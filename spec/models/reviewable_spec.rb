@@ -104,6 +104,52 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
+    it "triggers one transition to pending once the re-opening score is added" do
+      ReviewableUser.needs_review!(target: user, created_by: admin).transition_to(:approved, admin)
+
+      events =
+        DiscourseEvent.track_events do
+          2.times do
+            ReviewableUser.needs_review!(target: user, created_by: admin).add_score(
+              admin,
+              ReviewableScore.types[:needs_approval],
+            )
+          end
+        end
+
+      expect(events.map { |event| event[:event_name] }).to eq(
+        %i[reviewable_transitioned_to reviewable_score_updated],
+      )
+      expect(events.first[:params]).to eq([:pending, Reviewable.find_by(target: user)])
+    end
+
+    it "does not trigger a transition to pending when the re-opening score takes action" do
+      ReviewableUser.needs_review!(target: user, created_by: admin).transition_to(:approved, admin)
+
+      events =
+        DiscourseEvent.track_events(:reviewable_transitioned_to) do
+          ReviewableUser.needs_review!(target: user, created_by: admin).add_score(
+            admin,
+            ReviewableScore.types[:needs_approval],
+            take_action: true,
+          )
+        end
+
+      expect(events).to be_empty
+    end
+
+    it "saves the score added after re-opening an ignored reviewable" do
+      post = Fabricate(:post)
+      reviewable = ReviewableFlaggedPost.needs_review!(target: post, created_by: admin)
+      reviewable.add_score(user, PostActionType.types[:off_topic])
+      reviewable.transition_to(:ignored, admin)
+
+      reopened = ReviewableFlaggedPost.needs_review!(target: post, created_by: admin)
+      reviewable_score = reopened.add_score(user, PostActionType.types[:off_topic])
+
+      expect(reopened.reload.score).to eq(reviewable_score.score)
+    end
+
     it "preserves an approved queued reviewable when reusing the target's flagged reviewable" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)

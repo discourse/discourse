@@ -12,7 +12,7 @@ export default class EmailStylesEditor extends Component {
     return get(this.args.styles, this.args.fieldName);
   }
 
-  get currentEditorMode() {
+  get language() {
     return this.args.fieldName === "css" ? "scss" : this.args.fieldName;
   }
 
@@ -45,7 +45,7 @@ export default class EmailStylesEditor extends Component {
   <template>
     <div ...attributes>
       <CodeEditor
-        @language={{this.currentEditorMode}}
+        @language={{this.language}}
         @onChange={{this.updateEditorContents}}
         @onSave={{@save}}
         @value={{this.editorContents}}

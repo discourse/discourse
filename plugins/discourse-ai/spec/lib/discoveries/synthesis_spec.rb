@@ -23,6 +23,25 @@ describe DiscourseAi::Discoveries::Synthesis do
 
   before { enable_current_plugin }
 
+  it "lets the model return as many sources as the request asks for" do
+    agent = nil
+    allow(DiscourseAi::Agents::Bot).to receive(:as) do |_user, **kwargs|
+      agent = kwargs[:agent]
+      raise StopIteration
+    end
+
+    expect {
+      synthesis.call(
+        query: "plugins",
+        candidates: [{ "source_ref" => "source_1", "title" => "Plugins", "url" => "/t/plugins/1" }],
+        related_count: 6,
+      )
+    }.to raise_error(StopIteration)
+
+    source_refs = agent.response_format.find { |field| field["key"] == "source_refs" }
+    expect(source_refs["max_items"]).to eq(6)
+  end
+
   it "uses one tool-free structured call to select sources and stream an answer" do
     SiteSetting.ai_ask_ai_related_count = 4
     feature_name = nil
@@ -254,7 +273,7 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
   end
 
-  it "rejects source references outside the supplied candidates" do
+  it "rejects an answer when none of its source references are supplied candidates" do
     candidates = [
       {
         "source_ref" => "source_1",
@@ -276,6 +295,31 @@ describe DiscourseAi::Discoveries::Synthesis do
       ) { synthesis.call(query: "how do I create a plugin", candidates:) }
 
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
+  end
+
+  it "keeps an answer whose known source references survive alongside invalid ones" do
+    candidates =
+      %w[source_1 source_2 source_3].map do |source_ref|
+        { "source_ref" => source_ref, "title" => "Plugins", "excerpt" => "Use the skeleton." }
+      end
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          {
+            answerable: true,
+            source_refs: %w[source_9 source_2 source_2 source_1 source_3],
+            title: "Plugin guide",
+            answer: "Use the plugin skeleton.",
+          },
+        ],
+      ) { synthesis.call(query: "how do I create a plugin", candidates:, related_count: 2) }
+
+    expect(result).to have_attributes(
+      answerable: true,
+      source_refs: %w[source_2 source_1],
+      answer: "Use the plugin skeleton.",
+    )
   end
 
   it "returns the suggested follow-up question alongside the answer" do
@@ -356,6 +400,56 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
   end
 
+  it "streams source references only once the array is complete when the answer comes first" do
+    candidates =
+      %w[source_4 source_1 source_13].map do |source_ref|
+        { "source_ref" => source_ref, "title" => "Python", "excerpt" => "Use the API." }
+      end
+    chunks = [
+      "{\n  \"answer\": \"Use the REST API.\",",
+      "\n  \"answerable\": true,",
+      "\n  \"source_refs\": [\n    \"source_4",
+      "\",\n    \"source_1",
+      "3\",\n    \"source_1\"",
+      "\n  ],\n  \"title\": \"Python\"\n}",
+    ]
+    output =
+      DiscourseAi::Completions::StructuredOutput.new(
+        answer: {
+          type: "string",
+        },
+        answerable: {
+          type: "boolean",
+        },
+        source_refs: {
+          type: "array",
+        },
+        title: {
+          type: "string",
+        },
+      )
+    bot = instance_double(DiscourseAi::Agents::Bot)
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+    allow(bot).to receive(:reply) do |_, &stream|
+      chunks.each do |chunk|
+        output << chunk
+        stream.call(output, nil, :structured_output)
+      end
+      output.finish
+      stream.call(output, nil, :structured_output)
+    end
+    streamed_refs = []
+
+    result =
+      synthesis.call(query: "python", candidates:, related_count: 3) do |update|
+        streamed_refs << update[:source_refs] if update[:source_refs]
+      end
+
+    expect(streamed_refs.uniq).to eq([%w[source_4 source_13 source_1]])
+    expect(result.answerable).to eq(true)
+    expect(result.source_refs).to eq(%w[source_4 source_13 source_1])
+  end
+
   it "keeps every streamed title fragment" do
     candidates = [
       {
@@ -379,6 +473,7 @@ describe DiscourseAi::Discoveries::Synthesis do
       partials.each do |values|
         partial = double
         allow(partial).to receive(:read_buffered_property) { |key| values[key] }
+        allow(partial).to receive(:property_complete?).and_return(true)
         stream.call(partial, nil, :structured_output)
       end
     end
@@ -417,6 +512,7 @@ describe DiscourseAi::Discoveries::Synthesis do
       partials.each do |values|
         partial = double
         allow(partial).to receive(:read_buffered_property) { |key| values[key] }
+        allow(partial).to receive(:property_complete?).and_return(true)
         stream.call(partial, nil, :structured_output)
       end
     end

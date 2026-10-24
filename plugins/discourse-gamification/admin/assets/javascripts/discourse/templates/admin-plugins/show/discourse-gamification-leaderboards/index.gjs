@@ -1,5 +1,6 @@
 import { concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
@@ -9,7 +10,6 @@ import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
-import AdminCreateLeaderboard from "discourse/plugins/discourse-gamification/admin/components/admin-create-leaderboard";
 
 export default <template>
   <DBreadcrumbsItem
@@ -23,25 +23,19 @@ export default <template>
         {{#if @controller.model.leaderboards}}
           <actions.Primary
             class="leaderboard-admin__btn-new"
-            @action={{fn (mut @controller.creatingNew) true}}
             @icon="plus"
             @label="gamification.leaderboard.new"
-            @title="gamification.leaderboard.new"
+            @route="adminPlugins.show.discourse-gamification-leaderboards.new"
           />
 
           <actions.Default
             class="leaderboard-admin__btn-recalculate"
             @action={{@controller.recalculateScores}}
             @label="gamification.recalculate"
-            @title="gamification.recalculate"
           />
         {{/if}}
       </:actions>
     </DPageSubheader>
-
-    {{#if @controller.creatingNew}}
-      <AdminCreateLeaderboard @onCancel={{@controller.resetNewLeaderboard}} />
-    {{/if}}
 
     <div class="leaderboards">
       {{#if @controller.model.leaderboards}}
@@ -71,7 +65,7 @@ export default <template>
                   <LinkTo
                     class="d-table__overview-link"
                     @model={{leaderboard.id}}
-                    @route="gamificationLeaderboard.byName"
+                    @route="adminPlugins.show.discourse-gamification-leaderboards.edit"
                   >
                     <div class="d-table__overview-name">
                       {{leaderboard.name}}
@@ -109,8 +103,8 @@ export default <template>
                     <LinkTo
                       class="btn btn-default leaderboard-admin__edit btn-text btn-small"
                       @model={{leaderboard}}
-                      @route="adminPlugins.show.discourse-gamification-leaderboards.show"
-                    >{{i18n "gamification.edit"}} </LinkTo>
+                      @route="adminPlugins.show.discourse-gamification-leaderboards.edit"
+                    >{{i18n "gamification.edit"}}</LinkTo>
 
                     <DMenu
                       @icon="ellipsis-vertical"
@@ -121,6 +115,15 @@ export default <template>
                     >
                       <:content as |menu|>
                         <DDropdownMenu as |dropdown|>
+                          <dropdown.item>
+                            <DButton
+                              class="btn-transparent leaderboard-admin__view"
+                              @icon="eye"
+                              @label="gamification.leaderboard.view"
+                              @route="gamificationLeaderboard.byName"
+                              @routeModels={{leaderboard.id}}
+                            />
+                          </dropdown.item>
                           <dropdown.item>
                             <DButton
                               class="btn-transparent --danger leaderboard-admin__delete"
@@ -143,16 +146,11 @@ export default <template>
           </tbody>
         </table>
       {{else}}
-        {{#unless @controller.creatingNew}}
-          <div class="admin-plugin-config-area__empty-list">
-            {{i18n "gamification.leaderboard.none"}}
-            <DButton
-              class="btn-default btn-small leaderboard-admin__cta-new"
-              @action={{fn (mut @controller.creatingNew) true}}
-              @label="gamification.leaderboard.cta"
-            />
-          </div>
-        {{/unless}}
+        <AdminConfigAreaEmptyList
+          @ctaLabel="gamification.leaderboard.cta"
+          @ctaRoute="adminPlugins.show.discourse-gamification-leaderboards.new"
+          @emptyLabel="gamification.leaderboard.none"
+        />
       {{/if}}
     </div>
   </div>

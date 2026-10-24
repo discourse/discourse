@@ -289,6 +289,13 @@ te:
             tag: "ట్యాగ్"
           table:
             total_count: "మొత్తం"
+      ai_search:
+        related_replies:
+          one: "%{count} ప్రత్యుత్తరం"
+          other: "%{count} ప్రత్యుత్తరాలు"
+        tabs:
+          topics: "విషయాలు"
+          messages: "సందేశాలు"
       discobot_discoveries:
         legacy:
           regular_results: "విషయాలు"

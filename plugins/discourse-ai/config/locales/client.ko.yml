@@ -358,6 +358,12 @@ ko:
           summarize: "요약하기"
           since:
             other: "약 %{count}시간"
+      ai_search:
+        related_replies:
+          other: "%{count} 댓글"
+        tabs:
+          topics: "글"
+          messages: "메시지"
       discobot_discoveries:
         legacy:
           regular_results: "글"

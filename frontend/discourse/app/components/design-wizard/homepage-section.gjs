@@ -2,7 +2,6 @@ import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import OptionRow from "discourse/components/design-wizard/option-row";
 import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const TOPIC_PAGES = ["latest", "new", "hot"];

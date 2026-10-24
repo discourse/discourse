@@ -26,10 +26,12 @@ import {
   searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
@@ -256,9 +258,15 @@ export default class SearchMenu extends Component {
   clearSearch(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.search.activeGlobalSearchTerm = "";
-    this.search.focusSearchInput();
-    this.triggerSearch();
+    applyBehaviorTransformer(
+      "search-menu-clear-search",
+      () => {
+        this.search.activeGlobalSearchTerm = "";
+        this.search.focusSearchInput();
+        this.triggerSearch();
+      },
+      { location: this.args.location }
+    );
   }
 
   @action

@@ -6,6 +6,24 @@
 
 pl_PL:
   js:
+    dsa_notice:
+      title: "Zgłoś nielegalną treść"
+      content_url: "Dokładny adres URL treści"
+      explanation: "Dlaczego uważasz, że ta treść jest nielegalna?"
+      explanation_help: "Opisz fakty i wyjaśnij, dlaczego treść może być nielegalna. Nie musisz cytować konkretnego przepisu."
+      name: "Imię i nazwisko lub nazwa organizacji"
+      email: "Adres e-mail"
+      declaration_section: "Oświadczenie"
+      declaration: "Potwierdzam, że w dobrej wierze uważam, iż informacje i zarzuty zawarte w niniejszym zawiadomieniu są dokładne i kompletne."
+      submit: "Prześlij zgłoszenie"
+      get_email_code: "Pobierz kod przez e-mail"
+      resend_email_code: "Wyślij ponownie kod"
+      email_verified: "Zweryfikowano"
+      verification_code: "Kod weryfikacyjny"
+      received: "Otrzymano zgłoszenie"
+      received_description: "%{site} otrzymał Twoje zgłoszenie do rozpatrzenia."
+      reference: "Numer referencyjny twojego zgłoszenia to <strong>%{reference}</strong>."
+      contact_confirmation: "Wyślemy Ci e-mailem potwierdzenie i kopię zgłoszenia. Zespół weryfikujący wyśle Ci wynik e-mailem."
     mcp_oauth_client_id_metadata_policy:
       disabled: "Tylko rejestracja administratora"
       approved_domains: "CIMD z zatwierdzonych domen"

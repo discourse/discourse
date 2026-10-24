@@ -10,7 +10,6 @@ import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import CodeEditor from "discourse/components/code-editor";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -63,7 +62,7 @@ export default class AdminThemeEditor extends Component {
   }
 
   /**
-   * Lines using a theme colour variable directly, which the colour scheme
+   * Lines using a theme color variable directly, which the color scheme
    * cannot override. `color_definitions` is where they are meant to be
    * declared, so it is exempt.
    */
@@ -291,6 +290,7 @@ export default class AdminThemeEditor extends Component {
       </div>
 
       <CodeEditor
+        @autofocus={{true}}
         @language={{this.activeSectionMode}}
         @lineWarnings={{this.colorVariableWarnings}}
         @onChange={{fn (mut this.activeSection)}}

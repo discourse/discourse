@@ -12,7 +12,6 @@ ug:
     explorer:
       view_query: "كۆرۈنۈش"
       or: "ياكى"
-      create: "قۇر"
       ai:
         generate: "ھاسىللا"
         optional: "تاللاشچان"

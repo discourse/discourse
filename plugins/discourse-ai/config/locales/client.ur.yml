@@ -399,6 +399,14 @@ ur:
         topic:
           title: "موضوع کا خلاصہ"
           close: "خلاصہ پینل بند کریں"
+      ai_search:
+        related_topics: "متعلقہ موضوعات"
+        related_replies:
+          one: "%{count} جواب"
+          other: "%{count} جوابات"
+        tabs:
+          topics: "موضوعات"
+          messages: "پیغامات"
       discobot_discoveries:
         create_topic: "موضوع بنائیں"
         legacy:

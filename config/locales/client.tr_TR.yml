@@ -6,6 +6,9 @@
 
 tr_TR:
   js:
+    dsa_notice:
+      title: "Yasa dışı içeriği bildirin"
+      email: "E-posta adresi"
     user_api_key:
       title: '"%{application_name}" için yetkilendirme'
       authorize: "Yetkilendir"

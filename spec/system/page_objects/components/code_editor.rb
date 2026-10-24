@@ -26,26 +26,8 @@ module PageObjects
         self
       end
 
-      def clear_input
-        set_input("")
-      end
-
       def value
         page.evaluate_script("arguments[0].codemirrorView.state.doc.toString()", view_element)
-      end
-
-      def editor
-        @selector.is_a?(String) ? find(@selector) : @selector
-      end
-
-      # The wrapper renders before the editor chunk has loaded; the document
-      # handle exists only once the editor itself is in the DOM.
-      def view_element
-        editor.find(".codemirror-editor:has(.cm-editor)")
-      end
-
-      def editor_content
-        editor.find(".cm-content")
       end
 
       # Named apart from Capybara's text matchers, which would otherwise take
@@ -56,6 +38,18 @@ module PageObjects
 
       def has_value_including?(content)
         value.include?(content)
+      end
+
+      private
+
+      def editor
+        @selector.is_a?(String) ? find(@selector) : @selector
+      end
+
+      # The wrapper renders before the editor chunk has loaded; the document
+      # handle exists only once the editor itself is in the DOM.
+      def view_element
+        editor.find(".codemirror-editor:has(.cm-editor)")
       end
     end
   end

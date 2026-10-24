@@ -272,6 +272,20 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post).not_to be_hidden
     end
 
+    it "agree_and_keep keeps flags rejected in an earlier review rejected" do
+      reviewable.perform(moderator, :disagree)
+      new_score =
+        PostActionCreator.inappropriate(
+          Fabricate(:user, refresh_auto_groups: true),
+          post,
+        ).reviewable_score
+
+      reviewable.reload.perform(moderator, :agree_and_keep)
+
+      expect(score.reload).to be_disagreed
+      expect(new_score.reload).to be_agreed
+    end
+
     describe "with reviewable claiming enabled" do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
 
@@ -1468,6 +1482,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       reviewable.perform(moderator, :disagree_and_restore)
 
       assert_pm_creation_enqueued(reviewable.post.user_id, "flags_disagreed")
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the restored post notice" do
+        reviewable = Fabricate(:reviewable_flagged_post)
+        reviewable.post.update(
+          hidden: true,
+          hidden_at: Time.zone.now,
+          hidden_reason_id: PostActionType.types[:spam],
+        )
+
+        reviewable.perform(moderator, :disagree_and_restore)
+
+        args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
+        Jobs::SendSystemMessage.new.execute(args)
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
     end
 
     it "unsilences the user if they were silenced for the post" do

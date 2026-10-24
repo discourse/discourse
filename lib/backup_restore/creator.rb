@@ -211,50 +211,77 @@ module BackupRestore
     end
 
     def create_archive
-      log "Creating archive: #{@backup_filename}"
+      log "Streaming archive through gzip: #{@backup_filename}"
+      archive_path = "#{@archive_basename}.tar.gz"
+      partial_path = "#{archive_path}.partial"
+      @archive_mutex = Mutex.new
 
-      tar_filename = "#{@archive_basename}.tar"
-
-      log "Making sure archive does not already exist..."
-      [tar_filename, "#{tar_filename}.gz"].each do |filename|
-        File.delete(filename)
-      rescue Errno::ENOENT
+      File.open(partial_path, "wb") do |output|
+        compress_archive(output) do |input|
+          ArchiveWriter.write(input) do |archive|
+            @archive = archive
+            log "Archiving data dump..."
+            @archive.add_file(@dump_filename, File.basename(@dump_filename))
+            add_local_uploads_to_archive
+            add_remote_uploads_to_archive if SiteSetting.Upload.enable_s3_uploads
+          end
+        end
       end
 
-      log "Creating empty archive..."
-      Discourse::Utils.execute_command(
-        "tar",
-        "--create",
-        "--file",
-        tar_filename,
-        "--files-from",
-        "/dev/null",
-      )
-
-      log "Archiving data dump..."
-      Discourse::Utils.execute_command(
-        "tar",
-        "--append",
-        "--dereference",
-        "--file",
-        tar_filename,
-        File.basename(@dump_filename),
-        failure_message: "Failed to archive data dump.",
-        chdir: File.dirname(@dump_filename),
-      )
-
-      add_local_uploads_to_archive(tar_filename)
-      add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
-
+      File.rename(partial_path, archive_path)
       remove_tmp_directory
+    ensure
+      @archive = nil
+      FileUtils.rm_f(partial_path) if partial_path
+    end
 
-      log "Gzipping archive, this may take a while..."
-      Discourse::Utils.execute_command(
-        "gzip",
-        "-#{SiteSetting.backup_gzip_compression_level_for_uploads}",
-        tar_filename,
-        failure_message: "Failed to gzip archive.",
-      )
+    def compress_archive(output)
+      Tempfile.create("backup-gzip-errors-", @tmp_directory) do |errors|
+        begin
+          IO.popen(
+            ["gzip", "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", "-c"],
+            "wb",
+            out: output,
+            err: errors,
+          ) { |input| yield input }
+        rescue Errno::EPIPE => write_error
+          # IO.popen waits for gzip before we read its error, including worker failures.
+        end
+
+        status = $?
+        if write_error || !status.success?
+          errors.rewind
+          raise "Failed to gzip archive (exit status #{status.exitstatus}). #{errors.read.presence || write_error&.message}"
+        end
+      end
+    end
+
+    def add_path_to_archive(source, path, exclude: nil, ancestors: Set.new)
+      return if path == exclude
+
+      stat = File.stat(source)
+      if stat.directory?
+        inode = [stat.dev, stat.ino]
+        raise "Directory cycle while archiving: #{source}" if ancestors.include?(inode)
+        @archive.add_directory(path, source: source)
+        ancestors.add(inode)
+        begin
+          Dir.each_child(source) do |name|
+            add_path_to_archive(
+              File.join(source, name),
+              File.join(path, name),
+              exclude: exclude,
+              ancestors: ancestors,
+            )
+          end
+        ensure
+          ancestors.delete(inode)
+        end
+      elsif stat.file?
+        @archive.add_file(source, path)
+      end
+    rescue Errno::ENOENT
+      log "Skipping missing local upload: #{source}"
     end
 
     def include_uploads?
@@ -269,31 +296,15 @@ module BackupRestore
       File.directory?(local_uploads_directory) && !Dir.empty?(local_uploads_directory)
     end
 
-    def add_local_uploads_to_archive(tar_filename)
+    def add_local_uploads_to_archive
       log "Archiving uploads..."
-
       if has_local_uploads?
-        upload_directory = Discourse.store.upload_path
-
-        if SiteSetting.include_thumbnails_in_backups
-          exclude_optimized = ""
-        else
-          optimized_path = File.join(upload_directory, "optimized")
-          exclude_optimized = "--exclude=#{optimized_path}"
-        end
-
-        Discourse::Utils.execute_command(
-          "tar",
-          "--append",
-          "--dereference",
-          exclude_optimized,
-          "--file",
-          tar_filename,
-          upload_directory,
-          failure_message: "Failed to archive uploads.",
-          success_status_codes: [0, 1],
-          chdir: Rails.public_path.to_s,
-        )
+        exclude =
+          File.join(
+            Discourse.store.upload_path,
+            "optimized",
+          ) unless SiteSetting.include_thumbnails_in_backups
+        add_path_to_archive(local_uploads_directory, Discourse.store.upload_path, exclude: exclude)
       else
         log "No local uploads found. Skipping archiving of local uploads..."
       end
@@ -304,7 +315,7 @@ module BackupRestore
     # fallback path when URL doesn't match UPLOAD_PATH_REGEX
     UploadData = Data.define(:id, :url, :sha1, :extension, :original_filename)
 
-    def add_remote_uploads_to_archive(tar_filename)
+    def add_remote_uploads_to_archive
       if !SiteSetting.include_s3_uploads_in_backups
         log "Skipping uploads stored on S3."
         return
@@ -324,18 +335,6 @@ module BackupRestore
       download_upload_groups(uploads_by_sha1.values)
 
       log "Finished processing uploads: #{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied"
-
-      log "Appending uploads to archive..."
-      Discourse::Utils.execute_command(
-        "tar",
-        "--append",
-        "--file",
-        tar_filename,
-        @upload_directory,
-        failure_message: "Failed to append uploads to archive.",
-        success_status_codes: [0, 1],
-        chdir: @tmp_directory,
-      )
 
       if @download_stats[:downloaded] == 0 && @download_stats[:hardlinked] == 0 &&
            @download_stats[:copied] == 0
@@ -423,21 +422,38 @@ module BackupRestore
 
     def process_upload_group(upload_group)
       primary = upload_group.first
-      primary_filename = upload_path_in_archive(primary)
+      # Each worker stages one file, then waits for the writer before downloading another.
+      Tempfile.create(%w[backup-upload- .tmp], @tmp_directory) do |file|
+        file.close
+        next unless download_upload_to_file(primary, file.path)
 
-      return if !download_upload_to_file(primary, primary_filename)
-
-      upload_group
-        .drop(1)
-        .each do |duplicate|
-          duplicate_filename = upload_path_in_archive(duplicate)
-          primary_filename = create_hardlink(primary_filename, duplicate, duplicate_filename)
+        @archive_mutex.synchronize do
+          primary_path = upload_path_in_archive(primary)
+          @archive.add_file(file.path, primary_path, mode: 0o644)
+          archived_paths = Set.new([primary_path])
+          link_count = 1
+          upload_group
+            .drop(1)
+            .each do |duplicate|
+              path = upload_path_in_archive(duplicate)
+              next unless archived_paths.add?(path)
+              if link_count >= ArchiveWriter::MAX_LINKS
+                @archive.add_file(file.path, path, mode: 0o644)
+                primary_path = path
+                link_count = 1
+                increment_and_log_progress(:copied)
+              else
+                @archive.add_hardlink(path, primary_path)
+                link_count += 1
+                increment_and_log_progress(:hardlinked)
+              end
+            end
         end
+      end
     end
 
     def upload_path_in_archive(upload_data)
-      path = @s3_store.get_path_for_upload(upload_data)
-      File.join(@tmp_directory, @upload_directory, path)
+      File.join(@upload_directory, @s3_store.get_path_for_upload(upload_data))
     end
 
     def download_upload_to_file(upload_data, filename)
@@ -449,27 +465,6 @@ module BackupRestore
     rescue StandardError => ex
       log "Failed to download file with upload ID #{upload_data.id} from S3", ex
       false
-    end
-
-    def create_hardlink(source_filename, upload_data, target_filename)
-      if File.expand_path(source_filename) == File.expand_path(target_filename)
-        return source_filename
-      end
-
-      FileUtils.mkdir_p(File.dirname(target_filename))
-      FileUtils.ln(source_filename, target_filename)
-      increment_and_log_progress(:hardlinked)
-      source_filename
-    rescue Errno::EMLINK
-      # Filesystem hardlink limit reached - copy file and use as new primary
-      FileUtils.cp(source_filename, target_filename)
-      increment_and_log_progress(:copied)
-      target_filename
-    rescue StandardError => ex
-      log "Failed to create hardlink for upload ID #{upload_data.id}, copying instead", ex
-      FileUtils.cp(source_filename, target_filename)
-      increment_and_log_progress(:copied)
-      source_filename
     end
 
     def increment_and_log_progress(type)
@@ -550,10 +545,10 @@ module BackupRestore
     end
 
     def remove_tar_leftovers
-      log "Removing '.tar' leftovers..."
-      Dir["#{@archive_directory}/*.tar"].each { |filename| File.delete(filename) }
+      log "Removing unfinished archive leftovers..."
+      Dir["#{@archive_directory}/*.{tar,tar.gz.partial}"].each { |filename| File.delete(filename) }
     rescue => ex
-      log "Something went wrong while removing '.tar' leftovers.", ex
+      log "Something went wrong while removing unfinished archive leftovers.", ex
     end
 
     def remove_tmp_directory

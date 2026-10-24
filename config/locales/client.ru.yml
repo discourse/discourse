@@ -6,6 +6,9 @@
 
 ru:
   js:
+    dsa_notice:
+      title: "Сообщите о незаконном контенте"
+      email: "Адрес электронной почты"
     user_api_key:
       authorize: "Разрешить"
       deny: "Нет"

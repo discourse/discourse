@@ -26,14 +26,12 @@ pt_BR:
       admins_only: "O explorador de dados só está disponível para administradores."
       allow_groups: "Permitir que grupos acessem esta consulta"
       title: "Explorador de Dados"
-      create: "Criar"
       create_placeholder: "Nome da consulta…"
       description_placeholder: "Insira uma descrição aqui"
       ai:
         generate: "Gerar"
         optional: "opcional"
       import:
-        label: "Importar"
         unparseable_json: "Arquivo JSON não analisável"
         wrong_json: "Arquivo JSON incorreto. Um arquivo JSON deve conter um objeto \"consulta\", que deve ter pelo menos a propriedade \"sql\""
       help:
@@ -62,7 +60,6 @@ pt_BR:
         form:
           label: "Tipo de gráfico"
           bar: "Barras"
-      others_dirty: "Uma consulta tem alterações não salvas que serão perdidas se você sair desta página."
       run_time: "Consulta concluída em %{value} ms."
       result_count:
         one: "%{count} resultado."
@@ -81,7 +78,6 @@ pt_BR:
       column: "Coluna %{number}"
       save_params: "Definir padrões"
       reset_params: "Redefinir"
-      search_placeholder: "Pesquisar..."
       no_search_results: "Desculpe, não conseguimos encontrar nenhum resultado contendo o seu texto."
       form:
         errors:

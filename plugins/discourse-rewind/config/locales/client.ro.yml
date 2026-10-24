@@ -18,7 +18,7 @@ ro:
           author: Tu
           author_others: "%{username}"
           status_online: "● conectat"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} minut"
             few: "%{count} minute"

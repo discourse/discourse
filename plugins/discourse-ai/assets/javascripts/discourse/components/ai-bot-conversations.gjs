@@ -99,7 +99,7 @@ export default class AiBotConversations extends Component {
   constructor() {
     super(...arguments);
 
-    this.uppyUpload = new UppyUpload(getOwner(this), {
+    this.uppyUpload = new UppyUpload(this, {
       id: "ai-bot-file-uploader",
       type: "ai-bot-conversation",
       useMultipartUploadsIfAvailable: true,
@@ -143,7 +143,6 @@ export default class AiBotConversations extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.textarea?.removeEventListener("paste", this.#handlePaste);
-    this.uppyUpload?.teardown();
     // needed for safety (textarea may not have a autocomplete)
     if (this.textarea.autocomplete) {
       this.textarea.autocomplete("destroy");

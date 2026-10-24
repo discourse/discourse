@@ -27,12 +27,7 @@ export default class CodeControl extends Component {
   }
 
   get lang() {
-    return this.args.schema?.control_options?.lang || "text";
-  }
-
-  /** "text" is the absence of a language rather than one to look up. */
-  get language() {
-    return this.lang === "text" ? undefined : this.lang;
+    return this.args.schema?.control_options?.lang;
   }
 
   get content() {
@@ -68,8 +63,8 @@ export default class CodeControl extends Component {
         @describedBy={{@field.describedBy}}
         @disabled={{@field.disabled}}
         @inputId={{@field.id}}
-        @invalid={{@field.error}}
-        @language={{this.language}}
+        @invalid={{if @field.error true}}
+        @language={{this.lang}}
         @onChange={{this.handleInput}}
         @resizable={{true}}
         @value={{this.content}}

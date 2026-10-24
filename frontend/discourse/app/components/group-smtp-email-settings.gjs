@@ -10,7 +10,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import { or } from "discourse/truth-helpers";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
@@ -199,7 +198,7 @@ export default class GroupSmtpEmailSettings extends Component {
         <form.Submit
           class="btn-primary group-smtp-form__test-smtp-settings"
           tabindex="7"
-          @disabled={{or this.testingSettings}}
+          @disabled={{this.testingSettings}}
           @icon="gear"
           @label="groups.manage.email.test_settings"
           @title="groups.manage.email.settings_required"

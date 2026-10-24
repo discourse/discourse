@@ -16,7 +16,6 @@ import Invite from "discourse/models/invite";
 import { FORMAT as DATE_INPUT_FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TopicChooser from "discourse/select-kit/components/topic-chooser";
-import { and, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
@@ -337,7 +336,7 @@ export default class CreateInvite extends Component {
             @onLinkInsert={{this.maybeFocusCopyButton}}
             @showInviteLink={{and
               this.inviteCreated
-              (notEq this.flashClass "error")
+              (neq this.flashClass "error")
             }}
           >
             {{#if this.flashText}}
@@ -572,7 +571,7 @@ const InviteModalAlert = <template>
   <div
     class="alert alert-{{@alertClass}}"
     id="modal-alert"
-    role={{if (notEq @alertClass "error") "status" "alert"}}
+    role={{if (neq @alertClass "error") "status" "alert"}}
   >
     <div class="input-group invite-link">
       <label for="invite-link">

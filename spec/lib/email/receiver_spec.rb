@@ -15,6 +15,20 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  context "when email is addressed to an automatic group" do
+    let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+    before { group.update!(incoming_email: "meat@bar.com") }
+
+    it "creates a private message in the group inbox" do
+      expect { process(:encoded_display_name) }.to change(Topic, :count).by(1)
+
+      topic = Topic.last
+      expect(topic).to be_private_message
+      expect(topic.allowed_groups).to contain_exactly(group)
+    end
+  end
+
   it "raises an EmptyEmailError when 'mail_string' is blank" do
     expect { Email::Receiver.new(nil) }.to raise_error(Email::Receiver::EmptyEmailError)
     expect { Email::Receiver.new("") }.to raise_error(Email::Receiver::EmptyEmailError)
@@ -23,6 +37,11 @@ RSpec.describe Email::Receiver do
   it "raises a ScreenedEmailError when email address is screened" do
     ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
     expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
+  end
+
+  it "raises a SiteArchivedError when the site is archived" do
+    SiteSetting.site_archived = true
+    expect { process(:new_user) }.to raise_error(Email::Receiver::SiteArchivedError)
   end
 
   it "raises EmailNotAllowed when email address is not on allowlist" do

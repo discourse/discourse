@@ -1,7 +1,5 @@
-import type { Extension } from "@codemirror/state";
 import { expectTypeOf } from "expect-type";
 import {
-  type CodeEditorExtensionBuilder,
   type CodeEditorLanguageBuilder,
   type CodeEditorParams,
   loadCodeEditorLanguage,
@@ -11,13 +9,6 @@ import {
 // The module namespaces plugins receive are the real ones, not loose objects.
 expectTypeOf<CodeEditorParams["cmView"]["EditorView"]>().toEqualTypeOf<
   typeof import("@codemirror/view").EditorView
->();
-
-// Both kinds of builder produce editor extensions; a language may return
-// a single one, the editor argument has to return a list it can spread.
-expectTypeOf<CodeEditorLanguageBuilder>().returns.toEqualTypeOf<Extension>();
-expectTypeOf<CodeEditorExtensionBuilder>().returns.toEqualTypeOf<
-  readonly Extension[]
 >();
 
 // A shortcut resolves to a builder, or to null so the editor can fall back to

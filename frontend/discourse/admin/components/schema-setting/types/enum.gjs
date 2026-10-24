@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeEnum extends Component {
   get content() {

@@ -1171,6 +1171,17 @@ ru:
             compact: "Компактная"
             expanded: "Расширенная"
             expanded_description: "со сводками от AI"
+      ai_search:
+        related_topics: "Связанные темы"
+        related_replies:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответов"
+          other: "%{count} ответ"
+        tabs:
+          ask: "Спросить AI"
+          topics: "Новые темы"
+          messages: "Сообщений"
       discobot_discoveries:
         main_title: "Спросить AI"
         loading_convo: "Загрузка разговора"

@@ -6,6 +6,9 @@
 
 sk:
   js:
+    dsa_notice:
+      title: "Nahlásiť nezákonný obsah"
+      email: "E-mailová adresa"
     user_api_key:
       authorize: "Autorizovať"
       deny: "Zrušiť"
