@@ -813,10 +813,10 @@ export default class Category extends RestModel {
   }
 
   /**
-   * @param {string[]} [categoryTypes] - ids of the category's types; when
+   * @param {string[]} [categoryTypeIds] - ids of the category's types; when
    *   omitted, the server leaves the category's types unchanged.
    */
-  save(categoryTypes) {
+  save(categoryTypeIds) {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
 
@@ -884,9 +884,9 @@ export default class Category extends RestModel {
           locale: this.locale,
           category_localizations: this.localizations,
         }),
-        ...this._categoryTypeSaveProperties(id, categoryTypes),
+        ...this._categoryTypeSaveProperties(id, categoryTypeIds),
         ...this._pluginSaveProperties(),
-        category_types: categoryTypes,
+        category_types: categoryTypeIds,
       }),
       type: id ? "PUT" : "POST",
     });
@@ -957,7 +957,7 @@ export default class Category extends RestModel {
     );
   }
 
-  _categoryTypeSaveProperties(id, categoryTypes) {
+  _categoryTypeSaveProperties(id, categoryTypeIds) {
     const props = {
       category_type_site_settings: this.category_type_site_settings,
       category_type_settings: this.category_type_settings,
@@ -965,7 +965,7 @@ export default class Category extends RestModel {
 
     if (!id && this.categoryTypes) {
       const primaryType = Object.keys(this.categoryTypes)[0];
-      if (categoryTypes?.includes(primaryType)) {
+      if (categoryTypeIds?.includes(primaryType)) {
         props.category_type = primaryType;
       }
     }
