@@ -75,7 +75,7 @@ export default class UserDraftsStream extends RestModel {
           Site.current().updateCategory(category)
         );
 
-        this.set("hasMore", drafts.size >= this.limit);
+        this.set("hasMore", drafts.length >= this.limit);
 
         const promises = drafts.map((draft) => {
           draft.data = JSON.parse(draft.data);
