@@ -265,6 +265,173 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         }.to raise_error(Discourse::InvalidParameters)
       end
 
+      it "preserves last-Monday recurrence after creating a successor topic" do
+        starts_at = Time.utc(2027, 3, 29, 12, 0)
+        ends_at = starts_at + 1.hour
+        title = "Last Monday planning meeting"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_month"]
+              Monthly planning meeting.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+
+        freeze_time(ends_at + 1.hour)
+        job.execute({})
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_event = successor_topic.first_post.reload.event
+
+        expect(successor_event.original_starts_at).to eq_time(Time.utc(2027, 4, 26, 12, 0))
+
+        next_occurrence =
+          successor_event.calculate_next_occurrence_from(
+            successor_event.original_starts_at + 1.second,
+          )
+
+        expect(next_occurrence[:starts_at]).to eq(Time.utc(2027, 5, 31, 12, 0))
+
+        expect(successor_event.recurrence_anchor_starts_at).to eq_time(starts_at)
+
+        serialized_rule =
+          DiscourseEvents::Events::BasicEventSerializer.new(successor_event, root: false).rrule
+
+        expect(serialized_rule).to include("BYDAY=-1MO")
+
+        freeze_time(Time.utc(2027, 4, 26, 14, 0))
+        job.execute({})
+
+        may_topic = Topic.where(title:).where.not(id: [original_topic_id, successor_topic.id]).sole
+
+        may_event = may_topic.first_post.reload.event
+
+        expect(may_event.original_starts_at).to eq_time(Time.utc(2027, 5, 31, 12, 0))
+        expect(may_event.recurrence_anchor_starts_at).to eq_time(starts_at)
+      end
+
+      it "respects a manually changed successor recurrence date" do
+        starts_at = Time.utc(2027, 3, 29, 12, 0)
+        ends_at = starts_at + 1.hour
+        title = "Editable monthly meeting"
+
+        original_post =
+          PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="2027-03-29 12:00" end="2027-03-29 13:00" status="public" timezone="UTC" recurrence="every_month"]
+              Monthly meeting.
+              [/event]
+            RAW
+
+        freeze_time(ends_at + 1.hour)
+        job.execute({})
+
+        successor_topic = Topic.where(title:).where.not(id: original_post.topic_id).sole
+
+        successor_post = successor_topic.first_post
+        edited_raw = successor_post.raw.gsub("2027-04-26", "2027-05-03")
+
+        expect(edited_raw).not_to eq(successor_post.raw)
+
+        PostRevisor.new(successor_post).revise!(
+          event_author,
+          { raw: edited_raw },
+          bypass_bump: true,
+        )
+
+        edited_event = successor_post.reload.event.reload
+        new_start = Time.utc(2027, 5, 3, 12, 0)
+
+        expect(edited_event.original_starts_at).to eq_time(new_start)
+        expect(edited_event.recurrence_anchor_starts_at).to eq_time(new_start)
+
+        next_occurrence = edited_event.calculate_next_occurrence_from(new_start + 1.second)
+
+        expect(next_occurrence[:starts_at]).to eq(Time.utc(2027, 6, 7, 12, 0))
+      end
+
+      it "preserves the monthly weekday pattern when only the time is edited" do
+        starts_at = Time.utc(2027, 3, 29, 12, 0)
+        title = "Time-adjusted monthly meeting"
+
+        original_post =
+          PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="2027-03-29 12:00" end="2027-03-29 13:00" status="public" timezone="UTC" recurrence="every_month"]
+              Monthly meeting.
+              [/event]
+            RAW
+
+        freeze_time(Time.utc(2027, 3, 29, 14, 0))
+        job.execute({})
+
+        successor_topic = Topic.where(title:).where.not(id: original_post.topic_id).sole
+        successor_post = successor_topic.first_post
+
+        edited_raw =
+          successor_post
+            .raw
+            .gsub("2027-04-26 12:00", "2027-04-26 15:00")
+            .gsub("2027-04-26 13:00", "2027-04-26 16:00")
+
+        expect(edited_raw).not_to eq(successor_post.raw)
+
+        PostRevisor.new(successor_post).revise!(
+          event_author,
+          { raw: edited_raw },
+          bypass_bump: true,
+        )
+
+        edited_event = successor_post.reload.event.reload
+
+        expect(edited_event.original_starts_at).to eq_time(Time.utc(2027, 4, 26, 15, 0))
+
+        expect(edited_event.recurrence_anchor_starts_at).to eq_time(Time.utc(2027, 3, 29, 15, 0))
+
+        next_occurrence =
+          edited_event.calculate_next_occurrence_from(Time.utc(2027, 4, 26, 15, 0) + 1.second)
+
+        expect(next_occurrence[:starts_at]).to eq(Time.utc(2027, 5, 31, 15, 0))
+      end
+
+      it "resets the anchor when the successor recurrence frequency changes" do
+        starts_at = Time.utc(2027, 3, 29, 12, 0)
+        title = "Frequency-adjusted monthly meeting"
+
+        original_post =
+          PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="2027-03-29 12:00" end="2027-03-29 13:00" status="public" timezone="UTC" recurrence="every_month"]
+              Monthly meeting.
+              [/event]
+            RAW
+
+        freeze_time(Time.utc(2027, 3, 29, 14, 0))
+        job.execute({})
+
+        successor_topic = Topic.where(title:).where.not(id: original_post.topic_id).sole
+        successor_post = successor_topic.first_post
+
+        edited_raw =
+          successor_post.raw.sub('recurrence="every_month"', 'recurrence="every_two_weeks"')
+
+        expect(edited_raw).not_to eq(successor_post.raw)
+
+        PostRevisor.new(successor_post).revise!(
+          event_author,
+          { raw: edited_raw },
+          bypass_bump: true,
+        )
+
+        edited_event = successor_post.reload.event.reload
+
+        expect(edited_event.recurrence).to eq("every_two_weeks")
+        expect(edited_event.recurrence_anchor_starts_at).to eq_time(Time.utc(2027, 4, 26, 12, 0))
+
+        next_occurrence =
+          edited_event.calculate_next_occurrence_from(Time.utc(2027, 4, 26, 12, 0) + 1.second)
+
+        expect(next_occurrence[:starts_at]).to eq_time(Time.utc(2027, 5, 10, 12, 0))
+      end
+
       it "truncates the archived title while preserving the occurrence date" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour

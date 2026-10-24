@@ -67,6 +67,7 @@ module DiscourseEvents
         raise Discourse::InvalidParameters.new(:event) unless event_open_tag_match
 
         invitees = snapshot_invitees
+        recurrence_anchor = event.recurrence_anchor_starts_at
 
         next_occurrence = event.calculate_next_occurrence_from(event_date.starts_at + 1.second)
 
@@ -109,6 +110,12 @@ module DiscourseEvents
               )
 
             successor_post = create_successor_post(successor_raw, original_title)
+
+            successor_topic = successor_post.topic
+            successor_topic.custom_fields[
+              Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+            ] = recurrence_anchor.iso8601
+            successor_topic.save_custom_fields
             copy_recurring_invitees(invitees, successor_post)
           end
         end
