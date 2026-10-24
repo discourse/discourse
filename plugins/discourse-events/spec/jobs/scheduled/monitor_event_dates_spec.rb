@@ -701,6 +701,39 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor_topic.first_post.raw).to include("start=#{starts_on + 7.days}")
       end
 
+      it "ignores a long malformed event tag before a valid recurring event" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly meeting after malformed event example"
+        fence = "`" * 3
+        malformed_tag = "[event #{"a " * 5_000}\\\" ]"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              Example of malformed Event markup:
+
+              #{fence}
+              #{malformed_tag}
+              #{fence}
+
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Actual recurring meeting.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_post.raw).to include(malformed_tag)
+        expect(successor_post.event).to be_present
+        expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
+      end
+
       it "ignores event markup in code blocks when creating a successor" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
