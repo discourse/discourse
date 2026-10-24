@@ -13,6 +13,11 @@ module Jobs
             send_reminder(event_date)
             trigger_events(event_date)
             finish(event_date)
+          rescue StandardError => e
+            Discourse.warn_exception(
+              e,
+              message: "Failed to process Discourse event date #{event_date.id}",
+            )
           end
       end
 

@@ -741,6 +741,57 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor_topic.category_id).to eq(event_category.id)
       end
 
+      it "continues processing later events after a successor creation failure" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+
+        create_post =
+          lambda do |title|
+            PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+          end
+
+        failing_post = create_post.call("Failing weekly planning")
+        successful_post = create_post.call("Successful weekly planning")
+
+        failing_date = failing_post.reload.event.event_dates.pending.first
+        successful_date = successful_post.reload.event.event_dates.pending.first
+
+        expect(failing_date.id).to be < successful_date.id
+
+        freeze_time(ends_at + 1.hour)
+
+        allow(DiscourseEvents::Events::Event::CreateSuccessorTopic).to receive(
+          :call,
+        ).and_wrap_original do |original, event_date|
+          if event_date.id == failing_date.id
+            raise StandardError, "simulated successor creation failure"
+          end
+
+          original.call(event_date)
+        end
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        expect(failing_date.reload.finished_at).to be_nil
+        expect(DiscourseEvents::Events::EventDate.pending.where(id: failing_date.id)).to exist
+
+        expect(successful_date.reload.finished_at).to be_present
+
+        successor_topic =
+          Topic
+            .where(title: "Successful weekly planning")
+            .where.not(id: successful_post.topic_id)
+            .sole
+
+        successor_event = successor_topic.first_post.reload.event
+
+        expect(successor_event.original_starts_at).to eq_time(starts_at + 7.days)
+      end
+
       it "keeps the occurrence pending when successor creation fails" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
@@ -766,7 +817,14 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
           "successor creation failed",
         )
 
-        expect { job.execute({}) }.to raise_error(StandardError, "successor creation failed")
+        allow(Discourse).to receive(:warn_exception)
+
+        expect { job.execute({}) }.not_to change(Topic, :count)
+
+        expect(Discourse).to have_received(:warn_exception).with(
+          an_instance_of(StandardError),
+          message: "Failed to process Discourse event date #{event_date.id}",
+        )
 
         expect(event_date.reload.finished_at).to be_nil
         expect(DiscourseEvents::Events::EventDate.pending.where(id: event_date.id)).to exist
