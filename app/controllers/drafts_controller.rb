@@ -74,7 +74,7 @@ class DraftsController < ApplicationController
         )
       rescue Draft::OutOfSequence
         begin
-          if !Draft.exists?(user_id: current_user.id, draft_key: params[:draft_key])
+          if !Draft.live.exists?(user_id: current_user.id, draft_key: params[:draft_key])
             Draft.set(
               current_user,
               params[:draft_key],
@@ -141,7 +141,12 @@ class DraftsController < ApplicationController
     user = fetch_target_user
 
     begin
-      Draft.clear(user, params[:id], params[:sequence].to_i)
+      Draft.clear(
+        user,
+        params[:id],
+        params[:sequence].to_i,
+        permanent: params[:permanent].to_s == "true",
+      )
     rescue Draft::OutOfSequence
       # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
       # rendering an error causes issues in the composer
@@ -189,18 +194,12 @@ class DraftsController < ApplicationController
       return
     end
 
-    # Bulk delete in single transaction
-    deleted_count = 0
-    begin
-      ActiveRecord::Base.transaction do
-        deleted_count = Draft.where(user_id: user.id, draft_key: draft_keys).destroy_all.length
-
-        # Update user draft count
-        UserStat.update_draft_count(user.id)
+    deleted_count =
+      begin
+        Draft.discard!(user.id, draft_keys)
+      rescue StandardError
+        return render json: failed_json, status: :internal_server_error
       end
-    rescue StandardError
-      return render json: failed_json, status: :internal_server_error
-    end
 
     render json: success_json.merge(deleted_count: deleted_count)
   end
@@ -210,7 +209,7 @@ class DraftsController < ApplicationController
   def reached_max_drafts_per_user?(params)
     user_id = current_user.id
 
-    Draft.where(user_id: user_id).count >= SiteSetting.max_drafts_per_user &&
-      !Draft.exists?(user_id: user_id, draft_key: params[:draft_key])
+    Draft.live.where(user_id: user_id).count >= SiteSetting.max_drafts_per_user &&
+      !Draft.live.exists?(user_id: user_id, draft_key: params[:draft_key])
   end
 end

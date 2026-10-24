@@ -18,6 +18,10 @@ export default class UserDraft extends RestModel {
     return dReplaceEmoji(this.get("title"));
   }
 
+  get discarded() {
+    return !!this.deleted_at;
+  }
+
   @computed("draft_username")
   get editableDraft() {
     return this.draft_username === this.currentUser?.get("username");

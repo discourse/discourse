@@ -304,7 +304,10 @@ class UserMerger
     update_user_id(:developers)
 
     update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
-    update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
+    update_user_id(
+      :drafts,
+      conditions: "x.draft_key = y.draft_key AND x.deleted_at IS NULL AND y.deleted_at IS NULL",
+    )
 
     update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
 

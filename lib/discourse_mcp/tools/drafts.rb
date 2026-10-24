@@ -82,8 +82,8 @@ module DiscourseMcp
         draft_key = arguments.fetch("draft_key")
         ToolHelpers.ensure_private_message_draft_scope!(draft_key, request_context, access: :write)
 
-        if !Draft.exists?(user_id: user.id, draft_key:) &&
-             Draft.where(user_id: user.id).count >= SiteSetting.max_drafts_per_user
+        if !Draft.live.exists?(user_id: user.id, draft_key:) &&
+             Draft.live.where(user_id: user.id).count >= SiteSetting.max_drafts_per_user
           raise DiscourseMcp::ToolError, I18n.t("draft.too_many_drafts.title")
         end
 

@@ -3,10 +3,10 @@ import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 
 export default class Draft extends EmberObject {
-  static clear(key, sequence) {
+  static clear(key, sequence, { permanent = false } = {}) {
     return ajax(`/drafts/${key}.json`, {
       type: "DELETE",
-      data: { draft_key: key, sequence },
+      data: { draft_key: key, sequence, permanent },
     });
   }
 
@@ -21,6 +21,14 @@ export default class Draft extends EmberObject {
       type: "DELETE",
       data: { draft_keys, sequences },
     });
+  }
+
+  static restoreDiscarded(id) {
+    return ajax(`/discarded_drafts/${id}/restore.json`, { type: "PUT" });
+  }
+
+  static destroyDiscarded(id) {
+    return ajax(`/discarded_drafts/${id}.json`, { type: "DELETE" });
   }
 
   static get(key) {

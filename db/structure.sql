@@ -6071,7 +6071,8 @@ CREATE TABLE public.drafts (
     updated_at timestamp without time zone NOT NULL,
     sequence bigint DEFAULT 0 NOT NULL,
     revisions integer DEFAULT 1 NOT NULL,
-    owner character varying
+    owner character varying,
+    deleted_at timestamp(6) without time zone
 );
 
 
@@ -19990,6 +19991,27 @@ CREATE UNIQUE INDEX idx_discourse_calendar_post_event_dates_event_id_starts_at_u
 
 
 --
+-- Name: idx_drafts_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_drafts_on_deleted_at ON public.drafts USING btree (deleted_at) WHERE (deleted_at IS NOT NULL);
+
+
+--
+-- Name: idx_drafts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_drafts_on_user_id ON public.drafts USING btree (user_id);
+
+
+--
+-- Name: idx_drafts_on_user_id_and_draft_key_live; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_drafts_on_user_id_and_draft_key_live ON public.drafts USING btree (user_id, draft_key) WHERE (deleted_at IS NULL);
+
+
+--
 -- Name: idx_dwf_ai_sessions_on_status_updated_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22269,13 +22291,6 @@ CREATE INDEX index_do_not_disturb_timings_on_user_id ON public.do_not_disturb_ti
 --
 
 CREATE UNIQUE INDEX index_draft_sequences_on_user_id_and_draft_key ON public.draft_sequences USING btree (user_id, draft_key);
-
-
---
--- Name: index_drafts_on_user_id_and_draft_key; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING btree (user_id, draft_key);
 
 
 --
@@ -26160,6 +26175,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261024142334'),
+('20261024142328'),
+('20261024142323'),
 ('20261020161054'),
 ('20261020160221'),
 ('20261019232249'),

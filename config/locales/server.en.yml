@@ -1442,6 +1442,7 @@ en:
       title: "Too many drafts"
       description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
     bulk_destroy_limit: "You can only delete up to %{limit} drafts at once."
+    restore_conflict: "You already have a draft for this. Post or delete it before restoring this one."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -2996,6 +2997,7 @@ en:
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
 
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
+    discarded_drafts_retention_days: "Keep discarded drafts for (n) days so their authors can restore them from their drafts page. Set to 0 to delete drafts as soon as they are discarded."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."

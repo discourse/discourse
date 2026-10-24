@@ -332,5 +332,162 @@ RSpec.describe Draft do
     end
   end
 
+  describe "discarding" do
+    let(:key) { "topic_#{post.topic_id}" }
+    let(:content) { { reply: "a long reply worth keeping" }.to_json }
+
+    def discard(user, key)
+      Draft.clear(user, key, DraftSequence.current(user, key))
+    end
+
+    it "keeps a discarded draft out of reads, the stream and the draft count" do
+      Draft.set(user, key, 0, content)
+      discard(user, key)
+
+      draft = Draft.find_by(user: user, draft_key: key)
+      expect(draft.deleted_at).to be_present
+      expect(Draft.get(user, key, 0)).to be_nil
+      expect(Draft.stream(user: user)).to be_empty
+      expect(user.user_stat.reload.draft_count).to eq(0)
+    end
+
+    it "keeps the uploads referenced by a discarded draft" do
+      upload = Fabricate(:upload)
+      Draft.set(user, key, 0, { reply: "![image](#{upload.short_url})" }.to_json)
+      discard(user, key)
+
+      expect(UploadReference.where(target_type: "Draft", upload_id: upload.id)).to exist
+    end
+
+    it "deletes drafts without content right away" do
+      Draft.set(user, key, 0, { reply: " " }.to_json)
+      discard(user, key)
+
+      expect(Draft.where(user: user)).to be_empty
+    end
+
+    it "deletes drafts with data that is not an object" do
+      Draft.set(user, key, 0, "[1]")
+      discard(user, key)
+
+      expect(Draft.where(user: user)).to be_empty
+    end
+
+    it "deletes drafts right away when retention is disabled" do
+      SiteSetting.discarded_drafts_retention_days = 0
+      Draft.set(user, key, 0, content)
+      discard(user, key)
+
+      expect(Draft.where(user: user)).to be_empty
+    end
+
+    it "allows a new draft with the same key next to discarded ones" do
+      Draft.set(user, key, 0, content)
+      discard(user, key)
+      Draft.set(user, key, 0, { reply: "second" }.to_json)
+      discard(user, key)
+
+      sequence = Draft.set(user, key, 0, { reply: "third" }.to_json)
+
+      expect(Draft.get(user, key, sequence)).to eq({ reply: "third" }.to_json)
+      expect(Draft.discarded.where(user: user, draft_key: key).count).to eq(2)
+    end
+
+    it "evicts the oldest discarded drafts beyond max_drafts_per_user" do
+      SiteSetting.max_drafts_per_user = 2
+      upload = Fabricate(:upload)
+
+      Draft.set(user, "new_topic_1", 0, { reply: "![image](#{upload.short_url})" }.to_json)
+      freeze_time(3.days.ago) { discard(user, "new_topic_1") }
+      Draft.set(user, "new_topic_2", 0, content)
+      freeze_time(2.days.ago) { discard(user, "new_topic_2") }
+      Draft.set(user, "new_topic_3", 0, content)
+      discard(user, "new_topic_3")
+
+      expect(Draft.discarded.where(user: user).pluck(:draft_key)).to contain_exactly(
+        "new_topic_2",
+        "new_topic_3",
+      )
+      expect(UploadReference.where(target_type: "Draft", upload_id: upload.id)).not_to exist
+    end
+
+    it "keeps discarded drafts when the user posts or drafts are cleaned up" do
+      Draft.set(user, key, 0, content)
+      discard(user, key)
+      Draft.discarded.update_all(updated_at: 1.year.ago)
+
+      DraftSequence.next!(user, key)
+      Draft.cleanup!
+
+      expect(Draft.discarded.where(user: user)).to exist
+    end
+
+    describe "#restore!" do
+      it "brings the draft back at the current sequence" do
+        Draft.set(user, key, 0, content)
+        discard(user, key)
+        DraftSequence.next!(user, key)
+
+        Draft.discarded.find_by(user: user).restore!
+
+        sequence = DraftSequence.current(user, key)
+        expect(Draft.get(user, key, sequence)).to eq(content)
+        expect(user.user_stat.reload.draft_count).to eq(1)
+      end
+
+      it "refuses to replace a live draft with the same key" do
+        Draft.set(user, key, 0, content)
+        discard(user, key)
+        Draft.set(user, key, 0, { reply: "newer" }.to_json)
+
+        expect { Draft.discarded.find_by(user: user).restore! }.to raise_error(
+          Draft::RestoreConflict,
+        )
+        expect(Draft.get(user, key, 0)).to eq({ reply: "newer" }.to_json)
+      end
+    end
+
+    describe ".purge_discarded!" do
+      it "deletes discarded drafts past the retention window with their upload references" do
+        SiteSetting.discarded_drafts_retention_days = 3
+        upload = Fabricate(:upload)
+
+        Draft.set(user, "#{key}_old", 0, { reply: "![image](#{upload.short_url})" }.to_json)
+        Draft.set(user, key, 0, content)
+        freeze_time 4.days.ago do
+          discard(user, "#{key}_old")
+        end
+        discard(user, key)
+
+        Draft.purge_discarded!
+
+        expect(Draft.discarded.pluck(:draft_key)).to contain_exactly(key)
+        expect(UploadReference.where(target_type: "Draft", upload_id: upload.id)).not_to exist
+      end
+
+      it "keeps the upload references of a draft restored while it is being purged" do
+        SiteSetting.discarded_drafts_retention_days = 3
+        upload = Fabricate(:upload)
+        Draft.set(user, key, 0, { reply: "![image](#{upload.short_url})" }.to_json)
+        freeze_time(4.days.ago) { discard(user, key) }
+        draft = Draft.discarded.find_by(user: user)
+
+        restored = false
+        allow(DB).to receive(:query_single).and_wrap_original do |original, *args|
+          if !restored && args.first.include?("DELETE FROM drafts")
+            restored = true
+            draft.restore!
+          end
+          original.call(*args)
+        end
+
+        Draft.purge_discarded!
+
+        expect(Draft.live.where(id: draft.id)).to exist
+        expect(UploadReference.where(target_type: "Draft", target_id: draft.id)).to exist
+      end
+    end
+  end
+
   it { is_expected.to validate_length_of(:draft_key).is_at_most(40) }
 end

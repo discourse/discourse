@@ -145,7 +145,7 @@ describe "User activity drafts" do
       # Should have only one draft left and no bulk controls
       expect(drafts_page).to have_drafts(count: 1)
       expect(drafts_page).to have_no_bulk_controls
-      expect(Draft.count).to eq(1)
+      expect(Draft.live.count).to eq(1)
     end
 
     it "clears selection after successful bulk delete" do
@@ -165,7 +165,7 @@ describe "User activity drafts" do
       # Should have no drafts and no controls
       expect(drafts_page).to have_no_drafts
       expect(drafts_page).to have_no_bulk_controls
-      expect(Draft.count).to eq(0)
+      expect(Draft.live.count).to eq(0)
     end
   end
 
