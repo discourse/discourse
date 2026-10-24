@@ -1124,6 +1124,21 @@ class Post < ActiveRecord::Base
     replies.reject { |r| !secured_ids.include?(r[:id]) }
   end
 
+  def link_post_uploads(fragments: nil)
+    if form_data
+      answer_html =
+        form_submission
+          .answers
+          .values
+          .flatten
+          .grep(String)
+          .map { |text| PrettyText.cook(text, markdown_options) }
+          .join("\n")
+      fragments = Nokogiri::HTML5.fragment("#{fragments || cooked}\n#{answer_html}")
+    end
+    super(fragments:)
+  end
+
   def form_submission
     FormTemplate::Submission.new(form_data) if form_data
   end
