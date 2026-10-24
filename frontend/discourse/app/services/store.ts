@@ -8,6 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse/lib/get-owner";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import WeakValueMap from "discourse/lib/weak-value-map";
+import type Category from "discourse/models/category";
 import RestModel, {
   type RestModelAttrs,
   type RestModelClass,
@@ -20,6 +21,7 @@ import type UserDraft from "discourse/models/user-draft";
 
 /** Model instances by store type name. Plugins add theirs through module augmentation. */
 export interface ModelRegistry {
+  category: Category;
   "user-draft": UserDraft;
 }
 

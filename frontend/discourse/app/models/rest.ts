@@ -12,6 +12,9 @@ import {
   modelNameFor,
 } from "discourse/lib/model-extensions";
 import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
+import type Site from "discourse/models/site";
+import type TopicTrackingState from "discourse/models/topic-tracking-state";
+import type SiteSettingsService from "discourse/services/site-settings";
 import type StoreService from "discourse/services/store";
 
 /** A JSON payload sent to or received from the server. */
@@ -114,6 +117,13 @@ export default class RestModel extends EmberObject {
 
   primaryKey = "id";
   declare store: StoreService;
+  declare site: Site;
+
+  /** TODO(typescript-pending): the factory returns the settings instance without types; remove the mapped unknown shape when its return is typed. */
+  declare siteSettings: {
+    [K in keyof ReturnType<typeof SiteSettingsService.create>]: unknown;
+  };
+  declare topicTrackingState: TopicTrackingState;
 
   @tracked __state?: RestModelState;
 

@@ -782,3 +782,36 @@ acceptance("Category Edit - saved value types", function (needs) {
     );
   });
 });
+
+acceptance("Category Edit - deleting", function (needs) {
+  needs.user();
+
+  let deleteRequests;
+
+  needs.hooks.beforeEach(() => (deleteRequests = []));
+
+  needs.pretender((server, helper) => {
+    server.delete("/categories/:id", (request) => {
+      deleteRequests.push(request.params.id);
+      return helper.response(200, { success: "OK" });
+    });
+  });
+
+  test("deletes the category and returns to the categories list", async function (assert) {
+    await visit("/c/testing/edit/settings");
+    await click(".edit-category__delete-actions .btn-danger");
+    await click(".dialog-footer .btn-danger");
+
+    assert.deepEqual(deleteRequests, ["11"], "deletes the category by id");
+    assert.strictEqual(currentURL(), "/categories");
+  });
+
+  test("cancelling the confirmation keeps the category", async function (assert) {
+    await visit("/c/testing/edit/settings");
+    await click(".edit-category__delete-actions .btn-danger");
+    await click(".dialog-footer .btn-default");
+
+    assert.deepEqual(deleteRequests, [], "does not delete the category");
+    assert.strictEqual(currentURL(), "/c/testing/edit/settings");
+  });
+});
