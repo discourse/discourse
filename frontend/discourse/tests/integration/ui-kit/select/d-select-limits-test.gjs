@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import {
   click,
   fillIn,
@@ -174,7 +175,7 @@ module(
 
     test("Enter cannot add an ordinary option after the value reaches @maximum", async function (assert) {
       const onChange = sinon.spy();
-      this.set("value", [1]);
+      this.set("value", trackedArray([1]));
 
       await render(
         <template>
@@ -211,7 +212,7 @@ module(
     test("Space cannot add an ordinary option after the value reaches @maximum", async function (assert) {
       const onChange = sinon.spy();
       forceMobile();
-      this.set("value", [1]);
+      this.set("value", trackedArray([1]));
 
       await render(
         <template>
@@ -735,12 +736,12 @@ module(
     setupRenderingTest(hooks);
 
     test("the public limit getters reflect the live multi-select count", function (assert) {
-      let value = [1];
+      const state = trackedObject({ value: [1] });
       const engine = new SelectEngine({
         multiple: true,
         maximum: 3,
         minimum: 2,
-        getValue: () => value,
+        getValue: () => state.value,
       });
 
       assert.strictEqual(
@@ -763,7 +764,7 @@ module(
       );
       assert.strictEqual(engine.remaining, 2, "two cap slots remain");
 
-      value = [1, 2, 3, 4];
+      state.value = [1, 2, 3, 4];
       assert.true(
         engine.atMaximum,
         "an over-maximum value is still at maximum"

@@ -288,9 +288,9 @@ export interface SelectUpdateScope {
  * arguments, never `this`. Where a callback acts on the select, it is handed a
  * {@link SelectControl} (see {@link SelectItem#onSelect}).
  *
- * The `get*` reader options are the live counterparts of the plain option beside each: when
- * supplied they are read on every access, so a runtime change to the underlying `@arg`
- * propagates, while the plain static option is a construction-time snapshot for direct,
+ * The `get*` reader options are the live counterparts of the plain option beside each:
+ * they reflect runtime changes to the underlying `@arg`, while the plain static option
+ * is a construction-time snapshot for direct,
  * non-reactive consumers. A component wires these to its live args; the engine re-applies
  * each default on read.
  */
@@ -306,7 +306,9 @@ export interface SelectEngineOptions {
 
   /**
    * `() => value` — reads the controlled value live (single: an id or `null`; multi: an
-   * id array). Defaults to always-`null`.
+   * id array). Must read tracked state for changing values; a fixed value is also supported.
+   * In-place array edits require a tracked collection. Untracked changes are unsupported.
+   * Defaults to always-`null`.
    */
   getValue?: () => SelectValue;
 
@@ -813,10 +815,7 @@ export default class SelectEngine {
   }
 
   /**
-   * The controlled value, normalized. Not cached: it reads the live `getValue` thunk
-   * so it always reflects the parent's `@value` (which is what makes the component
-   * controlled). For a stable `@context` identity, feed the raw `@value` to the trigger
-   * rather than this getter.
+   * The controlled value, normalized and memoized from the consumer's tracked state.
    *
    * @returns A frozen id array (multiple) or a single id / `null`.
    */

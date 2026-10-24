@@ -1,3 +1,4 @@
+import { cached } from "@glimmer/tracking";
 import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectItem,
@@ -63,26 +64,18 @@ export default class SelectionActions {
   }
 
   /**
-   * The controlled value, normalized. Not cached: it reads the live `getValue` thunk
-   * so it always reflects the parent's `@value` (which is what makes the component
-   * controlled). For a stable `@context` identity, feed the raw `@value` to the trigger
-   * rather than this getter.
+   * Reads the live mode, sharing normalization across reads and list rebuilds.
    *
    * @returns A frozen id array (multiple) or a single id / `null`.
    */
   get value(): SelectValue {
-    const raw = this.#options.value;
-    return this.#options.multiple
-      ? Object.freeze(
-          this.#options.dedupeValues(makeArray(raw) as SelectItemId[])
-        )
-      : this.#options.singleValue(raw);
+    return this.#options.multiple ? this._valueArray : this._singleValue;
   }
 
   /** Whether anything is selected. */
   get hasValue(): boolean {
     return this.#options.multiple
-      ? this.#valueArray.length > 0
+      ? this._valueArray.length > 0
       : this.value != null;
   }
 
@@ -125,7 +118,7 @@ export default class SelectionActions {
    * removing that chip.
    */
   get #selectedCount(): number {
-    return this.#valueArray.length;
+    return this._valueArray.length;
   }
 
   get #atMaximum(): boolean {
@@ -133,14 +126,25 @@ export default class SelectionActions {
     return maximum != null && this.#selectedCount >= maximum;
   }
 
-  /**
-   * The current value coerced to its multi-select array form. Only meaningful when
-   * `#options.multiple` (the single-select value is never read through here); it centralizes
-   * the one place the union `value` is treated as an array so the multi-only call sites
-   * stay narrowing-free.
-   */
-  get #valueArray(): readonly SelectItemId[] {
-    return this.value as readonly SelectItemId[];
+  @cached
+  get _selectedKeys(): ReadonlySet<string | null> {
+    return new Set(
+      this._valueArray.map((value) => this.#options.valueKey(value))
+    );
+  }
+
+  @cached
+  get _singleValue(): SelectItemId | null {
+    return this.#options.singleValue(this.#options.value);
+  }
+
+  @cached
+  get _valueArray(): readonly SelectItemId[] {
+    return Object.freeze(
+      this.#options.dedupeValues(
+        makeArray(this.#options.value) as SelectItemId[]
+      )
+    );
   }
 
   /**
@@ -178,7 +182,7 @@ export default class SelectionActions {
       return false;
     }
     return this.#options.multiple
-      ? this.#valueArray.some((v) => this.#options.valueKey(v) === key)
+      ? this._selectedKeys.has(key)
       : this.#options.valueKey(this.value) === key;
   }
 
@@ -240,7 +244,7 @@ export default class SelectionActions {
     this.#cacheResolved(item);
     if (this.#options.multiple) {
       this.#emitChange(
-        [...this.#valueArray, this.#options.itemValue(item)],
+        [...this._valueArray, this.#options.itemValue(item)],
         origin
       );
     } else {
@@ -294,7 +298,7 @@ export default class SelectionActions {
     }
     this.#emitChange(
       [
-        ...this.#valueArray,
+        ...this._valueArray,
         ...additions.map((item) => this.#options.itemValue(item)),
       ],
       {
@@ -321,7 +325,7 @@ export default class SelectionActions {
     }
     const key = this.#options.valueKey(this.#options.itemValue(item));
     this.#emitChange(
-      this.#valueArray.filter((v) => this.#options.valueKey(v) !== key),
+      this._valueArray.filter((v) => this.#options.valueKey(v) !== key),
       origin
     );
   }
@@ -332,7 +336,7 @@ export default class SelectionActions {
     if (this.#options.locked || !this.#options.multiple) {
       return;
     }
-    const values = this.#valueArray;
+    const values = this._valueArray;
     if (values.length === 0) {
       return;
     }

@@ -1,5 +1,5 @@
 import { destroy } from "@ember/destroyable";
-import { trackedArray } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { run as runLoop } from "@ember/runloop";
 import { isSettled, settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
@@ -202,19 +202,22 @@ module("Unit | ui-kit | SelectEngine | maximum diagnostics", function (hooks) {
 // updates — simulating the parent's @value / @onChange loop. `engine.value` reads the
 // live variable, so the engine reflects "the parent" the way it does in a template.
 function controlled(opts = {}) {
-  let value = opts.value ?? (opts.multiple ? [] : null);
+  // Tracked like a component's `@value`, which is what `getValue` must read.
+  const state = trackedObject({
+    value: opts.value ?? (opts.multiple ? [] : null),
+  });
   const changes = [];
   const engine = new SelectEngine({
     ...opts,
-    getValue: () => value,
+    getValue: () => state.value,
     onChange: (nextValue, selected) => {
-      value = nextValue;
+      state.value = nextValue;
       changes.push([nextValue, selected]);
       opts.afterChange?.(nextValue);
     },
   });
   // Stands in for the parent writing `@value` without going through the engine.
-  const setValue = (next) => (value = next);
+  const setValue = (next) => (state.value = next);
   return { engine, changes, setValue };
 }
 
@@ -3054,16 +3057,16 @@ module("Unit | ui-kit | SelectEngine | held value reads", function (hooks) {
 
   test("a new value array replaces the held set", function (assert) {
     const items = rows(5);
-    let value = [1, 2];
+    const state = trackedObject({ value: [1, 2] });
     const engine = new SelectEngine({
       items,
       getMultiple: () => true,
-      getValue: () => value,
+      getValue: () => state.value,
     });
 
     assert.true(engine.isSelected(items[1]), "row 2 starts selected");
 
-    value = [3];
+    state.value = [3];
 
     assert.false(engine.isSelected(items[1]), "row 2 is no longer held");
     assert.true(engine.isSelected(items[2]), "row 3 now is");

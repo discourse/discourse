@@ -10,6 +10,14 @@ what `@onChange` reports.
 See the arg reference in `d-select.gts` (`Args` block) and the option reference in
 `select-engine.ts` (`SelectEngineOptions`).
 
+Direct `SelectEngine` consumers must have `getValue` read tracked state when the value can
+change, or return a fixed value. Replacing an array must update tracked state; editing it in
+place requires a tracked collection such as `trackedArray`. Untracked changes are unsupported.
+The engine memoizes the normalized held value across reads and list rebuilds, and Glimmer
+invalidates it when its tracked inputs change. `SelectHost` wires `getValue` to the component's
+tracked `@value` argument. The public `value` remains an id or `null` in single mode and a
+frozen, de-duplicated array in multi mode.
+
 ### Test and styling hooks
 
 These attributes are a stable contract for tests and styling. Option rows expose

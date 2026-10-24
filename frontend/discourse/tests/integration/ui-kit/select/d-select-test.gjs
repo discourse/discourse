@@ -4,6 +4,7 @@ import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
 import {
   click,
   fillIn,
@@ -2993,10 +2994,10 @@ module(
       // Closing the overlay on lock is async (it awaits the exit animation), so an option
       // stays mounted and clickable for that window. The lock must therefore gate the
       // activation itself — the single path pointer and keyboard share — not only the close.
-      let value = null;
+      const state = trackedObject({ value: null });
       const engine = new SelectEngine({
-        getValue: () => value,
-        onChange: (next) => (value = next),
+        getValue: () => state.value,
+        onChange: (next) => (state.value = next),
       });
       const descriptor = engine.buildItems(ITEMS)[1];
 
@@ -3028,7 +3029,7 @@ module(
 
       await click("[role='option']");
       assert.strictEqual(
-        value,
+        state.value,
         null,
         "activating a locked option does not change the value"
       );
@@ -3036,7 +3037,7 @@ module(
       await click(".do-unlock");
       await click("[role='option']");
       assert.strictEqual(
-        value,
+        state.value,
         2,
         "the same option activates once the lock is lifted"
       );

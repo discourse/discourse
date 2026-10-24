@@ -1,4 +1,4 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -1643,3 +1643,257 @@ module(
     });
   }
 );
+
+module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
+  setupTest(hooks);
+
+  test("unchanged held values have bounded reads across rebuilds and public reads", function (assert) {
+    const items = clientItems(1000);
+    let reads = 0;
+    const counted = (ids) =>
+      new Proxy(ids, {
+        get(target, property, receiver) {
+          if (typeof property === "string" && /^\d+$/.test(property)) {
+            reads++;
+          }
+          return Reflect.get(target, property, receiver);
+        },
+      });
+    const state = trackedObject({
+      value: counted(items.slice(0, 50).map((item) => item.id)),
+    });
+    const engine = new SelectEngine({
+      items,
+      multiple: true,
+      getValue: () => state.value,
+    });
+
+    reads = 0;
+    for (let rebuild = 0; rebuild < 5; rebuild++) {
+      engine.setFilter(rebuild % 2 ? "Item" : "");
+      engine.reload();
+      const descriptors = engine.buildItems(
+        engine.loadItems(engine.loadContext)
+      );
+      assert.strictEqual(
+        descriptors.filter((row) => row.flags.selected).length,
+        50,
+        "each rebuild marks every held option"
+      );
+      assert.strictEqual(
+        engine.value.length,
+        50,
+        "the public value stays current"
+      );
+      assert.true(engine.isSelected(items[0]), "direct selection reads agree");
+    }
+    assert.true(reads <= 100, `unchanged values cost ${reads} input reads`);
+
+    reads = 0;
+    state.value = counted([900, 901]);
+    for (let rebuild = 0; rebuild < 5; rebuild++) {
+      assert.deepEqual(
+        engine
+          .buildItems(items)
+          .filter((row) => row.flags.selected)
+          .map((row) => row.value),
+        [900, 901],
+        "replacement changes every subsequent rebuild"
+      );
+    }
+    assert.true(reads <= 4, `the replacement costs ${reads} input reads`);
+  });
+
+  test("matching rows has bounded held-id conversions across rebuilds", function (assert) {
+    const items = clientItems(1000);
+    let conversions = 0;
+    const value = items.slice(0, 50).map((item) => ({
+      toString() {
+        conversions++;
+        return String(item.id);
+      },
+    }));
+    const engine = new SelectEngine({
+      items,
+      multiple: true,
+      getValue: () => value,
+    });
+
+    conversions = 0;
+    for (let rebuild = 0; rebuild < 3; rebuild++) {
+      assert.strictEqual(
+        engine.buildItems(items).filter((row) => row.flags.selected).length,
+        50,
+        "object ids match rows by their string form"
+      );
+      assert.false(
+        engine.isSelected(items[999]),
+        "an unheld row stays unselected"
+      );
+    }
+    assert.true(
+      conversions <= 100,
+      `matching unchanged held ids costs ${conversions} conversions`
+    );
+  });
+
+  test("same-length tracked edits update hidden rows and emitted selections immediately", function (assert) {
+    const items = clientItems(5);
+    const value = trackedArray([1, 2]);
+    const changes = [];
+    const engine = new SelectEngine({
+      items,
+      multiple: true,
+      hideSelected: true,
+      getValue: () => value,
+      onChange: (next) => changes.push(next),
+    });
+    const before = engine.value;
+    assert.deepEqual(
+      engine.buildItems(items).map((row) => row.value),
+      [3, 4, 5],
+      "held rows start hidden"
+    );
+
+    value.splice(0, 1, 3);
+    assert.deepEqual(
+      engine.buildItems(items).map((row) => row.value),
+      [1, 4, 5],
+      "a same-length splice changes the hidden set"
+    );
+    value[1] = 4;
+    assert.false(
+      engine.isSelected(items[1]),
+      "index replacement releases the old id"
+    );
+    assert.true(
+      engine.isSelected(items[3]),
+      "index replacement holds the new id"
+    );
+    engine.select(items[4]);
+    engine.deselect(items[2]);
+    assert.deepEqual(
+      changes,
+      [[3, 4, 5], [4]],
+      "actions use the current consumer value without assuming emitted changes were applied"
+    );
+    assert.deepEqual(
+      before,
+      [1, 2],
+      "earlier public snapshots remain unchanged"
+    );
+    assert.true(
+      Object.isFrozen(engine.value),
+      "the current public snapshot is frozen"
+    );
+    value.length = 0;
+    assert.false(
+      engine.hasValue,
+      "truncating the tracked collection clears the selection"
+    );
+    assert.deepEqual(
+      engine.buildItems(items).map((row) => row.value),
+      [1, 2, 3, 4, 5],
+      "truncating releases every hidden row"
+    );
+  });
+
+  test("tracked growth and replacement update limits before the next action", function (assert) {
+    const items = clientItems(5);
+    const state = trackedObject({ value: trackedArray([1]) });
+    const changes = [];
+    const engine = new SelectEngine({
+      items,
+      multiple: true,
+      maximum: 2,
+      minimum: 2,
+      getValue: () => state.value,
+      onChange: (next) => changes.push(next),
+    });
+    assert.true(engine.belowMinimum, "the initial value is below the minimum");
+    assert.strictEqual(engine.remaining, 1, "one slot starts available");
+    state.value.push(2);
+    assert.true(engine.atMaximum, "in-place growth reaches the cap");
+    assert.false(engine.belowMinimum, "in-place growth reaches the minimum");
+    engine.select(items[2]);
+    assert.deepEqual(changes, [], "the cap rejects an immediate add");
+
+    state.value = [4];
+    assert.strictEqual(engine.remaining, 1, "replacement restores a slot");
+    engine.select(items[2]);
+    assert.deepEqual(
+      changes,
+      [[4, 3]],
+      "the next add preserves the replacement"
+    );
+  });
+
+  test("mode readers remain live while the held value stays unchanged", function (assert) {
+    let multiple = true;
+    const value = [2];
+    const engine = new SelectEngine({
+      items: clientItems(5),
+      getMultiple: () => multiple,
+      getValue: () => value,
+    });
+    assert.deepEqual(engine.value, [2], "multi mode starts with an array");
+    multiple = false;
+    assert.strictEqual(
+      engine.value,
+      2,
+      "the live mode reader changes the public shape"
+    );
+    multiple = true;
+    assert.deepEqual(
+      engine.value,
+      [2],
+      "switching back restores the multi shape"
+    );
+  });
+
+  test("normalization keeps first ids, nullish counting and mode changes reactive", function (assert) {
+    const items = clientItems(5);
+    const state = trackedObject({
+      value: [1, "1", null, undefined, 0, "0"],
+      multiple: true,
+    });
+    const engine = new SelectEngine({
+      items,
+      getMultiple: () => state.multiple,
+      getValue: () => state.value,
+    });
+    assert.deepEqual(
+      engine.value,
+      [1, null, 0],
+      "equivalent ids retain their first occurrence, including nullish ids"
+    );
+    assert.true(Object.isFrozen(engine.value), "multi values are frozen");
+    assert.false(
+      engine.isSelected({ id: null }),
+      "nullish ids never match an ordinary row"
+    );
+
+    state.value = [2];
+    state.multiple = false;
+    assert.strictEqual(engine.value, 2, "single mode exposes the id");
+    assert.true(engine.isSelected(items[1]), "single mode matches the new id");
+    state.value = null;
+    assert.strictEqual(engine.value, null, "an empty single selection is null");
+    assert.true(
+      engine.isSelected({ __none: true, id: null }),
+      "the none row represents empty single selection"
+    );
+    state.multiple = true;
+    assert.deepEqual(engine.value, [], "empty multi mode exposes an array");
+    state.value = 0;
+    assert.deepEqual(
+      engine.value,
+      [0],
+      "a falsy scalar is retained in multi mode"
+    );
+    assert.true(
+      engine.isSelected({ id: "0" }),
+      "falsy ids still match by string form"
+    );
+  });
+});
