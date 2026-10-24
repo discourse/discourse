@@ -4,6 +4,71 @@ RSpec.describe PostMover do
   fab!(:admin)
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
+  describe "moving form submissions" do
+    fab!(:source_op, :post)
+    fab!(:destination_op) { Fabricate(:post, created_at: source_op.created_at - 1.minute) }
+    fab!(:reply) { Fabricate(:post, topic: source_op.topic) }
+    fab!(:form_template)
+    let(:submission) do
+      FormTemplate::Submission.from_template(
+        form_template,
+        answers: {
+          "name" => "A sufficiently long form answer",
+        },
+      )
+    end
+
+    it "rejects moves that demote the incoming form, including merging two forms" do
+      source_op.update!(raw: submission.render, form_data: submission.to_h)
+      [false, true].each do |destination_has_form|
+        if destination_has_form
+          destination_op.update!(raw: submission.render, form_data: submission.to_h)
+        end
+        before_posts = Post.order(:id).map(&:attributes)
+        before_topics = Topic.order(:id).map(&:attributes)
+
+        [false, true].each do |chronological_order|
+          expect do
+            described_class.new(source_op.topic, admin, [source_op.id]).to_topic(
+              destination_op.topic_id,
+              chronological_order:,
+            )
+          end.to raise_error(
+            Discourse::InvalidParameters,
+            I18n.t("move_posts.form_must_remain_first"),
+          )
+          expect(Post.order(:id).map(&:attributes)).to eq(before_posts)
+          expect(Topic.order(:id).map(&:attributes)).to eq(before_topics)
+        end
+      end
+
+      described_class.new(source_op.topic, admin, [reply.id]).to_topic(destination_op.topic_id)
+      expect(reply.reload.topic_id).to eq(destination_op.topic_id)
+      expect(destination_op.reload.post_number).to eq(1)
+      expect(destination_op.form_data).to eq(submission.to_h)
+    end
+
+    it "rejects chronological moves that displace an existing form" do
+      source_op.update!(created_at: destination_op.created_at - 1.minute)
+      destination_op.update!(raw: submission.render, form_data: submission.to_h)
+      before_posts = Post.order(:id).map(&:attributes)
+      before_topics = Topic.order(:id).map(&:attributes)
+
+      expect do
+        described_class.new(source_op.topic, admin, [source_op.id]).to_topic(
+          destination_op.topic_id,
+          chronological_order: true,
+        )
+      end.to raise_error(Discourse::InvalidParameters, I18n.t("move_posts.form_must_remain_first"))
+      expect(Post.order(:id).map(&:attributes)).to eq(before_posts)
+      expect(Topic.order(:id).map(&:attributes)).to eq(before_topics)
+
+      described_class.new(source_op.topic, admin, [source_op.id]).to_topic(destination_op.topic_id)
+      expect(destination_op.reload.post_number).to eq(1)
+      expect(destination_op.form_data).to eq(submission.to_h)
+    end
+  end
+
   describe "#to_topic" do
     fab!(:topic)
     fab!(:first_post) { Fabricate(:post, topic: topic) }
