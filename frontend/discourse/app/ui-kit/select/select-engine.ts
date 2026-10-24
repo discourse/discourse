@@ -267,8 +267,13 @@ export interface SelectControl {
   ): Promise<void>;
 }
 
-/** The write authority of one update, without overlay or update controls. */
+/** The write authority and cancellation signal of one update, without overlay or update controls. */
 export interface SelectUpdateScope {
+  /**
+   * Cancels work with an `AbortError` when superseded or destroyed.
+   * Own writes, reloads, and a pure `current` read do not abort it.
+   */
+  readonly signal: AbortSignal;
   /** Whether this update still owns the live value. A pure read. */
   readonly current: boolean;
   /** Selects an item while current and unlocked. */

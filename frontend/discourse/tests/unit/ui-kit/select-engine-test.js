@@ -3077,3 +3077,291 @@ module("Unit | ui-kit | SelectEngine | held value reads", function (hooks) {
     );
   });
 });
+
+module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
+  setupTest(hooks);
+
+  const A = { id: 1, name: "A" };
+  const B = { id: 2, name: "B" };
+
+  /** Starts a blocked update and returns its signal and release. */
+  function blockedUpdate(engine, work = () => {}) {
+    const gate = deferred();
+    let signal;
+    const done = engine.control.update(async (scope) => {
+      signal = scope.signal;
+      await gate.promise;
+      work(scope);
+    });
+    return { signal, release: () => gate.resolve(), done };
+  }
+
+  test("work receives a live signal, synchronous or not", async function (assert) {
+    const { engine } = controlled({ items: [A] });
+    let syncSignal;
+    engine.control.update((scope) => {
+      syncSignal = scope.signal;
+      assert.false(scope.signal?.aborted, "live while synchronous work runs");
+    });
+    assert.true(syncSignal instanceof AbortSignal, "a real AbortSignal");
+
+    const { signal, release, done } = blockedUpdate(engine);
+    assert.true(signal instanceof AbortSignal);
+    assert.false(signal?.aborted, "live while asynchronous work runs");
+    release();
+    await done;
+  });
+
+  test("a newer update aborts the older one's signal", async function (assert) {
+    const { engine } = controlled({ items: [A, B] });
+    const first = blockedUpdate(engine);
+    const second = blockedUpdate(engine);
+
+    assert.true(first.signal?.aborted, "the superseded work is cancelled");
+    assert.strictEqual(
+      first.signal?.reason?.name,
+      "AbortError",
+      "with the reason fetch-style consumers recognise"
+    );
+    assert.false(second.signal?.aborted, "the current work is not");
+
+    first.release();
+    second.release();
+    await Promise.all([first.done, second.done]);
+  });
+
+  test("selection intent from outside the update aborts its signal", async function (assert) {
+    const { engine } = controlled({ items: [A, B], value: 1 });
+    const pending = blockedUpdate(engine);
+
+    engine.select(B);
+
+    assert.true(pending.signal?.aborted);
+    pending.release();
+    await pending.done;
+  });
+
+  test("the update's own writes do not abort its signal", async function (assert) {
+    const { engine } = controlled({ items: [A, B], multiple: true, value: [] });
+    let signal;
+    const gate = deferred();
+    let abortedAfterWrite;
+    const done = engine.control.update(async (scope) => {
+      signal = scope.signal;
+      scope.select(A);
+      abortedAfterWrite = scope.signal?.aborted;
+      await gate.promise;
+      scope.select(B);
+    });
+
+    assert.false(abortedAfterWrite, "a write keeps the work alive");
+    assert.false(signal?.aborted);
+    gate.resolve();
+    await done;
+  });
+
+  test("control.reload does not abort a pending update", async function (assert) {
+    const { engine } = controlled({ items: [A] });
+    const pending = blockedUpdate(engine);
+
+    engine.control.reload();
+
+    assert.false(pending.signal?.aborted);
+    pending.release();
+    await pending.done;
+  });
+
+  test("destroying the select aborts the signal of pending work", async function (assert) {
+    const { engine } = controlled({ items: [A] });
+    const pending = blockedUpdate(engine);
+
+    destroy(engine);
+    pending.release();
+    await settled();
+
+    assert.true(pending.signal?.aborted, "teardown cancels the work");
+    await pending.done;
+  });
+
+  test("abort listeners can stop work and cannot write through the revoked scope", async function (assert) {
+    for (const cancel of [
+      (engine) => engine.control.update(() => {}),
+      (engine) => engine.control.select(B),
+      (engine) => destroy(engine),
+    ]) {
+      const { engine, changes } = controlled({ items: [A, B] });
+      const gate = deferred();
+      let reason;
+      let aborts = 0;
+      const done = engine.control
+        .update(async (scope) => {
+          scope.signal?.addEventListener("abort", () => {
+            aborts++;
+            reason = scope.signal.reason;
+            assert.false(
+              scope.current,
+              "authority is revoked before notifying work"
+            );
+            scope.select(A);
+            gate.reject(reason);
+          });
+          await gate.promise;
+        })
+        .catch((error) => error);
+
+      assert.false(isSettled(), "pending work holds its test waiter");
+      cancel(engine);
+      await settled();
+      assert.strictEqual(aborts, 1, "the consumer is notified once");
+      assert.strictEqual(
+        reason?.name,
+        "AbortError",
+        "cancellation has an AbortError reason"
+      );
+      assert.false(
+        changes.some(([value]) => value === 1),
+        "the abort listener cannot commit"
+      );
+      assert.strictEqual(
+        await done,
+        reason,
+        "work rejection reaches the update caller"
+      );
+      await settled();
+      assert.true(
+        isSettled(),
+        "cancelled work releases its test waiter when it settles"
+      );
+    }
+  });
+
+  test("no-change external intent still aborts, including while locked", async function (assert) {
+    for (const locked of [false, true]) {
+      for (const intent of [
+        (control) => control.select(A),
+        (control) => control.selectMany([]),
+        (control) => control.selectMany([B]),
+        (control) => control.deselect(B),
+        (control) => control.clear(),
+      ]) {
+        const { engine } = controlled({
+          items: [A, B],
+          multiple: true,
+          value: [1],
+          maximum: 1,
+          getLocked: () => locked,
+        });
+        const gate = deferred();
+        let signal;
+        const done = engine.control.update(async (scope) => {
+          signal = scope.signal;
+          await gate.promise;
+        });
+
+        intent(engine.control);
+        assert.true(
+          signal?.aborted,
+          `external intent aborts when locked=${locked}`
+        );
+        assert.strictEqual(
+          signal?.reason?.name,
+          "AbortError",
+          "external intent uses AbortError"
+        );
+        gate.resolve();
+        await done;
+      }
+    }
+  });
+
+  test("all own verbs keep the signal live across an await and while locked", async function (assert) {
+    let locked = false;
+    const { engine, changes } = controlled({
+      items: [A, B],
+      multiple: true,
+      value: [1],
+      getLocked: () => locked,
+    });
+
+    await engine.control.update(async (scope) => {
+      const signal = scope.signal;
+      await Promise.resolve();
+      for (const lock of [true, false]) {
+        locked = lock;
+        scope.select(B);
+        scope.deselect(A);
+        scope.selectMany([A, B]);
+        scope.clear();
+        assert.strictEqual(
+          scope.signal,
+          signal,
+          "the signal stays stable after suspension"
+        );
+        assert.false(signal?.aborted, "own writes keep the signal live");
+        assert.true(scope.current, "own writes keep their authority");
+        const expectedChanges = lock ? 0 : 4;
+        assert.strictEqual(
+          changes.length,
+          expectedChanges,
+          "only unlocked writes emit changes"
+        );
+      }
+      assert.deepEqual(engine.control.value, [], "unlocked writes take effect");
+    });
+  });
+
+  test("reading a temporarily stale scope does not cancel its work", async function (assert) {
+    const { engine, setValue, changes } = controlled({
+      items: [A, B],
+      value: 1,
+    });
+    const gate = deferred();
+    let scope;
+    const done = engine.control.update(async (updateScope) => {
+      scope = updateScope;
+      await gate.promise;
+      scope.select(B);
+    });
+
+    setValue(2);
+    assert.false(scope.current, "the parent can make the scope stale");
+    assert.false(
+      scope.signal?.aborted,
+      "a pure current read does not cancel work"
+    );
+    setValue(1);
+    assert.true(
+      scope.current,
+      "returning to the owned value restores authority"
+    );
+    assert.false(
+      scope.signal?.aborted,
+      "the restored scope still has a live signal"
+    );
+    gate.resolve();
+    await done;
+    assert.deepEqual(changes, [[2, B]], "the restored scope can commit");
+  });
+
+  test("supersession cancels synchronous work before it returns", async function (assert) {
+    for (const cancel of [
+      (engine) => engine.control.update(() => {}),
+      (engine) => engine.control.clear(),
+    ]) {
+      const { engine } = controlled({ items: [A] });
+      await engine.control.update((scope) => {
+        assert.false(scope.signal?.aborted, "synchronous work starts live");
+        cancel(engine);
+        assert.true(
+          scope.signal?.aborted,
+          "cancellation does not require pending async work"
+        );
+        assert.strictEqual(
+          scope.signal?.reason?.name,
+          "AbortError",
+          "synchronous cancellation uses AbortError"
+        );
+      });
+    }
+  });
+});

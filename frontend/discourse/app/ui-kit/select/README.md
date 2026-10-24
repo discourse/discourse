@@ -496,8 +496,11 @@ select's whole life. It exposes:
   A loader that can answer synchronously (cached results) shows no loading state either way.
 - `update(work)` to run synchronous or asynchronous work with a selection update scope.
 
-The scope has a pure `current` reader and `select(item)`, `selectMany(items)`, `deselect(item)`,
-and `clear()` verbs.
+The scope has an `AbortSignal` named `signal`, a pure `current` reader, and `select(item)`,
+`selectMany(items)`, `deselect(item)`, and `clear()` verbs. Pass `scope.signal` to cancellable
+requests so the engine can stop them when the update is superseded or the select is destroyed.
+The signal is live during synchronous and asynchronous work and aborts with an `AbortError`
+reason. The update's own scope writes and `control.reload()` do not abort it.
 It has no `close()`, `reload()`, or `update()`. Inside `work`, call the scope's selection verbs.
 Calling `control.select()`, `control.selectMany()`, `control.deselect()`, or `control.clear()` expresses external
 selection intent and supersedes your own update. Scope writes use the normal selection rules,
@@ -509,10 +512,12 @@ onSelect: (control) => {
   const filter = control.filter;
   control.update(async (scope) => {
     control.close();
-    const item = await suggest(filter);
+    const item = await suggest(filter, { signal: scope.signal });
     if (item) scope.select(item);
     else if (scope.current) noSuggestionsToast();
-  }).catch(popupAjaxError);
+  }).catch((error) => {
+    if (error.name !== "AbortError") popupAjaxError(error);
+  });
 },
 ```
 
@@ -522,10 +527,11 @@ after an `await`, use `if (scope.current) control.close()` so stale work cannot 
 interaction. `update()` rejects when work throws or rejects, so catch the returned promise.
 
 A newer update, any external selection intent (including a re-pick, removal, or clear), opening
-a closed panel, a parent value change, or destruction supersedes the scope. Closing and filter
-resets and reloads do not. A parent value change is checked when reading `scope.current` or
-writing through the scope; a reordered multi value counts as a change. An A-to-B-to-A round trip
-between checks cannot be detected. Once work ends, its scope is no longer current. A deferred
+a closed panel, or destruction supersedes the scope and aborts its signal. Closing and filter
+resets and reloads do not. A parent value change can make `scope.current` false; a reordered
+multi value counts as a change. Reading `current` does not abort the signal, and the scope can
+become current again if the parent value changes back. An attempted write while stale
+supersedes the scope. Once work ends, its scope is no longer current. A deferred
 `change` commit may still finish after a normal end, but cannot commit after supersession.
 
 While async work is pending, the trigger shows selection loading feedback and a spinner.

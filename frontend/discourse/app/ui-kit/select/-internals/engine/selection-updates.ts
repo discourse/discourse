@@ -36,12 +36,21 @@ export class UpdateRecord {
   asynchronous = false;
   ended = false;
   revoked = false;
+  #controller = new AbortController();
   #resolve!: () => void;
 
   constructor(key: string, scope: (record: UpdateRecord) => SelectUpdateScope) {
     this.keys = new Set([key]);
     this.done = new Promise((resolve) => (this.#resolve = resolve));
     this.scope = scope(this);
+  }
+
+  get signal(): AbortSignal {
+    return this.#controller.signal;
+  }
+
+  abort(): void {
+    this.#controller.abort();
   }
 
   end(): void {
@@ -109,6 +118,7 @@ export default class SelectionUpdates {
     if (record) {
       record.revoked = true;
       this.#end(record);
+      record.abort();
     }
   }
 
@@ -174,6 +184,7 @@ export default class SelectionUpdates {
   #scope(record: UpdateRecord): SelectUpdateScope {
     const current = () => this.#isCurrent(record);
     return Object.freeze<SelectUpdateScope>({
+      signal: record.signal,
       get current() {
         return current();
       },
