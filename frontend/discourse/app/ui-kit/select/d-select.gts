@@ -141,7 +141,16 @@ interface DSelectSignature {
     describedBy?: string;
     /** Marks the control invalid (`aria-invalid`), for a form that owns the validation. */
     invalid?: boolean;
+    /**
+     * How many placeholder rows the loading skeleton shows. By default a reload mirrors the rows
+     * it replaces, so the panel keeps its size.
+     */
     skeletonCount?: number;
+    /**
+     * A status line, with a spinner, above the loading skeleton, naming what is loading for a
+     * source slow enough to need it. Absent by default.
+     */
+    loadingLabel?: string;
     /**
      * Icon marking the selected row(s) in the list. Multi-select always shows it (defaulting to a
      * check); single-select renders it only when this arg is set, so an ordinary single-select has

@@ -324,6 +324,45 @@ customization ports are done.
   | `.select-kit-row .discourse-tag-count` | `.d-tag-option .discourse-tag-count` |
   | `.filter-for-more` | `.d-tag-drop__filter-for-more`, inside `.d-select__footer` |
 
+## Porting lessons
+
+Mistakes made porting the tag family and its customizations, kept so the next families avoid
+them. Recorded 2026-10-23.
+
+- **Port the intent, not the shape.** The AI tag suggester was first ported as select-kit had it:
+  `idle`/`loading`/`results` modes, the request fired from a row's click handler, a fake
+  "loading" row, and `reload()` calls around the request. DSelect's customization points already
+  own that lifecycle. Remote work belongs in `spec.load`: a pending loader shows the skeleton, its
+  `signal` cancels a superseded request, and a rejection gets the error state with retry. A
+  toggle row only flips a flag and calls `control.reload()`. `content` adds rows, `options`
+  presents (`loadingLabel` names a slow load). The rewrite needed two state values instead of a
+  state machine.
+- **Never stand in for a pending load with rows.** A fake loading row hides the real loading
+  state and races it. If the list is waiting, its loader is pending.
+- **Do not collapse the list before the skeleton arrives.** The skeleton mirrors the rows on
+  screen when a reload starts, so a customization that drops rows on click shrinks the panel and
+  then sizes the skeleton to the shrunk list. Swap a row in place instead of removing it.
+- **Refilter in `content`, not by reloading.** Hiding rows that depend on the selection (held
+  tags leaving a suggestion list) is a `content` filter on tracked state, which re-runs on its
+  own when the selection changes. A `change` middleware that reloads after every pick re-runs
+  the loader for nothing, and asks the server again unless the results are cached.
+- **Read the response shape from the endpoint.** The suggester port dropped the endpoint's root
+  key (`{ assistant: [...] }`) in both paths, and every suggestion request then read as empty.
+  Check the controller and the other callers, not the old code's variable names.
+- **Assert what only the feature can produce.** The specs that missed that regression picked a
+  tag that the default list also offered, so they passed with no suggestions at all. Assert the
+  state the feature alone creates (here, the "Suggestions" header row).
+- **A recipe that forwards a block forwards its presence too.** A forwarded named block always
+  counts as passed, so pass `@suppressFooter={{not (has-block "footer")}}` with a forwarded
+  `:footer` (README, Recipes).
+- **select-kit row CSS does not fit DSelect rows.** Plugin styles written for select-kit's
+  two-child rows (`row-reverse` with `space-between`) misplace content in DSelect's rows. Check
+  plugin and theme row styles against a rendered DSelect row, and see the theme CSS audit above
+  for the root-is-trigger and portaled-panel traps.
+- **Compare against the old component's CSS before calling a port done.** The tag drop lost its
+  content-sized panel, its trigger states and its count layout until select-kit's styles were read
+  side by side with the new ones.
+
 ## Verification
 
 - **Test model:** a family's tests branch with the flag. Its existing tests keep driving

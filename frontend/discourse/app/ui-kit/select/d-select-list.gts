@@ -107,6 +107,8 @@ interface DSelectListSignature {
     searchPlaceholder?: string;
     /** A decorative trailing icon in the search field. */
     searchIcon?: string;
+    /** A status line, with a spinner, above the loading skeleton; absent by default. */
+    loadingLabel?: string;
     /** Label shown when a nonempty query returns no results. */
     noResultsLabel?: string;
     /** Native search-input id, for a label's for attribute. */

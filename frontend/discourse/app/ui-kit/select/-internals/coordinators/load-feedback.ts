@@ -74,10 +74,18 @@ export default class LoadFeedbackTracker {
   }
 
   /**
-   * Distinct-keyed placeholder rows for the loading skeleton (`@skeletonCount` overrides).
+   * Distinct-keyed placeholder rows for the loading skeleton (`@skeletonCount` overrides). A
+   * loading caption is drawn a row tall and takes one mirrored row's place, so the panel keeps
+   * its height when the skeleton replaces the list.
    */
   get skeletonRows(): Array<{ key: number }> {
-    const count = this.#getSkeletonCountArg() ?? this.#skeletonCount;
+    let count = this.#getSkeletonCountArg();
+    if (count === undefined) {
+      count = this.#skeletonCount;
+      if (this.#engine.resolvedOptions.loadingLabel) {
+        count = Math.max(count - 1, 1);
+      }
+    }
     return Array.from({ length: count }, (_, key) => ({ key }));
   }
 
@@ -92,7 +100,7 @@ export default class LoadFeedbackTracker {
 
   /** Whether the first page has waited long enough for in-flow placeholder rows. */
   get showInitialPlaceholder(): boolean {
-    return this._loadFeedbackDue && this.#engine.serverAwaitingFirstPage;
+    return this.#feedbackDue && this.#engine.serverAwaitingFirstPage;
   }
 
   /**
@@ -138,10 +146,18 @@ export default class LoadFeedbackTracker {
    */
   get #replaceRowsWhileReloading(): boolean {
     return (
-      this._loadFeedbackDue &&
+      this.#feedbackDue &&
       this.#engine.serverPending &&
       !this.#engine.serverRevealPending
     );
+  }
+
+  /**
+   * Whether the load has earned visible feedback: by waiting out the delay, or at once for an
+   * immediate reload, which replaced the list's source.
+   */
+  get #feedbackDue(): boolean {
+    return this._loadFeedbackDue || this.#engine.immediateLoadFeedback;
   }
 
   /**

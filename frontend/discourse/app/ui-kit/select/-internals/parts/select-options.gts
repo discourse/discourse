@@ -207,6 +207,14 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
         tabindex="-1"
       >
         {{#if (or (not @staticBody) @feedback.showInitialPlaceholder)}}
+          {{#if @engine.resolvedOptions.loadingLabel}}
+            <li class="d-select__loading-status" role="status">
+              {{dIcon "spinner" class="d-select__pending-icon"}}
+              <span>
+                {{~@engine.resolvedOptions.loadingLabel~}}
+              </span>
+            </li>
+          {{/if}}
           {{#each @feedback.skeletonRows key="key" as |row|}}
             <li
               aria-hidden={{if @staticBody "true"}}

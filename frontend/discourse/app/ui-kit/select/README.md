@@ -394,7 +394,7 @@ group headers, dividers, chips or the trigger. The context adds `item` (the raw 
 `selected` and `disabled` (which includes selection-cap restrictions). It has no `control`.
 
 **`options`** overrides presentation. The core keys are `caretIcon` (a string or
-`{ open, closed }`), `iconOnly`, `label`, `placeholder`, `searchPlaceholder`, `searchIcon`, `icon`, `showCaret`,
+`{ open, closed }`), `iconOnly`, `label`, `placeholder`, `searchPlaceholder`, `searchIcon`, `loadingLabel`, `icon`, `showCaret`,
 `clearable`, `noneLabel` and `disabled`, plus the keys a recipe declares (see
 [Recipes](#recipes)). `current` holds the values so far, starting from the call site's arguments.
 Every key is last-wins except `disabled`, which can add a lock but never lift one. `iconOnly`
@@ -403,7 +403,10 @@ warns in development and is ignored, and a non-object result is skipped. The val
 per change in what they read, not once per row. The context has `value` and `control`, and no
 `options`, because options cannot depend on themselves.
 
-**`load`** receives the loader for a new query and returns the one to use. It runs when the
+**`load`** receives the loader for a new query and returns the one to use. Remote work a
+customization adds belongs here rather than in a row's `onSelect`: a pending loader shows the
+loading skeleton (`loadingLabel` captions it, with a spinner, in place of one skeleton row), its
+`signal` cancels a superseded request, and a rejection shows the error state. It runs when the
 query's first page starts, outside render, and the returned loader handles every reveal of that
 query. Its context includes `loadContext`, the query's snapshot of `@loadContext`. A filter
 change starts a new query. A mode flip without a filter change needs a changed `@loadContext`
@@ -466,7 +469,10 @@ select's whole life. It exposes:
 - `deselect(item)` to remove a multi value, or clear a single value only if that item is held.
 - `clear()` to clear a nonempty selection.
 - `reload()` to start a new query, even with the same filter. It does not supersede a pending
-  `update()`.
+  `update()`. Its loading state waits out the usual delay, so a fast answer never flashes a
+  skeleton. `reload({ immediate: true })` shows it at once, for a reload that switches what the
+  list shows (a toggle into or out of suggestions), where the rows on screen are already wrong.
+  A loader that can answer synchronously (cached results) shows no loading state either way.
 - `update(work)` to run synchronous or asynchronous work with a selection update scope.
 
 The scope has a pure `current` reader and `select(item)`, `selectMany(items)`, `deselect(item)`,

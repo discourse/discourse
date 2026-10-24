@@ -500,6 +500,7 @@ RSpec.describe "AI Composer helper" do
 
       tag_chooser.expand
       tag_chooser.select_row_by_value("ai-tag-suggest")
+      expect(page).to have_css(".mini-tag-chooser .select-kit-row[data-value='ai-tag-exit']")
       tag_chooser.select_row_by_name(cloud.name)
 
       expect(page).to have_css(".mini-tag-chooser .formatted-selection", text: cloud.name)
@@ -551,6 +552,7 @@ RSpec.describe "AI Composer helper" do
       edit_tag_chooser.open
       edit_tag_chooser.select_value("ai-tag-suggest")
 
+      expect(edit_tag_chooser).to have_option_value("ai-tag-exit")
       expect(edit_tag_chooser).to have_option_name(cloud.name)
       expect(edit_tag_chooser).to have_no_option_name(video.name)
       expect(edit_tag_chooser).to have_no_option_name(music.name)
@@ -595,6 +597,7 @@ RSpec.describe "AI Composer helper" do
 
       composer_tag_chooser.open
       composer_tag_chooser.select_value("ai-tag-suggest")
+      expect(composer_tag_chooser).to have_option_value("ai-tag-exit")
       composer_tag_chooser.select_name(cloud.name)
 
       expect(composer_tag_chooser).to have_selected_name(cloud.name)

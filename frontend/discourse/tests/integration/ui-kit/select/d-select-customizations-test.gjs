@@ -7,6 +7,7 @@ import {
   render,
   settled,
   setupOnerror,
+  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -350,6 +351,21 @@ module(
       await click(".d-select__trigger");
 
       assert.dom(".d-select__panel .d-icon-magnifying-glass").exists();
+    });
+
+    test("loadingLabel reaches the loading state", async function (assert) {
+      overrideOptions(() => ({ loadingLabel: "From extension" }));
+      let resolveLoad;
+      const load = () => new Promise((resolve) => (resolveLoad = resolve));
+
+      await render(<template><DSelect @load={{load}} /></template>);
+      const typing = fillIn("[role='combobox']", "x");
+      await waitFor(".d-select__skeleton");
+
+      assert.dom(".d-select__loading-status").hasText("From extension");
+
+      resolveLoad([]);
+      await typing;
     });
 
     test("label names the combobox and the listbox", async function (assert) {

@@ -224,6 +224,15 @@ export interface SelectLegacyContext {
   isDestroyed?: () => boolean;
 }
 
+/** Options for {@link SelectControl#reload}. */
+export interface SelectReloadOptions {
+  /**
+   * Shows the loading state at once instead of after the usual delay, for a reload that changes
+   * what the list shows (a different source), where the current rows are already wrong.
+   */
+  immediate?: boolean;
+}
+
 /**
  * The live handle for action rows and content, options, load, and change customizations.
  * The object stays frozen for the select's life. Its methods are for event time,
@@ -247,7 +256,7 @@ export interface SelectControl {
   /** Clears a nonempty selection. */
   clear(): void;
   /** Starts a new query without superseding a pending update. */
-  reload(): void;
+  reload(options?: SelectReloadOptions): void;
   /** Runs event-time work with write authority until it ends or is superseded. */
   update(
     work: (scope: SelectUpdateScope) => void | Promise<void>
@@ -617,9 +626,9 @@ class EngineControl implements SelectControl {
   }
 
   /** Starts a new query while the select is alive, preserving update authority. */
-  reload(): void {
+  reload(options?: SelectReloadOptions): void {
     if (!isDestroying(this.#engine)) {
-      this.#engine.reload();
+      this.#engine.reload(options);
     }
   }
 
@@ -675,6 +684,9 @@ export default class SelectEngine {
   #onReloadList?: () => void;
   #requestContextQuery?: string;
   #requestLoadContext?: Readonly<Record<string, unknown>>;
+
+  /** The query an immediate reload started, compared with the live {@link queryKey}. */
+  #immediateQueryKey: string | null = null;
 
   /** Sealed declarations collected once, before source validation. */
   #customizations: SelectCustomizations;
@@ -773,6 +785,17 @@ export default class SelectEngine {
     return JSON.stringify([this.#state.nonce, this.#state.filter]);
   }
 
+  /**
+   * Whether the current query came from `reload({ immediate: true })`, so its loading state
+   * shows without the usual delay. Any later query, typed or reloaded, clears it.
+   */
+  get immediateLoadFeedback(): boolean {
+    return (
+      this.#immediateQueryKey !== null &&
+      this.#immediateQueryKey === this.queryKey
+    );
+  }
+
   /** The most recently started query's loader inputs, distinct from retained displayed rows. */
   get requestLoadContext(): Readonly<Record<string, unknown>> | undefined {
     return this.#requestLoadContext;
@@ -802,6 +825,7 @@ export default class SelectEngine {
         placeholder: args.placeholder,
         searchPlaceholder: args.searchPlaceholder,
         searchIcon: args.searchIcon,
+        loadingLabel: args.loadingLabel,
         icon: args.icon,
         showCaret: args.showCaret,
         clearable: args.clearable,
@@ -1305,9 +1329,10 @@ export default class SelectEngine {
    * stay cached.
    */
   @bind
-  reload(): void {
+  reload(options?: SelectReloadOptions): void {
     this.#valueResolver.evictUnresolved();
     this.#reloadList();
+    this.#immediateQueryKey = options?.immediate ? this.queryKey : null;
   }
 
   /** Checks live loader inputs at event time; never call during render. */

@@ -1376,3 +1376,100 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect (loadingLabel)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("loadingLabel captions the loading skeleton with a spinner", async function (assert) {
+      let resolveLoad;
+      const load = () => new Promise((resolve) => (resolveLoad = resolve));
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadingLabel="Generating suggestions"
+            @skeletonCount={{3}}
+          />
+        </template>
+      );
+      const typing = fillIn("[role='combobox']", "x");
+      await waitFor(".d-select__skeleton");
+
+      assert
+        .dom(".d-select__loading-status")
+        .hasAttribute("role", "status")
+        .hasText("Generating suggestions");
+      assert
+        .dom(".d-select__loading-status .d-select__pending-icon")
+        .exists("the caption carries the loading spinner");
+      assert.strictEqual(
+        findAll(".d-select__skeleton").length,
+        3,
+        "the skeleton keeps its own rows below the caption"
+      );
+
+      resolveLoad([]);
+      await typing;
+      assert
+        .dom(".d-select__loading-status")
+        .doesNotExist("the caption leaves with the skeleton");
+    });
+
+    test("loadingLabel takes a skeleton row's place so the panel keeps its height", async function (assert) {
+      const rows = [
+        { id: 1, name: "One" },
+        { id: 2, name: "Two" },
+        { id: 3, name: "Three" },
+        { id: 4, name: "Four" },
+      ];
+      let resolveLoad;
+      const load = (filter) =>
+        filter
+          ? new Promise((resolve) => (resolveLoad = resolve))
+          : Promise.resolve(rows);
+
+      await render(
+        <template>
+          <DSelect @load={{load}} @loadingLabel="Generating suggestions" />
+        </template>
+      );
+      await click("[role='combobox']");
+      await waitFor("[role='option']");
+      const before = find(".d-select__panel").offsetHeight;
+
+      const typing = fillIn("[role='combobox']", "x");
+      await waitFor(".d-select__skeleton");
+
+      assert.strictEqual(
+        findAll(".d-select__skeleton").length,
+        3,
+        "the caption stands in for one of the four rows"
+      );
+      const during = find(".d-select__panel").offsetHeight;
+      assert.true(
+        Math.abs(during - before) <= 1,
+        `the panel keeps its height (${before}px before, ${during}px while loading)`
+      );
+
+      resolveLoad([]);
+      await typing;
+    });
+
+    test("loadingLabel is absent unless asked for", async function (assert) {
+      let resolveLoad;
+      const load = () => new Promise((resolve) => (resolveLoad = resolve));
+
+      await render(<template><DSelect @load={{load}} /></template>);
+      const typing = fillIn("[role='combobox']", "x");
+      await waitFor(".d-select__skeleton");
+
+      assert.dom(".d-select__loading-status").doesNotExist();
+
+      resolveLoad([]);
+      await typing;
+    });
+  }
+);

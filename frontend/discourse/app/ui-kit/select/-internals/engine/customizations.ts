@@ -58,6 +58,8 @@ export interface SelectPresentationOptions {
   searchPlaceholder?: string;
   /** A decorative trailing icon in a search field that is not the trigger. */
   searchIcon?: string;
+  /** A status line, with a spinner, above the loading skeleton; absent by default. */
+  loadingLabel?: string;
   /** A decorative leading trigger icon. */
   icon?: string;
   /** Whether the trigger shows its caret. */
@@ -89,6 +91,7 @@ const CORE_OPTION_KEYS = new Set<keyof SelectPresentationOptions>([
   "placeholder",
   "searchPlaceholder",
   "searchIcon",
+  "loadingLabel",
   "icon",
   "showCaret",
   "clearable",

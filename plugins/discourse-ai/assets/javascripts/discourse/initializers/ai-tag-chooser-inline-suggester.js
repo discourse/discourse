@@ -54,7 +54,7 @@ async function loadSuggestions(component, selectKit, context) {
   selectKit.triggerSearch();
 
   try {
-    const suggestions = await ajax("/discourse-ai/ai-helper/suggest_tags", {
+    const { assistant } = await ajax("/discourse-ai/ai-helper/suggest_tags", {
       method: "POST",
       data,
     });
@@ -63,7 +63,7 @@ async function loadSuggestions(component, selectKit, context) {
       return;
     }
 
-    state.suggestions = suggestions || [];
+    state.suggestions = assistant || [];
     state.mode = state.suggestions.length ? "results" : "idle";
 
     if (!state.suggestions.length) {
@@ -136,22 +136,56 @@ function initInlineTagSuggester(api) {
     ({ value: selects }) => {
       for (const identifier of ["composer-tags", "topic-edit-tags"]) {
         selects.forIdentifier(identifier, (spec) => {
-          const state = trackedObject({ mode: "idle", suggestions: [] });
+          // `suggestions` caches one suggesting session's results.
+          const state = trackedObject({ suggesting: false, suggestions: null });
+
+          const stopSuggesting = () => {
+            state.suggesting = false;
+            state.suggestions = null;
+          };
 
           spec.load((load, { filter, instanceContext }) => {
             const context =
               chooserSuggestionContextFromInstance(instanceContext);
             if (filter || !enabledFor(context, siteSettings, currentUser)) {
-              state.mode = "idle";
-              state.suggestions = [];
+              stopSuggesting();
             }
-            if (state.mode === "results") {
-              return () =>
-                state.suggestions
-                  .filter((tag) => !context.selectedTagNames.includes(tag.name))
-                  .map((tag) => ({ ...tag, id: Number(tag.id) }));
+            if (!state.suggesting) {
+              return load;
             }
-            return state.mode === "loading" ? () => [] : load;
+            // Cached suggestions answer synchronously, so reopening the list while suggesting
+            // neither asks the AI again nor shows a loading state.
+            if (state.suggestions) {
+              return () => state.suggestions;
+            }
+            return async (query, opts) => {
+              const data = context.tagRequestData();
+              if (!data) {
+                stopSuggesting();
+                return load(query, opts);
+              }
+              state.suggestions =
+                (
+                  await ajax("/discourse-ai/ai-helper/suggest_tags", {
+                    method: "POST",
+                    data,
+                    signal: opts?.signal,
+                  })
+                ).assistant ?? [];
+              if (!state.suggestions.length) {
+                toasts.error({
+                  duration: "short",
+                  data: {
+                    message: i18n(
+                      "discourse_ai.ai_helper.suggest_errors.no_suggestions"
+                    ),
+                  },
+                });
+                stopSuggesting();
+                return load(query, opts);
+              }
+              return state.suggestions;
+            };
           });
 
           spec.content((items, { filter, instanceContext }) => {
@@ -160,10 +194,9 @@ function initInlineTagSuggester(api) {
             if (filter || !enabledFor(context, siteSettings, currentUser)) {
               return items;
             }
-            if (state.mode === "loading") {
-              return [{ ...loadingRow(), sticky: true, disabled: true }];
-            }
-            if (state.mode === "results") {
+            if (state.suggesting) {
+              // Held tags leave the suggestions as they are picked, and return when removed.
+              const held = context.selectedTagNames;
               return [
                 {
                   id: EXIT_ID,
@@ -171,12 +204,11 @@ function initInlineTagSuggester(api) {
                   name: i18n("discourse_ai.ai_helper.suggestions"),
                   sticky: true,
                   onSelect(control) {
-                    state.mode = "idle";
-                    state.suggestions = [];
-                    control.reload();
+                    stopSuggesting();
+                    control.reload({ immediate: true });
                   },
                 },
-                ...items,
+                ...items.filter((tag) => !held.includes(tag.name)),
               ];
             }
             if (!context.available) {
@@ -188,56 +220,30 @@ function initInlineTagSuggester(api) {
                 icon: "discourse-sparkles",
                 name: i18n("discourse_ai.ai_helper.suggest"),
                 sticky: true,
-                async onSelect(control) {
-                  const data = context.tagRequestData();
-                  if (!data) {
-                    return;
-                  }
-                  state.mode = "loading";
-                  control.reload();
-                  try {
-                    state.suggestions = await ajax(
-                      "/discourse-ai/ai-helper/suggest_tags",
-                      {
-                        method: "POST",
-                        data,
-                      }
-                    );
-                    state.mode = state.suggestions.length ? "results" : "idle";
-                    if (!state.suggestions.length) {
-                      toasts.error({
-                        duration: "short",
-                        data: {
-                          message: i18n(
-                            "discourse_ai.ai_helper.suggest_errors.no_suggestions"
-                          ),
-                        },
-                      });
-                    }
-                  } catch (error) {
-                    state.mode = "idle";
-                    popupAjaxError(error);
-                  } finally {
-                    control.reload();
-                  }
+                onSelect(control) {
+                  state.suggesting = true;
+                  control.reload({ immediate: true });
                 },
               },
               ...items,
             ];
           });
 
+          spec.options(() =>
+            state.suggesting
+              ? {
+                  loadingLabel: i18n(
+                    "discourse_ai.ai_helper.context_menu.loading"
+                  ),
+                }
+              : {}
+          );
+
           spec.row((row, { item }) => {
             if (item.id === SUGGEST_ID || item.id === EXIT_ID) {
               row.classes.push(
                 item.id === EXIT_ID ? "ai-tag-exit-row" : "ai-tag-suggest-row"
               );
-            }
-          });
-
-          spec.change(async (next, { control }) => {
-            await next();
-            if (state.mode === "results") {
-              control.reload();
             }
           });
         });

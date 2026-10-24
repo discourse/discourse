@@ -1585,6 +1585,67 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
       "a new query is charged the debounce it waited for"
     );
   });
+
+  test("an immediate reload flags its own query until the next query starts", async function (assert) {
+    const engine = new SelectEngine({
+      load: (filter) => [{ id: filter || "row", name: "Row" }],
+    });
+    await engine.loadItems(engine.loadContext);
+
+    assert.false(engine.immediateLoadFeedback, "a settled list is not flagged");
+
+    engine.control.reload({ immediate: true });
+    assert.true(
+      engine.immediateLoadFeedback,
+      "an immediate reload flags its query"
+    );
+
+    engine.control.reload();
+    assert.false(
+      engine.immediateLoadFeedback,
+      "a plain reload starts a query of its own, unflagged"
+    );
+
+    engine.control.reload({ immediate: true });
+    engine.setFilter("q");
+    assert.false(
+      engine.immediateLoadFeedback,
+      "typing starts a new query, which waits as usual"
+    );
+  });
+
+  test("an immediate reload shows the skeleton without waiting for the delay", function (assert) {
+    const engine = {
+      immediateLoadFeedback: false,
+      serverAwaitingFirstPage: false,
+      serverPending: true,
+      serverQueryPending: false,
+      serverRevealPending: false,
+    };
+    const feedback = new LoadFeedbackTracker({
+      engine,
+      getFilterDebounceDelay: () => INPUT_DELAY,
+      getSkeletonCountArg: () => undefined,
+    });
+
+    assert.false(
+      feedback.showingSkeleton,
+      "a plain reload keeps the rows until the delay passes"
+    );
+
+    engine.immediateLoadFeedback = true;
+    assert.true(
+      feedback.showingSkeleton,
+      "an immediate reload shows it at once"
+    );
+    assert.false(feedback.retainRowsWhileReloading);
+
+    engine.serverPending = false;
+    assert.false(
+      feedback.showingSkeleton,
+      "the skeleton leaves when the load settles"
+    );
+  });
 });
 
 module("Unit | ui-kit | SelectEngine | async update", function (hooks) {

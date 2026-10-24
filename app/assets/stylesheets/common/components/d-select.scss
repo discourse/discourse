@@ -134,6 +134,17 @@
   }
 }
 
+// Names what a slow source is loading, above its skeleton rows. It shares an option row's
+// padding and type size so it stands in for one row without changing the panel's height.
+.d-select__loading-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  color: var(--primary-medium);
+  list-style: none;
+}
+
 // Floor every dropdown's width so it is never uselessly narrow. `matchTriggerWidth` pins the
 // overlay to the trigger, which is unusably tight for a compact icon-only trigger; the min-width
 // overrides that smaller matched width (and gives the windowed option list a real width to lay its
