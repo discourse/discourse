@@ -1,3 +1,4 @@
+import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectItem,
@@ -23,6 +24,16 @@ export default class SelectionActions {
     payload: SelectItem | SelectItem[] | null
   ) => void;
   #getExtensionContext: () => Omit<SelectChangeContext, "value" | "items">;
+  #multiValueCache?: {
+    raw: SelectValue;
+    length: number;
+    cache: ReturnType<
+      typeof createCache<{
+        value: readonly SelectItemId[];
+        keys: Set<string | null>;
+      }>
+    >;
+  };
 
   /** Runs the once-only change queue around the guarded controlled emit. */
   #runChange: (
@@ -63,20 +74,15 @@ export default class SelectionActions {
   }
 
   /**
-   * The controlled value, normalized. Not cached: it reads the live `getValue` thunk
-   * so it always reflects the parent's `@value` (which is what makes the component
-   * controlled). For a stable `@context` identity, feed the raw `@value` to the trigger
-   * rather than this getter.
+   * The controlled value, normalized. Multi-select normalization tracks the parent's value
+   * and its contents. For a stable `@context` identity, feed the raw `@value` to the trigger.
    *
    * @returns A frozen id array (multiple) or a single id / `null`.
    */
   get value(): SelectValue {
-    const raw = this.#options.value;
     return this.#options.multiple
-      ? Object.freeze(
-          this.#options.dedupeValues(makeArray(raw) as SelectItemId[])
-        )
-      : this.#options.singleValue(raw);
+      ? this.#multiValue.value
+      : this.#options.singleValue(this.#options.value);
   }
 
   /** Whether anything is selected. */
@@ -143,6 +149,34 @@ export default class SelectionActions {
     return this.value as readonly SelectItemId[];
   }
 
+  get #multiValue() {
+    const raw = this.#options.value;
+    const length = Array.isArray(raw) ? raw.length : 0;
+    // Untracked arrays can grow during activation; tracked edits also invalidate the cache.
+    if (
+      !this.#multiValueCache ||
+      this.#multiValueCache.raw !== raw ||
+      this.#multiValueCache.length !== length
+    ) {
+      this.#multiValueCache = {
+        raw,
+        length,
+        cache: createCache(() => {
+          const value = Object.freeze(
+            this.#options.dedupeValues(
+              makeArray(this.#options.value) as SelectItemId[]
+            )
+          );
+          return {
+            value,
+            keys: new Set(value.map((id) => this.#options.valueKey(id))),
+          };
+        }),
+      };
+    }
+    return getValue(this.#multiValueCache.cache)!;
+  }
+
   /**
    * Finds the first value added and removed between two selections. Comparison deliberately
    * uses `String(value)`, including for nullish values, rather than the option identity key.
@@ -178,7 +212,7 @@ export default class SelectionActions {
       return false;
     }
     return this.#options.multiple
-      ? this.#valueArray.some((v) => this.#options.valueKey(v) === key)
+      ? this.#multiValue.keys.has(key)
       : this.#options.valueKey(this.value) === key;
   }
 

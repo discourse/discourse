@@ -1,7 +1,9 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
 // The cap a consumer opts into with `maxLoaded`. A server source has no row ceiling by
@@ -1643,3 +1645,189 @@ module(
     });
   }
 );
+
+module("Unit | ui-kit | SelectEngine | held value cache", function (hooks) {
+  setupTest(hooks);
+
+  test("reuses a frozen deduped value without freezing the input", function (assert) {
+    const value = [1, "1", null, undefined, 0, "", "null"];
+    const engine = new SelectEngine({ multiple: true, getValue: () => value });
+    const normalized = engine.value;
+
+    assert.deepEqual(
+      normalized,
+      [1, null, 0, "", "null"],
+      "deduplication preserves the first value and its order"
+    );
+    assert.true(Object.isFrozen(normalized), "the public value is frozen");
+    assert.false(Object.isFrozen(value), "the parent's input stays mutable");
+    assert.strictEqual(
+      engine.value,
+      normalized,
+      "unchanged reads reuse the array"
+    );
+    assert.true(engine.isSelected({ id: "1" }), "string and numeric ids match");
+    assert.true(engine.isSelected({ id: 0 }), "zero remains selectable");
+    assert.true(
+      engine.isSelected({ id: "" }),
+      "empty strings remain selectable"
+    );
+    assert.true(engine.isSelected({ id: "null" }), "the string null is an id");
+    assert.false(engine.isSelected({ id: null }), "nullish ids never match");
+    assert.false(engine.isSelected({}), "missing ids never match");
+  });
+
+  test("tracked edits and replacements refresh both value and membership", function (assert) {
+    const state = trackedObject({ value: trackedArray([1, "1", 2]) });
+    const engine = new SelectEngine({
+      multiple: true,
+      getValue: () => state.value,
+    });
+    const original = engine.value;
+
+    state.value.push(3, "3");
+
+    assert.true(
+      engine.isSelected({ id: 3 }),
+      "a pushed id enters the held set"
+    );
+    assert.deepEqual(engine.value, [1, 2, 3], "push refreshes deduplication");
+    assert.deepEqual(original, [1, 2], "the previous snapshot stays unchanged");
+    const pushed = engine.value;
+    assert.true(Object.isFrozen(pushed), "the refreshed snapshot is frozen");
+    assert.strictEqual(
+      engine.value,
+      pushed,
+      "reads reuse the refreshed snapshot"
+    );
+
+    state.value.splice(0, 2, 4, "4");
+
+    assert.false(
+      engine.isSelected({ id: 1 }),
+      "removed ids leave the held set"
+    );
+    assert.true(engine.isSelected({ id: 4 }), "splice adds its replacement id");
+    assert.deepEqual(
+      engine.value,
+      [4, 2, 3],
+      "a same-length splice refreshes the public value"
+    );
+
+    state.value = trackedArray([5, "5"]);
+
+    assert.deepEqual(
+      engine.value,
+      [5],
+      "replacement refreshes the public value"
+    );
+    assert.false(
+      engine.isSelected({ id: 4 }),
+      "replacement drops old membership"
+    );
+    assert.true(
+      engine.isSelected({ id: 5 }),
+      "replacement adds new membership"
+    );
+  });
+
+  test("untracked array length changes refresh membership and limits", function (assert) {
+    const value = [1];
+    const engine = new SelectEngine({
+      multiple: true,
+      maximum: 2,
+      getValue: () => value,
+    });
+    const original = engine.value;
+
+    value.push(2);
+
+    assert.true(
+      engine.atMaximum,
+      "an untracked push immediately reaches the cap"
+    );
+    assert.true(engine.isSelected({ id: 2 }), "the pushed id is selected");
+    assert.deepEqual(
+      engine.value,
+      [1, 2],
+      "the public value reflects the push"
+    );
+    assert.deepEqual(original, [1], "the original snapshot remains unchanged");
+
+    value.pop();
+
+    assert.false(
+      engine.atMaximum,
+      "an untracked pop immediately leaves the cap"
+    );
+    assert.false(
+      engine.isSelected({ id: 2 }),
+      "the popped id is no longer held"
+    );
+    assert.deepEqual(engine.value, [1], "the public value reflects the pop");
+  });
+
+  test("membership keys each row once after warming the held value", function (assert) {
+    const items = clientItems(1000);
+    const value = items.slice(0, 50).map((item) => item.id);
+    const engine = new SelectEngine({
+      items,
+      multiple: true,
+      getValue: () => value,
+    });
+    const normalized = engine.value;
+    const valueKey = sinon.spy(SelectOptionsView.prototype, "valueKey");
+    try {
+      assert.strictEqual(
+        items.filter((item) => engine.isSelected(item)).length,
+        50,
+        "every held row is selected"
+      );
+      assert.true(
+        valueKey.callCount <= 1050,
+        `1000 membership checks computed ${valueKey.callCount} keys; held ids must not be rescanned per row`
+      );
+      assert.strictEqual(
+        engine.value,
+        normalized,
+        "membership reuses the public value"
+      );
+    } finally {
+      valueKey.restore();
+    }
+  });
+
+  test("switching modes keeps single value reads live", function (assert) {
+    let multiple = true;
+    let value = [1];
+    const engine = new SelectEngine({
+      getMultiple: () => multiple,
+      getValue: () => value,
+    });
+
+    assert.deepEqual(engine.value, [1], "multi mode exposes an array");
+    multiple = false;
+    assert.strictEqual(
+      engine.value,
+      1,
+      "single mode normalizes the held array"
+    );
+    value = 2;
+    assert.strictEqual(engine.value, 2, "single mode reads the latest scalar");
+    assert.true(
+      engine.isSelected({ id: "2" }),
+      "single mode retains key matching"
+    );
+    multiple = true;
+    assert.deepEqual(
+      engine.value,
+      [2],
+      "multi mode normalizes the latest scalar"
+    );
+    assert.false(
+      engine.isSelected({ id: 1 }),
+      "the previous multi set is gone"
+    );
+    assert.true(engine.isSelected({ id: 2 }), "the new multi set is current");
+  });
+});

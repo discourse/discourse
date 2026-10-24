@@ -1,4 +1,5 @@
 import { destroy } from "@ember/destroyable";
+import { trackedArray } from "@ember/reactive/collections";
 import { run as runLoop } from "@ember/runloop";
 import { isSettled, settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
@@ -2982,3 +2983,94 @@ module(
     }
   }
 );
+
+module("Unit | ui-kit | SelectEngine | held value reads", function (hooks) {
+  setupTest(hooks);
+
+  function rows(count) {
+    return Array.from({ length: count }, (_, index) => ({
+      id: index + 1,
+      name: `Item ${index + 1}`,
+    }));
+  }
+
+  function countingValue(ids) {
+    const counter = { reads: 0 };
+    const value = new Proxy(ids, {
+      get(target, property, receiver) {
+        if (typeof property === "string" && /^\d+$/.test(property)) {
+          counter.reads++;
+        }
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    return { counter, value };
+  }
+
+  test("a rebuild reads the held values once, not once per row", function (assert) {
+    const items = rows(1000);
+    const { counter, value } = countingValue(
+      items.slice(0, 50).map((i) => i.id)
+    );
+    const engine = new SelectEngine({
+      items,
+      getMultiple: () => true,
+      getValue: () => value,
+    });
+
+    counter.reads = 0;
+    const descriptors = engine.buildItems(engine.loadItems(engine.loadContext));
+
+    assert.strictEqual(
+      descriptors.filter((descriptor) => descriptor.flags.selected).length,
+      50,
+      "every held row is marked selected"
+    );
+    assert.true(
+      counter.reads <= 150,
+      `1000 rows with 50 held read the value ${counter.reads} times; a per-row copy reads it at least 50000 times`
+    );
+  });
+
+  test("an in-place change to a tracked value updates selection", function (assert) {
+    const items = rows(5);
+    const value = trackedArray([1]);
+    const engine = new SelectEngine({
+      items,
+      getMultiple: () => true,
+      getValue: () => value,
+    });
+
+    assert.true(engine.isSelected(items[0]), "the held row reads selected");
+    assert.false(engine.isSelected(items[1]), "another row does not");
+
+    value.push(2);
+
+    assert.true(
+      engine.isSelected(items[1]),
+      "a row pushed onto the held array reads selected"
+    );
+  });
+
+  test("a new value array replaces the held set", function (assert) {
+    const items = rows(5);
+    let value = [1, 2];
+    const engine = new SelectEngine({
+      items,
+      getMultiple: () => true,
+      getValue: () => value,
+    });
+
+    assert.true(engine.isSelected(items[1]), "row 2 starts selected");
+
+    value = [3];
+
+    assert.false(engine.isSelected(items[1]), "row 2 is no longer held");
+    assert.true(engine.isSelected(items[2]), "row 3 now is");
+    assert.deepEqual(
+      [...engine.value],
+      [3],
+      "the value reflects the new array"
+    );
+  });
+});
