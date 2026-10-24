@@ -265,6 +265,63 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         }.to raise_error(Discourse::InvalidParameters)
       end
 
+      it "allows an event to be removed and recreated on a successor topic" do
+        starts_at = Time.utc(2027, 3, 29, 12, 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring meeting recreated after rollover"
+        anchor_field = DiscourseEvents::Events::Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="2027-03-29 12:00" end="2027-03-29 13:00" status="public" timezone="UTC" recurrence="every_month"]
+              Original monthly meeting.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+
+        freeze_time(ends_at + 1.hour)
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_topic.reload.custom_fields[anchor_field]).to eq(starts_at.iso8601)
+
+        expect(
+          PostRevisor.new(successor_post).revise!(
+            event_author,
+            { raw: "The original event has been removed." },
+            bypass_bump: true,
+          ),
+        ).to eq(true)
+
+        expect(successor_post.reload.event).to be_nil
+
+        replacement_raw = <<~RAW
+          [event start="2027-05-03 12:00" end="2027-05-03 13:00" status="public" timezone="UTC" recurrence="every_month"]
+          A new monthly series.
+          [/event]
+        RAW
+
+        expect(
+          PostRevisor.new(successor_post).revise!(
+            event_author,
+            { raw: replacement_raw },
+            bypass_bump: true,
+          ),
+        ).to eq(true)
+
+        replacement_event = successor_post.reload.event
+
+        expect(replacement_event).to be_present
+        expect(replacement_event.recurrence).to eq("every_month")
+        expect(replacement_event.original_starts_at).to eq_time(Time.utc(2027, 5, 3, 12, 0))
+        expect(replacement_event.recurrence_anchor_starts_at).to eq_time(
+          Time.utc(2027, 5, 3, 12, 0),
+        )
+        expect(successor_topic.reload.custom_fields[anchor_field]).to be_nil
+      end
+
       it "preserves last-Monday recurrence after creating a successor topic" do
         starts_at = Time.utc(2027, 3, 29, 12, 0)
         ends_at = starts_at + 1.hour

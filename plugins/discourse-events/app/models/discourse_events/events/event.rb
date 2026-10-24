@@ -138,7 +138,12 @@ module DiscourseEvents
 
         TopicCustomField.where(
           topic_id: post.topic_id,
-          name: [TOPIC_POST_EVENT_STARTS_AT, TOPIC_POST_EVENT_ENDS_AT, TOPIC_POST_EVENT_ALL_DAY],
+          name: [
+            TOPIC_POST_EVENT_STARTS_AT,
+            TOPIC_POST_EVENT_ENDS_AT,
+            TOPIC_POST_EVENT_ALL_DAY,
+            RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD,
+          ],
         ).delete_all
       end
 
@@ -662,10 +667,13 @@ module DiscourseEvents
 
         new_start = original_starts_at.in_time_zone(rrule_timezone)
 
+        previous_start = original_starts_at_before_last_save
         changed_date =
           changed_start &&
-            original_starts_at_before_last_save.in_time_zone(rrule_timezone).to_date !=
-              new_start.to_date
+            (
+              previous_start.nil? ||
+                previous_start.in_time_zone(rrule_timezone).to_date != new_start.to_date
+            )
 
         new_anchor =
           if changed_rule || changed_date
