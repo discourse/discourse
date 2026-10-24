@@ -348,7 +348,9 @@ export default class ConditionGroup extends Component<ConditionGroupSignature> {
 
       <div class="wireframe-condition-group__body">
         {{#if this.children.length}}
-          {{#each this.children as |child|}}
+          {{! Keyed by position: `children` builds fresh objects on every edit,
+              and identity keys would remount each row, collapsing it. }}
+          {{#each this.children key="index" as |child|}}
             {{#if child.group}}
               <ConditionGroup
                 @conditionTypes={{@conditionTypes}}
