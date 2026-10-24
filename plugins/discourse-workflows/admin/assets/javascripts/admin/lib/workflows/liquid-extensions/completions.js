@@ -1,8 +1,8 @@
+import { LIQUID_TAGS } from "discourse/plugins/discourse-workflows/discourse/lib/liquid-tags";
 import { walkScope } from "../expression-context.js";
 import {
   analyzeLiquidAt,
   LIQUID_FILTERS,
-  LIQUID_TAGS,
   loopBindingsAt,
 } from "../liquid-context.js";
 
@@ -19,7 +19,7 @@ function valueDetail(value) {
   return typeof value;
 }
 
-function optionsForObject(target, sections) {
+function scopeOptions(target, { section, boost }) {
   return Object.keys(target).map((name) => {
     const value = target[name];
     const isContainer = typeof value === "object" && value !== null;
@@ -31,7 +31,8 @@ function optionsForObject(target, sections) {
       apply: isContainer && !Array.isArray(value) ? `${name}.` : name,
       type: isContainer ? "property" : "variable",
       detail: valueDetail(value),
-      section: sections.properties,
+      boost: boost?.(name),
+      section: section(name),
     };
   });
 }
@@ -47,7 +48,8 @@ export function liquidCompletionSource({ scope, sections }) {
   const resolveScope = typeof scope === "function" ? scope : () => scope;
   const tagOptions = LIQUID_TAGS.map(([label, detail]) => ({
     label,
-    apply: `${label} `,
+    // The space only when arguments follow; the delimiter already has one.
+    apply: detail ? `${label} ` : label,
     type: "keyword",
     detail,
     section: sections.tags,
@@ -88,7 +90,7 @@ export function liquidCompletionSource({ scope, sections }) {
       }
       return {
         from: analysis.from,
-        options: optionsForObject(target, sections),
+        options: scopeOptions(target, { section: () => sections.properties }),
         filter: true,
         validFor: /^[\w-]*$/,
       };
@@ -100,20 +102,10 @@ export function liquidCompletionSource({ scope, sections }) {
 
     return {
       from: analysis.from,
-      options: Object.keys(localScope).map((name) => {
-        const value = localScope[name];
-        const isObject = typeof value === "object" && value !== null;
-
-        return {
-          label: name,
-          apply: isObject && !Array.isArray(value) ? `${name}.` : name,
-          type: isObject ? "property" : "variable",
-          detail: valueDetail(value),
-          boost: BOOSTED_ROOTS[name],
-          section: BOOSTED_ROOTS[name]
-            ? sections.recommended
-            : sections.metadata,
-        };
+      options: scopeOptions(localScope, {
+        section: (name) =>
+          BOOSTED_ROOTS[name] ? sections.recommended : sections.metadata,
+        boost: (name) => BOOSTED_ROOTS[name],
       }),
       filter: true,
     };

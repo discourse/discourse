@@ -1,11 +1,15 @@
 import { WORKFLOW_VARIABLE_MIME } from "../expression-context.js";
 import {
+  itemIndexAt,
   itemPrefixAt,
   liquidPathForVariable,
   openDelimiterAt,
 } from "../liquid-context.js";
 
-export function buildLiquidDragDrop({ cmView }, { perItem }) {
+export function buildLiquidDragDrop(
+  { cmView },
+  { perItem, scope, inputs = [] }
+) {
   const { dropCursor, ViewPlugin } = cmView;
 
   function handleDragOver(event) {
@@ -41,10 +45,19 @@ export function buildLiquidDragDrop({ cmView }, { perItem }) {
       view.state.doc.length;
 
     const text = view.state.doc.toString();
-    const path = liquidPathForVariable(
-      variable.id,
-      itemPrefixAt(text, pos, { perItem: perItem() })
-    );
+    const mode = { perItem: perItem() };
+    const path = liquidPathForVariable(variable.id, {
+      itemPrefix: itemPrefixAt(text, pos, mode),
+      itemIndex: itemIndexAt(text, pos),
+      inputs: inputs.map(({ prefix, inputIndex }) => ({
+        prefix,
+        itemPrefix: itemPrefixAt(text, pos, {
+          ...mode,
+          collection: `inputs[${inputIndex}]`,
+        }),
+      })),
+      scope: scope(),
+    });
 
     // Nothing sensible to insert for a source the template cannot reach.
     if (!path) {

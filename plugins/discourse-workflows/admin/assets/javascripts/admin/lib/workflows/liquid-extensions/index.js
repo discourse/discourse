@@ -34,7 +34,11 @@ export default function buildLiquidExtensions(cmParams, domainOpts = {}) {
 
   return [
     buildAutoCloseDelimiters(cmParams),
-    buildLiquidDragDrop(cmParams, { perItem }),
+    buildLiquidDragDrop(cmParams, {
+      perItem,
+      scope,
+      inputs: domainOpts.inputs || [],
+    }),
     buildLiquidCompletions(cmParams, { scope, sections }),
   ];
 }

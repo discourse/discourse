@@ -59,38 +59,6 @@ export const LIQUID_FILTERS = [
   ["where", "(key, value)"],
 ];
 
-// Tags offered when a `{%` has just been opened. Closing tags are completed
-// too, so `{% endf` finishes even though it opens nothing.
-export const LIQUID_TAGS = [
-  ["assign", "name = value"],
-  ["break", ""],
-  ["capture", "name"],
-  ["case", "value"],
-  ["comment", ""],
-  ["continue", ""],
-  ["cycle", "a, b"],
-  ["decrement", "name"],
-  ["echo", "value"],
-  ["else", ""],
-  ["elsif", "condition"],
-  ["endcapture", ""],
-  ["endcase", ""],
-  ["endcomment", ""],
-  ["endfor", ""],
-  ["endif", ""],
-  ["endraw", ""],
-  ["endtablerow", ""],
-  ["endunless", ""],
-  ["for", "item in collection"],
-  ["if", "condition"],
-  ["increment", "name"],
-  ["liquid", ""],
-  ["raw", ""],
-  ["tablerow", "item in collection"],
-  ["unless", "condition"],
-  ["when", "value"],
-];
-
 const FORLOOP = Object.freeze({
   first: false,
   index: 0,
@@ -235,63 +203,153 @@ export function loopBindingsAt(scope, text, pos) {
 // Environment symbols the render context exposes under a different name.
 const ENVIRONMENT_ALIASES = {
   $execution: "execution",
-  $itemIndex: "item_index",
   $site_settings: "site_settings",
   $vars: "vars",
 };
 
-/**
- * Resolves an input item's prefix without rebasing it onto a nested
- * collection's loop variable.
- */
-export function itemPrefixAt(text, pos, { perItem = false } = {}) {
+// A dotted or bracketed path and nothing else: an expression such as
+// `$json.a + 1` has no Liquid equivalent.
+const PATH_ROOT_RE = /^\$?[A-Za-z_]\w*/;
+const PATH_REST_RE =
+  /^(?:\.[A-Za-z_]\w*|\[\d+\]|\["(?:[^"\\]|\\.)*"\]|\['(?:[^'\\]|\\.)*'\])*$/;
+
+// The innermost loop over `collection` enclosing `pos`: its alias when no
+// inner loop shadows it, and the forloop index that addresses the collection.
+function itemLoopAt(text, pos, collection) {
   const loops = enclosingLoopsAt(text, pos);
+  const paths = collection === "items" ? ["items", "inputs[0]"] : [collection];
   const shadowedNames = new Set();
   for (let i = loops.length - 1; i >= 0; i--) {
     const loop = loops[i];
     if (!loop) {
       continue;
     }
-    if (loop.path === "items" || loop.path === "inputs[0]") {
-      if (!shadowedNames.has(loop.name)) {
-        return loop.name;
-      }
-
+    if (paths.includes(loop.path)) {
       // Liquid exposes iteration indexes, but not the source offset.
-      if (loop.index === null) {
-        return null;
-      }
-      const parentLoops = ".parentloop".repeat(loops.length - i - 1);
-      return `${loop.path}[forloop${parentLoops}.${loop.index || "index0"}]`;
+      const forloop =
+        loop.index === null
+          ? null
+          : `forloop${".parentloop".repeat(loops.length - i - 1)}.${
+              loop.index || "index0"
+            }`;
+      return {
+        alias: shadowedNames.has(loop.name) ? null : loop.name,
+        path: loop.path,
+        forloop,
+      };
     }
     shadowedNames.add(loop.name);
   }
-  return perItem ? "item" : "items[0]";
+  return null;
+}
+
+/**
+ * Resolves the current item of `collection` at `pos`: a loop alias, an index
+ * back into the collection, or the mode's default outside any loop. Another
+ * branch pairs with the primary loop's index, since items line up across
+ * inputs.
+ */
+export function itemPrefixAt(
+  text,
+  pos,
+  { perItem = false, collection = "items" } = {}
+) {
+  const loop = itemLoopAt(text, pos, collection);
+  if (loop) {
+    if (loop.alias) {
+      return loop.alias;
+    }
+    return loop.forloop ? `${loop.path}[${loop.forloop}]` : null;
+  }
+
+  if (collection !== "items") {
+    const primary = itemLoopAt(text, pos, "items");
+    if (primary) {
+      return primary.forloop ? `${collection}[${primary.forloop}]` : null;
+    }
+  }
+
+  if (!perItem) {
+    return `${collection}[0]`;
+  }
+  // Per-item mode walks the primary input only.
+  return collection === "items" ? "item" : null;
+}
+
+/**
+ * The 0-based index of the current primary item at `pos`, or null outside a
+ * loop over it: `item_index` is 1-based, so it is no substitute.
+ */
+export function itemIndexAt(text, pos) {
+  return itemLoopAt(text, pos, "items")?.forloop ?? null;
+}
+
+function restAfterPrefix(id, prefix) {
+  if (!prefix || !id.startsWith(prefix)) {
+    return null;
+  }
+  const rest = id.slice(prefix.length);
+  return rest === "" || rest.startsWith(".") || rest.startsWith("[")
+    ? rest
+    : null;
 }
 
 /**
  * Rewrites a dragged field's expression path as its Liquid equivalent, or
- * returns null for a source the render context cannot reach — another node's
- * output, say, which Liquid templates have no access to.
+ * returns null for a source the render context cannot reach.
+ *
+ * `itemPrefix` addresses the primary input's current item and `itemIndex`
+ * its 0-based index, both resolved at the drop position. `inputs` lists the
+ * other connected branches as `{ prefix, itemPrefix }`, and `scope` is the
+ * render context exemplar.
  */
-export function liquidPathForVariable(id, itemPrefix) {
+export function liquidPathForVariable(
+  id,
+  { itemPrefix = null, itemIndex = null, inputs = [], scope = null } = {}
+) {
   if (!id) {
     return null;
   }
 
-  if (!id.startsWith("$")) {
-    return itemPrefix ? `${itemPrefix}.${id}` : null;
+  for (const input of inputs) {
+    const rest = restAfterPrefix(id, input.prefix);
+    if (rest !== null) {
+      return input.itemPrefix && PATH_REST_RE.test(rest)
+        ? `${input.itemPrefix}${rest}`
+        : null;
+    }
   }
 
-  const [root] = id.split(/[.[]/, 1);
+  const root = PATH_ROOT_RE.exec(id)?.[0];
+  if (!root) {
+    return null;
+  }
   const rest = id.slice(root.length);
+  if (!PATH_REST_RE.test(rest)) {
+    return null;
+  }
 
+  if (!root.startsWith("$")) {
+    return itemPrefix ? `${itemPrefix}.${id}` : null;
+  }
   if (root === "$json") {
-    return itemPrefix && rest ? `${itemPrefix}${rest}` : itemPrefix;
+    return itemPrefix ? `${itemPrefix}${rest}` : null;
+  }
+  if (root === "$itemIndex") {
+    return rest ? null : itemIndex;
   }
 
   const alias = ENVIRONMENT_ALIASES[root];
-  return alias ? `${alias}${rest}` : null;
+  if (!alias) {
+    return null;
+  }
+  const path = `${alias}${rest}`;
+  // Execution data is a closed shape the exemplar knows in full; variables
+  // and settings are not, so only their roots are checked.
+  if (root === "$execution" && scope && walkScope(scope, path) === undefined) {
+    return null;
+  }
+  return path;
 }
 
 /**

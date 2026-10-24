@@ -1,33 +1,6 @@
-const TAG_KEYWORDS = new Set([
-  "assign",
-  "break",
-  "capture",
-  "case",
-  "comment",
-  "continue",
-  "cycle",
-  "decrement",
-  "echo",
-  "else",
-  "elsif",
-  "endcapture",
-  "endcase",
-  "endcomment",
-  "endfor",
-  "endif",
-  "endraw",
-  "endtablerow",
-  "endunless",
-  "for",
-  "if",
-  "increment",
-  "liquid",
-  "raw",
-  "render",
-  "tablerow",
-  "unless",
-  "when",
-]);
+import { LIQUID_TAGS } from "./liquid-tags.js";
+
+const TAG_KEYWORDS = new Set(LIQUID_TAGS.map(([name]) => name));
 
 const OPERATOR_KEYWORDS = new Set([
   "and",

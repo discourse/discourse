@@ -3,6 +3,7 @@ import {
   analyzeLiquidAt,
   buildLiquidScope,
   enclosingLoopsAt,
+  itemIndexAt,
   itemPrefixAt,
   liquidPathForVariable,
   loopBindingsAt,
@@ -207,7 +208,9 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
         const text = `{% ${block} %}{% for entry in items %}{% end${block} %}`;
 
         assert.strictEqual(
-          liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+          liquidPathForVariable("$json.name", {
+            itemPrefix: itemPrefixAt(text, text.length),
+          }),
           "items[0].name",
           "the drop does not reference an inactive loop variable"
         );
@@ -272,7 +275,9 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
         "{% for item in items reversed limit: 2 %}{% for item in item.collected %}";
 
       assert.strictEqual(
-        liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+        liquidPathForVariable("$json.name", {
+          itemPrefix: itemPrefixAt(text, text.length),
+        }),
         "items[forloop.parentloop.rindex0].name",
         "the reverse index addresses the original collection"
       );
@@ -283,7 +288,9 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
         "{% for item in items limit: 2 reversed %}{% for item in item.collected %}";
 
       assert.strictEqual(
-        liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+        liquidPathForVariable("$json.name", {
+          itemPrefix: itemPrefixAt(text, text.length),
+        }),
         "items[forloop.parentloop.index0].name",
         "the loop runs forward, so the forward index is used"
       );
@@ -297,17 +304,17 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
         const prefix = itemPrefixAt(text, text.length);
 
         assert.strictEqual(
-          liquidPathForVariable("$json.name", prefix),
+          liquidPathForVariable("$json.name", { itemPrefix: prefix }),
           null,
           "an inaccessible input field is not inserted with the wrong index"
         );
         assert.strictEqual(
-          liquidPathForVariable("name", prefix),
+          liquidPathForVariable("name", { itemPrefix: prefix }),
           null,
           "unqualified input fields are also rejected"
         );
         assert.strictEqual(
-          liquidPathForVariable("$vars.token", prefix),
+          liquidPathForVariable("$vars.token", { itemPrefix: prefix }),
           "vars.token",
           "environment variables remain accessible"
         );
@@ -319,7 +326,9 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
         "{% for entry in items offset: 1 reversed %}{% for tag in entry.tags %}";
 
       assert.strictEqual(
-        liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+        liquidPathForVariable("$json.name", {
+          itemPrefix: itemPrefixAt(text, text.length),
+        }),
         "entry.name",
         "the live alias already accounts for offset and reversal"
       );
@@ -329,7 +338,9 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
       const text = "{% for item in items %}{% for item in item.collected %}";
 
       assert.strictEqual(
-        liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+        liquidPathForVariable("$json.name", {
+          itemPrefix: itemPrefixAt(text, text.length),
+        }),
         "items[forloop.parentloop.index0].name",
         "the drop uses the outer loop's current item rather than its shadowed alias"
       );
@@ -341,7 +352,9 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
         "{% for value in item.values %}";
 
       assert.strictEqual(
-        liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+        liquidPathForVariable("$json.name", {
+          itemPrefix: itemPrefixAt(text, text.length),
+        }),
         "inputs[0][forloop.parentloop.parentloop.index0].name",
         "the index belongs to the primary input loop"
       );
@@ -351,7 +364,9 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
       const text = "{% for entry in items %}{% for row in entry.collected %}";
 
       assert.strictEqual(
-        liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+        liquidPathForVariable("$json.name", {
+          itemPrefix: itemPrefixAt(text, text.length),
+        }),
         "entry.name",
         "a field on the input item is not rebased onto the nested row"
       );
@@ -392,43 +407,195 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
       assert.strictEqual(itemPrefixAt("", 0), "items[0]");
       assert.strictEqual(itemPrefixAt("", 0, { perItem: true }), "item");
     });
+
+    test("addresses another branch's current item", function (assert) {
+      const collection = "inputs[2]";
+
+      assert.strictEqual(
+        itemPrefixAt("", 0, { collection }),
+        "inputs[2][0]",
+        "the first item outside any loop"
+      );
+      assert.strictEqual(
+        itemPrefixAt("", 0, { collection, perItem: true }),
+        null,
+        "per-item mode has no current item for another branch"
+      );
+
+      let text = "{% for entry in inputs[2] %}";
+      assert.strictEqual(
+        itemPrefixAt(text, text.length, { collection }),
+        "entry",
+        "a loop over the branch provides the alias"
+      );
+
+      text = "{% for item in items %}{% for t in item.tags %}";
+      assert.strictEqual(
+        itemPrefixAt(text, text.length, { collection }),
+        "inputs[2][forloop.parentloop.index0]",
+        "a loop over the items pairs the branch by index"
+      );
+
+      text = "{% for item in items offset: 1 %}";
+      assert.strictEqual(
+        itemPrefixAt(text, text.length, { collection }),
+        null,
+        "an offset breaks the pairing"
+      );
+    });
+  });
+
+  module("itemIndexAt", function () {
+    test("is the forloop index inside a loop over the items", function (assert) {
+      const text = "{% for entry in items %}";
+
+      assert.strictEqual(itemIndexAt(text, text.length), "forloop.index0");
+    });
+
+    test("reaches back through nested loops", function (assert) {
+      const text = "{% for e in items %}{% for t in e.tags %}";
+
+      assert.strictEqual(
+        itemIndexAt(text, text.length),
+        "forloop.parentloop.index0",
+        "the inner loop's own index is not the item's"
+      );
+    });
+
+    test("counts from the end of a reversed loop", function (assert) {
+      const text = "{% for e in items reversed limit: 2 %}";
+
+      assert.strictEqual(itemIndexAt(text, text.length), "forloop.rindex0");
+    });
+
+    test("is null when an offset hides the source index", function (assert) {
+      const text = "{% for e in items offset: 1 %}";
+
+      assert.strictEqual(itemIndexAt(text, text.length), null);
+    });
+
+    test("is null outside a loop in either mode", function (assert) {
+      assert.strictEqual(itemIndexAt("", 0), null);
+      assert.strictEqual(itemIndexAt("{% for e in inputs[2] %}", 24), null);
+    });
   });
 
   module("liquidPathForVariable", function () {
     test("rewrites an input field against the item prefix", function (assert) {
       assert.strictEqual(
-        liquidPathForVariable("$json.topic.title", "item"),
+        liquidPathForVariable("$json.topic.title", { itemPrefix: "item" }),
         "item.topic.title"
       );
       assert.strictEqual(
-        liquidPathForVariable("$json.collected[0].username", "items[0]"),
+        liquidPathForVariable("$json.collected[0].username", {
+          itemPrefix: "items[0]",
+        }),
         "items[0].collected[0].username"
       );
-      assert.strictEqual(liquidPathForVariable("$json", "item"), "item");
+      assert.strictEqual(
+        liquidPathForVariable("$json", { itemPrefix: "item" }),
+        "item"
+      );
     });
 
     test("renames the environment symbols it can reach", function (assert) {
       assert.strictEqual(
-        liquidPathForVariable("$vars.token", "item"),
+        liquidPathForVariable("$vars.token", { itemPrefix: "item" }),
         "vars.token"
       );
       assert.strictEqual(
-        liquidPathForVariable("$site_settings.title", "item"),
+        liquidPathForVariable("$site_settings.title", { itemPrefix: "item" }),
         "site_settings.title"
       );
       assert.strictEqual(
-        liquidPathForVariable("$itemIndex", "item"),
-        "item_index"
+        liquidPathForVariable("$execution.id", {
+          scope: buildLiquidScope(),
+        }),
+        "execution.id",
+        "an exemplar value of empty string still counts as reachable"
+      );
+    });
+
+    test("rejects execution data the render context lacks", function (assert) {
+      const scope = buildLiquidScope();
+
+      assert.strictEqual(
+        liquidPathForVariable("$execution.called_by.id", { scope }),
+        null
+      );
+      assert.strictEqual(
+        liquidPathForVariable("$execution.resume_url", { scope }),
+        null
+      );
+      assert.strictEqual(
+        liquidPathForVariable("$vars.added_later", { scope }),
+        "vars.added_later",
+        "variables are only checked at the root"
+      );
+    });
+
+    test("addresses the item index only where a loop defines it", function (assert) {
+      assert.strictEqual(
+        liquidPathForVariable("$itemIndex", { itemIndex: "forloop.index0" }),
+        "forloop.index0"
+      );
+      assert.strictEqual(liquidPathForVariable("$itemIndex", {}), null);
+      assert.strictEqual(
+        liquidPathForVariable("$itemIndex.x", { itemIndex: "forloop.index0" }),
+        null
+      );
+    });
+
+    test("rewrites another branch's fields against that branch", function (assert) {
+      const prefix = '$("Right").all(0)[$itemIndex].json';
+      const inputs = [{ prefix, itemPrefix: "inputs[1][0]" }];
+
+      assert.strictEqual(
+        liquidPathForVariable(`${prefix}.email`, { inputs }),
+        "inputs[1][0].email"
+      );
+      assert.strictEqual(
+        liquidPathForVariable(prefix, { inputs }),
+        "inputs[1][0]"
+      );
+      assert.strictEqual(
+        liquidPathForVariable(`${prefix}.email`, {
+          inputs: [{ prefix, itemPrefix: null }],
+        }),
+        null,
+        "no current item for the branch means no insertion"
+      );
+      assert.strictEqual(
+        liquidPathForVariable(`${prefix}x.email`, { inputs }),
+        null,
+        "a longer name is not a match"
+      );
+    });
+
+    test("is null for an expression rather than a path", function (assert) {
+      assert.strictEqual(
+        liquidPathForVariable("$json.a + 1", { itemPrefix: "item" }),
+        null
+      );
+      assert.strictEqual(
+        liquidPathForVariable("$json.list.length", { itemPrefix: "item" }),
+        "item.list.length"
+      );
+      assert.strictEqual(
+        liquidPathForVariable('$json["a-b"][0]', { itemPrefix: "item" }),
+        'item["a-b"][0]'
       );
     });
 
     test("is null for a source the template cannot reach", function (assert) {
       assert.strictEqual(
-        liquidPathForVariable("$('Other').item.json.id", "item"),
+        liquidPathForVariable("$('Other').item.json.id", {
+          itemPrefix: "item",
+        }),
         null
       );
       assert.strictEqual(
-        liquidPathForVariable("$current_user.username", "item"),
+        liquidPathForVariable("$current_user.username", { itemPrefix: "item" }),
         null
       );
     });

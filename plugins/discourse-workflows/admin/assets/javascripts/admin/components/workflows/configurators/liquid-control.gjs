@@ -9,6 +9,7 @@ import { loadCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { escapeExpression } from "discourse/lib/utilities";
 import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview.js";
 import {
+  inputFieldPrefixForConnection,
   inputIndexForConnection,
   outputIndexForConnection,
 } from "../../../lib/workflows/expression-paths.js";
@@ -81,20 +82,33 @@ export default class LiquidControl extends Component {
     const connections = node ? inputConnectionsForNode(node, graph) : [];
 
     const branchFields = [];
+    const inputs = [];
+    const primaryConnection = connections[0] || null;
     for (const connection of connections) {
-      branchFields[inputIndexForConnection(connection)] =
-        this.#fieldsForConnection(connection, {
-          node,
-          graph,
-          runData,
-          declaredOutputSchemas,
-          session,
+      const inputIndex = inputIndexForConnection(connection);
+      branchFields[inputIndex] = this.#fieldsForConnection(connection, {
+        node,
+        graph,
+        runData,
+        declaredOutputSchemas,
+        session,
+      });
+      if (connection !== primaryConnection) {
+        inputs.push({
+          inputIndex,
+          prefix: inputFieldPrefixForConnection(
+            connection,
+            previousNodeForConnection(connection, graph),
+            { primaryConnection }
+          ),
         });
+      }
     }
 
     return buildLiquidExtensions(cmParams, {
       inputFields: branchFields[0] || [],
       branchFields,
+      inputs,
       siteSettings: this.siteSettings,
       globalVars: this.workflowsNodeTypes.workflowVars,
       nodes: graph.nodes,

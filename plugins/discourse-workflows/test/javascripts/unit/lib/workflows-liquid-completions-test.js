@@ -49,6 +49,20 @@ module("Unit | lib | discourse-workflows | liquid-completions", function () {
 
     assert.true(labels(result).includes("for"));
     assert.true(labels(result).includes("endfor"), "including closing tags");
+    assert.strictEqual(
+      result.options.find((option) => option.label === "endfor").apply,
+      "endfor",
+      "a closing tag adds no space before the delimiter's own"
+    );
+    assert.strictEqual(
+      result.options.find((option) => option.label === "for").apply,
+      "for ",
+      "a tag with arguments leaves room for them"
+    );
+    assert.false(
+      labels(result).includes("render"),
+      "no tag the server cannot run"
+    );
     assert.strictEqual(result.from, 3, "replaces the partial tag name");
   });
 
