@@ -84,6 +84,8 @@ interface DSelectListSignature {
     maximum?: number | false;
     /** Advisory selection minimum. */
     minimum?: number;
+    /** Skips a passed `:footer` block; see `DSelect`'s `@suppressFooter`. */
+    suppressFooter?: boolean;
     /** Customization family, fixed at construction. */
     kind?: string;
     /**
@@ -103,6 +105,8 @@ interface DSelectListSignature {
     label?: string;
     /** Search placeholder text; defaults to the shared “Search…”. */
     searchPlaceholder?: string;
+    /** A decorative trailing icon in the search field. */
+    searchIcon?: string;
     /** Label shown when a nonempty query returns no results. */
     noResultsLabel?: string;
     /** Native search-input id, for a label's for attribute. */
@@ -290,7 +294,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @focusStrip={{this.interaction.focusStrip}}
         @hasEmptyBlock={{has-block "empty"}}
         @hasErrorBlock={{has-block "error"}}
-        @hasFooterBlock={{has-block "footer"}}
+        @hasFooterBlock={{and (has-block "footer") (not @suppressFooter)}}
         @hasGroupHeaderBlock={{false}}
         @hasItemBlock={{has-block "item"}}
         @hasListHeaderBlock={{has-block "listHeader"}}
@@ -369,6 +373,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @queryDisplay="always"
             @registerInput={{this.interaction.registerFilter}}
             @roleMode="search"
+            @searchIcon={{this.engine.resolvedOptions.searchIcon}}
             @selection={{this.heldSelection}}
             @showMenu={{this.interaction.focusInput}}
             @tabPassthrough={{true}}

@@ -157,6 +157,8 @@ export default class SelectItem extends Component<SelectItemSignature> {
         counterpart to pair it with. }}
         {{#if @hideSelectionMarker}}
           {{! A list that leaves held rows out would only ever show the unselected state. }}
+        {{else if @descriptor.flags.action}}
+          {{! An action row never becomes a value, so a marker would claim a state it cannot have. }}
         {{else if @selectedIcon}}
           {{dIcon @selectedIcon class="d-select__option-selected-icon"}}
         {{else if @multiple}}

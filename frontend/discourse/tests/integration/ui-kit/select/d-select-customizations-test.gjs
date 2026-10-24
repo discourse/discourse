@@ -341,6 +341,17 @@ module(
         .hasAttribute("placeholder", "Find a fruit");
     });
 
+    test("searchIcon reaches the panel search field", async function (assert) {
+      overrideOptions(() => ({ searchIcon: "magnifying-glass" }));
+
+      await render(
+        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+      );
+      await click(".d-select__trigger");
+
+      assert.dom(".d-select__panel .d-icon-magnifying-glass").exists();
+    });
+
     test("label names the combobox and the listbox", async function (assert) {
       overrideOptions(() => ({ label: "Fruit picker" }));
 

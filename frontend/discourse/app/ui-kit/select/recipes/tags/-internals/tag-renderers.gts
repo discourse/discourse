@@ -1,4 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
+import { concat } from "@ember/helper";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
@@ -43,20 +44,22 @@ export const TagOption: TemplateOnlyComponent<{
   {{else if @item.isNew}}
     {{i18n "d_select.create_item" label=@item.name}}
   {{else}}
-    {{dDiscourseTag @item.name noHref=true tagName="span"}}
-    {{#if @item.count}}
-      <span aria-hidden="true" class="discourse-tag-count">x
-        {{tagCount @item~}}
-      </span>
-      <span class="sr-only">
-        {{~i18n "tagging.tag_count_hidden" count=(tagCount @item)~}}
-      </span>
-    {{/if}}
-    {{#if @item.target_tag}}
-      <span class="synonym-hint"><span aria-hidden="true">→</span>
-        {{synonymName @item~}}
-      </span>
-    {{/if}}
+    <span class="d-tag-option">
+      {{dDiscourseTag @item.name noHref=true tagName="span"}}
+      {{#if @item.count}}
+        <span aria-hidden="true" class="discourse-tag-count">
+          {{~concat "x" (tagCount @item)~}}
+        </span>
+        <span class="sr-only">
+          {{~i18n "tagging.tag_count_hidden" count=(tagCount @item)~}}
+        </span>
+      {{/if}}
+      {{#if @item.target_tag}}
+        <span class="synonym-hint"><span aria-hidden="true">→</span>
+          {{synonymName @item~}}
+        </span>
+      {{/if}}
+    </span>
   {{/if}}
 </template>;
 

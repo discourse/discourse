@@ -126,6 +126,8 @@ export interface SelectDescriptor {
     group: boolean;
     /** A divider row: structural like a header, but presentational and label-less. */
     divider: boolean;
+    /** An action row: it runs its `onSelect` and never becomes a value. */
+    action: boolean;
     /** Marks the synthetic create-on-the-fly row. */
     __create: boolean;
     /** True for an unresolved held value; false on list rows. */
@@ -799,6 +801,7 @@ export default class SelectEngine {
         label: args.label,
         placeholder: args.placeholder,
         searchPlaceholder: args.searchPlaceholder,
+        searchIcon: args.searchIcon,
         icon: args.icon,
         showCaret: args.showCaret,
         clearable: args.clearable,

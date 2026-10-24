@@ -4400,3 +4400,133 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect (@searchIcon)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("searchIcon trails the panel search field and stays decorative", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @searchIcon="magnifying-glass"
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const input = find(".d-select__panel .d-select__filter");
+      const icon = find(".d-select__panel .d-icon-magnifying-glass");
+      assert.dom(icon).exists("the icon renders in the panel");
+      assert.dom(icon).hasAttribute("aria-hidden", "true");
+      assert.strictEqual(
+        input.compareDocumentPosition(icon),
+        Node.DOCUMENT_POSITION_FOLLOWING,
+        "the icon follows the field"
+      );
+      const field = input.getBoundingClientRect();
+      const glyph = icon.getBoundingClientRect();
+      assert.true(
+        glyph.left > field.left + field.width / 2,
+        "the icon sits in the trailing half of the field"
+      );
+      assert.true(
+        glyph.right <= field.right,
+        "the icon stays inside the field"
+      );
+      const fieldMiddle = field.top + field.height / 2;
+      const glyphMiddle = glyph.top + glyph.height / 2;
+      assert.true(
+        Math.abs(fieldMiddle - glyphMiddle) <= 1,
+        `the icon is vertically centered on the field (off by ${glyphMiddle - fieldMiddle}px)`
+      );
+    });
+
+    test("kind modifier: the overlay names its kind for styling", async function (assert) {
+      await render(
+        <template><DSelect @items={{ITEMS}} @kind="fruit" /></template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom(".d-select__content").hasClass("--kind-fruit");
+    });
+
+    test("searchIcon is absent unless asked for", async function (assert) {
+      await render(
+        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+      );
+      await click(".d-select__trigger");
+
+      assert.dom(".d-select__panel .d-select__filter").exists("panel is open");
+      assert.dom(".d-select__panel .d-icon").doesNotExist("no search icon");
+    });
+
+    test("searchIcon trails the panel chips search field", async function (assert) {
+      const held = [ITEMS[0].id];
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @panelChips={{true}}
+            @searchIcon="magnifying-glass"
+            @value={{held}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const field = find(".d-select__panel .d-select__chips");
+      const input = find(".d-select__panel .d-select__filter");
+      const icon = find(".d-select__panel .d-icon-magnifying-glass");
+      assert.dom(icon).exists("the icon renders in the chips field");
+      assert.dom(icon).hasAttribute("aria-hidden", "true");
+      assert.strictEqual(
+        input.compareDocumentPosition(icon),
+        Node.DOCUMENT_POSITION_FOLLOWING,
+        "the icon follows the input"
+      );
+      assert.true(field.contains(icon), "the icon sits inside the chips field");
+    });
+
+    test("searchIcon never decorates a desktop typeahead trigger", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @searchIcon="magnifying-glass" />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom("[role='listbox']").exists("the panel is open");
+      assert.dom(".d-icon-magnifying-glass").doesNotExist();
+    });
+
+    test("searchIcon trails the mobile typeahead modal's search field", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @searchIcon="magnifying-glass" />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".fk-d-menu-modal .d-select__filter")
+        .exists("the modal has its search field");
+      assert
+        .dom(".fk-d-menu-modal .d-icon-magnifying-glass")
+        .hasAttribute("aria-hidden", "true");
+      const field = find(".fk-d-menu-modal .d-select__filter");
+      const search = find(".fk-d-menu-modal .d-select__search");
+      assert.strictEqual(
+        field.offsetWidth,
+        search.offsetWidth,
+        "the field fills the search row"
+      );
+    });
+  }
+);

@@ -109,6 +109,8 @@ export interface SelectTagBaseSignature {
     label?: string;
     /** Additional persistent help element ids. */
     describedBy?: string;
+    /** Skips the forwarded `:footer` block; see `DSelect`'s `@suppressFooter`. */
+    suppressFooter?: boolean;
   };
   Element: HTMLElement;
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
@@ -524,6 +526,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
         @placeholder
         (i18n "tagging.choose_for_topic")
       }}
+      @suppressFooter={{@suppressFooter}}
       @value={{this.value}}
       @valueItems={{this.valueItems}}
       @variant={{@variant}}

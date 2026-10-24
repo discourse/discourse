@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import {
   click,
   fillIn,
+  find,
   findAll,
   render,
   settled,
@@ -70,6 +71,235 @@ module(
         getOwner(this).lookup("service:site").set("top_tags", TOP_TAGS);
         this.routeToUrl = sinon.stub(DiscourseURL, "routeToUrl");
         this.routeTo = sinon.stub(DiscourseURL, "routeTo");
+      });
+
+      test("suppressFooter: a single filter with every tag listed has no footer", async function (assert) {
+        await render(<template><DSelectTagFilter /></template>);
+        await click(".d-select__trigger");
+
+        assert.dom(optionNamed("zeta")).exists("the panel is open");
+        assert
+          .dom(".d-select__footer")
+          .doesNotExist("no empty footer region below the list");
+      });
+
+      test("suppressFooter: a single filter with more tags than listed shows its hint", async function (assert) {
+        this.siteSettings.max_tags_in_filter_list = 1;
+        await render(<template><DSelectTagFilter /></template>);
+        await click(".d-select__trigger");
+
+        assert
+          .dom(".d-select__footer")
+          .hasText(i18n("select_kit.components.filter_for_more"));
+      });
+
+      test("suppressFooter: a single filter keeps its caller's footer", async function (assert) {
+        await render(
+          <template>
+            <DSelectTagFilter>
+              <:footer>
+                <span class="custom-footer">Footer</span>
+              </:footer>
+            </DSelectTagFilter>
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        assert.dom(".d-select__footer .custom-footer").exists();
+      });
+
+      test("suppressFooter: a multiple filter without a caller footer has no footer", async function (assert) {
+        stubSearch();
+        const onChange = () => {};
+        await render(
+          <template>
+            <DSelectTagFilter @multiple={{true}} @onChange={{onChange}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        assert.dom(optionNamed("bug")).exists("the panel is open");
+        assert
+          .dom(".d-select__footer")
+          .doesNotExist("no empty footer region below the list");
+      });
+
+      test("searchIcon: a single filter shows the search icon in its panel", async function (assert) {
+        await render(<template><DSelectTagFilter /></template>);
+        await click(".d-select__trigger");
+
+        assert.dom(".d-select__panel .d-icon-magnifying-glass").exists();
+      });
+
+      test("tag drop parity: the panel is at least 16em wide", async function (assert) {
+        await render(
+          <template>
+            <div style="width: 80px"><DSelectTagFilter /></div>
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        const content = find(".d-select__content");
+        const em = parseFloat(getComputedStyle(content).fontSize);
+        assert.true(
+          content.offsetWidth >= 16 * em - 0.5,
+          `the panel is ${content.offsetWidth / em}em wide`
+        );
+      });
+
+      test("tag drop parity: a long tag keeps its count on its line", async function (assert) {
+        getOwner(this)
+          .lookup("service:site")
+          .set("top_tags", [
+            {
+              id: 9,
+              name: "differential-equations-and-more-analysis",
+              slug: "differential-equations-and-more-analysis",
+              count: 5,
+            },
+          ]);
+        await render(<template><DSelectTagFilter /></template>);
+        await click(".d-select__trigger");
+
+        const row = optionNamed("differential-equations");
+        const tag = row.querySelector(".discourse-tag").getBoundingClientRect();
+        const count = row.querySelector(".discourse-tag-count");
+        assert.dom(count).hasText("x5", "the count reads as one word");
+        const box = count.getBoundingClientRect();
+        assert.true(
+          Math.abs(box.top + box.height / 2 - (tag.top + tag.height / 2)) <
+            tag.height / 2,
+          "the count sits on the tag's line"
+        );
+        assert.true(
+          box.right <= row.getBoundingClientRect().right,
+          "the count stays inside the row"
+        );
+      });
+
+      test("tag drop parity: a held tag or untagged filter colors the trigger", async function (assert) {
+        const tag = { id: 1, name: "alpha", slug: "alpha" };
+        await render(
+          <template>
+            <div class="list-controls">
+              <span
+                class="probe"
+                style="color: var(--d-nav-border-color--active)"
+              >
+                probe
+              </span>
+              <div class="all"><DSelectTagFilter /></div>
+              <div class="tagged"><DSelectTagFilter @value={{tag}} /></div>
+              <div class="untagged"><DSelectTagFilter
+                  @value={{NO_TAG_ID}}
+                /></div>
+            </div>
+          </template>
+        );
+
+        const active = getComputedStyle(find(".probe")).color;
+        const style = (selector) => getComputedStyle(find(selector));
+        assert.strictEqual(style(".tagged .d-select").color, active);
+        assert.strictEqual(style(".tagged .d-select").borderTopColor, active);
+        assert.strictEqual(style(".untagged .d-select").color, active);
+        assert.notStrictEqual(
+          style(".all .d-select").borderTopColor,
+          active,
+          "all tags is not a filter"
+        );
+      });
+
+      test("tag drop parity: the topic-list trigger rules, hover included, reach the trigger", async function (assert) {
+        await render(
+          <template>
+            <div class="uc-modernize-foundation-theme">
+              <div class="list-controls"><DSelectTagFilter /></div>
+            </div>
+          </template>
+        );
+
+        const selectors = [];
+        const collect = (rules) => {
+          for (const rule of rules) {
+            if (rule.cssRules) {
+              collect(rule.cssRules);
+            }
+            if (rule.selectorText?.includes("tag-drop")) {
+              selectors.push(...rule.selectorText.split(","));
+            }
+          }
+        };
+        for (const sheet of document.styleSheets) {
+          try {
+            collect(sheet.cssRules);
+          } catch {
+            // Cross-origin sheets cannot be read.
+          }
+        }
+        const trigger = find(".d-select.tag-drop");
+        const matching = (hover) =>
+          selectors.filter(
+            (selector) =>
+              selector.includes(".list-controls") &&
+              selector.includes(":hover") === hover &&
+              trigger.matches(selector.replace(":hover", "").trim())
+          );
+
+        assert.true(
+          matching(false).length > 0,
+          "the base trigger rule applies"
+        );
+        assert.true(matching(true).length > 0, "the hover rule applies");
+      });
+
+      test("tag drop parity: the open trigger shows the focus ring", async function (assert) {
+        await render(
+          <template>
+            <div class="list-controls">
+              <span class="probe" style="color: var(--d-input-focused-color)">
+                probe
+              </span>
+              <DSelectTagFilter />
+            </div>
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        const focused = getComputedStyle(find(".probe")).color;
+        const trigger = getComputedStyle(find(".d-select.tag-drop"));
+        assert.strictEqual(trigger.outlineStyle, "solid");
+        assert.strictEqual(trigger.outlineColor, focused);
+        assert.strictEqual(trigger.borderTopColor, focused);
+      });
+
+      test("tag drop parity: the modernized open trigger fills instead of ringing", async function (assert) {
+        await render(
+          <template>
+            <div class="uc-modernize-foundation-theme">
+              <div class="list-controls">
+                <span class="fill" style="color: var(--primary-100)">
+                  fill
+                </span>
+                <span class="edge" style="color: var(--primary-300)">
+                  edge
+                </span>
+                <DSelectTagFilter />
+              </div>
+            </div>
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        const trigger = getComputedStyle(find(".d-select.tag-drop"));
+        assert.strictEqual(
+          trigger.backgroundColor,
+          getComputedStyle(find(".fill")).color
+        );
+        assert.strictEqual(
+          trigger.borderTopColor,
+          getComputedStyle(find(".edge")).color
+        );
+        assert.strictEqual(trigger.outlineStyle, "none");
       });
 
       test("exports the shortcut values", function (assert) {
@@ -354,7 +584,7 @@ module(
           );
       });
 
-      test("clearing a single filter emits the all-tags shortcut", async function (assert) {
+      test("Backspace never clears a single filter", async function (assert) {
         const value = { id: 2, name: "other", slug: "other" };
         const onChange = sinon.spy();
         await render(
@@ -363,11 +593,27 @@ module(
           </template>
         );
         await triggerKeyEvent(".d-select__trigger", "keydown", "Backspace");
-        assert.strictEqual(
-          onChange.lastCall?.args[0],
-          ALL_TAGS_ID,
-          "clearing normalizes to the all-tags id"
+        assert.false(onChange.called, "not from the closed trigger");
+
+        await click(".d-select__trigger");
+        await triggerKeyEvent(".d-select__panel input", "keydown", "Backspace");
+        assert.false(onChange.called, "not from the empty search field");
+        assert
+          .dom(".d-select__trigger")
+          .includesText("other", "the filter keeps its tag");
+      });
+
+      test("the all-tags shortcut is how a single filter clears", async function (assert) {
+        const value = { id: 2, name: "other", slug: "other" };
+        const onChange = sinon.spy();
+        await render(
+          <template>
+            <DSelectTagFilter @onChange={{onChange}} @value={{value}} />
+          </template>
         );
+        await click(".d-select__trigger");
+        await click(optionNamed(i18n("tagging.selector_remove_filter")));
+        assert.strictEqual(onChange.lastCall?.args[0], ALL_TAGS_ID);
       });
     });
   }

@@ -976,6 +976,22 @@ module(
         assert.dom(".custom-row").hasText("row", "item block is forwarded");
         assert.dom(".custom-footer").hasText("1", "footer block is forwarded");
       });
+
+      test("suppressFooter: no footer region without a caller footer", async function (assert) {
+        pretender.get("/tags/filter/search", () =>
+          response({ results: [{ id: 1, name: "row" }] })
+        );
+        const onChange = () => {};
+        await render(
+          <template><DSelectTag @onChange={{onChange}} /></template>
+        );
+        await new DSelect().open();
+
+        assert.dom(optionNamed("row")).exists("the panel is open");
+        assert
+          .dom(".d-select__footer")
+          .doesNotExist("no empty footer region below the list");
+      });
     });
 
     module("paste", function (nestedHooks) {

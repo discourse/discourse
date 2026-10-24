@@ -293,6 +293,36 @@ customization ports are done.
   every recipe exposes the same overrides instead of fixing them. Strings that cannot be overridden
   get an argument or a `@kindOptions` key before the families that render them join the flag.
   Requested 2026-10-23.
+- **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
+  it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
+  to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each
+  family is converted. Two traps found while porting the tag drop apply to every family:
+  - **In the `button` and `static` variants the root IS the trigger.** `.d-select.tag-drop` and
+    `.d-select__trigger` are the same element, so a descendant selector such as
+    `.d-select.tag-drop .d-select__trigger` (the shape a mechanical port of
+    `.select-kit.tag-drop .select-kit-header` produces) never matches. Core had two such rules
+    (`list-controls.scss`, the modernize theme's hover) that silently did nothing.
+  - **The panel is portaled.** Selectors scoped under the root or a page container
+    (`.list-controls .select-kit .select-kit-collection`) cannot reach rows, the search field or
+    the footer. Panel styles key on the overlay's kind modifier,
+    `.d-select__content.--kind-<kind>`.
+
+  | Legacy selector (tag drop) | DSelect equivalent |
+  |---|---|
+  | `.select-kit.tag-drop` | `.d-select.tag-drop` (root and trigger) |
+  | `.tag-drop-header`, `.select-kit-header` | `.d-select.tag-drop` itself |
+  | `.select-kit.tag-drop.has-selection` | `.d-select.tag-drop.--filtering` (a tag or untagged) |
+  | `.is-expanded`, `.is-focused`, `.is-highlighted` on the header | `[aria-expanded="true"]`, `:focus`, `:focus-visible` on the root |
+  | `.selected-name` | `.d-tag-drop__selection` |
+  | `.caret-icon`, `.angle-icon` | `.d-tag-drop__selection .d-icon` (`@kindOptions` `caretDownIcon` / `caretUpIcon` for the glyph) |
+  | `.select-kit-body` | `.d-select__content.--kind-select-tag-filter` (width: `--d-select-menu-min-width`) |
+  | `.select-kit-collection` | `.d-select__panel` (height: `--d-select-panel-max-height`) |
+  | `.select-kit-filter`, `.filter-input` | `.d-select__search`, `.d-select__filter` |
+  | `.filter-icon` | `.d-select__search-icon` (`@searchIcon` / the `searchIcon` option for the glyph) |
+  | `.select-kit-row`, `.is-highlighted`, `.is-selected` | `.d-select__option`, `.--active`, `[aria-selected="true"]` |
+  | `.select-kit-row[data-value="all-tags"]`, `[data-value="no-tags"]` | `.d-tag-drop__shortcut` (rows keep `data-value`) |
+  | `.select-kit-row .discourse-tag-count` | `.d-tag-option .discourse-tag-count` |
+  | `.filter-for-more` | `.d-tag-drop__filter-for-more`, inside `.d-select__footer` |
 
 ## Verification
 

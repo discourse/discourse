@@ -674,3 +674,38 @@
 .d-select__filter::-webkit-search-cancel-button {
   display: none;
 }
+
+// The panel's search field and its optional trailing icon, drawn inside the field.
+.d-select__search {
+  position: relative;
+
+  // The wrapper must be exactly as tall as the input for the icon to center on it, so the input's
+  // global bottom margin (the panel's only spacing under the field) moves here.
+  display: flex;
+  margin-bottom: 9px;
+
+  > .d-select__filter {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  &.--with-icon .d-select__filter {
+    padding-inline-end: 2em;
+  }
+
+  .d-select__search-icon {
+    position: absolute;
+    inset-inline-end: 0.65em;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.d-select__search-icon {
+  flex: none;
+  align-self: center;
+  margin-inline-start: auto;
+  color: var(--primary-medium);
+  pointer-events: none;
+}

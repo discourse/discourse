@@ -1604,6 +1604,55 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       assert.strictEqual(footer?.close, undefined, "no close in the state");
       assert.false(footer?.hasValue, "the state is live");
     });
+
+    test("DSelectList searchIcon trails its search field", async function (assert) {
+      const held = tracked([]);
+      const setHeld = (next) => (held.value = next);
+      await render(
+        <template>
+          <DSelectList
+            @items={{FRUIT}}
+            @label="Fruit"
+            @onChange={{setHeld}}
+            @searchIcon="magnifying-glass"
+            @value={{held.value}}
+          />
+        </template>
+      );
+
+      const filter = find(".d-select__filter");
+      const icon = find(".d-icon-magnifying-glass");
+      assert.dom(icon).hasAttribute("aria-hidden", "true");
+      assert.strictEqual(
+        filter.compareDocumentPosition(icon),
+        Node.DOCUMENT_POSITION_FOLLOWING,
+        "the icon follows the input"
+      );
+    });
+
+    test("DSelectList suppressFooter drops a passed footer", async function (assert) {
+      const held = tracked([]);
+      const setHeld = (next) => (held.value = next);
+      await render(
+        <template>
+          <DSelectList
+            @items={{FRUIT}}
+            @label="Fruit"
+            @onChange={{setHeld}}
+            @suppressFooter={{true}}
+            @value={{held.value}}
+          >
+            <:footer>
+              <span class="test-footer">Footer</span>
+            </:footer>
+          </DSelectList>
+        </template>
+      );
+
+      assert.dom("[role='listbox']").exists("the list renders");
+      assert.dom(".d-select__footer").doesNotExist("no footer region");
+      assert.dom(".test-footer").doesNotExist("no footer content");
+    });
   });
 
   module("locked", function () {

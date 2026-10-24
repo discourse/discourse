@@ -323,6 +323,7 @@ export default class ListComposer {
         capDisabled,
         group: !!item.__header,
         divider: !!item.__divider,
+        action: typeof item.onSelect === "function",
         __create: isCreate || !!item.__create,
         __unresolved: !!item.__unresolved,
         __none: !!item.__none,

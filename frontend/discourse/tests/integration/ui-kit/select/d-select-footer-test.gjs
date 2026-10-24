@@ -269,3 +269,88 @@ module(
     });
   }
 );
+
+/** A recipe that forwards its caller's footer, the way the tag recipes do. */
+const ForwardingSelect = <template>
+  <DSelect @items={{ITEMS}} @suppressFooter={{not (has-block "footer")}}>
+    <:footer>
+      {{~yield to="footer"~}}
+    </:footer>
+  </DSelect>
+</template>;
+
+module(
+  "Integration | ui-kit | select | DSelect (@suppressFooter)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("suppressFooter drops a passed footer", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @suppressFooter={{true}}>
+            <:footer>
+              <span class="test-footer">Footer</span>
+            </:footer>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom("[role='listbox']").exists("the panel is open");
+      assert.dom(".d-select__footer").doesNotExist("no footer region");
+      assert.dom(".test-footer").doesNotExist("no footer content");
+    });
+
+    test("suppressFooter false keeps a passed footer", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @suppressFooter={{false}}>
+            <:footer>
+              <span class="test-footer">Footer</span>
+            </:footer>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom(".d-select__footer .test-footer").exists();
+    });
+
+    test("suppressFooter false never adds a footer that was not passed", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @suppressFooter={{false}} />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom("[role='listbox']").exists("the panel is open");
+      assert.dom(".d-select__footer").doesNotExist();
+    });
+
+    test("suppressFooter lets a forwarding recipe skip the footer its caller did not pass", async function (assert) {
+      await render(<template><ForwardingSelect /></template>);
+      await click("[role='combobox']");
+
+      assert.dom("[role='listbox']").exists("the panel is open");
+      assert
+        .dom(".d-select__footer")
+        .doesNotExist("no empty footer region below the list");
+    });
+
+    test("suppressFooter keeps a footer forwarded from the caller", async function (assert) {
+      await render(
+        <template>
+          <ForwardingSelect>
+            <:footer>
+              <span class="test-footer">Footer</span>
+            </:footer>
+          </ForwardingSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom(".d-select__footer .test-footer").exists();
+    });
+  }
+);

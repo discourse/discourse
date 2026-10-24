@@ -27,6 +27,11 @@ The root also always exposes a unique `data-select-id` that stays stable for the
 life. Its `.d-select__panel` carries the same value whenever mounted, including loading,
 empty, error, minimum-query-length and mobile modal states. No panel is mounted while closed.
 
+The panel is portaled, so styles on the root never reach it. Its overlay, `.d-select__content`,
+carries a `--kind-<kind>` modifier when the select has a `@kind`, which is how a recipe or theme
+styles one kind's panel, for example `.d-select__content.--kind-select-tag-filter` to set
+`--d-select-menu-min-width`.
+
 Tests drive a select through these hooks with `dSelect()` (actions) and `assert.dSelect()`
 (checks) from `discourse/tests/helpers/`, and with `PageObjects::Components::UiKit::DSelect.at`
 in system specs.
@@ -389,7 +394,7 @@ group headers, dividers, chips or the trigger. The context adds `item` (the raw 
 `selected` and `disabled` (which includes selection-cap restrictions). It has no `control`.
 
 **`options`** overrides presentation. The core keys are `caretIcon` (a string or
-`{ open, closed }`), `iconOnly`, `label`, `placeholder`, `searchPlaceholder`, `icon`, `showCaret`,
+`{ open, closed }`), `iconOnly`, `label`, `placeholder`, `searchPlaceholder`, `searchIcon`, `icon`, `showCaret`,
 `clearable`, `noneLabel` and `disabled`, plus the keys a recipe declares (see
 [Recipes](#recipes)). `current` holds the values so far, starting from the call site's arguments.
 Every key is last-wins except `disabled`, which can add a lock but never lift one. `iconOnly`
@@ -540,6 +545,8 @@ exception to the kit's domain-free primitives. A recipe:
 - sets `@kind`, and passes `@kindContext` with its raw state;
 - forwards the call site's `@identifier`, `@instanceContext`, `@items`, `@load` and `@onChange`,
   and its `:item`, `:selection` and `:footer` blocks;
+- passes `@suppressFooter={{not (has-block "footer")}}` with a forwarded `:footer`. A forwarded
+  block always counts as passed, so without it every recipe panel ends in an empty footer;
 - never sets its own `@identifier`, which would take the call-site tier away from its callers.
 
 #### Tag recipes
@@ -557,7 +564,8 @@ The tag family has three recipes, split by what the pick is for:
 - **`DSelectTagFilter`** (kind `select-tag-filter`) narrows a topic list. Its value is a tag,
   `ALL_TAGS_ID` or `NO_TAG_ID` (exported by the module), or several tags with `@multiple` for
   intersections. It offers the "all tags" and "no tags" shortcuts and the top tags, and never
-  navigates: the call site turns the pick into a URL.
+  navigates: the call site turns the pick into a URL. A single filter clears only through its
+  "all tags" row; Backspace leaves it alone, since a stray key would otherwise change the page.
 - **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name.
 
 Held names resolve when the value changes. Search sends only known numeric ids, and a pending or
@@ -664,7 +672,9 @@ by mechanism.
   icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved label for
   the accessible name and is ignored with a warning without one; drive `@icon` from `@value` for
   a selection-reactive glyph); caret swap
-  (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); `@clearable`; `@disabled` /
+  (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
+  search field that is not the trigger (the `button` panel's field, the mobile modal's, and
+  DSelectList's; never a desktop `typeahead` trigger, and `static` has no search); `@clearable`; `@disabled` /
   `@readonly`; overlay placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
 - Custom row and selection markup (`:item` / `:selection` blocks; on the typeahead variant the
   `:selection` block is the resting/closed display — once the menu opens the built-in input shows
@@ -825,7 +835,7 @@ second ownership check for deferred reports. Adds and removals always speak. Emp
 and error content remains visible while unfocused without live-region roles. An
 empty query with no rows renders and speaks no empty-result message.
 
-`@label`, `@searchPlaceholder` (default “Search…”), `@id`, `@describedBy`, `@invalid`,
+`@label`, `@searchPlaceholder` (default “Search…”), `@searchIcon` (a trailing glyph), `@id`, `@describedBy`, `@invalid`,
 `@disabled` and `@readonly` apply to the search input. Its `aria-controls` exists only
 while a listbox renders. The root is `.d-select.--list`, takes `...attributes`, and
 exposes the same `data-select-id`, `data-value` and `data-name` hooks as DSelect.

@@ -113,6 +113,16 @@ module(
         assert.strictEqual(onChange.lastCall.args[0], "Kind");
       });
 
+      test("suppressFooter: no footer region without a caller footer", async function (assert) {
+        await render(<template><DSelectTagGroup /></template>);
+        await click(".d-select__trigger");
+
+        assert.dom(optionNamed("Kind")).exists("the panel is open");
+        assert
+          .dom(".d-select__footer")
+          .doesNotExist("no empty footer region below the list");
+      });
+
       test("held names that search does not return still show by name", async function (assert) {
         const held = ["Retired"];
 

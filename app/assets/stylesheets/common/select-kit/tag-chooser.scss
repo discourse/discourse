@@ -36,6 +36,22 @@
   }
 }
 
+// The tag gives way first: it truncates while its count stays on the same line.
+.d-tag-option {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+
+  .discourse-tag {
+    min-width: 0;
+  }
+
+  .discourse-tag-count {
+    flex: none;
+    white-space: nowrap;
+  }
+}
+
 .d-select__option {
   .discourse-tag-count {
     margin-inline-start: var(--space-1);

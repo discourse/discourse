@@ -1660,3 +1660,42 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
     assert.false(onChange.called, "no row was accidentally selected");
   });
 });
+
+module("Integration | ui-kit | select | DSelect action rows", function (hooks) {
+  setupRenderingTest(hooks);
+
+  const ROWS = [
+    { id: "act", name: "Run an action", onSelect() {} },
+    { id: 1, name: "Apple" },
+  ];
+
+  test("action rows carry no selection marker in a multi-select", async function (assert) {
+    await render(
+      <template><DSelect @items={{ROWS}} @multiple={{true}} /></template>
+    );
+    await click("[role='combobox']");
+
+    assert
+      .dom("[role='option'][data-value='act'] .d-select__option-selected-icon")
+      .doesNotExist("an action never becomes a value, so it has no checkbox");
+    assert
+      .dom("[role='option'][data-value='1'] .d-select__option-selected-icon")
+      .exists("an ordinary row keeps its checkbox");
+  });
+
+  test("action rows carry no selection marker with a custom selected icon", async function (assert) {
+    await render(
+      <template>
+        <DSelect @items={{ROWS}} @selectedIcon="check" @value={{1}} />
+      </template>
+    );
+    await click("[role='combobox']");
+
+    assert
+      .dom("[role='option'][data-value='act'] .d-select__option-selected-icon")
+      .doesNotExist();
+    assert
+      .dom("[role='option'][data-value='1'] .d-select__option-selected-icon")
+      .exists();
+  });
+});

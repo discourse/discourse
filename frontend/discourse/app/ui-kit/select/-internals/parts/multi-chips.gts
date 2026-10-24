@@ -68,6 +68,8 @@ interface MultiChipsSignature {
     label: string;
     /** The field placeholder. */
     placeholder?: string;
+    /** A decorative trailing icon, shown only when the field is a search field. */
+    searchIcon?: string;
     /** The id of the currently rendered listbox. */
     listboxId?: string;
     /** Whether the menu is expanded. */
@@ -519,6 +521,9 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           )}}
           {{on "keydown" @onInputKeydown capture=true}}
         />
+        {{#if (and (eq @roleMode "search") @searchIcon)}}
+          {{dIcon @searchIcon class="d-select__search-icon"}}
+        {{/if}}
         {{#if this.chipHint}}
           <span class="sr-only" id={{this.chipHintId}}>
             {{this.chipHint}}

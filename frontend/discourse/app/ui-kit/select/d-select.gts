@@ -22,6 +22,7 @@ import type { CapabilitiesService } from "discourse/services/capabilities";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import InteractionCoordinator from "discourse/ui-kit/select/-internals/coordinators/interaction-coordinator";
 import SelectHost, {
   type SelectPasteContext,
@@ -119,6 +120,12 @@ interface DSelectSignature {
     onChange?: SelectEngineOptions["onChange"];
     placeholder?: string;
     searchPlaceholder?: string;
+    /**
+     * A decorative trailing icon in a search field that is not the trigger: the `button` panel's
+     * field and the mobile modal's. A desktop `typeahead` trigger is its own search field and
+     * never shows it; `static` has no search.
+     */
+    searchIcon?: string;
     noResultsLabel?: string;
     label?: string;
     /**
@@ -234,6 +241,12 @@ interface DSelectSignature {
      * multi-select, where the empty state is the placeholder rather than a row.
      */
     noneLabel?: string;
+    /**
+     * Skips the `:footer` block even when one is passed. A recipe that forwards its caller's
+     * footer passes `(not (has-block "footer"))`, since a forwarded block always counts as passed.
+     * It can only remove a footer: without a `:footer` block there is none either way.
+     */
+    suppressFooter?: boolean;
     /** The overlay's preferred placement relative to the trigger (forwarded to the menu). */
     placement?: MenuOptions["placement"];
     /** The overlay's offset from the trigger, in pixels (forwarded to the menu). */
@@ -430,6 +443,12 @@ export default class DSelect extends Component<DSelectSignature> {
     associateDestroyableChild(this, this.interaction);
   }
 
+  /** The overlay's classes, with a `--kind-<kind>` modifier when the select has a kind. */
+  get contentClass(): string {
+    const kind = this.engine.kind;
+    return kind ? `d-select__content --kind-${kind}` : "d-select__content";
+  }
+
   /** Stable id for the panel message describing cap-disabled options. */
   get limitId(): string {
     return `${this.#listboxId}-limit`;
@@ -556,9 +575,10 @@ export default class DSelect extends Component<DSelectSignature> {
       ...attributes
       {{! The d-select__content class floors the overlay min-width in CSS: matchTriggerWidth pins
         it to the trigger, which is unusably narrow for a compact icon-only trigger, and the
-        min-width floor overrides that (it also gives the windowed option list a real width). }}
+        min-width floor overrides that (it also gives the windowed option list a real width).
+        The kind modifier lets a recipe or theme style its portaled overlay. }}
       @ariaLabel={{this.presenter.ariaLabelText}}
-      @contentClass="d-select__content"
+      @contentClass={{this.contentClass}}
       @contentRole={{this.presenter.panelContentRole}}
       {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
         mutate paths are gated separately in this component (they are not DMenu listeners). }}
@@ -747,7 +767,7 @@ export default class DSelect extends Component<DSelectSignature> {
             @focusStrip={{this.interaction.focusStrip}}
             @hasEmptyBlock={{has-block "empty"}}
             @hasErrorBlock={{has-block "error"}}
-            @hasFooterBlock={{has-block "footer"}}
+            @hasFooterBlock={{and (has-block "footer") (not @suppressFooter)}}
             @hasGroupHeaderBlock={{has-block "groupHeader"}}
             @hasItemBlock={{has-block "item"}}
             @hasListHeaderBlock={{has-block "listHeader"}}
@@ -837,6 +857,7 @@ export default class DSelect extends Component<DSelectSignature> {
                     @queryDisplay="always"
                     @registerInput={{this.interaction.captureFilter}}
                     @roleMode="search"
+                    @searchIcon={{this.engine.resolvedOptions.searchIcon}}
                     @selection={{this.heldSelection}}
                     @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
                     @showMenu={{menuArgs.show}}
@@ -863,33 +884,46 @@ export default class DSelect extends Component<DSelectSignature> {
                     </:selectionLoading>
                   </MultiChips>
                 {{else}}
-                  <ComboboxQueryInput
-                    aria-describedby={{@describedBy}}
-                    aria-invalid={{if @invalid "true"}}
-                    class="d-select__filter"
-                    id={{this.panelInputId}}
-                    @disabled={{this.presenter.isDisabled}}
-                    @engine={{this.engine}}
-                    @expanded={{true}}
-                    @label={{this.presenter.ariaLabelText}}
-                    @listboxId={{this.panelListboxId}}
-                    @onRequestClose={{menuArgs.close}}
-                    @placeholder={{this.presenter.searchPlaceholderText}}
-                    @queryDisplay="always"
-                    @readonly={{this.presenter.isReadonly}}
-                    @registerInput={{this.interaction.captureFilter}}
-                    @roleMode="search"
-                    @tabPassthrough={{true}}
-                    {{on "paste" this.host.handlePaste}}
-                    {{keepAboveKeyboard
-                      this.interaction.shouldCorrectKeyboardOcclusion
+                  <div
+                    class={{dConcatClass
+                      "d-select__search"
+                      (if this.engine.resolvedOptions.searchIcon "--with-icon")
                     }}
-                    {{on
-                      "keydown"
-                      this.interaction.handleInputKeydown
-                      capture=true
-                    }}
-                  />
+                  >
+                    <ComboboxQueryInput
+                      aria-describedby={{@describedBy}}
+                      aria-invalid={{if @invalid "true"}}
+                      class="d-select__filter"
+                      id={{this.panelInputId}}
+                      @disabled={{this.presenter.isDisabled}}
+                      @engine={{this.engine}}
+                      @expanded={{true}}
+                      @label={{this.presenter.ariaLabelText}}
+                      @listboxId={{this.panelListboxId}}
+                      @onRequestClose={{menuArgs.close}}
+                      @placeholder={{this.presenter.searchPlaceholderText}}
+                      @queryDisplay="always"
+                      @readonly={{this.presenter.isReadonly}}
+                      @registerInput={{this.interaction.captureFilter}}
+                      @roleMode="search"
+                      @tabPassthrough={{true}}
+                      {{on "paste" this.host.handlePaste}}
+                      {{keepAboveKeyboard
+                        this.interaction.shouldCorrectKeyboardOcclusion
+                      }}
+                      {{on
+                        "keydown"
+                        this.interaction.handleInputKeydown
+                        capture=true
+                      }}
+                    />
+                    {{#if this.engine.resolvedOptions.searchIcon}}
+                      {{dIcon
+                        this.engine.resolvedOptions.searchIcon
+                        class="d-select__search-icon"
+                      }}
+                    {{/if}}
+                  </div>
                 {{/if}}
               {{/if}}
             </:field>

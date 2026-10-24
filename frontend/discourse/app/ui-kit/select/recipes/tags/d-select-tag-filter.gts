@@ -112,9 +112,15 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     );
   }
 
-  get tagClass() {
+  /** The legacy tag class, plus `--filtering` while the filter narrows the list. */
+  get rootClass() {
     const tag = this.#tag;
-    return tag && "slug" in tag && tag.slug ? `tag-${tag.slug}` : "tag_all";
+    const tagClass =
+      tag && "slug" in tag && tag.slug ? `tag-${tag.slug}` : "tag_all";
+    if (this.selection.id === ALL_TAGS_ID) {
+      return tagClass;
+    }
+    return `${tagClass} --filtering`;
   }
 
   get #tag(): FilterTag | undefined {
@@ -219,10 +225,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   @action
   onChange(id: SelectValue, item: SelectItem | SelectItem[] | null) {
-    if (id === null) {
-      this.args.onChange?.(ALL_TAGS_ID);
-      return;
-    }
+    // A null id is DSelect's keyboard clear; a filter only clears through its "All tags" row.
     if (
       (typeof id !== "string" && typeof id !== "number") ||
       !item ||
@@ -271,6 +274,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @load={{@load}}
         @multiple={{true}}
         @onChange={{this.onMultipleChange}}
+        @suppressFooter={{not (has-block "footer")}}
         @value={{this.multipleValue}}
       >
         <:item as |item options|>
@@ -294,7 +298,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     {{else}}
       {{! TODO (select-kit-replacement-cleanup): Retain the legacy family and filter classes during rollout. }}
       <DSelect
-        class={{this.tagClass}}
+        class={{this.rootClass}}
         ...attributes
         @disabled={{@disabled}}
         @identifier={{@identifier}}
@@ -313,7 +317,9 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @onChange={{this.onChange}}
         @onClose={{this.onClose}}
         @onShow={{this.onShow}}
+        @searchIcon="magnifying-glass"
         @showCaret={{false}}
+        @suppressFooter={{not (or (has-block "footer") this.moreTags)}}
         @value={{this.selection.id}}
         @valueItems={{this.selection}}
         @variant="button"

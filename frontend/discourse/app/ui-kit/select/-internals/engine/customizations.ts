@@ -56,6 +56,8 @@ export interface SelectPresentationOptions {
   placeholder?: string;
   /** Text shown in an empty panel filter. */
   searchPlaceholder?: string;
+  /** A decorative trailing icon in a search field that is not the trigger. */
+  searchIcon?: string;
   /** A decorative leading trigger icon. */
   icon?: string;
   /** Whether the trigger shows its caret. */
@@ -86,6 +88,7 @@ const CORE_OPTION_KEYS = new Set<keyof SelectPresentationOptions>([
   "label",
   "placeholder",
   "searchPlaceholder",
+  "searchIcon",
   "icon",
   "showCaret",
   "clearable",

@@ -12,7 +12,7 @@ import {
 interface DSelectTagSignature extends Omit<SelectTagBaseSignature, "Args"> {
   Args: Omit<
     SelectTagBaseSignature["Args"],
-    "kind" | "kindContext" | "kindOptions"
+    "kind" | "kindContext" | "kindOptions" | "suppressFooter"
   >;
 }
 
@@ -47,6 +47,7 @@ const DSelectTag: TemplateOnlyComponent<DSelectTagSignature> = <template>
     @onChange={{@onChange}}
     @placeholder={{@placeholder}}
     @suggestRecent={{@suggestRecent}}
+    @suppressFooter={{not (has-block "footer")}}
     @value={{@value}}
     @variant={{@variant}}
   >

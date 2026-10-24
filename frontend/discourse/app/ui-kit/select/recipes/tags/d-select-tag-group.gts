@@ -156,6 +156,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
         @placeholder
         (i18n "category.tag_groups_placeholder")
       }}
+      @suppressFooter={{not (has-block "footer")}}
       @value={{this.selectionValue}}
       @valueItems={{this.valueItems}}
       @variant={{@variant}}
