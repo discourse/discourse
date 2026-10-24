@@ -79,7 +79,7 @@ class FormTemplate < ActiveRecord::Base
   private
 
   def validate_output_template
-    OutputRenderer.parse(output_template) if output_template.present?
+    Liquid::Template.parse(output_template) if output_template.present?
   rescue Liquid::Error
     errors.add(:output_template, I18n.t("form_templates.errors.invalid_output_template"))
   end
