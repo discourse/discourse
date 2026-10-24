@@ -1,5 +1,12 @@
 import { settled } from "@ember/test-helpers";
 import { setLocalCache } from "pretty-text/oneboxer-cache";
+import {
+  closeHistory,
+  redo,
+  redoDepth,
+  undo,
+  undoDepth,
+} from "prosemirror-history";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { buildEngine } from "discourse/static/markdown-it";
@@ -9,6 +16,9 @@ import { setupRichEditor } from "discourse/tests/helpers/rich-editor-helper";
 
 // Mocked by create-pretender for both /inline-onebox and /onebox.
 const URL = "http://www.example.com/has-title.html";
+const TOP_LEVEL_URL = "http://www.example.com";
+const ONEBOX_HTML =
+  '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com">Example</a></h3></article></aside>';
 
 function lastParagraphStart(doc) {
   let pos = null;
@@ -18,6 +28,39 @@ function lastParagraphStart(doc) {
     }
   });
   return pos;
+}
+
+async function undoAll(view) {
+  for (let i = 0; i < 5 && undoDepth(view.state) > 0; i++) {
+    undo(view.state, view.dispatch);
+    await settled();
+  }
+}
+
+function posOfText(doc, text) {
+  let pos = null;
+  doc.descendants((node, nodePos) => {
+    if (node.isText && node.text === text) {
+      pos = nodePos;
+    }
+  });
+  return pos;
+}
+
+// With pretender in manual-resolution mode, waits for the next /onebox request
+// to fire, releases its response, and lets the resulting render dispatch.
+async function resolveOneboxRequest() {
+  let ref;
+  for (let i = 0; i < 200 && !ref; i++) {
+    ref = pretender.requestReferences?.find((reference) =>
+      reference.request.url.includes("/onebox")
+    );
+    if (!ref) {
+      await new Promise((resolve) => setTimeout(resolve, 5));
+    }
+  }
+  pretender.resolve(ref.request);
+  await new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function moveCursorTo(view, pos) {
@@ -166,6 +209,181 @@ module(
         view.state.selection instanceof NodeSelection,
         "the cursor lands after the onebox, not selecting the block"
       );
+    });
+
+    test("undo reaches back past a typed URL's onebox", async function (assert) {
+      pretender.get("/onebox", () => [
+        200,
+        { "Content-Type": "text/html" },
+        ONEBOX_HTML,
+      ]);
+
+      const [editor] = await setupRichEditor(assert, "x");
+      const { view } = editor;
+      const original = editor.value;
+
+      view.dispatch(view.state.tr.insertText(`${TOP_LEVEL_URL} `, 1, 2));
+      await settled();
+      view.dispatch(view.state.tr.split(view.state.selection.from));
+      await settled();
+      assert.dom(".onebox-wrapper").exists("the URL becomes a full onebox");
+
+      await undoAll(view);
+
+      assert.dom(".onebox-wrapper").doesNotExist("undo removes the onebox");
+      assert.strictEqual(editor.value, original, "undo restores the document");
+    });
+
+    // The cursor lands away from a dropped link, so the scan must stay held
+    // through other plugins' appended reactions to the undo.
+    test("undo reaches back past a dropped link's onebox", async function (assert) {
+      pretender.get("/onebox", () => [
+        200,
+        { "Content-Type": "text/html" },
+        ONEBOX_HTML,
+      ]);
+
+      const [editor] = await setupRichEditor(assert, "aaaaa\n\nx");
+      const { view } = editor;
+      const { schema } = view.state;
+      const original = editor.value;
+
+      const linkMark = schema.marks.link.create({
+        href: TOP_LEVEL_URL,
+        markup: "linkify",
+      });
+      const lastStart = lastParagraphStart(view.state.doc);
+      const tr = view.state.tr
+        .replaceWith(
+          lastStart,
+          lastStart + 1,
+          schema.text(TOP_LEVEL_URL, [linkMark])
+        )
+        .delete(1, 3);
+      tr.setSelection(TextSelection.create(tr.doc, 1));
+      view.dispatch(tr);
+      await settled();
+      assert.dom(".onebox-wrapper").exists("the dropped link becomes a onebox");
+
+      await undoAll(view);
+
+      assert.dom(".onebox-wrapper").doesNotExist("undo removes the onebox");
+      assert.strictEqual(editor.value, original, "undo restores the document");
+    });
+
+    test("a render arriving after an undo preserves the redo stack", async function (assert) {
+      pretender.get("/onebox", () => [
+        200,
+        { "Content-Type": "text/html" },
+        ONEBOX_HTML,
+      ]);
+
+      const [editor] = await setupRichEditor(assert, "x");
+      const { view } = editor;
+
+      view.dispatch(view.state.tr.insertText(`${TOP_LEVEL_URL} `, 1, 2));
+      await settled();
+
+      view.dispatch(
+        closeHistory(view.state.tr.split(view.state.selection.from))
+      );
+      view.dispatch(closeHistory(view.state.tr.insertText("abc")));
+
+      undo(view.state, view.dispatch);
+      assert.strictEqual(redoDepth(view.state), 1, "the undo is redoable");
+
+      await settled();
+      assert.dom(".onebox-wrapper").exists("the late render still shows");
+      assert.strictEqual(
+        redoDepth(view.state),
+        1,
+        "the late render does not wipe the redo stack"
+      );
+
+      redo(view.state, view.dispatch);
+      await settled();
+      assert.true(
+        view.state.doc.textContent.includes("abc"),
+        "redo restores the undone edit"
+      );
+    });
+
+    test("a pending render leaves an undone onebox's link alone", async function (assert) {
+      let manual = false;
+      pretender.get(
+        "/onebox",
+        () => [200, { "Content-Type": "text/html" }, ONEBOX_HTML],
+        () => manual
+      );
+
+      const [editor] = await setupRichEditor(assert, "x\n\nyyy\n\nzzz");
+      const { view } = editor;
+      const { schema } = view.state;
+      manual = true;
+
+      const linkText = (url) =>
+        schema.text(url, [
+          schema.marks.link.create({ href: url, markup: "linkify" }),
+        ]);
+
+      // Drop link A on the first line, with the cursor away on the last line.
+      const trA = view.state.tr.replaceWith(1, 2, linkText(TOP_LEVEL_URL));
+      trA.setSelection(TextSelection.create(trA.doc, trA.doc.content.size - 1));
+      view.dispatch(trA);
+
+      // Drop link B on the second line — its fetch queues behind A's.
+      const posB = posOfText(view.state.doc, "yyy");
+      const trB = view.state.tr.replaceWith(
+        posB,
+        posB + 3,
+        linkText(`${TOP_LEVEL_URL}/b`)
+      );
+      trB.setSelection(TextSelection.create(trB.doc, trB.doc.content.size - 1));
+      view.dispatch(closeHistory(trB));
+
+      await resolveOneboxRequest();
+      assert.dom(".onebox-wrapper").exists({ count: 1 }, "A renders first");
+
+      // Undo A's render while B's fetch is still in flight.
+      undo(view.state, view.dispatch);
+      assert.dom(".onebox-wrapper").doesNotExist("undo restores A's link");
+
+      await resolveOneboxRequest();
+      await settled();
+
+      assert
+        .dom(".onebox-wrapper")
+        .exists({ count: 1 }, "B's preview still renders");
+      assert.strictEqual(
+        view.state.doc.firstChild.textContent,
+        TOP_LEVEL_URL,
+        "A stays the link undo restored"
+      );
+      assert.strictEqual(redoDepth(view.state), 1, "the undo stays redoable");
+    });
+
+    test("opening content with a onebox URL leaves nothing extra to undo", async function (assert) {
+      pretender.get("/onebox", () => [
+        200,
+        { "Content-Type": "text/html" },
+        ONEBOX_HTML,
+      ]);
+
+      const markdown = `hello\n\n${TOP_LEVEL_URL}\n\nworld`;
+      const [editor] = await setupRichEditor(assert, markdown);
+      const { view } = editor;
+
+      assert.dom(".onebox-wrapper").exists("the URL renders as a onebox");
+      assert.strictEqual(
+        undoDepth(view.state),
+        1,
+        "only the helper's own serialization nudge is undoable — not the render"
+      );
+
+      await undoAll(view);
+
+      assert.dom(".onebox-wrapper").exists("undo does not degrade the preview");
+      assert.strictEqual(editor.value, markdown, "the value is unchanged");
     });
   }
 );
