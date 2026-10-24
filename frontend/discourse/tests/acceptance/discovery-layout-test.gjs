@@ -22,6 +22,13 @@ acceptance("Discovery Layout", function () {
     assert.dom(".discovery-layout__sidebar").doesNotExist();
   });
 
+  test("mounts the sidebar-discovery outlet when no blocks are registered", async function (assert) {
+    await visit("/latest");
+
+    const blocks = this.owner.lookup("service:blocks");
+    assert.true(blocks.mountedOutletNames().has("sidebar-discovery"));
+  });
+
   test("renders the discovery-layout wrapper with sidebar when blocks are registered", async function (assert) {
     @block("sidebar-test-block")
     class SidebarTestBlock extends Component {

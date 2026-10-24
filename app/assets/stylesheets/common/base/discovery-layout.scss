@@ -1,0 +1,65 @@
+@use "lib/container";
+
+:root {
+  --d-comp-DiscoveryLayout-sidebar-size-inline: 18rem;
+  --d-comp-DiscoveryLayout-space-gap-inline: var(--space-6);
+  --d-comp-DiscoveryLayout-space-gap-block: var(--space-4);
+}
+
+// The columns only apply while the sidebar renders a block, or shows an outlet
+// boundary for tooling, so a layout whose blocks all skip keeps the full-width
+// list. Breakpoints follow the space the page gets, not the viewport.
+#main-outlet:has(
+  > .discovery-layout
+    .discovery-layout__sidebar
+    :is(.sidebar-discovery__block, [data-outlet-name="sidebar-discovery"])
+) {
+  container-type: inline-size;
+  container-name: discovery-page;
+}
+
+.discovery-layout:has(
+  .discovery-layout__sidebar
+    :is(.sidebar-discovery__block, [data-outlet-name="sidebar-discovery"])
+) {
+  @include container.from(lg, discovery-page) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(
+        --d-comp-DiscoveryLayout-sidebar-size-inline
+      );
+
+    // The trailing 1fr row absorbs leftover height when the sidebar is taller
+    // than the list. Every plugin outlet connector is a row of its own; unused
+    // auto rows collapse to nothing.
+    grid-template-rows: repeat(20, auto) 1fr;
+    column-gap: var(--d-comp-DiscoveryLayout-space-gap-inline);
+
+    > *,
+    .discovery-layout__content > * {
+      grid-column: 1;
+    }
+
+    .discovery-layout__content {
+      display: contents;
+    }
+
+    .discovery-layout__sidebar {
+      grid-column: 2;
+      grid-row: 1 / -1;
+    }
+  }
+
+  @include container.until(lg, discovery-page) {
+    display: flex;
+    flex-direction: column;
+
+    .discovery-layout__content {
+      display: contents;
+    }
+
+    .discovery-layout__sidebar {
+      order: -1;
+      margin-block-end: var(--d-comp-DiscoveryLayout-space-gap-block);
+    }
+  }
+}

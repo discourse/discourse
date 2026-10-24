@@ -135,14 +135,17 @@ export default class Layout extends Component {
           </div>
         </ConditionalWrap>
 
-        {{#if this.hasSidebarLayout}}
-          <div class="discovery-layout__sidebar">
-            <BlockOutlet
-              @name="sidebar-discovery"
-              @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-            />
-          </div>
-        {{/if}}
+        {{! Mounted even without a layout, so tooling that enumerates mounted
+            outlets can find it and start one. It renders nothing until then. }}
+        <ConditionalWrap
+          @class="discovery-layout__sidebar"
+          @when={{this.hasSidebarLayout}}
+        >
+          <BlockOutlet
+            @name="sidebar-discovery"
+            @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+          />
+        </ConditionalWrap>
 
         <PluginOutlet
           @connectorTagName="div"
