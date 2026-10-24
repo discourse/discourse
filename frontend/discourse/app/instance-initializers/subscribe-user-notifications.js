@@ -11,7 +11,9 @@ import {
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import {
+  consentPromptDismissedKey,
   isPushNotificationsEnabled,
+  keyValueStore as pushNotificationKeyValueStore,
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
@@ -99,8 +101,10 @@ class SubscribeUserNotificationsInit {
             }
           });
         } else {
-          // the stored subscription can no longer display anything
+          // the stored subscription can no longer display anything, so turn
+          // push off and let the consent banner ask again
           this.desktopNotifications.disable();
+          pushNotificationKeyValueStore.remove(consentPromptDismissedKey);
         }
       } else if (!this.currentUser.isInDoNotDisturb()) {
         unsubscribePushNotifications(this.currentUser);

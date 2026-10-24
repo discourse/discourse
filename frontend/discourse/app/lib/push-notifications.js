@@ -3,6 +3,7 @@ import { helperContext } from "discourse/lib/helpers";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
+export const consentPromptDismissedKey = "dismissed-prompt";
 
 export function userSubscriptionKey(user) {
   return `subscribed-${user.get("id")}`;
