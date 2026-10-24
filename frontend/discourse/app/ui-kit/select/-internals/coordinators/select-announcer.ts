@@ -84,6 +84,7 @@ export default class SelectAnnouncer {
 
   // Whether a "loading more" was announced and still owes its completion.
   #revealAnnounced = false;
+  #revealTimer?: ReturnType<typeof discourseLater>;
 
   // The last limit message announced, so re-crossing the cap boundary does not re-read it.
   #lastAnnouncedLimit: string | null = null;
@@ -253,17 +254,31 @@ export default class SelectAnnouncer {
   @action
   announceReveal(): void {
     if (!this.#canReport()) {
+      this.#cancelReveal();
       return;
     }
 
     // A new query is also pending and also retains its rows, but it is not more results — its
     // own count announcement covers it when it lands.
     if (this.#engine.serverRevealPending) {
-      this.#revealAnnounced = true;
-      this.#a11y.announce(i18n("d_select.loading_more"), "polite");
+      if (!this.#revealTimer && !this.#revealAnnounced) {
+        this.#revealTimer = discourseLater(() => {
+          this.#revealTimer = undefined;
+          if (
+            !isDestroying(this) &&
+            this.#canReport() &&
+            this.#engine.serverRevealPending
+          ) {
+            this.#revealAnnounced = true;
+            this.#a11y.announce(i18n("d_select.loading_more"), "polite");
+          }
+        }, LOADING_FEEDBACK_DELAY);
+      }
       return;
     }
 
+    cancel(this.#revealTimer);
+    this.#revealTimer = undefined;
     if (this.#revealAnnounced && !this.#engine.serverPending) {
       this.#revealAnnounced = false;
       this.#a11y.announce(i18n("d_select.loading_complete"), "polite");
@@ -398,7 +413,7 @@ export default class SelectAnnouncer {
     this.#narrowAnnouncedFor = null;
     // A "loading more" interrupted by a close otherwise leaves its debt standing, and the next
     // open's first pending→settled transition pays it as a completion nobody started.
-    this.#revealAnnounced = false;
+    this.#cancelReveal();
   }
 
   /** Invalidates reports about the previous list without ending the open session. */
@@ -407,7 +422,7 @@ export default class SelectAnnouncer {
     this.#knownTotalQuery = null;
     this.#lastAnnouncedCount = null;
     this.#suppressNextCount = false;
-    this.#revealAnnounced = false;
+    this.#cancelReveal();
   }
 
   /** Confirms programmatic intent even when the controlled value does not change. */
@@ -512,6 +527,7 @@ export default class SelectAnnouncer {
   /** Cancels every deferred report, including delayed selection-update feedback. */
   cancelPending(): void {
     this.#cancelPendingCount();
+    this.#cancelReveal();
     cancel(this.#updateTimer);
     this.#updateTimer = undefined;
     for (const timer of this.#suppressionTimers) {
@@ -519,6 +535,12 @@ export default class SelectAnnouncer {
     }
     this.#suppressionTimers.clear();
     this.#suppressNextCount = false;
+  }
+
+  #cancelReveal(): void {
+    cancel(this.#revealTimer);
+    this.#revealTimer = undefined;
+    this.#revealAnnounced = false;
   }
 
   #resetSuppressionNextRunloop(): void {

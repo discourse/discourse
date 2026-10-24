@@ -152,6 +152,19 @@ The loader receives a shallow, frozen snapshot as `opts.context` alongside `opts
 `spec.load` customizations receive that same snapshot as `context.loadContext`. Every page and
 retry of one query uses the same snapshot. Nested values are compared by identity, not deeply.
 
+`@load(query, opts)` returns an item array or `{ items, total?, hasMore?, cursor? }`.
+Paged sources receive the raw row `opts.offset` and a page-size `opts.limit` hint.
+The engine passes an opaque response `cursor` unchanged as the next request's `opts.cursor`.
+Only a successful, current-query page advances it; a failed page keeps the previous cursor,
+and a filter change or reload clears it. A `spec.load` wrapper must forward `(query, opts)`
+and preserve the response metadata, including `cursor`.
+
+Server lists have no row ceiling by default. Set `@maxLoaded` to stop at that many unique
+loaded rows and show the filter-to-narrow hint when results remain or rows were discarded.
+Virtualization bounds mounted rows independently of the number loaded. A response with
+`hasMore: false` ends paging; otherwise `hasMore: true` or a larger `total` permits another
+page. Two consecutive pages that add no unique rows stop paging even if the source claims more.
+
 The engine compares all own keys and their values with the current query's request snapshot,
 including the key count. A new object with equal entries reuses the settled list. Changed
 entries reload while open, or on the next open when closed. Open-list checks run after render
@@ -647,8 +660,9 @@ by mechanism.
 - A first-class "none" row on single-select (`@noneLabel`): a selectable list row that clears the
   value to `null` and reads as selected while nothing is chosen. Always present while browsing, and
   filtered out under an active query so a non-matching search still reaches the empty state.
-- Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and a render
-  cap; `@filterBy` field or predicate; `@minChars` gate; `@debounce` (filter changes only; reveals
+- Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and an
+  optional server row ceiling (`@maxLoaded`, uncapped by default); opaque paging cursors;
+  `@filterBy` field or predicate; `@minChars` gate; `@debounce` (filter changes only; reveals
   and reloads fetch at once).
 - Create-on-the-fly (`@allowCreate` + `@createItem`); prepended special rows (`@specialItems`).
 - Async value resolution for held-but-unfetched ids (`@resolveValue` / `@resolveValues`) with a
@@ -756,7 +770,7 @@ by mechanism.
   group-mates from the value. Designed, not implemented: see
   `docs/select-kit-replacement/RADIO-GROUPS-DESIGN.md`.
 - **Misc knobs** — hidden native form input; hidden-value exclusion; autofocus / open-on-render;
-  a consumer keydown boundary hook; configurable render cap and filter icon.
+  a consumer keydown boundary hook; filter icon.
 
 ### Deferred decisions
 

@@ -933,6 +933,38 @@ module(
     hooks.beforeEach(() => enableVirtualization());
     hooks.afterEach(() => disableVirtualization());
 
+    test("an item description follows the mixed text direction setting", async function (assert) {
+      const items = [{ id: 1, name: "Apple", description: "שלום world" }];
+
+      this.siteSettings.support_mixed_text_direction = true;
+      await render(
+        <template><DSelect @items={{items}} @variant="static" /></template>
+      );
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".d-select__option-description")
+        .hasAttribute(
+          "dir",
+          "auto",
+          "mixed-direction sites let each description pick its own direction"
+        );
+    });
+
+    test("an item description has no direction override by default", async function (assert) {
+      const items = [{ id: 1, name: "Apple", description: "Fruit" }];
+
+      this.siteSettings.support_mixed_text_direction = false;
+      await render(
+        <template><DSelect @items={{items}} @variant="static" /></template>
+      );
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".d-select__option-description")
+        .doesNotHaveAttribute("dir", "the page direction applies");
+    });
+
     test("group, item description and cap share the option description without changing its name", async function (assert) {
       const items = [
         { id: 1, name: "Apple", group: "Fruit" },

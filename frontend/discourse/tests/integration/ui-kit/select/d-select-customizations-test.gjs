@@ -13,7 +13,12 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { ITEMS, optionWithText } from "discourse/tests/helpers/d-select-hosts";
+import {
+  EngineProbe,
+  ITEMS,
+  optionWithText,
+  probedEngine,
+} from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
@@ -32,6 +37,42 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
     setupLegacyBridgeCallbacks(hooks);
+
+    test("a load customization that wraps the source keeps the paging cursor", async function (assert) {
+      customize((selects) =>
+        selects.forKind("paged-recipe", (spec) =>
+          spec.load((load) => (query, opts) => load(query, opts))
+        )
+      );
+      const cursors = [];
+      const load = (_query, opts = {}) => {
+        cursors.push(opts.cursor);
+        return {
+          items: [{ id: cursors.length, name: `Item ${cursors.length}` }],
+          hasMore: true,
+          cursor: `after-${cursors.length}`,
+        };
+      };
+
+      await render(
+        <template>
+          <EngineProbe
+            @debounce={{false}}
+            @kind="paged-recipe"
+            @load={{load}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      probedEngine().revealMore();
+      await settled();
+
+      assert.deepEqual(
+        cursors.slice(0, 2),
+        [undefined, "after-1"],
+        "the wrapped source receives the cursor its previous page returned"
+      );
+    });
 
     test("row classes compose general to specific", async function (assert) {
       customize((selects) => {

@@ -291,6 +291,14 @@ export default class WindowedListCoordinator {
     this.#listboxApi = api;
   }
 
+  /** Re-arms the end edge after a settled page, including one that added no rows. */
+  @action
+  rearmEndAfterPage(): void {
+    if (!this.#engine.serverPending && this.#engine.canRevealMore) {
+      this.#listboxApi?.armEdge("end");
+    }
+  }
+
   /**
    * Re-measures the list against the overlay's applied size.
    *

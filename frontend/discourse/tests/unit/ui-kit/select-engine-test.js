@@ -1,4 +1,5 @@
 import { destroy } from "@ember/destroyable";
+import { run as runLoop } from "@ember/runloop";
 import { isSettled, settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -7,11 +8,13 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
+import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
 import {
   PagedSource,
   SelectState,
 } from "discourse/ui-kit/select/-internals/engine/select-sources";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
+import { i18n } from "discourse-i18n";
 
 module(
   "Unit | ui-kit | modify-select-kit bridge | alias edge cases",
@@ -2785,3 +2788,197 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
     );
   });
 });
+
+module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
+  setupTest(hooks);
+
+  const A = { id: 1, name: "One" };
+  const B = { id: 2, name: "Two" };
+  const C = { id: 3, name: "Three" };
+
+  test("maxLoaded reads the live cap for each query", async function (assert) {
+    let maxLoaded = 3;
+    const engine = new SelectEngine({
+      getMaxLoaded: () => maxLoaded,
+      load: () => ({ items: [A, B, C, { id: 4, name: "Four" }] }),
+    });
+
+    assert.strictEqual(
+      (await engine.loadItems(engine.loadContext)).length,
+      3,
+      "the live reader caps the first query"
+    );
+    assert.true(engine.atCapWithMore, "discarded rows produce the hint");
+
+    maxLoaded = undefined;
+    engine.reload();
+    assert.strictEqual(
+      (await engine.loadItems(engine.loadContext)).length,
+      4,
+      "removing the live cap restores every row on reload"
+    );
+    assert.false(engine.atCapWithMore, "the uncapped query has no hint");
+  });
+
+  test("an uncapped source remains revealable after each page settles", async function (assert) {
+    const engine = new SelectEngine({
+      load: (_query, { offset = 0 }) => ({
+        items: Array.from({ length: 60 }, (_, index) => ({
+          id: offset + index,
+          name: `Item ${offset + index}`,
+        })),
+        hasMore: true,
+      }),
+    });
+    for (let index = 0; index < 6; index++) {
+      await engine.loadItems(engine.loadContext);
+      assert.true(
+        engine.canRevealMore,
+        "the settled source still has more rows"
+      );
+      assert.true(engine.revealMore(), "the next page is requested");
+      assert.true(engine.serverPending, "the next page is now pending");
+      assert.false(engine.canRevealMore, "pending work gates another reveal");
+    }
+    assert.strictEqual(engine.loadedCount, 360, "all six pages remain loaded");
+  });
+
+  test("reset forgets held keys even when the next query returns the same ids", async function (assert) {
+    const engine = new SelectEngine({
+      load: (query) => [{ id: 1, name: query || "Initial" }],
+    });
+    await engine.loadItems(engine.loadContext);
+    engine.setFilter("Changed");
+    let rows = await engine.loadItems(engine.loadContext);
+    assert.deepEqual(
+      rows,
+      [{ id: 1, name: "Changed" }],
+      "a new query retains its own row"
+    );
+    engine.reload();
+    rows = await engine.loadItems(engine.loadContext);
+    assert.deepEqual(
+      rows,
+      [{ id: 1, name: "Changed" }],
+      "reload also clears held keys"
+    );
+  });
+
+  test("a superseded response cannot replace the current query's opaque cursor", async function (assert) {
+    const gate = deferred();
+    const cursor = { after: [1, "opaque"] };
+    const cursors = [];
+    const engine = new SelectEngine({
+      load: (query, opts) => {
+        cursors.push(opts.cursor);
+        return query ? { items: [B], hasMore: true, cursor } : gate.promise;
+      },
+    });
+    const stale = engine.loadItems(engine.loadContext);
+    await Promise.resolve();
+    engine.setFilter("current");
+    await engine.loadItems(engine.loadContext);
+    gate.resolve({ items: [A], hasMore: true, cursor: "stale" });
+    await stale;
+    engine.revealMore();
+    await engine.loadItems(engine.loadContext);
+    assert.strictEqual(
+      cursors.at(-1),
+      cursor,
+      "the current cursor keeps its identity"
+    );
+  });
+});
+
+module(
+  "Unit | ui-kit | SelectAnnouncer | delayed reveal reports",
+  function (hooks) {
+    setupTest(hooks);
+
+    const A = { id: 1, name: "One" };
+    const B = { id: 2, name: "Two" };
+
+    test("closing after delayed feedback clears the completion debt", async function (assert) {
+      const gate = deferred();
+      let calls = 0;
+      const engine = new SelectEngine({
+        load: () =>
+          ++calls === 1 ? { items: [A], hasMore: true } : gate.promise,
+      });
+      const announce = sinon.spy();
+      const announcer = new SelectAnnouncer({
+        a11y: { announce },
+        engine,
+        getActiveOptionKey: () => null,
+        reannounceActive: () => false,
+        getNoResultsLabel: () => undefined,
+        getShouldSuppressEntryCount: () => false,
+      });
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      const pending = engine.loadItems(engine.loadContext);
+      announcer.announceReveal();
+      await settled();
+      assert.true(
+        announce.calledWith(i18n("d_select.loading_more")),
+        "a reveal held beyond the delay announces its start"
+      );
+      announcer.releaseSession();
+      gate.resolve({ items: [B], hasMore: false });
+      await pending;
+      announcer.announceReveal();
+      assert.false(
+        announce.calledWith(i18n("d_select.loading_complete")),
+        "the interrupted announcement owes no completion"
+      );
+      destroy(announcer);
+    });
+
+    for (const cleanup of ["close", "teardown"]) {
+      test(`${cleanup} cancels a delayed reveal report`, async function (assert) {
+        const gate = deferred();
+        let calls = 0;
+        const engine = new SelectEngine({
+          load: () =>
+            ++calls === 1 ? { items: [A], hasMore: true } : gate.promise,
+        });
+        const announce = sinon.spy();
+        const announcer = new SelectAnnouncer({
+          a11y: { announce },
+          engine,
+          getActiveOptionKey: () => null,
+          reannounceActive: () => false,
+          getNoResultsLabel: () => undefined,
+          getShouldSuppressEntryCount: () => false,
+        });
+        await engine.loadItems(engine.loadContext);
+        engine.revealMore();
+        const pending = engine.loadItems(engine.loadContext);
+        announcer.announceReveal();
+        runLoop(() => {
+          if (cleanup === "close") {
+            announcer.releaseSession();
+          } else {
+            destroy(announcer);
+          }
+        });
+        assert.true(
+          isSettled(),
+          "cleanup cancels the timer rather than waiting it out"
+        );
+        await settled();
+        assert.false(announce.called, "no delayed report survives cleanup");
+        gate.resolve({ items: [B], hasMore: false });
+        await pending;
+        if (cleanup === "close") {
+          announcer.announceReveal();
+        }
+        assert.false(
+          announce.calledWith(i18n("d_select.loading_complete")),
+          "the interrupted reveal owes no completion"
+        );
+        destroy(announcer);
+      });
+    }
+  }
+);

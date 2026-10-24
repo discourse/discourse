@@ -3,6 +3,8 @@ import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { service } from "@ember/service";
+import type SiteSettingsService from "discourse/services/site-settings";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectRowPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
@@ -55,6 +57,12 @@ interface SelectItemSignature {
  * roving highlight via `activeClass`. This part is internal to the select family.
  */
 export default class SelectItem extends Component<SelectItemSignature> {
+  /** TODO(typescript-pending): Remove the extension when the settings factory exposes runtime keys. */
+  @service
+  declare siteSettings: SiteSettingsService & {
+    support_mixed_text_direction: boolean;
+  };
+
   descriptionId = `d-select-option-description-${guidFor(this)}`;
   labelId = `d-select-option-label-${guidFor(this)}`;
 
@@ -174,6 +182,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
             <span id={{this.labelId}}>{{yield @descriptor.item}}</span>
             <span
               class="d-select__option-description"
+              dir={{if this.siteSettings.support_mixed_text_direction "auto"}}
               id={{this.descriptionId}}
             >
               {{@descriptor.item.description}}

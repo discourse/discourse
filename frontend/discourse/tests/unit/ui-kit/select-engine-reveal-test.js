@@ -4,10 +4,9 @@ import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
-// Mirrors the module-private SERVER cap in select-engine.ts. It is deliberately not
-// exported (not public API), so the tests pin the behaviour it produces instead. The
-// former client chunk/cap is gone: a client source now renders its whole filtered list
-// and `DVirtualList` owns the render window.
+// The cap a consumer opts into with `maxLoaded`. A server source has no row ceiling by
+// default, and a client source renders its whole filtered list while `DVirtualList` owns
+// the render window.
 const MAX_RENDERED = 200;
 
 function clientItems(count) {
@@ -307,7 +306,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         })),
         hasMore: true,
       }));
-      const engine = new SelectEngine({ load });
+      const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
       let result;
       for (let i = 0; i < 6; i++) {
@@ -332,7 +331,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         })),
         total: MAX_RENDERED,
       }));
-      const engine = new SelectEngine({ load });
+      const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
       for (let i = 0; i < 6; i++) {
         await engine.loadItems(engine.loadContext);
@@ -940,7 +939,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         items: uniquePage(0, 300),
         hasMore: false,
       }));
-      const engine = new SelectEngine({ load });
+      const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
       const result = await engine.loadItems(engine.loadContext);
 
@@ -987,7 +986,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         ],
         hasMore: false,
       }));
-      const engine = new SelectEngine({ load });
+      const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
       await engine.loadItems(engine.loadContext);
 
@@ -1064,7 +1063,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // declared completeness by staying silent, but 50 rows were dropped, so the count is
       // NOT a truthful set size and the user must be told the list is clipped.
       const { load } = recordingLoad(() => uniquePage(0, 250));
-      const engine = new SelectEngine({ load });
+      const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
       const result = await engine.loadItems(engine.loadContext);
 
@@ -1085,7 +1084,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // The boundary the truncation flag exists to get right: the 200th row is the last one
       // pushed, so nothing was discarded. A "keep typing to narrow" hint here would be a lie.
       const { load } = recordingLoad(() => uniquePage(0, MAX_RENDERED));
-      const engine = new SelectEngine({ load });
+      const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
       const result = await engine.loadItems(engine.loadContext);
 
@@ -1460,6 +1459,187 @@ module(
         );
         assert.true(engine.revealMore(), `page ${page} permits another reveal`);
       }
+    });
+  }
+);
+
+module(
+  "Unit | ui-kit | SelectEngine | uncapped server source",
+  function (hooks) {
+    setupTest(hooks);
+
+    function page(offset, length) {
+      return Array.from({ length }, (_, i) => ({
+        id: offset + i + 1,
+        name: `Item ${offset + i + 1}`,
+      }));
+    }
+
+    test("keeps paging past 200 rows when no maxLoaded is set", async function (assert) {
+      const { load } = recordingLoad((offset) => ({
+        items: page(offset, 60),
+        hasMore: true,
+      }));
+      const engine = new SelectEngine({ load });
+
+      let result;
+      for (let i = 0; i < 6; i++) {
+        result = await engine.loadItems(engine.loadContext);
+        if (i < 5) {
+          engine.revealMore();
+        }
+      }
+
+      assert.strictEqual(
+        result.length,
+        360,
+        "six 60-row pages accumulate past the former 200-row ceiling"
+      );
+      assert.true(
+        engine.canRevealMore,
+        "the source still declares more, so another reveal is allowed"
+      );
+      assert.false(engine.atCapWithMore, "no narrow hint without a cap");
+    });
+
+    test("keeps every row of a single response over 200 rows", async function (assert) {
+      const { load } = recordingLoad(() => page(0, 250));
+      const engine = new SelectEngine({ load });
+
+      const result = await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(result.length, 250, "no row is discarded");
+      assert.false(engine.atCapWithMore, "nothing was clipped");
+      assert.strictEqual(engine.total, 250, "the set is sized by every row");
+    });
+
+    test("maxLoaded restores the cap and the narrow hint", async function (assert) {
+      const { load } = recordingLoad((offset) => ({
+        items: page(offset, 60),
+        hasMore: true,
+      }));
+      const engine = new SelectEngine({ load, maxLoaded: 120 });
+
+      let result;
+      for (let i = 0; i < 4; i++) {
+        result = await engine.loadItems(engine.loadContext);
+        engine.revealMore();
+      }
+
+      assert.strictEqual(result.length, 120, "paging stops at maxLoaded");
+      assert.false(engine.canRevealMore, "no reveal past the cap");
+      assert.true(engine.atCapWithMore, "the narrow hint shows at the cap");
+    });
+
+    test("hands a page's cursor to the next request", async function (assert) {
+      const cursors = [];
+      const load = (_filter, opts = {}) => {
+        cursors.push(opts.cursor);
+        const index = cursors.length;
+        return Promise.resolve({
+          items: page((index - 1) * 10, 10),
+          hasMore: true,
+          cursor: `after-${index}`,
+        });
+      };
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(
+        cursors,
+        [undefined, "after-1", "after-2"],
+        "each request receives the cursor the previous page returned"
+      );
+    });
+
+    test("starts a new filter and a reload without a cursor", async function (assert) {
+      const cursors = [];
+      const load = (_filter, opts = {}) => {
+        cursors.push(opts.cursor);
+        return Promise.resolve({
+          items: page(cursors.length * 10, 10),
+          hasMore: true,
+          cursor: `after-${cursors.length}`,
+        });
+      };
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+
+      engine.setFilter("q");
+      await engine.loadItems(engine.loadContext);
+
+      engine.reload();
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(
+        cursors,
+        [undefined, "after-1", undefined, undefined],
+        "a new query and a reload never resume the previous query's cursor"
+      );
+    });
+
+    test("keeps the last successful cursor after a failed page", async function (assert) {
+      const cursors = [];
+      const load = (_filter, opts = {}) => {
+        cursors.push(opts.cursor);
+        if (cursors.length === 2) {
+          return Promise.reject(new Error("offline"));
+        }
+        return Promise.resolve({
+          items: page(cursors.length * 10, 10),
+          hasMore: true,
+          cursor: `after-${cursors.length}`,
+        });
+      };
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await assert.rejects(engine.loadItems(engine.loadContext), /offline/);
+
+      assert.true(engine.revealMore(), "the failed reveal can be retried");
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(
+        cursors,
+        [undefined, "after-1", "after-1"],
+        "the retry resumes from the page that last succeeded"
+      );
+    });
+
+    test("de-duplicates each row once, not once per later page", async function (assert) {
+      let keyReads = 0;
+      const countedPage = (offset) =>
+        Array.from({ length: 10 }, (_, i) => ({
+          get id() {
+            keyReads++;
+            return offset + i + 1;
+          },
+          name: `Item ${offset + i + 1}`,
+        }));
+      const { load } = recordingLoad((offset) => ({
+        items: countedPage(offset),
+        hasMore: true,
+      }));
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 10; i++) {
+        await engine.loadItems(engine.loadContext);
+        engine.revealMore();
+      }
+
+      assert.true(
+        keyReads <= 200,
+        `100 rows over 10 pages read their key ${keyReads} times; re-keying every held row on each page would read it at least 550 times`
+      );
     });
   }
 );

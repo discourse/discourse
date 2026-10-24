@@ -43,6 +43,7 @@ export interface SelectHostArgs
       | "identifier"
       | "kindOptions"
       | "minChars"
+      | "maxLoaded"
       | "maximum"
       | "minimum"
       | "noneLabel"
@@ -193,6 +194,7 @@ export default class SelectHost {
       getKindOptions: () => this.#options.getArgs().kindOptions,
       getInstanceContext: () => this.#options.getArgs().instanceContext,
       getMinChars: () => this.#options.getArgs().minChars,
+      getMaxLoaded: () => this.#options.getArgs().maxLoaded,
       getMaximum: () => this.#options.getArgs().maximum,
       getMinimum: () => this.#options.getArgs().minimum,
       getNoneLabel: () => this.#options.getArgs().noneLabel,

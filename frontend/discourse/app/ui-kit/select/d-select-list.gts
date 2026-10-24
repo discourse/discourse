@@ -76,6 +76,8 @@ interface DSelectListSignature {
     debounce?: boolean | number;
     /** Minimum query length before calling the source. */
     minChars?: number;
+    /** Optional server row ceiling with a filter-to-narrow hint. Uncapped by default. */
+    maxLoaded?: number;
     /** Virtualizes and paginates by default; false mounts a short first page in normal flow. */
     virtualized?: boolean;
     /** Omits held options from results without reloading. */

@@ -36,6 +36,8 @@ export default class SelectOptionsView {
   #readInstanceContext?: SelectEngineOptions["getInstanceContext"];
   #readMinChars?: SelectEngineOptions["getMinChars"];
   #minChars?: SelectEngineOptions["minChars"];
+  #readMaxLoaded?: SelectEngineOptions["getMaxLoaded"];
+  #maxLoaded?: SelectEngineOptions["maxLoaded"];
   #readMaximum?: SelectEngineOptions["getMaximum"];
   #maximum?: SelectEngineOptions["maximum"];
   #hasWarnedMaximum = false;
@@ -97,6 +99,8 @@ export default class SelectOptionsView {
     this.#readInstanceContext = opts.getInstanceContext;
     this.#readMinChars = opts.getMinChars;
     this.#minChars = opts.minChars;
+    this.#readMaxLoaded = opts.getMaxLoaded;
+    this.#maxLoaded = opts.maxLoaded;
     this.#readMaximum = opts.getMaximum;
     this.#maximum = opts.maximum;
     this.#readMinimum = opts.getMinimum;
@@ -161,6 +165,10 @@ export default class SelectOptionsView {
 
   get minChars(): number {
     return this.#readMinChars?.() ?? this.#minChars ?? 0;
+  }
+
+  get maxLoaded(): number | undefined {
+    return this.#readMaxLoaded?.() ?? this.#maxLoaded;
   }
 
   /** Raw none label for options resolution, independent of the overlay and multiple mode. */

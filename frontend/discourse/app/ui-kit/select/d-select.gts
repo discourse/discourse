@@ -208,6 +208,8 @@ interface DSelectSignature {
      * skeleton). `0` (default) searches on any input.
      */
     minChars?: number;
+    /** Optional server row ceiling with a filter-to-narrow hint. Uncapped by default. */
+    maxLoaded?: number;
     /**
      * Omits held options from the results without reloading; held items stay reachable as chips
      * (a static list shows its strip instead).

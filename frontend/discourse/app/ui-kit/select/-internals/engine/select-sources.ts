@@ -10,8 +10,6 @@ import type {
 import type SelectOptionsView from "./select-options.ts";
 import type { UpdateRecord } from "./selection-updates.ts";
 
-export const MAX_RENDERED = 200;
-
 /**
  * The full client-side item set (empty for a server source), used both for local
  * filtering and to resolve a value's display item without a fetch.
@@ -216,8 +214,11 @@ export class PagedSource implements SelectSource {
   #resolveLoad: (filter: string) => NonNullable<SelectEngineOptions["load"]>;
   #state: SelectState;
   #keyOf: (item: SelectItem) => string | null;
+  #getMaxLoaded: () => number | undefined;
   #serverItems: SelectItem[] = [];
+  #serverKeys = new Set<string>();
   #serverOffset = 0;
+  #serverCursor?: unknown;
   #serverPageSize?: number;
   #serverGeneration = 0;
   #serverBarrenPages = 0;
@@ -240,10 +241,13 @@ export class PagedSource implements SelectSource {
     resolveLoad: (filter: string) => NonNullable<SelectEngineOptions["load"]>;
     state: SelectState;
     keyOf: (item: SelectItem) => string | null;
+    /** Reads the optional server row ceiling. */
+    getMaxLoaded?: () => number | undefined;
   }) {
     this.#resolveLoad = opts.resolveLoad;
     this.#state = opts.state;
     this.#keyOf = opts.keyOf;
+    this.#getMaxLoaded = opts.getMaxLoaded ?? (() => undefined);
   }
 
   /**
@@ -269,23 +273,25 @@ export class PagedSource implements SelectSource {
   }
 
   canRevealMore(): boolean {
+    const maxLoaded = this.#getMaxLoaded();
     return (
       !this.pending() &&
       !this.#state.serverExhausted &&
       !this.#state.visiblyExhausted &&
-      this.#state.serverLoadedCount < MAX_RENDERED
+      (maxLoaded == null || this.#state.serverLoadedCount < maxLoaded)
     );
   }
 
   atCapWithMore(): boolean {
-    if (this.#state.visiblyExhausted) {
+    const maxLoaded = this.#getMaxLoaded();
+    if (maxLoaded == null || this.#state.visiblyExhausted) {
       return false;
     }
     const { serverLoadedCount, serverExhausted, serverTotal, serverTruncated } =
       this.#state;
     return (
       serverTruncated ||
-      (serverLoadedCount >= MAX_RENDERED &&
+      (serverLoadedCount >= maxLoaded &&
         !serverExhausted &&
         (serverTotal == null || serverLoadedCount < serverTotal))
     );
@@ -352,10 +358,7 @@ export class PagedSource implements SelectSource {
 
   /** Ignores retained rows both during a request and before its new rows reach the list. */
   noteVisible(visible: number, input: number): void {
-    if (
-      this.#serverRequest ||
-      input !== Math.min(this.#serverItems.length, MAX_RENDERED)
-    ) {
+    if (this.#serverRequest || input !== this.#serverItems.length) {
       return;
     }
     this.#visible = visible;
@@ -380,7 +383,9 @@ export class PagedSource implements SelectSource {
     // short-circuit then answers `[]` synchronously with nothing left to re-ask.
     this.#state.serverSettledKey = null;
     this.#serverItems = [];
+    this.#serverKeys.clear();
     this.#serverOffset = 0;
+    this.#serverCursor = undefined;
     this.#serverPageSize = undefined;
     this.#serverBarrenPages = 0;
     this.#barrenReveals = 0;
@@ -404,18 +409,20 @@ export class PagedSource implements SelectSource {
     filter: string,
     opts: SelectLoadOptions
   ): SelectItem[] | Promise<SelectItem[]> {
+    const maxLoaded = this.#getMaxLoaded();
     if (
       this.#serverRequest ||
       this.#state.serverExhausted ||
-      this.#serverItems.length >= MAX_RENDERED ||
+      (maxLoaded != null && this.#serverItems.length >= maxLoaded) ||
       this.#state.serverSettledKey === this.#loadKey
     ) {
-      return this.#serverItems.slice(0, MAX_RENDERED);
+      return this.#serverItems.slice(0, maxLoaded);
     }
 
     const generation = this.#serverGeneration;
     const key = this.#loadKey;
     const offset = this.#serverOffset;
+    const cursor = this.#serverCursor;
     const limit = this.#serverPageSize;
     // Started after the current task rather than inside it: this runs during render, where a
     // loader writing tracked state would fail the render and its tracked reads would turn into
@@ -425,7 +432,7 @@ export class PagedSource implements SelectSource {
         return [];
       }
       this.#queryLoad ??= this.#resolveLoad(filter);
-      return this.#queryLoad(filter, { ...opts, offset, limit });
+      return this.#queryLoad(filter, { ...opts, offset, limit, cursor });
     });
     this.#serverRequest = request;
     // An abandoned request must not keep answering for the one that replaces it. The consumer
@@ -456,15 +463,17 @@ export class PagedSource implements SelectSource {
     try {
       const response = await request;
       if (signal?.aborted || generation !== this.#serverGeneration) {
-        return this.#serverItems.slice(0, MAX_RENDERED);
+        return this.#serverItems.slice(0, this.#getMaxLoaded());
       }
 
-      const { items, total, hasMore } = this.#unwrapLoadResult(response);
+      const { items, total, hasMore, cursor } =
+        this.#unwrapLoadResult(response);
       const knownTotal = total ?? this.#state.serverTotal;
       const before = this.#serverItems.length;
-      this.#serverOffset += items.length;
       this.#serverPageSize ??= items.length || undefined;
       const truncated = this.#appendServerItems(items);
+      this.#serverOffset += items.length;
+      this.#serverCursor = cursor;
       const added = this.#serverItems.length - before;
 
       // Reachable only under `hasMore: true`, since silence now ends paging on its own. It is
@@ -499,7 +508,7 @@ export class PagedSource implements SelectSource {
       this.#state.serverLoadedCount = this.#serverItems.length;
       settled = true;
 
-      return this.#serverItems.slice(0, MAX_RENDERED);
+      return this.#serverItems.slice(0, this.#getMaxLoaded());
     } finally {
       if (this.#serverRequest === request) {
         this.#serverRequest = undefined;
@@ -522,28 +531,21 @@ export class PagedSource implements SelectSource {
   }
 
   #appendServerItems(items: SelectItem[]): boolean {
-    const keys = new Set(
-      this.#serverItems
-        .map((item) => this.#keyOf(item))
-        .filter((key): key is string => key != null)
-    );
+    const maxLoaded = this.#getMaxLoaded();
     for (const item of items) {
       const key = this.#keyOf(item);
-      if (key != null && keys.has(key)) {
+      if (key != null && this.#serverKeys.has(key)) {
         continue;
       }
 
-      if (this.#serverItems.length >= MAX_RENDERED) {
-        // The accumulator can no longer grow and `keys` is never read again, so one
-        // discarded row settles the question. Returning here also keeps the scan bounded by
-        // the cap rather than by the page, which a pre-pagination source sizes at the whole
-        // dataset.
+      if (maxLoaded != null && this.#serverItems.length >= maxLoaded) {
+        // One discarded unique row proves truncation without scanning the rest of the page.
         return true;
       }
 
       this.#serverItems.push(item);
       if (key != null) {
-        keys.add(key);
+        this.#serverKeys.add(key);
       }
     }
 

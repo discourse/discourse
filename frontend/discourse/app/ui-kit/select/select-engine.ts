@@ -178,6 +178,8 @@ export interface SelectLoadOptions {
   limit?: number;
   /** Raw source offset for a paginated request. */
   offset?: number;
+  /** Opaque cursor returned by the previous successful page; cleared for a new query. */
+  cursor?: unknown;
   /** Cancels a superseded request. */
   signal?: AbortSignal;
 }
@@ -186,6 +188,8 @@ export interface SelectLoadOptions {
 export interface SelectLoadResponse {
   /** The page returned for the requested offset. */
   items: SelectItem[];
+  /** Opaque continuation value passed unchanged to the next request as `opts.cursor`. */
+  cursor?: unknown;
   /**
    * The source's true result count when available. This is a fact about the whole set and
    * is carried forward across responses for the current query. It also licenses another
@@ -315,6 +319,9 @@ export interface SelectEngineOptions {
   /** Live reader for {@link minChars}. */
   getMinChars?: () => number | undefined;
 
+  /** Live reader for {@link maxLoaded}. */
+  getMaxLoaded?: () => number | undefined;
+
   /** Live reader for {@link maximum}. */
   getMaximum?: () => number | false | undefined;
 
@@ -414,6 +421,9 @@ export interface SelectEngineOptions {
    * {@link SelectEngine#belowMinChars}.
    */
   minChars?: number;
+
+  /** Optional server row ceiling with a filter-to-narrow hint. Uncapped by default. */
+  maxLoaded?: number;
 
   /**
    * Hard cap on a multi-select's selection count. Ignored when not `multiple`; `false` means
@@ -750,6 +760,7 @@ export default class SelectEngine {
       ? new PagedSource({
           resolveLoad: (filter) => this.#resolveLoad(filter),
           state: this.#state,
+          getMaxLoaded: () => this.#options.maxLoaded,
           keyOf: (item) =>
             this.#options.valueKey(this.#options.itemValue(item)),
         })
@@ -992,7 +1003,7 @@ export default class SelectEngine {
     return Object.freeze([...filterLocal(this.#options, this.#state.filter)]);
   }
 
-  /** Whether the current source has another page available below the cap. */
+  /** Whether the current source can fetch another page within any configured ceiling. */
   get canRevealMore(): boolean {
     return this.#source.canRevealMore();
   }
@@ -1088,7 +1099,7 @@ export default class SelectEngine {
 
   /**
    * The async-data function for the list `DAsyncContent`. Returns the full filtered local
-   * list or the accumulated server pages, bounded by the server cap.
+   * list or the accumulated server pages, bounded by `maxLoaded` when configured.
    *
    * @param _context - Reactivity trigger only; unused.
    * @returns Items, or a promise of items.
@@ -1103,7 +1114,7 @@ export default class SelectEngine {
   }
 
   /**
-   * Requests another page when the source can reveal one below the cap.
+   * Requests another page when the source can reveal one.
    *
    * @returns Whether the reveal cursor advanced.
    */

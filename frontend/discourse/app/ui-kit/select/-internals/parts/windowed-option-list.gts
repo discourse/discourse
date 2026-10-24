@@ -116,6 +116,7 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
       {{@modifiers.countOnEntry}}
       {{@modifiers.count}}
       {{didUpdate @announcer.announceReveal @engine.serverPending}}
+      {{didUpdate @listbox.rearmEndAfterPage @engine.serverPending}}
       {{! Static in the mobile modal moves DOM focus into the listbox; every other
           surface keeps focus on its controller (no-op there). }}
       {{didInsert @listbox.focusListboxIfSimple}}

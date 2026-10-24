@@ -18,6 +18,10 @@ import {
   EngineProbe,
   probedEngine,
 } from "discourse/tests/helpers/d-select-hosts";
+import {
+  disableVirtualization,
+  enableVirtualization,
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
@@ -94,9 +98,8 @@ module(
     });
 
     test("a capped server list shows and announces the keep-filtering hint", async function (assert) {
-      // The cap survives for a SERVER source only: its accumulator stops at MAX_RENDERED while
-      // the source still holds more, which is the one path that raises the narrow hint. (A
-      // client source renders in full and never caps — see the client tests above.)
+      // A server source caps only when it opts in with `@maxLoaded`: its accumulator stops there
+      // while the source still holds more, which is the one path that raises the narrow hint.
       let engine;
       const a11y = getOwner(this).lookup("service:a11y");
       const announce = sinon.spy(a11y, "announce");
@@ -107,7 +110,9 @@ module(
       });
 
       await render(
-        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
+        <template>
+          <EngineProbe @debounce={{false}} @load={{load}} @maxLoaded={{200}} />
+        </template>
       );
       await openSelect();
       engine = probedEngine();
@@ -154,7 +159,9 @@ module(
       });
 
       await render(
-        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
+        <template>
+          <EngineProbe @debounce={{false}} @load={{load}} @maxLoaded={{200}} />
+        </template>
       );
       await openSelect();
       engine = probedEngine();
@@ -223,6 +230,12 @@ module(
 
       engine.revealMore();
       await waitUntil(() => revealRequested);
+      // The announcement waits out the loading-feedback delay, so only a held page speaks.
+      await waitUntil(() =>
+        announce
+          .getCalls()
+          .some(({ args }) => /loading more/i.test(String(args[0])))
+      );
 
       assert.true(
         announce
@@ -456,6 +469,71 @@ module(
       );
     });
 
+    test("an uncapped server list pages past 200 rows with no narrow hint", async function (assert) {
+      let engine;
+      const allItems = buildItems(500);
+      const load = (_filter, { offset = 0 }) => ({
+        items: allItems.slice(offset, offset + 50),
+        total: allItems.length,
+      });
+
+      await render(
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
+      );
+      await openSelect();
+      engine = probedEngine();
+
+      for (let index = 0; index < 6; index++) {
+        engine.revealMore();
+        await settled();
+      }
+
+      assert
+        .dom(OPTION_SELECTOR)
+        .exists({ count: 350 }, "every revealed page stays in the list");
+      assert
+        .dom(".d-select__narrow")
+        .doesNotExist("no keep-filtering hint without @maxLoaded");
+    });
+
+    test("a reveal that settles quickly announces nothing", async function (assert) {
+      let engine;
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+      const allItems = buildItems(500);
+      const load = (_filter, { offset = 0 }) => ({
+        items: allItems.slice(offset, offset + 50),
+        total: allItems.length,
+      });
+
+      await render(
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
+      );
+      await openSelect();
+      engine = probedEngine();
+      const before = announce.callCount;
+
+      engine.revealMore();
+      await settled();
+
+      assert.dom(OPTION_SELECTOR).exists({ count: 100 }, "the page landed");
+      assert.deepEqual(
+        announce
+          .getCalls()
+          .slice(before)
+          .map(({ args }) => args[0])
+          .filter(
+            (text) =>
+              text === i18n("d_select.loading_more") ||
+              text === i18n("d_select.loading_complete")
+          ),
+        [],
+        "a page that lands before the loading delay is not announced"
+      );
+    });
+
     test("a held server reveal makes the retained listbox busy and announces its transitions", async function (assert) {
       let engine;
       let releaseReveal;
@@ -482,6 +560,13 @@ module(
       const initialAnnouncements = announce.callCount;
       engine.revealMore();
       await waitUntil(() => revealRequested);
+      // The announcement waits out the loading-feedback delay, so only a held page speaks.
+      await waitUntil(() =>
+        announce
+          .getCalls()
+          .slice(initialAnnouncements)
+          .some(({ args }) => /loading more/i.test(args[0] ?? ""))
+      );
 
       assert
         .dom("ul[role='listbox']")
@@ -1073,3 +1158,55 @@ module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect windowed paging",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      enableVirtualization();
+    });
+
+    hooks.afterEach(function () {
+      disableVirtualization();
+    });
+
+    test("a page that adds no rows does not stall paging at the end of the list", async function (assert) {
+      const pages = [buildItems(10), [], buildItems(20).slice(10)];
+      let calls = 0;
+      const load = () => {
+        const items = pages[calls] ?? [];
+        calls++;
+        return { items, hasMore: calls < pages.length };
+      };
+
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 400px;
+              overflow-y: auto;
+            }
+          </style>
+          <EngineProbe @debounce={{false}} @load={{load}} />
+        </template>
+      );
+      await openSelect();
+      await waitUntil(() => calls >= 3, { timeout: 2000 }).catch(() => {});
+      await settled();
+
+      assert.strictEqual(
+        calls,
+        3,
+        "the short list stays at its end, so the page after the empty one is fetched"
+      );
+      assert.strictEqual(
+        probedEngine().loadedCount,
+        20,
+        "the rows after the empty page are loaded"
+      );
+    });
+  }
+);
