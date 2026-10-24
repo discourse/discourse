@@ -866,6 +866,53 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
       end
 
+      it "creates a successor when the original author loses event creation permission" do
+        restricted_author = Fabricate(:user, refresh_auto_groups: true)
+
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly meeting after event permission change"
+
+        post =
+          PostCreator.create!(restricted_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        original_event = post.reload.event
+        original_date = original_event.event_dates.pending.first
+
+        expect(original_event.recurrence).to eq("every_week")
+
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:staff].to_s
+
+        expect(Guardian.new(restricted_author).can_create_discourse_post_event?).to eq(false)
+
+        expect(Discourse.system_user.guardian.can_create_discourse_post_event?).to eq(true)
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+
+        successor_post = successor_topic.first_post
+        successor_event = successor_post.reload.event
+
+        expect(successor_topic.user_id).to eq(restricted_author.id)
+        expect(successor_post.user_id).to eq(restricted_author.id)
+        expect(successor_event).to be_present
+        expect(successor_event.recurrence).to eq("every_week")
+        expect(successor_event.original_starts_at).to eq_time(starts_at + 7.days)
+
+        expect(original_date.reload.finished_at).to be_present
+        expect(original_event.reload.recurrence).to be_nil
+      end
+
       it "creates a successor when the original author can no longer create topics in the category" do
         restricted_author = Fabricate(:user, refresh_auto_groups: true)
         SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s

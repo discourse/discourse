@@ -152,6 +152,7 @@ module DiscourseEvents
       def create_successor_post(raw, title)
         PostCreator.create!(
           post.user || Discourse.system_user,
+          acting_user: Discourse.system_user,
           guardian: Discourse.system_user.guardian,
           title:,
           raw:,
