@@ -11,6 +11,10 @@ const CONVERT_FORMAT_REGEX = /(\.|\/)(jxl|hei[cf])$/i;
 const ANIMATED_GIF_REGEX = /(\.|\/)(gif)$/i;
 const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
 
+// How long the worker may go without reporting back while files are in flight
+// before they're given up on and uploaded unoptimized.
+export const WORKER_STALL_TIMEOUT_MS = 60_000;
+
 /**
  * Optimizes composer image uploads in a worker. The flow:
  *
@@ -22,8 +26,9 @@ const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
  *
  * The worker is a module worker bundled with its codecs, so it is ready as soon
  * as it is created (posted messages queue until its module evaluates). A worker
- * that fails to boot surfaces via onerror, and in-flight uploads continue
- * unoptimized.
+ * that fails to boot surfaces via onerror, and one that stops responding is
+ * terminated after WORKER_STALL_TIMEOUT_MS of silence. Either way, in-flight
+ * uploads continue unoptimized.
  */
 @disableImplicitInjections
 export default class MediaOptimizationWorkerService extends Service {
@@ -41,6 +46,14 @@ export default class MediaOptimizationWorkerService extends Service {
   promiseResolvers = null;
   workerDoneCount = 0;
   workerPendingCount = 0;
+
+  #stallTimer = null;
+  #stopOnComposerClose = false;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.stopWorker();
+  }
 
   async optimizeImage(data, opts = {}) {
     this.promiseResolvers = this.promiseResolvers || {};
@@ -102,6 +115,7 @@ export default class MediaOptimizationWorkerService extends Service {
 
       this.currentComposerUploadData = data;
       this.promiseResolvers[file.id] = resolve;
+      this.workerPendingCount++;
 
       const settings = {
         resize_threshold:
@@ -128,7 +142,13 @@ export default class MediaOptimizationWorkerService extends Service {
         arrayBuffer = await file.data.arrayBuffer();
       } catch (error) {
         this.logIfDebug(error);
-        return resolve();
+        this.workerPendingCount--;
+        return this.#settle(file.id);
+      }
+
+      // The worker may have been stopped, or this file cancelled, while reading it
+      if (this.promiseResolvers[file.id] !== resolve) {
+        return;
       }
 
       if (isConvertFormat || isOptimizable) {
@@ -158,7 +178,7 @@ export default class MediaOptimizationWorkerService extends Service {
         );
       }
 
-      this.workerPendingCount++;
+      this.#armStallTimer();
     });
   }
 
@@ -189,19 +209,41 @@ export default class MediaOptimizationWorkerService extends Service {
     }
     this.registerMessageHandler();
     this.worker.onerror = (err) => this.handleWorkerError(err);
-    this.appEvents.on("composer:closed", this, "stopWorker");
+
+    if (!this.#stopOnComposerClose) {
+      this.#stopOnComposerClose = true;
+      this.appEvents.on("composer:closed", this, "stopWorker");
+    }
   }
 
   handleWorkerError(err) {
     this.logIfDebug("media-optimization-worker error", err);
     this.stopWorker();
-    // Resolve any in-flight optimizations so their uploads continue unoptimized.
-    Object.values(this.promiseResolvers ?? {}).forEach((resolve) =>
-      resolve?.()
-    );
   }
 
+  /**
+   * Stops waiting on a file, e.g. because its upload was cancelled. With nothing
+   * else pending the worker is replaced, so a retry doesn't queue behind a job
+   * that may be stuck.
+   */
+  cancel(fileId) {
+    if (!this.promiseResolvers?.[fileId]) {
+      return;
+    }
+
+    this.#settle(fileId);
+    this.workerPendingCount = Math.max(this.workerPendingCount - 1, 0);
+
+    if (this.workerPendingCount === 0) {
+      this.stopWorker();
+    }
+  }
+
+  // Also settles any in-flight optimizations, so their uploads continue unoptimized.
   stopWorker() {
+    clearTimeout(this.#stallTimer);
+    this.#stallTimer = null;
+
     if (this.worker) {
       this.logIfDebug("Stopping media-optimization-worker...");
       this.worker.terminate();
@@ -209,6 +251,10 @@ export default class MediaOptimizationWorkerService extends Service {
       this.workerDoneCount = 0;
     }
     this.workerPendingCount = 0;
+
+    Object.keys(this.promiseResolvers ?? {}).forEach((fileId) =>
+      this.#settle(fileId)
+    );
   }
 
   registerMessageHandler() {
@@ -233,13 +279,13 @@ export default class MediaOptimizationWorkerService extends Service {
               `Finished optimization of ${optimizedFile.name}, new size is ${optimizedFile.size} bytes`
             );
 
-            this.promiseResolvers[workerMessage.data.fileId](optimizedFile);
+            this.#settle(workerMessage.data.fileId, optimizedFile);
           } else {
             this.logIfDebug(
               `Optimizing ${workerMessage.data.fileName} would produce ${outputFileName}, which is not an authorized extension here; keeping the original`
             );
 
-            this.promiseResolvers[workerMessage.data.fileId]();
+            this.#settle(workerMessage.data.fileId);
           }
 
           this.workerDoneCount++;
@@ -255,25 +301,26 @@ export default class MediaOptimizationWorkerService extends Service {
             `Handling error message from image optimization for ${workerMessage.data.fileName}`
           );
 
+          this.workerPendingCount--;
+          this.#settle(workerMessage.data.fileId);
           if (this.stopWorkerOnError) {
             this.stopWorker();
           }
-
-          this.promiseResolvers[workerMessage.data.fileId]();
-          this.workerPendingCount--;
           break;
         case "skipped":
           this.logIfDebug(
             `Conversion skipped for ${workerMessage.data.fileName}, keeping the original`
           );
 
-          this.promiseResolvers[workerMessage.data.fileId]();
+          this.#settle(workerMessage.data.fileId);
           this.workerDoneCount++;
           this.workerPendingCount--;
           break;
         default:
           this.logIfDebug(`Sorry, we are out of ${workerMessage}`);
       }
+
+      this.#restartStallTimer();
     };
   }
 
@@ -282,6 +329,32 @@ export default class MediaOptimizationWorkerService extends Service {
       // eslint-disable-next-line no-console
       console.log("[media-optimization-worker]", ...messages);
     }
+  }
+
+  #settle(fileId, optimizedFile) {
+    this.promiseResolvers?.[fileId]?.(optimizedFile);
+    delete this.promiseResolvers?.[fileId];
+  }
+
+  // Only the worker's own replies push the deadline out; sending it more work
+  // must not keep a stuck worker alive.
+  #armStallTimer() {
+    if (this.#stallTimer || this.workerPendingCount === 0) {
+      return;
+    }
+
+    this.#stallTimer = setTimeout(() => {
+      this.logIfDebug(
+        `No response from media-optimization-worker in ${WORKER_STALL_TIMEOUT_MS}ms`
+      );
+      this.stopWorker();
+    }, WORKER_STALL_TIMEOUT_MS);
+  }
+
+  #restartStallTimer() {
+    clearTimeout(this.#stallTimer);
+    this.#stallTimer = null;
+    this.#armStallTimer();
   }
 
   _renameForOutputType(fileName, outputType) {

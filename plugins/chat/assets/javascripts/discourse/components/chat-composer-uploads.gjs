@@ -31,6 +31,7 @@ export default class ChatComposerUploads extends Component {
         this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
           optimizeFn: (data, opts) =>
             this.mediaOptimizationWorker.optimizeImage(data, opts),
+          cancelFn: (fileId) => this.mediaOptimizationWorker.cancel(fileId),
           runParallel: !this.capabilities.isMobileDevice,
         });
       }
