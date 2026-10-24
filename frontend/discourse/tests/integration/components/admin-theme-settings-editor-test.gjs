@@ -1,12 +1,13 @@
-import { click, fillIn, find, render } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
+import { fillInCodeEditor } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("renders passed json model object into string in the ace editor", async function (assert) {
+  test("renders the model as JSON in the editor", async function (assert) {
     const model = {
       model: {
         settings: [
@@ -18,7 +19,9 @@ module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
 
     await render(<template><ThemeSettingsEditor @model={{model}} /></template>);
 
-    assert.dom(".ace_line").hasText("[");
+    await waitFor(".cm-content");
+
+    assert.dom(".cm-line").hasText("[");
   });
 
   test("input is valid json", async function (assert) {
@@ -26,7 +29,7 @@ module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
 
     await render(<template><ThemeSettingsEditor @model={{model}} /></template>);
 
-    await fillIn(".ace textarea", "foo");
+    await fillInCodeEditor(".code-editor", "foo");
     await click("button#save");
 
     assert.dom(".validation-error").hasText(/Syntax Error/);
@@ -37,7 +40,7 @@ module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
 
     await render(<template><ThemeSettingsEditor @model={{model}} /></template>);
 
-    await fillIn(".ace textarea", `[{ "value": "value1" }]`);
+    await fillInCodeEditor(".code-editor", `[{ "value": "value1" }]`);
     await click("button#save");
 
     assert.dom(".validation-error").hasText(/Syntax Error/);
@@ -48,7 +51,7 @@ module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
 
     await render(<template><ThemeSettingsEditor @model={{model}} /></template>);
 
-    await fillIn(".ace textarea", `[{ "setting": "setting1" }]`);
+    await fillInCodeEditor(".code-editor", `[{ "setting": "setting1" }]`);
     await click("button#save");
 
     assert.dom(".validation-error").hasText(/Syntax Error/);
@@ -59,7 +62,7 @@ module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
 
     await render(<template><ThemeSettingsEditor @model={{model}} /></template>);
 
-    await fillIn(".ace textarea", `[{ "other_key": "other-key-1" }]`);
+    await fillInCodeEditor(".code-editor", `[{ "other_key": "other-key-1" }]`);
     await click("button#save");
 
     assert.dom(".validation-error").hasText(/Syntax Error/);
@@ -74,7 +77,8 @@ module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
 
     await render(<template><ThemeSettingsEditor @model={{model}} /></template>);
 
-    find(".ace").aceEditor.session.doc.setValue(
+    await fillInCodeEditor(
+      ".code-editor",
       JSON.stringify([{ setting: "bar", value: "bar" }])
     );
     await click("button#save");
@@ -95,7 +99,8 @@ module("Integration | Component | AdminThemeSettingsEditor", function (hooks) {
 
     await render(<template><ThemeSettingsEditor @model={{model}} /></template>);
 
-    find(".ace").aceEditor.session.doc.setValue(
+    await fillInCodeEditor(
+      ".code-editor",
       JSON.stringify([
         { setting: "foo", value: "foo" },
         { setting: "bar", value: "bar" },

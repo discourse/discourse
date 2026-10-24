@@ -3,6 +3,10 @@ import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import EmailStylesEditor from "discourse/admin/components/email-styles-editor";
 import EmailStyle from "discourse/admin/models/email-style";
+import {
+  codeEditorValue,
+  fillInCodeEditor,
+} from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 class DialogStub extends Service {
@@ -14,19 +18,37 @@ class DialogStub extends Service {
 module("Integration | Component | EmailStylesEditor", function (hooks) {
   setupRenderingTest(hooks);
 
-  let aceSizing;
-
   hooks.beforeEach(function () {
     this.owner.register("service:dialog", DialogStub);
-
-    // ace only finishes its first render inside a sized element
-    aceSizing = document.createElement("style");
-    aceSizing.textContent = ".ace_editor { width: 300px; height: 200px; }";
-    document.head.append(aceSizing);
   });
 
-  hooks.afterEach(function () {
-    aceSizing.remove();
+  test("typing in the editor edits the field, and reset restores it", async function (assert) {
+    const styles = EmailStyle.create({
+      css: "body { color: red; }",
+      default_css: "body { color: red; }",
+    });
+
+    await render(
+      <template>
+        <EmailStylesEditor @fieldName="css" @styles={{styles}} />
+      </template>
+    );
+
+    await fillInCodeEditor(".code-editor", "body { color: green; }");
+
+    assert.strictEqual(
+      styles.css,
+      "body { color: green; }",
+      "the edit reaches the field"
+    );
+
+    await click(".btn-default");
+
+    assert.strictEqual(
+      codeEditorValue(".code-editor"),
+      "body { color: red; }",
+      "the editor shows the restored default"
+    );
   });
 
   test("resetting follows the edited field", async function (assert) {
