@@ -14,7 +14,7 @@ class FormTemplate::Submission
         "format_version" => FORMAT_VERSION,
         "template_id" => template.id,
         "definition" => {
-          "fields" => YAML.safe_load(template.template),
+          "fields" => template.fields,
           "output_template" => template.output_template,
         },
         "answers" => answers,

@@ -106,6 +106,7 @@ RSpec.describe PostsController do
       expect(response.status).to eq(422)
       expect(form_post.reload.form_data).to eq(original)
       expect(form_post.raw).to eq(submission.render)
+      expect(form_post.revisions.count).to eq(0)
 
       sign_in(Fabricate(:user))
       put "/posts/#{form_post.id}.json",

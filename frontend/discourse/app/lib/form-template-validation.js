@@ -14,17 +14,6 @@ export function initializeFormTemplateAnswers(form, fields, values) {
   }
 }
 
-export function getFormTemplateObject(form) {
-  const formData = new FormData(form);
-
-  const formObject = {};
-  formData.forEach((value, key) => {
-    formObject[key] = value;
-  });
-
-  return formObject;
-}
-
 export function collectFormTemplateAnswers(
   form,
   fields,
