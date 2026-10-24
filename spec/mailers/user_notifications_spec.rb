@@ -1909,7 +1909,7 @@ RSpec.describe UserNotifications do
     end
   end
 
-  shared_examples "notification email building" do
+  shared_examples "notification email building" do |invitation: false|
     let(:post) { Fabricate(:post, user: user) }
     let(:mail_type) { "user_#{notification_type}" }
     let(:mail_template) { "user_notifications.#{mail_type}" }
@@ -2003,6 +2003,26 @@ RSpec.describe UserNotifications do
             "#{mail_template}.text_body_template",
             custom_body,
           )
+        end
+
+        if invitation
+          it "renders invitation titles literally when the message is cooked again" do
+            title = 'Planning *notes* `draft` [agenda] (updated) \\ & <details>'
+            post.topic.update!(title: title)
+            notification.data_hash[:topic_title] = title
+            mail =
+              UserNotifications.public_send(
+                mail_type,
+                user,
+                notification_type: notification_type,
+                notification_data_hash: notification.data_hash,
+                post: post,
+              )
+            html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
+
+            expect(html.text).to include("You are now officially notified.")
+            expect(html.css("a[href='#{post.topic.url}']").map(&:text)).to include(title)
+          end
         end
 
         it "does not use the default html_override" do
@@ -2135,7 +2155,7 @@ RSpec.describe UserNotifications do
   end
 
   describe "user invited to a private message" do
-    include_examples "notification email building" do
+    include_examples "notification email building", invitation: true do
       let(:notification_type) { :invited_to_private_message }
       let(:post) { Fabricate(:private_message_post) }
       let(:user) { post.user }
@@ -2148,7 +2168,7 @@ RSpec.describe UserNotifications do
   end
 
   describe "group invited to a private message" do
-    include_examples "notification email building" do
+    include_examples "notification email building", invitation: true do
       let(:notification_type) { :invited_to_private_message }
       let(:post) { Fabricate(:private_message_post) }
       let(:user) { post.user }
@@ -2173,7 +2193,7 @@ RSpec.describe UserNotifications do
   describe "user invited to a topic" do
     let(:notification_type) { :invited_to_topic }
 
-    include_examples "notification email building" do
+    include_examples "notification email building", invitation: true do
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
