@@ -37,7 +37,7 @@ RSpec.describe FormTemplate::DefaultRenderer do
       expect(values.answers).to eq(original_answers)
     end
 
-    it "preserves separators for empty successful controls while omitting unsubmitted controls" do
+    it "omits empty answers and falls back to the field ID as the label" do
       fields = [
         { "id" => "first", "type" => "input", "attributes" => { "label" => "First" } },
         { "id" => "empty", "type" => "input" },
@@ -45,7 +45,7 @@ RSpec.describe FormTemplate::DefaultRenderer do
         { "id" => "missing", "type" => "input" },
         { "id" => "selections", "type" => "multi-select" },
         { "id" => "null", "type" => "input" },
-        { "id" => "last", "type" => "textarea", "attributes" => { "label" => "Last" } },
+        { "id" => "unlabeled", "type" => "textarea" },
       ]
       values =
         FormTemplate::FieldValues.new(
@@ -56,19 +56,11 @@ RSpec.describe FormTemplate::DefaultRenderer do
             "unchecked" => false,
             "selections" => [],
             "null" => nil,
-            "last" => "two",
+            "unlabeled" => "two",
           },
         )
 
-      expect(described_class.render(values)).to eq("### First\none\n\n\n\n### Last\ntwo")
-    end
-
-    it "preserves unlabeled fields and trailing empty controls" do
-      fields = [{ "id" => "unlabeled", "type" => "input" }, { "id" => "empty", "type" => "input" }]
-      values =
-        FormTemplate::FieldValues.new(fields:, answers: { "unlabeled" => "value", "empty" => "" })
-
-      expect(described_class.render(values)).to eq("### undefined\nvalue\n\n")
+      expect(described_class.render(values)).to eq("### First\none\n\n### unlabeled\ntwo")
     end
 
     it "renders empty forms and leaves answer types unchanged" do
