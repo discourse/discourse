@@ -103,11 +103,6 @@ export default class FormTemplateFieldWrapper extends Component {
       }
       this.parsedTemplate = load(templateContent);
       this.args.onSelectFormTemplate?.(this.parsedTemplate, id);
-      next(() => {
-        if (sequence === this.#templateLoadSequence && !this.isDestroying) {
-          this.args.onChange?.();
-        }
-      });
     } catch (e) {
       this.error = e;
     }

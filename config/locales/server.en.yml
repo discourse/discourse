@@ -6777,6 +6777,7 @@ en:
 
   form_templates:
     invalid_answer: "The answer for %{field} is invalid."
+    output_unavailable: "This form's output template could not be rendered. Please contact a staff member."
     errors:
       invalid_output_template: "contains an invalid output template"
       invalid_yaml: "is not a valid YAML string"
