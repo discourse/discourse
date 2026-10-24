@@ -65,6 +65,20 @@ module DiscourseEvents
         return false if source_post.hidden? || source_post.deleted_at.present?
         return false if !source_topic.visible? || source_topic.deleted_at.present?
 
+        # Editing someone else's post does not authorise publishing its
+        # contents as a new topic under the original author's identity.
+        # A later owner edit can reset last_editor_id, so consult the
+        # revision history as well.
+        return false if source_post.last_editor_id != source_post.user_id
+
+        non_owner_content_edit =
+          source_post
+            .post_revisions
+            .where.not(user_id: source_post.user_id)
+            .any? { |revision| revision.modifications.key?("raw") }
+
+        return false if non_owner_content_edit
+
         if author && (author.suspended? || SpamRule::AutoSilence.prevent_posting?(author))
           return false
         end
