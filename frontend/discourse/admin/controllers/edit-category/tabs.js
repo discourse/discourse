@@ -367,8 +367,10 @@ export default class EditCategoryTabsController extends Controller {
       return;
     }
 
+    // `category_types` here is the list of selected type ids sent with the save,
+    // not the category's type map, so it stays off the model.
     // eslint-disable-next-line no-unused-vars
-    const { visibility, ...categoryData } = data;
+    const { visibility, category_types, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
     // Category serialization converts an empty permission list to staff-only access.
@@ -400,7 +402,7 @@ export default class EditCategoryTabsController extends Controller {
       const previousTypes = new Set(
         Object.keys(this.model.categoryTypes ?? {})
       );
-      const result = await this.model.save();
+      const result = await this.model.save(category_types);
       const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
