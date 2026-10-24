@@ -409,7 +409,7 @@ let activeLightbox = null;
  *   `alt` labels the slide and its caption; images default to the element's alt
  * @param {{index?: number}} [options]
  * @returns {Promise<void>} resolves when the lightbox closes; calls made while
- *   one is opening or open share its promise
+ *   one is opening or open return its promise and are otherwise ignored
  */
 export function openLightbox(items, options) {
   // a second open during the async load would never show or settle
@@ -422,12 +422,20 @@ export function openLightbox(items, options) {
 async function showLightbox(items, { index = 0 } = {}) {
   const dataSource = items.map(buildSlideData);
 
-  const { default: PhotoSwipeLightbox } = await waitForPromise(
-    import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
-  );
+  // loaded up front so a failed chunk rejects here instead of never opening
+  const [{ default: PhotoSwipeLightbox }, { default: PhotoSwipe }] =
+    await waitForPromise(
+      Promise.all([
+        import(
+          /* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox"
+        ),
+        import(/* dynamicChunkName: "photoswipe" */ "photoswipe"),
+      ])
+    );
   const lightboxEl = new PhotoSwipeLightbox({
     ...sharedOptions(() => lightboxEl.pswp),
     dataSource,
+    pswpModule: PhotoSwipe,
   });
 
   closeOnEscape(lightboxEl);

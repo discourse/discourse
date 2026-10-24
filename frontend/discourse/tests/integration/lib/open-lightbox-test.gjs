@@ -120,6 +120,15 @@ module("Integration | Lib | openLightbox", function (hooks) {
     await waitUntil(() => !document.querySelector(".pswp"));
   });
 
+  test("opens again after a failed open", async function (assert) {
+    await assert.rejects(openLightbox(null));
+
+    openLightbox([{ src: "/images/avatar.png" }]);
+    await waitFor(".pswp--open");
+
+    assert.dom(".pswp", document.body).exists();
+  });
+
   test("resolves right away when a post lightbox is already open", async function (assert) {
     window.pswp = {};
 
