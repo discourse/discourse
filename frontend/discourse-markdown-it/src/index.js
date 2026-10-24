@@ -1,6 +1,6 @@
 import { cook as cookIt } from "./engine.js";
-import DEFAULT_FEATURES from "./features/index.js";
 import { updateBBCodeTag } from "./features/bbcode-block.js";
+import DEFAULT_FEATURES from "./features/index.js";
 import buildOptions from "./options.js";
 import setup from "./setup.js";
 
