@@ -140,7 +140,7 @@ RSpec.describe FormTemplate::RenderSubmission do
         it { is_expected.to run_successfully }
 
         it "renders the answers that were given" do
-          expect(result.raw).to eq("### undefined\n2")
+          expect(result.raw).to eq("### seats\n2")
         end
       end
     end
@@ -160,7 +160,7 @@ RSpec.describe FormTemplate::RenderSubmission do
       it { is_expected.to run_successfully }
 
       it "renders the default output" do
-        expect(result.raw).to eq("### Details\n**Hello**\n\n### undefined\n1e2")
+        expect(result.raw).to eq("### Details\n**Hello**\n\n### seats\n1e2")
       end
 
       context "with an output template" do

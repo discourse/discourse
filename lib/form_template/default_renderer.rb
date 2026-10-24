@@ -6,7 +6,7 @@ class FormTemplate::DefaultRenderer
       .fields
       .filter_map do |field|
         value = field_values.answers[field["id"]]
-        next if value.nil? || value == false || value == []
+        next if value.blank? && value != true
 
         text =
           case value
@@ -18,11 +18,7 @@ class FormTemplate::DefaultRenderer
             value
           end
 
-        # Empty successful controls leave a separator in the existing browser formatter.
-        next "" if text.empty?
-
-        label = field.fetch("attributes", {}).fetch("label", "undefined")
-        label = "null" if label.nil?
+        label = field.dig("attributes", "label") || field["id"]
         "### #{label}\n#{text}"
       end
       .join("\n\n")
