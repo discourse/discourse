@@ -128,6 +128,34 @@ module("Unit | Lib | push-notifications | register", function (hooks) {
     assert.false(registered);
   });
 
+  test("keeps reporting failure across boots until the server accepts the subscription", async function (assert) {
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    pretender.post("/push_notifications/subscribe", () => response(500, {}));
+    sinon.stub(console, "error");
+
+    assert.false(
+      await register(user, router, appEvents, "1|2|3"),
+      "a failed restore enables the fallback"
+    );
+    assert.false(
+      await register(user, router, appEvents, "1|2|3"),
+      "the next boot keeps the fallback when registration still fails"
+    );
+
+    pretender.post("/push_notifications/subscribe", () =>
+      response({ success: "OK" })
+    );
+
+    assert.true(
+      await register(user, router, appEvents, "1|2|3"),
+      "a later boot reports success once the server accepts the subscription"
+    );
+    assert.true(
+      this.pushManager.subscribe.calledOnce,
+      "subsequent boots reuse the restored browser subscription"
+    );
+  });
+
   test("treats a turned-off subscription as disabled", function (assert) {
     keyValueStore.setItem(userSubscriptionKey(user), "false");
     assert.false(isPushNotificationsEnabled(user));

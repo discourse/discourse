@@ -85,8 +85,14 @@ export function register(user, router, appEvents, applicationServerKey) {
       }
 
       if (subscription) {
-        sendSubscriptionToServer(subscription, false);
-        return true;
+        try {
+          await sendSubscriptionToServer(subscription, false);
+          return true;
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          return false;
+        }
       }
 
       if (keyValueStore.getItem(userSubscriptionKey(user)) !== "subscribed") {
