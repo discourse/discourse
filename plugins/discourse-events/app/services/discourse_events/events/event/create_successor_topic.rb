@@ -171,13 +171,9 @@ module DiscourseEvents
                 "end" => formatted_end(next_occurrence[:ends_at]),
               )
 
-            successor_post = create_successor_post(successor_raw, original_title)
+            successor_post =
+              create_successor_post(successor_raw, original_title, recurrence_anchor:)
 
-            successor_topic = successor_post.topic
-            successor_topic.custom_fields[
-              Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
-            ] = recurrence_anchor.iso8601
-            successor_topic.save_custom_fields
             copy_recurring_invitees(invitees, successor_post)
           end
         end
@@ -197,7 +193,7 @@ module DiscourseEvents
         post.topic
       end
 
-      def create_successor_post(raw, title)
+      def create_successor_post(raw, title, recurrence_anchor:)
         PostCreator.create!(
           post.user || Discourse.system_user,
           acting_user: Discourse.system_user,
@@ -206,6 +202,12 @@ module DiscourseEvents
           raw:,
           category: topic.category_id,
           tags: topic.tags.pluck(:name),
+          topic_opts: {
+            custom_fields: {
+              Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD => recurrence_anchor.iso8601,
+              Event::RECURRENCE_ANCHOR_INITIALIZING_TOPIC_CUSTOM_FIELD => true,
+            },
+          },
         ).reload
       end
 

@@ -19,6 +19,8 @@ module DiscourseEvents
       DEFAULT_DURATION_SECONDS = 3600
       DEFAULT_TIMEZONE = "UTC"
       RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD = "discourse_post_event_recurrence_anchor_starts_at"
+      RECURRENCE_ANCHOR_INITIALIZING_TOPIC_CUSTOM_FIELD =
+        "discourse_post_event_recurrence_anchor_initializing"
       NOTIFICATION_REMINDER = "notification"
       BUMP_TOPIC_REMINDER = "bumpTopic"
       REMINDER_TYPES = [NOTIFICATION_REMINDER, BUMP_TOPIC_REMINDER]
@@ -664,6 +666,15 @@ module DiscourseEvents
         field = RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
         stored_anchor = source_topic.custom_fields[field]
         return if stored_anchor.blank?
+
+        # Only a successor created with a pre-seeded anchor should preserve
+        # that anchor during its first Event save. A new Event on an existing
+        # Topic must still discard any stale recurrence anchor.
+        if previously_new_record? &&
+             source_topic.custom_fields.delete(RECURRENCE_ANCHOR_INITIALIZING_TOPIC_CUSTOM_FIELD)
+          source_topic.save_custom_fields
+          return
+        end
 
         new_start = original_starts_at.in_time_zone(rrule_timezone)
 

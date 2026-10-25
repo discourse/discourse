@@ -587,6 +587,48 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor_topic.reload.custom_fields[anchor_field]).to be_nil
       end
 
+      it "preserves the monthly anchor when successor creation is delayed" do
+        starts_at = Time.utc(2027, 3, 29, 12, 0)
+        ends_at = starts_at + 1.hour
+        title = "Delayed last-Monday meeting"
+        anchor_field = DiscourseEvents::Events::Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+
+        freeze_time(Time.utc(2027, 3, 1, 12, 0))
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="2027-03-29 12:00" end="2027-03-29 13:00" status="public" timezone="UTC" recurrence="every_month"]
+              Monthly meeting.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        event_date = post.reload.event.event_dates.pending.first
+
+        expect(event_date.starts_at).to eq_time(starts_at)
+
+        # The March occurrence was not processed until after April 26.
+        freeze_time(Time.utc(2027, 5, 1, 14, 0))
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_event = successor_topic.first_post.reload.event
+
+        expect(successor_event.original_starts_at).to eq_time(Time.utc(2027, 4, 26, 12, 0))
+
+        expect(successor_topic.reload.custom_fields[anchor_field]).to eq(starts_at.iso8601)
+        initializing_field =
+          DiscourseEvents::Events::Event::RECURRENCE_ANCHOR_INITIALIZING_TOPIC_CUSTOM_FIELD
+        expect(successor_topic.custom_fields[initializing_field]).to be_nil
+        expect(successor_event.recurrence_anchor_starts_at).to eq_time(starts_at)
+
+        expect(successor_event.event_dates.pending.pluck(:starts_at)).to contain_exactly(
+          Time.utc(2027, 5, 31, 12, 0),
+        )
+
+        expect(event_date.reload.finished_at).to be_present
+      end
+
       it "preserves last-Monday recurrence after creating a successor topic" do
         starts_at = Time.utc(2027, 3, 29, 12, 0)
         ends_at = starts_at + 1.hour
