@@ -23,7 +23,9 @@ module Jobs
           end
         end
         raw = rewrite.call(post.raw)
-        form_data = post.form_submission&.rewrite_text(&rewrite)&.to_h
+        submission = post.form_submission&.rewrite_text(&rewrite)
+        form_data = submission&.to_h
+        raw = submission.render if submission
 
         if post.raw != raw || post.form_data != form_data
           changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }

@@ -6777,6 +6777,7 @@ en:
       unsafe: "Payload URL cannot be used because it's unsafe"
 
   form_templates:
+    raw_managed_by_form: "This post is managed by a form. Edit its form answers instead of replacing the post text."
     invalid_answer: "The answer for %{field} is invalid."
     output_unavailable: "This form's output template could not be rendered. Please contact a staff member."
     errors:

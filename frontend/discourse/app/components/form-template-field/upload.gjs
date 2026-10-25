@@ -167,7 +167,10 @@ export default class FormTemplateFieldUpload extends Component {
         <ul class="form-template-field__uploaded-files">
           {{#each this.uploads as |upload index|}}
             <li>
-              <DCookText @rawText={{upload}} />
+              <DCookText
+                class="form-template-field__upload-preview"
+                @rawText={{upload}}
+              />
               <DButton
                 class="form-template-field__remove-upload"
                 @action={{fn this.removeUpload index}}

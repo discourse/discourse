@@ -12,6 +12,37 @@ RSpec.describe ShrinkUploadedImage do
   context "when local uploads are enabled" do
     let(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
 
+    it "updates uploads stored only in form answers" do
+      upload.save!
+      template =
+        Fabricate(
+          :form_template,
+          template: [{ id: "image", type: "upload" }].as_json.to_yaml,
+          output_template: "A post with an omitted image.",
+        )
+      original_url = upload.short_url
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "image" => "![image](#{original_url})",
+          },
+        )
+      post = create_post(raw: submission.render, form_data: submission.to_h)
+
+      result =
+        described_class.new(
+          upload:,
+          path: Discourse.store.path_for(upload),
+          max_pixels: 10_000,
+        ).perform
+
+      expect(result).to eq(true)
+      expect(post.reload.form_submission.answers["image"]).to include(upload.short_url)
+      expect(post.form_submission.answers["image"]).not_to include(original_url)
+      expect(post.form_submission.render).to eq(post.raw)
+    end
+
     it "resizes the image" do
       create_post_with_upload
       filesize_before = upload.filesize

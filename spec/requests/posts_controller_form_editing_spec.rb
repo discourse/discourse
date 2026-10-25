@@ -72,7 +72,12 @@ RSpec.describe PostsController do
     it "preserves username rewrites when editing another answer" do
       Jobs.run_immediately!
       UserActionManager.enable
+      SiteSetting.allow_uppercase_posts = true
       mentioned = Fabricate(:user, username: "formfriend")
+      form_template.update!(
+        output_template:
+          "{% if answers.description %}{{ answers.description | upcase }}{% endif %}",
+      )
       original =
         submission.with_answers(
           answers.merge("description" => "Playing with @formfriend this evening."),
@@ -99,7 +104,7 @@ RSpec.describe PostsController do
       )
       saved.reload
       expect(saved.form_submission.render).to eq(saved.raw)
-      expect(saved.raw).to include("@renamedfriend")
+      expect(saved.raw).to include("@RENAMEDFRIEND")
       saved.revisions.each do |revision|
         expect(revision.form_data_changes.map { |data| data.dig("answers", "description") }).to all(
           include("@renamedfriend"),
@@ -116,7 +121,7 @@ RSpec.describe PostsController do
             },
           }
       expect(response.status).to eq(200), response.body
-      expect(saved.reload.raw).to include("@renamedfriend")
+      expect(saved.reload.raw).to include("@RENAMEDFRIEND")
       expect(saved.form_submission.answers["confirmed"]).to eq(false)
     end
 
@@ -144,6 +149,15 @@ RSpec.describe PostsController do
           }
       expect(response.status).to eq(409)
       expect(form_post.reload.form_submission.answers).to eq(changed)
+
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: }.to_json,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(form_post.reload.form_submission.answers).to eq(answers)
     end
 
     it "rejects raw-only writes and unauthorized structured writes" do
@@ -155,6 +169,9 @@ RSpec.describe PostsController do
             },
           }
       expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("form_templates.raw_managed_by_form"),
+      )
       expect(form_post.reload.form_data).to eq(original)
       expect(form_post.raw).to eq(submission.render)
       expect(form_post.revisions.count).to eq(0)
@@ -173,6 +190,16 @@ RSpec.describe PostsController do
   end
 
   describe "form preview" do
+    it "rejects previews by users who cannot edit the form" do
+      sign_in(Fabricate(:user))
+      post "/form-templates/render.json",
+           params: {
+             post_id: form_post.id,
+             form_template_data: { answers: }.to_json,
+           }
+      expect(response.status).to eq(403)
+    end
+
     it "previews incomplete edits without changing saved state, even after forms are disabled" do
       original = form_post.form_data
       SiteSetting.enable_form_templates = false

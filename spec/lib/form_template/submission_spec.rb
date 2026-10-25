@@ -57,16 +57,18 @@ RSpec.describe FormTemplate::Submission do
   end
 
   describe "#rewrite_text" do
-    it "rejects computed templates even when the current output is unchanged" do
+    it "evaluates conditions and filters using rewritten answers" do
       data = submission.to_h
-      data["definition"]["fields"].find { |field| field["id"] == "options" }["choices"] = ["@old"]
+      data["answers"]["description"] = "@old"
       data["definition"][
         "output_template"
-      ] = "{% assign name = '@' | append: 'old' %}{% if answers.description == name %}Chosen{% else %}Other{% endif %}"
+      ] = "{% if answers.description == '@old' %}Original{% else %}{{ answers.description | upcase }}{% endif %}"
 
-      expect do
-        described_class.new(data).rewrite_text { |text| text.gsub("@old", "@new") }
-      end.to raise_error(ArgumentError)
+      rewritten = described_class.new(data).rewrite_text { |text| text.gsub("@old", "@new") }
+
+      expect(rewritten.answers["description"]).to eq("@new")
+      expect(rewritten.render).to eq("@NEW")
+      expect(rewritten.to_h["definition"]).to eq(data["definition"])
     end
 
     it "rewrites labels, choices and literal output while preserving field references and typed values" do

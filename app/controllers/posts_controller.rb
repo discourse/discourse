@@ -235,8 +235,8 @@ class PostsController < ApplicationController
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
     if params[:post][:form_template_data].present?
-      unless params[:post][:form_state_token].present? &&
-               params[:post][:form_state_token] == post.form_state_token
+      if params[:post][:form_state_token].present? &&
+           params[:post][:form_state_token] != post.form_state_token
         return render_json_error(I18n.t("edit_conflict"), status: 409)
       end
       submission =

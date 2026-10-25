@@ -796,7 +796,7 @@ export default class ComposerService extends Service {
     const draft = { id: this.model.formTemplateId, answers: values };
     if (
       !this.model.formTemplateDraft ||
-      this.model.formTemplateDraft.id !== draft.id
+      String(this.model.formTemplateDraft.id) !== String(draft.id)
     ) {
       this.model.set("originalFormTemplateDraft", draft);
     }

@@ -11,7 +11,8 @@ RSpec.describe Jobs::UpdateHotlinkedRaw do
           { id: "image", type: "composer" },
           { id: "confirmed", type: "checkbox" },
         ].as_json.to_yaml,
-        output_template: "An invitation with an image: {{ answers.image }}",
+        output_template:
+          "An invitation: {% if answers.image %}{{ answers.image | strip }}{% endif %}",
       )
     submission =
       FormTemplate::Submission.from_template(

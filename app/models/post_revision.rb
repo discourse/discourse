@@ -14,6 +14,24 @@ class PostRevision < ActiveRecord::Base
     form_data_changes ? modifications.merge("form_data" => form_data_changes) : modifications
   end
 
+  def rewrite_form_data(&rewrite)
+    return unless form_data_changes
+
+    submissions =
+      form_data_changes.map do |data|
+        data && FormTemplate::Submission.new(data, validate: false).rewrite_text(&rewrite)
+      end
+    self.form_data_changes = submissions.map { |submission| submission&.to_h }
+    raw =
+      submissions.each_with_index.map do |submission, index|
+        submission ? submission.normalized_raw : modifications.dig("raw", index)
+      end
+    if modifications.key?("raw") || raw[0] != raw[1]
+      modifications["raw"] = raw
+      modifications["cooked"] = raw.map { |text| post.cook(text) }
+    end
+  end
+
   after_create :create_notification
 
   def self.ensure_consistency!

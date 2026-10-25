@@ -30,6 +30,38 @@ RSpec.describe Jobs::ChangeDisplayName do
   let(:args) { { user_id: user.id, old_name: old_display_name, new_name: new_display_name } }
 
   describe "#execute" do
+    it "keeps form answers and revisions aligned with quote display names" do
+      template =
+        Fabricate(
+          :form_template,
+          template: [{ id: "quote", type: "composer" }].as_json.to_yaml,
+          output_template: "{% if answers.quote %}{{ answers.quote | strip }}{% endif %}",
+        )
+      original =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "quote" => post_attributes[:raw],
+          },
+        )
+      saved = create_post(raw: original.render, form_data: original.to_h)
+      changed = original.with_answers({ "quote" => revised_post_attributes[:raw] })
+      PostRevisor.new(saved).revise!(
+        saved.user,
+        { raw: changed.render, form_data: changed.to_h },
+        force_new_version: true,
+      )
+
+      described_class.new.execute(args)
+
+      expect(saved.reload.raw).to include(new_display_name)
+      expect(saved.form_submission.render).to eq(saved.raw)
+      expect(saved.form_submission.answers["quote"]).to include(new_display_name)
+      expect(
+        saved.revisions.last.form_data_changes.map { |data| data.dig("answers", "quote") },
+      ).to all(include(new_display_name))
+    end
+
     context "when the renamed user has been quoted" do
       it "rewrites the raw quote display name" do
         expect { described_class.new.execute(args) }.to change { post.reload.raw }.to(<<~RAW.strip)

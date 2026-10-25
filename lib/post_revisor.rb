@@ -540,6 +540,11 @@ class PostRevisor
       rewritten = yield(field, value)
       changes[key] = field == :form_data ? rewritten.to_json : rewritten
     end
+    if changes[original_form_data_key] && (data = JSON.parse(changes[original_form_data_key]))
+      raw = FormTemplate::Submission.new(data, validate: false).normalized_raw
+      changes[original_raw_key] = raw if changes.key?(original_raw_key)
+      changes[original_cooked_key] = @post.cook(raw) if changes.key?(original_cooked_key)
+    end
     changes.each { |key, value| Discourse.redis.set(key, value, xx: true, keepttl: true) }
   end
 

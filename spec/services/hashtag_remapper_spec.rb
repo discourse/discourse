@@ -10,6 +10,31 @@ RSpec.describe HashtagRemapper do
   end
 
   describe "posts" do
+    it "keeps saved form answers aligned with renamed hashtag references" do
+      tag = Fabricate(:tag, name: "support")
+      template =
+        Fabricate(
+          :form_template,
+          template: [{ id: "note", type: "input" }].as_json.to_yaml,
+          output_template: "{% if answers.note %}{{ answers.note }}{% endif %}",
+        )
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "note" => "See #support::tag for details.",
+          },
+        )
+      post = create_post(raw: submission.render, form_data: submission.to_h)
+      tag.update!(name: "help")
+
+      remap_tag(tag, "support")
+
+      expect(post.reload.raw).to eq("See #help::tag for details.")
+      expect(post.form_submission.render).to eq(post.raw)
+      expect(post.form_submission.answers["note"]).to eq(post.raw)
+    end
+
     it "rewrites a bare reference and re-cooks" do
       tag = Fabricate(:tag, name: "support")
       post = create_post(raw: "See #support for details.")

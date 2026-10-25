@@ -166,6 +166,8 @@ module Jobs
         attributes = { raw: update_raw(post.raw), cooked: update_cooked(post.cooked) }
         if post.form_data
           attributes[:form_data] = update_form_data(post.form_data)
+          attributes[:raw] = render_form_data(attributes[:form_data])
+          attributes[:cooked] = post.cook(attributes[:raw])
           PostRevisor
             .new(post)
             .rewrite_cached_original do |field, value|
@@ -192,8 +194,7 @@ module Jobs
       revision.with_lock do
         revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
         revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
-        revision.form_data_changes =
-          revision.form_data_changes&.map { |data| update_form_data(data) }
+        revision.rewrite_form_data { |text| update_raw(text) }
         revision.save! if revision.changed?
       end
     rescue => e
@@ -206,6 +207,10 @@ module Jobs
         .new(data, validate: false)
         .rewrite_text { |text| update_raw(text) }
         .to_h
+    end
+
+    def render_form_data(data)
+      FormTemplate::Submission.new(data, validate: false).normalized_raw
     end
 
     def mentioned(post_id_column)

@@ -445,7 +445,9 @@ export default class Composer extends RestModel {
     if (
       this.formTemplateDraft &&
       (this.formSubmission ||
-        this.category?.form_template_ids?.includes(this.formTemplateDraft.id))
+        this.category?.form_template_ids?.some(
+          (id) => String(id) === String(this.formTemplateDraft.id)
+        ))
     ) {
       return !deepEqual(this.formTemplateDraft, this.originalFormTemplateDraft);
     }
@@ -1207,6 +1209,7 @@ export default class Composer extends RestModel {
 
     // user clicked "overwrite edits" button
     if (this.editConflict) {
+      delete props.form_state_token;
       delete props.original_text;
       delete props.original_title;
       delete props.original_tags;

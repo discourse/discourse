@@ -694,6 +694,44 @@ module("Unit | Model | composer", function (hooks) {
     assert.true(composer.editConflict);
   });
 
+  test("a form edit can explicitly overwrite after a conflict", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      post: store.createRecord("post", { id: 123, post_number: 1 }),
+      topic: store.createRecord("topic", { id: 456, title: "a title" }),
+      title: "a title",
+      reply: "Form output",
+      formStateToken: "draft-token",
+      formTemplateData: JSON.stringify({ answers: { note: "draft answer" } }),
+    });
+    const payloads = [];
+    pretender.put("/posts/123", (request) => {
+      payloads.push(parsePostData(request.requestBody));
+      return payloads.length === 1
+        ? response(409, { errors: ["Edit conflict"] })
+        : response({ post: { id: 123, raw: "Form output" } });
+    });
+
+    await assert.rejects(composer.editPost({}), "the stale draft conflicts");
+    assert.strictEqual(
+      payloads[0].post.form_state_token,
+      "draft-token",
+      "checks the draft's original state"
+    );
+    assert.true(composer.editConflict, "offers an explicit overwrite");
+    await composer.editPost({});
+    assert.strictEqual(
+      payloads.length,
+      2,
+      "the overwrite completes on the next request"
+    );
+    assert.false(
+      "form_state_token" in payloads[1].post,
+      "explicit overwrite omits the stale token"
+    );
+  });
+
   test("editPost sends the topic edit-conflict fields", async function (assert) {
     const payload = await editTopicViaComposer.call(this, {
       topicProps: { title: "the original title" },

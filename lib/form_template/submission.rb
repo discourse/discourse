@@ -71,6 +71,10 @@ class FormTemplate::Submission
     raise FormTemplate::InvalidAnswers, I18n.t("form_templates.output_unavailable")
   end
 
+  def normalized_raw
+    TextCleaner.normalize_whitespaces(render).rstrip
+  end
+
   def with_answers(answers, validate: true)
     self.class.new(@data.merge("answers" => answers), validate:)
   end
@@ -97,31 +101,14 @@ class FormTemplate::Submission
     end
 
     if (output = data["definition"]["output_template"])
-      # Only direct answer interpolation is safe across future answer changes.
-      parts = output.split(/({{.*?}}|{%.*?%})/m)
-      expressions = parts.select { |part| part.start_with?("{{", "{%") }
-      data["definition"]["output_template"] = parts
-        .map do |part|
-          rewritten_part = yield(part)
-          if part.start_with?("{{", "{%") && rewritten_part != part
-            raise ArgumentError, "Cannot rewrite references inside Liquid expressions"
-          end
-          rewritten_part
-        end
+      # Expressions remain template logic, rather than editable post text.
+      data["definition"]["output_template"] = output
+        .split(/({{.*?}}|{%.*?%})/m)
+        .map { |part| part.start_with?("{{", "{%") ? part : yield(part) }
         .join
-      if data != @data &&
-           expressions.any? { |expression|
-             !expression.match?(/\A{{-?\s*answers(?:\.[\w-]+|\[["'][^"']+["']\])\s*-?}}\z/)
-           }
-        raise ArgumentError, "Cannot rewrite a form with computed Liquid expressions"
-      end
     end
 
-    rewritten = self.class.new(data, validate: false)
-    unless rewritten.render == yield(render)
-      raise ArgumentError, "Cannot rewrite generated form content without changing its meaning"
-    end
-    rewritten
+    self.class.new(data, validate: false)
   end
 
   def editor_data(raw:, guardian:)

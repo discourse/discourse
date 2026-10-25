@@ -13,8 +13,8 @@ class PostFormDataValidator < ActiveModel::Validator
       return
     end
 
-    rendered = TextCleaner.normalize_whitespaces(post.form_submission.render).rstrip
-    post.errors.add(:raw, :invalid) if post.raw != rendered
+    rendered = post.form_submission.normalized_raw
+    post.errors.add(:base, I18n.t("form_templates.raw_managed_by_form")) if post.raw != rendered
   rescue ArgumentError, FormTemplate::InvalidAnswers, Liquid::Error
     post.errors.add(:form_data, :invalid)
   end

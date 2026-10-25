@@ -51,11 +51,35 @@ module Jobs
     end
 
     def update_post(post)
-      rewritten = update_content(post.raw, post.cooked)
-      post.raw = rewritten[:raw]
-      post.cooked = rewritten[:cooked]
-
-      post.update_columns(raw: post.raw, cooked: post.cooked)
+      post.with_lock do
+        rewritten = update_content(post.raw, post.cooked)
+        if post.form_data
+          submission =
+            FormTemplate::Submission
+              .new(post.form_data)
+              .rewrite_text { |text| update_content(text, nil)[:raw] }
+          rewritten[:form_data] = submission.to_h
+          rewritten[:raw] = submission.normalized_raw
+          rewritten[:cooked] = post.cook(rewritten[:raw])
+          PostRevisor
+            .new(post)
+            .rewrite_cached_original do |field, value|
+              case field
+              when :raw
+                update_content(value, nil)[:raw]
+              when :cooked
+                value
+              when :form_data
+                value &&
+                  FormTemplate::Submission
+                    .new(value, validate: false)
+                    .rewrite_text { |text| update_content(text, nil)[:raw] }
+                    .to_h
+              end
+            end
+        end
+        post.update_columns(rewritten)
+      end
       post.sync_first_post_caches
 
       SearchIndexer.index(post, force: true) if post.topic
@@ -64,17 +88,19 @@ module Jobs
     end
 
     def update_revision(revision)
-      raw_versions = revision.modifications["raw"]
-      cooked_versions = revision.modifications["cooked"]
-      return if raw_versions.blank?
+      revision.with_lock do
+        raw_versions = revision.modifications["raw"]
+        cooked_versions = revision.modifications["cooked"]
 
-      raw_versions.each_index do |index|
-        rewritten = update_content(raw_versions[index], cooked_versions&.at(index))
-        raw_versions[index] = rewritten[:raw]
-        cooked_versions[index] = rewritten[:cooked] if cooked_versions
+        raw_versions&.each_index do |index|
+          rewritten = update_content(raw_versions[index], cooked_versions&.at(index))
+          raw_versions[index] = rewritten[:raw]
+          cooked_versions[index] = rewritten[:cooked] if cooked_versions
+        end
+
+        revision.rewrite_form_data { |text| update_content(text, nil)[:raw] }
+        revision.save! if revision.changed?
       end
-
-      revision.save!
     rescue => e
       Discourse.warn_exception(e, message: "Failed to update post revision with id #{revision.id}")
     end
