@@ -58,9 +58,9 @@ export default class FormTemplateFieldWrapper extends Component {
     if (this.args.content) {
       // Content used when no id exists yet
       // (i.e. previewing while creating a new template)
-      this._loadTemplate(this.args.content);
+      this.#loadTemplate(this.args.content);
     } else if (this.args.id) {
-      this._fetchTemplate(this.args.id);
+      this.#fetchTemplate(this.args.id);
     }
 
     next(this, () => {
@@ -82,10 +82,17 @@ export default class FormTemplateFieldWrapper extends Component {
       return;
     }
 
-    return this._fetchTemplate(this.args.id);
+    return this.#fetchTemplate(this.args.id);
   }
 
-  async _loadTemplate(
+  async #fetchTemplate(id) {
+    const sequence = ++this.#templateLoadSequence;
+    const response = await FormTemplate.findById(id);
+    const templateContent = await response.form_template.template;
+    return this.#loadTemplate(templateContent, id, sequence);
+  }
+
+  async #loadTemplate(
     templateContent,
     id = this.args.id,
     sequence = ++this.#templateLoadSequence
@@ -108,19 +115,12 @@ export default class FormTemplateFieldWrapper extends Component {
     }
   }
 
-  async _fetchTemplate(id) {
-    const sequence = ++this.#templateLoadSequence;
-    const response = await FormTemplate.findById(id);
-    const templateContent = await response.form_template.template;
-    return this._loadTemplate(templateContent, id, sequence);
-  }
-
   <template>
-    {{#if this.parsedTemplate}}
-      <div
-        class="form-template-form__wrapper"
-        {{didUpdate this.refreshTemplate @id}}
-      >
+    <div
+      class="form-template-form__wrapper"
+      {{didUpdate this.refreshTemplate @id}}
+    >
+      {{#if this.parsedTemplate}}
         {{#each this.parsedTemplate as |content|}}
           <FormTemplateField
             @component={{get this.fieldTypes content.type}}
@@ -130,11 +130,11 @@ export default class FormTemplateFieldWrapper extends Component {
             @uppyComposerUpload={{@uppyComposerUpload}}
           />
         {{/each}}
-      </div>
-    {{else if this.error}}
-      <div class="alert alert-error">
-        {{this.error}}
-      </div>
-    {{/if}}
+      {{else if this.error}}
+        <div class="alert alert-error">
+          {{this.error}}
+        </div>
+      {{/if}}
+    </div>
   </template>
 }

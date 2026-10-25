@@ -10,6 +10,40 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    test("loads the selected template when it changes during the initial request", async function (assert) {
+      const requests = { firstRequested: false };
+      for (const id of [1, 2]) {
+        pretender.get(
+          `/form-templates/${id}.json`,
+          () => {
+            requests.firstRequested ||= id === 1;
+            return response({
+              form_template: {
+                id,
+                template: `- type: input\n  id: field-${id}\n  attributes:\n    label: Template ${id}`,
+              },
+            });
+          },
+          id === 1 ? 100 : 0
+        );
+      }
+      const selections = [];
+      const onSelect = (fields, id) => selections.push(id);
+      this.set("templateId", 1);
+      const renderPromise = render(
+        <template>
+          <Wrapper @id={{this.templateId}} @onSelectFormTemplate={{onSelect}} />
+        </template>
+      );
+
+      await waitUntil(() => requests.firstRequested);
+      this.set("templateId", 2);
+      await renderPromise;
+
+      assert.dom("[name='field-2']").exists();
+      assert.deepEqual(selections, [2]);
+    });
+
     test("ignores an older template response after switching templates", async function (assert) {
       const requests = { secondRequested: false };
       for (const id of [1, 2, 3]) {
