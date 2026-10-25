@@ -23860,6 +23860,13 @@ CREATE UNIQUE INDEX index_published_pages_on_topic_id ON public.published_pages 
 
 
 --
+-- Name: index_push_subscriptions_on_endpoint; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_push_subscriptions_on_endpoint ON public.push_subscriptions USING btree ((((data)::jsonb ->> 'endpoint'::text)));
+
+
+--
 -- Name: index_quoted_posts_on_post_id_and_quoted_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26103,6 +26110,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261025182121'),
 ('20261020161054'),
 ('20261020160221'),
 ('20261019232249'),

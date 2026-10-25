@@ -1,6 +1,49 @@
 # frozen_string_literal: true
 
 RSpec.describe PushNotificationPusher do
+  describe ".subscribe with concurrent registrations" do
+    self.use_transactional_tests = false
+
+    after do
+      PushSubscription.where("data::jsonb ->> 'endpoint' = ?", "concurrent-endpoint").delete_all
+    end
+
+    it "atomically assigns the endpoint and keys to one owner" do
+      users = [User.new(id: -1001), User.new(id: -1002)]
+      barrier = Concurrent::CyclicBarrier.new(users.size)
+      ActiveRecord::Base.connection_pool.release_connection
+      threads =
+        users.map do |user|
+          Thread.new do
+            ActiveRecord::Base.connection_pool.with_connection do
+              raise "Concurrent registration did not start" unless barrier.wait(5)
+              described_class.subscribe(
+                user,
+                {
+                  endpoint: "concurrent-endpoint",
+                  keys: {
+                    p256dh: "key-#{user.id}",
+                    auth: "auth",
+                  },
+                },
+                false,
+              )
+            end
+          end
+        end
+      threads.each(&:value)
+
+      subscriptions =
+        PushSubscription.where("data::jsonb ->> 'endpoint' = ?", "concurrent-endpoint")
+      expect(subscriptions.count).to eq(1)
+      subscription = subscriptions.first
+      expect(subscription.user_id).to be_in(users.map(&:id))
+      expect(subscription.parsed_data.dig("keys", "p256dh")).to eq("key-#{subscription.user_id}")
+    ensure
+      threads&.each(&:join)
+    end
+  end
+
   it "returns badges url by default" do
     expect(PushNotificationPusher.get_badge).to match(
       %r{\A/assets/push-notifications/discourse-\w{8}.png\z},

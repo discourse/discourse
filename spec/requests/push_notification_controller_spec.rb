@@ -93,11 +93,20 @@ RSpec.describe PushNotificationController do
       expect(other_user.push_subscriptions).to be_empty
     end
 
-    it "removes another user's copy of an endpoint the current user already has" do
+    it "transfers an endpoint when its keys use equivalent base64 encodings" do
       other_user = Fabricate(:user)
-      subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
-      PushSubscription.create!(user: user, data: subscription.to_json)
-      PushSubscription.create!(user: other_user, data: subscription.to_json)
+      public_key = OpenSSL::PKey::EC.generate("prime256v1").public_key.to_bn.to_s(2)
+      subscription = {
+        endpoint: "https://push.example/subscription",
+        keys: {
+          p256dh: Base64.urlsafe_encode64(public_key, padding: false),
+          auth: Base64.urlsafe_encode64("a" * 16, padding: false),
+        },
+      }
+      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
+      subscription[:keys].transform_values! do |key|
+        Base64.urlsafe_encode64(Base64.urlsafe_decode64(key))
+      end
 
       post "/push_notifications/subscribe.json",
            params: {
@@ -108,6 +117,57 @@ RSpec.describe PushNotificationController do
       expect(response.status).to eq(200)
       expect(user.push_subscriptions.count).to eq(1)
       expect(other_user.push_subscriptions).to be_empty
+      expect(existing.reload.parsed_data).to eq(subscription.deep_stringify_keys)
+
+      WebPush.expects(:payload_send).never
+      PushNotificationPusher.push(other_user, notification_type: Notification.types[:mentioned])
+    end
+
+    it "updates rotated keys without creating another owner for the endpoint" do
+      other_user = Fabricate(:user)
+      subscription = { endpoint: "endpoint", keys: { p256dh: "old-key", auth: "old-auth" } }
+      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
+      subscription[:keys] = { auth: "new-auth", p256dh: "new-key" }
+
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: subscription,
+             send_confirmation: false,
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions).to contain_exactly(existing)
+      expect(other_user.push_subscriptions).to be_empty
+      expect(existing.reload.parsed_data).to eq(subscription.deep_stringify_keys)
+    end
+
+    it "transfers equivalent endpoint URLs to a single owner" do
+      other_user = Fabricate(:user)
+      subscription = {
+        endpoint: "https://push.example/subscription",
+        keys: {
+          p256dh: "key",
+          auth: "auth",
+        },
+      }
+      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
+      subscription[:endpoint] = "https://PUSH.example:443/a/../%73ubscription#ignored"
+
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: subscription,
+             send_confirmation: false,
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions).to contain_exactly(existing)
+      expect(other_user.push_subscriptions).to be_empty
+      expect(existing.reload.parsed_data["endpoint"]).to eq("https://push.example/subscription")
+
+      post "/push_notifications/unsubscribe.json", params: { subscription: subscription }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions.reload).to be_empty
     end
 
     it "sends the confirmation for an endpoint the user already has" do
@@ -153,6 +213,28 @@ RSpec.describe PushNotificationController do
 
       expect(response.status).to eq(200)
       expect(user.push_subscriptions).to eq([])
+    end
+
+    it "unsubscribes by endpoint even when the stored key representation differs" do
+      subscription = { endpoint: "endpoint", keys: { p256dh: "key", auth: "YQ" } }
+      PushSubscription.create!(user: user, data: subscription.to_json)
+      subscription[:keys][:auth] = "YQ=="
+
+      post "/push_notifications/unsubscribe.json", params: { subscription: subscription }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions).to be_empty
+    end
+
+    it "preserves the new owner's subscription when the previous owner unsubscribes" do
+      other_user = Fabricate(:user)
+      subscription = { endpoint: "endpoint", keys: { p256dh: "key", auth: "auth" } }
+      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
+
+      post "/push_notifications/unsubscribe.json", params: { subscription: subscription }
+
+      expect(response.status).to eq(200)
+      expect(other_user.push_subscriptions).to contain_exactly(existing)
     end
   end
 end

@@ -73,22 +73,14 @@ class PushNotificationPusher
   end
 
   def self.subscribe(user, push_params, send_confirmation)
-    data = push_params.to_json
-    subscriptions, other_users_subscriptions =
-      PushSubscription.where(data: data).partition { |s| s.user_id == user.id }
-
-    # A browser endpoint delivers to whoever is signed in there now
-    if other_users_subscriptions.present?
-      PushSubscription.where(id: other_users_subscriptions.map(&:id)).delete_all
-    end
-
-    new_subscription =
-      if subscriptions.size == 1
-        subscriptions.first
-      else
-        subscriptions.each(&:destroy!)
-        PushSubscription.create!(user: user, data: data)
-      end
+    push_params = push_params.to_h.with_indifferent_access
+    push_params[:endpoint] = PushSubscription.normalize_endpoint(push_params[:endpoint])
+    result =
+      PushSubscription.upsert(
+        { user_id: user.id, data: push_params.to_json },
+        unique_by: :index_push_subscriptions_on_endpoint,
+        returning: %w[id],
+      )
 
     if send_confirmation == "true"
       message = {
@@ -100,12 +92,18 @@ class PushNotificationPusher
         tag: "#{Discourse.current_hostname}-subscription",
       }
 
-      send_notification(user, new_subscription, message)
+      send_notification(user, PushSubscription.find(result.rows.first.first), message)
     end
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.where(user: user, data: subscription.to_json).delete_all
+    PushSubscription
+      .where(user: user)
+      .where(
+        "data::jsonb ->> 'endpoint' = ?",
+        PushSubscription.normalize_endpoint(subscription.to_h.with_indifferent_access[:endpoint]),
+      )
+      .delete_all
   end
 
   def self.get_badge

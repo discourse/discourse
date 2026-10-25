@@ -3,6 +3,14 @@
 class PushSubscription < ActiveRecord::Base
   belongs_to :user
 
+  def self.normalize_endpoint(endpoint)
+    return endpoint if endpoint.blank?
+
+    Addressable::URI.parse(endpoint).normalize.omit(:fragment).to_s
+  rescue Addressable::URI::InvalidURIError
+    raise Discourse::InvalidParameters.new(:endpoint)
+  end
+
   def parsed_data
     JSON.parse(data)
   end
@@ -19,4 +27,8 @@ end
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  user_id        :integer          not null
+#
+# Indexes
+#
+#  index_push_subscriptions_on_endpoint  ((((data)::jsonb ->> 'endpoint'::text))) UNIQUE
 #
