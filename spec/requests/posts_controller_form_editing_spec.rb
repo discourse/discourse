@@ -69,6 +69,42 @@ RSpec.describe PostsController do
   end
 
   describe "#update" do
+    it "reopens and edits a system-expanded snapshot without allowing further growth" do
+      form_template.update!(
+        template: (form_template.fields + [{ "id" => "note", "type" => "composer" }]).to_yaml,
+      )
+      data = submission.to_h
+      data["answers"]["note"] = "old "
+      data["answers"]["note"] += "x" *
+        (FormTemplate::Submission::MAX_BYTES - JSON.generate(data).bytesize)
+      expanded =
+        FormTemplate::Submission
+          .new(data)
+          .rewrite_text { |text| text.gsub("old ", "longer " * 200) }
+      form_post.update!(raw: expanded.render, form_data: expanded.to_h)
+
+      get "/posts/#{form_post.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("form_submission", "answers")).to eq(expanded.answers)
+      edited_answers = expanded.answers.merge("confirmed" => true)
+      payload = { answers: edited_answers }.to_json
+      expect(payload.bytesize).to be > FormTemplate::Submission::MAX_BYTES
+
+      put "/posts/#{form_post.id}.json", params: { post: { form_template_data: payload } }
+      expect(response.status).to eq(200)
+      expect(form_post.reload.form_submission.answers).to eq(edited_answers)
+
+      edited_answers["note"] += "More text"
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: edited_answers }.to_json,
+            },
+          }
+      expect(response.status).to eq(400)
+      expect(form_post.reload.form_submission.answers["note"]).to eq(expanded.answers["note"])
+    end
+
     it "preserves username rewrites when editing another answer" do
       Jobs.run_immediately!
       UserActionManager.enable

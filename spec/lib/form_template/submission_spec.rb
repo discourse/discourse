@@ -24,6 +24,16 @@ RSpec.describe FormTemplate::Submission do
   let(:submission) { described_class.from_template(form_template, answers:) }
 
   describe ".from_template" do
+    it "rejects oversized new submissions" do
+      expect do
+        described_class.from_template(
+          form_template,
+          answers: answers.merge("description" => "x" * described_class::MAX_BYTES),
+          validate: false,
+        )
+      end.to raise_error(ArgumentError)
+    end
+
     it "retains numeric spelling and isolates the snapshot from caller mutations" do
       form_template.update!(output_template: nil)
       snapshot = described_class.from_template(form_template, answers: { "seats" => "1e2" })
@@ -45,11 +55,7 @@ RSpec.describe FormTemplate::Submission do
       ].each { |invalid| expect { described_class.new(invalid) }.to raise_error(ArgumentError) }
     end
 
-    it "bounds snapshot size and nesting" do
-      oversized = submission.to_h
-      oversized["answers"]["description"] = "x" * described_class::MAX_BYTES
-      expect { described_class.new(oversized) }.to raise_error(ArgumentError)
-
+    it "bounds snapshot nesting" do
       nested = submission.to_h
       nested["answers"]["description"] = 25.times.reduce("x") { |value, _index| [value] }
       expect { described_class.new(nested) }.to raise_error(ArgumentError)
@@ -57,6 +63,27 @@ RSpec.describe FormTemplate::Submission do
   end
 
   describe "#rewrite_text" do
+    it "allows system rewrites to grow saved snapshots while limiting subsequent edits" do
+      original = submission.to_h
+      original["answers"]["description"] = "@old "
+      original["answers"]["description"] += "x" *
+        (described_class::MAX_BYTES - JSON.generate(original).bytesize)
+      saved = described_class.new(original)
+
+      rewritten = saved.rewrite_text { |text| text.gsub("@old", "@longer_username") }
+      reopened = described_class.new(rewritten.to_h)
+      expect(reopened.render).to include("@longer_username")
+      expect(JSON.generate(reopened.to_h).bytesize).to be > described_class::MAX_BYTES
+      expect(reopened.with_answers(reopened.answers).to_h).to eq(rewritten.to_h)
+      expect do
+        reopened.with_answers(
+          reopened.answers.merge("description" => reopened.answers["description"] + "x"),
+        )
+      end.to raise_error(ArgumentError)
+      shortened = reopened.with_answers(reopened.answers.merge("description" => "Shorter answer"))
+      expect do shortened.with_answers(reopened.answers) end.to raise_error(ArgumentError)
+    end
+
     it "evaluates conditions and filters using rewritten answers" do
       data = submission.to_h
       data["answers"]["description"] = "@old"

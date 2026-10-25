@@ -20,13 +20,15 @@ class FormTemplate::Submission
         "answers" => answers,
       },
       validate:,
+      max_bytes: MAX_BYTES,
     )
   end
 
-  def initialize(data, validate: true)
+  def initialize(data, validate: true, max_bytes: nil)
     raise ArgumentError unless data.is_a?(Hash)
     encoded = JSON.generate(data, max_nesting: 20)
-    raise ArgumentError if encoded.bytesize > MAX_BYTES
+    @bytesize = encoded.bytesize
+    raise ArgumentError if max_bytes && @bytesize > max_bytes
     @data = JSON.parse(encoded, max_nesting: 20)
     unless @data.keys.sort == KEYS.sort && @data["format_version"] == FORMAT_VERSION &&
              @data["template_id"].is_a?(Integer) && @data["template_id"].positive?
@@ -76,7 +78,11 @@ class FormTemplate::Submission
   end
 
   def with_answers(answers, validate: true)
-    self.class.new(@data.merge("answers" => answers), validate:)
+    self.class.new(@data.merge("answers" => answers), validate:, max_bytes: max_edit_bytes)
+  end
+
+  def max_edit_bytes
+    [MAX_BYTES, @bytesize].max
   end
 
   def rewrite_text
@@ -131,12 +137,13 @@ class FormTemplate::Submission
 
   def self.for_edit(post, payload:, guardian:, validate: true)
     guardian.ensure_can_edit!(post)
-    unless post.form_data && payload.is_a?(String) && payload.bytesize <= MAX_BYTES
+    submission = post.form_submission
+    unless submission && payload.is_a?(String) && payload.bytesize <= submission.max_edit_bytes
       raise Discourse::InvalidParameters.new(:form_template_data)
     end
     data = JSON.parse(payload, max_nesting: 20)
     raise ArgumentError unless data.is_a?(Hash)
-    post.form_submission.with_answers(data.fetch("answers"), validate:)
+    submission.with_answers(data.fetch("answers"), validate:)
   rescue JSON::JSONError, ArgumentError, KeyError
     raise Discourse::InvalidParameters.new(:form_template_data)
   end

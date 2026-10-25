@@ -47,6 +47,11 @@ Existing username and display-name jobs also rewrite historical snapshots and
 grace-period originals. Hotlinked-image localization, image replacement, and
 hashtag remapping update live snapshots with their rendered text.
 
+New submissions are limited to 64 KB, including the definition. System rewrites
+may expand saved snapshots beyond that intake limit. Such snapshots remain
+readable and editable, but answer edits cannot increase their size further.
+Once they shrink below the intake limit, the normal limit applies again.
+
 ## Lifecycle and access
 
 - Form posts remain topic first posts. Moves preserve the snapshot; post merging
@@ -57,7 +62,7 @@ hashtag remapping update live snapshots with their rendered text.
   separately for each answer so one answer cannot consume another's markup.
 - Interactive editing and history require edit permission. Webhooks exclude form
   state. Account exports include the author's saved and queued form state.
-- Full snapshots are bounded and stored separately from revision YAML. Public
+- Full snapshots are stored separately from revision YAML. Public
   history queries exclude that column.
 
 Administrative import and repair scripts that bypass validation must preserve
