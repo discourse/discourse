@@ -889,7 +889,12 @@ class PostsController < ApplicationController
   private
 
   def markdown_for_revision
-    find_post_revision_from_topic_id.modifications[:raw].last
+    revision = find_post_revision_from_topic_id
+    if (form_data = revision.form_data_changes&.last)
+      FormTemplate::Submission.new(form_data).normalized_raw
+    else
+      revision.modifications[:raw].last
+    end
   end
 
   def markdown_for_post

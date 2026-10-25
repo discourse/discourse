@@ -77,6 +77,32 @@ RSpec.describe PostsController do
   end
 
   describe "#revisions" do
+    it "reads the rendered text of an answer-only revision after later edits" do
+      sign_in(admin)
+      changed = submission.with_answers(submission.answers.merge("confirmed" => true))
+      later =
+        changed.with_answers(
+          changed.answers.merge("description" => "A later description for this invitation."),
+        )
+      [changed, later].each do |state|
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: state.render, form_data: state.to_h },
+          force_new_version: true,
+        )
+      end
+
+      get "/posts/#{post.id}.json", params: { version: 1 }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["raw"]).to eq(submission.render)
+      expect(response.parsed_body["cooked"]).to eq(post.cook(submission.render))
+
+      get "/raw/#{post.topic_id}/1", params: { revision: 2 }
+      expect(response.status).to eq(200)
+      expect(response.body).to eq(changed.render)
+      expect(post.reload.raw).to eq(later.render)
+    end
+
     it "excludes form snapshots from public history queries" do
       changed = submission.with_answers(submission.answers.merge("confirmed" => true))
       PostRevisor.new(post).revise!(

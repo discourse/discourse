@@ -1155,6 +1155,10 @@ class Post < ActiveRecord::Base
       attribute = "version" if attribute == "cached_version"
       self[attribute] = change[0]
     end
+    if post_revision.form_data_changes && form_data
+      self.raw = form_submission.normalized_raw
+      self.cooked = cook(raw)
+    end
   end
 
   def self.rebake_all_quoted_posts(user_id)
