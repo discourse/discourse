@@ -1,6 +1,7 @@
 import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
+import { codeEditorView } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 
@@ -92,6 +93,6 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
 
     await waitFor(".cm-content");
 
-    assert.dom(".cm-content").hasAttribute("contenteditable", "false");
+    assert.true(codeEditorView().state.readOnly);
   });
 });

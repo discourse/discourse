@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { isTrustedHTML } from "@ember/template";
+import { isTrustedHTML, type TrustedHTML } from "@ember/template";
 import {
   autocompletion,
   closeBrackets,
@@ -25,30 +24,74 @@ import {
   foldKeymap,
   indentOnInput,
 } from "@codemirror/language";
-import { setDiagnostics } from "@codemirror/lint";
+import { type Diagnostic, lintGutter, setDiagnostics } from "@codemirror/lint";
 import {
   closeSearchPanel,
   highlightSelectionMatches,
   search,
   searchKeymap,
 } from "@codemirror/search";
-import { Compartment, EditorState, Transaction } from "@codemirror/state";
+import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import {
   crosshairCursor,
   drawSelection,
   EditorView,
   highlightActiveLine,
   highlightActiveLineGutter,
+  type KeyBinding,
   keymap,
   lineNumbers,
   placeholder,
   rectangularSelection,
   ViewPlugin,
 } from "@codemirror/view";
-import { loadCodeEditorLanguage } from "discourse/lib/code-editor-languages";
+import {
+  type CodeEditorExtensionBuilder,
+  loadCodeEditorLanguage,
+} from "discourse/lib/code-editor-languages";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 import { buildCodeEditorParams } from "../editor-params.ts";
 import { defaultHighlighting } from "../highlight-style.js";
+
+export type LineWarning = {
+  /** The 1-based line to mark. */
+  line: number;
+  /** Shown when the mark is hovered. */
+  message: string;
+};
+
+export interface CodemirrorEditorSignature {
+  Args: {
+    value?: string;
+    onChange?: (value: string) => void;
+    language?: string;
+    languageOptions?: object;
+    completions?: readonly string[];
+    extensions?: CodeEditorExtensionBuilder;
+    onSetup?: (view: EditorView) => void;
+    onFocusIn?: () => void;
+    onFocusOut?: () => void;
+    onSave?: () => void;
+    onSubmit?: () => void;
+    readOnly?: boolean;
+    autofocus?: boolean;
+    lineNumbers?: boolean;
+    lineWrapping?: boolean;
+    placeholder?: string | TrustedHTML;
+    lineWarnings?: readonly LineWarning[];
+    inputId?: string;
+    describedBy?: string;
+    invalid?: boolean;
+    /** Everyday code-editing behaviour: brackets, folding, search, Tab. */
+    codeMode?: boolean;
+    class?: string;
+  };
+  Element: HTMLDivElement;
+}
+
+// Specs reach the document through the element.
+type HandleElement = HTMLDivElement & { codemirrorView?: EditorView };
 
 // How long after Escape the next Tab moves focus instead of indenting.
 const TAB_FOCUS_WINDOW = 2000;
@@ -88,28 +131,27 @@ function editorPhrases() {
   };
 }
 
-export default class CodemirrorEditor extends Component {
-  /** @type {import("@codemirror/view").EditorView | null} */
-  @tracked view = null;
-  #lastValue;
+export default class CodemirrorEditor extends Component<CodemirrorEditorSignature> {
+  view: EditorView | null = null;
+  #lastValue = "";
   #suppressChange = false;
   #language = new Compartment();
   #readOnly = new Compartment();
   #placeholder = new Compartment();
   #completions = new Compartment();
   #history = new Compartment();
-  #container = null;
-  #lastWarningsKey = null;
+  #container: HandleElement | null = null;
+  #lastWarningsKey: string | null = null;
 
-  get #commandKeymap() {
-    const bindings = [];
+  get #commandKeymap(): KeyBinding[] {
+    const bindings: KeyBinding[] = [];
 
     if (this.args.onSave) {
       bindings.push({
         key: "Mod-s",
         preventDefault: true,
         run: () => {
-          this.args.onSave();
+          this.args.onSave?.();
           return true;
         },
       });
@@ -120,7 +162,7 @@ export default class CodemirrorEditor extends Component {
         key: "Mod-Enter",
         preventDefault: true,
         run: () => {
-          this.args.onSubmit();
+          this.args.onSubmit?.();
           return true;
         },
       });
@@ -129,13 +171,13 @@ export default class CodemirrorEditor extends Component {
     return bindings;
   }
 
-  get #placeholderExtension() {
+  get #placeholderExtension(): Extension {
     const content = this.args.placeholder;
     if (!content?.toString()) {
       return [];
     }
     if (!isTrustedHTML(content)) {
-      return placeholder(content);
+      return placeholder(content as string);
     }
 
     const element = document.createElement("div");
@@ -144,35 +186,29 @@ export default class CodemirrorEditor extends Component {
   }
 
   // Beside the language's own completions, not instead of them.
-  get #completionExtensions() {
+  get #completionExtensions(): Extension {
     const completions = this.args.completions;
     if (!completions) {
       return [];
     }
 
-    const source =
-      typeof completions === "function"
-        ? completions
-        : completeFromList(completions);
-
+    // One source instance: the completion UI tracks sources by identity.
+    const source = completeFromList(completions);
     return [
       EditorState.languageData.of(() => [{ autocomplete: source }]),
       autocompletion(),
     ];
   }
 
-  get #readOnlyExtensions() {
-    if (!this.args.readOnly) {
-      return [];
-    }
-
-    return [EditorState.readOnly.of(true), EditorView.editable.of(false)];
+  // Read-only keeps the content focusable, so it can still be read and copied.
+  get #readOnlyExtensions(): Extension {
+    return this.args.readOnly ? EditorState.readOnly.of(true) : [];
   }
 
   @action
-  setup(container) {
+  setup(container: HandleElement) {
     const codeMode = this.args.codeMode;
-    const extensions = [
+    const extensions: Extension[] = [
       // Ahead of the defaults so a caller's shortcut wins.
       keymap.of(this.#commandKeymap),
       this.#history.of(history()),
@@ -191,14 +227,14 @@ export default class CodemirrorEditor extends Component {
           const value = update.state.doc.toString();
           this.#lastValue = value;
           if (!this.#suppressChange) {
-            this.args.change?.(value);
+            this.args.onChange?.(value);
           }
         }
         if (update.focusChanged) {
           if (update.view.hasFocus) {
-            this.args.focusIn?.();
+            this.args.onFocusIn?.();
           } else {
-            this.args.focusOut?.();
+            this.args.onFocusOut?.();
           }
         }
       }),
@@ -220,6 +256,7 @@ export default class CodemirrorEditor extends Component {
 
     if (codeMode) {
       extensions.push(
+        lintGutter(),
         foldGutter(),
         highlightActiveLine(),
         highlightActiveLineGutter(),
@@ -243,10 +280,11 @@ export default class CodemirrorEditor extends Component {
 
     // Escape closes what the editor owns before a surrounding dialog can
     // react; a second Escape within the tab-focus window falls through to it.
+    // Propagation stops here, so the editor's own Escape handling never runs
+    // and its tab-focus window is tracked here instead.
     let tabFocusArmedAt = 0;
-    const handleKeydown = (view, event) => {
+    const handleKeydown = (view: EditorView, event: KeyboardEvent) => {
       if (event.key !== "Escape") {
-        // Mirrors the editor, which drops tab-focus mode on any other key.
         if (!MODIFIER_KEYS.includes(event.key)) {
           tabFocusArmedAt = 0;
         }
@@ -274,11 +312,12 @@ export default class CodemirrorEditor extends Component {
     extensions.push(
       ViewPlugin.fromClass(
         class {
-          constructor(view) {
-            this.view = view;
+          handler: (event: KeyboardEvent) => void;
+
+          constructor(view: EditorView) {
             this.handler = (event) => {
-              if (this.view.dom.contains(document.activeElement)) {
-                handleKeydown(this.view, event);
+              if (view.dom.contains(document.activeElement)) {
+                handleKeydown(view, event);
               }
             };
             window.addEventListener("keydown", this.handler, { capture: true });
@@ -294,31 +333,31 @@ export default class CodemirrorEditor extends Component {
     );
 
     if (this.args.extensions) {
-      extensions.push(...this.args.extensions(buildCodeEditorParams()));
+      extensions.push(this.args.extensions(buildCodeEditorParams()));
     }
 
     const initialValue = this.args.value ?? "";
 
     this.view = new EditorView({
       parent: container,
-      state: EditorState.create({
-        doc: initialValue,
-        extensions,
-      }),
+      state: EditorState.create({ doc: initialValue, extensions }),
     });
 
     this.#lastValue = initialValue;
-    this.updateWarnings();
+    if (this.args.lineWarnings?.length) {
+      this.updateWarnings();
+    }
 
     if (this.args.autofocus) {
       this.view.focus();
     }
 
-    // Lets system specs reach the view from the element.
-    this.#container = container;
-    container.codemirrorView = this.view;
+    if (isTesting() || isRailsTesting()) {
+      this.#container = container;
+      container.codemirrorView = this.view;
+    }
 
-    this.updateLanguage();
+    void this.updateLanguage();
     this.args.onSetup?.(this.view);
   }
 
@@ -375,7 +414,7 @@ export default class CodemirrorEditor extends Component {
     }
 
     const doc = this.view.state.doc;
-    const diagnostics = (this.args.lineWarnings || [])
+    const diagnostics: Diagnostic[] = (this.args.lineWarnings || [])
       .filter(({ line }) => line >= 1 && line <= doc.lines)
       .map(({ line, message }) => {
         const { from, to } = doc.line(line);
@@ -414,12 +453,7 @@ export default class CodemirrorEditor extends Component {
     // old one would hand the caller stale content as if the user typed it.
     this.#suppressChange = true;
     this.view.dispatch({
-      changes: {
-        from: 0,
-        to: this.view.state.doc.length,
-        insert: value,
-      },
-      annotations: Transaction.addToHistory.of(false),
+      changes: { from: 0, to: this.view.state.doc.length, insert: value },
       effects: this.#history.reconfigure([]),
     });
     this.view.dispatch({ effects: this.#history.reconfigure(history()) });
@@ -445,6 +479,7 @@ export default class CodemirrorEditor extends Component {
   <template>
     <div
       class="codemirror-editor {{@class}}"
+      ...attributes
       {{didInsert this.setup}}
       {{didUpdate this.updateValue @value}}
       {{didUpdate this.updateContentAttributes @inputId @describedBy @invalid}}

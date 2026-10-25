@@ -1,10 +1,10 @@
 import { waitForPromise } from "@ember/test-waiters";
 
 /**
- * Loads the editor component behind `<CodeEditor>`.
+ * Loads the bare editor behind `<CodeEditor>`, for inline fields that want
+ * none of its code-editing behaviour.
  *
- * @internal Use `<CodeEditor>`; this component's arguments may change without
- * warning.
+ * @internal
  */
 export default async function loadCodemirrorEditor() {
   return (

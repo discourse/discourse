@@ -31,12 +31,12 @@ export default class VariableInput extends Component {
     >
       {{#if this.Editor}}
         <this.Editor
-          @change={{@onChange}}
           @class="workflows-variable-input"
           @extensions={{@extensions}}
-          @focusIn={{@onFocusIn}}
-          @focusOut={{@onFocusOut}}
           @lineWrapping={{true}}
+          @onChange={{@onChange}}
+          @onFocusIn={{@onFocusIn}}
+          @onFocusOut={{@onFocusOut}}
           @onSetup={{@onSetup}}
           @value={{@value}}
         />
