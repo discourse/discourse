@@ -141,6 +141,10 @@ export default class MediaOptimizationWorkerService extends Service {
       try {
         arrayBuffer = await file.data.arrayBuffer();
       } catch (error) {
+        if (this.promiseResolvers[file.id] !== resolve) {
+          return;
+        }
+
         this.logIfDebug(error);
         this.workerPendingCount--;
         return this.#settle(file.id);

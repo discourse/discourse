@@ -165,6 +165,48 @@ module("Unit | Service | media-optimization-worker", function (hooks) {
     );
   });
 
+  test("a read failure after cancellation preserves the next upload's timeout", async function (assert) {
+    let rejectRead;
+    const file = imageFile("cancelled");
+    file.data.arrayBuffer = () =>
+      new Promise((resolve, reject) => (rejectRead = reject));
+    this.service.optimizeImage(file);
+
+    this.service.cancel(file.id);
+    await this.clock.tickAsync(0);
+    rejectRead(new Error("Read failed"));
+    await this.clock.tickAsync(0);
+
+    const next = this.optimize("next");
+    await this.clock.tickAsync(WORKER_STALL_TIMEOUT_MS);
+
+    assert.true(next.settled, "the next upload times out");
+    assert.true(
+      this.workers[1].terminate.calledOnce,
+      "the unresponsive replacement worker is terminated"
+    );
+  });
+
+  test("a read failure from a stopped worker does not settle a retry of the same file", async function (assert) {
+    let rejectRead;
+    const file = imageFile("retry");
+    file.data.arrayBuffer = () =>
+      new Promise((resolve, reject) => (rejectRead = reject));
+    this.service.optimizeImage(file);
+
+    this.service.stopWorker();
+    await this.clock.tickAsync(0);
+    const retry = this.optimize(file.id);
+    await this.clock.tickAsync(0);
+    rejectRead(new Error("Read failed"));
+    await this.clock.tickAsync(0);
+
+    assert.false(retry.settled, "the retry keeps waiting for its own result");
+
+    await this.clock.tickAsync(WORKER_STALL_TIMEOUT_MS);
+    assert.true(retry.settled, "the retry times out normally");
+  });
+
   test("closing the composer settles in-flight optimizations", async function (assert) {
     const pending = this.optimize("pending");
     await this.clock.tickAsync(0);
