@@ -97,7 +97,7 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     };
     const view = await renderEditor(field);
 
-    assert.dom(".cm-content").hasAttribute("contenteditable", "false");
+    assert.true(view.state.readOnly);
 
     type(view, "{");
     await dropVariable(view, "$json.name");
