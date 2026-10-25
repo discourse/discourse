@@ -11,7 +11,7 @@ import {
   waitFor,
   waitUntil,
 } from "@ember/test-helpers";
-import { startCompletion } from "@codemirror/autocomplete";
+import { currentCompletions, startCompletion } from "@codemirror/autocomplete";
 import { undo } from "@codemirror/commands";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
@@ -342,7 +342,7 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.dom(".cm-content").doesNotHaveAttribute("aria-invalid");
   });
 
-  test("disabled makes the content read-only, and lifts when cleared", async function (assert) {
+  test("disabled rejects edits but keeps the document focusable", async function (assert) {
     const state = new (class {
       @tracked disabled = true;
     })();
@@ -352,14 +352,16 @@ module("Integration | Component | code-editor", function (hooks) {
         <CodeEditor @disabled={{state.disabled}} @value="fixed" />
       </template>
     );
-    await waitFor(".cm-editor");
+    const view = codeEditorView();
 
-    assert.dom(".cm-content").hasAttribute("contenteditable", "false");
+    assert.true(view.state.readOnly);
+    view.focus();
+    assert.true(view.hasFocus, "it can still be read and copied");
 
     state.disabled = false;
     await settled();
 
-    assert.dom(".cm-content").hasAttribute("contenteditable", "true");
+    assert.false(view.state.readOnly);
   });
 
   test("binds save and submit to their shortcuts", async function (assert) {
@@ -369,7 +371,7 @@ module("Integration | Component | code-editor", function (hooks) {
 
     await render(
       <template>
-        <CodeEditor @onSave={{save}} @onSubmit={{submit}} @value="" />
+        <CodeEditor @onSave={{save}} @onSubmit={{submit}} @value="one" />
       </template>
     );
     await waitFor(".cm-editor");
@@ -379,6 +381,29 @@ module("Integration | Component | code-editor", function (hooks) {
     await settled();
 
     assert.deepEqual(calls, ["save", "submit"]);
+    assert.strictEqual(
+      codeEditorView().state.doc.toString(),
+      "one",
+      "submit does not insert a newline"
+    );
+  });
+
+  test("honours the layout arguments", async function (assert) {
+    await render(
+      <template>
+        <CodeEditor
+          @autofocus={{true}}
+          @lineNumbers={{false}}
+          @lineWrapping={{true}}
+          @value="one"
+        />
+      </template>
+    );
+    await waitFor(".cm-editor");
+
+    assert.true(codeEditorView().hasFocus, "autofocus");
+    assert.dom(".cm-lineNumbers").doesNotExist("no line numbers");
+    assert.dom(".cm-lineWrapping").exists("wrapping");
   });
 
   test("adds a caller's raw extensions", async function (assert) {
@@ -440,25 +465,9 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.true(completionLabels().includes("allow_title"));
   });
 
-  test("offers the completions a caller lists, with no language set", async function (assert) {
-    const completions = ["alpha_one", { label: "alpha_two", detail: "number" }];
-
-    await render(
-      <template>
-        <CodeEditor @completions={{completions}} @value="alp" />
-      </template>
-    );
-    await openCompletions(codeEditorView());
-
-    assert.deepEqual(completionLabels(), ["alpha_one", "alpha_two"]);
-  });
-
-  test("stacks a caller's completion source on the language's own", async function (assert) {
+  test("offers the completions a caller lists, beside the language's own", async function (assert) {
     const languageOptions = { schema: { badges: ["allow_title"] } };
-    const completions = (context) => {
-      const word = context.matchBefore(/\w+/);
-      return word && { from: word.from, options: [{ label: "b_custom" }] };
-    };
+    const completions = ["b_custom"];
 
     await render(
       <template>
@@ -471,9 +480,10 @@ module("Integration | Component | code-editor", function (hooks) {
       </template>
     );
     await waitFor(".cm-content span[class]");
-    await openCompletions(codeEditorView());
+    const view = codeEditorView();
+    await openCompletions(view);
 
-    const labels = completionLabels();
+    const labels = currentCompletions(view.state).map((c) => c.label);
     assert.true(labels.includes("badges"), "the language's own");
     assert.true(labels.includes("b_custom"), "and the caller's");
   });
@@ -492,6 +502,7 @@ module("Integration | Component | code-editor", function (hooks) {
     await waitFor(".cm-lintRange");
 
     assert.dom(".cm-lintRange").exists({ count: 1 }).hasText("suspect");
+    assert.dom(".cm-lint-marker").exists({ count: 1 }, "with a gutter icon");
 
     state.warnings = [];
     await settled();

@@ -1,5 +1,5 @@
 /* eslint-disable ember/no-classic-components */
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { array, concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -66,6 +66,7 @@ export default class AdminThemeEditor extends Component {
    * cannot override. `color_definitions` is where they are meant to be
    * declared, so it is exempt.
    */
+  @cached
   get colorVariableWarnings() {
     if (
       this.activeSectionMode !== "scss" ||

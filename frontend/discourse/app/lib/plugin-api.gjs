@@ -3413,9 +3413,6 @@ class _PluginApi {
    * its module's default export receives the editor's modules and returns the
    * extensions to apply.
    *
-   * EXPERIMENTAL: the modules a language receives expose the underlying editor
-   * library, and may change without warning.
-   *
    * ```
    * api.registerCodeEditorLanguage("toml", () =>
    *   import("discourse/plugins/my-plugin/discourse/lib/toml-language")

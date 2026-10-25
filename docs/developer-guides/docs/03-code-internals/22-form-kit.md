@@ -632,7 +632,7 @@ Sets the height of the editor in pixels.
 ### @lang
 
 Sets the language shortcut: one of `css`, `html`, `javascript`, `json`, `scss`,
-`sql`, `yaml`, or a name registered with `api.registerCodeEditorLanguage`.
+`sql`, `text`, `yaml`, or a name registered with `api.registerCodeEditorLanguage`.
 
 **Example**
 
