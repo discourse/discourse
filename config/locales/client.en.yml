@@ -1,5 +1,23 @@
 en:
   js:
+    dsa_notice:
+      title: "Report illegal content"
+      content_url: "Exact URL of the content"
+      explanation: "Why do you believe this content is illegal?"
+      explanation_help: "Describe the facts and why the content may be illegal. You do not need to cite a specific law."
+      name: "Full name or organization name"
+      email: "Email address"
+      declaration_section: "Declaration"
+      declaration: "I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
+      submit: "Submit report"
+      get_email_code: "Get email code"
+      resend_email_code: "Resend code"
+      email_verified: "Verified"
+      verification_code: "Verification code"
+      received: "Report received"
+      received_description: "%{site} has received your report for review."
+      reference: "Your report reference is <strong>%{reference}</strong>."
+      contact_confirmation: "We will email you a receipt and a copy of your report. The reviewing team will email you the outcome."
     mcp_oauth_client_id_metadata_policy:
       disabled: "Admin registration only"
       approved_domains: "CIMD from approved domains"
@@ -1915,6 +1933,8 @@ en:
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
         Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
+      no_mentions_title: "You haven’t been mentioned yet"
+      no_mentions_body: "When someone mentions your @username in a post, the notification will appear here."
       no_other_notifications_title: "You don’t have any other notifications yet"
       no_other_notifications_body: >
         You will be notified in this panel about other kinds of activity that may be relevant to you - for example, when someone links to or edits one of your posts.

@@ -378,6 +378,13 @@ hu:
       summarization:
         chat:
           summarize: "Összefoglalás"
+      ai_search:
+        related_replies:
+          one: "%{count} válasz"
+          other: "%{count} válasz"
+        tabs:
+          topics: "Témák"
+          messages: "Üzenetek"
       discobot_discoveries:
         legacy:
           regular_results: "Témák"

@@ -5,6 +5,33 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  dsa_notice:
+    subject: "[%{reference}] Zgłoś potencjalnie nielegalną treść"
+    summary: "**Numer referencyjny zgłoszenia: %{reference}**\n\n**Adres e-mail:** %{reporter_email}\n\n**Pełna nazwa lub nazwa organizacji:** %{reporter_name}\n\n**Dokładny adres URL treści:** %{content_url}\n\n**Dlaczego uważasz, że ta treść jest nielegalna?**\n\n%{explanation}"
+    verification_invalid: "Kod weryfikacyjny e-mail jest niepoprawny lub wygasł. Sprawdź kod lub poproś o nowy."
+    invalid_parameters: "Zgłoszenie zawiera nieprawidłowe wartości."
+    invalid_url: "musi to być prawidłowy adres URL HTTP lub HTTPS bez danych logowania"
+    invalid_email: "musi to być prawidłowy adres e-mail"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] Twój kod weryfikacyjny zgłoszenia"
+    text_body_template: |
+      Użyj tego kodu, aby zresetować hasło w dniu %{site_title}:
+
+      ## %{verification_code}
+
+      Ten kod wygasa za %{expires_in_minutes} minut. Jeśli nie prosiłeś o jego wysłanie, możesz zignorować tę wiadomość e-mail.
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] Twoje zgłoszenie potencjalnie nielegalnej treści %{reference}"
+    text_body_template: |
+      %{site_title} otrzymał(a) Twoje zgłoszenie.
+
+      Zespół weryfikujący wyśle Ci e-mail z wynikiem. To potwierdzenie nie oznacza, że decyzja została podjęta ani że treść została usunięta.
+
+      %{summary}
+
+      **Oświadczenie:**
+
+      Potwierdzam, że w dobrej wierze uważam, że informacje i zarzuty zawarte w niniejszym zawiadomieniu są dokładne i kompletne.
   dsa_statements:
     classification_note: "Sklasyfikowano tę decyzję o moderacji w celu raportowania DSA.\nZasada społeczności: %{ground}\nKategoria: %{category}"
     errors:
@@ -504,9 +531,11 @@ pl_PL:
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
         email_alias_not_allowed: "Dzieje się tak, gdy adres nadawcy jest aliasem adresu już zarejestrowanego na koncie, a znormalizowane adresy e-mail muszą być unikalne."
+        site_archived_error: "Dzieje się tak, gdy witryna jest w trybie archiwizacji."
       unrecognized_error: "Niezidentyfikowany błąd"
     secure_uploads_placeholder: "Redacted: Ta strona ma włączone bezpieczne przesyłanie plików, odwiedź temat lub kliknij wyświetl media, aby zobaczyć załączone pliki."
     view_redacted_media: "Wyświetl załączniki"
+    view_diagram: "Zobacz diagram"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
@@ -902,6 +931,7 @@ pl_PL:
         many: "Nie można ustawić domyślnego poziomu powiadomień dla grup większych niż %{count} użytkowników. Nieprawidłowa grupa: %{group_name}"
         other: "Nie można ustawić domyślnego poziomu powiadomień dla grup większych niż %{count} użytkowników. Nieprawidłowa grupa: %{group_name}"
       grant_trust_level_not_valid: "\"%{trust_level}\" nie jest prawidłowym poziomem zaufania."
+      flair_upload_not_owned: "Jako znak rozpoznawczy grupy możesz użyć tylko obrazka, który sam wrzuciłeś."
       can_not_modify_automatic: "Nie można modyfikować automatyczną grupę"
       member_already_exist:
         one: "'%{username}' należy już do tej grupy."
@@ -1150,6 +1180,7 @@ pl_PL:
     post_template: "%{replace_paragraph}\n\nW kolejnych paragrafach możesz umieścić dłuższy opis, oraz opisać zasady i zwyczaje jakie będą obowiązywać w tej kategorii:\n\n- Czemu ma służyć ta kategoria? Dlaczego ludzie powinni wybierać tę kategorię?\n\n- Czym się różni od innych kategorii, które już mamy?\n\n- Co powinny zawierać tematy znajdujące się w tej kategorii?\n\n- Czy potrzebujemy tej kategorii? Czy możemy ją połączyć z jakąś inną kategorią, lub podkategorią?\n"
     errors:
       not_found: "Nie odnaleziono kategorii!"
+      self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
       uncategorized_parent: "Inne nie mogą być podkategorią innej kategorii."
       self_parent: "Podkategoria nie może być swoim rodzicem"
       depth: "Nie możesz umieścić subkategorii w innej subkategorii"
@@ -2179,6 +2210,8 @@ pl_PL:
   random_username:
     unavailable: "Nie udało się wygenerować losowej nazwy użytkownika. Sprawdź listy słów w losowej nazwie użytkownika w ustawieniach swojej witryny."
   site_settings:
+    dsa_notice_group: "Grupa, która dostaje powiadomienia o nielegalnych treściach, gdy włączona jest opcja {{setting:dsa_reporting_enabled}}. Członkowie mogą przeglądać powiadomienia i dane kontaktowe osoby, która zgłosiła naruszenie. Domyślnie są to administratorzy, którzy też dostają powiadomienia, jeśli wybrana grupa nie istnieje lub jest pusta."
+    dsa_moderation_appeal_email: "Użytkownicy mogą odwołać się od decyzji moderatorów, wysyłając wiadomość e-mail na ten adres. Pozostaw puste pole, aby pominąć instrukcje dotyczące odwołania. Wymagane jest włączenie opcji {{setting:dsa_reporting_enabled}}."
     dsa_community_rules: "Reguły społeczności są dostępne dla klasyfikacji DSA, gdy włączona jest opcja {{setting:dsa_reporting_enabled}} . Każda reguła wymaga dokładnego odniesienia umownego (do 500 znaków) oraz wyjaśnienia (do 2000 znaków). Pozostaw puste, aby wyłączyć klasyfikację."
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -3031,6 +3064,7 @@ pl_PL:
     push_notifications_icon: "Ikona odznaki pojawiająca się w rogu powiadomień. Zalecany jest monochromyczny PNG 96×96 z przezroczystym tłem."
     enable_desktop_push_notifications: "Aktywuj powiadomienia push dla interfejsu pulpitu. Ta funkcja umożliwia wysyłanie alertów w czasie rzeczywistym z witryny bezpośrednio na pulpit, zwiększając zaangażowanie i zapewniając użytkownikom zawsze aktualne informacje. Jednak skuteczność tej funkcji zależy od obsługi powiadomień push przez przeglądarkę."
     push_notification_time_window_mins: "Poczekaj (n) minut przed wysłaniem powiadomienia push. Pomaga zapobiegać wysyłaniu powiadomień push do aktywnego użytkownika online."
+    push_notification_localization_max_wait_mins: "Najdłuższy czas (w minutach) oczekiwania na powiadomienie push o nowym wpisie podczas tłumaczenia na język odbiorcy. Ustaw na 0, aby wysłać bez oczekiwania."
     base_font: "Podstawowa czcionka używana dla większości tekstu w witrynie. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--font-family`."
     heading_font: "Czcionka używana w nagłówkach witryny. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--heading-font-family`."
     enable_sitemap: "Wygeneruj mapę witryny dla swojej strony i umieść ją w pliku robots.txt."
@@ -3079,7 +3113,7 @@ pl_PL:
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
-    about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."
+    about_page_hidden_groups: "Na stronie /o nas nie wyświetlaj administratorów ani moderatorów, którzy są również członkami tych konkretnych grup."
     about_page_extra_groups: "Grupy, które mają być wyświetlane na stronie „O nas”, poniżej moderatorów."
     about_page_extra_groups_initial_members: "Liczba członków do rozwinięcia w każdej grupie na stronie „O nas”."
     about_page_extra_groups_show_description: "Czy uwzględnić opisy grup na stronie „O nas”."
@@ -3906,6 +3940,7 @@ pl_PL:
         other: "%{mentions} Wiadomości zostały wysłane ponad %{count} godzin temu. [Sprawdź je](%{base_url}/review)."
     private_topic_title: "Temat#%{id}"
     contents_hidden: "Proszę przejść do wpisu, aby wyświetlić jego zawartość."
+    moderation_appeal_instructions: "Aby odwołać się od tej decyzji, skontaktuj się z %{email}"
     post_hidden:
       title: "Ukryty wpis"
       preview: "Wpis został ukryty z powodu flag zgłoszonych przez członków społeczności."
@@ -4459,6 +4494,14 @@ pl_PL:
         Próbowałeś wysłać wiadomość e-mail do więcej niż %{max_recipients_count} osób, a nasz system automatycznie otagował Twój e-mail jako spam.
 
         Jeśli uważasz, że jest to błąd, [skontaktuj się z członkiem personelu](%{base_url}/about).
+    email_reject_site_archived:
+      title: "Archiwum witryny odrzucającej wiadomości e-mail"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail — witryna zarchiwizowana"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – witryna zarchiwizowana"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana na adres %{destination} (zatytułowana %{former_title}) nie zadziałała.
+
+        Ta witryna została zarchiwizowana i nie akceptuje nowych wpisów.
     email_error_notification:
       title: "Błąd emaila powiadomienie"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd autoryzacji POP"
@@ -4918,37 +4961,55 @@ pl_PL:
 
         %{respond_instructions}
     account_suspended:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
       subject_template_improved: "Twoje konto zostało zawieszone"
       text_body_template: |
-        Zostałeś zawieszony na forum do %{suspended_till}.
+        Witaj,
+
+        To automatyczna wiadomość od %{site_name} informująca, że Twoje konto zostało zawieszone do %{suspended_till}.
 
         Powód - %{reason}
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_suspended_forever:
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
       subject_template_improved: "Twoje konto zostało zawieszone"
       text_body_template: |
-        Zostałeś zawieszony na forum.
+        Witaj!
 
-        Powód - %{reason}
+        To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało zawieszone.
+
+        Powód — %{reason}
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_silenced:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Konto uciszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
       subject_template_improved: "Twoje konto zostało wyciszone"
       text_body_template: |
-        Zostałeś wyciszony na forum do %{silenced_till}.
+        Witaj!
 
-        Powód - %{reason}
+        To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało wyciszone do czasu %{silenced_till}.
+
+        Powód — %{reason}
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_silenced_forever:
       title: "Konto uciszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
       subject_template_improved: "Twoje konto zostało wyciszone"
       text_body_template: |
-        Zostałeś uciszony na forum.
+        Witaj,
+
+        To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało wyciszone.
 
         Powód - %{reason}
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_deleted:
       title: "Konto usunięte"
       subject_template: "[%{email_prefix}] Twoje konto zostało usunięte"

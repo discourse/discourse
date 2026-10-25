@@ -955,6 +955,15 @@ fi:
             compact: "Kompakti"
             expanded: "Laajennettu"
             expanded_description: "tekoäly-yhteenvedoilla"
+      ai_search:
+        related_topics: "Liittyvät ketjut"
+        related_replies:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+        tabs:
+          ask: "Kysy tekoälyltä"
+          topics: "Aiheet"
+          messages: "Viestit"
       discobot_discoveries:
         main_title: "Kysy tekoälyltä"
         loading_convo: "Ladataan keskustelua"

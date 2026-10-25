@@ -499,6 +499,20 @@ discourse_ai:
     max: 6
     client: true
     area: "ai-features/search"
+  enable_ai_combined_search:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415171"
+  ai_ask_ai_search_intent_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/search"
   ai_ask_ai_agent:
     default: "-41"
     type: enum
@@ -516,6 +530,32 @@ discourse_ai:
     client: true
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     validator: "DiscourseAi::Configuration::AskAiFollowUpAgentValidator"
+    area: "ai-features/search"
+  ai_ask_ai_keyword_search_enabled:
+    default: true
+    area: "ai-features/search"
+  ai_ask_ai_semantic_search_enabled:
+    default: true
+    area: "ai-features/search"
+  ai_ask_ai_search_categories:
+    type: category_list
+    default: ""
+    area: "ai-features/search"
+  ai_ask_ai_search_max_age_days:
+    default: 0
+    min: 0
+    area: "ai-features/search"
+  ai_ask_ai_external_sources:
+    type: list
+    list_type: compact
+    default: ""
+    allow_any: false
+    enum: "DiscourseAi::Configuration::AiToolEnumerator"
+    area: "ai-features/search"
+  ai_ask_ai_external_sources_timeout:
+    default: 8
+    min: 1
+    max: 12
     area: "ai-features/search"
   ai_ask_ai_allowed_groups:
     type: group_list

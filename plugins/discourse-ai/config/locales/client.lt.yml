@@ -606,6 +606,16 @@ lt:
       summarization:
         chat:
           summarize: "Apibendrinti"
+      ai_search:
+        related_replies:
+          one: "%{count} atsakymas"
+          few: "%{count} atsakymai"
+          many: "%{count} atsakymai"
+          other: "%{count} atsakymai"
+        tabs:
+          ask: "Paklauskite AI"
+          topics: "Temos"
+          messages: "Žinutės"
       discobot_discoveries:
         main_title: "Paklauskite AI"
         legacy:

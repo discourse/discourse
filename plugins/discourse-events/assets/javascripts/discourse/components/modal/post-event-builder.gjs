@@ -13,7 +13,6 @@ import { adjustedRangeEnd } from "discourse/lib/time-utils";
 import Group from "discourse/models/group";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import DDateInput from "discourse/ui-kit/d-date-input";

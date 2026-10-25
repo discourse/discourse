@@ -1078,6 +1078,7 @@ ar:
     post_template: "%{replace_paragraph}\n\nاستخدام الفقرات التالية لوضع وصف أطول، أو لوضع إرشادات أو قواعد الفئة:\n\n- لماذا قد يستخدم الأشخاص هذه الفئة؟ ما الغرض منها؟\n\n- ما الاختلاف بين هذه الفئة و الفئات الأخرى لدينا؟\n\n- ما الذي يمكن أن تتضمَّنه الموضوعات في هذه الفئة بشكلٍ عام؟\n\n- هل نحتاج حقًا إلى هذه الفئة؟ وهل يمكننا دمجها مع فئة أو فئة فرعية أخرى؟\n"
     errors:
       not_found: "لم يتم العثور على الفئة!"
+      self_lockout: "أنت على وشك تغيير أذونات الفئة بطريقة ستؤدي إلى إزالة صلاحية وصولك. هل أنت متأكد من رغبتك في المتابعة؟"
       uncategorized_parent: "لا يمكن للفئات غير المصنَّفة أن يكون لها فئة رئيسية"
       self_parent: "لا يمكن أن تكون الفئة الرئيسية للفئة الفرعية هي الفئة الفرعية نفسها"
       depth: "لا يمكنك وضع فئة فرعية تحت أخرى"
@@ -3008,7 +3009,6 @@ ar:
     experimental_impersonation_time_limit_minutes: "المدة الزمنية قبل إنهاء جلسة انتحال الشخصية تلقائيًا."
     page_loading_indicator: "إعداد مؤشر التحميل الذي يظهر في أثناء التنقل في الصفحة داخل Discourse. يكون 'Spinner' مؤشرًا لصفحة كاملة، بينما يعرض 'Slider' شريطًا ضيقًا أعلى الشاشة."
     show_user_menu_avatars: "إظهار الصور الرمزية للمستخدم في قائمة المستخدم"
-    about_page_hidden_groups: "عدم إظهار أعضاء المجموعات المحدَّدة في صفحة /about"
     about_page_extra_groups: "المجموعات التي يُعرض محتواها في صفحة \"حول\" أسفل قائمة المشرفين."
     about_page_extra_groups_initial_members: "عدد الأعضاء المراد عرضه عند توسيع كل مجموعة في صفحة \"حول\"."
     about_page_extra_groups_show_description: "تحديد ما إذا كان ينبغي تضمين وصف المجموعات في صفحة 'حول'."
@@ -4850,34 +4850,18 @@ ar:
       title: "تم تعليق الحساب"
       subject_template: "[%{email_prefix}] تم تعليق حسابك"
       subject_template_improved: "تم تعليق حسابك"
-      text_body_template: |
-        لقد تم تعليقك من المنتدى حتى %{suspended_till}.
-
-        السبب - %{reason}
     account_suspended_forever:
       title: "تم تعليق الحساب"
       subject_template: "[%{email_prefix}] تم تعليق حسابك"
       subject_template_improved: "تم تعليق حسابك"
-      text_body_template: |
-        تم تعليق حسابك من المنتدى.
-
-        السبب - %{reason}
     account_silenced:
       title: "تم كتم الحساب"
       subject_template: "[%{email_prefix}] تم كتم حسابك"
       subject_template_improved: "تم كتم حسابك"
-      text_body_template: |
-        تم كتمك من المنتدى حتى %{silenced_till}.
-
-        السبب - %{reason}
     account_silenced_forever:
       title: "تم كتم الحساب"
       subject_template: "[%{email_prefix}] تم كتم حسابك"
       subject_template_improved: "تم كتم حسابك"
-      text_body_template: |
-        تم كتمك من المنتدى.
-
-        السبب - %{reason}
     account_deleted:
       title: "حُذِف الحساب"
       subject_template: "[%{email_prefix}] حُذِف الحساب"

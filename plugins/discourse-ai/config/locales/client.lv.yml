@@ -287,6 +287,14 @@ lv:
             category: "Sadaļa"
           table:
             total_count: "Kopā"
+      ai_search:
+        related_replies:
+          zero: "%{count} atbildes"
+          one: "%{count} atbilde"
+          other: "%{count} atbildes"
+        tabs:
+          topics: "Tēmas"
+          messages: "Ziņās"
       discobot_discoveries:
         legacy:
           regular_results: "Tēmas"

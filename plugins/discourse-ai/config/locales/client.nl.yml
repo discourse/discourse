@@ -1338,6 +1338,15 @@ nl:
             compact: "Compact"
             expanded: "Uitgebreid"
             expanded_description: "met AI-samenvattingen"
+      ai_search:
+        related_topics: "Gerelateerde topics"
+        related_replies:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
+        tabs:
+          ask: "AI vragen"
+          topics: "Topics"
+          messages: "Berichten"
       discobot_discoveries:
         main_title: "AI vragen"
         loading_convo: "Conversatie laden"

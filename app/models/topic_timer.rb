@@ -139,6 +139,10 @@ class TopicTimer < BaseTimer
     Jobs.enqueue(TopicTimer.type_job_map[:delete], topic_timer_id: id)
   end
 
+  def schedule_auto_reminder_job
+    # Reminders are handled by bookmarks; legacy topic timers have no action.
+  end
+
   def schedule_auto_clear_slow_mode_job
     Jobs.enqueue(TopicTimer.type_job_map[:clear_slow_mode], topic_timer_id: id)
   end

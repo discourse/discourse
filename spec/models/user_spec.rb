@@ -3,6 +3,53 @@
 RSpec.describe User do
   subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
+  describe "#available_notification_types" do
+    fab!(:user)
+
+    it "returns distinct types for this user's read and unread notifications" do
+      expect(user.available_notification_types).to eq([])
+      like =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:liked],
+          read: true,
+        )
+      Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
+      Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
+      Fabricate(:notification, notification_type: Notification.types[:replied])
+
+      expect(user.available_notification_types).to contain_exactly(
+        Notification.types[:liked],
+        Notification.types[:mentioned],
+      )
+
+      like.destroy!
+      expect(user.available_notification_types).to eq([Notification.types[:mentioned]])
+    end
+
+    it "excludes notifications for deleted topics" do
+      notification = Fabricate(:notification, user: user)
+      notification.topic.update!(deleted_at: Time.current)
+
+      expect(user.available_notification_types).to eq([])
+    end
+
+    it "publishes current availability after creating and deleting notifications" do
+      user.update!(last_seen_at: 1.minute.ago)
+      notification = nil
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") do
+          notification =
+            Fabricate(:notification, user: user, notification_type: Notification.types[:liked])
+        end
+      expect(messages.last.data[:available_notification_types]).to eq([Notification.types[:liked]])
+
+      messages = MessageBus.track_publish("/notification/#{user.id}") { notification.destroy! }
+      expect(messages.last.data[:available_notification_types]).to eq([])
+    end
+  end
+
   it_behaves_like "it has custom fields"
 
   describe "#reload" do
@@ -3821,12 +3868,19 @@ RSpec.describe User do
 
       group.add(whisperer)
 
-      expect(whisperer.whisperer?).to eq(true)
+      expect(whisperer.reload.whisperer?).to eq(true)
       expect(user.whisperer?).to eq(false)
     end
 
     it "returns false if no whispers groups exist" do
       expect(user.whisperer?).to eq(false)
+    end
+
+    it "looks up whisper group membership once" do
+      SiteSetting.whispers_allowed_groups = "#{group.id}"
+      user.whisperer?
+
+      expect(track_sql_queries { user.whisperer? }).to be_empty
     end
   end
 

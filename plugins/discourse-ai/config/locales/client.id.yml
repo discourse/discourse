@@ -380,6 +380,13 @@ id:
             other: "%{count} jam terakhir"
         topic:
           title: "Ringkasan topik"
+      ai_search:
+        related_replies:
+          other: "%{count} balasan"
+        tabs:
+          ask: "Tanya AI"
+          topics: "Topik"
+          messages: "Pesan"
       discobot_discoveries:
         main_title: "Tanya AI"
         legacy:

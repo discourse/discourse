@@ -6,6 +6,10 @@
 
 uk:
   js:
+    dsa_notice:
+      title: "Повідомити про незаконний вміст"
+      email: "Адреса електронної пошти"
+      resend_email_code: "Надіслати код повторно"
     mcp_oauth_client_id_metadata_policy:
       disabled: "Тільки реєстрація адміністратора"
       approved_domains: "CIMD із затверджених доменів"

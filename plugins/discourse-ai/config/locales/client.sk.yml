@@ -962,6 +962,17 @@ sk:
             compact: "Kompaktné"
             expanded: "Rozšírené"
             expanded_description: "so súhrnmi AI"
+      ai_search:
+        related_topics: "Súvisiace témy"
+        related_replies:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
+        tabs:
+          ask: "Spýtajte sa AI"
+          topics: "Témy"
+          messages: "Správy"
       discobot_discoveries:
         main_title: "Spýtajte sa AI"
         loading_convo: "Načítanie konverzácie"

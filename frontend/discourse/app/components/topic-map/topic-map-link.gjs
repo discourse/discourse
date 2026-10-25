@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { and } from "discourse/truth-helpers";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 

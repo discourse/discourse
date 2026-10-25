@@ -8,12 +8,9 @@ lt:
   js:
     explorer:
       or: "arba"
-      create: "Sukurti"
       ai:
         generate: "Generuoti"
         optional: "pasirinktinai"
-      import:
-        label: "Importuoti"
       help:
         label: "Pagalba"
       schema:
@@ -43,7 +40,6 @@ lt:
       query_description: "Aprašymas"
       query_user: "Sukurta"
       reset_params: "Atstatyti"
-      search_placeholder: "Paieška..."
       filter_by_tag: "Filtruoti pagal žymą"
       filter_by_this_tag: "Filtruoti sąrašą pagal šią žymą"
     group:

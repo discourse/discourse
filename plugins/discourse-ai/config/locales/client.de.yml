@@ -1480,6 +1480,15 @@ de:
             compact: "Kompakt"
             expanded: "Erweitert"
             expanded_description: "mit KI-Zusammenfassungen"
+      ai_search:
+        related_topics: "Verwandte Themen"
+        related_replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        tabs:
+          ask: "KI fragen"
+          topics: "Themen"
+          messages: "Nachrichten"
       discobot_discoveries:
         main_title: "KI fragen"
         loading_convo: "Unterhaltung wird geladen"

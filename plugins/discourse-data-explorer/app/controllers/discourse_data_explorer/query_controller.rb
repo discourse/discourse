@@ -35,6 +35,7 @@ module DiscourseDataExplorer
       else
         base_scope = base_scope.order(order_column => order_direction)
       end
+      base_scope = base_scope.order(:id)
 
       if filter.present?
         sanitized_filter = "%#{Query.sanitize_sql_like(filter)}%"

@@ -6,6 +6,20 @@ RSpec.describe CurrentUserSerializer do
 
   let(:guardian) { user.guardian }
 
+  it "includes notification types with remaining read or unread notifications" do
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+    notification =
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        read: true,
+      )
+    expect(serializer.as_json[:available_notification_types]).to eq([Notification.types[:liked]])
+    notification.destroy!
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+  end
+
   context "when SSO is not enabled" do
     it "does not include external_id" do
       payload = serializer.as_json

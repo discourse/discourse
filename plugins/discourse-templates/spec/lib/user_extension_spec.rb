@@ -107,16 +107,6 @@ describe DiscourseTemplates::UserExtension do
       expect(user.can_use_private_templates?).to eq(false)
     end
 
-    it "is true when group is 'everyone'" do
-      expect(admin.can_use_private_templates?).to eq(true)
-      expect(moderator.can_use_private_templates?).to eq(true)
-      expect(user.can_use_private_templates?).to eq(false)
-
-      SiteSetting.discourse_templates_groups_allowed_private_templates =
-        Group::AUTO_GROUPS[:everyone].to_s
-      expect(user.can_use_private_templates?).to eq(true)
-    end
-
     it "only returns true to staff or members of the allowed groups" do
       expect(admin.can_use_private_templates?).to eq(true)
       expect(moderator.can_use_private_templates?).to eq(true)

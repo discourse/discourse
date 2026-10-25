@@ -7,7 +7,6 @@ import GifsResultList from "discourse/components/gifs/result-list";
 import withEventValue from "discourse/helpers/with-event-value";
 import getURL from "discourse/lib/get-url";
 import GifSearch from "discourse/lib/gif-search";
-import { or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";

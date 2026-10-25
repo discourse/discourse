@@ -793,64 +793,68 @@ RSpec.describe WebhooksController do
   describe "#aws" do
     let(:topic_arn) { "arn:aws:sns:us-east-1:123456789012:discourse-bounces" }
     let(:other_topic_arn) { "arn:aws:sns:us-east-1:999999999999:attacker-topic" }
+    let(:ses_message_id) { "000001378603177f-7a5433e7-8edb-42ae-af10-f0181f34d6ee-000000" }
     let(:bounce_status) { "5.1.1" }
     let(:payload) do
       {
         "Type" => "Notification",
         "TopicArn" => topic_arn,
-        "Message" => {
-          "notificationType" => "Bounce",
-          :bounce => {
-            "bounceType" => "Permanent",
-            "reportingMTA" => "dns; email.example.com",
-            :bouncedRecipients => [
-              {
-                "emailAddress" => email,
-                "status" => bounce_status,
-                "action" => "failed",
-                "diagnosticCode" => "smtp; 550 5.1.1 <#{email}>... User",
-              },
-            ],
-            "bounceSubType" => "General",
-            "timestamp" => "2016-01-27T14:59:38.237Z",
-            "feedbackId" => "00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa068a-000000",
-            "remoteMtaIp" => "127.0.2.0",
-          },
-          :mail => {
-            "timestamp" => "2016-01-27T14:59:38.237Z",
-            "source" => "john@example.com",
-            "sourceArn" => "arn:aws:ses:us-east-1:888888888888:identity/example.com",
-            "sourceIp" => "127.0.3.0",
-            "sendingAccountId" => "123456789012",
-            "callerIdentity" => "IAM_user_or_role_name",
-            "messageId" => message_id,
-            "destination" => [email, "jane@example.com", "mary@example.com", "richard@example.com"],
-            "headersTruncated" => false,
-            "headers" => [
-              { "name" => "From", "value" => "\"John Doe\" <john@example.com>" },
-              {
-                "name" => "To",
-                "value" =>
-                  "\"Test\" <#{email}>, \"Jane Doe\" <jane@example.com>, \"Mary Doe\" <mary@example.com>, \"Richard Doe\" <richard@example.com>",
-              },
-              { "name" => "Message-ID", "value" => message_id },
-              { "name" => "Subject", "value" => "Hello" },
-              { "name" => "Content-Type", "value" => "text/plain; charset=\"UTF-8\"" },
-              { "name" => "Content-Transfer-Encoding", "value" => "base64" },
-              { "name" => "Date", "value" => "Wed, 27 Jan 2016 14:05:45 +0000" },
-            ],
-            "commonHeaders" => {
-              "from" => ["John Doe <john@example.com>"],
-              "date" => "Wed, 27 Jan 2016 14:05:45 +0000",
-              "to" => [
-                "\"Test\" <#{email}>, Jane Doe <jane@example.com>, Mary Doe <mary@example.com>, Richard Doe <richard@example.com>",
-              ],
-              "messageId" => message_id,
-              "subject" => "Hello",
-            },
-          },
-        }.to_json,
+        "Message" => notification.to_json,
       }.to_json
+    end
+    let(:notification) do
+      {
+        "notificationType" => "Bounce",
+        :bounce => {
+          "bounceType" => "Permanent",
+          "reportingMTA" => "dns; email.example.com",
+          :bouncedRecipients => [
+            {
+              "emailAddress" => email,
+              "status" => bounce_status,
+              "action" => "failed",
+              "diagnosticCode" => "smtp; 550 5.1.1 <#{email}>... User",
+            },
+          ],
+          "bounceSubType" => "General",
+          "timestamp" => "2016-01-27T14:59:38.237Z",
+          "feedbackId" => "00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa068a-000000",
+          "remoteMtaIp" => "127.0.2.0",
+        },
+        :mail => {
+          "timestamp" => "2016-01-27T14:59:38.237Z",
+          "source" => "john@example.com",
+          "sourceArn" => "arn:aws:ses:us-east-1:888888888888:identity/example.com",
+          "sourceIp" => "127.0.3.0",
+          "sendingAccountId" => "123456789012",
+          "callerIdentity" => "IAM_user_or_role_name",
+          "messageId" => ses_message_id,
+          "destination" => [email, "jane@example.com", "mary@example.com", "richard@example.com"],
+          "headersTruncated" => false,
+          "headers" => [
+            { "name" => "From", "value" => "\"John Doe\" <john@example.com>" },
+            {
+              "name" => "To",
+              "value" =>
+                "\"Test\" <#{email}>, \"Jane Doe\" <jane@example.com>, \"Mary Doe\" <mary@example.com>, \"Richard Doe\" <richard@example.com>",
+            },
+            { "name" => "Message-ID", "value" => " <#{message_id}> " },
+            { "name" => "Subject", "value" => "Hello" },
+            { "name" => "Content-Type", "value" => "text/plain; charset=\"UTF-8\"" },
+            { "name" => "Content-Transfer-Encoding", "value" => "base64" },
+            { "name" => "Date", "value" => "Wed, 27 Jan 2016 14:05:45 +0000" },
+          ],
+          "commonHeaders" => {
+            "from" => ["John Doe <john@example.com>"],
+            "date" => "Wed, 27 Jan 2016 14:05:45 +0000",
+            "to" => [
+              "\"Test\" <#{email}>, Jane Doe <jane@example.com>, Mary Doe <mary@example.com>, Richard Doe <richard@example.com>",
+            ],
+            "messageId" => " <#{message_id}> ",
+            "subject" => "Hello",
+          },
+        },
+      }
     end
     let(:subscription_confirmation_payload) do
       {
@@ -870,7 +874,7 @@ RSpec.describe WebhooksController do
       SiteSetting.aws_sns_topic_arn_allowlist = topic_arn
     end
 
-    it "hard bounces" do
+    it "hard bounces using the original message ID" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
@@ -883,7 +887,7 @@ RSpec.describe WebhooksController do
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
-    it "does not bounce an email log with a different SES message id" do
+    it "does not bounce an email log with a different original message ID" do
       user = Fabricate(:user, email: email)
       email_log =
         Fabricate(:email_log, user: user, message_id: "other-message-id", to_address: email)
@@ -893,6 +897,82 @@ RSpec.describe WebhooksController do
 
       expect(email_log.reload.bounced).to eq(false)
       expect(email_log.user.user_stat.bounce_score).to eq(0)
+    end
+
+    it "matches the original message ID from raw headers without common headers" do
+      notification[:mail].delete("commonHeaders")
+      header = notification[:mail]["headers"].find { |entry| entry["name"] == "Message-ID" }
+      header["name"] = "mEsSaGe-Id"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(true)
+      expect(user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "matches the original message ID from common headers without raw headers" do
+      notification[:mail].delete("headers")
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(true)
+      expect(user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "uses common headers when the raw message ID is blank" do
+      header = notification[:mail]["headers"].find { |entry| entry["name"] == "Message-ID" }
+      header["value"] = " "
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(true)
+    end
+
+    it "prefers the raw original message ID over the common headers message ID" do
+      notification[:mail]["commonHeaders"]["messageId"] = ses_message_id
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+      other_email_log =
+        Fabricate(:email_log, user: user, message_id: ses_message_id, to_address: email)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(true)
+      expect(other_email_log.reload.bounced).to eq(false)
+    end
+
+    it "ignores notifications without an original message ID even if the SES ID matches a log" do
+      notification[:mail].delete("headers")
+      notification[:mail].delete("commonHeaders")
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: ses_message_id, to_address: email)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(false)
+      expect(user.user_stat.bounce_score).to eq(0)
+    end
+
+    it "ignores a matching message ID sent to a different recipient" do
+      user = Fabricate(:user)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: user.email)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(false)
+      expect(user.user_stat.bounce_score).to eq(0)
     end
 
     it "does not increase the bounce score for duplicate notifications" do

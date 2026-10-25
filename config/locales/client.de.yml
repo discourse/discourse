@@ -6,6 +6,10 @@
 
 de:
   js:
+    dsa_notice:
+      title: "Illegale Inhalte melden"
+      email: "E-Mail-Adresse"
+      resend_email_code: "Code erneut senden"
     user_api_key:
       title: '„%{application_name}“ autorisieren'
       authorize: "Autorisieren"
@@ -432,6 +436,7 @@ de:
         since: "(seit %{version})"
       toggle_safe_mode: "Abgesicherten Modus umschalten"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
+      open_styleguide: "Styleguide öffnen"
       disable_dev_tools: "Entwicklertools deaktivieren"
       toggle_upcoming_changes_debug: "Debuggen von bevorstehenden Änderungen ein-/ ausschalten"
     s3:
@@ -522,8 +527,11 @@ de:
       pm_title: "Vorgeschlagene Nachrichten"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
+      dismiss: "Einrichtung verwerfen"
       select_theme:
         title: "Passe deine Website an"
+        action: "Optionen anzeigen"
+        completed: "Optionen ändern"
         show_light_screenshot: "Hellen Screenshot anzeigen"
         show_dark_screenshot: "Dunklen Screenshot anzeigen"
       invite_collaborators:
@@ -544,16 +552,25 @@ de:
             body: "Willkommen in der Community! Lasst uns einander kennenlernen. Bitte stelle dich vor und erzähle ein wenig über deine Interessen. Ich fange an: Ich habe eine Leidenschaft für Technik und liebe es, mein Wissen weiterzugeben!"
     design_wizard:
       title: "Passe deine Website an"
+      save: "Speichern und fertigstellen"
       back: "Zurück"
       next: "Weiter"
+      intro:
+        start: "Los geht’s"
+      close:
+        keep: "Änderungen beibehalten"
+        revert: "Änderungen rückgängig machen"
+        continue_editing: "Weiter bearbeiten"
       sections:
         theme: "Theme"
+        colors: "Standardfarbe"
         fonts: "Schriftarten"
         homepage: "Homepage"
         welcome_banner: "Willkommensbanner"
         search: "Suche"
       theme:
         selected: "Ausgewählt"
+        applying: "Wird angewendet…"
       colors:
         light: "Hell"
         dark: "Dunkel"
@@ -565,6 +582,21 @@ de:
         categories: "Kategorien"
         styles:
           boxes: "Boxen"
+          with_topics: "Kategorien mit Themen"
+          only: "Nur Kategorien"
+      welcome_banner:
+        enable: "Einen Willkommensbanner anzeigen"
+        enable_description: "Besuchende mit dem Namen der Website und einem Suchfeld begrüßen"
+        location: "Bannerplatzierung"
+        locations:
+          below_site_header: "Unterhalb der Kopfzeile der Seite"
+          above_topic_content: "Oberhalb der Themenliste"
+      search:
+        experiences:
+          search_icon:
+            title: "Suchsymbol"
+          search_field:
+            title: "Suchfeld"
     about:
       edit: "Diese Seite bearbeiten"
       simple_title: "Über uns"
@@ -833,6 +865,7 @@ de:
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
       filtered_flagged_by: "Gemeldet von"
+      no_component_found: "Keine Komponente für %{type} gefunden"
       unknown:
         title:
           one: "Du hast ausstehende Elemente in der Warteschlange zur Überprüfung von einem deaktivierten Plug-in:"
@@ -2992,9 +3025,14 @@ de:
       enter: "Enter"
       option: "Option"
       period: "Zeitraum"
+      left_bracket: "Linke Klammer"
+      right_bracket: "Rechte Klammer"
+      space: "Leerzeichen"
       tab: "Tab"
+      backspace: "Rücktaste"
       delete: "Löschen"
       home: "Startseite"
+      end: "Ende"
     conditional_loading_section:
       loading: Wird geladen …
     category_row:
@@ -3264,6 +3302,7 @@ de:
       create_whisper: "Flüstern"
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
+      submit_shortcut_title: "Oder %{shortcut} drücken"
       save_and_close: "Speichern und schließen"
       discard: "Verwerfen"
       cancel_edit: "Bearbeiten abbrechen"

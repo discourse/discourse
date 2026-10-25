@@ -10,7 +10,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import userStatus from "discourse/helpers/user-status";
 import UserNotificationsDropdown from "discourse/select-kit/components/user-notifications-dropdown";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHtmlWithLinks from "discourse/ui-kit/d-html-with-links";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";

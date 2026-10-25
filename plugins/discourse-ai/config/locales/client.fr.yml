@@ -1480,6 +1480,15 @@ fr:
             compact: "Compact"
             expanded: "Étendu"
             expanded_description: "avec des résumés d'IA"
+      ai_search:
+        related_topics: "Sujets connexes"
+        related_replies:
+          one: "%{count} réponse"
+          other: "%{count} réponses"
+        tabs:
+          ask: "Demander à l'IA"
+          topics: "Sujets"
+          messages: "Messages directs"
       discobot_discoveries:
         main_title: "Demander à l'IA"
         loading_convo: "Chargement de la conversation"

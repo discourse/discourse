@@ -17,6 +17,7 @@ import {
   isValidNestedViewCacheSnapshot,
   NESTED_VIEW_CACHE_FORMAT_VERSION,
 } from "discourse/lib/nested-view-cache-snapshot";
+import resolvePermalink from "discourse/lib/permalink-check";
 import PreloadStore from "discourse/lib/preload-store";
 import { registerPostInTopicPostStream } from "discourse/lib/process-node";
 import DiscourseURL from "discourse/lib/url";
@@ -33,6 +34,15 @@ export function nestedQueryString(params) {
   }
 
   return query.toString();
+}
+
+function originalTopicPath(topic, params) {
+  let path = `/t/${topic.slug}/${topic.id}`;
+  const nearPost = params.nearPost;
+  if (nearPost && nearPost !== "last" && nearPost !== 999999999) {
+    path += `/${nearPost}`;
+  }
+  return path;
 }
 
 // This route is used for retrieving a topic based on params
@@ -89,11 +99,25 @@ export default class TopicFromParams extends DiscourseRoute {
         }
         return params;
       })
-      .catch((e) => {
+      .catch(async (e) => {
         if (!isTesting()) {
           // eslint-disable-next-line no-console
           console.log("Could not view topic", e);
         }
+
+        // The id-only topic JSON drops the slug, so the server can't match a
+        // permalink for the original URL; resolve it here instead.
+        if (topic.errorHtml) {
+          const result = await resolvePermalink(
+            originalTopicPath(topic, params),
+            transition,
+            this.router
+          ).catch(() => null);
+          if (result?.type === "redirect") {
+            return params;
+          }
+        }
+
         params._loading_error = true;
         return params;
       });

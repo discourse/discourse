@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCopyButton from "discourse/ui-kit/d-copy-button";

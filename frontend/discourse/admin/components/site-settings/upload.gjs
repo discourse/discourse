@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -87,7 +86,7 @@ export default class SiteSettingUpload extends Component {
   /** @type {SiteSettingUploadedFile | null} */
   @tracked uploadedFile = null;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: this.settingId,
     type: "site_setting",
     additionalParams: () => ({

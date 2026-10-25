@@ -368,6 +368,13 @@ ug:
           since:
             one: "ئاخىرقى %{count} سائەت"
             other: "ئاخىرقى %{count} سائەت"
+      ai_search:
+        related_replies:
+          one: "%{count} جاۋاب"
+          other: "%{count} جاۋاب"
+        tabs:
+          topics: "تېما"
+          messages: "ئۇچۇر"
       discobot_discoveries:
         legacy:
           regular_results: "تېما"

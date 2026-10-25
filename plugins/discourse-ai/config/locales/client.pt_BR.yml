@@ -1134,6 +1134,15 @@ pt_BR:
             compact: "Compactar"
             expanded: "Expandido(a)"
             expanded_description: "com resumos de IA"
+      ai_search:
+        related_topics: "Tópicos relacionados"
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          ask: "Perguntar à IA"
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
         main_title: "Perguntar à IA"
         loading_convo: "Carregando conversa"

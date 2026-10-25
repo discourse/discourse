@@ -41,6 +41,7 @@ register_asset "stylesheets/modules/admin-dashboard/common/admin-dashboard-highl
 register_asset "stylesheets/modules/ai-bot/common/bot-replies.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-agent.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
+register_asset "stylesheets/modules/ai-bot/common/ai-search.scss"
 register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"
@@ -147,6 +148,7 @@ after_initialize do
   register_problem_check ProblemCheck::AiLlmStatus
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
+  register_problem_check ProblemCheck::AiAskAiExternalSource
 
   register_modifier(:reviewable_automated_detection) do |automated, reviewable|
     scores = reviewable.reviewable_scores

@@ -43,6 +43,9 @@ class Patreon::PatreonWebhookController < ApplicationController
     adapter = Patreon::ApiVersion.adapter_for_payload(pledge_data)
     patreon_id = Patreon::Pledge.get_patreon_id(pledge_data, adapter: adapter)
 
+    # Preserve the local account link before a revoked pledge loses its cached email.
+    Patreon::Patron.get_local_user(patreon_id)
+
     if SiteSetting.patreon_verbose_log
       Rails.logger.warn(
         "Patreon verbose log for Webhook:\n  Event = #{event}\n Id = #{patreon_id}\n  Data = #{pledge_data.inspect}",
