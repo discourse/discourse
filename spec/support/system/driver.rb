@@ -173,7 +173,7 @@ module SystemDrivers
       --mute-audio
       --remote-allow-origins=*
       --disable-smooth-scrolling
-      --js-flags=--no-enable-lazy-source-positions
+      --js-flags=--no-enable-lazy-source-positions,--single-threaded
     ]
 
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
