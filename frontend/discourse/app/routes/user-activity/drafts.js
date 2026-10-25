@@ -5,7 +5,6 @@ import { i18n } from "discourse-i18n";
 export default class UserActivityDrafts extends DiscourseRoute {
   @service router;
   @service currentUser;
-  @service siteSettings;
 
   templateName = "user-activity/drafts";
 
@@ -27,7 +26,6 @@ export default class UserActivityDrafts extends DiscourseRoute {
     return {
       stream: draftsStream,
       emptyState: this.emptyState(),
-      showDiscardedLink: this.siteSettings.discarded_drafts_retention_days > 0,
     };
   }
 

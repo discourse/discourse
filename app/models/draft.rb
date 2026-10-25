@@ -83,6 +83,8 @@ class Draft < ActiveRecord::Base
     else
       opts = { user_id: user.id, draft_key: key, data: data, sequence: sequence, owner: owner }
 
+      # The pre-partial-index unique index can still make a discarded row the conflict target;
+      # reviving it is harmless once that index is gone.
       draft_id = DB.query_single(<<~SQL, opts).first
         INSERT INTO drafts (user_id, draft_key, data, sequence, owner, created_at, updated_at)
         VALUES (:user_id, :draft_key, :data, :sequence, :owner, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
@@ -94,7 +96,6 @@ class Draft < ActiveRecord::Base
           revisions = drafts.revisions + 1,
           owner = :owner,
           updated_at = CURRENT_TIMESTAMP,
-          -- until the full (user_id, draft_key) index is dropped, a discarded draft can be the conflicting row
           deleted_at = NULL
         RETURNING id
       SQL
@@ -156,15 +157,16 @@ class Draft < ActiveRecord::Base
 
   # Discarded drafts are kept for `discarded_drafts_retention_days` so users can restore them,
   # unless the caller knows the content was posted and nothing is lost.
-  def self.discard!(user_id, keys, permanent: false)
-    drafts = Draft.live.where(user_id: user_id, draft_key: keys).to_a
+  def self.discard!(user_id, draft_keys, permanent: false)
+    drafts = Draft.live.where(user_id: user_id, draft_key: draft_keys).to_a
     return 0 if drafts.empty?
 
     recoverable, disposable = permanent ? [[], drafts] : drafts.partition(&:recoverable?)
 
     Draft.transaction do
       Draft.where(id: recoverable.map(&:id)).update_all(deleted_at: Time.zone.now)
-      disposable.each(&:destroy!)
+      UploadReference.where(target_type: "Draft", target_id: disposable.map(&:id)).delete_all
+      Draft.where(id: disposable.map(&:id)).delete_all
       evict_excess_discarded!(user_id) if recoverable.any?
     end
 
@@ -204,6 +206,8 @@ class Draft < ActiveRecord::Base
     SQL
     UploadReference.where(target_type: "Draft", target_id: purged_ids).delete_all
   end
+
+  private_class_method :evict_excess_discarded!, :delete_discarded!
 
   def restore!
     sequence = DraftSequence.current(user_id, draft_key)

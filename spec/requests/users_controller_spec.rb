@@ -5668,6 +5668,12 @@ RSpec.describe UsersController do
   end
 
   describe "#show" do
+    it "renders the discarded drafts page" do
+      sign_in(user1)
+      get "/u/#{user1.username}/activity/drafts/discarded"
+      expect(response.status).to eq(200)
+    end
+
     context "when anon" do
       let(:user) { Discourse.system_user }
 

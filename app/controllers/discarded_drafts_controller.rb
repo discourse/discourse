@@ -3,18 +3,19 @@
 class DiscardedDraftsController < ApplicationController
   requires_login
 
-  INDEX_LIMIT = 50
-
   def index
-    params.permit(:offset)
-
     drafts =
       Draft
         .discarded
         .where(user_id: current_user.id)
         .order(deleted_at: :desc, id: :desc)
         .offset(params[:offset].to_i)
-        .limit(fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT))
+        .limit(
+          fetch_limit_from_params(
+            default: DraftsController::INDEX_LIMIT,
+            max: DraftsController::INDEX_LIMIT,
+          ),
+        )
         .to_a
     Draft.preload_data(drafts, current_user)
 
@@ -33,7 +34,17 @@ class DiscardedDraftsController < ApplicationController
     draft = find_discarded_draft
 
     if Draft.live.where(user_id: current_user.id).count >= SiteSetting.max_drafts_per_user
-      return render_json_error I18n.t("draft.too_many_drafts.title"), status: 403
+      return(
+        render_json_error I18n.t("draft.too_many_drafts.title"),
+                          status: 403,
+                          extras: {
+                            description:
+                              I18n.t(
+                                "draft.too_many_drafts.description",
+                                base_url: Discourse.base_url,
+                              ),
+                          }
+      )
     end
 
     begin
@@ -42,7 +53,7 @@ class DiscardedDraftsController < ApplicationController
       return render_json_error I18n.t("draft.restore_conflict"), status: 409
     end
 
-    render json: { draft_key: draft.draft_key, draft_sequence: draft.sequence }
+    render json: { draft: draft.data, draft_sequence: draft.sequence }
   end
 
   def destroy

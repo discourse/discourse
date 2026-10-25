@@ -102,9 +102,10 @@ export default class UserStreamComponent extends Component {
 
   @action
   async resumeDraft(item) {
+    let draftData;
     if (item.discarded) {
       try {
-        await Draft.restoreDiscarded(item.id);
+        draftData = await Draft.restoreDiscarded(item.id);
       } catch (error) {
         popupAjaxError(error);
         return;
@@ -119,7 +120,7 @@ export default class UserStreamComponent extends Component {
       DiscourseURL.routeTo(item.get("postUrl"));
     } else {
       try {
-        const draftData = await Draft.get(item.draft_key);
+        draftData ??= await Draft.get(item.draft_key);
         const draft = draftData.draft || item.data;
         if (!draft) {
           return;

@@ -17,12 +17,6 @@ RSpec.describe DiscardedDraftsController do
     expect(response.status).to eq(403)
   end
 
-  it "serves the discarded drafts page" do
-    sign_in(user)
-    get "/u/#{user.username}/activity/drafts/discarded"
-    expect(response.status).to eq(200)
-  end
-
   describe "#index" do
     it "lists only the current user's discarded drafts" do
       own = discarded_draft(user)
@@ -47,7 +41,7 @@ RSpec.describe DiscardedDraftsController do
       put "/discarded_drafts/#{draft.id}/restore.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["draft_key"]).to eq("new_topic_1")
+      expect(response.parsed_body["draft"]).to eq(content)
       expect(Draft.get(user, "new_topic_1", response.parsed_body["draft_sequence"])).to eq(content)
     end
 

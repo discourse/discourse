@@ -670,6 +670,12 @@ acceptance(`Composer`, function (needs) {
       });
     });
 
+    let draftDeleteBody;
+    pretender.delete("/drafts/:key", function (request) {
+      draftDeleteBody = request.requestBody;
+      return response({ success: "OK" });
+    });
+
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "Internationalization Localization");
@@ -686,6 +692,10 @@ acceptance(`Composer`, function (needs) {
     assert
       .dom(".saving-text")
       .doesNotExist("composer is not stuck in saving state");
+    assert.true(
+      draftDeleteBody?.includes("permanent=true"),
+      "deletes the draft outright since its content was submitted"
+    );
   });
 
   test("Can display a message and route to a URL", async function (assert) {
