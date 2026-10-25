@@ -259,6 +259,10 @@ export default class MediaOptimizationWorkerService extends Service {
 
   registerMessageHandler() {
     this.worker.onmessage = (workerMessage) => {
+      if (!this.promiseResolvers?.[workerMessage.data.fileId]) {
+        return;
+      }
+
       switch (workerMessage.data.type) {
         case "file":
           const outputType = workerMessage.data.outputType;
