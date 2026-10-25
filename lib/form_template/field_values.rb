@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class FormTemplate::FieldValues
-  NUMBER_PATTERN = /\A-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?\z/
+  MAX_NUMBER_LENGTH = 1024
+  NUMBER_PATTERN = /\A-?(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?\z/
 
   attr_reader :fields, :answers
 
@@ -55,7 +56,9 @@ class FormTemplate::FieldValues
   # Numbers keep the spelling typed into the control, so a round trip through
   # JSON cannot alter them and the control can be repopulated verbatim.
   def number?(value)
-    value.is_a?(String) && (value.empty? || (NUMBER_PATTERN.match?(value) && Float(value).finite?))
+    return false unless value.is_a?(String) && value.bytesize <= MAX_NUMBER_LENGTH
+
+    value.empty? || (NUMBER_PATTERN.match?(value) && Float(value, exception: false)&.finite?)
   end
 
   def string_array?(value)

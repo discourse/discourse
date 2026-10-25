@@ -56,10 +56,47 @@ RSpec.describe FormTemplate::FieldValues do
     it "accepts numbers in any spelling the number control accepts" do
       field = { "id" => "seats", "type" => "input", "validations" => { "type" => "number" } }
 
-      ["", "0", "-1", "2.5", ".5", "1e2", "1E-7", "12345678901234567890"].each do |value|
+      [
+        "",
+        "0",
+        "-1",
+        "2.5",
+        ".5",
+        "-.5",
+        ".5e+2",
+        "1e2",
+        "1E-7",
+        "12345678901234567890",
+      ].each do |value|
         expect(described_class.new(fields: [field], answers: { "seats" => value })).to(
           be_well_formed,
           "expected #{value.inspect} to be accepted",
+        )
+      end
+    end
+
+    it "rejects malformed and nonfinite numeric strings" do
+      field = { "id" => "seats", "type" => "input", "validations" => { "type" => "number" } }
+
+      %w[5. -5. 5.e2 . 1e +1 1_000 0x10 NaN Infinity 1e400].each do |value|
+        expect(described_class.new(fields: [field], answers: { "seats" => value })).not_to(
+          be_well_formed,
+          "expected #{value.inspect} to be rejected",
+        )
+      end
+    end
+
+    it "bounds numeric strings before parsing" do
+      field = { "id" => "seats", "type" => "input", "validations" => { "type" => "number" } }
+      limit = described_class::MAX_NUMBER_LENGTH
+
+      expect(described_class.new(fields: [field], answers: { "seats" => "0" * limit })).to(
+        be_well_formed,
+      )
+
+      ["0" * (limit + 1), "1" * 1_000_000 + "x"].each do |value|
+        expect(described_class.new(fields: [field], answers: { "seats" => value })).not_to(
+          be_well_formed,
         )
       end
     end
