@@ -264,6 +264,7 @@ export default class MediaOptimizationWorkerService extends Service {
   registerMessageHandler() {
     this.worker.onmessage = (workerMessage) => {
       if (!this.promiseResolvers?.[workerMessage.data.fileId]) {
+        this.#restartStallTimer();
         return;
       }
 

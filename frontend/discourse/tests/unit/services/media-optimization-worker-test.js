@@ -143,7 +143,7 @@ module("Unit | Service | media-optimization-worker", function (hooks) {
     assert.false(this.workers[0].terminate.called, "the worker is kept");
   });
 
-  test("a late reply for a cancelled file preserves the remaining file's timeout", async function (assert) {
+  test("a late reply for a cancelled file counts as worker activity", async function (assert) {
     this.optimize("cancelled");
     const stuck = this.optimize("stuck");
     await this.clock.tickAsync(0);
@@ -157,7 +157,14 @@ module("Unit | Service | media-optimization-worker", function (hooks) {
     assert.false(stuck.settled, "the remaining file is still being optimized");
 
     await this.clock.tickAsync(WORKER_STALL_TIMEOUT_MS / 2);
-    assert.true(stuck.settled, "the remaining file times out on schedule");
+    assert.false(stuck.settled, "the worker activity extends the deadline");
+    assert.false(
+      this.workers[0].terminate.called,
+      "the responsive worker keeps processing the remaining file"
+    );
+
+    await this.clock.tickAsync(WORKER_STALL_TIMEOUT_MS / 2);
+    assert.true(stuck.settled, "the remaining file times out after silence");
     assert.strictEqual(stuck.result, undefined, "the file is left unoptimized");
     assert.true(
       this.workers[0].terminate.calledOnce,
