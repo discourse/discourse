@@ -20,7 +20,8 @@ module Boards
                :can_unarchive,
                :can_write,
                :can_manage,
-               :created_by,
+               :can_manage_acl_owner,
+               :owners,
                :columns,
                :acl
 
@@ -61,10 +62,26 @@ module Boards
       scope.can_manage_board?(object)
     end
 
-    def created_by
-      return nil if object.created_by.blank?
+    def can_manage_acl_owner
+      scope.can_manage_acl_owner?(object)
+    end
 
-      { username: object.created_by.username, avatar_template: object.created_by.avatar_template }
+    def owners
+      owner_entries =
+        if @options.key?(:owners_by_board_id)
+          @options[:owners_by_board_id].fetch(object.id, [])
+        else
+          AccessControlList.with_permission(object, Acl::Permissions::OWNER).flattened_list
+        end
+
+      owner_entries.map do |owner|
+        {
+          id: owner[:id],
+          username: owner[:username],
+          name: owner[:display_name],
+          avatar_template: owner[:avatar_template],
+        }
+      end
     end
 
     def columns
