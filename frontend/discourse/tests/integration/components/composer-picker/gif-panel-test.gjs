@@ -1,4 +1,4 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import GifPanel from "discourse/components/composer-picker/gif-panel";
@@ -15,7 +15,7 @@ const PARROT = {
   },
 };
 
-module("Integration | Component | composer-picker/gif-panel", function (hooks) {
+module("Integration | Component | ComposerPicker | GifPanel", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -66,18 +66,41 @@ module("Integration | Component | composer-picker/gif-panel", function (hooks) {
     );
   });
 
-  test("fetches featured categories when opened", async function (assert) {
+  test("browses featured categories and searches the selected category", async function (assert) {
+    this.fetchStub.callsFake(async (url) => {
+      if (url.includes("/gifs/categories")) {
+        return fetchResponse({
+          tags: [
+            {
+              name: "Party",
+              image: "/images/d-logo-sketch.png",
+              searchterm: "party",
+            },
+          ],
+        });
+      }
+      return fetchResponse({ results: [PARROT], next: "" });
+    });
+
     await render(<template><GifPanel @context="topic" /></template>);
+    await waitFor(".gif-panel .gifs-result--category");
 
-    const categoriesCall = this.fetchStub
-      .getCalls()
-      .find((c) => c.args[0].includes("/gifs/categories"));
+    assert
+      .dom(".gif-panel .gifs-result__category-label")
+      .hasText("Party", "renders the featured category");
 
-    assert.notStrictEqual(
-      categoriesCall,
-      undefined,
-      "requests featured categories from the backend on open"
-    );
+    await click(".gif-panel .gifs-result--category");
+
+    assert
+      .dom(".gif-panel__filter input")
+      .hasValue("party", "searches for the selected category");
+    assert
+      .dom(".gif-panel .gifs-result__img")
+      .hasAttribute(
+        "alt",
+        "party parrot",
+        "renders the category's search results"
+      );
   });
 
   test("shows the no-results state when the search is empty", async function (assert) {

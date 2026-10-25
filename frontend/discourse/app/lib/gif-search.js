@@ -19,6 +19,7 @@ export default class GifSearch {
   @tracked loadingCategories = false;
   @tracked offset = 0;
   @tracked query = "";
+  @tracked searchPending = false;
   @tracked hasMore = true;
   @autoTrackedArray currentGifs = [];
 
@@ -43,6 +44,7 @@ export default class GifSearch {
   @action
   refresh(value) {
     this.query = value;
+    this.searchPending = this.query.length >= MIN_QUERY_LENGTH;
     this.debouncedSearch = discourseDebounce(
       this,
       this.search,
@@ -120,6 +122,8 @@ export default class GifSearch {
   }
 
   async search(clearResults = true, skipLengthCheck = false) {
+    this.searchPending = false;
+
     if (clearResults) {
       this.currentGifs = [];
       this.offset = 0;
