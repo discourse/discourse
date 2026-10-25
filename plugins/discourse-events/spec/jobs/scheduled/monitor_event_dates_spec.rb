@@ -1054,6 +1054,68 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(post.reload.event.recurrence).to be_blank
       end
 
+      it "rolls over adjacent BBCode attributes following a quoted value" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring event with adjacent attributes"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event name='Johnny's start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}"end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        event = post.reload.event
+
+        expect(event).to be_present
+        expect(event.original_ends_at).to eq_time(ends_at)
+
+        event_date = event.event_dates.pending.first
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_post.raw).to include("name='Johnny's")
+        expect(successor_post.event).to be_present
+        expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
+        expect(event_date.reload.finished_at).to be_present
+      end
+
+      it "keeps the Event tag valid when removing a glued start attribute" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring event with adjacent bare attribute"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}"s end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        event = post.reload.event
+
+        expect(event).to be_present
+
+        event_date = event.event_dates.pending.first
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(post.reload.raw).to include("[event s ")
+        expect(successor_post.raw).to include("[event s ")
+        expect(successor_post.event).to be_present
+        expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
+        expect(event_date.reload.finished_at).to be_present
+      end
+
       it "ignores a code-block decoy before an event with an unquoted apostrophe" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour

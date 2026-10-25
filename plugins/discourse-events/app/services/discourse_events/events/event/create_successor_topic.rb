@@ -19,7 +19,7 @@ module DiscourseEvents
         /
           \[event(?=\s|\])
           (?:
-            \s+[-\w]+
+            \s*[-\w]+
             (?:=
               (?:
                 "[^"]+"
@@ -335,7 +335,7 @@ module DiscourseEvents
         attribute_token =
           /
             \G
-            \s+
+            \s*
             (?<attribute_name>[-\w]+)
             (?:=#{ATTRIBUTE_VALUE})?
           /ix
@@ -346,7 +346,11 @@ module DiscourseEvents
         position = 6
 
         while (token = attribute_token.match(opening_tag, position))
-          rewritten << token[0] unless token[:attribute_name].casecmp?(name)
+          unless token[:attribute_name].casecmp?(name)
+            # Removing an adjacent attribute must not turn [event into [events.
+            rewritten << " " if rewritten.length == 6 && token[0].match?(/\A\S/)
+            rewritten << token[0]
+          end
           position = token.end(0)
         end
 
