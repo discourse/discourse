@@ -11,10 +11,6 @@ const CONVERT_FORMAT_REGEX = /(\.|\/)(jxl|hei[cf])$/i;
 const ANIMATED_GIF_REGEX = /(\.|\/)(gif)$/i;
 const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
 
-// How long the worker may go without reporting back while files are in flight
-// before they're given up on and uploaded unoptimized.
-export const WORKER_STALL_TIMEOUT_MS = 60_000;
-
 /**
  * Optimizes composer image uploads in a worker. The flow:
  *
@@ -26,9 +22,8 @@ export const WORKER_STALL_TIMEOUT_MS = 60_000;
  *
  * The worker is a module worker bundled with its codecs, so it is ready as soon
  * as it is created (posted messages queue until its module evaluates). A worker
- * that fails to boot surfaces via onerror, and one that stops responding is
- * terminated after WORKER_STALL_TIMEOUT_MS of silence. Either way, in-flight
- * uploads continue unoptimized.
+ * that fails to boot surfaces via onerror, and in-flight uploads continue
+ * unoptimized.
  */
 @disableImplicitInjections
 export default class MediaOptimizationWorkerService extends Service {
@@ -47,7 +42,6 @@ export default class MediaOptimizationWorkerService extends Service {
   workerDoneCount = 0;
   workerPendingCount = 0;
 
-  #stallTimer = null;
   #stopOnComposerClose = false;
 
   willDestroy() {
@@ -181,8 +175,6 @@ export default class MediaOptimizationWorkerService extends Service {
           [arrayBuffer]
         );
       }
-
-      this.#armStallTimer();
     });
   }
 
@@ -245,9 +237,6 @@ export default class MediaOptimizationWorkerService extends Service {
 
   // Also settles any in-flight optimizations, so their uploads continue unoptimized.
   stopWorker() {
-    clearTimeout(this.#stallTimer);
-    this.#stallTimer = null;
-
     if (this.worker) {
       this.logIfDebug("Stopping media-optimization-worker...");
       this.worker.terminate();
@@ -264,7 +253,6 @@ export default class MediaOptimizationWorkerService extends Service {
   registerMessageHandler() {
     this.worker.onmessage = (workerMessage) => {
       if (!this.promiseResolvers?.[workerMessage.data.fileId]) {
-        this.#restartStallTimer();
         return;
       }
 
@@ -328,8 +316,6 @@ export default class MediaOptimizationWorkerService extends Service {
         default:
           this.logIfDebug(`Sorry, we are out of ${workerMessage}`);
       }
-
-      this.#restartStallTimer();
     };
   }
 
@@ -343,27 +329,6 @@ export default class MediaOptimizationWorkerService extends Service {
   #settle(fileId, optimizedFile) {
     this.promiseResolvers?.[fileId]?.(optimizedFile);
     delete this.promiseResolvers?.[fileId];
-  }
-
-  // Only the worker's own replies push the deadline out; sending it more work
-  // must not keep a stuck worker alive.
-  #armStallTimer() {
-    if (this.#stallTimer || this.workerPendingCount === 0) {
-      return;
-    }
-
-    this.#stallTimer = setTimeout(() => {
-      this.logIfDebug(
-        `No response from media-optimization-worker in ${WORKER_STALL_TIMEOUT_MS}ms`
-      );
-      this.stopWorker();
-    }, WORKER_STALL_TIMEOUT_MS);
-  }
-
-  #restartStallTimer() {
-    clearTimeout(this.#stallTimer);
-    this.#stallTimer = null;
-    this.#armStallTimer();
   }
 
   _renameForOutputType(fileName, outputType) {
