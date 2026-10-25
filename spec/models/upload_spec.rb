@@ -344,6 +344,16 @@ RSpec.describe Upload do
   end
 
   describe ".get_from_url" do
+    it "resolves the logical upload from a shared secure URL" do
+      setup_s3
+      primary = Fabricate(:secure_upload_s3)
+      dependent = Fabricate(:secure_upload_s3, primary_upload: primary, url: primary.url)
+      url =
+        Upload.secure_uploads_url_from_upload_url(primary.url, base62_sha1: dependent.base62_sha1)
+
+      expect(Upload.get_from_url(url)).to eq(dependent)
+    end
+
     let(:sha1) { "10f73034616a796dfd70177dc54b6def44c4ba6f" }
     let(:upload) { Fabricate(:upload, sha1: sha1) }
 
@@ -893,9 +903,32 @@ RSpec.describe Upload do
   end
 
   describe ".sha1_from_base62_encoded" do
+    it "rejects malformed identities and preserves valid SHA1 values" do
+      [nil, 42, "", "bad!", "a b", "é", "a\n", Base62.encode(2**160)].each do |value|
+        expect(Upload.sha1_from_base62_encoded(value)).to be_nil
+      end
+      ["0" * 40, "f" * 40].each do |sha1|
+        expect(Upload.sha1_from_base62_encoded(Upload.base62_sha1(sha1))).to eq(sha1)
+      end
+    end
+
     it "rejects base62 strings that are too long" do
       long_base62 = "A" * 1000
       expect(Upload.sha1_from_base62_encoded(long_base62)).to be_nil
+    end
+  end
+
+  describe ".sha1_from_secure_uploads_url" do
+    it "extracts the logical upload sha1 from the query string" do
+      url = "/secure-uploads/original/1X/storage.png?base62_sha1=#{upload.base62_sha1}"
+
+      expect(Upload.sha1_from_secure_uploads_url(url)).to eq(upload.sha1)
+    end
+
+    it "returns nil for an invalid logical upload identity" do
+      url = "/secure-uploads/original/1X/storage.png?base62_sha1=not%20base62"
+
+      expect(Upload.sha1_from_secure_uploads_url(url)).to be_nil
     end
   end
 
@@ -922,6 +955,52 @@ RSpec.describe Upload do
       expect(user.user_profile.card_background_upload_id).to eq(nil)
       expect(user.user_profile.profile_background_upload_id).to eq(nil)
     end
+
+    context "with deduplication" do
+      let(:mock_store) { mock("store") }
+
+      before do
+        Discourse.stubs(:store).returns(mock_store)
+        # Allow fabricator to call get_path_for for URL generation
+        mock_store.stubs(:get_path_for).returns("/uploads/default/original/1X/test.png")
+      end
+
+      it "removes S3 file when standalone upload is destroyed" do
+        upload = Fabricate(:upload)
+        mock_store.expects(:remove_upload).with(upload).once
+
+        upload.destroy
+      end
+
+      it "does not remove S3 file when dependent upload is destroyed" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123")
+        dependent = Fabricate(:secure_upload, original_sha1: "abc123", primary_upload: primary)
+        mock_store.expects(:remove_upload).with(dependent).never
+
+        dependent.destroy
+      end
+
+      it "does not remove S3 file when primary transfers to dependent" do
+        primary = Fabricate(:secure_upload, url: "/uploads/primary.png", original_sha1: "abc123")
+        _dependent =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dep.png",
+            original_sha1: "abc123",
+            primary_upload: primary,
+          )
+        mock_store.expects(:remove_upload).with(primary).never
+
+        primary.destroy
+      end
+
+      it "removes S3 file when primary has no dependents" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123")
+        mock_store.expects(:remove_upload).with(primary).once
+
+        primary.destroy
+      end
+    end
   end
 
   describe ".secure_uploads_url_from_upload_url" do
@@ -936,6 +1015,46 @@ RSpec.describe Upload do
       secure_url = Upload.secure_uploads_url_from_upload_url(url)
       expect(secure_url).not_to include(SiteSetting.Upload.absolute_base_url)
     end
+
+    it "includes the logical upload identity when provided" do
+      upload = Fabricate(:upload_s3, secure: true)
+      secure_url =
+        Upload.secure_uploads_url_from_upload_url(upload.url, base62_sha1: upload.base62_sha1)
+
+      expect(secure_url).to end_with("?base62_sha1=#{upload.base62_sha1}")
+    end
+  end
+
+  describe ".signed_url_from_secure_uploads_url" do
+    before { enable_secure_uploads }
+
+    it "signs only thumbnails owned by the logical upload and rejects missing identities" do
+      upload = Fabricate(:secure_upload_s3)
+      other_upload = Fabricate(:secure_upload_s3)
+      image = Fabricate(:optimized_image, upload: upload)
+      image.update!(url: "#{SiteSetting.Upload.absolute_base_url}/#{image.url}")
+      url = Upload.secure_uploads_url_from_upload_url(image.url, base62_sha1: upload.base62_sha1)
+      signed_url =
+        Upload.signed_url_from_secure_uploads_url(url, include_content_disposition: false)
+      expect(URI.parse(signed_url).path).to eq(URI.parse(image.url).path)
+
+      [other_upload.base62_sha1, Upload.base62_sha1("f" * 40)].each do |identity|
+        url = Upload.secure_uploads_url_from_upload_url(image.url, base62_sha1: identity)
+        expect {
+          Upload.signed_url_from_secure_uploads_url(url, include_content_disposition: false)
+        }.to raise_error(Discourse::NotFound)
+      end
+    end
+
+    it "does not include the logical upload identity in the storage path" do
+      upload = Fabricate(:secure_upload_s3)
+      url = Upload.secure_uploads_url_from_upload_url(upload.url, base62_sha1: upload.base62_sha1)
+      signed_url =
+        Upload.signed_url_from_secure_uploads_url(url, include_content_disposition: false)
+
+      expect(URI.parse(signed_url).path).to eq(URI.parse(upload.url).path)
+      expect(signed_url).not_to include("base62_sha1")
+    end
   end
 
   describe ".secure_uploads_url?" do
@@ -947,6 +1066,13 @@ RSpec.describe Upload do
       expect(Upload.secure_uploads_url?(url)).to eq(true)
       url =
         "http://localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+    end
+
+    it "works when the secure uploads url includes a logical upload identity" do
+      url =
+        "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png?base62_sha1=1Eg9p8rrCURq4T3a6iJUk0ri6"
+
       expect(Upload.secure_uploads_url?(url)).to eq(true)
     end
 
@@ -1207,6 +1333,449 @@ RSpec.describe Upload do
       )
 
       expect(upload_3.reload.verification_status).to eq(Upload.verification_statuses[:verified])
+    end
+  end
+
+  describe "#update_secure_status" do
+    [false, true].each do |dependent|
+      it "ignores unfinished primary storage when transitioning a #{dependent ? "dependent" : "primary"}" do
+        setup_s3
+        stub_s3_store
+        SiteSetting.secure_uploads = true
+        primary =
+          Fabricate(:upload_s3, secure: false, original_sha1: "a" * 40, storage_sha256: "b" * 64)
+        upload =
+          if dependent
+            Fabricate(
+              :upload_s3,
+              secure: false,
+              original_sha1: primary.original_sha1,
+              storage_sha256: primary.storage_sha256,
+              primary_upload: primary,
+              url: primary.url,
+            )
+          else
+            primary
+          end
+        unfinished =
+          Fabricate(
+            :secure_upload_s3,
+            original_sha1: primary.original_sha1,
+            storage_sha256: primary.storage_sha256,
+            url: "",
+          )
+        original_url = upload.url
+
+        upload.update_secure_status(override: true)
+
+        expect(upload.reload.secure?).to eq(true)
+        expect(upload.primary_upload_id).to be_nil
+        expect(upload.url).to be_present
+        expect(unfinished.reload.url).to eq("")
+        expect(upload.url).to eq(original_url) unless dependent
+        requests = Discourse.store.s3_helper.s3_client.api_requests
+        expect(requests.select { |request| request[:operation_name] == :delete_object }).to be_empty
+        if dependent
+          expect(primary.reload.secure?).to eq(false)
+          expect(upload.url).not_to eq(primary.url)
+        end
+      end
+    end
+
+    it "uses the current status when a previously loaded upload has already transitioned" do
+      setup_s3
+      stub_s3_store
+      SiteSetting.secure_uploads = true
+      upload =
+        Fabricate(:upload_s3, secure: false, original_sha1: "a" * 40, storage_sha256: "b" * 64)
+      Upload.find(upload.id).update_secure_status(override: true)
+
+      expect(upload.update_secure_status(override: true)).to eq(false)
+
+      expect(upload.reload.secure?).to eq(true)
+      expect(upload.primary_upload_id).to be_nil
+      deleted_keys =
+        Discourse
+          .store
+          .s3_helper
+          .s3_client
+          .api_requests
+          .select { |request| request[:operation_name] == :delete_object }
+          .map { |request| request[:params][:key] }
+      expect(deleted_keys).to be_empty
+    end
+
+    it "keeps public dependents at their original path across repeated security transitions" do
+      setup_s3
+      stub_s3_store
+      SiteSetting.secure_uploads = true
+      primary =
+        Fabricate(:upload_s3, secure: false, original_sha1: "a" * 40, storage_sha256: "b" * 64)
+      dependents =
+        Array.new(2) do
+          Fabricate(
+            :upload_s3,
+            secure: false,
+            original_sha1: primary.original_sha1,
+            storage_sha256: primary.storage_sha256,
+            primary_upload: primary,
+            url: primary.url,
+          )
+        end
+      original_url = primary.url
+      original_key = URI.parse(original_url).path.delete_prefix("/")
+
+      primary.update_secure_status(override: true)
+      first_private_url = primary.reload.url
+      expect(first_private_url).not_to eq(original_url)
+      expect(dependents.map { |upload| upload.reload.url }).to eq([original_url, original_url])
+
+      primary.update_secure_status(override: false)
+      primary.update_secure_status(override: true)
+
+      expect(primary.reload.url).not_to eq(original_url)
+      expect(primary.url).not_to eq(first_private_url)
+      expect(Upload.sha1_from_long_url(primary.url)).to eq(primary.sha1)
+      expect(dependents.map { |upload| upload.reload.url }).to eq([original_url, original_url])
+      acl_keys =
+        Discourse
+          .store
+          .s3_helper
+          .s3_client
+          .api_requests
+          .select { |request| request[:operation_name] == :put_object_acl }
+          .map { |request| request[:params][:key] }
+      expect(acl_keys).not_to include(original_key)
+    end
+
+    it "updates a primary's image ACLs when it joins another primary" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      stub_s3_store
+      upload =
+        Fabricate(:upload_s3, original_sha1: "b" * 40, storage_sha256: "b" * 64, secure: false)
+      secure_primary =
+        Fabricate(
+          :secure_upload_s3,
+          original_sha1: upload.original_sha1,
+          storage_sha256: upload.storage_sha256,
+        )
+      dependent = Fabricate(:upload_s3, primary_upload: upload, url: upload.url)
+      optimized = Fabricate(:optimized_image, upload: upload)
+      key = Discourse.store.get_path_for_optimized_image(optimized)
+
+      upload.update_secure_status(override: true)
+
+      expect(upload.reload.primary_upload_id).to eq(secure_primary.id)
+      expect(dependent.reload.primary_upload_id).to be_nil
+      acl_requests =
+        Discourse
+          .store
+          .s3_helper
+          .s3_client
+          .api_requests
+          .select { |request| request[:operation_name] == :put_object_acl }
+          .map { |request| request[:params].slice(:key, :acl) }
+      expect(acl_requests).to eq([{ key: key, acl: "private" }])
+    end
+
+    it "updates and removes the stored object after its owner is promoted" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      stub_s3_store
+      primary =
+        Fabricate(:upload_s3, original_sha1: "b" * 40, storage_sha256: "b" * 64, secure: false)
+      dependent =
+        Fabricate(
+          :upload_s3,
+          original_sha1: primary.original_sha1,
+          primary_upload: primary,
+          url: primary.url,
+          secure: false,
+        )
+      key = URI.parse(primary.url).path.delete_prefix("/")
+
+      primary.destroy!
+      dependent.reload.update_secure_status(override: true)
+      dependent.destroy!
+
+      requests = Discourse.store.s3_helper.s3_client.api_requests
+      expect(
+        requests
+          .select { |request| request[:operation_name] == :put_object_acl }
+          .map { |request| request[:params].slice(:key, :acl) },
+      ).to eq([{ key: key, acl: "private" }])
+      expect(
+        requests
+          .select { |request| request[:operation_name] == :delete_object }
+          .map { |request| request[:params][:key] },
+      ).to include(key)
+    end
+
+    it "updates dependent image ACLs in both directions without changing the shared original" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      stub_s3_store
+      public_primary =
+        Fabricate(:upload_s3, original_sha1: "b" * 40, storage_sha256: "b" * 64, secure: false)
+      secure_primary =
+        Fabricate(
+          :secure_upload_s3,
+          original_sha1: public_primary.original_sha1,
+          storage_sha256: public_primary.storage_sha256,
+        )
+      dependent =
+        Fabricate(
+          :upload_s3,
+          original_sha1: public_primary.original_sha1,
+          storage_sha256: public_primary.storage_sha256,
+          primary_upload: public_primary,
+          url: public_primary.url,
+          secure: false,
+        )
+      optimized = Fabricate(:optimized_image, upload: dependent)
+      key = Discourse.store.get_path_for_optimized_image(optimized)
+
+      dependent.update_secure_status(override: true)
+      expect(dependent.reload.primary_upload_id).to eq(secure_primary.id)
+      dependent.update_secure_status(override: false)
+      expect(dependent.reload.primary_upload_id).to eq(public_primary.id)
+
+      acl_requests =
+        Discourse
+          .store
+          .s3_helper
+          .s3_client
+          .api_requests
+          .select { |request| request[:operation_name] == :put_object_acl }
+          .map { |request| request[:params].slice(:key, :acl) }
+      expect(acl_requests).to eq([{ key: key, acl: "private" }, { key: key, acl: "public-read" }])
+    end
+  end
+
+  describe "primary upload deduplication" do
+    fab!(:user)
+
+    describe ".find_primary_for" do
+      it "skips unfinished primary storage and finds a completed candidate" do
+        Fabricate(:secure_upload, storage_sha256: "b" * 64, url: "")
+
+        expect(Upload.find_primary_for(storage_sha256: "b" * 64, secure: true)).to be_nil
+
+        completed = Fabricate(:secure_upload, storage_sha256: "b" * 64)
+
+        expect(Upload.find_primary_for(storage_sha256: "b" * 64, secure: true)).to eq(completed)
+      end
+
+      it "returns nil when storage_sha256 is blank" do
+        expect(Upload.find_primary_for(storage_sha256: nil, secure: false)).to be_nil
+        expect(Upload.find_primary_for(storage_sha256: "", secure: false)).to be_nil
+      end
+
+      it "finds a primary upload matching storage_sha256 and secure status" do
+        primary = Fabricate(:secure_upload, storage_sha256: "abc123", secure: true)
+
+        found = Upload.find_primary_for(storage_sha256: "abc123", secure: true)
+        expect(found).to eq(primary)
+      end
+
+      it "does not find a primary with different secure status" do
+        Fabricate(:secure_upload, storage_sha256: "abc123", secure: true)
+
+        found = Upload.find_primary_for(storage_sha256: "abc123", secure: false)
+        expect(found).to be_nil
+      end
+
+      it "does not find an upload that is itself a dependent" do
+        primary = Fabricate(:secure_upload, storage_sha256: "abc123", secure: true)
+        dependent =
+          Fabricate(:secure_upload, storage_sha256: "abc123", secure: true, primary_upload: primary)
+
+        found = Upload.find_primary_for(storage_sha256: "abc123", secure: true)
+        expect(found).to eq(primary)
+        expect(found).not_to eq(dependent)
+      end
+    end
+
+    describe "#primary? and #dependent?" do
+      it "returns true for primary when primary_upload_id is nil and original_sha1 present" do
+        upload = Fabricate(:secure_upload, original_sha1: "abc123", primary_upload_id: nil)
+        expect(upload.primary?).to be true
+        expect(upload.dependent?).to be false
+      end
+
+      it "returns true for dependent when primary_upload_id is set" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123")
+        dependent = Fabricate(:secure_upload, original_sha1: "abc123", primary_upload: primary)
+
+        expect(dependent.primary?).to be false
+        expect(dependent.dependent?).to be true
+      end
+
+      it "returns false for primary when original_sha1 is blank" do
+        upload = Fabricate(:upload, original_sha1: nil, primary_upload_id: nil)
+        expect(upload.primary?).to be false
+      end
+    end
+
+    describe "#storage_url" do
+      it "returns own url when no primary" do
+        upload = Fabricate(:upload, url: "/uploads/test.png")
+        expect(upload.storage_url).to eq("/uploads/test.png")
+      end
+
+      it "returns primary url when dependent" do
+        primary = Fabricate(:secure_upload, url: "/uploads/primary.png", original_sha1: "abc123")
+        dependent =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dependent.png",
+            original_sha1: "abc123",
+            primary_upload: primary,
+          )
+
+        expect(dependent.storage_url).to eq("/uploads/primary.png")
+      end
+    end
+
+    describe "before_destroy primary transfer" do
+      it "transfers primary status to a dependent when destroyed" do
+        primary =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/primary.png",
+            original_sha1: "abc123",
+            secure: true,
+          )
+        dependent1 =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dep1.png",
+            original_sha1: "abc123",
+            secure: true,
+            primary_upload: primary,
+          )
+        dependent2 =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dep2.png",
+            original_sha1: "abc123",
+            secure: true,
+            primary_upload: primary,
+          )
+
+        primary.destroy!
+
+        dependent1.reload
+        dependent2.reload
+
+        expect(dependent1.primary_upload_id).to be_nil
+        expect(dependent1.url).to eq("/uploads/primary.png")
+        expect(dependent2.primary_upload_id).to eq(dependent1.id)
+      end
+
+      it "does nothing when no dependents exist" do
+        primary = Fabricate(:secure_upload, url: "/uploads/primary.png", original_sha1: "abc123")
+
+        expect { primary.destroy! }.not_to raise_error
+        expect(Upload.find_by(id: primary.id)).to be_nil
+      end
+    end
+
+    describe "context transition handling" do
+      let(:sha1_hash) { "a" * 40 }
+
+      it "switches to existing primary when secure status changes" do
+        secure_primary =
+          Fabricate(:upload, original_sha1: sha1_hash, storage_sha256: "b" * 64, secure: true)
+        public_primary =
+          Fabricate(:upload, original_sha1: sha1_hash, storage_sha256: "b" * 64, secure: false)
+        dependent =
+          Fabricate(
+            :upload,
+            original_sha1: sha1_hash,
+            storage_sha256: "b" * 64,
+            secure: true,
+            primary_upload: secure_primary,
+          )
+
+        dependent.handle_dedup_context_transition(false)
+        dependent.reload
+
+        expect(dependent.primary_upload_id).to eq(public_primary.id)
+        expect(dependent.url).to eq(public_primary.url)
+      end
+
+      it "promotes a dependent before a primary switches to an existing primary" do
+        secure_primary =
+          Fabricate(
+            :upload,
+            original_sha1: sha1_hash,
+            storage_sha256: "b" * 64,
+            secure: true,
+            url: "/uploads/secure.png",
+          )
+        public_primary =
+          Fabricate(
+            :upload,
+            original_sha1: sha1_hash,
+            storage_sha256: "b" * 64,
+            secure: false,
+            url: "/uploads/public.png",
+          )
+        dependent =
+          Fabricate(
+            :upload,
+            original_sha1: sha1_hash,
+            storage_sha256: "b" * 64,
+            secure: true,
+            primary_upload: secure_primary,
+            url: secure_primary.url,
+          )
+
+        secure_primary.update_secure_status(override: false, source: "spec")
+
+        expect(secure_primary.reload.primary_upload_id).to eq(public_primary.id)
+        expect(secure_primary.url).to eq(public_primary.url)
+        expect(secure_primary.secure).to eq(false)
+        expect(dependent.reload.primary_upload_id).to be_nil
+        expect(dependent.url).to eq("/uploads/secure.png")
+      end
+
+      it "copies a dependent instead of joining a target with matching SHA1 but different SHA256" do
+        Fabricate(:upload, original_sha1: sha1_hash, storage_sha256: "c" * 64, secure: false)
+        secure_primary =
+          Fabricate(:upload, original_sha1: sha1_hash, storage_sha256: "b" * 64, secure: true)
+        dependent =
+          Fabricate(
+            :upload,
+            original_sha1: sha1_hash,
+            storage_sha256: "b" * 64,
+            secure: true,
+            primary_upload: secure_primary,
+            url: secure_primary.url,
+          )
+
+        source_path = Discourse.store.path_for(secure_primary)
+        FileUtils.mkdir_p(File.dirname(source_path))
+        File.write(source_path, "upload contents")
+
+        dependent.handle_dedup_context_transition(false)
+        dependent.reload
+
+        expect(dependent.primary_upload_id).to be_nil
+        expect(dependent.url).not_to eq(secure_primary.url)
+        expect(File.read(Discourse.store.path_for(dependent))).to eq("upload contents")
+      end
+
+      it "does nothing for non-dependents" do
+        primary =
+          Fabricate(:upload, original_sha1: sha1_hash, storage_sha256: "b" * 64, secure: true)
+
+        expect { primary.handle_dedup_context_transition(false) }.not_to change {
+          primary.reload.primary_upload_id
+        }
+      end
     end
   end
 end

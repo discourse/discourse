@@ -589,7 +589,13 @@ module PrettyText
         elsif (img = a.at_css("img[src]"))
           url = a.classes.include?("lightbox") ? optimized_src(img) : a["href"]
           a.replace(
-            secure_uploads_placeholder(doc, url, width: img["width"], height: img["height"]),
+            secure_uploads_placeholder(
+              doc,
+              url,
+              width: img["width"],
+              height: img["height"],
+              base62_sha1: img["data-base62-sha1"],
+            ),
           )
         end
       end
@@ -620,6 +626,7 @@ module PrettyText
             onebox_type: onebox_type,
             width: width,
             height: height,
+            base62_sha1: img["data-base62-sha1"],
           ),
         )
       end
@@ -630,11 +637,19 @@ module PrettyText
     img["srcset"].present? ? img["srcset"].split(",").first : img["src"]
   end
 
-  def self.secure_uploads_placeholder(doc, url, onebox_type: nil, width: nil, height: nil)
+  def self.secure_uploads_placeholder(
+    doc,
+    url,
+    onebox_type: nil,
+    width: nil,
+    height: nil,
+    base62_sha1: nil
+  )
     notice = doc.document.create_element("div")
     notice["class"] = "secure-upload-notice"
     notice["data-stripped-secure-upload"] = url.to_s
     notice["data-onebox-type"] = onebox_type.to_s if onebox_type
+    notice["data-base62-sha1"] = base62_sha1 if base62_sha1
 
     width = numeric_dimension(width)
     height = numeric_dimension(height)

@@ -620,10 +620,10 @@ task "uploads:disable_secure_uploads" => :environment do
     secure_uploads.in_batches do |relation|
       secure_upload_ids = relation.pluck(:id)
 
-      relation.update_all(
+      update_upload_security(
+        secure_upload_ids,
         secure: false,
-        security_last_changed_at: Time.zone.now,
-        security_last_changed_reason: "marked as not secure by disable_secure_uploads task",
+        reason: "marked as not secure by disable_secure_uploads task",
       )
 
       post_ids_to_rebake =
@@ -730,6 +730,22 @@ def adjust_access_controls(upload_ids_to_adjust_access_control_for)
   end
 end
 
+def update_upload_security(upload_ids, secure:, reason: nil)
+  uploads = Upload.where(id: upload_ids)
+  # Shared storage must transition while the old security context is still known.
+  uploads
+    .where.not(original_sha1: nil)
+    .find_each do |upload|
+      upload.update_secure_status(override: secure, source: "upload security rake task")
+    end
+  uploads.update_all(
+    secure: secure,
+    security_last_changed_at: Time.zone.now,
+    security_last_changed_reason:
+      reason || "upload security rake task mark as #{secure ? "secure" : "not secure"}",
+  )
+end
+
 def mark_all_as_secure_login_required
   post_upload_ids_marked_secure = DB.query_single(<<~SQL)
     WITH upl AS (
@@ -738,24 +754,17 @@ def mark_all_as_secure_login_required
       INNER JOIN posts ON posts.id = upload_references.target_id AND upload_references.target_type = 'Post'
       INNER JOIN topics ON topics.id = posts.topic_id
     )
-    UPDATE uploads
-    SET secure = true,
-        security_last_changed_reason = 'upload security rake task mark as secure',
-        security_last_changed_at = NOW()
-    FROM upl
+    SELECT uploads.id FROM uploads, upl
     WHERE uploads.id = upl.upload_id
-    RETURNING uploads.id
   SQL
+  update_upload_security(post_upload_ids_marked_secure, secure: true)
   puts "Marked #{post_upload_ids_marked_secure.count} upload(s) as secure because login_required is true.",
        ""
   upload_ids_marked_not_secure = DB.query_single(<<~SQL, post_upload_ids_marked_secure)
-    UPDATE uploads
-    SET secure = false,
-        security_last_changed_reason = 'upload security rake task mark as not secure',
-        security_last_changed_at = NOW()
+    SELECT uploads.id FROM uploads
     WHERE id NOT IN (?)
-    RETURNING uploads.id
   SQL
+  update_upload_security(upload_ids_marked_not_secure, secure: false)
   puts "Marked #{upload_ids_marked_not_secure.count} upload(s) as not secure because they are not linked to posts.",
        ""
   puts "Finished marking upload(s) as secure."
@@ -788,7 +797,7 @@ def update_specific_upload_security_no_login_required
       SQL
     end
 
-  post_upload_ids_marked_secure = DB.query_single(<<~SQL)
+  post_upload_ids_to_secure = DB.query_single(<<~SQL)
     WITH upl AS (
       SELECT DISTINCT ON (upload_id) upload_id
       FROM upload_references
@@ -796,14 +805,12 @@ def update_specific_upload_security_no_login_required
       INNER JOIN topics ON topics.id = posts.topic_id
       #{filter_clause}
     )
-    UPDATE uploads
-    SET secure = true,
-        security_last_changed_reason = 'upload security rake task mark as secure',
-        security_last_changed_at = NOW()
-    FROM upl
-    WHERE uploads.id = upl.upload_id AND NOT uploads.secure
-    RETURNING uploads.id
+    SELECT uploads.id FROM uploads, upl
+    WHERE uploads.id = upl.upload_id
   SQL
+  post_upload_ids_marked_secure =
+    Upload.where(id: post_upload_ids_to_secure, secure: false).pluck(:id)
+  update_upload_security(post_upload_ids_marked_secure, secure: true)
   puts "Marked #{post_upload_ids_marked_secure.length} uploads as secure."
 
   # Anything in a public category or a regular topic should not be secure.
@@ -817,26 +824,20 @@ def update_specific_upload_security_no_login_required
       WHERE (topics.archetype = 'regular' AND topics.category_id IS NOT NULL AND NOT categories.read_restricted) OR
             (topics.archetype = 'regular' AND topics.category_id IS NULL)
     )
-    UPDATE uploads
-    SET secure = false,
-        security_last_changed_reason = 'upload security rake task mark as not secure',
-        security_last_changed_at = NOW()
-    FROM upl
+    SELECT uploads.id FROM uploads, upl
     WHERE uploads.id = upl.upload_id AND uploads.secure
-    RETURNING uploads.id
   SQL
+  update_upload_security(post_upload_ids_marked_not_secure, secure: false)
   puts "Marked #{post_upload_ids_marked_not_secure.length} uploads as not secure."
 
   # Everything else should not be secure!
   upload_ids_changed = (post_upload_ids_marked_secure + post_upload_ids_marked_not_secure).uniq
-  upload_ids_marked_not_secure = DB.query_single(<<~SQL, upload_ids_changed)
-    UPDATE uploads
-    SET secure = false,
-        security_last_changed_reason = 'upload security rake task mark as not secure',
-        security_last_changed_at = NOW()
+  upload_ids_marked_not_secure =
+    DB.query_single(<<~SQL, (upload_ids_changed + post_upload_ids_to_secure).uniq)
+    SELECT uploads.id FROM uploads
     WHERE id NOT IN (?) AND uploads.secure
-    RETURNING uploads.id
   SQL
+  update_upload_security(upload_ids_marked_not_secure, secure: false)
   puts "Finished updating upload security. Marked #{upload_ids_marked_not_secure.length} uploads not linked to posts as not secure."
 
   all_upload_ids_changed = (upload_ids_changed + upload_ids_marked_not_secure).uniq

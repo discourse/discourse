@@ -45,6 +45,62 @@ RSpec.describe "tasks/uploads" do
       context "when secure upload is enabled" do
         before { SiteSetting.secure_uploads = true }
 
+        [true, false].each do |login_required|
+          it "separates shared logo and post storage with login_required=#{login_required}" do
+            stub_s3_store
+            SiteSetting.login_required = login_required
+            unless login_required
+              post_1.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+            end
+            logo =
+              Fabricate(
+                :upload_s3,
+                secure: false,
+                original_sha1: "a" * 40,
+                storage_sha256: "b" * 64,
+              )
+            SiteSetting.logo = logo
+            shared =
+              Fabricate(
+                :upload_s3,
+                secure: false,
+                original_sha1: logo.original_sha1,
+                storage_sha256: logo.storage_sha256,
+                primary_upload: logo,
+                url: logo.url,
+              )
+            UploadReference.create!(upload: shared, target: post_1)
+
+            invoke_task
+            Jobs::SyncAccessControlForUploads.new.execute(upload_ids: [logo.id, shared.id])
+
+            expect(logo.reload.secure?).to eq(false)
+            expect(shared.reload.secure?).to eq(true)
+            expect(shared.storage_url).not_to eq(logo.storage_url)
+            acls =
+              Discourse
+                .store
+                .s3_helper
+                .s3_client
+                .api_requests
+                .select { |request| request[:operation_name] == :put_object_acl }
+                .to_h { |request| [request[:params][:key], request[:params][:acl]] }
+            expect(acls[URI.parse(logo.url).path.delete_prefix("/")]).to eq("public-read")
+            expect(acls[URI.parse(shared.url).path.delete_prefix("/")]).to eq("private")
+
+            invoke_task
+
+            expect(shared.reload.secure?).to eq(true)
+            expect(shared.storage_url).not_to eq(logo.reload.storage_url)
+
+            capture_stdout { invoke_rake_task("uploads:disable_secure_uploads") }
+
+            expect(shared.reload.secure?).to eq(false)
+            expect(shared.primary_upload_id).to eq(logo.id)
+            expect(shared.storage_url).to eq(logo.url)
+          end
+        end
+
         after do
           if File.exist?("secure_upload_analyse_and_update_posts_for_rebake.json")
             File.delete("secure_upload_analyse_and_update_posts_for_rebake.json")

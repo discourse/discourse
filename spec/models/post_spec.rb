@@ -2225,6 +2225,41 @@ RSpec.describe Post do
   end
 
   describe "#each_upload_url" do
+    it "falls back to the URL when the identity attribute is malformed" do
+      upload = Fabricate(:upload)
+      post = Fabricate(:post)
+      fragments = Nokogiri::HTML5.fragment(%(<img src="#{upload.url}" data-base62-sha1="bad!">))
+
+      post.link_post_uploads(fragments: fragments)
+
+      expect(post.uploads.reload.pluck(:id)).to eq([upload.id])
+    end
+
+    it "rewrites repeated original and optimized URLs for the same upload when a post becomes secure" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      upload = Fabricate(:upload_s3)
+      optimized = Fabricate(:optimized_image, upload: upload)
+      original_url = "http:#{upload.url}"
+      optimized_url = "http:#{SiteSetting.Upload.absolute_base_url}/#{optimized.url}"
+      post =
+        Fabricate(
+          :post,
+          raw:
+            "[original](#{original_url})\n\n![thumbnail](#{optimized_url})\n\n[original again](#{original_url})",
+        )
+      post.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+      post.reload
+
+      cooked = Nokogiri::HTML5.fragment(post.cook(post.raw))
+
+      urls = cooked.css("a/@href", "img/@src").map(&:value)
+      expect(urls.size).to eq(3)
+      expect(urls).to all(include("/secure-uploads/"))
+      post.link_post_uploads(fragments: cooked)
+      expect(post.uploads.reload.pluck(:id)).to eq([upload.id])
+    end
+
     it "correctly identifies all upload urls" do
       SiteSetting.authorized_extensions = "*"
       upload1 = Fabricate(:upload)
