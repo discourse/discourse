@@ -76,8 +76,7 @@
     border-left-color: var(--primary);
   }
 
-  .cm-selectionBackground,
-  .cm-content ::selection {
+  .cm-selectionBackground {
     background: var(--tertiary-low) !important;
   }
 

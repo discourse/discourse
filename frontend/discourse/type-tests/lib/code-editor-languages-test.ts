@@ -1,5 +1,7 @@
+import type { Extension } from "@codemirror/state";
 import { expectTypeOf } from "expect-type";
 import {
+  type CodeEditorExtensionBuilder,
   type CodeEditorLanguageBuilder,
   type CodeEditorParams,
   loadCodeEditorLanguage,
@@ -10,6 +12,10 @@ import {
 expectTypeOf<CodeEditorParams["cmView"]["EditorView"]>().toEqualTypeOf<
   typeof import("@codemirror/view").EditorView
 >();
+
+// Both builders return editor extensions, which may themselves be lists.
+expectTypeOf<CodeEditorLanguageBuilder>().returns.toEqualTypeOf<Extension>();
+expectTypeOf<CodeEditorExtensionBuilder>().returns.toEqualTypeOf<Extension>();
 
 // A shortcut resolves to a builder, or to null so the editor can fall back to
 // plain text.

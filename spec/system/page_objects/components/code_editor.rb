@@ -33,11 +33,17 @@ module PageObjects
       # Named apart from Capybara's text matchers, which would otherwise take
       # over `have_text` and check the page instead of the document.
       def has_value?(content)
-        value == content
+        try_until_success { expect(value).to eq(content) }
+        true
+      rescue RSpec::Expectations::ExpectationNotMetError
+        false
       end
 
       def has_value_including?(content)
-        value.include?(content)
+        try_until_success { expect(value).to include(content) }
+        true
+      rescue RSpec::Expectations::ExpectationNotMetError
+        false
       end
 
       private

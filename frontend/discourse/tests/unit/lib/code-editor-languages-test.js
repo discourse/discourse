@@ -2,10 +2,20 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
   clearRegisteredCodeEditorLanguages,
-  codeEditorLanguageNames,
   loadCodeEditorLanguage,
   registerCodeEditorLanguage,
 } from "discourse/lib/code-editor-languages";
+
+const BUILT_IN = [
+  "css",
+  "html",
+  "javascript",
+  "json",
+  "scss",
+  "sql",
+  "text",
+  "yaml",
+];
 
 module("Unit | Utility | code-editor-languages", function (hooks) {
   setupTest(hooks);
@@ -15,7 +25,7 @@ module("Unit | Utility | code-editor-languages", function (hooks) {
   });
 
   test("resolves each built-in shortcut to extensions", async function (assert) {
-    for (const name of codeEditorLanguageNames()) {
+    for (const name of BUILT_IN) {
       const build = await loadCodeEditorLanguage(name);
 
       assert.strictEqual(
@@ -24,7 +34,7 @@ module("Unit | Utility | code-editor-languages", function (hooks) {
         `${name} resolves to an extension builder`
       );
       assert.notStrictEqual(
-        build(),
+        build({}),
         undefined,
         `${name} builds with no options`
       );
@@ -43,8 +53,7 @@ module("Unit | Utility | code-editor-languages", function (hooks) {
 
     const build = await loadCodeEditorLanguage("klingon");
 
-    assert.strictEqual(build(), extensions);
-    assert.true(codeEditorLanguageNames().includes("klingon"));
+    assert.strictEqual(build({}), extensions);
   });
 
   test("a registered shortcut overrides a built-in one", async function (assert) {
@@ -53,6 +62,6 @@ module("Unit | Utility | code-editor-languages", function (hooks) {
       default: () => extensions,
     }));
 
-    assert.strictEqual((await loadCodeEditorLanguage("sql"))(), extensions);
+    assert.strictEqual((await loadCodeEditorLanguage("sql"))({}), extensions);
   });
 });

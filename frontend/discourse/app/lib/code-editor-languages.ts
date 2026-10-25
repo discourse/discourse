@@ -5,9 +5,6 @@ import type { Extension } from "@codemirror/state";
 /**
  * What every extension builder receives. Plugins cannot import the editor's
  * modules themselves, so they arrive here instead.
- *
- * @experimental Exposes the underlying editor library; may change without
- * warning.
  */
 export interface CodeEditorParams {
   /** The `@codemirror/autocomplete` module. */
@@ -21,61 +18,51 @@ export interface CodeEditorParams {
   /** The `@lezer/highlight` module, for styling a grammar's tokens. */
   lezerHighlight: typeof import("@lezer/highlight");
   /**
-   * Helpers for `{{ }}` expression editors.
+   * Helpers for the workflows plugin's `{{ }}` expression editors, which need
+   * a grammar compiled in core.
    *
-   * @internal Not part of the contract, experimental or otherwise.
+   * @internal Moves behind a registered language; do not build on it.
    */
   utils: (typeof import("discourse/static/codemirror/expression-utils"))["expressionUtils"];
 }
 
-/**
- * Builds the extensions an editor's `extensions` argument adds on top of the
- * language.
- *
- * @experimental
- */
+/** Builds the extensions an editor's `extensions` argument adds on top of the language. */
 export type CodeEditorExtensionBuilder = (
   params: CodeEditorParams
-) => readonly Extension[];
+) => Extension;
 
 /**
  * Builds a language's extensions. `options` is whatever the editor was given
  * as `languageOptions`, so a language decides its own configuration shape.
- *
- * @experimental
  */
-export type CodeEditorLanguageBuilder<Options extends object = object> = (
+export type CodeEditorLanguageBuilder = (
   params: CodeEditorParams,
-  options?: Options
+  options?: object
 ) => Extension;
 
-/**
- * Resolves to a module whose default export builds the language.
- *
- * @experimental
- */
+/** Resolves to a module whose default export builds the language. */
 export type CodeEditorLanguageLoader = () => Promise<{
   default: CodeEditorLanguageBuilder;
 }>;
 
-const BUILT_IN: Record<string, CodeEditorLanguageLoader> = {
-  css: () => import("discourse/static/codemirror/languages/css"),
-  html: () => import("discourse/static/codemirror/languages/html"),
-  javascript: () => import("discourse/static/codemirror/languages/javascript"),
-  json: () => import("discourse/static/codemirror/languages/json"),
-  scss: () => import("discourse/static/codemirror/languages/scss"),
-  sql: () => import("discourse/static/codemirror/languages/sql"),
-  text: () => import("discourse/static/codemirror/languages/text"),
-  yaml: () => import("discourse/static/codemirror/languages/yaml"),
-};
+const BUILT_IN = new Map<string, CodeEditorLanguageLoader>([
+  ["css", () => import("discourse/static/codemirror/languages/css")],
+  ["html", () => import("discourse/static/codemirror/languages/html")],
+  [
+    "javascript",
+    () => import("discourse/static/codemirror/languages/javascript"),
+  ],
+  ["json", () => import("discourse/static/codemirror/languages/json")],
+  ["scss", () => import("discourse/static/codemirror/languages/scss")],
+  ["sql", () => import("discourse/static/codemirror/languages/sql")],
+  ["text", () => import("discourse/static/codemirror/languages/text")],
+  ["yaml", () => import("discourse/static/codemirror/languages/yaml")],
+]);
 
 const registered = new Map<string, CodeEditorLanguageLoader>();
 
 /**
  * Registers a language shortcut.
- *
- * @experimental The builder a language provides receives the underlying
- * editor library, which may change without warning.
  *
  * @param name - identifier passed to an editor's `language` argument
  * @param loader - resolves to a module whose default export builds the extensions
@@ -86,7 +73,7 @@ export function registerCodeEditorLanguage(
 ) {
   // Overrides are allowed; warn so two plugins claiming a name don't silently
   // depend on load order.
-  if (registered.has(name) || BUILT_IN[name]) {
+  if (registered.has(name) || BUILT_IN.has(name)) {
     warn(`The code editor language "${name}" already exists.`, {
       id: "discourse.code-editor-language-override",
     });
@@ -104,7 +91,7 @@ export function registerCodeEditorLanguage(
 export async function loadCodeEditorLanguage(
   name: string
 ): Promise<CodeEditorLanguageBuilder | null> {
-  const loader = registered.get(name) || BUILT_IN[name];
+  const loader = registered.get(name) || BUILT_IN.get(name);
   if (!loader) {
     warn(`Unknown code editor language "${name}".`, {
       id: "discourse.code-editor-language-missing",
@@ -113,11 +100,6 @@ export async function loadCodeEditorLanguage(
   }
 
   return (await waitForPromise(loader())).default;
-}
-
-/** @internal */
-export function codeEditorLanguageNames(): string[] {
-  return [...new Set([...Object.keys(BUILT_IN), ...registered.keys()])].sort();
 }
 
 /** @internal */

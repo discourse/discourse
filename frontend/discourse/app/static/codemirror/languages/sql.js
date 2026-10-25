@@ -1,5 +1,6 @@
 import { PostgreSQL, sql } from "@codemirror/lang-sql";
 
-export default function sqlLanguage(cmParams, options = {}) {
-  return sql({ dialect: PostgreSQL, ...options });
+/** `schema` maps table names to their columns, each a name or completion. */
+export default function sqlLanguage(cmParams, { schema } = {}) {
+  return sql({ dialect: PostgreSQL, schema });
 }
