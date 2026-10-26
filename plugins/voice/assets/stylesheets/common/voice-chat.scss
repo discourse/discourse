@@ -1,5 +1,13 @@
 @use "lib/viewport";
 
+@include viewport.until(sm) {
+  #main-outlet-wrapper {
+    .has-full-page-chat & {
+      padding: 0;
+    }
+  }
+}
+
 .voice-chat {
   display: flex;
   flex-direction: column;
