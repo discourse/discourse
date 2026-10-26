@@ -112,8 +112,7 @@ export default class DesignWizardService extends Service {
       : (pair.light ?? pair.dark);
   }
 
-  // the endpoint only accepts core themes, so a site whose default theme the
-  // wizard cannot express is not offered a way back to it
+  // Only themes offered by the wizard can be restored through its endpoint.
   get canRevert() {
     return (
       this.source === SOURCE_ADMIN && this.progressSaved && !!this.#snapshot
@@ -286,13 +285,37 @@ export default class DesignWizardService extends Service {
     this.showIntro = false;
   }
 
-  selectTheme(themeId) {
+  async selectTheme(themeId) {
     if (themeId === this.themeId || this.applyingTheme) {
       return;
     }
 
     this.applyingTheme = true;
+    const previousThemeId = this.themeId;
+    const theme = this.data.themes.find(
+      (candidate) => candidate.id === themeId
+    );
     this.themeId = themeId;
+
+    if (theme?.remote_url) {
+      try {
+        const result = await ajax("/admin/themes/import", {
+          type: "POST",
+          data: { remote: theme.remote_url },
+        });
+        if (!this.active) {
+          this.applyingTheme = false;
+          return;
+        }
+        themeId = result.theme.id;
+        this.themeId = themeId;
+      } catch (error) {
+        this.themeId = previousThemeId;
+        this.applyingTheme = false;
+        popupAjaxError(error);
+        return;
+      }
+    }
     // these are resolved per theme, so let the reloaded page re-seed them from
     // the theme being previewed rather than carrying the old theme's values
     this.welcomeBanner = undefined;

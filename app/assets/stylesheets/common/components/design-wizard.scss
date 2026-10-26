@@ -280,6 +280,25 @@ $dw-button-default-border: #d3d3d3;
     color: inherit;
     cursor: pointer;
 
+    &.--without-screenshot {
+      box-sizing: border-box;
+      padding: var(--space-3);
+      border: 1px solid var(--content-border-color);
+      border-radius: var(--d-border-radius);
+
+      &.--selected,
+      &:focus-within,
+      html.discourse-no-touch &:hover {
+        border-color: var(--tertiary);
+        box-shadow: 0 0 0 1px var(--tertiary);
+      }
+
+      .design-wizard__theme-enabled-badge {
+        position: static;
+        align-self: flex-start;
+      }
+    }
+
     &.--selected .design-wizard__theme-screenshot {
       border-color: var(--tertiary);
       box-shadow: 0 0 0 1px var(--tertiary);

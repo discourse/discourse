@@ -11,7 +11,53 @@ RSpec.describe DesignWizard::Apply do
 
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
-    it { is_expected.to validate_inclusion_of(:theme_id).in_array(Theme::CORE_THEMES.values) }
+    it { is_expected.to allow_values(*Theme::CORE_THEMES.values).for(:theme_id) }
+
+    it "accepts installed official themes with either repository URL format" do
+      ["", ".git"].each do |suffix|
+        theme =
+          Fabricate(
+            :theme,
+            remote_theme:
+              Fabricate(
+                :remote_theme,
+                remote_url: "https://github.com/discourse/discourse-concord-theme#{suffix}",
+              ),
+          )
+
+        expect(described_class.new(theme_id: theme.id)).to be_valid
+      end
+    end
+
+    it "rejects custom themes, similarly named repositories, and components" do
+      custom_theme = Fabricate(:theme, name: "Concord")
+      unofficial_theme =
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/other/discourse-concord-theme",
+            ),
+        )
+      component =
+        Fabricate(
+          :theme,
+          component: true,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+
+      [custom_theme, unofficial_theme, component].each do |theme|
+        contract = described_class.new(theme_id: theme.id)
+
+        expect(contract).to be_invalid
+        expect(contract.errors.of_kind?(:theme_id, :inclusion)).to eq(true)
+      end
+    end
 
     it do
       is_expected.to validate_inclusion_of(:base_font).in_array(
@@ -90,6 +136,37 @@ RSpec.describe DesignWizard::Apply do
     let(:dependencies) { { guardian: } }
     let(:theme_id) { Theme::CORE_THEMES["foundation"] }
     let(:params) { { theme_id: } }
+
+    context "when applying an installed official theme" do
+      fab!(:concord_theme) do
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+      end
+      fab!(:palette) { Fabricate(:color_scheme, theme_id: concord_theme.id) }
+
+      let(:theme_id) { concord_theme.id }
+      let(:params) { { theme_id:, light_palette_id: palette.id, palettes_user_selectable: true } }
+
+      it "selects the theme and its palette" do
+        expect(result).to run_successfully
+        expect(SiteSetting.default_theme_id).to eq(concord_theme.id)
+        expect(concord_theme.reload.color_scheme_id).to eq(palette.id)
+        expect(palette.reload.user_selectable).to eq(true)
+      end
+    end
+
+    context "when applying an unsupported theme" do
+      fab!(:custom_theme, :theme)
+      let(:theme_id) { custom_theme.id }
+
+      it { is_expected.to fail_a_contract }
+    end
 
     context "when the contract isn't valid" do
       let(:params) { { theme_id:, base_font: "not_a_font" } }

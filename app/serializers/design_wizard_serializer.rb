@@ -3,14 +3,16 @@
 class DesignWizardSerializer < ApplicationSerializer
   attributes :current_theme, :base_font, :heading_font, :homepage, :palettes_user_selectable
 
-  has_many :themes, serializer: DesignWizardThemeSerializer, embed: :objects
+  attributes :themes
 
   def themes
-    @options[:themes]
+    @options[:themes].map do |theme|
+      DesignWizardThemeSerializer.new(theme, scope:, root: false).as_json
+    end + DesignWizard::Themes.available_to_install(@options[:themes], guardian: scope)
   end
 
   def current_theme
-    return if object.nil? || Theme::CORE_THEMES.value?(object.id)
+    return if object.nil? || @options[:themes].any? { |theme| theme.id == object.id }
 
     { id: object.id, name: object.name }
   end
@@ -35,9 +37,8 @@ class DesignWizardSerializer < ApplicationSerializer
 
   private
 
-  # The wizard offers Horizon when the current default is not a core theme.
   def preselected_theme
-    return object if Theme::CORE_THEMES.value?(object&.id)
+    return object if @options[:themes].any? { |theme| theme.id == object&.id }
 
     Theme.horizon_theme
   end

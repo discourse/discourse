@@ -35,7 +35,7 @@ class DesignWizard::Apply
       self.search_experience = search_experience.presence
     end
 
-    validates :theme_id, presence: true, inclusion: { in: Theme::CORE_THEMES.values }
+    validates :theme_id, presence: true, inclusion: { in: ->(_) { DesignWizard::Themes.ids } }
     validates :base_font,
               :heading_font,
               inclusion: {
