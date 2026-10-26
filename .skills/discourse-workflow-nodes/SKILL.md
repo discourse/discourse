@@ -34,6 +34,12 @@ of what it does, and has a trigger counterpart when it changes state.
 | Trigger | `trigger:<noun>_<past participle>` | Noun + past participle | `trigger:topic_closed`, "Topic closed" |
 | Resource node | `action:<noun>` | Noun | `action:topic`, "Topic" |
 
+## Settings
+
+- The AI author resolves loaded option values through `workflow_resolve_entity(kind: "node_option")`, which
+  calls the node's `self.load_options_context` the way the editor does, so a new option list needs no
+  AI-specific code. Loaders that need credentials return nothing there.
+
 ## Entities in output
 
 Shape entities only with `DiscourseWorkflows::EntitySerializers` (`lib/discourse_workflows/entity_serializers.rb`), available in `NodeType` instance and class methods:
