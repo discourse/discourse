@@ -134,7 +134,8 @@ module DiscourseWorkflows
       module_function
 
       def field_key(field)
-        field["field_name"].presence || field["field_label"].to_s.parameterize(separator: "_")
+        field["field_name"].presence ||
+          field["field_label"].to_s.parameterize(separator: "_", locale: SiteSetting.default_locale)
       end
 
       def with_keys(fields)
