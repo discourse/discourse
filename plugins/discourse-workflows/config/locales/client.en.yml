@@ -56,7 +56,10 @@ en:
         short: "Unavailable"
       node_deprecated:
         notice: "A newer version of this node is available. Its output changes: %{changes}. Expressions using the old keys must be updated after upgrading."
+        replaced_notice: "This node was replaced by %{nodes}."
         upgrade: "Upgrade"
+        upgraded: "%{name} was upgraded."
+        not_upgradable: "%{name} can't be upgraded automatically. Replace it with a current node."
         user_is_post_author: "In the newer version, user is the post author instead of whoever acted."
         user_is_topic_author: "In the newer version, user is the topic author instead of whoever acted."
         topic_v1: "Posts now use a smaller shape: author details such as trust_level, name, avatar_template, admin and staff moved to user, and fields such as topic_archetype, wiki, hidden, edit_reason and reads were removed."

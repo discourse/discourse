@@ -393,7 +393,10 @@ export default class WorkflowNode extends Component {
           {{#if this.resolvedNodeType.deprecation}}
             <DTooltip
               class="workflow-rete-node__deprecated-badge"
-              @content={{deprecationMessage this.resolvedNodeType.deprecation}}
+              @content={{deprecationMessage
+                this.resolvedNodeType.deprecation
+                this.workflowsNodeTypes.nodeTypes
+              }}
               @identifier="workflow-node-deprecated"
             >
               <:trigger>
