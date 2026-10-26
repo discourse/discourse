@@ -109,7 +109,9 @@ module DiscourseVips
         File.chmod(0o700, socket_directory)
         FileUtils.rm_f(@socket_path)
       else
-        socket_directory = Dir.mktmpdir("discourse-vips-worker-", Rails.root.join("tmp").to_s)
+        # Unix socket paths are limited to 108 bytes on Linux, so keep this out
+        # of Rails.root, which can be arbitrarily deep (e.g. CI checkouts).
+        socket_directory = Dir.mktmpdir("discourse-vips-worker-")
         @socket_path = File.join(socket_directory, "socket")
       end
     end
