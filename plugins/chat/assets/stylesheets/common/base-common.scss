@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --message-left-width: 42px;
   --full-page-border-radius: 12px;
@@ -271,7 +273,7 @@ body.has-full-page-chat {
   border-bottom: 1px solid var(--content-border-color);
 }
 
-html.has-full-page-chat {
+.has-full-page-chat {
   height: 100%;
   width: 100%;
 
@@ -280,9 +282,6 @@ html.has-full-page-chat {
   }
 
   body {
-    height: 100%;
-    width: 100%;
-
     #main-outlet {
       display: flex;
       flex-direction: column;
@@ -301,7 +300,7 @@ html.has-full-page-chat {
     }
   }
 
-  &.mobile-view {
+  @include viewport.until(sm) {
     #main-outlet-wrapper {
       padding: 0;
     }

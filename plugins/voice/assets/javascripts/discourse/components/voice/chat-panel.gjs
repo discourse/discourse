@@ -17,11 +17,27 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const SendButton = <template>
+  <div class="chat-composer-button__wrapper">
+    <button
+      aria-label={{i18n "voice.chat.send"}}
+      class="chat-composer-button -send"
+      disabled={{@disabled}}
+      title={{i18n "voice.chat.send"}}
+      type="button"
+      {{on "click" @onSend}}
+    >
+      {{dIcon "paper-plane"}}
+    </button>
+  </div>
+</template>;
+
 export default class VoiceChatPanel extends Component {
   @service chat;
   @service chatChannelsManager;
   @service messageBus;
   @service router;
+  @service site;
 
   @tracked loading = true;
   @tracked unavailable = false;
@@ -365,20 +381,20 @@ export default class VoiceChatPanel extends Component {
                     @context="voice-chat"
                     @didSelectEmoji={{this.insertEmoji}}
                   />
-                  <div class="chat-composer-separator"></div>
-                  <div class="chat-composer-button__wrapper">
-                    <button
-                      aria-label={{i18n "voice.chat.send"}}
-                      class="chat-composer-button -send"
-                      disabled={{this.sendDisabled}}
-                      title={{i18n "voice.chat.send"}}
-                      type="button"
-                      {{on "click" this.sendFirstMessage}}
-                    >
-                      {{dIcon "paper-plane"}}
-                    </button>
-                  </div>
+                  {{#if this.site.desktopView}}
+                    <div class="chat-composer-separator"></div>
+                    <SendButton
+                      @disabled={{this.sendDisabled}}
+                      @onSend={{this.sendFirstMessage}}
+                    />
+                  {{/if}}
                 </div>
+                {{#if this.site.mobileView}}
+                  <SendButton
+                    @disabled={{this.sendDisabled}}
+                    @onSend={{this.sendFirstMessage}}
+                  />
+                {{/if}}
               </div>
             </div>
           </div>
