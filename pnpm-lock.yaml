@@ -204,8 +204,8 @@ importers:
         specifier: ^10.0.6
         version: 10.0.6
       ember-content-mapper:
-        specifier: ^0.3.1
-        version: 0.3.1(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+        specifier: ^0.3.2
+        version: 0.3.2(@glint/ember-tsc@1.11.6(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
       eslint:
         specifier: 10.6.0
         version: 10.6.0(jiti@2.7.0)(supports-color@10.2.2)
@@ -4447,9 +4447,11 @@ packages:
     engines: {node: '>= 20.19.0'}
     hasBin: true
 
-  ember-content-mapper@0.3.1:
-    resolution: {integrity: sha512-m46P1JIJiuMmYZc9PNWZA+KWBc7lkfTpTbtixOknxHoR9Nj5WDmLgWG011edUzqzzzFT22fvMvdukHnEYlTNgA==}
+  ember-content-mapper@0.3.2:
+    resolution: {integrity: sha512-/+6w/yBMEzYN1DmBPyAwKoPTzzymOw2Up/E+qNsXz5lK+eeuIOBHXwKkKoJOJUZdn5OtCkk+UdFLaFAXIvEyzw==}
     engines: {node: ^22.21.1 || >=24.10.0}
+    peerDependencies:
+      '@glint/ember-tsc': ~1.11.0
 
   ember-curry-component@0.5.0:
     resolution: {integrity: sha512-8N1WWt1KuMntWvB+i9ShwXFMU0tliJO7XinLJB+fihSl/ip+72UWAW3UCRttpiirKuIXJPpwqt6VCmlKbL8C4A==}
@@ -12436,15 +12438,11 @@ snapshots:
       - walrus
       - whiskers
 
-  ember-content-mapper@0.3.1(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4):
+  ember-content-mapper@0.3.2(@glint/ember-tsc@1.11.6(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)):
     dependencies:
       '@glint/ember-tsc': 1.11.6(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
       tinypool: 2.1.2
       vscode-jsonrpc: 9.0.2
-    transitivePeerDependencies:
-      - ember-source
-      - supports-color
-      - typescript
 
   ember-curry-component@0.5.0(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2):
     dependencies:
