@@ -421,17 +421,16 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("first-post-only")
   end
 
-  it "enqueues user search workflows with the query" do
+  it "enqueues user search workflows with the query and the searching user" do
     create_published_workflow("user-search-trigger", "trigger:user_search")
 
     Search.execute("workflow query", guardian: Guardian.new(user), search_type: :header)
 
-    job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
-    expect(job["args"].first).to include(
-      "trigger_node_id" => "user-search-trigger",
-      "trigger_data" => {
-        "query" => "workflow query",
-      },
+    job_args = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first
+    expect(job_args["trigger_node_id"]).to eq("user-search-trigger")
+    expect(job_args["trigger_data"]).to include(
+      "query" => "workflow query",
+      "actor" => include("id" => user.id),
     )
   end
 

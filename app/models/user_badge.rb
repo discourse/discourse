@@ -113,14 +113,14 @@ class UserBadge < ActiveRecord::Base
     DB.exec query
   end
 
-  def self.trigger_user_badge_granted_event(badge_id, user_id)
-    DiscourseEvent.trigger(:user_badge_granted, badge_id, user_id)
+  def self.trigger_user_badge_granted_event(badge_id, user_id, acting_user: nil)
+    DiscourseEvent.trigger(:user_badge_granted, badge_id, user_id, acting_user:)
   end
 
   private
 
   def trigger_user_badge_granted_event
-    self.class.trigger_user_badge_granted_event(badge_id, user_id)
+    self.class.trigger_user_badge_granted_event(badge_id, user_id, acting_user: granted_by)
   end
 
   def single_grant_badge?

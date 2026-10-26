@@ -3076,9 +3076,9 @@ RSpec.describe PostMover do
 
         event = events.first
         expect(event[:event_name]).to eq(:post_moved)
-        expect(event[:params][0]).to eq(post_2)
-        expect(event[:params][1]).to eq(topic_1.id)
-        expect(event[:params][2]).to eq(post_2)
+        expect(event[:params]).to eq(
+          [post_2, topic_1.id, post_2, { acting_user: Discourse.system_user }],
+        )
       end
 
       context "with 'freeze_original' option" do
@@ -3099,9 +3099,9 @@ RSpec.describe PostMover do
 
           event = events.first
           expect(event[:event_name]).to eq(:post_moved)
-          expect(event[:params][0]).to eq(moved_post.new_post)
-          expect(event[:params][1]).to eq(topic_1.id)
-          expect(event[:params][2]).to eq(post_2)
+          expect(event[:params]).to eq(
+            [moved_post.new_post, topic_1.id, post_2, { acting_user: Discourse.system_user }],
+          )
         end
       end
     end

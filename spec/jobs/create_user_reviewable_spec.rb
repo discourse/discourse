@@ -36,7 +36,7 @@ RSpec.describe Jobs::CreateUserReviewable do
         described_class.new.execute(user_id: user.id)
       end
 
-    expect(events.map { |event| event[:params].last.payload["email"] }).to eq(
+    expect(events.map { |event| event[:params].second.payload["email"] }).to eq(
       ["replacement@example.com"],
     )
     expect(reviewable.reload).to be_pending

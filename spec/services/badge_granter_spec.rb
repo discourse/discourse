@@ -758,8 +758,12 @@ RSpec.describe BadgeGranter do
       events = DiscourseEvent.track_events(:user_badge_granted) { BadgeGranter.process_queue! }
 
       expect(events.length).to eq(2)
-      expect(events[0][:params]).to eq([Badge::FirstLike, liker.id])
-      expect(events[1][:params]).to eq([Badge::Welcome, user.id])
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [Badge::FirstLike, liker.id, { acting_user: Discourse.system_user }],
+          [Badge::Welcome, user.id, { acting_user: Discourse.system_user }],
+        ],
+      )
     end
   end
 

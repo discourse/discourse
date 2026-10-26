@@ -7,6 +7,7 @@ module DiscourseWorkflows
         OUTPUT_SCHEMA =
           Schema.merge(
             Schema::USER_SCHEMA,
+            Schema::ACTOR_SCHEMA,
             Schema.document(
               "old_trust_level" => {
                 "type" => "integer",
@@ -49,6 +50,7 @@ module DiscourseWorkflows
           @user = ::User.find_by(id: data[:user_id])
           @old_trust_level = data[:old_trust_level]
           @new_trust_level = data[:new_trust_level]
+          @actor = data[:acting_user]
         end
 
         def valid?
@@ -64,6 +66,7 @@ module DiscourseWorkflows
             user: serialize_user(@user),
             old_trust_level: @old_trust_level,
             new_trust_level: @new_trust_level,
+            actor: serialize_user(@actor),
           }
         end
 

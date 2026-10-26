@@ -1664,7 +1664,12 @@ class Search
     return if readonly_mode
     return if @opts[:type_filter] == "exclude_topics"
 
-    DiscourseEvent.trigger(:user_search, @clean_term, continue_on_error: true)
+    DiscourseEvent.trigger(
+      :user_search,
+      @clean_term,
+      acting_user: @guardian.user,
+      continue_on_error: true,
+    )
   end
 
   def filter_short_terms(term_string)

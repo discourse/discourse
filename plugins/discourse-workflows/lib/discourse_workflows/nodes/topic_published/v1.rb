@@ -18,6 +18,7 @@ module DiscourseWorkflows
               schema:
                 Schema.merge(
                   Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::ACTOR_SCHEMA,
                   Schema.document(
                     "published_at" => {
                       "type" => "string",
@@ -33,10 +34,11 @@ module DiscourseWorkflows
           },
         )
 
-        def initialize(topic, published_at)
+        def initialize(topic, published_at, payload = {})
           super(parameters: {})
           @topic = topic
           @published_at = published_at
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -44,7 +46,11 @@ module DiscourseWorkflows
         end
 
         def output
-          { topic: serialize_topic_list_item(@topic), published_at: @published_at.iso8601 }
+          {
+            topic: serialize_topic_list_item(@topic),
+            published_at: @published_at.iso8601,
+            actor: serialize_user(@actor),
+          }
         end
 
         def matches?(trigger_ctx)
