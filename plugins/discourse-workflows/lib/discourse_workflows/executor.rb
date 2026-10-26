@@ -1190,7 +1190,12 @@ module DiscourseWorkflows
     def node_dependencies(node)
       parameters = NodeData.parameters(node)
       credentials =
-        NodeData.split(parameters:, credentials: NodeData.credentials(node), node_type: node.type)[
+        NodeData.split(
+          parameters:,
+          credentials: NodeData.credentials(node),
+          node_type: node.type,
+          type_version: node.type_version,
+        )[
           "credentials"
         ]
       dependencies = []

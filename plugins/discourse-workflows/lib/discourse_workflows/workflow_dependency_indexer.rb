@@ -28,6 +28,7 @@ module DiscourseWorkflows
             parameters: parameters,
             credentials: NodeData.credentials(node),
             node_type: node_type,
+            type_version: NodeData.type_version(node),
           )
         credentials = split["credentials"]
 
