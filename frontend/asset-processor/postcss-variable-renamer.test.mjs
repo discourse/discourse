@@ -52,6 +52,28 @@ test("adds one comment when a declaration sets and reads the same old name", () 
   );
 });
 
+test("removes a declaration that a merge turns into a reference to itself", () => {
+  const merge = { "--old-a": "--merged", "--old-b": "--merged" };
+  const css = postcss([postcssVariableRenamer(merge)]).process(
+    ":root { --old-a: var(--old-b); }",
+    { from: undefined }
+  ).css;
+  expect(css).toBe(
+    ":root { /* automatically removed --old-a: var(--old-b), both names now refer to --merged */ }"
+  );
+});
+
+test("keeps a merge when the value is more than the reference", () => {
+  const merge = { "--old-a": "--merged", "--old-b": "--merged" };
+  const css = postcss([postcssVariableRenamer(merge)]).process(
+    ":root { --old-a: calc(var(--old-b) * 2); }",
+    { from: undefined }
+  ).css;
+  expect(css).toBe(
+    ":root { --merged: calc(var(--merged) * 2); /* automatically renamed --old-a to --merged, --old-b to --merged */ }"
+  );
+});
+
 test("leaves untouched declarations alone", () => {
   const css = "a { color: var(--primary); }";
   expect(process(css)).toBe(css);
