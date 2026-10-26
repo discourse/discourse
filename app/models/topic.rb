@@ -160,7 +160,7 @@ class Topic < ActiveRecord::Base
 
     super(trashed_by)
 
-    DiscourseEvent.trigger(:topic_trashed, self) if trigger_event
+    DiscourseEvent.trigger(:topic_trashed, self, acting_user: trashed_by) if trigger_event
 
     topic_embed.trash! if has_topic_embed?
   end
@@ -177,7 +177,7 @@ class Topic < ActiveRecord::Base
     # Note parens are required because superclass doesn't take `recovered_by`
     super()
 
-    DiscourseEvent.trigger(:topic_recovered, self) if trigger_event
+    DiscourseEvent.trigger(:topic_recovered, self, acting_user: recovered_by) if trigger_event
 
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
       topic_embed.recover!
