@@ -59,6 +59,33 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
       end
     end
 
+    context "when only the latest version of a node type limits its count" do
+      it "applies the latest version's limit" do
+        _v1, v2 = register_versioned_workflow_nodes("action:populate_limited_test")
+        v2.description(v2.description.merge(max_nodes: 1))
+
+        result =
+          described_class.call(
+            workflow:,
+            nodes_data: [
+              { id: "limited-1", type: "action:populate_limited_test", name: "Limited one" },
+              { id: "limited-2", type: "action:populate_limited_test", name: "Limited two" },
+            ],
+            connections_data: {
+            },
+          )
+
+        expect(result).to eq(false)
+        expect(workflow.errors.full_messages).to include(
+          I18n.t(
+            "discourse_workflows.errors.max_nodes_of_type_exceeded",
+            max: 1,
+            type: "action:populate_limited_test",
+          ),
+        )
+      end
+    end
+
     context "when a connection targets a node without input ports" do
       it "returns false and adds an error to the workflow" do
         result =
@@ -336,10 +363,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           },
         )
         node = { "id" => "node-1", "type" => "action:populate_upgrade_test", "name" => "Node" }
-        save = ->(type_version, type = node["type"]) do
+        save = ->(type_version) do
           described_class.call(
             workflow:,
-            nodes_data: [node.merge("type" => type, "typeVersion" => type_version)],
+            nodes_data: [node.merge("typeVersion" => type_version)],
             connections_data: {
             },
           )
@@ -350,10 +377,26 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         expect(save.call("9.0")).to eq("1.0")
         expect(save.call("2.0")).to eq("2.0")
         expect(save.call("1.0")).to eq("2.0")
+      end
 
-        register_versioned_workflow_nodes("action:populate_upgrade_other_test")
-        workflow.update!(nodes: [node.merge("typeVersion" => "1.0")], connections: {})
-        expect(save.call("2.0", "action:populate_upgrade_other_test")).to eq("1.0")
+      it "starts a node whose type changed on the submitted or latest version" do
+        register_versioned_workflow_nodes("action:populate_retyped_test")
+        node = { "id" => "node-1", "type" => "action:populate_retyped_test", "name" => "Node" }
+        save = ->(type_version) do
+          described_class.call(
+            workflow:,
+            nodes_data: [node.merge("typeVersion" => type_version).compact],
+            connections_data: {
+            },
+          )
+          workflow.reload.nodes.first["typeVersion"]
+        end
+
+        workflow.update!(nodes: [node.merge("type" => "action:topic_tags", "typeVersion" => "1.0")])
+        expect(save.call(nil)).to eq("2.0")
+
+        workflow.update!(nodes: [node.merge("type" => "action:topic_tags", "typeVersion" => "2.0")])
+        expect(save.call("1.0")).to eq("1.0")
       end
     end
 
