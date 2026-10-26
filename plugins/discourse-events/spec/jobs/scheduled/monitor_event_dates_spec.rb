@@ -128,6 +128,97 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
   end
 
   describe "#finish" do
+    it "rolls back advancement without emitting side effects and advances on the next run" do
+      past_event.update!(recurrence: "every_week")
+      original_date = past_date
+      freeze_time 8.days.after
+
+      allow_any_instance_of(DiscourseEvents::Events::Event).to receive(
+        :set_next_recurrent_event_date,
+      ).and_wrap_original do |original|
+        original.call
+        raise "Advancement failed"
+      end
+
+      messages = nil
+      events =
+        DiscourseEvent.track_events do
+          messages =
+            MessageBus.track_publish do
+              expect { job.finish(original_date) }.to raise_error("Advancement failed")
+            end
+        end
+
+      expect(events).to be_empty
+      expect(messages).to be_empty
+      expect(original_date.reload.finished_at).to be_nil
+      expect(past_event.event_dates.pluck(:id)).to contain_exactly(original_date.id)
+
+      allow_any_instance_of(DiscourseEvents::Events::Event).to receive(
+        :set_next_recurrent_event_date,
+      ).and_call_original
+      events =
+        DiscourseEvent.track_events(:discourse_post_event_event_ended) do
+          job.finish(original_date)
+          job.finish(original_date)
+        end
+
+      expect(events.size).to eq(1)
+      expect(original_date.reload.finished_at).to be_present
+      expect(past_event.event_dates.pending.pluck(:starts_at)).to contain_exactly(
+        be_within_one_second_of(original_date.starts_at + 7.days),
+      )
+    end
+
+    it "defers side effects until the enclosing transaction commits" do
+      past_event.update!(recurrence: "every_week")
+      original_date = past_date
+      freeze_time 8.days.after
+
+      messages = nil
+      events =
+        DiscourseEvent.track_events do
+          messages =
+            MessageBus.track_publish do
+              DiscourseEvents::Events::Event.transaction(requires_new: true) do
+                job.finish(original_date)
+                raise ActiveRecord::Rollback
+              end
+            end
+        end
+
+      expect(events).to be_empty
+      expect(messages).to be_empty
+      expect(original_date.reload.finished_at).to be_nil
+      expect(past_event.event_dates.pluck(:id)).to contain_exactly(original_date.id)
+    end
+
+    it "keeps advancement committed when a broadcast fails without repeating the ended event" do
+      past_event.update!(recurrence: "every_week")
+      original_date = past_date
+      freeze_time 8.days.after
+
+      allow(MessageBus).to receive(
+        :publish,
+      ).and_wrap_original do |original, channel, *args, **kwargs|
+        raise "Event broadcast failed" if channel == "/topic/#{past_event.post.topic_id}"
+
+        original.call(channel, *args, **kwargs)
+      end
+
+      events =
+        DiscourseEvent.track_events(:discourse_post_event_event_ended) do
+          expect { job.finish(original_date) }.to raise_error("Event broadcast failed")
+          job.finish(original_date)
+        end
+
+      expect(events.size).to eq(1)
+      expect(original_date.reload.finished_at).to be_present
+      expect(past_event.event_dates.pending.pluck(:starts_at)).to contain_exactly(
+        be_within_one_second_of(original_date.starts_at + 7.days),
+      )
+    end
+
     it "finishes past event" do
       job.execute({})
       expect(future_date.finished_at).to eq(nil)
