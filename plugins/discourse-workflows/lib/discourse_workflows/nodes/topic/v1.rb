@@ -230,11 +230,24 @@ module DiscourseWorkflows
 
         deprecated(
           superseded_by: "2.0",
+          replaced_by: %w[action:close_topic action:archive_topic],
           changes: {
             "post.trust_level" => "user.trust_level",
           },
           notice_key: "discourse_workflows.node_deprecated.topic_v1",
-        )
+        ) do |parameters|
+          status_parameters = parameters.slice("topic_id", "actor_username")
+          notes = ["discourse_workflows.node_upgrades.topic_post_removed"]
+
+          case parameters.fetch("operation", "create")
+          when "close"
+            { type: "action:close_topic", parameters: status_parameters, notes: }
+          when "archive"
+            { type: "action:archive_topic", parameters: status_parameters, notes: }
+          when *OPERATIONS
+            { type: "action:topic", version: "2.0", parameters: }
+          end
+        end
 
         def self.load_options_context(context)
           case context.method_name

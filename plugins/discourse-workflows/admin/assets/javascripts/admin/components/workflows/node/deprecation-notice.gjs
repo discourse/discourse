@@ -4,24 +4,38 @@ import { i18n } from "discourse-i18n";
 import { nodeTypeLabel } from "../../../lib/workflows/node-types.js";
 import { findNodeType } from "../../../lib/workflows/property-engine.js";
 
-function baseNotice(deprecation, nodeTypes) {
-  if (deprecation.replaced_by?.length) {
-    const nodes = deprecation.replaced_by
-      .map((identifier) =>
-        nodeTypeLabel(findNodeType(nodeTypes, identifier) || identifier)
-      )
-      .join(", ");
+function replacementLabels(deprecation, nodeTypes) {
+  return deprecation.replaced_by
+    .map((identifier) =>
+      nodeTypeLabel(findNodeType(nodeTypes, identifier) || identifier)
+    )
+    .join(", ");
+}
 
+function baseNotice(deprecation, nodeTypes) {
+  const replaced = deprecation.replaced_by?.length > 0;
+
+  if (replaced && !deprecation.superseded_by) {
     return i18n("discourse_workflows.node_deprecated.replaced_notice", {
-      nodes,
+      nodes: replacementLabels(deprecation, nodeTypes),
     });
   }
 
   const changes = Object.entries(deprecation.changes || {})
     .map(([from, to]) => `${from} → ${to}`)
     .join(", ");
+  const notice = i18n("discourse_workflows.node_deprecated.notice", {
+    changes,
+  });
 
-  return i18n("discourse_workflows.node_deprecated.notice", { changes });
+  if (!replaced) {
+    return notice;
+  }
+
+  return `${notice} ${i18n(
+    "discourse_workflows.node_deprecated.partly_replaced_notice",
+    { nodes: replacementLabels(deprecation, nodeTypes) }
+  )}`;
 }
 
 export function deprecationMessage(deprecation, nodeTypes = null) {

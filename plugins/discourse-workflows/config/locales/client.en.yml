@@ -57,6 +57,7 @@ en:
       node_deprecated:
         notice: "A newer version of this node is available. Its output changes: %{changes}. Expressions using the old keys must be updated after upgrading."
         replaced_notice: "This node was replaced by %{nodes}."
+        partly_replaced_notice: "Some of its operations moved to %{nodes}."
         upgrade: "Upgrade"
         upgraded: "%{name} was upgraded."
         not_upgradable: "%{name} can't be upgraded automatically. Replace it with a current node."
@@ -367,9 +368,18 @@ en:
         "action:topic_category": "Topic category"
         "action:topic_pin": "Topic pinning"
         "action:topic_moderation": "Topic moderation"
+        "action:close_topic": "Close topic"
+        "action:reopen_topic": "Reopen topic"
+        "action:archive_topic": "Archive topic"
+        "action:unarchive_topic": "Unarchive topic"
+        "action:unlist_topic": "Unlist topic"
+        "action:list_topic": "List topic"
         "action:flag_user": "Flag user"
       node_search_terms:
-        "action:topic_moderation": "hide, invisible"
+        "action:close_topic": "lock"
+        "action:reopen_topic": "unlock, open"
+        "action:unlist_topic": "hide, invisible"
+        "action:list_topic": "unhide, show, visible, relist"
       node_descriptions:
         "trigger:topic_published": "Fires when a topic is published"
         "trigger:topic_timer_changed": "Fires when a topic timer is created, updated, cancelled, or completed"
@@ -458,6 +468,12 @@ en:
         "action:topic_category": "Set or clear the category of a topic"
         "action:topic_pin": "Pin or unpin a topic in its category, globally, or as a banner"
         "action:topic_moderation": "Perform moderation actions on a topic"
+        "action:close_topic": "Close a topic so no one can reply"
+        "action:reopen_topic": "Reopen a closed topic for replies"
+        "action:archive_topic": "Archive a topic so it can no longer be changed"
+        "action:unarchive_topic": "Unarchive a topic"
+        "action:unlist_topic": "Unlist a topic so it no longer appears in topic lists"
+        "action:list_topic": "List an unlisted topic again"
         "action:flag_user": "Add a user to the review queue for a moderator to approve or reject. Best aimed at unapproved accounts, since approved ones can only be rejected by deletion"
       topic_admin_button:
         label: "Button label"
@@ -592,6 +608,9 @@ en:
         bannered_until_dynamic_hint: "Must resolve to a date and time, for example 2026-08-01 12:00."
         timezone: "Timezone"
         timezone_none: "Workflow default"
+        actor_username: "Performed by user"
+      topic_status_action:
+        topic_id: "Topic ID"
         actor_username: "Performed by user"
       topic_moderation:
         operation: "Operation"
