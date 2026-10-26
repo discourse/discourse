@@ -12,7 +12,7 @@ import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
-import { or } from "discourse/truth-helpers";
+import { and, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -477,7 +477,7 @@ export default class VoiceRoomPage extends Component {
 
   @action
   toggleFullscreenFromMenu(closeMenu) {
-    toggleFullscreen(document.documentElement);
+    this.toggleGridFullscreen();
     closeMenu?.();
   }
 
@@ -622,16 +622,15 @@ export default class VoiceRoomPage extends Component {
                 {{this.trackGridSize this.updateGridSize}}
                 {{this.trackFullscreen this.setGridFullscreen}}
               >
-                <button
-                  aria-label={{this.gridFullscreenTitle}}
-                  class="btn btn-icon no-text voice-room-page__fullscreen"
-                  title={{this.gridFullscreenTitle}}
-                  type="button"
-                  {{on "click" this.toggleGridFullscreen}}
-                >
-                  {{dIcon (if this.gridFullscreen "compress" "expand")}}
-                </button>
-
+                {{#if this.gridFullscreen}}
+                  <DButton
+                    class="btn-icon no-text voice-room-page__fullscreen"
+                    @action={{this.toggleGridFullscreen}}
+                    @icon="compress"
+                    @translatedAriaLabel={{this.gridFullscreenTitle}}
+                    @translatedTitle={{this.gridFullscreenTitle}}
+                  />
+                {{/if}}
                 {{#each this.tiles key="participant.id" as |tile|}}
                   <VoiceVideoTile
                     @isSelf={{tile.isSelf}}
@@ -712,10 +711,23 @@ export default class VoiceRoomPage extends Component {
                       <DButton
                         class="btn-transparent"
                         @action={{fn this.dockAndClose roomMenu.close}}
-                        @icon="compress"
+                        @icon="picture-in-picture"
                         @label="voice.room.widget_mode"
                       />
                     </dropdown.item>
+                    {{#if (and this.tiledLayout this.tiles.length)}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent voice-room-page__fullscreen-trigger"
+                          @icon="expand"
+                          @translatedLabel={{this.gridFullscreenTitle}}
+                          {{on
+                            "click"
+                            (fn this.toggleFullscreenFromMenu roomMenu.close)
+                          }}
+                        />
+                      </dropdown.item>
+                    {{/if}}
                     {{#if this.room.can_invite}}
                       <dropdown.item>
                         <DButton

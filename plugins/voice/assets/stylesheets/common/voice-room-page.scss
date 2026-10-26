@@ -365,11 +365,15 @@ html.discourse-touch .voice-call-widget {
     &:fullscreen {
       background: #000;
       padding: 0.5em;
+
+      .voice-video-tile__menu {
+        display: none;
+      }
     }
   }
 
   // Top-left so it never collides with the per-tile fullscreen buttons
-  // (top-right). Visible in fullscreen too, since it lives inside the grid.
+  // (top-right).
   &__fullscreen {
     position: absolute;
     inset-block-start: 0.35em;
@@ -770,6 +774,10 @@ body.has-sidebar-page #main-outlet-wrapper:has(.voice-room-header) {
   &:fullscreen {
     border-radius: 0;
     background: #000;
+  }
+
+  &:fullscreen &__menu {
+    display: none;
   }
 
   &:fullscreen &__video {
