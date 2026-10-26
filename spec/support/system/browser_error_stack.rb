@@ -3,7 +3,8 @@ require "open3"
 
 module BrowserErrorStack
   def self.resolve(messages)
-    return messages if ENV["DISCOURSE_CI_MINIFY"] != "1" || messages.empty?
+    return messages if messages.empty?
+    return messages unless ENV["EMBER_ENV"] == "production" || ENV["DISCOURSE_CI_MINIFY"] == "1"
 
     env = {}
     if (cli_path = ENV["PLAYWRIGHT_CLI_EXECUTABLE_PATH"])
