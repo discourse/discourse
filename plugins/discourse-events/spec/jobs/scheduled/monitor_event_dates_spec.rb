@@ -335,6 +335,137 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         SiteSetting.discourse_post_event_recurring_topic_mode = "create_next_topic"
       end
 
+      it "does not enqueue a post alert for automated event archival" do
+        author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+        SiteSetting.discourse_post_event_allowed_on_groups =
+          Group::AUTO_GROUPS[:trust_level_0].to_s
+
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+
+        post =
+          PostCreator.create!(
+            author,
+            title: "Quiet recurring event archive",
+            category: event_category.id,
+            raw: <<~RAW,
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Ordinary meeting notes.
+              [/event]
+            RAW
+          )
+
+        expect(post.reload.event).to be_present
+
+        freeze_time(ends_at + 1.hour)
+        allow(Jobs).to receive(:enqueue).and_call_original
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        expect(Jobs).not_to have_received(:enqueue).with(
+          :post_alert,
+          hash_including(post_id: post.id),
+        )
+      end
+
+      it "does not attribute the archived edit to the system user" do
+        author = Fabricate(:user, refresh_auto_groups: true)
+        SiteSetting.discourse_post_event_allowed_on_groups =
+          Group::AUTO_GROUPS[:trust_level_0].to_s
+
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+
+        post =
+          PostCreator.create!(
+            author,
+            title: "Least-privileged event archive",
+            category: event_category.id,
+            raw: <<~RAW,
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+          )
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        expect(post.reload.last_editor_id).to eq(author.id)
+        expect(post.raw).not_to include("recurrence=")
+      end
+
+      it "does not expose restricted profile details during event rollover" do
+        author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+        profile_user = Fabricate(:user, trust_level: TrustLevel[1])
+
+        profile_user.user_stat.update!(post_count: 0)
+        profile_user.user_profile.update!(
+          bio_raw: "private rollover biography",
+          location: "private rollover location",
+          website: "https://private-rollover.example.com",
+        )
+
+        SiteSetting.hide_new_user_profiles = true
+        SiteSetting.discourse_post_event_allowed_on_groups =
+          Group::AUTO_GROUPS[:trust_level_0].to_s
+
+        expect(Guardian.new(author).can_see_profile?(profile_user)).to eq(false)
+        expect(Discourse.system_user.guardian.can_see_profile?(profile_user)).to eq(true)
+
+        profile_url = "#{Discourse.base_url}/u/#{profile_user.username}"
+        title = "Restricted profile rollover"
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+
+        Jobs.run_immediately!
+
+        post =
+          PostCreator.create!(
+            author,
+            title:,
+            category: event_category.id,
+            raw: <<~RAW,
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Public meeting notes.
+              [/event]
+
+              #{profile_url}
+            RAW
+          )
+
+        expect(post.reload.event).to be_present
+        original_topic_id = post.topic_id
+
+        Oneboxer.invalidate(profile_url)
+        allow(Oneboxer).to receive(:onebox).and_call_original
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        archived_post = post.reload
+        successor_post =
+          Topic.where(title:).where.not(id: original_topic_id).sole.first_post.reload
+
+        expect(archived_post.last_editor_id).to eq(author.id)
+
+        [archived_post, successor_post].each do |rendered_post|
+          expect(rendered_post.raw).to include(profile_url)
+          expect(rendered_post.cooked).to include(profile_url)
+
+          expect(rendered_post.cooked).not_to include(profile_user.user_profile.bio_raw)
+          expect(rendered_post.cooked).not_to include(profile_user.user_profile.location)
+          expect(rendered_post.cooked).not_to include(profile_user.user_profile.website)
+        end
+
+        expect(Oneboxer).not_to have_received(:onebox).with(
+          profile_url,
+          hash_including(user_id: Discourse::SYSTEM_USER_ID),
+        )
+      end
+
       it "preserves attribute-like words and brackets inside quoted values" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour

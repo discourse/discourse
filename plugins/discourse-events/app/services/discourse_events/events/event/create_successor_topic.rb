@@ -100,12 +100,21 @@ module DiscourseEvents
           post.association(:event).reset
 
           revisor = PostRevisor.new(post)
-          revised =
-            revisor.revise!(
-              Discourse.system_user,
-              { raw: archived_raw, title: archived_title(original_title) },
-              bypass_bump: true,
-            )
+          post.event_rollover_validation_actor = Discourse.system_user
+
+          begin
+            revised =
+              revisor.revise!(
+                post.user,
+                { raw: archived_raw, title: archived_title(original_title) },
+                bypass_bump: true,
+                bypass_rate_limiter: true,
+                silent: true,
+                skip_post_alert: true,
+              )
+          ensure
+            post.event_rollover_validation_actor = nil
+          end
 
           unless revised
             errors = (topic.errors.full_messages + post.errors.full_messages).uniq
