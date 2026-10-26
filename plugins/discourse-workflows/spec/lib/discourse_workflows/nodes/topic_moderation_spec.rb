@@ -18,6 +18,28 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicModeration::V1 do
     end
   end
 
+  describe ".upgrade" do
+    it "becomes an Unlist topic node with the same topic and actor" do
+      expect(
+        described_class.upgrade(
+          "operation" => "unlist_topic",
+          "topic_id" => "={{ $json.topic.id }}",
+          "actor_username" => "system",
+        ),
+      ).to eq(
+        type: "action:unlist_topic",
+        parameters: {
+          "topic_id" => "={{ $json.topic.id }}",
+          "actor_username" => "system",
+        },
+      )
+    end
+
+    it "leaves a node whose operation is an expression to be replaced by hand" do
+      expect(described_class.upgrade("operation" => "={{ $json.operation }}")).to be_nil
+    end
+  end
+
   describe "#execute" do
     it "unlists a topic as the system user", :aggregate_failures do
       result = nil

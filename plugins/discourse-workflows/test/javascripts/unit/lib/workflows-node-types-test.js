@@ -48,12 +48,12 @@ module("Unit | Utility | workflows node types", function () {
         },
       ],
     };
-    const moderation = { identifier: "action:topic_moderation" };
+    const unlist = { identifier: "action:unlist_topic" };
 
     assert.strictEqual(nodeTypeSearchText(topic), "topic close topic");
     assert.strictEqual(
-      nodeTypeSearchText(moderation),
-      "topic moderation hide, invisible"
+      nodeTypeSearchText(unlist),
+      "unlist topic hide, invisible"
     );
   });
 

@@ -57,6 +57,28 @@ module(
       );
     });
 
+    test("lists the output changes and the nodes taking over some operations", async function (assert) {
+      const deprecation = {
+        ...DEPRECATION,
+        replaced_by: ["action:topic"],
+      };
+
+      await render(
+        <template><DeprecationNotice @deprecation={{deprecation}} /></template>
+      );
+
+      assert.dom(".workflows-deprecation-notice .alert").hasText(
+        [
+          i18n("discourse_workflows.node_deprecated.notice", {
+            changes: "editor → actor, user → author",
+          }),
+          i18n("discourse_workflows.node_deprecated.partly_replaced_notice", {
+            nodes: i18n("discourse_workflows.nodes.action:topic"),
+          }),
+        ].join(" ")
+      );
+    });
+
     test("appends the translated notice", async function (assert) {
       const deprecation = {
         ...DEPRECATION,
