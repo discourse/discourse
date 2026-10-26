@@ -50,7 +50,28 @@ class PublishedPagesController < ApplicationController
 
     @body_classes << @topic.category.slug if @topic.category
 
+    if publicly_cacheable?(pp)
+      # Serve from the same anonymous cache the rest of the app uses; its
+      # key already covers theme, locale, mobile, and color scheme
+      # variants, and it is bypassed for any request carrying an auth
+      # cookie. The header lets browsers reuse the page for a minute too.
+      discourse_expires_in 1.minute
+      expires_in 1.minute, public: true
+    else
+      response.headers["Cache-Control"] = "private, no-store"
+    end
+
     render layout: "publish"
+  end
+
+  # A published page may be cached for anonymous visitors only when
+  # nothing about it depends on who is asking: the page is public, its
+  # topic lives in a category anyone can read, and the site itself does
+  # not require login. Anything else would let a cached copy bypass the
+  # guardian and category checks above.
+  def publicly_cacheable?(pp)
+    current_user.nil? && pp.public && !@topic.category&.read_restricted &&
+      !SiteSetting.login_required?
   end
 
   def details
