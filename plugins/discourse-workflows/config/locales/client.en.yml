@@ -142,7 +142,7 @@ en:
       unpublished_changes_message_detail: "Publish to make them live"
       unpublished_changes_confirmation: "This workflow has unpublished changes. If you leave now, those changes will stay in draft and won't run until you publish them."
       keep_editing: "Keep editing"
-      workflow_name: "Workflow name"
+      name: "Name"
       creator: "Creator"
       last_update: "Last update"
       last_run: "Last run"

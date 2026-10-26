@@ -73,7 +73,7 @@ export default <template>
                         @asc={{not @controller.sortDescending}}
                         @automatic={{true}}
                         @field="name"
-                        @labelKey="explorer.query_name"
+                        @labelKey="explorer.name"
                         @onToggle={{@controller.updateSortProperty}}
                         @order={{@controller.sortByProperty}}
                       />
