@@ -181,6 +181,50 @@ RSpec.describe PostDestroyer do
       }.by(1)
     end
 
+    it "fires topic_recovered once, with the staff member who recovered the topic" do
+      first_post = create_post
+      topic = first_post.topic
+      PostDestroyer.new(moderator, first_post).destroy
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostDestroyer.new(moderator, first_post.reload).recover
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: moderator }]])
+    end
+
+    it "fires topic_recovered with the author when they cancel their own topic deletion" do
+      first_post = create_post
+      author = first_post.user
+      PostDestroyer.new(author, first_post).destroy
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostDestroyer.new(author, first_post.reload).recover
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[first_post.topic, { acting_user: author }]],
+      )
+    end
+
+    it "fires topic_recovered with the author when their deleted topic stays deleted" do
+      SiteSetting.delete_removed_posts_after = 0
+      first_post = create_post
+      topic = first_post.topic
+      author = first_post.user
+      PostDestroyer.new(author, first_post).destroy
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostDestroyer.new(author, first_post.reload).recover
+        end
+
+      expect(topic.reload).to be_trashed
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: author }]])
+    end
+
     it "creates a staff log entry when recovering a reply" do
       reply = create_post(topic: post.topic)
 
@@ -467,9 +511,9 @@ RSpec.describe PostDestroyer do
       expect(user_stat.reload.topic_count).to eq(1)
 
       called = 0
-      topic_recovered = ->(topic, user) do
+      topic_recovered = ->(topic, acting_user:) do
         expect(topic).to eq(post2.topic)
-        expect(user).to eq(post2.user)
+        expect(acting_user).to eq(post2.user)
         called += 1
       end
 
