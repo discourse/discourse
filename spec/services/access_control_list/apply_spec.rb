@@ -192,6 +192,26 @@ RSpec.describe AccessControlList::Apply do
       end
     end
 
+    context "when a deleted owner is submitted after their ownership was transferred" do
+      fab!(:owner_acl) do
+        Fabricate(
+          :access_control_list_with_users,
+          target:,
+          permission: Acl::Permissions::OWNER,
+          users: [target_owner],
+        )
+      end
+
+      let(:owner_user_ids) { [target_owner.id] }
+
+      before { target_owner.destroy! }
+
+      it "rejects the stale owner and preserves the replacement admin" do
+        expect(result).to fail_a_policy(:requested_owners_exist)
+        expect(owner_acl.reload.allowed_user_ids).to eq([admin.id])
+      end
+    end
+
     context "when an admin specifies owners for an ownerless target" do
       let(:acl_entries) { [] }
       let(:owner_user_ids) { [co_owner.id] }

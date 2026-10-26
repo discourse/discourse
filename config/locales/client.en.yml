@@ -9733,6 +9733,7 @@ en:
             change_access_control_list_permissions: "change access control list permissions"
             add_access_control_list_owner: "add access control list owner"
             remove_access_control_list_owner: "remove access control list owner"
+            assume_access_control_ownership: "assume access control ownership"
             admin_onboarding_step_completed: "complete admin onboarding step"
             admin_onboarding_completed: "complete admin onboarding"
             admin_onboarding_dismissed: "dismiss admin onboarding"

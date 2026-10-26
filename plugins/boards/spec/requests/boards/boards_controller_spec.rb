@@ -747,6 +747,25 @@ RSpec.describe Boards::Api::BoardsController do
       Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
     end
 
+    it "saves settings with the replacement owner after the previous owner is deleted" do
+      departing_owner = Fabricate(:user)
+      board = Fabricate(:boards_board, created_by: departing_owner)
+      UserDestroyer.new(admin).destroy(departing_owner)
+      sign_in(admin)
+
+      put "/boards/api/boards/#{board.id}.json",
+          params: {
+            board: {
+              name: "Reassigned board",
+              owner_user_ids: [admin.id],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(board.reload.name).to eq("Reassigned board")
+      expect(response.parsed_body["board"]["owners"].pluck("id")).to eq([admin.id])
+    end
+
     it "accepts all supported ACL permissions and retains mandatory admin access" do
       sign_in(manager)
 

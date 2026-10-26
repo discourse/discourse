@@ -423,6 +423,18 @@ class StaffActionLogger
     log_access_control_list_owner_change(:remove_access_control_list_owner, target, user, opts)
   end
 
+  def log_assume_access_control_ownership(owner_acl, user_id:, username:, deleted_at:)
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:assume_access_control_ownership],
+        subject: "#{owner_acl.target_type} (#{owner_acl.target_id})",
+        target_user_id: @admin.id,
+        context:
+          "deleted_user_id: #{user_id}\ndeleted_username: #{username}\ndeleted_at: #{deleted_at.iso8601}",
+      ),
+    )
+  end
+
   def theme_json(theme)
     ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
