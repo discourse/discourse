@@ -15,7 +15,7 @@ export function toggleFullscreen(element, { fallbackVideo = false } = {}) {
     return;
   }
 
-  if (fullscreenElement()) {
+  if (fullscreenElement() === element) {
     (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
     return;
   }
