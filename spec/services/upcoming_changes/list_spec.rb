@@ -35,6 +35,35 @@ RSpec.describe UpcomingChanges::List do
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
     end
 
+    context "when a permanent change has stored group restrictions" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :permanent,
+            impact_type: "other",
+            impact_role: "developers",
+            allow_enabled_for: [:staff],
+          },
+        )
+        SiteSetting.enable_upload_debug_mode = true
+        Fabricate(
+          :site_setting_group,
+          name: "enable_upload_debug_mode",
+          group_ids: Group::AUTO_GROUPS[:staff].to_s,
+        )
+      end
+
+      it "lists the change as enabled for everyone without groups" do
+        expect(result).to run_successfully
+        setting =
+          result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+        expect(setting[:upcoming_change][:enabled_for]).to eq("everyone")
+        expect(setting[:groups]).to be_nil
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

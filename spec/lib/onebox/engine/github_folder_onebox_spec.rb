@@ -16,6 +16,14 @@ RSpec.describe Onebox::Engine::GithubFolderOnebox do
     it_behaves_like "an engine"
 
     describe "#to_html" do
+      it "shows the preview type and repository in the header" do
+        header = Nokogiri::HTML5.fragment(html).at_css("aside > header")
+
+        expect(header.at_css(".github-onebox__label").text.strip).to eq("Folder")
+        expect(header.at_css("a").text.strip).to eq("discourse/discourse")
+        expect(header.at_css("a")["href"]).to eq(link)
+      end
+
       it "includes link to folder with truncated display path" do
         expect(html).to include(
           '<a href="https://github.com/discourse/discourse/tree/main/spec/fixtures" target="_blank" rel="noopener">main/spec/fixtures</a>',

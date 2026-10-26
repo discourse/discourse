@@ -29,7 +29,7 @@ module Jobs
             event_date_id: event_date.id,
             reminder: reminder[:description],
           )
-          event_date.update!(reminder_counter: event_date.reminder_counter + 1)
+          event_date.update!(reminder_counter: event_date.reminder_counter.to_i + 1)
         end
       end
 
@@ -49,41 +49,46 @@ module Jobs
       def finish(event_date)
         return if !event_date.ended?
 
-        event = event_date.event
-        recurring = event.recurrence.present?
-        create_successor_topic =
-          recurring && event.post.topic.archetype == Archetype.default &&
-            SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
+        # Roll back completion and successor creation together if advancement fails.
+        event_date.event.with_lock do
+          event_date.reload
+          next if event_date.finished_at || !event_date.ended?
 
-        if create_successor_topic
-          unless DiscourseEvents::Events::Event::CreateSuccessorTopic.rollover_allowed?(event)
+          event = event_date.event
+          recurring = event.recurring?
+          create_successor_topic =
+            recurring && event.post.topic.archetype == Archetype.default &&
+              SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
+
+          if create_successor_topic &&
+               !DiscourseEvents::Events::Event::CreateSuccessorTopic.rollover_allowed?(event)
             log_deferred_successor_rollover(event_date)
-            return
+            next
           end
 
-          DiscourseEvents::Events::Event.transaction do
-            event_date.update!(finished_at: Time.current)
-            DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
-          end
-        else
           event_date.update!(finished_at: Time.current)
+
+          if create_successor_topic
+            DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
+          elsif recurring
+            event.set_next_recurrent_event_date
+          end
+
+          DB.after_commit do
+            # Keep the captured Event's series metadata when rollover archives it as one-off.
+            DiscourseEvent.trigger(:discourse_post_event_event_ended, event, event_date)
+            MessageBus.publish(
+              "/topic/#{event.post.topic_id}",
+              { reload_topic: true, refresh_stream: true },
+              event.post.topic.secure_audience_publish_messages,
+            )
+
+            if recurring && !create_successor_topic
+              TopicTrackingState.publish_latest(event.post.topic)
+              event.set_topic_bump
+            end
+          end
         end
-
-        # Use the Event instance captured before rollover. In create-next-topic
-        # mode the persisted Event is rewritten as one-off, while event-ended
-        # should retain the series metadata for the occurrence that just ended.
-        DiscourseEvent.trigger(:discourse_post_event_event_ended, event, event_date)
-        MessageBus.publish(
-          "/topic/#{event.post.topic_id}",
-          { reload_topic: true, refresh_stream: true },
-          event.post.topic.secure_audience_publish_messages,
-        )
-
-        return if !recurring || create_successor_topic
-
-        event.set_next_recurrent_event_date
-        TopicTrackingState.publish_latest(event.post.topic)
-        event.set_topic_bump
       end
 
       def log_deferred_successor_rollover(event_date)
@@ -116,7 +121,7 @@ module Jobs
           end
           .select { |reminder| reminder[:date] <= Time.current }
           .sort_by { |reminder| reminder[:date] }
-          .drop(event_date.reminder_counter)
+          .drop(event_date.reminder_counter.to_i)
       end
     end
   end
