@@ -8,7 +8,9 @@ module("Unit | Service | embeddable-chat", function (hooks) {
   hooks.beforeEach(function () {
     const owner = getOwner(this);
 
-    this.topicController = { model: { chat_channel_id: 9 } };
+    this.topicController = {
+      model: { chat_channel_id: 9, livestream_chat_active: true },
+    };
     owner.register("controller:topic", this.topicController, {
       instantiate: false,
     });
@@ -102,6 +104,22 @@ module("Unit | Service | embeddable-chat", function (hooks) {
     assert.false(this.subject.showLivestreamHeaderChatIcon);
   });
 
+  test("stops docking the chat once the livestream is over", function (assert) {
+    this.capabilities.viewport.lg = false;
+    this.router.currentRouteName = "topic.fromParams";
+    this.topicController.model = {
+      chat_channel_id: 9,
+      livestream_chat_active: false,
+    };
+
+    assert.false(this.subject.showLivestreamHeaderChatIcon);
+    assert.false(this.subject.useLivestreamLayout);
+    assert.false(
+      this.subject.canRenderChatChannel(true),
+      "the chat is not embedded in the page either"
+    );
+  });
+
   test("does not show the header chat icon without a channel", function (assert) {
     this.capabilities.viewport.lg = false;
     this.topicController.model = {};
@@ -117,6 +135,7 @@ module("Unit | Service | embeddable-chat", function (hooks) {
     const event = { is_zoom_livestream: true, ends_at: null };
     this.topicController.model = {
       chat_channel_id: 9,
+      livestream_chat_active: true,
       // The join button lives on the first post, which is not necessarily the
       // first post loaded into the stream.
       postStream: { posts: [{ post_number: 4 }, { post_number: 1, event }] },
