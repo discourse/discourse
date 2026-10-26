@@ -16,7 +16,10 @@ import QueryGroups from "discourse/plugins/discourse-data-explorer/discourse/com
 
 export default <template>
   <div class="admin-detail">
-    <DPageSubheader @titleLabel={{i18n "explorer.queries"}}>
+    <DPageSubheader
+      @actionsPlacement="tabs"
+      @titleLabel={{i18n "explorer.queries"}}
+    >
       <:actions as |actions|>
         <actions.Primary
           @icon="plus"

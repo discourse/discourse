@@ -41,10 +41,31 @@ $mobile-breakpoint: 700px;
   }
 
   .d-nav-submenu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     background: transparent;
     border-bottom: 1px solid var(--content-border-color);
 
+    &__actions {
+      flex-shrink: 0;
+      margin-left: auto;
+      padding-bottom: var(--space-2);
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    &__actions,
+    .d-page-subheader__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
     .horizontal-overflow-nav {
+      min-width: 0;
       background: transparent;
 
       &::before {
