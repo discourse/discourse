@@ -250,6 +250,7 @@ RSpec.describe Chat::Workflows::Approval::ResumeInteraction do
                 "value" => "needs:changes",
                 "channel" => expected_channel,
                 "user" => expected_user,
+                "actor" => expected_user,
               },
               "pairedItem" => {
                 "item" => 0,

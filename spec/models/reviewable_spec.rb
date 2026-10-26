@@ -640,6 +640,7 @@ RSpec.describe Reviewable, type: :model do
       expect(event).to be_present
       expect(event[:params][0]).to eq(:approved)
       expect(event[:params][1]).to eq(reviewable)
+      expect(event[:params][2]).to eq(acting_user: moderator)
     end
   end
 

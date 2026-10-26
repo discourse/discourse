@@ -43,6 +43,21 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableStatusChanged::V1 do
   end
 
   describe "#output" do
+    it "exposes the new status and the reviewer who transitioned the reviewable",
+       :aggregate_failures do
+      moderator = Fabricate(:moderator)
+      events =
+        DiscourseEvent.track_events(:reviewable_transitioned_to) do
+          reviewable.transition_to(:rejected, moderator)
+        end
+
+      output = described_class.new(*events.sole[:params]).output
+
+      expect(output[:reviewable]).to include(status: "rejected")
+      expect(output[:actor]).to include(id: moderator.id, username: moderator.username)
+      expect(output).to match_node_output_schema(described_class)
+    end
+
     it "uses the target account for user reviewables" do
       reviewable_user = Fabricate(:reviewable_user)
 

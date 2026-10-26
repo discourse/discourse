@@ -15,7 +15,12 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLike::V1 do
       it "likes the post as the actor" do
         result = execute_node(configuration:)
 
-        expect(result).to eq("post_id" => post.id, "username" => actor.username, "changed" => true)
+        expect(result).to include(
+          "post_id" => post.id,
+          "username" => actor.username,
+          "changed" => true,
+          "actor" => include("username" => actor.username),
+        )
         expect(result).to match_node_output_schema(described_class)
         expect(post.reload.like_count).to eq(1)
       end
