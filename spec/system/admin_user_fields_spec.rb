@@ -28,7 +28,7 @@ describe "Admin User Fields" do
     expect(user_fields_page.form.field("description")).to have_errors("Required")
   end
 
-  it "makes sure new required fields are editable after signup" do
+  it "lets the admin configure editability and signup requirements for a new field" do
     user_fields_page.visit
     user_fields_page.click_add_field
 
@@ -36,40 +36,52 @@ describe "Admin User Fields" do
 
     form = page.find(".user-field")
     editable_label = I18n.t("admin_js.admin.user_fields.editable.title")
-
-    user_fields_page.choose_requirement("for_all_users")
-
-    expect(form).to have_field(editable_label, checked: true, disabled: true, visible: :all)
-
-    user_fields_page.choose_requirement("optional")
-
-    expect(form).to have_field(editable_label, checked: true, disabled: false, visible: :all)
-  end
-
-  it "makes sure fields are available on signup when they have to" do
-    user_fields_page.visit
-    user_fields_page.click_add_field
-
-    expect(page_header).to be_hidden
-
-    form = page.find(".user-field")
     show_on_signup_label = I18n.t("admin_js.admin.user_fields.show_on_signup.title")
 
     user_fields_page.choose_requirement("for_all_users")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
-
-    user_fields_page.choose_requirement("on_signup")
-
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    aggregate_failures "required editability" do
+      expect(form).to have_field(editable_label, checked: true, disabled: true, visible: :all)
+    end
 
     user_fields_page.choose_requirement("optional")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: false, visible: :all)
+    aggregate_failures "optional editability" do
+      expect(form).to have_field(editable_label, checked: true, disabled: false, visible: :all)
+    end
+
+    aggregate_failures "new field signup controls" do
+      expect(page_header).to be_hidden
+    end
+
+    user_fields_page.choose_requirement("for_all_users")
+
+    aggregate_failures "required signup" do
+      expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    end
+
+    user_fields_page.choose_requirement("on_signup")
+
+    aggregate_failures "signup requirement" do
+      expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    end
+
+    user_fields_page.choose_requirement("optional")
+
+    aggregate_failures "optional signup" do
+      expect(form).to have_field(
+        show_on_signup_label,
+        checked: true,
+        disabled: false,
+        visible: :all,
+      )
+    end
 
     user_fields_page.unselect_preference("editable")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    aggregate_failures "noneditable field controls" do
+      expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
+    end
   end
 
   it "requires confirmation when applying required fields retroactively" do

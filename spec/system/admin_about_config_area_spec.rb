@@ -91,30 +91,28 @@ describe "Admin About Config Area Page" do
     end
   end
 
-  describe "the general settings card" do
-    it "can saves its fields to their corresponding site settings" do
-      config_area.visit
+  it "saves and reloads each About configuration card" do
+    config_area.visit
 
-      image_file = file_from_fixtures("logo.png", "images")
-      config_area.general_settings_section.community_name_input.fill_in("my community name")
-      config_area.general_settings_section.community_summary_input.fill_in(
-        "here's a bit of a summary",
-      )
-      config_area.general_settings_section.community_description_editor.fill_in(
-        "here's an extended description for the **community**",
-      )
-      config_area.general_settings_section.community_title_input.fill_in(
-        "here's a title for my site",
-      )
-      config_area.general_settings_section.banner_image_uploader.select_image(image_file.path)
-      expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
+    image_file = file_from_fixtures("logo.png", "images")
+    config_area.general_settings_section.community_name_input.fill_in("my community name")
+    config_area.general_settings_section.community_summary_input.fill_in(
+      "here's a bit of a summary",
+    )
+    config_area.general_settings_section.community_description_editor.fill_in(
+      "here's an extended description for the **community**",
+    )
+    config_area.general_settings_section.community_title_input.fill_in("here's a title for my site")
+    config_area.general_settings_section.banner_image_uploader.select_image(image_file.path)
+    expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
 
-      config_area.general_settings_section.banner_image_uploader.toggle_lightbox_preview
-      expect(config_area.general_settings_section.banner_image_uploader).to have_lightbox_preview
-      config_area.general_settings_section.banner_image_uploader.close_lightbox_preview
+    config_area.general_settings_section.banner_image_uploader.toggle_lightbox_preview
+    expect(config_area.general_settings_section.banner_image_uploader).to have_lightbox_preview
+    config_area.general_settings_section.banner_image_uploader.close_lightbox_preview
 
-      config_area.general_settings_section.submit
+    config_area.general_settings_section.submit
 
+    aggregate_failures("general settings") do
       expect(config_area.general_settings_section).to have_saved_successfully
 
       expect(SiteSetting.title).to eq("my community name")
@@ -129,6 +127,120 @@ describe "Admin About Config Area Page" do
       expect(SiteSetting.about_banner_image.sha1).to eq(Upload.generate_digest(image_file))
     end
 
+    config_area.contact_information_section.community_owner_input.fill_in("awesome owner")
+    config_area.contact_information_section.contact_email_input.fill_in("owneremail@owner.com")
+    config_area.contact_information_section.contact_url_input.fill_in(
+      "https://website.owner.com/blah",
+    )
+
+    user_select_kit = config_area.contact_information_section.site_contact_user_selector
+    user_select_kit.expand
+    user_select_kit.search(admin.username)
+    user_select_kit.select_row_by_value(admin.username)
+    user_select_kit.collapse
+
+    group_select_kit = config_area.contact_information_section.site_contact_group_selector
+    group = admin.groups.first
+    group_select_kit.expand
+    group_select_kit.search(group.name)
+    group_select_kit.select_row_by_value(group.id)
+    group_select_kit.collapse
+
+    config_area.contact_information_section.submit
+
+    aggregate_failures("contact information") do
+      expect(config_area.contact_information_section).to have_saved_successfully
+
+      expect(SiteSetting.community_owner).to eq("awesome owner")
+      expect(SiteSetting.contact_email).to eq("owneremail@owner.com")
+      expect(SiteSetting.contact_url).to eq("https://website.owner.com/blah")
+      expect(SiteSetting.site_contact_username).to eq(admin.username)
+      expect(SiteSetting.site_contact_group_name).to eq(group.id.to_s)
+    end
+
+    config_area.your_organization_section.company_name_input.fill_in("lil' company")
+    config_area.your_organization_section.company_url_input.fill_in("https://lil.company")
+    config_area.your_organization_section.governing_law_input.fill_in("wild west law")
+    config_area.your_organization_section.city_for_disputes_input.fill_in("teeb el shouq")
+
+    config_area.your_organization_section.submit
+
+    aggregate_failures("organization") do
+      expect(config_area.your_organization_section).to have_saved_successfully
+
+      expect(SiteSetting.company_name).to eq("lil' company")
+      expect(SiteSetting.company_url).to eq("https://lil.company")
+      expect(SiteSetting.governing_law).to eq("wild west law")
+      expect(SiteSetting.city_for_disputes).to eq("teeb el shouq")
+    end
+
+    config_area.group_listing_section.groups_input.select("extra3")
+    config_area.group_listing_section.initial_members_input.fill_in("3")
+    config_area.group_listing_section.order_input.select("alphabetically")
+    config_area.group_listing_section.show_description_input.uncheck
+    expect(config_area.group_listing_section.show_description_input.value).to eq(false)
+
+    config_area.group_listing_section.submit
+
+    aggregate_failures("group listing") do
+      expect(config_area.group_listing_section).to have_saved_successfully
+
+      expect(SiteSetting.about_page_extra_groups).to include(extra_group_3.id.to_s)
+      expect(SiteSetting.about_page_extra_groups_initial_members).to eq(3)
+      expect(SiteSetting.about_page_extra_groups_order).to eq("alphabetically")
+      expect(SiteSetting.about_page_extra_groups_show_description).to eq(false)
+    end
+
+    page.refresh
+
+    aggregate_failures("saved card values after reload") do
+      expect(config_area.general_settings_section.community_name_input.value).to eq(
+        "my community name",
+      )
+      expect(config_area.general_settings_section.community_summary_input.value).to eq(
+        "here's a bit of a summary",
+      )
+      expect(config_area.general_settings_section.community_description_editor.value).to eq(
+        "here's an extended description for the **community**",
+      )
+      expect(config_area.general_settings_section.community_title_input.value).to eq(
+        "here's a title for my site",
+      )
+      expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
+      expect(config_area.contact_information_section.community_owner_input.value).to eq(
+        "awesome owner",
+      )
+      expect(config_area.contact_information_section.contact_email_input.value).to eq(
+        "owneremail@owner.com",
+      )
+      expect(config_area.contact_information_section.contact_url_input.value).to eq(
+        "https://website.owner.com/blah",
+      )
+      expect(
+        config_area.contact_information_section.site_contact_user_selector,
+      ).to have_selected_value(admin.username)
+      expect(
+        config_area.contact_information_section.site_contact_group_selector,
+      ).to have_selected_value(admin.groups.first.id)
+      expect(config_area.your_organization_section.company_name_input.value).to eq("lil' company")
+      expect(config_area.your_organization_section.company_url_input.value).to eq(
+        "https://lil.company",
+      )
+      expect(config_area.your_organization_section.governing_law_input.value).to eq("wild west law")
+      expect(config_area.your_organization_section.city_for_disputes_input.value).to eq(
+        "teeb el shouq",
+      )
+      expect(config_area.group_listing_section.groups_input.value.split(",")).to contain_exactly(
+        Group[:everyone].id.to_s,
+        extra_group_3.id.to_s,
+      )
+      expect(config_area.group_listing_section.initial_members_input.value).to eq("3")
+      expect(config_area.group_listing_section.order_input.value).to eq("alphabetically")
+      expect(config_area.group_listing_section.show_description_input.value).to eq(false)
+    end
+  end
+
+  describe "the general settings card" do
     describe "the banner image field" do
       it "can remove the uploaded image" do
         SiteSetting.about_banner_image = image_upload
@@ -186,79 +298,6 @@ describe "Admin About Config Area Page" do
           expect(SiteSetting.about_banner_image.secure).to eq(false)
         end
       end
-    end
-  end
-
-  describe "the contact information card" do
-    it "can saves its fields to their corresponding site settings" do
-      config_area.visit
-
-      config_area.contact_information_section.community_owner_input.fill_in("awesome owner")
-      config_area.contact_information_section.contact_email_input.fill_in("owneremail@owner.com")
-      config_area.contact_information_section.contact_url_input.fill_in(
-        "https://website.owner.com/blah",
-      )
-
-      user_select_kit = config_area.contact_information_section.site_contact_user_selector
-      user_select_kit.expand
-      user_select_kit.search(admin.username)
-      user_select_kit.select_row_by_value(admin.username)
-      user_select_kit.collapse
-
-      group_select_kit = config_area.contact_information_section.site_contact_group_selector
-      group = admin.groups.first
-      group_select_kit.expand
-      group_select_kit.search(group.name)
-      group_select_kit.select_row_by_value(group.id)
-      group_select_kit.collapse
-
-      config_area.contact_information_section.submit
-      expect(config_area.contact_information_section).to have_saved_successfully
-
-      expect(SiteSetting.community_owner).to eq("awesome owner")
-      expect(SiteSetting.contact_email).to eq("owneremail@owner.com")
-      expect(SiteSetting.contact_url).to eq("https://website.owner.com/blah")
-      expect(SiteSetting.site_contact_username).to eq(admin.username)
-      expect(SiteSetting.site_contact_group_name).to eq(group.id.to_s)
-    end
-  end
-
-  describe "the your organization card" do
-    it "can saves its fields to their corresponding site settings" do
-      config_area.visit
-
-      config_area.your_organization_section.company_name_input.fill_in("lil' company")
-      config_area.your_organization_section.company_url_input.fill_in("https://lil.company")
-      config_area.your_organization_section.governing_law_input.fill_in("wild west law")
-      config_area.your_organization_section.city_for_disputes_input.fill_in("teeb el shouq")
-
-      config_area.your_organization_section.submit
-      expect(config_area.your_organization_section).to have_saved_successfully
-
-      expect(SiteSetting.company_name).to eq("lil' company")
-      expect(SiteSetting.company_url).to eq("https://lil.company")
-      expect(SiteSetting.governing_law).to eq("wild west law")
-      expect(SiteSetting.city_for_disputes).to eq("teeb el shouq")
-    end
-  end
-
-  describe "the group listing card" do
-    it "can saves its fields to their corresponding site settings" do
-      config_area.visit
-
-      config_area.group_listing_section.groups_input.select("extra3")
-      config_area.group_listing_section.initial_members_input.fill_in("3")
-      config_area.group_listing_section.order_input.select("alphabetically")
-      config_area.group_listing_section.show_description_input.uncheck
-      expect(config_area.group_listing_section.show_description_input.value).to eq(false)
-
-      config_area.group_listing_section.submit
-      expect(config_area.group_listing_section).to have_saved_successfully
-
-      expect(SiteSetting.about_page_extra_groups).to include(extra_group_3.id.to_s)
-      expect(SiteSetting.about_page_extra_groups_initial_members).to eq(3)
-      expect(SiteSetting.about_page_extra_groups_order).to eq("alphabetically")
-      expect(SiteSetting.about_page_extra_groups_show_description).to eq(false)
     end
   end
 

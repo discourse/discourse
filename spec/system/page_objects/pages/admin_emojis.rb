@@ -13,6 +13,11 @@ module PageObjects
         self
       end
 
+      def open_import
+        find(".admin-emoji__import").click
+        self
+      end
+
       def has_emoji_listed?(name)
         page.has_css?(emoji_table_selector, text: name)
       end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples "signup scenarios" do
+shared_examples "signup scenarios" do |device|
   let(:signup_page) { PageObjects::Pages::Signup.new }
   let(:login_page) { PageObjects::Pages::Login.new }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
@@ -102,30 +102,34 @@ shared_examples "signup scenarios" do
       expect(composer).to be_opened
     end
 
-    it "cannot signup with a common password" do
-      signup_page.open.fill_email(invite.email).fill_username("john").fill_password("0123456789")
-      expect(signup_page).to have_valid_fields
+    if device == :desktop
+      it "cannot signup with a common password" do
+        signup_page.open.fill_email(invite.email).fill_username("john").fill_password("0123456789")
+        expect(signup_page).to have_valid_fields
 
-      signup_page.click_create_account
-      expect(signup_page).to have_content(
-        I18n.t("activerecord.errors.models.user_password.attributes.password.common"),
-      )
+        signup_page.click_create_account
+        expect(signup_page).to have_content(
+          I18n.t("activerecord.errors.models.user_password.attributes.password.common"),
+        )
+      end
     end
 
     context "with invite code" do
       before { SiteSetting.invite_code = "cupcake" }
 
-      it "can signup with valid code" do
-        signup_page
-          .open
-          .fill_email(invite.email)
-          .fill_username("john")
-          .fill_password("supersecurepassword")
-          .fill_code("cupcake")
-        expect(signup_page).to have_valid_fields
+      if device == :desktop
+        it "can signup with valid code" do
+          signup_page
+            .open
+            .fill_email(invite.email)
+            .fill_username("john")
+            .fill_password("supersecurepassword")
+            .fill_code("cupcake")
+          expect(signup_page).to have_valid_fields
 
-        signup_page.click_create_account
-        expect(page).to have_current_path("/u/account-created")
+          signup_page.click_create_account
+          expect(page).to have_current_path("/u/account-created")
+        end
       end
 
       it "cannot signup with invalid code" do
@@ -153,17 +157,19 @@ shared_examples "signup scenarios" do
         )
       end
 
-      it "can signup when filling the custom field" do
-        signup_page
-          .open
-          .fill_email(invite.email)
-          .fill_username("john")
-          .fill_password("supersecurepassword")
-          .fill_custom_field("Occupation", "Jedi")
-        expect(signup_page).to have_valid_fields
+      if device == :desktop
+        it "can signup when filling the custom field" do
+          signup_page
+            .open
+            .fill_email(invite.email)
+            .fill_username("john")
+            .fill_password("supersecurepassword")
+            .fill_custom_field("Occupation", "Jedi")
+          expect(signup_page).to have_valid_fields
 
-        signup_page.click_create_account
-        expect(page).to have_current_path("/u/account-created")
+          signup_page.click_create_account
+          expect(page).to have_current_path("/u/account-created")
+        end
       end
 
       it "cannot signup without filling the custom field" do
@@ -215,29 +221,7 @@ shared_examples "signup scenarios" do
 
         expect(page).to have_current_path("/")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-
-      it "can login directly when using an auto approved email" do
-        signup_page
-          .open
-          .fill_email("johndoe@awesomeemail.com")
-          .fill_username("john")
-          .fill_password("supersecurepassword")
-
-        expect(signup_page).to have_valid_fields
-
-        signup_page.click_create_account
-
-        expect(page).to have_current_path("/u/account-created")
-
-        user = User.find_by(username: "john")
-        EmailToken.confirm(Fabricate(:email_token, user:).token)
-        visit "/"
-        login_page.open.fill_username("john").fill_password("supersecurepassword").click_login
-
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
+      end if device == :desktop
     end
 
     context "when site has subfolder install" do
@@ -275,15 +259,17 @@ shared_examples "signup scenarios" do
       SiteSetting.blocked_email_domains = "example.com"
     end
 
-    it "cannot signup" do
-      signup_page
-        .open
-        .fill_email("blocked@example.com")
-        .fill_username("john")
-        .fill_password("supersecurepassword")
-      expect(signup_page).to have_valid_username
-      expect(signup_page).to have_valid_password
-      expect(signup_page).to have_content(I18n.t("user.email.not_allowed"))
+    if device == :desktop
+      it "cannot signup" do
+        signup_page
+          .open
+          .fill_email("blocked@example.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
+        expect(signup_page).to have_valid_username
+        expect(signup_page).to have_valid_password
+        expect(signup_page).to have_content(I18n.t("user.email.not_allowed"))
+      end
     end
   end
 
@@ -408,10 +394,10 @@ end
 
 describe "Signup" do
   context "when desktop" do
-    include_examples "signup scenarios"
+    include_examples "signup scenarios", :desktop
   end
 
   context "when mobile", mobile: true do
-    include_examples "signup scenarios"
+    include_examples "signup scenarios", :mobile
   end
 end

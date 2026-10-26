@@ -11,43 +11,53 @@ describe "Admin Users Page" do
 
   before { sign_in(current_user) }
 
-  it "show correct breadcrumbs" do
+  it "lets staff inspect the active list, reveal emails and select actionable users" do
     admin_users_page.visit
-    expect(admin_users_page).to have_correct_breadcrumbs
-  end
 
-  it "selects and clears all actionable users with the bulk select buttons" do
-    admin_users_page.visit
+    aggregate_failures "active list" do
+      expect(admin_users_page).to have_correct_breadcrumbs
+      expect(admin_users_page).to have_active_tab("active")
+      expect(page).to have_css(".directory-table__cell.username")
+      expect(admin_users_page).to have_users(
+        [current_user.id, another_admin.id, user_1.id, user_2.id, user_3.id],
+      )
+      expect(admin_users_page).to have_no_emails
+    end
+
+    admin_users_page.click_show_emails
+    expect(admin_users_page).to have_emails
+
     admin_users_page.bulk_select_button.click
+    aggregate_failures "staff action restrictions" do
+      expect(admin_users_page.user_row(current_user.id).bulk_select_checkbox.disabled?).to eq(true)
+      expect(admin_users_page.user_row(another_admin.id).bulk_select_checkbox.disabled?).to eq(true)
+      expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox.disabled?).to eq(false)
+    end
+    admin_users_page.user_row(another_admin.id).bulk_select_checkbox.hover
+    expect(PageObjects::Components::Tooltips.new("bulk-action-unavailable-reason")).to be_present(
+      text: I18n.t("admin_js.admin.users.bulk_actions.staff_cant_be_actioned"),
+    )
 
     admin_users_page.bulk_select_all_button.click
-    expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).to be_checked
-    expect(admin_users_page.user_row(user_2.id).bulk_select_checkbox).to be_checked
-    expect(admin_users_page.user_row(user_3.id).bulk_select_checkbox).to be_checked
-    expect(admin_users_page).to have_bulk_actions_dropdown
+    aggregate_failures "select all" do
+      expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).to be_checked
+      expect(admin_users_page.user_row(user_2.id).bulk_select_checkbox).to be_checked
+      expect(admin_users_page.user_row(user_3.id).bulk_select_checkbox).to be_checked
+      expect(admin_users_page).to have_bulk_actions_dropdown
+    end
 
     admin_users_page.bulk_clear_all_button.click
     expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).not_to be_checked
     expect(admin_users_page).to have_no_bulk_actions_dropdown
+
+    admin_users_page.bulk_select_button.click
+    admin_users_page.click_tab("suspended")
+    expect(admin_users_page).to have_active_tab("suspended")
+    expect(admin_users_page).to have_none_users
   end
 
   describe "bulk user delete" do
     let(:confirmation_modal) { PageObjects::Modals::BulkUserDeleteConfirmation.new }
-
-    it "disables checkboxes for users that can't be deleted or suspended" do
-      admin_users_page.visit
-
-      admin_users_page.bulk_select_button.click
-
-      expect(admin_users_page.user_row(current_user.id).bulk_select_checkbox.disabled?).to eq(true)
-      expect(admin_users_page.user_row(another_admin.id).bulk_select_checkbox.disabled?).to eq(true)
-      expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox.disabled?).to eq(false)
-
-      admin_users_page.user_row(another_admin.id).bulk_select_checkbox.hover
-      expect(PageObjects::Components::Tooltips.new("bulk-action-unavailable-reason")).to be_present(
-        text: I18n.t("admin_js.admin.users.bulk_actions.staff_cant_be_actioned"),
-      )
-    end
 
     it "has a button that toggles the bulk select checkboxes" do
       admin_users_page.visit
@@ -248,22 +258,6 @@ describe "Admin Users Page" do
   end
 
   context "when visiting an admin's page" do
-    it "shows list of active users" do
-      admin_users_page.visit
-      expect(admin_users_page).to have_active_tab("active")
-      expect(page).to have_css(".directory-table__cell.username")
-      expect(admin_users_page).to have_users(
-        [current_user.id, another_admin.id, user_1.id, user_2.id, user_3.id],
-      )
-    end
-
-    it "shows list of suspended users" do
-      admin_users_page.visit
-      admin_users_page.click_tab("suspended")
-      expect(admin_users_page).to have_active_tab("suspended")
-      expect(admin_users_page).to have_none_users
-    end
-
     it "shows list of silenced users" do
       admin_users_page.visit
       user_1.update!(silenced_till: 1.day.from_now)
@@ -271,13 +265,6 @@ describe "Admin Users Page" do
       expect(admin_users_page).to have_active_tab("silenced")
       expect(page).to have_css(".users-list.silenced")
       expect(admin_users_page).to have_users([user_1.id])
-    end
-
-    it "shows emails" do
-      admin_users_page.visit
-      expect(admin_users_page).to have_no_emails
-      admin_users_page.click_show_emails
-      expect(admin_users_page).to have_emails
     end
 
     it "redirects to groups page" do

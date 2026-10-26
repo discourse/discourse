@@ -7,43 +7,45 @@ describe "Admin Email Templates Page" do
 
   before { sign_in(admin) }
 
-  it "navigates to the email template edit page when clicking the Edit button" do
+  it "lets the admin open a template from its Edit button and name" do
     email_templates_page.visit
 
     email_templates_page.template("user_notifications.account_exists").edit_button.click
 
-    expect(page).to have_current_path("/admin/email/templates/user_notifications.account_exists")
-  end
+    aggregate_failures "Edit button destination" do
+      expect(page).to have_current_path("/admin/email/templates/user_notifications.account_exists")
+    end
 
-  it "navigates to the email template edit page when clicking the template name" do
-    email_templates_page.visit
+    page.go_back
 
     email_templates_page.template("user_notifications.account_exists").name_cell.click
 
-    expect(page).to have_current_path("/admin/email/templates/user_notifications.account_exists")
+    aggregate_failures "template name destination" do
+      expect(page).to have_current_path("/admin/email/templates/user_notifications.account_exists")
+    end
   end
 
   describe "filter controls" do
-    it "can find templates by name" do
+    it "lets the admin find a template by its name and identifier" do
       email_templates_page.visit
 
       email_templates_page.filter_controls.type_in_search("Account already")
 
-      expect(email_templates_page).to have_exact_count_templates_shown(1)
-      expect(
-        email_templates_page.template("user_notifications.account_exists").name_cell.text.strip,
-      ).to eq("Account already exists")
-    end
-
-    it "can find templates by id" do
-      email_templates_page.visit
+      aggregate_failures "template name search" do
+        expect(email_templates_page).to have_exact_count_templates_shown(1)
+        expect(
+          email_templates_page.template("user_notifications.account_exists").name_cell.text.strip,
+        ).to eq("Account already exists")
+      end
 
       email_templates_page.filter_controls.type_in_search("user_notifications.account_exists")
 
-      expect(email_templates_page).to have_exact_count_templates_shown(1)
-      expect(
-        email_templates_page.template("user_notifications.account_exists").name_cell.text.strip,
-      ).to eq("Account already exists")
+      aggregate_failures "template identifier search" do
+        expect(email_templates_page).to have_exact_count_templates_shown(1)
+        expect(
+          email_templates_page.template("user_notifications.account_exists").name_cell.text.strip,
+        ).to eq("Account already exists")
+      end
     end
 
     it "can filter templates to only show overridden ones" do

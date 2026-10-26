@@ -8,15 +8,13 @@ describe "Admin Email Templates" do
 
   before { sign_in(admin) }
 
-  it "forces markdown mode and doesn't allow the user to toggle the rich text editor" do
+  it "lets the admin edit an email template in markdown and reload its saved content" do
     email_templates_page.visit_template("user_notifications.account_exists")
 
-    expect(composer).to have_markdown_editor_active
-    expect(composer).to have_no_toggle_switch
-  end
-
-  it "can edit an email template" do
-    email_templates_page.visit_template("user_notifications.account_exists")
+    aggregate_failures "markdown editor" do
+      expect(composer).to have_markdown_editor_active
+      expect(composer).to have_no_toggle_switch
+    end
 
     subject_text = "Modified test subject #{SecureRandom.hex(8)}"
     email_templates_page.edit_subject(subject_text)
@@ -25,17 +23,23 @@ describe "Admin Email Templates" do
       "This is a modified test body with some **markdown** formatting #{SecureRandom.hex(8)}"
     email_templates_page.edit_body(body_text)
 
-    expect(email_templates_page).to have_preview_content(
-      "This is a modified test body with some markdown formatting",
-    )
-    expect(page).to have_css(".d-editor-preview strong", text: "markdown")
+    aggregate_failures "markdown preview" do
+      expect(email_templates_page).to have_preview_content(
+        "This is a modified test body with some markdown formatting",
+      )
+      expect(page).to have_css(".d-editor-preview strong", text: "markdown")
+    end
 
     email_templates_page.save_changes
-    expect(page).to have_css(".save-button .saved")
+    aggregate_failures "saved template" do
+      expect(page).to have_css(".save-button .saved")
+    end
 
     email_templates_page.visit_template("user_notifications.account_exists")
-    expect(email_templates_page).to have_subject_value(subject_text)
-    expect(composer).to have_value(body_text)
+    aggregate_failures "persisted template" do
+      expect(email_templates_page).to have_subject_value(subject_text)
+      expect(composer).to have_value(body_text)
+    end
   end
 
   it "shows link to site texts for template with multiple subjects" do

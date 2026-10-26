@@ -62,13 +62,19 @@ describe "Admin Customize Themes Config Area Page" do
     expect(config_area).to have_no_default_badge(foundation_theme)
   end
 
-  it "allows to make theme selectable by users" do
+  it "toggles theme selectability and deletes the theme through its editor" do
     config_area.visit
     expect(config_area).to have_no_badge(theme, "--selectable")
     config_area.toggle_selectable(theme)
     expect(config_area).to have_badge(theme, "--selectable")
     config_area.toggle_selectable(theme)
     expect(config_area).to have_no_badge(theme, "--selectable")
+
+    config_area.click_edit(theme)
+    expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+    admin_customize_themes_page.click_delete
+    admin_customize_themes_page.confirm_delete
+    expect(page).to have_current_path("/admin/config/customize/themes")
   end
 
   it "allows a theme to be created" do
@@ -79,16 +85,6 @@ describe "Admin Customize Themes Config Area Page" do
     )
 
     expect(page).to have_current_path(%r{/admin/customize/themes/\d+})
-  end
-
-  it "allows to edit and delete theme" do
-    config_area.visit
-    config_area.click_edit(theme)
-    expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
-
-    admin_customize_themes_page.click_delete
-    admin_customize_themes_page.confirm_delete
-    expect(page).to have_current_path("/admin/config/customize/themes")
   end
 
   it "has new look when edit theme is visited directly and can go back to themes" do

@@ -10,31 +10,19 @@ describe "Admin Emoji Bulk Import" do
 
   before { sign_in(current_user) }
 
-  it "imports emojis from the sample ZIP and shows them in the list" do
+  it "imports the sample ZIP and resolves conflicts when importing it again" do
     emojis_page.visit_import_page
-
     emojis_page.upload_zip(sample_zip)
-
     expect(emojis_page).to have_import_preview
-
     emojis_page.confirm_import
-
     expect(page).to have_current_path("/admin/config/emoji")
     expect(emojis_page).to have_emoji_listed("discourse")
-  end
 
-  it "can re-import without error when emoji already exists (conflict resolution)" do
-    emojis_page.visit_import_page
+    emojis_page.open_import
+    expect(page).to have_current_path("/admin/config/emoji/import")
     emojis_page.upload_zip(sample_zip)
-    emojis_page.confirm_import
-
-    emojis_page.visit_import_page
-    emojis_page.upload_zip(sample_zip)
-
     expect(emojis_page).to have_import_preview
-
     emojis_page.confirm_import
-
     expect(page).to have_current_path("/admin/config/emoji")
     expect(emojis_page).to have_emoji_listed("discourse")
   end

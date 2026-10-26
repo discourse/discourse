@@ -10,13 +10,13 @@ describe "Admin Dashboard Redesign | Site Advice section" do
 
     before { sign_in(current_user) }
 
-    it "shows every active problem with its count, severity order, and actions" do
+    it "shows active problems in severity order and lets an admin ignore and refresh them" do
       dashboard.visit
 
       expect(dashboard).to have_no_site_advice
 
       Fabricate(:admin_notice, identifier: "host_names", priority: "low")
-      Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
+      resolved = Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
 
       dashboard.visit
 
@@ -29,15 +29,9 @@ describe "Admin Dashboard Redesign | Site Advice section" do
       expect(dashboard).to have_ignore_button_for("STARTTLS disabled")
       expect(dashboard).to have_ignore_button_for("default localhost hostname")
       expect(dashboard).to have_site_advice_refresh_button
-    end
 
-    it "lets an admin ignore a problem and refresh the list in place" do
       ProblemCheck.stubs(:realtime).returns(stub(run_all: nil))
 
-      Fabricate(:admin_notice, identifier: "host_names", priority: "low")
-      resolved = Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
-
-      dashboard.visit
       dashboard.ignore_site_advice_problem("default localhost hostname")
 
       expect(dashboard).to have_no_site_advice_problem("default localhost hostname")

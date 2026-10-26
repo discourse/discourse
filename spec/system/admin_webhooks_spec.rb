@@ -14,21 +14,24 @@ describe "Admin Webhooks Page" do
     sign_in(admin)
   end
 
-  it "shows a list of webhooks" do
+  it "lets the admin inspect and add webhooks" do
     webhooks_page.visit_page
 
-    expect(webhooks_page).to have_webhook_listed("https://www.example.com/1")
-  end
+    aggregate_failures "existing webhook" do
+      expect(webhooks_page).to have_webhook_listed("https://www.example.com/1")
+    end
 
-  it "can add a new webhook" do
-    webhooks_page.visit_page
     webhooks_page.add_webhook(payload_url: "https://www.example.com/2")
 
-    expect(webhooks_page).to have_webhook_details("https://www.example.com/2")
+    aggregate_failures "created webhook" do
+      expect(webhooks_page).to have_webhook_details("https://www.example.com/2")
+    end
 
     webhooks_page.click_back
 
-    expect(webhooks_page).to have_webhook_listed("https://www.example.com/2")
+    aggregate_failures "saved webhook" do
+      expect(webhooks_page).to have_webhook_listed("https://www.example.com/2")
+    end
   end
 
   it "can edit existing webhooks" do

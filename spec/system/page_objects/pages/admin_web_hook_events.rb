@@ -12,6 +12,10 @@ module PageObjects
         find(".select-kit-header", text: "All Events").click
       end
 
+      def expand_filter
+        find(".delivery-status-filters .select-kit-header").click
+      end
+
       def click_filter_delivered
         find(".select-kit-row", text: "Delivered").click
       end

@@ -37,31 +37,24 @@ describe "Review queue | author penalty" do
       silence_author!
     end
 
-    it "marks the flagged user as silenced" do
+    it "lets staff inspect the automatic silence and lift it without resolving the flag" do
       review_page.visit_reviewable(reviewable)
 
-      expect(page).to have_css(
-        ".review-item__meta-flagged-user .d-icon-microphone-slash",
-        visible: :all,
-      )
-      expect(page).to have_css(
-        ".review-item__meta-flagged-user .svg-icon-title[title='This user is silenced.']",
-        visible: :all,
-      )
-    end
+      aggregate_failures "silenced author" do
+        expect(page).to have_css(
+          ".review-item__meta-flagged-user .d-icon-microphone-slash",
+          visible: :all,
+        )
+        expect(page).to have_css(
+          ".review-item__meta-flagged-user .svg-icon-title[title='This user is silenced.']",
+          visible: :all,
+        )
+      end
 
-    it "records the penalty in the timeline" do
-      review_page.visit_reviewable(reviewable)
       review_page.click_timeline_tab
-
       expect(page).to have_css(".timeline-event__title", text: "Author silenced automatically")
-    end
 
-    it "lifts the silence without resolving the flag" do
-      review_page.visit_reviewable(reviewable)
-
-      find(".reviewable-action.post-unsilence-user").click
-
+      review_page.select_action(reviewable, "post-unsilence-user")
       expect(page).to have_no_css(
         ".review-item__meta-flagged-user .d-icon-microphone-slash",
         visible: :all,

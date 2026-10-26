@@ -50,25 +50,51 @@ describe "Admin | Sidebar Navigation" do
     end
   end
 
-  it "displays the panel header" do
-    visit("/admin")
-    expect(sidebar).to have_panel_header
-  end
-
-  it "collapses sections by default" do
+  it "lets the admin inspect and expand the default navigation sections" do
     visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.map(&:text)).to eq(
-      [
-        I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.config.users.title"),
-        I18n.t("admin_js.admin.config.groups.title"),
-        I18n.t("admin_js.admin.config.site_settings.title"),
-        I18n.t("js.sidebar.sections.community.links.review.content"),
-        I18n.t("admin_js.admin.config.whats_new.title"),
-        I18n.t("admin_js.admin.config.upcoming_changes.title"),
-      ],
-    )
+    expected_links = [
+      I18n.t("admin_js.admin.dashboard.title"),
+      I18n.t("admin_js.admin.config.users.title"),
+      I18n.t("admin_js.admin.config.groups.title"),
+      I18n.t("admin_js.admin.config.site_settings.title"),
+      I18n.t("js.sidebar.sections.community.links.review.content"),
+      I18n.t("admin_js.admin.config.whats_new.title"),
+      I18n.t("admin_js.admin.config.upcoming_changes.title"),
+    ]
+
+    aggregate_failures "default navigation" do
+      expect(sidebar).to have_panel_header
+      expect(links.map(&:text)).to eq(expected_links)
+    end
+
+    sidebar.toggle_all_sections
+
+    aggregate_failures "expanded navigation" do
+      expect(page).to have_selector(
+        ".sidebar-section-link-content-text",
+        minimum: UNFILTERED_LINK_COUNT,
+      )
+    end
+
+    sidebar.toggle_all_sections
+
+    aggregate_failures "collapsed navigation" do
+      expect(page).to have_selector(
+        ".sidebar-section-link-content-text",
+        count: expected_links.length,
+      )
+      expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(expected_links)
+    end
+
+    sidebar.toggle_all_sections
+
+    aggregate_failures "reopened navigation" do
+      expect(page).to have_selector(
+        ".sidebar-section-link-content-text",
+        minimum: UNFILTERED_LINK_COUNT,
+      )
+    end
   end
 
   context "when on mobile" do
@@ -89,37 +115,6 @@ describe "Admin | Sidebar Navigation" do
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-root")
     end
-  end
-
-  it "allows sections to be expanded" do
-    visit("/admin")
-    sidebar.toggle_all_sections
-    expect(page).to have_selector(
-      ".sidebar-section-link-content-text",
-      minimum: UNFILTERED_LINK_COUNT,
-    )
-
-    sidebar.toggle_all_sections
-    expected_links = [
-      I18n.t("admin_js.admin.dashboard.title"),
-      I18n.t("admin_js.admin.config.users.title"),
-      I18n.t("admin_js.admin.config.groups.title"),
-      I18n.t("admin_js.admin.config.site_settings.title"),
-      I18n.t("js.sidebar.sections.community.links.review.content"),
-      I18n.t("admin_js.admin.config.whats_new.title"),
-      I18n.t("admin_js.admin.config.upcoming_changes.title"),
-    ]
-    expect(page).to have_selector(
-      ".sidebar-section-link-content-text",
-      count: expected_links.length,
-    )
-    expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(expected_links)
-
-    sidebar.toggle_all_sections
-    expect(page).to have_selector(
-      ".sidebar-section-link-content-text",
-      minimum: UNFILTERED_LINK_COUNT,
-    )
   end
 
   it "highlights the 'Themes and components' link when either the themes, themes components or theme site settings admin page is visited" do

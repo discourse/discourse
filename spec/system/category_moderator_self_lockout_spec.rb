@@ -21,7 +21,6 @@ describe "Category moderator self-lockout warning" do
   before { SiteSetting.moderators_manage_categories = true }
 
   def remove_everyone_and_add_restricted_group
-    category_page.visit_security(category)
     permission_row.remove_group_permission("everyone")
     form.field("security_add_group_id").select(restricted_group.id)
   end
@@ -29,15 +28,18 @@ describe "Category moderator self-lockout warning" do
   context "when moderator would lose access" do
     before { sign_in(moderator) }
 
-    it "shows confirmation dialog on save" do
+    it "lets a moderator cancel losing access before confirming the same category change" do
+      category_page.visit_security(category)
       remove_everyone_and_add_restricted_group
       category_page.save_settings
 
       expect(dialog).to be_open
       expect(dialog).to have_content(I18n.t("js.category.errors.self_lockout"))
-    end
+      dialog.click_no
 
-    it "saves and redirects home when confirmed" do
+      category_page.visit_security(category)
+      expect(permission_row).to have_group_permission("everyone")
+
       remove_everyone_and_add_restricted_group
       category_page.save_settings
       dialog.click_yes
@@ -46,15 +48,6 @@ describe "Category moderator self-lockout warning" do
       expect(category.reload.category_groups.map(&:group_id)).to contain_exactly(
         restricted_group.id,
       )
-    end
-
-    it "does not save when cancelled" do
-      remove_everyone_and_add_restricted_group
-      category_page.save_settings
-      dialog.click_no
-
-      category_page.visit_security(category)
-      expect(permission_row).to have_group_permission("everyone")
     end
   end
 
@@ -65,6 +58,7 @@ describe "Category moderator self-lockout warning" do
     end
 
     it "saves without showing dialog" do
+      category_page.visit_security(category)
       remove_everyone_and_add_restricted_group
       category_page.save_settings
 

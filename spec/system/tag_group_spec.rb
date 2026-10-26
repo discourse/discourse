@@ -22,33 +22,27 @@ describe "Tag Groups" do
       end
     end
 
-    it "displays the correct labels and values" do
+    it "lets an admin inspect a tag group and switch groups without carrying over tags" do
+      tag3 = Fabricate(:tag, name: "rats")
+      Fabricate(:tag_group, name: "Group One", tags: [tag1])
+      Fabricate(:tag_group, name: "Group Two", tags: [tag2, tag3])
+
       tag_groups_page.visit_tag_group(tag_group)
+      aggregate_failures "existing group fields" do
+        expect(tag_groups_page).to have_tags_label
+        expect(tag_groups_page).to have_parent_tag_label
+        expect(tag_groups_page).to have_visible_permission_label
+        expect(tag_groups_page).to have_tag_group_in_sidebar("Ats")
+        expect(tag_groups_page).to have_tag_in_group("cats")
+        expect(tag_groups_page).to have_tag_in_group("bats")
+      end
 
-      expect(tag_groups_page).to have_tags_label
-      expect(tag_groups_page).to have_parent_tag_label
-      expect(tag_groups_page).to have_visible_permission_label
-      expect(tag_groups_page).to have_tag_group_in_sidebar("Ats")
-      expect(tag_groups_page).to have_tag_in_group("cats")
-      expect(tag_groups_page).to have_tag_in_group("bats")
-    end
-  end
-
-  describe "navigating between tag groups" do
-    fab!(:tag3) { Fabricate(:tag, name: "rats") }
-    fab!(:group_one) { Fabricate(:tag_group, name: "Group One", tags: [tag1]) }
-    fab!(:group_two) { Fabricate(:tag_group, name: "Group Two", tags: [tag2, tag3]) }
-
-    it "updates the form when clicking a different tag group in the sidebar" do
-      tag_groups_page.visit
       tag_groups_page.click_tag_group("Group One")
-
       expect(tag_groups_page).to have_name("Group One")
       expect(tag_groups_page).to have_tag_in_group("cats")
       expect(tag_groups_page).to have_no_tag_in_group("bats")
 
       tag_groups_page.click_tag_group("Group Two")
-
       expect(tag_groups_page).to have_name("Group Two")
       expect(tag_groups_page).to have_tag_in_group("bats")
       expect(tag_groups_page).to have_tag_in_group("rats")

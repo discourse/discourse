@@ -17,20 +17,71 @@ describe "Admin Color Palette Config Area Page" do
     Stylesheet::Manager.cache.clear
   end
 
-  it "allows editing the palette name" do
+  it "edits, duplicates, and deletes a color palette" do
     config_area.visit(color_scheme.id)
 
     config_area.edit_name_button.click
     config_area.name_field.fill_in("Changed name 2.0")
-
     expect(config_area).to have_unsaved_changes_indicator
-
     config_area.form.submit
 
-    expect(toasts).to have_success(I18n.t("js.saved"))
-    expect(config_area).to have_no_unsaved_changes_indicator
-    expect(color_scheme.reload.name).to eq("Changed name 2.0")
-    expect(config_area.name_heading.text).to eq("Changed name 2.0")
+    aggregate_failures("saved palette name") do
+      expect(toasts).to have_success(I18n.t("js.saved"))
+      expect(config_area).to have_no_unsaved_changes_indicator
+      expect(color_scheme.reload.name).to eq("Changed name 2.0")
+      expect(config_area.name_heading.text).to eq("Changed name 2.0")
+    end
+    toasts.close_button.click
+
+    config_area.user_selectable_field.toggle
+    expect(config_area).to have_unsaved_changes_indicator
+    config_area.form.submit
+
+    aggregate_failures("saved selectable palette") do
+      expect(toasts).to have_success(I18n.t("js.saved"))
+      expect(config_area).to have_no_unsaved_changes_indicator
+      expect(config_area.user_selectable_field.value).to eq(true)
+      expect(color_scheme.reload.user_selectable).to eq(true)
+    end
+    toasts.close_button.click
+
+    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
+    expect(config_area).to have_unsaved_changes_indicator
+    config_area.form.submit
+
+    aggregate_failures("saved primary color") do
+      expect(toasts).to have_success(I18n.t("js.saved"))
+      expect(config_area).to have_no_unsaved_changes_indicator
+      expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#abcdef")
+      expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
+    end
+    toasts.close_button.click
+
+    max_id = ColorScheme.maximum(:id)
+    expect(config_area.user_selectable_field.value).to eq(true)
+    config_area.duplicate_button.click
+    expect(page).to have_current_path("/admin/config/colors/#{max_id + 1}")
+
+    aggregate_failures("duplicated palette") do
+      expect(config_area).to have_no_unsaved_changes_indicator
+      expect(config_area.name_heading.text).to eq(
+        I18n.t("admin_js.admin.config_areas.color_palettes.copy_of", name: color_scheme.name),
+      )
+      expect(toasts).to have_success(
+        I18n.t("admin_js.admin.config_areas.color_palettes.copy_created", name: color_scheme.name),
+      )
+      expect(config_area.user_selectable_field.value).to eq(false)
+    end
+
+    config_area.back_to_list
+    expect(page).to have_current_path("/admin/config/colors")
+    PageObjects::Pages::AdminColorPalettesConfigArea.new.open_palette(color_scheme)
+    expect(page).to have_current_path("/admin/config/colors/#{color_scheme.id}")
+    config_area.delete_button.click
+    dialog.click_danger
+
+    expect(page).to have_current_path("/admin/config/colors")
+    expect(ColorScheme.exists?(color_scheme.id)).to eq(false)
   end
 
   it "allows quick-saving just the name without affecting other changes" do
@@ -56,38 +107,6 @@ describe "Admin Color Palette Config Area Page" do
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(color_scheme.colors.reload.find_by(name: "primary").hex).to eq("abcdef")
-  end
-
-  it "allows changing the user selectable field" do
-    config_area.visit(color_scheme.id)
-
-    config_area.user_selectable_field.toggle
-
-    expect(config_area).to have_unsaved_changes_indicator
-
-    config_area.form.submit
-
-    expect(toasts).to have_success(I18n.t("js.saved"))
-    expect(config_area).to have_no_unsaved_changes_indicator
-    expect(config_area.user_selectable_field.value).to eq(true)
-    expect(color_scheme.reload.user_selectable).to eq(true)
-  end
-
-  it "allows changing colors" do
-    config_area.visit(color_scheme.id)
-
-    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
-
-    expect(config_area).to have_unsaved_changes_indicator
-
-    config_area.form.submit
-
-    expect(toasts).to have_success(I18n.t("js.saved"))
-    expect(config_area).to have_no_unsaved_changes_indicator
-
-    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#abcdef")
-
-    expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
   end
 
   it "supports pasting color codes with and without leading #" do
@@ -124,39 +143,6 @@ describe "Admin Color Palette Config Area Page" do
     expect(color_scheme.colors.reload.find_by(name: "primary").hex).to eq("dddddd")
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(config_area.color_palette_editor).to have_no_revert_button_for_color("primary")
-  end
-
-  it "allows duplicating the color palette" do
-    max_id = ColorScheme.maximum(:id)
-    color_scheme.update!(user_selectable: true)
-
-    config_area.visit(color_scheme.id)
-
-    expect(config_area.user_selectable_field.value).to eq(true)
-
-    config_area.duplicate_button.click
-
-    expect(page).to have_current_path("/admin/config/colors/#{max_id + 1}")
-    expect(config_area).to have_no_unsaved_changes_indicator
-    expect(config_area.name_heading.text).to eq(
-      I18n.t("admin_js.admin.config_areas.color_palettes.copy_of", name: color_scheme.name),
-    )
-    expect(toasts).to have_success(
-      I18n.t("admin_js.admin.config_areas.color_palettes.copy_created", name: color_scheme.name),
-    )
-    expect(config_area.user_selectable_field.value).to eq(false)
-  end
-
-  it "allows deleting a color palette" do
-    config_area.visit(color_scheme.id)
-
-    config_area.delete_button.click
-
-    dialog.click_danger
-
-    expect(page).to have_current_path("/admin/config/colors")
-
-    expect(ColorScheme.exists?(color_scheme.id)).to eq(false)
   end
 
   it "applies the changes live when editing the currently active palette" do

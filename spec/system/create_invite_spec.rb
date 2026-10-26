@@ -32,11 +32,17 @@ describe "Creating Invites" do
     sign_in(user)
   end
 
-  it "is possible to create an invite link without toggling the advanced options" do
+  it "lets the user create, copy, inspect, and edit an invite link" do
     visit_invites_page_and_open_modal
     cdp.allow_clipboard
 
+    aggregate_failures "new invite" do
+      expect(create_invite_modal.header).to have_text(I18n.t("js.user.invited.invite.new_title"))
+      expect(create_invite_modal).to have_footer
+    end
+
     create_invite_modal.save_button.click
+    expect(create_invite_modal).to have_no_footer
     create_invite_modal.copy_button.click
 
     invite_link = create_invite_modal.invite_link_input.value
@@ -50,51 +56,26 @@ describe "Creating Invites" do
 
     create_invite_modal.close
 
-    expect(user_invited_pending_page.invites_list.size).to eq(2)
-
-    expect(user_invited_pending_page.latest_invite).to be_link_type(
-      key: invite_key,
-      redemption_count: 0,
-      max_redemption_count: 7,
-    )
-    expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-      3.days.from_now,
-    )
-  end
-
-  it "has the correct modal title when creating a new invite" do
-    visit_invites_page_and_open_modal
-
-    expect(create_invite_modal.header).to have_text(I18n.t("js.user.invited.invite.new_title"))
-  end
-
-  it "hides the modal footer after creating an invite via simple mode" do
-    visit_invites_page_and_open_modal
-
-    expect(create_invite_modal).to have_footer
-    create_invite_modal.save_button.click
-    expect(create_invite_modal).to have_no_footer
-  end
-
-  context "when editing an invite" do
-    before do
-      visit_invites_page_and_open_modal
-      create_invite_modal.save_button.click
-      create_invite_modal.close
-
+    aggregate_failures "saved invite row" do
       expect(user_invited_pending_page.invites_list.size).to eq(2)
-
-      user_invited_pending_page.latest_invite.edit_button.click
+      expect(user_invited_pending_page.latest_invite).to be_link_type(
+        key: invite_key,
+        redemption_count: 0,
+        max_redemption_count: 7,
+      )
+      expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
+        3.days.from_now,
+      )
     end
 
-    it "has the correct modal title" do
+    user_invited_pending_page.latest_invite.edit_button.click
+
+    aggregate_failures "edit the created invite" do
       expect(create_invite_modal.header).to have_text(I18n.t("js.user.invited.invite.edit_title"))
-    end
-
-    it "displays the invite link and a copy button" do
       expect(create_invite_modal).to have_copy_button
       expect(create_invite_modal).to have_invite_link_input
     end
+    create_invite_modal.close
   end
 
   context "with the advanced options" do

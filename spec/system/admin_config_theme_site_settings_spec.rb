@@ -25,24 +25,26 @@ describe "Admin Theme Site Settings" do
 
   before { sign_in(current_user) }
 
-  it "shows the themeable site settings and their name, description, and default value" do
+  it "shows theme setting defaults and the themes overriding them" do
     visit "/admin/config/customize/theme-site-settings"
-    expect(theme_site_settings_page).to have_setting_with_default("enable_welcome_banner")
-    expect(theme_site_settings_page).to have_setting_with_default("search_experience")
-  end
 
-  it "shows links to each theme that overrides the default and overridden values" do
-    visit "/admin/config/customize/theme-site-settings"
-    expect(theme_site_settings_page).to have_theme_overriding(
-      "enable_welcome_banner",
-      theme_1,
-      "false",
-    )
-    expect(theme_site_settings_page).to have_theme_overriding(
-      "search_experience",
-      theme_2,
-      "search_field",
-    )
+    aggregate_failures("theme setting defaults") do
+      expect(theme_site_settings_page).to have_setting_with_default("enable_welcome_banner")
+      expect(theme_site_settings_page).to have_setting_with_default("search_experience")
+    end
+
+    aggregate_failures("theme override links and tooltips") do
+      expect(theme_site_settings_page).to have_theme_overriding(
+        "enable_welcome_banner",
+        theme_1,
+        "false",
+      )
+      expect(theme_site_settings_page).to have_theme_overriding(
+        "search_experience",
+        theme_2,
+        "search_field",
+      )
+    end
   end
 
   describe "all site setting list" do

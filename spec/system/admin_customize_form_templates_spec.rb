@@ -16,43 +16,24 @@ describe "Admin Customize Form Templates" do
   describe "when visiting the page to customize form templates" do
     before { category.update!(form_template_ids: [form_template.id]) }
 
-    it "shows existing form templates in a table" do
+    it "lists templates and assigned categories and opens the preview and editor" do
       form_template_page.visit
-
-      expect(form_template_page).to have_form_template_table
-      expect(form_template_page).to have_form_template(form_template.name)
-    end
-
-    it "shows the categories using each form template" do
-      form_template_page.visit
-
-      expect(form_template_page).to have_form_template_table
-      expect(form_template_page).to have_category_in_template_row(category.name)
-    end
-
-    it "shows the form-template structure in a modal" do
-      form_template_page.visit
+      aggregate_failures("template list and assigned category") do
+        expect(form_template_page).to have_form_template_table
+        expect(form_template_page).to have_form_template(form_template.name)
+        expect(form_template_page).to have_category_in_template_row(category.name)
+      end
 
       form_template_page.click_view_form_template
       expect(form_template_page).to have_template_structure("- type: input")
-    end
-
-    it "shows a template preview when the preview is toggled" do
-      form_template_page.visit
-
-      form_template_page.click_view_form_template
       form_template_page.click_toggle_preview
       expect(form_template_page).to have_input_field("input")
+
+      form_template_page.find(".d-modal__footer .btn-primary").click
+      expect(page).to have_current_path("/admin/customize/form-templates/#{form_template.id}")
     end
 
     context "when using the view template modal" do
-      it "opens the edit page from the edit button" do
-        form_template_page.visit
-        form_template_page.click_view_form_template
-        form_template_page.find(".d-modal__footer .btn-primary").click
-        expect(page).to have_current_path("/admin/customize/form-templates/#{form_template.id}")
-      end
-
       it "deletes the form template from the delete button" do
         form_template_page.visit
         original_template_name = form_template.name
@@ -93,57 +74,43 @@ describe "Admin Customize Form Templates" do
       expect(form_template_page).to have_form_template(sample_name)
     end
 
-    it "disables saving until the form is complete" do
+    it "enables a complete draft, previews it, closes the preview, and saves it" do
       form_template_page.visit_new
-      expect(form_template_page).to have_save_button_with_state(disabled: true)
-      form_template_page.type_in_template_name("New Template")
-      expect(form_template_page).to have_save_button_with_state(disabled: true)
-      ace_editor.type_input("- type: input")
-      expect(form_template_page).to have_save_button_with_state(disabled: false)
-    end
+      aggregate_failures("empty draft controls") do
+        expect(form_template_page).to have_save_button_with_state(disabled: true)
+        expect(form_template_page).to have_preview_button_with_state(disabled: true)
+      end
 
-    it "disables previewing until the form is complete" do
-      form_template_page.visit_new
-      expect(form_template_page).to have_preview_button_with_state(disabled: true)
       form_template_page.type_in_template_name("New Template")
-      expect(form_template_page).to have_preview_button_with_state(disabled: true)
-      ace_editor.type_input("- type: input")
-      expect(form_template_page).to have_preview_button_with_state(disabled: false)
+      aggregate_failures("incomplete draft controls") do
+        expect(form_template_page).to have_save_button_with_state(disabled: true)
+        expect(form_template_page).to have_preview_button_with_state(disabled: true)
+      end
+
+      sample_name = "Preview Close Save Template"
+      form_template_page.type_in_template_name(sample_name)
+      ace_editor.type_input("- type: input\n  id: name")
+      aggregate_failures("complete draft controls") do
+        expect(form_template_page).to have_save_button_with_state(disabled: false)
+        expect(form_template_page).to have_preview_button_with_state(disabled: false)
+      end
+
+      form_template_page.click_preview_button
+      aggregate_failures("template preview") do
+        expect(form_template_page).to have_preview_modal
+        expect(form_template_page).to have_input_field("input")
+      end
+
+      find(".modal-close").click
+      expect(form_template_page).to have_no_preview_modal
+      form_template_page.click_save_button
+      expect(form_template_page).to have_form_template(sample_name)
     end
 
     it "shows validation options from the validations button" do
       form_template_page.visit_new
       form_template_page.click_validations_button
       expect(form_template_page).to have_validations_modal
-    end
-
-    it "allows previewing, closing the modal, and then saving the template" do
-      form_template_page.visit_new
-
-      sample_name = "Preview Close Save Template"
-      sample_template = "- type: input\n  id: name"
-
-      form_template_page.type_in_template_name(sample_name)
-      ace_editor.type_input(sample_template)
-
-      form_template_page.click_preview_button
-      expect(form_template_page).to have_preview_modal
-
-      find(".modal-close").click
-      expect(form_template_page).to have_no_preview_modal
-
-      form_template_page.click_save_button
-      expect(form_template_page).to have_form_template(sample_name)
-    end
-
-    it "shows the template preview from the preview button" do
-      form_template_page.visit_new
-      form_template_page.type_in_template_name("New Template")
-      ace_editor.type_input("- type: input\n  id: name")
-      form_template_page.click_preview_button
-
-      expect(form_template_page).to have_preview_modal
-      expect(form_template_page).to have_input_field("input")
     end
 
     it "renders every input type in the preview" do

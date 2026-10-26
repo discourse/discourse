@@ -29,6 +29,7 @@ describe "Admin staff action logs" do
     )
   end
 
+  let(:dialog) { PageObjects::Components::Dialog.new }
   let(:staff_action_logs_page) { PageObjects::Pages::AdminStaffActionLogs.new }
 
   before { sign_in(current_user) }
@@ -91,18 +92,81 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page.log_row(legacy)).to have_no_content("Scheduled duration:")
   end
 
-  it "shows details for an action" do
+  it "lets the admin inspect, filter and export staff actions" do
     visit "/admin/logs/staff_action_logs"
 
-    expect(staff_action_logs_page.log_row(history_1)).to have_content(
-      I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
-    ).and have_content("enforce_second_factor").and have_content(
-                  I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"),
-                ).and have_content(I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"))
+    aggregate_failures "action details" do
+      expect(staff_action_logs_page.log_row(history_1)).to have_content(
+        I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+      ).and have_content("enforce_second_factor").and have_content(
+                    I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"),
+                  ).and have_content(
+                          I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"),
+                        )
 
-    expect(staff_action_logs_page.log_row(history_2)).to have_content(
-      I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
-    ).and have_css("[data-link-topic-id='#{history_2.topic_id}']")
+      expect(staff_action_logs_page.log_row(history_2)).to have_content(
+        I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
+      ).and have_css("[data-link-topic-id='#{history_2.topic_id}']")
+    end
+
+    aggregate_failures "available actions" do
+      expect(staff_action_logs_page).to have_log_row(history_1)
+      expect(staff_action_logs_page).to have_log_row(history_2)
+      expect(staff_action_logs_page).to have_log_row(history_3)
+    end
+
+    staff_action_logs_page.filter_by_action(:change_site_setting)
+
+    aggregate_failures "setting action filter" do
+      expect(page).to have_css(
+        ".staff-action-logs-filters .filter",
+        text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+      )
+
+      expect(staff_action_logs_page).to have_log_row(history_1)
+      expect(staff_action_logs_page).to have_no_log_row(history_2)
+      expect(staff_action_logs_page).to have_no_log_row(history_3)
+    end
+
+    aggregate_failures "filtered export controls" do
+      expect(page).to have_css(
+        ".staff-action-logs-filters .filter",
+        text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+      )
+      expect(page).to have_css(".export-staff-action-logs")
+    end
+
+    expect do
+      staff_action_logs_page.click_export_button
+
+      expect(page).to have_text(I18n.t("admin_js.admin.export_csv.success"))
+    end.to change { Jobs::ExportCsvFile.jobs.size }.by(1)
+
+    job = Jobs::ExportCsvFile.jobs.last
+    args = job["args"].first["args"]
+
+    aggregate_failures "exported action filter" do
+      expect(args).to include({ "action_id" => UserHistory.actions[:change_site_setting].to_s })
+    end
+
+    dialog.click_ok
+    expect(dialog).to be_closed
+
+    staff_action_logs_page.clear_filter
+    staff_action_logs_page.filter_by_action(:update_flag)
+
+    aggregate_failures "custom action filter" do
+      expect(staff_action_logs_page).to have_no_log_row(history_1)
+      expect(staff_action_logs_page).to have_no_log_row(history_2)
+      expect(staff_action_logs_page).to have_log_row(history_3)
+    end
+
+    staff_action_logs_page.clear_filter
+    staff_action_logs_page.filter_by_action(:toggle_flag)
+
+    aggregate_failures "unmatched action" do
+      expect(page).to have_text(I18n.t("js.search.no_results"))
+    end
   end
 
   it "keeps staff action details as text" do
@@ -151,62 +215,6 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page.log_row(history)).to have_css(".context", text: payload)
   end
 
-  it "can filter by type of action" do
-    visit "/admin/logs/staff_action_logs"
-
-    expect(staff_action_logs_page).to have_log_row(history_1)
-    expect(staff_action_logs_page).to have_log_row(history_2)
-    expect(staff_action_logs_page).to have_log_row(history_3)
-
-    staff_action_logs_page.filter_by_action(:change_site_setting)
-
-    expect(page).to have_css(
-      ".staff-action-logs-filters .filter",
-      text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
-    )
-
-    expect(staff_action_logs_page).to have_log_row(history_1)
-    expect(staff_action_logs_page).to have_no_log_row(history_2)
-    expect(staff_action_logs_page).to have_no_log_row(history_3)
-
-    staff_action_logs_page.clear_filter
-
-    staff_action_logs_page.filter_by_action(:update_flag)
-
-    expect(staff_action_logs_page).to have_no_log_row(history_1)
-    expect(staff_action_logs_page).to have_no_log_row(history_2)
-    expect(staff_action_logs_page).to have_log_row(history_3)
-  end
-
-  it "can export filtered logs" do
-    visit "/admin/logs/staff_action_logs"
-
-    staff_action_logs_page.filter_by_action(:change_site_setting)
-
-    expect(page).to have_css(
-      ".staff-action-logs-filters .filter",
-      text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
-    )
-
-    expect(page).to have_css(".export-staff-action-logs")
-
-    expect do
-      staff_action_logs_page.click_export_button
-
-      expect(page).to have_text(I18n.t("admin_js.admin.export_csv.success"))
-    end.to change { Jobs::ExportCsvFile.jobs.size }.by(1)
-
-    job = Jobs::ExportCsvFile.jobs.last
-    args = job["args"].first["args"]
-    expect(args).to include({ "action_id" => UserHistory.actions[:change_site_setting].to_s })
-  end
-
-  it "displays no result" do
-    visit "/admin/logs/staff_action_logs"
-    staff_action_logs_page.filter_by_action(:toggle_flag)
-    expect(page).to have_text(I18n.t("js.search.no_results"))
-  end
-
   it "can show details for an action" do
     history_1.update!(
       details:
@@ -225,23 +233,20 @@ describe "Admin staff action logs" do
       end
     end
 
-    it "can see filtered logs" do
+    it "lets the admin inspect and export staff logs for a date range" do
       visit "/admin/logs/staff_action_logs"
 
       staff_action_logs_page.fill_date_filter_from(7.days.ago)
       staff_action_logs_page.fill_date_filter_to(2.days.ago)
 
-      [1, 2, 8, 9, 10].each do |i|
-        expect(staff_action_logs_page).to have_no_log_row(histories[i - 1])
+      aggregate_failures "date range results" do
+        [1, 2, 8, 9, 10].each do |i|
+          expect(staff_action_logs_page).to have_no_log_row(histories[i - 1])
+        end
+        [3, 4, 5, 6, 7].each do |i|
+          expect(staff_action_logs_page).to have_log_row(histories[i - 1])
+        end
       end
-      [3, 4, 5, 6, 7].each { |i| expect(staff_action_logs_page).to have_log_row(histories[i - 1]) }
-    end
-
-    it "can export filtered logs" do
-      visit "/admin/logs/staff_action_logs"
-
-      staff_action_logs_page.fill_date_filter_from(7.days.ago)
-      staff_action_logs_page.fill_date_filter_to(2.days.ago)
 
       expect do
         staff_action_logs_page.click_export_button
@@ -251,8 +256,10 @@ describe "Admin staff action logs" do
 
       job = Jobs::ExportCsvFile.jobs.last
       args = job["args"].first["args"]
-      expect(args).to include("start_date")
-      expect(args).to include("end_date")
+      aggregate_failures "exported date range" do
+        expect(args).to include("start_date")
+        expect(args).to include("end_date")
+      end
     end
   end
 end

@@ -7,35 +7,24 @@ describe "Admin Site Setting Formatting" do
 
   before { sign_in(admin) }
 
-  it "capitalises the first letter of labels" do
+  it "formats capitalization, acronyms and combined replacements in setting headings" do
     setting_name = "default_locale"
-
     settings_page.visit(setting_name)
-
     expect(setting_label(setting_name)).to eq("Default locale")
-  end
 
-  it "capitalises acronyms in labels" do
+    settings_page.clear_search
     setting_name = "faq_url"
-
-    settings_page.visit(setting_name)
-
+    settings_page.type_in_search(setting_name)
     expect(setting_label(setting_name)).to eq("FAQ URL")
-  end
 
-  it "matches multi-word replacements" do
+    settings_page.clear_search
     setting_name = "enable_discourse_connect"
-
-    settings_page.visit(setting_name)
-
+    settings_page.type_in_search(setting_name)
     expect(setting_label(setting_name)).to eq("Enable Discourse Connect")
-  end
 
-  it "matches multiple types of replacements" do
+    settings_page.clear_search
     setting_name = "google_oauth2_client_id"
-
-    settings_page.visit(setting_name)
-
+    settings_page.type_in_search(setting_name)
     expect(setting_label(setting_name)).to eq("Google OAuth2 client ID")
   end
 

@@ -9,9 +9,11 @@ describe "Admin Permalinks Page" do
 
   before { sign_in(admin) }
 
-  it "allows admin to create, edit, and destroy permalink" do
+  it "lets the admin manage a permalink and open permalink settings" do
     admin_permalinks_page.visit
-    expect(admin_permalinks_page).to have_no_filter
+    aggregate_failures "empty permalink list" do
+      expect(admin_permalinks_page).to have_no_filter
+    end
 
     admin_permalinks_page.click_add_permalink
     admin_permalink_form_page
@@ -19,27 +21,35 @@ describe "Admin Permalinks Page" do
       .select_permalink_type("category")
       .fill_in_category("1")
       .click_save
-    expect(admin_permalinks_page).to have_permalinks("test")
-    expect(admin_permalinks_page).to have_filter
+    aggregate_failures "created permalink" do
+      expect(admin_permalinks_page).to have_permalinks("test")
+      expect(admin_permalinks_page).to have_filter
+    end
 
     admin_permalinks_page.filter("no results")
-    expect(admin_permalinks_page).to have_no_results
-    expect(admin_permalinks_page).to have_filter
+    aggregate_failures "unmatched permalink" do
+      expect(admin_permalinks_page).to have_no_results
+      expect(admin_permalinks_page).to have_filter
+    end
 
     admin_permalinks_page.filter("")
 
     admin_permalinks_page.click_edit_permalink("test")
     admin_permalink_form_page.fill_in_url("test2").click_save
-    expect(admin_permalinks_page).to have_permalinks("test2")
+    aggregate_failures "renamed permalink" do
+      expect(admin_permalinks_page).to have_permalinks("test2")
+    end
 
     admin_permalinks_page.click_delete_permalink("test2")
 
-    expect(admin_permalinks_page).to have_no_permalinks
-  end
+    aggregate_failures "deleted permalink" do
+      expect(admin_permalinks_page).to have_no_permalinks
+    end
 
-  it "allows admin to go to permalink settings page" do
-    admin_permalinks_page.visit
     admin_permalinks_page.click_tab("settings")
-    expect(admin_permalinks_page).to have_active_tab("settings")
+
+    aggregate_failures "permalink settings" do
+      expect(admin_permalinks_page).to have_active_tab("settings")
+    end
   end
 end

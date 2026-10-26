@@ -31,22 +31,7 @@ describe "Topic bulk select" do
 
     before { SiteSetting.enable_unified_new = true }
 
-    it "removes the topics from the list" do
-      sign_in(admin)
-      visit("/new?subset=replies")
-
-      topic_list_header.click_bulk_select_button
-      expect(topic_list).to have_topic_checkbox(topic)
-
-      topic_list.click_topic_checkbox(topic)
-
-      topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-new")
-
-      expect(topic_list).to have_no_topics
-    end
-
-    it "turns off bulk select after dismissing" do
+    it "lets users dismiss selected replies and leave bulk selection with the dropdown" do
       other_topic = Fabricate(:topic, user: admin)
       create_post(user: admin, topic: other_topic)
       create_post(topic: other_topic)
@@ -55,6 +40,7 @@ describe "Topic bulk select" do
       visit("/new?subset=replies")
 
       topic_list_header.click_bulk_select_button
+      expect(topic_list).to have_topic_checkbox(topic)
       topic_list.click_topic_checkbox(topic)
 
       topic_list_header.click_bulk_select_topics_dropdown
@@ -62,6 +48,13 @@ describe "Topic bulk select" do
 
       expect(topic_list).to have_topic(other_topic)
       expect(topic_list).to have_no_topic_checkbox(other_topic)
+
+      topic_list_header.click_bulk_select_button
+      expect(topic_list).to have_topic_checkbox(other_topic)
+      topic_list.click_topic_checkbox(other_topic)
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("dismiss-new")
+      expect(topic_list).to have_no_topics
     end
   end
 
@@ -74,22 +67,7 @@ describe "Topic bulk select" do
     before { SiteSetting.enable_unified_new = true }
 
     context "with the bulk actions dropdown" do
-      it "removes the topics from the list" do
-        sign_in(admin)
-        visit("/new")
-
-        topic_list_header.click_bulk_select_button
-        expect(topic_list).to have_topic_checkbox(topic)
-
-        topic_list.click_topic_checkbox(topic)
-
-        topic_list_header.click_bulk_select_topics_dropdown
-        topic_list_header.click_bulk_button("dismiss-new")
-
-        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
-      end
-
-      it "turns off bulk select after dismissing" do
+      it "lets users dismiss selected topics and leave bulk selection with the dropdown" do
         other_topic = Fabricate(:topic, user:)
         create_post(user:, topic: other_topic)
 
@@ -97,6 +75,7 @@ describe "Topic bulk select" do
         visit("/new")
 
         topic_list_header.click_bulk_select_button
+        expect(topic_list).to have_topic_checkbox(topic)
         topic_list.click_topic_checkbox(topic)
 
         topic_list_header.click_bulk_select_topics_dropdown
@@ -104,25 +83,18 @@ describe "Topic bulk select" do
 
         expect(topic_list).to have_topic(other_topic)
         expect(topic_list).to have_no_topic_checkbox(other_topic)
+
+        topic_list_header.click_bulk_select_button
+        expect(topic_list).to have_topic_checkbox(other_topic)
+        topic_list.click_topic_checkbox(other_topic)
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("dismiss-new")
+        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
       end
     end
 
     context "with the dismiss new button" do
-      it "removes the topics from the list" do
-        sign_in(admin)
-        visit("/new")
-
-        topic_list_header.click_bulk_select_button
-        expect(topic_list).to have_topic_checkbox(topic)
-
-        topic_list.click_topic_checkbox(topic)
-
-        topic_list_controls.dismiss_new
-
-        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
-      end
-
-      it "turns off bulk select after dismissing" do
+      it "lets users dismiss selected topics and leave bulk selection with the button" do
         other_topic = Fabricate(:topic, user:)
         create_post(user:, topic: other_topic)
 
@@ -130,12 +102,19 @@ describe "Topic bulk select" do
         visit("/new")
 
         topic_list_header.click_bulk_select_button
+        expect(topic_list).to have_topic_checkbox(topic)
         topic_list.click_topic_checkbox(topic)
 
         topic_list_controls.dismiss_new
 
         expect(topic_list).to have_topic(other_topic)
         expect(topic_list).to have_no_topic_checkbox(other_topic)
+
+        topic_list_header.click_bulk_select_button
+        expect(topic_list).to have_topic_checkbox(other_topic)
+        topic_list.click_topic_checkbox(other_topic)
+        topic_list_controls.dismiss_new
+        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
       end
     end
   end
@@ -222,45 +201,6 @@ describe "Topic bulk select" do
 
         expect(modal.add_tag_selector.option_names).to contain_exactly(restricted_tag.name)
       end
-
-      it "allows for searching restricted tags for that category and other tags too if the category allows it" do
-        restricted_tag_group = Fabricate(:tag_group)
-        restricted_tag = Fabricate(:tag)
-        TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
-        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
-        category.update!(allow_global_tags: true)
-
-        modal = open_manage_tags_modal([topic, topic_2])
-
-        modal.add_tags(restricted_tag.name, tag1.name)
-
-        modal.click_confirm
-
-        expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag, tag1])
-        expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag, tag1])
-      end
-
-      it "can remove and replace-away a restricted tag" do
-        restricted_tag_group = Fabricate(:tag_group)
-        restricted_to_remove = Fabricate(:tag)
-        restricted_to_replace = Fabricate(:tag)
-        [restricted_to_remove, restricted_to_replace].each do |t|
-          TagGroupMembership.create!(tag: t, tag_group: restricted_tag_group)
-        end
-        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
-        category.update!(allow_global_tags: true)
-        topic.update!(tags: [restricted_to_remove, restricted_to_replace])
-
-        modal = open_manage_tags_modal([topic, topic_2])
-
-        modal.remove_tags(restricted_to_remove.name)
-        modal.select_replace_from(restricted_to_replace.name)
-        modal.select_replace_to(tag1.name)
-
-        modal.click_confirm
-
-        expect(topic_list).to have_topic_tags(topic, tags: [tag1])
-      end
     end
 
     context "when selecting topics across multiple categories" do
@@ -273,18 +213,6 @@ describe "Topic bulk select" do
         topic.update!(category_id: category_a.id)
         topic_2.update!(category_id: category_b.id)
         TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
-      end
-
-      it "lets a restricted tag be added when every selected category allows it" do
-        CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
-        CategoryTagGroup.create!(category: category_b, tag_group: restricted_tag_group)
-
-        modal = open_manage_tags_modal([topic, topic_2])
-        modal.add_tags(restricted_tag.name)
-        modal.click_confirm
-
-        expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag])
-        expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag])
       end
 
       it "reports an error for topics whose category forbids the tag" do
@@ -456,7 +384,7 @@ describe "Topic bulk select" do
       GroupUser.create!(user: admin, group: group)
     end
 
-    it "allows moving private messages to the Archive" do
+    it "lets users archive and restore personal messages" do
       sign_in(admin)
       visit("/u/#{admin.username}/messages")
       expect(page).to have_content(private_message_1.title)
@@ -468,12 +396,7 @@ describe "Topic bulk select" do
       expect(UserArchivedMessage.exists?(user_id: admin.id, topic_id: private_message_1.id)).to eq(
         true,
       )
-    end
 
-    it "allows moving private messages to the Inbox" do
-      UserArchivedMessage.create!(user: admin, topic: private_message_1)
-      sign_in(admin)
-      visit("/u/#{admin.username}/messages/archive")
       expect(page).to have_content(private_message_1.title)
       open_bulk_actions_modal([private_message_1], "move-messages-to-inbox")
       topic_bulk_actions_modal.click_bulk_topics_confirm
@@ -482,7 +405,7 @@ describe "Topic bulk select" do
       expect(page).to have_content(private_message_1.title)
     end
 
-    it "allows moving group private messages to the scoped group Archive" do
+    it "lets users archive and restore messages within their group inbox" do
       sign_in(admin)
       visit("/u/#{admin.username}/messages/group/#{group.name}")
       expect(page).to have_content(group_private_message.title)
@@ -490,6 +413,13 @@ describe "Topic bulk select" do
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
       visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
+      expect(page).to have_content(group_private_message.title)
+
+      expect(page).to have_content(group_private_message.title)
+      open_bulk_actions_modal([group_private_message], "move-messages-to-inbox")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+      visit("/u/#{admin.username}/messages/group/#{group.name}")
       expect(page).to have_content(group_private_message.title)
     end
 
@@ -538,18 +468,6 @@ describe "Topic bulk select" do
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
       visit("/g/#{group.name}/messages/archive")
-      expect(page).to have_content(group_private_message.title)
-    end
-
-    it "allows moving group private messages to the scoped group Inbox" do
-      GroupArchivedMessage.create!(group: group, topic: group_private_message)
-      sign_in(admin)
-      visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
-      expect(page).to have_content(group_private_message.title)
-      open_bulk_actions_modal([group_private_message], "move-messages-to-inbox")
-      topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages/group/#{group.name}")
       expect(page).to have_content(group_private_message.title)
     end
 

@@ -51,7 +51,7 @@ module PageObjects
       end
 
       def click_edit(description)
-        row = page.find(row_selector, text: description)
+        row = page.find(".key-description", exact_text: description).ancestor(row_selector)
         row.find("button", text: I18n.t("admin_js.admin.api_keys.edit")).click
       end
 

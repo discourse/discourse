@@ -80,6 +80,10 @@ module PageObjects
         self
       end
 
+      def has_no_unsaved_changes?
+        has_no_css?(".admin-changes-banner")
+      end
+
       def toggle_setting(setting, text = "")
         find(".edit-category-tab .#{setting} label.checkbox-label", text: text, visible: :all).click
         self

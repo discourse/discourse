@@ -60,6 +60,8 @@ module TurboTests
         @failed_example
           .command_string
           .sub(/TEST_ENV_NUMBER=\d*\s*/, "")
+          .sub(/TURBO_RSPEC_FILE_CLAIMS=\S+\s*/, "")
+          .sub("--require ./lib/turbo_tests/dynamic_file_assignment", "")
           .sub("RSPEC_SILENCE_FILTER_ANNOUNCEMENTS=1", "")
           .sub("DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE=1", "")
           .gsub(/--format \S+/, "")

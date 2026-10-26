@@ -12,12 +12,7 @@ describe "Admin Welcome Banner Config" do
   after { I18n.reload! }
 
   describe "locale selector" do
-    it "displays a locale selector" do
-      config_page.visit
-      expect(config_page).to have_locale_selector
-    end
-
-    it "switches between locales and loads appropriate translations" do
+    it "displays a locale selector and loads the selected translations" do
       TranslationOverride.upsert!(
         "fr",
         "js.welcome_banner.header.new_members",
@@ -27,6 +22,7 @@ describe "Admin Welcome Banner Config" do
 
       config_page.visit
 
+      expect(config_page).to have_locale_selector
       expect(config_page.header_new_members_value).to eq("Welcome, %{preferred_display_name}!")
       expect(config_page.search_placeholder_value).to eq("Search")
 

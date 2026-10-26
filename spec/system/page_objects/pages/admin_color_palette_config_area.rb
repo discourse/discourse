@@ -7,6 +7,11 @@ module PageObjects
         page.visit("/admin/config/colors/#{palette_id}")
       end
 
+      def back_to_list
+        find(".admin-config-color-palettes__back a").click
+        self
+      end
+
       def form
         PageObjects::Components::FormKit.new(".admin-config.color-palettes .form-kit")
       end

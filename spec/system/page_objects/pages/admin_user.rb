@@ -7,6 +7,14 @@ module PageObjects
         page.visit("/admin/users/#{user.id}/#{user.username}")
       end
 
+      def close_ip_lookup
+        PageObjects::Components::DMenu.new(".ip-lookup-trigger", "ip-lookup").collapse
+      end
+
+      def has_closed_ip_lookup?
+        has_css?(".ip-lookup-trigger[aria-expanded='false']")
+      end
+
       def click_action_logs_button
         click_button(I18n.t("admin_js.admin.user.action_logs"))
       end

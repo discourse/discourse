@@ -80,40 +80,31 @@ describe "Admin Customize Themes Config Area Page" do
       expect(disabled_component.reload.enabled).to eq(true)
     end
 
-    it "can filter components by status" do
+    it "filters installed components by status and name and keeps empty filters visible" do
       config_area.visit
       config_area.status_selector.select("used")
-
       expect(config_area).to have_exact_components(enabled_component.id, remote_component.id)
 
       config_area.status_selector.select("unused")
-
       expect(config_area).to have_exact_components(
         disabled_component.id,
         remote_component_with_update.id,
       )
 
       config_area.status_selector.select("updates_available")
-
       expect(config_area).to have_exact_components(remote_component_with_update.id)
-    end
 
-    it "can filter components by name" do
-      config_area.visit
-
+      config_area.status_selector.select("all")
       config_area.name_filter_input.fill_in(with: "glo")
-
       expect(config_area).to have_exact_components(enabled_component.id, disabled_component.id)
-    end
-
-    it "keeps the filters shown when there are no components matching the filters" do
-      config_area.visit
 
       config_area.name_filter_input.fill_in(with: "stringthatshouldnotmatchanything")
-      expect(config_area).to have_no_components_found_text
-      expect(config_area).to have_no_components
-      expect(config_area).to have_name_filter_input
-      expect(config_area).to have_status_selector
+      aggregate_failures("empty component search") do
+        expect(config_area).to have_no_components_found_text
+        expect(config_area).to have_no_components
+        expect(config_area).to have_name_filter_input
+        expect(config_area).to have_status_selector
+      end
     end
 
     it "navigates to the component page when clicking the Edit button" do
@@ -350,28 +341,17 @@ describe "Admin Customize Themes Config Area Page" do
     expect(config_area).to have_no_name_filter_input
   end
 
-  it "allows a user to create a new component" do
+  it "creates a component and warns before leaving it unassigned" do
     config_area.visit.click_install_button.create_new_theme(
       name: "some new component",
       component: true,
     )
-
+    expect(page).to have_current_path(%r{/admin/customize/components/\d+})
     expect(PageObjects::Components::Toasts.new).to have_success(
       I18n.t("admin_js.admin.customize.theme.install_success", theme: "some new component"),
     )
 
-    expect(page).to have_current_path(%r{/admin/customize/components/\d+})
-  end
-
-  it "warns when leaving a newly created component that isn't assigned to any themes" do
     theme_page = PageObjects::Pages::AdminCustomizeThemes.new
-
-    config_area.visit.click_install_button.create_new_theme(
-      name: "some new component",
-      component: true,
-    )
-    expect(page).to have_current_path(%r{/admin/customize/components/\d+})
-
     theme_page.click_back_to_components
     expect(dialog).to have_content(I18n.t("admin_js.admin.customize.theme.unsaved_parent_themes"))
   end

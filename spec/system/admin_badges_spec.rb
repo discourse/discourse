@@ -109,26 +109,29 @@ describe "Admin Badges Page" do
   end
 
   context "when filtering badges" do
-    it "filters badges by name" do
+    it "lets the admin filter badges and see when no badge matches" do
       badges_page.visit_page
 
       autobiographer = Badge.find(Badge::Autobiographer)
       editor = Badge.find(Badge::Editor)
 
-      expect(badges_page).to have_badge_in_list(autobiographer.display_name)
-      expect(badges_page).to have_badge_in_list(editor.display_name)
+      aggregate_failures "available badges" do
+        expect(badges_page).to have_badge_in_list(autobiographer.display_name)
+        expect(badges_page).to have_badge_in_list(editor.display_name)
+      end
 
       badges_page.filter_badges(editor.display_name)
 
-      expect(badges_page).to have_badge_in_list(editor.display_name)
-      expect(badges_page).to have_no_badge_in_list(autobiographer.display_name)
-    end
+      aggregate_failures "matching badge" do
+        expect(badges_page).to have_badge_in_list(editor.display_name)
+        expect(badges_page).to have_no_badge_in_list(autobiographer.display_name)
+      end
 
-    it "shows no results message when no badges match" do
-      badges_page.visit_page
       badges_page.filter_badges("nonexistent")
 
-      expect(badges_page).to have_no_badges_found_message
+      aggregate_failures "unmatched badge" do
+        expect(badges_page).to have_no_badges_found_message
+      end
     end
   end
 

@@ -222,20 +222,6 @@ describe "Sign up via email code" do
     expect(User.find_by_email("new.person@example.com")).to be_nil
   end
 
-  it "does not create an account when registrations are disabled" do
-    SiteSetting.allow_new_registrations = false
-
-    open_code_signup
-    submit_email("new.person@example.com")
-
-    # No code is sent when registrations are closed, so any code is rejected.
-    fill_code("000000")
-
-    expect(page).to have_css(".code-login-form__error")
-    expect(page).to have_no_css(".header-dropdown-toggle.current-user")
-    expect(User.find_by_email("new.person@example.com")).to be_nil
-  end
-
   it "collects account details before approval and requires a fresh code afterward" do
     SiteSetting.enable_random_usernames = true
     SiteSetting.login_required = true

@@ -28,6 +28,11 @@ module PageObjects
         find_backup_row(filename).find(".backup-item-menu-trigger").click
       end
 
+      def close_backup_row_menu(filename)
+        find_backup_row(filename).find(".backup-item-menu-trigger").click
+        expect(page).to have_no_css(".backup-item-menu-content")
+      end
+
       def delete_backup(filename)
         expand_backup_row_menu(filename)
         find(".backup-item-menu-content").find(row_button_selector("delete")).click

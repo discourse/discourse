@@ -8,28 +8,26 @@ describe "Admin Site Setting Value Lists" do
 
   describe "reordering items in value lists" do
     context "when on non-touch devices" do
-      it "hides reorder buttons by default for simple-list settings" do
+      it "hides legacy reorder buttons for simple and emoji lists" do
         settings_page.visit("top_menu")
         expect(page).to have_css("html.discourse-no-touch")
         expect(settings_page).to have_hidden_reorder_buttons("top_menu")
-      end
 
-      it "hides reorder buttons by default for emoji-list settings" do
-        settings_page.visit("default_emoji_reactions")
+        settings_page.clear_search
+        settings_page.type_in_search("default_emoji_reactions")
         expect(page).to have_css("html.discourse-no-touch")
         expect(settings_page).to have_hidden_reorder_buttons("default_emoji_reactions")
       end
     end
 
     context "when on touch devices", mobile: true do
-      it "shows reorder buttons by default for simple-list settings" do
+      it "shows legacy reorder buttons for simple and emoji lists" do
         settings_page.visit("top_menu")
         expect(page).to have_css("html.discourse-touch")
         expect(settings_page).to have_visible_reorder_buttons("top_menu")
-      end
 
-      it "shows reorder buttons by default for emoji-list settings" do
-        settings_page.visit("default_emoji_reactions")
+        settings_page.clear_search
+        settings_page.type_in_search("default_emoji_reactions")
         expect(page).to have_css("html.discourse-touch")
         expect(settings_page).to have_visible_reorder_buttons("default_emoji_reactions")
       end
@@ -46,28 +44,26 @@ describe "Admin Site Setting Value Lists" do
       before { SiteSetting.enable_new_reordering_controls = true }
 
       context "when on non-touch devices" do
-        it "shows the reorder handle for simple-list settings" do
+        it "shows reorder handles for simple and emoji lists" do
           settings_page.visit("top_menu")
           expect(page).to have_css("html.discourse-no-touch")
           expect(settings_page).to have_reorder_handle("top_menu")
-        end
 
-        it "shows the reorder handle for emoji-list settings" do
-          settings_page.visit("default_emoji_reactions")
+          settings_page.clear_search
+          settings_page.type_in_search("default_emoji_reactions")
           expect(page).to have_css("html.discourse-no-touch")
           expect(settings_page).to have_reorder_handle("default_emoji_reactions")
         end
       end
 
       context "when on touch devices", mobile: true do
-        it "shows the same reorder handle for simple-list settings" do
+        it "shows the same reorder handles for simple and emoji lists" do
           settings_page.visit("top_menu")
           expect(page).to have_css("html.discourse-touch")
           expect(settings_page).to have_reorder_handle("top_menu")
-        end
 
-        it "shows the same reorder handle for emoji-list settings" do
-          settings_page.visit("default_emoji_reactions")
+          settings_page.clear_search
+          settings_page.type_in_search("default_emoji_reactions")
           expect(page).to have_css("html.discourse-touch")
           expect(settings_page).to have_reorder_handle("default_emoji_reactions")
         end
@@ -92,7 +88,7 @@ describe "Admin Site Setting Value Lists" do
       # destination before it has been placed asks the browser to scroll to
       # wherever the float still sits, which throws the reader to the top of the
       # settings page they were working in.
-      it "does not scroll the page when the move menu opens" do
+      it "keeps scroll position and highlights the focused destination when the move menu opens" do
         # Short enough that the settings page has somewhere to scroll from, which
         # is the whole of what this measures.
         resize_window(height: 700) do
@@ -111,24 +107,21 @@ describe "Admin Site Setting Value Lists" do
 
           expect(page).to have_css(".d-reorderable-list__move-item:focus")
           expect(page.evaluate_script("Math.round(window.scrollY)")).to eq(before)
+
+          # A pointer press does not set focus-visible, and the menu places focus on
+          # a destination as it opens, so a highlight keyed on that alone leaves a
+          # mouse user with a focused item and no way to see which one it is.
+          expect(settings_page).to have_reorder_handle("top_menu")
+          expect(page).to have_css(".d-reorderable-list__move-item:focus")
+          background = page.evaluate_script(<<~JS)
+            getComputedStyle(document.querySelector(".d-reorderable-list__move-item:focus"))
+              .backgroundColor
+          JS
+          expect(background).not_to eq("rgba(0, 0, 0, 0)")
+
+          settings_page.close_reorder_menu
+          expect(settings_page).to have_no_reorder_menu
         end
-      end
-
-      # A pointer press does not set focus-visible, and the menu places focus on
-      # a destination as it opens, so a highlight keyed on that alone leaves a
-      # mouse user with a focused item and no way to see which one it is.
-      it "highlights the focused destination when the menu is opened by pointer" do
-        settings_page.visit_category("basic")
-        expect(settings_page).to have_reorder_handle("top_menu")
-
-        settings_page.open_reorder_menu("top_menu")
-
-        expect(page).to have_css(".d-reorderable-list__move-item:focus")
-        background = page.evaluate_script(<<~JS)
-          getComputedStyle(document.querySelector(".d-reorderable-list__move-item:focus"))
-            .backgroundColor
-        JS
-        expect(background).not_to eq("rgba(0, 0, 0, 0)")
       end
     end
   end

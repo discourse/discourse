@@ -23,13 +23,10 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "banner visibility" do
-    it "shows the onboarding banner for admin users" do
+    it "shows the onboarding banner and all three steps for admin users" do
       visit("/")
       expect(banner).to be_visible
-    end
 
-    it "shows all three onboarding steps" do
-      visit("/")
       expect(banner.step_names).to eq(%w[select_theme start_posting invite_collaborators])
       expect(banner.step("select_theme")).to be_present
       expect(banner.step("invite_collaborators")).to be_present

@@ -11,6 +11,11 @@ module PageObjects
         find(".color-palettes-list li[data-palette-id=\"#{id}\"]")
       end
 
+      def open_palette(color_scheme)
+        find("a[href='/admin/config/colors/#{color_scheme.id}']", text: color_scheme.name).click
+        self
+      end
+
       def create_button
         find(".create-new-palette")
       end

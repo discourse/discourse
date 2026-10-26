@@ -8,6 +8,14 @@ module PageObjects
         self
       end
 
+      def has_no_reviewables?
+        has_no_css?(".review-item")
+      end
+
+      def has_empty_state?
+        has_css?(".no-review", text: I18n.t("js.review.none"))
+      end
+
       def filter_by_type(name)
         select_filter("review.filters.type.title", name)
       end

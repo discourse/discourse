@@ -9,7 +9,6 @@ module TurboTests
       start_time = opts.fetch(:start_time) { Time.now }
       verbose = opts.fetch(:verbose, false)
       fail_fast = opts.fetch(:fail_fast, nil)
-      use_runtime_info = opts.fetch(:use_runtime_info, false)
       retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
 
       reporter =
@@ -33,7 +32,6 @@ module TurboTests
         files: files,
         verbose: verbose,
         fail_fast: fail_fast,
-        use_runtime_info: use_runtime_info,
         seed: seed,
         profile: opts[:profile],
         retry_and_log_flaky_tests: retry_and_log_flaky_tests,
@@ -45,7 +43,6 @@ module TurboTests
       @files = opts[:files]
       @verbose = opts[:verbose]
       @fail_fast = opts[:fail_fast]
-      @use_runtime_info = opts[:use_runtime_info]
       @seed = opts[:seed]
       @profile = opts[:profile]
       @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
@@ -61,23 +58,13 @@ module TurboTests
 
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
-      group_opts = {}
-      group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
-
-      tests_in_groups =
-        ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
-
       setup_tmp_dir
 
       @reporter.add_formatter(Flaky::FailuresLoggerFormatter.new) if @retry_and_log_flaky_tests
 
-      subprocess_opts = { record_runtime: @use_runtime_info }
+      start_multisite_subprocess(@files)
 
-      start_multisite_subprocess(@files, **subprocess_opts)
-
-      tests_in_groups.each_with_index do |tests, process_id|
-        start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
-      end
+      @num_processes.times { |process_id| start_regular_subprocess(@files, process_id + 1) }
 
       @reporter.start
 
@@ -119,6 +106,7 @@ module TurboTests
       end
 
       FileUtils.mkdir_p("tmp/test-pipes/")
+      FileUtils.mkdir_p("tmp/test-pipes/file-claims")
     end
 
     def rerun_failed_examples(failed_examples)
@@ -136,21 +124,19 @@ module TurboTests
       system(*command)
     end
 
-    def start_multisite_subprocess(tests, **opts)
-      start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
+    def start_multisite_subprocess(tests)
+      start_subprocess({ "TURBO_RSPEC_FILE_CLAIMS" => nil }, tests, "multisite")
     end
 
-    def start_regular_subprocess(tests, process_id, **opts)
-      start_subprocess(
-        { "TEST_ENV_NUMBER" => process_id.to_s },
-        %w[--tag ~type:multisite],
-        tests,
-        process_id,
-        **opts,
-      )
+    def start_regular_subprocess(tests, process_id)
+      env = {
+        "TEST_ENV_NUMBER" => process_id.to_s,
+        "TURBO_RSPEC_FILE_CLAIMS" => File.expand_path("tmp/test-pipes/file-claims"),
+      }
+      start_subprocess(env, tests, process_id)
     end
 
-    def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
+    def start_subprocess(env, tests, process_id)
       exit_message = {
         type: "exit",
         process_id:,
@@ -169,25 +155,18 @@ module TurboTests
 
         env["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] = "1"
 
-        record_runtime_options =
-          if record_runtime
-            %w[--format ParallelTests::RSpec::RuntimeLogger --out tmp/turbo_rspec_runtime.log]
-          else
-            []
-          end
-
         command = [
           "bundle",
           "exec",
           "rspec",
-          *extra_args,
+          "--require",
+          "./lib/turbo_tests/dynamic_file_assignment",
           "--order",
           "random:#{@seed}",
           "--format",
           "TurboTests::JsonRowsFormatter",
           "--out",
           tmp_filename,
-          *record_runtime_options,
           *tests,
         ]
 

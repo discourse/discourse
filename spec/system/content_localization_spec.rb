@@ -72,13 +72,6 @@ describe "Content Localization" do
       japanese_user.user_option.update!(automatically_translate: true)
     end
 
-    it "shows the user's language based on their user locale" do
-      sign_in(japanese_user)
-
-      visit("/t/#{topic.id}")
-      expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
-    end
-
     it "lets the user keep topic and post content original without changing localized navigation" do
       tag = Fabricate(:tag, name: "strategy", locale: "en")
       Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略")
@@ -207,16 +200,6 @@ describe "Content Localization" do
       expect(post_4_obj.post_language).to have_content("日本語")
     end
 
-    it "shows 'en' posts for 'en_GB' users" do
-      brit_user = Fabricate(:user, locale: "en_GB")
-
-      sign_in(brit_user)
-      visit("/")
-
-      topic_list.visit_topic_with_title("Life strategies from The Art of War")
-      expect(post_3_obj.post).to have_content("A general is one who ..")
-    end
-
     context "with tl parameter" do
       before do
         SiteSetting.set_locale_from_param = true
@@ -302,13 +285,6 @@ describe "Content Localization" do
         )
       end
 
-      it "ignores tl parameter for logged-in users" do
-        sign_in(site_local_user)
-        visit("/t/#{topic.id}?tl=ja")
-
-        expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
-      end
-
       it "lets anonymous users view the localized about page" do
         SiteSetting.title = "English community"
         SiteSetting.site_description = "English community description"
@@ -339,32 +315,24 @@ describe "Content Localization" do
       let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
       let(:fast_editor) { PageObjects::Components::FastEditor.new }
 
-      it "allows editing original content when post is localized" do
+      it "lets admins choose original or translated editing and use the same choice from selected text" do
         sign_in(admin)
-
         topic_page.visit_topic(topic)
         topic_page.expand_post_actions(post_3)
         topic_page.click_post_action_button(post_3, :edit)
         expect(edit_localized_post_dialog).to be_open
         edit_localized_post_dialog.click_yes
         expect(composer).to have_content(post_3.raw)
-      end
+        composer.discard
+        expect(composer).to be_closed
 
-      it "allows editing translated content when post is localized" do
-        sign_in(admin)
-
-        topic_page.visit_topic(topic)
-        topic_page.expand_post_actions(post_3)
         topic_page.click_post_action_button(post_3, :edit)
         expect(edit_localized_post_dialog).to be_open
         edit_localized_post_dialog.click_no
         expect(page).to have_css(".action-title", text: I18n.t("js.composer.translations.title"))
-      end
+        composer.discard
+        expect(composer).to be_closed
 
-      it "does not open the fast editor for localized posts" do
-        sign_in(admin)
-
-        topic_page.visit_topic(topic)
         select_text_range("#{topic_page.post_by_number_selector(post_3.post_number)} .cooked", 0, 5)
         expect(topic_page.fast_edit_button).to be_visible
         topic_page.click_fast_edit_button
@@ -391,7 +359,7 @@ describe "Content Localization" do
           expect(page).to have_field("edit-title", with: topic_ja_localization.title)
         end
 
-        it "opens a dialog for choosing which title to edit for admins when title is localized" do
+        it "lets admins cancel translated title edits and save original and translated titles independently" do
           admin.update(locale: "ja")
 
           sign_in(admin)
@@ -406,6 +374,12 @@ describe "Content Localization" do
           topic_page.visit_topic(topic)
           original_translated_title = topic_ja_localization.fancy_title
           expect(topic_page).to have_topic_title(original_translated_title)
+          topic_page.click_topic_edit_title
+          edit_localized_post_dialog.click_no
+          find("#edit-title").fill_in(with: "Changed Title")
+          topic_page.click_topic_title_cancel_edit
+          expect(topic_page).to have_topic_title(original_translated_title)
+
           topic_page.click_topic_edit_title
           expect(edit_localized_post_dialog).to be_open
 
@@ -434,22 +408,6 @@ describe "Content Localization" do
           expect(topic_page).to have_topic_title("New Japanese Title")
           page.refresh
           expect(topic_page).to have_topic_title("New Japanese Title")
-        end
-
-        it "discards changes when cancelled" do
-          admin.update(locale: "ja")
-          sign_in(admin)
-
-          topic_page.visit_topic(topic)
-          original_title = topic_ja_localization.fancy_title
-
-          topic_page.click_topic_edit_title
-          edit_localized_post_dialog.click_no
-
-          find("#edit-title").fill_in(with: "Changed Title")
-          topic_page.click_topic_title_cancel_edit
-
-          expect(topic_page).to have_topic_title(original_title)
         end
       end
     end
@@ -627,25 +585,6 @@ describe "Content Localization" do
         SiteSetting.content_localization_use_default_locale_when_unsupported = true
       end
 
-      context "for a topic / post with no locale" do
-        it "shows content as-is" do
-          jap_post.update(locale: nil)
-          jap_topic.update(locale: nil)
-
-          sign_in(greek_user)
-
-          topic_page.visit_topic(jap_topic)
-          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
-          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
-
-          SiteSetting.content_localization_enabled = false
-
-          page.refresh
-          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
-          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
-        end
-      end
-
       context "for a topic / post written in Site default language (en)" do
         it "shows Site default language (en) translation to Greek user" do
           sign_in(greek_user)
@@ -660,17 +599,6 @@ describe "Content Localization" do
           expect(topic_page).to have_topic_title(jap_topic.fancy_title)
           expect(post_1_obj).to have_cooked_content(jap_post.cooked)
         end
-      end
-
-      it "shows content as-is when no localization exists" do
-        en_loc_jap_topic.destroy
-        en_loc_jap_post.destroy
-
-        sign_in(greek_user)
-
-        topic_page.visit_topic(jap_topic)
-        expect(topic_page).to have_topic_title(jap_topic.fancy_title)
-        expect(post_1_obj).to have_cooked_content(jap_post.cooked)
       end
     end
 

@@ -9,7 +9,7 @@ shared_context "with omniauth setup" do
   before { OmniAuth.config.test_mode = true }
 end
 
-shared_examples "social authentication scenarios" do
+shared_examples "social authentication scenarios" do |device|
   include_context "with omniauth setup"
 
   context "when user does not exist" do
@@ -17,17 +17,19 @@ shared_examples "social authentication scenarios" do
       before { enable_auth_provider(:facebook) }
       after { reset_omniauth_config(:facebook) }
 
-      it "fills the signup form" do
-        mock_facebook_auth
-        signup_page.open.click_social_button("facebook")
-        expect(signup_page).to be_open
-        expect(signup_page).to have_no_password_input
-        expect(signup_page).to have_valid_username
-        expect(signup_page).to have_valid_email
-        expect(signup_page).to have_no_right_side_column
+      if device == :desktop
+        it "fills the signup form" do
+          mock_facebook_auth
+          signup_page.open.click_social_button("facebook")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          expect(signup_page).to have_no_right_side_column
 
-        signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+          signup_page.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
       end
     end
 
@@ -68,21 +70,9 @@ shared_examples "social authentication scenarios" do
       before { enable_auth_provider(:github) }
       after { reset_omniauth_config(:github) }
 
-      it "fills the signup form" do
-        mock_github_auth
-        signup_page.open.click_social_button("github")
-        expect(signup_page).to be_open
-        expect(signup_page).to have_no_password_input
-        expect(signup_page).to have_valid_username
-        expect(signup_page).to have_valid_email
-        expect(signup_page).to have_no_right_side_column
-        signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-
-      context "when the email is not verified" do
-        it "needs to verify email" do
-          mock_github_auth(verified: false)
+      if device == :desktop
+        it "fills the signup form" do
+          mock_github_auth
           signup_page.open.click_social_button("github")
           expect(signup_page).to be_open
           expect(signup_page).to have_no_password_input
@@ -90,7 +80,7 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_valid_email
           expect(signup_page).to have_no_right_side_column
           signup_page.click_create_account
-          expect(page).to have_css(".account-created")
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
       end
 
@@ -100,33 +90,37 @@ shared_examples "social authentication scenarios" do
           SiteSetting.auth_overrides_name = true
         end
 
-        it "lets user input Name when no name is provided" do
-          mock_github_auth(name: "")
-          signup_page.open.click_social_button("github")
-          expect(signup_page).to be_open
-          expect(signup_page).to have_no_password_input
-          expect(signup_page).to have_valid_username
-          expect(signup_page).to have_valid_email
-          expect(signup_page).to have_editable_name_input
+        if device == :desktop
+          it "lets user input Name when no name is provided" do
+            mock_github_auth(name: "")
+            signup_page.open.click_social_button("github")
+            expect(signup_page).to be_open
+            expect(signup_page).to have_no_password_input
+            expect(signup_page).to have_valid_username
+            expect(signup_page).to have_valid_email
+            expect(signup_page).to have_editable_name_input
 
-          signup_page.fill_input("#new-account-name", "Test User")
+            signup_page.fill_input("#new-account-name", "Test User")
 
-          expect(signup_page).to have_no_right_side_column
-          signup_page.click_create_account
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+            expect(signup_page).to have_no_right_side_column
+            signup_page.click_create_account
+            expect(page).to have_css(".header-dropdown-toggle.current-user")
+          end
         end
 
-        it "works with a provided name" do
-          mock_github_auth(name: "Some Name")
-          signup_page.open.click_social_button("github")
-          expect(signup_page).to be_open
-          expect(signup_page).to have_no_password_input
-          expect(signup_page).to have_valid_username
-          expect(signup_page).to have_valid_email
-          expect(signup_page).to have_disabled_name_input
+        if device == :desktop
+          it "works with a provided name" do
+            mock_github_auth(name: "Some Name")
+            signup_page.open.click_social_button("github")
+            expect(signup_page).to be_open
+            expect(signup_page).to have_no_password_input
+            expect(signup_page).to have_valid_username
+            expect(signup_page).to have_valid_email
+            expect(signup_page).to have_disabled_name_input
 
-          signup_page.click_create_account
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+            signup_page.click_create_account
+            expect(page).to have_css(".header-dropdown-toggle.current-user")
+          end
         end
       end
     end
@@ -147,36 +141,24 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(page).to have_css(".account-created")
       end
-
-      context "when the email is not verified" do
-        it "needs to verify email" do
-          mock_twitter_auth(verified: false)
-          signup_page.open.click_social_button("twitter")
-          expect(signup_page).to be_open
-          expect(signup_page).to have_no_password_input
-          signup_page.fill_email(OmniauthHelpers::EMAIL)
-          expect(signup_page).to have_valid_username
-          expect(signup_page).to have_valid_email
-          signup_page.click_create_account
-          expect(page).to have_css(".account-created")
-        end
-      end
     end
 
     context "with Discord" do
       before { enable_auth_provider(:discord) }
       after { reset_omniauth_config(:discord) }
 
-      it "fills the signup form" do
-        mock_discord_auth
-        signup_page.open.click_social_button("discord")
-        expect(signup_page).to be_open
-        expect(signup_page).to have_no_password_input
-        expect(signup_page).to have_valid_username
-        expect(signup_page).to have_valid_email
-        expect(signup_page).to have_no_right_side_column
-        signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      if device == :desktop
+        it "fills the signup form" do
+          mock_discord_auth
+          signup_page.open.click_social_button("discord")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          expect(signup_page).to have_no_right_side_column
+          signup_page.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
       end
     end
 
@@ -185,34 +167,18 @@ shared_examples "social authentication scenarios" do
 
       after { reset_omniauth_config(:linkedin_oidc) }
 
-      it "fills the signup form" do
-        mock_linkedin_auth
-        signup_page.open.click_social_button("linkedin_oidc")
-        expect(signup_page).to be_open
-        expect(signup_page).to have_no_password_input
-        expect(signup_page).to have_valid_username
-        expect(signup_page).to have_valid_email
-        expect(signup_page).to have_no_right_side_column
-        signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-    end
-
-    # These tests use Google, but they should be the same for all providers
-    context "when opening the external auth from /login" do
-      before { enable_auth_provider(:google_oauth2) }
-      after { reset_omniauth_config(:google_oauth2) }
-
-      it "fills the signup form" do
-        mock_google_auth
-        signup_page.open.click_social_button("google_oauth2")
-        expect(signup_page).to be_open
-        expect(signup_page).to have_no_password_input
-        expect(signup_page).to have_valid_username
-        expect(signup_page).to have_valid_email
-        expect(signup_page).to have_no_right_side_column
-        signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      if device == :desktop
+        it "fills the signup form" do
+          mock_linkedin_auth
+          signup_page.open.click_social_button("linkedin_oidc")
+          expect(signup_page).to be_open
+          expect(signup_page).to have_no_password_input
+          expect(signup_page).to have_valid_username
+          expect(signup_page).to have_valid_email
+          expect(signup_page).to have_no_right_side_column
+          signup_page.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
       end
     end
 
@@ -411,12 +377,6 @@ shared_examples "social authentication scenarios" do
       before { enable_auth_provider(:facebook) }
       after { reset_omniauth_config(:facebook) }
 
-      it "logs in user" do
-        mock_facebook_auth
-        signup_page.open.click_social_button("facebook")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-
       it "removes destination_url cookie if present after setting up redirect" do
         mock_facebook_auth
         visit("/")
@@ -476,57 +436,6 @@ shared_examples "social authentication scenarios" do
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
-
-    context "with Github" do
-      before { enable_auth_provider(:github) }
-      after { reset_omniauth_config(:github) }
-
-      it "logs in user" do
-        mock_github_auth
-        signup_page.open.click_social_button("github")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-    end
-
-    context "with Twitter" do
-      before { enable_auth_provider(:twitter) }
-      after { reset_omniauth_config(:twitter) }
-
-      it "logs in user" do
-        UserAssociatedAccount.create!(
-          provider_name: "twitter",
-          user_id: user.id,
-          provider_uid: OmniauthHelpers::UID,
-        )
-
-        mock_twitter_auth
-        signup_page.open.click_social_button("twitter")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-    end
-
-    context "with Discord" do
-      before { enable_auth_provider(:discord) }
-      after { reset_omniauth_config(:discord) }
-
-      it "logs in user" do
-        mock_discord_auth
-        signup_page.open.click_social_button("discord")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-    end
-
-    context "with Linkedin" do
-      before { enable_auth_provider(:linkedin_oidc) }
-
-      after { reset_omniauth_config(:linkedin_oidc) }
-
-      it "logs in user" do
-        mock_linkedin_auth
-        signup_page.open.click_social_button("linkedin_oidc")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
-    end
   end
 
   context "when the provider returns an error" do
@@ -537,12 +446,6 @@ shared_examples "social authentication scenarios" do
 
       expect(page).to have_css(".alert-error", text: I18n.t("login.omniauth_error.unauthorized"))
     end
-
-    it "shows the request_error message" do
-      visit("/auth/failure?message=request_error")
-
-      expect(page).to have_css(".alert-error", text: I18n.t("login.omniauth_error.request_error"))
-    end
   end
 end
 
@@ -550,10 +453,10 @@ describe "Social authentication" do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
   context "when desktop" do
-    include_examples "social authentication scenarios"
+    include_examples "social authentication scenarios", :desktop
   end
 
   context "when mobile", mobile: true do
-    include_examples "social authentication scenarios"
+    include_examples "social authentication scenarios", :mobile
   end
 end

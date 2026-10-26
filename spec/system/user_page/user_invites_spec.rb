@@ -41,13 +41,10 @@ describe "User invites" do
   describe "expired invites" do
     let(:user_invite_expired_page) { PageObjects::Pages::UserInvitedExpired.new }
 
-    it "correctly shows expired invites" do
+    it "lets the user inspect and remove all expired invites" do
       user_invite_expired_page.visit(user)
       expect(user_invite_expired_page.invites_list.size).to eq(invites_expired.size)
-    end
 
-    it "can remove all expired invites" do
-      user_invite_expired_page.visit(user)
       user_invite_expired_page.bulk_remove_expired_button.click
       user_invite_expired_page.find(".btn-danger").click
       user_invite_expired_page.wait_till_loaded

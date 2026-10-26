@@ -20,48 +20,45 @@ describe "Admin Customize Themes" do
       expect(sidebar).to have_active_link("admin_themes_and_components")
     end
 
-    it "allows admins to update the theme's light color scheme" do
+    it "updates a theme's light and dark color palettes" do
       theme_page.visit(theme)
-
       color_scheme_settings = find(".theme-settings__light-color-scheme")
-
-      expect(color_scheme_settings).to have_no_css(".submit-light-edit")
-      expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
+      aggregate_failures("initial light palette controls") do
+        expect(color_scheme_settings).to have_no_css(".submit-light-edit")
+        expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
+      end
 
       color_scheme_settings.find(".color-palette-picker").click
       color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
       color_scheme_settings.find(".submit-light-edit").click
-
-      expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
-      expect(color_scheme_settings).to have_no_css(".submit-light-edit")
-      expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
-
-      expect(page).to have_link(
-        I18n.t("admin_js.admin.customize.theme.edit_colors"),
-        href: "/admin/config/colors/#{color_scheme.id}",
-      )
-    end
-
-    it "allows admins to update the theme's dark color scheme" do
-      theme_page.visit(theme)
+      aggregate_failures("saved light palette") do
+        expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
+        expect(color_scheme_settings).to have_no_css(".submit-light-edit")
+        expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
+        expect(color_scheme_settings).to have_link(
+          I18n.t("admin_js.admin.customize.theme.edit_colors"),
+          href: "/admin/config/colors/#{color_scheme.id}",
+        )
+      end
 
       color_scheme_settings = find(".theme-settings__dark-color-scheme")
-
-      expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
-      expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
+      aggregate_failures("initial dark palette controls") do
+        expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
+        expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
+      end
 
       color_scheme_settings.find(".color-palette-picker").click
       color_scheme_settings.find(".color-palette-picker-row[data-value='#{color_scheme.id}']").click
       color_scheme_settings.find(".submit-dark-edit").click
-
-      expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
-      expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
-      expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
-
-      expect(page).to have_link(
-        I18n.t("admin_js.admin.customize.theme.edit_colors"),
-        href: "/admin/config/colors/#{color_scheme.id}",
-      )
+      aggregate_failures("saved dark palette") do
+        expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
+        expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
+        expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
+        expect(color_scheme_settings).to have_link(
+          I18n.t("admin_js.admin.customize.theme.edit_colors"),
+          href: "/admin/config/colors/#{color_scheme.id}",
+        )
+      end
     end
 
     it "allows a theme to be deleted" do
@@ -372,24 +369,20 @@ describe "Admin Customize Themes" do
           component.save!
         end
 
-        it "lets the admin stay on the page" do
+        it "keeps unsaved component settings on cancel and discards them through browser history" do
           theme_page.visit(component).fill_in_setting("greeting", "howdy")
           theme_page.click_back_to_components
           expect(dialog).to have_content(unsaved_warning)
-
           dialog.click_no
-          expect(page).to have_current_path("/admin/customize/themes/#{component.id}")
-          expect(theme_page).to have_setting_value("greeting", "howdy")
-        end
+          aggregate_failures("canceled navigation retains the draft") do
+            expect(page).to have_current_path("/admin/customize/themes/#{component.id}")
+            expect(theme_page).to have_setting_value("greeting", "howdy")
+          end
 
-        it "discards the changes when leaving" do
-          theme_page.visit(component).fill_in_setting("greeting", "howdy")
           theme_page.click_back_to_components
           expect(dialog).to have_content(unsaved_warning)
-
           dialog.click_danger
           expect(page).to have_current_path("/admin/config/customize/components")
-
           page.go_back
           expect(theme_page).to have_setting_value("greeting", "hello")
         end
@@ -495,37 +488,38 @@ describe "Admin Customize Themes" do
   end
 
   describe "editing theme site settings" do
-    it "shows all themeable site settings and allows editing values" do
+    it "edits themeable site settings and resets an override to the site default" do
       theme_page.visit(theme.id)
-      SiteSetting.themeable_site_settings.each do |setting_name|
-        expect(theme_page).to have_theme_site_setting(setting_name)
+      aggregate_failures("available theme settings") do
+        SiteSetting.themeable_site_settings.each do |setting_name|
+          expect(theme_page).to have_theme_site_setting(setting_name)
+        end
       end
-      theme_page.toggle_theme_site_setting("enable_welcome_banner")
-      expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
-      expect(page).to have_content(
-        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
-      )
-      expect(
-        ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
-      ).to be_truthy
-    end
 
-    it "allows resetting themeable site setting values back to site setting default" do
-      Fabricate(
-        :theme_site_setting_with_service,
-        theme: theme,
-        name: "enable_welcome_banner",
-        value: false,
-      )
-      theme_page.visit(theme.id)
+      theme_page.toggle_theme_site_setting("enable_welcome_banner")
+      aggregate_failures("saved theme setting override") do
+        expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
+        expect(page).to have_content(
+          I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+        )
+        expect(
+          ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
+        ).to be_truthy
+      end
+      toasts = PageObjects::Components::Toasts.new
+      toasts.close_button.click
+      expect(toasts).to have_no_message
+
       expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
       theme_page.reset_overridden_theme_site_setting("enable_welcome_banner")
-      expect(page).to have_content(
-        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
-      )
-      expect(
-        ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
-      ).to be_falsey
+      aggregate_failures("reset theme setting override") do
+        expect(page).to have_content(
+          I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+        )
+        expect(
+          ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
+        ).to be_falsey
+      end
     end
 
     it "does not show the overridden indicator if the theme site setting value in the DB is the same as the default" do

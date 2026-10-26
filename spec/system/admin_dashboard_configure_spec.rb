@@ -79,17 +79,7 @@ describe "Admin Dashboard Configure menu" do
     context "when enable_new_reordering_controls is enabled" do
       before { SiteSetting.enable_new_reordering_controls = true }
 
-      it "reorders sections via the move menu on mobile", mobile: true do
-        dashboard.visit
-
-        dashboard.open_configure_menu.move_section_up_via_list("reports")
-
-        # reorder applies immediately, without closing the menu
-        expect(dashboard).to have_first_section("reports")
-        expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
-      end
-
-      it "shows the drag handle on mobile", mobile: true do
+      it "shows the drag handle and reorders sections via the move menu on mobile", mobile: true do
         # The rendering test only proves the handle is in the DOM. A touch screen
         # reaches the menu as a modal rather than a popover, so this asserts it is
         # actually visible there, which is the only thing a finger can act on.
@@ -97,6 +87,12 @@ describe "Admin Dashboard Configure menu" do
         dashboard.open_configure_menu
 
         expect(page).to have_css(".d-reorderable-list__handle")
+
+        dashboard.move_section_up_via_list("reports")
+
+        # reorder applies immediately, without closing the menu
+        expect(dashboard).to have_first_section("reports")
+        expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
       end
 
       it "reorders sections with a real browser drag" do

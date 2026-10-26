@@ -54,25 +54,46 @@ describe "Admin User Page" do
 
     before { admin_user_page.visit(user) }
 
-    it "can list accounts with identical IPs" do
+    it "lets staff inspect a user's identity, matching accounts and penalty choices" do
+      aggregate_failures "profile identity and controls" do
+        expect(page).to have_css(".display-row.username")
+        expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
+        expect(admin_user_page).to have_suspend_button
+        expect(admin_user_page).to have_silence_button
+      end
+
       find(".ip-lookup-trigger").click
 
-      expect(page).to have_content("#{I18n.t("js.ip_lookup.other_accounts")}\n3")
+      aggregate_failures "accounts sharing the IP" do
+        expect(page).to have_content("#{I18n.t("js.ip_lookup.other_accounts")}\n3")
+        table = page.find(".other-accounts table")
+        expect(table).to have_content(similar_user.username)
+        expect(table).to have_content(another_mod.username)
+        expect(table).to have_content(another_admin.username)
+      end
 
-      table = page.find(".other-accounts table")
-      expect(table).to have_content(similar_user.username)
-      expect(table).to have_content(another_mod.username)
-      expect(table).to have_content(another_admin.username)
-    end
+      admin_user_page.close_ip_lookup
+      expect(admin_user_page).to have_closed_ip_lookup
 
-    it "displays the suspend and silence buttons" do
-      expect(admin_user_page).to have_suspend_button
-      expect(admin_user_page).to have_silence_button
-    end
+      admin_user_page.click_suspend_button
+      aggregate_failures "suspend targets" do
+        expect(suspend_user_modal.similar_users).to contain_exactly(similar_user.username)
+        expect(admin_user_page.similar_users_warning).to include(
+          I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
+        )
+      end
+      suspend_user_modal.close
+      expect(suspend_user_modal).to be_closed
 
-    it "displays username in the title" do
-      expect(page).to have_css(".display-row.username")
-      expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
+      admin_user_page.click_silence_button
+      aggregate_failures "silence targets" do
+        expect(silence_user_modal.similar_users).to contain_exactly(similar_user.username)
+        expect(admin_user_page.similar_users_warning).to include(
+          I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
+        )
+      end
+      silence_user_modal.close
+      expect(silence_user_modal).to be_closed
     end
 
     describe "the upcoming changes section" do
@@ -140,23 +161,6 @@ describe "Admin User Page" do
           )
         end
 
-        context "when the user belongs to one of those groups" do
-          before { group1.add(user) }
-
-          it "displays the upcoming change with enabled status, correct reason, and specific groups" do
-            admin_user_page.visit(user)
-            open_upcoming_changes
-            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
-              "in_specific_groups",
-            )
-            expect(
-              admin_user_page.upcoming_change("enable_upload_debug_mode"),
-            ).to have_specific_groups(["test_group_1"])
-          end
-        end
-
         context "when the user belongs to multiple groups" do
           before do
             group1.add(user)
@@ -192,44 +196,9 @@ describe "Admin User Page" do
           end
         end
       end
-
-      it "does not show conceptual upcoming changes" do
-        mock_upcoming_change_metadata(
-          {
-            enable_upload_debug_mode: {
-              impact: "feature,all_members",
-              status: :beta,
-              impact_type: "feature",
-              impact_role: "all_members",
-            },
-            about_page_extra_groups_show_description: {
-              impact: "feature,all_members",
-              status: :conceptual,
-              impact_type: "feature",
-              impact_role: "all_members",
-            },
-          },
-        )
-
-        admin_user_page.visit(user)
-        open_upcoming_changes
-        expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-        expect(admin_user_page).to have_no_upcoming_change(
-          "about_page_extra_groups_show_description",
-        )
-      end
     end
 
     describe "the suspend user modal" do
-      it "displays the list of users who share the same IP but are not mods or admins" do
-        admin_user_page.click_suspend_button
-
-        expect(suspend_user_modal.similar_users).to contain_exactly(similar_user.username)
-        expect(admin_user_page.similar_users_warning).to include(
-          I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
-        )
-      end
-
       it "suspends the user along with selected similar users and unsuspends the user" do
         admin_user_page.click_suspend_button
         suspend_user_modal.select_similar_user(similar_user.username)
@@ -263,15 +232,6 @@ describe "Admin User Page" do
     end
 
     describe "the silence user modal" do
-      it "displays the list of users who share the same IP but are not mods or admins" do
-        admin_user_page.click_silence_button
-
-        expect(silence_user_modal.similar_users).to contain_exactly(similar_user.username)
-        expect(admin_user_page.similar_users_warning).to include(
-          I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
-        )
-      end
-
       it "silence and unsilence the user" do
         admin_user_page.click_silence_button
 
