@@ -1152,6 +1152,57 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__continue-to-site").isDisabled();
   });
 
+  test("shows username instructions when picking a username", async function (assert) {
+    this.siteSettings.show_signup_form_username_instructions = true;
+    stubCodeRequest();
+    pretender.post("/session/login-code/verify", () =>
+      response({
+        username_required: true,
+        username: null,
+        avatar_template: null,
+        can_upload_avatar: true,
+      })
+    );
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert
+      .dom(
+        ".code-login-form__signup-details-step #code-login-username-instructions"
+      )
+      .hasText(i18n("user.username.instructions"));
+  });
+
+  test("shows field instructions on the account details step", async function (assert) {
+    this.siteSettings.show_signup_form_username_instructions = true;
+    this.siteSettings.show_signup_form_full_name_instructions = true;
+    this.site.full_name_visible_in_signup = true;
+    this.site.full_name_required_for_signup = true;
+    this.owner.lookup("service:session-store").setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "user@example.com",
+        expiresAt: Date.now() + 60_000,
+        signupToken: "signup-token",
+        username: "",
+      },
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert
+      .dom(
+        ".code-login-form__account-details-step #code-login-username-instructions"
+      )
+      .hasText(i18n("user.username.instructions"));
+    assert
+      .dom(
+        ".code-login-form__account-details-step #code-login-name-instructions"
+      )
+      .hasText(i18n("user.name.instructions_required"));
+  });
+
   test("keeps the avatar read-only when it can't be edited", async function (assert) {
     stubCodeRequest();
     pretender.post("/session/login-code/verify", () =>
