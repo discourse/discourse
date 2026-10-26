@@ -3072,10 +3072,16 @@ RSpec.describe Topic do
       expect(topic_embed.deleted_at).not_to eq(nil)
     end
 
-    it "triggers the topic trashed event" do
-      events = DiscourseEvent.track_events(:topic_trashed) { topic.trash! }
+    it "triggers the topic trashed event with the user who trashed it" do
+      events = DiscourseEvent.track_events(:topic_trashed) { topic.trash!(moderator) }
 
-      expect(events.size).to eq(1)
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: moderator }]])
+    end
+
+    it "triggers the topic trashed event without a user when none is given" do
+      event = DiscourseEvent.track(:topic_trashed) { topic.trash! }
+
+      expect(event[:params]).to eq([topic, { acting_user: nil }])
     end
 
     it "does not trigger the topic trashed event when topic is already trashed" do
@@ -3124,12 +3130,20 @@ RSpec.describe Topic do
       expect(topic_embed.deleted_at).to be_nil
     end
 
-    it "triggers the topic recovered event" do
+    it "triggers the topic recovered event with the user who recovered it" do
       topic.trash!
 
-      events = DiscourseEvent.track_events(:topic_recovered) { topic.recover! }
+      events = DiscourseEvent.track_events(:topic_recovered) { topic.recover!(moderator) }
 
-      expect(events.size).to eq(1)
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: moderator }]])
+    end
+
+    it "triggers the topic recovered event without a user when none is given" do
+      topic.trash!
+
+      event = DiscourseEvent.track(:topic_recovered) { topic.recover! }
+
+      expect(event[:params]).to eq([topic, { acting_user: nil }])
     end
 
     it "does not trigger the topic recovered event when topic is already recovered" do

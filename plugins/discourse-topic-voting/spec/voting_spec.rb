@@ -136,6 +136,20 @@ describe DiscourseTopicVoting do
     end
   end
 
+  context "when staff recover a deleted topic" do
+    fab!(:admin)
+
+    it "enqueues a single job to reclaim votes" do
+      first_post = Fabricate(:post, topic: topic1, post_number: 1)
+      PostDestroyer.new(admin, first_post).destroy
+      Jobs::DiscourseTopicVoting::VoteReclaim.jobs.clear
+
+      PostDestroyer.new(admin, first_post.reload).recover
+
+      expect(Jobs::DiscourseTopicVoting::VoteReclaim.jobs.length).to eq(1)
+    end
+  end
+
   context "when a topic is moved to a category" do
     let(:admin) { Fabricate(:admin) }
     let(:post0) { Fabricate(:post, topic: topic0, post_number: 1) }
