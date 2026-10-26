@@ -19,7 +19,7 @@ class GitUtils
 
   def self.full_version
     filesystem_overrides["full_version"] ||
-      try_git('git describe --dirty --match "v[0-9]*" 2> /dev/null', "unknown")
+      try_git('git describe --match "v[0-9]*" 2> /dev/null', "unknown")
   end
 
   def self.has_commit?(hash)
