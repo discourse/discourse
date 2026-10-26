@@ -7,6 +7,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import roomIcon, { roomBadge } from "../../lib/voice/room-icon.js";
 import VoiceInviteUsersModal from "../modal/voice-invite-users.gjs";
+import VoiceRoomInfoModal from "../modal/voice-room-info.gjs";
 import VoiceRecordingBadge from "./recording-badge.gjs";
 import VoiceTranscriptBadge from "./transcript-badge.gjs";
 
@@ -22,13 +23,19 @@ const RoomMeta = <template>
 
 const RoomTitle = <template>
   <div class="voice-room-header__title">
-    <div class="voice-room-header__icon">
-      {{dIcon @icon}}
-      {{#if @badge}}
-        {{dIcon @badge class="voice-room-header__restricted-icon"}}
-      {{/if}}
-    </div>
-    <h1 class="voice-room-header__name">{{@room.name}}</h1>
+    <h1 class="voice-room-header__name">
+      <span class="voice-room-header__icon">
+        {{dIcon @icon}}
+        {{#if @badge}}
+          {{dIcon @badge class="voice-room-header__restricted-icon"}}
+        {{/if}}
+      </span>
+      <DButton
+        class="btn-transparent voice-room-header__info-trigger"
+        @action={{@onOpenInfo}}
+        @translatedLabel={{@room.name}}
+      />
+    </h1>
     <RoomMeta
       @participantCountLabel={{@participantCountLabel}}
       @room={{@room}}
@@ -81,6 +88,11 @@ export default class VoiceRoomHeader extends Component {
   }
 
   @action
+  openRoomInfo() {
+    this.modal.show(VoiceRoomInfoModal, { model: { room: this.args.room } });
+  }
+
+  @action
   openInviteModal() {
     this.modal.show(VoiceInviteUsersModal, {
       model: { room: this.args.room },
@@ -94,6 +106,7 @@ export default class VoiceRoomHeader extends Component {
           <RoomTitle
             @badge={{this.badge}}
             @icon={{this.icon}}
+            @onOpenInfo={{this.openRoomInfo}}
             @participantCountLabel={{this.participantCountLabel}}
             @room={{@room}}
           />
@@ -111,6 +124,7 @@ export default class VoiceRoomHeader extends Component {
           <RoomTitle
             @badge={{this.badge}}
             @icon={{this.icon}}
+            @onOpenInfo={{this.openRoomInfo}}
             @participantCountLabel={{this.participantCountLabel}}
             @room={{@room}}
           />

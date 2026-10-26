@@ -427,19 +427,45 @@ html.discourse-touch .voice-call-widget {
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
-    height: var(--chat-header-offset);
+    height: var(--chat-header-offset, 45px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   &__name {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
     margin: 0;
-    overflow: hidden;
     font-size: var(--font-0);
     font-weight: 700;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  }
+
+  &__info-trigger {
+    gap: var(--space-2);
+    min-width: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--primary);
+
+    &:hover,
+    &:focus-visible {
+      background: none;
+      color: var(--primary);
+
+      .discourse-no-touch & {
+        background: none;
+        color: var(--primary);
+      }
+    }
+
+    .d-button-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   &__participants {
@@ -449,12 +475,9 @@ html.discourse-touch .voice-call-widget {
 
   &__icon {
     position: relative;
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-    align-items: center;
     font-size: var(--font-up-1);
     color: var(--primary-medium);
+    line-height: 1;
   }
 
   &__restricted-icon {
@@ -470,15 +493,19 @@ html.discourse-touch .voice-call-widget {
   }
 
   &__fallback {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-2);
+    padding: 0 0.67em;
     border-block-end: 1px solid var(--content-border-color);
+    background: var(--secondary);
   }
 
   &__actions {
     display: flex;
+    align-items: center;
+    height: var(--chat-header-offset, 45px);
     margin-inline-start: auto;
   }
 }
