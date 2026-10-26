@@ -60,8 +60,14 @@ export default class EmbeddableChat extends Service {
       this.isMobileViewport &&
       this.livestreamChatActive &&
       !!this.chatChannelId &&
+      !this.isZoomRoute &&
       !this.hasActiveZoomLivestream
     );
+  }
+
+  // The zoom page always renders the chat inline beside the meeting.
+  get isZoomRoute() {
+    return this.router.currentRouteName === "topic-zoom";
   }
 
   get hasActiveZoomLivestream() {
