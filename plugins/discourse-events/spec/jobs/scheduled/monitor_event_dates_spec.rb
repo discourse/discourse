@@ -723,9 +723,11 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         expect(event_date.reload.finished_at).to be_nil
 
-        expect {
-          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
-        }.to raise_error(Discourse::InvalidParameters)
+        expect(
+          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
+            params: { event_date_id: event_date.id },
+          ),
+        ).to fail_a_policy(:rollover_allowed)
 
         expect(event_date.reload.finished_at).to be_nil
         expect(post.reload.user_id).to eq(event_author.id)
@@ -765,9 +767,11 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(event.reload.recurrence).to eq("every_week")
         expect(event.event_dates.pending.first.starts_at).to be > starts_at
 
-        expect {
-          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event.event_dates.pending.first)
-        }.to raise_error(Discourse::InvalidParameters)
+        expect(
+          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
+            params: { event_date_id: event.event_dates.pending.first.id },
+          ),
+        ).to fail_a_policy(:rollover_allowed)
       end
 
       it "allows an event to be removed and recreated on a successor topic" do
@@ -1635,9 +1639,11 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(event_date.reload.finished_at).to be_nil
         expect(post.reload.event.recurrence).to eq("every_week")
 
-        expect {
-          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
-        }.to raise_error(Discourse::InvalidParameters)
+        expect(
+          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
+            params: { event_date_id: event_date.id },
+          ),
+        ).to fail_a_policy(:rollover_allowed)
 
         expect(event_date.reload.finished_at).to be_nil
 
@@ -1816,12 +1822,12 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         allow(DiscourseEvents::Events::Event::CreateSuccessorTopic).to receive(
           :call,
-        ).and_wrap_original do |original, event_date|
-          if event_date.id == failing_date.id
+        ).and_wrap_original do |original, request|
+          if request.fetch(:params).fetch(:event_date_id) == failing_date.id
             raise StandardError, "simulated successor creation failure"
           end
 
-          original.call(event_date)
+          original.call(**request)
         end
 
         expect { job.execute({}) }.to change(Topic, :count).by(1)

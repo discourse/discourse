@@ -69,7 +69,20 @@ module Jobs
           event_date.update!(finished_at: Time.current)
 
           if create_successor_topic
-            DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
+            successor_result =
+              DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
+                params: { event_date_id: event_date.id },
+              )
+
+            unless successor_result.success?
+              if (exception = successor_result["result.try.default"]&.exception)
+                raise exception
+              end
+
+              raise ActiveRecord::RecordNotSaved,
+                    "Failed successor rollover for event date #{event_date.id}: " \
+                      "#{successor_result.inspect_steps}"
+            end
           elsif recurring
             event.set_next_recurrent_event_date
           end

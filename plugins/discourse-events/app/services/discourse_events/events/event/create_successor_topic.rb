@@ -3,12 +3,33 @@
 module DiscourseEvents
   module Events
     class Event::CreateSuccessorTopic
+      include Service::Base
+
+      params do
+        attribute :event_date_id, :integer
+        validates :event_date_id, presence: true
+      end
+
+      model :event_date
+      model :event
+      policy :rollover_allowed
+
+      try do
+        step :prepare_rollover
+
+        transaction do
+          step :archive_occurrence
+          step :create_successor
+          step :copy_successor_invitees
+        end
+      end
+
       def self.rollover_allowed?(event)
         source_post = event.post
         source_topic = source_post&.topic
         author = source_post&.user
 
-        return false if source_post.nil? || source_topic.nil?
+        return false if source_post.nil? || source_topic.nil? || author.nil?
         return false if source_topic.archetype != Archetype.default
         return false if source_post.hidden? || source_post.deleted_at.present?
         return false if !source_topic.visible? || source_topic.deleted_at.present?
@@ -45,102 +66,111 @@ module DiscourseEvents
         true
       end
 
-      def self.call(event_date)
-        new(event_date).call
-      end
-
-      def initialize(event_date)
-        @event_date = event_date
-        @event = event_date.event
-      end
-
-      def call
-        raise Discourse::InvalidParameters.new(:event) unless self.class.rollover_allowed?(event)
-
-        original_raw = post.raw
-        original_title = topic.title
-        rewriter = BbcodeRewriter.new(
-          original_raw,
-          tag: "event",
-          selector: "div.discourse-post-event",
-          cook_options: { topic_id: post.topic_id, user_id: post.user_id },
-        )
-
-        invitees = snapshot_invitees
-        recurrence_anchor = event.recurrence_anchor_starts_at
-
-        next_occurrence = event.calculate_next_occurrence_from(event_date.starts_at + 1.second)
-
-        successor_post = nil
-
-        Event.transaction do
-          topic.acting_user = Discourse.system_user
-
-          archived_raw =
-            rewriter.rewrite(
-              "start" => format_date(event_date.starts_at),
-              "end" => formatted_end(event_date.ends_at),
-              "recurrence" => nil,
-              "recurrence-until" => nil,
-              "recurrenceUntil" => nil,
-            )
-
-          # SyncFromPost runs on post_edited. Persist the archived attributes
-          # without callbacks so it does not reschedule the completed occurrence
-          # or reset RSVPs. Keep the in-memory recurrence for the event-ended
-          # workflow. The surrounding transaction rolls back on failure.
-          Event.where(id: event.id).update_all(
-            original_starts_at: event_date.starts_at,
-            original_ends_at: event.original_ends_at ? event_date.ends_at : nil,
-            recurrence: nil,
-            recurrence_until: nil,
-          )
-
-          # Ensure SyncFromPost reads the newly persisted event attributes.
-          post.association(:event).reset
-
-          revisor = PostRevisor.new(post)
-          post.event_rollover_validation_actor = Discourse.system_user
-
-          begin
-            revised =
-              revisor.revise!(
-                post.user,
-                { raw: archived_raw, title: archived_title(original_title) },
-                bypass_bump: true,
-                bypass_rate_limiter: true,
-                silent: true,
-                skip_post_alert: true,
-              )
-          ensure
-            post.event_rollover_validation_actor = nil
-          end
-
-          unless revised
-            errors = (topic.errors.full_messages + post.errors.full_messages).uniq
-            raise ActiveRecord::RecordNotSaved.new(errors.to_sentence)
-          end
-
-          if next_occurrence
-            successor_raw =
-              rewriter.rewrite(
-                "start" => format_date(next_occurrence[:starts_at]),
-                "end" => formatted_end(next_occurrence[:ends_at]),
-              )
-
-            successor_post =
-              create_successor_post(successor_raw, original_title, recurrence_anchor:)
-
-            copy_recurring_invitees(invitees, successor_post)
-          end
-        end
-
-        successor_post&.topic
-      end
-
       private
 
-      attr_reader :event_date, :event
+      def fetch_event_date(params:)
+        EventDate.find_by(id: params.event_date_id)
+      end
+
+      def fetch_event(event_date:)
+        event_date.event
+      end
+
+      def rollover_allowed(event:)
+        self.class.rollover_allowed?(event)
+      end
+
+      def prepare_rollover(event_date:, event:)
+        context[:original_title] = topic.title
+        original_raw = post.raw
+        context[:rewriter] =
+          BbcodeRewriter.new(
+            original_raw,
+            tag: "event",
+            selector: "div.discourse-post-event",
+            cook_options: { topic_id: post.topic_id, user_id: post.user_id },
+          )
+        context[:invitees] = snapshot_invitees
+        context[:successor_post] = nil
+        context[:recurrence_anchor] = event.recurrence_anchor_starts_at
+        context[:next_occurrence] =
+          event.calculate_next_occurrence_from(event_date.starts_at + 1.second)
+      end
+
+      def archive_occurrence(event_date:, event:, rewriter:, original_title:)
+        topic.acting_user = Discourse.system_user
+
+        archived_raw =
+          rewriter.rewrite(
+            "start" => format_date(event_date.starts_at),
+            "end" => formatted_end(event_date.ends_at),
+            "recurrence" => nil,
+            "recurrence-until" => nil,
+            "recurrenceUntil" => nil,
+          )
+
+        # SyncFromPost runs on post_edited. Persist the archived attributes
+        # without callbacks so it does not reschedule the completed occurrence
+        # or reset RSVPs. Keep the in-memory recurrence for the event-ended
+        # workflow. The surrounding service transaction rolls back on failure.
+        Event.where(id: event.id).update_all(
+          original_starts_at: event_date.starts_at,
+          original_ends_at: event.original_ends_at ? event_date.ends_at : nil,
+          recurrence: nil,
+          recurrence_until: nil,
+        )
+
+        post.association(:event).reset
+        revisor = PostRevisor.new(post)
+        post.event_rollover_validation_actor = Discourse.system_user
+
+        begin
+          revised =
+            revisor.revise!(
+              post.user,
+              { raw: archived_raw, title: archived_title(original_title) },
+              bypass_bump: true,
+              bypass_rate_limiter: true,
+              silent: true,
+              skip_post_alert: true,
+            )
+        ensure
+          post.event_rollover_validation_actor = nil
+        end
+
+        unless revised
+          errors = (topic.errors.full_messages + post.errors.full_messages).uniq
+          raise ActiveRecord::RecordNotSaved.new(errors.to_sentence)
+        end
+      end
+
+      def create_successor(rewriter:, next_occurrence:, original_title:, recurrence_anchor:)
+        return if next_occurrence.nil?
+
+        successor_raw =
+          rewriter.rewrite(
+            "start" => format_date(next_occurrence[:starts_at]),
+            "end" => formatted_end(next_occurrence[:ends_at]),
+          )
+
+        context[:successor_post] =
+          create_successor_post(successor_raw, original_title, recurrence_anchor:)
+        context[:successor_topic] = context[:successor_post].topic
+      end
+
+      def copy_successor_invitees(invitees:, successor_post:)
+        return if successor_post.nil?
+
+        copy_recurring_invitees(invitees, successor_post)
+      end
+
+      def event_date
+        context[:event_date]
+      end
+
+      def event
+        context[:event]
+      end
 
       def post
         event.post
@@ -152,7 +182,7 @@ module DiscourseEvents
 
       def create_successor_post(raw, title, recurrence_anchor:)
         PostCreator.create!(
-          post.user || Discourse.system_user,
+          post.user,
           acting_user: Discourse.system_user,
           guardian: Discourse.system_user.guardian,
           title:,
