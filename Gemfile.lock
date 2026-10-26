@@ -785,6 +785,7 @@ GEM
     uniform_notifier (1.18.0)
     uri (1.1.2)
     useragent (0.16.11)
+    vernier (1.11.0)
     version_gem (1.1.15)
     web-push (3.1.0)
       jwt (~> 3.0)
@@ -985,6 +986,7 @@ DEPENDENCIES
   tty-prompt
   tzinfo-data
   unf
+  vernier (= 1.11.0)
   web-push
   webmock
   yaml-lint
@@ -1327,6 +1329,7 @@ CHECKSUMS
   uniform_notifier (1.18.0) sha256=4787785556f66f6418486da0f1d78b3239aaff98e2e7938fb05e2062b0ffce9d
   uri (1.1.2) sha256=89292e98eabbef6248b0a0ed5e7e398e152f83f17560023a6d94a7f492b169fb
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
+  vernier (1.11.0) sha256=ffc3859da1d53df96a109c6609892dab9f1d96ffbdd77cf13fa4d74032331216
   version_gem (1.1.15) sha256=a73241587b29252e3567e0c818ded80730eb754d43b508f6ce4db22ca9ba27d0
   web-push (3.1.0) sha256=501ab00340c58fb70dabda59f28a86b3cccb0930c6f1f30721b2a5b24de7187d
   webmock (3.29.0) sha256=a854b243019d503d3446ab7807c9192f41826d5b673b5dfe0d287ced9606ecbc

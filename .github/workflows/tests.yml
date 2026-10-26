@@ -34,7 +34,7 @@ jobs:
         )
         || 'ubuntu-latest'
       }}
-    container: discourse/discourse_test:release
+    container: discourse/discourse_test@sha256:94eca5318fed6171264b95204914de76a113c305cebb72d9fa9527e2c4496494
     services:
       minio:
         image: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'bitnami/minio@sha256:50cec18ac4184af4671a78aedd5554942c8ae105d51a465fa82037949046da01' || '' }}
@@ -120,6 +120,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Setup Git
         run: |
@@ -325,7 +326,8 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation spec/system
+          DISCOURSE_CI_RUBY_WALL_PROFILE: "1"
+        run: SPEC_OPTS="${SPEC_OPTS:+$SPEC_OPTS }--require ./script/ci_ruby_wall_profile.rb" LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
@@ -381,6 +383,7 @@ jobs:
             tmp/capybara/*.png
             tmp/capybara/*.zip
             tmp/capybara/*.webm
+            tmp/ruby-wall-profiles/**
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
