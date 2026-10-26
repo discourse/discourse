@@ -24,7 +24,18 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     repeats it ("subcategories, subcategories") and no `placeholder` route exists for an empty
     level; the tag drop shares the pattern. Also the source's paging shape and the "and all
     subcategories" rows.
-  - ☐ **VoiceOver pass and visual review** across themes and color modes.
+  - ☑ **VoiceOver pass and visual review** across themes and color modes (2026-10-26). Rows read
+    their name, topic count ("2 topics in this category") and position; searches announce the
+    result count; "and all subcategories" rows read by name. Open findings:
+    - ☐ Disabled read-only rows are skipped by the arrow keys, so their explanation is never
+      read. Changing that is an engine decision.
+    - ☐ Opening the composer chooser with ArrowDown read nothing for the active option; the
+      breadcrumb drop, opened with Enter, did.
+    - ☐ Most migrated call sites leave their visible label unassociated, so pickers read as
+      "Options" (tags too; select-kit had the same gap).
+    - ☐ Emoji-style category badges read the emoji's short name ("card_file_box Uncategorized"),
+      as select-kit rows did.
+    - ☐ The mobile panel's search field has no side gutter, for every DSelect.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
   dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic
