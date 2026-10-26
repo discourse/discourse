@@ -116,6 +116,7 @@ class PostDestroyer
   end
 
   def recover
+    topic_was_trashed = @topic.trashed?
     staff_recovery = (post_is_reviewable? || can_moderate_this_topic?) && @post.deleted_at.present?
     user_recovery = !staff_recovery && (@user.staff? || @user.id == @post.user_id)
 
@@ -138,7 +139,10 @@ class PostDestroyer
 
     if @post.is_first_post?
       UserActionManager.topic_created(@topic)
-      DiscourseEvent.trigger(:topic_recovered, @topic, @user)
+      # Topic#recover! already fired it when the topic left the trash
+      if !topic_was_trashed || @topic.trashed?
+        DiscourseEvent.trigger(:topic_recovered, @topic, acting_user: @user)
+      end
 
       if @user.id != @post.user_id
         StaffActionLogger.new(@user).log_topic_delete_recover(
