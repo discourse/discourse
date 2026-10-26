@@ -586,6 +586,10 @@ $dw-button-default-border: #d3d3d3;
       grid-template-columns: 1fr 1fr;
       grid-auto-rows: 1fr;
     }
+
+    &.--conversation .design-wizard__mock-line {
+      margin-block-end: 0;
+    }
   }
 
   &__detail-group {
@@ -626,6 +630,29 @@ $dw-button-default-border: #d3d3d3;
       grid-template-columns: 1fr 1fr;
       grid-auto-rows: 1fr;
     }
+  }
+
+  &__mock-message {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-1);
+    flex: 1;
+  }
+
+  &__mock-message-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__mock-composer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-1);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--token-radius-small);
   }
 
   &__mock-card {

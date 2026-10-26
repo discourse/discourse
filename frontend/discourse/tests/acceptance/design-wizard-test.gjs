@@ -198,6 +198,7 @@ acceptance("Design wizard - admin launch", function (needs) {
         description:
           "Open the General channel when members visit your homepage.",
         icon: "comments",
+        illustration: "conversation",
         path: "/categories",
       },
     ];
@@ -208,6 +209,10 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(".design-wizard__intro-start");
     await click(".design-wizard__next");
     await click(".design-wizard__next");
+    assert
+      .dom('[data-homepage="chat"] .design-wizard__mock-message')
+      .exists({ count: 3 });
+    assert.dom('[data-homepage="chat"] .design-wizard__mock-composer').exists();
     await click('[data-homepage="chat"]');
 
     assert.strictEqual(
@@ -239,6 +244,29 @@ acceptance("Design wizard - admin launch", function (needs) {
       "leaves channel resolution to the server"
     );
     assert.true(redirect.called, "finishes the wizard");
+  });
+
+  test("omits unsupported welcome and search choices", async function (assert) {
+    wizardData.themes[0].supports_welcome_banner = false;
+    wizardData.themes[0].supports_search = false;
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+
+    assert.dom(".design-wizard__sections").doesNotIncludeText("Welcome banner");
+    assert.dom(".design-wizard__sections").doesNotIncludeText("Search");
+    await click(".design-wizard__save");
+    for (const key of [
+      "enable_welcome_banner",
+      "welcome_banner_location",
+      "search_experience",
+    ]) {
+      assert.false(key in savedPayloads.at(-1), `${key} is not saved`);
+    }
   });
 
   test("the appearance section launches the wizard on the forum", async function (assert) {

@@ -93,6 +93,14 @@ export default class DesignWizardService extends Service {
     return this.data?.additional_homepages ?? [];
   }
 
+  get supportsWelcomeBanner() {
+    return this.selectedTheme?.supports_welcome_banner !== false;
+  }
+
+  get supportsSearch() {
+    return this.selectedTheme?.supports_search !== false;
+  }
+
   get #supportedHomepages() {
     return [
       ...SUPPORTED_HOMEPAGES,
@@ -147,9 +155,15 @@ export default class DesignWizardService extends Service {
       homepage: this.homepage,
       category_page_style:
         this.homepage === "categories" ? this.categoryPageStyle : null,
-      enable_welcome_banner: this.welcomeBanner,
-      welcome_banner_location: this.welcomeBannerLocation,
-      search_experience: this.searchExperience,
+      ...(this.supportsWelcomeBanner
+        ? {
+            enable_welcome_banner: this.welcomeBanner,
+            welcome_banner_location: this.welcomeBannerLocation,
+          }
+        : {}),
+      ...(this.supportsSearch
+        ? { search_experience: this.searchExperience }
+        : {}),
     };
   }
 
@@ -590,9 +604,15 @@ export default class DesignWizardService extends Service {
         ? this.data.homepage
         : null,
       category_page_style: settings.desktop_category_page_style,
-      enable_welcome_banner: settings.enable_welcome_banner,
-      welcome_banner_location: settings.welcome_banner_location,
-      search_experience: settings.search_experience,
+      ...(currentTheme.supports_welcome_banner !== false
+        ? {
+            enable_welcome_banner: settings.enable_welcome_banner,
+            welcome_banner_location: settings.welcome_banner_location,
+          }
+        : {}),
+      ...(currentTheme.supports_search !== false
+        ? { search_experience: settings.search_experience }
+        : {}),
     };
   }
 
@@ -677,9 +697,13 @@ export default class DesignWizardService extends Service {
     if (this.homepage === "categories") {
       this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
     }
-    this.siteSettings.enable_welcome_banner = this.welcomeBanner;
-    this.siteSettings.welcome_banner_location = this.welcomeBannerLocation;
-    this.siteSettings.search_experience = this.searchExperience;
+    if (this.supportsWelcomeBanner) {
+      this.siteSettings.enable_welcome_banner = this.welcomeBanner;
+      this.siteSettings.welcome_banner_location = this.welcomeBannerLocation;
+    }
+    if (this.supportsSearch) {
+      this.siteSettings.search_experience = this.searchExperience;
+    }
   }
 
   #refreshCategoriesPage() {

@@ -14,6 +14,7 @@ RSpec.describe DesignWizard::Apply do
     it { is_expected.to allow_values(*Theme::CORE_THEMES.values).for(:theme_id) }
 
     it "accepts installed official themes with either repository URL format" do
+      SiteSetting.concord_in_wizard = true
       ["", ".git"].each do |suffix|
         theme =
           Fabricate(
@@ -30,6 +31,7 @@ RSpec.describe DesignWizard::Apply do
     end
 
     it "rejects custom themes, similarly named repositories, and components" do
+      SiteSetting.concord_in_wizard = true
       custom_theme = Fabricate(:theme, name: "Concord")
       unofficial_theme =
         Fabricate(
@@ -152,6 +154,14 @@ RSpec.describe DesignWizard::Apply do
 
       let(:theme_id) { concord_theme.id }
       let(:params) { { theme_id:, light_palette_id: palette.id, palettes_user_selectable: true } }
+
+      before { SiteSetting.concord_in_wizard = true }
+
+      it "rejects the installed theme when Concord is disabled" do
+        SiteSetting.concord_in_wizard = false
+
+        expect(result).to fail_a_contract
+      end
 
       it "selects the theme and its palette" do
         expect(result).to run_successfully

@@ -3,6 +3,8 @@
 module DesignWizard
   class Homepages
     def self.additional_options
+      return [] if !SiteSetting.concord_in_wizard
+
       DiscoursePluginRegistry.apply_modifier(:design_wizard_homepages, [])
     end
 

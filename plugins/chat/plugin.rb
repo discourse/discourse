@@ -457,6 +457,7 @@ after_initialize do
           name: I18n.t("chat.design_wizard_homepage_name"),
           description: I18n.t("chat.design_wizard_homepage_description", channel: channel.title),
           icon: "comments",
+          illustration: "conversation",
           path: channel.relative_url.delete_prefix(Discourse.base_path),
           settings: {
             chat_homepage_channel: channel.id.to_s,

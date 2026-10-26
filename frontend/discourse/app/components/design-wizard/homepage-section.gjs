@@ -109,6 +109,22 @@ const CategoryStyleMock = <template>
   {{/if}}
 </template>;
 
+const ConversationMock = <template>
+  {{#each (array 1 2 3)}}
+    <span class="design-wizard__mock-message">
+      <span class="design-wizard__mock-avatar"></span>
+      <span class="design-wizard__mock-message-body">
+        <span class="design-wizard__mock-line --title"></span>
+        <span class="design-wizard__mock-line --text"></span>
+      </span>
+    </span>
+  {{/each}}
+  <span class="design-wizard__mock-composer">
+    <span class="design-wizard__mock-line --text"></span>
+    <span class="design-wizard__mock-avatar"></span>
+  </span>
+</template>;
+
 const DesignWizardHomepageSection = <template>
   <div class="design-wizard__homepage-cards">
     <button
@@ -149,9 +165,18 @@ const DesignWizardHomepageSection = <template>
         type="button"
         {{on "click" (fn @onSelectHomepage option.id)}}
       >
-        <span class="design-wizard__homepage-thumbnail --icon">
-          {{dIcon option.icon}}
-        </span>
+        {{#if (eq option.illustration "conversation")}}
+          <span
+            aria-hidden="true"
+            class="design-wizard__homepage-thumbnail --conversation"
+          >
+            <ConversationMock />
+          </span>
+        {{else}}
+          <span class="design-wizard__homepage-thumbnail --icon">
+            {{dIcon option.icon}}
+          </span>
+        {{/if}}
         {{option.name}}
       </button>
     {{/each}}

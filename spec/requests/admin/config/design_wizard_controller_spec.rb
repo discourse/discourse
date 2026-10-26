@@ -30,11 +30,11 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(themes.map { |theme| theme["id"] }).to contain_exactly(
           Theme::CORE_THEMES["foundation"],
           Theme::CORE_THEMES["horizon"],
-          "concord",
         )
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
         expect(horizon["description"]).to eq("A simple, beautiful theme")
+        expect(horizon).to include("supports_welcome_banner" => true, "supports_search" => true)
         expect(horizon["palette_pairs"].map { |pair| pair["key"] }).to include(
           "horizon",
           "royal",
@@ -56,7 +56,29 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(dracula["light"]).to be_nil
       end
 
+      it "excludes installed Concord from the choices by default" do
+        concord =
+          Fabricate(
+            :theme,
+            remote_theme:
+              Fabricate(
+                :remote_theme,
+                remote_url: "https://github.com/discourse/discourse-concord-theme",
+              ),
+          )
+        concord.set_default!
+
+        get "/admin/config/design-wizard.json"
+
+        expect(SiteSetting.concord_in_wizard).to eq(false)
+        expect(response.parsed_body["themes"].map { |theme| theme["id"] }).to contain_exactly(
+          *Theme::CORE_THEMES.values,
+        )
+        expect(response.parsed_body["current_theme"]).to include("id" => concord.id)
+      end
+
       it "offers Concord for installation without creating a theme" do
+        SiteSetting.concord_in_wizard = true
         expect { get "/admin/config/design-wizard.json" }.not_to change { Theme.count }
 
         expect(response.status).to eq(200)
@@ -65,10 +87,15 @@ RSpec.describe Admin::Config::DesignWizardController do
           "remote_url" => "https://github.com/discourse/discourse-concord-theme",
           "description" => I18n.t("design_wizard.themes.concord.description"),
           "palette_pairs" => [],
+          "supports_welcome_banner" => false,
+          "supports_search" => false,
+          "screenshot_light_url" => "/images/design-wizard/concord-light.jpg",
+          "screenshot_dark_url" => "/images/design-wizard/concord-dark.jpg",
         )
       end
 
       it "hides installation choices when repository imports are restricted" do
+        SiteSetting.concord_in_wizard = true
         global_setting :allowed_theme_repos, "https://github.com/discourse/other-theme"
 
         get "/admin/config/design-wizard.json"
@@ -79,8 +106,14 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "hides installation choices when theme creation is disabled" do
+        SiteSetting.concord_in_wizard = true
         plugin = Plugin::Instance.new
-        plugin.register_modifier(:user_guardian_can_create_theme) { false }
+        modifier = ->(*) { false }
+        DiscoursePluginRegistry.register_modifier(
+          plugin,
+          :user_guardian_can_create_theme,
+          &modifier
+        )
 
         get "/admin/config/design-wizard.json"
 
@@ -88,10 +121,15 @@ RSpec.describe Admin::Config::DesignWizardController do
           *Theme::CORE_THEMES.values,
         )
       ensure
-        DiscoursePluginRegistry.reset!
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_create_theme,
+          &modifier
+        )
       end
 
       it "returns installed Concord as a selectable default with its palette state" do
+        SiteSetting.concord_in_wizard = true
         concord =
           Fabricate(
             :theme,
@@ -115,6 +153,10 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(themes.find { |theme| theme["id"] == concord.id }).to include(
           "default" => true,
           "color_scheme_id" => palette.id,
+          "supports_welcome_banner" => false,
+          "supports_search" => false,
+          "screenshot_light_url" => "/images/design-wizard/concord-light.jpg",
+          "screenshot_dark_url" => "/images/design-wizard/concord-dark.jpg",
         )
         expect(response.parsed_body["current_theme"]).to be_nil
         expect(response.parsed_body["palettes_user_selectable"]).to eq(true)
@@ -294,6 +336,7 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "applies installed Concord" do
+        SiteSetting.concord_in_wizard = true
         concord =
           Fabricate(
             :theme,
@@ -308,6 +351,24 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         expect(response.status).to eq(200)
         expect(SiteSetting.default_theme_id).to eq(concord.id)
+      end
+
+      it "rejects installed Concord by default" do
+        concord =
+          Fabricate(
+            :theme,
+            remote_theme:
+              Fabricate(
+                :remote_theme,
+                remote_url: "https://github.com/discourse/discourse-concord-theme",
+              ),
+          )
+
+        expect do
+          put "/admin/config/design-wizard.json", params: { theme_id: concord.id }
+        end.not_to change { SiteSetting.default_theme_id }
+
+        expect(response.status).to eq(400)
       end
 
       it "rejects unsupported themes without changing the default" do

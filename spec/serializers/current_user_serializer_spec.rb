@@ -538,6 +538,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "remains available when Concord is installed and selected as the default" do
+      SiteSetting.concord_in_wizard = true
       concord =
         Fabricate(
           :theme,
@@ -553,6 +554,10 @@ RSpec.describe CurrentUserSerializer do
       concord.set_default!
 
       expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+
+      SiteSetting.concord_in_wizard = false
+
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
     end
 
     it "is not included once a theme is installed" do
