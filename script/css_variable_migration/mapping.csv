@@ -1,0 +1,16 @@
+old_name,new_name,type,notes
+--d-border-radius,--d-sys-border-radius-md,rename,The theme knob; sm and lg derive from it.
+--d-border-radius-fixed,--d-sys-border-radius-md,merge,Fixed 4px becomes md and follows the theme.
+--token-radius-normal,--d-sys-border-radius-md,merge,Fixed 4px becomes md and follows the theme.
+--d-border-radius-large,--d-sys-border-radius-lg,rename,Double md.
+--token-radius-large,--d-sys-border-radius-lg,merge,Fixed 8px becomes lg (double md) and follows the theme.
+--d-border-radius-small,--d-sys-border-radius-sm,rename,Not defined in core; sm is half md (see definitions.csv).
+--token-radius-small,--d-sys-border-radius-sm,merge,Fixed 2px becomes sm (half md) and follows the theme.
+--d-border-radius-pill,--d-sys-border-radius-full,merge,1em becomes 9999px: differs only on elements taller than 2em.
+--token-radius-full,--d-sys-border-radius-full,rename,
+--d-button-border-radius,--d-comp-DButton-border-radius,rename,
+--d-input-border-radius,--d-comp-Input-border-radius,rename,Input pattern.
+--d-nav-pill-border-radius,--d-comp-NavPills-border-radius,rename,NavPills pattern.
+--d-post-control-border-radius,--d-comp-PostMenu-button-border-radius,rename,PostMenu button part.
+--d-tag-border-radius,--d-comp-DDiscourseTag-border-radius,rename,Owner from ui-kit/helpers/d-discourse-tag.js.
+--category-badge-border-radius,--d-comp-DCategoryBadge-border-radius,rename,Owner from ui-kit/helpers/d-category-badge.js.
