@@ -326,6 +326,53 @@ acceptance("Design wizard - admin launch", function (needs) {
     });
   });
 
+  ["topics", "categories"].forEach((choice) => {
+    [false, true].forEach((resume) => {
+      test(`switching from Chat to ${choice} preserves the original channel${resume ? " after a preview reload" : ""}`, async function (assert) {
+        wizardData.homepage_settings = { chat_homepage_channel: "23" };
+        wizardData.additional_homepages = [
+          {
+            id: "chat",
+            name: "Chat",
+            path: "/categories",
+            settings: { chat_homepage_channel: "12" },
+          },
+        ];
+        sinon.stub(DiscourseURL, "redirectTo");
+
+        await visit("/admin");
+        await click(APPEARANCE_LAUNCH_BUTTON);
+        await click(".design-wizard__intro-start");
+        await click(".design-wizard__next");
+        await click(".design-wizard__next");
+        await click('[data-homepage="chat"]');
+
+        if (resume) {
+          const wizard = this.owner.lookup("service:design-wizard");
+          await wizard.saveProgress();
+          wizardData.homepage = "chat";
+          wizardData.homepage_settings = { chat_homepage_channel: "12" };
+          await wizard.start({ resuming: true });
+          await click(".design-wizard__next");
+          await click(".design-wizard__next");
+        }
+
+        await click(`[data-homepage="${choice}"]`);
+        await click(".design-wizard__save");
+        assert.strictEqual(
+          savedPayloads.at(-1).homepage,
+          choice === "topics" ? "latest" : "categories",
+          "saves the selected forum homepage"
+        );
+        assert.strictEqual(
+          savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+          "23",
+          "restores the channel configured before the wizard started"
+        );
+      });
+    });
+  });
+
   test("reverts the welcome banner location after switching from Concord", async function (assert) {
     wizardData.themes[0].default = false;
     wizardData.themes.push({

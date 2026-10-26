@@ -83,6 +83,7 @@ export default class DesignWizardService extends Service {
   #starting = false;
   #startFailed = false;
   #originalSiteSettings;
+  #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
 
@@ -403,7 +404,7 @@ export default class DesignWizardService extends Service {
       ({ id }) => id === homepage
     );
     this.homepageSettings = {
-      ...this.homepageSettings,
+      ...this.#originalHomepageSettings,
       ...additionalHomepage?.settings,
     };
     if (homepage === "categories") {
@@ -585,6 +586,7 @@ export default class DesignWizardService extends Service {
     this.showIntro = false;
     this.#snapshot = undefined;
     this.#originalSiteSettings = undefined;
+    this.#originalHomepageSettings = undefined;
   }
 
   // captured before anything is previewed or saved, from the values the server
@@ -640,7 +642,8 @@ export default class DesignWizardService extends Service {
     this.headingFont = this.data.heading_font;
     this.colorMode = renderedColorMode();
     this.homepage = this.#supportedHomepage(this.data.homepage);
-    this.homepageSettings = this.data.homepage_settings ?? {};
+    this.#originalHomepageSettings = this.data.homepage_settings ?? {};
+    this.homepageSettings = this.#originalHomepageSettings;
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
     this.welcomeBanner = this.siteSettings.enable_welcome_banner;
     this.welcomeBannerLocation = this.siteSettings.welcome_banner_location;
@@ -653,6 +656,11 @@ export default class DesignWizardService extends Service {
     this.returnUrl = stored.returnUrl;
     this.progressSaved = stored.progressSaved ?? false;
     this.#snapshot = stored.snapshot;
+    this.#originalHomepageSettings =
+      stored.originalHomepageSettings ??
+      stored.snapshot?.homepage_settings ??
+      this.data.homepage_settings ??
+      {};
     // the intro is only ever shown once, before the first selection
     this.showIntro = false;
     this.themeId = stored.themeId;
@@ -690,6 +698,7 @@ export default class DesignWizardService extends Service {
         headingFont: this.headingFont,
         homepage: this.homepage,
         homepageSettings: this.homepageSettings,
+        originalHomepageSettings: this.#originalHomepageSettings,
         categoryPageStyle: this.categoryPageStyle,
         welcomeBanner: this.welcomeBanner,
         welcomeBannerLocation: this.welcomeBannerLocation,
