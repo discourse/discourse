@@ -324,6 +324,21 @@ customization ports are done.
   | `.select-kit-row .discourse-tag-count` | `.d-tag-option .discourse-tag-count` |
   | `.filter-for-more` | `.d-tag-drop__filter-for-more`, inside `.d-select__footer` |
 
+  | Legacy selector (category pickers) | DSelect equivalent |
+  |---|---|
+  | `.select-kit.category-chooser`, `.category-selector`, `.multiple-categories-selector`, `.category-drop` | `.d-select` with the same class (the root; for the drop it is also the trigger) |
+  | The 300px default width of `.select-kit.combo-box` and `.select-kit.multi-select` | None: DSelect fills its container, so the call site sets a width |
+  | `.category-drop-header`, `.select-kit.category-drop.has-selection` | `.d-select.category-drop` itself; there is no selection modifier yet, so this is a gap |
+  | `.selected-name` on the drop | `.d-category-filter__selection` |
+  | `.select-kit-body` | `.d-select__content.--kind-select-category` or `.--kind-select-category-filter` |
+  | `.select-kit-row.category-row` | `.d-select__option`; the badge is the option label, with no `.category-status` wrapper |
+  | `.category-row .category-desc` | `.d-select__option-description` |
+  | `.category-row .topic-count`, `.read-only` | `.d-select__option .topic-count`, `.read-only` |
+  | `.select-kit-row[data-value="all-categories"]`, `[data-value="no-categories"]` | `.d-select__option` with the same `data-value` |
+  | `.plus-subcategories` | None: the descendants row is a plain-text option, `[data-value^="category-descendants-"]` |
+  | `.selected-choice-category` | `.d-select__chip` |
+  | `.category-drop-footer` | The same class, inside `.d-select__footer`; the breadcrumbs render it |
+
 ## Behaviour changes to compare by hand
 
 Differences from select-kit to try side by side (flag on and off) before a family is promoted.

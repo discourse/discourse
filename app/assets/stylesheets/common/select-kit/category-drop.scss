@@ -81,3 +81,44 @@
     }
   }
 }
+
+// The filter's trigger is a short label and its windowed list cannot size the overlay to the
+// longest category, so the overlay gets a wider floor than the select default.
+.d-select__content.--kind-select-category-filter {
+  --d-select-menu-min-width: 16em;
+
+  .badge-category__wrapper {
+    font-size: var(--font-0);
+    max-width: 260px;
+  }
+
+  .d-select__option {
+    &[data-value="all-categories"],
+    &[data-value="no-categories"] {
+      color: var(--tertiary);
+      font-weight: 700;
+
+      @include viewport.until(sm) {
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+// The caller's footer content joins the select footer's own leading/trailing layout.
+.d-select__footer .category-drop-footer {
+  display: contents;
+  font-size: var(--font-down-1);
+
+  span {
+    color: var(--primary-high);
+  }
+}
+
+.d-select.category-drop.d-select__trigger {
+  &[aria-expanded="true"],
+  &:focus,
+  &:active {
+    @include default-focus;
+  }
+}
