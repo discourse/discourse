@@ -127,6 +127,16 @@ module("Unit | Service | embeddable-chat", function (hooks) {
     assert.false(this.subject.showLivestreamHeaderChatIcon);
   });
 
+  test("hides the header chat icon on the zoom route", function (assert) {
+    this.capabilities.viewport.lg = false;
+    this.router.currentRouteName = "topic-zoom";
+
+    assert.false(
+      this.subject.showLivestreamHeaderChatIcon,
+      "even when the event is not a zoom livestream"
+    );
+  });
+
   test("hides the header chat icon on a zoom livestream", function (assert) {
     const owner = getOwner(this);
     owner.lookup("service:site-settings").livestream_zoom_enabled = true;
