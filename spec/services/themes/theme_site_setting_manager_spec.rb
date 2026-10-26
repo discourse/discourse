@@ -43,6 +43,12 @@ RSpec.describe Themes::ThemeSiteSettingManager do
       end
     end
 
+    context "when the theme can't be edited" do
+      before { allow(guardian).to receive(:can_edit_theme?).with(theme).and_return(false) }
+
+      it { is_expected.to fail_a_policy(:can_edit_theme) }
+    end
+
     context "when creating a new theme site setting" do
       it { is_expected.to run_successfully }
 

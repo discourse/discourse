@@ -10,6 +10,8 @@ class Admin::ColorSchemesController < Admin::AdminController
   end
 
   def create
+    guardian.ensure_can_create_color_scheme!
+
     color_scheme = ColorScheme.create(color_scheme_params)
     if color_scheme.valid?
       render json: color_scheme, root: false

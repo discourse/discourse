@@ -896,4 +896,131 @@ RSpec.describe UserGuardian do
       expect(Guardian.new(moderator).can_check_sso_payload?(user)).to eq(false)
     end
   end
+
+  describe "theme permissions" do
+    fab!(:theme)
+    fab!(:locked_theme, :theme)
+    fab!(:component) { Fabricate(:theme, component: true) }
+    fab!(:locked_component) { Fabricate(:theme, component: true) }
+
+    let(:plugin) { Plugin::Instance.new }
+
+    describe "#can_edit_theme?" do
+      it "allows admins only" do
+        expect(Guardian.new(admin).can_edit_theme?(theme)).to eq(true)
+        expect(Guardian.new(moderator).can_edit_theme?(theme)).to eq(false)
+        expect(Guardian.new(user).can_edit_theme?(theme)).to eq(false)
+        expect(Guardian.new.can_edit_theme?(theme)).to eq(false)
+        expect(Guardian.new(admin).can_edit_theme?(nil)).to eq(false)
+      end
+
+      it "lets a plugin restrict which themes admins can edit" do
+        received = []
+        modifier =
+          proc do |_allowed, guardian, target|
+            received << [guardian.user, target]
+            false
+          end
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        expect(Guardian.new(admin).can_edit_theme?(theme)).to eq(false)
+        expect(received).to eq([[admin, theme]])
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
+      it "doesn't let a plugin open theme editing to non-admins" do
+        modifier = proc { true }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        expect(Guardian.new(moderator).can_edit_theme?(theme)).to eq(false)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+    end
+
+    describe "#can_edit_theme_relations?" do
+      let(:locked_ids) { [locked_theme.id, locked_component.id] }
+      let(:edit_modifier) do
+        proc { |allowed, _guardian, target| allowed && locked_ids.exclude?(target.id) }
+      end
+
+      before { plugin.register_modifier(:user_guardian_can_edit_theme, &edit_modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &edit_modifier
+        )
+      end
+
+      it "allows linking and unlinking editable themes" do
+        guardian = Guardian.new(admin)
+
+        expect(guardian.can_edit_theme_relations?(theme, child_theme_ids: [component.id])).to eq(
+          true,
+        )
+        expect(
+          guardian.can_edit_theme_relations?(component, parent_theme_ids: [theme.id.to_s]),
+        ).to eq(true)
+      end
+
+      it "requires every theme whose links change to be editable" do
+        guardian = Guardian.new(admin)
+
+        expect(
+          guardian.can_edit_theme_relations?(theme, child_theme_ids: [locked_component.id]),
+        ).to eq(false)
+        expect(
+          guardian.can_edit_theme_relations?(component, parent_theme_ids: [locked_theme.id]),
+        ).to(eq(false))
+        expect(guardian.can_edit_theme_relations?(locked_theme, child_theme_ids: [])).to eq(false)
+      end
+
+      it "ignores links that stay the same" do
+        theme.add_relative_theme!(:child, locked_component)
+        guardian = Guardian.new(admin)
+
+        expect(
+          guardian.can_edit_theme_relations?(
+            theme,
+            child_theme_ids: [locked_component.id, component.id],
+          ),
+        ).to eq(true)
+        expect(guardian.can_edit_theme_relations?(theme, child_theme_ids: [component.id])).to eq(
+          false,
+        )
+      end
+    end
+
+    describe "#can_create_color_scheme?" do
+      it "allows admins only" do
+        expect(Guardian.new(admin).can_create_color_scheme?).to eq(true)
+        expect(Guardian.new(moderator).can_create_color_scheme?).to eq(false)
+      end
+
+      it "lets a plugin restrict palette creation" do
+        modifier = proc { |allowed, guardian| allowed && guardian.user != admin }
+        plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier)
+
+        expect(Guardian.new(admin).can_create_color_scheme?).to eq(false)
+        expect(Guardian.new(Fabricate(:admin)).can_create_color_scheme?).to eq(true)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_create_color_scheme,
+          &modifier
+        )
+      end
+    end
+  end
 end

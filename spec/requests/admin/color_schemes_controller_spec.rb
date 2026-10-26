@@ -90,6 +90,25 @@ RSpec.describe Admin::ColorSchemesController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to be_present
       end
+
+      it "respects plugin restrictions on palette creation" do
+        plugin = Plugin::Instance.new
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier)
+
+        expect do post "/admin/color_schemes.json", params: valid_params end.not_to change {
+          ColorScheme.count
+        }
+        expect(response.status).to eq(403)
+      ensure
+        if plugin
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin,
+            :user_guardian_can_create_color_scheme,
+            &modifier
+          )
+        end
+      end
     end
 
     shared_examples "color scheme creation not allowed" do

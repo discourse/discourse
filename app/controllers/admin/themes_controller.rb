@@ -104,6 +104,10 @@ class Admin::ThemesController < Admin::AdminController
       update_components = params[:components]
       run_migrations = !params[:skip_migrations]
 
+      if theme_id.present? && (existing_theme = Theme.find_by(id: theme_id))
+        guardian.ensure_can_edit_theme!(existing_theme)
+      end
+
       begin
         @theme =
           RemoteTheme.update_zipped_theme(
@@ -178,6 +182,15 @@ class Admin::ThemesController < Admin::AdminController
   def update
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    guardian.ensure_can_edit_theme!(@theme)
+    if !guardian.can_edit_theme_relations?(
+         @theme,
+         child_theme_ids: theme_params[:child_theme_ids],
+         parent_theme_ids: theme_params[:parent_theme_ids],
+       )
+      raise Discourse::InvalidAccess
+    end
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
     disables_component = [false, "false"].include?(theme_params[:enabled])
@@ -256,6 +269,7 @@ class Admin::ThemesController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:theme) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_theme) { raise Discourse::InvalidAccess }
     end
   end
 
@@ -266,6 +280,7 @@ class Admin::ThemesController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:themes) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_themes) { raise Discourse::InvalidAccess }
     end
   end
 
@@ -306,6 +321,7 @@ class Admin::ThemesController < Admin::AdminController
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
+    guardian.ensure_can_edit_theme!(@theme)
 
     setting_name = params[:name].to_sym
     new_value = params[:value] || nil
@@ -343,6 +359,7 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
       on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_theme) { raise Discourse::InvalidAccess }
       on_failed_policy(:ensure_setting_is_themeable) do
         render_json_error(I18n.t("themes.setting_not_themeable", name: params[:name]), status: 400)
       end
@@ -366,6 +383,7 @@ class Admin::ThemesController < Admin::AdminController
   def update_source
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
+    guardian.ensure_can_edit_theme!(@theme)
     raise Discourse::InvalidParameters.new(:remote_theme) unless @theme.remote_theme&.is_git?
 
     remote_url = params[:remote_url]&.strip

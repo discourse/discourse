@@ -180,6 +180,28 @@ RSpec.describe Admin::SiteTextsController do
       expect(ThemeTranslationOverride.where(theme: theme)).to be_empty
     end
 
+    it "respects plugin restrictions on theme edits" do
+      plugin = Plugin::Instance.new
+      modifier = proc { |allowed, _guardian, target| allowed && target.id != theme.id }
+      plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+      put path, params: { site_text: { locale: "en", value: "Blocked" } }
+      expect(response.status).to eq(403)
+
+      delete path, params: { locale: "en" }
+      expect(response.status).to eq(403)
+
+      expect(ThemeTranslationOverride.where(theme: theme)).to be_empty
+    ensure
+      if plugin
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+    end
+
     it "rejects unknown keys and malformed values" do
       put "/admin/customize/site_texts/js.theme_translations.#{theme.id}.missing.json",
           params: {

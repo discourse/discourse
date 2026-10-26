@@ -221,6 +221,7 @@ class Admin::SiteTextsController < Admin::AdminController
   def update_theme_text(locale, revert: false)
     text = ThemeTranslationManager.find_site_text(params[:id], locale:)
     raise Discourse::NotFound unless text
+    guardian.ensure_can_edit_theme!(text.theme)
 
     old_value = text.value
     if revert

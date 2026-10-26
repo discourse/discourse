@@ -2024,4 +2024,111 @@ RSpec.describe Admin::ThemesController do
       )
     end
   end
+
+  describe "with a plugin restricting theme edits" do
+    fab!(:theme)
+    fab!(:locked_theme) { Fabricate(:theme, name: "Locked theme") }
+    fab!(:locked_component) { Fabricate(:theme, name: "Locked component", component: true) }
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier) do
+      proc do |allowed, _guardian, target|
+        allowed && [locked_theme.id, locked_component.id].exclude?(target.id)
+      end
+    end
+    let(:theme_archive) do
+      Rack::Test::UploadedFile.new(
+        file_from_fixtures("discourse-test-theme.zip", "themes"),
+        "application/zip",
+      )
+    end
+
+    before do
+      sign_in(admin)
+      plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+    end
+
+    after do
+      DiscoursePluginRegistry.unregister_modifier(plugin, :user_guardian_can_edit_theme, &modifier)
+    end
+
+    it "still allows editing other themes" do
+      put "/admin/themes/#{theme.id}.json", params: { theme: { name: "Renamed" } }
+
+      expect(response.status).to eq(200)
+      expect(theme.reload.name).to eq("Renamed")
+    end
+
+    it "blocks changes to a restricted theme" do
+      put "/admin/themes/#{locked_theme.id}.json", params: { theme: { name: "Renamed" } }
+      expect(response.status).to eq(403)
+
+      put "/admin/themes/#{locked_theme.id}/setting.json", params: { name: "bg", value: "green" }
+      expect(response.status).to eq(403)
+
+      put "/admin/themes/#{locked_theme.id}/site-setting.json",
+          params: {
+            name: "enable_welcome_banner",
+            value: false,
+          }
+      expect(response.status).to eq(403)
+
+      put "/admin/themes/#{locked_theme.id}/source.json", params: { remote_url: repo_url }
+      expect(response.status).to eq(403)
+
+      expect(locked_theme.reload.name).to eq("Locked theme")
+      expect(locked_theme.theme_site_settings).to be_empty
+    end
+
+    it "blocks replacing a restricted theme with an uploaded archive" do
+      post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: locked_theme.id }
+
+      expect(response.status).to eq(403)
+      expect(locked_theme.reload.theme_fields).to be_empty
+    end
+
+    it "blocks deleting a restricted theme" do
+      delete "/admin/themes/#{locked_theme.id}.json"
+      expect(response.status).to eq(403)
+
+      delete "/admin/themes/bulk_destroy.json", params: { theme_ids: [theme.id, locked_theme.id] }
+      expect(response.status).to eq(403)
+
+      expect(Theme.where(id: [theme.id, locked_theme.id]).count).to eq(2)
+    end
+
+    it "blocks including or removing a restricted component" do
+      put "/admin/themes/#{theme.id}.json",
+          params: {
+            theme: {
+              child_theme_ids: [locked_component.id],
+            },
+          }
+      expect(response.status).to eq(403)
+      expect(theme.reload.child_theme_ids).to be_empty
+
+      put "/admin/themes/#{locked_component.id}.json",
+          params: {
+            theme: {
+              parent_theme_ids: [theme.id],
+            },
+          }
+      expect(response.status).to eq(403)
+
+      component = Fabricate(:theme, component: true)
+      theme.add_relative_theme!(:child, locked_component)
+      put "/admin/themes/#{theme.id}.json", params: { theme: { child_theme_ids: [component.id] } }
+      expect(response.status).to eq(403)
+      expect(theme.reload.child_theme_ids).to eq([locked_component.id])
+
+      put "/admin/themes/#{theme.id}.json",
+          params: {
+            theme: {
+              child_theme_ids: [locked_component.id, component.id],
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(theme.reload.child_theme_ids).to contain_exactly(locked_component.id, component.id)
+    end
+  end
 end
