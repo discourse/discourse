@@ -6,6 +6,7 @@ import {
   findAll,
   render,
   settled,
+  triggerKeyEvent,
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -58,6 +59,7 @@ module("Integration | Component | DataTableViewer", function (hooks) {
 
     await click(firstCell);
     await fillIn(CELL_INPUT, "a2");
+    await triggerKeyEvent(CELL_INPUT, "keydown", "Enter");
     await click(secondCell);
     await fillIn(CELL_INPUT, "b2");
     await blur(CELL_INPUT);
