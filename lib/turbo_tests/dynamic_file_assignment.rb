@@ -11,7 +11,6 @@ module TurboTests
     def self.claim?(file)
       path = File.join(DIRECTORY, Digest::SHA256.hexdigest(File.expand_path(file)))
       File.open(path, File::WRONLY | File::CREAT | File::EXCL) { |owner| owner.write(WORKER) }
-      puts "Dynamic file assignment [#{WORKER}]: #{file}"
       true
     rescue Errno::EEXIST
       File.read(path) == WORKER
