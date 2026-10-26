@@ -56,6 +56,11 @@ module DiscourseWorkflows
         "#{DEFAULT_I18N_PREFIX}.node_descriptions.#{identifier}"
     end
 
+    # Comma-separated words admins might search for that aren't in the node's name, e.g. "hide" for unlisting.
+    def search_terms_key
+      description[:search_terms_key] || "#{DEFAULT_I18N_PREFIX}.node_search_terms.#{identifier}"
+    end
+
     def group
       description[:group] || default_group
     end
@@ -118,6 +123,7 @@ module DiscourseWorkflows
         defaults: description[:defaults],
         label_key: label_key,
         description_key: description_key,
+        search_terms_key: search_terms_key,
         palette_group: palette_group,
         i18n_prefix: i18n_prefix,
         i18n_scope: i18n_scope,
