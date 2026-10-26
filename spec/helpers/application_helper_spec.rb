@@ -1179,6 +1179,36 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "previewing palettes" do
+    fab!(:light_palette, :color_scheme)
+    fab!(:dark_palette, :color_scheme)
+
+    before do
+      controller.params[:preview_color_scheme_id] = light_palette.id.to_s
+      controller.params[:preview_dark_color_scheme_id] = dark_palette.id.to_s
+    end
+
+    it "uses the palettes passed in the URL for staff" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+
+      expect(helper.scheme_id).to eq(light_palette.id)
+      expect(helper.dark_scheme_id).to eq(dark_palette.id)
+      expect(helper.discourse_color_scheme_stylesheets).to include(
+        %[class="light-scheme" data-scheme-id="#{light_palette.id}"],
+        %[class="dark-scheme" data-scheme-id="#{dark_palette.id}"],
+      )
+    end
+
+    it "ignores them for everyone else" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      expect([helper.scheme_id, helper.dark_scheme_id]).not_to include(
+        light_palette.id,
+        dark_palette.id,
+      )
+    end
+  end
+
   describe "#forced_light_mode?" do
     fab!(:user)
 
