@@ -27,10 +27,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ **VoiceOver pass and visual review** across themes and color modes (2026-10-26). Rows read
     their name, topic count ("2 topics in this category") and position; searches announce the
     result count; "and all subcategories" rows read by name. Open findings:
-    - ☐ Disabled read-only rows are skipped by the arrow keys, so their explanation is never
-      read. Changing that is an engine decision.
-    - ☐ Opening the composer chooser with ArrowDown read nothing for the active option; the
-      breadcrumb drop, opened with Enter, did.
+    - ☐ Not yet heard: the read-only row itself. Opening the composer chooser with ArrowDown made
+      the second row active and read nothing for it; the breadcrumb drop, opened with Enter, read
+      its active row.
     - ☐ Most migrated call sites leave their visible label unassociated, so pickers read as
       "Options" (tags too; select-kit had the same gap).
     - ☐ Emoji-style category badges read the emoji's short name ("card_file_box Uncategorized"),
