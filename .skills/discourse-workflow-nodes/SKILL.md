@@ -34,6 +34,10 @@ of what it does, and has a trigger counterpart when it changes state.
 | Trigger | `trigger:<noun>_<past participle>` | Noun + past participle | `trigger:topic_closed`, "Topic closed" |
 | Resource node | `action:<noun>` | Noun | `action:topic`, "Topic" |
 
+The palette search matches a node's label, its operation labels and its search terms
+(`discourse_workflows.node_search_terms."<identifier>"` in `client.en.yml`, comma-separated). Add search terms
+for words admins would type that aren't in the name, such as "hide" for unlisting a topic.
+
 ## Settings
 
 - Option lists that come from site data or runtime registries (groups, badges, channels, reviewable types,

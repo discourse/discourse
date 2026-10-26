@@ -16,6 +16,7 @@ import {
   nodeTypePortLabel,
   nodeTypePrimaryOutputKey,
   nodeTypeRunScopeLabelKey,
+  nodeTypeSearchText,
   nodeTypeVersion,
   resolveNodeTypeVersion,
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/node-types";
@@ -35,6 +36,25 @@ module("Unit | Utility | workflows node types", function () {
       "discourse_ai.discourse_workflows"
     );
     assert.strictEqual(nodeTypeI18nScope(nodeType), "ai_agent");
+  });
+
+  test("searches the name, the operations and the search terms", function (assert) {
+    const topic = {
+      identifier: "action:topic",
+      operations: [
+        {
+          value: "close",
+          label_key: "discourse_workflows.topic.operations.close",
+        },
+      ],
+    };
+    const moderation = { identifier: "action:topic_moderation" };
+
+    assert.strictEqual(nodeTypeSearchText(topic), "topic close topic");
+    assert.strictEqual(
+      nodeTypeSearchText(moderation),
+      "topic moderation hide, invisible"
+    );
   });
 
   test("reads operation labels and palette groups from the descriptor", function (assert) {
