@@ -13,7 +13,6 @@ fail_fast = nil
 seed = rand(2**16)
 profile = false
 profile_print_slowest_examples_count = 10
-use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
 exclude_patterns = []
@@ -59,10 +58,6 @@ OptionParser
 
     opts.on("--seed SEED", "The seed for the random order") { |s| seed = s.to_i }
 
-    opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
-      use_runtime_info = true
-    end
-
     opts.on("--enable-system-tests", "Run the system tests (defaults false)") do
       enable_system_tests = true
     end
@@ -78,8 +73,6 @@ OptionParser
 if ARGV.empty?
   files = Dir.glob("spec/**/*_spec.rb")
   files.reject! { |file| File.fnmatch("*spec/system*", file) } if !enable_system_tests
-
-  use_runtime_info = true if use_runtime_info.nil?
 else
   STDERR.puts "Ignoring system test options since files were specified" if enable_system_tests
 
@@ -91,8 +84,6 @@ else
         arg
       end
     end
-
-  use_runtime_info = false if use_runtime_info.nil?
 end
 
 if exclude_patterns.any?
@@ -124,7 +115,6 @@ success =
     files: files,
     verbose: verbose,
     fail_fast: fail_fast,
-    use_runtime_info: use_runtime_info,
     seed: seed.to_s,
     profile:,
     profile_print_slowest_examples_count:,

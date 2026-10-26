@@ -10,7 +10,6 @@ require "rails"
 require File.expand_path("../../config/environment", __FILE__)
 
 require "parallel_tests"
-require "parallel_tests/rspec/runner"
 
 require "./lib/turbo_tests/reporter"
 require "./lib/turbo_tests/runner"
