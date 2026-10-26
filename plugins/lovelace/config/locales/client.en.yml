@@ -13,12 +13,14 @@ en:
         items: "Checklist items"
         preview: "Member preview"
         add_item: "Add checklist item"
+        edit_item: "Edit checklist item"
+        reset_preview: "Reset preview"
+        chat_unavailable: "Enable chat to select a chat channel."
         save_item: "Save item"
         saved: "Checklist saved."
         empty: "Add your first checklist item to welcome new members."
         progress: "%{count} of %{total} complete"
         remove_confirm: 'Remove “%{title}” from the checklist?'
-        url_help: "Use a community path such as /c/general/1, /t/welcome/123, or /chat/c/general/1. Custom links also accept full https:// or http:// URLs."
         fields:
           title: "Title"
           description: "Description"
@@ -37,6 +39,7 @@ en:
         minimize: "Minimize"
         expand: "Expand"
         dismiss: "Dismiss checklist"
+        dismiss_completion: "Dismiss"
         complete: "Well done! You’ve completed your onboarding checklist."
       checklist: "Your onboarding checklist"
       configure: "Onboarding checklist"

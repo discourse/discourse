@@ -9,6 +9,14 @@ RSpec.describe "Configure member onboarding" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
+  around do |example|
+    previous = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+    example.run
+  ensure
+    ActionController::Base.allow_forgery_protection = previous
+  end
+
   before do
     enable_current_plugin
     sign_in(admin)
@@ -33,11 +41,21 @@ RSpec.describe "Configure member onboarding" do
     expect(onboarding).to have_progress("1 of 3 complete")
     onboarding.preview_clear("Add a profile picture")
     expect(onboarding).to have_progress("0 of 3 complete")
+    onboarding.minimize_preview
+    onboarding.expand_preview
+    onboarding.dismiss_preview
+    expect(onboarding).to have_no_preview
+    onboarding.reset_preview
+    expect(onboarding).to have_progress("0 of 3 complete")
 
     page.current_window.resize_to(1400, 1000)
     expect(onboarding).to have_grouped_configuration(stacked: false)
     page.current_window.resize_to(390, 844)
     expect(onboarding).to have_grouped_configuration(stacked: true)
+    onboarding.start_item
+    expect(onboarding).to have_item_modal("Add checklist item")
+    expect(onboarding).to have_responsive_editor
+    onboarding.cancel_editor
   ensure
     page.current_window.resize_to(1400, 1000)
   end
@@ -117,6 +135,8 @@ RSpec.describe "Configure member onboarding" do
     PluginStore.set(Lovelace::PLUGIN_NAME, "checklist", { "items" => [], "revision" => 0 })
     onboarding.open
     onboarding.start_item
+    expect(onboarding).to have_item_modal("Add checklist item")
+    onboarding.cancel_editor
     onboarding.go_to_settings
     expect(dialog).to be_closed
     expect(page).to have_current_path("/admin/plugins/lovelace/settings")
@@ -128,8 +148,17 @@ RSpec.describe "Configure member onboarding" do
     expect(toasts).to have_no_message
     expect(onboarding).to have_preview_link("/my/preferences/profile")
 
-    onboarding.preview_complete("Add profile picture")
+    checklist = PageObjects::Pages::LovelaceMemberChecklist.new
+    checklist.complete_with_paused_clock("Add profile picture", preview: true)
     expect(onboarding).to have_progress("1 of 1 complete")
+    expect(checklist).to have_completion_summary
+    expect(checklist).to have_countdown_fraction(1)
+    checklist.advance_countdown_animation(1500)
+    expect(checklist).to have_countdown_fraction(0.5)
+    checklist.close_completion
+    expect(onboarding).to have_no_preview
+    onboarding.reset_preview
+    expect(onboarding).to have_progress("0 of 1 complete")
     onboarding.go_to_settings
     expect(dialog).to be_closed
     expect(page).to have_current_path("/admin/plugins/lovelace/settings")
@@ -137,6 +166,8 @@ RSpec.describe "Configure member onboarding" do
     onboarding.open
     expect(onboarding).to have_progress("0 of 1 complete")
     onboarding.edit_item("Add profile picture")
+    expect(onboarding).to have_item_modal("Edit checklist item")
+    onboarding.close_editor_with_escape
     onboarding.go_to_settings
     expect(dialog).to be_closed
     expect(page).to have_current_path("/admin/plugins/lovelace/settings")
@@ -144,7 +175,7 @@ RSpec.describe "Configure member onboarding" do
     onboarding.open
     onboarding.edit_item("Add profile picture")
     onboarding.editor.field("title").fill_in("Add an avatar")
-    onboarding.go_to_settings
+    onboarding.cancel_editor
     expect(dialog).to be_open
     dialog.click_no
     onboarding.editor.submit
@@ -169,5 +200,75 @@ RSpec.describe "Configure member onboarding" do
     expect(onboarding).to have_no_item("Set notifications")
     page.refresh
     expect(onboarding).to have_no_item("Set notifications")
+  end
+
+  it "lets admins select categories, search topics and channels, and retain destinations after reload" do
+    category = Fabricate(:category, name: "Getting started")
+    topic =
+      with_search_indexer_enabled do
+        Fabricate(
+          :post,
+          raw: "Welcome to our community",
+          topic: Fabricate(:topic, title: "A welcome for new members"),
+        ).topic
+      end
+    channel = Fabricate(:category_channel, name: "New member lounge")
+    SiteSetting.chat_enabled = true
+    admin.user_option.update!(chat_enabled: true)
+
+    onboarding.open
+    onboarding.start_item
+    expect(onboarding).to have_item_modal("Add checklist item")
+    onboarding.editor.field("title").fill_in("Explore the community")
+    onboarding.editor.field("button_text").fill_in("Explore")
+    onboarding.editor.field("link_type").select("category")
+    expect(onboarding).to have_destination_field("Category")
+    onboarding.editor.submit
+    expect(onboarding).to have_destination_error
+    onboarding.choose_destination(category.name)
+    onboarding.editor.submit
+    expect(onboarding).to have_saved_item("Explore the community")
+    expect(onboarding).to have_preview_link(category.url)
+    page.refresh
+    onboarding.edit_item("Explore the community")
+    expect(onboarding).to have_selected_destination(category.name)
+    onboarding.editor.field("link_type").select("topic")
+    expect(onboarding).to have_destination_field("Topic")
+    onboarding.choose_destination(topic.title)
+    onboarding.editor.submit
+    expect(onboarding).to have_saved_item("Explore the community")
+    expect(onboarding).to have_preview_link(topic.relative_url)
+    page.refresh
+    onboarding.edit_item("Explore the community")
+    expect(onboarding).to have_selected_destination(topic.title)
+    onboarding.editor.field("link_type").select("chat")
+    expect(onboarding).to have_destination_field("Chat channel")
+    onboarding.search_destination(channel.name)
+    expect(onboarding).to have_channel_option(channel)
+    onboarding.select_destination(channel.name)
+    expect(onboarding).to have_selected_channel(channel)
+    onboarding.editor.submit
+    expect(onboarding).to have_saved_item("Explore the community")
+    expect(onboarding).to have_preview_link("/chat/c/#{channel.slug}/#{channel.id}")
+    page.refresh
+    onboarding.edit_item("Explore the community")
+    expect(onboarding).to have_selected_channel(channel)
+    onboarding.cancel_editor
+    expect(dialog).to be_closed
+
+    onboarding.edit_item("Explore the community")
+    onboarding.editor.field("link_type").select("custom")
+    onboarding.editor.field("url").fill_in("/latest")
+    onboarding.editor.submit
+    expect(onboarding).to have_saved_item("Explore the community")
+    expect(onboarding).to have_preview_link("/latest")
+    page.refresh
+    onboarding.edit_item("Explore the community")
+    expect(onboarding.editor.field("url")).to have_value("/latest")
+    onboarding.editor.field("title").fill_in("An unsaved title")
+    onboarding.close_editor_with_escape
+    expect(dialog).to be_open
+    dialog.click_yes
+    expect(onboarding).to have_saved_item("Explore the community")
   end
 end

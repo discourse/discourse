@@ -1,19 +1,22 @@
+@use "lib/viewport";
+
 .lovelace-onboarding {
   &__columns {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
     gap: 1.5em;
-
-    @media (width > 900px) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
   }
 
   &__configuration {
     display: grid;
     min-width: 0;
     gap: 1em;
+
+    @include viewport.from(md) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
   }
 
   &__list {
@@ -61,7 +64,7 @@
   }
 
   &__editor {
-    margin-top: 1.5em;
+    margin: 0;
   }
 
   &__actions {

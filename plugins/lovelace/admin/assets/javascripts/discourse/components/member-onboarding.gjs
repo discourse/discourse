@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
+import MemberChecklist from "discourse/plugins/lovelace/discourse/components/member-checklist";
 import OnboardingItemContent from "./onboarding-item-content.gjs";
 import OnboardingItemEditor from "./onboarding-item-editor.gjs";
 
@@ -22,12 +22,15 @@ const SETTINGS_PATHS = {
 
 export default class MemberOnboarding extends Component {
   @service dialog;
+  @service modal;
   @service toasts;
 
   @tracked editing = null;
   @tracked saved = null;
   @tracked saving = false;
   @tracked completed = [];
+  @tracked _previewDismissed = false;
+  @tracked _previewMinimized = false;
 
   get bank() {
     return this.configuration.bank;
@@ -45,32 +48,30 @@ export default class MemberOnboarding extends Component {
     return this.saving || Boolean(this.editing);
   }
 
-  get previewItems() {
-    return this.items.map((item) => ({
-      ...item,
-      href: item.url.startsWith("/") ? getURL(item.url) : item.url,
-      checked: this.completed.includes(item.id),
-    }));
-  }
-
-  get progress() {
-    return i18n("lovelace.onboarding.progress", {
-      count: this.items.filter((item) => this.completed.includes(item.id))
-        .length,
-      total: this.items.length,
-    });
+  get previewChecklist() {
+    return {
+      items: this.items,
+      completed_ids: this.completed.filter((id) =>
+        this.items.some((item) => item.id === id)
+      ),
+      dismissed: this._previewDismissed,
+      minimized: this._previewMinimized,
+    };
   }
 
   @action
   addItem() {
-    this.editing = {
-      id: crypto.randomUUID(),
-      title: "",
-      description: "",
-      link_type: "custom",
-      url: "",
-      button_text: "",
-    };
+    this.#openEditor(
+      {
+        id: crypto.randomUUID(),
+        title: "",
+        description: "",
+        link_type: "custom",
+        url: "",
+        button_text: "",
+      },
+      "lovelace.onboarding.add_item"
+    );
   }
 
   @action
@@ -82,12 +83,7 @@ export default class MemberOnboarding extends Component {
 
   @action
   editItem(item) {
-    this.editing = { ...item };
-  }
-
-  @action
-  closeEditor() {
-    this.editing = null;
+    this.#openEditor({ ...item }, "lovelace.onboarding.edit_item");
   }
 
   @action
@@ -101,9 +97,7 @@ export default class MemberOnboarding extends Component {
           existing.id === item.id ? item : existing
         )
       : [...this.items, item];
-    if (await this.#save(items)) {
-      this.closeEditor();
-    }
+    return this.#save(items);
   }
 
   @action
@@ -130,14 +124,29 @@ export default class MemberOnboarding extends Component {
   }
 
   @action
-  togglePreview(id) {
-    this.completed = this.completed.includes(id)
-      ? this.completed.filter((existing) => existing !== id)
-      : [...this.completed, id];
+  updatePreview(checklist) {
+    this.completed = checklist.completed_ids;
+    this._previewDismissed = checklist.dismissed;
+    this._previewMinimized = checklist.minimized;
+  }
+
+  @action
+  resetPreview() {
+    this.completed = [];
+    this._previewDismissed = false;
+    this._previewMinimized = false;
   }
 
   itemLabel(item) {
     return item.title;
+  }
+
+  async #openEditor(item, title) {
+    this.editing = item;
+    await this.modal.show(OnboardingItemEditor, {
+      model: { item, title, onSave: this.saveItem },
+    });
+    this.editing = null;
   }
 
   async #save(items, previous = this.configuration) {
@@ -207,14 +216,6 @@ export default class MemberOnboarding extends Component {
               {{else}}
                 <p>{{i18n "lovelace.onboarding.empty"}}</p>
               {{/if}}
-              {{#if this.editing}}
-                <OnboardingItemEditor
-                  @item={{this.editing}}
-                  @onCancel={{this.closeEditor}}
-                  @onSave={{this.saveItem}}
-                  @saving={{this.saving}}
-                />
-              {{/if}}
             </:content>
           </AdminConfigAreaCard>
           <AdminConfigAreaCard
@@ -248,27 +249,15 @@ export default class MemberOnboarding extends Component {
           @heading="lovelace.onboarding.preview"
         >
           <:content>
-            <p class="lovelace-onboarding__progress"><strong
-              >{{this.progress}}</strong></p>
-            <ul class="lovelace-onboarding__list">
-              {{#each this.previewItems key="id" as |item|}}
-                <li
-                  class="lovelace-onboarding__row lovelace-onboarding__preview-item"
-                >
-                  <OnboardingItemContent
-                    @checked={{item.checked}}
-                    @item={{item}}
-                    @onToggle={{fn this.togglePreview item.id}}
-                  />
-                  <a
-                    class="btn btn-default"
-                    href={{item.href}}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >{{item.button_text}}</a>
-                </li>
-              {{/each}}
-            </ul>
+            <DButton
+              class="btn-default lovelace-onboarding__reset-preview"
+              @action={{this.resetPreview}}
+              @label="lovelace.onboarding.reset_preview"
+            />
+            <MemberChecklist
+              @onPreviewChange={{this.updatePreview}}
+              @previewChecklist={{this.previewChecklist}}
+            />
           </:content>
         </AdminConfigAreaCard>
       </div>

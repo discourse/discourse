@@ -9,7 +9,7 @@ RSpec.describe "Use member checklist" do
     sign_in(user)
   end
 
-  it "lets members resume, minimize, complete, undo and dismiss their checklist" do
+  it "lets members resume, minimize, undo items, and finish with a celebration that closes itself" do
     checklist.open
     expect(checklist).to have_progress("0 of 3 complete")
     try_until_success { expect(Lovelace::Reporting.summary["seen"]).to eq(1) }
@@ -27,13 +27,33 @@ RSpec.describe "Use member checklist" do
     checklist.expand
     checklist.toggle("Add a profile picture")
     expect(checklist).to have_progress("2 of 3 complete")
-    checklist.toggle("Read community guidelines")
-    expect(checklist).to have_progress("3 of 3 complete")
-    expect(checklist).to have_celebration
-    expect(checklist).to have_profile_link
+    checklist.toggle("Complete your profile")
+    expect(checklist).to have_progress("1 of 3 complete")
     checklist.toggle("Complete your profile")
     expect(checklist).to have_progress("2 of 3 complete")
-    checklist.dismiss
+    expect(checklist).to have_profile_link
+    checklist.complete_with_paused_clock("Read community guidelines")
+    expect(checklist).to have_progress("3 of 3 complete")
+    expect(checklist).to have_completion_summary
+    expect(checklist).to have_confetti
+    expect(checklist).to have_aligned_celebration
+    expect(checklist).to have_countdown_fraction(1)
+    checklist.advance_countdown_animation(1500)
+    expect(checklist).to have_countdown_fraction(0.5)
+    page.current_window.resize_to(390, 844)
+    expect(checklist).to have_countdown_fraction(0.5)
+    expect(checklist).to have_responsive_layout
+    checklist.use_rtl_layout
+    expect(checklist).to have_countdown_fraction(0.5)
+    expect(checklist).to have_countdown_origin_on_right
+    checklist.advance_completion_clock(2000)
+    expect(checklist).to have_completion_summary
+    checklist.advance_countdown_animation(3000)
+    expect(checklist).to have_countdown_fraction(0)
+    checklist.advance_completion_clock(1000)
+    expect(checklist).to have_fading_checklist
+    checklist.advance_completion_clock(300)
+    checklist.resume_completion_clock
     expect(checklist).to have_no_checklist
     page.refresh
     expect(checklist).to have_no_checklist
@@ -44,6 +64,70 @@ RSpec.describe "Use member checklist" do
       "dismissed" => 1,
       "dismissed_without_completion" => 0,
     )
+  ensure
+    page.current_window.resize_to(1400, 1000)
+  end
+
+  it "lets members close the celebration early and keeps it dismissed after reload" do
+    checklist.open
+    checklist.toggle("Complete your profile")
+    expect(checklist).to have_progress("1 of 3 complete")
+    checklist.toggle("Add a profile picture")
+    expect(checklist).to have_progress("2 of 3 complete")
+    checklist.complete_with_paused_clock("Read community guidelines")
+    expect(checklist).to have_completion_summary
+    checklist.dismiss_completion_with_paused_clock
+    expect(checklist).to have_fading_checklist
+    checklist.advance_completion_clock(300)
+    checklist.resume_completion_clock
+    expect(checklist).to have_no_checklist
+    page.refresh
+    expect(checklist).to have_no_checklist
+  end
+
+  it "keeps completion dismissed when reloading during the celebration" do
+    checklist.open
+    checklist.toggle("Complete your profile")
+    expect(checklist).to have_progress("1 of 3 complete")
+    checklist.toggle("Add a profile picture")
+    expect(checklist).to have_progress("2 of 3 complete")
+    checklist.complete_with_paused_clock("Read community guidelines")
+    expect(checklist).to have_completion_summary
+    checklist.resume_completion_clock
+    page.refresh
+    expect(checklist).to have_no_checklist
+  end
+
+  it "lets members finish with a quiet summary when they prefer reduced motion" do
+    page.driver.with_playwright_page { |browser| browser.emulate_media(reducedMotion: "reduce") }
+    checklist.open
+    checklist.toggle("Complete your profile")
+    expect(checklist).to have_progress("1 of 3 complete")
+    checklist.toggle("Add a profile picture")
+    expect(checklist).to have_progress("2 of 3 complete")
+    checklist.complete_with_paused_clock("Read community guidelines")
+    expect(checklist).to have_completion_summary
+    expect(checklist).to have_no_confetti
+    expect(checklist).to have_stepped_countdown
+    checklist.advance_completion_clock(3000)
+    checklist.resume_completion_clock
+    expect(checklist).to have_no_checklist
+    page.refresh
+    expect(checklist).to have_no_checklist
+  ensure
+    page.driver.with_playwright_page do |browser|
+      browser.emulate_media(reducedMotion: "no-preference")
+    end
+  end
+
+  it "lets members dismiss a partially completed checklist" do
+    checklist.open
+    checklist.toggle("Complete your profile")
+    expect(checklist).to have_progress("1 of 3 complete")
+    checklist.dismiss
+    expect(checklist).to have_no_checklist
+    page.refresh
+    expect(checklist).to have_no_checklist
   end
 
   it "lets members use compact rows and labelled icon controls on wide and narrow screens" do

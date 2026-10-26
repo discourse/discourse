@@ -54,6 +54,43 @@ RSpec.describe Lovelace::MemberChecklistsController do
     expect(response.parsed_body["completed_ids"]).to eq([])
   end
 
+  it "saves final completion and dismissal together while preserving other members' state" do
+    sign_in(user)
+    %w[profile_picture profile].each do |id|
+      put "/lovelace/member-checklist.json",
+          params: {
+            item_id: id,
+            completed: true,
+            seen: true,
+          },
+          as: :json
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["dismissed"]).to eq(false)
+    end
+    put "/lovelace/member-checklist.json",
+        params: {
+          item_id: "guidelines",
+          completed: true,
+          seen: true,
+        },
+        as: :json
+    expect(response.status).to eq(200)
+    expect(response.parsed_body).to include(
+      "completed_ids" => %w[profile_picture profile guidelines],
+      "dismissed" => true,
+    )
+    get "/lovelace/member-checklist.json"
+    expect(response.parsed_body["dismissed"]).to eq(true)
+    expect(Lovelace::Reporting.summary).to include(
+      "completed" => 1,
+      "dismissed" => 1,
+      "dismissed_without_completion" => 0,
+    )
+    sign_in(other_user)
+    get "/lovelace/member-checklist.json"
+    expect(response.parsed_body).to include("completed_ids" => [], "dismissed" => false)
+  end
+
   it "retains progress through edits and starts new item IDs incomplete" do
     sign_in(user)
     put "/lovelace/member-checklist.json",

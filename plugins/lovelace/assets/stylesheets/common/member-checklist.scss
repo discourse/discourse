@@ -9,6 +9,12 @@
   border-radius: var(--d-border-radius);
   background: var(--secondary);
   overflow: hidden;
+  transition: opacity 0.3s ease;
+
+  &.--dismissing {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   &__header {
     display: grid;
@@ -132,6 +138,34 @@
     padding: 0;
   }
 
+  &__celebration {
+    padding-inline: var(--space-4);
+  }
+
+  &__completion-actions {
+    display: inline-grid;
+    gap: var(--space-2);
+    margin-inline: var(--space-4);
+    margin-block-end: var(--space-4);
+  }
+
+  &__countdown {
+    height: 2px;
+    overflow: hidden;
+    border-radius: 1px;
+    background: var(--primary-200);
+  }
+
+  &__countdown-bar {
+    height: 100%;
+    background: var(--success);
+    transform-origin: 0 50%;
+
+    &:dir(rtl) {
+      transform-origin: 100% 50%;
+    }
+  }
+
   &__confetti {
     position: absolute;
     inset: 0;
@@ -174,6 +208,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lovelace-member-checklist {
+    transition: none;
+  }
+
   .lovelace-member-checklist__confetti {
     display: none;
   }

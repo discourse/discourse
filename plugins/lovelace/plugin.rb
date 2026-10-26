@@ -20,6 +20,7 @@ require_relative "lib/lovelace/engine"
 register_asset "stylesheets/common/checklist.scss"
 
 register_asset "stylesheets/common/member-checklist.scss"
+register_svg_icon "d-chat"
 register_svg_icon "far-circle"
 register_svg_icon "circle-check"
 

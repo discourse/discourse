@@ -119,11 +119,153 @@ module PageObjects
         has_button?("Expand", exact: true) && has_no_css?(".lovelace-member-checklist__items")
       end
 
+      def complete_with_paused_clock(title, preview: false)
+        prepare_completion_visuals
+        page.driver.with_playwright_page do |browser|
+          browser.clock.install(time: Time.current)
+          browser.clock.pause_at(1.second.from_now)
+          button = browser.get_by_role("button", name: title, exact: true)
+          # Dispatch directly because Playwright's actionability checks need animation frames.
+          if preview
+            button.dispatch_event("click")
+          else
+            browser.expect_response("**/lovelace/member-checklist.json") do
+              button.dispatch_event("click")
+              browser.clock.run_for(100)
+            end
+          end
+          browser.clock.run_for(100)
+        end
+        advance_countdown_animation(0)
+      end
+
+      def prepare_completion_visuals
+        page.execute_script(<<~JS)
+          // Restore native transitions so the fade can be inspected independently of the clock.
+          document.querySelectorAll('style').forEach(style => {
+            if (style.textContent.includes('animation-duration: 0s !important;') && style.textContent.includes('scroll-behavior: auto !important;')) {
+              style.remove();
+            }
+          });
+          const checklist = document.querySelector('.lovelace-member-checklist');
+          new MutationObserver(() => {
+            checklist.getAnimations().forEach(animation => {
+              if (animation.transitionProperty === 'opacity') {
+                animation.pause();
+                animation.currentTime = animation.effect.getTiming().duration / 2;
+              }
+            });
+          }).observe(checklist, { attributes: true, attributeFilter: ['class'] });
+        JS
+      end
+
+      def advance_countdown_animation(milliseconds)
+        find(".lovelace-member-checklist__countdown-bar").execute_script(<<~JS, milliseconds)
+          const animation = this.getAnimations()[0];
+          animation.pause();
+          animation.currentTime = arguments[0];
+        JS
+      end
+
+      def has_countdown_fraction?(fraction)
+        has_compact_dismissal_timer? &&
+          has_css?(".lovelace-member-checklist__countdown-bar") do |bar|
+            bar.evaluate_script(
+              "Math.abs(new DOMMatrixReadOnly(getComputedStyle(this).transform).m11 - #{fraction}) < 0.01",
+            )
+          end
+      end
+
+      def has_compact_dismissal_timer?
+        has_no_css?(".lovelace-member-checklist__auto-dismiss", visible: :all) &&
+          has_css?(".lovelace-member-checklist__completion-actions") do |actions|
+            actions.evaluate_script(<<~JS)
+              (() => {
+                const button = this.querySelector('.lovelace-member-checklist__close').getBoundingClientRect();
+                const timer = this.querySelector('.lovelace-member-checklist__countdown').getBoundingClientRect();
+                const checklist = this.closest('.lovelace-member-checklist').getBoundingClientRect();
+                return Math.abs(timer.left - button.left) < 1 && Math.abs(timer.right - button.right) < 1 && timer.top > button.bottom && timer.height === 2 && timer.width < checklist.width / 2;
+              })()
+            JS
+          end
+      end
+
+      def use_rtl_layout
+        page.execute_script("document.documentElement.dir = 'rtl'")
+      end
+
+      def has_countdown_origin_on_right?
+        has_css?(".lovelace-member-checklist__countdown-bar") do |bar|
+          bar.evaluate_script(
+            "Math.abs(parseFloat(getComputedStyle(this).transformOrigin) - this.clientWidth) < 1",
+          )
+        end
+      end
+
+      def has_stepped_countdown?
+        has_css?(".lovelace-member-checklist__countdown-bar") do |bar|
+          bar.evaluate_script("this.getAnimations()[0].effect.getTiming().easing === 'steps(3)'")
+        end
+      end
+
+      def has_fading_checklist?
+        has_css?(".lovelace-member-checklist.--dismissing") do |widget|
+          widget.evaluate_script(
+            "Number(getComputedStyle(this).opacity) > 0 && Number(getComputedStyle(this).opacity) < 1",
+          )
+        end
+      end
+
+      def dismiss_completion_with_paused_clock
+        page.driver.with_playwright_page do |browser|
+          browser.get_by_role("button", name: "Dismiss", exact: true).dispatch_event("click")
+          browser.clock.run_for(10)
+        end
+      end
+
+      def advance_completion_clock(milliseconds)
+        page.driver.with_playwright_page { |browser| browser.clock.run_for(milliseconds) }
+      end
+
+      def resume_completion_clock
+        page.driver.with_playwright_page { |browser| browser.clock.resume }
+      end
+
+      def close_completion
+        resume_completion_clock
+        click_button("Dismiss", exact: true)
+      end
+
+      def has_completion_summary?
+        has_celebration? && has_no_css?(".lovelace-member-checklist__items") &&
+          has_button?("Dismiss", exact: true) && has_css?(".lovelace-member-checklist__close:focus")
+      end
+
+      def has_confetti?
+        has_css?(".lovelace-member-checklist__confetti")
+      end
+
+      def has_no_confetti?
+        has_no_css?(".lovelace-member-checklist__confetti")
+      end
+
       def has_celebration?
         has_css?(
           ".lovelace-member-checklist__celebration",
           text: I18n.t("js.lovelace.member.complete"),
         )
+      end
+
+      def has_aligned_celebration?
+        has_css?(".lovelace-member-checklist__celebration") do |message|
+          message.evaluate_script(<<~JS)
+            (() => {
+              const title = document.querySelector('.lovelace-member-checklist__header h2').getBoundingClientRect();
+              const padding = parseFloat(getComputedStyle(this).paddingInlineStart);
+              return padding > 0 && Math.abs(this.getBoundingClientRect().left + padding - title.left) < 2;
+            })()
+          JS
+        end
       end
 
       def has_no_checklist?

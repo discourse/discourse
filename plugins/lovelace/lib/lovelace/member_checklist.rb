@@ -38,6 +38,10 @@ module ::Lovelace
           raise Discourse::InvalidParameters.new(field) if [true, false].exclude?(params[field])
           state[field] = params[field]
         end
+        if params[:completed] == true && params.key?(:item_id) && state[:items].present? &&
+             state[:completed_ids].size == state[:items].size
+          state[:dismissed] = true
+        end
         stored = PluginStore.get(PLUGIN_NAME, "member_checklist_#{user.id}") || {}
         reporting = stored["reporting"] || {}
         reporting["seen_at"] ||= Time.current.iso8601 if params[:seen] == true && visible

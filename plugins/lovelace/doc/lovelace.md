@@ -14,13 +14,12 @@ checklist; there is no subscription plan restriction or upgrade requirement.
 
 ## Editable checklist configuration
 
-The page groups checklist items and the item bank in one column, with the member
-preview alongside them. On narrow screens, the preview follows the checklist and
-bank. All three areas use the same compact row style, with the title above the
-description and controls alongside the text. Checklist rows have Edit, Remove,
-and drag controls; preview rows have a checkbox and the item's action link; bank
-rows have an Add button. New checklists start with three editable
-suggestions:
+The page places checklist items and the item bank alongside each other, with a
+full-width member preview below them. On narrow screens, the items and bank stack
+above the preview. Checklist rows have Edit, Remove, and drag controls; bank rows
+have an Add button. The preview uses the actual member widget, including its
+header, progress bar, completion buttons, links, and display controls. New
+checklists start with three editable suggestions:
 
 | Item | Description | Button | Destination |
 | --- | --- | --- | --- |
@@ -45,16 +44,19 @@ confirmation. The bank and
 checklist save together, and refreshing preserves both. When all four suggestions
 are selected, the bank indicates that all available items are in the checklist.
 
-Choose **Add checklist item** to open a form. Each item has a title, description,
+Choose **Add checklist item** to open a modal form. **Edit** opens the same modal
+with the existing item’s fields. Each item has a title, description,
 link destination, and button text. Title and button text are required. Limits are
 120 characters for titles, 1,000 for descriptions, 80 for button text, 2,048 for
 links, and 50 items per checklist.
 
 Link destinations include:
 
-- Category: enter a community path such as `/c/general/1`.
-- Topic: enter a community path such as `/t/welcome/123`.
-- Chat channel: enter a community path such as `/chat/c/general/1`.
+- Category: select from the categories available to the administrator.
+- Topic: search for a topic and select a result.
+- Chat channel: search for an available open public channel and select a result.
+  Results and the selected channel display the chat icon. Chat must be enabled
+  to select a channel.
 - Profile, notification, or account settings: the link automatically targets the
   corresponding `/my/preferences/…` page for the signed-in member.
 - Custom URL: enter a community path beginning with a single `/`, or a full
@@ -62,12 +64,15 @@ Link destinations include:
 
 Links do not grant access to their destination. Choose destinations that intended
 members can access; chat links require an available chat channel. Category,
-topic, and chat fields accept paths rather than providing a resource search.
+topic, and chat selections save community paths; existing saved paths remain
+compatible and load their selections when edited. Changing the link destination
+clears the previous selection so it cannot be saved as the wrong resource type.
 
 Choose **Save item** to persist an addition or edit. A successful save closes the
-form and leaves a compact row with its title, description, Edit button, drag
+modal and leaves a compact row with its title, description, Edit button, drag
 handle, and removal control. The “Checklist saved.” toast disappears on its own.
-Failed saves keep the form open for correction.
+Failed saves keep the modal open for correction. The modal cannot be closed
+while a save is pending.
 
 Drag a handle to reorder items. Clicking a handle also offers move options, and
 keyboard users can focus a handle and use Alt+Arrow keys to move an item. Reorders
@@ -76,17 +81,25 @@ and custom items require confirmation.
 Other list changes are disabled while an item form is open or a save is pending.
 
 Opening a form without changing a field does not trigger a navigation warning.
-Editing an unsaved field prompts before leaving the page or canceling the form.
+Editing an unsaved field prompts before leaving the page or closing the modal,
+including Cancel, Escape, the close button, or the backdrop.
 Saving closes the form and clears the pending change. Checking preview items or
 following preview links never creates an unsaved configuration change.
 
 ## Member preview
 
-The preview shows the saved checklist in order, including titles, descriptions,
-checkboxes, action links, and a completion count. Checkboxes update only this
-page’s temporary progress. Links open in a new tab with the current
-administrator’s permissions. Reloading or leaving the page resets preview
-progress; it does not write member progress.
+The preview renders the same widget members use, with the saved checklist in
+order, completion count, progress bar, circular completion controls, action links,
+and a completion celebration. Finishing hides the rows and closes the preview
+after a three-second countdown and a brief fade; **Dismiss** starts the fade
+sooner. It also supports minimizing and dismissing the preview.
+**Reset preview** restores its expanded, incomplete state after any interaction.
+Completion, minimization, and dismissal are temporary on this page. Reloading or
+leaving resets them; none of these interactions writes member progress, records
+reporting activity, or changes the administrator’s own member state.
+
+Preview action links open in a new tab with the administrator’s permissions.
+Use a separate member session to check actual member access.
 
 The editable configuration supplies the automatic member widget described below.
 The separate suggestion page retains its own selection. Preview progress stays
@@ -146,10 +159,17 @@ not serialize this read/check/write sequence in PluginStore.
 
 The plugin registers a standard admin plugin tab and page subheader. FormKit
 owns validation and unsaved draft checks, and is mounted only while adding or
-editing an item. The preview’s checkbox state is separate from the form and from
+editing an item. The preview’s completion state is separate from the form and from
 persisted configuration. The shared reorderable list supplies drag, menu, and
 keyboard interactions; the standard toast service supplies temporary save
 feedback. All interface strings are translatable, and item text is escaped.
+
+The modal editor uses the existing category chooser and topic search controls.
+Its channel chooser searches the existing chat channel API only when chat is
+enabled. These controls use the administrator’s permissions and store selected
+resources as community paths in the existing item data. No new API authorization
+surface or storage migration is needed. Loading an existing selection fetches its
+display text without changing the form draft.
 
 ## Member suggestion checklist
 
@@ -229,14 +249,22 @@ descriptions below titles on narrow screens.
 
 Each item has a bold title, description, primary-colored action link, and a circle
 button labelled with its title. Click the circle or use Enter or Space to mark an
-item complete; click again to undo it. Completed text and action links become
+item complete; before finishing the checklist, click again to undo an item. Completed text and action links become
 lighter, with a green checked circle; action links remain available. Visited and
 unvisited action links use the same color for their completion state. Following a
 link does not automatically complete an item.
 The progress bar and count update after a successful save. Completing the last
-item drops confetti inside the widget and announces a congratulatory message.
-Reduced-motion preferences suppress the animation. Reloading a completed
-checklist does not replay the celebration.
+item hides the rows, drops confetti, and shows a short congratulatory message.
+The message shares the header’s horizontal inset. The selected Option A design
+places a green, 2 px countdown line directly beneath **Dismiss**, matching the
+button’s width. It drains over three seconds without helper copy, then the whole
+checklist fades out over 300 ms. **Dismiss** starts the same fade sooner. Focus
+moves to **Dismiss**, and Discourse’s accessibility service announces completion. Reduced-motion
+preferences suppress confetti and fading; the countdown bar changes in three
+discrete steps while retaining the quiet message and dismiss button.
+Completion and dismissal are saved together before the celebration begins, so
+reloading during the celebration keeps the checklist hidden. Returning later does
+not replay it. This implements the “Celebrate, then close” completion option.
 
 **Minimize** hides the item rows while retaining the heading, progress, and
 controls. **Expand** restores them. **Dismiss checklist** hides the widget at any
@@ -253,8 +281,15 @@ the community configuration. Unknown items or invalid flags return HTTP 400.
 
 `MemberChecklist` stores each account’s state under its own PluginStore key.
 A per-member distributed lock serializes updates so changing one item preserves
-other progress and display preferences. Removed item IDs are ignored; newly
-configured IDs start incomplete. Stable IDs retain progress through title or
+other progress and display preferences. Checking the last incomplete item also
+persists dismissal inside that lock. The three-second timer controls only the
+brief celebration. A separate 300 ms delay removes it after the opacity fade.
+The countdown animation and timers are cleaned up when the component is destroyed
+or closed. Both the member widget and admin preview use the same flow; resetting
+the preview restores its expanded, incomplete appearance.
+Reporting records full completion and dismissal together without counting this as
+dismissal without completion. Removed item IDs are ignored; newly configured IDs
+start incomplete. Stable IDs retain progress through title or
 link edits. The widget uses the existing main content outlet and shared buttons,
 provides pressed/expanded state and progress semantics, and announces updates
 through Discourse’s accessibility service. Its layout wraps on narrow screens.
@@ -268,6 +303,7 @@ LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/requests
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/services
 pnpm --dir frontend/discourse build
 LOAD_PLUGINS=1 bin/rake assets:precompile:build_plugins
+LOAD_PLUGINS=1 RAILS_ENV=test bin/rails runner 'Stylesheet::Manager.recalculate_fs_asset_cachebuster!'
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/configure_member_onboarding_spec.rb
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/checklist_spec.rb
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/use_member_checklist_spec.rb
@@ -278,13 +314,15 @@ reordering, removal, supported destinations, invalid payloads, and stale writes.
 Service specs cover direct-call authorization, checklist normalization, invalid
 input, revision conflicts, saving or clearing the configuration, and preserving
 edited suggestions in the bank when removing and restoring them.
-The onboarding system spec covers adding and editing items, compact saved rows,
-temporary toasts, preview progress, navigation warnings, reordering, removal, and
-persistence after refresh. It also checks the seeded defaults, returning an edited
+The onboarding system spec runs with CSRF protection enabled and covers adding
+and editing items, compact saved rows, temporary toasts, preview progress,
+navigation warnings, reordering, removal, and persistence after refresh. It also checks the seeded defaults, returning an edited
 suggestion to the bank, restoring it, adding notifications, preview links, and
-retaining the checklist and bank after refresh. Layout checks cover the controls
+retaining the checklist and bank after refresh. Selector checks verify the chat
+icon in search results and the saved selection. Layout checks cover the controls
 in all three areas, checking and unchecking preview items, and keeping the bank
-next to the checklist on wide and narrow screens. Removal checks verify that
+beside the checklist on wide screens and stacked above the preview on narrow
+screens. Removal checks verify that
 unchanged suggestions return immediately, while customized suggestions still
 allow cancellation or confirmation after a reload. The existing core-features
 system spec checks normal forum interactions with the plugin enabled.
@@ -300,9 +338,16 @@ refreshing, and member preference links.
 Persistent widget request specs cover login, disabled-plugin behavior, per-account
 isolation, completion reversal, saved display preferences, editable configuration,
 and invalid input. Its system specs cover saved progress after reload, minimizing
-and expanding, celebrating completion, undoing an item, dismissal at partial and
-zero progress, and a narrow viewport. Layout checks cover inline desktop rows,
-stacked mobile descriptions, labelled header icons, and keyboard completion.
+and expanding, undoing an item before completion, the timed completion summary,
+early closure, reload during celebration, reduced motion, dismissal at partial and
+zero progress, and a narrow viewport. A controlled browser clock verifies the
+summary remains before the deadline, its countdown bar drains, and the checklist
+fades after three seconds. Native animations are paused and advanced separately
+to check intermediate bar widths and fade opacity. Layout checks verify that the
+2 px timer sits beneath the button and matches its width, without helper copy, on
+desktop, mobile, and right-to-left layouts. Early dismissal uses the same fade,
+while reduced-motion dismissal skips it. Layout checks cover inline desktop
+rows, stacked mobile descriptions, labelled header icons, and keyboard completion.
 Width checks verify alignment with the reading area with the sidebar open or
 closed, when minimized, and on mobile, along with a compact progress bar.
 
@@ -448,3 +493,18 @@ If the member widget is absent, check that Lovelace is enabled and the editable
 checklist is nonempty. An account that previously dismissed it needs another
 undismissed account for this test; visiting the member page does not reset saved
 progress or dismissal.
+
+
+### Admin polish coverage
+
+The configuration system spec also checks the full-width widget preview,
+minimize/dismiss/reset controls, modal create/edit and unsaved-close confirmation,
+required resource selections, category selection, topic search, channel search,
+and loading saved selections after refresh. The member widget spec checks that
+the success message is padded to align with the header. The comparison spec
+continues to verify that preview progress and actual member progress are isolated.
+
+The standalone [completion comparison](onboarding-completion-options.html)
+retains the three earlier design alternatives for reference. Option 2,
+“Celebrate, then close,” is implemented in the member widget and admin preview;
+the other alternatives remain demonstrations only.
