@@ -42,6 +42,16 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableStatusChanged::V1 do
     end
   end
 
+  describe "#output" do
+    it "uses the target account for user reviewables" do
+      reviewable_user = Fabricate(:reviewable_user)
+
+      output = described_class.new(:rejected, reviewable_user).output
+
+      expect(output[:reviewable][:target_user]).to include(id: reviewable_user.target.id)
+    end
+  end
+
   describe "#matches?" do
     it "filters by outcome and reviewable type" do
       trigger = described_class.new(:rejected, reviewable)

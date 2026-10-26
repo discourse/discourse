@@ -89,9 +89,9 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.post_url" => "string",
       "post.upload_ids" => "array<integer>",
     )
-    expect(output_fields_by_type.fetch("trigger:topic_created")).not_to include(
-      "post.trust_level",
-      "user.trust_level",
+    expect(output_fields_by_type.fetch("trigger:topic_created")).not_to include("post.trust_level")
+    expect(output_fields_by_type.fetch("trigger:topic_created")).to include(
+      "user.trust_level" => "integer",
     )
     expect(output_fields_by_type.fetch("trigger:post_created")).to include(
       "post.user_id" => "integer",
