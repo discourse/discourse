@@ -315,6 +315,32 @@ describe "Live rooms" do
           expect(live_media_track_live?(remote_video_selector, timeout: 10)).to eq(true)
         end
       end
+
+      it "lets the creator delete their own room" do
+        owned_room = Fabricate(:live_room, name: "My Room", creator: user, public: true)
+
+        visit("/latest")
+        live_sidebar.room_link(owned_room.id).hover
+        live_sidebar.room_link(owned_room.id).find(".sidebar-section-hover-button").click
+        click_button(I18n.t("js.live.room.edit"))
+        click_button(I18n.t("js.live.room.delete"))
+        find(".dialog-footer .btn-danger").click
+
+        expect(live_sidebar).to have_no_room_link(owned_room.id)
+        expect(Live::Room.exists?(owned_room.id)).to eq(false)
+      end
+
+      it "does not offer deletion of rooms the user does not own" do
+        room.room_memberships.create!(user: user, role: Live::RoomMembership::ROLE_MODERATOR)
+
+        visit("/latest")
+        live_sidebar.room_link(room.id).hover
+        live_sidebar.room_link(room.id).find(".sidebar-section-hover-button").click
+        click_button(I18n.t("js.live.room.edit"))
+
+        expect(page).to have_css(".live-room-info-modal__edit-form")
+        expect(page).to have_no_css(".live-room-info-modal__delete-btn")
+      end
     end
 
     context "with a stage room" do
