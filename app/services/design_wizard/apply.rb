@@ -22,6 +22,7 @@ class DesignWizard::Apply
     attribute :base_font, :string
     attribute :heading_font, :string
     attribute :homepage, :string
+    attribute :homepage_settings, default: -> { {} }
     attribute :category_page_style, :string
     attribute :enable_welcome_banner, :boolean
     attribute :welcome_banner_location, :string
@@ -59,10 +60,11 @@ class DesignWizard::Apply
               },
               allow_blank: true
     validate :built_in_palettes_exist
+    validate :homepage_settings_are_available
 
     def site_settings(theme_id:)
       DesignWizard::Homepages
-        .settings_for(homepage)
+        .settings_for(homepage, overrides: homepage_settings)
         .merge(
           {
             default_theme_id: theme_id,
@@ -88,6 +90,20 @@ class DesignWizard::Apply
     end
 
     private
+
+    def homepage_settings_are_available
+      if !homepage_settings.is_a?(Hash) ||
+           (homepage_settings.keys - DesignWizard::Homepages.current_settings.keys).any?
+        errors.add(:homepage_settings, :invalid)
+        return
+      end
+
+      homepage_settings.each do |name, value|
+        SiteSetting.type_supervisor.to_db_value(name, value)
+      rescue Discourse::InvalidParameters, ArgumentError
+        errors.add(:homepage_settings, :invalid)
+      end
+    end
 
     def built_in_palettes_exist
       %i[light_palette_id dark_palette_id].each do |attribute|

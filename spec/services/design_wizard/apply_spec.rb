@@ -97,6 +97,23 @@ RSpec.describe DesignWizard::Apply do
       ).allow_nil
     end
 
+    it "defaults homepage settings to an empty hash" do
+      contract = described_class.new(theme_id: Theme::CORE_THEMES["foundation"])
+
+      expect(contract).to be_valid
+      expect(contract.homepage_settings).to eq({})
+    end
+
+    it "rejects non-hash and unregistered homepage settings" do
+      [nil, "invalid", [], { title: "Unexpected title" }].each do |homepage_settings|
+        contract =
+          described_class.new(theme_id: Theme::CORE_THEMES["foundation"], homepage_settings:)
+
+        expect(contract).to be_invalid
+        expect(contract.errors.of_kind?(:homepage_settings, :invalid)).to eq(true)
+      end
+    end
+
     it "normalizes the base light palette id to nil" do
       contract =
         described_class.new(

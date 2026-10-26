@@ -18,7 +18,9 @@ RSpec.describe Admin::Config::DesignWizardController do
   describe "#index" do
     before { sign_in(admin) }
 
-    it "offers the General channel as the chat homepage without exposing settings" do
+    it "offers General defaults and the current channel settings for a forum homepage" do
+      SiteSetting.default_homepage = "categories"
+      SiteSetting.chat_homepage_channel = other_channel.id
       get "/admin/config/design-wizard.json"
 
       expect(response.status).to eq(200)
@@ -32,8 +34,25 @@ RSpec.describe Admin::Config::DesignWizardController do
             "icon" => "comments",
             "illustration" => "conversation",
             "path" => general_channel.relative_url,
+            "settings" => {
+              "chat_homepage_channel" => general_channel.id.to_s,
+            },
           },
         ],
+      )
+      expect(response.parsed_body["homepage_settings"]).to eq(
+        "chat_homepage_channel" => other_channel.id.to_s,
+      )
+    end
+
+    it "returns the configured channel settings for a Chat homepage" do
+      SiteSetting.default_homepage = "chat"
+      SiteSetting.chat_homepage_channel = other_channel.id
+
+      get "/admin/config/design-wizard.json"
+
+      expect(response.parsed_body["homepage_settings"]).to eq(
+        "chat_homepage_channel" => other_channel.id.to_s,
       )
     end
 
@@ -121,6 +140,87 @@ RSpec.describe Admin::Config::DesignWizardController do
       expect(response.status).to eq(200)
       expect(SiteSetting.default_homepage).to eq("categories")
       expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
+    end
+
+    it "preserves the current Chat channel when saving the next wizard step" do
+      SiteSetting.default_homepage = "chat"
+      SiteSetting.chat_homepage_channel = other_channel.id
+
+      put "/admin/config/design-wizard.json", params: params.merge(base_font: "lato")
+
+      expect(response.status).to eq(200)
+      expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
+      expect(SiteSetting.base_font).to eq("lato")
+    end
+
+    it "selects General when explicitly requested while Chat is already the homepage" do
+      SiteSetting.default_homepage = "chat"
+      SiteSetting.chat_homepage_channel = other_channel.id
+
+      put "/admin/config/design-wizard.json",
+          params:
+            params.merge(homepage_settings: { chat_homepage_channel: general_channel.id.to_s })
+
+      expect(response.status).to eq(200)
+      expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
+    end
+
+    %w[chat categories].each do |original_homepage|
+      it "restores the original #{original_homepage} homepage and channel settings after a preview" do
+        SiteSetting.default_homepage = original_homepage
+        SiteSetting.chat_homepage_channel = other_channel.id
+
+        get "/admin/config/design-wizard.json"
+        snapshot = response.parsed_body.slice("homepage", "homepage_settings")
+
+        put "/admin/config/design-wizard.json",
+            params:
+              params.merge(homepage_settings: { chat_homepage_channel: general_channel.id.to_s })
+        expect(response.status).to eq(200)
+        expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
+
+        put "/admin/config/design-wizard.json",
+            params: snapshot.merge("theme_id" => Theme::CORE_THEMES["foundation"])
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.default_homepage).to eq(original_homepage)
+        expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
+      end
+    end
+
+    it "rejects settings that are not registered homepage settings" do
+      put "/admin/config/design-wizard.json",
+          params: params.merge(homepage_settings: { title: "Unexpected title" })
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
+    it "rejects an unavailable channel without changing homepage settings" do
+      SiteSetting.chat_homepage_channel = other_channel.id
+
+      expect do
+        put "/admin/config/design-wizard.json",
+            params: params.merge(homepage_settings: { chat_homepage_channel: "999999" })
+      end.not_to change { [SiteSetting.default_homepage, SiteSetting.chat_homepage_channel] }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
+    it "rejects channel overrides when the wizard setting is disabled" do
+      SiteSetting.concord_in_wizard = false
+
+      put "/admin/config/design-wizard.json",
+          params:
+            params.merge(
+              homepage: "categories",
+              homepage_settings: {
+                chat_homepage_channel: general_channel.id.to_s,
+              },
+            )
+
+      expect(response.status).to eq(400)
     end
 
     shared_examples "an unavailable chat homepage" do

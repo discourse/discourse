@@ -12,8 +12,17 @@ module DesignWizard
       %w[latest new hot categories] + additional_options.map { |option| option[:id] }
     end
 
-    def self.settings_for(id)
-      additional_options.find { |option| option[:id] == id }&.fetch(:settings, {}) || {}
+    def self.current_settings
+      additional_options
+        .flat_map { |option| option.fetch(:settings, {}).keys }
+        .uniq
+        .index_with { |name| SiteSetting.public_send(name) }
+    end
+
+    def self.settings_for(id, overrides: {})
+      defaults = additional_options.find { |option| option[:id] == id }&.fetch(:settings, {}) || {}
+      defaults = {} if id == SiteSetting.homepage
+      defaults.merge(overrides)
     end
   end
 end

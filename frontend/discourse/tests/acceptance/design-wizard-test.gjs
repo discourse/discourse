@@ -199,6 +199,7 @@ acceptance("Design wizard - admin launch", function (needs) {
           "Open the General channel when members visit your homepage.",
         icon: "comments",
         illustration: "conversation",
+        settings: { chat_homepage_channel: "12" },
         path: "/categories",
       },
     ];
@@ -239,9 +240,10 @@ acceptance("Design wizard - admin launch", function (needs) {
       "chat",
       "saves the registered homepage"
     );
-    assert.false(
-      "chat_homepage_channel" in savedPayloads.at(-1),
-      "leaves channel resolution to the server"
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+      "12",
+      "uses the General channel provided by the server"
     );
     assert.true(redirect.called, "finishes the wizard");
   });
@@ -267,6 +269,105 @@ acceptance("Design wizard - admin launch", function (needs) {
     ]) {
       assert.false(key in savedPayloads.at(-1), `${key} is not saved`);
     }
+  });
+
+  ["chat", "latest"].forEach((homepage) => {
+    test(`preserves and restores the chat destination from ${homepage}`, async function (assert) {
+      wizardData.homepage = homepage;
+      wizardData.homepage_settings = { chat_homepage_channel: "23" };
+      wizardData.additional_homepages = [
+        {
+          id: "chat",
+          name: "Chat",
+          path: "/categories",
+          settings: { chat_homepage_channel: "12" },
+        },
+      ];
+      sinon.stub(DiscourseURL, "redirectTo");
+
+      await visit("/admin");
+      await click(APPEARANCE_LAUNCH_BUTTON);
+      await click(".design-wizard__intro-start");
+      await click(".design-wizard__next");
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "23",
+        "Next preserves the existing channel"
+      );
+      await click(".design-wizard__next");
+      await click('[data-homepage="chat"]');
+      const wizard = this.owner.lookup("service:design-wizard");
+      await wizard.saveProgress();
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "12",
+        "explicitly selecting Chat chooses General"
+      );
+
+      await wizard.start({ resuming: true });
+      await wizard.saveProgress();
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "12",
+        "the selection survives a preview reload"
+      );
+      await click(".design-wizard__close");
+      await click(".dialog-footer .btn-danger");
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage,
+        homepage,
+        "reverts the original homepage"
+      );
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "23",
+        "reverts the original channel after resuming"
+      );
+    });
+  });
+
+  test("reverts the welcome banner location after switching from Concord", async function (assert) {
+    wizardData.themes[0].default = false;
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default: true,
+      supports_welcome_banner: false,
+      supports_search: false,
+      palette_pairs: [],
+    });
+    this.siteSettings.welcome_banner_location = "top_menu";
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="-1"] input');
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.start({ resuming: true });
+    wizard.applyingTheme = false;
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    wizard.selectWelcomeBannerLocation("all");
+    await click(".design-wizard__back");
+    await click(".design-wizard__next");
+    assert.strictEqual(
+      savedPayloads.at(-1).welcome_banner_location,
+      "all",
+      "saves the changed site-wide location"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-danger");
+    assert.strictEqual(
+      savedPayloads.at(-1).theme_id,
+      "42",
+      "reverts to Concord"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).welcome_banner_location,
+      "top_menu",
+      "restores the original site-wide location"
+    );
   });
 
   test("the appearance section launches the wizard on the forum", async function (assert) {

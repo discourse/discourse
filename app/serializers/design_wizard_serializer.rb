@@ -4,10 +4,14 @@ class DesignWizardSerializer < ApplicationSerializer
   attributes :current_theme, :base_font, :heading_font, :homepage, :palettes_user_selectable
 
   attributes :themes
-  attributes :additional_homepages
+  attributes :additional_homepages, :homepage_settings
 
   def additional_homepages
-    DesignWizard::Homepages.additional_options.map { |option| option.except(:settings) }
+    DesignWizard::Homepages.additional_options
+  end
+
+  def homepage_settings
+    DesignWizard::Homepages.current_settings
   end
 
   def themes
