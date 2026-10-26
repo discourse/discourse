@@ -63,4 +63,84 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowResolveEntity do
       matches: [{ id: tag_group.id, name: tag_group.name }],
     )
   end
+
+  it "resolves options a node loads in the editor", :aggregate_failures do
+    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+    resolve = ->(node_type) do
+      described_class.new(
+        { kind: "node_option", node_type:, method: "reviewable_types", query: "flagged post" },
+        bot_user: Discourse.system_user,
+        llm: nil,
+        context:,
+      ).invoke
+    end
+
+    expect(resolve.("trigger:reviewable_created")).to eq(
+      status: "success",
+      kind: "node_option",
+      matches: [{ id: "ReviewableFlaggedPost", name: "Reviewable flagged post" }],
+    )
+    expect(resolve.("trigger:unknown")[:matches]).to eq([])
+  end
+
+  it "passes the node's other settings to options that depend on them" do
+    node_class =
+      Class.new(DiscourseWorkflows::NodeType) do
+        description(name: "action:resolve_entity_parameters_test", version: "1.0")
+
+        def self.load_options_context(context)
+          [{ id: context.get_current_node_parameter("scope"), name: "Scoped option" }]
+        end
+      end
+    (@registered_workflow_nodes ||= []) << node_class
+    DiscourseWorkflows.register_node(node_class, Plugin::Instance.new)
+    DiscourseWorkflows::Registry.reset_indexes!
+    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+    result =
+      described_class.new(
+        {
+          kind: "node_option",
+          node_type: "action:resolve_entity_parameters_test",
+          method: "options",
+          query: "scoped",
+          node_parameters: {
+            scope: "posts",
+          },
+        },
+        bot_user: Discourse.system_user,
+        llm: nil,
+        context:,
+      ).invoke
+
+    expect(result[:matches]).to eq([{ id: "posts", name: "Scoped option" }])
+  end
+
+  it "resolves no node options when the loader needs credentials" do
+    node_class =
+      Class.new(DiscourseWorkflows::NodeType) do
+        description(name: "action:resolve_entity_credentials_test", version: "1.0")
+
+        def self.load_options_context(context)
+          context.get_credentials("api")
+        end
+      end
+    (@registered_workflow_nodes ||= []) << node_class
+    DiscourseWorkflows.register_node(node_class, Plugin::Instance.new)
+    DiscourseWorkflows::Registry.reset_indexes!
+    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+    result =
+      described_class.new(
+        {
+          kind: "node_option",
+          node_type: "action:resolve_entity_credentials_test",
+          method: "channels",
+          query: "general",
+        },
+        bot_user: Discourse.system_user,
+        llm: nil,
+        context:,
+      ).invoke
+
+    expect(result).to eq(status: "success", kind: "node_option", matches: [])
+  end
 end
