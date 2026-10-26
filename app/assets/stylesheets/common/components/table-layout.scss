@@ -93,24 +93,6 @@
   font-weight: normal;
   color: var(--primary-high);
   vertical-align: bottom;
-
-  // DTableHeaderToggle carries directory-table header styles that don't suit d-table
-  .directory-table__column-header.sortable {
-    display: inline-flex;
-    justify-content: flex-start;
-    padding: 0;
-    border-bottom: none;
-    color: inherit;
-
-    &:hover,
-    &:focus {
-      background-color: transparent;
-    }
-
-    .header-contents {
-      text-align: left;
-    }
-  }
 }
 
 .d-table__row {
