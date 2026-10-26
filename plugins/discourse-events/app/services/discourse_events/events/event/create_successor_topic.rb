@@ -3,58 +3,6 @@
 module DiscourseEvents
   module Events
     class Event::CreateSuccessorTopic
-      QUOTATION_MARKS = [
-        %w[" "],
-        %w[' '],
-        %w[« »],
-        %w[“ ”],
-        %w[” ”],
-        %w[‘ ’],
-        %w[„ “],
-        %w[‚ ’],
-        %w[‹ ›],
-      ].freeze
-
-      EVENT_OPEN_TAG =
-        /
-          \[event(?=\s|\])
-          (?:
-            \s*[-\w]+
-            (?:=
-              (?:
-                "[^"]+"
-                | '[^']+'
-                | «[^»]+»
-                | “[^”]+”
-                | ”[^”]+”
-                | ‘[^’]+’
-                | „[^“]+“
-                | ‚[^’]+’
-                | ‹[^›]+›
-                | [^\s\]]+
-              )
-            )?
-          )*+
-          \s*
-          \]
-        /ix
-
-      ATTRIBUTE_VALUE =
-        /
-        (?:
-          "[^"]*"
-          | '[^']*'
-          | «[^»]*»
-          | “[^”]*”
-          | ”[^”]*”
-          | ‘[^’]*’
-          | „[^“]*“
-          | ‚[^’]*’
-          | ‹[^›]*›
-          | [^\s\]]+
-        )
-      /x
-
       def self.rollover_allowed?(event)
         source_post = event.post
         source_topic = source_post&.topic
@@ -111,8 +59,12 @@ module DiscourseEvents
 
         original_raw = post.raw
         original_title = topic.title
-        event_open_tag_match = rendered_event_open_tag_match(original_raw)
-        raise Discourse::InvalidParameters.new(:event) unless event_open_tag_match
+        rewriter = BbcodeRewriter.new(
+          original_raw,
+          tag: "event",
+          selector: "div.discourse-post-event",
+          cook_options: { topic_id: post.topic_id, user_id: post.user_id },
+        )
 
         invitees = snapshot_invitees
         recurrence_anchor = event.recurrence_anchor_starts_at
@@ -125,9 +77,7 @@ module DiscourseEvents
           topic.acting_user = Discourse.system_user
 
           archived_raw =
-            rewrite_event_attributes(
-              original_raw,
-              event_open_tag_match,
+            rewriter.rewrite(
               "start" => format_date(event_date.starts_at),
               "end" => formatted_end(event_date.ends_at),
               "recurrence" => nil,
@@ -164,9 +114,7 @@ module DiscourseEvents
 
           if next_occurrence
             successor_raw =
-              rewrite_event_attributes(
-                original_raw,
-                event_open_tag_match,
+              rewriter.rewrite(
                 "start" => format_date(next_occurrence[:starts_at]),
                 "end" => formatted_end(next_occurrence[:ends_at]),
               )
@@ -301,81 +249,6 @@ module DiscourseEvents
         end
       end
 
-      def rewrite_event_attributes(raw, match, attributes)
-        opening_tag = match[0]
-
-        attributes.each { |name, value| opening_tag = rewrite_attribute(opening_tag, name, value) }
-
-        raw[0...match.begin(0)] + opening_tag + raw[match.end(0)..]
-      end
-
-      def rendered_event_open_tag_match(raw)
-        matches = raw.to_enum(:scan, EVENT_OPEN_TAG).map { Regexp.last_match.dup }
-        return if matches.empty?
-
-        marked_raw =
-          raw
-            .gsub(EVENT_OPEN_TAG)
-            .with_index do |opening_tag, index|
-              opening_tag.sub(/\]\z/, %( rolloverMarker="candidate-#{index}"]))
-            end
-
-        cooked = PrettyText.cook(marked_raw, topic_id: post.topic_id, user_id: post.user_id)
-
-        marker =
-          Nokogiri::HTML5
-            .fragment(cooked)
-            .at_css("div.discourse-post-event[data-rollover-marker]")
-            &.[]("data-rollover-marker")
-
-        return if !marker&.match?(/\Acandidate-\d+\z/)
-
-        matches[marker.delete_prefix("candidate-").to_i]
-      end
-
-      def rewrite_attribute(opening_tag, name, value)
-        attribute_token =
-          /
-            \G
-            \s*
-            (?<attribute_name>[-\w]+)
-            (?:=#{ATTRIBUTE_VALUE})?
-          /ix
-
-        # Match complete attributes from immediately after "[event", so
-        # attribute-like words inside quoted values are never removed.
-        rewritten = +opening_tag[0, 6]
-        position = 6
-
-        while (token = attribute_token.match(opening_tag, position))
-          unless token[:attribute_name].casecmp?(name)
-            # Removing an adjacent attribute must not turn [event into [events.
-            rewritten << " " if rewritten.length == 6 && token[0].match?(/\A\S/)
-            rewritten << token[0]
-          end
-          position = token.end(0)
-        end
-
-        rewritten << opening_tag[position..]
-        return rewritten if value.nil?
-
-        serialized = serialize_attribute(name, value)
-        rewritten.sub(/\]\z/, " #{serialized}]")
-      end
-
-      def serialize_attribute(name, value)
-        string_value = value.to_s
-
-        return "#{name}=#{string_value}" unless string_value.match?(/[\s\]]/)
-
-        QUOTATION_MARKS.each do |open_quote, close_quote|
-          if string_value.exclude?(open_quote) && string_value.exclude?(close_quote)
-            return "#{name}=#{open_quote}#{string_value}#{close_quote}"
-          end
-        end
-
-        %(#{name}="#{string_value.delete('"')}")
-      end
     end
   end
 end
