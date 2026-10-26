@@ -11,6 +11,8 @@ en:
             type_options:
               enum_choices_required: "must include at least one choice for an enum field"
   discourse_workflows:
+    node_upgrades:
+      topic_post_removed: "The output no longer includes the topic's first post. If a later step uses post, add a Topic node with the Get operation to read it."
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
       create_summary: "Save this workflow as an unpublished draft?"

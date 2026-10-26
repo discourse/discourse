@@ -252,11 +252,19 @@ module DiscourseWorkflows
               },
             },
           ],
-          "action:topic_moderation" => [
+          "action:close_topic" => [
+            {
+              name: "Close the trigger topic",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:unlist_topic" => [
             {
               name: "Unlist the trigger topic",
               parameters: {
-                operation: "unlist_topic",
                 topic_id: "={{ $json.topic.id }}",
                 actor_username: "system",
               },

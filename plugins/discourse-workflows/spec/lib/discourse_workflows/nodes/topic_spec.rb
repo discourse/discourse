@@ -10,6 +10,70 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
   before { SiteSetting.tagging_enabled = true }
 
+  describe ".upgrade" do
+    let(:status_parameters) do
+      { "topic_id" => "={{ $json.topic.id }}", "actor_username" => "system" }
+    end
+
+    it "moves closing to Close topic, warning that the first post is gone" do
+      expect(described_class.upgrade(status_parameters.merge("operation" => "close"))).to eq(
+        type: "action:close_topic",
+        parameters: status_parameters,
+        notes: ["discourse_workflows.node_upgrades.topic_post_removed"],
+      )
+    end
+
+    it "moves archiving to Archive topic, warning that the first post is gone" do
+      expect(described_class.upgrade(status_parameters.merge("operation" => "archive"))).to eq(
+        type: "action:archive_topic",
+        parameters: status_parameters,
+        notes: ["discourse_workflows.node_upgrades.topic_post_removed"],
+      )
+    end
+
+    it "moves every other operation to version 2.0 with the same parameters" do
+      parameters = status_parameters.merge("operation" => "get")
+
+      expect(described_class.upgrade(parameters)).to eq(
+        type: "action:topic",
+        version: "2.0",
+        parameters:,
+      )
+    end
+
+    it "treats a node without an operation as creating a topic" do
+      expect(described_class.upgrade("title" => "Hello")).to include(
+        type: "action:topic",
+        version: "2.0",
+      )
+    end
+
+    it "leaves a node whose operation is an expression to be replaced by hand" do
+      expect(described_class.upgrade("operation" => "={{ $json.operation }}")).to be_nil
+    end
+
+    it "upgrades a saved close node to Close topic 1.0 with a translated note" do
+      node = {
+        "id" => "node-1",
+        "type" => "action:topic",
+        "typeVersion" => "1.0",
+        "name" => "Close",
+        "parameters" => status_parameters.merge("operation" => "close"),
+      }
+
+      result = DiscourseWorkflows::NodeUpgrader.call([node])
+
+      expect(result.nodes.sole).to include(
+        "type" => "action:close_topic",
+        "typeVersion" => "1.0",
+        "parameters" => status_parameters,
+      )
+      expect(result.upgrades.sole.notes).to eq(
+        [I18n.t("discourse_workflows.node_upgrades.topic_post_removed")],
+      )
+    end
+  end
+
   describe ".load_options_context" do
     fab!(:topic_with_custom_fields) { Fabricate(:topic, category: category) }
     fab!(:other_topic_with_custom_fields) { Fabricate(:topic, category: category) }
