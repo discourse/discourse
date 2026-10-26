@@ -26,6 +26,37 @@ module(
       );
     });
 
+    test("names the nodes that replace it", async function (assert) {
+      const deprecation = {
+        replaced_by: ["action:plugin_close", "action:topic"],
+      };
+      const nodeTypes = [
+        {
+          identifier: "action:plugin_close",
+          name: "action:plugin_close",
+          ui: { label_key: "discourse_workflows.nodes.action:post" },
+        },
+      ];
+
+      await render(
+        <template>
+          <DeprecationNotice
+            @deprecation={{deprecation}}
+            @nodeTypes={{nodeTypes}}
+          />
+        </template>
+      );
+
+      assert.dom(".workflows-deprecation-notice .alert").hasText(
+        i18n("discourse_workflows.node_deprecated.replaced_notice", {
+          nodes: [
+            i18n("discourse_workflows.nodes.action:post"),
+            i18n("discourse_workflows.nodes.action:topic"),
+          ].join(", "),
+        })
+      );
+    });
+
     test("appends the translated notice", async function (assert) {
       const deprecation = {
         ...DEPRECATION,

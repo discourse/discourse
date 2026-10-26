@@ -787,20 +787,68 @@ export default class WorkflowsEditor extends Component {
 
   @action
   async upgradeNode(clientId) {
-    const nodes = this.formApi
-      .get("nodes")
-      .map((n) =>
-        n.clientId === clientId
-          ? { ...n, typeVersion: nodeTypeVersion(this.#nodeTypeFor(n)) }
-          : n
+    const node = this.formApi.get("nodes").find((n) => n.clientId === clientId);
+    let result;
+
+    try {
+      result = await ajax(
+        "/admin/plugins/discourse-workflows/node-types/upgrades.json",
+        {
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ nodes: [WorkflowNode.serialize(node)] }),
+        }
       );
-    this.formApi.set("nodes", nodes);
+    } catch (error) {
+      popupAjaxError(error);
+      return;
+    }
+
+    const [upgrade] = result.upgrades;
+    if (!upgrade) {
+      this.toasts.error({
+        duration: "long",
+        data: {
+          message: i18n("discourse_workflows.node_deprecated.not_upgradable", {
+            name: node.name,
+          }),
+        },
+      });
+      return;
+    }
+
+    const upgraded = WorkflowNode.create(result.nodes[0]);
+    this.formApi.set(
+      "nodes",
+      this.formApi.get("nodes").map((n) =>
+        n.clientId === clientId
+          ? {
+              ...n,
+              type: upgraded.type,
+              typeVersion: upgraded.typeVersion,
+              configuration: upgraded.configuration,
+            }
+          : n
+      )
+    );
 
     try {
       await this.handleSubmit({ throwOnError: true });
     } catch {
       return;
     }
+
+    this.toasts.success({
+      duration: "long",
+      data: {
+        message: [
+          i18n("discourse_workflows.node_deprecated.upgraded", {
+            name: node.name,
+          }),
+          ...upgrade.notes,
+        ].join(" "),
+      },
+    });
 
     if (this.isDestroying) {
       return;
