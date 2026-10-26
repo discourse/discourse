@@ -58,6 +58,8 @@ RSpec.describe OptimizedImage do
     end
 
     it "produces cropped images with ImageMagick 7" do
+      global_setting :enable_vips_image_processing, false
+
       tmp_path = "/tmp/cropped.png"
       desired_width = 5
       desired_height = 5

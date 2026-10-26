@@ -342,7 +342,9 @@ RSpec.describe UploadCreator do
         }
       end
 
-      it "honors every EXIF orientation when storing JPEG uploads" do
+      it "honors every EXIF orientation when storing JPEG uploads with ImageMagick" do
+        global_setting :enable_vips_image_processing, false
+
         expected_color_grids.each do |orientation, expected_color_grid|
           with_jpeg_orientation(
             source_path: source_path,

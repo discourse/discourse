@@ -17,7 +17,8 @@ RSpec.describe LetterAvatar do
   end
 
   describe ".generate" do
-    it "generates a PNG avatar with the requested dimensions" do
+    it "generates a PNG avatar with ImageMagick" do
+      global_setting :enable_vips_image_processing, false
       username = "A"
       avatar_size = 45
       generated_path = described_class.generate(username, avatar_size, cache: false)
