@@ -40,6 +40,9 @@ module DiscourseWorkflows
 
       def self.node_line(node)
         line = "- #{node["id"]} | #{node["name"]} | #{node["type"]}"
+        if DiscourseWorkflows::NodeData.node_type(node)&.deprecated?
+          return "#{line} | deprecated: upgrade_node to move it to its replacement"
+        end
         return line if node["type"] != STICKY_NOTE_TYPE
 
         content = DiscourseWorkflows::NodeData.parameters(node)["content"]

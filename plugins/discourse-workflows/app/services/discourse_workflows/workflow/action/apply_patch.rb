@@ -81,6 +81,8 @@ module DiscourseWorkflows
         add_node!(state, operation)
       when "update_node_parameters"
         update_node_parameters!(state, operation)
+      when "upgrade_node"
+        upgrade_node!(state, operation)
       when "rename_node"
         rename_node!(state, operation)
       when "remove_node"
@@ -104,10 +106,16 @@ module DiscourseWorkflows
       client_id = operation[:client_id].presence
       state[:node_ids_by_client_id][client_id] = node_id if client_id
 
+      type_version = node_type_version(node_data[:typeVersion], node_type)
+      if DiscourseWorkflows::Registry.find_node_type(node_type, version: type_version)&.deprecated?
+        raise PatchError,
+              "#{node_type} #{type_version} is deprecated, add the latest version instead"
+      end
+
       state[:nodes] << {
         "id" => node_id,
         "type" => node_type,
-        "typeVersion" => node_type_version(node_data[:typeVersion], node_type),
+        "typeVersion" => type_version,
         "name" => name,
         "parameters" => node_data[:parameters] || {},
         "credentials" => node_credentials(node_data[:credentials]),
@@ -138,8 +146,30 @@ module DiscourseWorkflows
 
     def update_node_parameters!(state, operation)
       node = find_node!(state, operation)
+      # The catalog describes the replacement, so its parameters would corrupt the replaced node.
+      if replaced_node?(node)
+        raise PatchError, "Node #{node["name"]} was replaced, upgrade it with upgrade_node first"
+      end
       parameters = normalize_hash!(operation[:parameters], "Parameters must be an object")
       node["parameters"] = (node["parameters"] || {}).merge(parameters)
+    end
+
+    def replaced_node?(node)
+      deprecation = DiscourseWorkflows::NodeData.node_type(node)&.deprecation
+      return false if deprecation.blank?
+
+      deprecation[:replaced_by].present? || deprecation[:superseded_by].nil?
+    end
+
+    def upgrade_node!(state, operation)
+      node = find_node!(state, operation)
+      result = DiscourseWorkflows::NodeUpgrader.call([node])
+      if result.skipped.present?
+        raise PatchError, "Node #{node["name"]} can't be upgraded automatically"
+      end
+      raise PatchError, "Node #{node["name"]} is not deprecated" if result.upgrades.empty?
+
+      node.replace(result.nodes.first)
     end
 
     def rename_node!(state, operation)

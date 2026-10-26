@@ -687,7 +687,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         client_id: "get-topic",
         node: {
           type: "action:topic",
-          typeVersion: "1.0",
+          typeVersion: "2.0",
           name: "Get closed topic",
           position: {
             x: 260,
@@ -814,7 +814,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         client_id: "archive",
         node: {
           type: "action:topic",
-          typeVersion: "1.0",
+          typeVersion: "2.0",
           name: "Archive topic",
           position: {
             x: 560,
