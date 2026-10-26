@@ -4,7 +4,7 @@ class Admin::Config::DesignWizardController < Admin::AdminController
   def index
     themes =
       DesignWizard::Themes
-        .installed
+        .selectable
         .includes(:remote_theme, :locale_fields, theme_fields: :upload)
         .order(:id)
 

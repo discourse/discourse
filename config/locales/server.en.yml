@@ -6354,7 +6354,7 @@ en:
   design_wizard:
     themes:
       concord:
-        description: "A channel-based layout for categories, chat channels, and voice rooms."
+        description: "A channel-based layout for categories, chat channels, and voice/video rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."

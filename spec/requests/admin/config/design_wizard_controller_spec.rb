@@ -94,6 +94,33 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
       end
 
+      it "limits choices to core themes and Concord when other themes are installed" do
+        SiteSetting.concord_in_wizard = true
+        Fabricate(:theme, name: "Concord")
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(:remote_theme, remote_url: "https://github.com/discourse/other-theme"),
+        )
+        Fabricate(
+          :theme,
+          component: true,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+
+        get "/admin/config/design-wizard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["themes"].map { |theme| theme["id"] }).to contain_exactly(
+          *Theme::CORE_THEMES.values,
+          "concord",
+        )
+      end
+
       it "hides installation choices when repository imports are restricted" do
         SiteSetting.concord_in_wizard = true
         global_setting :allowed_theme_repos, "https://github.com/discourse/other-theme"
