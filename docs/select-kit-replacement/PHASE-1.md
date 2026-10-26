@@ -210,6 +210,9 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
 - ☐ **Large-list reveal** (Decision 5): server page-size auto-detected; hard `MAX_RENDERED`
   cap (**server-only** since `199ac768089`); reveal → "filter to narrow" at the cap;
   `aria-setsize`/`aria-posinset`. 5k-sync performance gate.
+  - **Superseded** by `0bcbcb240ad`: server lists no longer stop at a default cap and
+    `MAX_RENDERED` is gone. `@maxLoaded` opts back into a ceiling and the filter-to-narrow
+    hint (DSelect README, Loading inputs). The notes below describe the cap as it was.
   - ☑ Engine: `reveal` cursor, client range-slice and server page accumulator behind one
     `loadItems`, `canRevealMore`/`atCapWithMore`/`total`/`serverPending` gating, window reset
     on filter and reload. **Superseded in part**: the client half of this was retired once

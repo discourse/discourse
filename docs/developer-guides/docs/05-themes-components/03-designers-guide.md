@@ -245,13 +245,16 @@ Let's make some changes to this area. To do so, add the following to your `commo
 
 Here we target the `.select-kit-header` to give them each an identical border-radius, as well as a lighter background color.
 
-When the new select controls are enabled, the tag filter keeps the `.d-select.tag-drop`
-classes during the rollout and its trigger uses `.d-select__trigger`. The overlay is
-portaled outside the navigation container: target `.d-tag-drop__shortcut` and
-`.d-tag-drop__filter-for-more` for its recipe-specific content. Use the theme's
-color variables for both light and dark palettes. Caret customizations target the
-`select-tag-filter` kind through `select-customizations`, with `caretDownIcon` (closed)
-and `caretUpIcon` (open) declared as recipe options.
+When the new select controls are enabled, the category and tag filters keep the
+`.d-select.category-drop` and `.d-select.tag-drop` classes during the rollout, and each root is
+also its trigger, `.d-select__trigger`. The overlay is portaled outside the navigation container,
+so target it by kind: `.d-select__content.--kind-select-category-filter` and
+`.d-select__content.--kind-select-tag-filter`. Inside, the category filter's shortcut rows keep
+their `data-value` (`all-categories`, `no-categories`), and the tag filter's recipe content uses
+`.d-tag-drop__shortcut` and `.d-tag-drop__filter-for-more`. Use the theme's color variables for
+both light and dark palettes. Caret customizations target the `select-category-filter` or
+`select-tag-filter` kind through `select-customizations`, with `caretDownIcon` (closed) and
+`caretUpIcon` (open) declared as recipe options.
 
 Clicking on either of these, opens up a drop down menu.
 

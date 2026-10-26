@@ -11,13 +11,13 @@ A family joins only once the ports for its rows are done.
 
 | Kind | Sites | Targets today | Supported route | Status |
 |---|---|---|---|---|
-| Caret icons | 10 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses (one site applies `selectKitOptions` to the classes directly instead of `modifyClass`) | `spec.options` returning `caretIcon`, through `forKind` (the tag drop is now kind `select-tag-filter`) | Available |
-| Hiding the title text | 2 | `category-drop`, direct `DropdownSelectBox` uses | `spec.options` returning `iconOnly`; the recipe or call site passes `@label` | Available |
-| Empty-selection trigger text | 1 | `category-drop` (one parent's subcategory drop; the drop has no none row, the patch changes the trigger's no-selection text and title) | `spec.options` returning `placeholder`, through `forIdentifier`; the trigger title has no route yet | Available (text) |
+| Caret icons | 10 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses (one site applies `selectKitOptions` to the classes directly instead of `modifyClass`) | `spec.options` through `forKind`: `caretIcon` for the tag drop (kind `select-tag-filter`) and the dropdowns; the recipe keys `caretDownIcon` and `caretUpIcon` for the category drop (kind `select-category-filter`) | Available |
+| Hiding the title text | 2 | `category-drop`, direct `DropdownSelectBox` uses | `spec.options` returning `iconOnly`; the recipe or call site passes `@label`. On the category drop (kind `select-category-filter`) `iconOnly` also hides the caret, which the recipe draws inside the selection, so the setup must return an `icon` too | Available (category drop: with `icon`) |
+| Empty-selection trigger text | 1 | `category-drop` (one parent's subcategory drop; the drop has no none row, the patch changes the trigger's no-selection text and title) | None yet: the category drop always holds a value (an empty level is the "all" shortcut, shown as the level's name), so `placeholder` never shows, and the breadcrumbs pass no `@identifier`. Needs a recipe option for the level name | Gap |
 | Disabling a select from an outside flow | 1 | `form-template-chooser`, plus the composer's category and tag choosers through DOM queries | `spec.options` returning `disabled`, through `forIdentifier` | Available |
 | Row tooltips | 1 | every select-kit row | `spec.row` setting `title` | Available |
-| Filtering the category list | 2 | `category-chooser` | `spec.content` through `forKind("category-chooser")` (the current-category variant needs the call site's `@instanceContext`) | Available |
-| Shortcut rows with their own change routing | 1 | `category-drop` | recipe options for the shortcut and its URL, or `spec.content` for the rows and `spec.change` (without calling `next()`) for the routing | Available |
+| Filtering the category list | 2 | `category-chooser` | `spec.content` through `forKind("select-category")`, or `forIdentifier("composer-category")` and `forIdentifier("topic-edit-category")` for those two choosers, whose `instanceContext` carries the composer model or the topic (the current-category variant reads it) | Available |
+| Shortcut rows with their own change routing | 1 | `category-drop` | `spec.content` for the rows and `spec.change` (without calling `next()`) for the routing, through `forKind("select-category-filter")`; the recipe has no shortcut or URL options, since the call site owns routing | Available |
 | Reordering notification levels | 1 | `notifications-button` (group settings); the same patch also overrides opening the menu | Depends on the notification-level route (open decision, `ROLLOUT.md`) | Open |
 
 Every route is a setup on the `select-customizations` value transformer, registered with

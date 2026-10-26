@@ -2,12 +2,19 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import Category from "discourse/models/category";
+import CategoryChooserControl from "discourse/select-kit/components/category-chooser";
+import CategoryDropControl from "discourse/select-kit/components/category-drop";
+import CategorySelectorControl from "discourse/select-kit/components/category-selector";
 import MiniTagChooserControl from "discourse/select-kit/components/mini-tag-chooser";
 import TagChooserControl from "discourse/select-kit/components/tag-chooser";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import TagGroupChooserControl from "discourse/select-kit/components/tag-group-chooser";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectCategoryFilter from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import DSelectTagFilter, {
   ALL_TAGS_ID,
@@ -27,6 +34,16 @@ function formatValue(value) {
   return JSON.stringify(value);
 }
 
+/** Category records reference the site, so the demos show their ids. */
+function formatCategories(value) {
+  return formatValue(value.map((category) => category.id));
+}
+
+/** The drops emit a record or a shortcut id. */
+function formatCategoryFilter(value) {
+  return formatValue(value?.id ?? value);
+}
+
 /** Keeps intentional legacy renders quiet and lets callbacks replace both routing action paths. */
 function comparisonControl(Control) {
   return class extends Control {
@@ -42,6 +59,9 @@ const DemoTagDrop = comparisonControl(TagDrop);
 const DemoTagDropdown = comparisonControl(TagDropdown);
 const TagGroupChooser = comparisonControl(TagGroupChooserControl);
 const DemoTagsIntersectionChooser = comparisonControl(TagsIntersectionChooser);
+const CategoryChooser = comparisonControl(CategoryChooserControl);
+const CategorySelector = comparisonControl(CategorySelectorControl);
+const DemoCategoryDrop = comparisonControl(CategoryDropControl);
 
 class DemoSelection {
   @tracked value;
@@ -73,6 +93,8 @@ class DemoSelection {
 }
 
 export default class SelectComparison extends Component {
+  @service site;
+
   legacyTags = new DemoSelection(initialTags());
   newTags = new DemoSelection(initialTags());
   legacyMiniTags = new DemoSelection(initialTags());
@@ -86,7 +108,24 @@ export default class SelectComparison extends Component {
   legacyTagGroups = new DemoSelection(["product"]);
   newTagGroups = new DemoSelection(["product"]);
 
+  legacyCategory = new DemoSelection(null);
+  newCategory = new DemoSelection(null);
+  legacyCategories = new DemoSelection([]);
+  newCategories = new DemoSelection([]);
+  legacyCategoryFilter = new DemoSelection(null);
+  newCategoryFilter = new DemoSelection(null);
+
   tags = initialTags();
+
+  get topLevelCategories() {
+    return this.site.categories.filter(
+      (category) => !category.parent_category_id
+    );
+  }
+
+  get legacyFilterCategory() {
+    return Category.findById(this.legacyCategoryFilter.value);
+  }
 
   get legacyMainTag() {
     return this.legacyIntersection.value[0];
@@ -358,6 +397,135 @@ export default class SelectComparison extends Component {
               {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.newTagGroups.value)
+              ~}}
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="styleguide-select-comparison__pair"
+        data-pair="category-chooser"
+      >
+        <h3>
+          {{~i18n "styleguide.sections.select_comparison.category_chooser"~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
+            "styleguide.sections.select_comparison.category_chooser_description"
+          ~}}
+        </p>
+        <div class="styleguide-select-comparison__controls">
+          <div class="styleguide-select-comparison__legacy">
+            <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
+            <CategoryChooser
+              @onChange={{this.legacyCategory.update}}
+              @value={{this.legacyCategory.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.legacyCategory.value)
+              ~}}
+            </small>
+          </div>
+          <div class="styleguide-select-comparison__new">
+            <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
+            <DSelectCategory
+              @emit="ids"
+              @multiple={{false}}
+              @onChange={{this.newCategory.update}}
+              @permission="create"
+              @value={{this.newCategory.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatValue this.newCategory.value)
+              ~}}
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="styleguide-select-comparison__pair"
+        data-pair="category-selector"
+      >
+        <h3>
+          {{~i18n "styleguide.sections.select_comparison.category_selector"~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
+            "styleguide.sections.select_comparison.category_selector_description"
+          ~}}
+        </p>
+        <div class="styleguide-select-comparison__controls">
+          <div class="styleguide-select-comparison__legacy">
+            <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
+            <CategorySelector
+              @categories={{this.legacyCategories.value}}
+              @onChange={{this.legacyCategories.update}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatCategories this.legacyCategories.value)
+              ~}}
+            </small>
+          </div>
+          <div class="styleguide-select-comparison__new">
+            <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
+            <DSelectCategory
+              @onChange={{this.newCategories.update}}
+              @value={{this.newCategories.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatCategories this.newCategories.value)
+              ~}}
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="styleguide-select-comparison__pair"
+        data-pair="category-drop"
+      >
+        <h3>{{i18n "styleguide.sections.select_comparison.category_drop"}}</h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
+            "styleguide.sections.select_comparison.category_drop_description"
+          ~}}
+        </p>
+        <div class="styleguide-select-comparison__controls">
+          <div class="styleguide-select-comparison__legacy">
+            <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
+            <DemoCategoryDrop
+              @categories={{this.topLevelCategories}}
+              @category={{this.legacyFilterCategory}}
+              @onChange={{this.legacyCategoryFilter.update}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatCategoryFilter this.legacyCategoryFilter.value)
+              ~}}
+            </small>
+          </div>
+          <div class="styleguide-select-comparison__new">
+            <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
+            <DSelectCategoryFilter
+              @items={{this.topLevelCategories}}
+              @onChange={{this.newCategoryFilter.update}}
+              @value={{this.newCategoryFilter.value}}
+            />
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
+                "styleguide.sections.select_comparison.current_value"
+                value=(formatCategoryFilter this.newCategoryFilter.value)
               ~}}
             </small>
           </div>

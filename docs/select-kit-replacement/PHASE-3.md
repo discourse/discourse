@@ -10,8 +10,19 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 
 ### Wave 1: tags and categories, composer included
 
-- ☐ **Category family:** chooser, drop, selector, search and report choosers. Rows reuse
-  `categoryBadgeHTML`.
+- ☐ **Category family:** chooser, drop, selector, search and report choosers. Two recipes,
+  `DSelectCategory` and `DSelectCategoryFilter`, plus FormKit's `category-chooser` control; every
+  call site is branched and the category modules joined `MIGRATED_SELECT_KIT_MODULES`. Rows reuse
+  `categoryLinkHTML`.
+  - ☑ **Engine prerequisites:** server lists without a default row ceiling (`@maxLoaded` opts
+    in), an opaque paging cursor, an end edge re-armed after pages that add no rows, and an abort
+    signal on `control.update` work.
+  - ☑ **Call sites, the AI category suggestion and SCSS.**
+  - ☐ **Recipe follow-ups:** the multiple-mode placeholder (shows "Uncategorized"), a selection
+    modifier and an empty-level text route on the drop, topic counts on chooser rows, and the
+    subcategory drop's repeated accessible name. The source's paging shape and the "and all
+    subcategories" rows await a decision.
+  - ☐ **VoiceOver pass and visual review** across themes and color modes.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
   dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic
@@ -30,6 +41,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 - ☐ **Composer:** tag and category pickers write the same `model.tags` / category shape in both
   modes; drafts round-trip across modes.
 - ☐ **discourse-ai** suggesters and the customer `modifySelectKit` plugin work through the bridge.
+  The tag and category suggesters now use `select-customizations` on the composer and topic-edit
+  identifiers instead of the bridge.
 - ☐ **Customer `modifyClass` ports** for category-drop, tag-drop and category-chooser.
 - ☐ SCSS for these families migrated.
 - ☑ **Third-party notice** (render-time): notify when a legacy component of a migrated family

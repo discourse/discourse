@@ -617,6 +617,46 @@ rows, tags that share a one-per-topic group with the other row's tag are not off
 The default tag row renders new items with `d_select.create_item`. A custom `:item` block
 owns that wording too; use the item's `isNew` flag to distinguish creation from existing tags.
 
+#### Category recipes
+
+The category family has two recipes:
+
+- **`DSelectCategory`** (kind `select-category`) picks categories to store. `@value` takes ids,
+  numeric strings or category records; `@onChange` emits records, or ids with `@emit="ids"`. It
+  is multiple by default; `@multiple={{false}}` holds one category. The rules:
+  - `@permission`: `"see"` (the default) offers every visible category, `"create"` only those the
+    user can post in.
+  - `@uncategorized`: defaults to `true` when multiple, otherwise to the site's
+    `allow_uncategorized_topics`.
+  - `@subcategories={{false}}` offers top-level categories only.
+  - `@exclude` hides categories unless they are held.
+  - `@scope`, `@prioritize` and `@readOnly` are the composer's rules. While browsing, scope and
+    prioritize act one level up: the category's parent and that parent's children.
+    `@readOnly` categories show as disabled rows.
+  - `@placeholder` is the trigger text with no value. `@noneLabel` adds a selectable "none" row
+    instead.
+  - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.
+  - `@selectDescendants` (the default when multiple) adds an "and all subcategories" row to
+    matches that have children, once the filter is two or more characters long.
+- **`DSelectCategoryFilter`** (kind `select-category-filter`) narrows a topic list, one level at
+  a time. Its value is a category, `ALL_CATEGORIES_ID` or `NO_CATEGORIES_ID` (exported by the
+  module), and `@parentCategory` names the level. `@items` is the caller's list for the level, so
+  the page decides what the level shows. A search covers the whole site at the top level, or the
+  parent's direct children below it, and ranks top-level and prefix matches first. The filter
+  never navigates; the call site routes the pick. A long lazy level shows 15 rows, and the
+  `:footer` block receives the number left out and the parent, so the caller can link to the
+  rest.
+
+When the site preloads its categories, both recipes answer from them without a request, in the
+site's order. A site that loads categories lazily searches the server instead, and the list
+keeps the server's order. Held ids resolve either way.
+
+Until cleanup, `DSelectCategory` defaults `@legacyKind` to `category-chooser` (single) or
+`category-selector` (multiple), and the filter to `category-drop`. Call sites that replaced other
+select-kit components pass their own: advanced search passes
+`search-advanced-category-chooser` with `category-chooser`, and former multiple selectors pass
+`multiple-categories-selector`.
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 
@@ -626,16 +666,13 @@ their base values:
 ```gjs
 <DSelect
   @identifier={{@identifier}}
-  @items={{this.items}}
-  @kind="category-drop"
-  @kindContext={{this.kindContext}}
-  @kindOptions={{hash
-    allCategoriesUrl=(or @allCategoriesUrl "/categories")
-    allCategoriesShortcut=(or @allCategoriesShortcut "selected")
-  }}
-  @onChange={{this.route}}
+  @kind="select-category-filter"
+  @kindContext={{hash value=@value parentCategory=@parentCategory}}
+  @kindOptions={{hash caretDownIcon="angle-right" caretUpIcon="angle-down"}}
+  @load={{this.load}}
+  @onChange={{this.onChange}}
 >
-  <:item as |category options|>…</:item>
+  <:selection as |item options|>…</:selection>
 </DSelect>
 ```
 

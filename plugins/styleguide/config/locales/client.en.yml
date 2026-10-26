@@ -77,8 +77,14 @@ en:
           tag_dropdown_description: "Picks one tag to open its settings. Select-kit picks from a list it is given; DSelectTag searches the server and leaves navigation to the page."
           tag_group_chooser: "TagGroupChooser and DSelectTagGroup"
           tag_group_chooser_description: "Picks tag groups by name, not tags. Becomes a single select where only one group is allowed."
+          category_chooser: "CategoryChooser and DSelectCategory"
+          category_chooser_description: "Picks one category to store, such as a topic's category. Both offer only the categories the user can post in here."
+          category_selector: "CategorySelector and DSelectCategory"
+          category_selector_description: "Picks several categories for settings, preferences and plugins. After two typed characters, a category with subcategories also offers itself and all its subcategories in one pick."
+          category_drop: "CategoryDrop and DSelectCategoryFilter"
+          category_drop_description: "Picks one category to filter a topic list, one level at a time. Select-kit opens that category's topics on a pick; DSelectCategoryFilter leaves navigation to the page."
           current_value: "Current value: %{value}"
-          form_kit_note: "The FormKit tag field switches controls internally using enable_new_select_controls, so it cannot be shown side by side."
+          form_kit_note: "The FormKit tag and category fields switch controls internally using enable_new_select_controls, so they cannot be shown side by side."
         select:
           title: "Select"
           hero:

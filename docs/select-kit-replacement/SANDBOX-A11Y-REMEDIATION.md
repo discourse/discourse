@@ -57,7 +57,7 @@ breaking things.
 | Count on update while open | **Last resort.** Cursor moved → the row said it. New query, cursor still → ask for the row again. Set unchanged → nothing is said, by either channel. The count survives only where no row can carry it: no cursor at all, or more rows for the same question. |
 | `no_results`, `min_chars` | Keep, and `no_results` waits like a count. No row competes with it, but emptying the list breaks the control's own ARIA references, and the reader re-introduces the whole combobox over the top of it. |
 | Limit hint (`max_reached` / `min_not_reached`) | Keep. At the cap `shouldAutoActivateFirst` is suppressed (`engine.atMaximum`), so nothing seeds and nothing competes. |
-| `filter_to_narrow` | **Flagged.** Fires at entry when reopening a capped list, which is exactly when a cursor seeds. Unlike the count it says something markup cannot, so the resolution may be that the hint wins. Needs one listen. |
+| `filter_to_narrow` | **Flagged.** Fires at entry when reopening a capped list, which is exactly when a cursor seeds. Unlike the count it says something markup cannot, so the resolution may be that the hint wins. Needs one listen. Since `0bcbcb240ad` a list is capped only when the call site sets `@maxLoaded`. |
 | Reveal (`loading_more` / `loading_complete`) | Keep. Events. |
 | `item_added` / `item_removed` | Keep. Events. |
 | `selection_cleared` | Keep. Event, and clearing has no other channel. |
@@ -516,6 +516,7 @@ the race the suite is otherwise blind to.
   `MAX_RENDERED` will never render, so the size describes a complete set the reader cannot walk to
   the end of. Spec-literal says `aria-setsize` is the complete set; the reachable-set reading
   disagrees. Untested either way — do not assume the current behaviour there is deliberate.
+  Since `0bcbcb240ad` this arises only with an opt-in `@maxLoaded`; `MAX_RENDERED` is gone.
 - **A skipped row still occupies a position.** On the notification picker VoiceOver reads
   "Watching, 4 of 6", and one ArrowDown lands on "Manage notification settings, 6 of 6" — the
   reader hears a position vanish and reasonably concludes the list misbehaved. The set size is

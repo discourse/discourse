@@ -251,6 +251,8 @@ customization ports are done.
   discourse-ai's suggesters and the customer `modifySelectKit` plugin are ported. Staff skip tag
   validation (`frontend/discourse/app/services/composer.js:688`), so the alpha cohort includes a
   non-staff group, and member and anonymous paths are covered before exposure.
+  Status 2026-10-26: the tag family has joined; every category call site is branched, with the
+  recipe follow-ups and the screen-reader pass still open (`PHASE-3.md`).
 - **Wave 2, entity pickers and ui-kit wrappers.** The user, email-group-user and group choosers (a
   user search recipe, `addUserSearchOption`, `customSearchOptions`, a rewritten
   `DAccessControlGranteeChooser`), topic, form template, timezone, flair, list setting, color, font
@@ -293,6 +295,11 @@ customization ports are done.
   every recipe exposes the same overrides instead of fixing them. Strings that cannot be overridden
   get an argument or a `@kindOptions` key before the families that render them join the flag.
   Requested 2026-10-23.
+  - Categories, 2026-10-26: the filter keeps select-kit's lowercase strings (`categories`,
+    `subcategories`, `no subcategories`, `remove filter`, `view all`), as the tag filter does, so
+    the navigation bar reads the same in both modes. Its level name has no override yet (the gap
+    in `PATCH-MATRIX.md`). The new "%{category} and all subcategories" row name is a placeholder
+    string, so translations can reorder it.
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
   to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each
@@ -432,6 +439,31 @@ them. Recorded 2026-10-23.
 - **Compare against the old component's CSS before calling a port done.** The tag drop lost its
   content-sized panel, its trigger states and its count layout until select-kit's styles were read
   side by side with the new ones.
+
+Added while porting the category family, 2026-10-26:
+
+- **Measure at the scale the family has to serve.** A category chooser passed every behaviour test
+  while taking 7 to 9 seconds to open with 10,000 categories, because no test loaded that many.
+  Put the target size into a measured gate before the port starts. In rendering tests every row
+  a source returns is mounted (virtualization is off), so such a bench measures returned rows,
+  not the window.
+- **Port customizations to the new kind.** `forKind` matches only a select's `@kind`, never its
+  `@legacyKind`; the legacy name exists for the deprecated bridge and the legacy classes. A
+  customization written against `forKind("category-chooser")` reaches nothing.
+- **Port behaviour, do not invent it.** The suggestion port first cancelled its request whenever
+  focus or a click left the picker, which the old component never did, so clicking into the
+  composer body silently dropped the suggestion. Cancellation now follows the update scope: a
+  later pick, reopening the list or destroying the control.
+- **Guard arguments built from records that may not exist yet.** `@exclude={{array @category.id}}`
+  on a new category passes `[undefined]`, which reaches the server as `NaN` among the excluded
+  ids.
+- **Check widths, not only classes.** The DSelect root keeps the legacy class, so call-site layout
+  rules such as `.category-chooser { width: 100% }` still apply, but `.select-kit.*` defaults do
+  not: select-kit's choosers and multi-selects were 300px wide, and a DSelect fills its container.
+  Find the layouts that relied on the old default.
+- **A new module needs a full build before plugins can import it.** A devserver started before a
+  recipe existed cannot serve it to plugin bundles; restart the devserver instead of adding a
+  loader shim.
 
 ## Verification
 
