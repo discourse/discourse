@@ -7,6 +7,12 @@ RSpec.describe AccessControlList do
   fab!(:user) { Fabricate(:user, name: "User One") }
   fab!(:other_user) { Fabricate(:user, name: "User Two") }
 
+  it "defaults the source to core" do
+    access_control_list = Fabricate(:access_control_list, source: nil, target:, permission: "view")
+
+    expect(access_control_list.source).to eq("core")
+  end
+
   describe ".expand_list_for_bulk_insert" do
     it "collapses multiple groups sharing a permission into one record" do
       list = [
@@ -24,7 +30,7 @@ RSpec.describe AccessControlList do
         allowed_user_ids: [],
         target_type: "Category",
         target_id: target.id,
-        owner: "core",
+        source: "core",
       )
     end
 
@@ -42,13 +48,13 @@ RSpec.describe AccessControlList do
       )
     end
 
-    it "accepts a symbol type and a custom owner" do
+    it "accepts a symbol type and a custom source" do
       list = [{ type: :group, id: group.id, permission: "view" }]
 
       result = described_class.expand_list_for_bulk_insert(list, target, "chat")
 
       expect(result.first[:allowed_group_ids]).to contain_exactly(group.id)
-      expect(result.first[:owner]).to eq("chat")
+      expect(result.first[:source]).to eq("chat")
     end
 
     it "collapses users and groups sharing a permission into one record" do
@@ -67,7 +73,7 @@ RSpec.describe AccessControlList do
           allowed_user_ids: contain_exactly(user.id, other_user.id),
           target_type: "Category",
           target_id: target.id,
-          owner: "core",
+          source: "core",
         },
       )
     end
@@ -226,6 +232,24 @@ RSpec.describe AccessControlList do
         { id: group.id, permission: "view", mandatory: true },
         { id: group.id, permission: "edit", mandatory: false },
         { id: other_group.id, permission: "edit", mandatory: false },
+      )
+    end
+
+    it "does not mark owner entries as mandatory" do
+      Fabricate(:access_control_list_with_users, target: target, permission: "owner", users: [user])
+      target
+        .class
+        .stubs(:acl_is_mandatory?)
+        .with({ type: :user, id: user.id, permission: "owner" })
+        .returns(true)
+
+      owner_entry = described_class.where(target: target, permission: "owner").flattened_list.first
+
+      expect(owner_entry).to include(
+        type: :user,
+        id: user.id,
+        permission: "owner",
+        mandatory: false,
       )
     end
 

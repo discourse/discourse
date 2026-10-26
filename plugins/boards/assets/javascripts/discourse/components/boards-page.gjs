@@ -161,13 +161,23 @@ export default class BoardsPage extends Component {
                 </div>
 
                 <div class="discourse-boards-board-card__footer">
-                  <DUserLink
-                    class="discourse-boards-board-card__creator discourse-boards-badge"
-                    @user={{board.created_by}}
+                  <div
+                    class="discourse-boards-board-card__owners discourse-boards-badge"
                   >
-                    {{i18n "boards.board.created_by"}}
-                    {{dAvatar board.created_by imageSize="micro"}}
-                  </DUserLink>
+                    <span>
+                      {{i18n "boards.board.owners" count=board.owners.length}}
+                    </span>
+                    <span class="discourse-boards-board-card__owner-avatars">
+                      {{#each board.owners as |owner|}}
+                        <DUserLink
+                          class="discourse-boards-board-card__owner"
+                          @user={{owner}}
+                        >
+                          {{dAvatar owner imageSize="micro"}}
+                        </DUserLink>
+                      {{/each}}
+                    </span>
+                  </div>
 
                   <span class="discourse-boards-badge">
                     {{i18n
