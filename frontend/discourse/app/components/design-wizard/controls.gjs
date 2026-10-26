@@ -205,6 +205,7 @@ export default class DesignWizardControls extends Component {
           {{else}}
             <Section @title={{i18n "design_wizard.sections.homepage"}}>
               <HomepageSection
+                @additionalHomepages={{this.designWizard.additionalHomepages}}
                 @categoryPageStyle={{this.designWizard.categoryPageStyle}}
                 @homepage={{this.designWizard.homepage}}
                 @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}

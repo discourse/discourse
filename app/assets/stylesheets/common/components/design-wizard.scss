@@ -567,6 +567,16 @@ $dw-button-default-border: #d3d3d3;
     border: 1px solid var(--content-border-color);
     border-radius: var(--token-radius-small);
 
+    &.--icon {
+      align-items: center;
+      justify-content: center;
+
+      .d-icon {
+        width: 2em;
+        height: 2em;
+      }
+    }
+
     &.--topics.--horizon {
       background: var(--primary-very-low);
     }

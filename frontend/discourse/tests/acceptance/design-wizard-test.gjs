@@ -190,6 +190,57 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(".design-wizard__close");
   });
 
+  test("previews and saves an additional homepage without a destination picker", async function (assert) {
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        description:
+          "Open the General channel when members visit your homepage.",
+        icon: "comments",
+        path: "/categories",
+      },
+    ];
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    await click('[data-homepage="chat"]');
+
+    assert.strictEqual(
+      currentURL(),
+      "/categories",
+      "previews the path provided by the server"
+    );
+    assert
+      .dom('[data-homepage="chat"]')
+      .hasAttribute("aria-pressed", "true", "selects Chat");
+    assert
+      .dom('[data-homepage="topics"]')
+      .hasAttribute("aria-pressed", "false", "clears the topic selection");
+    assert
+      .dom(".design-wizard__detail-group")
+      .includesText("General", "explains the fixed destination");
+    assert.dom("[data-topic-page]").doesNotExist("hides topic list choices");
+    assert
+      .dom(".design-wizard__detail-group select")
+      .doesNotExist("does not offer a channel picker");
+    await click(".design-wizard__save");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "chat",
+      "saves the registered homepage"
+    );
+    assert.false(
+      "chat_homepage_channel" in savedPayloads.at(-1),
+      "leaves channel resolution to the server"
+    );
+    assert.true(redirect.called, "finishes the wizard");
+  });
+
   test("the appearance section launches the wizard on the forum", async function (assert) {
     await visit("/admin");
 

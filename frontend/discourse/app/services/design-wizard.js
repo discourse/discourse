@@ -89,6 +89,17 @@ export default class DesignWizardService extends Service {
     return this.data?.themes.find((theme) => theme.id === this.themeId);
   }
 
+  get additionalHomepages() {
+    return this.data?.additional_homepages ?? [];
+  }
+
+  get #supportedHomepages() {
+    return [
+      ...SUPPORTED_HOMEPAGES,
+      ...this.additionalHomepages.map(({ id }) => id),
+    ];
+  }
+
   get pairs() {
     return this.selectedTheme?.palette_pairs ?? [];
   }
@@ -378,11 +389,13 @@ export default class DesignWizardService extends Service {
     }
     this.#persistState();
 
-    // the page behind the sheet is the preview: show the chosen homepage.
-    // Explicit routes, because "/" resolves to the currently saved default
-    // homepage, and a router transition (unlike DiscourseURL.routeTo) can
-    // never escalate to a full page load, which would dismiss the sheet
-    this.router.transitionTo(`discovery.${homepage}`);
+    // An explicit destination previews unsaved choices without reloading the wizard.
+    const additionalHomepage = this.additionalHomepages.find(
+      ({ id }) => id === homepage
+    );
+    this.router.transitionTo(
+      additionalHomepage?.path ?? `discovery.${homepage}`
+    );
   }
 
   selectCategoryPageStyle(value) {
@@ -573,7 +586,7 @@ export default class DesignWizardService extends Service {
       heading_font: this.data.heading_font,
       // a homepage the wizard cannot express is left alone rather than replaced
       // with the one it fell back to
-      homepage: SUPPORTED_HOMEPAGES.includes(this.data.homepage)
+      homepage: this.#supportedHomepages.includes(this.data.homepage)
         ? this.data.homepage
         : null,
       category_page_style: settings.desktop_category_page_style,
@@ -682,7 +695,7 @@ export default class DesignWizardService extends Service {
   }
 
   #supportedHomepage(homepage) {
-    return SUPPORTED_HOMEPAGES.includes(homepage) ? homepage : "latest";
+    return this.#supportedHomepages.includes(homepage) ? homepage : "latest";
   }
 
   #currentPairKey(theme) {

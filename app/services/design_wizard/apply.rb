@@ -42,7 +42,7 @@ class DesignWizard::Apply
                 in: BaseFontSetting.values.map { |font| font[:value] },
               },
               allow_blank: true
-    validates :homepage, inclusion: { in: %w[latest new hot categories] }, allow_blank: true
+    validates :homepage, inclusion: { in: ->(_) { DesignWizard::Homepages.ids } }, allow_blank: true
     validates :category_page_style,
               inclusion: {
                 in: CategoryPageStyle.values.map { |style| style[:value] },
@@ -61,14 +61,20 @@ class DesignWizard::Apply
     validate :built_in_palettes_exist
 
     def site_settings(theme_id:)
-      {
-        default_theme_id: theme_id,
-        base_font: base_font.presence,
-        heading_font: heading_font.presence,
-        default_homepage: homepage.presence,
-        desktop_category_page_style: category_page_style.presence,
-        welcome_banner_location: welcome_banner_location.presence,
-      }.compact.map { |setting_name, value| { setting_name:, value: } }
+      DesignWizard::Homepages
+        .settings_for(homepage)
+        .merge(
+          {
+            default_theme_id: theme_id,
+            base_font: base_font.presence,
+            heading_font: heading_font.presence,
+            default_homepage: homepage.presence,
+            desktop_category_page_style: category_page_style.presence,
+            welcome_banner_location: welcome_banner_location.presence,
+          },
+        )
+        .compact
+        .map { |setting_name, value| { setting_name:, value: } }
     end
 
     # the wizard re-sends every selection on each step, so skip the settings
