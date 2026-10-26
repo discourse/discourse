@@ -1,0 +1,4 @@
+plugins:
+  jepsen_enabled:
+    default: true
+    client: true
