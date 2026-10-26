@@ -78,7 +78,7 @@ RSpec.describe AppearanceChange::Activate do
         result
 
         expect(appearance_change.reload).to have_attributes(
-          activated_at: Time.zone.now,
+          activated_at: eq_time(Time.zone.now),
           previous_state: {
             "color_scheme_id" => light_palette.id,
             "dark_color_scheme_id" => dark_palette.id,
