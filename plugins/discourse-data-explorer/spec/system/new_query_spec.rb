@@ -13,7 +13,7 @@ describe "Data explorer new query" do
 
   it "navigates to the new query page from the index" do
     visit("/admin/plugins/discourse-data-explorer/queries")
-    find(".d-page-subheader .btn-primary").click
+    find(".new-query-btn").click
     expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries/new")
   end
 

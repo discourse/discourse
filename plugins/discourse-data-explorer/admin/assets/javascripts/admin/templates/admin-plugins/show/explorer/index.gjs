@@ -22,6 +22,7 @@ export default <template>
     >
       <:actions as |actions|>
         <actions.Primary
+          class="new-query-btn"
           @icon="plus"
           @label="explorer.new_query"
           @route="adminPlugins.show.explorer.new"

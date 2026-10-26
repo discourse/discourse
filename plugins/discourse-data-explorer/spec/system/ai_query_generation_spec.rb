@@ -159,7 +159,7 @@ RSpec.describe "Data Explorer AI query generation" do
       expect(page).to have_no_css(".query-ai-prompt")
 
       find(".back-button").click
-      find(".d-page-subheader .btn-primary").click
+      find(".new-query-btn").click
       expect(page).to have_css(".query-new__manual-form")
       expect(page).to have_no_css(".query-new__ai-section")
 
