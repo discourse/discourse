@@ -74,7 +74,12 @@ module DiscourseWorkflows
         end
 
         def output
-          { topic: topic_data(@topic), status: @status, enabled: @enabled, change: change }
+          {
+            topic: serialize_topic_list_item(@topic),
+            status: @status,
+            enabled: @enabled,
+            change: change,
+          }
         end
 
         def matches?(trigger_ctx)

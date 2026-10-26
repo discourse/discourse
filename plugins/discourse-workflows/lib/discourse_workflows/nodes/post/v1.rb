@@ -378,7 +378,7 @@ module DiscourseWorkflows
 
           {
             post:
-              exec_ctx.serialize_post(
+              serialize_post(
                 post,
                 guardian: actor.guardian,
                 include_raw: true,
@@ -393,7 +393,7 @@ module DiscourseWorkflows
 
           {
             post:
-              exec_ctx.serialize_post(
+              serialize_post(
                 post,
                 guardian: editor.guardian,
                 include_raw: true,
@@ -406,14 +406,14 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           post = exec_ctx.destroy_post(user: actor, post_id: config["post_id"])
 
-          { post: exec_ctx.serialize_post(post, guardian: actor.guardian) }
+          { post: serialize_post(post, guardian: actor.guardian) }
         end
 
         def recover_post(exec_ctx, config, item_index)
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           post = exec_ctx.recover_post(user: actor, post_id: config["post_id"])
 
-          { post: exec_ctx.serialize_post(post, guardian: actor.guardian) }
+          { post: serialize_post(post, guardian: actor.guardian) }
         end
 
         def get_post(exec_ctx, config, item_index)
@@ -421,7 +421,7 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
 
-          { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
+          { post: serialized_post(post, guardian: actor.guardian, config: config) }
         end
 
         def list_posts(exec_ctx, config, item_index)
@@ -442,13 +442,13 @@ module DiscourseWorkflows
 
           posts = filter.search.includes(:user, topic: %i[category tags])
           posts.map do |post|
-            { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
+            { post: serialized_post(post, guardian: actor.guardian, config: config) }
           end
         end
 
-        def serialized_post(exec_ctx, post, guardian:, config:)
+        def serialized_post(post, guardian:, config:)
           data =
-            exec_ctx.serialize_post(
+            serialize_post(
               post,
               guardian: guardian,
               include_raw: config["include_raw"],
