@@ -112,6 +112,8 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential
 after_initialize do
   Rails.application.config.filter_parameters += %i[signature]
 
+  register_problem_check ProblemCheck::DeprecatedWorkflowNodes
+
   add_custom_reviewable_filter(
     [
       :workflow_id,

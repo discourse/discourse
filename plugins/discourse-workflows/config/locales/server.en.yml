@@ -337,6 +337,9 @@ en:
           allowed_tables:
             name: "Allowed tables"
             description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+  dashboard:
+    problem:
+      deprecated_workflow_nodes: "These workflows use deprecated nodes. Open each one and upgrade the nodes marked with an arrow before they stop being supported:%{workflows_list}"
   reviewables:
     reasons:
       workflow_flagged_user: "A workflow added this user to the review queue."

@@ -107,7 +107,7 @@ Renaming or removing an output key, or changing its meaning, breaks saved workfl
 - `class V2 < V1` in `v2.rb`, calling `description(superclass.description.merge(version: "2.0", output_contracts: [{ schema: V2_OUTPUT_SCHEMA }]))`, then override `output` / `execute` or a private `serialize_*` helper.
 - Core nodes self-register; plugin nodes need `register_discourse_workflows_node(...::V2)` next to V1.
 - Services resolve the saved version with `NodeData.node_type(node)`, never a hard-coded `V1`.
-- Deprecated versions keep running for saved workflows (drafts, published versions, history and paused executions reference them), are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action. Remove them only after the deprecation window, and only together with the removal migration that upgrades every stored copy (drafts, `WorkflowVersion`s, execution and webhook snapshots).
+- Deprecated versions keep running for saved workflows (drafts, published versions, history and paused executions reference them), are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action; the AI author upgrades them with its `upgrade_node` patch operation. The admin dashboard lists the workflows that still use them. Remove them only after the deprecation window, and only together with the removal migration that upgrades every stored copy (drafts, `WorkflowVersion`s, execution and webhook snapshots).
 - Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones. `node_deprecation_spec` checks that `superseded_by` and every `replaced_by` node are registered and not deprecated.
 
 ### Replacing a node
