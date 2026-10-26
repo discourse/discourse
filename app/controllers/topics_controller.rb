@@ -223,6 +223,8 @@ class TopicsController < ApplicationController
     response.headers["X-Robots-Tag"] = "noindex" unless @topic_view.topic.visible
 
     canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
+    # The canonical can be an embedding page, which has no translated versions.
+    @hreflang_url = UrlHelper.absolute_without_cdn(@topic_view.current_page_path)
 
     # provide hint to crawlers only for now
     # we would like to give them a bit more signal about age of data
