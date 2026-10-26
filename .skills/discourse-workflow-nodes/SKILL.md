@@ -1,9 +1,38 @@
 ---
 name: discourse-workflow-nodes
-description: Use when creating, changing, or reviewing Discourse Workflows nodes (triggers, actions, conditions) in plugins/discourse-workflows or plugins/*/lib/discourse_workflows, including their output schemas and specs
+description: Use when creating, changing, splitting, or reviewing Discourse Workflows nodes (triggers, actions, conditions, flow) in plugins/discourse-workflows or plugins/*/lib/discourse_workflows, including their settings, output schemas, events, and specs
 ---
 
 # Discourse Workflow Nodes
+
+Nodes are small bricks admins combine in the workflow editor. Each node does one thing, is findable by the name
+of what it does, and has a trigger counterpart when it changes state.
+
+## Granularity
+
+1. **Resource nodes own lifecycle, reads, and field edits.** `create`, `get`, `list`, `edit`, `delete`,
+   `recover`, and edits of a value or of a set edited as a whole (category, tags, trust level, custom fields,
+   a tag group's tags) are operations on one node per noun: Topic, Post, User, Group, Data table…
+2. **A change with a natural opposite gets one node per direction, as an action and as a trigger.**
+   Close / Reopen topic, Pin / Unpin topic, Like / Unlike post, Add user to / Remove user from group,
+   Grant / Revoke badge, Suspend / Unsuspend user, Set / Clear topic timer. Judge by the underlying event,
+   not by today's trigger: `:topic_timer_changed` passes `created`, `updated`, `cancelled` or `completed`,
+   so the timer gets split triggers and split actions.
+3. **Triggers split per change, keeping the generic trigger hidden.** The generic `*_changed` trigger stays
+   registered with `palette_visible: false` because it can match several changes in one node. Each change gets
+   a palette trigger built from it, as `TopicStatusChanged::V1.description_for_change("closed")` does.
+   Splitting a trigger never breaks saved workflows.
+4. **Actions don't keep a hidden generic.** Picking the direction from data is an If node feeding two actions.
+5. **Share code, not nodes.** Nodes that differ only by direction share a module (see `PostLifecycle`).
+   Never add an intermediate base class: every `NodeType` subclass registers itself as a node.
+
+## Naming
+
+| | Identifier | Label | Example |
+|---|---|---|---|
+| Action | `action:<verb>_<noun>` | Imperative, sentence case | `action:close_topic`, "Close topic" |
+| Trigger | `trigger:<noun>_<past participle>` | Noun + past participle | `trigger:topic_closed`, "Topic closed" |
+| Resource node | `action:<noun>` | Noun | `action:topic`, "Topic" |
 
 ## Entities in output
 
@@ -43,6 +72,16 @@ DiscourseEvent.trigger(:topic_status_updated, topic, status, enabled, acting_use
 ```
 
 Trigger nodes receive it as a trailing hash: `def initialize(topic, status, enabled, payload = {})` and read `payload[:acting_user]`. Specs that assert exact event params must include `{ acting_user: ... }`.
+
+- Every state change an action makes fires a `DiscourseEvent`, so a trigger can mirror it. If core or the plugin doesn't fire one, add it.
+- Fire it where the change happens, in the model method or service, not in the controller.
+- Jobs and automatic changes pass `Discourse.system_user`. Expiry jobs fire the event too: a change that happens on a timer is still a change (`Jobs::ClearSlowMode`).
+- When a record is saved from many places and its owner isn't who changed it, carry the user on the record rather than guessing in the trigger.
+- When the change only happens in a controller, move it into a core service that fires the event after its transaction, only when something changed, and call that service from the controller and the action alike (`Topic::UpdateSlowMode`).
+- When a model method wraps the change in a transaction that can still roll back, register the event with `DB.after_commit` after its success check, and only when the state really changed, so a failed or no-op call never fires it.
+- Pass every positional argument, even when it's `nil`, so the trailing hash never binds to an optional positional.
+- When an event gains `acting_user:`, every trigger listening to it must accept the trailing hash (`payload = {}`, or a `from_event` override that drops it). Otherwise building the trigger raises `ArgumentError`, which `EventListener` logs and swallows, so the trigger silently stops firing.
+- Declare `actor` only once the event carries `acting_user:` (or the actor is known by construction). Never declare an `actor` that is always `null`: make the event carry the user first.
 
 ## Breaking output changes
 
