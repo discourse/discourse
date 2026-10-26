@@ -224,7 +224,9 @@ export default class VoiceVideoTile extends Component {
           type="button"
           {{on "click" this.toggleFullscreen}}
         >
-          {{dIcon (if this.isFullscreen "compress" "expand")}}
+          {{dIcon
+            (if this.isFullscreen "discourse-compress" "discourse-expand")
+          }}
         </button>
       {{/if}}
     </div>

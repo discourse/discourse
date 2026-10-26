@@ -83,7 +83,7 @@ export default class VoiceRoomSidebarContextMenu extends Component {
         <DButton
           class="voice-room-sidebar-context-menu__open-page"
           @action={{this.openRoomPage}}
-          @icon="expand"
+          @icon="discourse-expand"
           @label="voice.room.open_page"
           @title="voice.room.open_page"
         />

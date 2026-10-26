@@ -765,7 +765,7 @@ export default class VoiceCallWidget extends Component {
             <DButton
               class="voice-call-widget__expand"
               @action={{this.expandWidget}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.expandWidgetTitle}}
             />
           {{else}}
@@ -773,7 +773,7 @@ export default class VoiceCallWidget extends Component {
             <DButton
               class="btn-default"
               @action={{this.openRoom}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.openRoomTitle}}
             />
             <DMenu

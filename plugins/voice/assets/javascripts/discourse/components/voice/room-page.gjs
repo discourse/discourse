@@ -626,7 +626,7 @@ export default class VoiceRoomPage extends Component {
                   <DButton
                     class="btn-icon no-text voice-room-page__fullscreen"
                     @action={{this.toggleGridFullscreen}}
-                    @icon="compress"
+                    @icon="discourse-compress"
                     @translatedAriaLabel={{this.gridFullscreenTitle}}
                     @translatedTitle={{this.gridFullscreenTitle}}
                   />
@@ -719,7 +719,7 @@ export default class VoiceRoomPage extends Component {
                       <dropdown.item>
                         <DButton
                           class="btn-transparent voice-room-page__fullscreen-trigger"
-                          @icon="expand"
+                          @icon="discourse-expand"
                           @translatedLabel={{this.gridFullscreenTitle}}
                           {{on
                             "click"
