@@ -114,7 +114,7 @@ class DirectoryItemsQuery
     direction = ascending ? :asc : :desc
 
     if DirectoryColumn.active_column_names.include?(order.to_sym)
-      items.order(order => direction, :id => :asc)
+      items.order(order => direction, :id => direction)
     elsif order == "username"
       items.joins(:user).order(users: { username: direction }, id: :asc)
     else
@@ -125,7 +125,7 @@ class DirectoryItemsQuery
   def order_by_user_field(items, order, direction, default_order)
     user_field_scope = guardian.is_staff? ? UserField.all : UserField.public_fields
     user_field = user_field_scope.find_by(name: order)
-    return items.order(default_order => direction, :id => :asc) if user_field.blank?
+    return items.order(default_order => direction, :id => direction) if user_field.blank?
 
     field_name = "#{User::USER_FIELD_PREFIX}#{user_field.id}"
     items

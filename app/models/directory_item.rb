@@ -257,12 +257,12 @@ end
 #
 # Indexes
 #
-#  index_directory_items_on_days_visited             (days_visited)
-#  index_directory_items_on_likes_given              (likes_given)
-#  index_directory_items_on_likes_received           (likes_received)
-#  index_directory_items_on_period_type_and_user_id  (period_type,user_id) UNIQUE
-#  index_directory_items_on_post_count               (post_count)
-#  index_directory_items_on_posts_read               (posts_read)
-#  index_directory_items_on_topic_count              (topic_count)
-#  index_directory_items_on_topics_entered           (topics_entered)
+#  index_directory_items_on_period_type_and_days_visited_and_id    (period_type,days_visited,id)
+#  index_directory_items_on_period_type_and_likes_given_and_id     (period_type,likes_given,id)
+#  index_directory_items_on_period_type_and_likes_received_and_id  (period_type,likes_received,id)
+#  index_directory_items_on_period_type_and_post_count_and_id      (period_type,post_count,id)
+#  index_directory_items_on_period_type_and_posts_read_and_id      (period_type,posts_read,id)
+#  index_directory_items_on_period_type_and_topic_count_and_id     (period_type,topic_count,id)
+#  index_directory_items_on_period_type_and_topics_entered_and_id  (period_type,topics_entered,id)
+#  index_directory_items_on_period_type_and_user_id                (period_type,user_id) UNIQUE
 #
