@@ -418,6 +418,24 @@ module DiscourseWorkflows
     REVIEWABLE_EVENT_SCHEMA =
       entity("reviewable", REVIEWABLE_PROPERTIES, "Review queue item payload")
 
+    TOPIC_TIMER_PROPERTIES = JSON.parse(<<~JSON).freeze
+      {
+        "id": { "type": "integer" },
+        "status_type": { "type": "string" },
+        "execute_at": { "type": "string", "format": "date-time" },
+        "category_id": { "type": ["integer", "null"] },
+        "user_id": { "type": "integer" },
+        "based_on_last_post": { "type": "boolean" },
+        "duration_minutes": { "type": ["integer", "null"] }
+      }
+    JSON
+
+    TOPIC_TIMER = { "type" => "object", "properties" => TOPIC_TIMER_PROPERTIES }.freeze
+    NULLABLE_TOPIC_TIMER = {
+      "type" => %w[object null],
+      "properties" => TOPIC_TIMER_PROPERTIES,
+    }.freeze
+
     TAG_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "id": { "type": "integer" },
