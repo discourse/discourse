@@ -18,10 +18,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     in), an opaque paging cursor, an end edge re-armed after pages that add no rows, and an abort
     signal on `control.update` work.
   - ☑ **Call sites, the AI category suggestion and SCSS.**
-  - ☐ **Recipe follow-ups:** the multiple-mode placeholder (shows "Uncategorized"), a selection
-    modifier and an empty-level text route on the drop, topic counts on chooser rows, and the
-    subcategory drop's repeated accessible name. The source's paging shape and the "and all
-    subcategories" rows await a decision.
+  - ☑ **Recipe follow-ups:** multiple pickers keep the select's own empty text, the drop marks an
+    active filter with `--filtering`, and chooser rows show topic counts.
+  - ☐ **Awaiting a decision:** the drop holds its level name as a value, so its accessible name
+    repeats it ("subcategories, subcategories") and no `placeholder` route exists for an empty
+    level; the tag drop shares the pattern. Also the source's paging shape and the "and all
+    subcategories" rows.
   - ☐ **VoiceOver pass and visual review** across themes and color modes.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category

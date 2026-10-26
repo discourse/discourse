@@ -157,12 +157,14 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   }
 
   get placeholder() {
+    // The fallback ports the single chooser's empty header; multiple pickers keep the select's own.
+    if (this.args.placeholder || this.multiple) {
+      return this.args.placeholder;
+    }
     return (
-      this.args.placeholder ||
       (!this.#readOnly.length && this.#uncategorized
         ? Category.findUncategorized()?.name
-        : undefined) ||
-      decodeCategoryText(i18n("category.choose"))
+        : undefined) || decodeCategoryText(i18n("category.choose"))
     );
   }
 
@@ -502,7 +504,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         {{#if (has-block "item")}}
           {{yield item options to="item"}}
         {{else}}
-          <CategoryBadge @ancestors={{true}} @item={{item}} />
+          <CategoryBadge @ancestors={{true}} @counts={{true}} @item={{item}} />
         {{/if}}
       </:item>
       <:selection as |item options|>

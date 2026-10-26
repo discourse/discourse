@@ -115,6 +115,10 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     );
   }
 
+  get filtering() {
+    return this.selection.id !== ALL_CATEGORIES_ID;
+  }
+
   get selection(): CategoryItem {
     const value = this.args.value;
     if (typeof value !== "object" || !value) {
@@ -319,7 +323,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
 
   <template>
     <DSelect
-      class="category-drop"
+      class={{if this.filtering "category-drop --filtering" "category-drop"}}
       ...attributes
       @debounce={{if this.site.lazy_load_categories true false}}
       @identifier={{@identifier}}

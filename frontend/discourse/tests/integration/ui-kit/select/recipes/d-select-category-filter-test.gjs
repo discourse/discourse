@@ -184,6 +184,33 @@ module(
         assert.notStrictEqual(name(".top"), name(".sub"));
       });
 
+      test("marks the trigger while a category narrows the list", async function (assert) {
+        const top = topLevel();
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+        const value = Category.findById(26);
+
+        await render(
+          <template>
+            <div class="all"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="held"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+                @value={{value}}
+              /></div>
+            <div class="none"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+                @value={{NO_CATEGORIES_ID}}
+              /></div>
+          </template>
+        );
+
+        assert.dom(select(".all").element()).doesNotHaveClass("--filtering");
+        assert.dom(select(".held").element()).hasClass("--filtering");
+        assert.dom(select(".none").element()).hasClass("--filtering");
+      });
+
       test("the held category shows its own badge", async function (assert) {
         const parent = Category.findById(2);
         const children = childrenOf(2);
@@ -725,6 +752,10 @@ module(
             [undefined, "tail"],
             "the source's cursor reaches its next request"
           );
+          // Measured rows can outgrow the estimate, so read on to the new end as a reader would.
+          list.scrollTop = list.scrollHeight;
+          await triggerEvent(list, "scroll");
+          await settledAfterFrame();
           assert
             .dom(`[role='option'][data-value='${rows.at(-1).id}']`)
             .exists("the final source row is reachable");

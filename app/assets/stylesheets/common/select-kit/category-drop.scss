@@ -121,4 +121,8 @@
   &:active {
     @include default-focus;
   }
+
+  &.--filtering {
+    border-color: var(--d-nav-border-color--active);
+  }
 }

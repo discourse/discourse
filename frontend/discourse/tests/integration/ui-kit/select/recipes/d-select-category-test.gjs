@@ -665,9 +665,46 @@ module(
 
         assert.strictEqual(placeholderText(), "root none label");
       });
+
+      test("multiple mode keeps the select's own empty text and name", async function (assert) {
+        this.siteSettings.allow_uncategorized_topics = true;
+
+        await render(<template><Host /></template>);
+
+        assert.strictEqual(
+          placeholderText(),
+          i18n("d_select.add_placeholder"),
+          "an empty multiple picker invites adding"
+        );
+        assert
+          .dom("[role='combobox']")
+          .hasAria("label", i18n("d_select.label"), "no category names it");
+      });
     });
 
     module("rows", function () {
+      test("options show topic counts and selections do not", async function (assert) {
+        Site.current().updateCategories([
+          {
+            id: 9802,
+            name: "Counted",
+            slug: "counted",
+            permission: 1,
+            topic_count: 17,
+          },
+        ]);
+
+        await render(
+          <template><Host @multiple={{false}} @value={{9802}} /></template>
+        );
+        await select().open();
+        await select().search("counted");
+
+        assert.dom(".topic-count", optionFor(9802)).hasText("× 17");
+        await select().close();
+        assert.dom(".topic-count", select().element()).doesNotExist();
+      });
+
       test("single mode shows decoded descriptions, multiple mode does not by default", async function (assert) {
         Site.current().updateCategories([
           {
