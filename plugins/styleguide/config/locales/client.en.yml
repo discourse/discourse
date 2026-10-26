@@ -182,6 +182,10 @@ en:
           paged_cursor_example: "Paginated server source reporting only more-ness"
           paged_cursor_note: "Rows report a set size of -1 while pages remain."
           large_list_note: "5000 options; only the rows in view are mounted."
+          large_category_list_example: "Large category list"
+          large_category_list_load: "Load 10,000 sample categories"
+          large_category_list_sample: "Sample category %{path}"
+          large_category_list_note: "Adds 10,000 categories to this page's site data until you leave the page. Reload to start over."
           events_note: "Opened %{opened} times, closed %{closed} times."
           placeholders:
             add_people: "Add people"
@@ -355,6 +359,8 @@ en:
           readonly_try_this: "Tab through both this and the \"Disabled\" example — only this one receives focus."
           large_list_description: "Five thousand client-side options rendered in full. Only the rows in view are mounted, and no render cap applies to a client source, so the last option is genuinely reachable."
           large_list_try_this: "Scroll to the very bottom — option 5000 exists, and a screen reader hears the true total throughout."
+          large_category_list_description: "DSelectCategory over 10,000 preloaded categories in three levels, the size a large site can reach. The list is answered from the site's own categories a page at a time, so opening, typing and picking stay fast however many there are."
+          large_category_list_try_this: "Load the categories, then type \"sample category 42-3\", pick several, and keep typing while they stay selected."
           teams:
             design: "Design"
             engineering: "Engineering"

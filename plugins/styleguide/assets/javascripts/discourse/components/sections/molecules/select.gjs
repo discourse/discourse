@@ -22,6 +22,8 @@ import MinimumCharactersSelectExample from "../../examples/molecules/select/data
 import minimumCharactersSelectSource from "../../examples/molecules/select/data/minimum-characters?source=file";
 import PagedSelectExample from "../../examples/molecules/select/data/paged.gjs";
 import pagedSelectSource from "../../examples/molecules/select/data/paged?source=file";
+import LargeCategoryListSelectExample from "../../examples/molecules/select/limits/large-category-list.gjs";
+import largeCategoryListSelectSource from "../../examples/molecules/select/limits/large-category-list?source=file";
 import LargeListSelectExample from "../../examples/molecules/select/limits/large-list.gjs";
 import largeListSelectSource from "../../examples/molecules/select/limits/large-list?source=file";
 import ListHeaderFooterExample from "../../examples/molecules/select/list/header-footer.gjs";
@@ -452,6 +454,27 @@ export default class Select extends Component {
           </:default>
           <:note>
             {{~i18n "styleguide.sections.select.large_list_note"~}}
+          </:note>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{largeCategoryListSelectSource}}
+          @description={{i18n
+            "styleguide.sections.select.large_category_list_description"
+          }}
+          @title={{i18n
+            "styleguide.sections.select.large_category_list_example"
+          }}
+          @tryThis={{i18n
+            "styleguide.sections.select.large_category_list_try_this"
+          }}
+        >
+          <:default>
+            <div class="select-examples__control">
+              <LargeCategoryListSelectExample />
+            </div>
+          </:default>
+          <:note>
+            {{~i18n "styleguide.sections.select.large_category_list_note"~}}
           </:note>
         </StyleguideExample>
       </Group>
