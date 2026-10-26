@@ -346,7 +346,7 @@ class PostMover
       @post_ids_after_move.map { |post_id| post_id == post.id ? new_post.id : post_id }
 
     DiscourseEvent.trigger(:first_post_moved, new_post, post)
-    DiscourseEvent.trigger(:post_moved, new_post, original_topic.id, post)
+    DiscourseEvent.trigger(:post_moved, new_post, original_topic.id, post, acting_user: user)
 
     # we don't want to keep the old topic's OP bookmarked when we are
     # moving it into a new topic
@@ -383,7 +383,7 @@ class PostMover
         @post_ids_after_move.map { |post_id| post_id == post.id ? moved_post.id : post_id }
     end
 
-    DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id, post)
+    DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id, post, acting_user: user)
 
     # Move any links from the post to the new topic
     moved_post.topic_links.update_all(topic_id: destination_topic.id)

@@ -72,6 +72,24 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableStatusChanged::V1 do
       expect(output).to match_node_output_schema(described_class)
     end
 
+    it "exposes the user whose new score reopened the reviewable as actor" do
+      admin = Fabricate(:admin)
+      reviewable.transition_to(:rejected, admin)
+      flagger = Fabricate(:user)
+      events =
+        DiscourseEvent.track_events(:reviewable_transitioned_to) do
+          ReviewableFlaggedPost.needs_review!(
+            target: reviewable.target,
+            created_by: flagger,
+          ).add_score(flagger, ReviewableScore.types[:off_topic])
+        end
+
+      output = described_class.new(*events.sole[:params]).output
+
+      expect(output[:reviewable]).to include(status: "pending")
+      expect(output[:actor]).to include(id: flagger.id)
+    end
+
     it "uses the target account for user reviewables" do
       reviewable_user = Fabricate(:reviewable_user)
 

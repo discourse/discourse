@@ -120,7 +120,9 @@ RSpec.describe Reviewable, type: :model do
       expect(events.map { |event| event[:event_name] }).to eq(
         %i[reviewable_transitioned_to reviewable_score_updated],
       )
-      expect(events.first[:params]).to eq([:pending, Reviewable.find_by(target: user)])
+      expect(events.first[:params]).to eq(
+        [:pending, Reviewable.find_by(target: user), { acting_user: admin }],
+      )
     end
 
     it "does not trigger a transition to pending when the re-opening score takes action" do

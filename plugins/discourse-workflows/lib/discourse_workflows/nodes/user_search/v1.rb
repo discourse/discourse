@@ -4,15 +4,11 @@ module DiscourseWorkflows
   module Nodes
     module UserSearch
       class V1 < NodeType
-        OUTPUT_SCHEMA = {
-          "$schema" => Schema::DRAFT_URI,
-          "type" => "object",
-          "properties" => {
-            "query" => {
-              "type" => "string",
-            },
-          },
-        }.freeze
+        OUTPUT_SCHEMA =
+          Schema.merge(
+            Schema.document("query" => { "type" => "string" }),
+            Schema::ACTOR_SCHEMA,
+          ).freeze
 
         description(
           name: "trigger:user_search",
@@ -26,9 +22,10 @@ module DiscourseWorkflows
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
         )
 
-        def initialize(query, *)
+        def initialize(query, payload = {})
           super(parameters: {})
           @query = query.to_s
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -36,7 +33,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { query: @query }
+          { query: @query, actor: serialize_user(@actor) }
         end
       end
     end
