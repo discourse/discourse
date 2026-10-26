@@ -50,6 +50,18 @@ module DiscourseWorkflows
       serialize_record(user, DiscourseWorkflows::UserSerializer, scope: guardian)
     end
 
+    # `attributes` lets a trigger serialize the timer as it was before a change.
+    def serialize_timer(timer, attributes = timer.attributes)
+      attributes
+        .slice(*::TopicTimer::EVENT_ATTRIBUTES)
+        .symbolize_keys
+        .merge(
+          id: timer.id,
+          status_type: ::TopicTimer.types[attributes["status_type"]].to_s,
+          execute_at: attributes["execute_at"].iso8601,
+        )
+    end
+
     def serialize_basic_group(group)
       { id: group.id, name: group.name, full_name: group.full_name, automatic: group.automatic? }
     end
