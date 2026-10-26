@@ -19,7 +19,7 @@ import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
-import { importSync } from "@embroider/macros";
+import { getGlobalConfig, importSync, macroCondition } from "@embroider/macros";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -99,7 +99,10 @@ async function loadThemeFromModulePreload(link) {
       window.Testem ? String(error) : error
     );
 
-    if (DEBUG && (isRailsTesting() || isTesting())) {
+    if (
+      macroCondition(getGlobalConfig().discourse.testSupport) &&
+      (isRailsTesting() || isTesting())
+    ) {
       throw new Error(error, { cause: error });
     }
 
@@ -116,11 +119,14 @@ async function loadPluginFromModulePreload(link) {
     }
     registerRouteBundles(bundle, `discourse/plugins/${pluginName}`);
   } catch (error) {
-    if (DEBUG) {
-      if (isRailsTesting() || isTesting()) {
-        throw new Error(error, { cause: error });
-      }
+    if (
+      macroCondition(getGlobalConfig().discourse.testSupport) &&
+      (isRailsTesting() || isTesting())
+    ) {
+      throw new Error(error, { cause: error });
+    }
 
+    if (DEBUG) {
       let { addError } = importSync("discourse/static/development-error");
       addError(error, link.dataset.pluginName, link.href);
     }

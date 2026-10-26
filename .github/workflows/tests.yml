@@ -66,8 +66,7 @@ jobs:
       S3_SYSTEM_TEST_SECRET_ACCESS_KEY: minioadmin
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
-      EMBER_ENV: development
-      DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && '1' || '' }}
+      EMBER_ENV: ${{ matrix.build_type == 'system' && 'production' || 'development' }}
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright

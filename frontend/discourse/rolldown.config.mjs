@@ -77,7 +77,9 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       discourse: "discourse.js",
-      ...(!isProduction || process.env.FORCE_BUILD_TESTS
+      ...(!isProduction ||
+      process.env.RAILS_ENV === "test" ||
+      process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
             "qunit-live-reload": "qunit-live-reload.js",
@@ -115,7 +117,9 @@ export function buildConfig({ devMode } = {}) {
       discourseChunkNamesPlugin(),
       chunkImportMapPlugin({
         root: import.meta.dirname,
-        noImportMap: (chunk) => chunk.facadeModuleId?.includes("/app/workers/"),
+        noImportMap: (chunk) =>
+          chunk.facadeModuleId?.includes("/app/workers/") ||
+          chunk.facadeModuleId?.endsWith("/qunit-live-reload.js"),
         onImportMap: (map) => (importMap = map),
       }),
       {
