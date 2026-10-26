@@ -21,20 +21,38 @@ RSpec.describe DiscourseWorkflows::NodeType do
       )
     end
 
-    it "points every deprecated version to a registered, non-deprecated successor" do
+    it "points every deprecated version to registered, non-deprecated successors" do
       DiscourseWorkflows::Registry
         .nodes(include_disabled_plugins: true)
         .select(&:deprecated?)
         .each do |node_class|
-          successor =
-            DiscourseWorkflows::Registry.find_node_type(
-              node_class.identifier,
-              version: node_class.deprecation[:superseded_by],
-              include_disabled_plugins: true,
-            )
+          deprecation = node_class.deprecation
+          successors =
+            Array(deprecation[:replaced_by]).map do |identifier|
+              [
+                identifier,
+                DiscourseWorkflows::Registry.latest_node_type(
+                  identifier,
+                  include_disabled_plugins: true,
+                ),
+              ]
+            end
+          if deprecation[:superseded_by]
+            successors << [
+              "#{node_class.identifier} #{deprecation[:superseded_by]}",
+              DiscourseWorkflows::Registry.find_node_type(
+                node_class.identifier,
+                version: deprecation[:superseded_by],
+                include_disabled_plugins: true,
+              ),
+            ]
+          end
 
-          expect(successor).to be_present, "#{node_class.name} has no registered successor"
-          expect(successor).not_to be_deprecated, "#{successor.name} is deprecated"
+          expect(successors).to be_present, "#{node_class.name} has no successor"
+          successors.each do |label, successor|
+            expect(successor).to be_present, "#{node_class.name}: #{label} isn't registered"
+            expect(successor).not_to be_deprecated, "#{node_class.name}: #{label} is deprecated"
+          end
         end
     end
   end

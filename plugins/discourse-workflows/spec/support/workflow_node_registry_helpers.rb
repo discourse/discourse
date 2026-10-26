@@ -2,11 +2,11 @@
 
 module DiscourseWorkflows
   module WorkflowNodeRegistryHelpers
-    def register_versioned_workflow_nodes(identifier, v1_deprecation: nil)
+    def register_versioned_workflow_nodes(identifier, v1_deprecation: nil, v1_upgrade: nil)
       v1 =
         Class.new(NodeType) do
           description(name: identifier, version: "1.0")
-          deprecated(**v1_deprecation) if v1_deprecation
+          deprecated(**v1_deprecation.to_h, &v1_upgrade) if v1_deprecation || v1_upgrade
         end
       v2 = Class.new(v1) { description(superclass.description.merge(version: "2.0")) }
       (@registered_workflow_nodes ||= []).push(v1, v2)
