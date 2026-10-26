@@ -29,6 +29,7 @@ import {
   DEFAULT_TILE_ASPECT,
   trackGridSize,
 } from "../../lib/voice/video-grid-layout.js";
+import VoiceInviteUsersModal from "../modal/voice-invite-users.gjs";
 import VoiceRoomInfoModal from "../modal/voice-room-info.gjs";
 import VoiceInviteAgentButton from "../voice-invite-agent-button.gjs";
 import VoiceCallControls from "./call-controls.gjs";
@@ -469,6 +470,18 @@ export default class VoiceRoomPage extends Component {
   }
 
   @action
+  openInviteModal(closeMenu) {
+    closeMenu?.();
+    this.modal.show(VoiceInviteUsersModal, { model: { room: this.room } });
+  }
+
+  @action
+  toggleFullscreenFromMenu(closeMenu) {
+    toggleFullscreen(document.documentElement);
+    closeMenu?.();
+  }
+
+  @action
   dockAndClose(closeMenu) {
     closeMenu?.();
     this.dockRoom();
@@ -703,6 +716,16 @@ export default class VoiceRoomPage extends Component {
                         @label="voice.room.widget_mode"
                       />
                     </dropdown.item>
+                    {{#if this.room.can_invite}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent"
+                          @action={{fn this.openInviteModal roomMenu.close}}
+                          @icon="user-plus"
+                          @label="voice.invite.menu"
+                        />
+                      </dropdown.item>
+                    {{/if}}
                     {{#if this.transcriptAvailable}}
                       <dropdown.item>
                         <DButton

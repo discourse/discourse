@@ -6,7 +6,6 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import roomIcon, { roomBadge } from "../../lib/voice/room-icon.js";
-import VoiceInviteUsersModal from "../modal/voice-invite-users.gjs";
 import VoiceRoomInfoModal from "../modal/voice-room-info.gjs";
 import VoiceRecordingBadge from "./recording-badge.gjs";
 import VoiceTranscriptBadge from "./transcript-badge.gjs";
@@ -44,15 +43,6 @@ const RoomTitle = <template>
 </template>;
 
 const RoomActions = <template>
-  {{#if @room.can_invite}}
-    <DButton
-      class="btn-transparent voice-room-header__invite"
-      @action={{@onInvite}}
-      @ariaLabel="voice.invite.menu"
-      @icon="user-plus"
-      @title="voice.invite.menu"
-    />
-  {{/if}}
   {{#if @canOpenChat}}
     <DButton
       class="btn-transparent voice-room-header__open-chat"
@@ -92,13 +82,6 @@ export default class VoiceRoomHeader extends Component {
     this.modal.show(VoiceRoomInfoModal, { model: { room: this.args.room } });
   }
 
-  @action
-  openInviteModal() {
-    this.modal.show(VoiceInviteUsersModal, {
-      model: { room: this.args.room },
-    });
-  }
-
   <template>
     <header class="voice-room-header">
       {{#if this.chatNavbar}}
@@ -113,7 +96,6 @@ export default class VoiceRoomHeader extends Component {
           <navbar.Actions>
             <RoomActions
               @canOpenChat={{@canOpenChat}}
-              @onInvite={{this.openInviteModal}}
               @onOpenChat={{@onOpenChat}}
               @room={{@room}}
             />
@@ -131,7 +113,6 @@ export default class VoiceRoomHeader extends Component {
           <div class="voice-room-header__actions">
             <RoomActions
               @canOpenChat={{@canOpenChat}}
-              @onInvite={{this.openInviteModal}}
               @onOpenChat={{@onOpenChat}}
               @room={{@room}}
             />
