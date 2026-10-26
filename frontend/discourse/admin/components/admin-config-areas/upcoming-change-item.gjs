@@ -63,7 +63,9 @@ export default class UpcomingChangeItem extends Component {
 
     if (allow.includes("everyone")) {
       options.push({
-        label: i18n("admin.upcoming_changes.enabled_for_options.everyone"),
+        label: i18n(
+          "admin.upcoming_changes.enabled_for_options.eligible_users"
+        ),
         value: "everyone",
       });
     }
@@ -232,7 +234,7 @@ export default class UpcomingChangeItem extends Component {
       );
     } else if (enabledFor === "everyone") {
       enabledForLabel = i18n(
-        "admin.upcoming_changes.enabled_for_options.everyone"
+        "admin.upcoming_changes.enabled_for_options.eligible_users"
       );
     } else if (enabledFor === this.staffGroupName) {
       enabledForLabel = i18n(
@@ -386,7 +388,7 @@ export default class UpcomingChangeItem extends Component {
       </td>
       <td class="d-table__cell --detail upcoming-change__toggle-cell">
         <div class="d-table__mobile-label">
-          {{i18n "admin.upcoming_changes.enabled_for"}}
+          {{i18n "admin.upcoming_changes.availability"}}
         </div>
 
         <DNativeSelect

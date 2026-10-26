@@ -6917,7 +6917,7 @@ en:
         plugin: "Plugin"
         metadata: "Metadata"
         enabled: "Enabled"
-        enabled_for: "Enabled for..."
+        availability: "Availability..."
         show_image: "Show image"
         edit_groups: "Edit opt-in groups"
         groups_updated: "Groups updated!"
@@ -6941,7 +6941,7 @@ en:
         default_warning_short: "The default for this setting has changed, read more about this in the <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming changes</a> page."
         enabled_for_options:
           no_one: "No one"
-          everyone: "Everyone"
+          eligible_users: "Eligible users"
           staff: "%{staffGroupName} only"
           specific_groups: "Specific group(s)"
           specific_groups_with_group_names:
