@@ -19,6 +19,20 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableStatusChanged::V1 do
         expect(node_class.property_schema.keys).to eq([:reviewable_types])
       end
     end
+
+    it "provides reviewable type options to the editor for every fixed trigger" do
+      fixed_triggers.each_value do |node_class|
+        node_type =
+          DiscourseWorkflows::NodeTypeSerializer.new(
+            identifier: node_class.identifier,
+            available_versions: [node_class.version],
+          ).to_h
+
+        expect(node_type.dig(:metadata, "reviewable_types")).to include(
+          { id: "ReviewableFlaggedPost", name: "Reviewable flagged post" },
+        )
+      end
+    end
   end
 
   describe "#valid?" do
