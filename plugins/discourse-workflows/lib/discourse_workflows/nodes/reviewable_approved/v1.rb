@@ -13,13 +13,6 @@ module DiscourseWorkflows
           ),
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "reviewable_types"
-            reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
-          end
-        end
-
         def output
           { reviewable: serialize_reviewable(@reviewable), actor: serialize_user(@actor) }
         end

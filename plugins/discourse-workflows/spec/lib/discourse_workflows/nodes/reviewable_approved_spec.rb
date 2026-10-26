@@ -4,9 +4,15 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableApproved::V1 do
   fab!(:reviewable, :reviewable_flagged_post)
 
   describe ".property_schema" do
-    it "includes reviewable type options for the multi-select control" do
-      expect(described_class.property_schema.dig(:reviewable_types, :options)).to include(
-        { value: "ReviewableFlaggedPost", label: "Reviewable flagged post" },
+    it "provides reviewable type options to the editor" do
+      node_type =
+        DiscourseWorkflows::NodeTypeSerializer.new(
+          identifier: described_class.identifier,
+          available_versions: [described_class.version],
+        ).to_h
+
+      expect(node_type.dig(:metadata, "reviewable_types")).to include(
+        { id: "ReviewableFlaggedPost", name: "Reviewable flagged post" },
       )
     end
   end

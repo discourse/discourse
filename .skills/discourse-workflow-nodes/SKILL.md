@@ -36,6 +36,11 @@ of what it does, and has a trigger counterpart when it changes state.
 
 ## Settings
 
+- Option lists that come from site data or runtime registries (groups, badges, channels, reviewable types,
+  site settings) use `type_options: { load_options_method: "…" }`, answered by `self.load_options_context`.
+  Never compute them inside `properties`: a node's definition must not depend on the site or on which plugins
+  are enabled.
+- Static option lists stay inline in `options`.
 - The AI author resolves loaded option values through `workflow_resolve_entity(kind: "node_option")`, which
   calls the node's `self.load_options_context` the way the editor does, so a new option list needs no
   AI-specific code. Loaders that need credentials return nothing there.
