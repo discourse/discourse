@@ -43,21 +43,31 @@ module Jobs
 
       def finish(event_date)
         return if !event_date.ended?
-        event_date.update!(finished_at: Time.current)
 
-        # The occurrence goes along with the event: `set_next_recurrent_event_date` below moves
-        # the event on to the next one, so it can no longer name the one that ended.
-        DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
-        MessageBus.publish(
-          "/topic/#{event_date.event.post.topic_id}",
-          { reload_topic: true, refresh_stream: true },
-          event_date.event.post.topic.secure_audience_publish_messages,
-        )
+        # Roll back completion and successor creation together if advancement fails.
+        event_date.event.with_lock do
+          event_date.reload
+          next if event_date.finished_at || !event_date.ended?
+          event_date.update!(finished_at: Time.current)
 
-        return if event_date.event.recurrence.blank?
-        event_date.event.set_next_recurrent_event_date
-        TopicTrackingState.publish_latest(event_date.event.post.topic)
-        event_date.event.set_topic_bump
+          recurring = event_date.event.recurring?
+          event_date.event.set_next_recurrent_event_date if recurring
+
+          DB.after_commit do
+            # The event now points to its successor, so pass the finished occurrence explicitly.
+            DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
+            MessageBus.publish(
+              "/topic/#{event_date.event.post.topic_id}",
+              { reload_topic: true, refresh_stream: true },
+              event_date.event.post.topic.secure_audience_publish_messages,
+            )
+
+            if recurring
+              TopicTrackingState.publish_latest(event_date.event.post.topic)
+              event_date.event.set_topic_bump
+            end
+          end
+        end
       end
 
       def due_reminders(event_date)

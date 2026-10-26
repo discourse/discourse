@@ -154,8 +154,10 @@ module DiscourseEvents
         return unless sync_event_date
 
         reset_invitees_for_next_occurrence
-        notify_if_new_event
-        publish_update!
+        DB.after_commit do
+          notify_if_new_event
+          publish_update!
+        end
       end
 
       def set_topic_bump
