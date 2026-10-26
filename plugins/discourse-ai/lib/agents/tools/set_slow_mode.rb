@@ -47,34 +47,36 @@ module DiscourseAi
         end
 
         def invoke
-          topic = Topic.find_by(id: parameters[:topic_id])
-          if !topic
-            return error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.not_found"))
-          end
-
-          if !guardian.can_moderate_topic?(topic)
-            return error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.not_allowed"))
-          end
-
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.no_reason"))
           end
 
-          slow_mode_seconds = parameters[:slow_mode_seconds].to_i
-          topic.update!(slow_mode_seconds: slow_mode_seconds)
-
-          enabled_until =
-            if slow_mode_seconds > 0 && parameters[:duration_hours]
-              parameters[:duration_hours].to_i.hours.from_now
+          Topic::UpdateSlowMode.call(
+            guardian:,
+            params: {
+              topic_id: parameters[:topic_id],
+              seconds: parameters[:slow_mode_seconds],
+              enabled_until: parameters[:duration_hours],
+            },
+          ) do
+            on_success do
+              { status: "success", message: I18n.t("discourse_ai.ai_bot.set_slow_mode.success") }
             end
-
-          topic.set_or_create_timer(
-            TopicTimer.types[:clear_slow_mode],
-            enabled_until,
-            by_user: acting_user,
-          )
-
-          { status: "success", message: I18n.t("discourse_ai.ai_bot.set_slow_mode.success") }
+            on_failed_contract do |contract|
+              error_response(
+                I18n.t(
+                  "discourse_ai.ai_bot.set_slow_mode.errors.invalid",
+                  errors: contract.errors.full_messages.join(", "),
+                ),
+              )
+            end
+            on_model_not_found(:topic) do
+              error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.not_found"))
+            end
+            on_failed_policy(:can_update_slow_mode) do
+              error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.not_allowed"))
+            end
+          end
         end
 
         def description_args
