@@ -695,6 +695,7 @@ module ApplicationHelper
 
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
+    return preview_scheme_id if preview_scheme_id
 
     if user_scheme_id
       return user_scheme_id unless theme_limits_color_schemes?
@@ -722,6 +723,8 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
+    return preview_dark_scheme_id if preview_dark_scheme_id
+
     if user_dark_scheme_id
       return user_dark_scheme_id unless theme_limits_color_schemes?
       return user_dark_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
@@ -732,6 +735,23 @@ module ApplicationHelper
     return dark_id if dark_id.present?
     return theme&.color_scheme_id if theme_limits_color_schemes?
     -1
+  end
+
+  # Staff can try out palettes, including ones no theme uses yet, by passing
+  # them in the URL, the same way `preview_theme_id` previews a theme.
+  def preview_scheme_id
+    return @preview_scheme_id if defined?(@preview_scheme_id)
+    @preview_scheme_id = previewed_color_scheme_id(:preview_color_scheme_id)
+  end
+
+  def preview_dark_scheme_id
+    return @preview_dark_scheme_id if defined?(@preview_dark_scheme_id)
+    @preview_dark_scheme_id = previewed_color_scheme_id(:preview_dark_color_scheme_id)
+  end
+
+  def previewed_color_scheme_id(param_name)
+    return if params[param_name].blank? || !guardian.is_staff?
+    ColorScheme.valid_id(params[param_name])
   end
 
   def theme_limits_color_schemes?
