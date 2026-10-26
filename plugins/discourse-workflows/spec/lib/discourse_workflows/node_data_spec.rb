@@ -81,6 +81,28 @@ RSpec.describe DiscourseWorkflows::NodeData do
       )
     end
 
+    it "filters credentials with the declarations of the node's version" do
+      _v1, v2 = register_versioned_workflow_nodes("action:node_data_versioned_credentials_test")
+      v2.description(
+        v2.description.merge(credentials: [{ name: "auth", credential_types: ["basic_auth"] }]),
+      )
+      credentials = { "auth" => { "id" => 12, "credential_type" => "basic_auth" } }
+      split = ->(type_version) do
+        described_class.split(
+          node_type: "action:node_data_versioned_credentials_test",
+          type_version:,
+          parameters: {
+          },
+          credentials:,
+        )[
+          "credentials"
+        ]
+      end
+
+      expect(split.call("1.0")).to eq({})
+      expect(split.call("2.0")).to eq("auth" => { "id" => "12", "credential_type" => "basic_auth" })
+    end
+
     it "removes credentials from node types without credential declarations" do
       split =
         described_class.split(
