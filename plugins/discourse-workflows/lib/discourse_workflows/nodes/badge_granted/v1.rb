@@ -13,7 +13,9 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :user_badge_granted,
-          output_contracts: [{ schema: Schema::BADGE_GRANTED_SCHEMA }],
+          output_contracts: [
+            { schema: Schema.merge(Schema::BADGE_GRANTED_SCHEMA, Schema::ACTOR_SCHEMA) },
+          ],
           properties: {
             badge_id: {
               type: :integer,
@@ -47,10 +49,11 @@ module DiscourseWorkflows
           end
         end
 
-        def initialize(badge_id, user_id)
+        def initialize(badge_id, user_id, payload = {})
           super(parameters: {})
           @badge = ::Badge.find_by(id: badge_id)
           @user = ::User.find_by(id: user_id)
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -58,7 +61,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { user: serialize_user(@user), badge: serialize_badge }
+          { user: serialize_user(@user), badge: serialize_badge, actor: serialize_user(@actor) }
         end
 
         def matches?(trigger_ctx)

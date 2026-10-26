@@ -328,6 +328,25 @@ RSpec.describe Promotion do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:promotion) { Promotion.new(user) }
 
+    it "triggers user_promoted with the admin who changed the trust level" do
+      admin = Fabricate(:admin)
+
+      event =
+        DiscourseEvent.track(:user_promoted) do
+          promotion.change_trust_level!(TrustLevel[1], log_action_for: admin)
+        end
+
+      expect(event[:params]).to eq(
+        [{ user_id: user.id, new_trust_level: 1, old_trust_level: 0, acting_user: admin }],
+      )
+    end
+
+    it "triggers user_promoted with the system user for automatic changes" do
+      event = DiscourseEvent.track(:user_promoted) { promotion.change_trust_level!(TrustLevel[1]) }
+
+      expect(event[:params].first).to include(acting_user: Discourse.system_user)
+    end
+
     context "when the user has no emails" do
       before { user.user_emails.delete_all }
 
