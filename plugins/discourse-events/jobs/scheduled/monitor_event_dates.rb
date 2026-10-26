@@ -24,7 +24,7 @@ module Jobs
             event_date_id: event_date.id,
             reminder: reminder[:description],
           )
-          event_date.update!(reminder_counter: event_date.reminder_counter + 1)
+          event_date.update!(reminder_counter: event_date.reminder_counter.to_i + 1)
         end
       end
 
@@ -85,7 +85,7 @@ module Jobs
           end
           .select { |reminder| reminder[:date] <= Time.current }
           .sort_by { |reminder| reminder[:date] }
-          .drop(event_date.reminder_counter)
+          .drop(event_date.reminder_counter.to_i)
       end
     end
   end
