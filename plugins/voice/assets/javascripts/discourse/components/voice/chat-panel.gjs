@@ -289,6 +289,15 @@ export default class VoiceChatPanel extends Component {
     >
       {{#if this.chatNavbar}}
         <this.chatNavbar as |navbar|>
+          {{#if (and this.site.mobileView @onClose)}}
+            <DButton
+              class="btn-transparent no-text c-navbar__back-button"
+              @action={{@onClose}}
+              @ariaLabel="voice.chat.close"
+              @icon="chevron-left"
+              @title="voice.chat.close"
+            />
+          {{/if}}
           <navbar.Title @icon="comment" @title={{i18n "voice.chat.title"}} />
           <navbar.Actions>
             {{#if this.canOpenInChat}}
@@ -300,7 +309,7 @@ export default class VoiceChatPanel extends Component {
                 @title="voice.chat.open_in_chat"
               />
             {{/if}}
-            {{#if @onClose}}
+            {{#if (and this.site.desktopView @onClose)}}
               <DButton
                 class="btn-transparent voice-chat__close"
                 @action={{@onClose}}
