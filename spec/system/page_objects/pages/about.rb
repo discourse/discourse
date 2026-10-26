@@ -53,7 +53,7 @@ module PageObjects
       end
 
       def has_no_extra_groups?
-        has_no_css?("--custom-group")
+        has_no_css?(".--custom-group")
       end
 
       def has_site_created_less_than_1_month_ago?

@@ -26,7 +26,7 @@ describe "Edit Category Security" do
 
   before { sign_in(current_user) }
 
-  it "lists the groups that can access the category" do
+  it "lets an admin inspect category access, follow a group and remove its permission" do
     category_page.visit_security(category)
     expect(category_page).to have_public_access_message
     expect(category_permission_row).to have_group_permission(
@@ -34,16 +34,17 @@ describe "Edit Category Security" do
       %w[create reply],
     )
     expect(category_permission_row).to have_group_permission("everyone", %w[create reply])
-  end
 
-  it "can navigate to a group" do
-    category_page.visit_security(category)
     category_permission_row.navigate_to_group(category_group_1.group.name)
     expect(page).to have_current_path("/g/#{category_group_1.group.name}")
-  end
 
-  it "can delete a group's permissions" do
-    category_page.visit_security(category)
+    page.go_back
+    expect(page).to have_current_path("/c/#{category.slug}/edit/security")
+    expect(category_permission_row).to have_group_permission(
+      category_group_1.group_name,
+      %w[create reply],
+    )
+
     category_permission_row.remove_group_permission(category_group_1.group.name)
     category_page.save_settings
     category_page.visit_security(category)

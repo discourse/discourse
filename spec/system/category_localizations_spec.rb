@@ -73,31 +73,18 @@ describe "Category Localizations" do
         expect(category_page).to have_setting_tab("localizations")
       end
 
-      it "shows no language when category has no locale" do
+      it "lets admins load a source language then save and clear a category language" do
+        category_page.visit_edit_localizations(category)
+        expect(form.field("locale")).to have_value("en")
         category_without_locale = Fabricate(:category, locale: nil)
         category_page.visit_edit_localizations(category_without_locale)
-
         expect(form.field("locale")).to have_value(
           PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
         )
-      end
-
-      it "loads the saved locale correctly" do
-        category_page.visit_edit_localizations(category)
-
-        expect(form.field("locale")).to have_value("en")
-      end
-
-      it "allows setting and persisting the category locale" do
-        category_without_locale = Fabricate(:category, locale: nil)
-        category_page.visit_edit_localizations(category_without_locale)
-
         form.field("locale").select("ja")
         category_page.save_settings
-
         page.refresh
         expect(form.field("locale")).to have_value("ja")
-
         form.field("locale").select_none
         category_page.save_settings
         page.refresh
@@ -109,13 +96,9 @@ describe "Category Localizations" do
       describe "when editing a category with no category localizations" do
         fab!(:mono_category, :category)
 
-        it "shows a hint to add new localizations" do
+        it "lets admins add translated category names and descriptions from an empty collection" do
           category_page.visit_edit_localizations(mono_category)
           expect(form).to have_an_alert(I18n.t("js.category.localization.hint"))
-        end
-
-        it "allows adding new localizations" do
-          category_page.visit_edit_localizations(mono_category)
           category_page.find(".edit-category-tab-localizations .add-localization").click
           form.field("localizations.0.locale").select("es")
           form.field("localizations.0.name").fill_in("Solicitud de función")
@@ -215,7 +198,7 @@ describe "Category Localizations" do
       before { SiteSetting.content_localization_language_switcher = "all" }
 
       shared_examples_for "navigating the site via various category links" do
-        it "keeps the translated category name when navigating sidebar" do
+        it "lets visitors follow translated categories through sidebar boxes filters and dropdowns" do
           visit("/")
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click
@@ -236,9 +219,7 @@ describe "Category Localizations" do
           sub_category_dropdown = get_category_dropdown(2)
           expect(parent_category_dropdown).to have_selected_name("Solicitudes")
           expect(sub_category_dropdown).to have_selected_name("Subcategoría")
-        end
 
-        it "keeps the translated category name when navigating topic filters" do
           visit("/categories")
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click
@@ -255,9 +236,7 @@ describe "Category Localizations" do
           sidebar.click_topics_button
 
           expect(topic_list.topic(cat_topic)).to have_text("Solicitudes")
-        end
 
-        it "keeps the translated category name when navigating category dropdown" do
           visit("/latest")
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click

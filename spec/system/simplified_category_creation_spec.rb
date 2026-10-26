@@ -14,10 +14,11 @@ describe "Simplified Category Creation" do
   before { sign_in(admin) }
 
   describe "Selecting category type when setting up a new category" do
-    it "automatically skips category type selection when only one type (discussion) is available" do
+    it "takes an admin directly to the discussion form when it is the only category type" do
       category_page.visit_new_category
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
       expect(page).to have_current_path("/new-category/general")
+      expect(page).to have_no_css(".category-type-selector")
     end
 
     context "when multiple types are available" do
@@ -64,48 +65,45 @@ describe "Simplified Category Creation" do
       expect(created_category.color).to eq("FF5733")
     end
 
-    it "edits an existing category name" do
+    it "lets an admin correct an invalid color and configure an existing category" do
+      parent_category = Fabricate(:category, name: "Parent")
       category_page.visit_general(category)
 
-      form.field("name").fill_in("Updated Name")
+      form.field("color").fill_in("GGGGGG")
       category_page.save_settings
-
-      expect(category.reload.name).to eq("Updated Name")
-    end
-
-    it "changes category color" do
-      category_page.visit_general(category)
+      expect(form.field("color")).to have_errors(
+        I18n.t("js.category.color_validations.non_hexdecimal"),
+      )
 
       form.field("color").fill_in("123ABC")
       category_page.save_settings
-
+      expect(category_page).to have_no_unsaved_changes
       expect(category.reload.color).to eq("123ABC")
-    end
 
-    it "selects a parent category" do
-      parent_category = Fabricate(:category, name: "Parent")
-      category_page.visit_general(category)
+      form.field("name").fill_in("Updated Name")
+      category_page.save_settings
+      expect(category_page).to have_no_unsaved_changes
+      expect(category.reload.name).to eq("Updated Name")
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
       parent_chooser.select_row_by_value(parent_category.id)
       category_page.save_settings
-
+      expect(category_page).to have_no_unsaved_changes
       expect(category.reload.parent_category_id).to eq(parent_category.id)
-    end
-
-    it "switches to group restricted visibility" do
-      category_page.visit_general(category)
 
       form.choose_conditional("group_restricted")
-
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       group_chooser.expand
       group_chooser.select_row_by_value(group.id)
       group_chooser.collapse
       category_page.save_settings
-
+      expect(category_page).to have_no_unsaved_changes
       expect(category.reload.category_groups.map(&:group_id)).to include(group.id)
+
+      category_page.toggle_advanced_settings
+      expect(page).to have_css(".edit-category-security")
+      expect(page).to have_css(".edit-category-settings")
     end
 
     it "shows a warning instead of visibility options for a special category" do
@@ -127,26 +125,6 @@ describe "Simplified Category Creation" do
 
       expect(page).to have_content(I18n.t("js.category.special_warning"))
       expect(page).to have_no_content(I18n.t("js.category.permissions.specific_groups_have_access"))
-    end
-
-    it "shows error when color is invalid" do
-      category_page.visit_general(category)
-
-      form.field("color").fill_in("GGGGGG")
-      category_page.save_settings
-
-      expect(form.field("color")).to have_errors(
-        I18n.t("js.category.color_validations.non_hexdecimal"),
-      )
-    end
-
-    it "shows advanced tabs when toggled" do
-      category_page.visit_general(category)
-
-      category_page.toggle_advanced_settings
-
-      expect(page).to have_css(".edit-category-security")
-      expect(page).to have_css(".edit-category-settings")
     end
 
     it "preserves permission types when adding a new access group on general tab" do
@@ -178,29 +156,16 @@ describe "Simplified Category Creation" do
       )
     end
 
-    it "automatically switches to private when selecting a restricted parent" do
+    it "lets an admin inherit private access when selecting a restricted parent" do
       restricted_parent =
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
-
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
       parent_chooser.select_row_by_value(restricted_parent.id)
 
       expect(page).to have_css(".group-chooser")
-    end
-
-    it "shows inherited groups when selecting a restricted parent" do
-      restricted_parent =
-        Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
-
-      category_page.visit_new_category
-
-      parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
-      parent_chooser.expand
-      parent_chooser.select_row_by_value(restricted_parent.id)
-
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       expect(group_chooser).to have_selected_name(group.name)
     end
@@ -252,12 +217,6 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".edit-category-description-container .readonly-field")
       expect(page).to have_content("Updated category description")
       expect(toasts).to have_success(I18n.t("js.category.description_updated"))
-    end
-
-    it "does not allow selecting other category types when creating a new category" do
-      category_page.visit_new_category
-      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
-      expect(page).to have_no_css(".category-type-selector")
     end
   end
 

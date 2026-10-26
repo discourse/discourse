@@ -5,6 +5,12 @@ module PageObjects
     class ViewTranslationsModal < PageObjects::Modals::Base
       MODAL_SELECTOR = ".post-translations-modal"
 
+      def delete_translation(locale)
+        find("#{full_modal_selector} tr", text: "(#{locale})").find(
+          ".post-translations-modal__delete-action .btn",
+        ).click
+      end
+
       def select_post_language(language)
         within(full_modal_selector) do
           select(language, from: I18n.t("js.post.localizations.modal.post_language"))

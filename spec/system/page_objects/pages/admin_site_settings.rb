@@ -125,6 +125,19 @@ module PageObjects
         self
       end
 
+      def cancel_setting(setting_name)
+        find_setting(setting_name).find(".setting-controls button.cancel").click
+        self
+      end
+
+      def has_setting_value?(setting_name, value:)
+        find_setting(setting_name).has_field?(with: value.to_s, visible: :all)
+      end
+
+      def has_no_pending_setting?(setting_name)
+        has_no_css?("#{setting_row_selector(setting_name)} .setting-controls button.ok")
+      end
+
       def has_overridden_setting?(setting_name, value: nil)
         setting_field = find_setting(setting_name, overridden: true)
         return setting_field.find(".setting-value input").value == value.to_s if value
@@ -156,7 +169,8 @@ module PageObjects
       end
 
       def clear_search
-        find("#setting-filter").click
+        find("#clear-filter").click
+        expect(page).to have_field("setting-filter", with: "")
         self
       end
 
@@ -228,6 +242,15 @@ module PageObjects
         ).click
         has_css?(".d-reorderable-list__move-item")
         self
+      end
+
+      def close_reorder_menu
+        send_keys(:escape)
+        self
+      end
+
+      def has_no_reorder_menu?
+        has_no_css?(".d-reorderable-list__move-item")
       end
 
       def move_list_value_to_top(setting_name, value)

@@ -99,74 +99,40 @@ describe "Content localization language switcher" do
     expect(page).to have_css(switcher_selector)
   end
 
-  it "lets anonymous visitors switch language when set_locale_from_cookie is also enabled" do
+  it "lets anonymous and signed in users switch content with the current language marked" do
     SiteSetting.set_locale_from_cookie = true
-    SiteSetting.content_localization_language_switcher = "anonymous"
-
-    visit("/")
-    language_switcher.select_language("es")
-
-    expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
-  end
-
-  it "displays the current language code on the trigger button" do
     SiteSetting.content_localization_language_switcher = "all"
-
-    visit("/")
-    expect(page.find(switcher_selector)).to have_content("EN")
-
-    language_switcher.select_language("ja")
-    expect(page.find(switcher_selector)).to have_content("JA")
-
-    language_switcher.select_language("es")
-    expect(page.find(switcher_selector)).to have_content("ES")
-  end
-
-  it "shows localized content when switching languages (anon, logged in)" do
-    SiteSetting.content_localization_language_switcher = "all"
-
     visit("/")
     expect(topic_list).to have_content("Life strategies from The Art of War")
-
+    expect(page.find(switcher_selector)).to have_content("EN")
+    switcher.expand
+    expect(page).to have_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+    switcher.collapse
+    language_switcher.select_language("ja")
+    expect(page.find(switcher_selector)).to have_content("JA")
+    switcher.expand
+    expect(page).to have_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+    switcher.collapse
     language_switcher.select_language("es")
-
+    expect(page.find(switcher_selector)).to have_content("ES")
     expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
       expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
     end
-
     sign_in(japanese_user)
-
     visit("/")
     expect(topic_list).to have_content("孫子兵法からの人生戦略")
     I18n.with_locale("ja") do
       expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
     end
-
     language_switcher.select_language("es")
-
     expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
       expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
     end
-  end
-
-  it "marks the current language as selected in the dropdown" do
-    SiteSetting.content_localization_language_switcher = "all"
-
-    visit("/")
-    switcher.expand
-
-    expect(page).to have_css("[data-menu-option-id='en'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='ja'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
-
-    switcher.collapse
-    language_switcher.select_language("ja")
-    switcher.expand
-
-    expect(page).to have_css("[data-menu-option-id='ja'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='en'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
   end
 end

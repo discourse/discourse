@@ -146,7 +146,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.open_theme_filter
     expect(site_texts_page).to have_theme_option(theme, disabled: true)
     expect(site_texts_page).to have_theme_option(duplicate)
-    page.send_keys(:escape)
+    site_texts_page.close_theme_filter
     site_texts_page.select_theme(theme)
     site_texts_page.select_locale("it")
     site_texts_page.search("resource_intro")

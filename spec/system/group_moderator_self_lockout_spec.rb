@@ -27,7 +27,7 @@ describe "Group moderator self-lockout warning" do
   context "when non-owner moderator changes visibility to 'Owners only'" do
     before { sign_in(moderator) }
 
-    it "shows confirmation dialog for visibility_level change" do
+    it "lets a moderator cancel losing group access before confirming owners visibility" do
       visit_membership_settings
       visibility_chooser.expand
       visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
@@ -35,6 +35,18 @@ describe "Group moderator self-lockout warning" do
 
       expect(dialog).to be_open
       expect(dialog).to have_content(I18n.t("js.groups.manage.interaction.self_lockout"))
+      dialog.click_no
+
+      visit_membership_settings
+      expect(visibility_chooser).to have_selected_value(Group.visibility_levels[:public])
+
+      visibility_chooser.expand
+      visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
+      group_page.click_save
+      dialog.click_yes
+
+      expect(page).to have_no_current_path(%r{/g/#{group.name}/manage})
+      expect(group.reload.visibility_level).to eq(Group.visibility_levels[:owners])
     end
 
     it "shows confirmation dialog for members_visibility_level change" do
@@ -45,28 +57,6 @@ describe "Group moderator self-lockout warning" do
 
       expect(dialog).to be_open
       expect(dialog).to have_content(I18n.t("js.groups.manage.interaction.self_lockout"))
-    end
-
-    it "saves when confirmed" do
-      visit_membership_settings
-      visibility_chooser.expand
-      visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
-      group_page.click_save
-      dialog.click_yes
-
-      expect(page).to have_no_current_path(%r{/g/#{group.name}/manage})
-      expect(group.reload.visibility_level).to eq(Group.visibility_levels[:owners])
-    end
-
-    it "does not save when cancelled" do
-      visit_membership_settings
-      visibility_chooser.expand
-      visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
-      group_page.click_save
-      dialog.click_no
-
-      visit_membership_settings
-      expect(visibility_chooser).to have_selected_value(Group.visibility_levels[:public])
     end
 
     it "saves without dialog for non-restrictive visibility levels" do
@@ -104,31 +94,24 @@ describe "Group moderator self-lockout warning" do
       sign_in(moderator)
     end
 
-    it "shows confirmation dialog when removing self as owner" do
+    it "lets an owner cancel removing ownership and inspect the separate member removal warning" do
       group_page.visit(group)
       member_dropdown.expand
       member_dropdown.select_row_by_value("removeOwner")
 
       expect(dialog).to be_open
       expect(dialog).to have_content(I18n.t("js.groups.members.remove_owner_self_lockout"))
-    end
+      dialog.click_no
+      expect(dialog).to be_closed
+      expect(group.reload.group_users.find_by(user: moderator).owner).to be true
 
-    it "shows confirmation dialog when removing self as member" do
-      group_page.visit(group)
       member_dropdown.expand
       member_dropdown.select_row_by_value("removeMember")
 
       expect(dialog).to be_open
       expect(dialog).to have_content(I18n.t("js.groups.members.remove_member_self_lockout"))
-    end
-
-    it "does not remove when cancelled" do
-      group_page.visit(group)
-      member_dropdown.expand
-      member_dropdown.select_row_by_value("removeOwner")
       dialog.click_no
-
-      expect(group.reload.group_users.find_by(user: moderator).owner).to be true
+      expect(dialog).to be_closed
     end
   end
 end

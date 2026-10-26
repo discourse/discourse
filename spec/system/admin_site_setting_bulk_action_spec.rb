@@ -9,7 +9,7 @@ describe "Admin Site Setting Bulk Action" do
 
   before { sign_in(admin) }
 
-  it "saves multiple site settings" do
+  it "preserves drafts across categories and saves both settings" do
     settings_page.visit
 
     expect(banner).to be_hidden
@@ -17,74 +17,113 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("site_description", "A cool place")
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    aggregate_failures "show two unsaved settings" do
+      expect(banner).to be_visible
+      expect(banner.element).to have_text("You have 2 unsaved changes")
+    end
+
+    settings_page.navigate_to_category(:branding)
+
+    aggregate_failures "keep drafts in Branding" do
+      expect(banner).to be_visible
+      expect(banner.element).to have_text("You have 2 unsaved changes")
+    end
+
+    settings_page.navigate_to_category(:required)
+
+    aggregate_failures "restore both drafts in Required" do
+      expect(banner).to be_visible
+      expect(banner.element).to have_text("You have 2 unsaved changes")
+      expect(settings_page).to have_overridden_setting("title", value: "The Shell")
+      expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
+    end
 
     banner.click_save
 
-    expect(banner).to be_hidden
-    expect(settings_page).to have_overridden_setting("title", value: "The Shell")
-    expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
+    aggregate_failures "commit both drafts" do
+      expect(banner).to be_hidden
+      expect(settings_page).to have_overridden_setting("title", value: "The Shell")
+      expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
+    end
+
+    page.refresh
+
+    aggregate_failures "reload both saved settings" do
+      expect(banner).to be_hidden
+      expect(settings_page).to have_overridden_setting("title", value: "The Shell")
+      expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
+    end
   end
 
-  it "shows a confirmation message for settings that require it" do
+  it "preserves rejected bulk drafts and confirms both settings on retry" do
+    saved_password_length = SiteSetting.min_password_length
+    saved_admin_password_length = SiteSetting.min_admin_password_length
     settings_page.visit("min_password")
     settings_page.fill_setting("min_password_length", 12)
     settings_page.fill_setting("min_admin_password_length", 13)
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    aggregate_failures "show both password drafts" do
+      expect(banner).to be_visible
+      expect(banner.element).to have_text("You have 2 unsaved changes")
+    end
 
     banner.click_save
 
-    expect(dialog).to be_open
-    expect(dialog).to have_content(
-      I18n.t(
-        "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
-      ),
-    )
+    aggregate_failures "confirm the first password draft" do
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
+        ),
+      )
+    end
     dialog.click_yes
 
-    expect(dialog).to be_open
-    expect(dialog).to have_content(
-      I18n.t(
-        "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
-      ),
-    )
-    dialog.click_yes
-
-    expect(settings_page).to have_overridden_setting("min_password_length", value: 12)
-    expect(settings_page).to have_overridden_setting("min_admin_password_length", value: 13)
-  end
-
-  it "cancels saving if rejecting a confirmation" do
-    settings_page.visit("min_password")
-    settings_page.fill_setting("min_password_length", 12)
-    settings_page.fill_setting("min_admin_password_length", 13)
-
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
-
-    banner.click_save
-
-    expect(dialog).to be_open
-    expect(dialog).to have_content(
-      I18n.t(
-        "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
-      ),
-    )
-    dialog.click_yes
-
-    expect(dialog).to be_open
-    expect(dialog).to have_content(
-      I18n.t(
-        "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
-      ),
-    )
+    aggregate_failures "reject the second password draft" do
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
+        ),
+      )
+    end
     dialog.click_no
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    aggregate_failures "retain both drafts after rejection" do
+      expect(dialog).to be_closed
+      expect(banner).to be_visible
+      expect(banner.element).to have_text("You have 2 unsaved changes")
+      expect(SiteSetting.min_password_length).to eq(saved_password_length)
+      expect(SiteSetting.min_admin_password_length).to eq(saved_admin_password_length)
+    end
+
+    banner.click_save
+
+    aggregate_failures "confirm the first password draft again" do
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
+        ),
+      )
+    end
+    dialog.click_yes
+
+    aggregate_failures "confirm the second password draft" do
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
+        ),
+      )
+    end
+    dialog.click_yes
+
+    aggregate_failures "save the confirmed password drafts" do
+      expect(settings_page).to have_overridden_setting("min_password_length", value: 12)
+      expect(settings_page).to have_overridden_setting("min_admin_password_length", value: 13)
+      expect(banner).to be_hidden
+    end
   end
 
   it "pops up an error when saving invalid settings" do
@@ -105,29 +144,6 @@ describe "Admin Site Setting Bulk Action" do
 
     expect(banner).to be_visible
     expect(banner.element).to have_text("You have 2 unsaved changes")
-  end
-
-  it "persists unsaved settings when browsing categories" do
-    settings_page.visit
-
-    settings_page.fill_setting("title", "The Shell")
-    settings_page.fill_setting("site_description", "A cool place")
-
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
-
-    settings_page.navigate_to_category(:branding)
-
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
-
-    settings_page.navigate_to_category(:required)
-
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
-
-    expect(settings_page).to have_overridden_setting("title", value: "The Shell")
-    expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
   end
 
   it "prompts about unsaved settings when navigating away" do

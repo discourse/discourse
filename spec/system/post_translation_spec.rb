@@ -17,6 +17,7 @@ describe "Post translations" do
       "toolbar-menu__post-language-selector-trigger",
     )
   end
+  let(:confirmation_dialog) { PageObjects::Components::Dialog.new }
   let(:view_translations_modal) { PageObjects::Modals::ViewTranslationsModal.new }
 
   before do
@@ -30,52 +31,54 @@ describe "Post translations" do
   end
 
   context "when a post does not have translations" do
-    it "shows only languages configured in the site setting" do
+    it "lets users create inspect edit and delete individual post translations" do
       post.update!(locale: "en")
-
-      topic_page.visit_topic(topic)
-
-      topic_page.click_post_action_button(post, :show_more)
-      topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
-      translation_selector.expand
-      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(3)
-      expect(translation_selector).to have_option_value("fr")
-      expect(translation_selector).to have_option_value("es")
-      expect(translation_selector).to have_option_value("pt_BR")
-      expect(translation_selector).to have_no_option_value("de")
-    end
-
-    it "allows a user to translate a post" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
       find(".update-translations-menu__add .post-action-menu__add-translation").click
       expect(composer).to be_opened
       translation_selector.expand
+      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(3)
+      expect(translation_selector).to have_option_value("fr")
+      expect(translation_selector).to have_option_value("es")
+      expect(translation_selector).to have_option_value("pt_BR")
+      expect(translation_selector).to have_no_option_value("de")
       translation_selector.select_row_by_value("fr")
       find("#translated-topic-title").fill_in(with: "Ceci est un sujet de test 0")
       composer.fill_content("Bonjour le monde")
       composer.submit
-
-      expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
-      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
-      expect(PostLocalization.find_by(post_id: post.id, locale: "fr").raw).to eq("Bonjour le monde")
-      expect(TopicLocalization.find_by(topic_id: topic.id, locale: "fr").title).to eq(
+      expect(composer).to be_closed
+      expect(TopicLocalization.find_by!(topic_id: topic.id, locale: "fr").title).to eq(
         "Ceci est un sujet de test 0",
       )
-    end
-  end
+      expect(PostLocalization.find_by!(post_id: post.id, locale: "fr").raw).to eq(
+        "Bonjour le monde",
+      )
 
-  context "when a post already has translations" do
-    fab!(:post_localization) do
-      Fabricate(:post_localization, post: post, locale: "fr", raw: "Bonjour le monde")
-    end
-    let(:confirmation_dialog) { PageObjects::Components::Dialog.new }
-
-    it "allows a user to add a new translation" do
-      topic_page.visit_topic(topic)
+      page.refresh
       topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      view_translation_button = find(".post-action-menu__view-translation")
+      expect(view_translation_button).to be_visible
+      expect(view_translation_button).to have_text(I18n.t("js.post.localizations.view", count: 1))
+      view_translation_button.click
+      expect(view_translations_modal).to be_open
+      expect(find(".post-translations-modal__locale")).to have_text("fr")
+      find(".post-translations-modal__edit-action .btn").click
+      expect(composer).to be_opened
+      expect(translation_selector).to have_selected_value("fr")
+      find("#translated-topic-title").fill_in(with: "C'est un sujet de test 0.")
+      composer.fill_content("Bonjour le monde")
+      composer.submit
+      expect(composer).to be_closed
+      expect(TopicLocalization.find_by!(topic_id: topic.id, locale: "fr").title).to eq(
+        "C'est un sujet de test 0.",
+      )
+      expect(PostLocalization.find_by!(post_id: post.id, locale: "fr").raw).to eq(
+        "Bonjour le monde",
+      )
+
       topic_page.click_post_action_button(post, :add_translation)
       find(".update-translations-menu__add .post-action-menu__add-translation").click
       expect(composer).to be_opened
@@ -84,28 +87,27 @@ describe "Post translations" do
       find("#translated-topic-title").fill_in(with: "Este es un tema de prueba 0")
       composer.fill_content("Hola mundo")
       composer.submit
-
-      expect(TopicLocalization.exists?(topic_id: topic.id, locale: "es")).to be true
-      expect(PostLocalization.exists?(post_id: post.id, locale: "es")).to be true
-      expect(PostLocalization.find_by(post_id: post.id, locale: "es").raw).to eq("Hola mundo")
-      expect(TopicLocalization.find_by(topic_id: topic.id, locale: "es").title).to eq(
+      expect(composer).to be_closed
+      expect(TopicLocalization.find_by!(topic_id: topic.id, locale: "es").title).to eq(
         "Este es un tema de prueba 0",
       )
-    end
+      expect(PostLocalization.find_by!(post_id: post.id, locale: "es").raw).to eq("Hola mundo")
 
-    it "allows a user to see locales translated" do
-      topic_page.visit_topic(topic)
+      page.refresh
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      view_translation_button = find(".post-action-menu__view-translation")
-      expect(view_translation_button).to be_visible
-      expect(view_translation_button).to have_text(
-        I18n.t("js.post.localizations.view", { count: 1 }),
-      )
+      find(".post-action-menu__view-translation").click
+      view_translations_modal.delete_translation("fr")
+      expect(confirmation_dialog).to be_open
+      confirmation_dialog.click_yes
+      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
+      expect(PostLocalization.exists?(post_id: post.id, locale: "es")).to be true
+    end
+  end
 
-      view_translation_button.click
-      expect(view_translations_modal).to be_open
-      expect(find(".post-translations-modal__locale")).to have_text("fr")
+  context "when a post already has translations" do
+    fab!(:post_localization) do
+      Fabricate(:post_localization, post: post, locale: "fr", raw: "Bonjour le monde")
     end
 
     it "lets a user set independent post and topic title languages without closing the modal" do
@@ -137,41 +139,6 @@ describe "Post translations" do
 
       expect(view_translations_modal).to have_post_language("English (en)")
       expect(view_translations_modal).to have_topic_language("Spanish (Español) (es)")
-    end
-
-    it "allows a user to edit a translation" do
-      topic_page.visit_topic(topic)
-      topic_page.click_post_action_button(post, :show_more)
-      topic_page.click_post_action_button(post, :add_translation)
-      find(".post-action-menu__view-translation").click
-      find(".post-translations-modal__edit-action .btn").click
-      expect(composer).to be_opened
-      expect(translation_selector).to have_selected_value("fr")
-      find("#translated-topic-title").fill_in(with: "C'est un sujet de test 0.")
-      composer.fill_content("Bonjour le monde")
-      composer.submit
-
-      expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
-      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
-      expect(PostLocalization.find_by(post_id: post.id, locale: "fr").raw).to eq("Bonjour le monde")
-      expect(TopicLocalization.find_by(topic_id: topic.id, locale: "fr").title).to eq(
-        "C'est un sujet de test 0.",
-      )
-    end
-
-    it "allows a user in content_localization_allowed_groups to delete a translation" do
-      topic_page.visit_topic(topic)
-      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
-
-      topic_page.click_post_action_button(post, :show_more)
-      topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
-      find(".post-action-menu__view-translation").click
-      find(".post-translations-modal__delete-action .btn").click
-      expect(confirmation_dialog).to be_open
-      confirmation_dialog.click_yes
-
-      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
     end
 
     it "prompts to discard changes when abandoning modified translation" do
@@ -218,40 +185,25 @@ describe "Post translations" do
   end
 
   context "when creating a new post in a different locale" do
-    it "shows configured languages, the default locale, and no locale" do
+    it "lets users choose a configured post language from an initially unset composer" do
       visit("/latest")
       page.find("#create-topic").click
+      expect(page).to have_no_css(
+        "#{POST_LANGUAGE_SWITCHER_SELECTOR} .toolbar-popup-menu-options__trigger-label",
+      )
       post_language_selector.expand
-      expect(post_language_selector).to have_content("English") # default locale
+      expect(post_language_selector).to have_content("English")
       expect(post_language_selector).to have_content("French (Français)")
       expect(post_language_selector).to have_content("Spanish (Español)")
       expect(post_language_selector).to have_content("Portuguese (Português (BR))")
       expect(post_language_selector).to have_content(
         I18n.t("js.post.localizations.post_language_selector.none"),
       )
-    end
-
-    it "allows a user to create a post in another locale" do
-      visit("/latest")
-      page.find("#create-topic").click
-      post_language_selector.expand
       post_language_selector.option("[data-name='fr']").click
       composer.fill_title("Ceci est un sujet de test 1")
       composer.fill_content("Bonjour le monde")
       composer.submit
-
-      updated_post = Topic.last.posts.first
-      expect(updated_post.locale).to eq("fr")
-    end
-
-    it "does not select a locale by default" do
-      visit("/latest")
-      page.find("#create-topic").click
-      expect(
-        page.has_no_css?(
-          "#{POST_LANGUAGE_SWITCHER_SELECTOR} .toolbar-popup-menu-options__trigger-label",
-        ),
-      ).to be true
+      expect(Topic.last.posts.first.locale).to eq("fr")
     end
   end
 
@@ -265,81 +217,36 @@ describe "Post translations" do
     end
     let(:translation_preview) { PageObjects::Components::DEditorOriginalTranslationPreview.new }
 
-    it "shows raw markdown toggle only on Original tab" do
-      topic_page.visit_topic(topic)
-      topic_page.click_post_action_button(post, :show_more)
-      topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
-
-      expect(composer).to be_opened
-      expect(translation_preview).to have_raw_toggle
-      expect(translation_preview.original_tab_active?).to be true
-
-      translation_preview.click_translation_tab
-      expect(translation_preview.translation_tab_active?).to be true
-      expect(translation_preview).to have_no_raw_toggle
-    end
-
-    it "displays rendered HTML by default" do
-      topic_page.visit_topic(topic)
-      topic_page.click_post_action_button(post, :show_more)
-      topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
-
-      expect(composer).to be_opened
-      expect(translation_preview.original_tab_active?).to be true
-      expect(translation_preview).to have_rendered_content
-      expect(translation_preview).to have_no_raw_markdown_content
-    end
-
-    it "displays raw markdown when toggle is enabled" do
+    it "lets users inspect markdown and rendered content and resets the raw view when changing tabs" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(markdown_post.post_number, :show_more)
       topic_page.click_post_action_button(markdown_post.post_number, :add_translation)
       find(".update-translations-menu__add .post-action-menu__add-translation").click
-
       expect(composer).to be_opened
+      expect(translation_preview.original_tab_active?).to be true
+      expect(translation_preview).to have_raw_toggle
+      expect(translation_preview).to have_rendered_content
+      expect(translation_preview).to have_no_raw_markdown_content
       translation_preview.raw_toggle.toggle
-
       expect(translation_preview).to have_raw_markdown_content
       raw_content = translation_preview.raw_markdown_content
-      expect(raw_content).to include("# Heading")
-      expect(raw_content).to include("**Bold**")
-      expect(raw_content).to include("[link](https://example.com)")
-      expect(raw_content).to include("*italic*")
-    end
-
-    it "resets raw markdown view when switching tabs" do
-      topic_page.visit_topic(topic)
-      topic_page.click_post_action_button(post, :show_more)
-      topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
-
-      expect(composer).to be_opened
+      expect(raw_content).to include(
+        "# Heading",
+        "**Bold**",
+        "[link](https://example.com)",
+        "*italic*",
+      )
+      translation_preview.raw_toggle.toggle
+      expect(translation_preview).to have_no_raw_markdown_content
+      expect(translation_preview).to have_rendered_content
       translation_preview.raw_toggle.toggle
       expect(translation_preview).to have_raw_markdown_content
-
       translation_preview.click_translation_tab
+      expect(translation_preview.translation_tab_active?).to be true
       expect(translation_preview).to have_no_raw_toggle
-
       translation_preview.click_original_tab
       expect(translation_preview).to have_raw_toggle
       expect(translation_preview.raw_toggle).to be_unchecked
-      expect(translation_preview).to have_rendered_content
-    end
-
-    it "maintains raw markdown state while on Original tab" do
-      topic_page.visit_topic(topic)
-      topic_page.click_post_action_button(post, :show_more)
-      topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
-
-      expect(composer).to be_opened
-      translation_preview.raw_toggle.toggle
-      expect(translation_preview).to have_raw_markdown_content
-
-      translation_preview.raw_toggle.toggle
-      expect(translation_preview).to have_no_raw_markdown_content
       expect(translation_preview).to have_rendered_content
     end
   end

@@ -15,7 +15,7 @@ module PageObjects
       end
 
       def click_bulk_select_button
-        find(".bulk-select").click
+        with_dom_retry { find(".bulk-select").click }
       end
 
       def has_bulk_select_topics_dropdown?

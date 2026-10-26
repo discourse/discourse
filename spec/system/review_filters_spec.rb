@@ -24,14 +24,6 @@ describe "Review filters" do
         expect(page).to have_css(".review-item", count: 1)
         expect(page).to have_css(".review-item[data-reviewable-id='#{flagged_post_1.id}']")
       end
-
-      it "shows no reviewables when filtering by a user who has not claimed any" do
-        ReviewableClaimedTopic.create!(user_id: moderator.id, topic_id: flagged_post_1.topic_id)
-
-        visit("/review?claimed_by=#{admin.username}")
-
-        expect(page).to have_no_css(".reviewable-item")
-      end
     end
 
     context "when reviewable claiming is disabled" do
@@ -72,6 +64,15 @@ describe "Review filters" do
 
       expect(page).to have_css(".review-item", count: 1)
       expect(page).to have_css(".review-item[data-reviewable-id='#{flagged_post_1.id}']")
+
+      review_index_page.claimed_by_select.expand
+      review_index_page.claimed_by_select.unselect_by_name(category_group_user.username)
+      review_index_page.claimed_by_select.search(admin.username)
+      review_index_page.claimed_by_select.select_row_by_value(admin.username)
+      review_index_page.submit_filters
+
+      expect(review_index_page).to have_no_reviewables
+      expect(review_index_page).to have_empty_state
     end
   end
 end

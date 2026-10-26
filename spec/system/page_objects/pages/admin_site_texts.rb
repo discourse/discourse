@@ -47,6 +47,10 @@ module PageObjects
         PageObjects::Components::SelectKit.new(".theme-search").expand
       end
 
+      def close_theme_filter
+        PageObjects::Components::SelectKit.new(".theme-search").collapse_with_escape
+      end
+
       def has_theme_option?(theme, disabled: false)
         row = ".theme-search .select-kit-row[data-value='#{theme.id}']"
         return false unless has_css?("#{row} .site-text-theme-row__name", exact_text: theme.name)

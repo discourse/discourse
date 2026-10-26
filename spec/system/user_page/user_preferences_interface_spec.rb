@@ -7,41 +7,32 @@ describe "User preferences | Interface" do
 
   before { sign_in(user) }
 
-  describe "Bookmarks" do
-    it "changes the bookmark after notification preference" do
+  describe "Notification and send preferences" do
+    it "lets users save bookmark notification and send shortcut preferences" do
       user_preferences_page.visit(user)
       click_link(I18n.t("js.user.preferences_nav.interface"))
-
-      dropdown = PageObjects::Components::SelectKit.new("#bookmark-after-notification-mode")
-
-      # preselects the default user_option.bookmark_auto_delete_preference value of 3 (clear_reminder)
-      expect(dropdown).to have_selected_value(Bookmark.auto_delete_preferences[:clear_reminder])
-
-      dropdown.select_row_by_value(Bookmark.auto_delete_preferences[:when_reminder_sent])
+      bookmark_dropdown =
+        PageObjects::Components::SelectKit.new("#bookmark-after-notification-mode")
+      shortcut_dropdown = PageObjects::Components::SelectKit.new("#user-send-shortcut")
+      expect(bookmark_dropdown).to have_selected_value(
+        Bookmark.auto_delete_preferences[:clear_reminder],
+      )
+      expect(shortcut_dropdown).to have_selected_value("enter")
+      bookmark_dropdown.select_row_by_value(Bookmark.auto_delete_preferences[:when_reminder_sent])
+      shortcut_dropdown.select_row_by_value("meta_enter")
       click_button(I18n.t("js.save"))
-
       expect(
         UserOption.exists?(
           user_id: user.id,
           bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
         ),
       ).to be_truthy
-    end
-  end
-
-  describe "Send shortcut" do
-    it "changes the send shortcut preference" do
-      user_preferences_page.visit(user)
-      click_link(I18n.t("js.user.preferences_nav.interface"))
-
-      dropdown = PageObjects::Components::SelectKit.new("#user-send-shortcut")
-
-      expect(dropdown).to have_selected_value("enter")
-
-      dropdown.select_row_by_value("meta_enter")
-      click_button(I18n.t("js.save"))
-
       expect(UserOption.exists?(user_id: user.id, send_shortcut: "meta_enter")).to be_truthy
+      page.refresh
+      expect(bookmark_dropdown).to have_selected_value(
+        Bookmark.auto_delete_preferences[:when_reminder_sent],
+      )
+      expect(shortcut_dropdown).to have_selected_value("meta_enter")
     end
   end
 

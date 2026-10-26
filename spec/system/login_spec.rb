@@ -2,7 +2,7 @@
 
 require "rotp"
 
-shared_examples "login scenarios" do
+shared_examples "login scenarios" do |device|
   let(:login_form) { PageObjects::Pages::Login.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
@@ -75,16 +75,18 @@ shared_examples "login scenarios" do
 
       activate_account.click_activate_account
       expect(page).to have_current_path(%r{/wizard})
-    end
+    end if device == :desktop
 
-    it "shows error when when activation link is invalid" do
-      login_form.open.fill(username: "john", password: "supersecurepassword").click_login
-      expect(page).to have_css(".not-activated-modal")
+    if device == :desktop
+      it "shows error when when activation link is invalid" do
+        login_form.open.fill(username: "john", password: "supersecurepassword").click_login
+        expect(page).to have_css(".not-activated-modal")
 
-      visit "/u/activate-account/123abc"
+        visit "/u/activate-account/123abc"
 
-      activate_account.click_activate_account
-      expect(activate_account).to have_error
+        activate_account.click_activate_account
+        expect(activate_account).to have_error
+      end
     end
 
     it "displays the right message when user's email has been marked as expired" do
@@ -184,7 +186,7 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".login-welcome")
 
       expect(page.body).not_to include(category.name)
-    end
+    end if device == :desktop
   end
 
   context "when login is not required" do
@@ -349,7 +351,7 @@ shared_examples "login scenarios" do
       find("#login-second-factor").fill_in(with: totp)
 
       expect(page).to have_current_path("/about")
-    end
+    end if device == :desktop
 
     it "can login with backup code" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
@@ -378,7 +380,7 @@ shared_examples "login scenarios" do
         find(".email-login-form .btn-primary").click
 
         expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
+      end if device == :desktop
 
       it "can login with login link and backup code" do
         login_form.open.fill_username("john").email_login_link
@@ -390,7 +392,7 @@ shared_examples "login scenarios" do
         find(".email-login-form .btn-primary").click
 
         expect(page).to have_css(".header-dropdown-toggle.current-user")
-      end
+      end if device == :desktop
     end
 
     it "can reset password with an email code and TOTP" do
@@ -448,16 +450,16 @@ shared_examples "login scenarios" do
       find(".change-password-form .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
-    end
+    end if device == :desktop
   end
 end
 
 describe "Login" do
   context "when desktop" do
-    include_examples "login scenarios"
+    include_examples "login scenarios", :desktop
   end
 
   context "when mobile", mobile: true do
-    include_examples "login scenarios"
+    include_examples "login scenarios", :mobile
   end
 end

@@ -20,7 +20,7 @@ describe "Homepage" do
     expect(discovery.topic_list).to have_topics(count: 5)
   end
 
-  it "allows users to pick their homepage" do
+  it "lets users choose a homepage then return to the current site default" do
     sign_in user
     visit "/"
 
@@ -37,13 +37,9 @@ describe "Homepage" do
     visit "/"
 
     expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
-  end
 
-  it "allows users to reset their homepage preference to the site default" do
-    user.user_option.update!(homepage_id: UserOption::HOMEPAGES.key("hot"))
     SiteSetting.default_homepage = "categories"
 
-    sign_in user
     visit "/"
 
     expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
@@ -118,7 +114,7 @@ describe "Homepage" do
   end
 
   shared_examples "a custom homepage" do
-    it "shows the custom homepage component" do
+    it "lets users return to the custom homepage and override or reset their homepage preference" do
       visit "/"
 
       expect(page).to have_css(".new-home", text: "Hi friends!")
@@ -131,13 +127,6 @@ describe "Homepage" do
 
       expect(page).to have_no_css(".list-container")
       # ensure clicking on logo brings user back to the custom homepage
-      expect(page).to have_css(".new-home", text: "Hi friends!")
-    end
-
-    it "respects the user's homepage choice" do
-      visit "/"
-
-      expect(page).not_to have_css(".list-container")
       expect(page).to have_css(".new-home", text: "Hi friends!")
 
       sign_in user

@@ -22,7 +22,7 @@ describe "About page" do
 
   let(:about_page) { PageObjects::Pages::About.new }
 
-  it "renders successfully" do
+  it "lets visitors read the community header with or without a banner" do
     about_page.visit
 
     expect(about_page).to have_banner_image(image_upload)
@@ -32,12 +32,9 @@ describe "About page" do
     expect(about_page).to have_members_count(3, "3")
     expect(about_page).to have_admins_count(1, "1")
     expect(about_page).to have_moderators_count(1, "1")
-  end
 
-  it "doesn't render banner image when it's not set" do
     SiteSetting.about_banner_image = ""
-
-    about_page.visit
+    page.refresh
     expect(about_page).to have_no_banner_image
   end
 
@@ -68,32 +65,70 @@ describe "About page" do
   end
 
   describe "the site activity section" do
-    describe "topics" do
-      before do
-        Fabricate(:topic, created_at: 2.days.ago)
-        Fabricate(:topic, created_at: 3.days.ago)
-        Fabricate(:topic, created_at: 8.days.ago)
-      end
-
-      it "shows the count of topics created in the last 7 days" do
-        about_page.visit
+    it "lets visitors read each activity count and its reporting period",
+       time: Time.zone.parse("2024-05-20 12:00:00") do
+      User.update_all(created_at: 1.month.ago, last_seen_at: 1.month.ago)
+      recent_user = Fabricate(:user, created_at: 3.hours.ago, last_seen_at: 1.hour.ago)
+      other_recent_user = Fabricate(:user, created_at: 3.days.ago, last_seen_at: 1.day.ago)
+      Fabricate(:user, created_at: 8.days.ago, last_seen_at: 8.days.ago)
+      admin.update!(last_seen_at: 3.days.ago)
+      moderator.update!(last_seen_at: 6.days.ago)
+      first_topic = Fabricate(:topic, user: admin, created_at: 2.days.ago)
+      second_topic = Fabricate(:topic, user: admin, created_at: 3.days.ago)
+      Fabricate(:topic, user: admin, created_at: 8.days.ago)
+      Fabricate(:post, topic: first_topic, user: admin, created_at: 2.days.ago)
+      first_post = Fabricate(:post, topic: first_topic, user: admin, created_at: 1.hour.ago)
+      second_post = Fabricate(:post, topic: second_topic, user: admin, created_at: 3.hours.ago)
+      Fabricate(:post, topic: second_topic, user: admin, created_at: 23.hours.ago)
+      UserAction.destroy_all
+      Fabricate(
+        :user_action,
+        user: recent_user,
+        target_post: first_post,
+        created_at: 1.hour.ago,
+        action_type: UserAction::LIKE,
+      )
+      Fabricate(
+        :user_action,
+        user: other_recent_user,
+        target_post: first_post,
+        created_at: 1.day.ago,
+        action_type: UserAction::LIKE,
+      )
+      Fabricate(
+        :user_action,
+        user: recent_user,
+        target_post: second_post,
+        created_at: 1.month.ago,
+        action_type: UserAction::LIKE,
+      )
+      Fabricate(
+        :user_action,
+        user: other_recent_user,
+        target_post: second_post,
+        created_at: 10.years.ago,
+        action_type: UserAction::LIKE,
+      )
+      about_page.visit
+      aggregate_failures("topics over seven days") do
         expect(about_page.site_activities.topics).to have_count(2, "2")
         expect(about_page.site_activities.topics).to have_7_days_period
       end
-    end
-
-    describe "posts" do
-      before do
-        Fabricate(:post, created_at: 2.days.ago)
-        Fabricate(:post, created_at: 1.hour.ago)
-        Fabricate(:post, created_at: 3.hours.ago)
-        Fabricate(:post, created_at: 23.hours.ago)
-      end
-
-      it "shows the count of topics created in the last day" do
-        about_page.visit
+      aggregate_failures("posts over one day") do
         expect(about_page.site_activities.posts).to have_count(3, "3")
         expect(about_page.site_activities.posts).to have_1_day_period
+      end
+      aggregate_failures("active users over seven days") do
+        expect(about_page.site_activities.active_users).to have_count(4, "4")
+        expect(about_page.site_activities.active_users).to have_7_days_period
+      end
+      aggregate_failures("signups over seven days") do
+        expect(about_page.site_activities.sign_ups).to have_count(2, "2")
+        expect(about_page.site_activities.sign_ups).to have_7_days_period
+      end
+      aggregate_failures("likes over all time") do
+        expect(about_page.site_activities.likes).to have_count(4, "4")
+        expect(about_page.site_activities.likes).to have_all_time_period
       end
     end
 
@@ -121,57 +156,6 @@ describe "About page" do
           )
           expect(about_page).to have_traffic_info_footer
         end
-      end
-    end
-
-    describe "active users" do
-      before do
-        User.update_all(last_seen_at: 1.month.ago)
-
-        Fabricate(:user, last_seen_at: 1.hour.ago)
-        Fabricate(:user, last_seen_at: 1.day.ago)
-        Fabricate(:user, last_seen_at: 3.days.ago)
-        Fabricate(:user, last_seen_at: 6.days.ago)
-        Fabricate(:user, last_seen_at: 8.days.ago)
-      end
-
-      it "shows the count of active users in the last 7 days" do
-        about_page.visit
-        expect(about_page.site_activities.active_users).to have_count(4, "4") # 4 fabricated above
-        expect(about_page.site_activities.active_users).to have_7_days_period
-      end
-    end
-
-    describe "sign ups" do
-      before do
-        User.update_all(created_at: 1.month.ago)
-
-        Fabricate(:user, created_at: 3.hours.ago)
-        Fabricate(:user, created_at: 3.days.ago)
-        Fabricate(:user, created_at: 8.days.ago)
-      end
-
-      it "shows the count of signups in the last 7 days" do
-        about_page.visit
-        expect(about_page.site_activities.sign_ups).to have_count(2, "2")
-        expect(about_page.site_activities.sign_ups).to have_7_days_period
-      end
-    end
-
-    describe "likes" do
-      before do
-        UserAction.destroy_all
-
-        Fabricate(:user_action, created_at: 1.hour.ago, action_type: UserAction::LIKE)
-        Fabricate(:user_action, created_at: 1.day.ago, action_type: UserAction::LIKE)
-        Fabricate(:user_action, created_at: 1.month.ago, action_type: UserAction::LIKE)
-        Fabricate(:user_action, created_at: 10.years.ago, action_type: UserAction::LIKE)
-      end
-
-      it "shows the count of likes of all time" do
-        about_page.visit
-        expect(about_page.site_activities.likes).to have_count(4, "4")
-        expect(about_page.site_activities.likes).to have_all_time_period
       end
     end
   end

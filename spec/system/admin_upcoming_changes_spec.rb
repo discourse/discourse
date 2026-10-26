@@ -26,7 +26,7 @@ describe "Admin upcoming changes" do
     sign_in(current_user)
   end
 
-  it "shows a list of upcoming changes and their metadata" do
+  it "shows core and plugin upcoming changes with their metadata" do
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_change(:about_page_extra_groups_show_description)
     expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
@@ -37,6 +37,11 @@ describe "Admin upcoming changes" do
     expect(
       upcoming_changes_page.change_item(:about_page_extra_groups_show_description),
     ).to have_impact_role(:all_members)
+
+    expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
+    expect(
+      upcoming_changes_page.change_item(:enable_experimental_sample_plugin_feature),
+    ).to have_plugin_name("Sample plugin")
   end
 
   it "does not show conceptual upcoming changes" do
@@ -152,14 +157,6 @@ describe "Admin upcoming changes" do
 
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_no_change(:allow_uppercase_posts)
-  end
-
-  it "shows upcoming changes from plugins" do
-    upcoming_changes_page.visit
-    expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
-    expect(
-      upcoming_changes_page.change_item(:enable_experimental_sample_plugin_feature),
-    ).to have_plugin_name("Sample plugin")
   end
 
   it "can enable and disable an upcoming change using the dropdown" do
