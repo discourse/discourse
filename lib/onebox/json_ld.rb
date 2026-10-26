@@ -39,13 +39,43 @@ module Onebox
 
     def event_data(json)
       starts_at = json["startDate"]
+      image = event_image(json["image"])
 
       {
         event_starts_at: starts_at,
         event_ends_at: json["endDate"],
         event_all_day: date_only?(starts_at).to_s,
         event_description: json["description"],
+        **{
+          event_image: image[:url],
+          event_image_width: image[:width],
+          event_image_height: image[:height],
+        }.compact,
       }
+    end
+
+    # Schema.org allows a URL, an ImageObject, or a list of either
+    def event_image(value)
+      value = value.first if value.is_a?(Array)
+
+      case value
+      when String
+        { url: value }
+      when Hash
+        {
+          url: [value["url"], value["contentUrl"]].find { |url| url.is_a?(String) },
+          width: dimension(value["width"]),
+          height: dimension(value["height"]),
+        }
+      else
+        {}
+      end
+    end
+
+    # Kept as strings like the rest of the normalized data; QuantitativeValue wraps the number
+    def dimension(value)
+      value = value["value"] if value.is_a?(Hash)
+      value.to_s if value.to_s.to_i.positive?
     end
 
     def date_only?(value)

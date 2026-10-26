@@ -57,6 +57,39 @@ RSpec.describe Onebox::JsonLd do
     )
   end
 
+  it "reads an Event image given as an ImageObject" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          {
+            "@type": "Event",
+            "startDate": "2026-10-22",
+            "image": { "@type": "ImageObject", "url": "https://example.com/event.png", "width": 800, "height": 600 }
+          }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to include(
+      event_image: "https://example.com/event.png",
+      event_image_width: "800",
+      event_image_height: "600",
+    )
+  end
+
+  it "reads the first of several Event images given as URLs" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          {
+            "@type": "Event",
+            "startDate": "2026-10-22",
+            "image": ["https://example.com/first.png", "https://example.com/second.png"]
+          }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to include(event_image: "https://example.com/first.png")
+    expect(described_class.new(doc).data).not_to have_key(:event_image_width)
+  end
+
   it "recognizes date-only Events as all-day" do
     doc = Nokogiri.HTML(<<~HTML)
         <script type="application/ld+json">

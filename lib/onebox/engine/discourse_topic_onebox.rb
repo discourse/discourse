@@ -27,7 +27,9 @@ module Onebox
           event_date_month: event_date&.strftime("%b"),
           event_description: event_description,
           event_ends_at: raw[:event_ends_at],
-          event_has_featured_image: event_has_featured_image?,
+          event_has_banner_image: event_has_banner_image?,
+          event_has_letterboxed_image: event_has_letterboxed_image?,
+          event_has_portrait_image: event_has_portrait_image?,
           event_starts_at: raw[:event_starts_at],
           event_time: event_time,
           event_timezone: event_timezone,
@@ -74,12 +76,28 @@ module Onebox
         raw[:event_description]
       end
 
-      def event_has_featured_image?
-        width = raw[:image_width].to_f
-        height = raw[:image_height].to_f
+      def event_has_banner_image?
+        width, height = event_image_dimensions
+        width.present? && width >= height
+      end
 
-        event? && raw[:image].present? && width.positive? && height.positive? &&
-          width >= height * 1.5
+      # Too far from 16:9 to crop without losing much of the image, so it's shown whole inside the banner
+      def event_has_letterboxed_image?
+        width, height = event_image_dimensions
+        width.present? && width >= height && (width < height * 4 / 3 || width > height * 2)
+      end
+
+      def event_has_portrait_image?
+        width, height = event_image_dimensions
+        width.present? && height > width
+      end
+
+      def event_image_dimensions
+        width = raw[:event_image_width].to_f
+        height = raw[:event_image_height].to_f
+        return if !event? || raw[:event_image].blank? || !width.positive? || !height.positive?
+
+        [width, height]
       end
 
       def event_time
@@ -127,7 +145,11 @@ module Onebox
       end
 
       def image
-        image = Onebox::Helpers.get_absolute_image_url(raw[:image], @url)
+        # Events only show their own image; the page's og:image can be a site-wide fallback like the logo
+        url = event? ? raw[:event_image] : raw[:image]
+        return if url.blank?
+
+        image = Onebox::Helpers.get_absolute_image_url(url, @url)
         Onebox::Helpers.normalize_url_for_output(html_entities.decode(image))
       end
 

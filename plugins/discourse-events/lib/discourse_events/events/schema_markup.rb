@@ -9,18 +9,30 @@ module DiscourseEvents
       #
       # - Only an event attached to the topic's first post is represented
       # - Event times include their configured timezone; all-day events use dates
+      # - Events without a location or URL are skipped, since search engines require a location
       # - Descriptions are reduced to plain text suitable for structured data
+      # - The event's own image is included so link previews don't fall back to the topic's
       #
       # Spec: https://schema.org/Event
       # Validator: https://validator.schema.org/
       def self.build(topic_view)
         return unless SiteSetting.enable_event_schema_for_topics
+        return unless SiteSetting.discourse_post_event_enabled
 
         topic = topic_view&.topic
-        event = topic&.first_post&.event
+        event = first_post(topic_view)&.event
         return if event.blank? || event.deleted_at.present?
 
-        json_ld_tag(schema(topic, event))
+        locations = locations(event)
+        return if locations.empty?
+
+        json_ld_tag(schema(topic, event, locations))
+      end
+
+      # Topic views have usually loaded the first post with its event already, so this runs on
+      # every topic page without extra queries
+      private_class_method def self.first_post(topic_view)
+        topic_view.posts&.find { |post| post.post_number == 1 } || topic_view.topic&.first_post
       end
 
       private_class_method def self.json_ld_tag(schema)
@@ -28,7 +40,7 @@ module DiscourseEvents
         ApplicationController.helpers.content_tag(:script, json, type: "application/ld+json")
       end
 
-      private_class_method def self.schema(topic, event)
+      private_class_method def self.schema(topic, event, locations)
         {
           "@context" => "https://schema.org",
           "@type" => "Event",
@@ -37,15 +49,81 @@ module DiscourseEvents
           "startDate" => serialize_time(event.starts_at, event),
           "endDate" => serialize_time(event.ends_at, event),
           "eventStatus" => "https://schema.org/EventScheduled",
+          "eventAttendanceMode" => attendance_mode(locations),
+          "location" => locations.one? ? locations.first : locations,
           "url" => topic.url,
+          "image" => image(topic, event),
+        }.compact
+      end
+
+      private_class_method def self.locations(event)
+        locations = []
+
+        place = plain_text(event.location, event)
+
+        # A location that's only a link is where the event streams, not a place
+        if web_url?(place)
+          locations << { "@type" => "VirtualLocation", "url" => place }
+        elsif place.present?
+          locations << { "@type" => "Place", "name" => place, "address" => place }
+        end
+
+        if web_url?(event.url) && locations.none? { |location| location["url"] == event.url }
+          locations << { "@type" => "VirtualLocation", "url" => event.url }
+        end
+
+        locations
+      end
+
+      private_class_method def self.web_url?(value)
+        value.present? && value.match?(%r{\Ahttps?://\S+\z}i)
+      end
+
+      private_class_method def self.attendance_mode(locations)
+        types = locations.map { |location| location["@type"] }
+
+        mode =
+          if types.include?("Place") && types.include?("VirtualLocation")
+            "Mixed"
+          elsif types.include?("Place")
+            "Offline"
+          else
+            "Online"
+          end
+
+        "https://schema.org/#{mode}EventAttendanceMode"
+      end
+
+      private_class_method def self.image(topic, event)
+        upload = event.image_upload
+        return if upload.blank? || upload.secure?
+
+        # The topic image is synced from the event image and has a share-sized thumbnail
+        url =
+          if topic.image_upload_id == upload.id
+            topic.image_url
+          else
+            UrlHelper.cook_url(upload.url, local: true)
+          end
+        return if url.blank?
+
+        {
+          "@type" => "ImageObject",
+          "url" => ApplicationController.helpers.get_absolute_image_url(url),
+          "width" => upload.width,
+          "height" => upload.height,
         }.compact
       end
 
       private_class_method def self.description(event)
-        return if event.description.blank?
+        plain_text(event.description, event)&.truncate(250, separator: " ")
+      end
 
-        cooked = Parser.cook_inline(event.description, post: event.post)
-        Nokogiri::HTML5.fragment(cooked).text.squish.truncate(250, separator: " ")
+      private_class_method def self.plain_text(value, event)
+        return if value.blank?
+
+        cooked = Parser.cook_inline(value, post: event.post)
+        Nokogiri::HTML5.fragment(cooked).text.squish.presence
       end
 
       private_class_method def self.serialize_time(time, event)

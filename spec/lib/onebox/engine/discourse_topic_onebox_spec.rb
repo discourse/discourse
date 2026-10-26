@@ -50,7 +50,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
 
     context "with Schema.org Event data" do
       let(:url) { "https://example.com/t/community-hangout/123" }
-      let(:image_metadata) { "" }
+      let(:event_image_json) { %("image": "https://example.com/event.png",) }
       let(:event_description_json) { %("description": "Meet the community",) }
       let(:html) { <<~HTML }
           <html>
@@ -58,8 +58,9 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
               <meta property="og:site_name" content="Example community">
               <meta property="og:title" content="Community hangout">
               <meta property="og:description" content="The ordinary topic excerpt">
-              <meta property="og:image" content="https://example.com/topic.png">
-              #{image_metadata}
+              <meta property="og:image" content="https://example.com/site-logo.png">
+              <meta property="og:image:width" content="1200">
+              <meta property="og:image:height" content="630">
               <meta property="article:published_time" content="2026-10-19T00:00:00Z">
               <meta name="twitter:label1" value="Reading time">
               <meta name="twitter:data1" value="1 min 🕑">
@@ -71,6 +72,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
                   "@type": "Event",
                   "name": "Community hangout",
                   #{event_description_json}
+                  #{event_image_json}
                   "startDate": "2026-10-22T09:00:00.000-04:00",
                   "endDate": "2026-10-22T10:00:00.000-04:00"
                 }
@@ -88,7 +90,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
           event_all_day: false,
           event_date_day: "22",
           event_date_month: "Oct",
-          event_has_featured_image: false,
+          event_has_banner_image: false,
           event_starts_at: "2026-10-22T09:00:00.000-04:00",
           event_ends_at: "2026-10-22T10:00:00.000-04:00",
           event_timezone: "UTC-04:00",
@@ -99,7 +101,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         html = onebox.to_html
 
         expect(html).to include('class="discourse-event-onebox"')
-        expect(html).not_to include("--featured-image")
+        expect(html).not_to include("--banner-image")
         expect(html).to include('data-event-starts-at="2026-10-22T09:00:00.000-04:00"')
         expect(html).to include('class="discourse-event-onebox__date"')
         expect(html).to include("Meet the community")
@@ -118,28 +120,92 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         end
       end
 
-      context "with a square topic image" do
-        let(:image_metadata) { <<~HTML }
-            <meta property="og:image:width" content="500">
-            <meta property="og:image:height" content="500">
-          HTML
+      it "uses the event's image rather than the page's" do
+        expect(data[:image]).to eq("https://example.com/event.png")
+        expect(onebox.to_html).not_to include("site-logo.png")
+      end
 
-        it "keeps the compact image layout" do
-          expect(data).to include(event_has_featured_image: false)
-          expect(onebox.to_html).not_to include("--featured-image")
+      context "without an event image" do
+        let(:event_image_json) { "" }
+
+        it "does not fall back to the page's image" do
+          expect(data[:image]).to be_nil
+          expect(onebox.to_html).not_to include("<img")
         end
       end
 
-      context "with a landscape topic image" do
-        let(:image_metadata) { <<~HTML }
-            <meta property="og:image:width" content="690">
-            <meta property="og:image:height" content="362">
-          HTML
+      context "with a square event image" do
+        let(:event_image_json) { image_object_json(500, 500) }
 
-        it "uses the featured image layout" do
-          expect(data).to include(event_has_featured_image: true)
-          expect(onebox.to_html).to include("--featured-image")
+        it "letterboxes the image in the banner layout" do
+          expect(data).to include(
+            event_has_banner_image: true,
+            event_has_letterboxed_image: true,
+            event_has_portrait_image: false,
+          )
+          expect(onebox.to_html).to include("--banner-image --letterboxed-image")
         end
+      end
+
+      context "with a portrait event image" do
+        let(:event_image_json) { image_object_json(800, 1200) }
+
+        it "uses the portrait image layout" do
+          expect(data).to include(event_has_banner_image: false, event_has_portrait_image: true)
+          expect(onebox.to_html).to include("--portrait-image")
+        end
+      end
+
+      context "with a 4:3 event image" do
+        let(:event_image_json) { image_object_json(800, 600) }
+
+        it "uses the banner image layout" do
+          expect(data).to include(event_has_banner_image: true, event_has_letterboxed_image: false)
+        end
+      end
+
+      context "with a landscape event image" do
+        let(:event_image_json) { image_object_json(690, 362) }
+
+        it "uses the banner image layout" do
+          expect(data).to include(event_has_banner_image: true, event_has_letterboxed_image: false)
+          expect(onebox.to_html).to include("--banner-image")
+          expect(onebox.to_html).not_to include("--letterboxed-image")
+        end
+      end
+
+      context "with an event image wider than 2:1" do
+        let(:event_image_json) { image_object_json(1500, 500) }
+
+        it "letterboxes the image in the banner layout" do
+          expect(data).to include(event_has_banner_image: true, event_has_letterboxed_image: true)
+        end
+      end
+
+      context "with image dimensions given as QuantitativeValues" do
+        let(:event_image_json) { <<~JSON }
+            "image": {
+              "@type": "ImageObject",
+              "url": "https://example.com/event.png",
+              "width": { "@type": "QuantitativeValue", "value": 800 },
+              "height": { "@type": "QuantitativeValue", "value": 1200 }
+            },
+          JSON
+
+        it "reads the dimensions" do
+          expect(data).to include(event_has_portrait_image: true)
+        end
+      end
+
+      def image_object_json(width, height)
+        <<~JSON
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://example.com/event.png",
+            "width": #{width},
+            "height": #{height}
+          },
+        JSON
       end
     end
   end

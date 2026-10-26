@@ -43,9 +43,73 @@ module("Unit | Lib | decorate-event-oneboxes", function () {
       .dom(".discourse-event-onebox__time-text", element)
       .hasText("All day", "the event is identified as all day");
   });
+
+  test("exposes the image's dominant color for the letterbox", function (assert) {
+    const element = buildOnebox({
+      dominantColor: "2A292A",
+      startsAt: "2026-10-22T13:00:00.000Z",
+    });
+
+    decorateEventOneboxes(element, "UTC");
+
+    assert.strictEqual(
+      element
+        .querySelector(".discourse-event-onebox")
+        .style.getPropertyValue("--event-onebox-image-color"),
+      "#2A292A",
+      "the color is available to the image styles"
+    );
+  });
+
+  test("exposes the image's size so the letterbox can fit it", function (assert) {
+    const element = buildOnebox({
+      dominantColor: "2A292A",
+      imageHeight: 300,
+      imageWidth: 600,
+      startsAt: "2026-10-22T13:00:00.000Z",
+    });
+
+    decorateEventOneboxes(element, "UTC");
+
+    const style = element.querySelector(".discourse-event-onebox").style;
+    assert.strictEqual(
+      style.getPropertyValue("--event-onebox-image-ratio"),
+      "0.5",
+      "the ratio is available to the image styles"
+    );
+    assert.strictEqual(
+      style.getPropertyValue("--event-onebox-image-height"),
+      "300px",
+      "the height is available to the image styles"
+    );
+  });
+
+  test("ignores a malformed dominant color", function (assert) {
+    const element = buildOnebox({
+      dominantColor: "red; display: none",
+      startsAt: "2026-10-22T13:00:00.000Z",
+    });
+
+    decorateEventOneboxes(element, "UTC");
+
+    assert.strictEqual(
+      element
+        .querySelector(".discourse-event-onebox")
+        .style.getPropertyValue("--event-onebox-image-color"),
+      "",
+      "no color is applied"
+    );
+  });
 });
 
-function buildOnebox({ allDay = false, startsAt, endsAt }) {
+function buildOnebox({
+  allDay = false,
+  dominantColor,
+  imageHeight,
+  imageWidth,
+  startsAt,
+  endsAt,
+}) {
   const element = document.createElement("div");
   element.innerHTML = `
     <div
@@ -54,6 +118,11 @@ function buildOnebox({ allDay = false, startsAt, endsAt }) {
       data-event-starts-at="${startsAt}"
       data-event-ends-at="${endsAt}"
     >
+      ${
+        dominantColor
+          ? `<img class="discourse-event-onebox__image" data-dominant-color="${dominantColor}" width="${imageWidth ?? ""}" height="${imageHeight ?? ""}">`
+          : ""
+      }
       <span class="discourse-event-onebox__month"></span>
       <span class="discourse-event-onebox__day"></span>
       <span class="discourse-event-onebox__time-text"></span>

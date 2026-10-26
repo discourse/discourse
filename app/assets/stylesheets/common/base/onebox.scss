@@ -337,9 +337,29 @@ aside.onebox {
   }
 }
 
+// The color, ratio and height are set client-side from the image when they're known. The frame is
+// 16:9 at most, but never taller than the image itself, so small or very wide images don't sit in
+// large bars.
+@mixin letterboxed-event-image {
+  background: var(--event-onebox-image-color, var(--primary-very-low));
+  height: min(
+    calc(100cqi * 9 / 16),
+    calc(100cqi * var(--event-onebox-image-ratio, 1)),
+    var(--event-onebox-image-height, 100cqi)
+  );
+
+  // Shrinks images that don't fit, but never enlarges small ones
+  object-fit: scale-down;
+  object-position: center;
+}
+
+aside.onebox:has(.discourse-event-onebox) {
+  container: event-onebox / inline-size;
+}
+
 .discourse-event-onebox {
   display: grid;
-  grid-template-columns: 5rem minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   gap: var(--space-4);
 
   &__media {
@@ -348,6 +368,15 @@ aside.onebox {
     overflow: hidden;
     position: relative;
     width: 5rem;
+
+    &:not(:has(.discourse-event-onebox__image)) {
+      height: auto;
+      width: auto;
+
+      .discourse-event-onebox__date {
+        position: static;
+      }
+    }
   }
 
   &__image.thumbnail {
@@ -357,6 +386,9 @@ aside.onebox {
     max-height: 100%;
     max-width: 100%;
     object-fit: cover;
+
+    // Only affects images taller than their box, where the subject tends to sit high
+    object-position: 50% 0;
     width: 100%;
   }
 
@@ -401,7 +433,8 @@ aside.onebox {
     margin-block: var(--space-3) var(--space-1);
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
       flex: 0 0 auto;
     }
   }
@@ -413,7 +446,8 @@ aside.onebox {
     overflow-wrap: anywhere;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
       flex: 0 0 auto;
       margin-top: 0.2em;
     }
@@ -428,30 +462,94 @@ aside.onebox {
     justify-content: space-between;
   }
 
-  &.--featured-image {
-    grid-template-columns: minmax(8rem, 20%) minmax(0, 1fr);
+  &.--banner-image {
+    container-type: inline-size;
 
+    // Lets the image span the full width above the date and content
     .discourse-event-onebox__media {
-      height: 10.625rem;
-      width: auto;
+      display: contents;
+    }
+
+    // Matches the event widget's 16:9 image. The height is derived from the width rather than
+    // set with aspect-ratio, which cooked images carry inline from their dimensions.
+    .discourse-event-onebox__image.thumbnail {
+      border-radius: var(--d-border-radius);
+      grid-column: 1 / -1;
+      height: calc(100cqi * 9 / 16);
     }
 
     .discourse-event-onebox__date {
-      bottom: var(--space-2);
-      inset-inline-end: auto;
-      inset-inline-start: var(--space-2);
       margin: 0;
-      top: auto;
+      position: static;
     }
   }
 
-  @include viewport.until(sm) {
-    &.--featured-image {
-      grid-template-columns: 1fr;
+  &.--letterboxed-image .discourse-event-onebox__image.thumbnail {
+    @include letterboxed-event-image;
+  }
+
+  &.--portrait-image {
+    // Flattens both wrappers so the date can sit beside the title while the image keeps its own column
+    grid-template:
+      "image date title" auto
+      "image time time" auto
+      "image description description" auto
+      "image metadata metadata" auto
+      "image . ." 1fr / 8rem auto minmax(0, 1fr);
+    row-gap: 0;
+
+    .discourse-event-onebox__media,
+    .discourse-event-onebox__content {
+      display: contents;
     }
 
-    &.--featured-image &__media {
-      max-width: 14rem;
+    // Shows a 2:3 poster whole; anything taller is cropped from the bottom
+    .discourse-event-onebox__image.thumbnail {
+      border-radius: var(--d-border-radius);
+      grid-area: image;
+      height: auto;
+      max-height: 12rem;
+    }
+
+    .discourse-event-onebox__date {
+      grid-area: date;
+      margin: 0;
+      position: static;
+    }
+
+    .title-wrapper {
+      align-self: center;
+      grid-area: title;
+    }
+
+    .discourse-event-onebox__time {
+      grid-area: time;
+    }
+
+    .discourse-event-onebox__description {
+      grid-area: description;
+    }
+
+    .discourse-event-onebox__metadata {
+      grid-area: metadata;
+    }
+
+    // Two columns leave too little room for long titles in narrow spaces like phones or the chat
+    // drawer, so the image goes above, letterboxed into the same 16:9 frame as banner images
+    @container event-onebox (width < 30rem) {
+      container-type: inline-size;
+      grid-template:
+        "image image" auto
+        "date title" auto
+        ". time" auto
+        ". description" auto
+        ". metadata" auto / auto minmax(0, 1fr);
+
+      .discourse-event-onebox__image.thumbnail {
+        @include letterboxed-event-image;
+        margin-bottom: var(--space-4);
+        max-height: none;
+      }
     }
   }
 }
