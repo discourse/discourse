@@ -238,7 +238,7 @@ html.discourse-touch .voice-call-widget {
 .voice-room-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  height: calc(100dvh - var(--header-offset, 4em));
+  height: calc(100dvh - var(--main-outlet-offset, 4em));
   min-height: 0;
   border-right: 1px solid var(--content-border-color);
 
@@ -420,7 +420,6 @@ html.discourse-touch .voice-call-widget {
   }
 }
 
-// fallbacks when chat plugin isn't enabled
 .voice-room-header {
   &__title {
     display: flex;
@@ -428,8 +427,6 @@ html.discourse-touch .voice-call-widget {
     gap: 0.5rem;
     min-width: 0;
     height: var(--chat-header-offset, 45px);
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -471,6 +468,7 @@ html.discourse-touch .voice-call-widget {
   &__participants {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+    white-space: nowrap;
   }
 
   &__icon {
@@ -713,7 +711,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.voice-room-header) {
 
   .voice-room-page .chat-side-panel {
     position: fixed;
-    inset-block: var(--header-offset, 4em) 0;
+    inset-block: var(--main-outlet-offset, 4em) 0;
     inset-inline: 0;
     z-index: 1050;
     width: auto;

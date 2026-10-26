@@ -71,7 +71,7 @@
     }
   }
 
-  .is-unavailable & {
+  .is-unavailable.voice-chat & {
     .d-icon {
       color: var(--danger);
     }
@@ -93,10 +93,6 @@
     &.--voice {
       @include viewport.until(sm) {
         margin-left: var(--space-4);
-
-        .emoji-picker-trigger {
-          display: none;
-        }
       }
     }
   }

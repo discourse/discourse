@@ -385,12 +385,12 @@ export default class VoiceChatPanel extends Component {
                       {{on "focusout" (fn this.setComposerFocused false)}}
                     ></textarea>
                   </div>
-                  <EmojiPicker
-                    @btnClass="chat-composer-button btn-transparent --emoji"
-                    @context="voice-chat"
-                    @didSelectEmoji={{this.insertEmoji}}
-                  />
                   {{#if this.site.desktopView}}
+                    <EmojiPicker
+                      @btnClass="chat-composer-button btn-transparent --emoji"
+                      @context="voice-chat"
+                      @didSelectEmoji={{this.insertEmoji}}
+                    />
                     <div class="chat-composer-separator"></div>
                     <SendButton
                       @disabled={{this.sendDisabled}}
