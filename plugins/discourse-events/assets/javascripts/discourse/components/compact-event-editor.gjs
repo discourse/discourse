@@ -916,7 +916,7 @@ export default class CompactEventEditor extends Component {
       {{/if}}
     </section>
 
-    {{#each this.visibleReminders as |entry|}}
+    {{#each this.visibleReminders key="@index" as |entry|}}
       <section class="composer-event__reminder">
         <DTooltip class="composer-event__reminder-icon">
           <:trigger>{{dIcon entry.icon}}</:trigger>
