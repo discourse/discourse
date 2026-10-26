@@ -18,9 +18,9 @@ import {
 } from "../../../lib/workflows/graph-constants.js";
 import {
   nodeTypeInputUsesConnectionIndexes,
-  nodeTypeLabel,
   nodeTypeOutputKeys,
   nodeTypePrimaryOutputKey,
+  nodeTypeSearchText,
   nodeTypeVersion,
   resolveNodeTypeVersion,
   typeVersionForNode,
@@ -217,9 +217,10 @@ export default class WorkflowsEditor extends Component {
     if (!term) {
       return nodeTypes;
     }
+    const words = term.split(/\s+/);
     return nodeTypes.filter((nt) => {
-      const label = nodeTypeLabel(nt)?.toLowerCase() || "";
-      return label.includes(term);
+      const searchText = nodeTypeSearchText(nt);
+      return words.every((word) => searchText.includes(word));
     });
   }
 

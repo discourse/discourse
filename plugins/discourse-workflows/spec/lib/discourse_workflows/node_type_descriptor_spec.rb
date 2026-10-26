@@ -50,6 +50,23 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
     end
   end
 
+  describe "#search_terms_key" do
+    it "builds the i18n key from the identifier" do
+      expect(trigger_class.search_terms_key).to eq(
+        "discourse_workflows.node_search_terms.trigger:test_event",
+      )
+    end
+
+    it "uses the key the description declares" do
+      klass =
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(name: "action:test_search", search_terms_key: "discourse_workflows.custom")
+        end
+
+      expect(klass.search_terms_key).to eq("discourse_workflows.custom")
+    end
+  end
+
   describe "#i18n_prefix" do
     it "returns the default prefix" do
       expect(trigger_class.i18n_prefix).to eq("discourse_workflows")
@@ -205,6 +222,9 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
       expect(result[:label_key]).to eq("discourse_workflows.nodes.trigger:test_event")
       expect(result[:description_key]).to eq(
         "discourse_workflows.node_descriptions.trigger:test_event",
+      )
+      expect(result[:search_terms_key]).to eq(
+        "discourse_workflows.node_search_terms.trigger:test_event",
       )
       expect(result[:palette_group][:id]).to eq("triggers")
       expect(result[:i18n_prefix]).to eq("discourse_workflows")

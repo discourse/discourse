@@ -365,6 +365,8 @@ en:
         "action:topic_pin": "Topic pinning"
         "action:topic_moderation": "Topic moderation"
         "action:flag_user": "Flag user"
+      node_search_terms:
+        "action:topic_moderation": "hide, invisible"
       node_descriptions:
         "trigger:topic_published": "Fires when a topic is published"
         "trigger:topic_timer_changed": "Fires when a topic timer is created, updated, cancelled, or completed"
