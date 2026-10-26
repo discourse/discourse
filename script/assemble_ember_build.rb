@@ -62,10 +62,14 @@ def ci_minify?
   ENV["DISCOURSE_CI_MINIFY"] == "1"
 end
 
+def production_test_build?
+  resolved_ember_env == "production" && ENV["RAILS_ENV"] == "test"
+end
+
 def build_info
   info = { "ember_env" => resolved_ember_env, "core_tree_hash" => core_tree_hash }
   info["ci_minify"] = true if ci_minify?
-  info["rails_testing"] = true if resolved_ember_env == "production" && ENV["RAILS_ENV"] == "test"
+  info["rails_testing"] = true if production_test_build?
   info
 end
 
@@ -139,7 +143,10 @@ build_env = { "CI" => "1", "SKIP_DB_AND_REDIS" => "1" }
 
 core_build_reusable =
   existing_core_build_usable? ||
-    (!ci_minify? && download_prebuild_assets! && existing_core_build_usable?)
+    (
+      !ci_minify? && !production_test_build? && download_prebuild_assets! &&
+        existing_core_build_usable?
+    )
 
 if core_build_reusable
   log "Reusing existing core ember build. All done."
