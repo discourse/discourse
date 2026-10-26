@@ -60,6 +60,7 @@ Shape entities only with `DiscourseWorkflows::EntitySerializers` (`lib/discourse
 | Topic (actions) | `serialize_topic(topic, guardian:, custom_field_names:)` | `TOPIC_LIST_ITEM_SCHEMA` |
 | Post | `serialize_post(post, guardian:, include_raw:, include_cooked:)` (nil for nil post) | `Schema::POST_SCHEMA` / `POST_PROPERTIES` |
 | Reviewable | `serialize_reviewable(reviewable)` | `Schema::REVIEWABLE_EVENT_SCHEMA` |
+| Timer | `serialize_timer(timer, attributes = timer.attributes)` (pass the previous attributes for the timer before a change) | `Schema::TOPIC_TIMER` / `NULLABLE_TOPIC_TIMER` / `TOPIC_TIMER_PROPERTIES` |
 | Assignee (user or group) | `serialize_assignee(assignee, guardian:)` | `Schema::ASSIGNEE_PROPERTIES` |
 | Group (basic) | `serialize_basic_group(group)` | `BASIC_GROUP_PROPERTIES` |
 | Any serializer | `serialize_record(record, SerializerClass, scope:)` | |

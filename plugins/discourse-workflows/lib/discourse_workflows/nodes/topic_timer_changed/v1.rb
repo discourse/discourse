@@ -5,30 +5,6 @@ module DiscourseWorkflows
     module TopicTimerChanged
       class V1 < NodeType
         CHANGES = %w[created updated cancelled completed].freeze
-        TIMER_PROPERTIES = {
-          "id" => {
-            "type" => "integer",
-          },
-          "status_type" => {
-            "type" => "string",
-          },
-          "execute_at" => {
-            "type" => "string",
-            "format" => "date-time",
-          },
-          "category_id" => {
-            "type" => %w[integer null],
-          },
-          "user_id" => {
-            "type" => "integer",
-          },
-          "based_on_last_post" => {
-            "type" => "boolean",
-          },
-          "duration_minutes" => {
-            "type" => %w[integer null],
-          },
-        }.freeze
 
         description(
           name: "trigger:topic_timer_changed",
@@ -49,14 +25,8 @@ module DiscourseWorkflows
                       "type" => "string",
                       "enum" => CHANGES,
                     },
-                    "timer" => {
-                      "type" => "object",
-                      "properties" => TIMER_PROPERTIES,
-                    },
-                    "previous_timer" => {
-                      "type" => %w[object null],
-                      "properties" => TIMER_PROPERTIES,
-                    },
+                    "timer" => Schema::TOPIC_TIMER,
+                    "previous_timer" => Schema::NULLABLE_TOPIC_TIMER,
                   ),
                 ),
             },
@@ -95,8 +65,8 @@ module DiscourseWorkflows
           {
             topic: serialize_topic_list_item(@topic),
             change: @change,
-            timer: serialize_timer(@timer.attributes),
-            previous_timer: @previous_attributes && serialize_timer(@previous_attributes),
+            timer: serialize_timer(@timer),
+            previous_timer: @previous_attributes && serialize_timer(@timer, @previous_attributes),
           }
         end
 
@@ -110,16 +80,6 @@ module DiscourseWorkflows
           return false if types.present? && !types.intersect?(timer_types)
 
           matches_topic_filters?(@topic, trigger_ctx)
-        end
-
-        private
-
-        def serialize_timer(attributes)
-          attributes.slice(*::TopicTimer::EVENT_ATTRIBUTES).merge(
-            "id" => @timer.id,
-            "status_type" => ::TopicTimer.types[attributes["status_type"]].to_s,
-            "execute_at" => attributes["execute_at"].iso8601,
-          )
         end
       end
     end
