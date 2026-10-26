@@ -83,14 +83,19 @@ if defined?(DiscourseWorkflows)
             {
               card:
                 @card.as_json(
-                  only: BoardsSchema::CARD_PROPERTIES.keys - ["unicode_title"],
-                  methods: [:unicode_title],
-                ),
+                  only: BoardsSchema::CARD_PROPERTIES.keys - %w[unicode_title url],
+                  methods: %i[unicode_title url],
+                ).merge("assignee" => serialize_assignee(@card.assigned_to)),
+              board: {
+                id: @card.board.id,
+                name: @card.board.name,
+                url: @card.board.url,
+              },
               card_moved: {
                 old_column: serialize_column(@old_column),
                 new_column: serialize_column(@new_column),
               },
-              acting_user: serialize_record(@acting_user, BasicUserSerializer),
+              acting_user: serialize_user(@acting_user),
             }
           end
 
