@@ -28,20 +28,11 @@ const TARGETS = [
 // `@ember/-internals/deprecations` bare specifier.
 const SPECIFIER = /deprecate|handlers|-internals\/deprecations/;
 
-export default function productionEmberDeprecations({
-  preserveDebugTools = false,
-} = {}) {
-  const targets = preserveDebugTools
-    ? [...TARGETS, "@ember/debug/index.js"]
-    : TARGETS;
-  const specifier = preserveDebugTools
-    ? new RegExp(`${SPECIFIER.source}|@ember/debug`)
-    : SPECIFIER;
-
+export default function productionEmberDeprecations() {
   return {
     name: "production-ember-deprecations",
     resolveId: {
-      filter: [include(id(specifier))],
+      filter: [include(id(SPECIFIER))],
       async handler(source, importer, options) {
         if (!importer) {
           return null;
@@ -55,7 +46,7 @@ export default function productionEmberDeprecations({
           return null;
         }
 
-        if (targets.some((target) => resolved.id.endsWith(PROD + target))) {
+        if (TARGETS.some((target) => resolved.id.endsWith(PROD + target))) {
           return { ...resolved, id: resolved.id.replace(PROD, DEV) };
         }
 

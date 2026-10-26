@@ -4,19 +4,26 @@ const {
 } = require("@warp-drive/core/build-config");
 const StripTestSelectors = require("strip-test-selectors");
 
+const PRODUCTION = process.env.EMBER_ENV === "production";
+const RAILS_TESTING = process.env.RAILS_ENV === "test";
+
 const macros = buildMacros({
   configure(macrosConfig) {
     macrosConfig.setGlobalConfig(__filename, "@embroider/core", {
       active: true,
     });
+    macrosConfig.setGlobalConfig(__filename, "discourse", {
+      testSupport: !PRODUCTION || RAILS_TESTING,
+    });
+    if (RAILS_TESTING) {
+      macrosConfig.enableRuntimeMode();
+    }
     // WarpDrive build config (previously wired via setConfig in ember-cli-build.js).
     // Feeds into our existing @embroider/macros config rather than a second
     // instance, which would duplicate the macros babel plugin.
     setWarpDriveConfig(macrosConfig, { compatWith: "5.9" });
   },
 });
-
-const PRODUCTION = process.env.EMBER_ENV === "production";
 
 module.exports = {
   plugins: [
@@ -31,7 +38,7 @@ module.exports = {
         ],
         transforms: [
           ...macros.templateMacros,
-          ...(PRODUCTION ? [StripTestSelectors] : []),
+          ...(PRODUCTION && !RAILS_TESTING ? [StripTestSelectors] : []),
         ],
       },
     ],

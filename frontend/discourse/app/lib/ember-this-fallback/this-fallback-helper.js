@@ -1,10 +1,10 @@
 import { helper } from "@ember/component/helper";
-import { deprecate } from "@ember/debug";
+import * as EmberDebug from "@ember/debug";
 import { get } from "@ember/object";
 
 export default helper(([context, path, deprecationJson]) => {
   if (deprecationJson) {
-    deprecate(...JSON.parse(deprecationJson));
+    EmberDebug.deprecate(...JSON.parse(deprecationJson));
   }
   return get(context, path);
 });

@@ -1,5 +1,5 @@
 /* eslint-disable ember/no-jquery */
-import { DEBUG } from "@glimmer/env";
+import { getGlobalConfig, macroCondition } from "@embroider/macros";
 import $ from "jquery";
 import { hasPendingBeaconRequests } from "discourse/lib/beacon-pageview";
 import { isRailsTesting } from "discourse/lib/environment";
@@ -8,7 +8,10 @@ export default {
   after: ["discourse-bootstrap"],
 
   initialize() {
-    if (DEBUG && isRailsTesting()) {
+    if (
+      macroCondition(getGlobalConfig().discourse.testSupport) &&
+      isRailsTesting()
+    ) {
       const setupDataElement = document.getElementById("data-discourse-setup");
       const isSettledDebugEnabled =
         setupDataElement?.dataset.capybaraPlaywrightDebugClientSettled ===

@@ -52,8 +52,6 @@ const aliases = [
 
 export function buildConfig({ devMode } = {}) {
   const isProduction = process.env.EMBER_ENV === "production";
-  const useProductionDependencies =
-    isProduction || process.env.DISCOURSE_CI_PRODUCTION_DEPS === "1";
 
   if (!isProduction) {
     process.env.NODE_ENV = "development";
@@ -65,9 +63,7 @@ export function buildConfig({ devMode } = {}) {
     tsconfig: false,
     resolve: {
       extensions,
-      conditionNames: useProductionDependencies
-        ? ["production"]
-        : ["development"],
+      conditionNames: isProduction ? ["production"] : ["development"],
     },
     experimental: {
       incrementalBuild: true,
@@ -81,7 +77,9 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       discourse: "discourse.js",
-      ...(!isProduction || process.env.FORCE_BUILD_TESTS
+      ...(!isProduction ||
+      process.env.RAILS_ENV === "test" ||
+      process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
             "qunit-live-reload": "qunit-live-reload.js",
@@ -105,9 +103,7 @@ export function buildConfig({ devMode } = {}) {
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
       discourseSourceImports(),
-      ...(useProductionDependencies
-        ? [productionEmberDeprecations({ preserveDebugTools: !isProduction })]
-        : []),
+      ...(isProduction ? [productionEmberDeprecations()] : []),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({
@@ -121,7 +117,9 @@ export function buildConfig({ devMode } = {}) {
       discourseChunkNamesPlugin(),
       chunkImportMapPlugin({
         root: import.meta.dirname,
-        noImportMap: (chunk) => chunk.facadeModuleId?.includes("/app/workers/"),
+        noImportMap: (chunk) =>
+          chunk.facadeModuleId?.includes("/app/workers/") ||
+          chunk.facadeModuleId?.endsWith("/qunit-live-reload.js"),
         onImportMap: (map) => (importMap = map),
       }),
       {
