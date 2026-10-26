@@ -7354,6 +7354,23 @@ RSpec.describe TopicsController do
 
         expect(execute_at).to eq(updated_timestamp)
       end
+
+      it "returns 400 and changes nothing when enabled_until is in the past" do
+        put "/t/#{topic.id}/slow_mode.json",
+            params: {
+              seconds: "3600",
+              enabled_until: 1.hour.ago.to_formatted_s(:iso8601),
+            }
+
+        expect(response.status).to eq(400)
+        expect(topic.reload.slow_mode_seconds).to eq(0)
+      end
+
+      it "returns 400 when seconds is missing" do
+        put "/t/#{topic.id}/slow_mode.json", params: { enabled_until: timestamp }
+
+        expect(response.status).to eq(400)
+      end
     end
 
     describe "changes slow mode" do

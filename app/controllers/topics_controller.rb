@@ -1340,26 +1340,14 @@ class TopicsController < ApplicationController
   end
 
   def set_slow_mode
-    topic = Topic.find(params[:topic_id])
-    slow_mode_type = TopicTimer.types[:clear_slow_mode]
-    timer = TopicTimer.find_by(topic: topic, status_type: slow_mode_type)
-
-    guardian.ensure_can_moderate!(topic)
-    topic.update!(slow_mode_seconds: params[:seconds])
-    enabled = params[:seconds].to_i > 0
-
-    time = enabled && params[:enabled_until].present? ? params[:enabled_until] : nil
-
-    topic.set_or_create_timer(slow_mode_type, time, by_user: timer&.user)
-
-    StaffActionLogger.new(current_user).log_topic_slow_mode(
-      topic,
-      enabled:,
-      seconds: params[:seconds],
-      until: time,
-    )
-
-    head :ok
+    Topic::UpdateSlowMode.call(service_params) do
+      on_success { head :ok }
+      on_failed_contract do |contract|
+        raise Discourse::InvalidParameters.new(contract.errors.full_messages.join("\n"))
+      end
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_update_slow_mode) { raise Discourse::InvalidAccess }
+    end
   end
 
   private

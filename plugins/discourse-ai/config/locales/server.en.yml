@@ -1237,6 +1237,7 @@ en:
           not_found: "Topic not found."
           not_allowed: "You are not allowed to set slow mode on this topic."
           no_reason: "A reason is required to set slow mode."
+          invalid: "Slow mode could not be changed: %{errors}"
         success: "Slow mode updated successfully."
 
       move_posts:
