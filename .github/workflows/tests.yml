@@ -284,6 +284,7 @@ jobs:
         run: |
           pnpm deploy --filter @discourse/playwright-runner --prod tmp/playwright
           echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
+          echo "NODE_PATH=$PWD/tmp/playwright/node_modules${NODE_PATH:+:$NODE_PATH}" >> $GITHUB_ENV
 
       # Drop node_modules to match production
       - name: Remove node_modules
