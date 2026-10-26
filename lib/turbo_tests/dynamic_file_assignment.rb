@@ -43,6 +43,16 @@ module TurboTests
 
     private_constant :Ordering, :Execution
 
+    RSpec.configure do |config|
+      config.define_derived_metadata do |metadata|
+        next unless metadata.key?(:example_group)
+
+        multisite = metadata[:type] == :multisite
+        selected = DIRECTORY ? !multisite : multisite
+        metadata[:if] = false unless selected
+      end
+    end
+
     if DIRECTORY
       RSpec::Core::World.prepend(Ordering)
       RSpec::Core::ExampleGroup.singleton_class.prepend(Execution)
