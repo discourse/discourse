@@ -139,8 +139,29 @@ module DiscourseWorkflows
       end
     end
 
-    def self.deprecated(superseded_by:, changes: {}, description_key: nil, notice_key: nil)
-      @deprecation = { superseded_by:, changes:, description_key:, notice_key: }.compact.freeze
+    # The upgrade block maps a saved node's parameters to its replacement, `{ type:, version:, parameters:,
+    # notes: }`, when that's another node (`replaced_by:`) or takes different parameters. `notes` are I18n keys
+    # telling admins what changes for them; nil means the configuration can't be upgraded automatically.
+    def self.deprecated(
+      superseded_by: nil,
+      replaced_by: nil,
+      changes: {},
+      description_key: nil,
+      notice_key: nil,
+      &upgrade
+    )
+      if superseded_by.nil? && upgrade.nil?
+        raise ArgumentError, "A deprecated node needs superseded_by: or an upgrade block"
+      end
+
+      @upgrade = upgrade
+      @deprecation = {
+        superseded_by:,
+        replaced_by: Array.wrap(replaced_by).presence,
+        changes:,
+        description_key:,
+        notice_key:,
+      }.compact.freeze
     end
 
     def self.deprecation
@@ -149,6 +170,15 @@ module DiscourseWorkflows
 
     def self.deprecated?
       deprecation.present?
+    end
+
+    def self.upgrade(parameters)
+      return if !deprecated?
+
+      parameters = parameters.deep_stringify_keys
+      return @upgrade.call(parameters) if @upgrade
+
+      { type: identifier, version: deprecation[:superseded_by], parameters: }
     end
 
     def self.identifier
@@ -168,7 +198,7 @@ module DiscourseWorkflows
     end
 
     def self.palette_visible?
-      description_value(:palette_visible)
+      description_value(:palette_visible) && !deprecated?
     end
 
     def self.previewable?
