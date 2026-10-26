@@ -324,6 +324,31 @@ customization ports are done.
   | `.select-kit-row .discourse-tag-count` | `.d-tag-option .discourse-tag-count` |
   | `.filter-for-more` | `.d-tag-drop__filter-for-more`, inside `.d-select__footer` |
 
+## Behaviour changes to compare by hand
+
+Differences from select-kit to try side by side (flag on and off) before a family is promoted.
+Open items need a decision after manual testing; the rest are intended but still worth seeing.
+
+**Categories** (recorded 2026-10-24)
+
+- [ ] **Open: typing does not highlight the first match.** Select-kit highlights the first row as
+  soon as a query is typed, so Enter picks it (`select-kit.js:1070-1076`, unless a single select
+  already holds a value). In DSelect's `button` variant nothing is active until an arrow key
+  moves to a row. Kept for now; changing it would change every `button`-variant select, so decide
+  after testing the composer chooser and the breadcrumb drop.
+- [ ] **No blank trigger.** With Uncategorized disallowed and `default_composer_category` set,
+  the legacy chooser shows an empty header. The new one shows "Choose a category…". The composer
+  fills in the default category itself, so the blank state only showed briefly or outside the
+  composer.
+- [ ] **Breadcrumb search is not capped at 5.** The legacy drop shows at most five results in
+  local mode; the new filter lists every match, ranked top level first, then prefix before
+  substring.
+- [ ] **Lazy loading pages instead of stopping.** The legacy chooser and selector make one search
+  request and show its first 25 rows; the new ones keep paging as you scroll. The breadcrumb drop still shows 15 with
+  "+N more" for a long level.
+- [ ] **"+ Subcategories" includes every level.** In lazy mode the legacy row missed
+  grandchildren; the new one adds the whole tree, minus excluded categories.
+
 ## Porting lessons
 
 Mistakes made porting the tag family and its customizations, kept so the next families avoid

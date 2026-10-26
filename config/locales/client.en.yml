@@ -5571,6 +5571,7 @@ en:
         login_to_set_languages: "Log in to set more languages"
 
     category:
+      select_with_subcategories: "%{category} and all subcategories"
       none: "(no category)"
       all: "All categories"
       choose: "Category&hellip;"

@@ -1,0 +1,881 @@
+import { set } from "@ember/object";
+import {
+  click,
+  find,
+  findAll,
+  render,
+  settled,
+  triggerEvent,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import Site from "discourse/models/site";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
+import {
+  disableVirtualization,
+  enableVirtualization,
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
+import DSelectCategoryFilter, {
+  ALL_CATEGORIES_ID,
+  NO_CATEGORIES_ID,
+} from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
+import { i18n } from "discourse-i18n";
+
+function optionValues() {
+  return findAll("[role='option'][data-value]").map(
+    (option) => option.dataset.value
+  );
+}
+
+/** Replaces the site's categories with 235 paged top-level ones, in activity order. */
+function setPagedCategories() {
+  const categories = Array.from({ length: 235 }, (_, index) =>
+    Category.create({
+      id: 99000 + index,
+      name: `Paged category ${String(index).padStart(3, "0")}`,
+      slug: `paged-${index}`,
+      permission: 1,
+      topic_count: 235 - index,
+    })
+  );
+  Site.current().set("categories", categories);
+  return categories;
+}
+
+function optionFor(id) {
+  return find(`[role='option'][data-value='${id}']`);
+}
+
+/** The select inside `scope`, or the only one rendered. */
+function select(scope = "") {
+  return dSelect(`${scope} .d-select`.trim());
+}
+
+/** The query input, wherever the variant places it. */
+function filterInput() {
+  return find(".d-select__input, .d-select__panel .d-select__filter");
+}
+
+/** The level lists bread-crumbs builds from the site, in its order. */
+function topLevel() {
+  return Site.current().categoriesList.filter(
+    (category) => !category.parent_category_id
+  );
+}
+
+function childrenOf(id) {
+  return Site.current().categoriesList.filter(
+    (category) => category.parent_category_id === id
+  );
+}
+
+module(
+  "Integration | ui-kit | select | recipes | DSelectCategoryFilter",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.navigate = sinon.stub(DiscourseURL, "routeTo");
+      this.navigateUrl = sinon.stub(DiscourseURL, "routeToUrl");
+    });
+
+    module("trigger", function () {
+      test("its kind is select-category-filter and its legacy class is category-drop", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-category-filter", (spec) =>
+              spec.row((row) => row.classes.push("x-category-filter"))
+            );
+          })
+        );
+        const items = topLevel();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+
+        assert.dom(".d-select").hasClass("category-drop");
+        await select().open();
+        assert.true(
+          find("[role='option']").classList.contains("x-category-filter")
+        );
+      });
+
+      test("the caret points right while closed and down while open", async function (assert) {
+        const items = topLevel();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+
+        assert.dom(".d-icon-angle-right", select().element()).exists();
+        await select().open();
+        assert.dom(".d-icon-angle-down", select().element()).exists();
+      });
+
+      test("with no value it names the level", async function (assert) {
+        const top = topLevel();
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+
+        await render(
+          <template>
+            <div class="top"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="sub"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+              /></div>
+            <div class="none"><DSelectCategoryFilter
+                @items={{children}}
+                @noSubcategories={{true}}
+                @parentCategory={{parent}}
+              /></div>
+          </template>
+        );
+
+        assert
+          .dom(select(".top").element())
+          .includesText(i18n("categories.categories_label"));
+        assert
+          .dom(select(".sub").element())
+          .includesText(i18n("categories.subcategories_label"));
+        assert
+          .dom(select(".none").element())
+          .includesText(i18n("categories.no_subcategories"));
+      });
+
+      test("adjacent levels have distinct accessible names", async function (assert) {
+        const top = topLevel();
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+
+        await render(
+          <template>
+            <div class="top"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="sub"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+              /></div>
+          </template>
+        );
+
+        const name = (scope) => {
+          const control =
+            select(scope)
+              .element()
+              .querySelector("[aria-label], [aria-labelledby]") ??
+            select(scope).element();
+          const labelledBy = control.getAttribute("aria-labelledby");
+          return labelledBy
+            ? labelledBy
+                .split(" ")
+                .map((id) => document.getElementById(id)?.textContent.trim())
+                .join(" ")
+            : control.getAttribute("aria-label");
+        };
+
+        assert.notStrictEqual(name(".top"), name(".sub"));
+      });
+
+      test("the held category shows its own badge", async function (assert) {
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+        const value = Category.findById(26);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @items={{children}}
+              @parentCategory={{parent}}
+              @value={{value}}
+            />
+          </template>
+        );
+
+        assert.deepEqual(
+          [...select().element().querySelectorAll(".badge-category__name")].map(
+            (el) => el.textContent.trim()
+          ),
+          ["spec"],
+          "no parent badge"
+        );
+      });
+    });
+
+    module("browsing", function () {
+      test("lists the caller's level in its order, without shortcuts when nothing is held", async function (assert) {
+        this.siteSettings.allow_uncategorized_topics = true;
+        const items = topLevel();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await select().open();
+
+        assert.deepEqual(
+          optionValues(),
+          items
+            .map((category) => String(category.id))
+            .slice(0, optionValues().length)
+        );
+      });
+
+      test("uncategorized follows the site setting", async function (assert) {
+        this.siteSettings.allow_uncategorized_topics = false;
+        const items = topLevel();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await select().open();
+
+        assert.dom(optionFor(17)).doesNotExist();
+      });
+
+      test("a held top-level category offers to remove the filter", async function (assert) {
+        const items = topLevel();
+        const value = items[0];
+
+        await render(
+          <template>
+            <DSelectCategoryFilter @items={{items}} @value={{value}} />
+          </template>
+        );
+        await select().open();
+
+        assert.strictEqual(optionValues()[0], ALL_CATEGORIES_ID);
+        assert
+          .dom(optionFor(ALL_CATEGORIES_ID))
+          .includesText(i18n("categories.remove_filter"));
+      });
+
+      test("a subcategory level offers no subcategories, and both shortcuts once one is held", async function (assert) {
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+        const held = Category.findById(26);
+
+        await render(
+          <template>
+            <div class="empty"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+              /></div>
+            <div class="held"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+                @value={{held}}
+              /></div>
+          </template>
+        );
+
+        await select(".empty").open();
+        assert.strictEqual(optionValues()[0], NO_CATEGORIES_ID);
+        assert
+          .dom(optionFor(NO_CATEGORIES_ID))
+          .includesText(i18n("categories.no_subcategories"));
+        await select(".empty").close();
+
+        await select(".held").open();
+        assert.deepEqual(optionValues().slice(0, 2), [
+          ALL_CATEGORIES_ID,
+          NO_CATEGORIES_ID,
+        ]);
+      });
+
+      test("editing offers no shortcut back to every category", async function (assert) {
+        const items = topLevel();
+        const value = items[0];
+
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @editing={{true}}
+              @items={{items}}
+              @value={{value}}
+            />
+          </template>
+        );
+        await select().open();
+
+        assert.dom(optionFor(ALL_CATEGORIES_ID)).doesNotExist();
+      });
+
+      test("subcategory rows hide their parent", async function (assert) {
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @items={{children}}
+              @parentCategory={{parent}}
+            />
+          </template>
+        );
+        await select().open();
+
+        assert.deepEqual(
+          [...optionFor(26).querySelectorAll(".badge-category__name")].map(
+            (el) => el.textContent.trim()
+          ),
+          ["spec"]
+        );
+      });
+
+      test("topic counts can include subcategories", async function (assert) {
+        const items = topLevel();
+
+        await render(
+          <template>
+            <div class="own"><DSelectCategoryFilter @items={{items}} /></div>
+            <div class="all"><DSelectCategoryFilter
+                @countSubcategories={{true}}
+                @items={{items}}
+              /></div>
+          </template>
+        );
+
+        await select(".own").open();
+        assert.true(optionFor(7).textContent.includes("481"));
+        await select(".own").close();
+
+        await select(".all").open();
+        assert.true(optionFor(7).textContent.includes("584"));
+      });
+
+      test("descriptions show only to newcomers", async function (assert) {
+        const items = topLevel();
+        const id = items[0].id;
+
+        set(this.currentUser, "staff", false);
+        set(this.currentUser, "moderator", false);
+        set(this.currentUser, "admin", false);
+        set(this.currentUser, "trust_level", 0);
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await select().open();
+        assert
+          .dom(".d-select__option-description", optionFor(id))
+          .exists("a TL0 user sees them");
+        await select().close();
+
+        set(this.currentUser, "trust_level", 1);
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await select().open();
+        assert
+          .dom(".d-select__option-description", optionFor(id))
+          .doesNotExist("TL1 does not");
+        await select().close();
+
+        set(this.currentUser, "trust_level", 0);
+        set(this.currentUser, "moderator", true);
+        set(this.currentUser, "staff", true);
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await select().open();
+        assert
+          .dom(".d-select__option-description", optionFor(id))
+          .doesNotExist("staff do not");
+      });
+    });
+
+    module("choosing", function () {
+      test("emits the Category or the shortcut and never navigates", async function (assert) {
+        Site.current().updateCategories([
+          {
+            id: 9700,
+            name: "Spectrum",
+            slug: "spectrum",
+            parent_category_id: 2,
+            permission: 1,
+          },
+        ]);
+        const onChange = sinon.spy();
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+        const held = Category.findById(26);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @items={{children}}
+              @onChange={{onChange}}
+              @parentCategory={{parent}}
+              @value={{held}}
+            />
+          </template>
+        );
+
+        await select().open();
+        await click(optionFor(NO_CATEGORIES_ID));
+        assert.strictEqual(onChange.lastCall.args[0], NO_CATEGORIES_ID);
+
+        await select().open();
+        await click(optionFor(ALL_CATEGORIES_ID));
+        assert.strictEqual(onChange.lastCall.args[0], ALL_CATEGORIES_ID);
+
+        await select().open();
+        await select().search("spectrum");
+        await click(optionFor(9700));
+        assert.strictEqual(
+          onChange.lastCall.args[0],
+          Category.findById(9700),
+          "a pick that changes the value emits the record"
+        );
+
+        assert.false(this.navigate.called, "no routeTo");
+        assert.false(this.navigateUrl.called, "no routeToUrl");
+      });
+    });
+
+    module("searching", function () {
+      test("at the top level a search spans the site and ranks top-level categories first", async function (assert) {
+        Site.current().updateCategories([
+          { id: 9801, name: "Alpha docs", slug: "alpha-docs", permission: 1 },
+          {
+            id: 9802,
+            name: "Docs",
+            slug: "docs",
+            parent_category_id: 9801,
+            permission: 1,
+          },
+          { id: 9803, name: "Docs hub", slug: "docs-hub", permission: 1 },
+        ]);
+        const items = topLevel();
+        const value = items[0];
+
+        await render(
+          <template>
+            <DSelectCategoryFilter @items={{items}} @value={{value}} />
+          </template>
+        );
+        await select().open();
+        await select().search("docs");
+
+        assert.deepEqual(
+          optionValues(),
+          ["9803", "9801", "9802"],
+          "top level first, then prefix before substring, and no shortcuts"
+        );
+      });
+
+      test("a search is not limited to five results", async function (assert) {
+        Site.current().updateCategories(
+          Array.from({ length: 8 }, (_, index) => ({
+            id: 9810 + index,
+            name: `Zebra ${index}`,
+            slug: `zebra-${index}`,
+            permission: 1,
+          }))
+        );
+        const items = topLevel();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await select().open();
+        await select().search("zebra");
+
+        assert.strictEqual(optionValues().length, 8);
+      });
+
+      test("below the top level a search keeps to the parent's direct children", async function (assert) {
+        const parent = Category.findById(7);
+        const children = childrenOf(7);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @items={{children}}
+              @parentCategory={{parent}}
+            />
+          </template>
+        );
+        await select().open();
+        await select().search("a");
+
+        assert.deepEqual(optionValues().sort(), ["27", "28"]);
+        assert.dom(optionFor(NO_CATEGORIES_ID)).doesNotExist("no shortcuts");
+      });
+
+      test("a keyboard pick on a typed match commits without waiting", async function (assert) {
+        const onChange = sinon.spy();
+        const items = topLevel();
+
+        await render(
+          <template>
+            <DSelectCategoryFilter @items={{items}} @onChange={{onChange}} />
+          </template>
+        );
+        await select().open();
+        await select().search("bug");
+        await triggerKeyEvent(filterInput(), "keydown", "ArrowDown");
+        await triggerKeyEvent(filterInput(), "keydown", "Enter");
+
+        assert.strictEqual(onChange.lastCall?.args[0], Category.findById(1));
+      });
+    });
+
+    module("lazy loading", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        Site.current().set("lazy_load_categories", true);
+      });
+
+      /** Returns `count` top-level rows from the server and records each request. */
+      function stubLevel(count) {
+        const requests = [];
+        pretender.post("/categories/search", (request) => {
+          const params = new URLSearchParams(request.requestBody);
+          requests.push(params);
+          const rows = Array.from({ length: count }, (_, index) => ({
+            id: 9900 + index,
+            name: `Remote ${index}`,
+            slug: `remote-${index}`,
+            permission: 1,
+          }));
+          const limit = Number(params.get("limit") || 25);
+          return response({
+            categories_count: count,
+            categories: rows.slice(0, limit),
+            ancestors: [],
+          });
+        });
+        return requests;
+      }
+
+      test("browsing asks the server for the level", async function (assert) {
+        const requests = stubLevel(3);
+        const parent = Category.findById(2);
+
+        await render(
+          <template>
+            <div class="top"><DSelectCategoryFilter /></div>
+            <div class="sub"><DSelectCategoryFilter
+                @parentCategory={{parent}}
+              /></div>
+          </template>
+        );
+
+        await select(".top").open();
+        await settled();
+        assert.strictEqual(requests.at(-1).get("parent_category_id"), "-1");
+        assert.deepEqual(optionValues(), ["9900", "9901", "9902"]);
+        await select(".top").close();
+
+        await select(".sub").open();
+        await settled();
+        assert.strictEqual(requests.at(-1).get("parent_category_id"), "2");
+      });
+
+      test("a long level shows fifteen rows and yields how many more there are", async function (assert) {
+        stubLevel(30);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter>
+              <:footer as |state options moreCount|>
+                <span class="more">{{moreCount}}</span>
+              </:footer>
+            </DSelectCategoryFilter>
+          </template>
+        );
+        await select().open();
+        await settled();
+
+        assert.strictEqual(optionValues().length, 15);
+        assert.dom(".more").hasText("15");
+      });
+
+      test("a short level renders no footer even when the caller passes one", async function (assert) {
+        stubLevel(18);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter>
+              <:footer>
+                <span class="more">more</span>
+              </:footer>
+            </DSelectCategoryFilter>
+          </template>
+        );
+        await select().open();
+        await settled();
+
+        assert.strictEqual(optionValues().length, 18, "every row");
+        assert.dom(".more").doesNotExist();
+        assert.dom(".d-select__footer").doesNotExist("no empty footer");
+      });
+    });
+
+    module("edge cases", function () {
+      test("filter badges omit ancestors on held and listed children", async function (assert) {
+        const parent = Category.findById(2);
+        const value = Category.findById(26);
+        const items = [value];
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @items={{items}}
+              @parentCategory={{parent}}
+              @value={{value}}
+            />
+          </template>
+        );
+        assert.deepEqual(
+          findAll(".d-select .badge-category__name").map((node) =>
+            node.textContent.trim()
+          ),
+          ["spec"],
+          "own badge on trigger"
+        );
+        await dSelect().open();
+        assert.deepEqual(
+          findAll("[role='option'][data-value='26'] .badge-category__name").map(
+            (node) => node.textContent.trim()
+          ),
+          ["spec"],
+          "own badge on row"
+        );
+      });
+
+      test("filter search ranks public before restricted and preserves activity for equal matches", async function (assert) {
+        Site.current().updateCategories([
+          {
+            id: 9801,
+            name: "Orchid prefix",
+            slug: "orchid-prefix",
+            read_restricted: true,
+            permission: 1,
+          },
+          { id: 9802, name: "An orchid", slug: "an-orchid", permission: 1 },
+          {
+            id: 9803,
+            name: "Orchid public",
+            slug: "orchid-public",
+            permission: 1,
+          },
+          {
+            id: 9804,
+            name: "Orchid child",
+            slug: "orchid-child",
+            parent_category_id: 2,
+            permission: 1,
+          },
+        ]);
+        await render(<template><DSelectCategoryFilter /></template>);
+        await dSelect().open();
+        await dSelect().search("orchid");
+        assert.deepEqual(
+          optionValues(),
+          ["9803", "9802", "9801", "9804"],
+          "level, access, then prefix"
+        );
+      });
+
+      test("filter source replacement preserves rows and paging", async function (assert) {
+        enableVirtualization();
+        try {
+          const rows = Site.current().categories.map((category) => ({
+            id: category.id,
+            name: category.name,
+          }));
+          const cursors = [];
+          const load = (_query, { cursor }) => {
+            cursors.push(cursor);
+            return {
+              items: cursor ? rows.slice(20) : rows.slice(0, 20),
+              total: rows.length,
+              hasMore: !cursor,
+              cursor: "tail",
+            };
+          };
+          await render(
+            <template>
+              <DSelectCategoryFilter
+                @load={{load}}
+                @uncategorized={{true}}
+              ><:footer><span
+                    class="more"
+                  >More</span></:footer></DSelectCategoryFilter>
+            </template>
+          );
+          await dSelect().open();
+          assert
+            .dom(".more")
+            .doesNotExist(
+              "the replacement source owns paging rather than a truncated level"
+            );
+          const list = find(".d-virtual-list");
+          list.scrollTop = list.scrollHeight;
+          await triggerEvent(list, "scroll");
+          await settledAfterFrame();
+          assert.deepEqual(
+            cursors,
+            [undefined, "tail"],
+            "the source's cursor reaches its next request"
+          );
+          assert
+            .dom(`[role='option'][data-value='${rows.at(-1).id}']`)
+            .exists("the final source row is reachable");
+        } finally {
+          disableVirtualization();
+        }
+      });
+
+      test("anonymous filter users see decoded descriptions", async function (assert) {
+        this.owner.unregister("service:current-user");
+        this.owner.register("service:current-user", null, {
+          instantiate: false,
+        });
+        const items = [Category.findById(1)];
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await dSelect().open();
+        assert
+          .dom("[role='option'] .d-select__option-description")
+          .exists("anonymous descriptions are visible");
+      });
+
+      test("filter source replacement keeps and emits an unloaded record", async function (assert) {
+        const row = { id: 99001, name: "Caller category" };
+        const load = () => [row];
+        const onChange = sinon.spy();
+        await render(
+          <template>
+            <DSelectCategoryFilter @load={{load}} @onChange={{onChange}} />
+          </template>
+        );
+        await dSelect().open();
+        assert
+          .dom("[role='option'][data-value='99001']")
+          .includesText(
+            "Caller category",
+            "the caller's record is listed without a site lookup"
+          );
+        await click("[role='option'][data-value='99001']");
+        assert.strictEqual(
+          onChange.lastCall?.args[0],
+          row,
+          "the supplied record is emitted"
+        );
+      });
+
+      test("mounts one local page and reports the full matching count", async function (assert) {
+        const categories = setPagedCategories();
+        await render(
+          <template><DSelectCategoryFilter @items={{categories}} /></template>
+        );
+        await dSelect().open();
+        assert.true(
+          optionValues().length < categories.length,
+          "browsing mounts one page, not the whole list"
+        );
+        assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
+        await dSelect().search("Paged category");
+        assert.true(
+          optionValues().length < categories.length,
+          "search mounts one page, not the whole list"
+        );
+        assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
+        assert.deepEqual(
+          optionValues(),
+          categories
+            .slice(0, optionValues().length)
+            .map((category) => String(category.id)),
+          "the first page retains activity order"
+        );
+      });
+
+      test("reveals every local search page in order", async function (assert) {
+        enableVirtualization();
+        try {
+          const categories = setPagedCategories();
+          const onChange = sinon.spy();
+          await render(
+            <template>
+              <DSelectCategoryFilter @onChange={{onChange}} />
+            </template>
+          );
+          await dSelect().open();
+          await dSelect().search("Paged category");
+          for (let scroll = 0; scroll < 10; scroll++) {
+            const list = find(".d-virtual-list");
+            list.scrollTop = list.scrollHeight;
+            await triggerEvent(list, "scroll");
+            await settledAfterFrame();
+          }
+          assert
+            .dom("[data-value='99234'][role='option']")
+            .hasAttribute("aria-posinset", "235")
+            .hasAttribute("aria-setsize", "235");
+          await click("[data-value='99234'][role='option']");
+          const emitted = onChange.lastCall.args[0];
+          assert.strictEqual(
+            Array.isArray(emitted) ? emitted[0] : emitted,
+            categories[234],
+            "the final page emits its site record"
+          );
+        } finally {
+          disableVirtualization();
+        }
+      });
+
+      test("follows source continuation with twenty-row server pages", async function (assert) {
+        enableVirtualization();
+        try {
+          Site.current().set("lazy_load_categories", true);
+          const pages = [];
+          pretender.post("/categories/search", (request) => {
+            const page = Number(
+              new URLSearchParams(request.requestBody).get("page") || 1
+            );
+            pages.push(page);
+            return response({
+              categories_count: 45,
+              categories: Array.from(
+                { length: Math.min(20, 45 - (page - 1) * 20) },
+                (_, index) => ({
+                  id: 99000 + (page - 1) * 20 + index,
+                  name: `Remote ${index}`,
+                  slug: `remote-${index}`,
+                  permission: 1,
+                  has_children: false,
+                })
+              ),
+              ancestors: [],
+            });
+          });
+          await render(<template><DSelectCategoryFilter /></template>);
+          await dSelect().open();
+          await dSelect().search("Remote");
+          for (let scroll = 0; scroll < 2; scroll++) {
+            const list = find(".d-virtual-list");
+            list.scrollTop = list.scrollHeight;
+            await triggerEvent(list, "scroll");
+            await settledAfterFrame();
+          }
+          assert.true(pages.includes(3), "the third server page is requested");
+          assert.strictEqual(
+            Number(find("[role='option']").getAttribute("aria-setsize")),
+            45,
+            "all forty-five matches remain reachable"
+          );
+        } finally {
+          disableVirtualization();
+        }
+      });
+    });
+  }
+);

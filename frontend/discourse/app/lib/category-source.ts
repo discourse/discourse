@@ -3,12 +3,30 @@ import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 
 /**
- * A site category with its serialized identity and child indicator.
+ * A site category with the serialized fields used by category sources and rows.
  * TODO(typescript-pending): Use Category directly once it declares these serialized fields.
  */
 export interface CategoryRecord extends Category {
   /** The site's numeric lookup key. */
   id: number;
+  /** Serialized category name. */
+  name: string;
+  /** Direct parent, absent for top-level categories. */
+  parent_category_id?: number | null;
+  /** Topic creation permission, with 1 granting full access. */
+  permission?: number | null;
+  /** Topics belonging directly to this category. */
+  topic_count?: number;
+  /** Whether access is restricted to specific groups. */
+  read_restricted?: boolean;
+  /** Transformed plain-text description. */
+  readonly descriptionText: string | null | undefined;
+  /** Direct parent resolved through the site. */
+  readonly parentCategory: CategoryRecord | undefined;
+  /** Ancestors ordered from the nearest parent outward. */
+  readonly predecessors: CategoryRecord[];
+  /** Own topic count plus the direct children's topics. */
+  readonly totalTopicCount: number | undefined;
   /** Whether unloaded descendants may exist. */
   has_children?: boolean;
 }
@@ -32,6 +50,8 @@ export interface CategorySearchOptions {
   term: string;
   /** One-based page number. */
   page?: number;
+  /** Opaque continuation from the preceding page; null starts the first page. */
+  cursor?: unknown;
   /** Direct children of this id, or top-level categories when set to -1. */
   parentCategoryId?: number;
   /** Category ids to omit from results. */
@@ -56,6 +76,26 @@ export interface CategoryPage {
   ancestors: CategoryRecord[];
   /** Total server matches before pagination. */
   total: number;
+  /** Whether another server page remains. */
+  hasMore: boolean;
+  /** Opaque continuation, consumed only by this source. */
+  cursor?: unknown;
+}
+
+/** Validates source-owned continuation without exposing its representation to recipes. */
+function continuation(
+  value: unknown
+): { page: number; received: number } | undefined {
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "page" in value &&
+    typeof value.page === "number" &&
+    "received" in value &&
+    typeof value.received === "number"
+  ) {
+    return { page: value.page, received: value.received };
+  }
 }
 
 /** Fetches one page and its ancestors; cancellation rejects without merging late rows. */
@@ -65,10 +105,13 @@ export async function fetchCategoryPage(
   const { signal } = options;
   signal?.throwIfAborted();
   const site = currentSite();
+  const previous = continuation(options.cursor);
+  const page =
+    previous?.page ?? options.page ?? (options.cursor === null ? 1 : undefined);
   const data = Object.fromEntries(
     Object.entries({
       term: options.term,
-      page: options.page,
+      page,
       parent_category_id: options.parentCategoryId,
       reject_category_ids: options.rejectIds,
       include_uncategorized: options.includeUncategorized,
@@ -98,16 +141,34 @@ export async function fetchCategoryPage(
 
     const ancestors = result.ancestors ?? [];
     const records = site.updateCategories([...ancestors, ...result.categories]);
+    const received = (previous?.received ?? 0) + result.categories.length;
+    const hasMore =
+      result.categories.length > 0 && received < result.categories_count;
     return {
       categories: records.slice(ancestors.length),
       ancestors: records.slice(0, ancestors.length),
       total: result.categories_count,
+      hasMore,
+      cursor: hasMore ? { page: (page ?? 1) + 1, received } : undefined,
     };
   } finally {
     if (onAbort) {
       signal?.removeEventListener("abort", onAbort);
     }
   }
+}
+
+/** Resolves already-loaded ids synchronously, in input order, without requesting missing records. */
+export function knownCategories(
+  ids: readonly (number | string)[]
+): CategoryRecord[] {
+  const byId = currentSite().categoriesById;
+  return ids.flatMap((value) => {
+    const id = Number(value);
+    const category =
+      Number.isSafeInteger(id) && id > 0 ? byId.get(id) : undefined;
+    return category ? [category] : [];
+  });
 }
 
 /** Resolves held ids in input order, preserving duplicates and dropping missing records. */
@@ -126,11 +187,7 @@ export async function resolveCategories(
     }
   }
 
-  const byId = site.categoriesById;
-  return normalized.flatMap((id) => {
-    const category = byId.get(id);
-    return category ? [category] : [];
-  });
+  return knownCategories(normalized);
 }
 
 /** Returns the root and every descendant in breadth-first order, paging lazy children. */
@@ -163,13 +220,12 @@ export async function loadDescendants(
       continue;
     }
 
-    let page = 1;
-    let received = 0;
+    let cursor: unknown = null;
     while (true) {
       const result = await fetchCategoryPage({
         term: "",
         parentCategoryId: parent.id,
-        page,
+        cursor,
         signal,
       });
       for (const child of result.categories) {
@@ -178,11 +234,10 @@ export async function loadDescendants(
           descendants.push(child);
         }
       }
-      received += result.categories.length;
-      if (!result.categories.length || received >= result.total) {
+      if (!result.hasMore) {
         break;
       }
-      page++;
+      cursor = result.cursor;
     }
   }
   return descendants;
