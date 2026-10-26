@@ -945,6 +945,20 @@ RSpec.describe UserGuardian do
           &modifier
         )
       end
+
+      it "doesn't apply plugin restrictions to the system user" do
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        expect(Discourse.system_user.guardian.can_edit_theme?(theme)).to eq(true)
+        expect(Guardian.new(admin).can_edit_theme?(theme)).to eq(false)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
     end
 
     describe "#can_edit_theme_relations?" do

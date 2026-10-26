@@ -309,6 +309,9 @@ module UserGuardian
 
   def can_edit_theme?(theme)
     return false if !is_admin? || theme.blank?
+    # theme imports and maintenance tasks run as the system user and have to
+    # apply a theme in full, so plugin restrictions don't apply to them
+    return true if @user.is_system_user?
     # like the creation modifier, this one can only further restrict which
     # themes can be changed or deleted
     DiscoursePluginRegistry.apply_modifier(:user_guardian_can_edit_theme, true, self, theme)
