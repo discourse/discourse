@@ -31,6 +31,24 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
   end
   let(:past_date_no_end_time) { past_event_no_end_time.event_dates.first }
 
+  describe "#execute" do
+    it "sends due reminders when the reminder counter is nil" do
+      past_date.update!(reminder_counter: nil)
+      freeze_time(past_date.starts_at - 59.minutes)
+
+      expect_enqueued_with(
+        job: :discourse_post_event_send_reminder,
+        args: {
+          event_id: past_event.id,
+          event_date_id: past_date.id,
+          reminder: "notification.1.hours",
+        },
+      ) { job.execute({}) }
+
+      expect(past_date.reload.reminder_counter).to eq(1)
+    end
+  end
+
   describe "#send_reminder" do
     it "lodge reminder jobs in correct times" do
       expect_not_enqueued_with(job: :discourse_post_event_send_reminder) { job.execute({}) }
