@@ -164,6 +164,10 @@ RSpec.describe DiscourseEvents::Events::SchemaMarkup do
     expect(view.topic).not_to have_received(:first_post)
   end
 
+  it "returns no markup on pages that aren't topics" do
+    expect(described_class.build(nil)).to be_nil
+  end
+
   it "returns no markup when post events are disabled" do
     SiteSetting.discourse_post_event_enabled = false
 

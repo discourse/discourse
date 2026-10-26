@@ -18,8 +18,10 @@ module DiscourseEvents
       def self.build(topic_view)
         return unless SiteSetting.enable_event_schema_for_topics
         return unless SiteSetting.discourse_post_event_enabled
+        # Builders run on every page, most of which aren't topics
+        return if topic_view.blank?
 
-        topic = topic_view&.topic
+        topic = topic_view.topic
         event = first_post(topic_view)&.event
         return if event.blank? || event.deleted_at.present?
 
