@@ -54,6 +54,17 @@ RSpec.describe TopicPublisher do
         end
       end
 
+      it "triggers topic_published with the publishing user" do
+        freeze_time
+
+        event =
+          DiscourseEvent.track(:topic_published) do
+            TopicPublisher.new(topic, moderator, shared_draft.category_id).publish!
+          end
+
+        expect(event[:params]).to eq([topic, Time.zone.now, { acting_user: moderator }])
+      end
+
       it "notifies users watching the tag" do
         Jobs.run_immediately!
 

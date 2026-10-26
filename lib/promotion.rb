@@ -94,6 +94,7 @@ class Promotion
         user_id: @user.id,
         new_trust_level: new_level,
         old_trust_level: old_level,
+        acting_user: admin || Discourse.system_user,
       )
       Group.user_trust_level_change!(@user.id, @user.trust_level)
       BadgeGranter.queue_badge_grant(Badge::Trigger::TrustLevelChange, user: @user)
