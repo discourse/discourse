@@ -800,6 +800,14 @@ table.group-reports {
 }
 
 .recent-queries {
+  .d-table__header-cell {
+    &.query-created-by,
+    &.query-group-names,
+    &.query-created-at {
+      width: 12.5%;
+    }
+  }
+
   .d-table__row.query-row {
     .d-table__overview-link {
       @include viewport.until(md) {

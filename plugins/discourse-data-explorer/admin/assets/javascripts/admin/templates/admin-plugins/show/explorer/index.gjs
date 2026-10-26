@@ -82,7 +82,7 @@ export default <template>
                         @order={{@controller.sortByProperty}}
                       />
                     </th>
-                    <th class="d-table__header-cell">
+                    <th class="d-table__header-cell query-created-by">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
                         @automatic={{true}}
@@ -92,10 +92,10 @@ export default <template>
                         @order={{@controller.sortByProperty}}
                       />
                     </th>
-                    <th class="d-table__header-cell">
+                    <th class="d-table__header-cell query-group-names">
                       {{i18n "explorer.query_groups"}}
                     </th>
-                    <th class="d-table__header-cell">
+                    <th class="d-table__header-cell query-created-at">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
                         @automatic={{true}}
@@ -105,6 +105,7 @@ export default <template>
                         @order={{@controller.sortByProperty}}
                       />
                     </th>
+                    <th class="d-table__header-cell"></th>
                   </tr>
                 </thead>
                 <tbody class="d-table__body">
