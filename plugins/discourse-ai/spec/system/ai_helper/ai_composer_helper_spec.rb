@@ -678,4 +678,88 @@ RSpec.describe "AI Composer helper" do
       end
     end
   end
+
+  context "when suggesting a category with the new select controls" do
+    with_select_controls(true)
+
+    let(:edit_category_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".edit-category__wrapper .category-chooser")
+    end
+    let(:composer_category_chooser) do
+      PageObjects::Components::UiKit::DSelect.at("#reply-control .category-input .category-chooser")
+    end
+
+    before do
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+      stub_request(:post, embedding_definition.url).to_return(
+        status: 200,
+        body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+      )
+    end
+
+    def suggested(*categories)
+      categories.map do |c|
+        { id: c.id, name: c.name, slug: c.slug, color: c.color, topicCount: 1, score: 1.0 }
+      end
+    end
+
+    it "applies the best suggestion in topic edit and closes the list" do
+      DiscourseAi::AiHelper::SemanticCategorizer
+        .any_instance
+        .stubs(:categories)
+        .returns(suggested(category_2))
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_category_chooser.open
+      edit_category_chooser.select_value("ai-category-suggest")
+
+      expect(edit_category_chooser).to have_selected_name(category_2.name)
+      expect(edit_category_chooser).not_to be_expanded
+    end
+
+    it "applies the best suggestion in the composer and closes the list" do
+      DiscourseAi::AiHelper::SemanticCategorizer
+        .any_instance
+        .stubs(:categories)
+        .returns(suggested(category, category_2))
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_category_chooser.open
+      composer_category_chooser.select_value("ai-category-suggest")
+
+      expect(composer_category_chooser).to have_selected_name(category.name)
+      expect(composer_category_chooser).not_to be_expanded
+    end
+
+    it "shows a toast when the composer gets no category suggestions" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns([])
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_category_chooser.open
+      composer_category_chooser.select_value("ai-category-suggest")
+
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
+    end
+
+    it "does not offer a suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      edit_category_chooser.open
+
+      expect(edit_category_chooser).to have_no_option_value("ai-category-suggest")
+    end
+  end
 end

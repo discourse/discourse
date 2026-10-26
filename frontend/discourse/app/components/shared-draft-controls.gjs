@@ -4,11 +4,13 @@ import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DButton from "discourse/ui-kit/d-button";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 export default class SharedDraftControls extends Component {
   @service dialog;
   @service site;
+  @service siteSettings;
 
   @tracked publishing = false;
 
@@ -67,10 +69,22 @@ export default class SharedDraftControls extends Component {
 
         <div class="publish-field">
           <label>{{i18n "shared_drafts.destination_category"}}</label>
-          <CategoryChooser
-            @onChange={{this.updateDestinationCategory}}
-            @value={{@topic.destination_category_id}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-chooser"
+              @emit="ids"
+              @multiple={{false}}
+              @onChange={{this.updateDestinationCategory}}
+              @permission="create"
+              @value={{@topic.destination_category_id}}
+            />
+          {{else}}
+            <CategoryChooser
+              @onChange={{this.updateDestinationCategory}}
+              @value={{@topic.destination_category_id}}
+            />
+          {{/if}}
         </div>
 
         <div class="publish-field">

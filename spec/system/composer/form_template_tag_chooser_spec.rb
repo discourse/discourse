@@ -59,8 +59,7 @@ describe "Composer Form Template" do
     def open_composer_in_category
       visit("/")
       find("#create-topic").click
-      find(".category-chooser").click
-      find(".category-row[data-value='#{category.id}']").click
+      composer.switch_category(category.name)
 
       expect(page).to have_css(".form-template-field__multi-select[name='cat-breed']")
     end

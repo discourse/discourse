@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn, hash } from "@ember/helper";
+import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -40,6 +40,7 @@ import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 const DISCUSSION_TYPE_ID = "discussion";
@@ -901,21 +902,39 @@ export default class UpsertCategoryGeneral extends Component {
           as |field|
         >
           <field.Control>
-            <CategoryChooser
-              @onChange={{field.set}}
-              @options={{hash
-                allowSubCategories=this.allowSubCategoriesAsParent
-                allowRestrictedCategories=true
-                allowUncategorized=false
-                excludeCategoryId=@category.id
-                none="category.none_subcategory_text"
-                clearable=true
-                caretUpIcon="chevron-up"
-                caretDownIcon="chevron-down"
-                displayCategoryDescription=false
-              }}
-              @value={{@transientData.parent_category_id}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectCategory
+                class="category-chooser"
+                @clearable={{true}}
+                @descriptions={{false}}
+                @emit="ids"
+                @exclude={{if @category.id (array @category.id)}}
+                @multiple={{false}}
+                @onChange={{field.set}}
+                @permission="see"
+                @placeholder={{i18n "category.none_subcategory_text"}}
+                @subcategories={{this.allowSubCategoriesAsParent}}
+                @uncategorized={{false}}
+                @value={{@transientData.parent_category_id}}
+              />
+            {{else}}
+              <CategoryChooser
+                @onChange={{field.set}}
+                @options={{hash
+                  allowSubCategories=this.allowSubCategoriesAsParent
+                  allowRestrictedCategories=true
+                  allowUncategorized=false
+                  excludeCategoryId=@category.id
+                  none="category.none_subcategory_text"
+                  clearable=true
+                  caretUpIcon="chevron-up"
+                  caretDownIcon="chevron-down"
+                  displayCategoryDescription=false
+                }}
+                @value={{@transientData.parent_category_id}}
+              />
+            {{/if}}
           </field.Control>
         </@form.Field>
       {{/unless}}

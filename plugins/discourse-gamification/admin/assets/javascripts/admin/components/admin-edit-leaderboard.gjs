@@ -14,6 +14,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 import PeriodInput from "discourse/plugins/discourse-gamification/discourse/components/period-input";
 
@@ -37,6 +38,7 @@ const SCORABLE_KEYS = [
 
 export default class AdminEditLeaderboard extends Component {
   @service site;
+  @service siteSettings;
   @service toasts;
   @service router;
 
@@ -316,10 +318,19 @@ export default class AdminEditLeaderboard extends Component {
                         field.value
                       }}
                     >
-                      <CategorySelector
-                        @categories={{this.selectedScorableCategories}}
-                        @onChange={{fn this.onCategoryChange field.set}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectCategory
+                          class="category-selector"
+                          @onChange={{fn this.onCategoryChange field.set}}
+                          @value={{this.selectedScorableCategories}}
+                        />
+                      {{else}}
+                        <CategorySelector
+                          @categories={{this.selectedScorableCategories}}
+                          @onChange={{fn this.onCategoryChange field.set}}
+                        />
+                      {{/if}}
                     </div>
                   </field.Control>
                 </form.Field>

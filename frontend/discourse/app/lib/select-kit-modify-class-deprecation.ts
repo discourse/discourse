@@ -19,6 +19,16 @@ export const SELECT_KIT_MODIFY_CLASS_DEPRECATION_ID =
  * sites merge; a patch on any other module still reaches every call site, so it isn't reported.
  */
 export const MIGRATED_SELECT_KIT_MODULES = new Set<string>([
+  "category-chooser",
+  "category-drop",
+  "category-drop/category-drop-header",
+  "category-drop-more-collection",
+  "category-row",
+  "category-selector",
+  "multiple-categories-selector",
+  "search-advanced-category-chooser",
+  "selected-choice-category",
+
   "mini-tag-chooser",
   "mini-tag-chooser/selected-collection",
   "tag-chooser",

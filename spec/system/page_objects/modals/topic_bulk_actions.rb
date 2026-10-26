@@ -5,7 +5,12 @@ module PageObjects
       MODAL_SELECTOR = ".topic-bulk-actions-modal"
 
       def category_selector
-        PageObjects::Components::SelectKit.new(".category-chooser")
+        selector = ".category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def click_bulk_topics_confirm

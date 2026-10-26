@@ -10,6 +10,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
@@ -138,12 +139,25 @@ export default class ChatToTopicSelector extends Component {
 
           <label>{{i18n "categories.category"}}</label>
 
-          <CategoryChooser
-            class="small"
-            @id="new-topic-category-selector"
-            @onChange={{fn (mut this.categoryId)}}
-            @value={{this.categoryId}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-chooser small"
+              @emit="ids"
+              @id="new-topic-category-selector"
+              @multiple={{false}}
+              @onChange={{fn (mut this.categoryId)}}
+              @permission="create"
+              @value={{this.categoryId}}
+            />
+          {{else}}
+            <CategoryChooser
+              class="small"
+              @id="new-topic-category-selector"
+              @onChange={{fn (mut this.categoryId)}}
+              @value={{this.categoryId}}
+            />
+          {{/if}}
 
           {{#if this.canAddTags}}
             <label>{{i18n "tagging.tags"}}</label>

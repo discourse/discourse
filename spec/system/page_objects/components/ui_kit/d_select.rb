@@ -78,12 +78,20 @@ module PageObjects
         end
 
         def open
-          input.click
+          if trigger.matches_css?(".--typeahead", wait: 0)
+            input.click
+          else
+            open_trigger
+          end
           self
         end
 
         def expanded?
-          input[:"aria-expanded"] == "true"
+          if trigger.matches_css?(".--typeahead", wait: 0)
+            input[:"aria-expanded"] == "true"
+          else
+            trigger[:"aria-expanded"] == "true"
+          end
         end
 
         # Prefixes a selector with this instance's overlay, so a page hosting several selects
@@ -474,6 +482,7 @@ module PageObjects
         end
 
         def option_count
+          page.assert_selector(in_panel("[role='listbox'], .d-select__empty"))
           options.size
         end
 

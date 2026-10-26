@@ -14,11 +14,16 @@ module PageObjects
       end
 
       def fill_in_category(category)
-        dropdown = PageObjects::Components::SelectKit.new(".admin-embedding-host-form__category")
-        dropdown.expand
-        dropdown.search(category.name)
-        dropdown.select_row_by_value(category.id)
-        dropdown.collapse
+        selector = ".admin-embedding-host-form__category"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector).select_name(category.name)
+        else
+          dropdown = PageObjects::Components::SelectKit.new(selector)
+          dropdown.expand
+          dropdown.search(category.name)
+          dropdown.select_row_by_value(category.id)
+          dropdown.collapse
+        end
         self
       end
 

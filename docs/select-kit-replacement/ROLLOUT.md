@@ -348,6 +348,36 @@ Open items need a decision after manual testing; the rest are intended but still
   "+N more" for a long level.
 - [ ] **"+ Subcategories" includes every level.** In lazy mode the legacy row missed
   grandchildren; the new one adds the whole tree, minus excluded categories.
+- [ ] **Reopening the chooser cancels a pending pick.** A row that picks asynchronously (a
+  suggestion request, for example) is cancelled when the list reopens, by a later pick, or when
+  the control goes away. The legacy chooser applied the result unless the value had changed.
+
+## Category call sites
+
+Category storage fields branch to `DSelectCategory` while `enable_new_select_controls` is on.
+Former single choosers pass `@multiple={{false}}`, `@emit="ids"` and `@permission="create"`;
+advanced search and the parent-category field pass `@permission="see"`. Former selectors keep
+emitting category records, and their blocked categories become `@exclude` ids. Empty-value text
+is a translated `@placeholder`; a field keeps a selectable none row only where the legacy chooser
+inserted one.
+
+Breadcrumb levels use `DSelectCategoryFilter` with the page's per-level category list. The caller
+routes category and shortcut picks, keeps the tag and the editing tab, and its footer links close
+the list. Each new-control level is keyed by its parent id, because lazy loading can replace the
+records backing a level while its list is open.
+
+The parent-category field drops its caret icon options and the report category filter drops
+`filterable`; the recipe has no arguments for them.
+
+The composer and topic-edit choosers take `@identifier` (`composer-category`,
+`topic-edit-category`) and an `@instanceContext` carrying the composer model, or the topic and its
+buffered state, so customizations can target them through `select-customizations`. A row that
+picks asynchronously closes the list and runs `control.update`; a later pick, reopening the list
+or destroying the control aborts its signal.
+
+The migrated-module reporting set now includes the category chooser, selector, multiple selector,
+advanced-search chooser, category drop with its header and more collection, category row and
+selected category choice.
 
 ## Porting lessons
 

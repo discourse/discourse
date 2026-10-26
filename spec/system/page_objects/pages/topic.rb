@@ -439,8 +439,13 @@ module PageObjects
       def move_to_public_category(category)
         click_admin_menu_button
         find(".topic-admin-menu-content li.topic-admin-convert").click
-        move_to_public_modal.find(".category-chooser").click
-        find(".category-row[data-value=\"#{category.id}\"]").click
+        selector = ".convert-to-public-topic .category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector).select_value(category.id)
+        else
+          move_to_public_modal.find(".category-chooser").click
+          find(".category-row[data-value=\"#{category.id}\"]").click
+        end
         move_to_public_modal.find(".btn-primary").click
       end
 

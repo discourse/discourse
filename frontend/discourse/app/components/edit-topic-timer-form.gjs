@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -26,11 +26,13 @@ import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 export default class EditTopicTimerForm extends Component {
   @service currentUser;
   @service keyboardShortcuts;
+  @service siteSettings;
 
   @tracked timerType;
 
@@ -252,11 +254,27 @@ export default class EditTopicTimerForm extends Component {
           <label class="control-label">
             {{i18n "topic.topic_status_update.publish_to"}}
           </label>
-          <CategoryChooser
-            @onChange={{fn (mut @topicTimer.category_id)}}
-            @options={{hash excludeCategoryId=this.excludeCategoryId}}
-            @value={{@topicTimer.category_id}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-chooser"
+              @emit="ids"
+              @exclude={{if
+                this.excludeCategoryId
+                (array this.excludeCategoryId)
+              }}
+              @multiple={{false}}
+              @onChange={{fn (mut @topicTimer.category_id)}}
+              @permission="create"
+              @value={{@topicTimer.category_id}}
+            />
+          {{else}}
+            <CategoryChooser
+              @onChange={{fn (mut @topicTimer.category_id)}}
+              @options={{hash excludeCategoryId=this.excludeCategoryId}}
+              @value={{@topicTimer.category_id}}
+            />
+          {{/if}}
         </div>
       {{/if}}
 

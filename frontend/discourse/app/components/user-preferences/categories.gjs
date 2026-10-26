@@ -3,7 +3,12 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
+
+function categoryIds(categories) {
+  return (categories ?? []).map((category) => category.id);
+}
 
 const Categories = <template>
   <div class="control-group category-notifications">
@@ -18,11 +23,21 @@ const Categories = <template>
             "user.tracked_topics_link"
           }}</a>
       {{/if}}
-      <CategorySelector
-        @blockedCategories={{@selectedCategories}}
-        @categories={{@model.watchedCategories}}
-        @onChange={{fn (mut @model.watchedCategories)}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if @siteSettings.enable_new_select_controls}}
+        <DSelectCategory
+          class="category-selector"
+          @exclude={{categoryIds @selectedCategories}}
+          @onChange={{fn (mut @model.watchedCategories)}}
+          @value={{@model.watchedCategories}}
+        />
+      {{else}}
+        <CategorySelector
+          @blockedCategories={{@selectedCategories}}
+          @categories={{@model.watchedCategories}}
+          @onChange={{fn (mut @model.watchedCategories)}}
+        />
+      {{/if}}
     </div>
     <div class="instructions">{{i18n
         "user.watched_categories_instructions"
@@ -37,11 +52,21 @@ const Categories = <template>
             "user.tracked_topics_link"
           }}</a>
       {{/if}}
-      <CategorySelector
-        @blockedCategories={{@selectedCategories}}
-        @categories={{@model.trackedCategories}}
-        @onChange={{fn (mut @model.trackedCategories)}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if @siteSettings.enable_new_select_controls}}
+        <DSelectCategory
+          class="category-selector"
+          @exclude={{categoryIds @selectedCategories}}
+          @onChange={{fn (mut @model.trackedCategories)}}
+          @value={{@model.trackedCategories}}
+        />
+      {{else}}
+        <CategorySelector
+          @blockedCategories={{@selectedCategories}}
+          @categories={{@model.trackedCategories}}
+          @onChange={{fn (mut @model.trackedCategories)}}
+        />
+      {{/if}}
     </div>
     <div class="instructions">{{i18n
         "user.tracked_categories_instructions"
@@ -52,11 +77,21 @@ const Categories = <template>
     >
       <label>{{dIcon "d-watching-first"}}
         {{i18n "user.watched_first_post_categories"}}</label>
-      <CategorySelector
-        @blockedCategories={{@selectedCategories}}
-        @categories={{@model.watchedFirstPostCategories}}
-        @onChange={{fn (mut @model.watchedFirstPostCategories)}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if @siteSettings.enable_new_select_controls}}
+        <DSelectCategory
+          class="category-selector"
+          @exclude={{categoryIds @selectedCategories}}
+          @onChange={{fn (mut @model.watchedFirstPostCategories)}}
+          @value={{@model.watchedFirstPostCategories}}
+        />
+      {{else}}
+        <CategorySelector
+          @blockedCategories={{@selectedCategories}}
+          @categories={{@model.watchedFirstPostCategories}}
+          @onChange={{fn (mut @model.watchedFirstPostCategories)}}
+        />
+      {{/if}}
     </div>
     <div class="instructions">{{i18n
         "user.watched_first_post_categories_instructions"
@@ -67,11 +102,21 @@ const Categories = <template>
         class="controls tracking-controls tracking-controls__regular-categories"
       >
         <label>{{dIcon "d-regular"}} {{i18n "user.regular_categories"}}</label>
-        <CategorySelector
-          @blockedCategories={{@selectedCategories}}
-          @categories={{@model.regularCategories}}
-          @onChange={{fn (mut @model.regularCategories)}}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if @siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="category-selector"
+            @exclude={{categoryIds @selectedCategories}}
+            @onChange={{fn (mut @model.regularCategories)}}
+            @value={{@model.regularCategories}}
+          />
+        {{else}}
+          <CategorySelector
+            @blockedCategories={{@selectedCategories}}
+            @categories={{@model.regularCategories}}
+            @onChange={{fn (mut @model.regularCategories)}}
+          />
+        {{/if}}
       </div>
       <div class="instructions">{{i18n
           "user.regular_categories_instructions"
@@ -88,11 +133,21 @@ const Categories = <template>
             }}</a>
         {{/if}}
 
-        <CategorySelector
-          @blockedCategories={{@selectedCategories}}
-          @categories={{@model.mutedCategories}}
-          @onChange={{fn (mut @model.mutedCategories)}}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if @siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="category-selector"
+            @exclude={{categoryIds @selectedCategories}}
+            @onChange={{fn (mut @model.mutedCategories)}}
+            @value={{@model.mutedCategories}}
+          />
+        {{else}}
+          <CategorySelector
+            @blockedCategories={{@selectedCategories}}
+            @categories={{@model.mutedCategories}}
+            @onChange={{fn (mut @model.mutedCategories)}}
+          />
+        {{/if}}
       </div>
 
       <div class="instructions">{{i18n

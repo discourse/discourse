@@ -6,6 +6,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -92,11 +93,28 @@ export default <template>
         <label class="filter-label">
           {{i18n "review.filters.category"}}
         </label>
-        <CategoryChooser
-          @onChange={{fn (mut @controller.filterCategoryId)}}
-          @options={{hash none="review.filters.all_categories" clearable=true}}
-          @value={{@controller.filterCategoryId}}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="category-chooser"
+            @clearable={{true}}
+            @emit="ids"
+            @multiple={{false}}
+            @onChange={{fn (mut @controller.filterCategoryId)}}
+            @permission="create"
+            @placeholder={{i18n "review.filters.all_categories"}}
+            @value={{@controller.filterCategoryId}}
+          />
+        {{else}}
+          <CategoryChooser
+            @onChange={{fn (mut @controller.filterCategoryId)}}
+            @options={{hash
+              none="review.filters.all_categories"
+              clearable=true
+            }}
+            @value={{@controller.filterCategoryId}}
+          />
+        {{/if}}
       </div>
 
       <div class="reviewable-filter topic-filter">

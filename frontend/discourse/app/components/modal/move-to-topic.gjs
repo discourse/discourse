@@ -21,6 +21,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
@@ -420,11 +421,23 @@ export default class MoveToTopic extends Component {
 
                 <div class="control-group">
                   <label>{{i18n "categories.category"}}</label>
-                  <CategoryChooser
-                    class="small"
-                    @onChange={{fn (mut this.categoryId)}}
-                    @value={{this.categoryId}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectCategory
+                      class="category-chooser small"
+                      @emit="ids"
+                      @multiple={{false}}
+                      @onChange={{fn (mut this.categoryId)}}
+                      @permission="create"
+                      @value={{this.categoryId}}
+                    />
+                  {{else}}
+                    <CategoryChooser
+                      class="small"
+                      @onChange={{fn (mut this.categoryId)}}
+                      @value={{this.categoryId}}
+                    />
+                  {{/if}}
                   <PluginOutlet
                     @name="split-new-topic-category-after"
                     @outletArgs={{lazyHash

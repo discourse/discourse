@@ -6,6 +6,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 
 export default class TopicMetadata extends Component {
@@ -18,11 +19,25 @@ export default class TopicMetadata extends Component {
           @name="edit-topic-category"
           @outletArgs={{lazyHash model=@model buffered=@buffered}}
         >
-          <CategoryChooser
-            class="small"
-            @onChange={{@topicCategoryChanged}}
-            @value={{@buffered.category_id}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-chooser small"
+              @emit="ids"
+              @identifier="topic-edit-category"
+              @instanceContext={{hash topic=@model buffered=@buffered}}
+              @multiple={{false}}
+              @onChange={{@topicCategoryChanged}}
+              @permission="create"
+              @value={{@buffered.category_id}}
+            />
+          {{else}}
+            <CategoryChooser
+              class="small"
+              @onChange={{@topicCategoryChanged}}
+              @value={{@buffered.category_id}}
+            />
+          {{/if}}
         </PluginOutlet>
       </div>
     {{/if}}

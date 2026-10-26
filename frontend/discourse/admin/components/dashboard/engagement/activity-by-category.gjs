@@ -15,6 +15,7 @@ import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import I18n, { i18n } from "discourse-i18n";
 
 const MAX_CATEGORIES = 10;
@@ -36,6 +37,7 @@ const MAX_CATEGORIES = 10;
  */
 export default class ActivityByCategory extends Component {
   @service currentUser;
+  @service siteSettings;
   @service toasts;
 
   @tracked selectedCategories = [];
@@ -218,14 +220,26 @@ export default class ActivityByCategory extends Component {
           }}
         </LinkTo>
 
-        <MultipleCategoriesSelector
-          @categories={{this.selectedCategories}}
-          @onChange={{this.onCategoriesChange}}
-          @options={{hash
-            maximum=MAX_CATEGORIES
-            showAncestorsInSelectedChoice=true
-          }}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="multiple-categories-selector"
+            @legacyKind="multiple-categories-selector"
+            @maximum={{MAX_CATEGORIES}}
+            @onChange={{this.onCategoriesChange}}
+            @showAncestors={{true}}
+            @value={{this.selectedCategories}}
+          />
+        {{else}}
+          <MultipleCategoriesSelector
+            @categories={{this.selectedCategories}}
+            @onChange={{this.onCategoriesChange}}
+            @options={{hash
+              maximum=MAX_CATEGORIES
+              showAncestorsInSelectedChoice=true
+            }}
+          />
+        {{/if}}
       </div>
 
       {{#if this.hasData}}

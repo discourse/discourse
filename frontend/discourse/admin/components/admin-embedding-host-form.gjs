@@ -11,6 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
@@ -97,11 +98,23 @@ export default class AdminEmbeddingHostForm extends Component {
                 as |field|
               >
                 <field.Control>
-                  <CategoryChooser
-                    class="admin-embedding-host-form__category"
-                    @onChange={{field.set}}
-                    @value={{field.value}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectCategory
+                      class="category-chooser admin-embedding-host-form__category"
+                      @emit="ids"
+                      @multiple={{false}}
+                      @onChange={{field.set}}
+                      @permission="create"
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    <CategoryChooser
+                      class="admin-embedding-host-form__category"
+                      @onChange={{field.set}}
+                      @value={{field.value}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
               <form.Field

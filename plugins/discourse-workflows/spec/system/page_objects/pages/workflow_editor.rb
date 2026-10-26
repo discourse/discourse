@@ -174,10 +174,14 @@ module PageObjects
         end
 
         def filter_topics_by_category(category)
-          selector =
-            PageObjects::Components::SelectKit.new("[data-name='category_ids'] .category-selector")
-          selector.expand
-          selector.select_row_by_value(category.id)
+          selector = "[data-name='category_ids'] .category-selector"
+          if find(selector).matches_css?(".d-select", wait: 0)
+            PageObjects::Components::UiKit::DSelect.at(selector).select_value(category.id)
+          else
+            chooser = PageObjects::Components::SelectKit.new(selector)
+            chooser.expand
+            chooser.select_row_by_value(category.id)
+          end
           self
         end
 
@@ -195,8 +199,10 @@ module PageObjects
         end
 
         def has_fixed_topic_filters?(category)
-          page.has_css?("[data-name='category_ids'] .select-kit-header", text: category.name) &&
-            page.has_css?("[data-name='include_subcategories']") &&
+          page.has_css?(
+            "[data-name='category_ids'] .select-kit-header, [data-name='category_ids'] .d-select__chip",
+            text: category.name,
+          ) && page.has_css?("[data-name='include_subcategories']") &&
             page.has_css?("[data-name='tag_names'] .mini-tag-chooser") &&
             page.has_no_css?("[data-name='statuses']")
         end

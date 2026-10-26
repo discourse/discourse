@@ -1,11 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { service } from "@ember/service";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 
 export default class SchemaSettingTypeCategories extends SchemaSettingTypeModels {
+  @service siteSettings;
+
   @tracked
   value =
     this.args.value
@@ -32,11 +36,22 @@ export default class SchemaSettingTypeCategories extends SchemaSettingTypeModels
   }
 
   <template>
-    <CategorySelector
-      @categories={{this.value}}
-      @onChange={{this.onInput}}
-      @options={{hash allowUncategorized=false maximum=this.max}}
-    />
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <DSelectCategory
+        class="category-selector"
+        @maximum={{this.max}}
+        @onChange={{this.onInput}}
+        @uncategorized={{false}}
+        @value={{this.value}}
+      />
+    {{else}}
+      <CategorySelector
+        @categories={{this.value}}
+        @onChange={{this.onInput}}
+        @options={{hash allowUncategorized=false maximum=this.max}}
+      />
+    {{/if}}
 
     <div class="schema-field__input-supporting-text">
       {{#if (and @description (not this.validationErrorMessage))}}

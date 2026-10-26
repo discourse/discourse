@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
@@ -20,6 +20,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
@@ -856,11 +857,32 @@ export default class SearchAdvancedOptions extends Component {
                 {{i18n "search.advanced.in_category.label"}}
               </label>
               <div class="controls">
-                <SearchAdvancedCategoryChooser
-                  @id="search-in-category"
-                  @onChange={{this.onChangeSearchTermForCategory}}
-                  @value={{this.searchedTerms.category.id}}
-                />
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectCategory
+                    class="search-advanced-category-chooser category-chooser"
+                    @clearable={{true}}
+                    @descriptions={{false}}
+                    @emit="ids"
+                    @id="search-in-category"
+                    @legacyKind={{array
+                      "search-advanced-category-chooser"
+                      "category-chooser"
+                    }}
+                    @multiple={{false}}
+                    @onChange={{this.onChangeSearchTermForCategory}}
+                    @permission="see"
+                    @placeholder={{i18n "category.all"}}
+                    @uncategorized={{true}}
+                    @value={{this.searchedTerms.category.id}}
+                  />
+                {{else}}
+                  <SearchAdvancedCategoryChooser
+                    @id="search-in-category"
+                    @onChange={{this.onChangeSearchTermForCategory}}
+                    @value={{this.searchedTerms.category.id}}
+                  />
+                {{/if}}
               </div>
             </div>
 

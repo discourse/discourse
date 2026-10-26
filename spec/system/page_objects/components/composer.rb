@@ -232,7 +232,12 @@ module PageObjects
       end
 
       def category_chooser
-        Components::SelectKit.new(".category-chooser")
+        selector = ".category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          Components::UiKit::DSelect.at(selector)
+        else
+          Components::SelectKit.new(selector)
+        end
       end
 
       def locale
@@ -245,8 +250,13 @@ module PageObjects
       end
 
       def switch_category(category_name)
-        category_chooser.expand
-        category_chooser.select_row_by_name(category_name)
+        chooser = category_chooser
+        if chooser.is_a?(Components::UiKit::DSelect)
+          chooser.select_name(category_name)
+        else
+          chooser.expand
+          chooser.select_row_by_name(category_name)
+        end
       end
 
       def preview

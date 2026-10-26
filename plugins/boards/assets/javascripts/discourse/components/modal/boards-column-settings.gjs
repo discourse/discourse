@@ -12,6 +12,7 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import {
@@ -255,11 +256,24 @@ export default class BoardsColumnSettings extends Component {
                     as |field|
                   >
                     <field.Control>
-                      <CategoryChooser
-                        @onChange={{fn this.onCategoryChange field}}
-                        @options={{hash clearable=true}}
-                        @value={{readonly data.move_to_category_id}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectCategory
+                          class="category-chooser"
+                          @clearable={{true}}
+                          @emit="ids"
+                          @multiple={{false}}
+                          @onChange={{fn this.onCategoryChange field}}
+                          @permission="create"
+                          @value={{readonly data.move_to_category_id}}
+                        />
+                      {{else}}
+                        <CategoryChooser
+                          @onChange={{fn this.onCategoryChange field}}
+                          @options={{hash clearable=true}}
+                          @value={{readonly data.move_to_category_id}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                 {{/if}}

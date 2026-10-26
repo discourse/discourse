@@ -41,6 +41,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
@@ -455,16 +456,36 @@ export default class ComposerContainer extends Component {
 
                       {{#if this.composer.model.showCategoryChooser}}
                         <div class="category-input">
-                          <CategoryChooser
-                            @onChange={{this.composer.updateCategory}}
-                            @options={{hash
-                              disabled=this.composer.disableCategoryChooser
-                              scopedCategoryId=this.composer.scopedCategoryId
-                              prioritizedCategoryId=this.composer.prioritizedCategoryId
-                              readOnlyCategoryId=this.composer.readOnlyCategoryId
-                            }}
-                            @value={{this.composer.model.categoryId}}
-                          />
+                          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                          {{#if this.siteSettings.enable_new_select_controls}}
+                            <DSelectCategory
+                              class="category-chooser"
+                              @disabled={{this.composer.disableCategoryChooser}}
+                              @emit="ids"
+                              @identifier="composer-category"
+                              @instanceContext={{hash
+                                composer=this.composer.model
+                              }}
+                              @multiple={{false}}
+                              @onChange={{this.composer.updateCategory}}
+                              @permission="create"
+                              @prioritize={{this.composer.prioritizedCategoryId}}
+                              @readOnly={{this.composer.readOnlyCategoryId}}
+                              @scope={{this.composer.scopedCategoryId}}
+                              @value={{this.composer.model.categoryId}}
+                            />
+                          {{else}}
+                            <CategoryChooser
+                              @onChange={{this.composer.updateCategory}}
+                              @options={{hash
+                                disabled=this.composer.disableCategoryChooser
+                                scopedCategoryId=this.composer.scopedCategoryId
+                                prioritizedCategoryId=this.composer.prioritizedCategoryId
+                                readOnlyCategoryId=this.composer.readOnlyCategoryId
+                              }}
+                              @value={{this.composer.model.categoryId}}
+                            />
+                          {{/if}}
                           <PluginOutlet
                             @name="after-composer-category-input"
                             @outletArgs={{lazyHash

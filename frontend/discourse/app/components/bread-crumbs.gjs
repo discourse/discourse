@@ -1,21 +1,36 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryVariables from "discourse/helpers/category-variables";
 import lazyHash from "discourse/helpers/lazy-hash";
-import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
+import DiscourseURL, {
+  getCategoryAndTagUrl,
+  getEditCategoryUrl,
+} from "discourse/lib/url";
 import CategoryDrop from "discourse/select-kit/components/category-drop";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategoryFilter, {
+  ALL_CATEGORIES_ID,
+  NO_CATEGORIES_ID,
+} from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
 import DSelectTagFilter, {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
+import { i18n } from "discourse-i18n";
 import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
+
+function categorySlugPath(category) {
+  return category.path.substring("/c/".length);
+}
 
 export default class BreadCrumbs extends Component {
   @service site;
@@ -65,6 +80,24 @@ export default class BreadCrumbs extends Component {
       ...(this.args.tag ? [this.args.tag] : []),
       ...(this.args.additionalTags ?? []).map((name) => ({ name })),
     ];
+  }
+
+  @action
+  changeCategory(breadcrumb, value) {
+    const category =
+      value === ALL_CATEGORIES_ID || value === NO_CATEGORIES_ID
+        ? breadcrumb.parentCategory
+        : value;
+    const includeSubcategories = value !== NO_CATEGORIES_ID;
+    DiscourseURL.routeToUrl(
+      this.args.editingCategoryTab
+        ? getEditCategoryUrl(
+            category,
+            includeSubcategories,
+            this.args.editingCategoryTab
+          )
+        : getCategoryAndTagUrl(category, includeSubcategories, this.args.tag)
+    );
   }
 
   @action
@@ -140,7 +173,15 @@ export default class BreadCrumbs extends Component {
         }}
       />
 
-      {{#each this.categoryBreadcrumbs as |breadcrumb|}}
+      {{#each
+        this.categoryBreadcrumbs
+        key=(if
+          this.siteSettings.enable_new_select_controls
+          "parentCategory.id"
+          "@identity"
+        )
+        as |breadcrumb|
+      }}
         {{#if breadcrumb.hasOptions}}
           <li
             style={{if
@@ -148,23 +189,66 @@ export default class BreadCrumbs extends Component {
               (categoryVariables breadcrumb.category)
             }}
           >
-            <CategoryDrop
-              class={{if
-                breadcrumb.isSubcategory
-                "category-breadcrumb__subcategory-selector"
-                "category-breadcrumb__category-selector"
-              }}
-              @categories={{breadcrumb.options}}
-              @category={{breadcrumb.category}}
-              @editingCategory={{this.editingCategory}}
-              @editingCategoryTab={{@editingCategoryTab}}
-              @options={{hash
-                parentCategory=breadcrumb.parentCategory
-                subCategory=breadcrumb.isSubcategory
-                noSubcategories=breadcrumb.noSubcategories
-              }}
-              @tag={{@tag}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectCategoryFilter
+                class={{if
+                  breadcrumb.isSubcategory
+                  "category-breadcrumb__subcategory-selector"
+                  "category-breadcrumb__category-selector"
+                }}
+                @editing={{this.editingCategory}}
+                @items={{breadcrumb.options}}
+                @noSubcategories={{breadcrumb.noSubcategories}}
+                @onChange={{fn this.changeCategory breadcrumb}}
+                @parentCategory={{breadcrumb.parentCategory}}
+                @value={{breadcrumb.category}}
+              >
+                <:footer as |state options moreCount parentCategory|>
+                  <div class="category-drop-footer">
+                    <span>
+                      {{i18n "categories.plus_more_count" count=moreCount}}
+                    </span>
+                    {{#if parentCategory}}
+                      <LinkTo
+                        @model={{categorySlugPath parentCategory}}
+                        @route="discovery.subcategories"
+                        {{on "click" state.close}}
+                      >
+                        {{i18n "categories.view_all"}}
+                        {{dIcon "up-right-from-square"}}
+                      </LinkTo>
+                    {{else}}
+                      <LinkTo
+                        @route="discovery.categories"
+                        {{on "click" state.close}}
+                      >
+                        {{i18n "categories.view_all"}}
+                        {{dIcon "up-right-from-square"}}
+                      </LinkTo>
+                    {{/if}}
+                  </div>
+                </:footer>
+              </DSelectCategoryFilter>
+            {{else}}
+              <CategoryDrop
+                class={{if
+                  breadcrumb.isSubcategory
+                  "category-breadcrumb__subcategory-selector"
+                  "category-breadcrumb__category-selector"
+                }}
+                @categories={{breadcrumb.options}}
+                @category={{breadcrumb.category}}
+                @editingCategory={{this.editingCategory}}
+                @editingCategoryTab={{@editingCategoryTab}}
+                @options={{hash
+                  parentCategory=breadcrumb.parentCategory
+                  subCategory=breadcrumb.isSubcategory
+                  noSubcategories=breadcrumb.noSubcategories
+                }}
+                @tag={{@tag}}
+              />
+            {{/if}}
           </li>
         {{/if}}
       {{/each}}

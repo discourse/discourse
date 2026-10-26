@@ -11,43 +11,81 @@ module PageObjects
       WHOS_POSTING_BAR_LABEL = "#{SECTION} .db-whos-posting__bar-label"
 
       def activity_category_filter
-        PageObjects::Components::SelectKit.new(ACTIVITY_CATEGORY_FILTER)
+        selector = ACTIVITY_CATEGORY_FILTER
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def whos_posting_category_filter
-        PageObjects::Components::SelectKit.new(WHOS_POSTING_CATEGORY_FILTER)
+        selector = WHOS_POSTING_CATEGORY_FILTER
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def expand_activity_category_filter
-        activity_category_filter.expand
+        if activity_category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          activity_category_filter.open
+        else
+          activity_category_filter.expand
+        end
         self
       end
 
       def expand_whos_posting_category_filter
-        whos_posting_category_filter.expand
+        if whos_posting_category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          whos_posting_category_filter.open
+        else
+          whos_posting_category_filter.expand
+        end
         self
       end
 
       def deselect_activity_category(category)
         expand_activity_category_filter
-        find("#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']").click
+        if activity_category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          activity_category_filter.remove(category.id)
+        else
+          find(
+            "#{ACTIVITY_CATEGORY_FILTER} #{category_choice_class(ACTIVITY_CATEGORY_FILTER)}[data-value='#{category.id}']",
+          ).click
+        end
         self
       end
 
       def deselect_whos_posting_category(category)
         expand_whos_posting_category_filter
-        find("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']").click
+        if whos_posting_category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          whos_posting_category_filter.remove(category.id)
+        else
+          find(
+            "#{WHOS_POSTING_CATEGORY_FILTER} #{category_choice_class(WHOS_POSTING_CATEGORY_FILTER)}[data-value='#{category.id}']",
+          ).click
+        end
         self
       end
 
       def select_whos_posting_category(category)
         expand_whos_posting_category_filter
-        whos_posting_category_filter.select_row_by_value(category.id)
+        if whos_posting_category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          whos_posting_category_filter.select_value(category.id)
+        else
+          whos_posting_category_filter.select_row_by_value(category.id)
+        end
         self
       end
 
       def close_whos_posting_category_filter
-        whos_posting_category_filter.collapse
+        if whos_posting_category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          whos_posting_category_filter.close
+        else
+          whos_posting_category_filter.collapse
+        end
         self
       end
 
@@ -60,15 +98,21 @@ module PageObjects
       end
 
       def has_selected_activity_category?(category)
-        has_css?("#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        has_css?(
+          "#{ACTIVITY_CATEGORY_FILTER} #{category_choice_class(ACTIVITY_CATEGORY_FILTER)}[data-value='#{category.id}']",
+        )
       end
 
       def has_selected_whos_posting_category?(category)
-        has_css?("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        has_css?(
+          "#{WHOS_POSTING_CATEGORY_FILTER} #{category_choice_class(WHOS_POSTING_CATEGORY_FILTER)}[data-value='#{category.id}']",
+        )
       end
 
       def has_no_selected_whos_posting_category?(category)
-        has_no_css?("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        has_no_css?(
+          "#{WHOS_POSTING_CATEGORY_FILTER} #{category_choice_class(WHOS_POSTING_CATEGORY_FILTER)}[data-value='#{category.id}']",
+        )
       end
 
       def has_activity_row_with_parent?(category)
@@ -77,14 +121,14 @@ module PageObjects
 
       def has_selected_activity_category_with_parent?(category)
         has_css?(
-          "#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+          "#{ACTIVITY_CATEGORY_FILTER} #{category_choice_class(ACTIVITY_CATEGORY_FILTER)}[data-value='#{category.id}'] " \
             "#{parent_then_child_badges(category)}",
         )
       end
 
       def has_selected_whos_posting_category_with_parent?(category)
         has_css?(
-          "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+          "#{WHOS_POSTING_CATEGORY_FILTER} #{category_choice_class(WHOS_POSTING_CATEGORY_FILTER)}[data-value='#{category.id}'] " \
             "#{parent_then_child_badges(category)}",
         )
       end
@@ -128,6 +172,10 @@ module PageObjects
       end
 
       private
+
+      def category_choice_class(selector)
+        find(selector).matches_css?(".d-select", wait: 0) ? ".d-select__chip" : ".selected-choice"
+      end
 
       def parent_then_child_badges(category)
         ".badge-category__wrapper:has(.badge-category[data-category-id='#{category.parent_category_id}']) + " \

@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 import HouseAdsRouteSelector from "./house-ads-route-selector.gjs";
 import Preview from "./modal/preview.gjs";
@@ -218,10 +219,19 @@ export default class HouseAdForm extends Component {
         as |field|
       >
         <field.Control>
-          <CategorySelector
-            @categories={{field.value}}
-            @onChange={{field.set}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-selector"
+              @onChange={{field.set}}
+              @value={{field.value}}
+            />
+          {{else}}
+            <CategorySelector
+              @categories={{field.value}}
+              @onChange={{field.set}}
+            />
+          {{/if}}
         </field.Control>
       </form.Field>
 

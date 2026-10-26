@@ -13,6 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import DButton from "discourse/ui-kit/d-button";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
 const MAX_CATEGORIES = 10;
@@ -253,16 +254,30 @@ export default class WhosPosting extends Component {
           {{i18n "admin.dashboard.sections.engagement.whos_posting.title"}}
         </LinkTo>
         <div class="db-whos-posting__filter">
-          <MultipleCategoriesSelector
-            @categories={{this.selectedCategories}}
-            @onChange={{this.onCategoriesChange}}
-            @onClose={{this.onCategoriesClose}}
-            @options={{hash
-              maximum=MAX_CATEGORIES
-              none="category.all"
-              showAncestorsInSelectedChoice=true
-            }}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="multiple-categories-selector"
+              @legacyKind="multiple-categories-selector"
+              @maximum={{MAX_CATEGORIES}}
+              @onChange={{this.onCategoriesChange}}
+              @onClose={{this.onCategoriesClose}}
+              @placeholder={{i18n "category.all"}}
+              @showAncestors={{true}}
+              @value={{this.selectedCategories}}
+            />
+          {{else}}
+            <MultipleCategoriesSelector
+              @categories={{this.selectedCategories}}
+              @onChange={{this.onCategoriesChange}}
+              @onClose={{this.onCategoriesClose}}
+              @options={{hash
+                maximum=MAX_CATEGORIES
+                none="category.all"
+                showAncestorsInSelectedChoice=true
+              }}
+            />
+          {{/if}}
         </div>
       </div>
 

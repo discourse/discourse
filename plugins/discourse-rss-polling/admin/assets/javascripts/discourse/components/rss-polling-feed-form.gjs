@@ -16,6 +16,7 @@ import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import RssPollingFeedItemList from "discourse/plugins/discourse-rss-polling/discourse/components/rss-polling-feed-item-list";
@@ -339,11 +340,23 @@ export default class RssPollingFeedForm extends Component {
                 as |field|
               >
                 <field.Control>
-                  <CategoryChooser
-                    class="rss-polling-feed-form__category"
-                    @onChange={{fn this.categoryChanged field}}
-                    @value={{field.value}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectCategory
+                      class="category-chooser rss-polling-feed-form__category"
+                      @emit="ids"
+                      @multiple={{false}}
+                      @onChange={{fn this.categoryChanged field}}
+                      @permission="create"
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    <CategoryChooser
+                      class="rss-polling-feed-form__category"
+                      @onChange={{fn this.categoryChanged field}}
+                      @value={{field.value}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
 

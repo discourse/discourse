@@ -9,6 +9,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import getTagName from "../../lib/utilities.js";
@@ -166,11 +167,24 @@ export default class EditRule extends Component {
               as |field|
             >
               <field.Control>
-                <CategoryChooser
-                  @onChange={{this.onCategoryChange}}
-                  @options={{hash none="chat_integration.all_categories"}}
-                  @value={{this.category_id}}
-                />
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectCategory
+                    class="category-chooser"
+                    @emit="ids"
+                    @multiple={{false}}
+                    @onChange={{this.onCategoryChange}}
+                    @permission="create"
+                    @placeholder={{i18n "chat_integration.all_categories"}}
+                    @value={{this.category_id}}
+                  />
+                {{else}}
+                  <CategoryChooser
+                    @onChange={{this.onCategoryChange}}
+                    @options={{hash none="chat_integration.all_categories"}}
+                    @value={{this.category_id}}
+                  />
+                {{/if}}
               </field.Control>
             </form.Field>
           {{else}}

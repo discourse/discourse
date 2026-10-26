@@ -21,6 +21,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card.gjs";
 import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card.gjs";
@@ -700,10 +701,19 @@ export default class AiTranslations extends Component {
                 </div>
                 {{#if this.showCategorySelector}}
                   <div class="ai-translations__category-selector-row">
-                    <CategorySelector
-                      @categories={{this.categories}}
-                      @onChange={{this.updateCategories}}
-                    />
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DSelectCategory
+                        class="category-selector"
+                        @onChange={{this.updateCategories}}
+                        @value={{this.categories}}
+                      />
+                    {{else}}
+                      <CategorySelector
+                        @categories={{this.categories}}
+                        @onChange={{this.updateCategories}}
+                      />
+                    {{/if}}
                     {{#if this.categoriesChanged}}
                       <div class="setting-controls">
                         <DButton

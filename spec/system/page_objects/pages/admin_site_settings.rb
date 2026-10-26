@@ -246,9 +246,12 @@ module PageObjects
       end
 
       def category_setting(setting_name)
-        PageObjects::Components::SelectKit.new(
-          "#{setting_row_selector(setting_name)} .category-chooser",
-        )
+        selector = "#{setting_row_selector(setting_name)} .category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def group_setting(setting_name)
