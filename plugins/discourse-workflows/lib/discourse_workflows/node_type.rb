@@ -70,6 +70,22 @@ module DiscourseWorkflows
       **TOPIC_FILTER_PROPERTIES,
     }.freeze
 
+    REVIEWABLE_TYPE_FILTER_PROPERTIES = {
+      reviewable_types: {
+        type: :multi_options,
+        required: false,
+        default: [],
+        type_options: {
+          load_options_method: "reviewable_types",
+        },
+        control_options: {
+          value_property: "id",
+          name_property: "name",
+          filterable: true,
+        },
+      },
+    }.freeze
+
     def self.actor_property(allow_anonymous: true, **options)
       property = { type: :string, required: false, default: "system", ui: { control: :actor } }
       property[:control_options] = { allow_anonymous: false } if !allow_anonymous
@@ -372,6 +388,11 @@ module DiscourseWorkflows
         .uniq(&:sti_name)
         .sort_by(&:name)
         .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
+    end
+
+    def self.load_reviewable_type_options(context)
+      return if context.method_name != "reviewable_types"
+      reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
     end
 
     def self.trust_level_options

@@ -17,22 +17,14 @@ module DiscourseWorkflows
           output_contracts: [
             { schema: Schema.merge(Schema::REVIEWABLE_EVENT_SCHEMA, Schema::ACTOR_SCHEMA) },
           ],
-          properties: -> do
-            {
-              statuses: {
-                type: :multi_options,
-                default: [],
-                options: ::Reviewable.statuses.keys,
-              },
-              reviewable_types: {
-                type: :multi_options,
-                options:
-                  reviewable_type_options.map do |option|
-                    { value: option[:id], label: option[:name] }
-                  end,
-              },
-            }
-          end,
+          properties: {
+            statuses: {
+              type: :multi_options,
+              default: [],
+              options: ::Reviewable.statuses.keys,
+            },
+            **REVIEWABLE_TYPE_FILTER_PROPERTIES,
+          },
         )
 
         def self.description_for_status(status)
@@ -41,8 +33,12 @@ module DiscourseWorkflows
             fixed_status: status,
             palette_visible: true,
             i18n_scope: "reviewable_status_changed",
-            properties: -> { properties.except(:statuses) },
+            properties: properties.except(:statuses),
           )
+        end
+
+        def self.load_options_context(context)
+          load_reviewable_type_options(context)
         end
 
         def initialize(status, reviewable, payload = {})

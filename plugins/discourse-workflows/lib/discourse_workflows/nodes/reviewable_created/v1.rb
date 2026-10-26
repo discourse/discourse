@@ -14,25 +14,11 @@ module DiscourseWorkflows
           group: "discourse_triggers",
           event: :reviewable_created,
           output_contracts: [{ schema: Schema::REVIEWABLE_EVENT_SCHEMA }],
-          properties: -> do
-            {
-              reviewable_types: {
-                type: :multi_options,
-                required: false,
-                options:
-                  reviewable_type_options.map do |option|
-                    { value: option[:id], label: option[:name] }
-                  end,
-              },
-            }
-          end,
+          properties: REVIEWABLE_TYPE_FILTER_PROPERTIES,
         )
 
         def self.load_options_context(context)
-          case context.method_name
-          when "reviewable_types"
-            reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
-          end
+          load_reviewable_type_options(context)
         end
 
         def initialize(reviewable, *)
