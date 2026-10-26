@@ -67,6 +67,7 @@ en:
     chat:
       default_thread_title: "Voice chat in %{room}"
       default_thread_opener: "In %{room} - %{message}"
+      started_thread_opener: "Started a chat in %{room}"
     user_status:
       in_room: "In %{room_name}"
       in_private_room: "In a voice room"

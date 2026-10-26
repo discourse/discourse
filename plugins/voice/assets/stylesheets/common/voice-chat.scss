@@ -78,26 +78,6 @@
   }
 }
 
-.chat-composer {
-  .voice-chat:not(:has(.chat-replying-indicator-container)) & {
-    &__wrapper {
-      margin-bottom: var(--space-4);
-    }
-
-    &__inner-container {
-      padding-inline-start: var(--space-4);
-    }
-  }
-
-  &__wrapper {
-    &.--voice {
-      @include viewport.until(sm) {
-        margin-left: var(--space-4);
-      }
-    }
-  }
-}
-
 .c-navbar__title-text {
   .voice-chat & {
     .d-icon {

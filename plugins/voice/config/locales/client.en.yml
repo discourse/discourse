@@ -73,9 +73,8 @@ en:
         unavailable_title: "Zoinks!"
         unavailable: "Chat is unavailable right now."
         empty_title: "No chat yet"
-        empty_body: "Send a message to get the conversation started."
-        composer_placeholder: "Message the room…"
-        send: "Send"
+        empty_body: "Start a chat to message everyone in the room."
+        start: "Start chat"
         open_in_chat: "Open in chat"
         back_to_voice_room: "Back to voice room"
       video:

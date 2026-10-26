@@ -700,7 +700,7 @@ module Voice
     def chat_message
       ensure_chat_available!
 
-      text = params.require(:message).to_s
+      text = params[:message].to_s.presence
       # We post through Chat::CreateMessage directly, which bypasses the
       # per-user flood limit + auto-silence that chat enforces in its own
       # controller — apply it here so this endpoint isn't a way around it.

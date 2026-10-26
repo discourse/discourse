@@ -80,31 +80,21 @@ describe "Voice room chat panel" do
     expect(page).to have_no_css(".chat-side-panel")
   end
 
-  it "opens the session thread from the first message sent through the starter composer" do
+  it "starts the session thread from the start chat button" do
     visit("/voice/r/#{room.slug}?chat=true")
     click_button(I18n.t("js.voice.room.join"))
-    # The panel slides in; typing into it mid-animation can miss the composer.
+    # The panel slides in; clicking into it mid-animation can miss the button.
     wait_for_animation(find(".chat-side-panel"))
 
-    # No thread yet: the panel offers the starter composer, not the thread UI.
-    expect(page).to have_css(".chat-composer__wrapper.--voice .chat-composer__input")
+    # No thread yet: the panel offers the start button, not the thread UI.
     expect(page).to have_no_css(".voice-chat .chat-thread")
+    using_wait_time(20) { click_button(I18n.t("js.voice.chat.start")) }
 
-    find(".chat-composer__wrapper.--voice .chat-composer__input").fill_in(
-      with: "kicking things off",
-    )
-    # See the note above: the first send races thread creation, its message
-    # fetch, and the native composer's mount/focus against the settle check.
-    using_wait_time(20) do
-      find(".chat-composer__wrapper.--voice .chat-composer__input").send_keys(:enter)
-    end
-
-    # The first message creates the thread and the panel swaps to the native UI.
-    expect(page).to have_css(".voice-chat .chat-thread")
-    expect(page).to have_css(".voice-chat .chat-message-text", text: "kicking things off")
+    # Starting the chat creates the thread and the panel swaps to the native UI.
+    expect(page).to have_css(".voice-chat .chat-thread .chat-composer__input")
 
     thread = Chat::Thread.find_by(channel_id: channel.id)
-    expect(thread.original_message.message).to eq("In ##{room.slug}::room - kicking things off")
+    expect(thread.original_message.message).to eq("Started a chat in ##{room.slug}::room")
     expect(thread.original_message.user_id).to eq(user.id)
   end
 end
