@@ -306,4 +306,41 @@ module UserGuardian
     # to non-admins)
     DiscoursePluginRegistry.apply_modifier(:user_guardian_can_create_theme, true, self)
   end
+
+  def can_edit_theme?(theme)
+    return false if !is_admin? || theme.blank?
+    # like the creation modifier, this one can only further restrict which
+    # themes can be changed or deleted
+    DiscoursePluginRegistry.apply_modifier(:user_guardian_can_edit_theme, true, self, theme)
+  end
+
+  # Including a component in a theme, or removing it, changes where the
+  # component's code runs, so both sides of the change have to be editable.
+  def can_edit_theme_relations?(theme, child_theme_ids: nil, parent_theme_ids: nil)
+    return false if !can_edit_theme?(theme)
+
+    changed_ids = []
+    if !child_theme_ids.nil?
+      changed_ids.concat(changed_theme_ids(theme.child_theme_ids, child_theme_ids))
+    end
+    if !parent_theme_ids.nil?
+      changed_ids.concat(changed_theme_ids(theme.parent_theme_ids, parent_theme_ids))
+    end
+    return true if changed_ids.empty?
+
+    Theme.where(id: changed_ids.uniq).all? { |related| can_edit_theme?(related) }
+  end
+
+  def can_create_color_scheme?
+    return false if !is_admin?
+    # like the theme modifiers, this one can only further restrict palette creation
+    DiscoursePluginRegistry.apply_modifier(:user_guardian_can_create_color_scheme, true, self)
+  end
+
+  private
+
+  def changed_theme_ids(current_ids, new_ids)
+    new_ids = Array(new_ids).map(&:to_i)
+    (current_ids - new_ids) | (new_ids - current_ids)
+  end
 end

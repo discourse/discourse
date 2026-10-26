@@ -34,6 +34,7 @@ class Themes::BulkDestroy
   end
 
   model :themes
+  policy :can_edit_themes
 
   transaction do
     step :log_themes_destroy
@@ -44,6 +45,10 @@ class Themes::BulkDestroy
 
   def fetch_themes(params:)
     Theme.where(id: params.theme_ids)
+  end
+
+  def can_edit_themes(guardian:, themes:)
+    themes.all? { |theme| guardian.can_edit_theme?(theme) }
   end
 
   def log_themes_destroy(themes:, guardian:)

@@ -28,6 +28,7 @@ class Themes::Destroy
   end
 
   model :theme
+  policy :can_edit_theme
   policy :not_default
 
   transaction do
@@ -39,6 +40,10 @@ class Themes::Destroy
 
   def fetch_theme(params:)
     Theme.find_by(id: params.id)
+  end
+
+  def can_edit_theme(guardian:, theme:)
+    guardian.can_edit_theme?(theme)
   end
 
   def not_default(theme:)
