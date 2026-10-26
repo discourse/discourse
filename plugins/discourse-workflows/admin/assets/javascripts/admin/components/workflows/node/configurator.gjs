@@ -630,6 +630,7 @@ export default class NodeConfigurator extends Component {
           {{/if}}
           <DeprecationNotice
             @deprecation={{this.resolvedNodeType.deprecation}}
+            @nodeTypes={{this.nodeTypes}}
             @onUpgrade={{this.upgradeNode}}
           />
           <div
