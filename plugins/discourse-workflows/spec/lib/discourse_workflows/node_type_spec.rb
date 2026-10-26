@@ -96,6 +96,95 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
+  describe ".deprecated" do
+    it "needs a superseding version or an upgrade block" do
+      expect { Class.new(described_class) { deprecated(changes: {}) } }.to raise_error(
+        ArgumentError,
+      )
+    end
+
+    it "lists the replacing nodes without exposing the upgrade block" do
+      klass =
+        Class.new(described_class) do
+          description(name: "action:replaced_test")
+          deprecated(replaced_by: "action:replacement_test") { nil }
+        end
+
+      expect(klass.deprecation).to eq(replaced_by: ["action:replacement_test"], changes: {})
+    end
+
+    it "hides the deprecated version from the palette" do
+      v1, v2 =
+        register_versioned_workflow_nodes(
+          "action:palette_deprecation_test",
+          v1_deprecation: {
+            superseded_by: "2.0",
+          },
+        )
+
+      expect(v1).not_to be_palette_visible
+      expect(v2).to be_palette_visible
+    end
+  end
+
+  describe ".upgrade" do
+    it "returns nothing for a version that isn't deprecated" do
+      klass = Class.new(described_class) { description(name: "action:current_test") }
+
+      expect(klass.upgrade({ "title" => "Hello" })).to be_nil
+    end
+
+    it "moves the parameters to the superseding version by default" do
+      v1, _v2 =
+        register_versioned_workflow_nodes(
+          "action:superseded_test",
+          v1_deprecation: {
+            superseded_by: "2.0",
+          },
+        )
+
+      expect(v1.upgrade({ "title" => "Hello" })).to eq(
+        type: "action:superseded_test",
+        version: "2.0",
+        parameters: {
+          "title" => "Hello",
+        },
+      )
+    end
+
+    it "returns what the upgrade block maps the parameters to" do
+      v1, _v2 =
+        register_versioned_workflow_nodes(
+          "action:upgrade_block_test",
+          v1_upgrade: ->(parameters) do
+            { type: "action:log", parameters: { "message" => parameters["title"] } }
+          end,
+        )
+
+      expect(v1.upgrade({ "title" => "Hello" })).to eq(
+        type: "action:log",
+        parameters: {
+          "message" => "Hello",
+        },
+      )
+    end
+
+    it "gives the upgrade block string keys whatever the caller passes" do
+      v1, _v2 =
+        register_versioned_workflow_nodes(
+          "action:upgrade_keys_test",
+          v1_upgrade: ->(parameters) { { type: "action:log", parameters: } },
+        )
+
+      expect(v1.upgrade({ title: "Hello" })).to eq(
+        type: "action:log",
+        parameters: {
+          "title" => "Hello",
+        },
+      )
+    end
+  end
+
   describe ".output_contracts" do
     let(:declared_schema) do
       {
