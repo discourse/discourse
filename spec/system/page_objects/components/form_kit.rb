@@ -42,6 +42,12 @@ module PageObjects
           picker.value
         when "d-select", "d-select-multi"
           component.find(".d-select")["data-value"]
+        when "category-chooser"
+          if component.has_css?(".form-kit__control-category-chooser.d-select", wait: 0)
+            return UiKit::DSelect.at(category_chooser_selector).value
+          end
+
+          PageObjects::Components::SelectKit.new(category_chooser_selector).value
         when "tag-chooser"
           return tag_chooser_d_select.value if tag_chooser_d_select?
 
@@ -172,6 +178,17 @@ module PageObjects
           picker.search(value)
           picker.select_row_by_name(value)
           picker.collapse
+        when "category-chooser"
+          if component.has_css?(".form-kit__control-category-chooser.d-select", wait: 0)
+            picker = UiKit::DSelect.at(category_chooser_selector)
+            picker.select_value(value)
+            picker.close
+          else
+            picker = PageObjects::Components::SelectKit.new(category_chooser_selector)
+            picker.expand
+            picker.select_row_by_value(value)
+            picker.collapse
+          end
         when "tag-chooser"
           if tag_chooser_d_select?
             picker = tag_chooser_d_select
@@ -267,6 +284,10 @@ module PageObjects
       end
 
       private
+
+      def category_chooser_selector
+        "[data-name='#{component["data-name"]}'] .form-kit__control-category-chooser"
+      end
 
       def tag_chooser_d_select?
         component.has_css?(".form-kit__control-tag-chooser.d-select", wait: 0)

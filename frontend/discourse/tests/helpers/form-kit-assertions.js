@@ -152,9 +152,10 @@ class FieldHelper {
           `Calendar is a complex type, value can't be check from UI components`
         );
       }
+      case "category-chooser":
       case "tag-chooser": {
         const select = this.element.querySelector(
-          ".form-kit__control-tag-chooser.d-select"
+          ".form-kit__control-tag-chooser.d-select, .form-kit__control-category-chooser.d-select"
         );
         return select
           ? select.dataset.value

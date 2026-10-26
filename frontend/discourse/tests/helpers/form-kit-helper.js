@@ -88,7 +88,7 @@ class Field {
     return this.element.matches(".d-select")
       ? this.element
       : this.element.querySelector(
-          ".form-kit__control-custom .d-select, .form-kit__control-tag-chooser.d-select"
+          ".form-kit__control-custom .d-select, .form-kit__control-tag-chooser.d-select, .form-kit__control-category-chooser.d-select"
         );
   }
 
@@ -160,6 +160,7 @@ class Field {
           this.element.querySelector(".d-icon-grid-picker")?.dataset?.value ||
           null
         );
+      case "category-chooser":
       case "tag-chooser":
         return this.dSelectElement
           ? this.dSelectElement.dataset.value
@@ -286,6 +287,7 @@ class Field {
         await kit.collapse();
         break;
       }
+      case "category-chooser":
       case "tag-chooser": {
         if (this.dSelectElement) {
           const control = this.dSelectControl;

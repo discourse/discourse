@@ -319,7 +319,7 @@ A field must have a title. It will be displayed above the control and is also us
 A field must have a type. This determines which control component is rendered. The available types are:
 
 - **Input types**: `input` (defaults to text), `input-text`, `input-number`, `input-email`, `input-password`, `input-url`, `input-tel`, `input-date`, `input-time`, `input-datetime-local`, `input-color`, `input-month`, `input-week`, `input-range`, `input-search`, `input-hidden`
-- **Other controls**: `checkbox`, `code`, `calendar`, `color`, `composer`, `custom`, `emoji`, `icon`, `image`, `menu`, `password`, `question`, `radio-group`, `select`, `tag-chooser`, `textarea`, `toggle`
+- **Other controls**: `category-chooser`, `checkbox`, `code`, `calendar`, `color`, `composer`, `custom`, `emoji`, `icon`, `image`, `menu`, `password`, `question`, `radio-group`, `select`, `tag-chooser`, `textarea`, `toggle`
 
 **Example**
 
@@ -1028,6 +1028,44 @@ By default, Select includes a "none" option when the field is blank or when the 
   </form.Field>
 </Form>
 ```
+
+## Category chooser
+
+Renders a `<DSelectCategory />` when `enable_new_select_controls` is enabled. Otherwise it renders a legacy `<CategoryChooser />` for single selection or `<CategorySelector />` for multiple selection. The field stores a numeric category id or `null` by default, and an array of numeric ids with `@multiple={{true}}`. Rendering a held value does not mark the form dirty. In lazy-loading mode, the legacy multiple control resolves held ids before allowing edits.
+
+Control arguments:
+
+- `@multiple`: defaults to `false`. Multiple selection stores `number[]`.
+- `@placeholder`: a translation key for the empty selection.
+- `@maximum`: the maximum number of selected categories in multiple mode.
+
+The new control uses the field's id, title, description, error state, and disabled state for accessibility. It also forwards these category rules:
+
+- `@permission`: `"see"` by default, or `"create"` to require permission to create topics.
+- `@uncategorized`: includes Uncategorized. Defaults to `true` in multiple mode, otherwise the `allow_uncategorized_topics` setting.
+- `@exclude`: category ids hidden unless already held.
+- `@subcategories`: includes categories with parents; defaults to `true`.
+
+**Example**
+
+```hbs
+<Form @data={{hash categoryIds=(array 1 2)}} as |form|>
+  <form.Field
+    @name="categoryIds"
+    @title="Categories"
+    @type="category-chooser"
+    as |field|
+  >
+    <field.Control
+      @multiple={{true}}
+      @maximum={{5}}
+      @placeholder="category.choose"
+    />
+  </form.Field>
+</Form>
+```
+
+In JavaScript tests, `await formKit().field("categoryIds").select(3)` picks a category by id in either mode. `assert.form().field("categoryIds").hasValue("1,2,3")` checks the rendered ids as a comma-separated string; single selection uses a single id string. In system tests, `field.select(3)` and `field.has_value?("1,2,3")` provide the equivalent helpers.
 
 ## Tag Chooser
 
@@ -2489,7 +2527,7 @@ await formKit().field("foo").refuse();
 
 ### select()
 
-Can be used on `@type="select"`, `@type="menu"`, `@type="icon"`, `@type="radio-group"`, and `@type="color"` fields.
+Can be used on `@type="select"`, `@type="menu"`, `@type="icon"`, `@type="radio-group"`, `@type="color"`, `@type="tag-chooser"`, and `@type="category-chooser"` fields. Category choosers select by category id in either rendering mode.
 
 Will select the given value.
 
@@ -2783,7 +2821,7 @@ field.fill_in("bar")
 
 ### select
 
-Allows selecting a specified value in a field. Available for `@type="select"`, `@type="icon"`, `@type="menu"`, `@type="radio-group"`, `@type="question"`, tag choosers, and custom multi-select controls.
+Allows selecting a specified value in a field. Available for `@type="select"`, `@type="icon"`, `@type="menu"`, `@type="radio-group"`, `@type="question"`, tag choosers, category choosers, and custom multi-select controls. Category choosers select by category id in either rendering mode.
 
 **Example**
 
