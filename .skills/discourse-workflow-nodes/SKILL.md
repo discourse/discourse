@@ -107,8 +107,31 @@ Renaming or removing an output key, or changing its meaning, breaks saved workfl
 - `class V2 < V1` in `v2.rb`, calling `description(superclass.description.merge(version: "2.0", output_contracts: [{ schema: V2_OUTPUT_SCHEMA }]))`, then override `output` / `execute` or a private `serialize_*` helper.
 - Core nodes self-register; plugin nodes need `register_discourse_workflows_node(...::V2)` next to V1.
 - Services resolve the saved version with `NodeData.node_type(node)`, never a hard-coded `V1`.
-- Deprecated versions keep running for saved workflows, are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action. Remove them after a deprecation window.
-- Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones. `node_deprecation_spec` checks `superseded_by`.
+- Deprecated versions keep running for saved workflows (drafts, published versions, history and paused executions reference them), are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action. Remove them only after the deprecation window, and only together with the removal migration that upgrades every stored copy (drafts, `WorkflowVersion`s, execution and webhook snapshots).
+- Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones. `node_deprecation_spec` checks that `superseded_by` and every `replaced_by` node are registered and not deprecated.
+
+### Replacing a node
+
+When an operation becomes its own node (or a node splits into several), deprecate the old version towards the nodes replacing it, with a block mapping each saved configuration to its replacement:
+
+```ruby
+deprecated(replaced_by: %w[action:close_topic action:archive_topic]) do |parameters|
+  case parameters["operation"]
+  when "close"
+    { type: "action:close_topic", parameters: parameters.slice("topic_id"), notes: ["discourse_workflows.node_upgrades.topic_post_removed"] }
+  when "archive"
+    { type: "action:archive_topic", parameters: parameters.slice("topic_id") }
+  end
+end
+```
+
+- The block returns `{ type:, version:, parameters:, notes: }`. `version` defaults to `superseded_by` for the same node and to the latest version of another node. It can also go with `superseded_by:` when the newer version takes different parameters; without a block, Upgrade keeps the parameters.
+- Return nil for a configuration that can't be upgraded automatically, such as an operation chosen by an expression. The admin then replaces that node by hand.
+- `notes` are server I18n keys under `discourse_workflows.node_upgrades.*` telling admins what changes for them, such as an output key that's gone. `changes:` and `notice_key:` still describe the old version before the upgrade.
+- The replacement must have the same number of output ports, because connections are stored per port. `NodeUpgrader` skips a node otherwise, or when the target is missing or deprecated.
+- `NodeUpgrader` keeps the node's id, name, position, credentials and settings, so connections, expressions and pinned data still find it.
+- A saved node goes through at most one upgrade: never deprecate towards another deprecated version, and when a node is both versioned and split, do both in one step.
+- Spec every route with `Foo::V1.upgrade(parameters)`, including the configurations that return nil.
 
 ## Output conventions
 
