@@ -172,6 +172,15 @@ module PrettyText
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
     text = text || ""
 
+    opt_input = markdown_options(opts)
+
+    protect do
+      DiscourseEvent.trigger(:markdown_context, v8)
+      v8.call("__PrettyText.cook", text, opt_input)
+    end
+  end
+
+  def self.markdown_options(opts = {})
     custom_emoji = {}
     Emoji.custom.map { |e| custom_emoji[e.name] = e.cdn_url }
 
@@ -212,10 +221,7 @@ module PrettyText
     # Be careful disabling sanitization. We allow for custom emails
     opt_input[:disableSanitizer] = true if opts[:sanitize] == false
 
-    protect do
-      DiscourseEvent.trigger(:markdown_context, v8)
-      v8.call("__PrettyText.cook", text, opt_input)
-    end
+    opt_input
   end
 
   def self.paths
@@ -250,6 +256,42 @@ module PrettyText
 
   def self.splice_hashtags(raw, replacements)
     protect { v8.call("__PrettyText.spliceHashtags", raw.to_s, replacements) }
+  end
+
+  def self.update_bbcode_attributes(raw, tag_name, attributes, opts = {})
+    protect do
+      DiscourseEvent.trigger(:markdown_context, v8)
+      v8.call(
+        "__PrettyText.updateBBCodeAttributes",
+        raw,
+        tag_name,
+        attributes,
+        markdown_options(opts),
+      )
+    end
+  end
+
+  def self.scan_bbcode_tags(raw, tag:)
+    protect { v8.call("__PrettyText.scanBBCodeTags", raw.to_s, tag.to_s) }
+  end
+
+  def self.mark_bbcode_tags(raw, tag:, attribute:, prefix:, candidate: nil)
+    protect do
+      v8.call("__PrettyText.markBBCodeTags", raw.to_s, tag.to_s, attribute.to_s, prefix.to_s, candidate)
+    end
+  end
+
+  def self.rewrite_bbcode_tag(raw, tag:, candidate:, expected_opening:, changes:)
+    protect do
+      v8.call(
+        "__PrettyText.rewriteBBCodeTag",
+        raw.to_s,
+        tag.to_s,
+        candidate,
+        expected_opening,
+        changes.stringify_keys,
+      )
+    end
   end
 
   def self.unescape_emoji(title)

@@ -87,6 +87,75 @@ const BBCODE_ATTR_REGEXP = new RegExp(
   "gi"
 );
 
+const BBCODE_REQUIRES_QUOTES_PATTERN = /[\s\]]/;
+
+export function serializeBBCodeAttr(value, name) {
+  if (!value) {
+    return "";
+  }
+
+  const stringValue = String(value);
+  const needsQuotes = BBCODE_REQUIRES_QUOTES_PATTERN.test(stringValue);
+
+  if (!needsQuotes) {
+    return ` ${name}=${stringValue}`;
+  }
+
+  for (const pair of QUOTATION_MARKS) {
+    const [open, close] = pair;
+    if (!stringValue.includes(open) && !stringValue.includes(close)) {
+      return ` ${name}=${open}${stringValue}${close}`;
+    }
+  }
+
+  return ` ${name}="${stringValue.replaceAll('"', "")}"`;
+}
+
+export function updateBBCodeTag(tag, attributes) {
+  const remaining = { ...attributes };
+  const matches = [...tag.matchAll(new RegExp(BBCODE_ATTR_REGEXP))].slice(1);
+
+  for (const match of matches.reverse()) {
+    const name = match[1];
+    if (!Object.hasOwn(attributes, name)) {
+      continue;
+    }
+
+    const start = tag.slice(0, match.index).search(/\s*$/);
+    tag =
+      tag.slice(0, start) +
+      serializeBBCodeAttr(attributes[name], name) +
+      tag.slice(match.index + match[0].length);
+    delete remaining[name];
+  }
+
+  const added = Object.entries(remaining)
+    .map(([name, value]) => serializeBBCodeAttr(value, name))
+    .join("");
+  return tag.slice(0, -1) + added + "]";
+}
+
+/** Return the source spans of attributes using the Markdown parser's grammar. */
+export function bbCodeAttributeTokens(opening) {
+  const matches = [
+    ...opening.slice(0, -1).matchAll(new RegExp(BBCODE_ATTR_REGEXP)),
+  ];
+  const [head, ...attributes] = matches;
+
+  if (!head || head.index !== 1) {
+    throw new Error("Invalid BBCode opening tag");
+  }
+
+  return {
+    headEnd: head.index + head[0].length,
+    attributes: attributes.map((match) => ({
+      name: match[1],
+      start: match.index,
+      end: match.index + match[0].length,
+    })),
+  };
+}
+
 export function parseBBCodeTag(src, start, max, multiline) {
   let m;
   const text = src.slice(start, max);
@@ -371,6 +440,8 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 
     let lastToken = state.tokens[state.tokens.length - 1];
     lastToken.map = [startLine, nextLine];
+    lastToken.markup = state.src.slice(start, start + info.length);
+    lastToken.meta = { ...lastToken.meta, bbcode: info.tag };
 
     if (closeTag.block) {
       state.md.block.tokenize(state, startLine + 1, nextLine);
