@@ -285,6 +285,13 @@ jobs:
           pnpm deploy --filter @discourse/playwright-runner --prod tmp/playwright
           echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
 
+      - name: Preserve deprecation report dependencies outside node_modules
+        if: matrix.build_type == 'system'
+        run: |
+          mkdir -p tmp/deprecation-report/node_modules
+          cp -RL frontend/discourse/node_modules/source-map-js tmp/deprecation-report/node_modules/
+          echo "NODE_PATH=$PWD/tmp/deprecation-report/node_modules${NODE_PATH:+:$NODE_PATH}" >> $GITHUB_ENV
+
       # Drop node_modules to match production
       - name: Remove node_modules
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
