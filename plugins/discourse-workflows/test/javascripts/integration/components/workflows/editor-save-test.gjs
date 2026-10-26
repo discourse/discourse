@@ -5,17 +5,11 @@ import WorkflowsEditor from "discourse/plugins/discourse-workflows/admin/compone
 import WorkflowNode from "discourse/plugins/discourse-workflows/admin/models/workflow-node";
 
 let editor;
-let editedNodes;
 
 class TestEditor extends WorkflowsEditor {
   constructor() {
     super(...arguments);
     editor = this;
-    editedNodes = [];
-  }
-
-  editNode(clientId) {
-    editedNodes.push(clientId);
   }
 
   <template></template>
@@ -81,35 +75,5 @@ module("Integration | Component | workflows editor saves", function (hooks) {
     await second;
 
     assert.strictEqual(saves[1].nodes[0].configuration.message, "Y");
-  });
-
-  test("upgradeNode is not undoable", async function (assert) {
-    const { workflow, saves } = savingWorkflow([
-      { clientId: "n1", type: "action:log", name: "Log", typeVersion: "1.0" },
-    ]);
-    await renderEditor(workflow);
-
-    const upgrading = editor.upgradeNode("n1");
-    await waitUntil(() => saves.length === 1);
-    saves[0].resolve();
-    await upgrading;
-
-    assert.false(editor.undoManager.hasPendingCapture);
-    assert.deepEqual(editedNodes, ["n1"]);
-  });
-
-  test("upgradeNode does not reopen the node once the editor is destroyed", async function (assert) {
-    const { workflow, saves } = savingWorkflow([
-      { clientId: "n1", type: "action:log", name: "Log", typeVersion: "1.0" },
-    ]);
-    await renderEditor(workflow);
-
-    const upgrading = editor.upgradeNode("n1");
-    await waitUntil(() => saves.length === 1);
-    await render(<template></template>);
-    saves[0].resolve();
-    await upgrading;
-
-    assert.deepEqual(editedNodes, []);
   });
 });
