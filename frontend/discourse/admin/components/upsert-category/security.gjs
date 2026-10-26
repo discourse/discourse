@@ -213,7 +213,7 @@ export default class UpsertCategorySecurity extends Component {
               <span class="cell"></span>
             </span>
           </div>
-          {{#each this.permissions as |p|}}
+          {{#each this.permissions key="group_id" as |p|}}
             <UpsertCategoryPermissionRow
               @everyonePermission={{this.everyonePermission}}
               @groupId={{p.group_id}}
