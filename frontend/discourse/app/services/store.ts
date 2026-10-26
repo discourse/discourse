@@ -18,19 +18,38 @@ import RestModel, {
 } from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import type Site from "discourse/models/site";
+import type {
+  default as Topic,
+  TopicCreateAttrs,
+} from "discourse/models/topic";
 import type UserDraft from "discourse/models/user-draft";
 
 /** Model instances by store type name. Plugins add theirs through module augmentation. */
 export interface ModelRegistry {
   category: Category;
   site: Site;
+  topic: Topic;
   "user-draft": UserDraft;
+}
+
+/**
+ * Creation attributes by store type name, for models whose inputs differ from
+ * their instance fields. Plugins add entries through module augmentation.
+ */
+export interface ModelCreateAttrsRegistry {
+  topic: TopicCreateAttrs<Topic>;
 }
 
 /** Unregistered names, including dynamic strings, fall back to the base REST model. */
 export type ModelFor<K extends string> = K extends keyof ModelRegistry
   ? ModelRegistry[K]
   : RestModel;
+
+/** Uses registered creation attributes, falling back to the model's declared fields. */
+export type ModelCreateAttrsFor<K extends string> =
+  K extends keyof ModelCreateAttrsRegistry
+    ? ModelCreateAttrsRegistry[K]
+    : RestModelAttrs<ModelFor<K>>;
 
 /** The content property is supplied by the legacy array proxy at runtime. */
 export type ResultSetOf<M> = ResultSet & { content: M[] };
@@ -356,10 +375,10 @@ export default class StoreService extends Service {
     });
   }
 
-  /** Declared model fields retain their types; additional server attributes pass through. */
+  /** Accepts registered creation attributes, or the model's declared fields by default. */
   createRecord<K extends string>(
     type: K,
-    attrs?: RestModelAttrs<ModelFor<K>>
+    attrs?: ModelCreateAttrsFor<K>
   ): ModelFor<K>;
 
   createRecord(type: string, attrs?: RestPayload) {
