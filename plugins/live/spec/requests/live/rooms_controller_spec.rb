@@ -1354,6 +1354,27 @@ RSpec.describe Live::RoomsController do
       expect(Live::Room.exists?(private_room.id)).to eq(false)
     end
 
+    it "returns 403 for a room moderator who is not the creator" do
+      private_room.room_memberships.create!(
+        user: other_participant,
+        role: Live::RoomMembership::ROLE_MODERATOR,
+      )
+      sign_in(other_participant)
+
+      delete "/live/rooms/#{private_room.id}.json"
+
+      expect(response.status).to eq(403)
+      expect(Live::Room.exists?(private_room.id)).to eq(true)
+    end
+
+    it "serializes can_delete for the creator" do
+      sign_in(room_owner)
+
+      get "/live/rooms/#{private_room.id}.json"
+
+      expect(response.parsed_body.dig("room", "can_delete")).to eq(true)
+    end
+
     it "broadcasts the destroy to the members the room had" do
       sign_in(room_owner)
 

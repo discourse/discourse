@@ -7,6 +7,7 @@ import { bind } from "discourse/lib/decorators";
 // a response scoped to the current user supplies fresh values.
 const USER_GATED_ROOM_FIELDS = [
   "can_manage",
+  "can_delete",
   "can_invite",
   "membership",
   "chat_available",
