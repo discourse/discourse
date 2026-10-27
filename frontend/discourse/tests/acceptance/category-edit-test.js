@@ -655,3 +655,130 @@ acceptance("Category Edit - emoji disabled", function (needs) {
       .isChecked("emoji category resolves to square");
   });
 });
+
+acceptance("Category Edit - saved value types", function (needs) {
+  needs.user();
+
+  const discussionType = {
+    id: "discussion",
+    name: "Discussion",
+    configuration_schema: {},
+  };
+
+  let seed, failSave;
+
+  needs.hooks.beforeEach(() => {
+    seed = {};
+    failSave = false;
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () =>
+      helper.response(200, {
+        category: seededCategory({
+          sort_order: "views",
+          category_types: { discussion: discussionType },
+          ...seed,
+        }),
+      })
+    );
+
+    server.put("/categories/:id", () => {
+      if (failSave) {
+        return helper.response(422, { errors: ["Something went wrong"] });
+      }
+      return helper.response(200, {
+        success: "OK",
+        category: seededCategory({
+          sort_order: "views",
+          category_types: { discussion: discussionType },
+        }),
+      });
+    });
+  });
+
+  test("saves the sort direction as a boolean", async function (assert) {
+    seed = { sort_ascending: false };
+
+    await visit("/c/bug/edit/images");
+    await formKit().field("sort_ascending").select("true");
+    await click(".admin-changes-banner .btn-primary");
+
+    assert.true(
+      latestCategorySavePayload().sort_ascending,
+      "sends true, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("saves a descending sort direction as false", async function (assert) {
+    seed = { sort_ascending: true };
+
+    await visit("/c/bug/edit/images");
+    await formKit().field("sort_ascending").select("false");
+    await click(".admin-changes-banner .btn-primary");
+
+    assert.false(
+      latestCategorySavePayload().sort_ascending,
+      "sends false, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("saves the search priority as a number", async function (assert) {
+    seed = { search_priority: 0 };
+
+    await visit("/c/bug/edit/settings");
+    await formKit().field("search_priority").select(1);
+    await click(".admin-changes-banner .btn-primary");
+
+    assert.strictEqual(
+      latestCategorySavePayload().search_priority,
+      1,
+      "sends the number, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("saves a zero search priority as 0", async function (assert) {
+    seed = { search_priority: 2 };
+
+    await visit("/c/bug/edit/settings");
+    await formKit().field("search_priority").select(0);
+    await click(".admin-changes-banner .btn-primary");
+
+    assert.strictEqual(
+      latestCategorySavePayload().search_priority,
+      0,
+      "sends 0, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("keeps the category's types when the save fails", async function (assert) {
+    failSave = true;
+
+    await visit("/c/bug/edit/general");
+    const model = this.owner.lookup("controller:edit-category/tabs").model;
+    const typesBefore = cloneJSON(model.category_types);
+
+    await fillIn("input.category-name", "renamed");
+    await click(".admin-changes-banner .btn-primary");
+
+    assert.deepEqual(
+      latestCategorySavePayload().category_types,
+      ["discussion"],
+      "still sends the selected type ids"
+    );
+    assert.deepEqual(
+      typesBefore,
+      { discussion: discussionType },
+      "the category starts with its type map"
+    );
+    assert.deepEqual(
+      cloneJSON(model.category_types),
+      typesBefore,
+      "the category keeps its type map instead of the request's id list"
+    );
+  });
+});
