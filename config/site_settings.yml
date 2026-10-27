@@ -557,7 +557,7 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   about_page_extra_groups:
     client: true
@@ -4299,6 +4299,9 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
+  concord_in_wizard:
+    default: false
+    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4790,6 +4793,14 @@ dashboard:
     client: true
 
 experimental:
+  enable_user_menu_mentions_tab:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415579"
   enable_markdown_endpoints:
     default: false
     hidden: true
@@ -4798,6 +4809,7 @@ experimental:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413006"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_generated_llms_txt:
@@ -4900,10 +4912,20 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    hidden: true
+    area: "experimental"
   dsa_reporting_enabled:
+    client: true
     default: false
     hidden: true
     area: "experimental"
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    hidden: true
   dsa_community_rules:
     type: objects
     default: []

@@ -1203,7 +1203,7 @@ RSpec.describe Search do
       expect(results.posts).to eq([])
 
       user.groups << whisperers_group
-      results = Search.execute("tiger", guardian: Guardian.new(user))
+      results = Search.execute("tiger", guardian: Guardian.new(user.reload))
       expect(results.posts).to eq([post])
     end
 
@@ -2717,6 +2717,20 @@ RSpec.describe Search do
 
       expect(Search.execute("Topic min_views:150").posts.map(&:id)).to eq([post2.id])
       expect(Search.execute("Topic max_views:150").posts.map(&:id)).to eq([post.id])
+    end
+
+    it "returns every matching post from topic 1 without including other topics" do
+      topic.update!(id: 1)
+      posts = [
+        Fabricate(:post, topic:, raw: "Widgets need a reset after updating"),
+        Fabricate(:post, topic:, raw: "Another widget tip: clear the cache"),
+      ]
+      other_post = Fabricate(:post, raw: "Another widget topic")
+      [*posts, other_post].each { |post| SearchIndexer.index(post, force: true) }
+
+      results = Search.execute("widget topic:1", search_type: :full_page)
+
+      expect(results.posts.map(&:id)).to contain_exactly(*posts.map(&:id))
     end
 
     it "can order by likes" do

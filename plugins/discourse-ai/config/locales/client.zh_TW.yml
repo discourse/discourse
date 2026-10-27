@@ -1558,6 +1558,14 @@ zh_TW:
             compact: "緊湊"
             expanded: "展開"
             expanded_description: "帶 AI 摘要"
+      ai_search:
+        related_topics: "相關主題"
+        related_replies:
+          other: "%{count} 則回覆"
+        tabs:
+          ask: "詢問 AI"
+          topics: "主題"
+          messages: "訊息"
       discobot_discoveries:
         main_title: "詢問 AI"
         loading_convo: "正在加載對話"

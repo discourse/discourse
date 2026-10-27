@@ -21,7 +21,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { reviewable: reviewable_data(@reviewable) }
+          { reviewable: serialize_reviewable(@reviewable), actor: serialize_user(@actor) }
         end
       end
     end

@@ -41,6 +41,8 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          deprecated(superseded_by: "2.0", changes: { "acting_user" => "actor" })
+
           def initialize(board, card_payload, acting_user, *)
             super(parameters: {})
             card_payload = card_payload.with_indifferent_access
@@ -83,20 +85,25 @@ if defined?(DiscourseWorkflows)
             {
               card:
                 @card.as_json(
-                  only: BoardsSchema::CARD_PROPERTIES.keys - ["unicode_title"],
-                  methods: [:unicode_title],
-                ),
-              card_moved: {
-                old_column: column_data(@old_column),
-                new_column: column_data(@new_column),
+                  only: BoardsSchema::CARD_PROPERTIES.keys - %w[unicode_title url],
+                  methods: %i[unicode_title url],
+                ).merge("assignee" => serialize_assignee(@card.assigned_to)),
+              board: {
+                id: @card.board.id,
+                name: @card.board.name,
+                url: @card.board.url,
               },
-              acting_user: serialize_record(@acting_user, BasicUserSerializer),
+              card_moved: {
+                old_column: serialize_column(@old_column),
+                new_column: serialize_column(@new_column),
+              },
+              acting_user: serialize_user(@acting_user),
             }
           end
 
           private
 
-          def column_data(column)
+          def serialize_column(column)
             column&.as_json(
               only: BoardsSchema::COLUMN_PROPERTIES.keys - ["unicode_title"],
               methods: [:unicode_title],

@@ -421,6 +421,13 @@ pt:
           summarize: "Resumir"
         topic:
           regenerate_summaries_option: "Resumos de tópico"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
         legacy:
           regular_results: "Tópicos"

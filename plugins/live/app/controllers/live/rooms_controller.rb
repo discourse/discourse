@@ -117,7 +117,7 @@ module Live
     end
 
     def destroy
-      guardian.ensure_can_manage_live_room!(@room)
+      guardian.ensure_can_delete_live_room!(@room)
       # Built before the destroy so the broadcast still targets the members
       # whose memberships the destroy cascades away.
       broadcaster = Live::DirectoryBroadcaster.new(@room, :destroyed)

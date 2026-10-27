@@ -276,6 +276,23 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
       it { is_expected.to fail_a_policy(:has_answers) }
     end
 
+    context "when the topic title contains an HTML comment opener and a script tag" do
+      fab!(:reply) { Fabricate(:post, topic:) }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        topic.update!(title: "Why does <!--<script> break my template?")
+      end
+
+      it "keeps the script element closed and the title intact" do
+        fragment = Nokogiri::HTML5.fragment("#{result[:html]}<p></p>")
+        schema = JSON.parse(fragment.at_css('script[type="application/ld+json"]').content)
+
+        expect(fragment.children.map(&:name)).to eq(%w[script p])
+        expect(schema["name"]).to eq(topic.title)
+      end
+    end
+
     context "when there is an accepted answer and suggested answers" do
       fab!(:answer_user, :user)
       fab!(:answer_post) { Fabricate(:post, topic:, user: answer_user, like_count: 3) }

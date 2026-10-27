@@ -6,6 +6,9 @@
 
 hu:
   js:
+    dsa_notice:
+      title: "Illegális tartalom bejelentése"
+      email: "E-mail-cím"
     user_api_key:
       title: '"%{application_name}" engedélyezése'
       authorize: "Engedélyezés"

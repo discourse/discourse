@@ -16,6 +16,9 @@ minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
 - "@discourse/*"
 - discourse
+- ember-eslint-parser@0.16.0
+- ember-estree@0.9.0
+- eslint-plugin-ember@13.8.0
 packages:
 - "docs/developer-guides"
 - "frontend/deprecation-silencer"

@@ -1338,6 +1338,15 @@ tr_TR:
             compact: "Kompakt"
             expanded: "Genişletilmiş"
             expanded_description: "YZ özetleriyle"
+      ai_search:
+        related_topics: "İlgili konular"
+        related_replies:
+          one: "%{count} yanıt"
+          other: "%{count} yanıt"
+        tabs:
+          ask: "YZ'ye sor"
+          topics: "Konular"
+          messages: "İletiler"
       discobot_discoveries:
         main_title: "YZ'ye sor"
         loading_convo: "Konuşma yükleniyor"

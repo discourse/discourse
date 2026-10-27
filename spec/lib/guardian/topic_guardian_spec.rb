@@ -246,6 +246,14 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_edit_tags?" do
+    it "returns false for the author of a wiki topic whose first post is hidden during the cooldown" do
+      post = Fabricate(:post, user:, wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_tags?(post.topic)).to eq(false)
+    end
+  end
+
   describe "#can_delete_topic?" do
     it "returns false for an unauthenticated user" do
       expect(Guardian.new.can_delete_topic?(topic)).to be_falsey

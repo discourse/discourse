@@ -841,6 +841,7 @@ nl:
     post_template: "%{replace_paragraph}\n\nGebruik de volgende alinea's voor een langere beschrijving, of om richtlijnen of regels voor de categorie op te stellen:\n\n- Waarom zouden mensen deze categorie gebruiken? Waar dient deze voor?\n\n- Op welke punten onderscheidt deze categorie zich van andere categorieën die we al hebben?\n\n- Wat dienen topics in deze categorie over het algemeen te bevatten?\n\n- Hebben we deze categorie nodig? Kunnen we deze samenvoegen met een andere categorie of subcategorie?\n"
     errors:
       not_found: "Categorie niet gevonden!"
+      self_lockout: "Je staat op het punt om categoriestoestemmingen te wijzigen op een manier die je eigen toegang verwijderd. Weet je zeker dat je door wilt gaan?"
       uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
       self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"
       depth: "Je kunt geen subcategorie onder een andere subcategorie plaatsen"
@@ -2495,7 +2496,6 @@ nl:
     experimental_impersonation_time_limit_minutes: "Hoelang het duurt voordat een impersonatiesessie automatisch wordt beëindigd."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     show_user_menu_avatars: "Gebruikersavatars weergeven in het gebruikersmenu"
-    about_page_hidden_groups: "Geef leden van specifieke groepen niet weer op de over/-pagina."
     about_page_extra_groups: "Groepen om weer te geven op de Over-pagina onder de moderators."
     about_page_extra_groups_initial_members: "Aantal leden om elke groep naar uit te breiden op de Over-pagina."
     about_page_extra_groups_show_description: "Of de groepsbeschrijvingen op de Over-pagina moeten worden weergegeven."
@@ -4105,34 +4105,18 @@ nl:
       title: "Account geschorst"
       subject_template: "[%{email_prefix}] Je account is geschorst"
       subject_template_improved: "Je account is geschorst"
-      text_body_template: |
-        Je bent geschorst van het forum tot %{suspended_till}.
-
-        Reden: %{reason}
     account_suspended_forever:
       title: "Account geschorst"
       subject_template: "[%{email_prefix}] Je account is geschorst"
       subject_template_improved: "Je account is geschorst"
-      text_body_template: |
-        Je bent geschorst van het forum.
-
-        Reden: %{reason}
     account_silenced:
       title: "Account gedempt"
       subject_template: "[%{email_prefix}] Je account is gedempt"
       subject_template_improved: "Je account is gedempt"
-      text_body_template: |
-        Je bent gedempt op het forum tot %{silenced_till}.
-
-        Reden: %{reason}
     account_silenced_forever:
       title: "Account gedempt"
       subject_template: "[%{email_prefix}] Je account is gedempt"
       subject_template_improved: "Je account is gedempt"
-      text_body_template: |
-        Je bent gedempt op het forum.
-
-        Reden: %{reason}
     account_deleted:
       title: "Account verwijderd"
       subject_template: "[%{email_prefix}] Je account is verwijderd"

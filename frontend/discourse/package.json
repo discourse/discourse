@@ -160,7 +160,6 @@
     "ember-modifier": "^4.3.0",
     "ember-qunit": "^9.2.0",
     "ember-template-imports": "^4.4.0",
-    "ember-truth-helpers": "^5.0.0",
     "expect-type": "^1.4.0",
     "jquery": "^4.0.0",
     "js-yaml": "^5.4.3",

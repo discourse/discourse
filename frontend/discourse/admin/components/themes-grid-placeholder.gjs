@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
 
 export default class ThemesGridPlaceholder extends Component {
   randomVariant = Math.floor(Math.random() * 4);

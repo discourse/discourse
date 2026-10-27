@@ -79,5 +79,42 @@ RSpec.describe NestedReplies::PostTreeSerializer do
         expect(json).not_to have_key(:ignored_post_placeholder)
       end
     end
+
+    describe "avatar_color" do
+      it "uses the letter avatar colour when the author has no uploaded avatar" do
+        json = serializer_for(user).serialize_post(reply, {})
+
+        expect(json[:avatar_color]).to eq(
+          User.letter_avatar_color(User.normalize_username(ignored_user.username)),
+        )
+      end
+
+      it "uses the dominant colour of an uploaded avatar" do
+        upload = Fabricate(:image_upload, dominant_color: "a1b2c3")
+        ignored_user.update!(uploaded_avatar: upload)
+
+        json = serializer_for(user).serialize_post(reply.reload, {})
+
+        expect(json[:avatar_color]).to eq("a1b2c3")
+      end
+
+      it "is nil when the uploaded avatar has no dominant colour yet" do
+        upload = Fabricate(:image_upload)
+        upload.update_column(:dominant_color, nil)
+        ignored_user.update!(uploaded_avatar: upload)
+
+        json = serializer_for(user).serialize_post(reply.reload, {})
+
+        expect(json[:avatar_color]).to be_nil
+      end
+
+      it "is nil when custom default avatars are configured" do
+        SiteSetting.default_avatars = "https://example.com/avatar.png"
+
+        json = serializer_for(user).serialize_post(reply, {})
+
+        expect(json[:avatar_color]).to be_nil
+      end
+    end
   end
 end

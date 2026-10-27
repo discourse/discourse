@@ -36,6 +36,10 @@ module PageObjects
         has_no_css?(".house-ads-table tr.d-table__row", text: name)
       end
 
+      def has_selected_category?(category)
+        has_css?(".house-ad-form .category-selector .formatted-selection", text: category.name)
+      end
+
       def click_delete
         find(".house-ad-form .btn-danger").click
         self

@@ -1,9 +1,15 @@
 import { tracked } from "@glimmer/tracking";
+import ApplicationInstance from "@ember/application/instance";
 import { warn } from "@ember/debug";
+import {
+  associateDestroyableChild,
+  isDestroying,
+  registerDestructor,
+} from "@ember/destroyable";
 import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
-import { run } from "@ember/runloop";
+import { next, run } from "@ember/runloop";
 import { service } from "@ember/service";
 import AwsS3 from "@uppy/aws-s3";
 import Uppy from "@uppy/core";
@@ -11,6 +17,7 @@ import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
 import { deepMerge } from "discourse/lib/object";
 import {
@@ -32,6 +39,8 @@ const DEFAULT_CONFIG = {
   uploadDone: null,
   uploadError: null,
   autoStartUploads: true,
+  /** let uploads in progress finish after the parent is destroyed */
+  finishUploadsOnDestroy: false,
   uploadUrl: null,
   uploadRootPath: "/uploads",
   validateUploadedFilesOptions: {},
@@ -111,9 +120,35 @@ export default class UppyUpload {
 
   _fileInputEl;
 
-  constructor(owner, config) {
-    setOwner(this, owner);
-    this.uppyWrapper = new UppyWrapper(owner);
+  /**
+   * @param {object} parent The component (or other destroyable) using this upload. It's torn down when the parent is destroyed.
+   * @param {object} config
+   */
+  constructor(parent, config) {
+    if (parent instanceof ApplicationInstance) {
+      deprecated(
+        "Passing an owner to `new UppyUpload()` is deprecated. Pass the component that uses it instead, so it's torn down with that component.",
+        { id: "discourse.uppy-upload-owner", since: "2026.10.0" }
+      );
+      setOwner(this, parent);
+    } else {
+      setOwner(this, getOwner(parent));
+    }
+
+    associateDestroyableChild(parent, this);
+    registerDestructor(this, () => {
+      // With uploads in progress, #reset() tears down once they finish
+      if (
+        this.config.finishUploadsOnDestroy &&
+        (this.uploading || this.processing)
+      ) {
+        return;
+      }
+
+      this.teardown();
+    });
+
+    this.uppyWrapper = new UppyWrapper(getOwner(this));
     this.config = lazyMergeConfig(config);
     validateConfig(this.config);
   }
@@ -135,8 +170,6 @@ export default class UppyUpload {
   }
 
   teardown() {
-    this.messageBus.unsubscribe(`/uploads/${this.config.type}`);
-
     this._fileInputEl?.removeEventListener(
       "change",
       this.#fileInputEventListener
@@ -151,11 +184,14 @@ export default class UppyUpload {
         this.cancelSingleUpload
       );
       this.uppyWrapper.uppyInstance.destroy();
+      this.uppyWrapper.uppyInstance = null;
     }
   }
 
   @bind
   setup(fileInputEl) {
+    this.teardown();
+
     if (fileInputEl) {
       this._fileInputEl = fileInputEl;
       this.allowMultipleFiles = this._fileInputEl.multiple;
@@ -234,7 +270,6 @@ export default class UppyUpload {
     });
 
     this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
-      this.uppyWrapper.addNeedProcessing(files.length);
       this.processing = true;
       this.cancellable = false;
       files.forEach((file) => {
@@ -245,6 +280,7 @@ export default class UppyUpload {
             progress: 0,
             extension: file.extension,
             processing: false,
+            data: file.data,
           })
         );
         this.#triggerInProgressUploadsEvent();
@@ -499,7 +535,7 @@ export default class UppyUpload {
           data,
         })
           .then((response) => {
-            this.uppyWrapper.uppyInstance.setFileMeta(file.id, {
+            this.uppyWrapper.uppyInstance?.setFileMeta(file.id, {
               uniqueUploadIdentifier: response.unique_identifier,
             });
 
@@ -568,6 +604,11 @@ export default class UppyUpload {
     if (this._fileInputEl) {
       this._fileInputEl.value = "";
     }
+
+    if (this.config.finishUploadsOnDestroy && isDestroying(this)) {
+      // Deferred because this can run inside one of Uppy's own event handlers
+      next(this, this.teardown);
+    }
   }
 
   #removeInProgressUpload(fileId) {
@@ -580,10 +621,6 @@ export default class UppyUpload {
   }
 
   #allUploadsComplete() {
-    if (this.isDestroying) {
-      return;
-    }
-
     this.appEvents.trigger(
       `upload-mixin:${this.config.id}:all-uploads-complete`
     );

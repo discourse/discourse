@@ -7,6 +7,11 @@ class EnsureUniquePushSubscriptionEndpoints < ActiveRecord::Migration[8.0]
     # Keep registrations from recreating duplicates before the index exists.
     execute "LOCK TABLE push_subscriptions IN SHARE ROW EXCLUSIVE MODE"
     normalize_endpoints
+    # Raw endpoint values must fit PostgreSQL's B-tree index tuple limit.
+    execute <<~SQL
+      DELETE FROM push_subscriptions
+      WHERE octet_length(data::jsonb ->> 'endpoint') > 2048
+    SQL
     execute <<~SQL
       DELETE FROM push_subscriptions
       WHERE id IN (
@@ -24,6 +29,8 @@ class EnsureUniquePushSubscriptionEndpoints < ActiveRecord::Migration[8.0]
     add_index :push_subscriptions,
               "(data::jsonb ->> 'endpoint')",
               unique: true,
+              # Index builds can still see oversized tuples deleted in this transaction.
+              where: "octet_length(data::jsonb ->> 'endpoint') <= 2048",
               name: "index_push_subscriptions_on_endpoint"
   end
 

@@ -33,6 +33,11 @@ export default class Site extends RestModel {
     return store.createRecord("site", siteAttributes);
   }
 
+  /**
+   * @template {import("discourse/models/rest").RestModelClass} C
+   * @this {C}
+   * @returns {InstanceType<C>}
+   */
   static create() {
     const result = super.create.apply(this, arguments);
 

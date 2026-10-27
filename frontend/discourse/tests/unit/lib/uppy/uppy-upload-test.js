@@ -1,8 +1,11 @@
-import { getOwner } from "@ember/owner";
+import { destroy } from "@ember/destroyable";
+import { getOwner, setOwner } from "@ember/owner";
+import { run } from "@ember/runloop";
 import { waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { dialog } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -40,9 +43,13 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
     this.fileInput.type = "file";
     this.fileInput.multiple = true;
     document.body.appendChild(this.fileInput);
+
+    this.parent = {};
+    setOwner(this.parent, getOwner(this));
   });
 
   hooks.afterEach(function () {
+    run(() => destroy(this.parent));
     this.fileInput.remove();
     sinon.restore();
   });
@@ -67,7 +74,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       return uploadResponse(fileName);
     });
 
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-test",
       type: "composer",
       uploadDone: ({ file_name }) => completed.push(file_name),
@@ -96,8 +103,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       alert.calledOnceWith("upload failed"),
       "the rejection is reported once, with the server's own message"
     );
-
-    upload.teardown();
   });
 
   test("a successful upload is not reported as cancelled", async function (assert) {
@@ -108,7 +113,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       uploadResponse(request.requestBody.get("file").name)
     );
 
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-success-test",
       type: "composer",
       uploadDone: ({ file_name }) => completed.push(file_name),
@@ -138,13 +143,11 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       [],
       "the finished upload is not reported as cancelled"
     );
-
-    upload.teardown();
   });
 
   test("explicit single-file cancellation is reported", async function (assert) {
     const cancellations = [];
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-cancel-single-test",
       type: "composer",
       autoStartUploads: false,
@@ -173,13 +176,11 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       [],
       "the cancelled file is removed"
     );
-
-    upload.teardown();
   });
 
   test("explicit cancel all is reported as cancelled", async function (assert) {
     const cancellations = [];
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-cancel-all-test",
       type: "composer",
       autoStartUploads: false,
@@ -201,8 +202,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       ["uploads-cancelled"],
       "explicit cancel all reports one cancellation"
     );
-
-    upload.teardown();
   });
 
   test("a batch drained by a cancel still reports the failure", async function (assert) {
@@ -218,7 +217,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       await new Promise(() => {});
     });
 
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-cancel-test",
       type: "composer",
       uploadDone: () => {},
@@ -243,7 +242,121 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       alert.calledOnceWith("upload failed"),
       "the buffered failure is reported once the cancel drains the batch"
     );
+  });
+
+  test("teardown destroys the Uppy instance", function (assert) {
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-teardown-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    const uppyDestroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+    upload.teardown();
+
+    assert.true(uppyDestroy.calledOnce, "destroys the instance");
+  });
+
+  test("destroying the parent tears down", function (assert) {
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-parent-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    const uppyDestroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+    run(() => destroy(this.parent));
+
+    assert.true(uppyDestroy.calledOnce, "destroys the Uppy instance");
+  });
+
+  test("still accepts an owner", function (assert) {
+    const owner = getOwner(this);
+    const upload = withSilencedDeprecations(
+      "discourse.uppy-upload-owner",
+      () =>
+        new UppyUpload(owner, {
+          id: "uppy-upload-owner-test",
+          type: "composer",
+          uploadDone: () => {},
+        })
+    );
+
+    upload.setup(this.fileInput);
+
+    assert.strictEqual(getOwner(upload), owner, "uses it as the owner");
+  });
+
+  test("finishUploadsOnDestroy lets an upload in progress finish", async function (assert) {
+    const completed = [];
+    let requested = false;
+    let respond;
+    const responded = new Promise((resolve) => (respond = resolve));
+
+    pretender.post(UPLOAD_URL, async (request) => {
+      requested = true;
+      await responded;
+      return uploadResponse(request.requestBody.get("file").name);
+    });
+
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-finish-test",
+      type: "composer",
+      finishUploadsOnDestroy: true,
+      uploadDone: ({ file_name }) => completed.push(file_name),
+    });
+
+    upload.setup(this.fileInput);
+    const uppyDestroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+    await waitUntil(() => requested, { timeout: 5000 });
+    run(() => destroy(this.parent));
+
+    assert.false(uppyDestroy.called, "keeps the upload going");
+
+    respond();
+    await waitUntil(() => uppyDestroy.called, { timeout: 5000 });
+
+    assert.deepEqual(completed, [SIBLING_FILE], "finishes the upload");
+    assert.true(uppyDestroy.calledOnce, "tears down once idle");
+  });
+
+  test("teardown is a no-op before setup", function (assert) {
+    const unsubscribe = sinon.spy(
+      getOwner(this).lookup("service:message-bus"),
+      "unsubscribe"
+    );
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-early-teardown-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
 
     upload.teardown();
+
+    assert.false(unsubscribe.called, "doesn't unsubscribe from MessageBus");
+  });
+
+  test("setup destroys the previous Uppy instance", function (assert) {
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-setup-again-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    const previous = upload.uppyWrapper.uppyInstance;
+    const uppyDestroy = sinon.spy(previous, "destroy");
+    upload.setup(this.fileInput);
+
+    assert.true(uppyDestroy.calledOnce, "destroys the previous instance");
+    assert.notStrictEqual(
+      upload.uppyWrapper.uppyInstance,
+      previous,
+      "creates a new instance"
+    );
   });
 });

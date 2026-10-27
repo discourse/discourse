@@ -303,6 +303,25 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
         );
     });
 
+    test("C key opens composer with a fresh draft in new topic mode from a regular topic", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await triggerKeyEvent(document, "keypress", "C");
+
+      assert
+        .dom(".composer-action-create-topic")
+        .exists("opens the composer in new topic mode");
+      const composerModel = this.owner.lookup("service:composer").model;
+      assert.true(
+        /^new_topic_\d+$/.test(composerModel.draftKey),
+        "uses a unique draft key"
+      );
+      assert.strictEqual(
+        composerModel.draftSequence,
+        0,
+        "starts a fresh draft sequence"
+      );
+    });
+
     test("C key opens composer in new PM mode from messages list", async function (assert) {
       await visit("/my/messages");
       await triggerKeyEvent(document, "keypress", "C");

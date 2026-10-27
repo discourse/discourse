@@ -161,6 +161,24 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(Post.public_posts.count).to eq(post_count)
         end
 
+        context "when the dsa_reporting_enabled site setting is enabled" do
+          before do
+            SiteSetting.dsa_reporting_enabled = true
+            SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+          end
+
+          it "includes appeal instructions in the feedback message" do
+            reviewable.perform(
+              moderator,
+              :revise_and_reject_post,
+              revise_reason: "Duplicate",
+              revise_feedback: "This is old news",
+            )
+
+            expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+          end
+        end
+
         it "creates a private message to the creator of the post" do
           args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
           expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {

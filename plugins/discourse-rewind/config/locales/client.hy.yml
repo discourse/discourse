@@ -18,7 +18,7 @@ hy:
           author: Դուք
           author_others: "%{username}"
           status_online: "● օնլայն"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} րոպե"
             other: "%{count} րոպե"

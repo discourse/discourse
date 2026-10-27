@@ -295,6 +295,13 @@ sq:
       summarization:
         chat:
           summarize: "Përmblidhni"
+      ai_search:
+        related_replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+        tabs:
+          topics: "Topics"
+          messages: "Mesazhet"
       discobot_discoveries:
         legacy:
           regular_results: "Topics"

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import SectionFormLinkReorderable from "discourse/components/sidebar/section-form-link-reorderable";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
-import { eq, has } from "discourse/truth-helpers";
+import { has } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import DReorderableListGroup from "discourse/ui-kit/d-reorderable-list-group";

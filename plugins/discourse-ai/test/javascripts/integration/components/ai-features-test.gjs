@@ -1,5 +1,5 @@
 import Service from "@ember/service";
-import { render, settled } from "@ember/test-helpers";
+import { fillIn, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -111,5 +111,58 @@ module("Integration | Component | AiFeatures", function (hooks) {
         "Claude",
         "updates the rendered LLM link from the refreshed payload"
       );
+  });
+  test("filters sentiment cards by decision and dedicated model names without groups", async function (assert) {
+    const features = [
+      {
+        id: 14,
+        module_name: "sentiment",
+        module_enabled: true,
+        features: [
+          {
+            name: "sentiment",
+            enabled: true,
+            backend: "decision_model",
+            ready: true,
+            agents: [],
+            llm_models: [],
+            decision_model: { id: 3, display_name: "Fast decisions" },
+          },
+          {
+            name: "emotion",
+            enabled: true,
+            backend: "classification_model",
+            ready: true,
+            agents: [
+              {
+                id: 1,
+                name: "Unused",
+                allowed_groups: [{ id: 1, name: "staff" }],
+              },
+            ],
+            llm_models: [],
+            classification_model: { model_name: "dedicated/emotions" },
+          },
+        ],
+      },
+    ];
+    await render(<template><AiFeatures @features={{features}} /></template>);
+    assert
+      .dom(".ai-feature-card__groups")
+      .doesNotExist("background classifiers do not display groups");
+    await fillIn(".ai-features__controls input", "FAST DECISIONS");
+    assert
+      .dom(".ai-feature-card")
+      .exists({ count: 1 }, "only the matching decision capability remains");
+    assert
+      .dom('[data-feature-name="sentiment"]')
+      .exists("matches decision display name case insensitively");
+    await fillIn(".ai-features__controls input", "dedicated/emotions");
+    assert
+      .dom(".ai-feature-card")
+      .exists({ count: 1 }, "only the matching dedicated capability remains");
+    assert
+      .dom('[data-feature-name="emotion"]')
+      .exists("matches the dedicated model identifier");
   });
 });

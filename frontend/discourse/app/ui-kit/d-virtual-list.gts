@@ -676,10 +676,8 @@ export default class DVirtualList<T> extends Component<
               {{#if @ownedRow}}
                 {{yield row.item row}}
               {{else}}
-                {{! The role is dynamic, so the linter only sees a bare div and
-                    assumes the generic role. Both position attributes are gated at
-                    runtime on the roles that define them, and omitted otherwise. }}
-                {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
+                {{! Both position attributes are gated at runtime on the roles
+                    that define them, and omitted otherwise. }}
                 <div
                   aria-posinset={{row.posinset}}
                   aria-setsize={{row.setSize}}

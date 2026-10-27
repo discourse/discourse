@@ -35,7 +35,8 @@ en:
         "trigger:post_reaction_changed": "Post reaction changed"
       node_descriptions:
         "action:post_reaction": "Add or remove a reaction on a post"
-        "trigger:post_reaction_changed": "Fires when a reaction on a post is added, replaced or removed. The user is whoever reacted, not the author."
+        "trigger:post_reaction_changed": "Fires when a reaction on a post is added, replaced or removed. The user is the author; the actor is whoever reacted."
+        "trigger:post_reaction_changed_v1": "Fires when a reaction on a post is added, replaced or removed. The user is whoever reacted, not the author."
       post_reaction:
         operations:
           add: "Add reaction"

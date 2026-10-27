@@ -5,7 +5,6 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { AUTO_GROUPS } from "discourse/lib/constants";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
@@ -87,7 +86,6 @@ const DISCUSSION_TYPE_ID = "discussion";
  * @property {boolean} isDirty
  */
 export default class EditCategoryTabsController extends Controller {
-  @service currentUser;
   @service dialog;
   @service site;
   @service siteSettings;
@@ -204,10 +202,10 @@ export default class EditCategoryTabsController extends Controller {
       ...(this.model.category_type_settings ?? {}),
     };
     data.site_texts = {};
-    data.category_types = Object.keys(this.model.categoryTypes ?? {});
+    data.category_type_ids = Object.keys(this.model.categoryTypes ?? {});
 
-    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
-      data.category_types.unshift(DISCUSSION_TYPE_ID);
+    if (!data.category_type_ids.includes(DISCUSSION_TYPE_ID)) {
+      data.category_type_ids.unshift(DISCUSSION_TYPE_ID);
     }
 
     Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
@@ -370,15 +368,21 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { visibility, ...categoryData } = data;
+    const { visibility, category_type_ids, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
-    // If permissions is empty or not set, ensure it's an empty array (public category)
+    // Category serialization converts an empty permission list to staff-only access.
     if (!this.model.permissions?.length) {
       this.model.set("permissions", []);
     }
 
-    const lostAccess = this._wouldLoseAccess();
+    let lostAccess;
+    try {
+      lostAccess = await this.#wouldLoseAccess();
+    } catch (error) {
+      popupAjaxError(error);
+      return;
+    }
 
     if (lostAccess) {
       const confirmed = await this.dialog.yesNoConfirm({
@@ -396,7 +400,7 @@ export default class EditCategoryTabsController extends Controller {
       const previousTypes = new Set(
         Object.keys(this.model.categoryTypes ?? {})
       );
-      const result = await this.model.save();
+      const result = await this.model.save(category_type_ids);
       const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
@@ -541,27 +545,25 @@ export default class EditCategoryTabsController extends Controller {
     });
   }
 
-  _wouldLoseAccess() {
-    if (this.currentUser.admin) {
+  async #wouldLoseAccess(category = this.model) {
+    try {
+      await ajax("/categories/evaluate_permissions.json", {
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          group_ids: category.permissions.map(
+            (permission) => permission.group_id
+          ),
+        }),
+      });
       return false;
+    } catch (error) {
+      if (error.jqXHR?.responseJSON?.extras?.current_user_will_lose_access) {
+        return true;
+      }
+
+      throw error;
     }
-
-    const permissions = this.model.permissions;
-    if (!permissions?.length) {
-      return false;
-    }
-
-    const userGroupIds = new Set(
-      this.currentUser.visibleGroups.map((g) => g.id)
-    );
-
-    // TODO (martin) Update this with granular_anonymous_and_logged_in_groups_permissions to
-    // do a server-side check, since this is only checking against the current user's visible
-    // groups, it should check against _all_ their groups.
-    return !permissions.some(
-      (p) =>
-        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
-    );
   }
 
   _stashVisibleSiteTexts() {

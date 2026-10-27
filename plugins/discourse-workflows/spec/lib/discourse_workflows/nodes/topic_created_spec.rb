@@ -52,6 +52,8 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output[:topic][:category_id]).to eq(topic.category_id)
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)
+      expect(output[:user]).to include(id: user.id, trust_level: user.trust_level)
+      expect(output).to match_node_output_schema(described_class)
     end
 
     it "includes assignment data when assign is available" do

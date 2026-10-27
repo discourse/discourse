@@ -872,6 +872,7 @@ fr:
     post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description ou pour établir des règles :\n\n- À quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi est-elle différente des autres catégories existantes ?\n\n- Quels sont les sujets qui devraient figurer dans cette catégorie ?\n\n- Avons-nous besoin de cette catégorie ? Devrions-nous fusionner celle-ci avec une autre catégorie ?\n"
     errors:
       not_found: "Catégorie non trouvée !"
+      self_lockout: "Vous êtes sur le point de modifier les permissions de la catégorie de manière à supprimer votre propre accès. Voulez-vous vraiment continuer ?"
       uncategorized_parent: "La catégorie « Sans catégorie » ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
@@ -2682,7 +2683,6 @@ fr:
     experimental_impersonation_time_limit_minutes: "Durée avant la fin automatique d'une session pendant laquelle un administrateur se fait passer pour un autre utilisateur."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
-    about_page_hidden_groups: "N'affichez pas les membres de groupes spécifiques sur la page /about."
     about_page_extra_groups: "Groupes à afficher sur la page À propos sous les modérateurs."
     about_page_extra_groups_initial_members: "Nombre de membres à développer pour chaque groupe sur la page À propos."
     about_page_extra_groups_show_description: "Indique s'il faut inclure les descriptions des groupes sur la page À propos."
@@ -4411,34 +4411,18 @@ fr:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-      text_body_template: |
-        Votre compte sur le forum a été suspendu jusqu'à %{suspended_till}.
-
-        Motif : %{reason}
     account_suspended_forever:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-      text_body_template: |
-        Votre compte a été suspendu du forum.
-
-        Motif : %{reason}
     account_silenced:
       title: "Compte mis en sourdine"
       subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
       subject_template_improved: "Votre compte a été mis en sourdine"
-      text_body_template: |
-        Votre compte sur le forum a été mis en sourdine jusqu'à %{silenced_till}.
-
-        Motif : %{reason}
     account_silenced_forever:
       title: "Compte mis en sourdine"
       subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
       subject_template_improved: "Votre compte a été mis en sourdine"
-      text_body_template: |
-        Votre compte a été mis en sourdine sur le forum.
-
-        Motif : %{reason}
     account_deleted:
       title: "Compte supprimé"
       subject_template: "[%{email_prefix}] Votre compte a été supprimé"

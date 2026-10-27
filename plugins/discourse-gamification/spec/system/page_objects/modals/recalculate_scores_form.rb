@@ -3,25 +3,32 @@
 module PageObjects
   module Modals
     class RecalculateScoresForm < PageObjects::Modals::Base
-      def update_range_dropdown
-        PageObjects::Components::SelectKit.new("#update-range")
+      def form
+        PageObjects::Components::FormKit.new(".recalculate-scores-form")
       end
 
-      def select_update_range(value: nil)
-        update_range_dropdown.expand
-        update_range_dropdown.select_row_by_value(value)
-      end
-
-      def fill_since_date(since)
-        find("#custom-from-date").fill_in(with: since)
+      def select_update_range(range)
+        form.field("range").select(range)
       end
 
       def date_range
-        find(".recalculate-modal__date-range")
+        form.field("range").component.find(".form-kit__container-description")
       end
 
-      def custom_since_date
-        find("#custom-from-date input")
+      def has_no_date_range?
+        form.field("range").component.has_no_css?(".form-kit__container-description")
+      end
+
+      def fill_since_date(since)
+        form.field("from_date").fill_in(since)
+      end
+
+      def has_since_date_field?
+        form.has_field_with_name?("from_date")
+      end
+
+      def has_no_since_date_field?
+        form.has_no_field_with_name?("from_date")
       end
 
       def status
@@ -32,8 +39,12 @@ module PageObjects
         find(".recalculate-modal__footer-text")
       end
 
-      def apply
-        find("#apply-section")
+      def submit_button
+        find(".recalculate-modal__submit")
+      end
+
+      def has_disabled_submit_button?
+        has_css?(".recalculate-modal__submit[disabled]")
       end
     end
   end

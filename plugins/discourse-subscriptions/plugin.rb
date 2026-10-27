@@ -66,6 +66,7 @@ require_relative "app/controllers/concerns/group"
 
 after_initialize do
   ::Stripe.api_version = "2024-04-10"
+  ::Stripe.ca_bundle_path = OpenSSL::X509::DEFAULT_CERT_FILE
 
   ::Stripe.set_app_info(
     "Discourse Subscriptions",

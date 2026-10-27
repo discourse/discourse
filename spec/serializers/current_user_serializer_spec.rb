@@ -6,6 +6,20 @@ RSpec.describe CurrentUserSerializer do
 
   let(:guardian) { user.guardian }
 
+  it "includes notification types with remaining read or unread notifications" do
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+    notification =
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        read: true,
+      )
+    expect(serializer.as_json[:available_notification_types]).to eq([Notification.types[:liked]])
+    notification.destroy!
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+  end
+
   context "when SSO is not enabled" do
     it "does not include external_id" do
       payload = serializer.as_json
@@ -521,6 +535,29 @@ RSpec.describe CurrentUserSerializer do
 
     it "is true for an admin on a site that still uses a core theme" do
       expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "remains available when Concord is installed and selected as the default" do
+      SiteSetting.concord_in_wizard = true
+      concord =
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+
+      concord.set_default!
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+
+      SiteSetting.concord_in_wizard = false
+
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
     end
 
     it "is not included once a theme is installed" do

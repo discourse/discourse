@@ -25,6 +25,47 @@ RSpec.describe PushNotificationController do
   context "when logged in" do
     before { sign_in(user) }
 
+    it "rejects endpoints exceeding the index size budget after normalization" do
+      [
+        "https://push.example/#{SecureRandom.hex(4096)}",
+        "https://push.example/#{"é" * 400}",
+        "https://push.example/".ljust(PushSubscription::MAX_ENDPOINT_BYTES + 1, "a"),
+      ].each do |endpoint|
+        post "/push_notifications/subscribe.json",
+             params: {
+               subscription: {
+                 endpoint: endpoint,
+                 keys: {
+                   p256dh: "256dh",
+                   auth: "auth",
+                 },
+               },
+               send_confirmation: false,
+             }
+
+        expect(response.status).to eq(400)
+        expect(user.push_subscriptions).to be_empty
+      end
+    end
+
+    it "accepts an endpoint at the size limit" do
+      endpoint = "https://push.example/".ljust(PushSubscription::MAX_ENDPOINT_BYTES, "a")
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: {
+               endpoint: endpoint,
+               keys: {
+                 p256dh: "256dh",
+                 auth: "auth",
+               },
+             },
+             send_confirmation: false,
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions.sole.parsed_data["endpoint"]).to eq(endpoint)
+    end
+
     it "subscribes the user" do
       post "/push_notifications/subscribe.json",
            params: {

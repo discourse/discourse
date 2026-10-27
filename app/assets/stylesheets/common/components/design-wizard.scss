@@ -280,6 +280,25 @@ $dw-button-default-border: #d3d3d3;
     color: inherit;
     cursor: pointer;
 
+    &.--without-screenshot {
+      box-sizing: border-box;
+      padding: var(--space-3);
+      border: 1px solid var(--content-border-color);
+      border-radius: var(--d-border-radius);
+
+      &.--selected,
+      &:focus-within,
+      html.discourse-no-touch &:hover {
+        border-color: var(--tertiary);
+        box-shadow: 0 0 0 1px var(--tertiary);
+      }
+
+      .design-wizard__theme-enabled-badge {
+        position: static;
+        align-self: flex-start;
+      }
+    }
+
     &.--selected .design-wizard__theme-screenshot {
       border-color: var(--tertiary);
       box-shadow: 0 0 0 1px var(--tertiary);
@@ -548,6 +567,16 @@ $dw-button-default-border: #d3d3d3;
     border: 1px solid var(--content-border-color);
     border-radius: var(--token-radius-small);
 
+    &.--icon {
+      align-items: center;
+      justify-content: center;
+
+      .d-icon {
+        width: 2em;
+        height: 2em;
+      }
+    }
+
     &.--topics.--horizon {
       background: var(--primary-very-low);
     }
@@ -556,6 +585,10 @@ $dw-button-default-border: #d3d3d3;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-auto-rows: 1fr;
+    }
+
+    &.--conversation .design-wizard__mock-line {
+      margin-block-end: 0;
     }
   }
 
@@ -597,6 +630,29 @@ $dw-button-default-border: #d3d3d3;
       grid-template-columns: 1fr 1fr;
       grid-auto-rows: 1fr;
     }
+  }
+
+  &__mock-message {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-1);
+    flex: 1;
+  }
+
+  &__mock-message-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__mock-composer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-1);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--token-radius-small);
   }
 
   &__mock-card {

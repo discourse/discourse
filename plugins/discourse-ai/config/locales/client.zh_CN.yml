@@ -377,8 +377,10 @@ zh_CN:
         awaiting_staff: "等待管理人员审批"
       default_llm:
         title: "默认语言模型"
+        description: "适用于任何未指定自身语言模型的AI功能或代理。如果未设置语言模型，则使用最近添加的语言模型。"
       llm_selector:
         none: "无"
+        saved: "已保存默认语言模型"
       features:
         short_title: "功能"
         description: "这些是您站点的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的智能体和 LLM，并按群组控制访问权限。"
@@ -1106,6 +1108,14 @@ zh_CN:
         manage: "管理决策模型"
         start_from: "从"
         no_preset: "无"
+        preset_descriptions:
+          none: "适用于任何兼容决策模型端点的设置"
+          jev-latest: "TypeSafe 的托管决策模型，仅文本"
+          jev-latest-vision: "TypeSafe 的托管决策模型具有实验性的图像支持"
+          vllm-sr-d3: "开源多模态决策模型，采用 vLLM 自托管"
+          cloudflare-clef: "Cloudflare 在 Workers AI 上开发的开源多模态决策模型"
+          cloudflare-clef-flash: "Workers AI 上的 Clef 的更小、更快的版本"
+          gpt-6-luna: "OpenAI 的决策模型基于 Decisions API，并支持图像处理。"
         display_name: "名称"
         model: "模型"
         provider: "提供商"
@@ -1207,20 +1217,42 @@ zh_CN:
         test_summary:
           other: "发现了 %{count} 个使用协议 %{version} 的工具。"
       models:
+        short_title: "模型"
+        description: "连接驱动人工智能功能和工作流程的模型。"
         new: "新建模型"
+        back: "返回模型"
+        back_to_types: "返回模型类型"
+        empty: "您尚未设置任何模型"
         name: "名称"
         type: "类型"
         provider: "提供商"
         edit: "编辑"
+        choose_type: "您想添加哪种类型的模型？"
         select_type: "选择"
         types:
+          llm: "大语言"
           embedding: "嵌入向量"
+          decision: "决定"
         type_titles:
+          llm: "大型语言模型"
+          embedding: "嵌入模型"
           decision: "决策模型"
+        type_descriptions:
+          llm: "为 AI 机器人、摘要和 AI 助手等功能生成文本"
+          embedding: "将内容转化为语义搜索和相关主题的向量"
+          decision: "回答有关内容的文本问题（是/否、选择题、评分题），并给出概率，用于工作流程中。"
         type_filters:
+          llm: "大型语言模型"
+          embedding: "嵌入模型"
           decision: "决策模型"
+        templates:
+          llm: "选择语言模型模板"
+          embedding: "选择嵌入模板"
+          decision: "选择决策模型模板"
         filters:
           all: "所有类型"
+          text: "按名称或提供商筛选"
+          no_results: "没有符合您筛选条件的型号"
           reset: "重置筛选器"
       llms:
         short_title: "LLM"
@@ -1483,6 +1515,15 @@ zh_CN:
         empty: "您尚未设置嵌入向量"
         presets: "选择一个预设…"
         configure_manually: "手动配置"
+        preset_descriptions:
+          manual: "适用于任何嵌入服务的设置，包括自托管服务"
+          bge-large-en: "开源的纯英文模型，自托管"
+          bge-m3: "适用于较长内容的开源多语言模型，可自行托管"
+          multilingual-e5-large: "开源多语言模型，自托管"
+          gemini-embedding-001: "谷歌托管的多语言模型"
+          text-embedding-3-large: "OpenAI 最精确的嵌入模型"
+          text-embedding-3-small: "OpenAI 更快、更低成本的嵌入模型"
+          text-embedding-ada-002: "OpenAI 的上一代模型已被 text-embedding-3-small 取代。"
         edit: "编辑"
         seeded_warning: "此内容在您的站点上预先配置，无法编辑。"
         tests:
@@ -1748,6 +1789,30 @@ zh_CN:
             compact: "紧凑"
             expanded: "展开"
             expanded_description: "带 AI 摘要"
+      ai_search:
+        related_topics: "相关话题"
+        related_replies:
+          other: "%{count} 条回复"
+        answer_label: "AI 答案"
+        follow_up_label: "提出后续问题"
+        follow_up_placeholder: "提出后续问题…"
+        ask: "提问"
+        references_title: "引用主题"
+        references_empty: "答案中提到的主题列在这里。"
+        tabs:
+          label: "搜索结果"
+          ask: "询问 AI"
+          topics: "话题"
+          this_topic: "话题"
+          messages: "消息"
+          no_answer: "未找到人工智能答案"
+        no_keyword_matches: "未找到匹配的关键词。"
+        no_answer: "AI 没能找到一个明确的答案。 %{askLink}"
+        ask_community: "向社区询问。"
+        scope:
+          this_topic: "话题"
+          messages: "您的消息"
+          fallback: "在 %{name}中未找到任何内容，因此该答案来自整个网站。"
       discobot_discoveries:
         main_title: "询问 AI"
         loading_convo: "正在加载对话"

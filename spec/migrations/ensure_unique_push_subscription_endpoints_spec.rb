@@ -6,6 +6,30 @@ RSpec.describe EnsureUniquePushSubscriptionEndpoints do
   fab!(:user)
   fab!(:other_user, :user)
 
+  it "removes oversized legacy endpoints before building the unique index" do
+    ActiveRecord::Base.connection.remove_index(
+      :push_subscriptions,
+      name: "index_push_subscriptions_on_endpoint",
+    )
+    oversized_endpoint = "https://push.example/#{SecureRandom.hex(4096)}"
+    PushSubscription.create!(user: user, data: { endpoint: oversized_endpoint }.to_json)
+    PushSubscription.create!(
+      user: user,
+      data: { endpoint: "https://push.example/#{"é" * 400}" }.to_json,
+    )
+    endpoint = "https://push.example/".ljust(2048, "a")
+    retained = PushSubscription.create!(user: user, data: { endpoint: endpoint }.to_json)
+
+    described_class.new.up
+
+    expect(PushSubscription.all).to contain_exactly(retained)
+    expect do
+      PushSubscription.transaction(requires_new: true) do
+        PushSubscription.create!(user: other_user, data: retained.data)
+      end
+    end.to raise_error(ActiveRecord::RecordNotUnique)
+  end
+
   it "keeps the newest owner of each endpoint and prevents duplicate ownership" do
     ActiveRecord::Base.connection.remove_index(
       :push_subscriptions,
