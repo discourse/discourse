@@ -44,6 +44,27 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(trigger_data_for("set-trigger")).to include("actor" => include("id" => admin.id))
   end
 
+  it "runs Slow mode cleared workflows, and not Topic timer completed ones, when slow mode expires" do
+    create_published_workflow("slow-mode-trigger", "trigger:topic_slow_mode_cleared")
+    create_published_workflow("completed-trigger", "trigger:topic_timer_completed")
+    Topic::UpdateSlowMode.call(
+      guardian: admin.guardian,
+      params: {
+        topic_id: topic.id,
+        seconds: 600,
+        enabled_until: "1",
+      },
+    )
+    timer = topic.reload.slow_mode_topic_timer
+
+    freeze_time(2.hours.from_now) { Jobs::ClearSlowMode.new.execute(topic_timer_id: timer.id) }
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("slow-mode-trigger")
+    expect(trigger_data_for("slow-mode-trigger")).to include(
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
   it "does not enqueue when plugin is disabled" do
     SiteSetting.enable_discourse_workflows = false
 
