@@ -96,7 +96,17 @@ RSpec.describe PluginGem do
     scoped: false
   )
     gemfile =
-      scoped ? "source \"#{source}\" do\n#{gemfile}end\n" : "source \"#{source}\"\n#{gemfile}"
+      if scoped
+        <<~GEMFILE
+          source "#{source}" do
+          #{gemfile}end
+        GEMFILE
+      else
+        <<~GEMFILE
+          source "#{source}"
+          #{gemfile}
+        GEMFILE
+      end
     File.write(File.join(dir, "Gemfile"), gemfile)
     return if lock.nil?
 
