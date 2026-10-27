@@ -182,7 +182,7 @@ module DiscoursePoll
           root: false,
           scope: Guardian.new(nil),
         ).as_json
-      post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
+      post.publish_poll_message!(post_id: post.id, polls: polls)
     end
 
     def self.is_different?(old_poll, new_poll, new_options)

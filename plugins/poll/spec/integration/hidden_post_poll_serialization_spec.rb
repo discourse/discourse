@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "DiscoursePoll hidden post serialization" do
+RSpec.describe "DiscoursePoll hidden post serialization", type: :request do
   fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:voter) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
@@ -54,6 +54,72 @@ RSpec.describe "DiscoursePoll hidden post serialization" do
     serialized = serialized_poll_post
 
     expect(serialized["polls"].first["options"].map { |o| o["html"] }).to include("Secret option A")
+  end
+
+  describe "poll broadcasts" do
+    def poll_messages(&block)
+      MessageBus.track_publish("/polls/#{topic.id}", &block)
+    end
+
+    it "does not broadcast hidden poll status changes, but returns the poll to its author" do
+      sign_in(author)
+
+      messages =
+        poll_messages do
+          put "/polls/toggle_status.json",
+              params: {
+                post_id: poll_post.id,
+                poll_name: "poll",
+                status: "closed",
+              }
+        end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["poll"]["status"]).to eq("closed")
+      expect(messages).to be_empty
+    end
+
+    it "does not broadcast votes or vote removals on hidden polls" do
+      sign_in(author)
+
+      messages =
+        poll_messages do
+          put "/polls/vote.json",
+              params: {
+                post_id: poll_post.id,
+                poll_name: "poll",
+                options: [poll_post.polls.first.poll_options.first.digest],
+              }
+        end
+
+      expect(response.status).to eq(200)
+      expect(messages).to be_empty
+
+      messages =
+        poll_messages do
+          delete "/polls/vote.json", params: { post_id: poll_post.id, poll_name: "poll" }
+        end
+
+      expect(response.status).to eq(200)
+      expect(messages).to be_empty
+    end
+
+    it "does not broadcast hidden polls from the updater or post-created hook" do
+      expect(poll_messages { DiscoursePoll::PollsUpdater.publish_changes(poll_post) }).to be_empty
+      expect(
+        poll_messages { DiscourseEvent.trigger(:post_created, poll_post, {}, author) },
+      ).to be_empty
+    end
+
+    it "resumes broadcasts when a post is no longer hidden" do
+      poll_post.unhide!
+
+      messages = poll_messages { DiscoursePoll::PollsUpdater.publish_changes(poll_post) }
+
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:post_id]).to eq(poll_post.id)
+      expect(messages.first.data[:polls]).to be_present
+    end
   end
 
   it "keeps polls visible to the hidden post's author" do

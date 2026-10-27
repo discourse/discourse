@@ -139,7 +139,7 @@ after_initialize do
         root: false,
         scope: guardian,
       ).as_json
-    post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
+    post.publish_poll_message!(post_id: post.id, polls: polls)
   end
 
   on(:post_moved) do |new_post, _original_topic_id, old_post|

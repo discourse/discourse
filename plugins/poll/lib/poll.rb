@@ -223,7 +223,7 @@ class DiscoursePoll::Poll
         post_id:,
         polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
       }
-      post.publish_message!("/polls/#{post.topic_id}", payload)
+      post.publish_poll_message!(payload)
 
       serialized_poll
     end
@@ -561,7 +561,7 @@ class DiscoursePoll::Poll
         post_id:,
         polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
       }
-      post.publish_message!("/polls/#{post.topic_id}", payload)
+      post.publish_poll_message!(payload)
 
       serialized_poll
     end
