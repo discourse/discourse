@@ -65,6 +65,30 @@ RSpec.describe DiscourseWorkflows::EventListener do
     )
   end
 
+  it "runs Topic published and Topic converted to public topic once each when a personal message is published on a schedule" do
+    create_published_workflow("published-trigger", "trigger:topic_published")
+    create_published_workflow("converted-trigger", "trigger:topic_converted_to_public_topic")
+    Fabricate(:post, topic:, user: topic.user)
+    topic.convert_to_private_message(Discourse.system_user)
+    timer =
+      Fabricate(
+        :topic_timer,
+        topic:,
+        user: admin,
+        status_type: TopicTimer.types[:publish_to_category],
+        category_id: other_category.id,
+        execute_at: 1.minute.ago,
+      )
+
+    Jobs::PublishTopicToCategory.new.execute(topic_timer_id: timer.id)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("published-trigger", "converted-trigger")
+    expect(trigger_data_for("converted-trigger")).to include(
+      "topic" => include("id" => topic.id, "category_id" => other_category.id),
+      "actor" => include("id" => admin.id),
+    )
+  end
+
   it "does not enqueue when plugin is disabled" do
     SiteSetting.enable_discourse_workflows = false
 

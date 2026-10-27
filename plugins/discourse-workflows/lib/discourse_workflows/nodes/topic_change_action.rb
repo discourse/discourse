@@ -5,7 +5,16 @@ module DiscourseWorkflows
     # Per-item actions on a topic, outputting the topic and whether it changed. Including modules or nodes
     # define a private `change(exec_ctx, topic, actor, item_index)` returning the item.
     module TopicChangeAction
-      def self.description(name:, icon:, color:, i18n_scope:, changed:, properties: {}, output: {})
+      def self.description(
+        name:,
+        icon:,
+        color:,
+        i18n_scope:,
+        changed:,
+        properties: {},
+        output: {},
+        allow_anonymous: true
+      )
         {
           name:,
           version: "1.0",
@@ -39,7 +48,7 @@ module DiscourseWorkflows
               required: true,
             },
             **properties,
-            **NodeType.actor_property,
+            **NodeType.actor_property(allow_anonymous:),
           },
         }
       end

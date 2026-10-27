@@ -65,6 +65,24 @@ RSpec.describe TopicPublisher do
         expect(event[:params]).to eq([topic, Time.zone.now, { acting_user: moderator }])
       end
 
+      it "triggers topic_converted_to_public_topic after topic_published for a personal message" do
+        topic.update_columns(archetype: Archetype.private_message, category_id: nil)
+        topic.topic_allowed_users.create!(user: moderator)
+
+        events =
+          DiscourseEvent.track_events do
+            TopicPublisher.new(topic, moderator, shared_draft.category_id).publish!
+          end
+
+        expect(topic.reload).to have_attributes(archetype: Archetype.default, category: category)
+        conversion = events.find { |event| event[:event_name] == :topic_converted_to_public_topic }
+        expect(conversion[:params]).to eq([topic, { acting_user: moderator }])
+        expect(
+          events.map { |event| event[:event_name] } &
+            %i[topic_published topic_converted_to_public_topic],
+        ).to eq(%i[topic_published topic_converted_to_public_topic])
+      end
+
       it "notifies users watching the tag" do
         Jobs.run_immediately!
 

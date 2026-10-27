@@ -389,6 +389,10 @@ en:
         "action:clear_slow_mode": "Clear slow mode"
         "trigger:topic_slow_mode_set": "Slow mode set"
         "trigger:topic_slow_mode_cleared": "Slow mode cleared"
+        "action:convert_to_personal_message": "Convert to personal message"
+        "action:convert_to_public_topic": "Convert to public topic"
+        "trigger:topic_converted_to_personal_message": "Topic converted to personal message"
+        "trigger:topic_converted_to_public_topic": "Topic converted to public topic"
         "action:flag_user": "Flag user"
       node_search_terms:
         "action:close_topic": "lock"
@@ -406,6 +410,10 @@ en:
         "action:clear_slow_mode": "rate limit, cooldown, throttle, disable, remove, turn off"
         "trigger:topic_slow_mode_set": "rate limit, cooldown, throttle, enabled, posting interval"
         "trigger:topic_slow_mode_cleared": "rate limit, cooldown, throttle, disabled, removed, expired"
+        "action:convert_to_personal_message": "make private, pm, dm, message"
+        "action:convert_to_public_topic": "make public, publish, pm, dm, message"
+        "trigger:topic_converted_to_personal_message": "made private, pm, dm, message"
+        "trigger:topic_converted_to_public_topic": "made public, published, pm, dm, message"
       node_descriptions:
         "trigger:topic_published": "Fires when a topic is published"
         "trigger:topic_timer_changed": "Fires when a topic timer is created, updated, cancelled, or completed"
@@ -515,6 +523,10 @@ en:
         "action:clear_slow_mode": "Turn slow mode off on a topic"
         "trigger:topic_slow_mode_set": "Fires when slow mode is turned on for a topic, or its interval or end time changes"
         "trigger:topic_slow_mode_cleared": "Fires when slow mode is turned off on a topic, including when it expires"
+        "action:convert_to_personal_message": "Turn a topic into a personal message between the people who posted in it. The user performing the action is added to it"
+        "action:convert_to_public_topic": "Turn a personal message into a public topic in a category"
+        "trigger:topic_converted_to_personal_message": "Fires when a topic is converted to a personal message"
+        "trigger:topic_converted_to_public_topic": "Fires when a personal message is converted to a public topic, including when it is published to a category on a schedule"
         "action:flag_user": "Add a user to the review queue for a moderator to approve or reject. Best aimed at unapproved accounts, since approved ones can only be rejected by deletion"
       topic_admin_button:
         label: "Button label"
@@ -697,6 +709,11 @@ en:
         enabled_until_dynamic_hint: "Must resolve to a future date and time, for example 2026-08-01 12:00."
         timezone: "Timezone"
         timezone_none: "Workflow default"
+        actor_username: "Performed by user"
+      topic_conversion:
+        topic_id: "Topic ID"
+        category_id: "Category"
+        category_id_description: "Leave empty to use Uncategorized, or the first public category when uncategorized topics aren't allowed."
         actor_username: "Performed by user"
       topic_moderation:
         operation: "Operation"

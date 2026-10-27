@@ -10,6 +10,8 @@ class TopicConverter
   end
 
   def convert_to_public_topic(category_id = nil)
+    was_private = @topic.private_message?
+
     Topic.transaction do
       category_id ||=
         SiteSetting.uncategorized_category_id if SiteSetting.allow_uncategorized_topics
@@ -40,6 +42,8 @@ class TopicConverter
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
       watch_topic(@topic) unless @silent
+
+      trigger_after_commit(:topic_converted_to_public_topic) if was_private
     end
 
     @topic
@@ -56,6 +60,8 @@ class TopicConverter
       )
       return @topic
     end
+
+    was_private = @topic.private_message?
 
     Topic.transaction do
       was_public = !@topic.category.read_restricted
@@ -82,12 +88,20 @@ class TopicConverter
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
       watch_topic(@topic) unless @silent
+
+      trigger_after_commit(:topic_converted_to_private_message) if !was_private
     end
 
     @topic
   end
 
   private
+
+  # Registered after the success check so a failed conversion never fires it, and after the small
+  # action so listeners see it.
+  def trigger_after_commit(event)
+    DB.after_commit { DiscourseEvent.trigger(event, @topic, acting_user: @user) }
+  end
 
   def update_tag_counters(topic_count_delta, include_public:)
     counters = { staff_topic_count: topic_count_delta, pm_topic_count: -topic_count_delta }
