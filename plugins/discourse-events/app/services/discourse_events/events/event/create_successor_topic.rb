@@ -30,6 +30,11 @@ module DiscourseEvents
         author = source_post&.user
 
         return false if source_post.nil? || source_topic.nil? || author.nil?
+
+        # The system Guardian must not publish successor topics attributed to
+        # inactive or staged accounts.
+        return false if !author.active? || author.staged?
+
         return false if source_topic.archetype != Archetype.default
         return false if source_post.hidden? || source_post.deleted_at.present?
         return false if !source_topic.visible? || source_topic.deleted_at.present?

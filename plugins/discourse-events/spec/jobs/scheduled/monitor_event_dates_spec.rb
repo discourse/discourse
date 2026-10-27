@@ -1598,6 +1598,45 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
       end
 
+      { "deactivated" => { active: false }, "staged" => { staged: true } }.each do |status, changes|
+        it "does not publish a successor for a #{status} event author" do
+          author = Fabricate(:user, refresh_auto_groups: true)
+          SiteSetting.discourse_post_event_allowed_on_groups =
+            Group::AUTO_GROUPS[:trust_level_0].to_s
+
+          starts_at = 7.days.after.change(sec: 0)
+          ends_at = starts_at + 1.hour
+          title = "Recurring event by subsequently #{status} author"
+
+          post = PostCreator.create!(author, title:, category: event_category.id, raw: <<~RAW)
+                [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+                Meeting notes.
+                [/event]
+              RAW
+
+          event_date = post.reload.event.event_dates.pending.first
+          original_raw = post.raw
+          author.update_columns(**changes)
+
+          expect(author.reload.active?).to eq(false) if changes.key?(:active)
+          expect(author.reload.staged?).to eq(true) if changes.key?(:staged)
+
+          freeze_time(ends_at + 1.hour)
+
+          expect { job.execute({}) }.not_to change(Topic, :count)
+          expect(event_date.reload.finished_at).to be_nil
+          expect(post.reload.raw).to eq(original_raw)
+
+          expect(
+            DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
+              params: {
+                event_date_id: event_date.id,
+              },
+            ),
+          ).to fail_a_policy(:rollover_allowed)
+        end
+      end
+
       it "does not publish a successor for a silenced event author" do
         author = Fabricate(:user, refresh_auto_groups: true)
         SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
