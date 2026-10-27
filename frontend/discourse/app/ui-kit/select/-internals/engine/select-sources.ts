@@ -125,7 +125,7 @@ export class SelectState {
 export interface SelectSource {
   /** Whether the latest answer arrived without a promise, so a filter change need not wait. */
   answersSynchronously(): boolean;
-  /** Records a rendered source's transformed option count. */
+  /** Records a rendered source's transformed option count, built from `input` raw rows. */
   noteVisible(visible: number, input: number): void;
   rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]>;
   total(): number | undefined;

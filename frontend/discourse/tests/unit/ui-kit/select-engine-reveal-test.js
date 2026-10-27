@@ -1190,6 +1190,21 @@ module(
       assert.false(engine.canRevealMore, "paging stays stopped");
     });
 
+    test("two barren reveals stop paging when pages carry structural rows", async function (assert) {
+      const { load, calls } = recordingLoad((offset) => ({
+        items: [...page(offset, 1), { __divider: true }],
+        hasMore: true,
+      }));
+      hideRows((item) => item.id > 1);
+      const engine = new SelectEngine({ load });
+
+      assert.true(
+        await pageUntilRefused(engine),
+        "a reveal is refused although every page holds a divider"
+      );
+      assert.strictEqual(calls.length, 3, "three loads, then no more");
+    });
+
     test("a single barren reveal is tolerated and growth keeps paging", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
         items: page(offset, 10),

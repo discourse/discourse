@@ -44,7 +44,7 @@ export default class ListComposer {
       context: SelectContentContext
     ) => SelectItem[];
     applyLegacyContent: (items: SelectItem[]) => SelectItem[];
-    /** Measures source options before and after content extensions. */
+    /** Records the options left after content extensions, with the raw row count they came from. */
     noteVisible: (visible: number, input: number) => void;
   }) {
     this.#options = opts.options;
@@ -73,6 +73,8 @@ export default class ListComposer {
     filter = this.#getFilter()
   ): readonly SelectDescriptor[] {
     let items: SelectItem[] = [...(makeArray(rawItems) as SelectItem[])];
+    // The source validates a measurement against the rows it holds, structural ones included.
+    const rawCount = items.length;
     const inputCount = items.filter((item) => !this.#isStructural(item)).length;
 
     items = this.#applyContent(items, {
@@ -91,7 +93,7 @@ export default class ListComposer {
     const visibleCount = items.filter(
       (item) => !this.#isStructural(item)
     ).length;
-    this.#noteVisible(visibleCount, inputCount);
+    this.#noteVisible(visibleCount, rawCount);
 
     const createCandidate = this.#createItem(items, filter);
     const hideSelected = this.#options.hideSelected;
