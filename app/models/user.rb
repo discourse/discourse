@@ -2495,13 +2495,15 @@ end
 #
 # Indexes
 #
-#  idx_users_admin                    (id) WHERE admin
-#  idx_users_ip_address               (ip_address)
-#  idx_users_moderator                (id) WHERE moderator
-#  index_users_on_last_posted_at      (last_posted_at)
-#  index_users_on_last_seen_at        (last_seen_at)
-#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
-#  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
-#  index_users_on_username            (username) UNIQUE
-#  index_users_on_username_lower      (username_lower) UNIQUE
+#  idx_users_admin                         (id) WHERE admin
+#  idx_users_ip_address                    (ip_address)
+#  idx_users_moderator                     (id) WHERE moderator
+#  index_users_on_created_at_month_day     ((((EXTRACT(month FROM created_at) * (100)::numeric) + EXTRACT(day FROM created_at))))
+#  index_users_on_date_of_birth_month_day  ((((EXTRACT(month FROM date_of_birth) * (100)::numeric) + EXTRACT(day FROM date_of_birth)))) WHERE (date_of_birth IS NOT NULL)
+#  index_users_on_last_posted_at           (last_posted_at)
+#  index_users_on_last_seen_at             (last_seen_at)
+#  index_users_on_secure_identifier        (secure_identifier) UNIQUE
+#  index_users_on_uploaded_avatar_id       (uploaded_avatar_id)
+#  index_users_on_username                 (username) UNIQUE
+#  index_users_on_username_lower           (username_lower) UNIQUE
 #
