@@ -214,6 +214,14 @@ function wrapWithErrorHandler(func, messageKey) {
  * @typedef {_PluginApi} PluginApi
  */
 class _PluginApi {
+  /** @type {import("discourse/lib/transformer").RegisterBehaviorTransformer} */
+  registerBehaviorTransformer = (name, callback) =>
+    _registerTransformer(name, transformerTypes.BEHAVIOR, callback);
+
+  /** @type {import("discourse/lib/transformer").RegisterValueTransformer} */
+  registerValueTransformer = (name, callback) =>
+    _registerTransformer(name, transformerTypes.VALUE, callback);
+
   #source;
 
   constructor(container, source = CORE_SOURCE) {
@@ -408,7 +416,7 @@ class _PluginApi {
   /**
    * Add a new valid behavior transformer name.
    *
-   * Use this API to add a new behavior transformer name that can be used in the `registerValueTransformer` API.
+   * Use this API to add a new behavior transformer name that can be used in the `registerBehaviorTransformer` API.
    *
    * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
    *
@@ -431,67 +439,6 @@ class _PluginApi {
    */
   addBehaviorTransformerName(name) {
     _addTransformerName(name, transformerTypes.BEHAVIOR);
-  }
-
-  /**
-   * Register a transformer to override behavior defined in Discourse.
-   *
-   * Example: to perform an action before the expected behavior
-   * ```
-   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
-   *   exampleNewAction(); // action performed before the expected behavior
-   *
-   *   next(); //iterates over the transformer queue processing the behaviors
-   * });
-   * ```
-   *
-   * Example: to perform an action after the expected behavior
-   * ```
-   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
-   *   next(); //iterates over the transformer queue processing the behaviors
-   *
-   *   exampleNewAction(); // action performed after the expected behavior
-   * });
-   * ```
-   *
-   * Example: to use a value returned by the expected behavior to decide if an action must be performed
-   * ```
-   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
-   *   const expected = next(); //iterates over the transformer queue processing the behaviors
-   *
-   *   if (expected === "EXPECTED") {
-   *     exampleNewAction(); // action performed after the expected behavior
-   *   }
-   * });
-   * ```
-   *
-   * Example: to abort the expected behavior based on a condition
-   * ```
-   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
-   *   if (context.property) {
-   *     // not calling next() on a behavior transformer aborts executing the expected behavior
-   *
-   *     return;
-   *   }
-   *
-   *   next();
-   * });
-   * ```
-   *
-   * @template [R=unknown] - The expected behavior result; middleware may also return void.
-   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
-   * @param {string} transformerName the name of the transformer
-   * @param {import("discourse/lib/transformer").BehaviorTransformer<R, C>} behaviorCallback
-   * Middleware which can call next() to run the remaining queue, including the default behavior. If the callback
-   * doesn't call next(), the default behavior is completely overridden.
-   * @returns {boolean} True if the transformer exists, false otherwise.
-   */
-  registerBehaviorTransformer(transformerName, behaviorCallback) {
-    return _registerTransformer(
-      transformerName,
-      transformerTypes.BEHAVIOR,
-      behaviorCallback
-    );
   }
 
   /**
@@ -520,48 +467,6 @@ class _PluginApi {
    */
   addValueTransformerName(name) {
     _addTransformerName(name, transformerTypes.VALUE);
-  }
-
-  /**
-   * Register a transformer to override values defined in Discourse.
-   *
-   * Example: return a static value
-   * ```
-   * api.registerValueTransformer("example-transformer", () => "value");
-   * ```
-   *
-   * Example: transform the current value
-   * ```
-   * api.registerValueTransformer("example-transformer", ({value}) => value * 10);
-   * ```
-   *
-   * Example: transform the current value based on a context property
-   * ```
-   * api.registerValueTransformer("example-transformer", ({value, context}) => {
-   *   if (context.property) {
-   *     return value * 10;
-   *   }
-   *
-   *   return value;
-   * });
-   * ```
-   *
-   * @template [T=unknown] - The value passed to the callback.
-   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
-   * @param {string} transformerName the name of the transformer
-   * @param {import("discourse/lib/transformer").AnyValueTransformer<T, C>} valueCallback
-   * Receives the current value and context. To avoid potential errors or unexpected behavior the callback must be a
-   * pure function, i.e. return the transformed value instead of mutating the input value, return the same output for
-   * the same input and not have any side effects. Only hooks applied with `applyMutableValueTransformer` expect the
-   * callback to mutate the value instead; their return value is ignored.
-   * @returns {boolean} True if the transformer exists, false otherwise.
-   */
-  registerValueTransformer(transformerName, valueCallback) {
-    return _registerTransformer(
-      transformerName,
-      transformerTypes.VALUE,
-      valueCallback
-    );
   }
 
   /**
