@@ -74,8 +74,8 @@ module DiscourseCakeday
           where_month_day_between(
             @users,
             month_day_sql(indexed_column_sql),
-            from - 1.day,
-            to + 1.day,
+            previous_day(from),
+            next_day(to),
           )
       end
 
@@ -114,6 +114,17 @@ module DiscourseCakeday
 
     def in_leap_year(date)
       Date.new(2000, date.month, date.day)
+    end
+
+    # in non-leap years, February 28th and March 1st are next to each other
+    def previous_day(date)
+      day = date - 1.day
+      day.month == 2 && day.day == 29 ? day - 1.day : day
+    end
+
+    def next_day(date)
+      day = date + 1.day
+      day.month == 2 && day.day == 29 ? day + 1.day : day
     end
 
     def where_month_day_between(users, month_day_sql, from, to)

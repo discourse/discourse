@@ -113,6 +113,29 @@ RSpec.describe "Anniversaries and Birthdays" do
         end
       end
 
+      it "accounts for the current user's timezone around February 29th" do
+        user1 = Fabricate(:user, created_at: Time.zone.local(2015, 2, 28, 23))
+        user2 = Fabricate(:user, created_at: Time.zone.local(2015, 3, 1, 5))
+
+        current_user.user_option.update!(timezone: "Asia/Kolkata")
+
+        freeze_time(Time.zone.local(2017, 3, 15)) do
+          get "/cakeday/anniversaries.json", params: { month: 3 }
+
+          body = response.parsed_body
+          expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user1.id, user2.id)
+        end
+
+        current_user.user_option.update!(timezone: "America/Los_Angeles")
+
+        freeze_time(Time.zone.local(2017, 2, 28, 20)) do
+          get "/cakeday/anniversaries.json", params: { filter: "today" }
+
+          body = response.parsed_body
+          expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user1.id, user2.id)
+        end
+      end
+
       it "handles Nuku'alofa timezone without SQL errors" do
         # Nuku'alofa contains an apostrophe and must be converted to Pacific/Tongatapu
         current_user.user_option.update!(timezone: "Nuku'alofa")
