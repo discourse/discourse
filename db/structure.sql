@@ -25580,6 +25580,20 @@ CREATE INDEX index_user_warnings_on_user_id ON public.user_warnings USING btree 
 
 
 --
+-- Name: index_users_on_created_at_month_day; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_created_at_month_day ON public.users USING btree ((((EXTRACT(month FROM created_at) * (100)::numeric) + EXTRACT(day FROM created_at))));
+
+
+--
+-- Name: index_users_on_date_of_birth_month_day; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_date_of_birth_month_day ON public.users USING btree ((((EXTRACT(month FROM date_of_birth) * (100)::numeric) + EXTRACT(day FROM date_of_birth)))) WHERE (date_of_birth IS NOT NULL);
+
+
+--
 -- Name: index_users_on_last_posted_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26164,6 +26178,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261027163032'),
 ('20261021063131'),
 ('20261021063122'),
 ('20261021061850'),

@@ -36,6 +36,8 @@ module DiscourseCakeday
           Time.zone.now
         end.to_date
 
+      indexed_column_sql = column_sql
+
       if apply_timezone && @timezone.present? && @timezone != "UTC"
         if (iana_timezone = ActiveSupport::TimeZone[@timezone]&.tzinfo&.canonical_identifier)
           quoted_timezone = ActiveRecord::Base.connection.quote(iana_timezone)
@@ -47,30 +49,35 @@ module DiscourseCakeday
         @users = @users.where("EXTRACT(YEAR FROM #{column_sql}) < ?", today.year)
       end
 
-      # when the current year is not a leap year, we consider February 29th to be March 1st
-      date_sql = <<~SQL
-        TO_CHAR(#{column_sql}, 'MMDD') = :date OR (
-          NOT :leap AND
-          :date = '0301' AND
-          TO_CHAR(#{column_sql}, 'MMDD') = '0229'
-        )
-      SQL
-
-      @users =
+      # dates are moved to a leap year so that February 29th can be part of a range
+      from, to =
         case params[:filter]
-        when "today"
-          @users.where(date_sql, leap: today.leap?, date: mmdd(today))
-        when "tomorrow"
-          tomorrow = today + 1.day
-          @users.where(date_sql, leap: tomorrow.leap?, date: mmdd(tomorrow))
+        when "today", "tomorrow"
+          date = params[:filter] == "today" ? today : today + 1.day
+          from = to = in_leap_year(date)
+          # when the current year is not a leap year, we consider February 29th to be March 1st
+          from -= 1.day if !date.leap? && to == Date.new(2000, 3, 1)
+          [from, to]
         when "upcoming"
-          from = today + 2.days
-          to = from + 1.week
-          @users.where("TO_CHAR(#{column_sql}, 'MMDD') BETWEEN ? AND ?", mmdd(from), mmdd(to))
+          [in_leap_year(today + 2.days), in_leap_year(today + 9.days)]
         else # month
           more_params[:month] = @month
-          @users.where("EXTRACT(MONTH FROM #{column_sql}) = ?", @month)
+          first = Date.new(2000, @month, 1)
+          [first, first.end_of_month]
         end
+
+      @users = where_month_day_between(@users, month_day_sql(column_sql), from, to)
+
+      if column_sql != indexed_column_sql
+        # the timezone shifts the date by less than a day, so the UTC date can use the index to narrow down the users
+        @users =
+          where_month_day_between(
+            @users,
+            month_day_sql(indexed_column_sql),
+            previous_day(from),
+            next_day(to),
+          )
+      end
 
       total = @users.count
 
@@ -85,7 +92,11 @@ module DiscourseCakeday
       @users =
         @users
           .select(:id, :username, :name, :title, :uploaded_avatar_id, "#{column_sql} cakedate")
-          .order("TO_CHAR(#{column_sql}, 'MMDDYYYY') ASC")
+          .order(
+            # the upcoming range can wrap around the end of the year
+            "#{month_day_sql(column_sql)} < #{month_day(from)} ASC",
+            "TO_CHAR(#{column_sql}, 'MMDDYYYY') ASC",
+          )
           .order(tie_breaker)
           .limit(PAGE_SIZE)
           .offset(PAGE_SIZE * @page)
@@ -93,8 +104,36 @@ module DiscourseCakeday
       [@users, total, more_params]
     end
 
-    def mmdd(date)
-      date.strftime("%m%d")
+    def month_day_sql(column_sql)
+      "(EXTRACT(MONTH FROM #{column_sql}) * 100 + EXTRACT(DAY FROM #{column_sql}))"
+    end
+
+    def month_day(date)
+      date.month * 100 + date.day
+    end
+
+    def in_leap_year(date)
+      Date.new(2000, date.month, date.day)
+    end
+
+    # in non-leap years, February 28th and March 1st are next to each other
+    def previous_day(date)
+      day = date - 1.day
+      day.month == 2 && day.day == 29 ? day - 1.day : day
+    end
+
+    def next_day(date)
+      day = date + 1.day
+      day.month == 2 && day.day == 29 ? day + 1.day : day
+    end
+
+    def where_month_day_between(users, month_day_sql, from, to)
+      operator = month_day(from) <= month_day(to) ? "AND" : "OR"
+      users.where(
+        "#{month_day_sql} >= :from #{operator} #{month_day_sql} <= :to",
+        from: month_day(from),
+        to: month_day(to),
+      )
     end
   end
 end

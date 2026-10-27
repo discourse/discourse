@@ -97,6 +97,45 @@ RSpec.describe "Anniversaries and Birthdays" do
         end
       end
 
+      it "accounts for the current user's timezone across months" do
+        current_user.user_option.update!(timezone: "Asia/Kolkata")
+
+        freeze_time(time) do
+          created_at = time - 1.year
+
+          user1 = Fabricate(:user, created_at: created_at.beginning_of_month - 1.hour)
+          user2 = Fabricate(:user, created_at: created_at.end_of_month - 1.hour)
+
+          get "/cakeday/anniversaries.json", params: { month: time.month }
+
+          body = response.parsed_body
+          expect(body["anniversaries"].map { |u| u["id"] }).to eq [user1.id]
+        end
+      end
+
+      it "accounts for the current user's timezone around February 29th" do
+        user1 = Fabricate(:user, created_at: Time.zone.local(2015, 2, 28, 23))
+        user2 = Fabricate(:user, created_at: Time.zone.local(2015, 3, 1, 5))
+
+        current_user.user_option.update!(timezone: "Asia/Kolkata")
+
+        freeze_time(Time.zone.local(2017, 3, 15)) do
+          get "/cakeday/anniversaries.json", params: { month: 3 }
+
+          body = response.parsed_body
+          expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user1.id, user2.id)
+        end
+
+        current_user.user_option.update!(timezone: "America/Los_Angeles")
+
+        freeze_time(Time.zone.local(2017, 2, 28, 20)) do
+          get "/cakeday/anniversaries.json", params: { filter: "today" }
+
+          body = response.parsed_body
+          expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user1.id, user2.id)
+        end
+      end
+
       it "handles Nuku'alofa timezone without SQL errors" do
         # Nuku'alofa contains an apostrophe and must be converted to Pacific/Tongatapu
         current_user.user_option.update!(timezone: "Nuku'alofa")
@@ -141,6 +180,38 @@ RSpec.describe "Anniversaries and Birthdays" do
 
           body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user5.id]
+        end
+      end
+
+      it "returns upcoming birthdays across the end of the year" do
+        freeze_time(Time.zone.local(2016, 12, 28)) do
+          user1 = Fabricate(:user, date_of_birth: "1904-1-2")
+          user2 = Fabricate(:user, date_of_birth: "1904-12-31")
+          Fabricate(:user, date_of_birth: "1904-1-7")
+
+          get "/cakeday/birthdays.json", params: { filter: "upcoming" }
+
+          body = response.parsed_body
+          expect(body["birthdays"].map { |u| u["id"] }).to eq [user2.id, user1.id]
+        end
+      end
+
+      it "returns February 29th birthdays on March 1st when the year is not a leap year" do
+        user1 = Fabricate(:user, date_of_birth: "1904-2-29")
+        user2 = Fabricate(:user, date_of_birth: "1904-3-1")
+
+        freeze_time(Time.zone.local(2017, 3, 1)) do
+          get "/cakeday/birthdays.json", params: { filter: "today" }
+
+          body = response.parsed_body
+          expect(body["birthdays"].map { |u| u["id"] }).to eq [user1.id, user2.id]
+        end
+
+        freeze_time(Time.zone.local(2016, 3, 1)) do
+          get "/cakeday/birthdays.json", params: { filter: "today" }
+
+          body = response.parsed_body
+          expect(body["birthdays"].map { |u| u["id"] }).to eq [user2.id]
         end
       end
 
