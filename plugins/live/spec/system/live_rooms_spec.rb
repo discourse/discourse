@@ -14,7 +14,9 @@ describe "Live rooms" do
   end
 
   def click_call_widget_open_page_button
-    within(".live-call-widget__controls") { find(".d-icon-expand").ancestor("button").click }
+    within(".live-call-widget__controls") do
+      find(".d-icon-discourse-expand").ancestor("button").click
+    end
   end
 
   def click_call_widget_leave_button

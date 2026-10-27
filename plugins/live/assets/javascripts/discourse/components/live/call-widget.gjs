@@ -764,7 +764,7 @@ export default class LiveCallWidget extends Component {
             <DButton
               class="live-call-widget__expand"
               @action={{this.expandWidget}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.expandWidgetTitle}}
             />
           {{else}}
@@ -772,7 +772,7 @@ export default class LiveCallWidget extends Component {
             <DButton
               class="btn-default"
               @action={{this.openRoom}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.openRoomTitle}}
             />
             <DMenu
