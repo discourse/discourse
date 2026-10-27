@@ -1,6 +1,7 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
-import { knownCategories } from "discourse/lib/category-source";
-import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
+import { removeAccents } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
 import type { CategoryItem, CategoryRecord } from "./category-types.ts";
 
@@ -14,10 +15,7 @@ export function decodeCategoryText(text: string): string {
 
 /** Case and accent insensitive category matching. */
 export function normalizeCategoryName(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  return removeAccents(text.toLowerCase());
 }
 
 /** Decodes transformed descriptions without treating their text as markup. */
@@ -45,15 +43,12 @@ export function categoryItem(
   };
 }
 
-/** Narrows the model attached by category sources, including resolved held values. */
-function record(item: SelectItem): CategoryRecord | null {
-  return (
-    (item as CategoryItem).category ??
-    (typeof item.id === "number" || typeof item.id === "string"
-      ? knownCategories([item.id])[0]
-      : undefined) ??
-    null
-  );
+/** The category a row renders as a badge; action rows render their label instead. */
+function record(item: SelectItem): CategoryRecord | undefined {
+  if (item.onSelect) {
+    return;
+  }
+  return (item as CategoryItem).category ?? Category.findById(item.id);
 }
 
 /** Narrows shortcut and action labels for templates. */
@@ -63,32 +58,14 @@ function name(item: SelectItem): string {
 
 /** Topic counts are confined to options. */
 function topicCount(
-  category: CategoryRecord | null,
+  category: CategoryRecord,
   counts?: boolean,
   countSubcategories?: boolean
 ) {
   if (!counts) {
     return;
   }
-  return countSubcategories ? category?.totalTopicCount : category?.topic_count;
-}
-
-/** Renders through the shared badge helper, with counts confined to option rows. */
-function badge(
-  item: SelectItem,
-  ancestors?: boolean,
-  counts?: boolean,
-  countSubcategories?: boolean
-) {
-  const category = record(item);
-  return categoryLinkHTML(category, {
-    allowUncategorized: true,
-    hideParent: true,
-    ancestors: ancestors ? category?.predecessors : undefined,
-    topicCount: topicCount(category, counts, countSubcategories),
-    readOnly: item.disabled,
-    link: false,
-  });
+  return countSubcategories ? category.totalTopicCount : category.topic_count;
 }
 
 /** Badge content shared by category rows and selections. */
@@ -104,9 +81,18 @@ export const CategoryBadge: TemplateOnlyComponent<{
     countSubcategories?: boolean;
   };
 }> = <template>
-  {{#if (and (record @item) (not @item.onSelect))}}
-    {{badge @item @ancestors @counts @countSubcategories}}
-  {{else}}
-    {{name @item}}
-  {{/if}}
+  {{#let (record @item) as |category|}}
+    {{#if category}}
+      {{dCategoryBadge
+        category
+        allowUncategorized=true
+        ancestors=(if @ancestors category.predecessors)
+        hideParent=true
+        readOnly=@item.disabled
+        topicCount=(topicCount category @counts @countSubcategories)
+      }}
+    {{else}}
+      {{name @item}}
+    {{/if}}
+  {{/let}}
 </template>;
