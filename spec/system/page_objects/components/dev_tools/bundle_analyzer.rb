@@ -6,8 +6,12 @@ module PageObjects
       class BundleAnalyzer < PageObjects::Components::Base
         MODAL = ".bundle-analyzer-modal"
 
+        # The warning renders with the modal, so a production build — which has
+        # nothing to warn about — is known immediately rather than waited for.
         def dismiss_development_warning
-          find("#{MODAL} .ba-warning .btn-primary").click
+          if page.has_css?("#{MODAL} .ba-warning", wait: 0)
+            find("#{MODAL} .ba-warning .btn-primary").click
+          end
           self
         end
 
