@@ -1529,6 +1529,7 @@ class Topic < ActiveRecord::Base
     save
 
     MessageBus.publish("/site/banner", banner)
+    DiscourseEvent.trigger(:topic_bannered, self, acting_user: user)
 
     Jobs.cancel_scheduled_job(:remove_banner, topic_id: id)
     Jobs.enqueue_at(bannered_until, :remove_banner, topic_id: id) if bannered_until
@@ -1541,6 +1542,7 @@ class Topic < ActiveRecord::Base
     save
 
     MessageBus.publish("/site/banner", nil)
+    DiscourseEvent.trigger(:topic_unbannered, self, acting_user: user)
 
     Jobs.cancel_scheduled_job(:remove_banner, topic_id: id)
   end

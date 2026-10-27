@@ -1902,6 +1902,21 @@ RSpec.describe Topic do
         expect(Topic.where(archetype: Archetype.banner).count).to eq(1)
       end
 
+      it "triggers topic_bannered, and topic_unbannered for the previous banner" do
+        previous_banner = Fabricate(:banner_topic)
+
+        events = DiscourseEvent.track_events { topic.make_banner!(user) }
+
+        banner_events =
+          events.filter { |event| %i[topic_bannered topic_unbannered].include?(event[:event_name]) }
+        expect(banner_events.map { |event| [event[:event_name], event[:params]] }).to eq(
+          [
+            [:topic_unbannered, [previous_banner, { acting_user: user }]],
+            [:topic_bannered, [topic, { acting_user: user }]],
+          ],
+        )
+      end
+
       it "removes any dismissed banner keys" do
         user.user_profile.update_column(:dismissed_banner_key, topic.id)
 
@@ -1912,6 +1927,14 @@ RSpec.describe Topic do
     end
 
     describe "remove_banner!" do
+      it "triggers topic_unbannered with the user" do
+        topic.make_banner!(user)
+
+        event = DiscourseEvent.track(:topic_unbannered) { topic.remove_banner!(user) }
+
+        expect(event[:params]).to eq([topic, { acting_user: user }])
+      end
+
       it "resets the topic archetype" do
         topic.expects(:add_moderator_post)
 

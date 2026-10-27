@@ -97,6 +97,36 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("category-mismatch", "tag-mismatch")
   end
 
+  it "runs Topic unpinned workflows when a pin expires" do
+    create_published_workflow("unpinned-trigger", "trigger:topic_unpinned")
+    topic.update_pinned(true)
+
+    Jobs::UnpinTopic.new.execute(topic_id: topic.id)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("unpinned-trigger")
+    expect(trigger_data_for("unpinned-trigger")).to include(
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
+  it "runs Topic bannered and Topic unbannered workflows when a banner replaces another" do
+    previous_banner = Fabricate(:topic, category:)
+    previous_banner.make_banner!(admin)
+    create_published_workflow("bannered-trigger", "trigger:topic_bannered")
+    create_published_workflow("unbannered-trigger", "trigger:topic_unbannered")
+
+    topic.make_banner!(admin)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("bannered-trigger", "unbannered-trigger")
+    expect(trigger_data_for("bannered-trigger")).to include(
+      "topic" => include("id" => topic.id),
+      "actor" => include("id" => admin.id),
+    )
+    expect(trigger_data_for("unbannered-trigger")).to include(
+      "topic" => include("id" => previous_banner.id),
+    )
+  end
+
   it "only enqueues topic created workflows matching the category and tags" do
     create_post(topic: topic)
     topic.tags << tag
