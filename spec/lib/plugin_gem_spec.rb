@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rubygems/package"
+require "bundler/lockfile_generator"
 
 RSpec.describe PluginGem do
   let(:tmp_dir) { Dir.mktmpdir("plugin-gem-spec") }
@@ -99,8 +100,9 @@ RSpec.describe PluginGem do
     File.write(File.join(dir, "Gemfile"), gemfile)
     return if lock.nil?
 
-    dsl = Bundler::Dsl.new
-    dsl.eval_gemfile(File.join(dir, "Gemfile"))
+    lockfile = File.join(dir, "Gemfile.lock")
+    definition = Bundler::Definition.build(File.join(dir, "Gemfile"), lockfile, nil)
+    definition.sources.git_sources.clear
     gems =
       lock.map do |name, version|
         [name, version, repo_gems.find { it[0] == name && it[1] == version }&.dig(2)]
@@ -108,34 +110,44 @@ RSpec.describe PluginGem do
     # `bundle lock` would add the application's gems the plugin's gems need.
     app_gems = gems.flat_map { it[2]&.keys || [] }.uniq - lock.keys
     gems += app_gems.map { [it, app_versions.fetch(it), nil] }
-    path_sections =
+    rubygems_source =
+      definition.sources.non_global_rubygems_sources.first ||
+        definition.sources.global_rubygems_source
+    specs = gems.map { locked_spec(*it, rubygems_source) }
+    specs +=
       path.map do |name, (version, dependencies)|
-        "PATH\n  remote: #{name}\n  specs:\n#{lock_specs([[name, version, dependencies]])}\n\n"
+        source = definition.sources.path_sources.find { it.path.to_s == name }
+        locked_spec(name, version, dependencies, source)
       end
-    # With a scoped source block, bundler also writes an empty GEM section
-    # for the implicit global source into the lock.
-    File.write(File.join(dir, "Gemfile.lock"), <<~LOCK)
-      #{"GEM\n  specs:\n\n" if scoped}#{path_sections.join}GEM
-        remote: #{source}/
-        specs:
-      #{lock_specs(gems)}
-
-      PLATFORMS
-        ruby
-
-      DEPENDENCIES
-      #{dsl.dependencies.map(&:to_lock).sort.join("\n")}
-      #{checksum_section(gems, path, checksums) if checksums}
-    LOCK
+    add_checksums(specs, checksums, lockfile) if checksums
+    lock_definition =
+      instance_double(
+        Bundler::Definition,
+        sources: definition.sources,
+        resolve: Bundler::SpecSet.new(specs),
+        platforms: [Gem::Platform::RUBY],
+        dependencies: definition.dependencies,
+        locked_checksums: !checksums.nil?,
+        locked_ruby_version: nil,
+        bundler_version_to_lock: Bundler.gem_version,
+      )
+    File.write(lockfile, Bundler::LockfileGenerator.generate(lock_definition))
   end
 
-  def checksum_section(gems, path, checksums)
-    lines =
-      path.map { |name, (version)| "  #{name} (#{version})" } +
-        gems.map do |name, version|
-          "  #{name} (#{version}) #{checksums.fetch(name) { checksum(name, version) }}"
-        end
-    "\nCHECKSUMS\n#{lines.sort.join("\n")}\n"
+  def locked_spec(name, version, dependencies, source)
+    spec =
+      Bundler::LazySpecification.new(name, Gem::Version.new(version), Gem::Platform::RUBY, source)
+    spec.dependencies = dependencies&.map { Gem::Dependency.new(*it) } || []
+    spec
+  end
+
+  def add_checksums(specs, checksums, lockfile)
+    specs.each do |spec|
+      value = checksum(spec.name, spec.version) if spec.source.is_a?(Bundler::Source::Rubygems)
+      value = checksums.fetch(spec.name, value)
+      parsed = Bundler::Checksum.from_lock(value, lockfile) if value
+      spec.source.checksum_store.register(spec, parsed)
+    end
   end
 
   def checksum(name, version)
@@ -145,14 +157,6 @@ RSpec.describe PluginGem do
     # The application's lock has no checksums for its path and git gems, so
     # those get a made-up one.
     app_checksums.fetch(name) { "sha256=#{Digest::SHA256.hexdigest(name)}" }
-  end
-
-  def lock_specs(gems)
-    gems
-      .flat_map do |name, version, dependencies|
-        ["    #{name} (#{version})", *dependencies&.map { "      #{_1} (#{_2})" }]
-      end
-      .join("\n")
   end
 
   # A fresh process: only the application's gems are activated.
