@@ -77,7 +77,7 @@ describe DiscourseAi::Discoveries::Synthesis do
     )
   end
 
-  it "flags a solved candidate and its accepted answer passage" do
+  it "flags a solved candidate and its answer passage" do
     candidate = {
       "source_ref" => "source_1",
       "title" => "Robot stuck",
@@ -85,7 +85,7 @@ describe DiscourseAi::Discoveries::Synthesis do
       "solved" => true,
       "passages" => [
         { "post_number" => 1, "excerpt" => "My robot is stuck." },
-        { "post_number" => 4, "excerpt" => "Restart it.", "accepted_answer" => true },
+        { "post_number" => 4, "excerpt" => "Restart it.", "answer" => true },
       ],
     }
 
@@ -101,7 +101,7 @@ describe DiscourseAi::Discoveries::Synthesis do
       "solved" => true,
       "passages" => [
         { "post_number" => 1, "excerpt" => "My robot is stuck." },
-        { "post_number" => 4, "excerpt" => "Restart it.", "accepted_answer" => true },
+        { "post_number" => 4, "excerpt" => "Restart it.", "answer" => true },
       ],
     )
   end

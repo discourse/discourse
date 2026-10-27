@@ -407,7 +407,7 @@ describe DiscourseAi::Discoveries::Retrieval do
             "post_id" => answer.id,
             "post_number" => answer.post_number,
             "excerpt" => "Restart the robot to fix it",
-            "accepted_answer" => true,
+            "answer" => true,
           ),
         )
         expect(candidates.second).not_to include("solved")
@@ -417,7 +417,7 @@ describe DiscourseAi::Discoveries::Retrieval do
         candidates = call([source(answer)]).candidates
 
         expect(candidates.first.fetch("passages")).to contain_exactly(
-          include("post_id" => answer.id, "accepted_answer" => true),
+          include("post_id" => answer.id, "answer" => true),
         )
       end
 
@@ -437,6 +437,122 @@ describe DiscourseAi::Discoveries::Retrieval do
 
         expect(candidates.first).not_to include("solved")
         expect(candidates.first.fetch("passages").pluck("post_id")).to eq([post_1.id])
+      end
+    end
+  end
+
+  describe "#call with endorsed replies" do
+    fab!(:moderator)
+    fab!(:liked_reply) { Fabricate(:post, topic: topic_1, raw: "Clear the cache first") }
+    fab!(:author_liked_reply) { Fabricate(:post, topic: topic_1, raw: "Restart the robot") }
+
+    def call(lexical)
+      described_class.new(
+        user:,
+        lexical_retriever: ->(_query) { lexical },
+        semantic_retriever: ->(_query) { [] },
+      ).call("robot")
+    end
+
+    def answer_passages(candidate)
+      candidate.fetch("passages").select { |passage| passage["answer"] }
+    end
+
+    it "adds the reply the topic author liked ahead of more liked ones" do
+      PostActionCreator.like(moderator, liked_reply)
+      PostActionCreator.like(Fabricate(:user), liked_reply)
+      PostActionCreator.like(topic_1.user, author_liked_reply)
+      PostActionCreator.like(moderator, author_liked_reply)
+
+      candidates = call([source(post_1), source(post_2)]).candidates
+
+      expect(answer_passages(candidates.first)).to contain_exactly(
+        include(
+          "post_id" => author_liked_reply.id,
+          "excerpt" => "Restart the robot",
+          "answer" => true,
+        ),
+      )
+      expect(candidates.first).not_to include("solved")
+      expect(answer_passages(candidates.second)).to be_empty
+    end
+
+    it "adds a reply liked only by a member of the endorsing groups" do
+      PostActionCreator.like(moderator, liked_reply)
+      PostActionCreator.like(Fabricate(:user), author_liked_reply)
+
+      candidates = call([source(post_1)]).candidates
+
+      expect(answer_passages(candidates.first)).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
+      )
+    end
+
+    it "adds the topic author's liked follow-up ahead of a group member's like" do
+      follow_up =
+        Fabricate(:post, topic: topic_1, user: topic_1.user, raw: "Fixed it, the cache was stale")
+      PostActionCreator.like(Fabricate(:user), follow_up)
+      PostActionCreator.like(moderator, liked_reply)
+      PostActionCreator.like(Fabricate(:user), liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to contain_exactly(
+        include("post_id" => follow_up.id, "answer" => true),
+      )
+    end
+
+    it "ignores the topic author's liked posts before anyone else replied" do
+      topic = Fabricate(:topic, category:)
+      first_post = Fabricate(:post, topic:, user: topic.user)
+      addendum = Fabricate(:post, topic:, user: topic.user)
+      PostActionCreator.like(Fabricate(:user), addendum)
+
+      expect(answer_passages(call([source(first_post)]).candidates.first)).to be_empty
+    end
+
+    it "marks an endorsed reply that retrieval matched instead of repeating it" do
+      PostActionCreator.like(topic_1.user, liked_reply)
+
+      candidates = call([source(liked_reply)]).candidates
+
+      expect(candidates.first.fetch("passages")).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
+      )
+    end
+
+    it "leaves out replies that are hidden or only liked by others" do
+      PostActionCreator.like(topic_1.user, liked_reply)
+      liked_reply.update!(hidden: true)
+      PostActionCreator.like(Fabricate(:user), author_liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to be_empty
+    end
+
+    it "counts any like when the endorsing groups include everyone" do
+      SiteSetting.ai_ask_ai_endorsed_reply_groups = Group::AUTO_GROUPS[:everyone].to_s
+      PostActionCreator.like(Fabricate(:user), liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
+      )
+    end
+
+    it "adds no replies when no endorsing groups are set" do
+      SiteSetting.ai_ask_ai_endorsed_reply_groups = ""
+      PostActionCreator.like(topic_1.user, liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to be_empty
+    end
+
+    if defined?(DiscourseSolved)
+      it "keeps the accepted answer as a solved topic's only answer" do
+        SiteSetting.solved_enabled = true
+        Fabricate(:solved_topic, topic: topic_1, answer_post: liked_reply)
+        PostActionCreator.like(topic_1.user, author_liked_reply)
+
+        candidate = call([source(post_1)]).candidates.first
+
+        expect(candidate).to include("solved" => true)
+        expect(answer_passages(candidate).pluck("post_id")).to eq([liked_reply.id])
       end
     end
   end

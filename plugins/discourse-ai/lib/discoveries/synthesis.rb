@@ -195,7 +195,7 @@ module DiscourseAi
         input["solved"] = true if candidate["solved"]
         if candidate["passages"].present?
           input["passages"] = candidate["passages"].map do |passage|
-            passage.slice("post_number", "excerpt", "accepted_answer").compact
+            passage.slice("post_number", "excerpt", "answer").compact
           end
         else
           input["excerpt"] = candidate["excerpt"] if candidate["excerpt"]
