@@ -5,9 +5,11 @@ module DiscourseAi
     # What the Admin Assistant's appearance tools share: who can use them, the
     # drafts they sign, and how they describe palettes on approval cards.
     module AppearanceAuthoring
-      # Changing colors and fonts, and creating a new theme, are checked as
-      # separate features.
+      # Changing colors and fonts, creating new palettes, and creating a new
+      # theme are checked as separate features. Without new palettes, the
+      # tools choose from the palettes a theme can already use.
       FEATURE = :appearance_authoring
+      PALETTE_FEATURE = :palette_authoring
       THEME_FEATURE = :theme_authoring
 
       # The colors approval cards compare, as [palette, color name].
@@ -36,8 +38,8 @@ module DiscourseAi
       end
 
       # Returns why the user can't change the site's appearance, or nil when
-      # they can.
-      def self.denial(user:, phase:, new_theme: false)
+      # they can. A new theme comes with new palettes.
+      def self.denial(user:, phase:, new_theme: false, new_palettes: false)
         return I18n.t("discourse_ai.appearance_authoring.not_allowed") if !user&.admin?
 
         access = access(user:, phase:)
@@ -45,7 +47,23 @@ module DiscourseAi
           return access.message.presence || I18n.t("discourse_ai.appearance_authoring.unavailable")
         end
 
-        theme_denial(user:, phase:) if new_theme
+        refusal = theme_denial(user:, phase:) if new_theme
+        refusal || (palette_denial(user:, phase:) if new_theme || new_palettes)
+      end
+
+      # Returns why the user can't create new palettes, or nil when they can.
+      def self.palette_denial(user:, phase:)
+        access = access(user:, phase:, feature: PALETTE_FEATURE)
+        if !access.allowed
+          return(
+            access.message.presence ||
+              I18n.t("discourse_ai.appearance_authoring.palettes_unavailable")
+          )
+        end
+
+        if !user.guardian.can_create_color_scheme?
+          I18n.t("discourse_ai.appearance_authoring.palettes_unavailable")
+        end
       end
 
       def self.theme_denial(user:, phase:)
@@ -194,13 +212,13 @@ module DiscourseAi
         end
       end
 
+      # Colors as { "color name" => "six-digit lowercase hex" }.
       def self.normalize_colors(colors)
         colors.to_h.transform_values do |hex|
           hex = hex.to_s.downcase
           hex.length == 3 ? hex.gsub(/(\h)/, '\1\1') : hex
         end
       end
-      private_class_method :normalize_colors
 
       def self.empty_value
         I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value")

@@ -608,9 +608,11 @@ en:
         create_category_question: "Do you want to create this category?"
         save_appearance_title:
           palettes: "Save palettes: %{name}"
+          existing_palettes: "Use palettes: %{name}"
           theme: "Save theme: %{name}"
         save_appearance_details:
           palettes: "Saves these colors without changing the site, so you can preview them first."
+          existing_palettes: "Saves the choice of these palettes, which the site already has, without changing the site, so you can preview them first."
           theme: "Saves a new theme based on Foundation, core's default design, without making it the default theme, so you can preview it first."
         save_appearance_question: "Do you want to save this?"
         activate_appearance_title: "Make live: %{name}"
@@ -1388,6 +1390,8 @@ en:
       live: "%{name} is live."
       switched_back: "Switched back from %{name}."
       palettes_target: "New palettes for the current theme, %{theme}"
+      existing_palettes_target: "The %{palette} palettes, the closest of the ones %{theme} can use"
+      already_closest: "%{theme} already uses %{palette}, the closest of the palettes it can use, so its colors don't need to change. Fonts can still change through the base_font and heading_font settings."
       new_theme_target: "A new theme based on Foundation, core's default design"
       new_theme_target_with_layout_change: "A new theme based on Foundation, core's default design. The site uses %{theme} now, so its layout will change too."
       default_theme: "Default theme"

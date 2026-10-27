@@ -51,7 +51,7 @@ class AppearanceChange::Activate
   end
 
   def changes_palettes(appearance_change:)
-    appearance_change.kind_palettes?
+    !appearance_change.kind_theme?
   end
 
   def assign_palettes(appearance_change:)

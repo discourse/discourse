@@ -94,6 +94,19 @@ RSpec.describe AppearanceChange::Activate do
       end
     end
 
+    context "with palettes the site already had" do
+      fab!(:appearance_change) { Fabricate(:appearance_change, kind: :existing_palettes, theme:) }
+
+      it "gives the theme the palettes" do
+        result
+
+        expect(theme.reload).to have_attributes(
+          color_scheme_id: appearance_change.light_color_scheme_id,
+          dark_color_scheme_id: appearance_change.dark_color_scheme_id,
+        )
+      end
+    end
+
     context "with a new theme" do
       fab!(:appearance_change) do
         Fabricate(:theme_appearance_change, site_settings: { "heading_font" => "roboto" })

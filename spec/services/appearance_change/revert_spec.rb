@@ -93,6 +93,15 @@ RSpec.describe AppearanceChange::Revert do
       end
     end
 
+    context "with palettes the site already had" do
+      fab!(:appearance_change) { Fabricate(:appearance_change, kind: :existing_palettes, theme:) }
+
+      it "gives the theme back its previous palettes" do
+        expect { result }.to change { theme.reload.color_scheme_id }.to(light_palette.id)
+        expect(theme.dark_color_scheme_id).to eq(dark_palette.id)
+      end
+    end
+
     context "with a new theme" do
       fab!(:appearance_change, :theme_appearance_change)
 

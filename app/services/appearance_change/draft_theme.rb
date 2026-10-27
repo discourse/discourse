@@ -6,7 +6,7 @@
 class AppearanceChange::DraftTheme
   include Service::Base
 
-  params base_class: AppearanceChange::Contract
+  params base_class: AppearanceChange::PalettesContract
 
   policy :can_create_theme
   policy :local_themes_allowed

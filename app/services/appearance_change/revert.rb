@@ -51,7 +51,7 @@ class AppearanceChange::Revert
   end
 
   def changes_palettes(appearance_change:)
-    appearance_change.kind_palettes?
+    !appearance_change.kind_theme?
   end
 
   def restore_palettes(appearance_change:, previous_state:)
