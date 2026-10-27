@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq } from "discourse/truth-helpers";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 

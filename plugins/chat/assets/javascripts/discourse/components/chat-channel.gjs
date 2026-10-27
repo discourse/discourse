@@ -11,7 +11,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import { and, not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";

@@ -61,7 +61,6 @@ import { deepEqual } from "discourse/lib/object";
 import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

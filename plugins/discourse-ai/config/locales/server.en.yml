@@ -11,6 +11,7 @@ en:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
       ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
       ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_ask_ai_external_source: "Ask AI skipped its external source <a href='%{base_path}/admin/plugins/discourse-ai/ai-tools/%{target}/edit'>%{tool_name}</a> in %{skipped} of its last %{searches} searches over the past %{hours} hours: %{timed_out} took longer than the external source wait, %{failed} failed, and %{busy} were skipped because too many searches were still waiting on external sources."
       ai_image_caption_agent: "AI image captions are enabled, but the selected image caption agent is not ready: %{reason}. <a href='%{url}'>Review the image caption agent</a>."
       ai_image_caption_agent_reasons:
         agent_missing: "the selected agent does not exist"
@@ -175,6 +176,12 @@ en:
     ai_ask_ai_agent: "Agent that selects sources and writes Ask AI answers."
     ai_ask_ai_query_rewriter_agent: "Agent used to prepare separate keyword and semantic queries for Ask AI. If this agent or its model is unavailable, Ask AI searches with the user's original query."
     ai_ask_ai_follow_up_agent: "Agent used when a user wants to follow up an Ask AI result. The selected agent must be enabled, allow personal messages, and be available to the user."
+    ai_ask_ai_keyword_search_enabled: "Search the forum by keyword for Ask AI answers."
+    ai_ask_ai_semantic_search_enabled: "Search the forum semantically for Ask AI answers. Requires embeddings."
+    ai_ask_ai_search_categories: "Only search these categories, and their subcategories, for Ask AI answers. Personal messages are still searched when asked for. Leave empty to search all categories."
+    ai_ask_ai_search_max_age_days: "Only search posts created in this many days for Ask AI answers. Set to 0 to search posts of any age."
+    ai_ask_ai_external_sources: "Custom tools Ask AI searches alongside the forum. Each is called with the user's query and must return a list of results, each with a title, an http(s) url, and optionally a blurb, content and published_at. Queries are sent to whatever services the tools call."
+    ai_ask_ai_external_sources_timeout: "Seconds Ask AI waits for its external sources, all searched at once, before answering without the ones still running. Counts towards the 20 seconds an Ask AI request may take, so a longer wait leaves less time to write the answer."
     ai_ask_ai_allowed_groups: "Groups allowed to use Ask AI and its follow-up handoff. The Ask AI agent's permissions, the follow-up agent's permissions, and normal topic, category, and personal-message visibility still apply. Semantic personal-message search requires {{setting:ai_embeddings_generate_for_pms}}. Content visible to an allowed user, including restricted topics and personal messages, may be sent to the configured LLM provider."
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
@@ -458,6 +465,9 @@ en:
         llm_missing: "The AI image caption agent must use an LLM."
         llm_vision_disabled: "The AI image caption agent must use a vision-capable LLM."
     ask_ai:
+      external_sources:
+        invalid_output: "Ask AI sources must return a list of results."
+        invalid_result: "Result %{position} needs a title and an http(s) url."
       configuration:
         agent_missing: "Select an existing agent for Ask AI follow-ups."
         agent_disabled: "The Ask AI follow-up agent must be enabled."

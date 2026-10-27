@@ -9,7 +9,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FlairChooser from "discourse/select-kit/components/flair-chooser";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import DTextField from "discourse/ui-kit/d-text-field";

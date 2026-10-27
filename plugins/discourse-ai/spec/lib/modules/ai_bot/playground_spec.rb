@@ -1340,6 +1340,30 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
+    it "preserves the conversation model for a per-turn legacy model mention" do
+      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, legacy_user.id)
+      agent.update!(allow_topic_mentions: true)
+      topic = Fabricate(:topic, user: admin)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = opus_model.id
+      topic.save_custom_fields
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["One-turn legacy response"],
+        llm: claude_2,
+      ) { create_post(topic:, user: admin, raw: "@#{legacy_user.username} answer this turn") }
+
+      response = topic.reload.posts.order(:post_number).last
+      expect(response.raw).to eq("One-turn legacy response")
+      expect(response.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        opus_model.id,
+      )
+    end
+
     it "normalizes a reply to a public legacy model post to the topic agent" do
       legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
       claude_2.update_column(:user_id, legacy_user.id)
@@ -1502,6 +1526,37 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
+    it "preserves a deleted conversation model when another agent is mentioned for one turn" do
+      mentioned_agent =
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          allow_topic_mentions: true,
+          default_llm: opus_model,
+        ).tap(&:ensure_user!)
+      topic = Fabricate(:topic, user: admin)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+      topic.save_custom_fields
+      agent.update!(default_llm: opus_model)
+      claude_2.destroy!
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["One-turn replacement response"],
+        llm: opus_model,
+      ) do
+        create_post(topic:, user: admin, raw: "@#{mentioned_agent.user.username} answer this turn")
+      end
+
+      response = topic.reload.posts.order(:post_number).last
+      expect(response.raw).to eq("One-turn replacement response")
+      expect(response.user).to eq(mentioned_agent.user)
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD].to_i).to eq(agent.id)
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
     it "persists a missing model default when continuing an existing agent conversation" do
       topic = Fabricate(:private_message_topic, user: admin, recipient: agent.user)
       topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
@@ -1514,6 +1569,48 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(
         topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i,
       ).to eq(claude_2.id)
+    end
+
+    it "continues an existing conversation with the current agent model after deleting the old model" do
+      post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["ORCHID-726", "Code word"],
+        llm: claude_2,
+      ) do
+        post =
+          create_post(
+            title: "Remember a code word",
+            raw: "Remember ORCHID-726",
+            target_usernames: agent.user.username,
+            archetype: Archetype.private_message,
+            user: admin,
+            custom_fields: {
+              DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => agent.id,
+              DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => claude_2.id,
+            },
+          )
+      end
+
+      expect(post.topic.posts.order(:post_number).last.raw).to eq("ORCHID-726")
+
+      agent.update!(default_llm: opus_model)
+      claude_2.destroy!
+      toggle_enabled_bots(bots: [])
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["ORCHID-726"], llm: opus_model) do
+        create_post(topic: post.topic, user: admin, raw: "What was the code word?")
+      end
+
+      topic = post.topic.reload
+      response = topic.posts.order(:post_number).last
+      expect(response.raw).to eq("ORCHID-726")
+      expect(response.user).to eq(agent.user)
+      expect(response.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        opus_model.id,
+      )
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        opus_model.id,
+      )
     end
 
     it "accepts a configured topic default sent back unchanged by the client" do

@@ -34,6 +34,8 @@ end
 require_relative "lib/discourse_data_explorer/engine"
 
 after_initialize do
+  register_seedfu_fixtures(Rails.root.join("plugins/discourse-data-explorer/db/fixtures"))
+
   require_relative "lib/discourse_data_explorer/mcp_tools"
 
   register_mcp_tool(

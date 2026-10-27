@@ -308,11 +308,13 @@ describe "AI combined search" do
       ask(query)
 
       expect_tab("topics")
-      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
       expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      # counts wait for a tab to open, then show only on the others
+      expect(page).to have_no_css("#{tab("topics")} .ai-search-tabs__count")
 
       # the answer was asked for with the rest, so switching asks nothing more
       select_tab("ask")
+      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
       expect(page).to have_css(".ai-search-answer")
       expect(page).to have_no_css(".search-menu .search-result-topic")
       publish(
@@ -610,7 +612,7 @@ describe "AI combined search" do
       expect(page).to have_css(tab("context"), text: category.name)
       expect_tab("context")
       expect(scopes.last).to eq("category:#{category.id}")
-      expect(page).to have_css("#{tab("context")} .ai-search-tabs__count", text: "1")
+      expect(page).to have_no_css("#{tab("context")} .ai-search-tabs__count")
       expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "2")
       # the counts hang off the pills rather than widening them
       widths = page.evaluate_script(<<~JS)
@@ -622,6 +624,7 @@ describe "AI combined search" do
 
       select_tab("topics")
       expect(page).to have_css(".search-menu .search-result-topic", text: outside.title)
+      expect(page).to have_css("#{tab("context")} .ai-search-tabs__count", text: "1")
       expect(request_ids.size).to eq(1)
     end
 

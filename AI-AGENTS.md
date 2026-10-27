@@ -34,6 +34,7 @@ Discourse is large with long history. Understand context before changes.
 
 ## Testing
 - Use the skill at `.skills/discourse-writing-rspec-tests` when writing RSpec tests
+- Use the skill at `.skills/discourse-workflow-nodes` when writing or reviewing Discourse Workflows nodes
 
 ## Commands
 

@@ -70,7 +70,6 @@ module Onebox
 
         status_data = fetch_pr_status(result)
         result["pr_status"] = status_data&.dig(:status)
-        result["pr_status_title"] = pr_status_title(result["pr_status"])
 
         status_timestamp = status_data&.dig(:timestamp) || result["created_at"]
         status_date = Time.parse(status_timestamp)
@@ -95,9 +94,18 @@ module Onebox
           result["pr"] = true
         end
 
+        result["layout_class"] = "github-onebox"
+        result["repository"] = "#{org}/#{repo}"
+        if result["pr"] && result["pr_status"]
+          result["layout_class"] += " --github-#{result["pr_status"]}"
+          result["pr_status_data"] = {
+            result["pr_status"] => true,
+            :label => I18n.t("onebox.github.pr_status.#{result["pr_status"]}"),
+          }
+        end
+
         result["number"] = match[:number]
         result["i18n"] = i18n
-        result["i18n"]["status_date_label"] = status_date_label(result["pr_status"])
         result["i18n"]["pr_summary"] = I18n.t(
           "onebox.github.pr_summary",
           {
@@ -117,21 +125,17 @@ module Onebox
 
       def i18n
         {
+          header: {
+            pull_request: I18n.t("onebox.github.header.pull_request"),
+            comment: I18n.t("onebox.github.header.comment"),
+            review: I18n.t("onebox.github.header.review"),
+            commit: I18n.t("onebox.github.header.commit"),
+          },
           opened: I18n.t("onebox.github.opened"),
           commit_by: I18n.t("onebox.github.commit_by"),
           comment_by: I18n.t("onebox.github.comment_by"),
           review_by: I18n.t("onebox.github.review_by"),
         }
-      end
-
-      def status_date_label(status)
-        key = status.presence || "open"
-        I18n.t("onebox.github.status_date.#{key}")
-      end
-
-      def pr_status_title(status)
-        key = status.presence || "default"
-        I18n.t("onebox.github.pr_title.#{key}")
       end
 
       def load_commit(link)

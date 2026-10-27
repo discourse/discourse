@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
@@ -45,7 +44,7 @@ export default class ThemeSiteSettings extends Component {
   /** @returns {SelectableTheme | undefined} */
   get currentTheme() {
     return this.themes.find((theme) => {
-      return eq(theme.id, this.currentThemeIdValue);
+      return theme.id === this.currentThemeIdValue;
     });
   }
 

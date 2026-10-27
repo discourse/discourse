@@ -10,7 +10,6 @@ import FKErrors from "discourse/form-kit/components/fk/errors";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
-import { and, not, or } from "discourse/truth-helpers";
 import DOtp from "discourse/ui-kit/d-otp";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";

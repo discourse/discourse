@@ -28,9 +28,7 @@ sw:
       close: "Funga"
       delete: "Futa"
       edit: "Hariri"
-      back: "Iliyopita"
       save: "Hifadhi"
-      apply: "Tumia"
       update_range:
         all_time: "Wakati wote"
       custom_range_from: "Kutoka"

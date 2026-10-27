@@ -103,7 +103,7 @@ module DiscourseWorkflows
 
         def output
           {
-            user: user_data(@user),
+            user: serialize_user(@user),
             seen: {
               first_seen: first_seen?,
               current_seen_at: current_seen_at&.iso8601,
@@ -159,10 +159,6 @@ module DiscourseWorkflows
 
           amount.positive? && NOT_SEEN_UNITS.include?(unit) &&
             previous_seen_at <= amount.public_send(unit).ago
-        end
-
-        def user_data(user)
-          serialize_record(user, BasicUserSerializer)
         end
       end
     end

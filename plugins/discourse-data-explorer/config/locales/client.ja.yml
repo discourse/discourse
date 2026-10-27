@@ -23,14 +23,12 @@ ja:
       admins_only: "データエクスプローラーは管理者のみが利用できます。"
       allow_groups: "このクエリへのアクセスをグループに許可する"
       title: "データエクスプローラー"
-      create: "作成"
       create_placeholder: "クエリ名..."
       description_placeholder: "説明をここに入力"
       ai:
         generate: "生成"
         optional: "オプション"
       import:
-        label: "インポート"
         unparseable_json: "解析不能な JSON ファイルです。"
         wrong_json: "不正な JSON ファイル。JSON ファイルには 'query' オブジェクトと、その中に少なくとも 'sql' プロパティが含まれている必要があります。"
       help:
@@ -54,7 +52,6 @@ ja:
         form:
           label: "グラフの種類"
           bar: "棒"
-      others_dirty: "クエリには保存されていない変更があり、移動すると失われます。"
       run_time: "クエリは %{value} ミリ秒で完了しました。"
       result_count:
         other: "%{count} 件の結果。"
@@ -70,7 +67,6 @@ ja:
       query_user: "作成者"
       column: "列 %{number}"
       reset_params: "リセット"
-      search_placeholder: "検索..."
       no_search_results: "残念ながら、テキストに一致する結果は見つかりませんでした。"
       form:
         errors:
