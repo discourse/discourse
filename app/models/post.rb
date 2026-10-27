@@ -1150,7 +1150,7 @@ class Post < ActiveRecord::Base
   end
 
   def form_submission
-    FormTemplate::Submission.new(form_data) if form_data
+    FormTemplate::Submission.new(form_data, validate: false) if form_data
   end
 
   def form_state_token

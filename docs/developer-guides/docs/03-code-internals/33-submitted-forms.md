@@ -8,6 +8,13 @@ A submitted form stores its definition and typed answers in `Post#form_data`.
 The saved definition is independent of later template edits. The answers and definition
 produce `raw`; `cooked` is derived through the normal post pipeline.
 
+`Post#form_submission` reads a persisted snapshot without checking answer
+completeness. It still checks its structure and value types. System cleanup may
+remove a required answer from a deleted post; reading that snapshot must remain
+possible. New submissions, `Submission#with_answers` / `for_edit`, and normal
+post validation enforce completeness explicitly. A user must supply complete
+answers when repairing such a snapshot.
+
 ## Updating a form
 
 Do not replace `raw` independently of a form snapshot. Normal validation rejects

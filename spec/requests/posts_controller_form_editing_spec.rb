@@ -52,6 +52,44 @@ RSpec.describe PostsController do
     expect(created.form_submission.answers).to eq(literal_answers)
   end
 
+  it "requires complete answers on creation and when repairing an incomplete saved form" do
+    category.form_templates << form_template
+    form_template.update!(output_template: "A form whose required answer is omitted.")
+    incomplete_answers = answers.merge("description" => "")
+
+    expect do
+      post "/posts.json",
+           params: {
+             title: "A form with a missing required answer",
+             category: category.id,
+             form_template_data: { id: form_template.id, answers: incomplete_answers }.to_json,
+           }
+    end.not_to change(Post, :count)
+    expect(response.status).to eq(422)
+
+    saved = form_post
+    incomplete = submission.with_answers(incomplete_answers, validate: false)
+    saved.update_columns(raw: incomplete.normalized_raw, form_data: incomplete.to_h)
+
+    put "/posts/#{saved.id}.json",
+        params: {
+          post: {
+            form_template_data: { answers: incomplete_answers }.to_json,
+          },
+        }
+    expect(response.status).to eq(422)
+    expect(saved.reload.form_data).to eq(incomplete.to_h)
+
+    put "/posts/#{saved.id}.json",
+        params: {
+          post: {
+            form_template_data: { answers: answers }.to_json,
+          },
+        }
+    expect(response.status).to eq(200)
+    expect(saved.reload.form_submission.answers).to eq(answers)
+  end
+
   describe "#create" do
     it "preserves form state through queued approval" do
       category.form_templates << form_template

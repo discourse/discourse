@@ -13,7 +13,7 @@ class PostFormDataValidator < ActiveModel::Validator
       return
     end
 
-    rendered = post.form_submission.normalized_raw
+    rendered = FormTemplate::Submission.new(post.form_data, validate: true).normalized_raw
     post.errors.add(:base, I18n.t("form_templates.raw_managed_by_form")) if post.raw != rendered
   rescue ArgumentError, FormTemplate::InvalidAnswers, Liquid::Error
     post.errors.add(:form_data, :invalid)

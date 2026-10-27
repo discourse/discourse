@@ -52,11 +52,13 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       )
     end
 
-    it "removes uploads retained only by omitted form answers" do
+    it "removes required uploads retained only by omitted form answers" do
       template =
         Fabricate(
           :form_template,
-          template: [{ id: "attachment", type: "upload" }].as_json.to_yaml,
+          template: [
+            { id: "attachment", type: "upload", validations: { required: true } },
+          ].as_json.to_yaml,
           output_template: "A form with an omitted attachment.",
         )
       submission =
