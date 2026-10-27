@@ -23,6 +23,7 @@ import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
 import { clearExtraAttributes } from "discourse/data/extra-attributes";
+import { removeCookie } from "discourse/lib/cookie";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
@@ -398,6 +399,14 @@ export default async function setupTests(config) {
       // Chrome keeps logged objects alive for DevTools even when it's closed
       // eslint-disable-next-line no-console
       console.clear();
+    }
+    // Color preferences persist in cookies, which would force a later test's color mode
+    for (const name of [
+      "forced_color_mode",
+      "color_scheme_id",
+      "dark_scheme_id",
+    ]) {
+      removeCookie(name, { path: "/" });
     }
     enableLoadMoreObserver();
     enableVirtualization();
