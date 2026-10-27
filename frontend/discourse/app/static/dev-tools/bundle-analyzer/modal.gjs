@@ -6,7 +6,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import "./styles.css";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
-import { i18n } from "discourse-i18n";
 import Analysis from "./analysis.js";
 import LoadedChunks from "./loaded-chunks.js";
 import PluginsAnalysis from "./plugins-analysis.js";
@@ -95,35 +94,33 @@ export default class BundleAnalyzerModal extends Component {
     <DModal
       class="bundle-analyzer-modal"
       @closeModal={{@closeModal}}
-      @title={{i18n "dev_tools.bundle_analyzer.title"}}
+      @title="Bundle analysis"
     >
       <:body>
         {{#if this.showWarning}}
           <div class="ba-warning">
-            <h2>{{i18n "dev_tools.bundle_analyzer.development_title"}}</h2>
-            <p>{{i18n "dev_tools.bundle_analyzer.development_warning"}}</p>
+            <h2>Development build</h2>
+            <p>Chunk splitting and sizes are completely different to production,
+              and brotli sizes aren't available. Restart the server with
+              EMBER_ENV=production.</p>
             <DButton
               class="btn-primary"
               @action={{this.acceptWarning}}
-              @label="dev_tools.bundle_analyzer.development_continue"
+              @translatedLabel="Open analyzer anyway"
             />
           </div>
         {{else}}
           <div {{didInsert this.load}}>
             {{#if this.error}}
               <div class="ba-empty">
-                {{i18n
-                  "dev_tools.bundle_analyzer.load_failed"
-                  error=this.error
-                }}
+                Failed to load bundle-analysis.json:
+                {{this.error}}
               </div>
             {{/if}}
             {{#if this.pluginError}}
               <div class="ba-empty">
-                {{i18n
-                  "dev_tools.bundle_analyzer.load_failed"
-                  error=this.pluginError
-                }}
+                Failed to load bundle-analysis.json:
+                {{this.pluginError}}
               </div>
             {{/if}}
             {{#if this.ready}}
