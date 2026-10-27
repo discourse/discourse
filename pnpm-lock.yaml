@@ -12465,7 +12465,7 @@ snapshots:
 
   ember-eslint-parser@0.16.0(@babel/eslint-parser@8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2)))(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
-      '@glimmer/syntax': 0.95.0
+      '@glimmer/syntax': 0.96.0
       '@typescript-eslint/tsconfig-utils': 8.63.0(typescript@5.9.3)
       content-tag: 4.2.1
       ember-estree: 0.9.0
@@ -12489,7 +12489,7 @@ snapshots:
   ember-estree@0.9.0:
     dependencies:
       '@glimmer/env': 0.1.7
-      '@glimmer/syntax': 0.95.0
+      '@glimmer/syntax': 0.96.0
       content-tag: 4.2.1
       oxc-parser: 0.130.0
 
