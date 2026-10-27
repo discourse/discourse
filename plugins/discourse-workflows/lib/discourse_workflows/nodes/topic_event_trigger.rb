@@ -12,7 +12,7 @@ module DiscourseWorkflows
 
       OUTPUT_SCHEMA = Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, Schema::ACTOR_SCHEMA)
 
-      def self.description(name:, event:, icon:, color:, i18n_scope:)
+      def self.description(name:, event:, icon:, color:, i18n_scope:, schema: OUTPUT_SCHEMA)
         {
           name:,
           version: "1.0",
@@ -23,7 +23,7 @@ module DiscourseWorkflows
           group: "discourse_triggers",
           event:,
           i18n_scope:,
-          output_contracts: [{ schema: OUTPUT_SCHEMA }],
+          output_contracts: [{ schema: }],
           properties: PROPERTIES,
         }
       end
