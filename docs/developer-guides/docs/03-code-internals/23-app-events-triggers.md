@@ -91,7 +91,7 @@ No arguments passed to this event.
 | 1        | bookmarkFormData.saveData     | property        | -           |
 | 2        | this.bookmarkModel.attachedTo | called_function | -           |
 
-##### /frontend/discourse/app/models/post.js#688 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post.js#L688)
+##### /frontend/discourse/app/models/post.ts#1248 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post.ts#L1248)
 
 | Position | Argument            | Type     | Description |
 | -------- | ------------------- | -------- | ----------- |
@@ -100,7 +100,7 @@ No arguments passed to this event.
 | -        | objectArg2.target   | string   | -           |
 | -        | objectArg2.targetId | property | -           |
 
-##### /frontend/discourse/app/models/post.js#708 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post.js#L708)
+##### /frontend/discourse/app/models/post.ts#1268 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post.ts#L1268)
 
 | Position | Argument            | Type     | Description |
 | -------- | ------------------- | -------- | ----------- |

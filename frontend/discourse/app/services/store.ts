@@ -10,6 +10,7 @@ import { cleanNullQueryParams } from "discourse/lib/utilities";
 import WeakValueMap from "discourse/lib/weak-value-map";
 import type Category from "discourse/models/category";
 import type PendingPost from "discourse/models/pending-post";
+import type { default as Post, PostCreateAttrs } from "discourse/models/post";
 import type PublishedPage from "discourse/models/published-page";
 import RestModel, {
   type RestModelAttrs,
@@ -30,6 +31,7 @@ import type UserDraft from "discourse/models/user-draft";
 export interface ModelRegistry {
   category: Category;
   "pending-post": PendingPost;
+  post: Post;
   "published-page": PublishedPage;
   site: Site;
   topic: Topic;
@@ -41,6 +43,7 @@ export interface ModelRegistry {
  * their instance fields. Plugins add entries through module augmentation.
  */
 export interface ModelCreateAttrsRegistry {
+  post: PostCreateAttrs<Post>;
   topic: TopicCreateAttrs<Topic>;
 }
 
