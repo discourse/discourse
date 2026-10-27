@@ -4,7 +4,7 @@ class Chat::Api::ChannelsReadController < Chat::ApiController
   def update
     Chat::UpdateUserChannelLastRead.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:ensure_message_id_recency) do
         raise Discourse::InvalidParameters.new(:message_id)
       end
@@ -21,7 +21,7 @@ class Chat::Api::ChannelsReadController < Chat::ApiController
   def update_all
     Chat::MarkAllUserChannelsRead.call(service_params) do
       on_success { |updated_memberships:| render(json: success_json.merge(updated_memberships:)) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
     end
   end
 end

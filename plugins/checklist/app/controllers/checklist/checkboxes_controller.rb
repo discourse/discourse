@@ -35,17 +35,17 @@ module Checklist
         on_failed_policy(:checkboxes_found) { |post:| render_checklist_conflict(post) }
         on_failed_policy(:checkboxes_toggleable) do
           render json: failed_json.merge(errors: [I18n.t("checklist.checkbox_locked")]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_failed_step(:revise_post) do |step, post:, params:|
           if step.error == :edit_conflict
             render_checklist_conflict(post, retryable: checklist_conflict_retryable?(post, params))
           else
             render json: failed_json.merge(errors: [I18n.t("checklist.revision_failed")]),
-                   status: :unprocessable_entity
+                   status: :unprocessable_content
           end
         end
-        on_failure { render json: failed_json, status: :unprocessable_entity }
+        on_failure { render json: failed_json, status: :unprocessable_content }
       end
     end
 

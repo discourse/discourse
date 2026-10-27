@@ -83,7 +83,7 @@ describe UsersController do
             chat_channel_list_sort: "priority",
           }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(user.user_option.reload).to have_attributes(
         chat_channel_list_filter: "all",
         chat_channel_list_sort: "alphabetical",
@@ -93,7 +93,7 @@ describe UsersController do
     it "rejects an invalid sort preference" do
       put "/u/#{user.username}.json", params: { chat_channel_list_sort: "invalid" }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(user.user_option.reload.chat_channel_list_sort).to eq("alphabetical")
     end
 

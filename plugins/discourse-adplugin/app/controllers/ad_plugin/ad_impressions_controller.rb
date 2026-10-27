@@ -44,7 +44,7 @@ module AdPlugin
                  success: false,
                  error: I18n.t("errors.already_clicked"),
                },
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
     end
 

@@ -169,7 +169,7 @@ RSpec.describe "AI bot conversation creation" do
            }
     end.not_to change { Topic.private_messages_for_user(current_user).count }
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(response.parsed_body["errors"]).to include(
       I18n.t("discourse_ai.ai_bot.errors.no_user_for_agent"),
     )
@@ -193,7 +193,7 @@ RSpec.describe "AI bot conversation creation" do
            }
     end.not_to change { Topic.private_messages_for_user(current_user).count }
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "uses AI bot access settings for bot conversations" do
@@ -209,6 +209,6 @@ RSpec.describe "AI bot conversation creation" do
            }
     end.not_to change { Topic.private_messages_for_user(current_user).count }
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 end

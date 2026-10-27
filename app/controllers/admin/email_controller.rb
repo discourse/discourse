@@ -19,7 +19,7 @@ class Admin::EmailController < Admin::AdminController
 
       render json: { sent_test_email_message: I18n.t("admin.email.sent_test") }
     rescue => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
+      render json: { errors: [e.message] }, status: :unprocessable_content
     end
   end
 
@@ -64,7 +64,7 @@ class Admin::EmailController < Admin::AdminController
         Email::Sender.new(message, :digest).send
         render json: success_json
       rescue => e
-        render json: { errors: [e.message] }, status: :unprocessable_entity
+        render json: { errors: [e.message] }, status: :unprocessable_content
       end
     else
       render json: { errors: skip_reason }

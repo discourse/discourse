@@ -11,7 +11,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       **service_params,
     ) do |result|
       on_success { render_serialized(result, ::Chat::MessagesSerializer, root: false) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
       on_model_not_found(:channel) { raise Discourse::NotFound }
@@ -24,7 +24,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   def destroy
     Chat::TrashMessage.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_contract do |contract|
@@ -36,7 +36,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   def bulk_destroy
     Chat::TrashMessages.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:messages) { raise Discourse::NotFound }
       on_failed_policy(:can_delete_all_chat_messages) { raise Discourse::InvalidAccess }
       on_failed_contract do |contract|
@@ -48,7 +48,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   def restore
     Chat::RestoreMessage.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_contract do |contract|
@@ -60,7 +60,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   def update
     Chat::UpdateMessage.call(service_params) do
       on_success { |message:| render json: success_json.merge(message_id: message.id) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_model_not_found(:membership) { raise Discourse::NotFound }
       on_failed_policy(:can_edit_message) { raise Discourse::InvalidAccess }
@@ -83,7 +83,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       on_success do |message_instance:|
         render json: success_json.merge(message_id: message_instance.id)
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_post_in_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }

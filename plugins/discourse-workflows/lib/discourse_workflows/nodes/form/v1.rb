@@ -181,7 +181,7 @@ module DiscourseWorkflows
           unless form_validation.valid?
             return(
               DiscourseWorkflows::WebhookResponse.respond(
-                status: :unprocessable_entity,
+                status: :unprocessable_content,
                 body: {
                   errors: form_validation.errors.map(&:to_h),
                 },

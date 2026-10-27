@@ -493,13 +493,13 @@ class Admin::UsersController < Admin::StaffController
     render_serialized(user, AdminDetailedUserSerializer, root: false)
   rescue DiscourseConnect::ParseError
     render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")),
-           status: :unprocessable_entity
+           status: :unprocessable_content
   rescue DiscourseConnect::BlankExternalId
     render json: failed_json.merge(message: I18n.t("discourse_connect.blank_id_error")),
-           status: :unprocessable_entity
+           status: :unprocessable_content
   rescue DiscourseConnect::BannedExternalId
     render json: failed_json.merge(message: I18n.t("discourse_connect.banned_id_error")),
-           status: :unprocessable_entity
+           status: :unprocessable_content
   rescue ActiveRecord::RecordInvalid => e
     render json: failed_json.merge(message: e.message), status: :forbidden
   end

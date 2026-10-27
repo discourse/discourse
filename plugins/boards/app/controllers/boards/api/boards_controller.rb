@@ -140,7 +140,7 @@ module Boards
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 
@@ -166,7 +166,7 @@ module Boards
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 
@@ -189,7 +189,7 @@ module Boards
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 
@@ -263,13 +263,13 @@ module Boards
           end
           on_exceptions(ActiveRecord::RecordInvalid) do |exception|
             render json: failed_json.merge(errors: exception.record.errors.full_messages),
-                   status: :unprocessable_entity
+                   status: :unprocessable_content
           end
           on_exceptions(ActiveRecord::RecordNotUnique) do
             render json: failed_json.merge(errors: [I18n.t("boards.errors.slug_unavailable")]),
-                   status: :unprocessable_entity
+                   status: :unprocessable_content
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 
@@ -301,13 +301,13 @@ module Boards
           end
           on_exceptions(ActiveRecord::RecordInvalid) do |exception|
             render json: failed_json.merge(errors: exception.record.errors.full_messages),
-                   status: :unprocessable_entity
+                   status: :unprocessable_content
           end
           on_exceptions(ActiveRecord::RecordNotUnique) do
             render json: failed_json.merge(errors: [I18n.t("boards.errors.slug_unavailable")]),
-                   status: :unprocessable_entity
+                   status: :unprocessable_content
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 
@@ -320,7 +320,7 @@ module Boards
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 

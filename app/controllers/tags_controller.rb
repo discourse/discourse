@@ -339,7 +339,7 @@ class TagsController < ::ApplicationController
       end
       render json: success_json
     rescue Discourse::InvalidParameters => e
-      render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
+      render json: failed_json.merge(errors: [e.message]), status: :unprocessable_content
     end
   end
 
@@ -348,7 +348,7 @@ class TagsController < ::ApplicationController
       on_success { |results:| render json: results }
       on_failed_policy(:can_admin_tags) { raise Discourse::InvalidAccess }
       on_failed_contract do |contract|
-        render_json_error(contract.errors.full_messages.first, status: :unprocessable_entity)
+        render_json_error(contract.errors.full_messages.first, status: :unprocessable_content)
       end
     end
   end
@@ -412,7 +412,7 @@ class TagsController < ::ApplicationController
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 

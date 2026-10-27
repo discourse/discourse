@@ -24,7 +24,7 @@ module DiscourseWorkflows
           on_success { |form_data:| render json: form_data }
           on_failed_policy(:authenticated_if_required) { raise Discourse::NotLoggedIn }
           on_failed_policy(:action_form) { raise Discourse::NotFound }
-          on_failure { render(json: failed_json, status: :unprocessable_entity) }
+          on_failure { render(json: failed_json, status: :unprocessable_content) }
           on_model_not_found(:published_trigger) { raise Discourse::NotFound }
           on_model_not_found(:form_node) { raise Discourse::NotFound }
         end
@@ -45,18 +45,21 @@ module DiscourseWorkflows
         on_failed_policy(:valid_initial_submission_token) do
           render_form_response(
             failed_json.merge(errors: [I18n.t("discourse_workflows.errors.invalid_form_token")]),
-            :unprocessable_entity,
+            :unprocessable_content,
           )
         end
         on_failed_step(:ensure_form_valid) do |form_validation:|
-          render json: { errors: form_validation.errors.map(&:to_h) }, status: :unprocessable_entity
+          render json: {
+                   errors: form_validation.errors.map(&:to_h),
+                 },
+                 status: :unprocessable_content
         end
         on_failure do
           render_form_response(
             failed_json.merge(
               errors: [I18n.t("discourse_workflows.errors.invalid_form_submission")],
             ),
-            :unprocessable_entity,
+            :unprocessable_content,
           )
         end
         on_model_not_found(:published_trigger) { raise Discourse::NotFound }
@@ -72,7 +75,7 @@ module DiscourseWorkflows
       DiscourseWorkflows::FormTestSession::Show.call(service_params) do
         on_success { |form_data:| render json: form_data }
         on_failed_policy(:owns_form_test_session) { raise Discourse::InvalidAccess }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_model_not_found(:form_test_session) { raise Discourse::NotFound }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
         on_model_not_found(:form_node) { raise Discourse::NotFound }
@@ -89,14 +92,17 @@ module DiscourseWorkflows
         end
         on_failed_policy(:owns_form_test_session) { raise Discourse::InvalidAccess }
         on_failed_step(:ensure_form_valid) do |form_validation:|
-          render json: { errors: form_validation.errors.map(&:to_h) }, status: :unprocessable_entity
+          render json: {
+                   errors: form_validation.errors.map(&:to_h),
+                 },
+                 status: :unprocessable_content
         end
         on_failure do
           render_form_response(
             failed_json.merge(
               errors: [I18n.t("discourse_workflows.errors.invalid_form_submission")],
             ),
-            :unprocessable_entity,
+            :unprocessable_content,
           )
         end
         on_model_not_found(:form_test_session) { raise Discourse::NotFound }

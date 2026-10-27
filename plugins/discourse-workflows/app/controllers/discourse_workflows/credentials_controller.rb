@@ -13,7 +13,7 @@ module DiscourseWorkflows
                    meta: { total_rows: total_rows, load_more_url: load_more_url }.compact,
                  }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
@@ -28,7 +28,7 @@ module DiscourseWorkflows
             status: :created,
           )
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:valid_credential_type) do
           render(json: failed_json.merge(errors: ["Invalid credential type"]), status: :bad_request)
@@ -42,7 +42,7 @@ module DiscourseWorkflows
         on_model_errors(:credential) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
       end
@@ -59,7 +59,7 @@ module DiscourseWorkflows
             root: "credential",
           )
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
           render(
@@ -71,7 +71,7 @@ module DiscourseWorkflows
         on_model_errors(:credential) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
       end
@@ -82,7 +82,7 @@ module DiscourseWorkflows
         service_params.deep_merge(params: { credential_id: params[:id] }),
       ) do |result|
         on_success { head :no_content }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:credential_not_in_use) do
           render(
@@ -91,7 +91,7 @@ module DiscourseWorkflows
                 type: "credential_in_use",
                 referencing_workflows: result[:referencing_workflows],
               ),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
         on_model_not_found(:credential) { raise Discourse::NotFound }

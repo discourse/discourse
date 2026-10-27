@@ -205,7 +205,7 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       it "returns 422 with referencing workflow details" do
         delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json"
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         body = response.parsed_body
         expect(body["type"]).to eq("data_table_in_use")
         expect(body["referencing_workflows"]).to contain_exactly(

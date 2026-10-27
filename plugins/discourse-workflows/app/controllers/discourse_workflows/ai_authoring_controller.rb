@@ -20,7 +20,7 @@ module DiscourseWorkflows
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:workflow_exists_when_requested) { raise Discourse::NotFound }
         on_model_not_found(:session) { raise Discourse::NotFound }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 
@@ -42,7 +42,7 @@ module DiscourseWorkflows
               failed_json.merge(
                 errors: [I18n.t("discourse_workflows.ai.error_proposal_not_ready")],
               ),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
         on_failed_policy(:proposal_current) do
@@ -54,7 +54,7 @@ module DiscourseWorkflows
         end
         on_failed_policy(:patch_valid) do |_policy, patch_result:|
           render json: failed_json.merge(errors: patch_result[:errors]),
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         end
         on_model_not_found(:session) { raise Discourse::NotFound }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
@@ -63,7 +63,7 @@ module DiscourseWorkflows
                   I18n.t("discourse_workflows.ai.error_no_operations"),
                 )
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
       end
     end
 

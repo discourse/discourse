@@ -28,13 +28,13 @@ module Boards
                      failed_json.merge(
                        errors: [I18n.t("boards.errors.topic_does_not_match_constraints")],
                      ),
-                   status: :unprocessable_entity
+                   status: :unprocessable_content
           end
           on_failed_contract do |contract|
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
     end

@@ -34,10 +34,10 @@ class DsaStatementsController < ApplicationController
         render_json_error(I18n.t("dsa_statements.errors.statements_changed"), status: :conflict)
       end
       on_failed_contract do |contract|
-        render_json_error(contract.errors.full_messages, status: :unprocessable_entity)
+        render_json_error(contract.errors.full_messages, status: :unprocessable_content)
       end
       on_failure do
-        render_json_error(I18n.t("dsa_statements.errors.failed"), status: :unprocessable_entity)
+        render_json_error(I18n.t("dsa_statements.errors.failed"), status: :unprocessable_content)
       end
     end
   end

@@ -25,7 +25,7 @@ module Boards
           on_model_not_found(:column) do |model_step|
             if model_step.exception
               render json: failed_json.merge(errors: [model_step.exception.message]),
-                     status: :unprocessable_entity
+                     status: :unprocessable_content
             else
               raise Discourse::NotFound.new(I18n.t("boards.errors.column_not_found"))
             end
@@ -35,7 +35,7 @@ module Boards
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 
@@ -64,7 +64,7 @@ module Boards
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
 
@@ -88,7 +88,7 @@ module Boards
             render json: failed_json.merge(errors: contract.errors.full_messages),
                    status: :bad_request
           end
-          on_failure { render json: failed_json, status: :unprocessable_entity }
+          on_failure { render json: failed_json, status: :unprocessable_content }
         end
       end
     end

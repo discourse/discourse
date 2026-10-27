@@ -17,7 +17,7 @@ module DiscourseWorkflows
                  },
                  status: :created
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_not_found(:trigger_node) { raise Discourse::NotFound }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
@@ -39,7 +39,7 @@ module DiscourseWorkflows
                    }.compact,
                  }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
@@ -49,7 +49,7 @@ module DiscourseWorkflows
         service_params.deep_merge(params: { execution_ids: params[:ids] }),
       ) do |result|
         on_success { head :no_content }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
@@ -78,7 +78,7 @@ module DiscourseWorkflows
                    },
                  }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_model_not_found(:execution) { raise Discourse::NotFound }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end

@@ -119,7 +119,7 @@ class SessionController < ApplicationController
     render plain: I18n.t("discourse_connect.missing_secret"), status: :bad_request
   rescue DiscourseConnectProvider::ParseError
     # Do NOT pass the error text to the client, it would give them the correct signature
-    render plain: I18n.t("discourse_connect.login_error"), status: :unprocessable_entity
+    render plain: I18n.t("discourse_connect.login_error"), status: :unprocessable_content
   rescue DiscourseConnectProvider::BlankReturnUrl
     render plain: "return_sso_url is blank, it must be provided", status: :bad_request
   rescue DiscourseConnectProvider::InvalidParameterValueError => e

@@ -185,7 +185,7 @@ RSpec.describe DiscourseWorkflows::AiAuthoringController do
              session_id: session.id,
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(workflow.reload.nodes).to eq([])
     end
 

@@ -466,7 +466,7 @@ RSpec.describe Chat::Api::ChannelsController do
 
       it "returns an error" do
         post "/chat/api/channels", params: params
-        expect(response).to have_http_status :unprocessable_entity
+        expect(response).to have_http_status :unprocessable_content
       end
     end
 

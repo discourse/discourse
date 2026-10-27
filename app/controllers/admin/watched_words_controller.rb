@@ -65,12 +65,12 @@ class Admin::WatchedWordsController < Admin::StaffController
       begin
         CSV.new(content).lazy.select { |row| row[0].present? }.first(max_words + 1)
       rescue CSV::MalformedCSVError => e
-        return render_json_error(e.message, status: :unprocessable_entity)
+        return render_json_error(e.message, status: :unprocessable_content)
       end
 
     if rows.size > max_words
       error = I18n.t("watched_words.upload_too_many_csv_entries", count: max_words)
-      return render_json_error(error, status: :unprocessable_entity)
+      return render_json_error(error, status: :unprocessable_content)
     end
 
     Scheduler::Defer.later("Upload watched words") do

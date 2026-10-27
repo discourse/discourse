@@ -223,7 +223,7 @@ RSpec.describe DiscourseWorkflows::FormsController do
     it "returns 422 when the initial submission token is missing" do
       post form_path, params: { form_data: { name: "Test User" } }, headers: origin_headers
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body).to include(
         "errors" => [I18n.t("discourse_workflows.errors.invalid_form_token")],
       )
@@ -238,7 +238,7 @@ RSpec.describe DiscourseWorkflows::FormsController do
              },
            },
            headers: origin_headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"]).to eq(
         [{ "field_label" => "Name", "code" => "missing" }],
       )
