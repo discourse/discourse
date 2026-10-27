@@ -6,6 +6,7 @@ RSpec.describe TopicsController do
   before do
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    SiteSetting.enable_event_schema_for_topics = true
   end
 
   describe "#show" do
