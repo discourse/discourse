@@ -61,13 +61,16 @@ module Plugin
     # Logical path of each plugin's bundle analysis report, for the dev tool.
     def self.bundle_analysis_assets
       get_set_cache("bundle_analysis_assets") do
-        Discourse.plugins.filter_map do |plugin|
-          file =
-            Dir.glob(
-              "#{Rails.root.join("app/assets/generated/#{plugin.directory_name}/js/plugins", "*bundle-analysis*.json")}",
-            ).first
-          logical_path(File.basename(file)) if file
-        end
+        Discourse
+          .plugins
+          .filter_map do |plugin|
+            file =
+              Dir.glob(
+                "#{Rails.root.join("app/assets/generated/#{plugin.directory_name}/js/plugins", "*bundle-analysis*.json")}",
+              ).first
+            [plugin.directory_name, logical_path(File.basename(file))] if file
+          end
+          .to_h
       end
     end
 
