@@ -141,6 +141,17 @@ RSpec.describe Jobs::PublishTopicToCategory do
       end
     end
 
+    it "triggers topic_converted_to_public_topic as the timer's user" do
+      topic.convert_to_private_message(Discourse.system_user)
+
+      event =
+        DiscourseEvent.track(:topic_converted_to_public_topic) do
+          described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+        end
+
+      expect(event[:params]).to eq([topic, { acting_user: admin }])
+    end
+
     it "does nothing if the user can't see the PM" do
       non_participant_TL4_user = Fabricate(:trust_level_4)
       topic.convert_to_private_message(Discourse.system_user)

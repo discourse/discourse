@@ -1170,6 +1170,22 @@ RSpec.describe TopicsBulkAction do
         I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
       )
     end
+
+    it "triggers topic_converted_to_public_topic for each converted topic only" do
+      regular = Fabricate(:post).topic
+
+      events =
+        DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+          TopicsBulkAction.new(
+            admin,
+            [pm.id, regular.id],
+            type: "convert_to_public_topic",
+            category_id: category.id,
+          ).perform!
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[pm, { acting_user: admin }]])
+    end
   end
 
   describe "convert_to_private_message" do
@@ -1190,6 +1206,22 @@ RSpec.describe TopicsBulkAction do
 
       expect(changed).to eq([public_topic.id])
       expect(public_topic.reload.archetype).to eq(Archetype.private_message)
+    end
+
+    it "triggers topic_converted_to_private_message for each converted topic only" do
+      pm = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: pm, user: pm.user)
+
+      events =
+        DiscourseEvent.track_events(:topic_converted_to_private_message) do
+          TopicsBulkAction.new(
+            admin,
+            [public_topic.id, pm.id],
+            type: "convert_to_private_message",
+          ).perform!
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[public_topic, { acting_user: admin }]])
     end
 
     it "surfaces errors and does not mark topic as changed when cap is exceeded" do
