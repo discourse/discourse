@@ -2249,6 +2249,36 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "linked upcoming change group setting registration" do
+    it "normalizes the group setting name when loading YAML metadata" do
+      Tempfile.create(%w[linked-upcoming-change .yml]) do |file|
+        file.write(<<~YAML)
+          test:
+            linked_feature:
+              default: false
+              client: true
+              hidden: true
+              upcoming_change:
+                status: experimental
+                impact: feature,all_members
+                group_setting: linked_feature_groups
+            linked_feature_groups:
+              default: "3|12"
+              type: group_list
+        YAML
+        file.flush
+
+        settings.load_settings(file.path)
+        settings.refresh!
+
+        expect(settings.upcoming_change_metadata[:linked_feature][:group_setting]).to eq(
+          :linked_feature_groups,
+        )
+        expect(settings.linked_feature_groups_map).to contain_exactly(3, 12)
+      end
+    end
+  end
+
   describe "upcoming_change_default_override" do
     before do
       settings.setting(

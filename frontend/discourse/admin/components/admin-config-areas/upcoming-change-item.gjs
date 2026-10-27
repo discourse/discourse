@@ -10,13 +10,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import UpcomingChangeBadges from "discourse/admin/components/admin-config-areas/upcoming-change-badges";
+import UpcomingChangeGroupControl from "discourse/admin/components/admin-config-areas/upcoming-change-group-control";
+import AdminSiteSetting from "discourse/admin/models/site-setting";
 import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import lightbox from "discourse/lib/lightbox";
 import { sanitize } from "discourse/lib/text";
-import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
@@ -26,6 +27,7 @@ import { i18n } from "discourse-i18n";
 export default class UpcomingChangeItem extends Component {
   @service site;
   @service toasts;
+  @service siteSettingChangeTracker;
 
   @tracked
   bufferedGroups = this.args.change.groups?.split(",").filter(Boolean) || [];
@@ -33,14 +35,12 @@ export default class UpcomingChangeItem extends Component {
   @tracked savingEnabledFor = false;
   @tracked showGroups = false;
   @tracked enableAfterSelection = false;
-  @tracked bufferedGroupsDirty = false;
-
+  @tracked groupsInitialized = false;
   groupSelectionId = `${guidFor(this)}-groups`;
 
   applyLightbox = modifier((element) => lightbox(element));
 
-  #groupsInitialized = false;
-  #lastSavedSelection = [];
+  @tracked _linkedGroupSetting = this.args.change.group_setting;
 
   get allowEnabledFor() {
     return this.args.change.upcoming_change.allow_enabled_for;
@@ -48,7 +48,9 @@ export default class UpcomingChangeItem extends Component {
 
   get canRefineGroups() {
     return (
-      !this.allowEnabledFor || this.allowEnabledFor.includes("specific_groups")
+      this._linkedGroupSetting ||
+      !this.allowEnabledFor ||
+      this.allowEnabledFor.includes("specific_groups")
     );
   }
 
@@ -57,7 +59,7 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get requiresStaff() {
-    return this.allowEnabledFor?.includes("staff");
+    return !this._linkedGroupSetting && this.allowEnabledFor?.includes("staff");
   }
 
   get staffGroupName() {
@@ -65,7 +67,38 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get lockedGroups() {
+    if (this._linkedGroupSetting) {
+      return (this._linkedGroupSetting.mandatory_values || "")
+        .split("|")
+        .filter(Boolean)
+        .map((id) => this.site.groupsById[Number(id)]?.name)
+        .filter(Boolean);
+    }
     return this.requiresStaff ? [this.staffGroupName] : [];
+  }
+
+  get disallowedGroups() {
+    return (this._linkedGroupSetting?.disallowed_groups || "")
+      .split("|")
+      .filter(Boolean)
+      .map(Number);
+  }
+
+  get emptySelectionMessage() {
+    if (this._linkedGroupSetting) {
+      return i18n("admin.upcoming_changes.toggle_instead_of_empty_groups");
+    }
+  }
+
+  get preventEmptyGroups() {
+    return Boolean(this._linkedGroupSetting || this.enableAfterSelection);
+  }
+
+  get includeEveryone() {
+    return Boolean(
+      this._linkedGroupSetting &&
+      !this.disallowedGroups.includes(AUTO_GROUPS.everyone.id)
+    );
   }
 
   get toggleLabel() {
@@ -81,14 +114,6 @@ export default class UpcomingChangeItem extends Component {
     if (this.enableAfterSelection || !this.bufferedGroups.length) {
       return i18n("admin.upcoming_changes.add_groups_to_enable");
     }
-  }
-
-  get saveGroupsDisabled() {
-    return (
-      this.savingEnabledFor ||
-      !this.bufferedGroupsDirty ||
-      (this.enableAfterSelection && !this.bufferedGroups.length)
-    );
   }
 
   get showPermanentSoonNotice() {
@@ -159,10 +184,12 @@ export default class UpcomingChangeItem extends Component {
       return;
     }
 
+    if (this._linkedGroupSetting) {
+      await this.#save(true);
+      return;
+    }
     this.#initializeGroups();
-    const groups = this.bufferedGroupsDirty
-      ? this.#lastSavedSelection
-      : this.bufferedGroups;
+    const groups = this.bufferedGroups;
     if (this.allowEnabledFor?.includes("specific_groups") && !groups.length) {
       this.showGroups = true;
       this.enableAfterSelection = true;
@@ -172,34 +199,71 @@ export default class UpcomingChangeItem extends Component {
   }
 
   @action
-  groupsChanged(groups) {
-    if (this.savingEnabledFor) {
-      return;
-    }
-    this.bufferedGroups = [...new Set([...this.lockedGroups, ...groups])];
-    this.bufferedGroupsDirty =
-      this.bufferedGroups.length !== this.#lastSavedSelection.length ||
-      this.bufferedGroups.some(
-        (group) => !this.#lastSavedSelection.includes(group)
-      );
-  }
-
-  @action
-  async saveGroups() {
-    if (this.saveGroupsDisabled) {
-      return;
+  async saveGroups(groups) {
+    if (this._linkedGroupSetting) {
+      return this.#saveLinkedGroups(groups);
     }
     const enabled =
-      this.bufferedGroups.length > 0 &&
-      (this.isEnabled || this.enableAfterSelection);
-    if (await this.#save(enabled, this.bufferedGroups)) {
-      this.#lastSavedSelection = this.bufferedGroups;
-      this.bufferedGroupsDirty = false;
+      groups.length > 0 && (this.isEnabled || this.enableAfterSelection);
+    if (await this.#save(enabled, groups)) {
+      this.bufferedGroups = groups;
+      return true;
+    }
+    return false;
+  }
+
+  async #saveLinkedGroups(groups) {
+    if (!groups.length || this.savingEnabledFor) {
+      return false;
+    }
+    this.savingEnabledFor = true;
+    try {
+      const setting = AdminSiteSetting.create(this._linkedGroupSetting);
+      if (
+        setting.requiresConfirmation &&
+        !(await this.siteSettingChangeTracker.confirmChanges(setting))
+      ) {
+        return false;
+      }
+      const result = await ajax("/admin/config/upcoming-changes/groups", {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          setting: this.args.change.setting,
+          group_names: groups,
+        }),
+      });
+      this._linkedGroupSetting = result.group_setting;
+      this.bufferedGroups = result.groups?.split(",").filter(Boolean) || [];
+      this.args.change.groups = result.groups;
+      this.args.change.group_setting = result.group_setting;
+      this.bufferedEnabledFor = this.#enabledFor(
+        this.isEnabled,
+        this.bufferedGroups
+      );
+      this.args.enabledForChanged?.(
+        this.args.change.setting,
+        this.bufferedEnabledFor
+      );
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("admin.upcoming_changes.groups_updated") },
+      });
+      return true;
+    } catch (error) {
+      popupAjaxError(error);
+      return false;
+    } finally {
+      this.savingEnabledFor = false;
     }
   }
 
   #initializeGroups() {
-    if (this.#groupsInitialized) {
+    if (this.groupsInitialized) {
+      return;
+    }
+    if (this._linkedGroupSetting) {
+      this.groupsInitialized = true;
       return;
     }
     if (this.allowEnabledFor?.includes("everyone")) {
@@ -214,15 +278,25 @@ export default class UpcomingChangeItem extends Component {
         AUTO_GROUPS.anonymous_users,
       ].map((group) => this.site.groupsById[group.id]?.name || group.name);
     }
-    this.#lastSavedSelection = this.bufferedGroups;
-    this.#groupsInitialized = true;
+    this.groupsInitialized = true;
   }
 
   #enabledFor(enabled, groups) {
     if (!enabled) {
       return "no_one";
     }
-    if (!groups.length) {
+    if (this._linkedGroupSetting) {
+      const everyone = [
+        AUTO_GROUPS.logged_in_users,
+        AUTO_GROUPS.anonymous_users,
+      ].map((group) => this.site.groupsById[group.id]?.name || group.name);
+      if (everyone.every((group) => groups.includes(group))) {
+        return "everyone";
+      }
+      if (!groups.length) {
+        return "groups";
+      }
+    } else if (!groups.length) {
       return "everyone";
     }
     if (groups.length === 1 && groups[0] === this.staffGroupName) {
@@ -284,7 +358,9 @@ export default class UpcomingChangeItem extends Component {
 
   #showSuccessToast(enabled, groups, previousEnabledFor) {
     let message;
-    if (enabled === (previousEnabledFor !== "no_one")) {
+    if (this._linkedGroupSetting && enabled) {
+      message = i18n("admin.upcoming_changes.change_enabled");
+    } else if (enabled === (previousEnabledFor !== "no_one")) {
       message = i18n("admin.upcoming_changes.groups_updated");
     } else if (!enabled) {
       message = i18n("admin.upcoming_changes.change_disabled");
@@ -410,39 +486,20 @@ export default class UpcomingChangeItem extends Component {
           {{/if}}
         </div>
 
-        {{#if this.showGroups}}
-          <div
-            class="upcoming-change__group-selection-wrapper"
-            id={{this.groupSelectionId}}
-          >
-            <div class="upcoming-change__group-controls">
-              <EmailGroupUserChooser
-                @onChange={{this.groupsChanged}}
-                @options={{hash
-                  disabled=this.savingEnabledFor
-                  groupsOnly=true
-                  useHeaderFilter=true
-                  fullWidthWrap=true
-                  lockedValues=this.lockedGroups
-                  none="admin.upcoming_changes.select_groups"
-                  headerAriaLabel=(i18n "admin.upcoming_changes.select_groups")
-                }}
-                @value={{this.bufferedGroups}}
-              />
-              <DButton
-                class="btn-primary upcoming-change__save-groups"
-                @disabled={{this.saveGroupsDisabled}}
-                @icon="check"
-                @title="admin.upcoming_changes.save_groups"
-                {{on "click" this.saveGroups}}
-              />
-            </div>
-            {{#if this.groupsDescription}}
-              <p
-                class="upcoming-change__groups-description"
-              >{{this.groupsDescription}}</p>
-            {{/if}}
-          </div>
+        {{#if this.groupsInitialized}}
+          <UpcomingChangeGroupControl
+            @description={{this.groupsDescription}}
+            @disabled={{this.savingEnabledFor}}
+            @disallowedGroups={{this.disallowedGroups}}
+            @emptySelectionMessage={{this.emptySelectionMessage}}
+            @expanded={{this.showGroups}}
+            @groups={{this.bufferedGroups}}
+            @id={{this.groupSelectionId}}
+            @includeEveryone={{this.includeEveryone}}
+            @lockedGroups={{this.lockedGroups}}
+            @onSave={{this.saveGroups}}
+            @preventEmpty={{this.preventEmptyGroups}}
+          />
         {{/if}}
 
         {{#if this.showDependentSettingsLink}}

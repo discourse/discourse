@@ -177,6 +177,24 @@ RSpec.describe SiteSetting::UpsertGroups do
       end
     end
 
+    context "when the upcoming change uses a linked group setting" do
+      let(:setting) { "enable_upload_debug_mode" }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_upload_debug_mode: {
+            status: :experimental,
+            group_setting: :about_page_extra_groups,
+          },
+        )
+      end
+
+      it "rejects writing a second audience to the opt-in groups table" do
+        expect(result).to fail_a_policy(:allowed_enabled_for_target)
+        expect(SiteSettingGroup.where(name: setting)).to be_empty
+      end
+    end
+
     context "when an admin user upserts groups for a setting" do
       it { is_expected.to run_successfully }
 

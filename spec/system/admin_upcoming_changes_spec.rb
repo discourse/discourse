@@ -230,6 +230,73 @@ describe "Admin upcoming changes" do
     expect(item).to have_groups("logged_in_users", "trust_level_4")
   end
 
+  context "when an upcoming change uses a linked group setting" do
+    before do
+      mock_upcoming_change_metadata(
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          impact_type: "other",
+          impact_role: "developers",
+          status: :experimental,
+          group_setting: :hidden_post_visible_groups,
+        },
+      )
+    end
+
+    it "lets an admin save the audience separately and retains its mandatory groups" do
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item).to be_disabled
+      item.toggle_groups
+      expect(item).to have_groups("admins", "moderators", "trust_level_4")
+      expect(item).to have_locked_group("admins")
+      expect(item).to have_locked_group("moderators")
+      item.remove_group("trust_level_4")
+      item.add_group("trust_level_2")
+      expect(item).to be_disabled
+      item.save_groups
+      expect(upcoming_changes_page).to have_groups_updated_success_toast
+      expect(item).to be_disabled
+
+      upcoming_changes_page.visit
+      item.toggle_groups
+      expect(item).to have_groups("admins", "moderators", "trust_level_2")
+      item.toggle
+      expect(item).to be_enabled
+
+      upcoming_changes_page.visit
+      expect(item).to be_enabled
+      item.toggle_groups
+      expect(item).to have_groups("admins", "moderators", "trust_level_2")
+    end
+
+    it "requires a nonempty linked audience before saving without changing the flag" do
+      mock_upcoming_change_metadata(
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          impact_type: "other",
+          impact_role: "developers",
+          status: :experimental,
+          group_setting: :about_page_extra_groups,
+        },
+      )
+      SiteSetting.about_page_extra_groups = "12"
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.toggle_groups
+      expect(item).to have_groups("trust_level_2")
+      item.remove_group("trust_level_2")
+      expect(item).to have_disabled_group_save
+      expect(item).to have_empty_groups_description
+      expect(item).to be_disabled
+
+      upcoming_changes_page.visit
+      item.toggle_groups
+      expect(item).to have_groups("trust_level_2")
+      expect(item).to be_disabled
+    end
+  end
+
   describe "allow_enabled_for restrictions" do
     def mock_with_allow(allow)
       mock_upcoming_change_metadata(

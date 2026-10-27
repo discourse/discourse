@@ -62,6 +62,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
         impact
         learn_more_url
         allow_enabled_for
+        group_setting
         body_class
         permanent_warning
         hide_settings
@@ -121,6 +122,34 @@ RSpec.describe "upcoming change metadata integrity checks" do
               "#{label} upcoming_change.learn_more_url must match https://meta.discourse.org/t/-/NNNN, do not include the topic slug"
             end
           end
+        end
+
+        if metadata.key?(:group_setting)
+          group_setting = metadata[:group_setting]
+          expect(group_setting).to be_present,
+          "#{label} `upcoming_change.group_setting` must name a group-list setting"
+          expect(metadata).not_to have_key(:allow_enabled_for),
+          "#{label} may not combine `group_setting` and `allow_enabled_for`"
+
+          permitted_files = [Rails.root.join("config/site_settings.yml").to_s]
+          if owning_plugin_dir
+            permitted_files << Rails
+              .root
+              .join("plugins", owning_plugin_dir, "config/settings.yml")
+              .to_s
+          end
+          linked_setting = nil
+          permitted_files.each do |file|
+            SiteSettings::YamlLoader
+              .new(file)
+              .load do |category, setting_name, default, opts|
+                linked_setting = opts if setting_name.to_s == group_setting.to_s
+              end
+          end
+          expect(linked_setting).to be_present,
+          "#{label} must reference a core setting or a setting from its own plugin"
+          expect(linked_setting&.dig(:type)).to eq("group_list"),
+          "#{label} `upcoming_change.group_setting` must reference a group-list setting"
         end
 
         if allow_enabled_for.present?

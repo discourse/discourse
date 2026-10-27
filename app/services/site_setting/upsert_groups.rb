@@ -48,6 +48,7 @@ class SiteSetting::UpsertGroups
   end
 
   def allowed_enabled_for_target(params:)
+    return false if UpcomingChanges.group_setting_name(params.setting)
     return true unless UpcomingChanges.exists?(params.setting)
     if UpcomingChanges.allow_enabled_for(params.setting)&.sort == %i[specific_groups staff] &&
          params.group_names.empty?

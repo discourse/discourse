@@ -65,6 +65,8 @@ class UpcomingChanges::Toggle
   end
 
   def allowed_enabled_for_target(params:)
+    return params.group_names.nil? if UpcomingChanges.group_setting_name(params.setting_name)
+
     names = params.group_names
     if names.nil?
       return true if !params.enabled
@@ -116,6 +118,7 @@ class UpcomingChanges::Toggle
   end
 
   def clear_groups_if_groups_not_allowed(params:)
+    return if UpcomingChanges.group_setting_name(params.setting_name)
     return if UpcomingChanges.groups_target_allowed?(params.setting_name)
 
     SiteSettingGroup.find_by(name: params.setting_name)&.destroy!

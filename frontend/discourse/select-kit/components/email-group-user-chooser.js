@@ -13,6 +13,8 @@ import EmailGroupUserChooserRow from "./email-group-user-chooser-row.gjs";
 @selectKitOptions({
   filterComponent: EmailGroupUserChooserFilter,
   groupsOnly: false,
+  excludedGroupIds: null,
+  includeEveryone: false,
   lockedValues: null,
   fullWidthWrap: false,
   autoWrap: false,
@@ -49,9 +51,13 @@ export default class EmailGroupUserChooser extends UserChooserComponent {
           term: filter,
           ignore_automatic: false,
           include_pseudogroups: true,
+          include_everyone: this.selectKit.options.includeEveryone,
         }).then((groups) =>
           groups.filter(
-            (group) => group.id !== 0 && !this.value?.includes(group.name)
+            (group) =>
+              (group.id !== 0 || this.selectKit.options.includeEveryone) &&
+              !this.selectKit.options.excludedGroupIds?.includes(group.id) &&
+              !this.value?.includes(group.name)
           )
         )
       : super.search(...arguments);

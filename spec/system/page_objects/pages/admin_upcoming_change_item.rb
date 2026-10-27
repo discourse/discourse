@@ -127,6 +127,17 @@ module PageObjects
         find_item(@setting_name).find(".upcoming-change__save-groups").click
       end
 
+      def has_disabled_group_save?
+        find_item(@setting_name).has_css?(".upcoming-change__save-groups[disabled]")
+      end
+
+      def has_empty_groups_description?
+        find_item(@setting_name).has_css?(
+          ".upcoming-change__groups-description",
+          text: I18n.t("admin_js.admin.upcoming_changes.toggle_instead_of_empty_groups"),
+        )
+      end
+
       def has_staff_description?
         find_item(@setting_name).has_css?(
           ".upcoming-change__groups-description",

@@ -305,9 +305,28 @@ module UpcomingChanges
     allow.include?(:staff) || allow.include?(:specific_groups)
   end
 
+  def self.group_setting_name(change_setting_name)
+    change_metadata(change_setting_name)[:group_setting]&.to_sym
+  end
+
+  def self.group_setting_data(change_setting_name)
+    name = group_setting_name(change_setting_name)
+    return unless name && settings_provider.has_setting?(name)
+    return unless settings_provider.type_supervisor.get_type(name) == :group_list
+
+    {
+      setting: name,
+      value: settings_provider.public_send(name).to_s,
+      mandatory_values: settings_provider.mandatory_values[name],
+      disallowed_groups: settings_provider.disallowed_groups[name],
+      requires_confirmation: settings_provider.requires_confirmation_settings[name],
+    }
+  end
+
   def self.normalize_group_names(change_setting_name, group_names)
     names = Array.wrap(group_names).reject(&:blank?).uniq
-    unless exists?(change_setting_name) && target_allowed?(change_setting_name, :everyone)
+    unless exists?(change_setting_name) && !group_setting_name(change_setting_name) &&
+             target_allowed?(change_setting_name, :everyone)
       return names
     end
 
@@ -336,11 +355,14 @@ module UpcomingChanges
   end
 
   def self.has_groups?(change_setting_name)
-    group_ids_for(change_setting_name).present?
+    group_setting_name(change_setting_name).present? || group_ids_for(change_setting_name).present?
   end
 
   def self.group_ids_for(change_setting_name)
     change_setting_name = change_setting_name.to_sym
+    if (group_setting = group_setting_name(change_setting_name))
+      return settings_provider.public_send("#{group_setting}_map")
+    end
     return [] if change_status(change_setting_name) == :permanent
     settings_provider.site_setting_group_ids[change_setting_name].presence || []
   end
@@ -472,6 +494,17 @@ module UpcomingChanges
     enabled_for =
       if !setting_value
         "no_one"
+      elsif group_setting_name(setting_name)
+        if (
+             Group::AUTO_GROUPS.values_at(:anonymous_users, :logged_in_users) -
+               group_ids_for_setting
+           ).empty?
+          "everyone"
+        elsif group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
       elsif setting_groups.blank?
         # When `allow_enabled_for` excludes `:everyone` and the change is enabled
         # without an admin-configured scope (typically because it was auto-promoted

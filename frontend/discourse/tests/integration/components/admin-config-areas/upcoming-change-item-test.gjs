@@ -314,7 +314,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     await click(".upcoming-change__edit-groups");
     assert.strictEqual(saves, 0);
     assert.strictEqual(change.groups, "");
-    assert.dom(".upcoming-change__save-groups").doesNotExist();
+    assert.dom(".upcoming-change__save-groups").isNotVisible();
     assert
       .dom(".upcoming-change__enabled")
       .hasAttribute("aria-checked", "true");
@@ -564,5 +564,162 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     ]);
     assert.dom('.selected-choice[data-name="staff"]').doesNotExist();
     assert.dom(".upcoming-change__save-groups").isNotDisabled();
+  });
+  test("linked audience edits save only the group setting and never toggle the change", async function (assert) {
+    const toggles = [],
+      groupSaves = [];
+    const descriptor = {
+      setting: "feature_allowed_groups",
+      value: "3",
+      mandatory_values: "",
+      disallowed_groups: "0",
+    };
+    pretender.put("/admin/config/upcoming-changes/toggle", (request) => {
+      toggles.push(JSON.parse(request.requestBody));
+      return response({ success: "OK" });
+    });
+    pretender.put("/admin/config/upcoming-changes/groups", (request) => {
+      groupSaves.push(JSON.parse(request.requestBody));
+      return response({
+        success: "OK",
+        groups: "staff,team",
+        group_setting: { ...descriptor, value: "3|20" },
+      });
+    });
+    pretender.get("/groups/search.json", () =>
+      response([{ id: 20, name: "team" }])
+    );
+    const change = buildChange({
+      groups: "staff",
+      value: false,
+      group_setting: descriptor,
+      upcoming_change: {
+        status: "beta",
+        enabled_for: "no_one",
+        group_setting: "feature_allowed_groups",
+      },
+    });
+    await render(
+      <template>
+        <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
+      </template>
+    );
+    await click(".upcoming-change__edit-groups");
+    const chooser = selectKit(".email-group-user-chooser");
+    await chooser.expand();
+    await chooser.selectRowByValue("team");
+    assert.strictEqual(groupSaves.length, 0);
+    await click(".upcoming-change__save-groups");
+    assert.deepEqual(groupSaves, [
+      { setting: "test_setting", group_names: ["staff", "team"] },
+    ]);
+    assert.strictEqual(toggles.length, 0);
+    assert
+      .dom(".upcoming-change__enabled")
+      .hasAttribute("aria-checked", "false");
+    await click(".upcoming-change__enabled");
+    assert.deepEqual(toggles, [
+      { setting_name: "test_setting", enabled: true },
+    ]);
+    assert.strictEqual(groupSaves.length, 1);
+  });
+
+  test("an empty linked audience cannot be saved and directs admins to the toggle", async function (assert) {
+    let saves = 0;
+    pretender.put("/admin/config/upcoming-changes/groups", () => {
+      saves++;
+      return response({ success: "OK" });
+    });
+    const change = buildChange({
+      groups: "staff",
+      group_setting: { setting: "feature_allowed_groups", value: "3" },
+      upcoming_change: {
+        status: "beta",
+        enabled_for: "staff",
+        group_setting: "feature_allowed_groups",
+      },
+    });
+    await render(
+      <template>
+        <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
+      </template>
+    );
+    await click(".upcoming-change__edit-groups");
+    await click('.selected-choice[data-value="staff"]');
+    assert.dom(".upcoming-change__save-groups").isDisabled();
+    assert
+      .dom(".upcoming-change__groups-description")
+      .hasText(i18n("admin.upcoming_changes.toggle_instead_of_empty_groups"));
+    assert
+      .dom(".upcoming-change__enabled")
+      .hasAttribute("aria-checked", "true");
+    assert.strictEqual(saves, 0);
+    assert.strictEqual(change.groups, "staff");
+  });
+
+  test("linked empty settings are shown as empty without synthetic prefill", async function (assert) {
+    const toggles = [];
+    pretender.put("/admin/config/upcoming-changes/toggle", (request) => {
+      toggles.push(JSON.parse(request.requestBody));
+      return response({ success: "OK" });
+    });
+    const change = buildChange({
+      groups: "",
+      group_setting: { setting: "feature_allowed_groups", value: "" },
+      upcoming_change: {
+        status: "beta",
+        enabled_for: "groups",
+        group_setting: "feature_allowed_groups",
+      },
+    });
+    await render(
+      <template>
+        <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
+      </template>
+    );
+    await click(".upcoming-change__edit-groups");
+    assert.dom(".selected-choice").doesNotExist();
+    assert.dom(".upcoming-change__save-groups").isDisabled();
+    await click(".upcoming-change__enabled");
+    await click(".upcoming-change__enabled");
+    assert.deepEqual(toggles, [
+      { setting_name: "test_setting", enabled: false },
+      { setting_name: "test_setting", enabled: true },
+    ]);
+    assert.strictEqual(change.groups, "");
+  });
+
+  test("linked mandatory and disallowed groups come from the site setting", async function (assert) {
+    pretender.get("/groups/search.json", () =>
+      response([
+        { id: 4, name: "anonymous_users" },
+        { id: 20, name: "team" },
+      ])
+    );
+    const change = buildChange({
+      groups: "staff",
+      group_setting: {
+        setting: "feature_allowed_groups",
+        value: "3",
+        mandatory_values: "3",
+        disallowed_groups: "0|4",
+      },
+      upcoming_change: {
+        status: "beta",
+        enabled_for: "staff",
+        group_setting: "feature_allowed_groups",
+      },
+    });
+    await render(
+      <template>
+        <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
+      </template>
+    );
+    await click(".upcoming-change__edit-groups");
+    assert.dom('.selected-choice[data-value="staff"]').isDisabled();
+    const chooser = selectKit(".email-group-user-chooser");
+    await chooser.expand();
+    assert.dom('.select-kit-row[data-value="anonymous_users"]').doesNotExist();
+    assert.dom('.select-kit-row[data-value="team"]').exists();
   });
 });

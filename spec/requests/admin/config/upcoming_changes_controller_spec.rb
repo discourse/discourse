@@ -186,6 +186,75 @@ RSpec.describe Admin::Config::UpcomingChangesController do
     end
   end
 
+  describe "#update_groups with a linked site setting" do
+    let(:setting) { "enable_upload_debug_mode" }
+
+    before do
+      sign_in(admin)
+      mock_upcoming_change_metadata(
+        enable_upload_debug_mode: {
+          status: :experimental,
+          group_setting: :hidden_post_visible_groups,
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = false
+    end
+
+    it "returns the saved audience and the linked setting descriptor" do
+      put "/admin/config/upcoming-changes/groups.json",
+          params: {
+            setting:,
+            group_names: ["trust_level_2"],
+          },
+          as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include(
+        "success" => "OK",
+        "groups" => "admins,moderators,trust_level_2",
+        "group_setting" =>
+          include(
+            "setting" => "hidden_post_visible_groups",
+            "value" => "1|2|12",
+            "mandatory_values" => "1|2",
+            "disallowed_groups" => "4",
+          ),
+      )
+      expect(SiteSetting.enable_upload_debug_mode).to eq(false)
+      expect(SiteSettingGroup.where(name: setting)).to be_empty
+    end
+
+    it "rejects an empty audience while preserving the flag and linked setting" do
+      previous_value = SiteSetting.hidden_post_visible_groups
+
+      put "/admin/config/upcoming-changes/groups.json",
+          params: {
+            setting:,
+            group_names: [],
+          },
+          as: :json
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(SiteSetting.hidden_post_visible_groups).to eq(previous_value)
+      expect(SiteSetting.enable_upload_debug_mode).to eq(false)
+    end
+
+    it "rejects disallowed groups without updating the linked setting" do
+      previous_value = SiteSetting.hidden_post_visible_groups
+
+      put "/admin/config/upcoming-changes/groups.json",
+          params: {
+            setting:,
+            group_names: ["anonymous_users"],
+          },
+          as: :json
+
+      expect(response.status).to eq(422)
+      expect(SiteSetting.hidden_post_visible_groups).to eq(previous_value)
+    end
+  end
+
   describe "#toggle_change" do
     before do
       mock_upcoming_change_metadata(
@@ -280,6 +349,28 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         expect(response.status).to eq(200)
         expect(SiteSetting.enable_form_templates).to eq(true)
         expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3|12")
+      end
+
+      it "toggles a linked change independently while preserving its configured audience" do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            group_setting: :about_page_extra_groups,
+          },
+        )
+        SiteSetting.enable_form_templates = false
+        SiteSetting.about_page_extra_groups = ""
+
+        put "/admin/config/upcoming-changes/toggle.json",
+            params: {
+              setting_name:,
+              enabled: true,
+            },
+            as: :json
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSetting.about_page_extra_groups).to eq("")
       end
 
       it "logs the change in staff action logs" do

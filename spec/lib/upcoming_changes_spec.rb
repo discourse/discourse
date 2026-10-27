@@ -1160,6 +1160,72 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe "linked group settings" do
+    fab!(:user)
+    fab!(:member, :user)
+    fab!(:group) { Fabricate(:group, users: [member]) }
+
+    before do
+      mock_upcoming_change_metadata(
+        setting_name => {
+          status: :experimental,
+          group_setting: :about_page_extra_groups,
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+      Fabricate(:site_setting_group, name: setting_name, group_ids: "3")
+    end
+
+    it "reads group IDs from the linked setting and ignores stale opt-in rows" do
+      SiteSetting.about_page_extra_groups = group.id.to_s
+
+      expect(described_class.group_setting_name(setting_name)).to eq(:about_page_extra_groups)
+      expect(described_class.group_ids_for(setting_name)).to eq([group.id])
+      expect(described_class.enabled_for_user?(setting_name, member)).to eq(true)
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(false)
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+    end
+
+    it "treats an empty linked setting as an empty audience" do
+      SiteSetting.about_page_extra_groups = ""
+
+      expect(described_class.has_groups?(setting_name)).to eq(true)
+      expect(described_class.group_ids_for(setting_name)).to eq([])
+      expect(described_class.enabled_for_user?(setting_name, member)).to eq(false)
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(false)
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+    end
+
+    it "keeps the linked audience restrictions after the change becomes permanent" do
+      mock_upcoming_change_metadata(
+        setting_name => {
+          status: :permanent,
+          group_setting: :about_page_extra_groups,
+        },
+      )
+      SiteSetting.about_page_extra_groups = group.id.to_s
+      SiteSetting.enable_upload_debug_mode = false
+
+      expect(described_class.group_ids_for(setting_name)).to eq([group.id])
+      expect(described_class.enabled_for_user?(setting_name, member)).to eq(true)
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(false)
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+    end
+
+    it "honors the anonymous pseudo-group in a linked audience" do
+      mock_upcoming_change_metadata(
+        setting_name => {
+          status: :experimental,
+          group_setting: :cross_origin_opener_unsafe_none_groups,
+        },
+      )
+      SiteSetting.cross_origin_opener_unsafe_none_groups = Group::AUTO_GROUPS[:anonymous_users].to_s
+
+      expect(described_class.enabled_for_user?(setting_name, nil)).to eq(true)
+      expect(described_class.enabled_for_user?(setting_name, user)).to eq(false)
+    end
+  end
+
   describe ".stats_for_user" do
     fab!(:user)
 

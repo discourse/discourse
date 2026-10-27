@@ -42,6 +42,8 @@
 #                            `stable` status admins are warned that it will become permanent and they will no
 #                            longer be able to opt out. Set to false when that warning does not apply, for
 #                            example a change that only alters the default value of another site setting.
+#                          - group_setting: (optional setting name) use an existing group_list setting as
+#                            the audience instead of SiteSettingGroup. Cannot combine with allow_enabled_for.
 #                          - allow_enabled_for: (optional array) restricts which "Enabled for"
 #                            dropdown options the admin can pick for this upcoming change.
 #                            Valid values: everyone, staff, specific_groups.

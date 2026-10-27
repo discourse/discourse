@@ -199,6 +199,57 @@ RSpec.describe UpcomingChanges::Toggle do
       end
     end
 
+    context "when the audience comes from a linked group setting" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            group_setting: :about_page_extra_groups,
+          },
+        )
+        SiteSetting.about_page_extra_groups = "12"
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "3")
+      end
+
+      it "enables the flag without changing either audience store" do
+        SiteSetting.enable_form_templates = false
+
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSetting.about_page_extra_groups).to eq("12")
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3")
+      end
+
+      it "enables the flag independently of an empty linked audience" do
+        SiteSetting.enable_form_templates = false
+        SiteSetting.about_page_extra_groups = ""
+
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSetting.about_page_extra_groups).to eq("")
+      end
+    end
+
+    context "when a linked audience is submitted through the toggle" do
+      let(:params) { super().merge(group_names: ["staff"]) }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            group_setting: :about_page_extra_groups,
+          },
+        )
+        SiteSetting.enable_form_templates = false
+      end
+
+      it "requires the dedicated audience update instead" do
+        expect(result).to fail_a_policy(:allowed_enabled_for_target)
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSetting.about_page_extra_groups).to eq("")
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
