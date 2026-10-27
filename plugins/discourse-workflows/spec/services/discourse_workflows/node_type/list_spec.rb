@@ -186,6 +186,23 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(loop_node[:palette_visible]).to eq(false)
       end
 
+      it "lists the per-change user moderation triggers in the palette, not the generic one" do
+        expected = {
+          "trigger:user_moderation_changed" => false,
+          "trigger:user_suspended" => true,
+          "trigger:user_unsuspended" => true,
+          "trigger:user_silenced" => true,
+          "trigger:user_unsilenced" => true,
+        }
+
+        palette_visible =
+          result[:node_types]
+            .select { |nt| expected.key?(nt[:identifier]) }
+            .to_h { |nt| [nt[:identifier], nt[:palette_visible]] }
+
+        expect(palette_visible).to eq(expected)
+      end
+
       it "includes manually_triggerable for triggers that support it" do
         manual = result[:node_types].find { |nt| nt[:identifier] == "trigger:manual" }
         schedule = result[:node_types].find { |nt| nt[:identifier] == "trigger:schedule" }
