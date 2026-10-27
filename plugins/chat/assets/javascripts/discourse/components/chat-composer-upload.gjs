@@ -14,13 +14,15 @@ import { i18n } from "discourse-i18n";
 export default class ChatComposerUpload extends Component {
   @service capabilities;
 
-  registerMedia = modifier((element) => {
-    this.#mediaElement = element;
-  });
+  registerPreview = modifier((element) =>
+    this.args.registerPreview?.(this.args.upload, {
+      type: this.isVideo ? "video" : "image",
+      element,
+      alt: this.fileName,
+    })
+  );
 
   #localPreviewUrl = null;
-
-  #mediaElement = null;
   @tracked _previewFailed = false;
 
   constructor() {
@@ -101,7 +103,7 @@ export default class ChatComposerUpload extends Component {
 
   @action
   openPreview() {
-    this.args.onPreview?.(this.#mediaElement);
+    this.args.onPreview?.(this.args.upload);
   }
 
   <template>
@@ -128,21 +130,19 @@ export default class ChatComposerUpload extends Component {
               <img
                 alt=""
                 class="preview-img"
-                data-file-name={{this.fileName}}
                 src={{this.previewImageSrc}}
                 {{on "error" this.handlePreviewError}}
-                {{this.registerMedia}}
+                {{this.registerPreview}}
               />
             {{else}}
               <video
                 class="preview-video"
-                data-file-name={{this.fileName}}
                 muted
                 playsinline
                 preload="metadata"
                 src={{this.previewVideoSrc}}
                 {{on "error" this.handlePreviewError}}
-                {{this.registerMedia}}
+                {{this.registerPreview}}
               ></video>
             {{/if}}
           </DButton>

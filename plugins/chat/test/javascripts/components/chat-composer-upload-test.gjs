@@ -3,6 +3,7 @@ import {
   clearRender,
   click,
   render,
+  settled,
   waitFor,
   waitUntil,
 } from "@ember/test-helpers";
@@ -160,33 +161,47 @@ module("Component | ChatComposerUpload", function (hooks) {
     assert.dom(".file-name").hasText("photo.heic");
   });
 
-  test("hands its media element to @onPreview when clicked", async function (assert) {
+  test("registers its preview and asks to open it when clicked", async function (assert) {
+    const unregister = sinon.spy();
+    this.set("registerPreview", sinon.stub().returns(unregister));
+    this.set("onPreview", sinon.spy());
+    this.set("shown", true);
     this.set("upload", {
       original_filename: "photo.png",
       extension: "png",
       url: "/images/avatar.png",
     });
-    this.set("onPreview", sinon.spy());
 
     await render(
       <template>
-        <ChatComposerUpload
-          @isDone={{true}}
-          @onPreview={{this.onPreview}}
-          @upload={{this.upload}}
-        />
+        {{#if this.shown}}
+          <ChatComposerUpload
+            @isDone={{true}}
+            @onPreview={{this.onPreview}}
+            @registerPreview={{this.registerPreview}}
+            @upload={{this.upload}}
+          />
+        {{/if}}
       </template>
     );
 
+    assert.true(
+      this.registerPreview.calledOnceWith(this.upload, {
+        type: "image",
+        element: document.querySelector("img.preview-img"),
+        alt: "photo.png",
+      })
+    );
     assert
       .dom(".chat-composer-upload__preview-btn")
       .hasAria("label", i18n("chat.preview_upload", { filename: "photo.png" }));
 
     await click(".chat-composer-upload__preview-btn");
+    assert.true(this.onPreview.calledOnceWith(this.upload));
 
-    assert.true(
-      this.onPreview.calledOnceWith(document.querySelector("img.preview-img"))
-    );
+    this.set("shown", false);
+    await settled();
+    assert.true(unregister.calledOnce, "unregisters when removed");
   });
 
   test("keeps its local preview alive while a lightbox shows it", async function (assert) {

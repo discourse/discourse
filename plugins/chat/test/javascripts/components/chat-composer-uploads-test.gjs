@@ -102,6 +102,55 @@ module("Component | ChatComposerUploads", function (hooks) {
     }
   });
 
+  test("leaves uploads whose preview failed out of the lightbox", async function (assert) {
+    const videoUrl = URL.createObjectURL(
+      new Blob([WEBM_BYTES], { type: "video/webm" })
+    );
+    const brokenImageUrl = URL.createObjectURL(
+      new Blob(["not an image"], { type: "image/png" })
+    );
+    this.existingUploads = [
+      {
+        original_filename: "photo.png",
+        extension: "png",
+        url: "/images/avatar.png",
+      },
+      {
+        original_filename: "broken.png",
+        extension: "png",
+        url: brokenImageUrl,
+      },
+      { original_filename: "clip.webm", extension: "webm", url: videoUrl },
+    ];
+
+    try {
+      await render(
+        <template>
+          <ChatComposerUploads
+            @existingUploads={{this.existingUploads}}
+            @fileUploadElementId="chat-widget-uploader"
+          />
+        </template>
+      );
+      await waitUntil(
+        () =>
+          document.querySelectorAll(".chat-composer-upload__preview-btn")
+            .length === 2
+      );
+
+      await click(
+        ".chat-composer-upload--video .chat-composer-upload__preview-btn"
+      );
+      await waitFor(".pswp--open");
+
+      assert.dom(".pswp__counter", document.body).hasText("2 / 2");
+      assert.dom(".pswp__caption-title", document.body).hasText("clip.webm");
+    } finally {
+      URL.revokeObjectURL(videoUrl);
+      URL.revokeObjectURL(brokenImageUrl);
+    }
+  });
+
   test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {
     this.existingUploads = [fakeUpload];
 

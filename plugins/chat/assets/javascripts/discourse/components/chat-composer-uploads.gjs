@@ -73,6 +73,7 @@ export default class ChatComposerUploads extends Component {
   uploadDropZone = null;
 
   #gallery = null;
+  #previews = new WeakMap();
 
   get inProgressUploads() {
     return this.uppyUpload.inProgressUploads;
@@ -121,22 +122,28 @@ export default class ChatComposerUploads extends Component {
   }
 
   @action
-  openPreview(element) {
-    const media = [
-      ...element
-        .closest(".chat-composer-uploads-container")
-        .querySelectorAll(".preview-img, .preview-video"),
-    ];
+  openPreview(upload) {
+    const shown = [...this.uploads, ...this.inProgressUploads].filter((item) =>
+      this.#previews.has(item)
+    );
 
     this.#gallery = openLightbox(
-      media.map((item) => ({
-        type: item.tagName === "VIDEO" ? "video" : "image",
-        src: item.currentSrc || item.src,
-        element: item,
-        alt: item.dataset.fileName,
-      })),
-      { index: media.indexOf(element) }
+      shown.map((item) => {
+        const { type, element, alt } = this.#previews.get(item);
+        return { type, src: element.currentSrc || element.src, element, alt };
+      }),
+      { index: shown.indexOf(upload) }
     ).finally(() => (this.#gallery = null));
+  }
+
+  @bind
+  registerPreview(upload, preview) {
+    this.#previews.set(upload, preview);
+    return () => {
+      if (this.#previews.get(upload) === preview) {
+        this.#previews.delete(upload);
+      }
+    };
   }
 
   @bind
@@ -182,6 +189,7 @@ export default class ChatComposerUploads extends Component {
               @isDone={{true}}
               @onCancel={{fn this.removeUpload upload}}
               @onPreview={{this.openPreview}}
+              @registerPreview={{this.registerPreview}}
               @upload={{upload}}
             />
           {{/each}}
@@ -191,6 +199,7 @@ export default class ChatComposerUploads extends Component {
               @activeGallery={{this.activeGallery}}
               @onCancel={{fn this.cancelUploading upload}}
               @onPreview={{this.openPreview}}
+              @registerPreview={{this.registerPreview}}
               @upload={{upload}}
             />
           {{/each}}

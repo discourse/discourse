@@ -494,13 +494,23 @@ export default class ImageNodeView extends Component {
       event?.preventDefault();
       event?.stopPropagation();
 
-      const images = [
-        ...this.args.view.dom.querySelectorAll(".composer-image-node img"),
-      ];
-      await openLightbox(
-        images.map((img) => ({ src: img.src, element: img })),
-        { index: images.indexOf(this.image) }
-      );
+      // image nodes also hold videos and audio; only rendered images belong in the gallery
+      const { view } = this.args;
+      const slides = [];
+      view.state.doc.descendants((node, pos) => {
+        if (node.type.name !== "image") {
+          return;
+        }
+
+        const element = view.nodeDOM(pos)?.querySelector(":scope > img");
+        if (element) {
+          slides.push({ src: node.attrs.src, element });
+        }
+      });
+
+      await openLightbox(slides, {
+        index: slides.findIndex((slide) => slide.element === this.image),
+      });
 
       const pos = this.args.getPos();
       if (pos !== null && pos >= 0) {
