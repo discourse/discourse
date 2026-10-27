@@ -115,19 +115,23 @@ class UserSilencer
   end
 
   def unsilence
-    return false if @account.silenced_till.blank?
-
-    @account.silenced_till = nil
-    if @account.save
-      DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)
-      SystemMessage.create(@user, :unsilenced, Dsa::AppealInstructions.message_options)
-      if @by_user
-        StaffActionLogger.new(@by_user).log_unsilence_user(
-          @user,
-          reviewable_id: @opts[:reviewable_id],
-        )
+    unsilenced =
+      @account.with_lock do
+        next false if @account.silenced_till.blank?
+        @account.update(silenced_till: nil)
       end
+    return false if !unsilenced
+
+    DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)
+    SystemMessage.create(@user, :unsilenced, Dsa::AppealInstructions.message_options)
+    if @by_user
+      StaffActionLogger.new(@by_user).log_unsilence_user(
+        @user,
+        reviewable_id: @opts[:reviewable_id],
+      )
     end
+
+    true
   end
 
   private
