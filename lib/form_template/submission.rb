@@ -28,14 +28,12 @@ class FormTemplate::Submission
     )
   end
 
-  def self.for_edit(post, payload:, guardian:, validate: true)
-    guardian.ensure_can_edit!(post)
+  def self.for_edit(post, payload:, validate: true)
     unless post.form_data && payload.is_a?(String)
       raise Discourse::InvalidParameters.new(:form_template_data)
     end
-    raise TooLarge if payload.bytesize > MAX_BYTES
     data = JSON.parse(payload, max_nesting: 20)
-    raise ArgumentError unless data.is_a?(Hash)
+    raise Discourse::InvalidParameters.new(:form_template_data) unless data.is_a?(Hash)
     new(post.form_data, validate: false).with_answers(data.fetch("answers"), validate:)
   rescue JSON::JSONError, ArgumentError, KeyError
     raise Discourse::InvalidParameters.new(:form_template_data)
@@ -46,7 +44,7 @@ class FormTemplate::Submission
     encoded = JSON.generate(data, max_nesting: 20)
     raise TooLarge if encoded.bytesize > MAX_BYTES
     @data = JSON.parse(encoded, max_nesting: 20)
-    # JSONB cannot store NUL, including in answers omitted from the rendered post.
+    # jsonb cannot store NUL.
     raise ArgumentError if contains_nul?(@data)
     unless @data.keys.sort == KEYS.sort && @data["format_version"] == FORMAT_VERSION &&
              @data["template_id"].is_a?(Integer) && @data["template_id"].positive?
@@ -66,11 +64,8 @@ class FormTemplate::Submission
               field: field.dig("attributes", "label") || field["id"],
             )
     end
-    Liquid::Template.parse(definition["output_template"]) if definition["output_template"].present?
   rescue JSON::JSONError
     raise ArgumentError
-  rescue Liquid::Error
-    raise FormTemplate::InvalidAnswers, I18n.t("form_templates.errors.invalid_output_template")
   end
 
   def to_h
@@ -82,8 +77,7 @@ class FormTemplate::Submission
   end
 
   def answers_match?(payload)
-    payload.is_a?(String) && payload.bytesize <= MAX_BYTES &&
-      JSON.parse(payload, max_nesting: 20) == @data["answers"]
+    payload.is_a?(String) && JSON.parse(payload, max_nesting: 20) == @data["answers"]
   rescue JSON::JSONError
     false
   end

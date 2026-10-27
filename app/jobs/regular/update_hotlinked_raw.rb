@@ -40,8 +40,7 @@ module Jobs
 
     private
 
-    # A rewritten snapshot can outgrow the size cap; the post then falls back to
-    # markdown editing instead of blocking the raw rewrite.
+    # An oversized rewrite falls back to markdown editing rather than block the raw rewrite.
     def rewritten_form_data(post, rewrite)
       post.form_submission&.rewrite_answers(&rewrite)&.to_h
     rescue FormTemplate::Submission::TooLarge

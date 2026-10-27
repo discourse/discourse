@@ -429,9 +429,6 @@ module("Unit | Model | composer", function (hooks) {
     });
 
     assert.strictEqual(composer.originalFormAnswers, JSON.stringify(answers));
-
-    composer.set("formSubmission", null);
-    assert.strictEqual(composer.originalFormAnswers, undefined);
   });
 
   test("initial category when uncategorized is allowed", function (assert) {

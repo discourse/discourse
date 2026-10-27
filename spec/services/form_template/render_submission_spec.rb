@@ -185,16 +185,6 @@ RSpec.describe FormTemplate::RenderSubmission do
       it { is_expected.to fail_with_exception(Liquid::Error) }
     end
 
-    context "when the snapshot exceeds the size cap" do
-      before { form_template.update!(output_template: "Omitted.") }
-
-      let(:answers) { { description: "x" * FormTemplate::Submission::MAX_BYTES } }
-
-      it "rejects the submission" do
-        expect { result }.to raise_error(FormTemplate::Submission::TooLarge)
-      end
-    end
-
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

@@ -29,7 +29,6 @@ RSpec.describe FormTemplate::Submission do
         described_class.from_template(
           form_template,
           answers: answers.merge("description" => "x" * described_class::MAX_BYTES),
-          validate: false,
         )
       end.to raise_error(described_class::TooLarge)
     end
@@ -52,6 +51,7 @@ RSpec.describe FormTemplate::Submission do
         data.merge("extra" => true),
         data.merge("definition" => { "fields" => "invalid", "output_template" => nil }),
         data.merge("answers" => { "confirmed" => "false" }),
+        data.merge("answers" => answers.merge("description" => "a\u0000b")),
       ].each { |invalid| expect { described_class.new(invalid) }.to raise_error(ArgumentError) }
     end
 

@@ -248,11 +248,7 @@ class PostsController < ApplicationController
 
     if params[:post][:form_template_data].present?
       submission =
-        FormTemplate::Submission.for_edit(
-          post,
-          payload: params[:post][:form_template_data],
-          guardian:,
-        )
+        FormTemplate::Submission.for_edit(post, payload: params[:post][:form_template_data])
       changes[:raw] = submission.render
       changes[:form_data] = submission.to_h
     end

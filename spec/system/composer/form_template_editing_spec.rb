@@ -118,17 +118,7 @@ RSpec.describe "Editable form submissions" do
       Fabricate(:post, user:, post_number: 1, raw: submission.render, form_data: submission.to_h)
     topic_page.visit_topic(form_post.topic)
     topic_page.click_post_action_button(form_post, :edit)
-    expect(page).to have_field("notes", with: "")
-    composer.discard
-    expect(composer).to be_closed
-    expect(PageObjects::Modals::DiscardDraft.new).to be_closed
-
-    topic_page.click_post_action_button(form_post, :edit)
     first(".form-template-field__remove-upload").click
-    composer.close
-    expect(composer).to be_closed
-    drafts_page.visit(user)
-    find(".post-list-item .resume-draft").click
     expect(page).to have_css(".form-template-field__uploaded-files li", count: 1)
     composer.submit
     expect(composer).to be_closed

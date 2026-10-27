@@ -247,11 +247,10 @@ export default class ComposerService extends Service {
   }
 
   get formTemplateInitialValues() {
-    const draft = this.model?.formTemplateDraft;
-    if (draft && String(draft.id) === String(this.model.formTemplateId)) {
-      return draft.answers;
-    }
-    return this._formTemplateInitialValues;
+    return (
+      this.model?.currentFormTemplateDraft?.answers ??
+      this._formTemplateInitialValues
+    );
   }
 
   set formTemplateInitialValues(values) {
@@ -774,13 +773,10 @@ export default class ComposerService extends Service {
 
   @action
   initializeFormTemplateDraft() {
-    const draft = this.model.formTemplateDraft;
     initializeFormTemplateAnswers(
       document.querySelector("#form-template-form"),
       this.selectedFormTemplate,
-      draft && String(draft.id) === String(this.model.formTemplateId)
-        ? draft.answers
-        : null
+      this.model.currentFormTemplateDraft?.answers ?? null
     );
     this.#formTemplateReady = true;
   }
@@ -802,10 +798,7 @@ export default class ComposerService extends Service {
       return;
     }
     const draft = { id: this.model.formTemplateId, answers: values };
-    if (
-      !this.model.formTemplateDraft ||
-      String(this.model.formTemplateDraft.id) !== String(draft.id)
-    ) {
+    if (!this.model.currentFormTemplateDraft) {
       this.model.set("originalFormTemplateDraft", draft);
     }
     if (!deepEqual(this.model.formTemplateDraft, draft)) {
@@ -2201,8 +2194,8 @@ export default class ComposerService extends Service {
 
       this._saveDraftPromise = this.model
         .saveDraft()
-        .then((result) => {
-          if (showToast && result && !result.conflict_user) {
+        .then(() => {
+          if (showToast) {
             this.toasts.success({
               duration: "short",
               data: {
@@ -2210,13 +2203,11 @@ export default class ComposerService extends Service {
               },
             });
           }
-          return result;
         })
         .finally(() => {
           this._lastDraftSaved = Date.now();
           this._saveDraftPromise = null;
         });
-      return this._saveDraftPromise;
     }
   }
 

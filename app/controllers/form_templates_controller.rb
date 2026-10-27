@@ -26,12 +26,11 @@ class FormTemplatesController < ApplicationController
   def render_output
     if params[:post_id].present?
       post = Post.with_deleted.find(params[:post_id])
-      guardian.ensure_can_see!(post)
+      guardian.ensure_can_edit!(post)
       submission =
         FormTemplate::Submission.for_edit(
           post,
           payload: params.require(:form_template_data),
-          guardian:,
           validate: false,
         )
       render json: { raw: submission.render }

@@ -1124,8 +1124,7 @@ class Post < ActiveRecord::Base
     replies.reject { |r| !secured_ids.include?(r[:id]) }
   end
 
-  # The saved form is only usable while it still renders the current raw; any
-  # other rewrite of raw turns the post back into an ordinary markdown post.
+  # Any rewrite of raw that bypasses form_data turns the post back into a markdown post.
   def form_submission
     return if form_data.nil?
     submission = FormTemplate::Submission.new(form_data, validate: false)

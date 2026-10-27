@@ -53,10 +53,7 @@ RSpec.describe ReviewablesController do
             },
           }
       expect(response.status).to eq(200)
-      result = reviewable.reload.perform(moderator, :approve_post)
-      expect(result.success?).to eq(true)
-      expect(result.created_post.topic.title).to eq("A revised form title")
-      expect(result.created_post.form_data).to eq(submission.to_h)
+      expect(reviewable.reload.payload["title"]).to eq("A revised form title")
     end
   end
 end

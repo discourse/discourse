@@ -453,7 +453,13 @@ export default class Composer extends RestModel {
     return (this.reply || "").trim() !== (this.originalText || "").trim();
   }
 
-  @computed("formSubmission", "originalFormTemplateDraft")
+  get currentFormTemplateDraft() {
+    const draft = this.formTemplateDraft;
+    if (draft && String(draft.id) === String(this.formTemplateId)) {
+      return draft;
+    }
+  }
+
   get originalFormAnswers() {
     if (this.formSubmission && this.originalFormTemplateDraft) {
       return JSON.stringify(this.originalFormTemplateDraft.answers);
