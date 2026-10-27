@@ -257,18 +257,26 @@ class PostActionCreator
         @post_action_type_id,
         Post.hidden_reasons[:flag_threshold_reached],
         custom_message: :queued_by_staff,
+        acting_user: @created_by,
       )
       return
     end
 
+    # Staff taking action also pass the trusted spam flagger check.
+    auto_actor = @take_action ? @created_by : Discourse.system_user
+
     if trusted_spam_flagger?
-      @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
+      @post.hide!(
+        @post_action_type_id,
+        Post.hidden_reasons[:flagged_by_tl3_user],
+        acting_user: auto_actor,
+      )
       return
     end
 
     score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
     if score >= Reviewable.score_required_to_hide_post || @take_action
-      @post.hide!(@post_action_type_id)
+      @post.hide!(@post_action_type_id, acting_user: auto_actor)
     end
   end
 

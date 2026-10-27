@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class UserSilencer
+  HIDE_RECENT_POSTS_SQL = <<~SQL
+    UPDATE posts
+    SET hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, :reason)
+    WHERE user_id = :user_id AND created_at > :since AND deleted_at IS NULL AND NOT hidden
+    RETURNING id
+  SQL
+
   attr_reader :user_history
 
   def initialize(user, by_user = nil, opts = {})
@@ -78,14 +85,12 @@ class UserSilencer
   def hide_posts
     return unless @user.trust_level == TrustLevel[0]
 
-    Post
-      .where(user_id: @user.id)
-      .where("created_at > ?", 24.hours.ago)
-      .update_all(
-        [
-          "hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)",
-          Post.hidden_reasons[:new_user_spam_threshold_reached],
-        ],
+    hidden_post_ids =
+      DB.query_single(
+        HIDE_RECENT_POSTS_SQL,
+        user_id: @user.id,
+        since: 24.hours.ago,
+        reason: Post.hidden_reasons[:new_user_spam_threshold_reached],
       )
     topic_ids =
       Post
@@ -97,6 +102,16 @@ class UserSilencer
       TopicLocalization.where(topic_id: topic_ids).update_all(excerpt: nil)
       CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
     end
+
+    acting_user = @by_user || Discourse.system_user
+    Post
+      .where(id: hidden_post_ids)
+      .includes(:topic)
+      .each do |post|
+        DB.after_commit do
+          DiscourseEvent.trigger(:post_hidden, post, acting_user:, post_action_type_id: nil)
+        end
+      end
   end
 
   def unsilence
