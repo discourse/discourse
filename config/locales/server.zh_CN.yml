@@ -695,6 +695,7 @@ zh_CN:
       default_notification_level_users_limit:
         other: "无法为大于 %{count} 个用户的群组设置默认通知级别。错误的群组：%{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任级别。"
+      flair_upload_not_owned: "你只能使用自己上传的图片作为群组徽章。"
       can_not_modify_automatic: "您不能修改自动生成的群组"
       member_already_exist:
         other: "以下用户已是此群组的成员：%{username}"
