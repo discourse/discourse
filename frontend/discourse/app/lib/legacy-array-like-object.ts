@@ -5,16 +5,18 @@
  * already existing classes that previously used the ArrayProxy mixin. It should not
  * be used in new development.
  *
- * For new code, use a standard class with tracked properties and @autoTrackedArray for the content property.
+ * For new code, use a standard class with tracked properties and `@autoTrackedArray` for the content property.
  * Example:
  *
- *   import { tracked } from '@glimmer/tracking';
- *   import { autoTrackedArray } from "discourse/lib/tracked-tools";
+ * ```js
+ * import { tracked } from '@glimmer/tracking';
+ * import { autoTrackedArray } from "discourse/lib/tracked-tools";
  *
- *   class MyArrayWrapper {
- *     @tracked someProp;
- *     @autoTrackedArray content = [];
- *   }
+ * class MyArrayWrapper {
+ *   @tracked someProp;
+ *   @autoTrackedArray content = [];
+ * }
+ * ```
  *
  * This approach provides reactivity and array capabilities without legacy proxy patterns.
  */
@@ -24,7 +26,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import deprecated from "discourse/lib/deprecated";
 import { isTrackedArray } from "discourse/lib/tracked-tools";
 
-const EMBER_OBJECT_PROPERTIES = new Set([
+const EMBER_OBJECT_PROPERTIES = new Set<PropertyKey>([
   "constructor",
   "addObserver",
   "cacheFor",
@@ -47,7 +49,7 @@ const EMBER_OBJECT_PROPERTIES = new Set([
   "mergedProperties",
 ]);
 
-const ARRAY_PROPERTIES = new Set(
+const ARRAY_PROPERTIES = new Set<PropertyKey>(
   [
     ...Object.getOwnPropertyNames(Array.prototype),
     ...Object.getOwnPropertySymbols(Array.prototype),
@@ -60,25 +62,29 @@ const ARRAY_PROPERTIES = new Set(
  * LegacyArrayLikeObject is an EmberObject that proxies array-like behavior to a TrackedArray,
  * while exposing additional properties and methods. Access array methods via `.content`.
  *
- * @class LegacyArrayLikeObject
- * @extends EmberObject
- * @example
- *   const obj = LegacyArrayLikeObject.create({ content: [1,2,3], foo: 'bar' });
- *   obj.content.push(4); // Use .content for array operations
- *   obj.foo // 'bar'
- *
  * Note: Must be instantiated via LegacyArrayLikeObject.create().
+ *
+ * @example
+ * ```js
+ * const obj = LegacyArrayLikeObject.create({ content: [1,2,3], foo: 'bar' });
+ * obj.content.push(4); // Use .content for array operations
+ * obj.foo // 'bar'
+ * ```
  */
-export default class LegacyArrayLikeObject extends EmberObject {
+export default class LegacyArrayLikeObject<T = unknown> extends EmberObject {
   static #isConstructing = false; // to simulate a private constructor
 
   /**
    * Creates an instance of LegacyArrayLikeObject. Must be used instead of `new`.
    *
-   * @param {{ content?: unknown[] } & Record<string, unknown>} [attrs] - Properties to set on the instance. `content` must be an array.
-   * @returns {LegacyArrayLikeObject}
+   * @param attrs - Properties applied after subclass fields initialize. `content` must be an array.
    */
-  static create(attrs = {}) {
+  static create<M extends LegacyArrayLikeObject>(
+    this: new (...args: never[]) => M,
+    attrs?: Partial<M> & Record<string, unknown>
+  ): M;
+
+  static create(attrs: { content?: unknown[] } & Record<string, unknown> = {}) {
     LegacyArrayLikeObject.#isConstructing = true;
 
     const { content, ...properties } = attrs;
@@ -97,10 +103,11 @@ export default class LegacyArrayLikeObject extends EmberObject {
   /**
    * Emits a deprecation warning for direct array property access.
    *
-   * @param {LegacyArrayLikeObject} instance - The instance of LegacyArrayLikeObject (or subclass) being accessed
-   * @param {string|number|symbol} prop - The property being accessed on the instance
-   * @private
+   * @param instance - The instance of LegacyArrayLikeObject (or subclass) being accessed
+   * @param prop - The property being accessed on the instance
+   * @internal
    * @example
+   * ```js
    * // Will warn about accessing array methods directly:
    * const obj = CustomArrayLike.create({ content: [1,2,3] });
    * obj[0]; // Triggers deprecation warning
@@ -109,8 +116,12 @@ export default class LegacyArrayLikeObject extends EmberObject {
    * // Should use content instead:
    * obj.content[0]; // Correct usage
    * obj.content.push(4); // Correct usage
+   * ```
    */
-  static warnArrayDeprecation(instance, prop) {
+  static warnArrayDeprecation(
+    instance: LegacyArrayLikeObject,
+    prop: PropertyKey
+  ) {
     const instanceName = instance.constructor.name;
     const propName = isNumericIndexProp(prop)
       ? `[${prop}]`
@@ -127,16 +138,19 @@ export default class LegacyArrayLikeObject extends EmberObject {
     );
   }
 
-  #content;
+  /** The proxy supplies this array; replacing it throws. Mutate its elements instead. */
+  declare readonly content: T[];
+
+  #content: T[];
 
   /**
    * Constructor is private. Use LegacyArrayLikeObject.create() instead.
    *
-   * @param {Array} content - The array to wrap. Must be an array.
-   * @throws {TypeError} If not called via .create or if content is not an array.
-   * @private
+   * @param content - The array to wrap. Must be an array.
+   * @throws `TypeError` if not called via .create or if content is not an array.
+   * @internal
    */
-  constructor(content = []) {
+  constructor(content: T[] = []) {
     super();
 
     if (!LegacyArrayLikeObject.#isConstructing) {
@@ -161,22 +175,21 @@ export default class LegacyArrayLikeObject extends EmberObject {
   /**
    * Context string to add to array access deprecation warnings.
    * To be overridden by subclasses to provide additional context.
-   *
-   * @returns {string|undefined} The warning context string
    */
-  get warnContext() {
+  get warnContext(): string | undefined {
     // to be overridden by subclasses
+    return undefined;
   }
 }
 
 /**
  * Checks if a property is an EmberObject property or a custom instance property.
  *
- * @param {Object} instance - The object instance to check against.
- * @param {string|symbol} prop - The property name or symbol.
- * @returns {boolean} True if the property belongs to the instance, false otherwise.
+ * @param instance - The object instance to check against.
+ * @param prop - The property name or symbol.
+ * @returns True if the property belongs to the instance, false otherwise.
  */
-function isInstanceProperty(instance, prop) {
+function isInstanceProperty(instance: object, prop: PropertyKey): boolean {
   return (
     Reflect.has(instance, prop) &&
     (EMBER_OBJECT_PROPERTIES.has(prop) || !ARRAY_PROPERTIES.has(prop))
@@ -186,10 +199,10 @@ function isInstanceProperty(instance, prop) {
 /**
  * Checks if a property is an Array property.
  *
- * @param {string|symbol} prop - The property name or symbol.
- * @returns {boolean} True if the property is an Array property, false otherwise.
+ * @param prop - The property name or symbol.
+ * @returns True if the property is an Array property, false otherwise.
  */
-function isArrayProperty(prop) {
+function isArrayProperty(prop: PropertyKey): boolean {
   return ARRAY_PROPERTIES.has(prop);
 }
 
@@ -197,10 +210,10 @@ function isArrayProperty(prop) {
  * Checks if a property is a numeric array index (string or number).
  * Accepts numeric strings or numbers (e.g. '0', 0, '12', 12).
  *
- * @param {string|number} prop - The property to check.
- * @returns {boolean} True if the property is a numeric index, false otherwise.
+ * @param prop - The property to check.
+ * @returns True if the property is a numeric index, false otherwise.
  */
-function isNumericIndexProp(prop) {
+function isNumericIndexProp(prop: PropertyKey): prop is string | number {
   // Accepts numeric strings or numbers (e.g. '0', 0, '12', 12)
   return (
     (typeof prop === "string" && /^\d+$/.test(prop)) ||
@@ -215,11 +228,15 @@ function isNumericIndexProp(prop) {
  * and array properties to the underlying array.
  * Emits deprecation warnings for direct array property access.
  *
- * @param {LegacyArrayLikeObject} instance - The LegacyArrayLikeObject instance.
- * @param {TrackedArray} trackedItems - The underlying tracked array.
- * @returns {Proxy} Proxy object that combines instance and array behaviors.
+ * @param instance - The LegacyArrayLikeObject instance.
+ * @param trackedItems - The underlying tracked array.
+ * @returns Proxy object that combines instance and array behaviors.
  */
-function createProxy(instance, trackedItems) {
+function createProxy<T>(
+  instance: LegacyArrayLikeObject<T>,
+  trackedItems: T[]
+): LegacyArrayLikeObject<T> {
+  // The traps expose the instance's prototype and members over the array target.
   return new Proxy(trackedItems, {
     get(target, prop, receiver) {
       if (prop === "content") {
@@ -231,7 +248,9 @@ function createProxy(instance, trackedItems) {
       }
 
       if (isArrayProperty(prop) || isNumericIndexProp(prop)) {
-        instance.constructor.warnArrayDeprecation(instance, prop);
+        (
+          instance.constructor as typeof LegacyArrayLikeObject
+        ).warnArrayDeprecation(instance, prop);
       }
 
       return Reflect.get(target, prop, receiver);
@@ -249,7 +268,9 @@ function createProxy(instance, trackedItems) {
       }
 
       if (isArrayProperty(prop) || isNumericIndexProp(prop)) {
-        instance.constructor.warnArrayDeprecation(instance, prop);
+        (
+          instance.constructor as typeof LegacyArrayLikeObject
+        ).warnArrayDeprecation(instance, prop);
       }
 
       return Reflect.set(target, prop, value, receiver);
@@ -284,5 +305,5 @@ function createProxy(instance, trackedItems) {
       }
       return Reflect.getOwnPropertyDescriptor(target, prop);
     },
-  });
+  }) as unknown as LegacyArrayLikeObject<T>;
 }
