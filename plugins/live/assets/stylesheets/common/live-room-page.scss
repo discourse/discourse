@@ -605,6 +605,16 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
       content: ":";
     }
   }
+
+  // Portaled into the fullscreen grid or tile, clear of the tile name bar.
+  &.--fullscreen {
+    position: absolute;
+    inset-block-end: 3em;
+    inset-inline: 0;
+    margin-inline: auto;
+    height: auto;
+    font-size: var(--font-up-2);
+  }
 }
 
 @keyframes live-ns-badge-pulse {

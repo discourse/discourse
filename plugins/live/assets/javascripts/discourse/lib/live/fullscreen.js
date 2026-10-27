@@ -1,6 +1,6 @@
 import { modifier } from "ember-modifier";
 
-function fullscreenElement() {
+export function fullscreenElement() {
   return document.fullscreenElement || document.webkitFullscreenElement || null;
 }
 
