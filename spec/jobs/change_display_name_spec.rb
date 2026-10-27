@@ -62,6 +62,65 @@ RSpec.describe Jobs::ChangeDisplayName do
       ).to all(include(new_display_name))
     end
 
+    it "updates hidden quote answers in live forms and historical snapshots" do
+      template =
+        Fabricate(
+          :form_template,
+          template: [
+            { id: "quote", type: "composer" },
+            { id: "show_quote", type: "checkbox" },
+          ].as_json.to_yaml,
+          output_template:
+            "{% if answers.show_quote %}{{ answers.quote | strip }}{% else %}Quote is hidden.{% endif %}",
+        )
+      original =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "quote" => post_attributes[:raw],
+            "show_quote" => false,
+          },
+        )
+      saved = create_post(raw: original.render, form_data: original.to_h)
+      changed =
+        original.with_answers({ "quote" => revised_post_attributes[:raw], "show_quote" => false })
+      PostRevisor.new(saved).revise!(
+        saved.user,
+        { raw: changed.render, form_data: changed.to_h },
+        force_new_version: true,
+      )
+      expect(QuotedPost.where(post_id: saved.id)).to be_empty
+      other_user = Fabricate(:user, name: old_display_name)
+      other_quoted_post =
+        Fabricate(:post, user: other_user, raw: "Another quoted post.", post_number: 1)
+      unrelated_quote = <<~RAW
+        [quote="#{old_display_name}, post:1, topic:#{other_quoted_post.topic_id}, username:#{other_user.username}"]
+        Another quoted post.
+        [/quote]
+      RAW
+      unrelated =
+        original.with_answers(
+          { "quote" => "#{unrelated_quote}\nPlain text about #{username}.", "show_quote" => false },
+        )
+      unrelated_post = create_post(raw: unrelated.render, form_data: unrelated.to_h)
+
+      described_class.new.execute(args)
+
+      expect(unrelated_post.reload.form_data).to eq(unrelated.to_h)
+      expect(saved.reload.raw).to eq(original.render)
+      expect(saved.form_submission.answers["quote"]).to include(new_display_name)
+      snapshots =
+        saved.revisions.last.form_data_changes.map { |data| FormTemplate::Submission.new(data) }
+      expect(snapshots.map { |snapshot| snapshot.answers["quote"] }).to all(
+        include(new_display_name),
+      )
+      expect(
+        [saved.form_submission, *snapshots].map do |snapshot|
+          snapshot.with_answers(snapshot.answers.merge("show_quote" => true)).render
+        end,
+      ).to all(include(new_display_name))
+    end
+
     context "when the renamed user has been quoted" do
       it "rewrites the raw quote display name" do
         expect { described_class.new.execute(args) }.to change { post.reload.raw }.to(<<~RAW.strip)

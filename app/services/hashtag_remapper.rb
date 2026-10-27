@@ -96,7 +96,7 @@ class HashtagRemapper
     end
     new_raw = rewrite.call(raw)
 
-    return false if new_raw == raw
+    return false unless store.rewrite_changes_content?(record, new_raw, &rewrite)
     return false if store.raw(record.reload) != raw
 
     store.write!(record, new_raw, &rewrite)

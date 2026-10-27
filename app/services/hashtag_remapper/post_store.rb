@@ -14,6 +14,15 @@ class HashtagRemapper
         .where(topics: { deleted_at: nil })
     end
 
+    def self.candidates(old_ref)
+      super.or(relation.where("form_data::text ILIKE ?", HashtagRewriter.sql_like_pattern(old_ref)))
+    end
+
+    def self.rewrite_changes_content?(post, new_raw, &rewrite)
+      super ||
+        (post.form_data && post.form_submission.rewrite_text(&rewrite).to_h != post.form_data)
+    end
+
     def self.write!(post, raw, &rewrite)
       post.with_lock do
         if post.form_data && rewrite

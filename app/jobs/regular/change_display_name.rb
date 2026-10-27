@@ -29,18 +29,28 @@ module Jobs
     attr_reader :user, :old_display_name, :new_display_name, :quote_rewriter
 
     def update_posts
-      Post
-        .with_deleted
-        .joins(quoted("posts.id"))
-        .where("p.user_id = :user_id", user_id: user.id)
+      posts = Post.with_deleted
+      quoted_posts = posts.joins(quoted("posts.id")).where("p.user_id = :user_id", user_id: user.id)
+      posts
+        .where(id: quoted_posts.select("posts.id"))
+        .or(posts.where("form_data::text ~* ?", saved_quote_pattern))
         .find_each { |post| update_post(post) }
     end
 
     def update_revisions
+      quoted_revisions =
+        PostRevision.joins(quoted("post_revisions.post_id")).where(
+          "p.user_id = :user_id",
+          user_id: user.id,
+        )
       PostRevision
-        .joins(quoted("post_revisions.post_id"))
-        .where("p.user_id = :user_id", user_id: user.id)
+        .where(id: quoted_revisions.select("post_revisions.id"))
+        .or(PostRevision.where("form_data_changes::text ~* ?", saved_quote_pattern))
         .find_each { |revision| update_revision(revision) }
+    end
+
+    def saved_quote_pattern
+      "\\[quote[^]]*username:[[:space:]]*#{Regexp.escape(user.username)}[^[:alnum:]_.-]"
     end
 
     def quoted(post_id_column)

@@ -10,6 +10,10 @@ class HashtagRemapper
     def self.hashtag_context = nil
     def self.raw(record) = record.public_send(raw_column)
 
+    def self.rewrite_changes_content?(record, new_raw)
+      raw(record) != new_raw
+    end
+
     def self.write!(record, raw)
       record.public_send(:"#{raw_column}=", raw)
       record.save!(validate: false)

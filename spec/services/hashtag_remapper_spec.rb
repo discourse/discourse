@@ -35,6 +35,47 @@ RSpec.describe HashtagRemapper do
       expect(post.form_submission.answers["note"]).to eq(post.raw)
     end
 
+    it "remaps hidden form answers once without changing the rendered post" do
+      tag = Fabricate(:tag, name: "support")
+      template =
+        Fabricate(
+          :form_template,
+          template: [
+            { id: "note", type: "input" },
+            { id: "show_note", type: "checkbox" },
+          ].as_json.to_yaml,
+          output_template:
+            "{% if answers.show_note %}{{ answers.note }}{% else %}Details are hidden.{% endif %}",
+        )
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "note" => "See #support::tag for details.",
+            "show_note" => false,
+          },
+        )
+      post = create_post(raw: submission.render, form_data: submission.to_h)
+      unrelated =
+        submission.with_answers({ "note" => "An unrelated answer.", "show_note" => false })
+      unrelated_post = create_post(raw: unrelated.render, form_data: unrelated.to_h)
+      tag.update!(name: "help")
+
+      counts = remap_tag(tag, "support")
+
+      expect(counts["post"][:rewritten]).to eq(1)
+      expect(post.reload.raw).to eq(submission.render)
+      expect(post.form_submission.answers["note"]).to eq("See #help::tag for details.")
+      expect(
+        post
+          .form_submission
+          .with_answers(post.form_submission.answers.merge("show_note" => true))
+          .render,
+      ).to eq("See #help::tag for details.")
+      expect(unrelated_post.reload.form_data).to eq(unrelated.to_h)
+      expect(remap_tag(tag, "support").fetch("post", {}).fetch(:rewritten, 0)).to eq(0)
+    end
+
     it "rewrites a bare reference and re-cooks" do
       tag = Fabricate(:tag, name: "support")
       post = create_post(raw: "See #support for details.")
