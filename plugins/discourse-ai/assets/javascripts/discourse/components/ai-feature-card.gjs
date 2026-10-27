@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import GroupLink from "discourse/components/group-link";
@@ -68,6 +68,14 @@ class ExpandableList extends Component {
 }
 
 export default class AiFeatureCard extends Component {
+  get showAgentConfiguration() {
+    return !this.args.feature.backend || this.args.feature.backend === "agent";
+  }
+
+  get backendLabel() {
+    return i18n(`discourse_ai.features.backends.${this.args.feature.backend}`);
+  }
+
   @action
   hasGroups(feature) {
     return this.groupList(feature).length > 0;
@@ -104,57 +112,106 @@ export default class AiFeatureCard extends Component {
             <span>{{i18n "discourse_ai.features.disabled"}}</span>
           {{/unless}}
         </div>
-        <div class="ai-feature-card__agent">
-          <span class="ai-feature-card__label">
-            {{i18n "discourse_ai.features.agent" count=@feature.agents.length}}
-          </span>
-          {{#if @feature.agents}}
-            <ExpandableList
-              @items={{@feature.agents}}
-              @maxItemsToShow={{5}}
-              as |agent index isLastItem|
-            >
-              <LinkTo
-                class="ai-feature-card__agent-link"
-                @model={{agent.id}}
-                @route="adminPlugins.show.discourse-ai-agents.edit"
-              >
-                {{concat agent.name (unless (isLastItem index) ", ")}}
-              </LinkTo>
-            </ExpandableList>
-          {{else}}
+        {{#if @feature.backend}}
+          <div class="ai-feature-card__backend">
             <span class="ai-feature-card__label">
-              {{i18n "discourse_ai.features.no_agent"}}
+              {{i18n "discourse_ai.features.backend"}}
             </span>
+            {{this.backendLabel}}
+          </div>
+          {{#if (eq @feature.ready false)}}
+            <div class="ai-feature-card__readiness">
+              {{i18n "discourse_ai.features.not_configured"}}
+            </div>
           {{/if}}
-        </div>
-        <div class="ai-feature-card__llm">
-          {{#if @feature.llm_models}}
+        {{/if}}
+        {{#if this.showAgentConfiguration}}
+          <div class="ai-feature-card__agent">
             <span class="ai-feature-card__label">
               {{i18n
-                "discourse_ai.features.llm"
-                count=@feature.llm_models.length
+                "discourse_ai.features.agent"
+                count=@feature.agents.length
               }}
             </span>
-            <ExpandableList
-              @items={{@feature.llm_models}}
-              @maxItemsToShow={{5}}
-              as |llm index isLastItem|
-            >
-              <LinkTo
-                class="ai-feature-card__llm-link"
-                @model={{llm.id}}
-                @route="adminPlugins.show.discourse-ai-llms.edit"
+            {{#if @feature.agents}}
+              <ExpandableList
+                @items={{@feature.agents}}
+                @maxItemsToShow={{5}}
+                as |agent index isLastItem|
               >
-                {{concat llm.name (unless (isLastItem index) ", ")}}
+                <LinkTo
+                  class="ai-feature-card__agent-link"
+                  @model={{agent.id}}
+                  @route="adminPlugins.show.discourse-ai-agents.edit"
+                >
+                  {{concat agent.name (unless (isLastItem index) ", ")}}
+                </LinkTo>
+              </ExpandableList>
+            {{else}}
+              <span class="ai-feature-card__label">
+                {{i18n "discourse_ai.features.no_agent"}}
+              </span>
+            {{/if}}
+          </div>
+          <div class="ai-feature-card__llm">
+            {{#if @feature.llm_models}}
+              <span class="ai-feature-card__label">
+                {{i18n
+                  "discourse_ai.features.llm"
+                  count=@feature.llm_models.length
+                }}
+              </span>
+              <ExpandableList
+                @items={{@feature.llm_models}}
+                @maxItemsToShow={{5}}
+                as |llm index isLastItem|
+              >
+                <LinkTo
+                  class="ai-feature-card__llm-link"
+                  @model={{llm.id}}
+                  @route="adminPlugins.show.discourse-ai-llms.edit"
+                >
+                  {{concat llm.name (unless (isLastItem index) ", ")}}
+                </LinkTo>
+              </ExpandableList>
+            {{else}}
+              <span class="ai-feature-card__label">
+                {{i18n "discourse_ai.features.no_llm"}}
+              </span>
+            {{/if}}
+          </div>
+        {{else if (eq @feature.backend "decision_model")}}
+          {{#if @feature.decision_model}}
+            <div class="ai-feature-card__decision-model">
+              <span class="ai-feature-card__label">
+                {{i18n "discourse_ai.features.decision_model"}}
+              </span>
+              <LinkTo
+                class="ai-feature-card__decision-model-link"
+                @model={{@feature.decision_model.id}}
+                @route="adminPlugins.show.discourse-ai-decision-models.edit"
+              >
+                {{@feature.decision_model.display_name}}
               </LinkTo>
-            </ExpandableList>
-          {{else}}
-            <span class="ai-feature-card__label">
-              {{i18n "discourse_ai.features.no_llm"}}
-            </span>
+            </div>
           {{/if}}
-        </div>
+        {{else if (eq @feature.backend "classification_model")}}
+          {{#if @feature.classification_model}}
+            <div class="ai-feature-card__classification-model">
+              <span class="ai-feature-card__label">
+                {{i18n "discourse_ai.features.classification_model"}}
+              </span>
+              <LinkTo
+                class="ai-feature-card__classification-model-link"
+                @model="all_results"
+                @query={{hash filter="ai_sentiment_model_configs"}}
+                @route="adminSiteSettingsCategory"
+              >
+                {{@feature.classification_model.model_name}}
+              </LinkTo>
+            </div>
+          {{/if}}
+        {{/if}}
         {{#if @showGroups}}
           {{#if @feature.agents}}
             <div class="ai-feature-card__groups">

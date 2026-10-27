@@ -79,7 +79,7 @@ en:
           fetch_error: "Ask AI metrics could not be loaded."
         emotion:
           title: "Emotion"
-          description: "The table lists a count of posts classified with a determined emotion. Depending on the selected emotion classification method, posts are classified with either the configured emotion classification model ('SamLowe/roberta-base-go_emotions') or the configured emotion classification agent."
+          description: "The table counts posts classified with each emotion using the selected emotion classification backend."
         reports:
           filters:
             group_by:
@@ -389,7 +389,7 @@ en:
 
       features:
         short_title: "Features"
-        description: "These are the AI features available to visitors on your site. These can be configured to use specific agents and LLMs, and can be access controlled by groups."
+        description: "Configure AI features for your site, including their agents, models, and access permissions where supported."
         back: "Back to AI features"
         settings_save_error: "Some settings could not be saved."
         disabled: "(disabled)"
@@ -403,6 +403,14 @@ en:
         no_llm: "No LLM selected"
         no_agent: "Not set"
         no_groups: "None"
+        backend: "Backend:"
+        backends:
+          agent: "LLM agent"
+          decision_model: "Decision model"
+          classification_model: "Dedicated classification endpoint"
+        decision_model: "Decision model:"
+        classification_model: "Model:"
+        not_configured: "Not configured"
         edit: "Settings"
         expand_list:
           one: "(%{count} more)"
@@ -422,12 +430,34 @@ en:
           not_enabled: "Not enabled"
         filters:
           all: "All"
-          text: "Search features, agents, LLMs, or groups..."
+          text: "Search features, agents, models, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
 
         no_automations: "There are no automations yet"
 
+        sentiment:
+          name: "Sentiment and emotion"
+          description: "Classifies the sentiment and emotion of posts in the background"
+          sentiment: "Sentiment"
+          emotion: "Emotion"
+          backend: "Backend"
+          enabled: "Enabled"
+          agent: "Agent"
+          decision_model: "Decision model"
+          posts_per_hour: "Posts per hour"
+          post_age_limit: "Post age limit (days)"
+          posts_per_hour_description: "Approximate rate. 0 stops the scan, including new posts. Edited posts are checked separately."
+          background_description: "Checks unclassified posts every 5 minutes, within these shared limits. Each enabled classifier may incur a request per post. Refusals may be retried."
+          emotion_scores: "Scores are distributed across 28 emotions."
+          model_change_warning: "Changing the selected model does not reclassify existing results."
+          dedicated_description: "Dedicated classification endpoints are configured in site settings."
+          configure_dedicated: "Configure dedicated classification endpoints"
+          manage_decision_models: "Manage decision models"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emotion"
+            background_processing: "Background processing"
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
@@ -1196,7 +1226,7 @@ en:
           remove: "Remove header"
         edit: "Edit"
         delete: "Delete"
-        confirm_delete: "Are you sure you want to delete this decision model? Workflows that use it will stop working."
+        confirm_delete: "Are you sure you want to delete this decision model? Features and workflows that use it will stop working."
         saved: "Decision model saved"
         test: "Run test"
         test_success: "The decision model answered the test question (yes: %{percentage}%)."
@@ -1311,7 +1341,7 @@ en:
         type_descriptions:
           llm: "Generates text for features like the AI bot, summaries, and the AI helper"
           embedding: "Turns content into vectors for semantic search and related topics"
-          decision: "Answers typed questions about content (yes/no, choice, score) with probabilities, for use in workflows"
+          decision: "Answers typed questions about content (yes/no, choice, score) with probabilities, for use in AI features and workflows"
         type_filters:
           llm: "Large language models"
           embedding: "Embedding models"
