@@ -30,6 +30,27 @@ RSpec.describe PrettyText do
       expect(rewrite(raw, "recurrence" => nil)).to eq("[excerpt name=John's]Body[/excerpt]")
     end
 
+    it "separates attributes glued to a removed middle attribute" do
+      raw =
+        '[excerpt name=Standup recurrence="every_week"url=https://example.com start="2027-03-29 12:00"]Body[/excerpt]'
+
+      expect(rewrite(raw, "recurrence" => nil, "start" => "2027-04-05 12:00")).to eq(
+        '[excerpt name=Standup url=https://example.com start="2027-04-05 12:00"]Body[/excerpt]',
+      )
+    end
+
+    it "separates a glued bare flag after an intermediate attribute is removed" do
+      raw = '[excerpt name=Standup recurrence="every_week"flag]Body[/excerpt]'
+
+      expect(rewrite(raw, "recurrence" => nil)).to eq("[excerpt name=Standup flag]Body[/excerpt]")
+    end
+
+    it "preserves originally adjacent quoted and bare attributes" do
+      raw = "[excerpt name='Johnny's recurrence=every_week]Body[/excerpt]"
+
+      expect(rewrite(raw, "recurrence" => nil)).to eq("[excerpt name='Johnny's]Body[/excerpt]")
+    end
+
     it "serializes false and zero without dropping their values" do
       raw = "[excerpt option=old]Body[/excerpt]"
 

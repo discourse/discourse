@@ -163,14 +163,19 @@ function rewriteOpening(original, changes) {
   const head = original.slice(0, headEnd);
   let result = head;
   let cursor = headEnd;
+  let removedSinceLastKept = false;
 
   for (const { name, start, end } of attributes) {
     if (!Object.hasOwn(changes, name)) {
       const separator = original.slice(cursor, start);
-      // Removing the first attribute can expose an adjacent bare flag.
-      // Keep it separate from the opening tag name: [event s], not [events].
-      result += separator || (result === head ? " " : "");
+      // Keep original adjacency if both tokens survive; insert a boundary
+      // only where removing another attribute would glue tokens together.
+      result +=
+        separator || (result === head || removedSinceLastKept ? " " : "");
       result += original.slice(start, end);
+      removedSinceLastKept = false;
+    } else {
+      removedSinceLastKept = true;
     }
     cursor = end;
   }
