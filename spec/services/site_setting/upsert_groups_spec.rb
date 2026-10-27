@@ -110,9 +110,70 @@ RSpec.describe SiteSetting::UpsertGroups do
           )
         end
 
-        let(:group_names) { %w[trust_level_0 admins] }
+        let(:group_names) { %w[staff trust_level_0 admins] }
 
         it { is_expected.to run_successfully }
+
+        it "preserves staff alongside the selected groups" do
+          result
+
+          expect(SiteSettingGroup.find_by(name: setting).group_ids).to eq("1|3|10")
+        end
+      end
+    end
+
+    context "when a staff-inclusive change omits the staff group" do
+      let(:setting) { "enable_form_templates" }
+      let(:group_names) { ["trust_level_2"] }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: %i[staff specific_groups],
+          },
+        )
+        Fabricate(:site_setting_group, name: setting, group_ids: "3")
+      end
+
+      it "rejects the change and preserves the required staff audience" do
+        expect(result).to fail_a_policy(:allowed_enabled_for_target)
+        expect(SiteSettingGroup.find_by(name: setting).group_ids).to eq("3")
+      end
+    end
+
+    context "when a staff-inclusive change clears all groups" do
+      let(:setting) { "enable_form_templates" }
+      let(:group_names) { [] }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: %i[staff specific_groups],
+          },
+        )
+        Fabricate(:site_setting_group, name: setting, group_ids: "3")
+      end
+
+      it "rejects the change and preserves the required staff audience" do
+        expect(result).to fail_a_policy(:allowed_enabled_for_target)
+        expect(SiteSettingGroup.find_by(name: setting).group_ids).to eq("3")
+      end
+    end
+
+    context "when an unrestricted change selects all visitors" do
+      let(:setting) { "enable_form_templates" }
+      let(:group_names) { %w[anonymous_users logged_in_users staff] }
+
+      before do
+        mock_upcoming_change_metadata(enable_form_templates: { status: :experimental })
+        Fabricate(:site_setting_group, name: setting, group_ids: "3")
+      end
+
+      it "clears the stored restriction instead of persisting redundant groups" do
+        expect(result).to run_successfully
+        expect(SiteSettingGroup.where(name: setting)).to be_empty
       end
     end
 

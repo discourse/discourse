@@ -237,6 +237,51 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         }.to change { SiteSetting.enable_form_templates }.from(true).to(false)
       end
 
+      it "accepts an empty JSON audience while disabling the change" do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: [:specific_groups],
+          },
+        )
+        SiteSetting.enable_form_templates = true
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "12")
+
+        put "/admin/config/upcoming-changes/toggle.json",
+            params: {
+              setting_name:,
+              enabled: false,
+              group_names: [],
+            },
+            as: :json
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSettingGroup.where(name: setting_name)).to be_empty
+      end
+
+      it "accepts a JSON audience and enables a staff-inclusive change together" do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: %i[staff specific_groups],
+          },
+        )
+        SiteSetting.enable_form_templates = false
+
+        put "/admin/config/upcoming-changes/toggle.json",
+            params: {
+              setting_name:,
+              enabled: true,
+              group_names: %w[staff trust_level_2],
+            },
+            as: :json
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3|12")
+      end
+
       it "logs the change in staff action logs" do
         expect {
           put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }

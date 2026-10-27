@@ -6920,6 +6920,8 @@ en:
         availability: "Availability..."
         show_image: "Show image"
         edit_groups: "Edit opt-in groups"
+        toggle: "Enable %{name}"
+        staff_always_included: "Staff is always included"
         groups_updated: "Groups updated!"
         save_groups: "Save groups"
         add_groups_to_enable: "Add groups to enable this feature"

@@ -14,6 +14,7 @@ class Admin::Config::UpcomingChangesController < Admin::AdminController
 
   def update_groups
     SiteSetting::UpsertGroups.call(service_params) do |result|
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_success { render(json: success_json) }
       on_model_not_found(:group_ids) { raise Discourse::NotFound }
       on_failed_contract do |contract|

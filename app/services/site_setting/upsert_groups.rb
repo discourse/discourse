@@ -4,7 +4,10 @@ class SiteSetting::UpsertGroups
   include Service::Base
 
   params do
-    before_validation { self.group_names = Array.wrap(group_names).delete_if(&:empty?) }
+    before_validation do
+      self.group_names =
+        setting.present? ? UpcomingChanges.normalize_group_names(setting, group_names) : []
+    end
 
     attribute :group_names, :array
     attribute :setting, :string
@@ -45,10 +48,14 @@ class SiteSetting::UpsertGroups
   end
 
   def allowed_enabled_for_target(params:)
-    return true if params.group_names.empty?
+    return true unless UpcomingChanges.exists?(params.setting)
+    if UpcomingChanges.allow_enabled_for(params.setting)&.sort == %i[specific_groups staff] &&
+         params.group_names.empty?
+      return false
+    end
+    return true if params.group_names.empty? && !UpcomingChanges.enabled?(params.setting)
 
-    target = params.group_names == ["staff"] ? :staff : :specific_groups
-    UpcomingChanges.target_allowed?(params.setting, target)
+    UpcomingChanges.group_scope_allowed?(params.setting, params.group_names)
   end
 
   def fetch_group_ids(params:)

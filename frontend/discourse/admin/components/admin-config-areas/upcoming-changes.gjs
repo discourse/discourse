@@ -133,7 +133,8 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
             staffGroupName: this.staffGroupName,
           }),
           value: "enabled_for_staff",
-          filterFn: (change) => change.upcoming_change.enabled_for === "staff",
+          filterFn: (change) =>
+            change.upcoming_change.enabled_for === this.staffGroupName,
         },
         {
           label: i18n(
