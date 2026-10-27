@@ -160,6 +160,99 @@ RSpec.describe UserSuspender do
   end
 
   describe ".unsuspend" do
+    def unsuspend_logs
+      user.user_histories.where(action: UserHistory.actions[:unsuspend_user])
+    end
+
+    def expire_suspension
+      UserSuspender.expire(
+        user,
+        suspended_at: user.suspended_at,
+        suspended_till: user.suspended_till,
+      )
+    end
+
+    context "when the suspension is in force" do
+      before { user.update!(suspended_at: 1.hour.ago, suspended_till: 1.day.from_now) }
+
+      it "unsuspends the user, logs it and fires once as the moderator" do
+        result = nil
+        events =
+          DiscourseEvent.track_events(:user_unsuspended) do
+            result = described_class.unsuspend(user, by_user: admin)
+          end
+
+        expect(result).to eq(true)
+        expect(user.reload).to have_attributes(suspended_at: nil, suspended_till: nil)
+        expect(unsuspend_logs.pluck(:acting_user_id)).to eq([admin.id])
+        expect(events.map { |event| event[:params].first }).to eq([{ user:, by_user: admin }])
+      end
+    end
+
+    context "when the suspension expired and its end was announced" do
+      before do
+        freeze_time(Time.zone.now.round)
+        user.update!(suspended_at: 1.day.ago, suspended_till: 1.hour.ago)
+        expire_suspension
+      end
+
+      it "keeps the suspension dates and logs and fires nothing" do
+        result = nil
+        events =
+          DiscourseEvent.track_events(:user_unsuspended) do
+            result = described_class.unsuspend(user, by_user: admin)
+          end
+
+        expect(result).to eq(false)
+        expect(user.reload).to have_attributes(suspended_at: 1.day.ago, suspended_till: 1.hour.ago)
+        expect(unsuspend_logs.pluck(:acting_user_id)).to eq([Discourse.system_user.id])
+        expect(events).to be_empty
+      end
+    end
+
+    context "when the suspension expired without its end being announced" do
+      before do
+        freeze_time(Time.zone.now.round)
+        user.update!(suspended_at: 1.day.ago, suspended_till: 1.hour.ago)
+      end
+
+      it "unsuspends the user, logs it and fires once as the moderator" do
+        result = nil
+        events =
+          DiscourseEvent.track_events(:user_unsuspended) do
+            result = described_class.unsuspend(user, by_user: admin)
+          end
+
+        expect(result).to eq(true)
+        expect(user.reload).to have_attributes(suspended_at: nil, suspended_till: nil)
+        expect(unsuspend_logs.pluck(:acting_user_id)).to eq([admin.id])
+        expect(events.map { |event| event[:params].first }).to eq([{ user:, by_user: admin }])
+      end
+
+      it "announces nothing more when the expiry job runs afterwards" do
+        suspended_at = user.suspended_at
+        suspended_till = user.suspended_till
+        described_class.unsuspend(user, by_user: admin)
+
+        events =
+          DiscourseEvent.track_events(:user_unsuspended) do
+            UserSuspender.expire(user, suspended_at:, suspended_till:)
+          end
+
+        expect(events).to be_empty
+      end
+    end
+
+    it "does nothing when the user was never suspended" do
+      events =
+        DiscourseEvent.track_events(:user_unsuspended) do
+          expect(described_class.unsuspend(user, by_user: admin)).to eq(false)
+        end
+
+      expect(events).to be_empty
+      expect(unsuspend_logs).to be_empty
+    end
+
     it "preserves the suspension on listener failure and identifies the moderator on retry" do
       user.update!(suspended_at: 1.hour.ago, suspended_till: 1.day.from_now)
       handler = proc { raise "Listener unavailable" }

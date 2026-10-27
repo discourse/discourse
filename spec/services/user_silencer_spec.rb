@@ -276,6 +276,25 @@ RSpec.describe UserSilencer do
       end
     end
 
+    it "returns true when it unsilenced the user" do
+      user.update!(silenced_till: 1.year.from_now)
+
+      expect(UserSilencer.unsilence(user, admin)).to eq(true)
+    end
+
+    it "does nothing when the user was unsilenced since it was loaded" do
+      user.update!(silenced_till: 1.year.from_now)
+      User.where(id: user.id).update_all(silenced_till: nil)
+
+      events =
+        DiscourseEvent.track_events(:user_unsilenced) do
+          expect(UserSilencer.unsilence(user, admin)).to eq(false)
+        end
+
+      expect(events).to be_empty
+      expect(UserHistory.where(action: UserHistory.actions[:unsilence_user])).to be_empty
+    end
+
     it "does nothing when the user is not silenced" do
       expect(UserSilencer.unsilence(user, admin)).to eq(false)
 
