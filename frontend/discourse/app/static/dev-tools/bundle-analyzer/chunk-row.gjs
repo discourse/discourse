@@ -103,11 +103,11 @@ export default class ChunkRow extends ExpandableRow {
         <div class="ba-site">file
           <code>{{this.fileName}}</code>
         </div>
-        <div class="ba-pill" style="margin:2px 0 6px">
+        <div class="ba-note">
           Used by
           {{this.usedByLabel}}
         </div>
-        <div class="ba-pill" style="margin-bottom:4px">
+        <div class="ba-note">
           Source bytes, before minifying.
         </div>
         {{#each this.visibleModules as |m|}}

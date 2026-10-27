@@ -140,7 +140,7 @@ export default class EntrypointCard extends ExpandableRow {
             </div>
           {{/each}}
         </div>
-        <div class="ba-pill" style="margin-bottom:6px">
+        <div class="ba-note">
           {{#if @baseline}}
             <b>{{this.loadSet.size}}</b>
             files

@@ -61,7 +61,13 @@
 .bundle-analyzer .ba-hint {
   color: var(--ba-muted);
   font-size: 12px;
-  margin: -4px 0 12px;
+  margin: 10px 0 12px;
+}
+
+.bundle-analyzer .ba-note {
+  color: var(--ba-muted);
+  font-size: 11px;
+  margin: 2px 0 6px;
 }
 
 /* The filter takes the slack so the scope and the switch sit at the right edge.

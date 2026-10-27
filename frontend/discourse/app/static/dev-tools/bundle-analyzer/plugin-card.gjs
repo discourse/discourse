@@ -117,7 +117,7 @@ export default class PluginCard extends ExpandableRow {
         </div>
 
         {{#if this.routeBundles}}
-          <div class="ba-hint" style="margin-top:10px">
+          <div class="ba-hint">
             Loaded on demand, when a url matches.
           </div>
           <div class="ba-sub-list">
