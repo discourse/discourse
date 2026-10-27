@@ -186,10 +186,6 @@
       width: 90%; // topic title isn't full-width on wide screens
     }
 
-    input#edit-title {
-      width: 100%;
-    }
-
     .edit-topic__wrapper {
       // managing whitespace to prevent the edit icon from wrapping to a new line
       white-space: nowrap;
@@ -242,63 +238,124 @@
   a.edit-topic .d-icon {
     font-size: 0.8em;
   }
+}
 
-  .edit-topic-title {
+.edit-topic-title {
+  --edit-topic-title-font-size: var(--font-up-4);
+  --edit-topic-title-control-height: 2em;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  width: 100%;
+  min-width: 0;
+
+  @include viewport.until(sm) {
+    --edit-topic-title-font-size: var(--font-up-3);
+  }
+
+  .editing-localization-indicator {
     display: flex;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    gap: 0.5em;
-    width: 100%;
-    max-width: calc(
-      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-        var(--topic-avatar-width)
-    );
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
 
-    .select-kit .category-row {
-      max-width: unset;
-    }
+  // font lives here so the expanding textarea's sizing copy inherits it too
+  .edit-title__wrapper {
+    flex: 1 1 100%;
+    font-family: var(--heading-font-family);
+    font-size: var(--edit-topic-title-font-size);
+    font-weight: var(--heading-font-weight);
+    line-height: var(--line-height-medium);
 
-    .editing-localization-indicator {
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-size: var(--font-down-1);
-      color: var(--primary-medium);
-      margin-bottom: -0.5em; // matches the flex gap of the edit-title__wrapper
+    .expanding-text-area {
+      --expanding-text-area-padding: 0 0 var(--space-1);
+
+      // the textarea has no border, so neither may its sizing copy
+      &::after {
+        border: 0;
+      }
     }
   }
 
-  .edit-title__wrapper {
-    flex: 1 1 100%;
+  #edit-title {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0 0 var(--space-1);
+    font: inherit;
+    color: var(--primary);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    overflow: hidden;
 
-    #edit-title {
-      width: 100%;
-      margin: 0;
+    // a shadow, not a border, so the focus line can thicken without shifting layout
+    box-shadow: inset 0 -1px var(--primary-medium);
+
+    &::placeholder {
+      color: var(--primary-low-mid);
+    }
+
+    &:hover {
+      box-shadow: inset 0 -1px var(--primary-high);
+    }
+
+    &:focus {
+      box-shadow: inset 0 -2px var(--d-input-focused-color);
+    }
+  }
+
+  .private-message-glyph-wrapper {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    font-size: var(--edit-topic-title-font-size);
+    line-height: var(--line-height-medium);
+    pointer-events: none;
+  }
+
+  // indents only the first line, like the inline glyph in the read-only title
+  .private-message-glyph-wrapper ~ .edit-title__wrapper {
+    #edit-title,
+    .expanding-text-area::after {
+      text-indent: 1.25em;
     }
   }
 
   .edit-category__wrapper {
-    flex: 1 1 5%;
-
-    @include viewport.until(md) {
-      min-width: 0; // allows category name to shrink to fit narrow screens
-    }
+    flex: 0 1 auto;
+    min-width: 0;
 
     .select-kit.combo-box.category-chooser {
-      width: 100%;
-      height: 100%;
+      width: auto;
+      max-width: 100%;
+    }
+
+    .select-kit .category-row {
+      max-width: unset;
     }
   }
 
+  // aligns picker content with the title text
+  .edit-category__wrapper,
   .edit-tags__wrapper {
-    flex: 1 1 33%;
+    margin-inline-start: calc(-1 * var(--space-2));
+  }
 
-    @include viewport.until(md) {
-      flex: 1 1 100%; // force full row on narrow screens
-    }
+  .edit-tags__wrapper {
+    flex: 0 1 auto;
+    min-width: 0;
 
     .mini-tag-chooser {
-      width: 100%;
+      width: auto;
+      min-width: 12em;
+      max-width: 100%;
+      background: transparent;
     }
 
     .select-kit-header--filter {
@@ -320,19 +377,80 @@
     }
   }
 
-  .edit-controls {
-    display: flex;
-    width: 100%;
-    gap: 0.5em;
+  .select-kit.combo-box .select-kit-header,
+  .select-kit.multi-select .multi-select-header {
+    align-items: center;
+    min-height: var(--edit-topic-title-control-height);
+    padding-block: 0.15em;
+    background: transparent;
+    border-color: transparent;
+    font-weight: normal;
   }
 
-  @include viewport.from(sm) {
-    .remove-featured-link {
-      float: right;
-      text-transform: lowercase;
-      color: var(--primary-med-or-secondary-med);
-      font-size: 0.857rem;
+  .discourse-no-touch & {
+    .select-kit.combo-box:not(.is-expanded) .select-kit-header:hover,
+    .select-kit.multi-select:not(.is-expanded) .multi-select-header:hover {
+      background: var(--primary-very-low);
     }
+  }
+
+  .select-kit.is-expanded .select-kit-header,
+  .select-kit .select-kit-header:focus-visible,
+  .select-kit.multi-select .multi-select-header:focus-within {
+    background: var(--d-input-bg-color);
+
+    @include default-focus;
+  }
+
+  .select-kit-header--filter .selected-choice.tag-choice {
+    flex-direction: row-reverse;
+    gap: var(--space-1);
+    color: var(--primary-high);
+    background: var(--primary-very-low);
+    border-color: transparent;
+
+    .d-icon {
+      margin: 0;
+      color: var(--primary-medium);
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: var(--primary);
+      background: var(--primary-low);
+      box-shadow: none;
+
+      .d-icon {
+        color: var(--danger);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
+    }
+  }
+
+  .edit-controls {
+    display: flex;
+    flex: 0 0 auto;
+    align-self: flex-end;
+    align-items: center;
+    gap: var(--space-1);
+    margin-inline-start: auto;
+
+    .btn {
+      height: var(--edit-topic-title-control-height);
+      padding-block: 0;
+    }
+  }
+
+  .remove-featured-link {
+    order: -1;
+    margin-inline-end: var(--space-2);
+    font-size: var(--font-down-1);
+    color: var(--primary-med-or-secondary-med);
+    text-transform: lowercase;
   }
 }
 
@@ -343,38 +461,6 @@
 
 .private_message {
   background: var(--d-content-background);
-
-  #topic-title {
-    .edit-topic-title {
-      position: relative;
-      min-width: 0;
-
-      .private-message-glyph {
-        position: absolute;
-        z-index: 1;
-        left: 0.75em;
-        top: 1.2em;
-
-        .mobile-view & {
-          top: 1.1em;
-        }
-      }
-
-      #edit-title {
-        padding-left: 2.25em;
-      }
-
-      .mini-tag-chooser {
-        margin-left: 0;
-
-        @include viewport.from(sm) {
-          .selected-name {
-            max-width: 500px;
-          }
-        }
-      }
-    }
-  }
 }
 
 .topic-title-outlet {

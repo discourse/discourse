@@ -53,11 +53,11 @@ module PageObjects
       end
 
       def has_topic_title_editor?
-        has_css?("#topic-title input#edit-title")
+        has_css?("#topic-title #edit-title")
       end
 
       def has_no_topic_title_editor?
-        has_no_css?("#topic-title input#edit-title")
+        has_no_css?("#topic-title #edit-title")
       end
 
       def has_post_content?(post_number:, content:)
