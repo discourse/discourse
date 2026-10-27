@@ -268,17 +268,33 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
       )
     end
 
-    it "perform_disagree unsilences the user" do
-      reviewable.perform(moderator, :disagree)
-
-      expect(user.reload.silenced?).to eq(false)
+    def unsilence_logs
+      UserHistory.where(action: UserHistory.actions[:unsilence_user], target_user_id: user.id)
     end
 
-    it "perform_disagree_and_restore unsilences the user" do
-      chat_message.trash!(user)
-      reviewable.perform(moderator, :disagree_and_restore)
+    it "perform_disagree unsilences the user as the moderator" do
+      events =
+        DiscourseEvent.track_events(:user_unsilenced) { reviewable.perform(moderator, :disagree) }
 
       expect(user.reload.silenced?).to eq(false)
+      expect(unsilence_logs.pluck(:acting_user_id, :reviewable_id)).to eq(
+        [[moderator.id, reviewable.id]],
+      )
+      expect(events.map { |event| event[:params].first }).to eq([{ user:, by_user: moderator }])
+    end
+
+    it "perform_disagree_and_restore unsilences the user as the moderator" do
+      chat_message.trash!(user)
+      events =
+        DiscourseEvent.track_events(:user_unsilenced) do
+          reviewable.perform(moderator, :disagree_and_restore)
+        end
+
+      expect(user.reload.silenced?).to eq(false)
+      expect(unsilence_logs.pluck(:acting_user_id, :reviewable_id)).to eq(
+        [[moderator.id, reviewable.id]],
+      )
+      expect(events.map { |event| event[:params].first }).to eq([{ user:, by_user: moderator }])
     end
   end
 end
