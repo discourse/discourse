@@ -21,7 +21,9 @@ of what it does, and has a trigger counterpart when it changes state.
 3. **Triggers split per change, keeping the generic trigger hidden.** The generic `*_changed` trigger stays
    registered with `palette_visible: false` because it can match several changes in one node. Each change gets
    a palette trigger built from it, as `TopicStatusChanged::V1.description_for_change("closed")` does.
-   Splitting a trigger never breaks saved workflows.
+   Splitting a trigger never breaks saved workflows. A palette trigger may cover several event reasons when
+   admins see them as one change: Topic timer set covers `created` and `updated`, listed in `fixed_changes`
+   by `TopicTimerChanged::V1.description_for_change("set")`.
 4. **Actions don't keep a hidden generic.** Picking the direction from data is an If node feeding two actions.
 5. **Share code, not nodes.** Nodes that differ only by direction share a module (see `PostLifecycle`).
    Never add an intermediate base class: every `NodeType` subclass registers itself as a node.
@@ -92,7 +94,7 @@ Trigger nodes receive it as a trailing hash: `def initialize(topic, status, enab
 - Every state change an action makes fires a `DiscourseEvent`, so a trigger can mirror it. If core or the plugin doesn't fire one, add it.
 - Fire it where the change happens, in the model method or service, not in the controller.
 - Jobs and automatic changes pass `Discourse.system_user`. Expiry jobs fire the event too: a change that happens on a timer is still a change (`Jobs::ClearSlowMode`).
-- When a record is saved from many places and its owner isn't who changed it, carry the user on the record rather than guessing in the trigger.
+- When a record is saved from many places and its owner isn't who changed it, carry the user on the record rather than guessing in the trigger (`TopicTimer#acting_user`, set by `Topic#set_or_create_timer` and by jobs).
 - When the change only happens in a controller, move it into a core service that fires the event after its transaction, only when something changed, and call that service from the controller and the action alike (`Topic::UpdateSlowMode`).
 - When a model method wraps the change in a transaction that can still roll back, register the event with `DB.after_commit` after its success check, and only when the state really changed, so a failed or no-op call never fires it.
 - Pass every positional argument, even when it's `nil`, so the trailing hash never binds to an optional positional.

@@ -165,6 +165,23 @@ RSpec.describe Topic::UpdateSlowMode do
         expect(events.sole[:params]).to eq([topic, ends_at, { acting_user: moderator }])
       end
 
+      it "reports the user who set it as changing the end, even on someone else's timer" do
+        events = DiscourseEvent.track_events(:topic_timer_changed) { result }
+        expect(events.map { |event| event[:params].values_at(1, -1) }).to eq(
+          [[:created, { acting_user: moderator }]],
+        )
+
+        slow_mode_timers.sole.update!(user: other_moderator)
+        params[:enabled_until] = 2.weeks.from_now.iso8601
+        events =
+          DiscourseEvent.track_events(:topic_timer_changed) do
+            described_class.call(params:, **dependencies)
+          end
+        expect(events.map { |event| event[:params].values_at(1, -1) }).to eq(
+          [[:updated, { acting_user: moderator }]],
+        )
+      end
+
       it "keeps a single end when the topic has several" do
         kept = schedule_end(at: 1.day.from_now, owner: other_moderator)
         duplicate = schedule_end(at: 2.days.from_now)

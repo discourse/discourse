@@ -572,6 +572,23 @@ module DiscourseWorkflows
       timezone
     end
 
+    # Reads a date and time in the node's timezone, or the workflow's when it has none.
+    def parse_time_in_timezone(exec_ctx, value, item_index:, field:, error_key:)
+      value = value.to_s.presence
+      return if value.nil?
+
+      zone = ActiveSupport::TimeZone[resolve_timezone(exec_ctx, item_index)]
+      parsed =
+        begin
+          zone&.parse(value)
+        rescue ArgumentError
+          nil
+        end
+      raise_node_error!(I18n.t(error_key, field:, value:)) if parsed.nil?
+
+      parsed
+    end
+
     def matches_user_groups?(user, group_ids)
       raw_group_ids = Array.wrap(group_ids).reject(&:blank?)
       return true if raw_group_ids.empty?

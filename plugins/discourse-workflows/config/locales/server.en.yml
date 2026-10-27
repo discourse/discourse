@@ -208,6 +208,19 @@ en:
         banner_not_allowed: "'%{username}' cannot make topic %{topic_id} a banner. Banner topics can only be managed by staff."
         banner_private_message: "Personal messages cannot be made into banner topics."
         banner_restricted_category: "Topics in a restricted category cannot be made into banner topics."
+      topic_timer:
+        invalid_timer_type: "Unknown timer type: %{timer_type}."
+        invalid_schedule: "Unknown schedule: %{schedule}."
+        invalid_duration_unit: "Unknown duration unit: %{duration_unit}."
+        invalid_duration: "'duration' must be a whole number greater than 0 and at most %{max_days} days: '%{value}'."
+        invalid_time: "'%{field}' is not a valid date and time: '%{value}'."
+        time_required: "'execute_at' must be set to schedule the timer at a time."
+        time_in_past: "The timer must run in the future: '%{value}'."
+        after_last_post_not_supported: "Only close timers can be based on the last post."
+        at_time_not_supported: "Deleting replies can only be scheduled after a duration."
+        category_required: "Publishing to a category needs a category."
+        category_not_found: "Category %{category_id} doesn't exist."
+        save_failed: "The timer could not be saved: %{errors}"
       sort:
         code_missing_return: "Code must contain a return statement."
       summarize:

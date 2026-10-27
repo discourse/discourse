@@ -270,6 +270,29 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:set_topic_timer" => [
+            {
+              name: "Close the trigger topic 24 hours after its last post",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                timer_type: "close",
+                schedule: "after_last_post",
+                duration: 24,
+                duration_unit: "hours",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:clear_topic_timer" => [
+            {
+              name: "Cancel the trigger topic's close timer",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                timer_type: "close",
+                actor_username: "system",
+              },
+            },
+          ],
         }.freeze
 
         MAX_TYPES = 10
