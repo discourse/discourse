@@ -151,7 +151,10 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page.log_row(history)).to have_css(".context", text: payload)
   end
 
-  it "can filter by type of action" do
+  it "can filter by type of action and staff user" do
+    history_1.update!(acting_user: current_user)
+    other_history = Fabricate(:site_setting_change_history)
+
     visit "/admin/logs/staff_action_logs"
 
     expect(staff_action_logs_page).to have_log_row(history_1)
@@ -168,6 +171,25 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page).to have_log_row(history_1)
     expect(staff_action_logs_page).to have_no_log_row(history_2)
     expect(staff_action_logs_page).to have_no_log_row(history_3)
+
+    expect(staff_action_logs_page).to have_log_row(other_history)
+
+    staff_action_logs_page.filter_by_staff_user(current_user)
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+
+    page.refresh
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+
+    staff_action_logs_page.clear_staff_user_filter(current_user)
+
+    expect(staff_action_logs_page).to have_log_row(other_history)
+    expect(staff_action_logs_page).to have_no_log_row(history_2)
 
     staff_action_logs_page.clear_filter
 
