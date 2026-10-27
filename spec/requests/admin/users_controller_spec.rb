@@ -1240,6 +1240,18 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
       end
 
+      it "reports the admin as the actor of the membership event" do
+        events =
+          DiscourseEvent.track_events(:user_added_to_group) do
+            post "/admin/users/#{user.id}/groups.json", params: { group_id: group.id }
+          end
+
+        expect(events).to contain_exactly(
+          event_name: :user_added_to_group,
+          params: [user, group, { automatic: false, acting_user: admin }],
+        )
+      end
+
       it "returns not-found error when there is no group" do
         group.destroy!
 
@@ -1294,6 +1306,20 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.primary_group).to eq(nil)
+      end
+
+      it "reports the admin as the actor of the membership event" do
+        group = Fabricate(:group, users: [user])
+
+        events =
+          DiscourseEvent.track_events(:user_removed_from_group) do
+            delete "/admin/users/#{user.id}/groups/#{group.id}.json"
+          end
+
+        expect(events).to contain_exactly(
+          event_name: :user_removed_from_group,
+          params: [user, group, { acting_user: admin }],
+        )
       end
 
       it "returns not-found error when there is no group" do

@@ -5,7 +5,7 @@ class GroupManager
     @group = group
   end
 
-  def add(user_ids, automatic: false)
+  def add(user_ids, automatic: false, acting_user: nil)
     return [] if user_ids.blank?
 
     added_user_ids = bulk_add_transaction(user_ids)
@@ -15,12 +15,12 @@ class GroupManager
 
     User
       .where(id: added_user_ids)
-      .find_each { |user| @group.trigger_user_added_event(user, automatic) }
+      .find_each { |user| @group.trigger_user_added_event(user, automatic, acting_user:) }
 
     added_user_ids
   end
 
-  def remove(user_ids)
+  def remove(user_ids, acting_user: nil)
     return [] if user_ids.blank?
 
     removed_group_users = bulk_remove_transaction(user_ids)
@@ -32,7 +32,9 @@ class GroupManager
     bulk_publish_category_updates(removed_user_ids)
     enqueue_pm_notification_cleanup(removed_user_ids)
 
-    User.where(id: removed_user_ids).find_each { |user| @group.trigger_user_removed_event(user) }
+    User
+      .where(id: removed_user_ids)
+      .find_each { |user| @group.trigger_user_removed_event(user, acting_user:) }
     enqueue_user_removed_webhook_events(removed_group_users)
 
     removed_user_ids

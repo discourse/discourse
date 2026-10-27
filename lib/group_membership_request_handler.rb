@@ -18,7 +18,7 @@ class GroupMembershipRequestHandler
 
     Group.transaction do
       if accept
-        group.add(user)
+        group.add(user, acting_user: guardian.user)
         GroupActionLogger.new(guardian.user, group).log_add_user_to_group(user)
       end
 

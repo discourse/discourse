@@ -152,10 +152,10 @@ module DiscourseWorkflows
 
           case config["operation"]
           when "remove"
-            changed = group.remove(user)
+            changed = group.remove(user, acting_user: actor)
             logger.log_remove_user_from_group(user)
           else
-            changed = GroupManager.new(group).add([user.id]).present?
+            changed = GroupManager.new(group).add([user.id], acting_user: actor).present?
             logger.log_add_user_to_group(user)
             changed = set_primary_group(user, group, guardian) || changed if config[
               "set_primary_group"

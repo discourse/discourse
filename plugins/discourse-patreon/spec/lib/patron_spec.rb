@@ -78,5 +78,24 @@ RSpec.describe Patreon::Patron do
       expect(group1.users.to_a).to eq([patreon_user_info.user])
       expect(group2.users.to_a).to eq([patreon_user_info.user])
     end
+
+    it "reports the system user as the actor of the membership changes" do
+      patron = patreon_user_info.user
+      group1.add(Fabricate(:user))
+
+      events = DiscourseEvent.track_events { described_class.sync_groups }
+      membership_events =
+        events.select do |event|
+          %i[user_added_to_group user_removed_from_group].include?(event[:event_name])
+        end
+
+      expect(membership_events.map { |event| event[:params].first }).to include(patron)
+      expect(membership_events.map { |event| event[:event_name] }).to include(
+        :user_removed_from_group,
+      )
+      expect(membership_events.map { |event| event[:params].last[:acting_user] }).to all(
+        eq(Discourse.system_user),
+      )
+    end
   end
 end

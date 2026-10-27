@@ -978,6 +978,29 @@ RSpec.describe Group do
       expect(user.groups).to include(custom_group)
     end
 
+    it "reports the system user as the actor of the automatic changes" do
+      user = Fabricate(:user)
+      user.update_columns(admin: true, trust_level: TrustLevel[1])
+
+      added =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          described_class.refresh_automatic_groups_for_user!(user)
+        end
+      user.update_columns(admin: false)
+      removed =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          described_class.refresh_automatic_groups_for_user!(user)
+        end
+
+      expect(added.map { |event| event[:params].last }).to all(
+        eq(automatic: true, acting_user: Discourse.system_user),
+      )
+      expect(removed.map { |event| event[:params].last }).to all(
+        eq(acting_user: Discourse.system_user),
+      )
+      expect(removed.map { |event| event[:params][1].name }).to contain_exactly("admins", "staff")
+    end
+
     it "adds automatic memberships to staged users" do
       user = Fabricate(:staged)
       user.update_columns(admin: true, moderator: true, trust_level: TrustLevel[4])
@@ -1023,6 +1046,27 @@ RSpec.describe Group do
     ensure
       DiscourseEvent.off(:user_added_to_group, &block)
     end
+  end
+
+  it "reports the system user as the actor of a trust level group change" do
+    user = Fabricate(:user, trust_level: 2)
+
+    events =
+      DiscourseEvent.track_events(:user_added_to_group) do
+        Group.user_trust_level_change!(user.id, 3)
+      end
+
+    expect(events.map { |event| event[:params][1].name }).to contain_exactly("trust_level_3")
+    expect(events.first[:params].last).to eq(automatic: true, acting_user: Discourse.system_user)
+  end
+
+  it "reports the system user when a new user joins trust_level_0" do
+    events = DiscourseEvent.track_events(:user_added_to_group) { Fabricate(:user) }
+
+    expect(events.map { |event| event[:params][1].name }).to include("trust_level_0")
+    expect(events.map { |event| event[:params].last[:acting_user] }).to all(
+      eq(Discourse.system_user),
+    )
   end
 
   describe "group management" do
@@ -1389,6 +1433,43 @@ RSpec.describe Group do
       expect(events).to include(:user_removed_from_group)
     end
 
+    it "passes the acting user to the event" do
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          group.remove(user, acting_user: admin)
+        end
+
+      expect(events).to contain_exactly(
+        event_name: :user_removed_from_group,
+        params: [user, group, { acting_user: admin }],
+      )
+    end
+
+    it "passes a nil acting user when the caller doesn't say who acted" do
+      events = DiscourseEvent.track_events(:user_removed_from_group) { group.remove(user) }
+
+      expect(events.first[:params].last).to eq(acting_user: nil)
+    end
+
+    it "keeps calling listeners that only take the user and the group" do
+      called = nil
+      block = Proc.new { |removed_user, from_group| called = [removed_user, from_group] }
+      DiscourseEvent.on(:user_removed_from_group, &block)
+
+      group.remove(user, acting_user: admin)
+
+      expect(called).to eq([user, group])
+    ensure
+      DiscourseEvent.off(:user_removed_from_group, &block)
+    end
+
+    it "reports the system user when removing automatically" do
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) { group.remove_automatically(user) }
+
+      expect(events.first[:params].last).to eq(acting_user: Discourse.system_user)
+    end
+
     it "enqueues an inaccessible-notifications cleanup for each PM the removed user has notifications on" do
       pm_topic1 = Fabricate(:private_message_topic)
       pm_topic2 = Fabricate(:private_message_topic)
@@ -1512,6 +1593,28 @@ RSpec.describe Group do
       ensure
         DiscourseEvent.off(:user_added_to_group, &block)
       end
+    end
+
+    it "passes the acting user to the event" do
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) { group.add(user, acting_user: admin) }
+
+      expect(events).to contain_exactly(
+        event_name: :user_added_to_group,
+        params: [user, group, { automatic: false, acting_user: admin }],
+      )
+    end
+
+    it "passes a nil acting user when the caller doesn't say who acted" do
+      events = DiscourseEvent.track_events(:user_added_to_group) { group.add(user) }
+
+      expect(events.first[:params].last).to eq(automatic: false, acting_user: nil)
+    end
+
+    it "reports the system user when adding automatically" do
+      events = DiscourseEvent.track_events(:user_added_to_group) { group.add_automatically(user) }
+
+      expect(events.first[:params].last).to eq(automatic: false, acting_user: Discourse.system_user)
     end
 
     context "when adding a user into a public group" do
@@ -1687,6 +1790,18 @@ RSpec.describe Group do
       expect(events.first[:params][2][:automatic]).to eq(true)
     end
 
+    it "passes the acting user to each event" do
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          group.bulk_add([user.id, admin.id], acting_user: admin)
+        end
+
+      expect(events.map { |event| event[:params].last }).to all(
+        eq(automatic: false, acting_user: admin),
+      )
+      expect(events.size).to eq(2)
+    end
+
     it "sets category notification defaults" do
       category = Fabricate(:category)
       group.update!(watching_category_ids: [category.id])
@@ -1838,6 +1953,17 @@ RSpec.describe Group do
 
       expect(events.size).to eq(2)
       expect(events.map { |e| e[:params][0] }).to contain_exactly(user, admin)
+    end
+
+    it "passes the acting user to each event" do
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          group.bulk_remove([user.id, admin.id], acting_user: admin)
+        end
+
+      expect(events.map { |event| event[:params].last }).to eq(
+        [{ acting_user: admin }, { acting_user: admin }],
+      )
     end
 
     it "publishes category updates for removed users" do

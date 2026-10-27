@@ -2454,6 +2454,19 @@ RSpec.describe User do
       expect(group_history.target_user).to eq(user)
     end
 
+    it "reports the system user as the actor of the membership event" do
+      user = Fabricate(:user, active: true, email: "foo@bar.com")
+      email_token = Fabricate(:email_token, user:)
+
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) { EmailToken.confirm(email_token.token) }
+
+      expect(events).to include(
+        event_name: :user_added_to_group,
+        params: [user, group, { automatic: false, acting_user: Discourse.system_user }],
+      )
+    end
+
     it "is automatically added to a group when the email matches the SSO record" do
       user = Fabricate(:user, active: true, email: "sso@bar.com")
       user.create_single_sign_on_record(

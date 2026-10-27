@@ -239,7 +239,7 @@ RSpec.describe DiscourseAssign do
       let!(:third_assignment) { Fabricate(:topic_assignment, assigned_to: group, active: false) }
 
       it "creates missing notifications for added user" do
-        group.add(user)
+        group.add(user, acting_user: Discourse.system_user)
         [first_assignment, second_assignment].each do |assignment|
           expect_job_enqueued(
             job: Jobs::AssignNotification,

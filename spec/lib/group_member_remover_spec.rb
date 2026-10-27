@@ -27,6 +27,18 @@ describe GroupMemberRemover do
       ).to eq(true)
     end
 
+    it "reports the guardian's user as the actor of the event" do
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          described_class.remove(owner.guardian, group, usernames: user.username)
+        end
+
+      expect(events).to contain_exactly(
+        event_name: :user_removed_from_group,
+        params: [user, group, { acting_user: owner }],
+      )
+    end
+
     it "reports users who were not members as skipped" do
       result =
         described_class.remove(owner.guardian, group, usernames: [user.username, user_1.username])
