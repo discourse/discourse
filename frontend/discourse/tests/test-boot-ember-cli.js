@@ -100,7 +100,15 @@ export async function startTests() {
         const module = requirejs(name);
         // Plugin test files are registered as loaders; app modules named "*-test" are namespaces.
         if (typeof module === "function") {
-          availableModules[name] = module;
+          // One broken file must not abort the rest of the run.
+          availableModules[name] = () =>
+            module().catch((error) =>
+              QUnit.module(name, () =>
+                QUnit.test("loads", () => {
+                  throw error;
+                })
+              )
+            );
         }
       }
     }
