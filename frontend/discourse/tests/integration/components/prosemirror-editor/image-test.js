@@ -245,7 +245,7 @@ module(
       );
       const [editor] = await setupRichEditor(
         assert,
-        "![one](https://example.com/one.png)\n\n![clip|video](upload://galleryVideoHash.mp4)\n\n![song|audio](upload://galleryAudioHash.mp3)\n\n![two](https://example.com/two.png)"
+        "![one](/images/avatar.png)\n\n![clip|video](upload://galleryVideoHash.mp4)\n\n![song|audio](upload://galleryAudioHash.mp3)\n\n![two](/images/avatar.png?2)"
       );
       const { view } = editor;
       let secondImagePos;
@@ -265,12 +265,7 @@ module(
       await waitFor(".pswp--open");
 
       assert.dom(".pswp__counter", document.body).hasText("2 / 2");
-      assert
-        .dom(
-          ".pswp__item[aria-hidden='false'] .pswp__img:not(.pswp__img--placeholder)",
-          document.body
-        )
-        .hasAttribute("src", "https://example.com/two.png");
+      assert.dom(".pswp__caption-title", document.body).hasText("two");
 
       await triggerKeyEvent(".pswp", "keydown", "Escape");
       await waitUntil(() => !document.querySelector(".pswp"));
