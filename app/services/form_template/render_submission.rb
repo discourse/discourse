@@ -82,8 +82,6 @@ class FormTemplate::RenderSubmission
     !options.allow_incomplete_answers
   end
 
-  # An oversized snapshot is dropped rather than blocking the post, which is
-  # then created as plain markdown.
   def build_form_submission(form_template:, field_values:, guardian:)
     form_template.process!(guardian)
     context[:form_submission] = FormTemplate::Submission.from_template(
@@ -91,8 +89,6 @@ class FormTemplate::RenderSubmission
       answers: field_values.answers,
       validate: false,
     )
-  rescue FormTemplate::Submission::TooLarge
-    context[:form_submission] = nil
   end
 
   def render(field_values:, form_template:)

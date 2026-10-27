@@ -190,11 +190,8 @@ RSpec.describe FormTemplate::RenderSubmission do
 
       let(:answers) { { description: "x" * FormTemplate::Submission::MAX_BYTES } }
 
-      it { is_expected.to run_successfully }
-
-      it "renders without a form submission" do
-        expect(result.raw).to eq("Omitted.")
-        expect(result.form_submission).to be_nil
+      it "rejects the submission" do
+        expect { result }.to raise_error(FormTemplate::Submission::TooLarge)
       end
     end
 

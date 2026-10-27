@@ -31,7 +31,7 @@ RSpec.describe FormTemplate::Submission do
           answers: answers.merge("description" => "x" * described_class::MAX_BYTES),
           validate: false,
         )
-      end.to raise_error(ArgumentError)
+      end.to raise_error(described_class::TooLarge)
     end
 
     it "retains numeric spelling and isolates the snapshot from caller mutations" do

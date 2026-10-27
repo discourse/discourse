@@ -44,7 +44,7 @@ module Jobs
     # markdown editing instead of blocking the raw rewrite.
     def rewritten_form_data(post, rewrite)
       post.form_submission&.rewrite_answers(&rewrite)&.to_h
-    rescue ArgumentError
+    rescue FormTemplate::Submission::TooLarge
       nil
     end
   end

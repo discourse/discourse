@@ -50,8 +50,8 @@ rewrites are not expected to, and the fallback covers them.
 ## Lifecycle and access
 
 - Submissions are limited to 64 KB, including the definition, and cannot contain
-  NUL characters. A submission over the limit still creates the post, as plain
-  markdown without a saved form.
+  NUL characters. A submission over the limit is rejected with a message asking
+  for shorter answers.
 - The editor payload (`PostSerializer#form_submission`) is included only for
   users who can edit the post. Webhooks never include it. Account exports
   include the author's saved and queued form state.

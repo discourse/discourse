@@ -3,7 +3,10 @@
 require "liquid"
 
 class FormTemplate::Submission
-  class TooLarge < ArgumentError
+  class TooLarge < FormTemplate::InvalidAnswers
+    def initialize(message = I18n.t("form_templates.submission_too_large"))
+      super
+    end
   end
 
   FORMAT_VERSION = 1
@@ -27,9 +30,10 @@ class FormTemplate::Submission
 
   def self.for_edit(post, payload:, guardian:, validate: true)
     guardian.ensure_can_edit!(post)
-    unless post.form_data && payload.is_a?(String) && payload.bytesize <= MAX_BYTES
+    unless post.form_data && payload.is_a?(String)
       raise Discourse::InvalidParameters.new(:form_template_data)
     end
+    raise TooLarge if payload.bytesize > MAX_BYTES
     data = JSON.parse(payload, max_nesting: 20)
     raise ArgumentError unless data.is_a?(Hash)
     new(post.form_data, validate: false).with_answers(data.fetch("answers"), validate:)
