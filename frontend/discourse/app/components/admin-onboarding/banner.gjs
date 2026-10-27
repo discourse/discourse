@@ -218,6 +218,9 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
+  /**
+   * @returns {(typeof OnboardingStep)[]}
+   */
   @cached
   get steps() {
     return applyValueTransformer("admin-onboarding-steps", [...STEPS], {
