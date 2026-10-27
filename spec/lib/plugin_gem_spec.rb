@@ -276,6 +276,9 @@ RSpec.describe PluginGem do
     Bundler.settings.temporary(without: nil) { boot }
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
 
+    Bundler.settings.temporary(only: %i[development], without: nil) { boot }
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
+
     Bundler.settings.temporary(with: %i[migrations], without: %i[development test]) { boot }
     expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0])
   end
