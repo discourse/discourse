@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import { resolveCategories } from "discourse/lib/category-source";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
@@ -25,7 +24,7 @@ export default class FKControlCategoryChooser extends FKBaseControl {
     const ids = this.args.field.value ?? [];
     return new TrackedAsyncData(
       this.site.lazy_load_categories
-        ? resolveCategories(ids)
+        ? Category.asyncFindByIds(ids)
         : Category.findByIds(ids)
     );
   }

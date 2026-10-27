@@ -93,6 +93,7 @@ import {
 } from "discourse/lib/user-presence";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { destroyUserStatuses } from "discourse/lib/user-status-on-autocomplete";
+import Category from "discourse/models/category";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
@@ -242,6 +243,7 @@ export function testCleanup(container, app) {
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
   resetCategoryTagSearchCache();
+  Category.clearAsyncSearchCache();
   destroyUserStatuses();
   resetHighestReadCache();
   resetCardClickListenerSelector();

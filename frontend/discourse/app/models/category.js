@@ -182,6 +182,44 @@ export default class Category extends RestModel {
     return this.findByIds(ids);
   }
 
+  /**
+   * The category and every descendant in breadth-first order. A lazy site pages each level from
+   * the server, skipping categories known to have no children.
+   */
+  static async asyncFindDescendants(category) {
+    if (!Site.current().lazy_load_categories) {
+      return category.descendants;
+    }
+
+    const descendants = [category];
+    const seen = new Set([category.id]);
+    for (let index = 0; index < descendants.length; index++) {
+      const parent = descendants[index];
+      if (parent.has_children === false) {
+        continue;
+      }
+
+      for (let page = 1, received = 0; ; page++) {
+        const { categories, categoriesCount } = await this.asyncSearch("", {
+          parentCategoryId: parent.id,
+          includeAncestors: true,
+          page,
+        });
+        received += categories.length;
+        for (const child of categories) {
+          if (!seen.has(child.id)) {
+            seen.add(child.id);
+            descendants.push(child);
+          }
+        }
+        if (!categories.length || received >= categoriesCount) {
+          break;
+        }
+      }
+    }
+    return descendants;
+  }
+
   static async asyncFindById(id) {
     return (await Category.asyncFindByIds([id]))[0];
   }
@@ -442,11 +480,18 @@ export default class Category extends RestModel {
     });
   }
 
+  static clearAsyncSearchCache() {
+    Object.keys(CATEGORY_ASYNC_SEARCH_CACHE).forEach((key) => {
+      delete CATEGORY_ASYNC_SEARCH_CACHE[key];
+    });
+  }
+
   static async asyncSearch(term, opts) {
     opts ||= {};
 
     const data = {
       term,
+      only_postable: opts.onlyPostable,
       parent_category_id: opts.parentCategoryId,
       include_uncategorized: opts.includeUncategorized,
       select_category_ids: opts.selectCategoryIds,

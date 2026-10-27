@@ -465,14 +465,17 @@ for (const newControls of [false, true]) {
 
         test(`lazy ${multiple ? "multiple" : "single"} ids survive hydration and a later pick without a mount emission`, async function (assert) {
           Site.current().set("lazy_load_categories", true);
-          pretender.get("/categories/find", () =>
-            response({
-              categories: [
-                { id: 9900, name: "Remote", slug: "remote" },
-                { id: 9901, name: "Other remote", slug: "other-remote" },
-              ],
-            })
-          );
+          const remote = [
+            { id: 1, name: "Picked", slug: "picked", permission: 1 },
+            { id: 9900, name: "Remote", slug: "remote" },
+            { id: 9901, name: "Other remote", slug: "other-remote" },
+          ];
+          pretender.get("/categories/find", (request) => {
+            const ids = [request.queryParams.ids].flat().map(Number);
+            return response({
+              categories: remote.filter(({ id }) => ids.includes(id)),
+            });
+          });
           pretender.post("/categories/search", () =>
             response({
               categories: [

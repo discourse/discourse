@@ -894,3 +894,149 @@ module("Unit | Model | category | site lookups", function (hooks) {
     );
   });
 });
+
+module(
+  "Unit | Model | category | async search and descendants",
+  function (hooks) {
+    setupTest(hooks);
+
+    test("asyncSearch asks for postable categories only when told", async function (assert) {
+      const sent = [];
+      pretender.post("/categories/search", (request) => {
+        sent.push(
+          new URLSearchParams(request.requestBody).get("only_postable")
+        );
+        return response({ categories: [], categories_count: 0 });
+      });
+
+      await Category.asyncSearch("postable-a", { onlyPostable: true });
+      await Category.asyncSearch("postable-b");
+
+      assert.strictEqual(sent[0], "true", "the rule is sent");
+      assert.notStrictEqual(sent[1], "true", "it is absent otherwise");
+    });
+
+    test("clearAsyncSearchCache makes the next search ask the server again", async function (assert) {
+      let requests = 0;
+      pretender.post("/categories/search", () => {
+        requests++;
+        return response({ categories: [], categories_count: 0 });
+      });
+
+      await Category.asyncSearch("cached-term");
+      await Category.asyncSearch("cached-term");
+      assert.strictEqual(requests, 1, "a repeated search is cached");
+
+      Category.clearAsyncSearchCache();
+      await Category.asyncSearch("cached-term");
+      assert.strictEqual(requests, 2, "the cleared search is fetched again");
+    });
+
+    test("asyncFindDescendants returns the preloaded tree without asking the server", async function (assert) {
+      const site = Site.current();
+      site.set("lazy_load_categories", false);
+      site.updateCategories([
+        { id: 9800, name: "Root", slug: "root9800" },
+        {
+          id: 9801,
+          name: "Child",
+          slug: "child9801",
+          parent_category_id: 9800,
+        },
+        {
+          id: 9802,
+          name: "Grandchild",
+          slug: "grandchild9802",
+          parent_category_id: 9801,
+        },
+      ]);
+      let requests = 0;
+      pretender.post("/categories/search", () => {
+        requests++;
+        return response({ categories: [], categories_count: 0 });
+      });
+
+      const result = await Category.asyncFindDescendants(
+        Category.findById(9800)
+      );
+
+      assert.deepEqual(
+        result.map((category) => category.id),
+        [9800, 9801, 9802]
+      );
+      assert.strictEqual(requests, 0, "nothing is fetched");
+    });
+
+    test("asyncFindDescendants pages every level from the server when lazy", async function (assert) {
+      const site = Site.current();
+      site.set("lazy_load_categories", true);
+      site.updateCategories([{ id: 9600, name: "Root", has_children: true }]);
+      const children = Array.from({ length: 26 }, (_, index) => ({
+        id: 9601 + index,
+        name: `Child ${index}`,
+        parent_category_id: 9600,
+        has_children: index === 0 || index === 25,
+      }));
+      const levels = {
+        9600: children,
+        9601: [
+          {
+            id: 9700,
+            name: "First grandchild",
+            parent_category_id: 9601,
+            has_children: true,
+          },
+        ],
+        9626: [
+          {
+            id: 9701,
+            name: "Last grandchild",
+            parent_category_id: 9626,
+            has_children: false,
+          },
+        ],
+        9700: [
+          {
+            id: 9702,
+            name: "Great grandchild",
+            parent_category_id: 9700,
+            has_children: false,
+          },
+        ],
+      };
+      const requests = [];
+      pretender.post("/categories/search", (request) => {
+        const params = new URLSearchParams(request.requestBody);
+        const parent = Number(params.get("parent_category_id"));
+        const page = Number(params.get("page") || 1);
+        requests.push([parent, page]);
+        const rows = levels[parent] ?? [];
+        return response({
+          categories_count: rows.length,
+          categories: rows.slice((page - 1) * 25, page * 25),
+          ancestors: [],
+        });
+      });
+
+      const result = await Category.asyncFindDescendants(
+        Category.findById(9600)
+      );
+
+      assert.deepEqual(
+        result.map((category) => category.id),
+        [9600, ...children.map((category) => category.id), 9700, 9701, 9702],
+        "all pages and depths appear in breadth first order"
+      );
+      assert.deepEqual(
+        [...new Set(requests.map(([parent]) => parent))].sort(),
+        [9600, 9601, 9626, 9700],
+        "only parents with children are searched"
+      );
+      assert.deepEqual(
+        requests.filter(([parent]) => parent === 9600).map(([, page]) => page),
+        [1, 2],
+        "a level larger than one response is paged"
+      );
+    });
+  }
+);

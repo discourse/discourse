@@ -1,11 +1,8 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
-import {
-  type CategoryRecord,
-  knownCategories,
-} from "discourse/lib/category-source";
+import { knownCategories } from "discourse/lib/category-source";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
-import type { CategoryItem } from "./category-types.ts";
+import type { CategoryItem, CategoryRecord } from "./category-types.ts";
 
 /** Decodes entities while preserving literal markup as text. */
 export function decodeCategoryText(text: string): string {

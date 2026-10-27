@@ -4,7 +4,6 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import {
-  type CategoryRecord,
   fetchCategoryPage,
   knownCategories,
   loadDescendants,
@@ -26,6 +25,7 @@ import {
 } from "./category-renderers.gts";
 import type {
   CategoryItem,
+  CategoryRecord,
   CategorySettings,
   CategorySite,
   CategoryValue,
