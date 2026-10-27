@@ -15,7 +15,7 @@ describe "Category recipe migration details" do
 
     picker = PageObjects::Components::UiKit::DSelect.at(".category-breadcrumb__category-selector")
     picker.open
-    expect(picker.option_count).to eq(15)
+    expect(picker.option_values.size).to eq(15)
     picker.search("Tomatoes")
     expect(picker).to have_option_value(child.id)
   end

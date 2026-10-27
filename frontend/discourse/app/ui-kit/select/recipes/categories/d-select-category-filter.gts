@@ -138,7 +138,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     return {
       parentCategory: this.args.parentCategory,
       items: this.args.items,
-      editing: this.args.editing,
       uncategorized: this.#uncategorized,
       descriptions: this.#descriptions,
       categories: this.site.lazy_load_categories
@@ -160,7 +159,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       return this.#loadPage(query, opts);
     }
     const uncategorized = this.#uncategorized;
-    const uncategorizedId = this.site.uncategorized_category_id;
     this.moreCount = 0;
     let categories: CategoryRecord[];
     if (query) {
@@ -178,7 +176,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       categories = [...(this.args.items ?? [])];
     }
     return categories
-      .filter((category) => uncategorized || category.id !== uncategorizedId)
+      .filter((category) => uncategorized || !category.isUncategorizedCategory)
       .map((category) => categoryItem(category, this.#descriptions));
   }
 

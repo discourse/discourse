@@ -469,6 +469,23 @@ module(
         );
       });
 
+      test("null composer rules list every category", async function (assert) {
+        await render(
+          <template>
+            <DSelectCategory
+              @permission="create"
+              @prioritize={{null}}
+              @readOnly={{null}}
+              @scope={{null}}
+            />
+          </template>
+        );
+        await select().open();
+
+        assert.dom(".d-select__error").doesNotExist("the list loads");
+        assert.true(optionValues().includes("1"));
+      });
+
       test("prioritize lists that family first, then everything else", async function (assert) {
         this.siteSettings.allow_uncategorized_topics = true;
         const total = Site.current().sortedCategories.length;

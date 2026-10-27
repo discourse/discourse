@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { set } from "@ember/object";
 import {
   click,
@@ -335,6 +336,38 @@ module(
           ALL_CATEGORIES_ID,
           NO_CATEGORIES_ID,
         ]);
+      });
+
+      test("toggling editing updates the shortcuts without reloading the level", async function (assert) {
+        const items = topLevel();
+        const value = items[0];
+        const editing = tracked(false);
+        let loads = 0;
+        const load = () => {
+          loads++;
+          return items.map((category) => ({
+            id: category.id,
+            name: category.name,
+          }));
+        };
+
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @editing={{editing.value}}
+              @load={{load}}
+              @value={{value}}
+            />
+          </template>
+        );
+        await select().open();
+        assert.dom(optionFor(ALL_CATEGORIES_ID)).exists();
+
+        editing.value = true;
+        await settled();
+
+        assert.dom(optionFor(ALL_CATEGORIES_ID)).doesNotExist();
+        assert.strictEqual(loads, 1, "the level is not asked again");
       });
 
       test("editing offers no shortcut back to every category", async function (assert) {

@@ -229,12 +229,11 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const excluded = new Set((this.args.exclude ?? []).map(Number));
     const onlyPostable = this.args.permission === "create";
     const uncategorized = this.#uncategorized;
-    const uncategorizedId = this.site.uncategorized_category_id;
     const subcategories = this.args.subcategories !== false;
     return (category: CategoryRecord) =>
       readOnly.has(category.id) ||
-      ((!onlyPostable || category.permission === 1) &&
-        (uncategorized || category.id !== uncategorizedId) &&
+      ((!onlyPostable || category.canCreateTopic) &&
+        (uncategorized || !category.isUncategorizedCategory) &&
         (subcategories || !category.parent_category_id) &&
         !excluded.has(category.id));
   }
@@ -250,8 +249,8 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
-  #idOf(value?: CategoryValue) {
-    return typeof value === "object" ? value.id : value;
+  #idOf(value?: CategoryValue | null) {
+    return value && typeof value === "object" ? value.id : value;
   }
 
   /** The id of the family one level up from a category: its parent, or itself at the top. */

@@ -80,7 +80,7 @@ describe "Category pickers with the new select controls" do
         visit "/latest"
 
         top_breadcrumb.open
-        expect(top_breadcrumb.option_count).to eq(15)
+        expect(top_breadcrumb.option_values.size).to eq(15)
 
         footer = ".d-select__footer"
         more =
