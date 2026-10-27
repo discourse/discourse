@@ -480,6 +480,9 @@ RSpec.describe DiscourseWorkflows::NodeType do
         topic_closed
         topic_published
         topic_timer_changed
+        topic_timer_set
+        topic_timer_cleared
+        topic_timer_completed
         stale_topic
         topic_tag_changed
       ]

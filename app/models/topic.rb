@@ -1780,6 +1780,7 @@ class Topic < ActiveRecord::Base
     topic_timer_options.merge!(silent: silent) if silent
     topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
     topic_timer.status_type = status_type
+    topic_timer.acting_user = by_user || Discourse.system_user
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = based_on_last_post.present?

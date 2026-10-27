@@ -127,8 +127,8 @@ class Topic::UpdateSlowMode
     params.ends_at.present? && slow_mode_timer.present?
   end
 
-  def reschedule_end(params:, slow_mode_timer:)
-    slow_mode_timer.update!(execute_at: params.ends_at)
+  def reschedule_end(params:, guardian:, slow_mode_timer:)
+    slow_mode_timer.update!(execute_at: params.ends_at, acting_user: guardian.user)
   end
 
   def no_longer_ending(params:, slow_mode_timer:)
