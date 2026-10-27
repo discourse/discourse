@@ -228,16 +228,32 @@ body.has-full-page-chat {
   }
 }
 
-// the banner publishes its height on its parent, so the offset must be read
-// from wherever it renders: the channel route when chat is the homepage
+// the banner floats over the message list instead of shortening it, so the
+// list keeps its full height and messages scroll underneath
 .c-routes.--channel {
-  --chat-content-offset: var(--admin-onboarding-banner-height, 0px);
+  position: relative;
 
   > .admin-onboarding-banner {
-    padding-inline: var(--space-6);
+    position: absolute;
+
+    // the navbar's height plus its bottom border
+    top: calc(var(--chat-header-offset) + 1px);
+    left: 0;
+    right: 0;
+
+    // the scroller stacks at 1
+    z-index: 2;
+    padding: var(--space-4) var(--space-6);
+    pointer-events: none;
 
     @include viewport.until(sm) {
-      padding-inline: var(--space-2);
+      padding: var(--space-2);
+    }
+
+    .admin-onboarding-banner__wrap {
+      pointer-events: auto;
+      background: var(--secondary);
+      box-shadow: var(--shadow-card);
     }
   }
 }

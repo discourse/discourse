@@ -10,7 +10,9 @@
   .full-page-chat & {
     padding-inline: 1rem;
     box-sizing: border-box;
-    top: 2rem;
+
+    // queue under a floating onboarding banner, which publishes its height
+    top: calc(2rem + var(--admin-onboarding-banner-height, 0px));
   }
 
   // float notices below the pinned bar only while it's actually visible
