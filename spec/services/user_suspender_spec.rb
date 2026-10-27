@@ -126,7 +126,7 @@ RSpec.describe UserSuspender do
         )
       end
 
-      it "delivers a suspension email containing the reason without an optional message" do
+      it "delivers a suspension email with the reason when DSA reporting is enabled" do
         SiteSetting.dsa_reporting_enabled = true
         user.user_option.update!(timezone: "Asia/Singapore")
 
