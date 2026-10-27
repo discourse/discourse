@@ -8,10 +8,10 @@ function offsetStyle(reaction) {
 }
 
 export default class LiveReactionOverlay extends Component {
-  @service liveWebrtc;
+  @service liveReactions;
 
   get reactions() {
-    return this.liveWebrtc.reactionsFor(this.args.room.id);
+    return this.liveReactions.reactionsFor(this.args.room.id);
   }
 
   <template>

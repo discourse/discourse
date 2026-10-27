@@ -60,10 +60,6 @@ class LiveWebrtcStub extends Service {
     return false;
   }
 
-  reactionsFor() {
-    return [];
-  }
-
   setWatching() {}
   join() {}
   leave() {}

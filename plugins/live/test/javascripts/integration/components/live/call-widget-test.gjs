@@ -75,10 +75,6 @@ class LiveWebrtcStub extends Service {
     return false;
   }
 
-  reactionsFor() {
-    return [];
-  }
-
   remoteStreamFor(roomId, userId) {
     return this.videoStreams.get(`${roomId}:${userId}`);
   }

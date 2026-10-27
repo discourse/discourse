@@ -8,7 +8,7 @@ import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class LiveReactionPicker extends Component {
-  @service liveWebrtc;
+  @service liveReactions;
   @service site;
   @service siteSettings;
 
@@ -19,7 +19,7 @@ export default class LiveReactionPicker extends Component {
   }
 
   get title() {
-    return this.liveWebrtc.reactionsRateLimited
+    return this.liveReactions.rateLimited
       ? i18n("live.reactions.rate_limited")
       : i18n("live.reactions.title");
   }
@@ -27,14 +27,14 @@ export default class LiveReactionPicker extends Component {
   // The menu stays open so a burst of applause doesn't need a reopen per clap.
   @action
   react(emoji) {
-    this.liveWebrtc.sendReaction(this.args.room.id, emoji);
+    this.liveReactions.send(this.args.room.id, emoji);
   }
 
   <template>
     {{#if this.emojis.length}}
       <DMenu
         @ariaLabel={{this.title}}
-        @disabled={{this.liveWebrtc.reactionsRateLimited}}
+        @disabled={{this.liveReactions.rateLimited}}
         @icon="far-face-smile"
         @identifier="live-reaction-menu"
         @placement="top"

@@ -1,11 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseLater from "discourse/lib/later";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
@@ -43,7 +40,6 @@ import {
   setPreferredScreenQuality,
   setPreferredVoiceQuality,
 } from "../../lib/live/quality-preferences.js";
-import ReactionFeed from "../../lib/live/reaction-feed.js";
 import RemoteStreamRegistry from "../../lib/live/remote-stream-registry.js";
 import { activeRingingEntries } from "../../lib/live/ringing.js";
 import RoomMessageQueue from "../../lib/live/room-message-queue.js";
@@ -76,6 +72,7 @@ export default class LiveWebrtcService extends Service {
   @service messageBus;
   @service modal;
   @service siteSettings;
+  @service("live-reactions") liveReactions;
   @service("live-rooms") liveRooms;
   @service toasts;
 
@@ -96,7 +93,6 @@ export default class LiveWebrtcService extends Service {
   @tracked cameraQuality = preferredCameraQuality();
   @tracked screenQuality = preferredScreenQuality();
   @tracked screenContent = preferredScreenContent();
-  @tracked reactionsRateLimited = false;
 
   #connectingRoomIds = new Set();
   #activeRoomIds = new Set();
@@ -124,8 +120,6 @@ export default class LiveWebrtcService extends Service {
   #pendingPlaybackElements = new WeakSet();
   #cameraRestorePromise = null;
   #queuedCameraRestoreRoomId = null;
-  #reactionFeed = new ReactionFeed();
-  #reactionsRateLimitTimer = null;
 
   #signaling;
   #peerManager;
@@ -437,7 +431,6 @@ export default class LiveWebrtcService extends Service {
     super.willDestroy(...arguments);
 
     this.#joinRevision++;
-    cancel(this.#reactionsRateLimitTimer);
     this.#pttManager.destroy();
     this.#idleTracker.stop();
     this.#audioMonitor.destroyAll();
@@ -663,53 +656,6 @@ export default class LiveWebrtcService extends Service {
 
   captionsFor(roomId) {
     return this.#transcription.captionsFor(roomId);
-  }
-
-  reactionsFor(roomId) {
-    return this.#reactionFeed.forRoom(roomId);
-  }
-
-  // Shown locally straight away for instant feedback; the broadcast echo of
-  // our own reaction is ignored.
-  async sendReaction(roomId, emoji) {
-    if (this.reactionsRateLimited) {
-      return;
-    }
-
-    const reaction = this.#reactionFeed.add({
-      roomId,
-      userId: this.currentUser.id,
-      username: this.currentUser.username,
-      emoji,
-    });
-
-    try {
-      await ajax(`/live/rooms/${roomId}/reaction`, {
-        type: "POST",
-        data: {
-          emoji,
-          participant_session_id: this.#roomSessions.get(roomId),
-        },
-      });
-      // Only once accepted, so the transcript holds what others actually saw.
-      this.#transcription.recordReaction(
-        roomId,
-        this.currentUser.id,
-        this.currentUser.username,
-        emoji
-      );
-    } catch (error) {
-      this.#reactionFeed.remove(reaction.id);
-      // Hitting the rate limit mid-burst isn't worth a popup; the picker
-      // disables itself until the server's window reopens instead.
-      if (error?.jqXHR?.status === 429) {
-        this.#holdReactions(
-          error.jqXHR.responseJSON?.extras?.wait_seconds ?? 1
-        );
-      } else {
-        popupAjaxError(error);
-      }
-    }
   }
 
   remoteStreamsFor(roomId) {
@@ -1729,7 +1675,7 @@ export default class LiveWebrtcService extends Service {
     this.#signaling.clearHttpQueue(roomId);
     this.#roomMessageQueue.clear(roomId);
     this.#transcription.stopIfTranscribing(roomId);
-    this.#reactionFeed.clearRoom(roomId);
+    this.liveReactions.clearRoom(roomId);
   }
 
   #handleRoomMessage(roomId, payload) {
@@ -1794,7 +1740,15 @@ export default class LiveWebrtcService extends Service {
     } else if (payload.type === "hand_raise") {
       this.#roster.handleHandRaise(roomId, payload);
     } else if (payload.type === "reaction") {
-      this.#handleReaction(roomId, payload);
+      this.liveReactions.receive(roomId, payload);
+      // Recorded from the broadcast, our own included, so the transcript holds
+      // exactly what everyone in the call saw.
+      this.#transcription.recordReaction(
+        roomId,
+        payload.user_id,
+        payload.username,
+        payload.emoji
+      );
     } else if (payload.type === "kicked") {
       this.#handleKicked(roomId);
     } else if (payload.type === "room_updated") {
@@ -1802,37 +1756,6 @@ export default class LiveWebrtcService extends Service {
     } else if (payload.type === "recording") {
       this.#handleRecordingChanged(payload);
     }
-  }
-
-  #holdReactions(waitSeconds) {
-    this.reactionsRateLimited = true;
-    cancel(this.#reactionsRateLimitTimer);
-    this.#reactionsRateLimitTimer = discourseLater(
-      () => {
-        this.reactionsRateLimited = false;
-        this.#reactionsRateLimitTimer = null;
-      },
-      Math.max(1, waitSeconds) * 1000
-    );
-  }
-
-  #handleReaction(roomId, payload) {
-    if (Number(payload.user_id) === this.currentUser?.id) {
-      return;
-    }
-
-    this.#reactionFeed.add({
-      roomId,
-      userId: payload.user_id,
-      username: payload.username,
-      emoji: payload.emoji,
-    });
-    this.#transcription.recordReaction(
-      roomId,
-      payload.user_id,
-      payload.username,
-      payload.emoji
-    );
   }
 
   #handleKicked(roomId) {
