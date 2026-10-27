@@ -21954,24 +21954,59 @@ CREATE UNIQUE INDEX index_developers_on_user_id ON public.developers USING btree
 
 
 --
--- Name: index_directory_items_on_days_visited; Type: INDEX; Schema: public; Owner: -
+-- Name: index_directory_items_on_period_type_and_days_visited_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_directory_items_on_days_visited ON public.directory_items USING btree (days_visited);
-
-
---
--- Name: index_directory_items_on_likes_given; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_directory_items_on_likes_given ON public.directory_items USING btree (likes_given);
+CREATE INDEX index_directory_items_on_period_type_and_days_visited_and_id ON public.directory_items USING btree (period_type, days_visited, id);
 
 
 --
--- Name: index_directory_items_on_likes_received; Type: INDEX; Schema: public; Owner: -
+-- Name: index_directory_items_on_period_type_and_likes_given_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_directory_items_on_likes_received ON public.directory_items USING btree (likes_received);
+CREATE INDEX index_directory_items_on_period_type_and_likes_given_and_id ON public.directory_items USING btree (period_type, likes_given, id);
+
+
+--
+-- Name: index_directory_items_on_period_type_and_likes_received_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directory_items_on_period_type_and_likes_received_and_id ON public.directory_items USING btree (period_type, likes_received, id);
+
+
+--
+-- Name: index_directory_items_on_period_type_and_post_count_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directory_items_on_period_type_and_post_count_and_id ON public.directory_items USING btree (period_type, post_count, id);
+
+
+--
+-- Name: index_directory_items_on_period_type_and_posts_read_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directory_items_on_period_type_and_posts_read_and_id ON public.directory_items USING btree (period_type, posts_read, id);
+
+
+--
+-- Name: index_directory_items_on_period_type_and_solutions_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directory_items_on_period_type_and_solutions_and_id ON public.directory_items USING btree (period_type, solutions, id);
+
+
+--
+-- Name: index_directory_items_on_period_type_and_topic_count_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directory_items_on_period_type_and_topic_count_and_id ON public.directory_items USING btree (period_type, topic_count, id);
+
+
+--
+-- Name: index_directory_items_on_period_type_and_topics_entered_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directory_items_on_period_type_and_topics_entered_and_id ON public.directory_items USING btree (period_type, topics_entered, id);
 
 
 --
@@ -21979,34 +22014,6 @@ CREATE INDEX index_directory_items_on_likes_received ON public.directory_items U
 --
 
 CREATE UNIQUE INDEX index_directory_items_on_period_type_and_user_id ON public.directory_items USING btree (period_type, user_id);
-
-
---
--- Name: index_directory_items_on_post_count; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_directory_items_on_post_count ON public.directory_items USING btree (post_count);
-
-
---
--- Name: index_directory_items_on_posts_read; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_directory_items_on_posts_read ON public.directory_items USING btree (posts_read);
-
-
---
--- Name: index_directory_items_on_topic_count; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_directory_items_on_topic_count ON public.directory_items USING btree (topic_count);
-
-
---
--- Name: index_directory_items_on_topics_entered; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_directory_items_on_topics_entered ON public.directory_items USING btree (topics_entered);
 
 
 --
@@ -26164,6 +26171,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261027013355'),
+('20261026231322'),
+('20261026231200'),
 ('20261021063131'),
 ('20261021063122'),
 ('20261021061850'),

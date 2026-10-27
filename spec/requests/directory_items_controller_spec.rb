@@ -213,6 +213,20 @@ RSpec.describe DirectoryItemsController do
       expect(names).to eq(names.sort.reverse)
     end
 
+    it "breaks ties on the same direction as the sort" do
+      items = DirectoryItem.where(period_type: DirectoryItem.period_types[:all])
+      items.update_all(likes_received: 0)
+      user_ids = items.order(:id).pluck(:user_id)
+
+      get "/directory_items.json", params: { order: "likes_received", period: "all" }
+      expect(response.parsed_body["directory_items"].map { |item| item["id"] }).to eq(
+        user_ids.reverse,
+      )
+
+      get "/directory_items.json", params: { order: "likes_received", period: "all", asc: true }
+      expect(response.parsed_body["directory_items"].map { |item| item["id"] }).to eq(user_ids)
+    end
+
     it "finds user by name" do
       get "/directory_items.json", params: { period: "all", name: evil_trout.name }
       expect(response.status).to eq(200)
