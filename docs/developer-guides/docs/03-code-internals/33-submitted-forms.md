@@ -104,15 +104,15 @@ omit, repeat, filter, or conditionally render an answer. Keep structured answers
 as the source of truth and pass the transformation itself to the rewrite API.
 Model callbacks cannot enforce this for SQL updates or `update_columns`.
 
-The following administrative paths bypass the rewrite API and require explicit
-form handling before use on saved submissions:
+`DbHelper.remap` and `DbHelper.regexp_replace` rewrite saved form text and
+historical snapshots, including grace-period originals. Matching and replacement
+use PostgreSQL semantics, with the same table exclusions as text-column remaps.
+Upload scheme and S3 migrations also remap URLs in omitted answers before the
+old storage location is retired.
 
-- `DbHelper.remap` and `DbHelper.regexp_replace` operate on SQL text columns;
-  they do not visit JSONB snapshots. This also affects storage-migration callers.
-- `Upload.migrate_to_new_scheme` and the legacy inline-image conversion in
-  `FileStore::ToS3Migration` write rendered text directly.
-- The `posts:remap`, inline-upload repair, and import normalization tasks operate
-  on rendered text, sometimes with validation disabled.
+The `posts:remap`, inline-upload repair, and import normalization tasks still
+operate on rendered text, sometimes with validation disabled. These paths require
+explicit form handling before use on saved submissions.
 
 Raw-only plugin edits through normal validation are rejected for form posts.
 Such plugins must either edit structured answers explicitly or supply a text
