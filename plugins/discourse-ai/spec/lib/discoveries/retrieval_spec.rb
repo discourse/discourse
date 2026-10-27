@@ -380,6 +380,67 @@ describe DiscourseAi::Discoveries::Retrieval do
     end
   end
 
+  if defined?(DiscourseSolved)
+    describe "#call with solved topics" do
+      fab!(:answer) { Fabricate(:post, topic: topic_1, raw: "Restart the robot to fix it") }
+
+      before do
+        SiteSetting.solved_enabled = true
+        Fabricate(:solved_topic, topic: topic_1, answer_post: answer)
+      end
+
+      def call(lexical)
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { lexical },
+          semantic_retriever: ->(_query) { [] },
+        ).call("robot")
+      end
+
+      it "adds the accepted answer as a passage of a solved topic" do
+        candidates = call([source(post_1), source(post_2)]).candidates
+
+        expect(candidates.first).to include("solved" => true)
+        expect(candidates.first.fetch("passages")).to contain_exactly(
+          include("post_id" => post_1.id),
+          include(
+            "post_id" => answer.id,
+            "post_number" => answer.post_number,
+            "excerpt" => "Restart the robot to fix it",
+            "accepted_answer" => true,
+          ),
+        )
+        expect(candidates.second).not_to include("solved")
+      end
+
+      it "marks an accepted answer that retrieval matched instead of repeating it" do
+        candidates = call([source(answer)]).candidates
+
+        expect(candidates.first.fetch("passages")).to contain_exactly(
+          include("post_id" => answer.id, "accepted_answer" => true),
+        )
+      end
+
+      it "leaves out an accepted answer the user cannot see" do
+        answer.update!(hidden: true)
+
+        candidates = call([source(post_1)]).candidates
+
+        expect(candidates.first).not_to include("solved")
+        expect(candidates.first.fetch("passages").pluck("post_id")).to eq([post_1.id])
+      end
+
+      it "leaves out accepted answers when solved is disabled" do
+        SiteSetting.solved_enabled = false
+
+        candidates = call([source(post_1)]).candidates
+
+        expect(candidates.first).not_to include("solved")
+        expect(candidates.first.fetch("passages").pluck("post_id")).to eq([post_1.id])
+      end
+    end
+  end
+
   describe "#call with external sources" do
     def external_source(name: "Help center", &search)
       Struct
