@@ -15,18 +15,10 @@ export default <template>
     <:actions as |actions|>
       <actions.Wrapped as |wrapped|>
         {{#if @controller.siteSettings.enable_backups}}
-          {{#if @controller.localBackupStorage}}
-            <UppyBackupUploader
-              class={{wrapped.buttonClass}}
-              @done={{routeAction "uploadSuccess"}}
-              @localBackupStorage={{@controller.localBackupStorage}}
-            />
-          {{else}}
-            <UppyBackupUploader
-              class={{wrapped.buttonClass}}
-              @done={{routeAction "remoteUploadSuccess"}}
-            />
-          {{/if}}
+          <UppyBackupUploader
+            class={{wrapped.buttonClass}}
+            @uppyUpload={{@controller.uppyUpload}}
+          />
         {{/if}}
       </actions.Wrapped>
     </:actions>

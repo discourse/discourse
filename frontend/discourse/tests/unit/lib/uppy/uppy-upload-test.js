@@ -1,7 +1,7 @@
 import { destroy } from "@ember/destroyable";
 import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
-import { waitUntil } from "@ember/test-helpers";
+import { triggerEvent, waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -289,39 +289,77 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
     assert.strictEqual(getOwner(upload), owner, "uses it as the owner");
   });
 
-  test("finishUploadsOnDestroy lets an upload in progress finish", async function (assert) {
-    const completed = [];
+  test("attachFileInput rebinds an input without interrupting an upload", async function (assert) {
     let requested = false;
-    let respond;
-    const responded = new Promise((resolve) => (respond = resolve));
-
-    pretender.post(UPLOAD_URL, async (request) => {
+    pretender.post(UPLOAD_URL, async () => {
       requested = true;
-      await responded;
-      return uploadResponse(request.requestBody.get("file").name);
+      await new Promise(() => {});
     });
 
     const upload = new UppyUpload(this.parent, {
-      id: "uppy-upload-finish-test",
+      id: "uppy-upload-attach-test",
       type: "composer",
-      finishUploadsOnDestroy: true,
-      uploadDone: ({ file_name }) => completed.push(file_name),
+      uploadDone: () => {},
     });
 
-    upload.setup(this.fileInput);
-    const uppyDestroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+    upload.attachFileInput(this.fileInput);
+    const uppyInstance = upload.uppyWrapper.uppyInstance;
 
     await upload.addFiles([createFile(SIBLING_FILE)]);
     await waitUntil(() => requested, { timeout: 5000 });
-    run(() => destroy(this.parent));
+    const addFiles = sinon.stub(uppyInstance, "addFiles");
 
-    assert.false(uppyDestroy.called, "keeps the upload going");
+    upload.detachFileInput(this.fileInput);
+    const newInput = document.createElement("input");
+    newInput.type = "file";
+    upload.attachFileInput(newInput);
 
-    respond();
-    await waitUntil(() => uppyDestroy.called, { timeout: 5000 });
+    assert.strictEqual(
+      upload.uppyWrapper.uppyInstance,
+      uppyInstance,
+      "keeps the Uppy instance"
+    );
+    assert.true(upload.uploading, "keeps uploading");
 
-    assert.deepEqual(completed, [SIBLING_FILE], "finishes the upload");
-    assert.true(uppyDestroy.calledOnce, "tears down once idle");
+    await triggerEvent(this.fileInput, "change", {
+      files: [createFile("old.png")],
+    });
+    assert.false(addFiles.called, "unbinds the old input");
+
+    await triggerEvent(newInput, "change", {
+      files: [createFile("new.png")],
+    });
+    assert.true(addFiles.calledOnce, "binds the new input");
+  });
+
+  test("attachFileInput recreates Uppy only when idle", async function (assert) {
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-attach-idle-test",
+      type: "composer",
+      autoStartUploads: false,
+      uploadDone: () => {},
+    });
+
+    upload.attachFileInput(this.fileInput);
+    const previous = upload.uppyWrapper.uppyInstance;
+    upload.attachFileInput(this.fileInput);
+    const uppyInstance = upload.uppyWrapper.uppyInstance;
+
+    assert.notStrictEqual(uppyInstance, previous, "recreates an idle instance");
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+    upload.attachFileInput(this.fileInput);
+
+    assert.strictEqual(
+      upload.uppyWrapper.uppyInstance,
+      uppyInstance,
+      "keeps an instance with queued files"
+    );
+    assert.strictEqual(
+      uppyInstance.getFiles().length,
+      1,
+      "keeps the queued file"
+    );
   });
 
   test("teardown is a no-op before setup", function (assert) {
