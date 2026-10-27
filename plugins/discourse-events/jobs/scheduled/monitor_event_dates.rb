@@ -55,9 +55,10 @@ module Jobs
           next if event_date.finished_at || !event_date.ended?
 
           event = event_date.event
-          recurring = event.recurring?
+          # Preserve the pre-rollover state; archival removes recurrence.
+          was_recurring = event.recurring?
           create_successor_topic =
-            recurring && event.post.topic.archetype == Archetype.default &&
+            was_recurring && event.post.topic.archetype == Archetype.default &&
               SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
 
           if create_successor_topic &&
@@ -85,7 +86,7 @@ module Jobs
                     "Failed successor rollover for event date #{event_date.id}: " \
                       "#{successor_result.inspect_steps}"
             end
-          elsif recurring
+          elsif was_recurring
             event.set_next_recurrent_event_date
           end
 
@@ -98,7 +99,7 @@ module Jobs
               event.post.topic.secure_audience_publish_messages,
             )
 
-            if recurring && !create_successor_topic
+            if was_recurring && !create_successor_topic
               TopicTrackingState.publish_latest(event.post.topic)
               event.set_topic_bump
             end
