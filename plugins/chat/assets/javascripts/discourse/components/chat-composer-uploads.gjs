@@ -72,7 +72,6 @@ export default class ChatComposerUploads extends Component {
   existingUploads = null;
   uploadDropZone = null;
 
-  #gallery = null;
   #previews = new WeakMap();
 
   get inProgressUploads() {
@@ -127,13 +126,21 @@ export default class ChatComposerUploads extends Component {
       this.#previews.has(item)
     );
 
-    this.#gallery = openLightbox(
-      shown.map((item) => {
-        const { type, element, alt } = this.#previews.get(item);
-        return { type, src: element.currentSrc || element.src, element, alt };
-      }),
-      { index: shown.indexOf(upload) }
-    ).finally(() => (this.#gallery = null));
+    // own links to unfinished files, so tiles can release theirs at any time
+    const localUrls = [];
+    const slides = shown.map((item) => {
+      const { type, element, alt } = this.#previews.get(item);
+      let src = element.currentSrc || element.src;
+      if (item.data instanceof Blob) {
+        src = URL.createObjectURL(item.data);
+        localUrls.push(src);
+      }
+      return { type, src, element, alt };
+    });
+
+    openLightbox(slides, { index: shown.indexOf(upload) }).finally(() =>
+      localUrls.forEach((url) => URL.revokeObjectURL(url))
+    );
   }
 
   @bind
@@ -144,11 +151,6 @@ export default class ChatComposerUploads extends Component {
         this.#previews.delete(upload);
       }
     };
-  }
-
-  @bind
-  activeGallery() {
-    return this.#gallery;
   }
 
   @bind
@@ -185,21 +187,19 @@ export default class ChatComposerUploads extends Component {
         <div class="chat-composer-uploads-container">
           {{#each this.uploads as |upload|}}
             <ChatComposerUpload
-              @activeGallery={{this.activeGallery}}
               @isDone={{true}}
               @onCancel={{fn this.removeUpload upload}}
-              @onPreview={{this.openPreview}}
-              @registerPreview={{this.registerPreview}}
+              @onPreview={{fn this.openPreview upload}}
+              @registerPreview={{fn this.registerPreview upload}}
               @upload={{upload}}
             />
           {{/each}}
 
           {{#each this.inProgressUploads as |upload|}}
             <ChatComposerUpload
-              @activeGallery={{this.activeGallery}}
               @onCancel={{fn this.cancelUploading upload}}
-              @onPreview={{this.openPreview}}
-              @registerPreview={{this.registerPreview}}
+              @onPreview={{fn this.openPreview upload}}
+              @registerPreview={{fn this.registerPreview upload}}
               @upload={{upload}}
             />
           {{/each}}

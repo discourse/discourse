@@ -15,7 +15,7 @@ export default class ChatComposerUpload extends Component {
   @service capabilities;
 
   registerPreview = modifier((element) =>
-    this.args.registerPreview?.(this.args.upload, {
+    this.args.registerPreview?.({
       type: this.isVideo ? "video" : "image",
       element,
       alt: this.fileName,
@@ -37,18 +37,8 @@ export default class ChatComposerUpload extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    const url = this.#localPreviewUrl;
-    if (!url) {
-      return;
-    }
-
-    // the upload can finish while its local preview is still shown in the lightbox
-    const gallery = this.args.activeGallery?.();
-    if (gallery) {
-      const revoke = () => URL.revokeObjectURL(url);
-      gallery.then(revoke, revoke);
-    } else {
-      URL.revokeObjectURL(url);
+    if (this.#localPreviewUrl) {
+      URL.revokeObjectURL(this.#localPreviewUrl);
     }
   }
 
@@ -101,11 +91,6 @@ export default class ChatComposerUpload extends Component {
     this._previewFailed = true;
   }
 
-  @action
-  openPreview() {
-    this.args.onPreview?.(this.args.upload);
-  }
-
   <template>
     {{#if @upload}}
       <div
@@ -120,7 +105,7 @@ export default class ChatComposerUpload extends Component {
         {{#if this.hasPreview}}
           <DButton
             class="btn-transparent preview chat-composer-upload__preview-btn"
-            @action={{this.openPreview}}
+            @action={{@onPreview}}
             @translatedAriaLabel={{i18n
               "chat.preview_upload"
               filename=this.fileName

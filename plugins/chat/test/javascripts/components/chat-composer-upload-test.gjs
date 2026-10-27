@@ -5,7 +5,6 @@ import {
   render,
   settled,
   waitFor,
-  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -186,7 +185,7 @@ module("Component | ChatComposerUpload", function (hooks) {
     );
 
     assert.true(
-      this.registerPreview.calledOnceWith(this.upload, {
+      this.registerPreview.calledOnceWith({
         type: "image",
         element: document.querySelector("img.preview-img"),
         alt: "photo.png",
@@ -197,44 +196,11 @@ module("Component | ChatComposerUpload", function (hooks) {
       .hasAria("label", i18n("chat.preview_upload", { filename: "photo.png" }));
 
     await click(".chat-composer-upload__preview-btn");
-    assert.true(this.onPreview.calledOnceWith(this.upload));
+    assert.true(this.onPreview.calledOnce);
 
     this.set("shown", false);
     await settled();
     assert.true(unregister.calledOnce, "unregisters when removed");
-  });
-
-  test("keeps its local preview alive while a lightbox shows it", async function (assert) {
-    const revoke = sinon.spy(URL, "revokeObjectURL");
-    let closeGallery;
-    const gallery = new Promise((resolve) => (closeGallery = resolve));
-    this.set("activeGallery", () => gallery);
-    this.set("uploading", true);
-    this.set("upload", {
-      extension: ".png",
-      progress: 90,
-      fileName: "test.png",
-      data: createFile("test.png", "image/png", PNG_BYTES),
-    });
-
-    await render(
-      <template>
-        {{#if this.uploading}}
-          <ChatComposerUpload
-            @activeGallery={{this.activeGallery}}
-            @upload={{this.upload}}
-          />
-        {{/if}}
-      </template>
-    );
-
-    const src = document.querySelector("img.preview-img").getAttribute("src");
-    this.set("uploading", false);
-    assert.false(revoke.calledWith(src), "waits while the lightbox is open");
-
-    closeGallery();
-    await waitUntil(() => revoke.calledWith(src));
-    assert.true(revoke.calledWith(src), "revokes once the lightbox closes");
   });
 
   test("image - preprocessing upload in progress", async function (assert) {
