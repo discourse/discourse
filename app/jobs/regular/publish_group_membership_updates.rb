@@ -10,15 +10,16 @@ module Jobs
       return if !group
 
       added_members = args[:type] == Group::AUTO_GROUPS_ADD
+      system_user = Discourse.system_user
 
       User
         .human_users
         .where(id: args[:user_ids])
         .each do |user|
           if added_members
-            group.trigger_user_added_event(user, group.automatic?)
+            group.trigger_user_added_event(user, group.automatic?, acting_user: system_user)
           else
-            group.trigger_user_removed_event(user)
+            group.trigger_user_removed_event(user, acting_user: system_user)
           end
         end
     end
