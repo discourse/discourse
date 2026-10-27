@@ -1085,7 +1085,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         original_topic.reload
 
-        suffix = " — #{starts_at.utc.strftime("%Y-%m-%d")}"
+        suffix = " (archived event on #{starts_at.utc.strftime("%Y-%m-%d")})"
 
         expect(original_topic.title.length).to eq(SiteSetting.max_topic_title_length)
         expect(original_topic.title).to end_with(suffix)
@@ -1341,7 +1341,9 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         original_event.reload
         post.reload
 
-        expect(original_topic.title).to eq("#{title} — #{starts_at.utc.strftime("%Y-%m-%d")}")
+        expect(original_topic.title).to eq(
+          "#{title} (archived event on #{starts_at.utc.strftime("%Y-%m-%d")})",
+        )
         expect(original_event.recurrence).to be_blank
         expect(original_event.recurrence_until).to be_nil
         expect(original_event.event_dates.pending).to be_empty
@@ -1375,7 +1377,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         original_topic.reload
         original_event.reload
 
-        expect(original_topic.title).to eq("#{title} — #{starts_on}")
+        expect(original_topic.title).to eq("#{title} (archived event on #{starts_on})")
         expect(original_event.original_starts_at).to eq_time(starts_on.to_time(:utc))
         expect(original_event.recurrence).to be_blank
 
@@ -1665,7 +1667,9 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         second_topic.reload
 
         expect(first_topic.title).not_to eq(second_topic.title)
-        expect(first_topic.title).to end_with(starts_at.utc.strftime("%Y-%m-%d"))
+        expect(first_topic.title).to end_with(
+          "(archived event on #{starts_at.utc.strftime("%Y-%m-%d")})",
+        )
         expect(second_topic.title).to include(starts_at.utc.strftime("%Y-%m-%d"))
         expect(first_topic.title.length).to be <= SiteSetting.max_topic_title_length
         expect(second_topic.title.length).to be <= SiteSetting.max_topic_title_length
@@ -1700,7 +1704,40 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
       end
 
-      it "avoids archive title collisions hidden from the original author" do
+      it "retries a failed archival revision only for a duplicate archived title" do
+        SiteSetting.duplicate_topic_titles = "disallowed"
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly planning title retry"
+        date = starts_at.utc.strftime("%Y-%m-%d")
+        first_archive_title = "#{title} (archived event on #{date})"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+        original_topic = post.topic
+        Fabricate(:topic, title: first_archive_title, category: event_category, user: event_author)
+
+        attempted_titles = []
+        allow_any_instance_of(PostRevisor).to receive(:revise!).and_wrap_original do |method, *args|
+          attempted_titles << args.fetch(1).fetch(:title)
+          method.call(*args)
+        end
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+        expect(attempted_titles).to eq(
+          [first_archive_title, "#{first_archive_title} ##{original_topic.id}"],
+        )
+        expect(original_topic.reload.title).to eq("#{first_archive_title} ##{original_topic.id}")
+        expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
+      end
+
+      it "allows an archived title matching a topic hidden from its author" do
+        SiteSetting.duplicate_topic_titles = "disallowed"
         original_author = Fabricate(:user, refresh_auto_groups: true)
         SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
 
@@ -1716,7 +1753,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
             RAW
 
         original_topic = post.topic
-        archive_title = "#{title} — #{starts_at.utc.strftime("%Y-%m-%d")}"
+        archive_title = "#{title} (archived event on #{starts_at.utc.strftime("%Y-%m-%d")})"
 
         private_group = Fabricate(:group)
         hidden_category =
@@ -1735,7 +1772,8 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         original_topic.reload
 
-        expect(original_topic.title).to eq("#{archive_title} ##{original_topic.id}")
+        expect(original_topic.title).to eq(archive_title)
+        expect(Topic.where(title: archive_title).count).to eq(2)
         expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
       end
 
@@ -2307,7 +2345,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         expect(original_topic.id).to eq(post.topic_id)
         expect(original_topic.title).to eq(
-          "#{title} — #{original_date.starts_at.utc.strftime("%Y-%m-%d")}",
+          "#{title} (archived event on #{original_date.starts_at.utc.strftime("%Y-%m-%d")})",
         )
         expect(original_event.recurrence).to be_blank
         expect(original_event.event_dates.pending).to be_empty

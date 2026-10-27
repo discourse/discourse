@@ -76,6 +76,35 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(successor.first_post.reload.event.recurrence).to eq("every_week")
   end
 
+  it "does not retry an archival revision that fails for another reason" do
+    starts_at = 7.days.after.change(sec: 0)
+    ends_at = starts_at + 1.hour
+    title = "Archive validation failure"
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+          [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+          Meeting notes.
+          [/event]
+        RAW
+    event_date = post.reload.event.event_dates.pending.first
+    original_raw = post.raw
+    attempts = 0
+
+    allow_any_instance_of(PostRevisor).to receive(:revise!) do |_revisor, *_args|
+      attempts += 1
+      false
+    end
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result.success?).to eq(false)
+      expect(result["result.try.default"]&.exception).to be_a(ActiveRecord::RecordNotSaved)
+    end.not_to change(Topic, :count)
+
+    expect(attempts).to eq(1)
+    expect(post.reload.raw).to eq(original_raw)
+    expect(event_date.reload.finished_at).to be_nil
+  end
+
   it "archives the occurrence and creates a successor" do
     starts_at = 7.days.after.change(sec: 0)
     ends_at = starts_at + 1.hour

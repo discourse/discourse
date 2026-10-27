@@ -136,27 +136,52 @@ module DiscourseEvents
         )
 
         post.association(:event).reset
-        revisor = PostRevisor.new(post)
-        post.event_rollover_validation_actor = Discourse.system_user
+        base_suffix = archived_title_suffix(event_date)
+        max_title_attempts = 5
 
-        begin
-          revised =
-            revisor.revise!(
-              post.user,
-              { raw: archived_raw, title: archived_title(original_title) },
-              bypass_bump: true,
-              bypass_rate_limiter: true,
-              bypass_slow_mode: true,
-              silent: true,
-              skip_post_alert: true,
-            )
-        ensure
-          post.event_rollover_validation_actor = nil
-        end
+        max_title_attempts.times do |attempt|
+          # A failed PostRevisor transaction rolls back persisted changes but
+          # may leave the Ruby objects changed. Reload before retrying.
+          if attempt.positive?
+            post.reload
+            post.association(:event).reset
+          end
 
-        unless revised
+          archive_title =
+            topic.title_with_disambiguating_suffix(original_title, base_suffix, attempt:)
+          revisor = PostRevisor.new(post)
+          post.event_rollover_validation_actor = Discourse.system_user
+
+          begin
+            revised =
+              revisor.revise!(
+                post.user,
+                { raw: archived_raw, title: archive_title },
+                bypass_bump: true,
+                bypass_rate_limiter: true,
+                bypass_slow_mode: true,
+                silent: true,
+                skip_post_alert: true,
+              )
+          ensure
+            post.event_rollover_validation_actor = nil
+          end
+
+          break if revised
+
           errors = (topic.errors.full_messages + post.errors.full_messages).uniq
-          raise ActiveRecord::RecordNotSaved.new(errors.to_sentence)
+          # Do not retry if the revision also failed any unrelated validation.
+          details = topic.errors.details
+          duplicate_title =
+            post.errors.empty? && details.present? &&
+              details.all? do |attribute, failures|
+                attribute == :base &&
+                  failures.all? { |failure| failure[:error] == :topic_title_already_used }
+              end
+
+          unless duplicate_title && attempt < max_title_attempts - 1
+            raise ActiveRecord::RecordNotSaved.new(errors.to_sentence)
+          end
         end
       end
 
@@ -267,7 +292,7 @@ module DiscourseEvents
           end
       end
 
-      def archived_title(original_title)
+      def archived_title_suffix(event_date)
         date =
           if event.all_day
             event_date.starts_at.utc.strftime("%Y-%m-%d")
@@ -275,41 +300,7 @@ module DiscourseEvents
             event_date.starts_at.in_time_zone(event.rrule_timezone).strftime("%Y-%m-%d")
           end
 
-        suffix = " — #{date}"
-        candidate = title_with_suffix(original_title, suffix)
-        return candidate unless archived_title_taken?(candidate)
-
-        suffix = " — #{date} ##{topic.id}"
-        candidate = title_with_suffix(original_title, suffix)
-        return candidate unless archived_title_taken?(candidate)
-
-        counter = 2
-
-        loop do
-          suffix = " — #{date} ##{topic.id}-#{counter}"
-          candidate = title_with_suffix(original_title, suffix)
-          return candidate unless archived_title_taken?(candidate)
-
-          counter += 1
-        end
-      end
-
-      def title_with_suffix(original_title, suffix)
-        max_length = SiteSetting.max_topic_title_length
-        return suffix[-max_length, max_length] if suffix.length >= max_length
-
-        title_length = max_length - suffix.length
-        "#{original_title.truncate(title_length, omission: "").rstrip}#{suffix}"
-      end
-
-      def archived_title_taken?(candidate)
-        return false if SiteSetting.duplicate_topic_titles.allowed?
-
-        topic
-          .duplicate_title_candidates
-          .where.not(id: topic.id)
-          .where("lower(title) = ?", candidate.downcase)
-          .exists?
+        " (archived event on #{date})"
       end
 
       def formatted_end(value)
