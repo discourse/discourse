@@ -205,7 +205,7 @@ RSpec.describe PostDestroyer do
         end
 
       expect(events.map { |event| event[:params] }).to eq(
-        [[first_post.topic, { acting_user: author }]],
+        [[first_post.topic, { acting_user: author, from_trash: false }]],
       )
     end
 
@@ -222,7 +222,9 @@ RSpec.describe PostDestroyer do
         end
 
       expect(topic.reload).to be_trashed
-      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: author }]])
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, { acting_user: author, from_trash: false }]],
+      )
     end
 
     it "creates a staff log entry when recovering a reply" do
@@ -511,9 +513,10 @@ RSpec.describe PostDestroyer do
       expect(user_stat.reload.topic_count).to eq(1)
 
       called = 0
-      topic_recovered = ->(topic, acting_user:) do
+      topic_recovered = ->(topic, acting_user:, from_trash:) do
         expect(topic).to eq(post2.topic)
         expect(acting_user).to eq(post2.user)
+        expect(from_trash).to eq(false)
         called += 1
       end
 

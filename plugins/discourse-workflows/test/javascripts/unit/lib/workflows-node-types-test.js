@@ -50,7 +50,10 @@ module("Unit | Utility | workflows node types", function () {
     };
     const unlist = { identifier: "action:unlist_topic" };
 
-    assert.strictEqual(nodeTypeSearchText(topic), "topic close topic");
+    assert.strictEqual(
+      nodeTypeSearchText(topic),
+      "topic close topic trash, remove, restore, undelete"
+    );
     assert.strictEqual(
       nodeTypeSearchText(unlist),
       "unlist topic hide, invisible"

@@ -25,7 +25,7 @@ class PostOwnerChanger
         @topic.user = @new_owner
         if post.user.nil?
           topic_was_deleted = @topic.deleted_at.present?
-          @topic.recover!
+          @topic.recover!(@acting_user)
           # only resurrect an OP trashed alongside its topic, not one moderated individually
           post.recover! if topic_was_deleted && post.deleted_at.present?
         end
