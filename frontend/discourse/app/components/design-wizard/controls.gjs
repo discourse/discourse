@@ -205,6 +205,7 @@ export default class DesignWizardControls extends Component {
           {{else}}
             <Section @title={{i18n "design_wizard.sections.homepage"}}>
               <HomepageSection
+                @additionalHomepages={{this.designWizard.additionalHomepages}}
                 @categoryPageStyle={{this.designWizard.categoryPageStyle}}
                 @homepage={{this.designWizard.homepage}}
                 @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}
@@ -213,21 +214,25 @@ export default class DesignWizardControls extends Component {
               />
             </Section>
 
-            <Section @title={{i18n "design_wizard.sections.welcome_banner"}}>
-              <WelcomeBannerSection
-                @enabled={{this.designWizard.welcomeBanner}}
-                @location={{this.designWizard.welcomeBannerLocation}}
-                @onSelectLocation={{this.selectWelcomeBannerLocation}}
-                @onToggle={{this.toggleWelcomeBanner}}
-              />
-            </Section>
+            {{#if this.designWizard.supportsWelcomeBanner}}
+              <Section @title={{i18n "design_wizard.sections.welcome_banner"}}>
+                <WelcomeBannerSection
+                  @enabled={{this.designWizard.welcomeBanner}}
+                  @location={{this.designWizard.welcomeBannerLocation}}
+                  @onSelectLocation={{this.selectWelcomeBannerLocation}}
+                  @onToggle={{this.toggleWelcomeBanner}}
+                />
+              </Section>
 
-            <Section @title={{i18n "design_wizard.sections.search"}}>
-              <SearchSection
-                @onSelect={{this.selectSearchExperience}}
-                @searchExperience={{this.designWizard.searchExperience}}
-              />
-            </Section>
+            {{/if}}
+            {{#if this.designWizard.supportsSearch}}
+              <Section @title={{i18n "design_wizard.sections.search"}}>
+                <SearchSection
+                  @onSelect={{this.selectSearchExperience}}
+                  @searchExperience={{this.designWizard.searchExperience}}
+                />
+              </Section>
+            {{/if}}
           {{/if}}
         </div>
 
