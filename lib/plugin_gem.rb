@@ -86,8 +86,11 @@ module PluginGem
       end
     pins.delete("bundler")
     app_lock = Bundler.definition.locked_gems
+    app_groups = Bundler.definition.requested_dependencies.flat_map(&:groups).uniq
+    app_groups -= Bundler.settings[:without]
+    app_groups &= Bundler.settings[:only] if Bundler.settings[:only].any?
     dsl = Bundler::Dsl.new
-    dependencies = plugin_dependencies(dsl, gemfiles)
+    dependencies = plugin_dependencies(dsl, gemfiles, app_groups)
     locks = gemfiles.to_h { [it, ensure_lock_matches(it)] }
     locks.each { |gemfile, lock| ensure_app_remotes(gemfile, lock, app_lock) }
     locked = locked_versions(dependencies, pins, locks, app_lock)
@@ -170,9 +173,7 @@ module PluginGem
     raise "Plugin #{File.basename(File.dirname(gemfile))}'s Gemfile uses the gem source #{foreign.join(", ")}; a plugin's gems must come from the application's gem sources (#{remotes.join(", ")})"
   end
 
-  def self.plugin_dependencies(dsl, gemfiles)
-    excluded_groups = %i[development]
-    excluded_groups << :test unless Rails.env.test?
+  def self.plugin_dependencies(dsl, gemfiles, app_groups)
     # A Gemfile can eval_gemfile other files. Their gems count for the lock
     # of the plugin's top-level Gemfile.
     gemfiles.to_h do |gemfile|
@@ -188,7 +189,7 @@ module PluginGem
         raise "Plugin #{dependency.gemfile.dirname.basename}'s Gemfile declares #{dependency.name} from #{dependency.source.class.name.demodulize.downcase}; a plugin's gems must come from the application's gem sources or a path"
       end
       dependencies.select! do |dependency|
-        dependency.should_include? && (dependency.groups - excluded_groups).any?
+        dependency.should_include? && dependency.groups.intersect?(app_groups)
       end
       [gemfile, dependencies]
     end

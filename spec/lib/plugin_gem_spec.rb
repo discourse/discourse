@@ -249,28 +249,35 @@ RSpec.describe PluginGem do
     expect(installed).to be_empty
   end
 
-  it "loads test dependencies only in the test environment and ignores development dependencies" do
+  it "loads dependencies from the groups enabled for the application" do
     add_plugin(
       "one",
       <<~GEMFILE,
       gem "beta"
-      gem "not-on-rubygems", group: :development
+      gem "alpha", group: :development
       gem "shared", group: :test
+      gem "gamma", group: :migrations
     GEMFILE
       lock: {
+        "alpha" => "1.1.0",
         "beta" => "1.0.0",
-        "not-on-rubygems" => "1.0.0",
+        "gamma" => "1.0.0",
+        git_gem.name => git_gem.version.to_s,
         "shared" => "1.0.0",
       },
     )
 
-    allow(Rails.env).to receive(:test?).and_return(false)
-    boot
+    Bundler.settings.temporary(without: %i[development test]) { boot }
     expect(activated).to eq(%w[beta-1.0.0])
 
-    allow(Rails.env).to receive(:test?).and_return(true)
-    boot
+    Bundler.settings.temporary(without: %i[development]) { boot }
     expect(activated).to eq(%w[beta-1.0.0 shared-1.0.0])
+
+    Bundler.settings.temporary(without: nil) { boot }
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
+
+    Bundler.settings.temporary(with: %i[migrations], without: %i[development test]) { boot }
+    expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0])
   end
 
   it "ignores dependencies for other platforms when selecting lock pins" do
@@ -390,7 +397,7 @@ RSpec.describe PluginGem do
       File.join(dir, "Gemfile"),
       %(source "https://rubygems.org"\neval_gemfile "dependencies.rb"\n),
     )
-    boot
+    Bundler.settings.temporary(without: %i[development]) { boot }
     expect(activated).to be_empty
 
     File.write(nested, <<~GEMFILE)
