@@ -54,7 +54,6 @@ const aliases = [
 
 export function buildConfig({ devMode } = {}) {
   const isProduction = process.env.EMBER_ENV === "production";
-  const brotliSizes = new Map();
 
   if (!isProduction) {
     process.env.NODE_ENV = "development";
@@ -210,12 +209,8 @@ export function buildConfig({ devMode } = {}) {
           }
         },
       },
-      brotliAssetsPlugin({ enabled: isProduction, sizes: brotliSizes }),
-      bundleAnalyzerPlugin({
-        brotliSizes,
-        compress: isProduction,
-        pruneStale: devMode,
-      }),
+      brotliAssetsPlugin({ enabled: isProduction }),
+      bundleAnalyzerPlugin({ compress: isProduction }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {

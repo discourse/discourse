@@ -3,8 +3,7 @@ import * as fs from "fs";
 import { relative } from "path";
 import brotli from "./brotli.mjs";
 
-const BUNDLE_ANALYSIS_RE =
-  /^assets\/js\/bundle-analysis-\w+\.digested\.json(\.br)?$/;
+const BUNDLE_ANALYSIS_RE = /^bundle-analysis-\w+\.digested\.json(\.br)?$/;
 
 // rolldown's `chunk.name` keeps the original seed-module name even when
 // chunkFileNames renames the file.
@@ -36,20 +35,14 @@ function rel(id) {
 }
 
 // Describes the finished bundle: what each chunk weighs, what is inside it, and
-// which files dynamically import it. Rails finds the report by name on disk: a
-// watching build runs this hook on its own schedule, so neither the manifest nor
-// the bundle a later plugin is handed can be relied on to mention it.
-export default function bundleAnalyzerPlugin({
-  brotliSizes,
-  compress,
-  pruneStale,
-} = {}) {
-  let reportFileName;
-
+// which files dynamically import it. Written from `writeBundle`, where the
+// chunks a browser will fetch are already on disk to be measured; Rails finds
+// the report by globbing for its name.
+export default function bundleAnalyzerPlugin({ compress } = {}) {
   return {
     name: "bundle-analyzer",
 
-    async generateBundle(_options, bundle) {
+    async writeBundle(options, bundle) {
       const chunks = {};
       const entrypoints = [];
       const dynamicEntrypoints = [];
@@ -66,6 +59,7 @@ export default function bundleAnalyzerPlugin({
 
       for (const [fileName, chunk] of chunkList) {
         const rawSize = Buffer.byteLength(chunk.code, "utf8");
+        const compressed = compressedSize(`${options.dir}/${fileName}.br`);
 
         const modules = Object.entries(chunk.modules)
           .map(([moduleId, m]) => ({
@@ -93,7 +87,7 @@ export default function bundleAnalyzerPlugin({
           isEntry: chunk.isEntry,
           isDynamicEntry: chunk.isDynamicEntry,
           rawSize,
-          brotliSize: brotliSizes.get(fileName) ?? null,
+          brotliSize: compressed,
           imports: chunk.imports,
           modules,
           importSites,
@@ -121,36 +115,29 @@ export default function bundleAnalyzerPlugin({
         .update(json)
         .digest("hex")
         .slice(0, 12);
-      const fileName = `assets/js/bundle-analysis-${digest}.digested.json`;
+      const fileName = `bundle-analysis-${digest}.digested.json`;
+      const dir = `${options.dir}/assets/js`;
 
-      this.emitFile({ type: "asset", fileName, source: json });
-      reportFileName = fileName;
+      fs.writeFileSync(`${dir}/${fileName}`, json);
 
       if (compress) {
-        this.emitFile({
-          type: "asset",
-          fileName: `${fileName}.br`,
-          source: await brotli(Buffer.from(json, "utf8")),
-        });
-      }
-    },
-
-    // A watching build never clears its output directory, and each report is the
-    // size of the bundle it describes. Swept after the write, so the name in the
-    // manifest always points at a file that exists.
-    writeBundle() {
-      const dir = "./dist/assets/js";
-      // Without a report of its own, this pass would sweep away the live one.
-      if (!pruneStale || !reportFileName || !fs.existsSync(dir)) {
-        return;
+        fs.writeFileSync(
+          `${dir}/${fileName}.br`,
+          await brotli(Buffer.from(json, "utf8"))
+        );
       }
 
+      // A watching build never clears its output directory, and each report is
+      // the size of the bundle it describes.
       for (const entry of fs.readdirSync(dir)) {
-        const path = `assets/js/${entry}`;
-        if (BUNDLE_ANALYSIS_RE.test(path) && !path.startsWith(reportFileName)) {
+        if (BUNDLE_ANALYSIS_RE.test(entry) && !entry.startsWith(fileName)) {
           fs.rmSync(`${dir}/${entry}`);
         }
       }
     },
   };
+}
+
+function compressedSize(path) {
+  return fs.existsSync(path) ? fs.statSync(path).size : null;
 }

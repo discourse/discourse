@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import brotli from "./brotli.mjs";
 
 // Ships a `.br` beside every chunk for nginx to serve under `brotli_static`.
-export default function brotliAssetsPlugin({ enabled, sizes } = {}) {
+export default function brotliAssetsPlugin({ enabled } = {}) {
   let compressed = new Map();
 
   return {
@@ -13,7 +13,6 @@ export default function brotliAssetsPlugin({ enabled, sizes } = {}) {
         return;
       }
 
-      sizes.clear();
       const stillHere = new Map();
 
       await Promise.all(
@@ -25,7 +24,6 @@ export default function brotliAssetsPlugin({ enabled, sizes } = {}) {
             const br = compressed.get(key) ?? (await brotli(source));
 
             stillHere.set(key, br);
-            sizes.set(fileName, br.length);
             this.emitFile({
               type: "asset",
               fileName: `${fileName}.br`,
