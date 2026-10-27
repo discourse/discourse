@@ -364,6 +364,15 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:lock_post" => [
+            {
+              name: "Lock the trigger post against edits",
+              parameters: {
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
           "action:convert_to_public_topic" => [
             {
               name: "Make the trigger personal message a public topic in a category",
