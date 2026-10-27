@@ -212,9 +212,9 @@ module PluginGem
         without: nil,
       ) do
         Bundler.configure_gem_home_and_path(Bundler.bundle_path)
-        # Bundler.setup has limited rubygems to the application's gems. The
-        # gems already installed in GEMS_DIR are added back so bundler finds
-        # them.
+        # Bundler.setup replaced Gem::Specification's known specs with the
+        # application's bundle. Add the plugin gems already installed in
+        # GEMS_DIR so the resolver can find them too.
         Dir["#{Bundler.bundle_path}/specifications/*.gemspec"].each do |path|
           Gem::Specification.add_spec(Gem::Specification.load(path))
         end
