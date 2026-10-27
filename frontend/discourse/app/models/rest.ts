@@ -12,31 +12,98 @@ import {
   modelNameFor,
 } from "discourse/lib/model-extensions";
 import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
+import type StoreService from "discourse/services/store";
 
-function waitForCallbacks(pending, next) {
+/** A JSON payload sent to or received from the server. */
+export type RestPayload = Record<string, unknown>;
+
+/** Lifecycle state the store assigns: `"new"` before the first save, `"created"` after. */
+export type RestModelState = "new" | "created";
+
+/** Members the store assigns when it builds a record. */
+export interface RestModelStoreAttrs {
+  store?: StoreService;
+  __type?: string;
+  __state?: RestModelState;
+}
+
+/**
+ * Attributes accepted by `create`: the model's declared members keep their
+ * types, the store-assigned members are typed, and other keys pass through,
+ * since server payloads carry fields a model may not declare.
+ */
+export type RestModelAttrs<M> = Partial<M> &
+  RestModelStoreAttrs & { [key: string]: unknown };
+
+/**
+ * A `RestModel` instance, matched structurally on a few base members so that
+ * subclasses whose overrides conflict with `EmberObject`'s (such as a
+ * Promise-returning `destroy`) still qualify.
+ */
+export type RestModelInstance = Pick<
+  RestModel,
+  "isNew" | "isCreated" | "primaryKey"
+>;
+
+/** A class whose instances are `RestModel`s. */
+export type RestModelClass = abstract new (
+  ...args: never[]
+) => RestModelInstance;
+
+/** The result of `save` and `update`, as returned by the adapter. */
+export interface RestModelSaveResult<M extends RestModelInstance = RestModel> {
+  payload?: RestPayload;
+  responseJson?: RestPayload;
+  /** `null` until the save completes, including while after-save hooks run. */
+  target?: M | null;
+  [key: string]: unknown;
+}
+
+function waitForCallbacks<T>(
+  pending: PromiseLike<unknown> | undefined,
+  next: () => PromiseLike<T>
+): globalThis.Promise<T>;
+function waitForCallbacks<T>(
+  pending: PromiseLike<unknown> | undefined,
+  next: () => T
+): T | globalThis.Promise<T>;
+function waitForCallbacks<T>(
+  pending: PromiseLike<unknown> | undefined,
+  next: () => T
+) {
   return pending ? pending.then(next) : next();
 }
 
 export default class RestModel extends EmberObject {
   // Overwrite and JSON will be passed through here before `create` and `update`
-  static munge(json) {
+  static munge(json: RestPayload, store?: StoreService): RestPayload;
+  static munge(json: RestPayload) {
     return json;
   }
 
-  static create(args) {
+  static create<C extends RestModelClass>(
+    this: C,
+    attrs?: RestModelAttrs<InstanceType<C>>
+  ): InstanceType<C>;
+
+  static create(args?: RestPayload) {
     args = args || {};
 
     args.__munge = this.munge;
     const createArgs = this.munge(
       { ...args, ...Object.fromEntries(enumerateTrackedEntries(args)) },
-      args.store
+      args.store as StoreService | undefined
     );
 
     // Some Discourse code calls `model.create()` directly without going through the
     // store. In that case the owner is not set, and injections will fail. This workaround ensures
     // the owner is always present. Eventually we should use the store for everything to fix this.
     const receivedOwner = getOwner(createArgs);
-    if (!receivedOwner || receivedOwner.isDestroyed) {
+    if (
+      !receivedOwner ||
+      (receivedOwner as typeof receivedOwner & { isDestroyed?: boolean })
+        .isDestroyed
+    ) {
       setOwner(createArgs, getOwnerWithFallback());
     }
 
@@ -46,18 +113,24 @@ export default class RestModel extends EmberObject {
   @tracked isSaving = false;
 
   primaryKey = "id";
-  @tracked __state;
+  declare store: StoreService;
 
-  constructor() {
-    super(...arguments);
+  @tracked __state?: RestModelState;
+
+  /** Assigned by the store; absent on models created directly. */
+  declare __type?: string;
+  declare __munge: (json: RestPayload) => RestPayload;
+
+  constructor(...args: ConstructorParameters<typeof EmberObject>) {
+    super(...args);
 
     // Defines plugin-registered fields as tracked properties, before the server
     // payload is assigned. See `addModelField`.
     applyRegisteredFields(this);
   }
 
-  init() {
-    super.init(...arguments);
+  init(...args: Parameters<EmberObject["init"]>) {
+    super.init(...args);
 
     // Fires `init` callbacks after the create args are assigned, so they see
     // the initial state. See `addModelCallback`.
@@ -74,18 +147,25 @@ export default class RestModel extends EmberObject {
     return this.__state === "created";
   }
 
+  beforeCreate(props: object): void;
   beforeCreate() {}
+  afterCreate(result: RestModelSaveResult): void;
   afterCreate() {}
 
+  beforeUpdate(props: object): void;
   beforeUpdate() {}
+  afterUpdate(result: RestModelSaveResult): void;
   afterUpdate() {}
 
-  update(props) {
+  update(props?: object): globalThis.Promise<RestModelSaveResult<this>> {
     if (this.isSaving) {
       return Promise.reject();
     }
 
-    props = props || this.updateProperties();
+    // Subclasses that update without explicit props define `updateProperties`.
+    props =
+      props ||
+      (this as this & { updateProperties(): RestPayload }).updateProperties();
 
     const modelName = modelNameFor(this);
     mergeSaveProperties(modelName, this, props);
@@ -95,16 +175,23 @@ export default class RestModel extends EmberObject {
     this.set("isSaving", true);
     return waitForCallbacks(
       applyModelCallbacks(modelName, "beforeUpdate", this, props),
-      () => this.store.update(this.__type, this.get(this.primaryKey), props)
+      () =>
+        this.store.update(
+          this.__type,
+          this.get(this.primaryKey as keyof this),
+          props
+        ) as globalThis.Promise<RestModelSaveResult<this>>
     )
       .then((res) => {
-        const payload = this.__munge(res.payload || res.responseJson);
+        const payload = this.__munge(
+          (res.payload || res.responseJson) as RestPayload
+        );
 
         if (payload.success === "OK") {
           warn("An update call should return the updated attributes", {
             id: "discourse.rest-model.update-attributes",
           });
-          res = props;
+          res = props as RestModelSaveResult<this>;
         }
 
         this.setProperties(payload);
@@ -120,21 +207,21 @@ export default class RestModel extends EmberObject {
       .finally(() => this.set("isSaving", false));
   }
 
-  createProperties() {
+  createProperties(): RestPayload {
     throw new Error(
       "You must overwrite `createProperties()` before saving a record"
     );
   }
 
-  save(props) {
+  save(props?: object): globalThis.Promise<RestModelSaveResult<this>> {
     return this.isNew ? this._saveNew(props) : this.update(props);
   }
 
-  destroyRecord() {
+  destroyRecord(): globalThis.Promise<unknown> {
     return this.store.destroyRecord(this.__type, this);
   }
 
-  _saveNew(props) {
+  _saveNew(props?: object): globalThis.Promise<RestModelSaveResult<this>> {
     if (this.isSaving) {
       return Promise.reject();
     }
@@ -151,7 +238,10 @@ export default class RestModel extends EmberObject {
     this.set("isSaving", true);
     return waitForCallbacks(
       applyModelCallbacks(modelName, "beforeCreate", this, props),
-      () => adapter.createRecord(this.store, this.__type, props)
+      () =>
+        adapter.createRecord(this.store, this.__type, props) as Promise<
+          RestModelSaveResult<this> | undefined
+        >
     )
       .then((res) => {
         if (!res) {
