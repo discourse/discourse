@@ -12,6 +12,29 @@ RSpec.describe PostActionsController do
       expect(response.status).to eq(403)
     end
 
+    it "returns 404 without unliking again when staff take back a like twice" do
+      admin = Fabricate(:admin)
+      sign_in(admin)
+      PostActionCreator.like(admin, post)
+      delete "/post_actions/#{post.id}.json",
+             params: {
+               post_action_type_id: PostActionType.types[:like],
+             }
+
+      events =
+        DiscourseEvent.track_events(:like_destroyed) do
+          expect {
+            delete "/post_actions/#{post.id}.json",
+                   params: {
+                     post_action_type_id: PostActionType.types[:like],
+                   }
+          }.not_to change { GivenDailyLike.find_for(admin.id, Date.today).pick(:likes_given) }
+        end
+
+      expect(response.status).to eq(404)
+      expect(events).to be_empty
+    end
+
     context "when logged in" do
       before { sign_in(user) }
 
