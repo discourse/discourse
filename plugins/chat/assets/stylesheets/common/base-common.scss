@@ -228,33 +228,32 @@ body.has-full-page-chat {
   }
 }
 
-// the banner floats over the message list instead of shortening it, so the
-// list keeps its full height and messages scroll underneath
-.c-routes.--channel {
+// a zero-height region right above the message list: whatever it holds flows
+// in normal order below the status, filter and pinned bars, and overflows
+// downward over the list, which keeps its full height underneath
+.chat-channel__overlays {
   position: relative;
 
-  > .admin-onboarding-banner {
-    position: absolute;
+  // what the notices stacked at before they moved in here
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 0px;
+  min-height: 0;
 
-    // the navbar's height plus its bottom border
-    top: calc(var(--chat-header-offset) + 1px);
-    left: 0;
-    right: 0;
-
-    // the scroller stacks at 1
-    z-index: 2;
+  .admin-onboarding-banner {
     padding: var(--space-4) var(--space-6);
     pointer-events: none;
 
     @include viewport.until(sm) {
       padding: var(--space-2);
     }
+  }
 
-    .admin-onboarding-banner__wrap {
-      pointer-events: auto;
-      background: var(--secondary);
-      box-shadow: var(--shadow-card);
-    }
+  .admin-onboarding-banner__wrap {
+    pointer-events: auto;
+    background: var(--secondary);
+    box-shadow: var(--shadow-card);
   }
 }
 

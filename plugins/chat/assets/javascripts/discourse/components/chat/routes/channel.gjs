@@ -99,16 +99,18 @@ export default class ChatRoutesChannel extends Component {
         </navbar.Actions>
       </Navbar>
 
-      {{#if this.siteSettings.enable_site_owner_onboarding}}
-        <AdminOnboardingBanner @location="chat_channel" />
-      {{/if}}
-
       <FullPageChat
         @channel={{@channel}}
         @isFiltering={{this.isFiltering}}
         @onToggleFilter={{this.toggleIsFiltering}}
         @targetMessageId={{@targetMessageId}}
-      />
+      >
+        <:aboveMessages>
+          {{#if this.siteSettings.enable_site_owner_onboarding}}
+            <AdminOnboardingBanner @location="chat_channel" />
+          {{/if}}
+        </:aboveMessages>
+      </FullPageChat>
     </div>
 
     <ChatSidePanel>

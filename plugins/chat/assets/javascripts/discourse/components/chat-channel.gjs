@@ -808,7 +808,6 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
     >
       <ChatChannelStatus @channel={{@channel}} />
-      <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
       <ChatChannelFilter
         @channel={{@channel}}
@@ -823,6 +822,11 @@ export default class ChatChannel extends Component {
         @onJumpToMessage={{this.jumpToPinnedMessage}}
         @viewportBottomMessageId={{this.lastVisibleMessageId}}
       />
+
+      <div class="chat-channel__overlays">
+        {{yield to="aboveMessages"}}
+        <ChatNotices @channel={{@channel}} />
+      </div>
 
       <ChatMessagesScroller
         @onRegisterScroller={{this.registerScroller}}

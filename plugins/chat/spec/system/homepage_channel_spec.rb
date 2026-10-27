@@ -125,6 +125,21 @@ RSpec.describe "Chat channel as the homepage" do
       expect(banner.step_completed?("start_posting")).to eq(true)
     end
 
+    it "keeps the pinned message bar and channel notices clear of the checklist" do
+      SiteSetting.chat_pinned_messages = true
+      Fabricate(
+        :chat_pinned_message,
+        chat_message: message_1,
+        chat_channel: channel_1,
+        user: current_user,
+      )
+
+      visit("/")
+
+      expect(channel_page).to have_onboarding_banner_below_pinned_bar
+      try_until_success { expect(channel_page).to have_notices_below_onboarding_banner }
+    end
+
     def expect_composer_in_viewport
       try_until_success do
         bottom =
