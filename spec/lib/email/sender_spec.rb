@@ -595,6 +595,45 @@ RSpec.describe Email::Sender do
       end
     end
 
+    it "retains omitted form uploads without attaching them to notification emails" do
+      SiteSetting.email_total_attachment_size_limit_kb = 10_000
+      SiteSetting.secure_uploads_allow_embed_images_in_emails = true
+      SiteSetting.secure_uploads_max_email_embed_image_size_kb = 5_000
+      image.update_columns(secure: true)
+      template =
+        Fabricate(
+          :form_template,
+          template: [
+            { id: "attachment", type: "upload" },
+            { id: "image", type: "upload" },
+          ].as_json.to_yaml,
+          output_template: "A form with #{UploadMarkdown.new(small_pdf).attachment_markdown}",
+        )
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "attachment" => UploadMarkdown.new(large_pdf).attachment_markdown,
+            "image" => UploadMarkdown.new(image).image_markdown,
+          },
+        )
+      form_post = Fabricate(:post, raw: submission.render, form_data: submission.to_h)
+      form_post.link_post_uploads
+      notification = Fabricate(:posted_notification, user: post.user, post: form_post)
+      form_message =
+        UserNotifications.user_posted(
+          post.user,
+          post: form_post,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      Email::Sender.new(form_message, :valid_type).send
+
+      expect(form_post.uploads.pluck(:id)).to contain_exactly(small_pdf.id, large_pdf.id, image.id)
+      expect(form_message.attachments.map(&:filename)).to eq([small_pdf.original_filename])
+    end
+
     it "adds only non-image uploads as attachments to the email" do
       SiteSetting.email_total_attachment_size_limit_kb = 10_000
       Email::Sender.new(message, :valid_type).send

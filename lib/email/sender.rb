@@ -363,7 +363,16 @@ module Email
       posts.each do |post|
         next unless DiscoursePluginRegistry.apply_modifier(:should_add_email_attachments, post)
 
-        post.uploads.each do |original_upload|
+        uploads = post.uploads
+        if post.form_data
+          rendered_upload_ids = []
+          post.each_upload_url do |url, _, sha1|
+            rendered_upload_ids << Upload.fetch_from(sha1:, url:)&.id
+          end
+          uploads = uploads.where(id: rendered_upload_ids.compact)
+        end
+
+        uploads.each do |original_upload|
           optimized_1X = original_upload.optimized_images.first
 
           if FileHelper.is_supported_image?(original_upload.original_filename)
