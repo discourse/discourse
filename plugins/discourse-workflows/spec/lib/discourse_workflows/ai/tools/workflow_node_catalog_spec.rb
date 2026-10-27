@@ -301,6 +301,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
     expect(topic_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "get", topic_id: "={{ $json.topic.id }}")),
+      include(parameters: include(operation: "delete", topic_id: "={{ $json.topic.id }}")),
     )
     expect(post_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "create", topic_id: "={{ $json.topic.id }}")),

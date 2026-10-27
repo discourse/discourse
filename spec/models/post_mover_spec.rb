@@ -1036,6 +1036,21 @@ RSpec.describe PostMover do
             expect(Topic.with_deleted.find(topic.id).deleted_at).to be_present
           end
 
+          it "trashes the merged topic once, as the merging user" do
+            SiteSetting.delete_merged_stub_topics_after_days = 0
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+
+            events = []
+            expect {
+              events =
+                DiscourseEvent.track_events(:topic_trashed) do
+                  topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+                end
+            }.to change { Category.find(topic.category_id).topic_count }.by(-1)
+
+            expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: user }]])
+          end
+
           it "ignores moderator posts and closes the topic if all regular posts were moved" do
             add_moderator_post_to topic, Post.types[:moderator_action]
             add_moderator_post_to topic, Post.types[:small_action]

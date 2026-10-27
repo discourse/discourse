@@ -139,9 +139,10 @@ class PostDestroyer
 
     if @post.is_first_post?
       UserActionManager.topic_created(@topic)
-      # Topic#recover! already fired it when the topic left the trash
+      # Topic#recover! already fired it when the topic left the trash, so this one
+      # is for a topic that didn't, such as an author cancelling a pending deletion
       if !topic_was_trashed || @topic.trashed?
-        DiscourseEvent.trigger(:topic_recovered, @topic, acting_user: @user)
+        DiscourseEvent.trigger(:topic_recovered, @topic, acting_user: @user, from_trash: false)
       end
 
       if @user.id != @post.user_id

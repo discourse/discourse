@@ -13,7 +13,8 @@ module DiscourseWorkflows
     end
 
     def first_post_id
-      object.first_post&.id
+      # `first_post` skips deleted posts, and a deleted topic's first post is deleted too.
+      (object.first_post || object.first_post_with_deleted)&.id
     end
 
     def include_fancy_title_localized?

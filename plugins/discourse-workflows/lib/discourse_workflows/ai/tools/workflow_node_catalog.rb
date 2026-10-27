@@ -128,6 +128,14 @@ module DiscourseWorkflows
                 actor_username: "system",
               },
             },
+            {
+              name: "Delete the trigger topic",
+              parameters: {
+                operation: "delete",
+                topic_id: "={{ $json.topic.id }}",
+                actor_username: "system",
+              },
+            },
           ],
           "action:post" => [
             {

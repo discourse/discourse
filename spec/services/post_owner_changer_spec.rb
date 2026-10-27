@@ -151,6 +151,24 @@ RSpec.describe PostOwnerChanger do
       expect(p1.user).to eq(user_a)
     end
 
+    it "recovers a topic deleted with its removed author as the acting user" do
+      topic # memoize before the topic is trashed and scoped out of p1.topic
+      PostDestroyer.new(editor, p1).destroy
+      p1.reload.update_columns(user_id: nil)
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostOwnerChanger.new(
+            post_ids: [p1.id],
+            topic_id: topic.id,
+            new_owner: user_a,
+            acting_user: editor,
+          ).change_owner!
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: editor }]])
+    end
+
     it "leaves an individually deleted first post deleted when the topic is live" do
       p1.trash!(editor)
       p1.reload.update_columns(user_id: nil)
