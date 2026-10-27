@@ -320,11 +320,13 @@ module DiscourseEvents
       end
 
       def format_date(value)
-        if event.all_day
-          value.utc.strftime("%Y-%m-%d")
-        else
-          value.in_time_zone(event.rrule_timezone).strftime("%Y-%m-%d %H:%M")
-        end
+        return value.utc.strftime("%Y-%m-%d") if event.all_day
+
+        local_time = value.in_time_zone(event.rrule_timezone)
+        formatted = local_time.strftime("%Y-%m-%d %H:%M:%S")
+        return formatted if local_time.usec.zero?
+
+        "#{formatted}.#{local_time.strftime("%6N")}".sub(/0+\z/, "")
       end
     end
   end
