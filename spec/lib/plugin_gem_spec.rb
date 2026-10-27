@@ -227,10 +227,12 @@ RSpec.describe PluginGem do
   end
 
   it "fails when the highest shared lock version does not satisfy another plugin" do
-    add_plugin("one", %(gem "shared", "< 1.1"\n), lock: { "shared" => "1.0.0" })
-    add_plugin("two", %(gem "shared"\n), lock: { "shared" => "1.1.0" })
+    add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
+    add_plugin("two", %(gem "alpha", "~> 1.0.0"\n), lock: { "alpha" => "1.0.0", "beta" => "1.0.0" })
 
-    expect { boot }.to raise_error(/Resolving plugin gems failed for .*shared/m)
+    expect { boot }.to raise_error(
+      %r{Resolving plugin gems failed for .*/one/Gemfile, .*/two/Gemfile:.*alpha.*1.1.0}m,
+    )
     expect(installed).to be_empty
   end
 
@@ -666,23 +668,6 @@ RSpec.describe PluginGem do
       ).to_stdout_from_any_process
       expect(installed).to eq(%w[alpha-1.0.0 alpha-1.1.0 beta-1.0.0])
       expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
-    end
-
-    it "fails when its version conflicts with another plugin's requirement" do
-      add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
-      add_plugin(
-        "two",
-        %(gem "alpha", "~> 1.0.0"\n),
-        lock: {
-          "alpha" => "1.0.0",
-          "beta" => "1.0.0",
-        },
-      )
-
-      expect { boot }.to raise_error(
-        %r{Resolving plugin gems failed for .*/one/Gemfile, .*/two/Gemfile:.*alpha.*1.1.0}m,
-      )
-      expect(installed).to be_empty
     end
   end
 end
