@@ -13,6 +13,10 @@ module DiscourseWorkflows
           ),
         )
 
+        deprecated(replaced_by: REPLACEMENTS.values) do |parameters|
+          replacement_for(parameters, %w[discourse_workflows.node_upgrades.post_like_output])
+        end
+
         private
 
         def serialize_result(*)

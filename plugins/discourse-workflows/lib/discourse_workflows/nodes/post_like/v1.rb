@@ -5,6 +5,7 @@ module DiscourseWorkflows
     module PostLike
       class V1 < NodeType
         OPERATIONS = %w[like unlike].freeze
+        REPLACEMENTS = { "like" => "action:like_post", "unlike" => "action:unlike_post" }.freeze
         OUTPUT_SCHEMA =
           Schema.merge(
             Schema.document(
@@ -48,7 +49,21 @@ module DiscourseWorkflows
           },
         )
 
-        deprecated(superseded_by: "2.0", changes: { "username" => "actor.username" })
+        deprecated(replaced_by: REPLACEMENTS.values) do |parameters|
+          replacement_for(
+            parameters,
+            %w[
+              discourse_workflows.node_upgrades.post_like_output
+              discourse_workflows.node_upgrades.post_like_username
+            ],
+          )
+        end
+
+        # An operation set by an expression can't be upgraded automatically.
+        def self.replacement_for(parameters, notes)
+          type = REPLACEMENTS[parameters.fetch("operation", "like")]
+          type && { type:, parameters: parameters.slice("post_id", "actor_username"), notes: }
+        end
 
         def execute(exec_ctx)
           items =

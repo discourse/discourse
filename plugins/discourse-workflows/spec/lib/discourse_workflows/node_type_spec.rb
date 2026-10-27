@@ -474,6 +474,8 @@ RSpec.describe DiscourseWorkflows::NodeType do
         post_recovered
         post_moved
         post_like_changed
+        post_liked
+        post_unliked
       ]
       once_per_topic = %w[
         topic_created

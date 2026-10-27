@@ -13,6 +13,8 @@ en:
   discourse_workflows:
     node_upgrades:
       topic_pin_output: "The output no longer has topic_id, pinned, pinned_globally, pinned_at or banner. Use topic.id, topic.pinned and topic.pinned_globally instead, and topic.archetype, which is banner for the banner topic. Pin topic keeps pinned_until and Make banner keeps bannered_until, and the new changed is false when the topic was already in that state."
+      post_like_output: "The output no longer has post_id. Use post.id instead: post now holds the whole post, including its like_count. actor and changed are unchanged."
+      post_like_username: "The output no longer has username. Use actor.username instead."
       topic_post_removed: "The output no longer includes the topic's first post. If a later step uses post, add a Topic node with the Get operation to read it."
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
@@ -228,6 +230,8 @@ en:
         not_allowed: "'%{username}' cannot change slow mode on topic %{topic_id}. Slow mode can only be changed by staff and trust level 4 users."
         invalid: "Slow mode could not be changed: %{errors}"
         failed: "Slow mode could not be changed on topic %{topic_id}."
+      post_liking:
+        failed: "The like on post %{post_id} couldn't be changed."
       topic_conversion:
         to_personal_message_failed: "Topic %{topic_id} couldn't be converted to a personal message."
         to_public_topic_failed: "Personal message %{topic_id} couldn't be converted to a public topic. Check that the topic has the tags the category requires and that the category accepts new topics."
