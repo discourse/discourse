@@ -337,8 +337,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
       it "does not enqueue a post alert for automated event archival" do
         author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
-        SiteSetting.discourse_post_event_allowed_on_groups =
-          Group::AUTO_GROUPS[:trust_level_0].to_s
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
 
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
@@ -370,8 +369,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
       it "does not attribute the archived edit to the system user" do
         author = Fabricate(:user, refresh_auto_groups: true)
-        SiteSetting.discourse_post_event_allowed_on_groups =
-          Group::AUTO_GROUPS[:trust_level_0].to_s
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
 
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
@@ -408,8 +406,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         )
 
         SiteSetting.hide_new_user_profiles = true
-        SiteSetting.discourse_post_event_allowed_on_groups =
-          Group::AUTO_GROUPS[:trust_level_0].to_s
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
 
         expect(Guardian.new(author).can_see_profile?(profile_user)).to eq(false)
         expect(Discourse.system_user.guardian.can_see_profile?(profile_user)).to eq(true)
@@ -421,19 +418,13 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         Jobs.run_immediately!
 
-        post =
-          PostCreator.create!(
-            author,
-            title:,
-            category: event_category.id,
-            raw: <<~RAW,
+        post = PostCreator.create!(author, title:, category: event_category.id, raw: <<~RAW)
               [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
               Public meeting notes.
               [/event]
 
               #{profile_url}
             RAW
-          )
 
         expect(post.reload.event).to be_present
         original_topic_id = post.topic_id
@@ -446,8 +437,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect { job.execute({}) }.to change(Topic, :count).by(1)
 
         archived_post = post.reload
-        successor_post =
-          Topic.where(title:).where.not(id: original_topic_id).sole.first_post.reload
+        successor_post = Topic.where(title:).where.not(id: original_topic_id).sole.first_post.reload
 
         expect(archived_post.last_editor_id).to eq(author.id)
 
@@ -725,7 +715,9 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         expect(
           DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
-            params: { event_date_id: event_date.id },
+            params: {
+              event_date_id: event_date.id,
+            },
           ),
         ).to fail_a_policy(:rollover_allowed)
 
@@ -769,7 +761,9 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         expect(
           DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
-            params: { event_date_id: event.event_dates.pending.first.id },
+            params: {
+              event_date_id: event.event_dates.pending.first.id,
+            },
           ),
         ).to fail_a_policy(:rollover_allowed)
       end
@@ -1641,7 +1635,9 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         expect(
           DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
-            params: { event_date_id: event_date.id },
+            params: {
+              event_date_id: event_date.id,
+            },
           ),
         ).to fail_a_policy(:rollover_allowed)
 

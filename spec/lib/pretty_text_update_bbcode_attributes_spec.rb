@@ -49,5 +49,4 @@ RSpec.describe PrettyText do
       ).to be_nil
     end
   end
-
 end

@@ -71,7 +71,9 @@ module Jobs
           if create_successor_topic
             successor_result =
               DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
-                params: { event_date_id: event_date.id },
+                params: {
+                  event_date_id: event_date.id,
+                },
               )
 
             unless successor_result.success?

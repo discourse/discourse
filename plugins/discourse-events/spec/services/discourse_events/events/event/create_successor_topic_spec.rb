@@ -52,17 +52,11 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     starts_at = 7.days.after.change(sec: 0)
     ends_at = starts_at + 1.hour
     title = "Service-object rollover"
-    post =
-      PostCreator.create!(
-        author,
-        title:,
-        category: category.id,
-        raw: <<~RAW,
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
           [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
           Meeting notes.
           [/event]
         RAW
-      )
     event_date = post.reload.event.event_dates.pending.first
 
     expect do

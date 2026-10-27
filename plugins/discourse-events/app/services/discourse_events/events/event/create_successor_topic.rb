@@ -83,18 +83,21 @@ module DiscourseEvents
       def prepare_rollover(event_date:, event:)
         context[:original_title] = topic.title
         original_raw = post.raw
-        context[:rewriter] =
-          BbcodeRewriter.new(
-            original_raw,
-            tag: "event",
-            selector: "div.discourse-post-event",
-            cook_options: { topic_id: post.topic_id, user_id: post.user_id },
-          )
+        context[:rewriter] = BbcodeRewriter.new(
+          original_raw,
+          tag: "event",
+          selector: "div.discourse-post-event",
+          cook_options: {
+            topic_id: post.topic_id,
+            user_id: post.user_id,
+          },
+        )
         context[:invitees] = snapshot_invitees
         context[:successor_post] = nil
         context[:recurrence_anchor] = event.recurrence_anchor_starts_at
-        context[:next_occurrence] =
-          event.calculate_next_occurrence_from(event_date.starts_at + 1.second)
+        context[:next_occurrence] = event.calculate_next_occurrence_from(
+          event_date.starts_at + 1.second,
+        )
       end
 
       def archive_occurrence(event_date:, event:, rewriter:, original_title:)
@@ -153,8 +156,11 @@ module DiscourseEvents
             "end" => formatted_end(next_occurrence[:ends_at]),
           )
 
-        context[:successor_post] =
-          create_successor_post(successor_raw, original_title, recurrence_anchor:)
+        context[:successor_post] = create_successor_post(
+          successor_raw,
+          original_title,
+          recurrence_anchor:,
+        )
         context[:successor_topic] = context[:successor_post].topic
       end
 
@@ -287,7 +293,6 @@ module DiscourseEvents
           value.in_time_zone(event.rrule_timezone).strftime("%Y-%m-%d %H:%M")
         end
       end
-
     end
   end
 end

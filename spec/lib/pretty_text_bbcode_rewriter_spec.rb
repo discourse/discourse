@@ -27,9 +27,7 @@ RSpec.describe PrettyText do
     it "preserves an unquoted apostrophe when removing another attribute" do
       raw = "[excerpt name=John's recurrence=every_week]Body[/excerpt]"
 
-      expect(rewrite(raw, "recurrence" => nil)).to eq(
-        "[excerpt name=John's]Body[/excerpt]",
-      )
+      expect(rewrite(raw, "recurrence" => nil)).to eq("[excerpt name=John's]Body[/excerpt]")
     end
 
     it "serializes false and zero without dropping their values" do
@@ -43,9 +41,7 @@ RSpec.describe PrettyText do
     it "removes duplicate attributes" do
       raw = "[excerpt name=old name=new flag]Body[/excerpt]"
 
-      expect(rewrite(raw, "name" => nil)).to eq(
-        "[excerpt flag]Body[/excerpt]",
-      )
+      expect(rewrite(raw, "name" => nil)).to eq("[excerpt flag]Body[/excerpt]")
     end
 
     it "preserves untouched duplicate attributes" do
@@ -66,7 +62,9 @@ RSpec.describe PrettyText do
           tag: "excerpt",
           candidate: candidate.fetch("index"),
           expected_opening: candidate.fetch("opening"),
-          changes: { "title" => "replacement" },
+          changes: {
+            "title" => "replacement",
+          },
         )
       end.to raise_error(MiniRacer::RuntimeError, /BBCode target changed/)
     end

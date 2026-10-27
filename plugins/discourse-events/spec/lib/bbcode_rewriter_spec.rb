@@ -17,15 +17,19 @@ RSpec.describe BbcodeRewriter do
   end
 
   it "rewrites a live event but preserves a fenced-code decoy and surrounding Unicode" do
-    raw = "Before 😃\r\n\r\n```\r\n[event start=2000-01-01 recurrence=every_week]\r\n[/event]\r\n```\r\n\r\n#{event_tag}\r\nMeeting notes.\r\n[/event]\r\n"
+    raw =
+      "Before 😃\r\n\r\n```\r\n[event start=2000-01-01 recurrence=every_week]\r\n[/event]\r\n```\r\n\r\n#{event_tag}\r\nMeeting notes.\r\n[/event]\r\n"
 
-    archived = build_rewriter(raw).rewrite(
-      "start" => "2027-03-29 12:00",
-      "end" => "2027-03-29 13:00",
-      "recurrence" => nil,
+    archived =
+      build_rewriter(raw).rewrite(
+        "start" => "2027-03-29 12:00",
+        "end" => "2027-03-29 13:00",
+        "recurrence" => nil,
+      )
+
+    expect(archived).to start_with(
+      "Before 😃\r\n\r\n```\r\n[event start=2000-01-01 recurrence=every_week]",
     )
-
-    expect(archived).to start_with("Before 😃\r\n\r\n```\r\n[event start=2000-01-01 recurrence=every_week]")
     expect(archived).to include('name="Year End Party"')
     expect(archived).not_to include('recurrence="every_week"')
     expect(archived).to end_with("Meeting notes.\r\n[/event]\r\n")
@@ -34,10 +38,7 @@ RSpec.describe BbcodeRewriter do
   it "returns separate rewrites from the same original snapshot" do
     rewriter = build_rewriter("#{event_tag}\nNotes.\n[/event]")
     archive = rewriter.rewrite("recurrence" => nil)
-    successor = rewriter.rewrite(
-      "start" => "2027-04-05 12:00",
-      "end" => "2027-04-05 13:00",
-    )
+    successor = rewriter.rewrite("start" => "2027-04-05 12:00", "end" => "2027-04-05 13:00")
 
     expect(archive).not_to include("recurrence=")
     expect(successor).to match(/\brecurrence=(?:"every_week"|every_week)(?=[\s\]])/)

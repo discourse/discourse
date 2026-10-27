@@ -277,7 +277,14 @@ module PrettyText
 
   def self.mark_bbcode_tags(raw, tag:, attribute:, prefix:, candidate: nil)
     protect do
-      v8.call("__PrettyText.markBBCodeTags", raw.to_s, tag.to_s, attribute.to_s, prefix.to_s, candidate)
+      v8.call(
+        "__PrettyText.markBBCodeTags",
+        raw.to_s,
+        tag.to_s,
+        attribute.to_s,
+        prefix.to_s,
+        candidate,
+      )
     end
   end
 

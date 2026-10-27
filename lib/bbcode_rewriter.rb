@@ -1,11 +1,20 @@
 # frozen_string_literal: true
 
 class BbcodeRewriter
-  class Error < StandardError; end
-  class TargetNotFound < Error; end
-  class AmbiguousTarget < Error; end
-  class UnsupportedRenderer < Error; end
-  class InvalidRewrite < Error; end
+  # SyntaxTree compacts the exception declarations below.
+  # rubocop:disable Layout/EmptyLineBetweenDefs
+  class Error < StandardError
+  end
+  class TargetNotFound < Error
+  end
+  class AmbiguousTarget < Error
+  end
+  class UnsupportedRenderer < Error
+  end
+  class InvalidRewrite < Error
+  end
+
+  # rubocop:enable Layout/EmptyLineBetweenDefs
 
   def initialize(raw, tag:, selector:, cook_options: {})
     @raw = raw.to_s.dup.freeze
@@ -69,13 +78,14 @@ class BbcodeRewriter
     raise AmbiguousTarget, "More than one rendered #{@tag} target found" if marked_nodes.size > 1
 
     candidate = tokens.fetch(marked_nodes.first[data_attribute])
-    marked_raw = PrettyText.mark_bbcode_tags(
-      @raw,
-      tag: @tag,
-      attribute:,
-      prefix:,
-      candidate: candidate.fetch("index"),
-    )
+    marked_raw =
+      PrettyText.mark_bbcode_tags(
+        @raw,
+        tag: @tag,
+        attribute:,
+        prefix:,
+        candidate: candidate.fetch("index"),
+      )
     document = Nokogiri::HTML5.fragment(cook(marked_raw))
     nodes = document.css(@selector)
     token = "#{prefix}-#{candidate.fetch("index")}"
