@@ -262,6 +262,11 @@ module PageObjects
         has_no_css?(".c-navbar__star-channel-button")
       end
 
+      def has_onboarding_banner_below_header?
+        has_css?(".c-routes.--channel .c-navbar-container + .admin-onboarding-banner") &&
+          has_css?(".admin-onboarding-banner", count: 1)
+      end
+
       def thread_list_button_selector
         ".c-navbar__threads-list-button"
       end

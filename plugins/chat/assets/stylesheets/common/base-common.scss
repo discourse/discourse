@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --message-left-width: 42px;
   --full-page-border-radius: 12px;
@@ -223,6 +225,20 @@ body.has-full-page-chat {
   .chat-messages-scroller {
     box-sizing: border-box;
     height: 100%;
+  }
+}
+
+// the banner publishes its height on its parent, so the offset must be read
+// from wherever it renders: the channel route when chat is the homepage
+.c-routes.--channel {
+  --chat-content-offset: var(--admin-onboarding-banner-height, 0px);
+
+  > .admin-onboarding-banner {
+    padding-inline: var(--space-6);
+
+    @include viewport.until(sm) {
+      padding-inline: var(--space-2);
+    }
   }
 }
 
