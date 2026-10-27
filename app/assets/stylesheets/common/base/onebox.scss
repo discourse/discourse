@@ -567,6 +567,26 @@ aside.onebox.github-onebox {
     --github-onebox-header-background: light-dark(#818b981f, #292e36);
   }
 
+  &.githubpullrequest.--github-open {
+    --github-onebox-header-background: color-mix(
+      in srgb,
+      var(--primary) 10%,
+      var(--secondary)
+    );
+
+    .github-onebox__label {
+      color: var(--primary-high);
+    }
+  }
+
+  &.--github-draft {
+    --github-onebox-header-background: color-mix(
+      in srgb,
+      var(--primary) 3%,
+      var(--secondary)
+    );
+  }
+
   &.--github-changes_requested,
   &.--github-pending {
     --github-onebox-status-color: light-dark(#9a6700, #d29922);
