@@ -21,6 +21,12 @@ const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
 
 replaceIcon("d-chat", "comment");
 
+function formattingToggleLabel() {
+  return this.showFormattingBar
+    ? "chat.composer.hide_formatting"
+    : "chat.composer.show_formatting";
+}
+
 class ChatSetupInit {
   @service router;
   @service("chat") chatService;
@@ -148,6 +154,24 @@ class ChatSetupInit {
           },
         });
       }
+
+      api.registerChatComposerButton({
+        id: "toggle-formatting",
+        icon: "font",
+        title: formattingToggleLabel,
+        label: formattingToggleLabel,
+        ariaLabel: formattingToggleLabel,
+        classNames() {
+          return this.showFormattingBar ? ["--active"] : [];
+        },
+        position() {
+          return this.site.desktopView ? "inline" : "dropdown";
+        },
+        action: "toggleFormattingBar",
+        displayed() {
+          return !!this.currentUser && this.canUseRichEditor;
+        },
+      });
 
       api.registerChatComposerButton({
         id: "toggle-editor",
