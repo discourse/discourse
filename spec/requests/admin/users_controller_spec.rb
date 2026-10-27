@@ -900,6 +900,26 @@ RSpec.describe Admin::UsersController do
           expect(job_args["id"]).to eq(user.id)
           expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
         end
+
+        it "doesn't enqueue it again for a suspension whose end was announced" do
+          freeze_time(Time.zone.now.round)
+          user.update!(suspended_at: 1.day.ago, suspended_till: 1.hour.ago)
+          UserSuspender.expire(
+            user,
+            suspended_at: user.suspended_at,
+            suspended_till: user.suspended_till,
+          )
+
+          expect do put "/admin/users/#{user.id}/unsuspend.json" end.not_to change {
+            Jobs::EmitWebHookEvent.jobs.size
+          }
+
+          expect(response.status).to eq(200)
+          expect(user.reload).to have_attributes(
+            suspended_at: 1.day.ago,
+            suspended_till: 1.hour.ago,
+          )
+        end
       end
 
       it "can unsuspend a user who was granted moderation while suspended" do

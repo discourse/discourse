@@ -13,11 +13,7 @@ class UserSuspender
       return if user.suspended_at != suspended_at || user.suspended_till != suspended_till
       return if user.suspended?
 
-      context = [
-        SUSPENSION_EXPIRY_CONTEXT,
-        suspended_at.utc.iso8601(TIMESTAMP_PRECISION),
-        suspended_till.utc.iso8601(TIMESTAMP_PRECISION),
-      ].join(":")
+      context = expiry_context(suspended_at, suspended_till)
       return if user.user_histories.where(context: context).exists?
 
       StaffActionLogger.new(actor).log_user_unsuspend(user, context: context)
@@ -27,14 +23,38 @@ class UserSuspender
 
   def self.unsuspend(user, by_user:)
     user.with_lock(requires_new: true) do
-      return if user.suspended_till.nil?
+      return false if user.suspended_till.nil?
+      # Keeps the dates of a suspension whose end was already logged and
+      # announced, so its end isn't reported a second time.
+      return false if !user.suspended? && expiry_announced?(user)
 
       user.update!(suspended_at: nil, suspended_till: nil)
       StaffActionLogger.new(by_user).log_user_unsuspend(user)
 
       DiscourseEvent.trigger(:user_unsuspended, user: user, by_user: by_user)
     end
+
+    true
   end
+
+  def self.expiry_context(suspended_at, suspended_till)
+    [
+      SUSPENSION_EXPIRY_CONTEXT,
+      suspended_at.utc.iso8601(TIMESTAMP_PRECISION),
+      suspended_till.utc.iso8601(TIMESTAMP_PRECISION),
+    ].join(":")
+  end
+  private_class_method :expiry_context
+
+  def self.expiry_announced?(user)
+    return false if user.suspended_at.nil?
+
+    user
+      .user_histories
+      .where(context: expiry_context(user.suspended_at, user.suspended_till))
+      .exists?
+  end
+  private_class_method :expiry_announced?
 
   def initialize(
     user,

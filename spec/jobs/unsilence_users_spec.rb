@@ -14,6 +14,21 @@ RSpec.describe Jobs::UnsilenceUsers do
     expect(user.silenced_till).to be(nil)
   end
 
+  it "keeps a silence applied after the batch was loaded" do
+    user = Fabricate(:user, silenced_till: 1.hour.ago)
+    stale_user = User.find(user.id)
+    user.update!(silenced_till: 1.day.from_now)
+    expired_users = User.where(id: user.id)
+    allow(expired_users).to receive(:find_each).and_yield(stale_user)
+    allow(User).to receive(:where).and_call_original
+    allow(User).to receive(:where).with(/silenced_till < now\(\)/).and_return(expired_users)
+
+    events = DiscourseEvent.track_events(:user_unsilenced) { described_class.new.execute({}) }
+
+    expect(events).to be_empty
+    expect(user.reload).to be_silenced
+  end
+
   context "with an anonymous shadow" do
     fab!(:main, :user)
     fab!(:shadow) do
