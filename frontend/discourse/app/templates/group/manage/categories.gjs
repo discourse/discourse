@@ -5,8 +5,12 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
-function categoryIds(categories) {
-  return (categories ?? []).map((category) => category.id);
+/** Ids of the categories held by the other lists, which a list must not offer. */
+function otherCategoryIds(selected, own) {
+  const held = new Set((own ?? []).map((category) => category.id));
+  return (selected ?? [])
+    .map((category) => category.id)
+    .filter((id) => !held.has(id));
 }
 
 export default <template>
@@ -26,7 +30,10 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @controller.selectedCategories}}
+          @exclude={{otherCategoryIds
+            @controller.selectedCategories
+            @controller.model.watchingCategories
+          }}
           @onChange={{fn (mut @controller.model.watchingCategories)}}
           @value={{@controller.model.watchingCategories}}
         />
@@ -51,7 +58,10 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @controller.selectedCategories}}
+          @exclude={{otherCategoryIds
+            @controller.selectedCategories
+            @controller.model.trackingCategories
+          }}
           @onChange={{fn (mut @controller.model.trackingCategories)}}
           @value={{@controller.model.trackingCategories}}
         />
@@ -76,7 +86,10 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @controller.selectedCategories}}
+          @exclude={{otherCategoryIds
+            @controller.selectedCategories
+            @controller.model.watchingFirstPostCategories
+          }}
           @onChange={{fn (mut @controller.model.watchingFirstPostCategories)}}
           @value={{@controller.model.watchingFirstPostCategories}}
         />
@@ -103,7 +116,10 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @controller.selectedCategories}}
+          @exclude={{otherCategoryIds
+            @controller.selectedCategories
+            @controller.model.regularCategories
+          }}
           @onChange={{fn (mut @controller.model.regularCategories)}}
           @value={{@controller.model.regularCategories}}
         />
@@ -128,7 +144,10 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @controller.selectedCategories}}
+          @exclude={{otherCategoryIds
+            @controller.selectedCategories
+            @controller.model.mutedCategories
+          }}
           @onChange={{fn (mut @controller.model.mutedCategories)}}
           @value={{@controller.model.mutedCategories}}
         />

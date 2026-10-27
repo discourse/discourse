@@ -6,8 +6,12 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
-function categoryIds(categories) {
-  return (categories ?? []).map((category) => category.id);
+/** Ids of the categories held by the other lists, which a list must not offer. */
+function otherCategoryIds(selected, own) {
+  const held = new Set((own ?? []).map((category) => category.id));
+  return (selected ?? [])
+    .map((category) => category.id)
+    .filter((id) => !held.has(id));
 }
 
 const Categories = <template>
@@ -27,7 +31,10 @@ const Categories = <template>
       {{#if @siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @selectedCategories}}
+          @exclude={{otherCategoryIds
+            @selectedCategories
+            @model.watchedCategories
+          }}
           @onChange={{fn (mut @model.watchedCategories)}}
           @value={{@model.watchedCategories}}
         />
@@ -56,7 +63,10 @@ const Categories = <template>
       {{#if @siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @selectedCategories}}
+          @exclude={{otherCategoryIds
+            @selectedCategories
+            @model.trackedCategories
+          }}
           @onChange={{fn (mut @model.trackedCategories)}}
           @value={{@model.trackedCategories}}
         />
@@ -81,7 +91,10 @@ const Categories = <template>
       {{#if @siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @exclude={{categoryIds @selectedCategories}}
+          @exclude={{otherCategoryIds
+            @selectedCategories
+            @model.watchedFirstPostCategories
+          }}
           @onChange={{fn (mut @model.watchedFirstPostCategories)}}
           @value={{@model.watchedFirstPostCategories}}
         />
@@ -106,7 +119,10 @@ const Categories = <template>
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-selector"
-            @exclude={{categoryIds @selectedCategories}}
+            @exclude={{otherCategoryIds
+              @selectedCategories
+              @model.regularCategories
+            }}
             @onChange={{fn (mut @model.regularCategories)}}
             @value={{@model.regularCategories}}
           />
@@ -137,7 +153,10 @@ const Categories = <template>
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-selector"
-            @exclude={{categoryIds @selectedCategories}}
+            @exclude={{otherCategoryIds
+              @selectedCategories
+              @model.mutedCategories
+            }}
             @onChange={{fn (mut @model.mutedCategories)}}
             @value={{@model.mutedCategories}}
           />

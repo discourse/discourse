@@ -394,22 +394,22 @@ module(
         assert.deepEqual(optionValues(), ["1001"]);
       });
 
-      test("excluded categories are hidden unless held", async function (assert) {
+      test("excluded categories are not offered, even when held", async function (assert) {
         const exclude = [1, 2];
         const held = [2];
 
         await render(
           <template><Host @exclude={{exclude}} @value={{held}} /></template>
         );
+        assert
+          .dom(".d-select__chip[data-value='2']")
+          .exists("the held category stays selected");
         await select().open();
         await select().search("bug");
         assert.deepEqual(optionValues(), [], "excluded");
 
         await select().search("feature");
-        assert.true(
-          optionValues().includes("2"),
-          "a held category stays listed"
-        );
+        assert.false(optionValues().includes("2"), "held and excluded");
       });
 
       test("a scope lists the category one level up and its children, until a search", async function (assert) {
@@ -1509,7 +1509,7 @@ module(
         );
       });
 
-      test("only held excluded membership reloads the category list", async function (assert) {
+      test("selection never reloads the category list, a changed exclusion does", async function (assert) {
         Site.current().set("lazy_load_categories", true);
         const requests = [];
         pretender.post("/categories/search", (request) => {
@@ -1528,13 +1528,13 @@ module(
           });
         });
         const value = tracked([1]);
-        const exclude = [1];
+        const exclude = tracked([]);
         const onChange = (next) => (value.value = next);
         await render(
           <template>
             <DSelectCategory
               @emit="ids"
-              @exclude={{exclude}}
+              @exclude={{exclude.value}}
               @onChange={{onChange}}
               @value={{value.value}}
             />
@@ -1542,19 +1542,18 @@ module(
         );
         await dSelect().open();
         await click("[role='option'][data-value='2']");
-        assert.strictEqual(
-          requests.length,
-          1,
-          "an unrelated selection does not reload"
-        );
         await dSelect().remove(1);
+        assert.deepEqual(requests, [[]], "picking and removing do not reload");
+
+        exclude.value = [2];
+        await settled();
         assert.deepEqual(
           requests,
-          [[], ["1"]],
-          "removing the held exception reloads with that id excluded"
+          [[], ["2"]],
+          "a changed exclusion reloads with the id rejected"
         );
         assert
-          .dom("[role='option'][data-value='1']")
+          .dom("[role='option'][data-value='2']")
           .doesNotExist("the excluded category is no longer listed");
       });
 

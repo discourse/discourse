@@ -629,7 +629,8 @@ The category family has two recipes:
   - `@uncategorized`: defaults to `true` when multiple, otherwise to the site's
     `allow_uncategorized_topics`.
   - `@subcategories={{false}}` offers top-level categories only.
-  - `@exclude` hides categories unless they are held.
+  - `@exclude` lists categories that are never offered; a held one stays selected. A screen
+    with several lists passes each list only the categories the other lists hold.
   - `@scope`, `@prioritize` and `@readOnly` are the composer's rules. While browsing, scope and
     prioritize act one level up: the category's parent and that parent's children.
     `@readOnly` categories show as disabled rows.

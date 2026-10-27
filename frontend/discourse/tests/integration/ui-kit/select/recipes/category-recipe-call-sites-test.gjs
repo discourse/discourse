@@ -4,10 +4,12 @@ import sinon from "sinon";
 import SiteSettingCategoryList from "discourse/admin/components/site-settings/category-list";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import UserPreferencesCategories from "discourse/components/user-preferences/categories";
 import { MIGRATED_SELECT_KIT_MODULES } from "discourse/lib/select-kit-modify-class-deprecation";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
+import GroupManageCategories from "discourse/templates/group/manage/categories";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { DSelect as SelectDriver } from "discourse/tests/helpers/d-select-helper";
 import {
@@ -202,6 +204,59 @@ module(
         assert.false(
           optionValues().includes("3"),
           "a category the page left out is not"
+        );
+      });
+    });
+
+    module("notification levels", function () {
+      test("a preferences list offers its own held categories but not another list's", async function (assert) {
+        const model = {
+          watchedCategories: [Category.findById(1)],
+          trackedCategories: [Category.findById(2)],
+          watchedFirstPostCategories: [],
+          mutedCategories: [],
+        };
+        const selected = [
+          ...model.watchedCategories,
+          ...model.trackedCategories,
+        ];
+        await render(
+          <template>
+            <UserPreferencesCategories
+              @model={{model}}
+              @selectedCategories={{selected}}
+              @siteSettings={{this.siteSettings}}
+            />
+          </template>
+        );
+        await click(".tracking-controls__watched-categories .d-select");
+        assert.true(optionValues().includes("1"), "its own category is listed");
+        assert.false(
+          optionValues().includes("2"),
+          "the tracked category is not offered"
+        );
+      });
+
+      test("a group list offers its own held categories but not another list's", async function (assert) {
+        const model = {
+          watchingCategories: [Category.findById(1)],
+          trackingCategories: [Category.findById(2)],
+        };
+        const controller = {
+          model,
+          selectedCategories: [Category.findById(1), Category.findById(2)],
+          siteSettings: this.siteSettings,
+        };
+        await render(
+          <template>
+            <GroupManageCategories @controller={{controller}} />
+          </template>
+        );
+        await click(".control-group:nth-of-type(2) .d-select");
+        assert.true(optionValues().includes("1"), "its own category is listed");
+        assert.false(
+          optionValues().includes("2"),
+          "the tracking category is not offered"
         );
       });
     });

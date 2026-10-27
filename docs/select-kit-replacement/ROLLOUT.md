@@ -379,7 +379,7 @@ Open items need a decision after manual testing; the rest are intended but still
 Category storage fields branch to `DSelectCategory` while `enable_new_select_controls` is on.
 Former single choosers pass `@multiple={{false}}`, `@emit="ids"` and `@permission="create"`;
 advanced search and the parent-category field pass `@permission="see"`. Former selectors keep
-emitting category records, and their blocked categories become `@exclude` ids. Empty-value text
+emitting category records, and their blocked categories become `@exclude` ids, minus the list's own held categories. Empty-value text
 is a translated `@placeholder`; a field keeps a selectable none row only where the legacy chooser
 inserted one.
 

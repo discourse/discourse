@@ -75,7 +75,7 @@ interface DSelectCategorySignature {
     prioritize?: CategoryValue;
     /** Category ids always offered as disabled rows while browsing. */
     readOnly?: number | string | readonly (number | string)[];
-    /** Categories hidden unless already held. */
+    /** Categories never offered; a held one stays selected. */
     exclude?: readonly (number | string)[];
     /** Translated text used when empty. */
     placeholder?: string;
@@ -124,18 +124,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return this.multiple ? this._ids : (this._ids[0] ?? null);
   }
 
-  get #heldExcludedKey() {
-    if (!this.args.exclude?.length) {
-      return "";
-    }
-    const held = new Set(this._ids);
-    return this.args.exclude
-      .map(Number)
-      .filter((id) => held.has(id))
-      .sort((a, b) => a - b)
-      .join(",");
-  }
-
   get #readOnly(): number[] {
     return makeArray(
       this.args.readOnly as number | string | (number | string)[]
@@ -163,7 +151,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
 
   get loadContext() {
     return {
-      heldExcluded: this.#heldExcludedKey,
       permission: this.args.permission,
       scope: this.args.scope,
       prioritize: this.args.prioritize,
@@ -253,7 +240,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   #categoryAllowed() {
     const readOnly = new Set(this.#readOnly);
     const excluded = new Set((this.args.exclude ?? []).map(Number));
-    const held = new Set(this._ids);
     const onlyPostable = this.args.permission === "create";
     const uncategorized = this.#uncategorized;
     const uncategorizedId = this.site.uncategorized_category_id;
@@ -263,7 +249,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       ((!onlyPostable || category.permission === 1) &&
         (uncategorized || category.id !== uncategorizedId) &&
         (subcategories || !category.parent_category_id) &&
-        (!excluded.has(category.id) || held.has(category.id)));
+        !excluded.has(category.id));
   }
 
   #matches(category: CategoryRecord, term: string, multiple = this.multiple) {
@@ -347,16 +333,10 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
             const descendants: CategoryRecord[] =
               await Category.asyncFindDescendants(category);
             const allowed = this.#categoryAllowed();
-            const excluded = new Set((this.args.exclude ?? []).map(Number));
             const locked = new Set(this.#readOnly);
             scope.selectMany(
               descendants
-                .filter(
-                  (child) =>
-                    !excluded.has(child.id) &&
-                    !locked.has(child.id) &&
-                    allowed(child)
-                )
+                .filter((child) => !locked.has(child.id) && allowed(child))
                 .map((child) => categoryItem(child))
             );
           });
@@ -391,9 +371,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         : this.#familyId(this.args.prioritize),
       rejectCategoryIds: [
         ...new Set([
-          ...(this.args.exclude ?? [])
-            .map(Number)
-            .filter((id) => !this._ids.includes(id)),
+          ...(this.args.exclude ?? []).map(Number),
           ...this.#readOnly,
         ]),
       ],
