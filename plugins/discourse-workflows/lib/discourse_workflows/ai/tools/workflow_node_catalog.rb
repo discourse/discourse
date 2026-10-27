@@ -293,6 +293,17 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:set_slow_mode" => [
+            {
+              name: "Slow the trigger topic down to one post every 10 minutes",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                interval: 10,
+                interval_unit: "minutes",
+                actor_username: "system",
+              },
+            },
+          ],
         }.freeze
 
         MAX_TYPES = 10

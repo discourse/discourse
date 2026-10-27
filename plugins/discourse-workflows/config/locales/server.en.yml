@@ -221,6 +221,13 @@ en:
         category_required: "Publishing to a category needs a category."
         category_not_found: "Category %{category_id} doesn't exist."
         save_failed: "The timer could not be saved: %{errors}"
+      topic_slow_mode:
+        invalid_interval: "'interval' must be a whole number of at least 1 second and at most %{max_days} days: '%{value}'."
+        invalid_interval_unit: "Unknown interval unit: %{interval_unit}."
+        invalid_time: "'%{field}' is not a valid date and time: '%{value}'."
+        not_allowed: "'%{username}' cannot change slow mode on topic %{topic_id}. Slow mode can only be changed by staff and trust level 4 users."
+        invalid: "Slow mode could not be changed: %{errors}"
+        failed: "Slow mode could not be changed on topic %{topic_id}."
       sort:
         code_missing_return: "Code must contain a return statement."
       summarize:
