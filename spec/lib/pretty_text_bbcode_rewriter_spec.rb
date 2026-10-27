@@ -52,6 +52,23 @@ RSpec.describe PrettyText do
       )
     end
 
+    it "removes every renderer-equivalent spelling of an attribute" do
+      raw =
+        '[excerpt name="Recurrence Until" Recurrence=every_week recurrenceUntil=2027-04-05 recurrence-until=2027-04-06]Body[/excerpt]'
+
+      expect(rewrite(raw, "recurrence" => nil, "recurrence-until" => nil)).to eq(
+        '[excerpt name="Recurrence Until"]Body[/excerpt]',
+      )
+    end
+
+    it "replaces all mixed-case aliases without leaving duplicate rendered attributes" do
+      raw = "[excerpt Start=old start=stale End=before]Body[/excerpt]"
+
+      expect(rewrite(raw, "start" => "new", "end" => "after")).to eq(
+        "[excerpt start=new end=after]Body[/excerpt]",
+      )
+    end
+
     it "rejects a stale opening tag snapshot" do
       raw = "[excerpt title=old]Body[/excerpt]"
       candidate = described_class.scan_bbcode_tags(raw, tag: "excerpt").sole

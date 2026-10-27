@@ -48,6 +48,34 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(event_date.reload.finished_at).to be_nil
   end
 
+  it "archives initial-capital Event recurrence aliases as a one-off" do
+    starts_at = 7.days.after.change(sec: 0)
+    ends_at = starts_at + 1.hour
+    until_at = starts_at + 4.weeks
+    title = "Mixed-case recurrence rollover"
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+          [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" Recurrence="every_week" RecurrenceUntil="#{until_at.utc.strftime("%Y-%m-%d %H:%M")}"]
+          Meeting notes.
+          [/event]
+        RAW
+    event_date = post.reload.event.event_dates.pending.first
+
+    expect(post.event.recurrence).to eq("every_week")
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    archived = post.reload
+    expect(archived.raw).not_to match(/\bRecurrence(?:Until)?=/)
+    expect(archived.event.reload.recurrence).to be_nil
+    expect(archived.event.recurrence_until).to be_nil
+
+    successor = Topic.where(title:).where.not(id: post.topic_id).sole
+    expect(successor.first_post.reload.event.recurrence).to eq("every_week")
+  end
+
   it "archives the occurrence and creates a successor" do
     starts_at = 7.days.after.change(sec: 0)
     ends_at = starts_at + 1.hour

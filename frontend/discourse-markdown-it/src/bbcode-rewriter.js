@@ -1,3 +1,4 @@
+import { camelCaseToDash } from "discourse/lib/case-converter";
 import {
   bbCodeAttributeTokens,
   parseBBCodeTag,
@@ -5,6 +6,11 @@ import {
 } from "./features/bbcode-block.js";
 
 const NAME_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_-]*$/;
+
+// Match the names actually exposed by applyDataAttributes in the renderer.
+function renderedAttributeName(name) {
+  return camelCaseToDash(name.replace(/[^a-z0-9-]/gi, ""));
+}
 
 /** Find opening tags using the same grammar as the Markdown engine. */
 export function scanBBCodeTags(raw, tag) {
@@ -62,26 +68,64 @@ export function rewriteBBCodeTag(raw, tag, index, expectedOpening, changes) {
 
   const parsed = parseBBCodeTag(candidate.opening, 0, candidate.opening.length);
   const attributes = new Map(Object.entries(parsed.attrs));
+  const requestedChanges = new Map();
 
   for (const [name, value] of Object.entries(changes)) {
-    if (name !== "_default" && !NAME_PATTERN.test(name)) {
+    if (name === "_default") {
+      throw new Error("Rewriting default BBCode attributes is not supported");
+    }
+    if (!NAME_PATTERN.test(name)) {
       throw new Error("Invalid BBCode attribute name");
     }
-
-    if (value === null) {
-      attributes.delete(name);
-    } else if (["string", "number", "boolean"].includes(typeof value)) {
-      const text = String(value);
-      if (/[\r\n]/.test(text)) {
-        throw new Error("BBCode attribute values must stay on one line");
-      }
-      attributes.set(name, text);
-    } else {
+    if (
+      value !== null &&
+      !["string", "number", "boolean"].includes(typeof value)
+    ) {
       throw new Error("BBCode attribute values must be scalar or null");
+    }
+    if (value !== null && /[\r\n]/.test(String(value))) {
+      throw new Error("BBCode attribute values must stay on one line");
+    }
+
+    const renderedName = renderedAttributeName(name);
+    if (
+      requestedChanges.has(renderedName) &&
+      requestedChanges.get(renderedName) !== value
+    ) {
+      throw new Error(
+        "Conflicting BBCode values for the same rendered attribute"
+      );
+    }
+    requestedChanges.set(renderedName, value);
+  }
+
+  // Remove every original spelling that renders to a changed data-* key,
+  // including Recurrence, recurrence, recurrenceUntil and recurrence-until.
+  // Reinsert non-null values using one canonical (dash-case) spelling.
+  const resolvedChanges = {};
+  for (const name of Object.keys(parsed.attrs)) {
+    if (
+      name !== "_default" &&
+      requestedChanges.has(renderedAttributeName(name))
+    ) {
+      resolvedChanges[name] = null;
+    }
+  }
+  for (const [name, value] of requestedChanges) {
+    if (value !== null) {
+      resolvedChanges[name] = value;
     }
   }
 
-  const opening = rewriteOpening(candidate.opening, changes);
+  for (const [name, value] of Object.entries(resolvedChanges)) {
+    if (value === null) {
+      attributes.delete(name);
+    } else {
+      attributes.set(name, String(value));
+    }
+  }
+
+  const opening = rewriteOpening(candidate.opening, resolvedChanges);
   const roundTrip = parseBBCodeTag(opening, 0, opening.length);
 
   if (
