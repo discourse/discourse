@@ -24,6 +24,7 @@ vi:
     access_control:
       manage:
         access_permission_editor: "Lần Đầu Sửa Tút"
+        access_permission_owner: "Chủ nhóm"
         access_permission_remove: "Bỏ"
         access_permission_remove_description: "Gỡ bỏ quyền của đối tượng này"
         add_group: "Thêm người dùng hoặc nhóm"

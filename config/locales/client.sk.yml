@@ -28,6 +28,7 @@ sk:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Vlastník"
         access_permission_remove: "Odstrániť"
     number:
       format:

@@ -53,6 +53,7 @@ ru:
     access_control:
       manage:
         access_permission_editor: "Редактор"
+        access_permission_owner: "Владелец"
         access_permission_remove: "Отозвать"
     carousel:
       go_to_slide: "Перейти к слайду %{index}"

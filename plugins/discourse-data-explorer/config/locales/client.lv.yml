@@ -10,7 +10,6 @@ lv:
       or: "vai"
       ai:
         generate: "Radīt"
-        optional: "pēc izvēles"
       help:
         label: "Palīdzība"
       schema:
@@ -23,6 +22,7 @@ lv:
       chart:
         form:
           bar: "Josla"
+      name: "Vārds"
       query_groups: "Grupas"
       query_tags: "Birkas"
       query_description: "Apraksts"

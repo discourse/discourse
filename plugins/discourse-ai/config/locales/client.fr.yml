@@ -31,7 +31,6 @@ fr:
             failed: "Échec"
         emotion:
           title: "Émotion"
-          description: "Le tableau indique le nombre de publications classées selon une émotion donnée. Selon la méthode de classification des émotions sélectionnée, les publications sont classées soit avec le modèle de classification configuré (« SamLowe/roberta-base-go_emotions »), soit avec l'agent de classification des émotions configuré."
         reports:
           filters:
             group_by:
@@ -296,7 +295,6 @@ fr:
         none: "Jamais"
       features:
         short_title: "Fonctionnalités"
-        description: "Voici les fonctionnalités d'IA accessibles aux visiteurs de votre site. Elles peuvent être configurées pour utiliser des agents et des LLM précis, et leur accès peut être contrôlé par groupe."
         back: "Revenir aux fonctionnalités d'IA"
         settings_save_error: "Certains paramètres n'ont pas pu être enregistrés."
         disabled: "(désactivée)"
@@ -310,6 +308,7 @@ fr:
         no_llm: "Aucun LLM sélectionné"
         no_agent: "Non défini"
         no_groups: "Aucun"
+        classification_model: "Modèle :"
         edit: "Paramètres"
         expand_list:
           one: "(%{count} autre)"
@@ -329,10 +328,17 @@ fr:
           not_enabled: "Non activé"
         filters:
           all: "Tout"
-          text: "Rechercher des fonctionnalités, des agents, des LLM ou des groupes..."
           no_results: "Aucune fonctionnalité correspondant à vos filtres n'a été trouvée."
           reset: "Réinitialiser"
         no_automations: "Il n'y a pas encore d'automatisations"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Émotion"
+          enabled: "Activées"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Émotion"
         summarization:
           name: "Résumés"
           description: "Met à disposition un bouton de résumé qui permet aux visiteurs de résumer les sujets"

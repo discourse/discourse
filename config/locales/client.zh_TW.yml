@@ -61,6 +61,7 @@ zh_TW:
       manage:
         access_permission_editor: "編輯"
         access_permission_editor_description: "可為此實體建立及編輯內容"
+        access_permission_owner: "擁有者"
         access_permission_viewer: "觀看者"
         access_permission_viewer_description: "可檢視此實體的內容"
         access_permission_remove: "移除"

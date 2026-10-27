@@ -24,6 +24,7 @@ pt:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Dono(a)"
         access_permission_remove: "Remover"
     number:
       format:

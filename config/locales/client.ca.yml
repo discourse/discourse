@@ -24,6 +24,7 @@ ca:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Propietari"
         access_permission_remove: "Elimina"
     number:
       format:

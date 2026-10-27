@@ -8,8 +8,6 @@ id:
   js:
     explorer:
       or: "atau"
-      ai:
-        optional: "opsional"
       help:
         label: "Bantuan"
       schema:
@@ -22,6 +20,7 @@ id:
       chart:
         form:
           bar: "Batang"
+      name: "Nama"
       query_groups: "Grup"
       query_tags: "Label"
       query_description: "Deskripsi"

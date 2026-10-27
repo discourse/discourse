@@ -2137,9 +2137,11 @@ pt:
       meeting_code: "Código:"
     github:
       closed: "fechado"
-      status_date:
-        approved: "aprovado"
-        closed: "fechado"
+      pr_status:
+        draft: "Rascunho"
+        open: "Abrir"
+        approved: "Aprovado"
+        closed: "Fechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'

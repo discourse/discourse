@@ -21,6 +21,7 @@ te:
     access_control:
       manage:
         access_permission_editor: "ఎడిటరు"
+        access_permission_owner: "యజమాని"
         access_permission_remove: "తొలగించు"
     number:
       format:

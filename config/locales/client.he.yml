@@ -52,6 +52,7 @@ he:
     access_control:
       manage:
         access_permission_editor: "עורכים"
+        access_permission_owner: "בעלות"
         access_permission_remove: "הסרה"
         add_group: "הוספת משתמש או קבוצה"
         mandatory: "חובה"

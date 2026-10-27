@@ -55,7 +55,6 @@ fr:
         save_query: "Enregistrer la requête"
         write_manually: "Écrire le code SQL manuellement"
         sql_label: "SQL"
-        optional: "facultatif"
       import:
         unparseable_json: "Fichier JSON non analysable."
         wrong_json: "Fichier JSON incorrect. Un fichier JSON doit contenir un objet « query », qui doit au moins avoir une propriété « sql »."
@@ -118,7 +117,7 @@ fr:
       max_result_count:
         one: "Affichage du premier (%{count}) résultat."
         other: "Affichage des %{count} premiers résultats."
-      query_name: "Requête"
+      name: "Nom"
       query_groups: "Groupes"
       query_tags: "Étiquettes"
       link: "Lien pour"

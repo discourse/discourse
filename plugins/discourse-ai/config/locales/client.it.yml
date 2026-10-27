@@ -200,6 +200,7 @@ it:
         no_llm: "Nessun LLM selezionato"
         no_agent: "Non impostato"
         no_groups: "Nessuna"
+        classification_model: "Modello:"
         edit: "Impostazioni"
         expand_list:
           one: "(%{count} altro)"
@@ -216,6 +217,13 @@ it:
           no_results: "Nessuna funzionalità trovata per i filtri impostati."
           reset: "Annulla"
         no_automations: "Non ci sono ancora automazioni"
+        sentiment:
+          sentiment: "Sentimento"
+          emotion: "Emozione"
+          enabled: "Abilitato"
+          setting_groups:
+            sentiment: "Sentimento"
+            emotion: "Emozione"
         summarization:
           name: "Riepiloghi"
           description: "Rende disponibile un pulsante attraverso cui i visitatori possono ottenere un riepilogo degli argomenti"

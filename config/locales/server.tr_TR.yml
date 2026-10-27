@@ -4931,6 +4931,9 @@ tr_TR:
       truncated_file: "Bu dosya kesildi."
       show_original: "orjinali göster"
     github:
+      header:
+        file: "Dosya"
+        success: "Başarılı"
       binary_file: "Bu dosya ikilidir."
       truncated_file: "Bu dosya kesildi."
       show_original: "orjinali göster"
@@ -4944,21 +4947,12 @@ tr_TR:
       review_by: "İnceleyen:"
       pr_summary: "%{commits} işlem %{changed_files} dosyalarını %{additions} eklemeler ve %{deletions} silmelerle değiştirdi"
       no_description: "GitHub'da bir hesap oluşturarak %{repo} geliştirmesine katkıda bulunun."
-      pr_title:
-        default: "Çekme İsteği"
-        draft: "Taslak Çekme İsteği"
-        open: "Çekme isteği aç"
-        approved: "Onaylanmış Çekme İsteği"
-        changes_requested: "Değişiklik talep edildi"
-        merged: "Birleştirilmiş Çekme İsteği"
-        closed: "Kapalı Çekme İsteği"
-      status_date:
-        open: "açıldı"
-        draft: "taslağı hazırlanmış"
-        approved: "onaylanmış mı"
-        changes_requested: "değişiklikler talep edildi"
-        merged: "birleştirildi"
-        closed: "kapatıldı"
+      pr_status:
+        draft: "Taslak"
+        open: "Aç"
+        approved: "Onaylandı"
+        merged: "Birleştirildi"
+        closed: "Kapalı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'

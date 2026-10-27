@@ -39,7 +39,9 @@ fr:
         unassign_from_topic: "Annuler l'attribution de @%{username} au sujet"
         unassign_from_post: "Annuler l'attribution de @%{username} à #%{post_number}"
         edit_assignments: "Modifier les attributions…"
-        created_by: "Créé par "
+        owners:
+          one: "Propriétaire"
+          other: "Propriétaires"
       manage:
         name: "Nom"
         slug: "Identifiant"

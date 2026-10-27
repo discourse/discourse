@@ -152,6 +152,14 @@ pl_PL:
     livestream:
       chat:
         topic_reference_message: "Ten kanał jest przeznaczony na wydarzenie [%{title}](%{url}) — odwiedź temat, aby uzyskać więcej szczegółów i potwierdzić obecność."
+        transcript_heading: "Transkrypcja czatu"
+        transcript_heading_dated: "Transkrypcja czatu w dniu %{date}"
+        transcript_edit_reason: "Dodano transkrypt czatu na żywo"
+        transcript_earlier_messages:
+          one: "%{count} wcześniejsza wiadomość znajduje się na [kanale czatu](%{url})."
+          few: "%{count} wcześniejsze wiadomości znajduje się na [kanale czatu](%{url})."
+          many: "%{count} wcześniejszych wiadomości znajduje się na [kanale czatu](%{url})."
+          other: "%{count} wcześniejszych wiadomości znajduje się na [kanale czatu](%{url})."
       zoom:
         frame_title: "Webinarium Zoom"
         frame_join: "Dołącz do webinarium"
@@ -196,6 +204,7 @@ pl_PL:
           invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: %{recurrences}."
           invalid_timezone: "Strefa czasowa nie została rozpoznana."
           invalid_url: "Adres URL musi być prawidłowym adresem internetowym."
+          invalid_recording_url: "Nagranie musi być prawidłowym adresem internetowym."
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
           acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
           invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."
@@ -215,6 +224,8 @@ pl_PL:
             length: "Długość adresu URL wydarzenia jest ograniczona do %{maximum} znaków."
           location:
             length: "Lokalizacja zdarzenia jest ograniczona do %{maximum} znaków."
+          recording:
+            length: "Łącze do rejestrowania zdarzeń jest ograniczone do %{maximum} znaków."
   discourse_push_notifications:
     popup:
       event_reminder: "Przypomnienie o wydarzeniu"

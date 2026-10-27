@@ -253,6 +253,7 @@ pt_BR:
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não configurado"
         no_groups: "Nenhum"
+        classification_model: "Modelo:"
         edit: "Configurações"
         expand_list:
           one: "(mais %{count})"
@@ -274,6 +275,13 @@ pt_BR:
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
           reset: "Redefinir"
         no_automations: "Ainda não há nenhuma automação"
+        sentiment:
+          sentiment: "Sentimento"
+          emotion: "Gesto"
+          enabled: "Ativados"
+          setting_groups:
+            sentiment: "Sentimento"
+            emotion: "Gesto"
         summarization:
           name: "Resumos"
           description: "Ativa o botão de criação de resumo para os visitantes resumirem os tópicos"

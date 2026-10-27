@@ -21,6 +21,7 @@ th:
         failed: "ล้มเหลว"
     access_control:
       manage:
+        access_permission_owner: "เจ้าของ"
         access_permission_remove: "ลบ"
     number:
       format:

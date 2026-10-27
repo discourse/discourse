@@ -82,7 +82,7 @@ zh_CN:
           fetch_error: "询问 AI 指标无法加载。"
         emotion:
           title: "情绪"
-          description: "该表格列出了按特定情绪分类的帖子数量。根据所选情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"
+          description: "该表格统计了使用所选情绪分类后端对每种情绪进行分类的帖子数量。"
         reports:
           filters:
             group_by:
@@ -383,7 +383,7 @@ zh_CN:
         saved: "已保存默认语言模型"
       features:
         short_title: "功能"
-        description: "这些是您站点的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的智能体和 LLM，并按群组控制访问权限。"
+        description: "为您的网站配置 AI 功能，包括其代理、模型和访问权限（如果支持）。"
         back: "返回 AI 功能"
         settings_save_error: "某些设置无法保存。"
         disabled: "（已禁用）"
@@ -395,6 +395,14 @@ zh_CN:
         no_llm: "未选择 LLM"
         no_agent: "未设置"
         no_groups: "无"
+        backend: "后端："
+        backends:
+          agent: "LLM代理"
+          decision_model: "决策模型"
+          classification_model: "专用分类端点"
+        decision_model: "决策模型:"
+        classification_model: "模型："
+        not_configured: "未配置"
         edit: "设置"
         expand_list:
           other: "（其他 %{count} 个）"
@@ -413,10 +421,32 @@ zh_CN:
           not_enabled: "未启用"
         filters:
           all: "所有"
-          text: "搜索功能、智能体、LLM 或群组…"
+          text: "搜索功能、代理、模型或群组……"
           no_results: "找不到符合您的筛选条件的功能。"
           reset: "重置"
         no_automations: "尚无自动化"
+        sentiment:
+          name: "情感与情绪"
+          description: "在后台对帖子中的情感和情绪进行分类。"
+          sentiment: "情绪"
+          emotion: "情绪"
+          backend: "后端"
+          enabled: "已启用"
+          agent: "智能体"
+          decision_model: "决策模型"
+          posts_per_hour: "每小时发帖数"
+          post_age_limit: "发布年龄限制（天数）"
+          posts_per_hour_description: "大致扫描频率。0 表示停止扫描，包括新发布的帖子。已编辑的帖子会单独检查。"
+          background_description: "每 5 分钟检查一次未分类帖子，检查范围在共享限制内。每个已启用的分类器每次处理帖子都可能产生一次请求。拒绝请求后可能会重试。"
+          emotion_scores: "分数分布在 28 种情绪上。"
+          model_change_warning: "更改所选模型不会重新分类现有结果。"
+          dedicated_description: "专用分类端点在站点设置中配置。"
+          configure_dedicated: "配置专用分类端点"
+          manage_decision_models: "管理决策模型"
+          setting_groups:
+            sentiment: "情绪"
+            emotion: "情绪"
+            background_processing: "后台处理"
         summarization:
           name: "总结"
           description: "提供总结按钮，允许访客总结话题"
@@ -1130,7 +1160,7 @@ zh_CN:
           remove: "移除请求头"
         edit: "编辑"
         delete: "删除"
-        confirm_delete: "您确定要删除此决策模型吗？使用该模型的工作流将停止运行。"
+        confirm_delete: "您确定要删除此决策模型吗？使用该模型的功能和工作流程将停止运行。"
         saved: "决策模型已保存"
         test: "运行测试"
         test_success: "决策模型回答了测试问题（是： %{percentage}%）。"
@@ -1240,7 +1270,7 @@ zh_CN:
         type_descriptions:
           llm: "为 AI 机器人、摘要和 AI 助手等功能生成文本"
           embedding: "将内容转化为语义搜索和相关主题的向量"
-          decision: "回答有关内容的文本问题（是/否、选择题、评分题），并给出概率，用于工作流程中。"
+          decision: "回答有关内容的文本问题（是/否、选择题、评分），并给出概率，用于人工智能功能和工作流程。"
         type_filters:
           llm: "大型语言模型"
           embedding: "嵌入模型"

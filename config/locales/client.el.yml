@@ -47,6 +47,7 @@ el:
     access_control:
       manage:
         access_permission_editor: "Επεξεργαστής"
+        access_permission_owner: "Ιδιοκτήτης"
         access_permission_remove: "Αφαίρεση"
     carousel:
       go_to_slide: "Μετάβαση στη διαφάνεια %{index}"
