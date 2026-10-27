@@ -25,6 +25,62 @@ RSpec.describe PushNotificationController do
   context "when logged in" do
     before { sign_in(user) }
 
+    it "rejects missing, blank, and non-string endpoints without storing subscriptions" do
+      [nil, "", " ", "#fragment", 1, false, true, [], {}].each do |endpoint|
+        2.times do
+          post "/push_notifications/subscribe.json",
+               params: {
+                 subscription: {
+                   endpoint: endpoint,
+                   keys: {
+                     p256dh: "key",
+                     auth: "auth",
+                   },
+                 },
+                 send_confirmation: false,
+               },
+               as: :json
+
+          expect(response.status).to eq(400)
+          expect(user.push_subscriptions).to be_empty
+        end
+      end
+
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: {
+               keys: {
+                 p256dh: "key",
+                 auth: "auth",
+               },
+             },
+           },
+           as: :json
+
+      expect(response.status).to eq(400)
+      expect(user.push_subscriptions).to be_empty
+    end
+
+    it "rejects malformed unsubscribe endpoints without deleting valid subscriptions" do
+      existing = Fabricate(:push_subscription, user: user)
+      [nil, "", " ", "#fragment", 1, false, true, [], {}].each do |endpoint|
+        post "/push_notifications/unsubscribe.json",
+             params: {
+               subscription: {
+                 endpoint: endpoint,
+                 keys: {
+                   p256dh: "key",
+                   auth: "auth",
+                 },
+               },
+             },
+             as: :json
+
+        expect(response.status).to eq(400)
+        expect(user.push_subscriptions).to contain_exactly(existing)
+      end
+    end
+
     it "rejects endpoints exceeding the index size budget after normalization" do
       [
         "https://push.example/#{SecureRandom.hex(4096)}",

@@ -6,6 +6,22 @@ RSpec.describe EnsureUniquePushSubscriptionEndpoints do
   fab!(:user)
   fab!(:other_user, :user)
 
+  it "removes malformed legacy endpoints while retaining valid subscriptions" do
+    ActiveRecord::Base.connection.remove_index(
+      :push_subscriptions,
+      name: "index_push_subscriptions_on_endpoint",
+    )
+    [nil, "", " ", "#fragment", 1, false, true, [], {}, "https://exa mple.com"].each do |endpoint|
+      PushSubscription.create!(user: user, data: { endpoint: endpoint }.to_json)
+    end
+    PushSubscription.create!(user: user, data: { keys: { auth: "key" } }.to_json)
+    retained = Fabricate(:push_subscription, user: user)
+
+    described_class.new.up
+
+    expect(PushSubscription.all).to contain_exactly(retained)
+  end
+
   it "removes oversized legacy endpoints before building the unique index" do
     ActiveRecord::Base.connection.remove_index(
       :push_subscriptions,

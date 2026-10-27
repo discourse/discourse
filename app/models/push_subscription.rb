@@ -6,10 +6,14 @@ class PushSubscription < ActiveRecord::Base
   belongs_to :user
 
   def self.normalize_endpoint(endpoint)
-    return endpoint if endpoint.nil?
+    unless endpoint.is_a?(String) && endpoint.present?
+      raise Discourse::InvalidParameters.new(:endpoint)
+    end
 
     normalized = Addressable::URI.parse(endpoint).normalize.omit(:fragment).to_s
-    raise Discourse::InvalidParameters.new(:endpoint) if normalized.bytesize > MAX_ENDPOINT_BYTES
+    if normalized.blank? || normalized.bytesize > MAX_ENDPOINT_BYTES
+      raise Discourse::InvalidParameters.new(:endpoint)
+    end
     normalized
   rescue Addressable::URI::InvalidURIError
     raise Discourse::InvalidParameters.new(:endpoint)

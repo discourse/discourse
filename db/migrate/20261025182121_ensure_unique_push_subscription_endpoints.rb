@@ -53,11 +53,9 @@ class EnsureUniquePushSubscriptionEndpoints < ActiveRecord::Migration[8.0]
       rows.each do |row|
         data = JSON.parse(row.data)
         endpoint = data["endpoint"]
-        next if endpoint.blank?
-
-        begin
-          normalized = Addressable::URI.parse(endpoint).normalize.omit(:fragment).to_s
-        rescue Addressable::URI::InvalidURIError
+        normalized = normalize_endpoint(endpoint)
+        if normalized.blank?
+          DB.exec("DELETE FROM push_subscriptions WHERE id = :id", id: row.id)
           next
         end
         next if endpoint == normalized
@@ -71,5 +69,13 @@ class EnsureUniquePushSubscriptionEndpoints < ActiveRecord::Migration[8.0]
       end
       last_id = rows.last.id
     end
+  end
+
+  def normalize_endpoint(endpoint)
+    return unless endpoint.is_a?(String) && endpoint.present?
+
+    Addressable::URI.parse(endpoint).normalize.omit(:fragment).to_s
+  rescue Addressable::URI::InvalidURIError
+    nil
   end
 end
