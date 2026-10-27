@@ -256,8 +256,9 @@ assertion needs a real browser.
 
 ## Custom row content
 
-Six named blocks control what the component renders: `:item`, `:selection`, `:groupHeader`,
-`:empty`, `:footer` and `:error`.
+Named blocks control what the component renders: `:item`, `:selection`, `:selectionLoading`,
+`:unresolved`, `:groupHeader`, `:groupFooter`, `:skeletonItem`, `:empty`, `:listHeader`,
+`:footer` and `:error`.
 
 **Supply a block only when an argument cannot express the content.** `@labelField` picks the
 field to display, `@selectedIcon` marks the chosen row, `@icon` puts a glyph in the trigger, and
@@ -266,7 +267,7 @@ it costs behaviour (see `:selection` below) and it costs the reader a reason to 
 
 ### What each block replaces
 
-All six land **inside** markup the component keeps, so you supply content, not structure — the
+Every block lands **inside** markup the component keeps, so you supply content, not structure — the
 option's `role`, its selected and disabled state, its ARIA position, the group header's label id,
 the empty state's `role="status"` and the error state's `role="alert"` are all still handled for
 you.
@@ -274,9 +275,15 @@ you.
 `:error` is yielded `reload` alongside the error, so a block that wants its own recovery control
 can render one; the component's retry is shown only when no block is supplied.
 
-`:item`, `:selection`, `:unresolved`, `:groupHeader` and `:footer` also yield the select's resolved
-options as their last parameter, so a recipe can render values extensions override (see
-[Recipes](#recipes)).
+`:item`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and `:footer`
+also yield the select's resolved options as their last parameter, so a recipe can render values
+extensions override (see [Recipes](#recipes)).
+
+`:groupHeader` and `:groupFooter` draw every header and footer row, text or action, and `:item`
+never receives one, so `:item` stays about records. Tell the kinds apart by `onSelect`, which only
+an action row carries; both carry `groupKey`, so one block can draw group-specific content for
+either. `@groupHeader` (the builder) and `<:groupHeader>` (the block) share a name across separate
+namespaces, and `<:groupFooter>` is unrelated to the panel's `<:footer>`.
 
 ### Blocks that interact
 
@@ -286,9 +293,15 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   so it renders in every panel state — while loading, when populated, when empty, and when the
   source has failed. Gate its contents on the yielded `total`/`loadedCount` rather than assuming
   there are rows, or a footer will read "12 results" underneath "Nothing matches".
-- **A `:groupHeader` does not replace the option description.** Each option is
-  `aria-describedby` a dedicated label span containing the group's label; arbitrary custom
-  markup, counts, and hints remain visible in the header without being repeated for every row.
+- **A `:groupHeader` or `:groupFooter` does not replace the option description.** Each option is
+  `aria-describedby` a dedicated label span holding the builder's text for its group's text
+  header, then its text footer; arbitrary custom markup, counts, and hints remain visible in the
+  row without being repeated for every option. Keep a text footer short and about the group, since
+  it is what repeats, and never end it with a bare number, which runs into the spoken position.
+- **A group block never names an action row.** For an action header or footer, the builder's
+  label (through `@labelField`) is the option's spoken name and the block's drawing is hidden
+  from screen readers. So the label must contain the words the drawing shows (WCAG 2.5.3, label
+  in name), and counts or hints in the drawing must not carry meaning the label lacks.
 
 ### Accessibility rules for block content
 
@@ -301,7 +314,10 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   announced as a bare remove button.
 - Never render a trailing bare number; it is announced as part of the option's name ("performance
   871"). Use a phrase, or hide the visual figure and supply one.
-- `role="option"` forbids interactive descendants, so no buttons or links inside `:item`.
+- No interactive content in `:item`, `:groupHeader` or `:groupFooter`. In a text header or
+  footer (`role="presentation"`) it cannot be reached from the keyboard; inside an option it is
+  flattened into the name, and a click on it reaches the row's handler, so it runs the row's
+  action. An action belongs in an action row returned by `@groupHeader` or `@groupFooter`.
 - **Naming the control:** use `@label`, or `aria-labelledby` pointing at your own caption. A
   wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
   descendant, so the browser resolves the label to that sink instead of to whichever button
@@ -409,8 +425,11 @@ assertion and otherwise leaves the list unchanged. Content changes are reflected
 `aria-setsize` and the announced count. On paged sources, the set is the declared total plus the
 customizations' net change. Two reveals in a row that add no visible rows stop paging for that
 query. The set is then sized by the rows shown, and the footer's `total` becomes undefined.
-Otherwise, footer `total` and `loadedCount` remain source counts. Legacy `modifySelectKit` content
-runs after every `content` callback.
+Otherwise, footer `total` and `loadedCount` remain source counts. A group's action header or
+footer is an option too, so `aria-setsize` counts every one shown: with a declared total it grows
+as pages add groups (40 + 2, then 40 + 5), and a reveal that only adds a footer announces one more
+result. Paging never counts them. Legacy `modifySelectKit` content runs after every `content`
+callback.
 
 **`row`** gets a fresh `{ classes: [], title: undefined }` for each row. Classes are added after
 the core classes, and falsy entries are ignored. `title` renders only when a callback sets it; an
@@ -600,8 +619,9 @@ Sources (`-internals/engine/select-sources.ts`):
   the cursor, hands them back as `opts.offset`/`opts.page`/`opts.cursor`, and asks again on a
   reveal. A recipe never counts pages itself.
 - Without `hasMore`, `total` decides whether more pages remain, and sizes the list for
-  `aria-setsize`. An explicit `hasMore` wins, and `hasMore: false` ends paging. Give `hasMore`
-  instead of `total` when the rows do not map one to one to the counted records.
+  `aria-setsize`. An explicit `hasMore` wins, and `hasMore: false` ends paging. Return only the
+  counted records: a row that belongs after a record, such as an action on its family, is a
+  group footer the engine adds (see Grouping below), never a row in the page.
 - Rows are de-duplicated by key across pages, and a response for a superseded query or reveal is
   dropped, so a loader never checks its `signal` or compares results.
 - Rendering is windowed, so a long array costs only the rows on screen.
@@ -609,6 +629,15 @@ Sources (`-internals/engine/select-sources.ts`):
   (`-internals/coordinators/select-presenter-base.ts`). A recipe never sets `@debounce`.
 - `@loadContext` is the loader's inputs: a changed entry reloads the list. Arrays compare by their
   elements, so an equal array derived afresh after a pick never does.
+
+Grouping (`-internals/engine/list-composer.ts`):
+
+- `@groupBy` groups the rows. A client source merges every row of a key; a `@load` source groups
+  consecutive rows, so pages only append. A loader that leaves the key unset turns grouping off
+  for those rows.
+- `@groupHeader` and `@groupFooter` build each group's boundaries from its key and rows: text, an
+  action row, or nothing. The engine keys, positions and describes them, and holds a paged
+  source's last footer back until no more rows can load.
 
 Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
 
@@ -755,8 +784,9 @@ existing arguments keep their positions:
 - `@load`, `@resolveValue` and `@resolveValues` get `options` on their second argument.
 - `@onChange` gets `options` on its third argument, `{ origin, reason, options }`.
 - `allowCreate`, `createItem`, `createUnresolvedItem`, `specialItems` (after its snapshot),
-  `filterBy`, `groupBy` and `groupLabel` get it as their last argument.
-- The `:item`, `:selection`, `:unresolved`, `:groupHeader` and `:footer` blocks yield it as their
+  `filterBy`, `groupBy`, `groupHeader` and `groupFooter` get it as their last argument.
+- The `:item`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and
+  `:footer` blocks yield it as their
   last parameter.
 
 Code outside `DSelect`, such as markup around it, cannot read the resolved values.
@@ -831,7 +861,9 @@ by mechanism.
   items in the panel even where the rows already show them (see "The panel field").
 - Selection limits (`@maximum` / `@minimum`, multi-select). `@maximum` is a hard cap enforced at the
   engine's single `select()` chokepoint (so pointer, keyboard, create-on-the-fly, and the compat
-  bridge are all covered) and reinforced by disabling every unselected option at the cap; a value
+  bridge are all covered) and reinforced by disabling every unselected option at the cap. Action
+  rows stay open at the cap because they never become a value, except a group's action header
+  or footer, which acts by adding rows and so closes like an option; a value
   seeded over the cap is displayed and removable, never trimmed. Pass `@maximum={{false}}` for no
   cap. Numbers below 1 and NaN also mean no cap, with a once-per-select development warning.
   `@minimum` is advisory (message + state only, never blocks removal — the consuming form owns
@@ -843,28 +875,44 @@ by mechanism.
   `@identifier` (content, rows, presentation options, loading and change, see
   [Extension points](#extension-points)); recipe options through `@kindOptions`; plus richer
   screen-reader announcements than the legacy family.
-- Groups via `@groupBy` (a field name or `(item, options) => key`). The engine segments the filtered
-  options and renders a structural boundary before each segment, and the boundary's presentation
-  is label-driven: where `@groupLabel` yields text the boundary is a non-selectable header
-  (custom markup via the `:groupHeader` block); where it yields nullish — or when `@groupLabel`
-  is omitted entirely — the boundary is an unlabeled splitter, a purely visual rule that is
-  suppressed at the head of the list. Grouping runs after filtering on every render, so
-  boundaries are always recomputed: an empty group draws nothing, and a query keeps exactly the
-  splitters that still separate two surviving groups. A client (`@items`) source merges every
-  row of a key into one group, in first-appearance order. A `@load` source groups consecutive
-  rows instead, so a later page only ever appends: it extends the last group or starts new
-  ones, and a key that comes back later starts another group. Return a family's rows together
-  to keep it in one group. Groups are found before held rows are hidden, so selecting never
-  renumbers them.
-  Headers are `role="presentation"` rows in the windowed list. Each option in a *labeled* group
-  references the id-bearing label span in its header through `aria-describedby`
-  (splitter-bounded options carry no group description — an unlabeled boundary has nothing to
-  announce). The window extension keeps a group's header mounted while any of its rows are mounted, so
-  descriptions resolve for every published window and the description DOM stays bounded by the
-  window size by construction, even under near-unique `@groupBy`. The label span contains only
-  the group's label text and is hidden when a custom `:groupHeader` renders, keeping arbitrary
-  block markup out of option descriptions. The engine still rejects a string `@groupBy` that
-  names the value field outright.
+- Groups via `@groupBy` (a field name or `(item, options) => key`). Grouping runs after filtering
+  on every render, so an empty group draws nothing and boundaries are always recomputed. A client
+  (`@items`) source merges every row of a key into one group, in first-appearance order. A `@load`
+  source groups consecutive rows instead, so a later page only ever appends: it extends the last
+  group or starts new ones, and a key that comes back later starts another group. Return a
+  family's rows together to keep it in one group. Groups are found before held rows are hidden,
+  so selecting never renumbers them.
+
+  Each group may have a header and a footer, built by `@groupHeader` and `@groupFooter` from
+  `(key, rows, options)`, where `rows` are the group's surviving rows, frozen. Either builder
+  returns text (a `role="presentation"` row), an action row (an item with `onSelect`, rendered as
+  a navigable option and copied without `sticky`), or nothing; anything else is a development
+  assertion. Builders run during render, so they must be pure, and they return nothing for an
+  `undefined` key. A group with no header of either kind gets an unlabeled splitter instead, a
+  purely visual rule that is suppressed at the head of the list.
+
+  For a `@load` source, the last group's footer waits until no more rows can load (the source is
+  exhausted, either brake stopped paging, or `@maxLoaded` was reached), so a page that continues
+  that group adds rows above a footer that is not there yet instead of pushing one down. Its
+  builder is not called until then, and after a `@maxLoaded` stop its `rows` hold only the loaded
+  part. A header on that group sees only the rows loaded so far, so a whole-group action belongs
+  in a footer. Across pages a builder must keep each boundary's presence and kind, changing only
+  its contents; a development warning flags a change, since it would shift rows already shown.
+
+  After a search the cursor starts on the first activatable row. An action header leading the
+  results is therefore where it starts, and Enter runs it; use a footer when Enter should pick a
+  record. An action footer is where it starts only when every row before it is held or disabled.
+
+  Each option in a group with a text header or text footer references their id-bearing label
+  spans through `aria-describedby`, header first. A group with neither carries no group
+  description, and action rows name their group themselves: so an action header, or an action
+  footer without a text header, must name its group. Use a text header when the options need the
+  group's name. The window extension keeps a group's text header and footer mounted while any of
+  its rows are mounted, so descriptions resolve for every published window and the description
+  DOM stays bounded by the window size by construction, even under near-unique `@groupBy`. The
+  label span contains only the builder's text and is hidden when a custom `:groupHeader` or
+  `:groupFooter` renders, keeping arbitrary block markup out of option descriptions. The engine
+  still rejects a string `@groupBy` that names the value field outright.
 
   The previous mechanism resolved ID references on every rendered frame; keeping headers mounted
   guarantees them for every published window. During the one-runloop transient after an items change (the
@@ -876,8 +924,9 @@ by mechanism.
   (The APG-sanctioned structure nests a `role="group"` with `aria-labelledby` between the
   listbox and its options; our flat virtualizer can't window nested group containers, so the
   flat association is the sanctioned fallback — nested groups are a follow-up.)
-  **Invariant:** all structural rows are engine-injected. The `__header`/`__divider` fields on
-  `SelectItem` are engine plumbing with no public constructor — never supply them in `@items`,
+  **Invariant:** all structural rows are engine-injected. The `__header`/`__footer`/`__divider`
+  fields on `SelectItem` (and the `__groupHeader`/`__groupFooter` stamps on action copies) are
+  engine plumbing with no public constructor — never supply them in `@items`,
   `@load`, or `@specialItems` (grouping discards upstream structural rows and derives its own
   structure); those inputs must be selectable options.
 

@@ -106,17 +106,22 @@ interface DSelectSignature {
     createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
     specialItems?: SelectEngineOptions["specialItems"];
     /**
-     * Groups the options: a field name or `(item, options) => key`. A boundary renders as a labeled
-     * header where `@groupLabel` yields text and as an unlabeled splitter otherwise. A `@load`
-     * source groups consecutive rows, so pages only append. Recomputed after filtering, so an
-     * empty group draws nothing.
+     * Groups the options: a field name or `(item, options) => key`. A group with no header of
+     * either kind gets an unlabeled splitter. A `@load` source groups consecutive rows, so pages
+     * only append. Recomputed after filtering, so an empty group draws nothing.
      */
     groupBy?: SelectEngineOptions["groupBy"];
     /**
-     * `(key, options) => text` maps a group key to its header text. Nullish renders an
-     * unlabeled splitter; omitted entirely, every boundary is a splitter.
+     * `(key, rows, options) => text | actionRow | null` builds a group's header: text renders
+     * a presentational header, an item with `onSelect` a navigable action row. The
+     * `<:groupHeader>` block draws either kind.
      */
-    groupLabel?: SelectEngineOptions["groupLabel"];
+    groupHeader?: SelectEngineOptions["groupHeader"];
+    /**
+     * Builds a group's footer, like `@groupHeader`, drawn by `<:groupFooter>`. A `@load`
+     * source shows its last group's footer once no more rows can load.
+     */
+    groupFooter?: SelectEngineOptions["groupFooter"];
     /** Receives the next value, resolved items, and metadata including resolved options. */
     onChange?: SelectEngineOptions["onChange"];
     placeholder?: string;
@@ -307,9 +312,20 @@ interface DSelectSignature {
       /** Resolved core and recipe values. */
       options: SelectResolvedOptions,
     ];
-    /** Consumer override for a group header's content; yields the header item (with its `label`). */
+    /**
+     * Draws a group header of either kind; yields its item. A text header's item carries its
+     * `label` and `groupKey`; an action header's item is the builder's row, stamped with
+     * `groupKey`. The engine supplies the row around it, and `:item` never receives it.
+     */
     groupHeader?: [
-      /** The synthetic header item. */
+      /** The header item. */
+      item: SelectItemModel,
+      /** Resolved core and recipe values. */
+      options: SelectResolvedOptions,
+    ];
+    /** Draws a group footer of either kind, like `<:groupHeader>`. */
+    groupFooter?: [
+      /** The footer item. */
       item: SelectItemModel,
       /** Resolved core and recipe values. */
       options: SelectResolvedOptions,
@@ -781,6 +797,7 @@ export default class DSelect extends Component<DSelectSignature> {
             @hasEmptyBlock={{has-block "empty"}}
             @hasErrorBlock={{has-block "error"}}
             @hasFooterBlock={{and (has-block "footer") (not @suppressFooter)}}
+            @hasGroupFooterBlock={{has-block "groupFooter"}}
             @hasGroupHeaderBlock={{has-block "groupHeader"}}
             @hasItemBlock={{has-block "item"}}
             @hasListHeaderBlock={{has-block "listHeader"}}
@@ -946,6 +963,9 @@ export default class DSelect extends Component<DSelectSignature> {
             <:groupHeader as |item options|>
               {{~yield item options to="groupHeader"~}}
             </:groupHeader>
+            <:groupFooter as |item options|>
+              {{~yield item options to="groupFooter"~}}
+            </:groupFooter>
             <:skeletonItem>
               {{~yield to="skeletonItem"~}}
             </:skeletonItem>

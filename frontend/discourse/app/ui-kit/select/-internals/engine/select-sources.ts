@@ -130,6 +130,8 @@ export interface SelectSource {
   rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]>;
   total(): number | undefined;
   canRevealMore(): boolean;
+  /** Whether later rows may still arrive for this query, whether or not a page is in flight. */
+  mayGrow(): boolean;
   atCapWithMore(): boolean;
   pending(): boolean;
   awaitingFirstPage(): boolean;
@@ -170,6 +172,10 @@ export class LocalSource implements SelectSource {
   }
 
   canRevealMore(): boolean {
+    return false;
+  }
+
+  mayGrow(): boolean {
     return false;
   }
 
@@ -293,9 +299,12 @@ export class PagedSource implements SelectSource {
   }
 
   canRevealMore(): boolean {
+    return !this.pending() && this.mayGrow();
+  }
+
+  mayGrow(): boolean {
     const maxLoaded = this.#getMaxLoaded();
     return (
-      !this.pending() &&
       !this.#state.serverExhausted &&
       !this.#state.visiblyExhausted &&
       (maxLoaded == null || this.#state.serverLoadedCount < maxLoaded)

@@ -1,6 +1,7 @@
 import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
@@ -271,24 +272,56 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
     // boundaries, so a labeled group always names its label source.
     const identityLabel = (key) => key;
 
+    /** Text boundaries print their label, action boundaries their name, options their id. */
     function kinds(rows) {
-      return rows.map((row) =>
-        row.flags.group
-          ? `H:${row.item.label}`
-          : row.flags.divider
-            ? "DIV"
-            : row.value
-      );
+      return rows.map((row) => {
+        const { action, divider, groupFooter, groupHeader } = row.flags;
+        if (divider) {
+          return "DIV";
+        }
+        if (groupHeader || groupFooter) {
+          const prefix = `${action ? "A" : ""}${groupHeader ? "H" : "F"}`;
+          return `${prefix}:${action ? row.item.name : row.item.label}`;
+        }
+        return row.value;
+      });
     }
 
     function options(rows) {
-      return rows.filter((row) => !row.flags.group && !row.flags.divider);
+      return rows.filter(
+        (row) => !row.flags.textBoundary && !row.flags.divider
+      );
     }
+
+    /** A paging engine whose pages are the given row lists, in order. */
+    function pagedEngine(pages, extra = {}) {
+      return new SelectEngine({
+        load: (_filter, opts = {}) =>
+          Promise.resolve({
+            items: pages[opts.page - 1] ?? [],
+            hasMore: opts.page < pages.length,
+          }),
+        groupBy: "group",
+        groupHeader: identityLabel,
+        ...extra,
+      });
+    }
+
+    async function loadAll(engine, pageCount) {
+      let loaded = await engine.loadItems(engine.loadContext);
+      for (let page = 1; page < pageCount; page++) {
+        engine.revealMore();
+        loaded = await engine.loadItems(engine.loadContext);
+      }
+      return loaded;
+    }
+
+    const member = (id, group) => ({ id, name: `Row ${id}`, group });
 
     module("stable keys", function () {
       const keyOf = (rows, predicate) => rows.find(predicate)?.key;
       const isHeader = (label) => (row) =>
-        row.flags.group && row.item.label === label;
+        row.flags.groupHeader && row.item.label === label;
 
       test("a header keeps its key when the create row disappears", function (assert) {
         const fruits = [
@@ -298,7 +331,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         const engine = new SelectEngine({
           items: fruits,
           groupBy: "group",
-          groupLabel: identityLabel,
+          groupHeader: identityLabel,
           allowCreate: true,
           createItem: (filter) => ({ id: filter, name: filter }),
         });
@@ -335,7 +368,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           hideSelected: true,
           getValue: () => value,
           groupBy: "group",
-          groupLabel: identityLabel,
+          groupHeader: identityLabel,
         });
 
         const before = keyOf(engine.buildItems(produce), isHeader("Fruits"));
@@ -367,7 +400,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         const engine = new SelectEngine({
           items: [],
           groupBy: "group",
-          groupLabel: identityLabel,
+          groupHeader: identityLabel,
         });
         const sample = [{ id: 1, name: "Apple", group: "Fruits" }];
         const headerKey = keyOf(engine.buildItems(sample), isHeader("Fruits"));
@@ -398,7 +431,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         const engine = new SelectEngine({
           items: numbered,
           groupBy: "group",
-          groupLabel: (key) => `Group ${key}`,
+          groupHeader: (key) => `Group ${key}`,
         });
 
         assert.deepEqual(
@@ -417,7 +450,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 3, name: "Pea", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
       });
 
       assert.deepEqual(
@@ -434,11 +467,14 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Pear", group: "Fruits" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
       });
-      const header = descriptors(engine).find((row) => row.flags.group);
+      const header = descriptors(engine).find((row) => row.flags.groupHeader);
 
-      assert.true(header.flags.group, "the header carries the group flag");
+      assert.true(
+        header.flags.groupHeader,
+        "the header carries the group flag"
+      );
       assert.false(header.flags.selected, "a header is never selected");
       assert.strictEqual(
         header.posInSet,
@@ -456,7 +492,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 3, name: "Pea", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
       });
       const opts = options(descriptors(engine));
 
@@ -474,21 +510,21 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("groupBy accepts a function and groupLabel maps the key to header text", function (assert) {
+    test("groupBy accepts a function and groupHeader maps the key to header text", function (assert) {
       const engine = new SelectEngine({
         items: [
           { id: 1, name: "A", level: 2 },
           { id: 2, name: "B", level: 2 },
         ],
         groupBy: (item) => item.level,
-        groupLabel: (key) => `Level ${key}`,
+        groupHeader: (key) => `Level ${key}`,
       });
-      const header = descriptors(engine).find((row) => row.flags.group);
+      const header = descriptors(engine).find((row) => row.flags.groupHeader);
 
       assert.strictEqual(
         header.item.label,
         "Level 2",
-        "groupLabel produces the header text from the group key"
+        "groupHeader produces the header text from the group key"
       );
     });
 
@@ -499,13 +535,15 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Carrot", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
       });
       engine.setFilter("apple");
       const rows = descriptors(engine);
 
       assert.deepEqual(
-        rows.filter((row) => row.flags.group).map((row) => row.item.label),
+        rows
+          .filter((row) => row.flags.groupHeader)
+          .map((row) => row.item.label),
         ["Fruits"],
         "only the surviving group keeps a header"
       );
@@ -526,7 +564,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       const rows = descriptors(engine);
 
       assert.true(
-        rows.every((row) => !row.flags.group && !row.flags.divider),
+        rows.every((row) => !row.flags.groupHeader && !row.flags.divider),
         "no structural rows are injected without groupBy"
       );
       assert.deepEqual(
@@ -567,7 +605,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Carrot", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
         specialItems: () => [{ id: 0, name: "None" }],
       });
       const rows = descriptors(engine);
@@ -591,7 +629,9 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         )
       );
       assert.deepEqual(
-        rows.filter((row) => row.flags.group).map((row) => row.item.label),
+        rows
+          .filter((row) => row.flags.groupHeader)
+          .map((row) => row.item.label),
         ["Fruits", "Vegetables"],
         "each group still gets a header"
       );
@@ -604,7 +644,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Beet", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
         allowCreate: true,
         createItem: (filter) => ({
           id: `new:${filter}`,
@@ -634,13 +674,15 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         assert.strictEqual(option.setSize, 2, "setSize counts both options")
       );
       assert.deepEqual(
-        rows.filter((row) => row.flags.group).map((row) => row.item.label),
+        rows
+          .filter((row) => row.flags.groupHeader)
+          .map((row) => row.item.label),
         ["Fruits"],
         "only the surviving group keeps a header"
       );
     });
 
-    test("groupBy without groupLabel renders splitter boundaries, not headers", function (assert) {
+    test("groupBy without groupHeader renders splitter boundaries, not headers", function (assert) {
       const engine = new SelectEngine({
         items: [
           { id: 1, name: "Carrot", group: "Vegetables" },
@@ -657,13 +699,13 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         "group boundaries render as splitters; the leading boundary is suppressed"
       );
       assert.true(
-        rows.every((row) => !row.flags.group),
-        "no header row exists without groupLabel"
+        rows.every((row) => !row.flags.groupHeader),
+        "no header row exists without groupHeader"
       );
       assert.deepEqual(
         options(rows).map((option) => option.groupOrdinal),
-        [undefined, undefined, undefined],
-        "splitter-bounded options carry no group tagging"
+        [0, 0, 1],
+        "every group carries an ordinal, with or without a header"
       );
       assert.deepEqual(
         options(rows).map((option) => option.posInSet),
@@ -679,7 +721,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("a nullish groupLabel turns that boundary into a splitter", function (assert) {
+    test("a nullish groupHeader turns that boundary into a splitter", function (assert) {
       const engine = new SelectEngine({
         items: [
           { id: 1, name: "Apple", group: "Fruits" },
@@ -687,7 +729,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 3, name: "Oat", group: "Grains" },
         ],
         groupBy: "group",
-        groupLabel: (key) => (key === "Vegetables" ? key : null),
+        groupHeader: (key) => (key === "Vegetables" ? key : null),
       });
       const rows = descriptors(engine);
 
@@ -697,14 +739,16 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         "unlabeled first boundary is suppressed; labeled boundary is a header; later unlabeled boundary is a splitter"
       );
       assert.deepEqual(
-        rows.filter((row) => row.flags.group).map((row) => row.groupOrdinal),
-        [0],
-        "header ordinals stay dense over headers only"
+        rows
+          .filter((row) => row.flags.groupHeader)
+          .map((row) => row.groupOrdinal),
+        [1],
+        "a header takes its group's ordinal, which counts every group"
       );
       assert.deepEqual(
         options(rows).map((option) => option.groupOrdinal),
-        [undefined, 0, undefined],
-        "only options under a labeled header carry its ordinal"
+        [0, 1, 2],
+        "options carry their group's ordinal, headed or not"
       );
     });
 
@@ -715,7 +759,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Carrot", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: (key) => (key === "Fruits" ? key : null),
+        groupHeader: (key) => (key === "Fruits" ? key : null),
       });
 
       assert.deepEqual(
@@ -750,7 +794,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Beet", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
         allowCreate: true,
         createItem: (filter) => ({
           id: `new:${filter}`,
@@ -785,7 +829,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Carrot", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: () => "",
+        groupHeader: () => "",
       });
 
       assert.deepEqual(
@@ -802,7 +846,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Carrot", group: "Vegetables" },
         ],
         groupBy: "group",
-        groupLabel: identityLabel,
+        groupHeader: identityLabel,
       });
       const rows = engine.buildItems([
         { __divider: true },
@@ -816,7 +860,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("header ordinals stay dense across an interleaved splitter", function (assert) {
+    test("group ordinals stay dense across an interleaved splitter", function (assert) {
       const engine = new SelectEngine({
         items: [
           { id: 1, name: "Apple", group: "Fruits" },
@@ -824,7 +868,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 3, name: "Oat", group: "Grains" },
         ],
         groupBy: "group",
-        groupLabel: (key) => (key === "Vegetables" ? null : key),
+        groupHeader: (key) => (key === "Vegetables" ? null : key),
       });
       const rows = descriptors(engine);
 
@@ -834,14 +878,16 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         "labeled, unlabeled, and labeled boundaries render in order"
       );
       assert.deepEqual(
-        rows.filter((row) => row.flags.group).map((row) => row.groupOrdinal),
-        [0, 1],
-        "a splitter consumes no header ordinal"
+        rows
+          .filter((row) => row.flags.groupHeader)
+          .map((row) => row.groupOrdinal),
+        [0, 2],
+        "the splitter-bounded group between them takes an ordinal too"
       );
       assert.deepEqual(
         options(rows).map((option) => option.groupOrdinal),
-        [0, undefined, 1],
-        "options resume the next dense ordinal after a splitter-bounded group"
+        [0, 1, 2],
+        "ordinals stay dense over every group"
       );
     });
 
@@ -864,34 +910,15 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
     });
 
     module("a source that pages", function () {
-      /** A paging engine whose pages are the given row lists, in order. */
-      function pagedEngine(pages, extra = {}) {
-        return new SelectEngine({
-          load: (_filter, opts = {}) =>
-            Promise.resolve({
-              items: pages[opts.page - 1] ?? [],
-              hasMore: opts.page < pages.length,
-            }),
-          groupBy: "group",
-          groupLabel: identityLabel,
-          ...extra,
-        });
-      }
-
-      async function loadAll(engine, pageCount) {
-        let loaded = await engine.loadItems(engine.loadContext);
-        for (let page = 1; page < pageCount; page++) {
-          engine.revealMore();
-          loaded = await engine.loadItems(engine.loadContext);
-        }
-        return loaded;
-      }
-
-      const row = (id, group) => ({ id, name: `Row ${id}`, group });
-
       test("a paging source groups consecutive rows", async function (assert) {
         const engine = pagedEngine([
-          [row(1, "A"), row(2, "A"), row(3, "B"), row(4, "A"), row(5, "A#1")],
+          [
+            member(1, "A"),
+            member(2, "A"),
+            member(3, "B"),
+            member(4, "A"),
+            member(5, "A#1"),
+          ],
         ]);
         const rows = engine.buildItems(await loadAll(engine, 1));
 
@@ -910,8 +937,8 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
 
       test("a later page continues the last run and only ever appends", async function (assert) {
         const engine = pagedEngine([
-          [row(1, "A"), row(2, "B")],
-          [row(3, "B"), row(4, "C")],
+          [member(1, "A"), member(2, "B")],
+          [member(3, "B"), member(4, "C")],
         ]);
         const first = kinds(engine.buildItems(await loadAll(engine, 1)));
         engine.revealMore();
@@ -929,11 +956,14 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
 
       test("hiding an earlier run keeps a later run's keys", async function (assert) {
         const value = trackedArray([]);
-        const engine = pagedEngine([[row(1, "A"), row(2, "B"), row(3, "A")]], {
-          multiple: true,
-          hideSelected: true,
-          getValue: () => value,
-        });
+        const engine = pagedEngine(
+          [[member(1, "A"), member(2, "B"), member(3, "A")]],
+          {
+            multiple: true,
+            hideSelected: true,
+            getValue: () => value,
+          }
+        );
         const loaded = await loadAll(engine, 1);
         const keyOfRun = (rows, id) => {
           const index = rows.findIndex((descriptor) => descriptor.value === id);
@@ -970,7 +1000,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           )
         );
         const seen = [];
-        const engine = pagedEngine([[row(1, "A")]], {
+        const engine = pagedEngine([[member(1, "A")]], {
           groupBy: (item) => {
             seen.push(item.id);
             return item.group;
@@ -984,6 +1014,594 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           ["H:A", 1, "DIV", "extra"],
           "with no key it gets a splitter, not a header"
         );
+      });
+    });
+
+    module("headers and footers", function () {
+      const produce = [
+        { id: 1, name: "Apple", group: "Fruits" },
+        { id: 2, name: "Pear", group: "Fruits" },
+        { id: 3, name: "Carrot", group: "Vegetables" },
+      ];
+      const ending = (key) => `${key} end`;
+      const bulk = (key) => ({
+        id: `all:${key}`,
+        name: `All ${key}`,
+        onSelect() {},
+      });
+
+      test("a text footer follows its group's rows", function (assert) {
+        const engine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupHeader: identityLabel,
+          groupFooter: ending,
+        });
+        const rows = descriptors(engine);
+
+        assert.deepEqual(
+          kinds(rows),
+          [
+            "H:Fruits",
+            1,
+            2,
+            "F:Fruits end",
+            "H:Vegetables",
+            3,
+            "F:Vegetables end",
+          ],
+          "each group closes with its footer"
+        );
+        const footer = rows.find((row) => row.flags.groupFooter);
+        assert.true(footer.flags.textBoundary, "a text footer is structural");
+        assert.strictEqual(footer.posInSet, undefined, "it takes no position");
+        assert.deepEqual(
+          options(rows).map((option) => [option.posInSet, option.setSize]),
+          [
+            [1, 3],
+            [2, 3],
+            [3, 3],
+          ],
+          "options are numbered over options only"
+        );
+      });
+
+      test("a group with only a footer gets a splitter, except at the head", function (assert) {
+        const engine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupFooter: ending,
+        });
+
+        assert.deepEqual(
+          kinds(descriptors(engine)),
+          [1, 2, "F:Fruits end", "DIV", 3, "F:Vegetables end"],
+          "a missing header still means a splitter"
+        );
+      });
+
+      test("an action footer is a navigable option counted in the set", function (assert) {
+        const engine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupFooter: bulk,
+        });
+        const rows = descriptors(engine);
+
+        assert.deepEqual(
+          kinds(rows),
+          [1, 2, "AF:All Fruits", "DIV", 3, "AF:All Vegetables"],
+          "each group closes with its action row"
+        );
+        const footer = rows.find((row) => row.item.id === "all:Fruits");
+        assert.true(footer.flags.action, "it is an action row");
+        assert.false(footer.flags.textBoundary, "it is not presentational");
+        assert.true(footer.item.__groupFooter, "the copy is stamped");
+        assert.strictEqual(footer.item.groupKey, "Fruits", "with its group");
+        assert.deepEqual(
+          options(rows).map((option) => [
+            option.posInSet,
+            option.logicalIndex,
+            option.setSize,
+          ]),
+          [
+            [1, 0, 5],
+            [2, 1, 5],
+            [3, 2, 5],
+            [4, 3, 5],
+            [5, 4, 5],
+          ],
+          "action footers take positions and count toward the set"
+        );
+      });
+
+      test("an action header leads its rows without a splitter", function (assert) {
+        const engine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupHeader: bulk,
+        });
+        const rows = descriptors(engine);
+
+        assert.deepEqual(
+          kinds(rows),
+          ["AH:All Fruits", 1, 2, "AH:All Vegetables", 3],
+          "an action header is a header, so no splitter is added"
+        );
+        assert.deepEqual(
+          rows.map((row) => row.posInSet),
+          [1, 2, 3, 4, 5],
+          "action headers take positions"
+        );
+      });
+
+      test("an action row is copied and never sticky", function (assert) {
+        const returned = [];
+        const engine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupFooter: (key) => {
+            const item = { ...bulk(key), sticky: true };
+            returned.push(item);
+            return item;
+          },
+        });
+        const rows = descriptors(engine);
+        const footer = rows.find((row) => row.item.id === "all:Fruits");
+
+        assert.notStrictEqual(footer.item, returned[0], "the row is a copy");
+        assert.false(
+          "__groupFooter" in returned[0],
+          "the returned item is untouched"
+        );
+        assert.false(footer.flags.sticky, "it is not sticky");
+        assert.strictEqual(
+          kinds(rows).indexOf("AF:All Fruits"),
+          2,
+          "it stays after its rows instead of leading the list"
+        );
+      });
+
+      test("builders receive the key, the group's surviving rows frozen, and the options", function (assert) {
+        const calls = [];
+        let groupByOptions;
+        const engine = new SelectEngine({
+          items: produce,
+          multiple: true,
+          hideSelected: true,
+          getValue: () => [2],
+          groupBy: (item, resolved) => {
+            groupByOptions = resolved;
+            return item.group;
+          },
+          groupHeader: (key, rows, resolved) => {
+            calls.push({ kind: "header", key, rows, resolved });
+            return key;
+          },
+          groupFooter: (key, rows, resolved) => {
+            calls.push({ kind: "footer", key, rows, resolved });
+            return null;
+          },
+        });
+        descriptors(engine);
+
+        const fruits = calls.filter((call) => call.key === "Fruits");
+        assert.deepEqual(
+          fruits.map((call) => call.kind),
+          ["header", "footer"],
+          "both builders run for the group"
+        );
+        fruits.forEach((call) => {
+          assert.deepEqual(
+            call.rows.map((item) => item.id),
+            [1],
+            "the hidden selected row is not passed"
+          );
+          assert.true(Object.isFrozen(call.rows), "the rows are frozen");
+          assert.strictEqual(
+            call.resolved,
+            groupByOptions,
+            "the options are the resolved options"
+          );
+        });
+      });
+
+      test("an undefined key reaches the builders, which turn its boundaries off", function (assert) {
+        const keys = [];
+        const engine = new SelectEngine({
+          items: [...produce, { id: 4, name: "Rock" }],
+          groupBy: "group",
+          groupHeader: (key) => {
+            keys.push(key);
+            return key;
+          },
+          groupFooter: (key) => (key === undefined ? null : ending(key)),
+        });
+        const rows = descriptors(engine);
+
+        assert.true(keys.includes(undefined), "the unset key is passed");
+        assert.deepEqual(
+          kinds(rows).slice(-2),
+          ["DIV", 4],
+          "the ungrouped row gets neither a header nor a footer"
+        );
+      });
+
+      test("a builder result that is neither text nor an action row is rejected", function (assert) {
+        const footerEngine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupFooter: () => 5,
+        });
+        assert.throws(
+          () => descriptors(footerEngine),
+          /groupFooter/,
+          "a number is rejected"
+        );
+
+        const headerEngine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupHeader: (key) => ({ id: key, name: key }),
+        });
+        assert.throws(
+          () => descriptors(headerEngine),
+          /groupHeader/,
+          "a record without onSelect is rejected"
+        );
+      });
+
+      test("every group carries its ordinal and the text boundaries it has", function (assert) {
+        const engine = new SelectEngine({
+          items: [...produce, { id: 4, name: "Oat", group: "Grains" }],
+          groupBy: "group",
+          groupHeader: (key) => (key === "Vegetables" ? null : key),
+          groupFooter: (key) => (key === "Fruits" ? null : ending(key)),
+        });
+        const rows = descriptors(engine);
+        const of = (id) => rows.find((row) => row.value === id);
+
+        assert.deepEqual(
+          kinds(rows),
+          [
+            "H:Fruits",
+            1,
+            2,
+            "DIV",
+            3,
+            "F:Vegetables end",
+            "H:Grains",
+            4,
+            "F:Grains end",
+          ],
+          "headers, splitters and footers mix per group"
+        );
+        assert.deepEqual(
+          rows
+            .filter((row) => !row.flags.divider)
+            .map((row) => row.groupOrdinal),
+          [0, 0, 0, 1, 1, 2, 2, 2],
+          "every row of a group carries its ordinal"
+        );
+        assert.deepEqual(
+          [of(1), of(3), of(4)].map((row) => row.groupText),
+          [
+            { header: true, footer: false },
+            { header: false, footer: true },
+            { header: true, footer: true },
+          ],
+          "members know which text boundaries their group has"
+        );
+      });
+
+      test("the boundaries of one group have distinct engine keys", function (assert) {
+        const engine = new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupHeader: (key) => (key === "Fruits" ? key : null),
+          groupFooter: (key) => (key === "Fruits" ? ending(key) : bulk(key)),
+        });
+        const rows = descriptors(engine);
+        const keys = rows.map((row) => row.key);
+
+        assert.strictEqual(new Set(keys).size, keys.length, "no key repeats");
+        assert.true(
+          rows
+            .filter((row) => row.flags.groupFooter)
+            .every((row) => row.key.startsWith("__ds:")),
+          "footers take engine keys, an action footer included"
+        );
+      });
+
+      test("an action boundary is closed off at the selection limit", function (assert) {
+        const engine = new SelectEngine({
+          items: produce,
+          multiple: true,
+          maximum: 1,
+          getValue: () => [1],
+          groupBy: "group",
+          groupHeader: bulk,
+          groupFooter: bulk,
+          specialItems: () => [{ id: "act", name: "Act", onSelect() {} }],
+        });
+        const rows = descriptors(engine);
+        const boundaries = rows.filter(
+          (row) => row.flags.groupHeader || row.flags.groupFooter
+        );
+
+        assert.true(
+          boundaries.every(
+            (row) => row.flags.capDisabled && row.flags.disabled
+          ),
+          "header and footer actions add values, so the limit closes them"
+        );
+        assert.false(
+          rows.find((row) => row.value === "act").flags.capDisabled,
+          "another action row stays open"
+        );
+      });
+
+      module("a source that pages", function () {
+        test("the trailing run's footer waits until the source cannot grow", async function (assert) {
+          const footers = [];
+          const engine = pagedEngine(
+            [
+              [member(1, "A"), member(2, "B")],
+              [member(3, "B"), member(4, "C")],
+            ],
+            {
+              groupFooter: (key) => {
+                footers.push(key);
+                return ending(key);
+              },
+            }
+          );
+
+          const first = engine.buildItems(await loadAll(engine, 1));
+          assert.deepEqual(
+            kinds(first),
+            ["H:A", 1, "F:A end", "H:B", 2],
+            "the last run may still grow, so its footer waits"
+          );
+          assert.deepEqual(footers, ["A"], "its builder is not called");
+
+          engine.revealMore();
+          const second = engine.buildItems(
+            await engine.loadItems(engine.loadContext)
+          );
+          assert.deepEqual(
+            kinds(second),
+            ["H:A", 1, "F:A end", "H:B", 2, 3, "F:B end", "H:C", 4, "F:C end"],
+            "the next page closes B, and the end of paging closes C"
+          );
+        });
+
+        test("the footer stays held while a reveal is in flight", async function (assert) {
+          let release;
+          const engine = new SelectEngine({
+            load: (_filter, opts) =>
+              opts.page === 1
+                ? Promise.resolve({ items: [member(1, "A")], hasMore: true })
+                : new Promise((resolve) => {
+                    release = () =>
+                      resolve({ items: [member(2, "B")], hasMore: false });
+                  }),
+            groupBy: "group",
+            groupFooter: ending,
+          });
+          const first = await engine.loadItems(engine.loadContext);
+          engine.revealMore();
+          const next = engine.loadItems(engine.loadContext);
+          // The loader is asked a few microtasks later.
+          for (let tick = 0; !release && tick < 50; tick++) {
+            await Promise.resolve();
+          }
+
+          assert.deepEqual(
+            kinds(engine.buildItems(first)),
+            [1],
+            "the pending page may still continue A"
+          );
+
+          release();
+          assert.deepEqual(
+            kinds(engine.buildItems(await next)),
+            [1, "F:A end", "DIV", 2, "F:B end"],
+            "both footers appear once the page lands and paging ends"
+          );
+        });
+
+        test("a page ending in a sticky or structural row holds back the run before it", async function (assert) {
+          const sticky = pagedEngine(
+            [
+              [member(1, "A"), { id: "s", name: "S", sticky: true }],
+              [member(2, "A")],
+            ],
+            { groupFooter: ending }
+          );
+          assert.deepEqual(
+            kinds(sticky.buildItems(await loadAll(sticky, 1))),
+            ["s", "H:A", 1],
+            "a trailing sticky row does not release A"
+          );
+
+          const structural = pagedEngine(
+            [[member(1, "A"), { __divider: true }], [member(2, "A")]],
+            { groupFooter: ending }
+          );
+          assert.deepEqual(
+            kinds(structural.buildItems(await loadAll(structural, 1))),
+            ["H:A", 1],
+            "a trailing structural row does not release A"
+          );
+        });
+
+        test("a last row a customization removes holds back the run before it", async function (assert) {
+          withPluginApi((api) =>
+            api.registerValueTransformer(
+              "select-customizations",
+              ({ value: selects }) =>
+                selects.forAll((spec) =>
+                  spec.content((list) => list.filter((item) => item.id !== 2))
+                )
+            )
+          );
+          const engine = pagedEngine(
+            [[member(1, "A"), member(2, "B")], [member(3, "A")]],
+            {
+              groupFooter: ending,
+            }
+          );
+
+          assert.deepEqual(
+            kinds(engine.buildItems(await loadAll(engine, 1))),
+            ["H:A", 1],
+            "A is the last run the source placed"
+          );
+        });
+
+        test("hiding the trailing run releases the footer before it", async function (assert) {
+          const value = trackedArray([]);
+          const engine = pagedEngine(
+            [[member(1, "A"), member(2, "B")], [member(3, "A")]],
+            {
+              multiple: true,
+              hideSelected: true,
+              getValue: () => value,
+              groupFooter: ending,
+            }
+          );
+          const loaded = await loadAll(engine, 1);
+          value.push(2);
+
+          assert.deepEqual(
+            kinds(engine.buildItems(loaded)),
+            ["H:A", 1, "F:A end"],
+            "B is held back and emptied, so A is closed"
+          );
+
+          engine.revealMore();
+          const rows = engine.buildItems(
+            await engine.loadItems(engine.loadContext)
+          );
+          assert.deepEqual(
+            kinds(rows),
+            ["H:A", 1, "F:A end", "H:A", 3, "F:A end"],
+            "more A rows start a new run instead of growing the closed one"
+          );
+        });
+
+        test("paging stopped by maxLoaded closes the partial run", async function (assert) {
+          const seen = [];
+          const engine = pagedEngine(
+            [[member(1, "A"), member(2, "A")], [member(3, "A")]],
+            {
+              maxLoaded: 2,
+              groupFooter: (key, rows) => {
+                seen.push(rows.map((item) => item.id));
+                return ending(key);
+              },
+            }
+          );
+
+          assert.deepEqual(
+            kinds(engine.buildItems(await loadAll(engine, 1))),
+            ["H:A", 1, 2, "F:A end"],
+            "the footer appears once no more rows may load"
+          );
+          assert.deepEqual(seen, [[1, 2]], "with only the loaded rows");
+        });
+
+        test("an action footer counts toward a declared total", async function (assert) {
+          const engine = new SelectEngine({
+            load: () =>
+              Promise.resolve({
+                items: [member(1, "A"), member(2, "A"), member(3, "B")],
+                total: 3,
+              }),
+            groupBy: "group",
+            groupFooter: bulk,
+          });
+          const rows = engine.buildItems(
+            await engine.loadItems(engine.loadContext)
+          );
+
+          assert.deepEqual(
+            [...new Set(options(rows).map((option) => option.setSize))],
+            [5],
+            "the total plus the two action footers"
+          );
+        });
+
+        test("an action header acts on the rows loaded so far", async function (assert) {
+          const seen = [];
+          const engine = pagedEngine([[member(1, "A")], [member(2, "A")]], {
+            groupHeader: (key, rows) => {
+              seen.push(rows.map((item) => item.id));
+              return bulk(key);
+            },
+          });
+          engine.buildItems(await loadAll(engine, 1));
+          engine.revealMore();
+          engine.buildItems(await engine.loadItems(engine.loadContext));
+
+          assert.deepEqual(seen, [[1], [1, 2]], "its rows grow with the run");
+        });
+
+        test("a boundary that changes kind as a run grows warns", async function (assert) {
+          const stub = sinon.stub(console, "warn");
+          let footerFor = () => null;
+          let headerFor = (key) => key;
+          const engine = pagedEngine(
+            [
+              [member(1, "A"), member(2, "B")],
+              [member(3, "B"), member(4, "C")],
+            ],
+            {
+              groupHeader: (key) => headerFor(key),
+              groupFooter: (key) => footerFor(key),
+            }
+          );
+          try {
+            engine.buildItems(await loadAll(engine, 1));
+            headerFor = (key) => (key === "A" ? null : key);
+            footerFor = (key) => (key === "A" ? bulk(key) : null);
+            engine.revealMore();
+            engine.buildItems(await engine.loadItems(engine.loadContext));
+
+            assert.true(
+              stub.calledWithMatch("header of a group"),
+              "a header that disappears warns"
+            );
+            assert.true(
+              stub.calledWithMatch("footer of a group"),
+              "a footer that becomes an action warns"
+            );
+          } finally {
+            stub.restore();
+          }
+        });
+
+        test("a new query may change a boundary without a warning", async function (assert) {
+          const stub = sinon.stub(console, "warn");
+          let headerFor = (key) => key;
+          const engine = pagedEngine([[member(1, "A")], [member(2, "A")]], {
+            groupHeader: (key) => headerFor(key),
+          });
+          try {
+            engine.buildItems(await loadAll(engine, 1));
+            headerFor = () => null;
+            engine.setFilter("a");
+            engine.buildItems(await engine.loadItems(engine.loadContext));
+
+            assert.false(
+              stub.calledWithMatch("of a group"),
+              "only page extensions are compared"
+            );
+          } finally {
+            stub.restore();
+          }
+        });
       });
     });
   });

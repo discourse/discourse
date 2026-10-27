@@ -367,6 +367,14 @@
   cursor: default;
 }
 
+// A group footer: a non-interactive note closing its group; the next header's rule follows it.
+.d-select__group-footer {
+  padding: 0.25em 0.75em 0.5em;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  cursor: default;
+}
+
 .d-select__divider {
   height: 1px;
   padding: 0;

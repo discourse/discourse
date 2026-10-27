@@ -148,6 +148,8 @@ export default class SelectItem extends Component<SelectItemSignature> {
           (if @descriptor.flags.selected "--selected")
           (if @descriptor.flags.__create "--create")
           (if @descriptor.flags.__none "--none")
+          (if @descriptor.flags.groupHeader "--action-header")
+          (if @descriptor.flags.groupFooter "--action-footer")
           row.classes
         }}
         data-name={{this.name}}

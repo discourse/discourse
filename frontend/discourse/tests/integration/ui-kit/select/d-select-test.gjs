@@ -3785,13 +3785,13 @@ module(
 
       test("selectByName and selectByIndex", async function (assert) {
         const onChange = sinon.spy();
-        const groupLabel = (key) => key;
+        const groupHeader = (key) => key;
 
         await render(
           <template>
             <DSelect
               @groupBy="section"
-              @groupLabel={{groupLabel}}
+              @groupHeader={{groupHeader}}
               @items={{SECTIONED}}
               @onChange={{onChange}}
             />

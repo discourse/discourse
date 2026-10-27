@@ -72,14 +72,26 @@ export interface SelectItem {
   __unresolved?: boolean;
 
   /**
-   * Marks a synthetic group-header row (engine-injected from `groupBy`). A structural row:
-   * it is never selectable, navigable, or counted in the option set. Carries its `label`.
+   * Marks a text group-header row (engine-injected when `groupHeader` returns text). A structural
+   * row: it is never selectable, navigable, or counted in the option set. Carries its `label`.
    */
   __header?: boolean;
 
+  /** Marks a text group-footer row, the footer counterpart of `__header`. */
+  __footer?: boolean;
+
   /**
-   * Marks an engine-injected divider for an unlabeled group boundary. `groupBy` injects it when
-   * `groupLabel` returns nullish for the segment; consumers never set it.
+   * Marks the engine's copy of an action row that `groupHeader` returned. It stays a navigable
+   * option; the marker routes it to the `<:groupHeader>` block.
+   */
+  __groupHeader?: boolean;
+
+  /** Marks the engine's copy of an action row that `groupFooter` returned. */
+  __groupFooter?: boolean;
+
+  /**
+   * Marks an engine-injected splitter before a group that has no header of either kind, except
+   * at the head of the list; consumers never set it.
    */
   __divider?: boolean;
 
@@ -123,11 +135,16 @@ export interface SelectDescriptor {
     reasonDisabled: boolean;
     /** Whether the selection cap prevents adding this option. */
     capDisabled: boolean;
+    /** A group header, text or action. */
+    groupHeader: boolean;
+    /** A group footer, text or action. */
+    groupFooter: boolean;
     /**
-     * A group-header row: structural, so it is skipped by selection, navigation, and the
-     * option-position math (no `posInSet`/`setSize`). Rendered outside the option set.
+     * A text header or text footer: structural, so it is skipped by selection, navigation, and
+     * the option-position math (no `posInSet`/`setSize`). Rendered outside the option set. An
+     * action header or footer is an option instead.
      */
-    group: boolean;
+    textBoundary: boolean;
     /** A divider row: structural like a header, but presentational and label-less. */
     divider: boolean;
     /** An action row: it runs its `onSelect` and never becomes a value. */
@@ -145,10 +162,12 @@ export interface SelectDescriptor {
    */
   logicalIndex?: number;
   /**
-   * Zero-based group-header ordinal. A header carries its own ordinal and following options
-   * inherit it until a divider or another header ends the run. Ungrouped rows leave it undefined.
+   * Zero-based ordinal of the row's group, dense over every group shown, headed or not. Every
+   * row the grouping emits carries it except splitters; ungrouped rows leave it undefined.
    */
   groupOrdinal?: number;
+  /** Which text boundaries the row's group has, so its rows can be described by them. */
+  groupText?: { header: boolean; footer: boolean };
   /**
    * 1-based position in the whole result set, independent of how many rows are mounted.
    * Stamped by {@link SelectEngine#buildItems} only; the trigger/chip path leaves it
@@ -295,6 +314,16 @@ export interface SelectUpdateScope {
   /** Clears a nonempty selection while current and unlocked. */
   clear(): void;
 }
+
+/**
+ * Builds a group's header or footer from its key and surviving rows: text, an action row (an
+ * item with `onSelect`), or nullish for none.
+ */
+export type SelectGroupBoundaryBuilder = (
+  key: SelectItemId,
+  rows: readonly SelectItem[],
+  options: SelectResolvedOptions
+) => string | SelectItem | null | undefined;
 
 /**
  * Constructor options for a {@link SelectEngine}.
@@ -557,24 +586,32 @@ export interface SelectEngineOptions {
   ) => SelectItem[];
 
   /**
-   * Groups the filtered options by a field name or `(item, options) => key`. Each group's label
-   * determines whether its boundary is a header or an unlabeled splitter; a leading splitter
-   * is suppressed. A client source merges every row of a key into one group; a source that pages
-   * groups consecutive rows, so a later page only extends the last group or adds new ones, and a
-   * key that comes back starts another group.
+   * Groups the filtered options by a field name or `(item, options) => key`. A group without a
+   * header of either kind gets an unlabeled splitter, except at the head of the list. A client
+   * source merges every row of a key into one group; a source that pages groups consecutive
+   * rows, so a later page only extends the last group or adds new ones, and a key that comes
+   * back starts another group.
    */
   groupBy?:
     | string
     | ((item: SelectItem, options: SelectResolvedOptions) => SelectItemId);
 
   /**
-   * `(key, options) => text` maps a group key to its header text. A nullish result renders an
-   * unlabeled splitter; when omitted, every boundary is a splitter.
+   * `(key, rows, options) => text | actionRow | null` builds a group's header. Text renders a
+   * presentational header; an item with `onSelect` renders a navigable action row. A group
+   * with no header of either kind gets an unlabeled splitter instead, except at the head of
+   * the list. `rows` are the group's surviving rows, frozen; for the last group of a source
+   * that pages, the rows loaded so far. Runs during render, so it must be pure, and it must
+   * return nullish for an `undefined` key.
    */
-  groupLabel?: (
-    key: SelectItemId,
-    options: SelectResolvedOptions
-  ) => string | null | undefined;
+  groupHeader?: SelectGroupBoundaryBuilder;
+
+  /**
+   * Builds a group's footer, with the same signature and results as `groupHeader`. For a
+   * source that pages, the last group's footer waits until the source can no longer grow, so
+   * rows already shown never move.
+   */
+  groupFooter?: SelectGroupBoundaryBuilder;
 
   /** Whether choosing an item closes the overlay. Defaults to `!multiple`. */
   closeOnSelect?: boolean;
@@ -777,6 +814,7 @@ export default class SelectEngine {
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
+      canGrow: () => this.#source.mayGrow(),
       applyLegacyContent: (items) => applyLegacySelectKitContent(this, items),
       getContentContext: () => ({
         ...this.#extensionContext(),

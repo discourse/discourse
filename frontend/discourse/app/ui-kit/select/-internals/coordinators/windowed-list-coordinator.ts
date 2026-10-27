@@ -21,11 +21,12 @@ const ROW_HEIGHT_ESTIMATE = 38;
 /** An engine descriptor with the DOM ids needed to render it. */
 interface OptionRow extends SelectDescriptor {
   isSkeleton: false;
-  // Ties an option to its group's header for `aria-describedby`: a header carries `headerId`,
-  // each option in the group carries the same value as `groupHeaderId`, so a screen reader
-  // announces the group name — membership a flat listbox can't convey by structure alone.
-  headerId?: string;
-  groupHeaderId?: string;
+  // Ties an option to its group's text boundaries for `aria-describedby`: a text header or
+  // footer carries `boundaryId`, and each option in the group lists those ids, header first, in
+  // `groupDescribedBy`, so a screen reader announces the group, which a flat listbox can't
+  // convey by structure alone.
+  boundaryId?: string;
+  groupDescribedBy?: string;
 }
 
 /** A rendered list row: a navigable engine descriptor or a frontier skeleton. */
@@ -75,20 +76,27 @@ export default class WindowedListCoordinator {
     const items: OptionRow[] = this.#engine
       .buildItems(rawItems, filter)
       .map((descriptor) => {
-        if (descriptor.flags.group) {
+        const { groupOrdinal, groupText } = descriptor;
+        if (groupOrdinal == null || !groupText) {
+          return { ...descriptor, isSkeleton: false };
+        }
+        const headerId = `${listboxId}-group-${groupOrdinal}`;
+        const footerId = `${headerId}-footer`;
+        if (descriptor.flags.textBoundary) {
           return {
             ...descriptor,
             isSkeleton: false,
-            headerId: `${listboxId}-group-${descriptor.groupOrdinal}`,
+            boundaryId: descriptor.flags.groupFooter ? footerId : headerId,
           };
         }
+        const ids = [
+          groupText.header && headerId,
+          groupText.footer && footerId,
+        ].filter(Boolean);
         return {
           ...descriptor,
           isSkeleton: false,
-          groupHeaderId:
-            descriptor.groupOrdinal == null
-              ? undefined
-              : `${listboxId}-group-${descriptor.groupOrdinal}`,
+          groupDescribedBy: ids.length ? ids.join(" ") : undefined,
         };
       });
     if (this.#feedback.showRevealPlaceholder) {
@@ -154,7 +162,7 @@ export default class WindowedListCoordinator {
    */
   mountedRows = (rows: readonly ListRow[]) => {
     const kept = this.#keptIndex(rows) ?? this.revealRowIndex(rows);
-    const headerIndices = this.#headerIndices(rows);
+    const boundaryIndices = this.#boundaryIndices(rows);
 
     return (indices: readonly number[]) => {
       const extras: Array<number | undefined> = kept == null ? [] : [kept];
@@ -164,7 +172,7 @@ export default class WindowedListCoordinator {
         if (!option || option.groupOrdinal == null) {
           return;
         }
-        extras.push(headerIndices.get(option.groupOrdinal));
+        extras.push(...(boundaryIndices.get(option.groupOrdinal) ?? []));
       };
 
       indices.forEach(collectHeader);
@@ -184,7 +192,7 @@ export default class WindowedListCoordinator {
   #listboxRoving: DRovingFocusApi | null = null;
   #jumpTimer?: ReturnType<typeof nextRunloop>;
   #lastRows?: readonly ListRow[];
-  #lastHeaderIndices = new Map<number, number>();
+  #lastBoundaryIndices = new Map<number, number[]>();
 
   // Maps a logical option ordinal to its raw index in the rendered row array, so a jump target
   // (logical) can be scrolled through the virtualizer (which addresses rows by raw index).
@@ -384,7 +392,7 @@ export default class WindowedListCoordinator {
   setSizeOf(rows: readonly ListRow[]): number {
     for (const row of rows) {
       const option = this.optionRow(row);
-      if (option && !option.flags.group && !option.flags.divider) {
+      if (option && !option.flags.textBoundary && !option.flags.divider) {
         return option.setSize ?? 0;
       }
     }
@@ -473,18 +481,21 @@ export default class WindowedListCoordinator {
     });
   }
 
-  #headerIndices(rows: readonly ListRow[]): Map<number, number> {
+  /** The indices of each group's text boundaries, which its options' descriptions point at. */
+  #boundaryIndices(rows: readonly ListRow[]): Map<number, number[]> {
     if (rows !== this.#lastRows) {
-      const headerIndices = new Map<number, number>();
+      const boundaryIndices = new Map<number, number[]>();
       rows.forEach((row, index) => {
         const option = this.optionRow(row);
-        if (option?.flags.group) {
-          headerIndices.set(option.groupOrdinal!, index);
+        if (option?.flags.textBoundary && option.groupOrdinal != null) {
+          const indices = boundaryIndices.get(option.groupOrdinal) ?? [];
+          indices.push(index);
+          boundaryIndices.set(option.groupOrdinal, indices);
         }
       });
       this.#lastRows = rows;
-      this.#lastHeaderIndices = headerIndices;
+      this.#lastBoundaryIndices = boundaryIndices;
     }
-    return this.#lastHeaderIndices;
+    return this.#lastBoundaryIndices;
   }
 }

@@ -44,6 +44,8 @@ interface WindowedOptionListSignature {
     hasSkeletonItemBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
+    /** Whether the consumer supplied custom group-footer markup. */
+    hasGroupFooterBlock: boolean;
     /** Handles pointer-down on an option before its click resolves. */
     onOptionMousedown: (event: MouseEvent) => void;
     /** Composed rows for this resolved content. */
@@ -60,6 +62,11 @@ interface WindowedOptionListSignature {
     /** Custom markup for a group header. */
     groupHeader?: [
       /** The group-header item being rendered. */
+      item: SelectItemModel,
+    ];
+    /** Custom markup for a group footer. */
+    groupFooter?: [
+      /** The group-footer item being rendered. */
       item: SelectItemModel,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
@@ -127,6 +134,7 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
         <SelectOptionRow
           @descriptor={{descriptor}}
           @engine={{@engine}}
+          @hasGroupFooterBlock={{@hasGroupFooterBlock}}
           @hasGroupHeaderBlock={{@hasGroupHeaderBlock}}
           @hasItemBlock={{@hasItemBlock}}
           @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
@@ -148,6 +156,9 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
           <:groupHeader as |item|>
             {{~yield item to="groupHeader"~}}
           </:groupHeader>
+          <:groupFooter as |item|>
+            {{~yield item to="groupFooter"~}}
+          </:groupFooter>
           <:skeletonItem>
             {{~yield to="skeletonItem"~}}
           </:skeletonItem>

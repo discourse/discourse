@@ -12,6 +12,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   EngineProbe,
@@ -585,7 +586,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{GROUPED_ITEMS}}
         />
       </template>
@@ -622,7 +623,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{GROUPED_ITEMS}}
         />
       </template>
@@ -664,7 +665,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{GROUPED_ITEMS}}
         />
       </template>
@@ -721,7 +722,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <template>
           <DSelect
             @groupBy="group"
-            @groupLabel={{identityLabel}}
+            @groupHeader={{identityLabel}}
             @items={{GROUPED_ITEMS}}
           />
         </template>
@@ -744,7 +745,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{GROUPED_ITEMS}}
         />
       </template>
@@ -786,7 +787,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{GROUPED_ITEMS}}
         />
       </template>
@@ -831,7 +832,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         </style>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{items}}
           @variant="static"
         />
@@ -883,7 +884,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         </style>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{items}}
           @value={{heldId}}
           @variant="static"
@@ -915,7 +916,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{GROUPED_ITEMS}}
         >
           <:groupHeader as |item|>
@@ -967,7 +968,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         </style>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{items}}
           @variant="static"
         />
@@ -987,7 +988,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     );
   });
 
-  test("groupBy without groupLabel renders splitters between groups", async function (assert) {
+  test("groupBy without groupHeader renders splitters between groups", async function (assert) {
     await render(
       <template><DSelect @groupBy="group" @items={{GROUPED_ITEMS}} /></template>
     );
@@ -1019,14 +1020,14 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     );
   });
 
-  test("a mixed groupLabel renders a header for the labeled group and a splitter for the rest", async function (assert) {
+  test("a mixed groupHeader renders a header for the labeled group and a splitter for the rest", async function (assert) {
     const onlyVegetables = (key) => (key === "Vegetables" ? key : null);
 
     await render(
       <template>
         <DSelect
           @groupBy="group"
-          @groupLabel={{onlyVegetables}}
+          @groupHeader={{onlyVegetables}}
           @items={{GROUPED_ITEMS}}
         />
       </template>
@@ -1063,7 +1064,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
           @allowCreate={{true}}
           @createItem={{createItem}}
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{GROUPED_ITEMS}}
         />
       </template>
@@ -1098,7 +1099,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         </style>
         <DSelect
           @groupBy="group"
-          @groupLabel={{identityLabel}}
+          @groupHeader={{identityLabel}}
           @items={{items}}
           @variant="static"
         />
@@ -1134,6 +1135,390 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       );
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect group headers and footers",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const ACTION_FOOTER_SELECTOR = `${OPTION_SELECTOR}.--action-footer`;
+    const ACTION_HEADER_SELECTOR = `${OPTION_SELECTOR}.--action-header`;
+    const GROUP_FOOTER_SELECTOR = `${LISTBOX_SELECTOR} > .d-select__group-footer`;
+    const identityLabel = (key) => key;
+    const ending = (key) => `${key} end`;
+
+    /** An action row for the whole group, with an optional description. */
+    const bulkWith =
+      (extra = {}) =>
+      (key) => ({
+        id: `all:${key}`,
+        name: `All ${key}`,
+        onSelect() {},
+        ...extra,
+      });
+    const bulk = bulkWith();
+
+    /** The rows an option's description points at, resolved by id. */
+    function describedTexts(option) {
+      return (option.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((id) => document.getElementById(id)?.textContent.trim());
+    }
+
+    /** The text of the active option, read through the controller. */
+    function activeName() {
+      const id = find("[role='combobox']").getAttribute(
+        "aria-activedescendant"
+      );
+      return id ? document.getElementById(id)?.dataset.name : undefined;
+    }
+
+    hooks.beforeEach(async function () {
+      enableVirtualization();
+      this.accessibleName = await loadAccessibleName();
+    });
+
+    hooks.afterEach(function () {
+      disableVirtualization();
+    });
+
+    test("an action footer draws its block inside a navigable option the item block never receives", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{bulk}}
+            @items={{GROUPED_ITEMS}}
+          >
+            <:item as |item|>
+              <span class="custom-item">{{item.name}}</span>
+            </:item>
+            <:groupFooter as |item|>
+              <span class="custom-footer">{{item.label}} + Subcategories</span>
+            </:groupFooter>
+          </DSelect>
+        </template>
+      );
+      await openSelect();
+
+      assert
+        .dom(ACTION_FOOTER_SELECTOR)
+        .exists({ count: 2 }, "each group closes with an action option");
+      assert
+        .dom(`${ACTION_FOOTER_SELECTOR} [aria-hidden='true'] .custom-footer`)
+        .exists({ count: 2 }, "the block draws inside a hidden wrapper");
+      assert
+        .dom(`${ACTION_FOOTER_SELECTOR} .custom-item`)
+        .doesNotExist("the item block never draws a footer");
+      assert
+        .dom(".custom-item")
+        .exists({ count: GROUPED_ITEMS.length }, "it draws every record");
+      assert.deepEqual(
+        findAll(ACTION_FOOTER_SELECTOR).map((option) =>
+          this.accessibleName(option)
+        ),
+        ["All Vegetables", "All Fruits"],
+        "the name is the builder's label, not the drawing"
+      );
+    });
+
+    test("an action footer with a description keeps the builder's label as its name", async function (assert) {
+      const described = bulkWith({ description: "Adds the whole group" });
+
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{described}}
+            @items={{GROUPED_ITEMS}}
+          >
+            <:groupFooter>
+              <span class="custom-footer">+ Subcategories</span>
+            </:groupFooter>
+          </DSelect>
+        </template>
+      );
+      await openSelect();
+
+      const footer = find(ACTION_FOOTER_SELECTOR);
+      assert.strictEqual(
+        this.accessibleName(footer),
+        "All Vegetables",
+        "the labelled span carries the label, not the drawing"
+      );
+      assert
+        .dom(footer)
+        .hasAttribute(
+          "aria-describedby",
+          /d-select-option-description/,
+          "the description is still announced"
+        );
+    });
+
+    test("an action header draws its block inside a navigable option", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupHeader={{bulk}}
+            @items={{GROUPED_ITEMS}}
+          >
+            <:item as |item|>
+              <span class="custom-item">{{item.name}}</span>
+            </:item>
+            <:groupHeader>
+              <span class="custom-header">Everything</span>
+            </:groupHeader>
+          </DSelect>
+        </template>
+      );
+      await openSelect();
+
+      assert
+        .dom(`${ACTION_HEADER_SELECTOR} [aria-hidden='true'] .custom-header`)
+        .exists({ count: 2 }, "the block draws each action header");
+      assert
+        .dom(`${ACTION_HEADER_SELECTOR} .custom-item`)
+        .doesNotExist("the item block never draws a header");
+      assert.deepEqual(
+        findAll(ACTION_HEADER_SELECTOR).map((option) =>
+          this.accessibleName(option)
+        ),
+        ["All Vegetables", "All Fruits"],
+        "the name is the builder's label"
+      );
+    });
+
+    test("without a group block an action row shows its label, even beside an item block", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{bulk}}
+            @groupHeader={{identityLabel}}
+            @items={{GROUPED_ITEMS}}
+          >
+            <:item as |item|>
+              <span class="custom-item">{{item.name}}</span>
+            </:item>
+          </DSelect>
+        </template>
+      );
+      await openSelect();
+
+      assert.deepEqual(
+        findAll(ACTION_FOOTER_SELECTOR).map((option) =>
+          option.textContent.trim()
+        ),
+        ["All Vegetables", "All Fruits"],
+        "the label is drawn"
+      );
+      assert.deepEqual(
+        findAll(GROUP_HEADER_SELECTOR).map((header) =>
+          header.textContent.trim()
+        ),
+        ["Vegetables", "Fruits"],
+        "a text row draws its builder's string"
+      );
+    });
+
+    test("options are described by their group's text header and footer", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{ending}}
+            @groupHeader={{identityLabel}}
+            @items={{GROUPED_ITEMS}}
+          >
+            <:groupFooter as |item|>
+              <em class="custom-footer">{{item.label}}!</em>
+            </:groupFooter>
+          </DSelect>
+        </template>
+      );
+      await openSelect();
+
+      assert
+        .dom(`${GROUP_FOOTER_SELECTOR} .custom-footer`)
+        .exists({ count: 2 }, "the block draws each text footer");
+      assert
+        .dom(`${GROUP_FOOTER_SELECTOR} [id][hidden]`)
+        .exists({ count: 2 }, "the label span hides behind the block");
+      assert
+        .dom(GROUP_FOOTER_SELECTOR)
+        .hasAttribute("role", "presentation", "a text footer is no option");
+      assert.deepEqual(
+        findAll(OPTION_SELECTOR).map(describedTexts),
+        [
+          ["Vegetables", "Vegetables end"],
+          ["Vegetables", "Vegetables end"],
+          ["Fruits", "Fruits end"],
+          ["Fruits", "Fruits end"],
+        ],
+        "each option names its group's header, then its footer"
+      );
+    });
+
+    test("an action footer is reached by the keyboard and runs its action", async function (assert) {
+      const picked = [];
+      const footer = (key) => ({
+        ...bulk(key),
+        onSelect: () => picked.push(key),
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{footer}}
+            @items={{GROUPED_ITEMS}}
+          />
+        </template>
+      );
+      await openSelect();
+
+      const visited = [activeName()];
+      for (let step = 0; step < 2; step++) {
+        await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+        visited.push(activeName());
+      }
+      assert.deepEqual(
+        visited,
+        ["Carrot", "Pea", "All Vegetables"],
+        "the footer follows its group's rows"
+      );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      assert.deepEqual(picked, ["Vegetables"], "Enter runs the footer");
+    });
+
+    test("an action header leading the results is where the cursor starts after a search", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupHeader={{bulk}}
+            @items={{GROUPED_ITEMS}}
+          />
+        </template>
+      );
+      await openSelect();
+      await fillIn("[role='combobox']", "pe");
+
+      assert.strictEqual(
+        activeName(),
+        "All Vegetables",
+        "the first activatable row is the action header, so Enter would run it"
+      );
+    });
+
+    test("an action footer starts the cursor only when every row before it is held", async function (assert) {
+      const value = [1, 3];
+
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{bulk}}
+            @items={{GROUPED_ITEMS}}
+            @multiple={{true}}
+            @value={{value}}
+          />
+        </template>
+      );
+      await openSelect();
+      await fillIn("[role='combobox']", "a");
+
+      assert.strictEqual(
+        activeName(),
+        "All Vegetables",
+        "both vegetables are held, so the footer is the first row left"
+      );
+    });
+
+    test("every description resolves while the window sits deep in a group", async function (assert) {
+      const items = Array.from({ length: 60 }, (_, index) => ({
+        id: index,
+        name: `Item ${index}`,
+        group: index < 30 ? "First" : "Second",
+      }));
+
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{ending}}
+            @groupHeader={{identityLabel}}
+            @items={{items}}
+            @variant="static"
+          />
+        </template>
+      );
+      await openSelect();
+      // Mid-group, so neither of its boundaries is in the window on its own.
+      for (let step = 0; step < 3; step++) {
+        await triggerKeyEvent("[role='combobox']", "keydown", "PageDown");
+      }
+      await settledAfterFrame();
+
+      const options = findAll(OPTION_SELECTOR);
+      assert.true(options.length > 0, "options are mounted");
+      options.forEach((option) => {
+        const group =
+          Number(option.dataset.logicalIndex) < 30 ? "First" : "Second";
+        assert.deepEqual(
+          describedTexts(option),
+          [group, `${group} end`],
+          "both boundaries of a mounted option's group stay mounted"
+        );
+      });
+    });
+
+    test("near-unique groups with footers keep the mounted DOM bounded by the window", async function (assert) {
+      const items = Array.from({ length: 120 }, (_, index) => ({
+        id: index,
+        name: `Item ${index}`,
+        group: `Group ${index}`,
+      }));
+
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{ending}}
+            @groupHeader={{identityLabel}}
+            @items={{items}}
+            @variant="static"
+          />
+        </template>
+      );
+      await openSelect();
+
+      // 120 groups with a header and a footer produce 360 rows.
+      const mounted = findAll(`${LISTBOX_SELECTOR} > li`).length;
+      assert.true(
+        mounted < 60,
+        `the mounted rows stay a window (got ${mounted})`
+      );
+    });
+  }
+);
 
 // The roving seed only sees MOUNTED rows, and the reveal scroll that would mount an off-window
 // selection is deferred a tick — so a selection past the window loses the seed to row zero, which

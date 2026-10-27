@@ -143,6 +143,8 @@ interface SelectPanelSignature<State> {
     hasItemBlock: boolean;
     /** Whether the host supplies the groupHeader block. */
     hasGroupHeaderBlock: boolean;
+    /** Whether the host supplies the groupFooter block. */
+    hasGroupFooterBlock: boolean;
     /** Whether the host supplies the skeletonItem block. */
     hasSkeletonItemBlock: boolean;
     /** Whether the host supplies the selection block. */
@@ -170,6 +172,11 @@ interface SelectPanelSignature<State> {
     ];
     /** Custom groupHeader content. */
     groupHeader?: [
+      /** The rendered item. */ item: SelectItem,
+      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+    ];
+    /** Custom groupFooter content. */
+    groupFooter?: [
       /** The rendered item. */ item: SelectItem,
       /** Resolved core and recipe options. */ options: SelectResolvedOptions,
     ];
@@ -302,6 +309,7 @@ export default class SelectPanel<State> extends Component<
           <@body
             @announcer={{@announcer}}
             @engine={{@engine}}
+            @hasGroupFooterBlock={{@hasGroupFooterBlock}}
             @hasGroupHeaderBlock={{@hasGroupHeaderBlock}}
             @hasItemBlock={{@hasItemBlock}}
             @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
@@ -324,6 +332,9 @@ export default class SelectPanel<State> extends Component<
             <:groupHeader as |item|>
               {{~yield item this.resolvedOptions to="groupHeader"~}}
             </:groupHeader>
+            <:groupFooter as |item|>
+              {{~yield item this.resolvedOptions to="groupFooter"~}}
+            </:groupFooter>
             <:skeletonItem>
               {{~yield to="skeletonItem"~}}
             </:skeletonItem>

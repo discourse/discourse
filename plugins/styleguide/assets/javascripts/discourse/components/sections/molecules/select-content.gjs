@@ -13,6 +13,8 @@ import CustomErrorSelectExample from "../../examples/molecules/select/content/er
 import customErrorSelectSource from "../../examples/molecules/select/content/error?source=file";
 import FooterSelectExample from "../../examples/molecules/select/content/footer.gjs";
 import footerSelectSource from "../../examples/molecules/select/content/footer?source=file";
+import GroupFooterSelectExample from "../../examples/molecules/select/content/group-footer.gjs";
+import groupFooterSelectSource from "../../examples/molecules/select/content/group-footer?source=file";
 import GroupedSelectExample from "../../examples/molecules/select/content/grouped.gjs";
 import groupedSelectSource from "../../examples/molecules/select/content/grouped?source=file";
 import RowIconsSelectExample from "../../examples/molecules/select/content/row-icons.gjs";
@@ -148,6 +150,17 @@ export default <template>
     @tryThis={{i18n "styleguide.sections.select.content.grouped_try_this"}}
   >
     <div class="select-examples__control"><GroupedSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{groupFooterSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.group_footer_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.group_footer_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.group_footer_try_this"}}
+  >
+    <div class="select-examples__control"><GroupFooterSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample

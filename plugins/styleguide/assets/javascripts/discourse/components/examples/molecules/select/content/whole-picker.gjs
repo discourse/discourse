@@ -13,7 +13,7 @@ export default class WholePickerSelectExample extends Component {
   @tracked value = [];
 
   @action
-  groupLabel(key) {
+  groupHeader(key) {
     return teamLabels()[key] ?? key;
   }
 
@@ -25,7 +25,7 @@ export default class WholePickerSelectExample extends Component {
   <template>
     <DSelect
       @groupBy="team"
-      @groupLabel={{this.groupLabel}}
+      @groupHeader={{this.groupHeader}}
       @identifier="sg-content-picker"
       @items={{TEAM_MEMBERS}}
       @labelField="name"

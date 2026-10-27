@@ -2594,7 +2594,7 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
     const engine = new SelectEngine({
       items: ROWS,
       groupBy: "section",
-      groupLabel: (key) => (key === "fruit" ? "Fruit" : "Vegetables"),
+      groupHeader: (key) => (key === "fruit" ? "Fruit" : "Vegetables"),
     });
 
     const rows = engine.buildItems(await engine.loadItems(engine.loadContext));
@@ -2607,7 +2607,7 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
       "it belongs to no group"
     );
     assert.false(
-      rows.some((row) => row.flags.sticky && row.flags.group),
+      rows.some((row) => row.flags.sticky && row.flags.groupHeader),
       "a header is never sticky"
     );
   });

@@ -1357,13 +1357,13 @@ module(
         { id: 3, name: "Beet", section: "vegetable" },
         { id: 4, name: "Kale", section: "leafy" },
       ];
-      const groupLabel = (key) => (key === "fruit" ? "Fruit" : null);
+      const groupHeader = (key) => (key === "fruit" ? "Fruit" : null);
 
       await render(
         <template>
           <DSelect
             @groupBy="section"
-            @groupLabel={{groupLabel}}
+            @groupHeader={{groupHeader}}
             @identifier="test-select"
             @items={{sectioned}}
           />
@@ -1610,13 +1610,13 @@ module(
         );
       });
       const items = numbered(5);
-      const groupLabel = (key) => (key === "even" ? "Even" : "Odd");
+      const groupHeader = (key) => (key === "even" ? "Even" : "Odd");
 
       await render(
         <template>
           <DSelect
             @groupBy="section"
-            @groupLabel={{groupLabel}}
+            @groupHeader={{groupHeader}}
             @items={{items}}
             @variant="button"
           />

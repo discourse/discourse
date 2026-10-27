@@ -10,7 +10,7 @@ export default class GroupedSelectExample extends Component {
   @tracked value = null;
 
   @action
-  groupLabel(key) {
+  groupHeader(key) {
     return scriptLabels()[key] ?? key;
   }
 
@@ -22,7 +22,7 @@ export default class GroupedSelectExample extends Component {
   <template>
     <DSelect
       @groupBy="script"
-      @groupLabel={{this.groupLabel}}
+      @groupHeader={{this.groupHeader}}
       @identifier="sg-grouped"
       @items={{LOCALES}}
       @onChange={{this.onChange}}

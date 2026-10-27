@@ -35,6 +35,8 @@ interface SelectOptionRowSignature {
     hasSkeletonItemBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
+    /** Whether the consumer supplied custom group-footer markup. */
+    hasGroupFooterBlock: boolean;
     /** Handles pointer-down on an option before its click resolves. */
     onOptionMousedown: (event: MouseEvent) => void;
     /** The descriptor at this rendered slot, absent during window shrinkage. */
@@ -54,9 +56,14 @@ interface SelectOptionRowSignature {
       /** The item being rendered. */
       item: SelectItemModel,
     ];
-    /** Custom markup for a group header. */
+    /** Custom markup for a group header, text or action. */
     groupHeader?: [
       /** The group-header item being rendered. */
+      item: SelectItemModel,
+    ];
+    /** Custom markup for a group footer, text or action. */
+    groupFooter?: [
+      /** The group-footer item being rendered. */
       item: SelectItemModel,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
@@ -73,23 +80,39 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             descriptor. }}
     {{#if @descriptor}}
       {{#let (@listbox.optionRow @descriptor) as |option|}}
-        {{#if option.flags.group}}
-          {{! A group header: presentational, so it is skipped by roving
-                  navigation and carries no option position. }}
-          <li
-            class="d-select__group-header"
-            data-option-key={{option.key}}
-            role="presentation"
-            {{@place}}
-            {{@measure}}
-          >
-            {{#if @hasGroupHeaderBlock}}
-              {{yield option.item to="groupHeader"}}
-            {{/if}}
-            <span hidden={{@hasGroupHeaderBlock}} id={{option.headerId}}>
-              {{selectItemLabel option.item "label"}}
-            </span>
-          </li>
+        {{#if option.flags.textBoundary}}
+          {{! A text header or footer: presentational, so it is skipped by roving
+                  navigation and carries no option position. The hidden label
+                  stays the description its group's options point at. }}
+          {{#let
+            (if
+              option.flags.groupFooter @hasGroupFooterBlock @hasGroupHeaderBlock
+            )
+            as |hasBlock|
+          }}
+            <li
+              class={{if
+                option.flags.groupFooter
+                "d-select__group-footer"
+                "d-select__group-header"
+              }}
+              data-option-key={{option.key}}
+              role="presentation"
+              {{@place}}
+              {{@measure}}
+            >
+              {{#if hasBlock}}
+                {{#if option.flags.groupFooter}}
+                  {{yield option.item to="groupFooter"}}
+                {{else}}
+                  {{yield option.item to="groupHeader"}}
+                {{/if}}
+              {{/if}}
+              <span hidden={{hasBlock}} id={{option.boundaryId}}>
+                {{selectItemLabel option.item "label"}}
+              </span>
+            </li>
+          {{/let}}
         {{else if option.flags.divider}}
           <li
             aria-hidden="true"
@@ -110,7 +133,7 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             data-logical-index={{option.logicalIndex}}
             data-option-key={{option.key}}
             @active={{eq option.key @listbox.activeOptionKey}}
-            @describedBy={{option.groupHeaderId}}
+            @describedBy={{option.groupDescribedBy}}
             @descriptor={{option}}
             @engine={{@engine}}
             @hideSelectionMarker={{@hideSelectionMarker}}
@@ -128,7 +151,26 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
             {{on "mousedown" @onOptionMousedown}}
           >
-            {{#if @hasItemBlock}}
+            {{! A group's action row is drawn by its group block, never the item
+                block. The drawing is hidden and the builder's label is the
+                name, so the name never depends on what the block draws. }}
+            {{#if (and option.flags.groupHeader @hasGroupHeaderBlock)}}
+              <span class="sr-only">
+                {{~selectItemLabel option.item @presenter.labelField~}}
+              </span>
+              <span aria-hidden="true">
+                {{~yield option.item to="groupHeader"~}}
+              </span>
+            {{else if (and option.flags.groupFooter @hasGroupFooterBlock)}}
+              <span class="sr-only">
+                {{~selectItemLabel option.item @presenter.labelField~}}
+              </span>
+              <span aria-hidden="true">
+                {{~yield option.item to="groupFooter"~}}
+              </span>
+            {{else if (or option.flags.groupHeader option.flags.groupFooter)}}
+              {{selectItemLabel option.item @presenter.labelField}}
+            {{else if @hasItemBlock}}
               {{yield option.item to="item"}}
             {{else if option.flags.__create}}
               {{i18n

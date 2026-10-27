@@ -7,7 +7,7 @@ import DSelect from "discourse/ui-kit/select/d-select";
 export default class EmojiSelectExample extends Component {
   @tracked value = "tada";
 
-  groupLabel = (key) => key;
+  groupHeader = (key) => key;
 
   items = [
     { id: "tada", name: "tada", group: "Celebration" },
@@ -34,7 +34,7 @@ export default class EmojiSelectExample extends Component {
   <template>
     <DSelect
       @groupBy="group"
-      @groupLabel={{this.groupLabel}}
+      @groupHeader={{this.groupHeader}}
       @identifier="sg-emoji"
       @items={{this.items}}
       @onChange={{this.update}}

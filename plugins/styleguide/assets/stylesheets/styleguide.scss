@@ -634,7 +634,8 @@
   background: var(--bullet-color, var(--primary-medium));
 }
 
-.select-examples__group-header {
+.select-examples__group-header,
+.select-examples__group-footer {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;

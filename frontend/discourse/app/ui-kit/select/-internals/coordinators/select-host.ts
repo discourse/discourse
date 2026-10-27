@@ -61,7 +61,8 @@ export interface SelectHostArgs
       | "createUnresolvedItem"
       | "specialItems"
       | "groupBy"
-      | "groupLabel"
+      | "groupHeader"
+      | "groupFooter"
       | "onChange"
     > {
   /** Recipe data passed to customizations. */
@@ -225,7 +226,8 @@ export default class SelectHost {
       createUnresolvedItem: this.#options.getArgs().createUnresolvedItem,
       specialItems: this.#options.getArgs().specialItems,
       groupBy: this.#options.getArgs().groupBy,
-      groupLabel: this.#options.getArgs().groupLabel,
+      groupHeader: this.#options.getArgs().groupHeader,
+      groupFooter: this.#options.getArgs().groupFooter,
       onChange: this.handleChange,
       onReconfirm: (item, origin) => this.announcer.reconfirm(item, origin),
       onUpdateStart: (isCurrent) => this.announcer.updateStarted(isCurrent),

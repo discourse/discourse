@@ -1007,8 +1007,12 @@ module(
         record("groupBy", options);
         return item.section;
       };
-      const groupLabel = (key, options) => {
-        record("groupLabel", options);
+      const groupHeader = (key, rows, options) => {
+        record("groupHeader", options);
+        return key;
+      };
+      const groupFooter = (key, rows, options) => {
+        record("groupFooter", options);
         return key;
       };
 
@@ -1020,7 +1024,8 @@ module(
             @createUnresolvedItem={{createUnresolvedItem}}
             @filterBy={{filterBy}}
             @groupBy={{groupBy}}
-            @groupLabel={{groupLabel}}
+            @groupFooter={{groupFooter}}
+            @groupHeader={{groupHeader}}
             @items={{items}}
             @kind="recipe"
             @kindOptions={{hash prefix="base"}}
@@ -1038,7 +1043,8 @@ module(
         createUnresolvedItem: "base+kind",
         filterBy: "base+kind",
         groupBy: "base+kind",
-        groupLabel: "base+kind",
+        groupFooter: "base+kind",
+        groupHeader: "base+kind",
         specialItems: "base+kind",
       });
       assert.deepEqual(
@@ -1051,14 +1057,16 @@ module(
     test("resolved options reach the blocks as the last parameter", async function (assert) {
       customizeRecipe();
       const items = [{ id: 1, name: "Apple", section: "fruit" }];
-      const groupLabel = (key) => key;
+      const groupHeader = (key) => key;
+      const groupFooter = (key) => `${key} end`;
 
       await render(
         <template>
           <div class="held">
             <DSelect
               @groupBy="section"
-              @groupLabel={{groupLabel}}
+              @groupFooter={{groupFooter}}
+              @groupHeader={{groupHeader}}
               @items={{items}}
               @kind="recipe"
               @kindOptions={{hash prefix="base"}}
@@ -1074,6 +1082,9 @@ module(
               <:groupHeader as |header options|>
                 <span class="x-header">{{options.prefix}}</span>
               </:groupHeader>
+              <:groupFooter as |footer options|>
+                <span class="x-group-footer">{{options.prefix}}</span>
+              </:groupFooter>
               <:footer as |state options|>
                 <span class="x-footer">{{options.prefix}}</span>
               </:footer>
@@ -1101,6 +1112,7 @@ module(
       await click(".held [role='combobox']");
       assert.dom(".x-item").hasText("base+kind");
       assert.dom(".x-header").hasText("base+kind");
+      assert.dom(".x-group-footer").hasText("base+kind");
       assert.dom(".x-footer").hasText("base+kind");
     });
 

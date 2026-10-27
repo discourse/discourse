@@ -77,7 +77,8 @@ export default class SelectOptionsView {
   #createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
   #specialItems?: SelectEngineOptions["specialItems"];
   #groupBy?: SelectEngineOptions["groupBy"];
-  #groupLabelFn?: SelectEngineOptions["groupLabel"];
+  #groupHeader?: SelectEngineOptions["groupHeader"];
+  #groupFooter?: SelectEngineOptions["groupFooter"];
   #readCloseOnSelect: boolean | undefined;
   #onChange?: SelectEngineOptions["onChange"];
   #onReconfirm?: SelectEngineOptions["onReconfirm"];
@@ -135,7 +136,8 @@ export default class SelectOptionsView {
     this.#createUnresolvedItem = opts.createUnresolvedItem;
     this.#specialItems = opts.specialItems;
     this.#groupBy = opts.groupBy;
-    this.#groupLabelFn = opts.groupLabel;
+    this.#groupHeader = opts.groupHeader;
+    this.#groupFooter = opts.groupFooter;
     // Kept raw (not defaulted here): `closeOnSelect` re-derives `!multiple` live, so a
     // runtime `multiple` flip flips the default close behavior with it.
     this.#readCloseOnSelect = opts.closeOnSelect;
@@ -309,8 +311,12 @@ export default class SelectOptionsView {
     return this.#groupBy;
   }
 
-  get groupLabel(): SelectEngineOptions["groupLabel"] {
-    return this.#groupLabelFn;
+  get groupHeader(): SelectEngineOptions["groupHeader"] {
+    return this.#groupHeader;
+  }
+
+  get groupFooter(): SelectEngineOptions["groupFooter"] {
+    return this.#groupFooter;
   }
 
   get onChange(): SelectEngineOptions["onChange"] {

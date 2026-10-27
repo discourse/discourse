@@ -268,7 +268,13 @@ export default class SelectionActions {
     let limit = 0;
     const remaining = this.remaining;
     for (const item of items) {
-      if (item.disabled || item.onSelect || item.__header || item.__divider) {
+      if (
+        item.disabled ||
+        item.onSelect ||
+        item.__header ||
+        item.__footer ||
+        item.__divider
+      ) {
         continue;
       }
       const key = this.#options.valueKey(this.#options.itemValue(item));

@@ -657,7 +657,7 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
       name: filter,
       __create: true,
     });
-    const groupLabel = (group) => group;
+    const groupHeader = (group) => group;
 
     await render(
       <template>
@@ -665,7 +665,7 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
           @allowCreate={{true}}
           @createItem={{createItem}}
           @groupBy="group"
-          @groupLabel={{groupLabel}}
+          @groupHeader={{groupHeader}}
           @items={{items}}
           @noneLabel="None"
           @specialItems={{specialItems}}
@@ -982,13 +982,13 @@ module(
           description: "Unavailable today",
         },
       ];
-      const groupLabel = (group) => group;
+      const groupHeader = (group) => group;
       const onChange = sinon.spy();
       await render(
         <template>
           <DSelect
             @groupBy="group"
-            @groupLabel={{groupLabel}}
+            @groupHeader={{groupHeader}}
             @items={{items}}
             @maximum={{1}}
             @multiple={{true}}
@@ -1039,7 +1039,7 @@ module(
         group: Math.floor(index / 40),
         disabled: index % 2 === 1,
       }));
-      const groupLabel = (group) => `Group ${group}`;
+      const groupHeader = (group) => `Group ${group}`;
       const onChange = sinon.spy();
       await render(
         <template>
@@ -1052,7 +1052,7 @@ module(
           </style>
           <DSelect
             @groupBy="group"
-            @groupLabel={{groupLabel}}
+            @groupHeader={{groupHeader}}
             @items={{items}}
             @maximum={{1}}
             @multiple={{true}}

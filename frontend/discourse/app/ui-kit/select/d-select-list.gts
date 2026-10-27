@@ -299,6 +299,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @hasEmptyBlock={{has-block "empty"}}
         @hasErrorBlock={{has-block "error"}}
         @hasFooterBlock={{and (has-block "footer") (not @suppressFooter)}}
+        @hasGroupFooterBlock={{false}}
         @hasGroupHeaderBlock={{false}}
         @hasItemBlock={{has-block "item"}}
         @hasListHeaderBlock={{has-block "listHeader"}}
