@@ -56,12 +56,18 @@ module DiscourseWorkflows
       def execute(exec_ctx)
         items =
           exec_ctx.input_items.map.with_index do |_item, item_index|
-            topic = ::Topic.find(exec_ctx.get_node_parameter("topic_id", item_index))
+            topic = find_topic(exec_ctx.get_node_parameter("topic_id", item_index))
             actor = exec_ctx.actor_from_parameter("actor_username", item_index)
             wrap(change(exec_ctx, topic, actor, item_index))
           end
 
         [items]
+      end
+
+      private
+
+      def find_topic(topic_id)
+        ::Topic.find(topic_id)
       end
     end
   end
