@@ -139,6 +139,7 @@ RSpec.describe PluginGem do
         platforms: [Gem::Platform::RUBY],
         dependencies: definition.dependencies,
         locked_checksums: !checksums.nil?,
+        locked_gems: nil,
         locked_ruby_version: nil,
         bundler_version_to_lock: Bundler.gem_version,
       )
