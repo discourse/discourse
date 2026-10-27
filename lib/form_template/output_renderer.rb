@@ -13,6 +13,6 @@ class FormTemplate::OutputRenderer
     template.resource_limits.render_length_limit = SiteSetting.max_post_length * 4
     template.resource_limits.render_score_limit = RENDER_SCORE_LIMIT
     template.resource_limits.assign_score_limit = ASSIGN_SCORE_LIMIT
-    template.render!({ "answers" => field_values.answers })
+    template.render!({ "answers" => field_values.template_answers })
   end
 end

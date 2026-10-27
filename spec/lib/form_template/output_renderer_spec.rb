@@ -30,6 +30,20 @@ RSpec.describe FormTemplate::OutputRenderer do
       expect(described_class.render(values, source)).to eq("First, Second / any")
     end
 
+    it "exposes number answers as numbers" do
+      source =
+        "{% if answers.seats > 2 %}group{% endif %} {{ answers.seats | plus: 1 }} {{ answers.seats }}"
+
+      values.answers["seats"] = "3"
+      expect(described_class.render(values, source)).to eq("group 4 3")
+
+      values.answers["seats"] = "2.50"
+      expect(described_class.render(values, source)).to eq("group 3.5 2.5")
+
+      values.answers["seats"] = ""
+      expect(described_class.render(values, source)).to eq(" 1 ")
+    end
+
     it "does not interpret answer content" do
       values.answers["description"] = "{{ answers.games | join: '' }} {% if true %}x{% endif %}"
       expect(described_class.render(values, "{{ answers.description }}")).to eq(

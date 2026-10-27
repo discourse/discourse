@@ -32,6 +32,28 @@ RSpec.describe FormTemplate::FieldValues do
     end
   end
 
+  describe "#template_answers" do
+    it "converts number answers and leaves other answers as typed" do
+      fields = [
+        { "id" => "seats", "type" => "input", "validations" => { "type" => "number" } },
+        { "id" => "price", "type" => "input", "validations" => { "type" => "number" } },
+        { "id" => "blank", "type" => "input", "validations" => { "type" => "number" } },
+        { "id" => "code", "type" => "input" },
+      ]
+      answers = { "seats" => "007", "price" => "-.5e1", "blank" => "", "code" => "42" }
+
+      values = described_class.new(fields:, answers:)
+
+      expect(values.template_answers).to eq(
+        "seats" => 7,
+        "price" => BigDecimal("-5"),
+        "blank" => nil,
+        "code" => "42",
+      )
+      expect(values.answers).to eq(answers)
+    end
+  end
+
   describe "#well_formed?" do
     it "accepts tag selections as scalar or collection values" do
       fields = [

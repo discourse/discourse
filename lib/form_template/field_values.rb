@@ -15,6 +15,15 @@ class FormTemplate::FieldValues
     unknown_ids.empty? && fields.all? { |field| acceptable?(field, answers[field["id"]]) }
   end
 
+  # Output templates compare and calculate with number answers, which only
+  # works once they are numeric.
+  def template_answers
+    fields.each_with_object(answers.dup) do |field, typed|
+      value = typed[field["id"]]
+      typed[field["id"]] = to_number(value) if number_field?(field) && value.is_a?(String)
+    end
+  end
+
   # HTML constraints remain browser-side; Ruby regexes, lengths, and choice strings differ.
   def incomplete_fields
     fields.select { |field| required?(field) && blank_answer?(answers[field["id"]]) }
@@ -45,12 +54,21 @@ class FormTemplate::FieldValues
     when "tag-chooser"
       field.dig("attributes", "multiple") ? string_array?(value) : value.is_a?(String)
     when "input"
-      field.dig("validations", "type") == "number" ? number?(value) : value.is_a?(String)
+      number_field?(field) ? number?(value) : value.is_a?(String)
     when "dropdown", "textarea", "upload", "composer"
       value.is_a?(String)
     else
       false
     end
+  end
+
+  def number_field?(field)
+    field["type"] == "input" && field.dig("validations", "type") == "number"
+  end
+
+  def to_number(value)
+    return if value.empty?
+    value.match?(/\A-?[0-9]+\z/) ? Integer(value, 10) : BigDecimal(value)
   end
 
   # Numbers keep the spelling typed into the control, so a round trip through
