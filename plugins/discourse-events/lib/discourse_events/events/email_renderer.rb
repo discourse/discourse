@@ -199,9 +199,15 @@ module DiscourseEvents
       end
 
       def recurrence_ref
+        zone = ActiveSupport::TimeZone[timezone] || ActiveSupport::TimeZone["UTC"]
+        # A successor may display the fourth weekday, but inherit a "last
+        # weekday" rule from the original fifth-weekday series anchor.
+        # Its occurrence date belongs in the dates row, not the rule label.
+        anchor = @event&.recurrence_anchor_starts_at
+        return all_day? ? anchor.utc.to_date : anchor.in_time_zone(zone) if anchor.present?
+
         return Date.parse(starts_at) if all_day?
 
-        zone = ActiveSupport::TimeZone[timezone] || ActiveSupport::TimeZone["UTC"]
         zone.parse(starts_at)
       rescue StandardError
         nil
