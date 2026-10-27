@@ -150,7 +150,7 @@ module PluginGem
       .temporary(frozen: true) do
         definition = Bundler::Definition.build(gemfile, "#{gemfile}.lock", nil)
         definition.ensure_equivalent_gemfile_and_lockfile(true)
-        if !definition.locked_checksums
+        unless definition.locked_checksums
           raise "Plugin #{File.basename(dir)}'s Gemfile.lock has no checksums; run `bundle lock --add-checksums` in #{dir} and commit it"
         end
         definition.locked_gems
@@ -243,7 +243,7 @@ module PluginGem
         definition.specs.each do |spec|
           next if spec.name == "bundler"
           if pin = pins[spec.name]
-            unless spec.full_name == pin[2] && spec.full_gem_path == pin[3]
+            if spec.full_name != pin[2] || spec.full_gem_path != pin[3]
               raise "Resolved plugin bundle would replace core gem #{pin[2]} with #{spec.full_name} from #{spec.source}"
             end
             next
@@ -257,7 +257,7 @@ module PluginGem
               .find do |candidate|
                 candidate.full_name == spec.full_name && candidate.source == spec.source
               end
-          unless locked.key?(spec.name) && locked_spec
+          if !locked.key?(spec.name) || locked_spec.nil?
             raise "Resolved plugin gem #{spec.full_name} is not in the committed Gemfile.lock files with the same source; update the locks for #{Bundler.local_platform} and commit them"
           end
           if spec.source.is_a?(Bundler::Source::Rubygems) &&
