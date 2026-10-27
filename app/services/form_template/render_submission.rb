@@ -48,7 +48,7 @@ class FormTemplate::RenderSubmission
     policy :answers_are_complete, class_name: FormTemplate::Policy::AnswersAreComplete
   end
   try(Liquid::Error, ArgumentError) do
-    model :form_submission, :build_form_submission
+    step :build_form_submission
     step :render
   end
 
@@ -82,13 +82,17 @@ class FormTemplate::RenderSubmission
     !options.allow_incomplete_answers
   end
 
+  # An oversized snapshot is dropped rather than blocking the post, which is
+  # then created as plain markdown.
   def build_form_submission(form_template:, field_values:, guardian:)
     form_template.process!(guardian)
-    FormTemplate::Submission.from_template(
+    context[:form_submission] = FormTemplate::Submission.from_template(
       form_template,
       answers: field_values.answers,
       validate: false,
     )
+  rescue FormTemplate::Submission::TooLarge
+    context[:form_submission] = nil
   end
 
   def render(field_values:, form_template:)

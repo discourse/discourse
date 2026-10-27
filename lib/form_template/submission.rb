@@ -3,6 +3,9 @@
 require "liquid"
 
 class FormTemplate::Submission
+  class TooLarge < ArgumentError
+  end
+
   FORMAT_VERSION = 1
   MAX_BYTES = 64.kilobytes
   KEYS = %w[format_version template_id definition answers].freeze
@@ -37,7 +40,7 @@ class FormTemplate::Submission
   def initialize(data, validate: true)
     raise ArgumentError unless data.is_a?(Hash)
     encoded = JSON.generate(data, max_nesting: 20)
-    raise ArgumentError if encoded.bytesize > MAX_BYTES
+    raise TooLarge if encoded.bytesize > MAX_BYTES
     @data = JSON.parse(encoded, max_nesting: 20)
     # JSONB cannot store NUL, including in answers omitted from the rendered post.
     raise ArgumentError if contains_nul?(@data)

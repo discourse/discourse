@@ -32,7 +32,7 @@ RSpec.describe PostsController do
     }
 
     expect { post "/posts.json", params: }.not_to change(Post, :count)
-    expect(response.status).to eq(422)
+    expect(response.status).to eq(400)
 
     literal_answers = answers.merge("description" => 'Omitted\u0000answer')
     params[:form_template_data] = { id: form_template.id, answers: literal_answers }.to_json
@@ -50,6 +50,22 @@ RSpec.describe PostsController do
     expect(response.status).to eq(400)
     expect(created.reload.form_data).to eq(original_data)
     expect(created.form_submission.answers).to eq(literal_answers)
+  end
+
+  it "creates a plain markdown post when the submission exceeds the size cap" do
+    category.form_templates << form_template
+    form_template.update!(output_template: "An invitation with omitted answers.")
+    oversized = answers.merge("description" => "x" * FormTemplate::Submission::MAX_BYTES)
+    post "/posts.json",
+         params: {
+           title: "A form that is too large to keep",
+           category: category.id,
+           form_template_data: { id: form_template.id, answers: oversized }.to_json,
+         }
+    expect(response.status).to eq(200)
+    created = Post.find(response.parsed_body["id"])
+    expect(created.raw).to eq("An invitation with omitted answers.")
+    expect(created.form_data).to be_nil
   end
 
   it "requires complete answers on creation and when repairing an incomplete saved form" do

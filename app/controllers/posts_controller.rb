@@ -173,7 +173,7 @@ class PostsController < ApplicationController
     if params[:form_template_data].present?
       raise Discourse::InvalidParameters.new(:topic_id) if manager_params[:topic_id].present?
       render_form_submission(category_id: manager_params[:category]) do |raw, submission|
-        manager_params[:form_data] = submission.to_h
+        manager_params[:form_data] = submission.to_h if submission
         manager_params[:raw] = raw
       end
       return if performed?
