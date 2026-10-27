@@ -29,6 +29,7 @@ export default class CategoriesField extends BaseField {
               class="category-selector"
               @clearable={{true}}
               @disabled={{@field.isDisabled}}
+              @multiple={{true}}
               @onChange={{this.onChangeCategories}}
               @value={{this.categories}}
             />

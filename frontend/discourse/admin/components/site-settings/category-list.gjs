@@ -54,6 +54,7 @@ export default class CategoryList extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @multiple={{true}}
           @onChange={{this.onChangeSelectedCategories}}
           @value={{this.selectedCategories}}
         />

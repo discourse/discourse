@@ -32,7 +32,6 @@ export default class Category extends FilterComponent {
             "search-advanced-category-chooser"
             "category-chooser"
           }}
-          @multiple={{false}}
           @onChange={{this.onChange}}
           @permission="see"
           @placeholder={{i18n "category.all"}}

@@ -345,7 +345,6 @@ export default class RssPollingFeedForm extends Component {
                     <DSelectCategory
                       class="category-chooser rss-polling-feed-form__category"
                       @emit="ids"
-                      @multiple={{false}}
                       @onChange={{fn this.categoryChanged field}}
                       @permission="create"
                       @value={{field.value}}

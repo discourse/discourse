@@ -41,6 +41,7 @@ export default class SchemaSettingTypeCategories extends SchemaSettingTypeModels
       <DSelectCategory
         class="category-selector"
         @maximum={{this.max}}
+        @multiple={{true}}
         @onChange={{this.onInput}}
         @uncategorized={{false}}
         @value={{this.value}}

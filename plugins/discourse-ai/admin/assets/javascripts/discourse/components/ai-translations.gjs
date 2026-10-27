@@ -705,6 +705,7 @@ export default class AiTranslations extends Component {
                     {{#if this.siteSettings.enable_new_select_controls}}
                       <DSelectCategory
                         class="category-selector"
+                        @multiple={{true}}
                         @onChange={{this.updateCategories}}
                         @value={{this.categories}}
                       />

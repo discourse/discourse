@@ -172,7 +172,6 @@ export default class EditRule extends Component {
                   <DSelectCategory
                     class="category-chooser"
                     @emit="ids"
-                    @multiple={{false}}
                     @onChange={{this.onCategoryChange}}
                     @permission="create"
                     @placeholder={{i18n "chat_integration.all_categories"}}

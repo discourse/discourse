@@ -50,6 +50,7 @@ export default class CategoryList extends FilterComponent {
           class="multiple-categories-selector"
           @disabled={{@filter.disabled}}
           @legacyKind="multiple-categories-selector"
+          @multiple={{true}}
           @onChange={{this.onChange}}
           @onClose={{this.onClose}}
           @placeholder={{i18n "category.all"}}

@@ -99,7 +99,6 @@ export default <template>
             class="category-chooser"
             @clearable={{true}}
             @emit="ids"
-            @multiple={{false}}
             @onChange={{fn (mut @controller.filterCategoryId)}}
             @permission="create"
             @placeholder={{i18n "review.filters.all_categories"}}

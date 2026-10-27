@@ -377,11 +377,11 @@ Open items need a decision after manual testing; the rest are intended but still
 ## Category call sites
 
 Category storage fields branch to `DSelectCategory` while `enable_new_select_controls` is on.
-Former single choosers pass `@multiple={{false}}`, `@emit="ids"` and `@permission="create"`;
-advanced search and the parent-category field pass `@permission="see"`. Former selectors keep
-emitting category records, and their blocked categories become `@exclude` ids, minus the list's own held categories. Empty-value text
-is a translated `@placeholder`; a field keeps a selectable none row only where the legacy chooser
-inserted one.
+Former single choosers pass `@emit="ids"` and `@permission="create"`; advanced search and the
+parent-category field pass `@permission="see"`. Former selectors pass `@multiple={{true}}` and
+keep emitting category records, and their blocked categories become `@exclude` ids, minus the
+list's own held categories. Empty-value text is a translated
+`@placeholder`; a field keeps a selectable none row only where the legacy chooser inserted one.
 
 Breadcrumb levels use `DSelectCategoryFilter` with the page's per-level category list. The caller
 routes category and shortcut picks, keeps the tag and the editing tab, and its footer links close

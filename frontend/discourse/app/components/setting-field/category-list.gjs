@@ -53,6 +53,7 @@ export default class SettingFieldCategoryList extends Component {
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-selector"
+            @multiple={{true}}
             @onChange={{this.onChangeCategories}}
             @value={{this.selectedCategories}}
           />

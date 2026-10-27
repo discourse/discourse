@@ -910,7 +910,6 @@ export default class UpsertCategoryGeneral extends Component {
                 @descriptions={{false}}
                 @emit="ids"
                 @exclude={{if @category.id (array @category.id)}}
-                @multiple={{false}}
                 @onChange={{field.set}}
                 @permission="see"
                 @placeholder={{i18n "category.none_subcategory_text"}}

@@ -207,14 +207,19 @@ module(
         await render(
           <template>
             <div class="single"><Host @multiple={{false}} /></div>
-            <div class="multiple"><Host /></div>
+            <div class="default"><Host /></div>
+            <div class="multiple"><Host @multiple={{true}} /></div>
             <div class="legacy"><Host
                 @legacyKind="multiple-categories-selector"
+                @multiple={{true}}
               /></div>
           </template>
         );
 
         assert.dom(".single .d-select").hasClass("category-chooser");
+        assert
+          .dom(".default .d-select")
+          .hasClass("category-chooser", "single unless asked, like DSelect");
         assert.dom(".multiple .d-select").hasClass("category-selector");
         assert
           .dom(".legacy .d-select")
@@ -254,7 +259,9 @@ module(
       test("held values may be ids, numeric strings or Category objects", async function (assert) {
         const held = [1, "2", Category.findById(3)];
 
-        await render(<template><Host @value={{held}} /></template>);
+        await render(
+          <template><Host @multiple={{true}} @value={{held}} /></template>
+        );
 
         assert.deepEqual(
           findAll(".d-select__chip").map((chip) => chip.dataset.value),
@@ -267,7 +274,9 @@ module(
         const held = [1, 999999];
 
         await render(
-          <template><Host @onChange={{onChange}} @value={{held}} /></template>
+          <template>
+            <Host @multiple={{true}} @onChange={{onChange}} @value={{held}} />
+          </template>
         );
         await select().open();
         await click(optionFor(2));
@@ -287,6 +296,7 @@ module(
           <template>
             <div class="multiple"><Host
                 @emit="ids"
+                @multiple={{true}}
                 @onChange={{multipleChange}}
                 @value={{held}}
               /></div>
@@ -315,7 +325,7 @@ module(
           String(category.id)
         );
 
-        await render(<template><Host /></template>);
+        await render(<template><Host @multiple={{true}} /></template>);
         await select().open();
 
         assert.strictEqual(setSize(), expected.length, "every category");
@@ -334,8 +344,11 @@ module(
 
         await render(
           <template>
-            <div class="create"><Host @permission="create" /></div>
-            <div class="see"><Host /></div>
+            <div class="create"><Host
+                @multiple={{true}}
+                @permission="create"
+              /></div>
+            <div class="see"><Host @multiple={{true}} /></div>
           </template>
         );
 
@@ -359,7 +372,7 @@ module(
         await render(
           <template>
             <div class="single"><Host @multiple={{false}} /></div>
-            <div class="multiple"><Host /></div>
+            <div class="multiple"><Host @multiple={{true}} /></div>
             <div class="forced"><Host
                 @multiple={{false}}
                 @uncategorized={{true}}
@@ -399,7 +412,9 @@ module(
         const held = [2];
 
         await render(
-          <template><Host @exclude={{exclude}} @value={{held}} /></template>
+          <template>
+            <Host @exclude={{exclude}} @multiple={{true}} @value={{held}} />
+          </template>
         );
         assert
           .dom(".d-select__chip[data-value='2']")
@@ -556,7 +571,9 @@ module(
 
       test("multiple mode matches the name only", async function (assert) {
         await render(
-          <template><Host @selectDescendants={{false}} /></template>
+          <template>
+            <Host @multiple={{true}} @selectDescendants={{false}} />
+          </template>
         );
         await select().open();
         await select().search("feature");
@@ -669,7 +686,7 @@ module(
       test("multiple mode keeps the select's own empty text and name", async function (assert) {
         this.siteSettings.allow_uncategorized_topics = true;
 
-        await render(<template><Host /></template>);
+        await render(<template><Host @multiple={{true}} /></template>);
 
         assert.strictEqual(
           placeholderText(),
@@ -719,7 +736,7 @@ module(
         await render(
           <template>
             <div class="single"><Host @multiple={{false}} /></div>
-            <div class="multiple"><Host /></div>
+            <div class="multiple"><Host @multiple={{true}} /></div>
           </template>
         );
 
@@ -789,8 +806,9 @@ module(
 
         await render(
           <template>
-            <div class="plain"><Host @value={{held}} /></div>
+            <div class="plain"><Host @multiple={{true}} @value={{held}} /></div>
             <div class="ancestors"><Host
+                @multiple={{true}}
                 @showAncestors={{true}}
                 @value={{held}}
               /></div>
@@ -814,7 +832,7 @@ module(
 
     module("descendants", function () {
       test("multiple mode offers a row for each match with children once the search has two characters", async function (assert) {
-        await render(<template><Host /></template>);
+        await render(<template><Host @multiple={{true}} /></template>);
         await select().open();
 
         await select().search("S");
@@ -850,7 +868,9 @@ module(
         const onChange = sinon.spy();
 
         await render(
-          <template><Host @emit="ids" @onChange={{onChange}} /></template>
+          <template>
+            <Host @emit="ids" @multiple={{true}} @onChange={{onChange}} />
+          </template>
         );
         await select().open();
         await select().search("Parent Category");
@@ -868,7 +888,12 @@ module(
 
         await render(
           <template>
-            <Host @emit="ids" @exclude={{exclude}} @onChange={{onChange}} />
+            <Host
+              @emit="ids"
+              @exclude={{exclude}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+            />
           </template>
         );
         await select().open();
@@ -901,7 +926,9 @@ module(
       test("browsing pages from the server and searches send the term", async function (assert) {
         const requests = stubServer(this.table);
 
-        await render(<template><Host @permission="create" /></template>);
+        await render(
+          <template><Host @multiple={{true}} @permission="create" /></template>
+        );
         await select().open();
         await settled();
 
@@ -926,6 +953,7 @@ module(
           <template>
             <Host
               @exclude={{exclude}}
+              @multiple={{true}}
               @subcategories={{false}}
               @uncategorized={{false}}
             />
@@ -982,7 +1010,9 @@ module(
         );
         const held = [9900];
 
-        await render(<template><Host @value={{held}} /></template>);
+        await render(
+          <template><Host @multiple={{true}} @value={{held}} /></template>
+        );
 
         assert.dom(".d-select__chip[data-value='9900']").includesText("Remote");
       });
@@ -1090,6 +1120,7 @@ module(
             <DSelectCategory
               @emit="ids"
               @maximum={{2}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{held.value}}
             />
@@ -1133,7 +1164,9 @@ module(
               ancestors: [],
             });
           });
-          await render(<template><DSelectCategory /></template>);
+          await render(
+            <template><DSelectCategory @multiple={{true}} /></template>
+          );
           await dSelect().open();
           await settled();
           await dSelect().search("Remote");
@@ -1197,6 +1230,7 @@ module(
         await render(
           <template>
             <DSelectCategory
+              @multiple={{true}}
               @noneLabel="Any category"
               @onChange={{onChange}}
               @value={{value}}
@@ -1270,6 +1304,7 @@ module(
             <DSelectCategory
               @emit="ids"
               @exclude={{exclude}}
+              @multiple={{true}}
               @onChange={{onChange}}
             />
           </template>
@@ -1324,6 +1359,7 @@ module(
           <template>
             <DSelectCategory
               @emit="ids"
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{value.value}}
             />
@@ -1380,7 +1416,9 @@ module(
           });
         });
         await render(
-          <template><DSelectCategory @readOnly={{9900}} /></template>
+          <template>
+            <DSelectCategory @multiple={{true}} @readOnly={{9900}} />
+          </template>
         );
         await dSelect().open();
         assert
@@ -1419,7 +1457,9 @@ module(
           Category.findById(9901),
         ]);
         this.siteSettings.fixed_category_positions_on_create = true;
-        await render(<template><DSelectCategory /></template>);
+        await render(
+          <template><DSelectCategory @multiple={{true}} /></template>
+        );
         await dSelect().open();
         assert.deepEqual(
           optionValues(),
@@ -1451,6 +1491,7 @@ module(
         await render(
           <template>
             <DSelectCategory
+              @multiple={{true}}
               @permission="create"
               @readOnly={{9900}}
               @scope={{2}}
@@ -1490,6 +1531,7 @@ module(
           <template>
             <DSelectCategory
               @emit="ids"
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{value.value}}
             />
@@ -1535,6 +1577,7 @@ module(
             <DSelectCategory
               @emit="ids"
               @exclude={{exclude.value}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{value.value}}
             />
@@ -1558,7 +1601,9 @@ module(
       });
 
       test("local category lists follow a refreshed site collection", async function (assert) {
-        await render(<template><DSelectCategory /></template>);
+        await render(
+          <template><DSelectCategory @multiple={{true}} /></template>
+        );
         await dSelect().open();
         Site.current().updateCategories([
           { id: 99001, name: "Fresh category", slug: "fresh", permission: 1 },
@@ -1598,7 +1643,11 @@ module(
           const onChange = sinon.spy();
           await render(
             <template>
-              <DSelectCategory @emit="ids" @onChange={{onChange}} />
+              <DSelectCategory
+                @emit="ids"
+                @multiple={{true}}
+                @onChange={{onChange}}
+              />
             </template>
           );
           await dSelect().open();
@@ -1630,7 +1679,9 @@ module(
         enableVirtualization();
         try {
           const categories = setPagedCategories();
-          await render(<template><DSelectCategory /></template>);
+          await render(
+            <template><DSelectCategory @multiple={{true}} /></template>
+          );
           await dSelect().open();
           assert.true(
             optionValues().length < categories.length,
@@ -1661,7 +1712,9 @@ module(
           const categories = setPagedCategories();
           const onChange = sinon.spy();
           await render(
-            <template><DSelectCategory @onChange={{onChange}} /></template>
+            <template>
+              <DSelectCategory @multiple={{true}} @onChange={{onChange}} />
+            </template>
           );
           await dSelect().open();
           await dSelect().search("Paged category");
@@ -1712,7 +1765,9 @@ module(
               ancestors: [],
             });
           });
-          await render(<template><DSelectCategory /></template>);
+          await render(
+            <template><DSelectCategory @multiple={{true}} /></template>
+          );
           await dSelect().open();
           await dSelect().search("Remote");
           for (let scroll = 0; scroll < 2; scroll++) {

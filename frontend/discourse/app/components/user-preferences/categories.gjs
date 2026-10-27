@@ -35,6 +35,7 @@ const Categories = <template>
             @selectedCategories
             @model.watchedCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @model.watchedCategories)}}
           @value={{@model.watchedCategories}}
         />
@@ -67,6 +68,7 @@ const Categories = <template>
             @selectedCategories
             @model.trackedCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @model.trackedCategories)}}
           @value={{@model.trackedCategories}}
         />
@@ -95,6 +97,7 @@ const Categories = <template>
             @selectedCategories
             @model.watchedFirstPostCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @model.watchedFirstPostCategories)}}
           @value={{@model.watchedFirstPostCategories}}
         />
@@ -123,6 +126,7 @@ const Categories = <template>
               @selectedCategories
               @model.regularCategories
             }}
+            @multiple={{true}}
             @onChange={{fn (mut @model.regularCategories)}}
             @value={{@model.regularCategories}}
           />
@@ -157,6 +161,7 @@ const Categories = <template>
               @selectedCategories
               @model.mutedCategories
             }}
+            @multiple={{true}}
             @onChange={{fn (mut @model.mutedCategories)}}
             @value={{@model.mutedCategories}}
           />

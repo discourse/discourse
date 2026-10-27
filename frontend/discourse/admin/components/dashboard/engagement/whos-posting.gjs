@@ -260,6 +260,7 @@ export default class WhosPosting extends Component {
               class="multiple-categories-selector"
               @legacyKind="multiple-categories-selector"
               @maximum={{MAX_CATEGORIES}}
+              @multiple={{true}}
               @onChange={{this.onCategoriesChange}}
               @onClose={{this.onCategoriesClose}}
               @placeholder={{i18n "category.all"}}

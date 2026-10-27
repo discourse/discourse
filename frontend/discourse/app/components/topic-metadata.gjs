@@ -26,7 +26,6 @@ export default class TopicMetadata extends Component {
               @emit="ids"
               @identifier="topic-edit-category"
               @instanceContext={{hash topic=@model buffered=@buffered}}
-              @multiple={{false}}
               @onChange={{@topicCategoryChanged}}
               @permission="create"
               @value={{@buffered.category_id}}

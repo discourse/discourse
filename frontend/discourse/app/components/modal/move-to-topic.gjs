@@ -426,7 +426,6 @@ export default class MoveToTopic extends Component {
                     <DSelectCategory
                       class="category-chooser small"
                       @emit="ids"
-                      @multiple={{false}}
                       @onChange={{fn (mut this.categoryId)}}
                       @permission="create"
                       @value={{this.categoryId}}

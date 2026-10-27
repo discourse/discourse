@@ -263,7 +263,6 @@ export default class EditTopicTimerForm extends Component {
                 this.excludeCategoryId
                 (array this.excludeCategoryId)
               }}
-              @multiple={{false}}
               @onChange={{fn (mut @topicTimer.category_id)}}
               @permission="create"
               @value={{@topicTimer.category_id}}

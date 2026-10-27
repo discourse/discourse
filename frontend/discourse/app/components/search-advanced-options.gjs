@@ -869,7 +869,6 @@ export default class SearchAdvancedOptions extends Component {
                       "search-advanced-category-chooser"
                       "category-chooser"
                     }}
-                    @multiple={{false}}
                     @onChange={{this.onChangeSearchTermForCategory}}
                     @permission="see"
                     @placeholder={{i18n "category.all"}}

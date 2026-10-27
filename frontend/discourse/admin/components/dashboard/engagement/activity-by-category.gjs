@@ -226,6 +226,7 @@ export default class ActivityByCategory extends Component {
             class="multiple-categories-selector"
             @legacyKind="multiple-categories-selector"
             @maximum={{MAX_CATEGORIES}}
+            @multiple={{true}}
             @onChange={{this.onCategoriesChange}}
             @showAncestors={{true}}
             @value={{this.selectedCategories}}

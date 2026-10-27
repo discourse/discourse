@@ -523,7 +523,6 @@ export default class BulkTopicActions extends Component {
                   <DSelectCategory
                     class="category-chooser"
                     @emit="ids"
-                    @multiple={{false}}
                     @onChange={{this.onCategoryChange}}
                     @permission="create"
                     @value={{this.categoryId}}

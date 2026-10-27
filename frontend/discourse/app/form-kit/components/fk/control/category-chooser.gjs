@@ -29,10 +29,6 @@ export default class FKControlCategoryChooser extends FKBaseControl {
     );
   }
 
-  get multiple() {
-    return this.args.multiple ?? false;
-  }
-
   get placeholder() {
     return this.args.placeholder
       ? decodeCategoryText(i18n(this.args.placeholder))
@@ -41,7 +37,7 @@ export default class FKControlCategoryChooser extends FKBaseControl {
 
   @action
   handleChange(value) {
-    if (this.multiple) {
+    if (this.args.multiple) {
       this.args.field.set((value ?? []).map(Number));
       return;
     }
@@ -67,7 +63,7 @@ export default class FKControlCategoryChooser extends FKBaseControl {
         @invalid={{if @field.error true false}}
         @label={{@field.title}}
         @maximum={{@maximum}}
-        @multiple={{this.multiple}}
+        @multiple={{@multiple}}
         @onChange={{this.handleChange}}
         @permission={{@permission}}
         @placeholder={{this.placeholder}}
@@ -75,7 +71,7 @@ export default class FKControlCategoryChooser extends FKBaseControl {
         @uncategorized={{@uncategorized}}
         @value={{readonly @field.value}}
       />
-    {{else if this.multiple}}
+    {{else if @multiple}}
       <CategorySelector
         class="form-kit__control-category-chooser"
         ...attributes

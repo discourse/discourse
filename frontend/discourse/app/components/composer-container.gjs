@@ -466,7 +466,6 @@ export default class ComposerContainer extends Component {
                               @instanceContext={{hash
                                 composer=this.composer.model
                               }}
-                              @multiple={{false}}
                               @onChange={{this.composer.updateCategory}}
                               @permission="create"
                               @prioritize={{this.composer.prioritizedCategoryId}}

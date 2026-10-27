@@ -433,7 +433,6 @@ export default class SelectComparison extends Component {
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
             <DSelectCategory
               @emit="ids"
-              @multiple={{false}}
               @onChange={{this.newCategory.update}}
               @permission="create"
               @value={{this.newCategory.value}}
@@ -477,6 +476,7 @@ export default class SelectComparison extends Component {
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
             <DSelectCategory
+              @multiple={{true}}
               @onChange={{this.newCategories.update}}
               @value={{this.newCategories.value}}
             />

@@ -74,7 +74,6 @@ export default class SharedDraftControls extends Component {
             <DSelectCategory
               class="category-chooser"
               @emit="ids"
-              @multiple={{false}}
               @onChange={{this.updateDestinationCategory}}
               @permission="create"
               @value={{@topic.destination_category_id}}

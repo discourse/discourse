@@ -22,7 +22,6 @@ export default class CategoryField extends BaseField {
               @clearable={{true}}
               @disabled={{@field.isDisabled}}
               @emit="ids"
-              @multiple={{false}}
               @onChange={{this.mutValue}}
               @permission="create"
               @value={{@field.metadata.value}}

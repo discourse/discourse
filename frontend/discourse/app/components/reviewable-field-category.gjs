@@ -23,7 +23,6 @@ export default class extends Component {
       <DSelectCategory
         class="category-chooser"
         @emit="ids"
-        @multiple={{false}}
         @onChange={{this.onChange}}
         @permission="create"
         @value={{this.categoryId}}

@@ -61,7 +61,7 @@ interface DSelectCategorySignature {
     ) => void;
     /** Output representation; unresolved ids are kept only in ids mode. */
     emit?: "objects" | "ids";
-    /** Select several categories; defaults to true. */
+    /** Select several categories. */
     multiple?: boolean;
     /** Requires visibility by default, or permission to create topics. */
     permission?: "see" | "create";
@@ -97,31 +97,19 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   @service declare site: CategorySite;
   @service declare siteSettings: CategorySettings;
 
-  get multiple() {
-    return this.args.multiple !== false;
-  }
-
   get legacyKind() {
     if (this.args.legacyKind) {
       return this.args.legacyKind;
     }
-    return this.multiple ? "category-selector" : "category-chooser";
+    return this.args.multiple ? "category-selector" : "category-chooser";
   }
 
   @cached
-  private get _ids(): (number | string)[] {
-    const value = this.args.value;
-    if (value == null) {
-      return [];
-    }
-    const values = Array.isArray(value) ? value : [value];
-    return values.map((entry: CategoryValue) =>
-      typeof entry === "object" ? entry.id : Number(entry)
-    );
-  }
-
   get value() {
-    return this.multiple ? this._ids : (this._ids[0] ?? null);
+    const ids = makeArray(
+      this.args.value as CategoryValue | CategoryValue[] | null | undefined
+    ).map((entry) => (typeof entry === "object" ? entry.id : Number(entry)));
+    return this.args.multiple ? ids : (ids[0] ?? null);
   }
 
   get #readOnly(): number[] {
@@ -133,13 +121,13 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   get #uncategorized() {
     return (
       this.args.uncategorized ??
-      (this.multiple || this.siteSettings.allow_uncategorized_topics)
+      (this.args.multiple || this.siteSettings.allow_uncategorized_topics)
     );
   }
 
   get placeholder() {
     // The fallback ports the single chooser's empty header; multiple pickers keep the select's own.
-    if (this.args.placeholder || this.multiple) {
+    if (this.args.placeholder || this.args.multiple) {
       return this.args.placeholder;
     }
     return (
@@ -159,7 +147,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       uncategorized: this.#uncategorized,
       subcategories: this.args.subcategories,
       descriptions: this.args.descriptions,
-      multiple: this.multiple,
+      multiple: this.args.multiple,
       selectDescendants: this.args.selectDescendants,
       lazy: this.site.lazy_load_categories,
       categories: this.site.lazy_load_categories
@@ -182,11 +170,10 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const allowed = this.#categoryAllowed();
     const readOnly = new Set(this.#readOnly);
     const term = normalizeCategoryName(query);
-    const multiple = this.multiple;
     categories = categories.filter(
       (category) =>
         allowed(category) &&
-        (!query || this.#matches(category, term, multiple)) &&
+        (!query || this.#matches(category, term)) &&
         (query ||
           !this.args.scope ||
           !family ||
@@ -214,7 +201,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   @action
   specialItems(snapshot: SelectSnapshot): CategoryItem[] {
     const rows: CategoryItem[] = [];
-    if (this.multiple && this.args.noneLabel && !snapshot.filter) {
+    if (this.args.multiple && this.args.noneLabel && !snapshot.filter) {
       rows.push({
         id: "category-none",
         name: this.args.noneLabel,
@@ -234,7 +221,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       this.args.emit === "ids"
         ? ids
         : (Category.findByIds(ids) as CategoryRecord[]);
-    this.args.onChange?.(this.multiple ? result : (result[0] ?? null));
+    this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
   }
 
   #categoryAllowed() {
@@ -252,12 +239,12 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         !excluded.has(category.id));
   }
 
-  #matches(category: CategoryRecord, term: string, multiple = this.multiple) {
+  #matches(category: CategoryRecord, term: string) {
     if (normalizeCategoryName(category.name).includes(term)) {
       return true;
     }
     return (
-      !multiple &&
+      !this.args.multiple &&
       !!category.parentCategory &&
       normalizeCategoryName(category.parentCategory.name).includes(term)
     );
@@ -295,7 +282,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   #offersDescendants(query: string) {
     return (
       query.length >= 2 &&
-      this.multiple &&
+      this.args.multiple &&
       this.args.selectDescendants !== false
     );
   }
@@ -306,7 +293,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       ? this.site.categoriesByParentId
       : undefined;
     const readOnly = new Set(this.#readOnly);
-    const descriptions = this.args.descriptions ?? !this.multiple;
+    const descriptions = this.args.descriptions ?? !this.args.multiple;
     const readOnlyDescription = i18n("category_row.read_only_description");
     const items: CategoryItem[] = [];
     for (const category of categories) {
@@ -406,7 +393,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @load={{if @load @load this.load}}
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
-      @multiple={{this.multiple}}
+      @multiple={{@multiple}}
       @noneLabel={{@noneLabel}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}

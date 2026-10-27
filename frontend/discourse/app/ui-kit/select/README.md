@@ -623,7 +623,7 @@ The category family has two recipes:
 
 - **`DSelectCategory`** (kind `select-category`) picks categories to store. `@value` takes ids,
   numeric strings or category records; `@onChange` emits records, or ids with `@emit="ids"`. It
-  is multiple by default; `@multiple={{false}}` holds one category. The rules:
+  holds one category, like `DSelect`; `@multiple={{true}}` holds several. The rules:
   - `@permission`: `"see"` (the default) offers every visible category, `"create"` only those the
     user can post in.
   - `@uncategorized`: defaults to `true` when multiple, otherwise to the site's

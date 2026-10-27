@@ -420,6 +420,7 @@ export default class SupportSection extends Component {
                 @exclude={{categoryIds this.blockedCategories}}
                 @legacyKind="multiple-categories-selector"
                 @maximum={{MAX_CATEGORIES}}
+                @multiple={{true}}
                 @onChange={{this.onCategoriesChange}}
                 @onClose={{this.onClose}}
                 @placeholder={{i18n "category.all"}}

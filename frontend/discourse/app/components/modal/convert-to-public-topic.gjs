@@ -52,7 +52,6 @@ export default class ConvertToPublicTopic extends Component {
           <DSelectCategory
             class="category-chooser"
             @emit="ids"
-            @multiple={{false}}
             @onChange={{fn (mut this.publicCategoryId)}}
             @permission="create"
             @value={{this.publicCategoryId}}

@@ -316,6 +316,7 @@ export default class BoardsBoardSettings extends Component {
                         {{#if this.siteSettings.enable_new_select_controls}}
                           <DSelectCategory
                             class="category-selector"
+                            @multiple={{true}}
                             @onChange={{fn this.onCategoriesChange field}}
                             @value={{categories}}
                           />

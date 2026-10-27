@@ -103,7 +103,6 @@ export default class AdminEmbeddingHostForm extends Component {
                     <DSelectCategory
                       class="category-chooser admin-embedding-host-form__category"
                       @emit="ids"
-                      @multiple={{false}}
                       @onChange={{field.set}}
                       @permission="create"
                       @value={{field.value}}

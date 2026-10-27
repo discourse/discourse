@@ -145,7 +145,6 @@ export default class ChatToTopicSelector extends Component {
               class="category-chooser small"
               @emit="ids"
               @id="new-topic-category-selector"
-              @multiple={{false}}
               @onChange={{fn (mut this.categoryId)}}
               @permission="create"
               @value={{this.categoryId}}

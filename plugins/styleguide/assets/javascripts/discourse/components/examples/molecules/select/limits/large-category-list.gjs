@@ -85,6 +85,7 @@ export default class LargeCategoryListExample extends Component {
       <DSelectCategory
         @emit="ids"
         @identifier="sg-large-category-list"
+        @multiple={{true}}
         @onChange={{this.onChange}}
         @value={{this.value}}
       />

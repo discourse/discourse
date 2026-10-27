@@ -14,7 +14,6 @@ export default class Category extends Component {
       <DSelectCategory
         class="category-chooser"
         @emit="ids"
-        @multiple={{false}}
         @onChange={{@changeValueCallback}}
         @permission="create"
         @placeholder={{i18n "category.none"}}

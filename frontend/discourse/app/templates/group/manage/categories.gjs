@@ -34,6 +34,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.watchingCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @controller.model.watchingCategories)}}
           @value={{@controller.model.watchingCategories}}
         />
@@ -62,6 +63,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.trackingCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @controller.model.trackingCategories)}}
           @value={{@controller.model.trackingCategories}}
         />
@@ -90,6 +92,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.watchingFirstPostCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @controller.model.watchingFirstPostCategories)}}
           @value={{@controller.model.watchingFirstPostCategories}}
         />
@@ -120,6 +123,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.regularCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @controller.model.regularCategories)}}
           @value={{@controller.model.regularCategories}}
         />
@@ -148,6 +152,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.mutedCategories
           }}
+          @multiple={{true}}
           @onChange={{fn (mut @controller.model.mutedCategories)}}
           @value={{@controller.model.mutedCategories}}
         />
