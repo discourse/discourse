@@ -107,8 +107,9 @@ interface DSelectSignature {
     specialItems?: SelectEngineOptions["specialItems"];
     /**
      * Groups the options: a field name or `(item, options) => key`. A boundary renders as a labeled
-     * header where `@groupLabel` yields text and as an unlabeled splitter otherwise. Client
-     * sources only. Recomputed after filtering, so an empty group draws nothing.
+     * header where `@groupLabel` yields text and as an unlabeled splitter otherwise. A `@load`
+     * source groups consecutive rows, so pages only append. Recomputed after filtering, so an
+     * empty group draws nothing.
      */
     groupBy?: SelectEngineOptions["groupBy"];
     /**

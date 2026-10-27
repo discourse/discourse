@@ -10,6 +10,15 @@ import type {
 import type { SelectContentContext } from "./customizations.ts";
 import { engineKey, groupIdentity, recordKey } from "./row-keys.ts";
 
+/** One group of rows: a merged key for a client source, a consecutive run for a paged one. */
+interface GroupRun {
+  key: SelectItemId;
+  identity: string;
+  /** How many earlier runs share this key; 0 for the first and for every client group. */
+  occurrence: number;
+  items: SelectItem[];
+}
+
 export default class ListComposer {
   #options: SelectOptionsView;
   #getFilter: () => string;
@@ -96,6 +105,12 @@ export default class ListComposer {
     ).length;
     this.#noteVisible(visibleCount, rawCount);
 
+    // Runs are found before held rows are hidden, so what is selected never renumbers them.
+    const runs =
+      this.#shouldGroup() && this.#options.isAsync
+        ? this.#assignRuns(items)
+        : undefined;
+
     const createCandidate = this.#createItem(items, filter);
     const hideSelected = this.#options.hideSelected;
     const include = (item: SelectItem) =>
@@ -125,7 +140,7 @@ export default class ListComposer {
     ).length;
 
     // Only source options are grouped; the create row belongs to no group.
-    const grouped = this.#shouldGroup() ? this.#groupItems(items) : items;
+    const grouped = this.#shouldGroup() ? this.#groupItems(items, runs) : items;
 
     const noneRow = this.#noneRow();
     const scrollingSpecial = visibleSpecial.filter((item) => !isSticky(item));
@@ -338,9 +353,9 @@ export default class ListComposer {
    */
   #rowKey(item: SelectItem, value: SelectItemId, index: number): string {
     if ((item.__header || item.__divider) && Object.hasOwn(item, "groupKey")) {
-      return engineKey(
-        `${item.__header ? "h" : "d"}:${groupIdentity(item.groupKey)}`
-      );
+      // The run count sits in the tag, before the separator, so no group key can mimic it.
+      const tag = `${item.__header ? "h" : "d"}${item.groupRun || ""}`;
+      return engineKey(`${tag}:${groupIdentity(item.groupKey)}`);
     }
     if (item.__none) {
       return engineKey("none");
@@ -373,12 +388,8 @@ export default class ListComposer {
     };
   }
 
-  /**
-   * Client sources only: a paginating source can split a group across pages, so grouping a
-   * single page would fragment it. Deferred for server sources.
-   */
   #shouldGroup(): boolean {
-    return this.#options.groupBy != null && !this.#options.isAsync;
+    return this.#options.groupBy != null;
   }
 
   #groupKey(item: SelectItem): SelectItemId {
@@ -392,19 +403,52 @@ export default class ListComposer {
   }
 
   /**
-   * Labels turn group boundaries into headers; nullish labels use splitters, with a leading
-   * splitter suppressed because it separates nothing.
+   * A paged source groups consecutive rows, so a later page only ever appends: it extends the
+   * last run or starts new ones. A key that comes back later starts another run.
    */
-  #groupItems(options: SelectItem[]): SelectItem[] {
-    const groups = new Map<
-      string,
-      { key: SelectItemId; items: SelectItem[] }
-    >();
+  #assignRuns(items: SelectItem[]): Map<SelectItem, GroupRun> {
+    const runs = new Map<SelectItem, GroupRun>();
+    const occurrences = new Map<string, number>();
+    let current: GroupRun | undefined;
+    for (const item of items) {
+      if (this.#isStructural(item) || item.sticky) {
+        continue;
+      }
+      const key = this.#groupKey(item);
+      const identity = groupIdentity(key);
+      if (current?.identity !== identity) {
+        const occurrence = occurrences.get(identity) ?? 0;
+        occurrences.set(identity, occurrence + 1);
+        current = { key, identity, occurrence, items: [] };
+      }
+      runs.set(item, current);
+    }
+    return runs;
+  }
+
+  /**
+   * Labels turn group boundaries into headers; nullish labels use splitters, with a leading
+   * splitter suppressed because it separates nothing. Without `runs`, a client source merges
+   * every row of a key into one group, in first-appearance order.
+   */
+  #groupItems(
+    options: SelectItem[],
+    runs?: Map<SelectItem, GroupRun>
+  ): SelectItem[] {
+    const groups = new Map<string | GroupRun, GroupRun>();
     for (const item of options) {
       // Grouping addresses options only. A structural row that reached the source (e.g. an
       // upstream transformer) is skipped rather than passed to `groupBy`, which would throw on
       // a synthetic row or spawn an option-less phantom group.
       if (this.#isStructural(item)) {
+        continue;
+      }
+      const run = runs?.get(item);
+      if (run) {
+        if (!groups.has(run)) {
+          groups.set(run, { ...run, items: [] });
+        }
+        groups.get(run)!.items.push(item);
         continue;
       }
       const key = this.#groupKey(item);
@@ -413,17 +457,22 @@ export default class ListComposer {
       if (bucket) {
         bucket.items.push(item);
       } else {
-        groups.set(identity, { key, items: [item] });
+        groups.set(identity, { key, identity, occurrence: 0, items: [item] });
       }
     }
 
     const out: SelectItem[] = [];
-    for (const { key, items: groupItems } of groups.values()) {
+    for (const { key, occurrence, items: groupItems } of groups.values()) {
       const label = this.#groupLabel(key);
       if (label != null) {
-        out.push({ __header: true, groupKey: key, label });
+        out.push({
+          __header: true,
+          groupKey: key,
+          groupRun: occurrence,
+          label,
+        });
       } else if (out.length > 0) {
-        out.push({ __divider: true, groupKey: key });
+        out.push({ __divider: true, groupKey: key, groupRun: occurrence });
       }
       out.push(...groupItems);
     }

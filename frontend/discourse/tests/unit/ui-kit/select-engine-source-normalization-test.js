@@ -1,6 +1,7 @@
 import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
 const MAX_RENDERED = 200;
@@ -862,28 +863,128 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("a paging source ignores groupBy entirely", async function (assert) {
-      const engine = new SelectEngine({
-        load: () =>
-          Promise.resolve({
-            items: [
-              { id: 1, name: "Apple", group: "Fruits" },
-              { id: 2, name: "Carrot", group: "Vegetables" },
-            ],
-            total: 2,
-            hasMore: false,
-          }),
-        groupBy: "group",
-        groupLabel: identityLabel,
-      });
-      const loaded = await engine.loadItems(engine.loadContext);
-      const rows = engine.buildItems(loaded);
+    module("a source that pages", function () {
+      /** A paging engine whose pages are the given row lists, in order. */
+      function pagedEngine(pages, extra = {}) {
+        return new SelectEngine({
+          load: (_filter, opts = {}) =>
+            Promise.resolve({
+              items: pages[opts.page - 1] ?? [],
+              hasMore: opts.page < pages.length,
+            }),
+          groupBy: "group",
+          groupLabel: identityLabel,
+          ...extra,
+        });
+      }
 
-      assert.deepEqual(
-        kinds(rows),
-        [1, 2],
-        "a paged list stays flat: no headers and no splitters"
-      );
+      async function loadAll(engine, pageCount) {
+        let loaded = await engine.loadItems(engine.loadContext);
+        for (let page = 1; page < pageCount; page++) {
+          engine.revealMore();
+          loaded = await engine.loadItems(engine.loadContext);
+        }
+        return loaded;
+      }
+
+      const row = (id, group) => ({ id, name: `Row ${id}`, group });
+
+      test("a paging source groups consecutive rows", async function (assert) {
+        const engine = pagedEngine([
+          [row(1, "A"), row(2, "A"), row(3, "B"), row(4, "A"), row(5, "A#1")],
+        ]);
+        const rows = engine.buildItems(await loadAll(engine, 1));
+
+        assert.deepEqual(
+          kinds(rows),
+          ["H:A", 1, 2, "H:B", 3, "H:A", 4, "H:A#1", 5],
+          "each run of one key is a group, and a key that returns starts another"
+        );
+        const keys = rows.map((descriptor) => descriptor.key);
+        assert.strictEqual(
+          new Set(keys).size,
+          keys.length,
+          "repeated runs, and a key that spells a run count, have distinct header keys"
+        );
+      });
+
+      test("a later page continues the last run and only ever appends", async function (assert) {
+        const engine = pagedEngine([
+          [row(1, "A"), row(2, "B")],
+          [row(3, "B"), row(4, "C")],
+        ]);
+        const first = kinds(engine.buildItems(await loadAll(engine, 1)));
+        engine.revealMore();
+        const second = kinds(
+          engine.buildItems(await engine.loadItems(engine.loadContext))
+        );
+
+        assert.deepEqual(first, ["H:A", 1, "H:B", 2], "the first page");
+        assert.deepEqual(
+          second,
+          ["H:A", 1, "H:B", 2, 3, "H:C", 4],
+          "the family split across pages joins up, and earlier rows keep their places"
+        );
+      });
+
+      test("hiding an earlier run keeps a later run's keys", async function (assert) {
+        const value = trackedArray([]);
+        const engine = pagedEngine([[row(1, "A"), row(2, "B"), row(3, "A")]], {
+          multiple: true,
+          hideSelected: true,
+          getValue: () => value,
+        });
+        const loaded = await loadAll(engine, 1);
+        const keyOfRun = (rows, id) => {
+          const index = rows.findIndex((descriptor) => descriptor.value === id);
+          return rows[index - 1].key;
+        };
+        const before = keyOfRun(engine.buildItems(loaded), 3);
+
+        value.push(1);
+        const rows = engine.buildItems(loaded);
+
+        assert.deepEqual(
+          kinds(rows),
+          ["H:B", 2, "H:A", 3],
+          "the first run is gone"
+        );
+        assert.strictEqual(
+          keyOfRun(rows, 3),
+          before,
+          "the second run of A keeps its header key"
+        );
+      });
+
+      test("rows a customization adds reach groupBy", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer(
+            "select-customizations",
+            ({ value: selects }) =>
+              selects.forAll((spec) =>
+                spec.content((list) => [
+                  ...list,
+                  { id: "extra", name: "Extra" },
+                ])
+              )
+          )
+        );
+        const seen = [];
+        const engine = pagedEngine([[row(1, "A")]], {
+          groupBy: (item) => {
+            seen.push(item.id);
+            return item.group;
+          },
+        });
+        const rows = engine.buildItems(await loadAll(engine, 1));
+
+        assert.true(seen.includes("extra"), "the added row was grouped");
+        assert.deepEqual(
+          kinds(rows),
+          ["H:A", 1, "DIV", "extra"],
+          "with no key it gets a splitter, not a header"
+        );
+      });
     });
   });
 });

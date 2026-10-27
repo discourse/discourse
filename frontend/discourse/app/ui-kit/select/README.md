@@ -850,7 +850,12 @@ by mechanism.
   is omitted entirely — the boundary is an unlabeled splitter, a purely visual rule that is
   suppressed at the head of the list. Grouping runs after filtering on every render, so
   boundaries are always recomputed: an empty group draws nothing, and a query keeps exactly the
-  splitters that still separate two surviving groups. Client (`@items`) sources only.
+  splitters that still separate two surviving groups. A client (`@items`) source merges every
+  row of a key into one group, in first-appearance order. A `@load` source groups consecutive
+  rows instead, so a later page only ever appends: it extends the last group or starts new
+  ones, and a key that comes back later starts another group. Return a family's rows together
+  to keep it in one group. Groups are found before held rows are hidden, so selecting never
+  renumbers them.
   Headers are `role="presentation"` rows in the windowed list. Each option in a *labeled* group
   references the id-bearing label span in its header through `aria-describedby`
   (splitter-bounded options carry no group description — an unlabeled boundary has nothing to
@@ -878,8 +883,6 @@ by mechanism.
 
 ### Missing (scheduled)
 
-- **Server-side grouping** — `@groupBy` covers client sources; a group that spans fetched pages
-  is deferred (a paginating source ignores `@groupBy`, splitters included).
 - **Nested `role="group"` grouping semantics** — the APG-sanctioned optgroup structure (a
   `role="group"` + `aria-labelledby` wrapping each group's options, kept even under virtualization,
   which is what a windowed listbox has to preserve for the structure to mean anything). Requires
@@ -909,8 +912,6 @@ by mechanism.
 
 - **Grid / multi-column layout** — a two-dimensional picker is a separate primitive, not a linear
   select.
-- **Server-side grouping** — `@groupBy` covers client sources first; a group that spans fetched
-  pages is deferred.
 - **Full component overrides** — swapping the trigger, filter, or per-row component wholesale is
   intentionally not offered; customization is the headless engine plus the `:item` / `:selection`
   blocks.

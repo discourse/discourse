@@ -559,8 +559,9 @@ export interface SelectEngineOptions {
   /**
    * Groups the filtered options by a field name or `(item, options) => key`. Each group's label
    * determines whether its boundary is a header or an unlabeled splitter; a leading splitter
-   * is suppressed. Client sources only; a source that pages ignores it because a group can
-   * span pages.
+   * is suppressed. A client source merges every row of a key into one group; a source that pages
+   * groups consecutive rows, so a later page only extends the last group or adds new ones, and a
+   * key that comes back starts another group.
    */
   groupBy?:
     | string
