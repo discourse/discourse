@@ -84,18 +84,18 @@ export default <template>
                         )
                       )
                     }}
-                      <p class="ai-feature-editor__legacy-description">
+                      <p class="ai-feature-editor__dedicated-description">
                         {{i18n
-                          "discourse_ai.features.sentiment.legacy_description"
+                          "discourse_ai.features.sentiment.dedicated_description"
                         }}
                         <LinkTo
-                          class="ai-feature-editor__legacy-link"
+                          class="ai-feature-editor__dedicated-link"
                           @model="all_results"
                           @query={{hash filter="ai_sentiment_model_configs"}}
                           @route="adminSiteSettingsCategory"
                         >
                           {{i18n
-                            "discourse_ai.features.sentiment.configure_legacy"
+                            "discourse_ai.features.sentiment.configure_dedicated"
                           }}
                         </LinkTo>
                       </p>

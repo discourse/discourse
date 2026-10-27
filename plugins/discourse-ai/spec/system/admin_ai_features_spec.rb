@@ -188,7 +188,7 @@ RSpec.describe "Admin AI features configuration" do
     form.field("ai_sentiment_enabled").check
     expect(form.field("ai_sentiment_emotion_enabled")).to be_unchecked
     expect(form).to have_no_field_with_name("ai_sentiment_emotion_classification_strategy")
-    expect(ai_features_page).to have_legacy_configuration_link
+    expect(ai_features_page).to have_dedicated_configuration_link
     expect(form).to have_no_field_with_name("ai_sentiment_sentiment_agent")
     expect(form).to have_no_field_with_name("ai_sentiment_sentiment_decision_model")
     expect(form).to have_no_field_with_name("ai_sentiment_model_configs")

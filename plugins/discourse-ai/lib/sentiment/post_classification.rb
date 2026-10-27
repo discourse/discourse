@@ -293,21 +293,21 @@ module DiscourseAi
 
       def hugging_face_classifiers
         if %i[sentiment emotion].none? { |type|
-             self.class.enabled_for?(type) && legacy_strategy_for?(type)
+             self.class.enabled_for?(type) && dedicated_strategy_for?(type)
            }
           return []
         end
 
         configs = DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values
-        legacy_sentiment_model = self.class.untyped_custom_model_name(configs, "sentiment")
+        untyped_sentiment_model = self.class.untyped_custom_model_name(configs, "sentiment")
 
         configs.filter_map do |config|
           classification_type = classification_type_for(config)
           effective_type =
             classification_type.presence ||
-              ("sentiment" if config.model_name == legacy_sentiment_model)
+              ("sentiment" if config.model_name == untyped_sentiment_model)
           next unless self.class.enabled_for?(effective_type.presence || :sentiment)
-          next if effective_type.present? && !legacy_strategy_for?(effective_type)
+          next if effective_type.present? && !dedicated_strategy_for?(effective_type)
 
           api_endpoint = config.endpoint
 
@@ -369,7 +369,7 @@ module DiscourseAi
         self.class.classification_type_for(config)
       end
 
-      def legacy_strategy_for?(classification_type)
+      def dedicated_strategy_for?(classification_type)
         self.class.strategy_for(classification_type) == Constants::CLASSIFICATION_MODEL_STRATEGY
       end
 

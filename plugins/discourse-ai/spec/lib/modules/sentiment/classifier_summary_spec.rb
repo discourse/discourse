@@ -110,7 +110,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       end
     end
 
-    it "exposes only the selected legacy name without resolving SRV or exposing secrets" do
+    it "exposes only the selected dedicated name without resolving SRV or exposing secrets" do
       SiteSetting.ai_sentiment_enabled = true
       SiteSetting.ai_sentiment_model_configs = [
         {
@@ -130,7 +130,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       )
     end
 
-    it "matches the single untyped custom legacy fallback" do
+    it "matches the single untyped custom dedicated fallback" do
       SiteSetting.ai_sentiment_model_configs = [
         {
           model_name: "private/custom",
@@ -149,7 +149,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       expect(described_class.new.classifiers).to be_empty
     end
 
-    it "reports missing or blank legacy endpoints as not ready" do
+    it "reports missing or blank dedicated endpoints as not ready" do
       expect(described_class.classifier_summary_for(:sentiment)).to eq(
         backend: "classification_model",
         ready: false,

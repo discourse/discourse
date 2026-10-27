@@ -43,12 +43,12 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         end
       end
 
-      it "caps decision input at 3000 words while retaining the legacy 512-token limit" do
+      it "caps decision input at 3000 words while retaining the dedicated 512-token limit" do
         post.update!(
           raw: "Opening CASE!\n\n#{(1..3100).map { |number| "word#{number}" }.join(" ")}",
         )
         full_text = "#{post.topic.title}\n#{post.raw}"
-        legacy_text =
+        dedicated_text =
           DiscourseAi::Tokenizer::BertTokenizer.truncate(
             full_text,
             512,
@@ -66,7 +66,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         ].to_json
         request =
           stub_request(:post, "https://emotion.example.com").with(
-            body: { inputs: legacy_text, truncate: true }.to_json,
+            body: { inputs: dedicated_text, truncate: true }.to_json,
           ).to_return(body: [{ label: "neutral", score: 0.9 }].to_json)
 
         DiscourseAi::Decisions.with_canned_answers(sentiment: "neutral") do |canned|

@@ -85,10 +85,10 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
     end
   end
 
-  it "filters topics using decision results instead of inactive legacy results" do
+  it "filters topics using decision results instead of inactive dedicated results" do
     SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
     decision_post = Fabricate(:post)
-    legacy_post = Fabricate(:post)
+    dedicated_post = Fabricate(:post)
     Fabricate(
       :sentiment_classification,
       target: decision_post,
@@ -99,7 +99,7 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
     )
     Fabricate(
       :sentiment_classification,
-      target: legacy_post,
+      target: dedicated_post,
       model_used: DiscourseAi::Sentiment::Constants::EMOTION_MODEL,
       classification: {
         joy: 0.9,

@@ -79,7 +79,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     end
   end
 
-  describe "legacy capability attribution" do
+  describe "dedicated capability attribution" do
     before do
       SiteSetting.ai_sentiment_model_configs = [
         {

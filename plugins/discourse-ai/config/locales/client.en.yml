@@ -407,7 +407,7 @@ en:
         backends:
           agent: "LLM agent"
           decision_model: "Decision model"
-          classification_model: "Legacy classification endpoint"
+          classification_model: "Dedicated classification endpoint"
         decision_model: "Decision model:"
         classification_model: "Model:"
         not_configured: "Not configured"
@@ -451,8 +451,8 @@ en:
           background_description: "Checks unclassified posts every 5 minutes, within these shared limits. Each enabled classifier may incur a request per post. Refusals may be retried."
           emotion_scores: "Scores are distributed across 28 emotions."
           model_change_warning: "Changing the selected model does not reclassify existing results."
-          legacy_description: "Legacy classification endpoints are configured in site settings."
-          configure_legacy: "Configure legacy classification endpoints"
+          dedicated_description: "Dedicated classification endpoints are configured in site settings."
+          configure_dedicated: "Configure dedicated classification endpoints"
           manage_decision_models: "Manage decision models"
           setting_groups:
             sentiment: "Sentiment"

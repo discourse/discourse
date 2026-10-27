@@ -33,7 +33,7 @@ RSpec.describe DiscourseAi::Sentiment::SentimentAnalysisReport do
     expect { Report.cache(report) }.not_to raise_error
   end
 
-  it "selects decision results in grouped and overall reports without counting legacy results" do
+  it "selects decision results in grouped and overall reports without counting dedicated results" do
     SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
     Fabricate(
       :sentiment_classification,

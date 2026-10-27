@@ -75,7 +75,7 @@ module("Integration | Component | AiFeatureCard", function (hooks) {
         agents: [{ id: 1, name: "Classifier" }],
         llm_models: [{ id: 2, name: "Classifier LLM" }],
         decision_model: { id: 3, display_name: "Fast decisions" },
-        classification_model: { model_name: "legacy/sentiment" },
+        classification_model: { model_name: "dedicated/sentiment" },
       };
       await render(<template><AiFeatureCard @feature={{feature}} /></template>);
       assert
@@ -108,7 +108,7 @@ module("Integration | Component | AiFeatureCard", function (hooks) {
           .hasText(
             backend === "decision_model"
               ? "Fast decisions"
-              : "legacy/sentiment",
+              : "dedicated/sentiment",
             "links the configured model"
           );
       }

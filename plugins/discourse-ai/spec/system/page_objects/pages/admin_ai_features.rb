@@ -67,7 +67,7 @@ module PageObjects
         )
       end
 
-      def has_legacy_configuration_link?
+      def has_dedicated_configuration_link?
         page.has_link?(
           href: "/admin/site_settings/category/all_results?filter=ai_sentiment_model_configs",
         )

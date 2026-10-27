@@ -79,13 +79,17 @@ module(
             "management follows the applicable model warning"
           );
       };
-      const assertLegacyAfter = (section, message) => {
+      const assertDedicatedAfter = (section, message) => {
         assert
-          .dom(".ai-feature-editor__legacy-link")
-          .exists({ count: 1 }, "shows legacy configuration exactly once");
+          .dom(".ai-feature-editor__dedicated-link")
+          .exists({ count: 1 }, "shows dedicated configuration exactly once")
+          .hasText(
+            i18n("discourse_ai.features.sentiment.configure_dedicated"),
+            "labels dedicated endpoint configuration"
+          );
         assert
           .dom(section.nextElementSibling)
-          .hasClass("ai-feature-editor__legacy-description", message);
+          .hasClass("ai-feature-editor__dedicated-description", message);
       };
 
       assertDecisionAfter(
@@ -107,9 +111,9 @@ module(
       await form()
         .field("ai_sentiment_sentiment_classification_strategy")
         .fillIn("classification_model");
-      assertLegacyAfter(
+      assertDedicatedAfter(
         sentimentSection,
-        "legacy sentiment guidance stays with sentiment"
+        "dedicated sentiment guidance stays with sentiment"
       );
       assertDecisionAfter(
         emotionSection,
@@ -125,29 +129,29 @@ module(
         sentimentSection,
         "decision sentiment guidance stays with sentiment in mixed mode"
       );
-      assertLegacyAfter(
+      assertDedicatedAfter(
         emotionSection,
-        "legacy emotion guidance stays with emotion"
+        "dedicated emotion guidance stays with emotion"
       );
       await form()
         .field("ai_sentiment_sentiment_classification_strategy")
         .fillIn("classification_model");
-      assertLegacyAfter(
+      assertDedicatedAfter(
         emotionSection,
-        "both legacy classifiers share one link after the last applicable section"
+        "both dedicated classifiers share one link after the last applicable section"
       );
       assert
         .dom(".ai-feature-editor__model-change-warning")
-        .doesNotExist("legacy-only mode has no decision warning");
+        .doesNotExist("dedicated-only mode has no decision warning");
       await form().field("ai_sentiment_emotion_enabled").toggle();
-      assertLegacyAfter(
+      assertDedicatedAfter(
         sentimentSection,
-        "sentiment-only legacy guidance moves away from disabled emotion"
+        "sentiment-only dedicated guidance moves away from disabled emotion"
       );
       await form().field("ai_sentiment_enabled").toggle();
       assert
-        .dom(".ai-feature-editor__legacy-link")
-        .doesNotExist("disabled classifiers have no legacy guidance");
+        .dom(".ai-feature-editor__dedicated-link")
+        .doesNotExist("disabled classifiers have no dedicated guidance");
       assert
         .dom(".ai-feature-editor__decision-models-link")
         .doesNotExist("disabled classifiers have no decision guidance");
@@ -250,7 +254,7 @@ module(
         for (const [value, label] of Object.entries({
           agent: "LLM agent",
           decision_model: "Decision model",
-          classification_model: "Legacy classification endpoint",
+          classification_model: "Dedicated classification endpoint",
         })) {
           assert
             .dom(`${field} option[value="${value}"]`)
@@ -267,8 +271,10 @@ module(
         .dom('[data-name="ai_sentiment_sentiment_decision_model"]')
         .doesNotExist("hides the inactive decision selector");
       assert
-        .dom(".ai-feature-editor__legacy-link")
-        .doesNotExist("no endpoint link when neither capability uses legacy");
+        .dom(".ai-feature-editor__dedicated-link")
+        .doesNotExist(
+          "no endpoint link when neither capability uses dedicated"
+        );
       await form().field("ai_sentiment_sentiment_agent").fillIn("3");
       await form()
         .field("ai_sentiment_sentiment_classification_strategy")
@@ -304,8 +310,8 @@ module(
         .field("ai_sentiment_emotion_classification_strategy")
         .fillIn("classification_model");
       assert
-        .dom(".ai-feature-editor__legacy-link")
-        .exists("either legacy capability exposes endpoint configuration");
+        .dom(".ai-feature-editor__dedicated-link")
+        .exists("either dedicated capability exposes endpoint configuration");
       assert
         .dom('[data-name="ai_sentiment_model_configs"]')
         .doesNotExist("never renders a masked JSON control");
@@ -332,7 +338,7 @@ module(
       );
       await settled();
       assert
-        .dom(".ai-feature-editor__legacy-link")
+        .dom(".ai-feature-editor__dedicated-link")
         .doesNotExist("hides the endpoint link when no longer needed");
 
       await form().field("ai_sentiment_enabled").toggle();

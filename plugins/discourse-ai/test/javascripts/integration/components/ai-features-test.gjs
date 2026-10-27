@@ -112,7 +112,7 @@ module("Integration | Component | AiFeatures", function (hooks) {
         "updates the rendered LLM link from the refreshed payload"
       );
   });
-  test("filters sentiment cards by decision and legacy model names without groups", async function (assert) {
+  test("filters sentiment cards by decision and dedicated model names without groups", async function (assert) {
     const features = [
       {
         id: 14,
@@ -141,7 +141,7 @@ module("Integration | Component | AiFeatures", function (hooks) {
               },
             ],
             llm_models: [],
-            classification_model: { model_name: "legacy/emotions" },
+            classification_model: { model_name: "dedicated/emotions" },
           },
         ],
       },
@@ -157,12 +157,12 @@ module("Integration | Component | AiFeatures", function (hooks) {
     assert
       .dom('[data-feature-name="sentiment"]')
       .exists("matches decision display name case insensitively");
-    await fillIn(".ai-features__controls input", "legacy/emotions");
+    await fillIn(".ai-features__controls input", "dedicated/emotions");
     assert
       .dom(".ai-feature-card")
-      .exists({ count: 1 }, "only the matching legacy capability remains");
+      .exists({ count: 1 }, "only the matching dedicated capability remains");
     assert
       .dom('[data-feature-name="emotion"]')
-      .exists("matches the legacy model identifier");
+      .exists("matches the dedicated model identifier");
   });
 });

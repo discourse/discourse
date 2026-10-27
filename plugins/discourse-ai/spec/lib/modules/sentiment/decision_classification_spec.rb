@@ -136,7 +136,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       )
     end
 
-    it "runs the legacy backend only for the other selected classification type" do
+    it "runs the dedicated backend only for the other selected classification type" do
       SiteSetting.ai_sentiment_model_configs = [
         {
           classification_type: "sentiment",
@@ -167,9 +167,13 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       )
     end
 
-    it "skips blank and deleted decision models without falling back to legacy" do
+    it "skips blank and deleted decision models without falling back to dedicated" do
       SiteSetting.ai_sentiment_model_configs = [
-        { model_name: "custom/legacy", endpoint: "srv://excluded.example.com", api_key: "secret" },
+        {
+          model_name: "custom/dedicated",
+          endpoint: "srv://excluded.example.com",
+          api_key: "secret",
+        },
       ].to_json
       decision_model.destroy!
 
@@ -273,7 +277,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
   end
 
   describe "#classifiers with decision models" do
-    it "excludes all legacy configs when neither type selects the legacy strategy" do
+    it "excludes all dedicated configs when neither type selects the dedicated strategy" do
       SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
       SiteSetting.ai_sentiment_model_configs = [
         { model_name: "unknown/one", endpoint: "srv://excluded.example.com", api_key: "secret" },
@@ -285,7 +289,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       )
     end
 
-    it "preserves multiple untyped legacy configs while one type still selects legacy" do
+    it "preserves multiple untyped dedicated configs while one type still selects dedicated" do
       SiteSetting.ai_sentiment_model_configs = [
         { model_name: "unknown/one", endpoint: "https://one.example.com", api_key: "secret" },
         { model_name: "unknown/two", endpoint: "https://two.example.com", api_key: "secret" },
