@@ -41,6 +41,19 @@ module PageObjects
           page.has_no_css?("#{MODAL} .bundle-analyzer")
         end
 
+        def toggle_card(name)
+          find("#{MODAL} .ba-row .ba-label", exact_text: name).click
+          self
+        end
+
+        def has_expanded_card?(name)
+          page.has_css?("#{MODAL} .ba-row.open > .ba-head .ba-label", exact_text: name)
+        end
+
+        def has_no_expanded_card?(name)
+          page.has_no_css?("#{MODAL} .ba-row.open > .ba-head .ba-label", exact_text: name)
+        end
+
         def has_card?(name)
           page.has_css?("#{MODAL} .ba-row .ba-label", exact_text: name)
         end

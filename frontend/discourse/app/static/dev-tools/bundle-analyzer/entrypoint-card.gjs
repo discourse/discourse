@@ -1,13 +1,20 @@
+import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { brotliLabel, fmt, label, routeName } from "./analysis.js";
 import ChunkRow from "./chunk-row.gjs";
-import ExpandableRow from "./expandable-row.js";
+import Expansion from "./expansion.js";
 import Row from "./row.gjs";
 
 // One entrypoint as an expandable card of the chunks it pulls in. `@baseline`
 // marks the card the others measure against, which shows its whole load rather
 // than a delta. `@urls` names what loads a bundle no import site points at.
-export default class EntrypointCard extends ExpandableRow {
+export default class EntrypointCard extends Component {
+  // Every card on screen matches the filter, so a filter opens them all.
+  expansion = new Expansion({
+    defaultTo: () => !!this.args.filter,
+    filter: () => this.args.filter ?? "",
+  });
+
   get analysis() {
     return this.args.analysis;
   }
@@ -69,11 +76,6 @@ export default class EntrypointCard extends ExpandableRow {
     return brotliLabel(this.shownTotals);
   }
 
-  // Every card on screen matches the filter, so a filter opens them all.
-  get autoExpanded() {
-    return !!this.args.filter;
-  }
-
   get sites() {
     if (this.args.urls) {
       return this.args.urls.map((url) => ({ lead: "loaded on", label: url }));
@@ -99,9 +101,9 @@ export default class EntrypointCard extends ExpandableRow {
 
   <template>
     <Row
-      @expanded={{this.expanded}}
+      @expanded={{this.expansion.expanded}}
       @loaded={{this.isLoaded}}
-      @toggle={{this.toggle}}
+      @toggle={{this.expansion.toggle}}
     >
       <:name>
         {{#if @baseline}}

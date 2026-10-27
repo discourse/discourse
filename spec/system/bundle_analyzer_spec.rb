@@ -34,6 +34,20 @@ describe "Bundle analyzer" do
     expect(analyzer.filter_text).to eq("No Such Module Anywhere")
   end
 
+  it "opens a card on click, and closes it again" do
+    analyzer.dismiss_development_warning
+
+    expect(analyzer).to have_no_expanded_card("discourse")
+
+    analyzer.toggle_card("discourse")
+
+    expect(analyzer).to have_expanded_card("discourse")
+
+    analyzer.toggle_card("discourse")
+
+    expect(analyzer).to have_no_expanded_card("discourse")
+  end
+
   it "shows plugins and core separately" do
     analyzer.dismiss_development_warning
     analyzer.select_scope("plugins")

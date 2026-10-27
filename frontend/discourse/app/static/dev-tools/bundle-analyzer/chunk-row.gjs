@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import {
   barWidth,
@@ -8,12 +9,18 @@ import {
   routeName,
   sizeOrDash,
 } from "./analysis.js";
-import ExpandableRow from "./expandable-row.js";
+import Expansion from "./expansion.js";
 import Row from "./row.gjs";
 
 // One expandable chunk row. `@root` marks the card's own chunk rather than one
 // it pulls in.
-export default class ChunkRow extends ExpandableRow {
+export default class ChunkRow extends Component {
+  // A filter matching a module inside this chunk opens it on that module.
+  expansion = new Expansion({
+    defaultTo: () => !!this.args.filter && this.visibleModules.length > 0,
+    filter: () => this.args.filter ?? "",
+  });
+
   get chunk() {
     return this.args.analysis.chunks[this.args.file];
   }
@@ -53,20 +60,15 @@ export default class ChunkRow extends ExpandableRow {
     return this.chunk.modules.filter((m) => matches(m.id, this.args.filter));
   }
 
-  // A filter matching a module inside this chunk opens it on that module.
-  get autoExpanded() {
-    return !!this.args.filter && this.visibleModules.length > 0;
-  }
-
   get brotliLabel() {
     return sizeOrDash(this.args.analysis.brotliOf(this.args.file));
   }
 
   <template>
     <Row
-      @expanded={{this.expanded}}
+      @expanded={{this.expansion.expanded}}
       @loaded={{this.isLoaded}}
-      @toggle={{this.toggle}}
+      @toggle={{this.expansion.toggle}}
     >
       <:name>
         {{#unless @root}}

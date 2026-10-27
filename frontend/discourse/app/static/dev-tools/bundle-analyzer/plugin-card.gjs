@@ -1,14 +1,20 @@
+import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { brotliLabel, fmt, matches } from "./analysis.js";
 import EntrypointCard from "./entrypoint-card.gjs";
-import ExpandableRow from "./expandable-row.js";
+import Expansion from "./expansion.js";
 import { routeBundlesByFile } from "./plugins-analysis.js";
 import Row from "./row.gjs";
 
 // One plugin, expanding to the cards the core tab is built from. `main` is the
 // baseline, since a plugin loads it on every page; a route bundle measures
 // against the entrypoint that owns it, which its urls have already loaded.
-export default class PluginCard extends ExpandableRow {
+export default class PluginCard extends Component {
+  expansion = new Expansion({
+    defaultTo: () => !!this.args.filter,
+    filter: () => this.args.filter ?? "",
+  });
+
   get analysis() {
     return this.args.analysis;
   }
@@ -19,10 +25,6 @@ export default class PluginCard extends ExpandableRow {
 
   get graph() {
     return this.analysis.graphFor(this.plugin);
-  }
-
-  get autoExpanded() {
-    return !!this.args.filter;
   }
 
   // Any one chunk is enough, so a collapsed list says which plugins this page
@@ -88,9 +90,9 @@ export default class PluginCard extends ExpandableRow {
 
   <template>
     <Row
-      @expanded={{this.expanded}}
+      @expanded={{this.expansion.expanded}}
       @loaded={{this.isLoaded}}
-      @toggle={{this.toggle}}
+      @toggle={{this.expansion.toggle}}
     >
       <:name>
         <span class="ba-badge">plugin</span>
