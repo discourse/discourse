@@ -353,6 +353,7 @@ module DiscourseAi
             .where(id: candidates.pluck("post_id").compact)
             .includes(:user, topic: [{ category: :parent_category }, :tags])
             .index_by(&:id)
+        accepted_answers = accepted_answers_by_topic_id(posts.values.map(&:topic_id))
         hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
 
         candidates.filter_map do |candidate|
@@ -370,17 +371,60 @@ module DiscourseAi
               excerpt: plain_text(candidate["excerpt"]),
             ).stringify_keys
 
-          candidate.merge(
-            search_metadata,
-            "category_id" => topic.category_id,
-            "username" => post.user&.username,
-            "name" => SiteSetting.enable_names? ? post.user&.name : nil,
-            "avatar_template" => post.user&.avatar_template,
-            "author_is_staff" => post.user&.staff? || false,
-            "is_topic_op" => post.post_number == 1,
-            "topic_bumped_at" => topic.bumped_at&.iso8601,
+          candidate =
+            candidate.merge(
+              search_metadata,
+              "category_id" => topic.category_id,
+              "username" => post.user&.username,
+              "name" => SiteSetting.enable_names? ? post.user&.name : nil,
+              "avatar_template" => post.user&.avatar_template,
+              "author_is_staff" => post.user&.staff? || false,
+              "is_topic_op" => post.post_number == 1,
+              "topic_bumped_at" => topic.bumped_at&.iso8601,
+            )
+          answers = accepted_answers[topic.id]
+          answers.present? ? with_accepted_answers(candidate, answers) : candidate
+        end
+      end
+
+      def accepted_answers_by_topic_id(topic_ids)
+        return {} if !defined?(DiscourseSolved) || !SiteSetting.solved_enabled || topic_ids.empty?
+
+        guardian = Guardian.new(@user)
+        Post
+          .where(
+            id:
+              DiscourseSolved::TopicAnswer
+                .joins(:solved_topic)
+                .where(discourse_solved_solved_topics: { topic_id: topic_ids })
+                .select(:answer_post_id),
+            post_type: Post.types[:regular],
+            hidden: false,
+          )
+          .includes(:topic)
+          .select { |post| guardian.can_see_post?(post) }
+          .group_by(&:topic_id)
+      end
+
+      # Retrieval mostly matches the question in a topic's first post, so an
+      # accepted answer would rarely reach the model unless it is added.
+      def with_accepted_answers(candidate, answers)
+        answer_ids = answers.map(&:id)
+        passages =
+          Array(candidate["passages"]).map do |passage|
+            next passage if answer_ids.exclude?(passage["post_id"])
+
+            passage.merge("accepted_answer" => true)
+          end
+        answers.each do |answer|
+          next if passages.any? { |passage| passage["post_id"] == answer.id }
+
+          passages << passage_from_source(source_from_post(answer, excerpt: answer.cooked)).merge(
+            "accepted_answer" => true,
           )
         end
+
+        candidate.merge("solved" => true, "passages" => passages)
       end
 
       def plain_text(value)
