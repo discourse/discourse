@@ -335,6 +335,34 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         SiteSetting.discourse_post_event_recurring_topic_mode = "create_next_topic"
       end
 
+      it "archives a regular author's recurring Event when the topic is in slow mode" do
+        regular_author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+        SiteSetting.slow_mode_prevents_editing = true
+
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Slow-mode recurring Event archive"
+
+        post = PostCreator.create!(regular_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic = post.topic
+        original_topic.update!(slow_mode_seconds: 1.hour.to_i)
+        event_date = post.reload.event.event_dates.pending.first
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+        expect(event_date.reload.finished_at).to be_present
+        expect(post.reload.event.recurrence).to be_nil
+        expect(post.last_editor_id).to eq(regular_author.id)
+        expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
+      end
+
       it "does not enqueue a post alert for automated event archival" do
         author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
         SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s

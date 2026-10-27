@@ -142,6 +142,7 @@ module DiscourseEvents
               { raw: archived_raw, title: archived_title(original_title) },
               bypass_bump: true,
               bypass_rate_limiter: true,
+              bypass_slow_mode: true,
               silent: true,
               skip_post_alert: true,
             )
