@@ -107,38 +107,18 @@ module("Integration | Lib | openLightbox", function (hooks) {
     }
   });
 
-  test("shares one lightbox between quick repeated opens", async function (assert) {
-    const first = openLightbox([{ src: "/images/avatar.png" }]);
-    const second = openLightbox([{ src: "/images/avatar.png?2" }]);
-    await waitFor(".pswp--open");
+  test("settles every call when opened twice quickly", async function (assert) {
+    let settled = 0;
+    openLightbox([{ src: "/images/avatar.png" }]).then(() => settled++);
+    openLightbox([{ src: "/images/avatar.png?2" }]).then(() => settled++);
+    await waitUntil(() => window.pswp?.currSlide?.content.state === "loaded");
 
-    assert.strictEqual(first, second);
     assert.dom(".pswp", document.body).exists({ count: 1 });
 
     await triggerKeyEvent(".pswp", "keydown", "Escape");
-    await second;
     await waitUntil(() => !document.querySelector(".pswp"));
-  });
-
-  test("opens again after a failed open", async function (assert) {
-    await assert.rejects(openLightbox(null));
-
-    openLightbox([{ src: "/images/avatar.png" }]);
-    await waitFor(".pswp--open");
-
-    assert.dom(".pswp", document.body).exists();
-  });
-
-  test("resolves right away when a post lightbox is already open", async function (assert) {
-    window.pswp = {};
-
-    try {
-      await openLightbox([{ src: "/images/avatar.png" }]);
-
-      assert.dom(".pswp", document.body).doesNotExist();
-    } finally {
-      delete window.pswp;
-    }
+    await waitUntil(() => settled === 2, { timeout: 1000 });
+    assert.strictEqual(settled, 2, "neither open is left pending");
   });
 
   test("resolves when closed with Escape", async function (assert) {

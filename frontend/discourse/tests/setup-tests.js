@@ -341,7 +341,7 @@ export default async function setupTests(config) {
     WebauthnAbortHandler.controller?.abort();
 
     // An open lightbox is a window global that would stop later tests opening one
-    window.pswp?.destroy?.();
+    window.pswp?.destroy();
 
     // Test modules can keep fakes after the test; their unformatted error stacks,
     // call history and pending timers would retain the test's owner

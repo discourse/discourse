@@ -399,8 +399,6 @@ async function initLightbox(elem, additionalData = {}) {
   lightboxEl.init();
 }
 
-let activeLightbox = null;
-
 /**
  * Opens a lightbox over standalone media elements, for content that isn't
  * rendered as `.lightbox` links (editor images, pending uploads).
@@ -408,21 +406,13 @@ let activeLightbox = null;
  * @param {Array<{type?: "image"|"video", src: string, element?: HTMLImageElement|HTMLVideoElement, alt?: string}>} items
  *   `alt` labels the slide and its caption; images default to the element's alt
  * @param {{index?: number}} [options]
- * @returns {Promise<void>} resolves when the lightbox closes; calls made while
- *   one is opening or open return its promise and are otherwise ignored
+ * @returns {Promise<void>} resolves when the lightbox closes, or right away
+ *   when another lightbox is already open
  */
-export function openLightbox(items, options) {
-  // a second open during the async load would never show or settle
-  activeLightbox ??= showLightbox(items, options).finally(
-    () => (activeLightbox = null)
-  );
-  return activeLightbox;
-}
-
-async function showLightbox(items, { index = 0 } = {}) {
+export async function openLightbox(items, { index = 0 } = {}) {
   const dataSource = items.map(buildSlideData);
 
-  // loaded up front so a failed chunk rejects here instead of never opening
+  // loaded up front: with a lazily loaded core, two quick opens race and one never settles
   const [{ default: PhotoSwipeLightbox }, { default: PhotoSwipe }] =
     await waitForPromise(
       Promise.all([
