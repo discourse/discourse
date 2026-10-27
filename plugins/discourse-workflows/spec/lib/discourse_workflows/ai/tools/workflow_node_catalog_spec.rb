@@ -352,4 +352,12 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "action:unhide_post" => [include(parameters: include(post_id: "={{ $json.post.id }}"))],
     )
   end
+
+  it "includes an example for locking posts" do
+    result = invoke_tool(%w[action:lock_post])
+
+    expect(result[:nodes].sole[:examples]).to contain_exactly(
+      include(parameters: include(post_id: "={{ $json.post.id }}")),
+    )
+  end
 end

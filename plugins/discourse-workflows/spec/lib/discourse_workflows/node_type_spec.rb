@@ -478,6 +478,8 @@ RSpec.describe DiscourseWorkflows::NodeType do
         post_unliked
         post_hidden
         post_unhidden
+        post_locked
+        post_unlocked
       ]
       once_per_topic = %w[
         topic_created
