@@ -161,6 +161,17 @@ RSpec.describe PluginGem do
     PluginGem.activate_gemfiles(plugins)
   end
 
+  # Bundler's temporary settings can't hold an empty group list: an empty
+  # value removes the key, and the host's bundle config shows through. The
+  # child resets the settings, so every instance is stubbed.
+  def boot_with_groups(with: [], without: [], only: [])
+    groups = { with:, without:, only: }
+    allow_any_instance_of(Bundler::Settings).to receive(:[]).and_wrap_original do |original, key|
+      groups.fetch(key.to_sym) { original.call(key) }
+    end
+    boot
+  end
+
   def installed
     Dir["#{gems_dir}/ruby/*/specifications/*.gemspec"].map { File.basename(it, ".gemspec") }.sort
   end
@@ -275,19 +286,19 @@ RSpec.describe PluginGem do
       },
     )
 
-    Bundler.settings.temporary(without: %i[development test]) { boot }
+    boot_with_groups(without: %i[development test])
     expect(activated).to eq(%w[beta-1.0.0])
 
-    Bundler.settings.temporary(without: %i[development]) { boot }
+    boot_with_groups(without: %i[development])
     expect(activated).to eq(%w[beta-1.0.0 shared-1.0.0])
 
-    Bundler.settings.temporary(without: nil) { boot }
+    boot_with_groups
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
 
-    Bundler.settings.temporary(only: %i[development], without: nil) { boot }
+    boot_with_groups(only: %i[development])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
 
-    Bundler.settings.temporary(with: %i[migrations], without: %i[development test]) { boot }
+    boot_with_groups(with: %i[migrations], without: %i[development test])
     expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0])
   end
 
@@ -408,7 +419,7 @@ RSpec.describe PluginGem do
       File.join(dir, "Gemfile"),
       %(source "https://rubygems.org"\neval_gemfile "dependencies.rb"\n),
     )
-    Bundler.settings.temporary(without: %i[development]) { boot }
+    boot_with_groups(without: %i[development])
     expect(activated).to be_empty
 
     File.write(nested, <<~GEMFILE)
