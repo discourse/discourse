@@ -60,6 +60,24 @@ RSpec.describe User::Silence do
       it { is_expected.to fail_a_policy(:can_silence_all_users) }
     end
 
+    context "when the user is an anonymous shadow" do
+      fab!(:shadow) do
+        Fabricate(:anonymous).tap { it.anonymous_user_master.update!(master_user: user) }
+      end
+
+      let(:user_id) { shadow.id }
+
+      before { SiteSetting.allow_anonymous_mode = true }
+
+      it "silences the account behind the shadow and messages the shadow" do
+        result
+
+        expect(user.reload).to be_silenced
+        expect(Topic.private_messages_for_user(shadow)).to exist
+        expect(Topic.private_messages_for_user(user)).to be_empty
+      end
+    end
+
     context "when everything's ok" do
       it "silences all provided users" do
         result
