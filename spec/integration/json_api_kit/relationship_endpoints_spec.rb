@@ -75,7 +75,7 @@ RSpec.describe "JSON:API relationship endpoints", type: :request do
     end
 
     it "continues the relationship with the related resource's ordering" do
-      get(body.fetch("links").fetch("next"), headers:)
+      get(body.dig("links", "next"), headers:)
 
       expect(next_page.fetch("data")).to eq([{ "type" => "posts", "id" => posts.last.id.to_s }])
     end
@@ -102,6 +102,12 @@ RSpec.describe "JSON:API relationship endpoints", type: :request do
       fab!(:deleted_topic) { Fabricate(:topic, deleted_at: 1.day.ago) }
 
       let(:owner_id) { deleted_topic.id }
+
+      it { expect(response).to have_http_status(:not_found) }
+    end
+
+    context "when the owner does not exist" do
+      let(:owner_id) { 0 }
 
       it { expect(response).to have_http_status(:not_found) }
     end

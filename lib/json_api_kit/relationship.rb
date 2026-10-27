@@ -2,25 +2,21 @@
 
 module JsonApiKit
   class Relationship
-    def initialize(id, name, resource:, client:)
-      @id = id
-      @name = name.tr("-", "_")
-      @owner_resource = resource.new(guardian: client.guardian, edition: client.edition)
+    def initialize(owner_id, name, resource:)
+      @owner_id = owner_id
+      @name = name
+      @owner_resource = resource
     end
 
     delegate :resource, to: :declaration
 
-    def scope
-      owner_resource.schema.association(declaration.name.to_sym, [owner]).related_scope
-    end
+    def scope = owner_resource.related_scope(declaration.name, owner_id:)
 
     private
 
-    attr_reader :id, :name, :owner_resource
+    attr_reader :owner_id, :name, :owner_resource
 
     delegate :guardian, to: :owner_resource, private: true
-
-    def owner = @owner ||= owner_resource.find(id).record.record
 
     def declaration
       @declaration ||=

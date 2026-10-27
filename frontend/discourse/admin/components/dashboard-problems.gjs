@@ -6,7 +6,6 @@ import AdminNotice from "discourse/admin/components/admin-notice";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

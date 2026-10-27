@@ -1,7 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -78,12 +77,12 @@ export default <template>
                         @asc={{not @controller.sortDescending}}
                         @automatic={{true}}
                         @field="name"
-                        @labelKey="explorer.query_name"
+                        @labelKey="explorer.name"
                         @onToggle={{@controller.updateSortProperty}}
                         @order={{@controller.sortByProperty}}
                       />
                     </th>
-                    <th class="d-table__header-cell">
+                    <th class="d-table__header-cell query-created-by">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
                         @automatic={{true}}
@@ -93,10 +92,10 @@ export default <template>
                         @order={{@controller.sortByProperty}}
                       />
                     </th>
-                    <th class="d-table__header-cell">
+                    <th class="d-table__header-cell query-group-names">
                       {{i18n "explorer.query_groups"}}
                     </th>
-                    <th class="d-table__header-cell">
+                    <th class="d-table__header-cell query-created-at">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
                         @automatic={{true}}
@@ -106,6 +105,7 @@ export default <template>
                         @order={{@controller.sortByProperty}}
                       />
                     </th>
+                    <th class="d-table__header-cell"></th>
                   </tr>
                 </thead>
                 <tbody class="d-table__body">

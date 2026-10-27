@@ -7,10 +7,8 @@ module JsonApiKit
 
       private
 
-      def data
-        contents.primary.map do |record|
-          ResourceIdentifier.new(record, glossary: client.glossary, meta: page_meta(record)).to_h
-        end
+      def representation(record, meta:)
+        ResourceIdentifier.new(record, glossary: client.glossary, meta:)
       end
     end
   end

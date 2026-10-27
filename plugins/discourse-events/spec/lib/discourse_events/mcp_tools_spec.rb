@@ -17,7 +17,13 @@ describe DiscourseEvents::McpTools::ListEvents do
         original_starts_at: 1.day.from_now.iso8601,
         original_ends_at: 2.days.from_now.iso8601,
       )
-    request_context = instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+    request_context =
+      instance_double(
+        DiscourseMcp::RequestContext,
+        user:,
+        guardian: user.guardian,
+        has_scopes?: false,
+      )
 
     result = described_class.call(arguments: {}, request_context:)
 

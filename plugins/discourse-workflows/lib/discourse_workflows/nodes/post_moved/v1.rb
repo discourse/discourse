@@ -46,9 +46,9 @@ module DiscourseWorkflows
 
         def output
           {
-            post: post_data(@post),
-            topic: topic_data(destination_topic),
-            original_topic: topic_data(original_topic),
+            post: serialize_post(@post),
+            topic: serialize_topic_list_item(destination_topic),
+            original_topic: serialize_topic_list_item(original_topic),
           }
         end
 
@@ -57,10 +57,6 @@ module DiscourseWorkflows
         end
 
         private
-
-        def post_data(post)
-          serialize_post(post)
-        end
 
         def destination_topic
           @destination_topic ||= ::Topic.find_by(id: @post&.topic_id)

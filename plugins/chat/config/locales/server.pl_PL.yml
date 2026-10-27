@@ -315,11 +315,13 @@ pl_PL:
         recipient_inactive: "'%{username}' nie aktywował jeszcze swojego konta."
         recipient_chat_disabled: "Użytkownik '%{username}' wyłączył czat w swoich preferencjach."
         recipient_cannot_chat: "'%{username}' nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
-        sender_anonymous: "Wiadomości bezpośrednich nie można wysyłać anonimowo. Wybierz użytkownika jako nadawcę."
+        sender_anonymous: "Wiadomości czatu nie można wysyłać anonimowo. Wybierz użytkownika jako nadawcę."
         sender_chat_disabled: "Nadawca '%{sender}' wyłączył czat w swoich preferencjach."
         sender_cannot_chat: "Nadawca „%{sender}” nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
         sender_cannot_create_dm: "Nadawca '%{sender}' nie ma uprawnień do wysyłania wiadomości bezpośrednich (zobacz ustawienie „grupy z włączonymi wiadomościami bezpośrednimi”)."
         sender_dms_disabled: "Nadawca '%{sender}' wyłączył wiadomości prywatne w swoich preferencjach."
+        sender_cannot_post: "Nadawca „%{sender}” nie ma uprawnień do publikowania wpisów na kanale %{channel_id}."
+        sender_not_member: "Nadawca „%{sender}” nie jest członkiem kanału %{channel_id}. Najpierw dołącz do kanału jako ten użytkownik."
         user_blocked: "'%{sender}' nie można wysłać bezpośredniej wiadomości do '%{username}': %{reason}"
         group_blocked: "'%{sender}' nie można wysłać wiadomości grupowej bezpośrednio do %{usernames}: %{reason}"
       chat_approval:
@@ -343,7 +345,7 @@ pl_PL:
         preferences_bypassed: "„%{username}” nie przyjmuje bezpośrednich wiadomości od „%{sender}”, ale wiadomość została dostarczona, bo nadawca jest członkiem personelu."
     logs:
       send_chat_message:
-        sent_to_channel: "Element %{item_index}: wysłano wiadomość %{message_id} na kanał %{channel_id}."
+        sent_to_channel: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} na kanał %{channel_id}."
         sent_to_user: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do '%{username}'."
         sent_to_group: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do grupy w wiadomościach bezpośrednich za pomocą %{usernames}."
   reviewable_score_types:

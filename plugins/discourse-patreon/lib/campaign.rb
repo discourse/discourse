@@ -36,7 +36,7 @@ module Patreon
 
       Patreon.set("rewards", rewards)
 
-      adapter.pull_pledges!(campaign_data)
+      return false unless adapter.pull_pledges!(campaign_data)
 
       pledges = Patreon.get("pledges") || {}
       users = Patreon.get("users") || {}

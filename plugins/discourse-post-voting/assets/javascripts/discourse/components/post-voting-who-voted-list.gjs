@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
 import { bind } from "discourse/lib/decorators";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSmallUserList, {
   smallUserAttrs,

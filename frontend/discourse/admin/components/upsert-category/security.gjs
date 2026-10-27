@@ -8,7 +8,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -214,7 +213,7 @@ export default class UpsertCategorySecurity extends Component {
               <span class="cell"></span>
             </span>
           </div>
-          {{#each this.permissions as |p|}}
+          {{#each this.permissions key="group_id" as |p|}}
             <UpsertCategoryPermissionRow
               @everyonePermission={{this.everyonePermission}}
               @groupId={{p.group_id}}

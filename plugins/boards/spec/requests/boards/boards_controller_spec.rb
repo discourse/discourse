@@ -91,6 +91,25 @@ RSpec.describe Boards::Api::BoardsController do
       slugs = response.parsed_body["boards"].map { |b| b["slug"] }
       expect(slugs).to contain_exactly("editable")
     end
+
+    it "returns owners for every board with one batched ACL lookup" do
+      co_owner = Fabricate(:user)
+      first_board = Fabricate(:boards_board, name: "First", created_by: admin)
+      second_board = Fabricate(:boards_board, name: "Second", created_by: co_owner)
+      AccessControlList.find_by!(target: first_board, permission: Acl::Permissions::OWNER).update!(
+        allowed_user_ids: [admin.id, co_owner.id],
+      )
+
+      sign_in(admin)
+      queries = track_sql_queries { get "/boards/api/boards.json" }
+
+      boards = response.parsed_body["boards"].index_by { |board| board["id"] }
+      expect(boards[first_board.id]["owners"].pluck("id")).to contain_exactly(admin.id, co_owner.id)
+      expect(boards[second_board.id]["owners"].pluck("id")).to contain_exactly(co_owner.id)
+
+      owner_acl_queries = queries.grep(/FROM "access_control_lists".*"target_id" IN .*"permission"/)
+      expect(owner_acl_queries.size).to eq(1)
+    end
   end
 
   describe "GET /boards/api/boards/available" do
@@ -394,7 +413,7 @@ RSpec.describe Boards::Api::BoardsController do
       expect(response.parsed_body["board"]["can_manage"]).to eq(false)
     end
 
-    it "includes the creator's username and avatar_template" do
+    it "includes the owners' usernames and avatar templates" do
       board =
         Fabricate(:boards_board, name: "Creator Test", slug: "creator-test", created_by: admin)
       board.columns.create!(title: "Col", position: 0)
@@ -403,10 +422,9 @@ RSpec.describe Boards::Api::BoardsController do
       get "/boards/api/boards/#{board.id}.json"
 
       expect(response.status).to eq(200)
-      created_by = response.parsed_body["board"]["created_by"]
-      expect(created_by).to be_present
-      expect(created_by["username"]).to eq(admin.username)
-      expect(created_by["avatar_template"]).to eq(admin.avatar_template)
+      owners = response.parsed_body["board"]["owners"]
+      expect(owners.sole["username"]).to eq(admin.username)
+      expect(owners.sole["avatar_template"]).to eq(admin.avatar_template)
     end
 
     it "includes topic details for detailed cards" do
@@ -608,7 +626,29 @@ RSpec.describe Boards::Api::BoardsController do
         ["view", [read_group.id]],
         ["edit", [write_group.id]],
         ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+        ["owner", []],
       )
+      expect(
+        AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids,
+      ).to contain_exactly(manager.id)
+    end
+
+    it "rejects initial co-owner ids from a non-admin" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Co-owned board",
+                 slug: "co-owned-board",
+                 owner_user_ids: [outsider.id],
+               },
+             }
+      end.not_to change { Boards::Board.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
     end
 
     it "rejects an invalid permission name without creating a board, columns, or ACLs" do
@@ -634,6 +674,26 @@ RSpec.describe Boards::Api::BoardsController do
           AccessControlList.count,
           Boards::BoardHistory.count,
         ]
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "rejects an ACL payload that assigns ownership to another user" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Spoofed owner",
+                 slug: "spoofed-owner",
+                 acl: [{ type: "user", id: outsider.id, permission: "owner" }],
+               },
+             }
+      end.not_to change {
+        [Boards::Board.count, AccessControlList.count, Boards::BoardHistory.count]
       }
 
       expect(response.status).to eq(422)
@@ -687,6 +747,25 @@ RSpec.describe Boards::Api::BoardsController do
       Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
     end
 
+    it "saves settings with the replacement owner after the previous owner is deleted" do
+      departing_owner = Fabricate(:user)
+      board = Fabricate(:boards_board, created_by: departing_owner)
+      UserDestroyer.new(admin).destroy(departing_owner)
+      sign_in(admin)
+
+      put "/boards/api/boards/#{board.id}.json",
+          params: {
+            board: {
+              name: "Reassigned board",
+              owner_user_ids: [admin.id],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(board.reload.name).to eq("Reassigned board")
+      expect(response.parsed_body["board"]["owners"].pluck("id")).to eq([admin.id])
+    end
+
     it "accepts all supported ACL permissions and retains mandatory admin access" do
       sign_in(manager)
 
@@ -708,7 +787,11 @@ RSpec.describe Boards::Api::BoardsController do
         ["view", [read_group.id]],
         ["edit", [write_group.id]],
         ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+        ["owner", []],
       )
+      expect(
+        AccessControlList.find_by!(target: acl_board, permission: "owner").allowed_user_ids,
+      ).to contain_exactly(admin.id)
     end
 
     it "rejects an invalid permission name and preserves the board and its existing ACLs" do
@@ -732,6 +815,67 @@ RSpec.describe Boards::Api::BoardsController do
       expect(response.status).to eq(422)
       expect(response.parsed_body["failed"]).to eq("FAILED")
       expect(acl_board.reload.attributes).to eq(previous_attributes)
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+    end
+
+    it "rejects an ACL payload that replaces the existing owner" do
+      sign_in(manager)
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      expect do
+        put "/boards/api/boards/#{acl_board.id}.json",
+            params: {
+              board: {
+                acl: [
+                  { type: "group", id: manage_group.id, permission: "manage" },
+                  { type: "user", id: outsider.id, permission: "owner" },
+                ],
+              },
+            }
+      end.not_to change { Boards::BoardHistory.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+      expect(acl_board.reload.created_by_id).to eq(admin.id)
+    end
+
+    it "allows an owner to remove themselves when another owner remains" do
+      board = Fabricate(:boards_board, created_by: manager)
+      AccessControlList.find_by!(target: board, permission: "owner").update!(
+        allowed_user_ids: [manager.id, outsider.id],
+      )
+      sign_in(manager)
+
+      put "/boards/api/boards/#{board.id}.json",
+          params: {
+            board: {
+              owner_user_ids: [outsider.id],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids).to eq(
+        [outsider.id],
+      )
+    end
+
+    it "rejects owner changes from a board manager who is not an owner" do
+      sign_in(manager)
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      put "/boards/api/boards/#{acl_board.id}.json",
+          params: {
+            board: {
+              owner_user_ids: [admin.id, outsider.id],
+            },
+          }
+
+      expect(response.status).to eq(422)
       expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
         previous_acls,
       )

@@ -4,7 +4,6 @@ import AdminReport from "discourse/admin/components/admin-report";
 import AdminReportRelatedItems from "discourse/admin/components/admin-report-related-items";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";

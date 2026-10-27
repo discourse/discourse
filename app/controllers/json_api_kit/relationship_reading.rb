@@ -2,10 +2,6 @@
 
 module JsonApiKit
   module RelationshipReading
-    extend ActiveSupport::Concern
-
-    included { rescue_from(Error) { render_document(Document::Errors.new(it)) } }
-
     private
 
     def render_relationship(document_class)
@@ -20,7 +16,11 @@ module JsonApiKit
     end
 
     def relationship
-      @relationship ||= Relationship.new(params[:id], params[:relationship], resource:, client:)
+      @relationship ||= Relationship.new(params[:id], relationship_name, resource: owner_resource)
     end
+
+    def relationship_name = params[:relationship].tr("-", "_")
+
+    def owner_resource = resource.new(guardian:, edition:)
   end
 end

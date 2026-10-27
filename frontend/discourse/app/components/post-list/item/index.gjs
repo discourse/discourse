@@ -7,7 +7,6 @@ import { trustHTML } from "@ember/template";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import { userPath } from "discourse/lib/url";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";

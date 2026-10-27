@@ -3,7 +3,6 @@ import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-ca
 import BackButton from "discourse/components/back-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";

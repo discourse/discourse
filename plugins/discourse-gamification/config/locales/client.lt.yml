@@ -26,9 +26,7 @@ lt:
       close: "Uždaryti"
       delete: "Pašalinti"
       edit: "Redaguoti"
-      back: "Atgal"
       save: "Saugoti"
-      apply: "Kandidatuoti"
       update_range:
         last_10_days: "Paskutinės 10 dienų"
         last_30_days: "Paskutinės 30 dienų"

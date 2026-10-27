@@ -18,13 +18,10 @@ nb_NO:
       or: "eller"
       admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
       title: "Datautforsker"
-      create: "Opprett"
       create_placeholder: "Spørringsnavn…"
       ai:
         generate: "Generer API-nøkkel"
         optional: "valgfritt"
-      import:
-        label: "Importer"
       help:
         label: "Hjelp"
       schema:
@@ -38,7 +35,6 @@ nb_NO:
       chart:
         form:
           bar: "Bar"
-      others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
@@ -46,7 +42,6 @@ nb_NO:
       query_tags: "Stikkord"
       query_description: "Beskrivelse"
       reset_params: "Tilbakestill"
-      search_placeholder: "Søk…"
     group:
       reports: "Rapporter"
     discourse_workflows:

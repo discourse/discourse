@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
-import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

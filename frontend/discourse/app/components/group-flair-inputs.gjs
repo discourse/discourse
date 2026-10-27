@@ -5,7 +5,6 @@ import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import getURL from "discourse/lib/get-url";
 import { convertIconClass } from "discourse/lib/icon-library";
 import { ensureSpriteSymbol } from "discourse/lib/svg-sprite-loader";
-import { or } from "discourse/truth-helpers";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import DRadioButton from "discourse/ui-kit/d-radio-button";

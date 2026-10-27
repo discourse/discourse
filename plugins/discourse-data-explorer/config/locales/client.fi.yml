@@ -22,14 +22,12 @@ fi:
       admins_only: "Dataselain on vain ylläpitäjille."
       allow_groups: "Salli ryhmien käyttää tätä kyselyä"
       title: "Dataselain"
-      create: "Luo"
       create_placeholder: "Kyselyn nimi..."
       description_placeholder: "Kirjoita kuvaus tähän"
       ai:
         generate: "Luo"
         optional: "valinnainen"
       import:
-        label: "Tuo"
         unparseable_json: "JSON-tiedosto ei ole jäsennettävissä."
         wrong_json: "Väärä JSON-tiedosto. JSON-tiedoston tulisi sisältää query-objekti, jolla tulisi olla ainakin sql-ominaisuus."
       help:
@@ -53,7 +51,6 @@ fi:
         form:
           label: "Kuvaajan tyyppi"
           bar: "Pylväs"
-      others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois."
       run_time: "Kysely suoritettu %{value} millisekunnissa."
       result_count:
         one: "%{count} tulos."
@@ -71,7 +68,6 @@ fi:
       query_user: "Luonut"
       column: "Sarake %{number}"
       reset_params: "Palauta"
-      search_placeholder: "Hae..."
       no_search_results: "Pahoittelut, emme löytäneet tekstiäsi vastaavia tuloksia."
       form:
         errors:

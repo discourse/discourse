@@ -56,6 +56,7 @@ class UserNotifications < ActionMailer::Base
     build_email(
       user.email,
       template: "user_notifications.post_approved",
+      **Dsa::AppealInstructions.message_options,
       locale: locale,
       base_url: Discourse.base_url,
       post_url: post_url,
@@ -68,6 +69,7 @@ class UserNotifications < ActionMailer::Base
     build_email(
       user.email,
       template: "user_notifications.signup_after_reject",
+      **Dsa::AppealInstructions.message_options,
       locale: locale,
       reject_reason: opts[:reject_reason],
       recipient_user: user,
@@ -179,6 +181,7 @@ class UserNotifications < ActionMailer::Base
       build_email(
         user.email,
         template: "user_notifications.account_silenced_forever",
+        **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
         recipient_user: user,
@@ -191,6 +194,7 @@ class UserNotifications < ActionMailer::Base
       build_email(
         user.email,
         template: "user_notifications.account_silenced",
+        **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
         silenced_till:
@@ -219,7 +223,12 @@ class UserNotifications < ActionMailer::Base
 
     flag_reason ||= I18n.t("flag_reasons.spam")
 
-    build_email(email, template: "user_notifications.account_deleted", flag_reason: flag_reason)
+    build_email(
+      email,
+      template: "user_notifications.account_deleted",
+      **Dsa::AppealInstructions.message_options,
+      flag_reason: flag_reason,
+    )
   end
 
   def account_suspended(user, opts = nil)
@@ -233,6 +242,7 @@ class UserNotifications < ActionMailer::Base
       build_email(
         user.email,
         template: "user_notifications.account_suspended_forever",
+        **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
         recipient_user: user,
@@ -245,6 +255,7 @@ class UserNotifications < ActionMailer::Base
       build_email(
         user.email,
         template: "user_notifications.account_suspended",
+        **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
         suspended_till:

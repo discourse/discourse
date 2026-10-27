@@ -1,4 +1,3 @@
-import { eq } from "discourse/truth-helpers";
 import ImageNodeView from "./image-node-view.gjs";
 import VideoNodeView from "./video-node-view.gjs";
 

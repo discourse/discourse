@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -18,11 +17,8 @@ import AiLlmUsages from "./ai-llm-usages.gjs";
 
 const ALL = "all";
 
-// Decision models only exist where workflows are enabled, so the route passes none otherwise.
-export function modelTypes(decisionModels) {
-  return decisionModels
-    ? ["llm", "embedding", "decision"]
-    : ["llm", "embedding"];
+export function modelTypes() {
+  return ["llm", "embedding", "decision"];
 }
 
 function llmDescription(llm) {
@@ -50,7 +46,7 @@ export default class AiModelsList extends Component {
   @tracked filterValue = "";
 
   get types() {
-    return modelTypes(this.args.decisionModels);
+    return modelTypes();
   }
 
   get selectedType() {
