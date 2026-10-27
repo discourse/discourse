@@ -19,6 +19,7 @@ const AI_CONVERSATIONS_HOMEPAGE = "ai-conversations";
 const SCROLL_BUFFER = 100;
 const DEBOUNCE = 100;
 const TITLE_CHANNEL = `/discourse-ai/ai-bot/topic-titles`;
+const NEW_CONVERSATION_INPUT_ID = "ai-bot-conversations-input";
 
 export default class AiConversationsSidebarManager extends Service {
   @service appEvents;
@@ -211,6 +212,17 @@ export default class AiConversationsSidebarManager extends Service {
     }
   }
 
+  /** Opens the conversations page, or focuses its input when already there. */
+  startNewConversation() {
+    this.appEvents.trigger("discourse-ai:new-conversation-btn-clicked");
+
+    if (this.router.currentRouteName !== "discourse-ai-bot-conversations") {
+      this.router.transitionTo("/discourse-ai/ai-bot/conversations");
+    } else {
+      document.getElementById(NEW_CONVERSATION_INPUT_ID)?.focus();
+    }
+  }
+
   async updateConversationStarred(topic, starred) {
     if (!topic) {
       return;
@@ -252,14 +264,17 @@ export default class AiConversationsSidebarManager extends Service {
     const sections = document.querySelector(
       ".sidebar-sections.ai-conversations-panel"
     );
-    this._scrollElement = sections;
+    // In a menu, the menu's body scrolls rather than the panel. Menus render
+    // afresh each time they open, so the element to watch changes.
+    const element = sections?.closest(".menu-panel .panel-body") ?? sections;
 
-    if (this._hasScrollListener || !this._scrollElement) {
+    if (!element || element === this._scrollElement) {
       return;
     }
 
-    sections.addEventListener("scroll", this._debouncedScrollHandler);
-
+    this._removeScrollListener();
+    element.addEventListener("scroll", this._debouncedScrollHandler);
+    this._scrollElement = element;
     this._hasScrollListener = true;
   }
 
@@ -466,6 +481,14 @@ export default class AiConversationsSidebarManager extends Service {
 
             if (sec.name === "starred-conversations") {
               return currentSection.links.length > 0;
+            }
+
+            // Holds the empty state only when there are no conversations at all
+            if (sec.name === "today") {
+              return (
+                currentSection.links.length > 0 ||
+                this.manager.topics.length === 0
+              );
             }
 
             return true;

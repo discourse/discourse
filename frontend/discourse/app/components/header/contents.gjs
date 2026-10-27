@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import HeaderSectionNavButton from "discourse/components/header/section-nav-button";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -14,7 +13,6 @@ import TopicInfo from "./topic/info.gjs";
 
 export default class Contents extends Component {
   @service site;
-  @service mobileTabBar;
   @service header;
   @service router;
   @service navigationMenu;
@@ -92,8 +90,6 @@ export default class Contents extends Component {
             @toggleNavigationMenu={{@toggleNavigationMenu}}
           />
         {{/if}}
-      {{else if this.mobileTabBar.enabled}}
-        <HeaderSectionNavButton />
       {{/if}}
 
       <div class="home-logo-wrapper-outlet">

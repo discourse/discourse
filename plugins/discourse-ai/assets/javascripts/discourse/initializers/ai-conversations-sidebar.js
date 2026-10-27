@@ -56,6 +56,12 @@ export default {
                 label: i18n("discourse_ai.ai_bot.conversations.tab_label"),
                 icon: "discobot",
                 url: "/discourse-ai/ai-bot/conversations",
+                menuAction: {
+                  label: i18n("discourse_ai.ai_bot.conversations.new"),
+                  icon: "plus",
+                  action: () =>
+                    aiConversationsSidebarManager.startNewConversation(),
+                },
                 ownsRoute: (routeInfo) =>
                   routeInfo.name === "discourse-ai-bot-conversations" ||
                   isOwnBotConversation(routeInfo, currentUser),

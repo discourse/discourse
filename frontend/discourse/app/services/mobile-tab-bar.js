@@ -19,15 +19,15 @@ const HUB_TAB = "hub";
 /**
  * Drives the mobile tab bar and the header controls that go with it. Each tab
  * is a section of the site: a sidebar panel that opted in through
- * `mobileTab`, plus search. Tabs navigate and remember where the user was;
- * the header's menu button opens the current section's panel.
+ * `mobileTab`, plus search. Tabs go to their section and remember where the
+ * user was; the current section's tab opens its panel as a menu, in place of
+ * the header's hamburger menu.
  */
 @disableImplicitInjections
 export default class MobileTabBar extends Service {
   @service capabilities;
   @service currentUser;
   @service header;
-  @service routeHistory;
   @service router;
   @service search;
   @service sidebarState;
@@ -44,7 +44,6 @@ export default class MobileTabBar extends Service {
   @tracked menuPanelKey = null;
 
   #lastURLs = new Map();
-  #parentURLs = new Map();
 
   init() {
     super.init(...arguments);
@@ -87,10 +86,6 @@ export default class MobileTabBar extends Service {
     });
   }
 
-  get isSectionMenuOpen() {
-    return this.#isMenuOpen(this.#sectionPanelKey);
-  }
-
   /** The action at the top of the open menu, such as starting a new topic. */
   get menuAction() {
     return this.#tab(this.menuPanelKey)?.menuAction;
@@ -127,15 +122,6 @@ export default class MobileTabBar extends Service {
     ].filter(Boolean);
   }
 
-  // Search has no panel of its own, so its menu is the forum's
-  get #sectionPanelKey() {
-    return this.sidebarState.panels.some(
-      (panel) => panel.key === this.sectionTabKey
-    )
-      ? this.sectionTabKey
-      : MAIN_PANEL;
-  }
-
   get #isSearchPage() {
     return this.router.currentRouteName === SEARCH_ROUTE;
   }
@@ -161,34 +147,38 @@ export default class MobileTabBar extends Service {
     }
 
     const owner = this.#allTabs.find((tab) => tab.ownsRoute?.(route));
+    const isProfile = !owner && !!profileUsernameForRoute(route);
 
     // A profile stays in the section that led there
     if (owner) {
       this.sectionTabKey = owner.key;
-    } else if (!profileUsernameForRoute(route)) {
+    } else if (!isProfile) {
       this.sectionTabKey = MAIN_PANEL;
     }
 
-    const url = this.router.currentURL;
     this.isNestedPage = !!this.#tab(this.sectionTabKey)?.isNestedRoute?.(route);
-    this.#lastURLs.set(this.sectionTabKey, url);
 
-    if (!this.isNestedPage) {
-      this.#parentURLs.set(this.sectionTabKey, url);
+    // A profile only borrows its section, so returning to the section from
+    // elsewhere would land on the profile under a different tab
+    if (!isProfile) {
+      this.#lastURLs.set(this.sectionTabKey, this.router.currentURL);
     }
   }
 
   /**
    * Goes to where the user last was in the tab's section. On the current
-   * section, climbs one level at a time: from a nested page back to the list
-   * it was opened from, then to the section's top level, then to the top of
-   * the page.
+   * section, opens or closes its menu instead, or for search, focuses its
+   * input.
    *
    * @param {string} key
    */
   @bind
   selectTab(key) {
-    const tab = this.#tab(key);
+    if (key === this.sectionTabKey && this.#hasPanel(key)) {
+      this.#toggleMenu(key);
+      return;
+    }
+
     this.closeMenu();
 
     // The app's own list of sites is the only thing outside this one
@@ -198,25 +188,13 @@ export default class MobileTabBar extends Service {
     }
 
     // Search starts fresh, so the page focuses its empty input
-    if (key !== this.sectionTabKey) {
-      const lastURL = key !== SEARCH_TAB && this.#lastURLs.get(key);
-      DiscourseURL.routeTo(lastURL || tab.url);
-    } else if (this.isNestedPage) {
-      this.#returnToList(tab);
-    } else if (this.router.currentURL !== tab.url && !this.#isSearchPage) {
-      DiscourseURL.routeTo(tab.url);
-    } else {
+    if (key === SEARCH_TAB && this.#isSearchPage) {
       scrollTop();
-
-      if (this.#isSearchPage) {
-        document.querySelector(".full-page-search")?.focus();
-      }
+      document.querySelector(".full-page-search")?.focus();
+    } else {
+      const lastURL = key !== SEARCH_TAB && this.#lastURLs.get(key);
+      DiscourseURL.routeTo(lastURL || this.#tab(key).url);
     }
-  }
-
-  @bind
-  toggleSectionMenu() {
-    this.#toggleMenu(this.#sectionPanelKey);
   }
 
   @bind
@@ -228,15 +206,8 @@ export default class MobileTabBar extends Service {
     return this.#allTabs.find((tab) => tab.key === key);
   }
 
-  // Stepping back through history keeps the list's scroll position
-  #returnToList(tab) {
-    const parent = this.#parentURLs.get(tab.key) || tab.url;
-
-    if (this.routeHistory.lastURL === parent) {
-      window.history.back();
-    } else {
-      DiscourseURL.routeTo(parent);
-    }
+  #hasPanel(key) {
+    return this.sidebarState.panels.some((panel) => panel.key === key);
   }
 
   #isMenuOpen(key) {

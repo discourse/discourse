@@ -118,13 +118,8 @@ html.mobile-tab-bar-visible {
   }
 }
 
-// Sits before the logo, so it needs the header icons' spacing mirrored
-.d-header-icons.header-section-nav {
-  margin: 0 var(--space-1) 0 0;
-}
-
-// Next to a topic or channel title the small logo only crowds it; the tabs
-// already lead home
+// Next to a topic or channel title the small logo only crowds it; the
+// forum tab's menu already leads home
 html.mobile-tab-bar-nested .d-header .title--minimized {
   display: none;
 }

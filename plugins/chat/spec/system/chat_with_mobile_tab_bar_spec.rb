@@ -14,7 +14,7 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
     sign_in(current_user)
   end
 
-  it "shows the channel in the site header and leads back to the channel list and other channels" do
+  it "shows the channel in the site header and opens the chat menu from its tab" do
     chat_page.visit_channel(channel_1)
 
     expect(tab_bar).to have_active_tab("chat")
@@ -25,18 +25,15 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
 
     tab_bar.click_tab("chat")
 
-    expect(page).to have_no_css(".d-header .c-navbar__channel-title")
-    expect(page).to have_css(".d-header .title:not(.title--minimized)")
-    expect(page).to have_css(".c-footer.--pills .nav-pills #c-footer-channels.active")
-    expect(page).to have_no_css(".c-footer__item")
-
-    tab_bar.open_section_menu
-
     expect(page).to have_css(
       ".sidebar-hamburger-dropdown .chat-panel .sidebar-section-link",
       text: channel_1.name,
     )
     expect(page).to have_css(".sidebar-menu-action__button", text: "New message")
+
+    tab_bar.click_tab("chat")
+
+    expect(page).to have_no_css(".sidebar-hamburger-dropdown")
   end
 
   it "shows the user their unread direct messages on the chat tab" do

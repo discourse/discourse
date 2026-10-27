@@ -18,7 +18,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     sign_in(current_user)
   end
 
-  it "takes the user back to where they left each section" do
+  it "takes the user back to where they left each section, and opens the current section's menu" do
     visit("/latest")
 
     expect(tab_bar).to have_tabs("main", "search", "admin")
@@ -29,11 +29,13 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
 
     expect(page).to have_current_path("/admin")
     expect(tab_bar).to have_active_tab("admin")
+    expect(page).to have_no_css(".sidebar-hamburger-dropdown")
 
-    tab_bar.open_section_menu
+    tab_bar.click_tab("admin")
     find("#{admin_menu} .sidebar-section-link", text: "Users").click
 
     expect(page).to have_current_path(%r{\A/admin/users})
+    expect(page).to have_no_css(".sidebar-hamburger-dropdown")
 
     tab_bar.click_tab("main")
 
@@ -45,35 +47,42 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
 
     tab_bar.click_tab("admin")
 
-    expect(page).to have_current_path("/admin")
+    expect(page).to have_css(admin_menu)
+
+    tab_bar.click_tab("admin")
+
+    expect(page).to have_no_css(".sidebar-hamburger-dropdown")
   end
 
-  it "lets the user open the current section's menu and start something new from it" do
+  it "leads back to a section's own pages rather than a profile opened from it" do
     visit("/latest")
 
-    tab_bar.open_section_menu
+    tab_bar.click_tab("main")
+    find("#{forum_menu} .sidebar-section-link[data-link-name='my-posts']").click
+
+    expect(page).to have_current_path(%r{\A/u/alice/})
+    expect(tab_bar).to have_active_tab("main")
+
+    tab_bar.click_tab("admin")
+
+    expect(page).to have_current_path("/admin")
+
+    tab_bar.click_tab("main")
+
+    expect(page).to have_current_path("/latest")
+    expect(tab_bar).to have_active_tab("main")
+  end
+
+  it "lets the user start something new from a section's menu" do
+    visit("/latest")
+
+    tab_bar.click_tab("main")
 
     expect(page).to have_css(forum_menu)
     find(".sidebar-menu-action__button").click
 
     expect(page).to have_no_css(".sidebar-hamburger-dropdown")
     expect(page).to have_css("#reply-control.open")
-  end
-
-  it "takes the user from a topic back to the list they opened it from when they tap the current tab" do
-    category = Fabricate(:category)
-    topic = Fabricate(:post, topic: Fabricate(:topic, category:)).topic
-    visit(category.url)
-
-    PageObjects::Components::TopicList.new.visit_topic(topic)
-
-    expect(page).to have_current_path(%r{\A/t/})
-    expect(page).to have_css(".header-section-nav")
-    expect(page).to have_css("html.mobile-tab-bar-nested")
-
-    tab_bar.click_tab("main")
-
-    expect(page).to have_current_path(category.url)
   end
 
   it "takes the user to search from its tab" do
@@ -87,10 +96,8 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     find("input.search-query").fill_in(with: "kittens\n")
     expect(page).to have_current_path("/search?q=kittens")
 
-    tab_bar.click_tab("main")
     tab_bar.click_tab("search")
 
-    expect(page).to have_current_path("/search")
     expect(page).to have_css("input.search-query:focus")
   end
 
@@ -104,7 +111,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
 
     expect(page).to have_css(".user-navigation-primary")
 
-    tab_bar.open_section_menu
+    tab_bar.click_tab("main")
 
     expect(page).to have_css(forum_menu)
   end

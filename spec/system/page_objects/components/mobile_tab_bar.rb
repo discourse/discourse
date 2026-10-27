@@ -10,11 +10,6 @@ module PageObjects
         self
       end
 
-      def open_section_menu
-        find(".header-section-nav button").click
-        self
-      end
-
       def has_tabs?(*keys)
         all("#{SELECTOR} .mobile-tab-bar__tab").map { |tab| tab["data-key"] } == keys
       end

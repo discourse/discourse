@@ -7,18 +7,19 @@ import DButton from "discourse/ui-kit/d-button";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager.js";
 import AiBotAnonymousCard from "./ai-bot-anonymous-card.gjs";
 
-const TEXTAREA_ID = "ai-bot-conversations-input";
-
 export default class AiBotSidebarNewConversation extends Component {
   @service aiConversationsSidebarManager;
-  @service appEvents;
   @service currentUser;
-  @service router;
+  @service mobileTabBar;
   @service sidebarState;
   @service siteSettings;
 
+  // The tab bar's menu leads with its own action, and its tabs lead back
   get shouldRender() {
-    return this.sidebarState.isCurrentPanel(AI_CONVERSATIONS_PANEL);
+    return (
+      !this.mobileTabBar.enabled &&
+      this.sidebarState.isCurrentPanel(AI_CONVERSATIONS_PANEL)
+    );
   }
 
   get shouldShowBackLink() {
@@ -30,20 +31,8 @@ export default class AiBotSidebarNewConversation extends Component {
   }
 
   @action
-  focusTextarea() {
-    document.getElementById(TEXTAREA_ID)?.focus();
-  }
-
-  @action
   routeTo() {
-    this.appEvents.trigger("discourse-ai:new-conversation-btn-clicked");
-
-    if (this.router.currentRouteName !== "discourse-ai-bot-conversations") {
-      this.router.transitionTo("/discourse-ai/ai-bot/conversations");
-    } else {
-      this.focusTextarea();
-    }
-
+    this.aiConversationsSidebarManager.startNewConversation();
     this.args.outletArgs?.toggleNavigationMenu?.();
   }
 

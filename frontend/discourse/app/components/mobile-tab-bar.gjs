@@ -38,6 +38,9 @@ export default class MobileTabBar extends Component {
   <template>
     {{#if this.isVisible}}
       {{htmlClass "footer-nav-visible" "mobile-tab-bar-visible"}}
+      {{#if this.mobileTabBar.isNestedPage}}
+        {{htmlClass "mobile-tab-bar-nested"}}
+      {{/if}}
 
       <nav aria-label={{i18n "mobile_tab_bar.label"}} class="mobile-tab-bar">
         {{#each this.mobileTabBar.tabs key="key" as |tab|}}
