@@ -15,6 +15,9 @@ class TopicTimer < BaseTimer
   belongs_to :topic, foreign_key: :timerable_id
   belongs_to :category
 
+  # Who is changing the timer: not always its owner, and the system user for automatic changes.
+  attr_accessor :acting_user
+
   validates :user_id, presence: true
   validates :timerable_id, presence: true
   validates :execute_at, presence: true
@@ -60,7 +63,15 @@ class TopicTimer < BaseTimer
 
   after_save :publish_timer_change
   after_destroy do
-    DiscourseEvent.trigger(:topic_timer_changed, self, :cancelled, nil) unless trashed?
+    if !trashed?
+      DiscourseEvent.trigger(
+        :topic_timer_changed,
+        self,
+        :cancelled,
+        nil,
+        acting_user: Discourse.system_user,
+      )
+    end
   end
 
   def trash!(trashed_by = nil)
@@ -76,7 +87,13 @@ class TopicTimer < BaseTimer
       next false if trashed?
 
       trash_update(Time.current, by_user&.id)
-      DiscourseEvent.trigger(:topic_timer_changed, self, reason, nil)
+      DiscourseEvent.trigger(
+        :topic_timer_changed,
+        self,
+        reason,
+        nil,
+        acting_user: by_user || Discourse.system_user,
+      )
       true
     end
   end
@@ -91,7 +108,7 @@ class TopicTimer < BaseTimer
 
   def publish_timer_change
     if previously_new_record?
-      DiscourseEvent.trigger(:topic_timer_changed, self, :created, nil)
+      DiscourseEvent.trigger(:topic_timer_changed, self, :created, nil, acting_user: changed_by)
       return
     end
 
@@ -99,7 +116,11 @@ class TopicTimer < BaseTimer
     return if changes.empty?
 
     previous = attributes.slice(*EVENT_ATTRIBUTES).merge(changes.transform_values(&:first))
-    DiscourseEvent.trigger(:topic_timer_changed, self, :updated, previous)
+    DiscourseEvent.trigger(:topic_timer_changed, self, :updated, previous, acting_user: changed_by)
+  end
+
+  def changed_by
+    acting_user || user
   end
 
   def executed_at_in_future?
