@@ -42,7 +42,7 @@ class User::Silence
   end
 
   def fetch_users(user:, params:)
-    [user, *User.where(id: params.other_user_ids.to_a.uniq).to_a]
+    [user, *User.where(id: params.other_user_ids.to_a.uniq).where.not(id: user.id).to_a]
   end
 
   def can_silence_all_users(guardian:, users:)
