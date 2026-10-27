@@ -50,7 +50,7 @@ interface DSelectListSignature {
     items?: SelectHostArgs["items"];
     /** Async query source, optionally paginating with total or hasMore. */
     load?: SelectHostArgs["load"];
-    /** Reactive source inputs; replacing the object or an entry reloads the list. */
+    /** Reactive source inputs; a changed entry reloads the list, and arrays compare by their elements. */
     loadContext?: SelectHostArgs["loadContext"];
     /** Local filtering fields or predicate. */
     filterBy?: SelectHostArgs["filterBy"];

@@ -158,7 +158,9 @@ Keep `@load` stable for the component's lifetime. Pass its reactive inputs in a 
 through `@loadContext`, for example `@loadContext={{hash categoryId=this.categoryId}}`.
 The loader receives a shallow, frozen snapshot as `opts.context` alongside `opts.options`;
 `spec.load` customizations receive that same snapshot as `context.loadContext`. Every page and
-retry of one query uses the same snapshot. Nested values are compared by identity, not deeply.
+retry of one query uses the same snapshot. An array entry compares by its elements, so a call site
+may derive an equal array on every render (`@exclude` rebuilt after each pick) without reloading;
+an array changed in place still counts. Other values, including nested ones, compare by identity.
 
 `@load(query, opts)` returns an item array or `{ items, total?, hasMore?, cursor? }`.
 Paged sources receive the raw row `opts.offset` and a page-size `opts.limit` hint.
@@ -602,8 +604,8 @@ Sources (`-internals/engine/select-sources.ts`):
 - Rendering is windowed, so a long array costs only the rows on screen.
 - A filter change waits the input delay only for a loader that answered with a promise
   (`-internals/coordinators/select-presenter-base.ts`). A recipe never sets `@debounce`.
-- `@loadContext` is the loader's inputs: a changed entry reloads the list.
-  A pick alone never does.
+- `@loadContext` is the loader's inputs: a changed entry reloads the list. Arrays compare by their
+  elements, so an equal array derived afresh after a pick never does.
 
 Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
 

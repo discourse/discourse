@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import {
@@ -1130,6 +1130,147 @@ module(
         calls.length,
         initial + 3,
         "nested objects compare by identity"
+      );
+    });
+
+    test("an equal array re-derived after a pick neither reloads nor moves the list", async function (assert) {
+      class State {
+        @tracked value = [];
+        @tracked exclude = [1000];
+      }
+      const state = new State();
+      let loads = 0;
+      const load = () => {
+        loads++;
+        return Array.from({ length: 60 }, (_, id) => ({
+          id,
+          name: `Row ${id}`,
+        }));
+      };
+      // Call sites derive the excluded ids afresh on every render, so each pick hands the
+      // select a new array with the same contents.
+      const onChange = (value) => {
+        state.value = value;
+        state.exclude = [1000];
+      };
+
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash exclude=state.exclude}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{state.value}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      const initial = loads;
+      const viewport = find(".d-virtual-list");
+      viewport.scrollTop = 400;
+      await settled();
+      const top = viewport.scrollTop;
+      assert.true(top > 0, "the list was scrolled");
+
+      const visible = findAll("[role='option']").find((option) => {
+        const box = option.getBoundingClientRect();
+        const frame = viewport.getBoundingClientRect();
+        return box.top >= frame.top && box.bottom <= frame.bottom;
+      });
+      await click(visible);
+
+      assert.strictEqual(state.value.length, 1, "the pick was kept");
+      assert.strictEqual(loads, initial, "the equal array did not reload");
+      assert.strictEqual(
+        find(".d-virtual-list").scrollTop,
+        top,
+        "the list keeps its scroll position"
+      );
+    });
+
+    test("arrays in the context compare by their elements", async function (assert) {
+      const nested = [1];
+      const context = tracked({ ids: [1, 2], nested: [nested] });
+      let loads = 0;
+      const load = () => {
+        loads++;
+        return ITEMS;
+      };
+
+      await render(
+        <template>
+          <DSelect @load={{load}} @loadContext={{context.value}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const initial = loads;
+
+      context.value = { ids: [1, 2], nested: [nested] };
+      await settled();
+      assert.strictEqual(loads, initial, "equal elements do not reload");
+
+      context.value = { ids: [1, 3], nested: [nested] };
+      await settled();
+      assert.strictEqual(
+        loads,
+        initial + 1,
+        "a changed element of the same length reloads"
+      );
+
+      context.value = { ids: [1, 3], nested: [[1]] };
+      await settled();
+      assert.strictEqual(
+        loads,
+        initial + 2,
+        "elements compare by identity, one level deep"
+      );
+    });
+
+    test("an array changed in place still reloads", async function (assert) {
+      const ids = [1, 2];
+      const context = tracked({ ids });
+      let loads = 0;
+      const load = () => {
+        loads++;
+        return ITEMS;
+      };
+
+      await render(
+        <template>
+          <DSelect @load={{load}} @loadContext={{context.value}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const initial = loads;
+      press("Escape");
+      await settled();
+
+      ids[1] = 3;
+      await click("[role='combobox']");
+      assert.strictEqual(
+        loads,
+        initial + 1,
+        "the next open notices an element changed under the same reference"
+      );
+
+      press("Escape");
+      await settled();
+      ids[1] = 4;
+      context.value = { ids: [1, 4] };
+      await settled();
+      await click("[role='combobox']");
+      assert.strictEqual(
+        loads,
+        initial + 2,
+        "an in-place change still counts when an equal array replaces it"
       );
     });
 

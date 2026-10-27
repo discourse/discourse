@@ -400,7 +400,10 @@ export interface SelectEngineOptions {
     opts: SelectLoadOptions
   ) => SelectLoadResult | Promise<SelectLoadResult>;
 
-  /** The loader inputs whose own keys and values determine whether the list reloads. */
+  /**
+   * The loader inputs whose own keys and values determine whether the list reloads. An array
+   * entry compares by its elements, one level deep; every other entry compares by identity.
+   */
   loadContext?: Readonly<Record<string, unknown>>;
 
   /** Live reader for {@link loadContext}. */
@@ -701,6 +704,12 @@ export default class SelectEngine {
   #onReloadList?: () => void;
   #requestContextQuery?: string;
   #requestLoadContext?: Readonly<Record<string, unknown>>;
+
+  /**
+   * Copies of the snapshot's array entries, so a later check can tell an equal array derived
+   * afresh from a changed one, even when the caller mutated the snapshotted array in place.
+   */
+  #requestContextArrays = new Map<PropertyKey, readonly unknown[]>();
 
   /** The query an immediate reload started, compared with the live {@link queryKey}. */
   #immediateQueryKey: string | null = null;
@@ -1368,7 +1377,7 @@ export default class SelectEngine {
       keys.some(
         (key) =>
           !Object.hasOwn(snapshot, key) ||
-          !Object.is(Reflect.get(context, key), Reflect.get(snapshot, key))
+          this.#contextEntryChanged(key, Reflect.get(context, key), snapshot)
       )
     ) {
       this.#reloadList();
@@ -1382,6 +1391,22 @@ export default class SelectEngine {
   @bind
   requestClose(): void {
     this.#options.requestClose?.();
+  }
+
+  #contextEntryChanged(
+    key: PropertyKey,
+    value: unknown,
+    snapshot: Readonly<Record<string, unknown>>
+  ): boolean {
+    const copy = this.#requestContextArrays.get(key);
+    if (!copy) {
+      return !Object.is(value, Reflect.get(snapshot, key));
+    }
+    return (
+      !Array.isArray(value) ||
+      value.length !== copy.length ||
+      value.some((element, index) => !Object.is(element, copy[index]))
+    );
   }
 
   /** The static names and live data shared by select customizations. */
@@ -1411,6 +1436,12 @@ export default class SelectEngine {
       )
     );
     this.#requestLoadContext = snapshot;
+    this.#requestContextArrays = new Map(
+      Reflect.ownKeys(snapshot).flatMap((key) => {
+        const value: unknown = Reflect.get(snapshot, key);
+        return Array.isArray(value) ? [[key, [...value]] as const] : [];
+      })
+    );
     this.#requestContextQuery = this.queryKey;
     const load = this.#customizations.applyLoad(this.#options.load!, {
       loadContext: snapshot,

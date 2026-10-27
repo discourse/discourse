@@ -93,7 +93,7 @@ interface DSelectSignature {
     instanceContext?: object;
     items?: SelectEngineOptions["items"];
     load?: SelectEngineOptions["load"];
-    /** Loader inputs, compared by own keys and value identity to reload the list. */
+    /** Loader inputs, compared by own keys to reload the list: arrays by their elements, other values by identity. */
     loadContext?: SelectEngineOptions["loadContext"];
     filterBy?: SelectEngineOptions["filterBy"];
     valueField?: string;
