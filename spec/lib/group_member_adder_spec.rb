@@ -24,6 +24,18 @@ describe GroupMemberAdder do
       ).to eq(true)
     end
 
+    it "reports the guardian's user as the actor of the event" do
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          described_class.add(owner.guardian, group, usernames: user.username)
+        end
+
+      expect(events).to contain_exactly(
+        event_name: :user_added_to_group,
+        params: [user, group, { automatic: false, acting_user: owner }],
+      )
+    end
+
     it "notifies added members only when asked" do
       expect_not_enqueued_with(job: :notify_users_added_to_group) do
         described_class.add(owner.guardian, group, usernames: user.username)

@@ -13,7 +13,9 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :user_added_to_group,
-          output_contracts: [{ schema: Schema::USER_ADDED_TO_GROUP_SCHEMA }],
+          output_contracts: [
+            { schema: Schema.merge(Schema::USER_ADDED_TO_GROUP_SCHEMA, Schema::ACTOR_SCHEMA) },
+          ],
           properties: {
             group_id: {
               type: :integer,
@@ -45,12 +47,12 @@ module DiscourseWorkflows
           end
         end
 
-        def initialize(user, group, options = {})
+        def initialize(user, group, payload = {})
           super(parameters: {})
           @user = user
           @group = group
-          @automatic =
-            options.respond_to?(:to_h) ? options.to_h.with_indifferent_access[:automatic] : nil
+          @automatic = payload[:automatic]
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -65,6 +67,7 @@ module DiscourseWorkflows
               action: "added",
               automatic: @automatic == true,
             },
+            actor: serialize_user(@actor),
           }
         end
 

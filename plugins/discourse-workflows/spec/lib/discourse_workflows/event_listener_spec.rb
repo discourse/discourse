@@ -669,7 +669,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       },
     )
 
-    membership_group.add(user, automatic: true)
+    membership_group.add(user, automatic: true, acting_user: admin)
 
     expect(enqueued_trigger_node_ids).to include("matching-add-trigger")
     expect(enqueued_trigger_node_ids).not_to include("group-mismatch-add-trigger")
@@ -688,6 +688,28 @@ RSpec.describe DiscourseWorkflows::EventListener do
         "action" => "added",
         "automatic" => true,
       },
+      "actor" => include("id" => admin.id, "username" => admin.username),
+    )
+  end
+
+  it "enqueues user added to group workflows with the system user for automatic memberships" do
+    trust_level_group = Group.find(Group::AUTO_GROUPS[:trust_level_3])
+    create_published_workflow(
+      "trust-level-add-trigger",
+      "trigger:user_added_to_group",
+      configuration: {
+        "group_id" => trust_level_group.id.to_s,
+      },
+    )
+
+    Group.user_trust_level_change!(user.id, TrustLevel[3])
+
+    expect(trigger_data_for("trust-level-add-trigger")).to include(
+      "membership" => {
+        "action" => "added",
+        "automatic" => true,
+      },
+      "actor" => include("id" => Discourse.system_user.id),
     )
   end
 
@@ -709,7 +731,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       },
     )
 
-    membership_group.remove(user)
+    GroupMemberRemover.remove(admin.guardian, membership_group, usernames: user.username)
 
     expect(enqueued_trigger_node_ids).to include("matching-remove-trigger")
     expect(enqueued_trigger_node_ids).not_to include("group-mismatch-remove-trigger")
@@ -728,6 +750,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
         "action" => "removed",
         "automatic" => nil,
       },
+      "actor" => include("id" => admin.id, "username" => admin.username),
     )
   end
 

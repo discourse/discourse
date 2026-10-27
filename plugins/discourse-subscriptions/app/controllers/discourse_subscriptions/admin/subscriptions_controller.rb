@@ -56,7 +56,7 @@ module DiscourseSubscriptions
           if customer
             user = ::User.find(customer.user_id)
             group = plan_group(subscription[:plan])
-            group.remove(user) if group
+            group.remove(user, acting_user: current_user) if group
           end
 
           render_json_dump subscription

@@ -133,6 +133,21 @@ RSpec.describe Jobs::BulkInvite do
       expect(existing_user.reload.groups).to eq([group1])
     end
 
+    it "reports the admin who uploaded the invites as the actor of the membership event" do
+      existing_user = Fabricate(:user, email: "test@discourse.org")
+      group2.update!(automatic: true)
+
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          described_class.new.execute(current_user_id: admin.id, invites: invites)
+        end
+
+      expect(events).to include(
+        event_name: :user_added_to_group,
+        params: [existing_user, group1, { automatic: false, acting_user: admin }],
+      )
+    end
+
     it "can create staged users and prepopulate user fields" do
       user_field = Fabricate(:user_field, name: "Location")
       user_field_color = Fabricate(:user_field, field_type: "dropdown", name: "Color")

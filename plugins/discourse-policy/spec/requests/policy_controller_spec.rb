@@ -62,6 +62,28 @@ describe DiscoursePolicy::PolicyController do
       expect(post.reload.post_policy.accepted_by.map(&:id)).to eq([])
       expect(group2.users.pluck(:id)).to contain_exactly(moderator.id)
     end
+
+    it "reports the accepting user as the actor of the membership changes" do
+      sign_in(user1)
+
+      added =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          put "/policy/accept.json", params: { post_id: post.id }
+        end
+      removed =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          put "/policy/unaccept.json", params: { post_id: post.id }
+        end
+
+      expect(added).to contain_exactly(
+        event_name: :user_added_to_group,
+        params: [user1, group2, { automatic: false, acting_user: user1 }],
+      )
+      expect(removed).to contain_exactly(
+        event_name: :user_removed_from_group,
+        params: [user1, group2, { acting_user: user1 }],
+      )
+    end
   end
 
   context "when an add-users-to-group assignment is removed" do

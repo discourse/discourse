@@ -143,7 +143,7 @@ module Jobs
           if groups.present?
             Group.transaction do
               groups.each do |group|
-                group.add(user)
+                group.add(user, acting_user: @current_user)
 
                 GroupActionLogger.new(@current_user, group).log_add_user_to_group(user)
               end
