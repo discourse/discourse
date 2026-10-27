@@ -24,8 +24,7 @@ import {
 import { activeRingingEntries } from "../../lib/live/ringing.js";
 import { speakQueue } from "../../lib/live/speak-queue.js";
 import {
-  bestRowHeight,
-  DEFAULT_TILE_ASPECT,
+  computeRoomGrid,
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
@@ -62,7 +61,6 @@ export default class LiveRoomPage extends Component {
   @tracked gridWidth = 0;
   @tracked gridHeight = 0;
   @tracked gridGap = 0;
-  @tracked tileAspects = new Map();
   @tracked gridFullscreen = false;
   // Stage rooms mirror a workshop: chat panel open, presenter featured.
   @tracked chatOpen = !!this.args.openChat || this.#isStageRoom;
@@ -192,6 +190,24 @@ export default class LiveRoomPage extends Component {
     return this.tiles.filter((tile) => tile.participant.id !== featuredId);
   }
 
+  // In a one-to-one call your own camera is the least useful tile to you, so
+  // it floats in a corner and the other person gets the whole stage.
+  get pipTile() {
+    if (
+      !this.tiledLayout ||
+      this.tiles.length !== 2 ||
+      this.ringingEntries.length
+    ) {
+      return null;
+    }
+    return this.tiles.find((tile) => tile.isSelf) ?? null;
+  }
+
+  get gridTiles() {
+    const pipTile = this.pipTile;
+    return pipTile ? this.tiles.filter((tile) => tile !== pipTile) : this.tiles;
+  }
+
   get tiledLayout() {
     return this.layoutMode === LAYOUT_TILED;
   }
@@ -220,26 +236,20 @@ export default class LiveRoomPage extends Component {
       return null;
     }
 
-    const aspects = [
-      ...this.tiles.map(
-        (tile) =>
-          this.tileAspects.get(tile.participant.id) ?? DEFAULT_TILE_ASPECT
-      ),
-      ...this.ringingEntries.map(() => DEFAULT_TILE_ASPECT),
-    ];
+    const grid = computeRoomGrid({
+      width: this.gridWidth,
+      height: this.gridHeight,
+      count: this.gridTiles.length + this.ringingEntries.length,
+      gap: this.gridGap,
+    });
 
-    const rowHeight = bestRowHeight(
-      this.gridWidth,
-      this.gridHeight,
-      aspects,
-      this.gridGap
-    );
-
-    if (rowHeight <= 0) {
+    if (!grid) {
       return null;
     }
 
-    return trustHTML(`--live-tile-height: ${rowHeight}px;`);
+    return trustHTML(
+      `--live-tile-width: ${grid.tileWidth}px; --live-tile-height: ${grid.tileHeight}px; --live-grid-line-width: ${grid.lineWidth}px;`
+    );
   }
 
   get chatAvailable() {
@@ -362,22 +372,6 @@ export default class LiveRoomPage extends Component {
   @action
   toggleGridFullscreen() {
     toggleFullscreen(this.gridElement);
-  }
-
-  @action
-  reportTileAspect(participantId, aspect) {
-    const current = this.tileAspects.get(participantId) ?? null;
-    if (current === aspect) {
-      return;
-    }
-
-    const nextAspects = new Map(this.tileAspects);
-    if (aspect) {
-      nextAspects.set(participantId, aspect);
-    } else {
-      nextAspects.delete(participantId);
-    }
-    this.tileAspects = nextAspects;
   }
 
   @action
@@ -578,7 +572,6 @@ export default class LiveRoomPage extends Component {
                 <div class="live-room-page__presentation-main">
                   <LiveVideoTile
                     @isSelf={{this.presentationTile.isSelf}}
-                    @onAspect={{this.reportTileAspect}}
                     @onSpotlight={{this.toggleSpotlight}}
                     @participant={{this.presentationTile.participant}}
                     @room={{this.room}}
@@ -599,7 +592,6 @@ export default class LiveRoomPage extends Component {
                     }}
                       <LiveVideoTile
                         @isSelf={{tile.isSelf}}
-                        @onAspect={{this.reportTileAspect}}
                         @onSpotlight={{this.toggleSpotlight}}
                         @participant={{tile.participant}}
                         @room={{this.room}}
@@ -630,20 +622,32 @@ export default class LiveRoomPage extends Component {
                     @translatedTitle={{this.gridFullscreenTitle}}
                   />
                 {{/if}}
-                {{#each this.tiles key="participant.id" as |tile|}}
+                <div class="live-room-page__tiles">
+                  {{#each this.gridTiles key="participant.id" as |tile|}}
+                    <LiveVideoTile
+                      @isSelf={{tile.isSelf}}
+                      @onSpotlight={{this.toggleSpotlight}}
+                      @participant={{tile.participant}}
+                      @room={{this.room}}
+                      @showVideo={{tile.showVideo}}
+                      @spotlighted={{tile.spotlighted}}
+                    />
+                  {{/each}}
+                  {{#each this.ringingEntries key="user.id" as |entry|}}
+                    <LiveRingingTile @user={{entry.user}} />
+                  {{/each}}
+                </div>
+                {{#if this.pipTile}}
                   <LiveVideoTile
-                    @isSelf={{tile.isSelf}}
-                    @onAspect={{this.reportTileAspect}}
+                    class="live-room-page__pip"
+                    @isSelf={{this.pipTile.isSelf}}
                     @onSpotlight={{this.toggleSpotlight}}
-                    @participant={{tile.participant}}
+                    @participant={{this.pipTile.participant}}
                     @room={{this.room}}
-                    @showVideo={{tile.showVideo}}
-                    @spotlighted={{tile.spotlighted}}
+                    @showVideo={{this.pipTile.showVideo}}
+                    @spotlighted={{this.pipTile.spotlighted}}
                   />
-                {{/each}}
-                {{#each this.ringingEntries key="user.id" as |entry|}}
-                  <LiveRingingTile @user={{entry.user}} />
-                {{/each}}
+                {{/if}}
               </div>
             {{/if}}
           {{else}}
