@@ -406,6 +406,9 @@ selected category choice.
 Mistakes made porting the tag family and its customizations, kept so the next families avoid
 them. Recorded 2026-10-23.
 
+Before writing or reviewing a recipe, use the skill at `.skills/discourse-select-recipes`: it
+holds the survey to do first, the red flags and the review gate that these lessons led to.
+
 - **Port the intent, not the shape.** The AI tag suggester was first ported as select-kit had it:
   `idle`/`loading`/`results` modes, the request fired from a row's click handler, a fake
   "loading" row, and `reload()` calls around the request. DSelect's customization points already
@@ -464,6 +467,20 @@ Added while porting the category family, 2026-10-26:
 - **A new module needs a full build before plugins can import it.** A devserver started before a
   recipe existed cannot serve it to plugin bundles; restart the devserver instead of adding a
   loader shim.
+
+Added after reviewing the category recipes, 2026-10-27:
+
+- **Survey the engine, the model and the ui-kit helpers before writing recipe code, and ask
+  before adding what seems missing.** The first category recipes paged, sized and de-duplicated
+  rows by hand, wrapped `Category`'s own search and lookups in a `lib/` module, flipped
+  `@multiple`'s default, toggled `@debounce`, drew their own caret and called a badge helper's
+  internals. Every one of those already existed. The rework removed them; the skill above lists
+  them as red flags.
+- **A call-site quirk belongs at the call site.** The preference lists passed their own held
+  categories as `@exclude`, and the recipe grew a "held stays offered" exception and a reload
+  key to match. Each list now passes only the other lists' categories.
+- **Stub endpoints as they answer.** A `/categories/find` stub that ignored the requested ids
+  made a correct lookup remove a category from the site and fail far from the cause.
 
 ## Verification
 

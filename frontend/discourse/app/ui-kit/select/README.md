@@ -582,6 +582,60 @@ exception to the kit's domain-free primitives. A recipe:
   block always counts as passed, so without it every recipe panel ends in an empty footer;
 - never sets its own `@identifier`, which would take the call-site tier away from its callers.
 
+#### What the engine already does
+
+A recipe states its domain's rules and renders its rows. Before writing anything else, check this
+list; if a need is missing from it and from the domain's model, ask before adding code.
+
+Sources (`-internals/engine/select-sources.ts`):
+
+- `@items` is a client source (`LocalSource`); `@load` is a server source (`PagedSource`), even
+  when it answers synchronously.
+- A `@load` that returns a plain array has returned the complete set. Return
+  `{ items, total, hasMore, cursor }` only to page: the engine keeps the offset and the cursor,
+  hands them back as `opts.offset`/`opts.cursor`, and asks again on a reveal.
+- Without `hasMore`, `total` decides whether more pages remain, and sizes the list for
+  `aria-setsize`. An explicit `hasMore` wins, and `hasMore: false` ends paging. Give `hasMore`
+  instead of `total` when the rows do not map one to one to the counted records.
+- Rows are de-duplicated by key across pages, and a response for a superseded query or reveal is
+  dropped, so a loader never checks its `signal` or compares results.
+- Rendering is windowed, so a long array costs only the rows on screen.
+- A filter change waits the input delay only for a loader that answered with a promise
+  (`-internals/coordinators/select-presenter-base.ts`). A recipe never sets `@debounce`.
+- `@loadContext` is the loader's inputs: a changed entry reloads the list.
+  A pick alone never does.
+
+Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
+
+- `@multiple` defaults to `false`. A recipe forwards it; it never flips the default.
+- `@valueItems` gives items for held ids already in hand; `@resolveValues` resolves the rest,
+  synchronously or not. The engine normalizes `@value`'s shape and the emitted ids' types.
+- `@specialItems` adds recipe-owned rows ahead of the source's, from a snapshot of the filter
+  and value. They are not de-duplicated against the source, so the source must leave them out.
+- `@noneLabel` adds the single-select "none" row; `@maximum` and `@minimum` cap the selection
+  and announce the limit.
+- Held rows stay listed and marked as selected, which keeps the selection reachable for
+  assistive technology. `@hideSelected` exists, but is not a default to copy from the old
+  component.
+- A row with `onSelect` is an action: `control.update(async (scope) => …)` runs its work, and
+  `scope.selectMany` is a no-op once a later change supersedes it (`SelectUpdateScope` in
+  `select-engine.ts`).
+
+Presentation:
+
+- `@caretIcon={{hash open closed}}` sets the caret, and customizations override it as the core
+  `caretIcon` option (`-internals/coordinators/variant-presenter.ts`,
+  `-internals/engine/customizations.ts`). A recipe never tracks open state to draw its own.
+- `@label`, `@id`, `@describedBy` and `@placeholder` name and describe the control.
+- `@kindOptions` declares only rules the engine has no option for.
+
+Shared helpers outside the engine: `makeArray` (`lib/helpers.ts`) normalizes one-or-many values,
+`removeAccents` (`lib/utilities.js`) folds accents, and the `ui-kit/helpers/` badges
+(`dCategoryBadge`, `dDiscourseTag`) render domain rows. A domain model's statics, such as
+`Category.findByIds`, `asyncFindByIds`, `search`, `asyncSearch` and `asyncFindDescendants`,
+answer lookups and searches; a recipe calls them instead of wrapping them in a `lib/*-source`
+module.
+
 #### Tag recipes
 
 The tag family has three recipes, split by what the pick is for:
