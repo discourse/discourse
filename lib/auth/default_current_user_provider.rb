@@ -453,6 +453,8 @@ class Auth::DefaultCurrentUserProvider
   # However, in some scenarios it is essential to send them via url parameters
   # so we need to add some exceptions
   def api_parameter_allowed?
+    # Matching routes runs constraints that can call back into this provider
+    return false if @request.query_string.empty? && @request.content_length.to_i == 0
     parameter_api_patterns.any? { |p| p.match?(env: @env) }
   end
 
