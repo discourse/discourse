@@ -39,7 +39,7 @@ module DiscourseWorkflows
             "WebHookPostSerializer payload",
           )
 
-        def self.output_contracts_for(topic_schema, post_schema)
+        def self.output_contracts_for(topic_schema, post_schema, extra_variants: [])
           [
             {
               variants: [
@@ -51,6 +51,7 @@ module DiscourseWorkflows
                     },
                   },
                 },
+                *extra_variants,
               ],
               schema: Schema.merge(topic_schema, post_schema),
             },

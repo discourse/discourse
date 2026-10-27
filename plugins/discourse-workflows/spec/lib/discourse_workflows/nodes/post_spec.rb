@@ -417,6 +417,37 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(result["post"]).to include("id" => post.id, "raw" => "Original post")
     end
 
+    it "deletes and recovers the topic once with its first post", :aggregate_failures do
+      first_post = Fabricate(:post, user: user)
+      topic = first_post.topic
+
+      trashed =
+        DiscourseEvent.track_events(:topic_trashed) do
+          execute_node(
+            configuration: {
+              "operation" => "delete",
+              "post_id" => first_post.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+        end
+      recovered =
+        DiscourseEvent.track_events(:topic_recovered) do
+          execute_node(
+            configuration: {
+              "operation" => "recover",
+              "post_id" => first_post.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+        end
+
+      expect(trashed.map { |event| event[:params] }).to eq([[topic, { acting_user: admin }]])
+      expect(recovered.map { |event| event[:params] }).to eq([[topic, { acting_user: admin }]])
+    end
+
     it "raises when the actor may not delete or recover the post", :aggregate_failures do
       post = Fabricate(:post, user: admin, raw: "Original post")
 
