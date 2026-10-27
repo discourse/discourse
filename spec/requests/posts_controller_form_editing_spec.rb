@@ -100,6 +100,23 @@ RSpec.describe PostsController do
   end
 
   describe "#update" do
+    it "allows staff to edit metadata on a soft-deleted form post" do
+      form_post.trash!
+      sign_in(Fabricate(:admin))
+
+      put "/posts/#{form_post.id}.json",
+          params: {
+            title: "Updated deleted form title",
+            post: {
+              raw: form_post.raw,
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(form_post.topic.reload.title).to eq("Updated deleted form title")
+      expect(form_post.reload.form_data).to eq(submission.to_h)
+    end
+
     it "reopens and edits a system-expanded snapshot without allowing further growth" do
       form_template.update!(
         template: (form_template.fields + [{ "id" => "note", "type" => "composer" }]).to_yaml,
@@ -187,7 +204,7 @@ RSpec.describe PostsController do
               form_state_token: saved.form_state_token,
             },
           }
-      expect(response.status).to eq(200), response.body
+      expect(response.status).to eq(200)
       expect(saved.reload.raw).to include("@RENAMEDFRIEND")
       expect(saved.form_submission.answers["confirmed"]).to eq(false)
     end
@@ -203,7 +220,7 @@ RSpec.describe PostsController do
               form_state_token: token,
             },
           }
-      expect(response.status).to eq(200), response.body
+      expect(response.status).to eq(200)
       expect(form_post.reload.raw).to eq(submission.render)
       expect(form_post.form_submission.answers).to eq(changed)
 
@@ -257,6 +274,19 @@ RSpec.describe PostsController do
   end
 
   describe "form preview" do
+    it "allows staff to preview deleted forms while denying other users" do
+      form_post.trash!
+      params = { post_id: form_post.id, form_template_data: { answers: }.to_json }
+      sign_in(Fabricate(:admin))
+      post("/form-templates/render.json", params:)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["raw"]).to eq(submission.render)
+
+      sign_in(Fabricate(:user))
+      post("/form-templates/render.json", params:)
+      expect(response.status).to eq(403)
+    end
+
     it "rejects previews by users who cannot edit the form" do
       sign_in(Fabricate(:user))
       post "/form-templates/render.json",

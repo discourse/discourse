@@ -369,7 +369,11 @@ class PostRevisor
     Post.transaction do
       if @post.form_data || @fields.key?(:form_data)
         locked_state =
-          Post.where(id: @post.id).lock("FOR UPDATE").pick(:raw, :form_data, :last_version_at)
+          Post
+            .with_deleted
+            .where(id: @post.id)
+            .lock("FOR UPDATE")
+            .pick(:raw, :form_data, :last_version_at)
         # PostgreSQL stores timestamps at microsecond precision.
         if locked_state != [@post.raw, @post.form_data, @post.last_version_at&.floor(6)]
           @post.errors.add(:base, :edit_conflict, message: I18n.t("edit_conflict"))

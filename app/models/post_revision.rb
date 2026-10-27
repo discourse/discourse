@@ -28,7 +28,8 @@ class PostRevision < ActiveRecord::Base
       end
     if modifications.key?("raw") || raw[0] != raw[1]
       modifications["raw"] = raw
-      modifications["cooked"] = raw.map { |text| post.cook(text) }
+      revision_post = Post.with_deleted.find(post_id)
+      modifications["cooked"] = raw.map { |text| revision_post.cook(text) }
     end
   end
 
