@@ -17,6 +17,8 @@ export default class GifPanel extends Component {
   @service interfaceColor;
   @service siteSettings;
 
+  gifBaseWidth = 105;
+
   search = new GifSearch({
     siteSettings: this.siteSettings,
     dialog: this.dialog,
@@ -30,10 +32,6 @@ export default class GifPanel extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.search.destroy();
-  }
-
-  get gifBaseWidth() {
-    return 105;
   }
 
   @action

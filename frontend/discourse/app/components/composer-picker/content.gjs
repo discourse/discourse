@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { composerPickerTabs } from "discourse/lib/composer-picker";
-import { gt } from "discourse/truth-helpers";
 import DTabs from "discourse/ui-kit/d-tabs";
 import { i18n } from "discourse-i18n";
 
