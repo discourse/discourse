@@ -21,6 +21,37 @@ RSpec.describe PostsController do
 
   before { sign_in(user) }
 
+  it "rejects NUL in omitted answers on creation and editing, but allows literal escape text" do
+    category.form_templates << form_template
+    form_template.update!(output_template: "An invitation with omitted answers.")
+    invalid_answers = answers.merge("description" => "Omitted\u0000answer")
+    params = {
+      title: "A form with omitted answers",
+      category: category.id,
+      form_template_data: { id: form_template.id, answers: invalid_answers }.to_json,
+    }
+
+    expect { post "/posts.json", params: }.not_to change(Post, :count)
+    expect(response.status).to eq(422)
+
+    literal_answers = answers.merge("description" => 'Omitted\u0000answer')
+    params[:form_template_data] = { id: form_template.id, answers: literal_answers }.to_json
+    post("/posts.json", params:)
+    expect(response.status).to eq(200)
+    created = Post.find(response.parsed_body["id"])
+    original_data = created.form_data
+
+    put "/posts/#{created.id}.json",
+        params: {
+          post: {
+            form_template_data: { answers: invalid_answers }.to_json,
+          },
+        }
+    expect(response.status).to eq(400)
+    expect(created.reload.form_data).to eq(original_data)
+    expect(created.form_submission.answers).to eq(literal_answers)
+  end
+
   describe "#create" do
     it "preserves form state through queued approval" do
       category.form_templates << form_template

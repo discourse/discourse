@@ -30,6 +30,8 @@ class FormTemplate::Submission
     @bytesize = encoded.bytesize
     raise ArgumentError if max_bytes && @bytesize > max_bytes
     @data = JSON.parse(encoded, max_nesting: 20)
+    # JSONB cannot store NUL, including in answers omitted from the rendered post.
+    raise ArgumentError if contains_nul?(@data)
     unless @data.keys.sort == KEYS.sort && @data["format_version"] == FORMAT_VERSION &&
              @data["template_id"].is_a?(Integer) && @data["template_id"].positive?
       raise ArgumentError
@@ -153,6 +155,17 @@ class FormTemplate::Submission
   end
 
   private
+
+  def contains_nul?(value)
+    case value
+    when String
+      value.include?("\u0000")
+    when Hash
+      value.any? { |key, item| contains_nul?(key) || contains_nul?(item) }
+    when Array
+      value.any? { |item| contains_nul?(item) }
+    end
+  end
 
   def valid_definition?(definition)
     return false unless definition.is_a?(Hash) && definition.keys.sort == %w[fields output_template]
