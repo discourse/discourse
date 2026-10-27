@@ -204,8 +204,8 @@ export default class LiveRoomPage extends Component {
   }
 
   get gridTiles() {
-    const pipTile = this.pipTile;
-    return pipTile ? this.tiles.filter((tile) => tile !== pipTile) : this.tiles;
+    const pipId = this.pipTile?.participant.id;
+    return this.tiles.filter((tile) => tile.participant.id !== pipId);
   }
 
   get tiledLayout() {

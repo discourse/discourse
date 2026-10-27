@@ -415,6 +415,20 @@ html.discourse-touch .live-call-widget {
     max-height: 40%;
     box-shadow: 0 0.35rem 1.25rem rgb(0 0 0 / 35%);
     transition: none;
+
+    // A portrait feed sized by width would blow past the height cap, so size
+    // it by height and let the inline aspect-ratio set the width.
+    &.--portrait {
+      width: auto;
+      height: min(40%, 20rem);
+    }
+
+    // Any remaining mismatch between the capped box and the feed letterboxes
+    // rather than cropping your own camera.
+    .live-video-tile__video {
+      object-fit: contain;
+      background: var(--primary-very-high);
+    }
   }
 
   // Top-left so it never collides with the per-tile fullscreen buttons
