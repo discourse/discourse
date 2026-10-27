@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import brotliAssetsPlugin from "./lib/brotli-assets-plugin.mjs";
+import bundleAnalyzerPlugin from "./lib/bundle-analyzer-plugin.mjs";
 import chunkImportMapPlugin from "./lib/chunk-import-map-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
@@ -52,6 +54,7 @@ const aliases = [
 
 export function buildConfig({ devMode } = {}) {
   const isProduction = process.env.EMBER_ENV === "production";
+  const brotliSizes = new Map();
 
   if (!isProduction) {
     process.env.NODE_ENV = "development";
@@ -207,6 +210,12 @@ export function buildConfig({ devMode } = {}) {
           }
         },
       },
+      brotliAssetsPlugin({ enabled: isProduction, sizes: brotliSizes }),
+      bundleAnalyzerPlugin({
+        brotliSizes,
+        compress: isProduction,
+        pruneStale: devMode,
+      }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {
