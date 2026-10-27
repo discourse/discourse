@@ -33,18 +33,20 @@ RSpec.describe DiscourseEvents::Events::SchemaMarkup do
   end
 
   it "keeps all-day event dates independent of timezones" do
-    event =
-      event_double(
-        all_day: true,
-        starts_at: Time.iso8601("2026-10-22T10:00:00Z"),
-        ends_at: Time.iso8601("2026-10-23T10:00:00Z"),
-        timezone: "Pacific/Honolulu",
-      )
+    %w[America/New_York Pacific/Kiritimati].each do |timezone|
+      event =
+        event_double(
+          all_day: true,
+          starts_at: Time.utc(2026, 10, 22),
+          ends_at: Time.utc(2026, 10, 23, 23, 59, 59),
+          timezone:,
+        )
 
-    expect(schema_from(described_class.build(topic_view(event)))).to include(
-      "startDate" => "2026-10-22",
-      "endDate" => "2026-10-23",
-    )
+      expect(schema_from(described_class.build(topic_view(event)))).to include(
+        "startDate" => "2026-10-22",
+        "endDate" => "2026-10-23",
+      )
+    end
   end
 
   describe "location" do

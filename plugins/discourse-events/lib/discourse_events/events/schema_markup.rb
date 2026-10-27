@@ -130,10 +130,9 @@ module DiscourseEvents
 
       private_class_method def self.serialize_time(time, event)
         return if time.blank?
+        return time.utc.strftime("%Y-%m-%d") if event.all_day
 
         zoned_time = time.in_time_zone(event.timezone.presence || Event::DEFAULT_TIMEZONE)
-        return zoned_time.to_date.iso8601 if event.all_day
-
         zoned_time.iso8601(3)
       end
     end
