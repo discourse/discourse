@@ -9,6 +9,7 @@ import { getRegister } from "discourse/lib/get-owner";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import WeakValueMap from "discourse/lib/weak-value-map";
 import type Category from "discourse/models/category";
+import type Group from "discourse/models/group";
 import type PendingPost from "discourse/models/pending-post";
 import type { default as Post, PostCreateAttrs } from "discourse/models/post";
 import type PostStream from "discourse/models/post-stream";
@@ -32,6 +33,7 @@ import type UserDraft from "discourse/models/user-draft";
 /** Model instances by store type name. Plugins add theirs through module augmentation. */
 export interface ModelRegistry {
   category: Category;
+  group: Group;
   "pending-post": PendingPost;
   post: Post;
   "post-stream": PostStream;

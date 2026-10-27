@@ -45,7 +45,7 @@ import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
-import Group from "discourse/models/group";
+import Group, { type GroupFields } from "discourse/models/group";
 import RestModel, {
   type RestModelAttrs,
   type RestModelClass,
@@ -140,27 +140,23 @@ export interface UserOption {
   watched_precedence_over_muted?: boolean;
 }
 
-/** Visible memberships can be plain current-user entries or hydrated profile groups.
- * TODO(typescript-pending): Group omits its serializer fields; use its canonical fields when Group is typed.
- */
-export interface UserGroup {
-  id: number;
-  name: string;
-  automatic?: boolean;
-  has_messages?: boolean;
+/** Visible memberships can be plain current-user entries or hydrated profile groups. */
+export interface UserGroup
+  extends
+    Required<Pick<GroupFields, "id" | "name">>,
+    Pick<
+      GroupFields,
+      | "automatic"
+      | "has_messages"
+      | "title"
+      | "flair_url"
+      | "flair_bg_color"
+      | "flair_color"
+      | "can_admin_group"
+      | "is_group_owner"
+      | "group_user"
+    > {
   owner?: true;
-  title?: string | null;
-  flair_url?: string | null;
-  flair_bg_color?: string | null;
-  flair_color?: string | null;
-  can_admin_group?: boolean;
-  is_group_owner?: boolean;
-  group_user?: {
-    user_id: number;
-    group_id: number;
-    notification_level: number;
-    owner?: boolean;
-  };
 }
 
 /** TODO(typescript-pending): Badge's field forwarders and factories lack declared fields; remove when Badge is typed. */
@@ -442,7 +438,7 @@ export interface UserDetailsResponse {
     stats?:
       | (Omit<Partial<UserActionStat>, "count"> & { count?: number | string })[]
       | UserActionStat[];
-    groups?: RestModelAttrs<Group>[];
+    groups?: (RestModelAttrs<Group> & Pick<UserGroup, "id" | "name">)[];
     group_users?: UserGroup["group_user"][];
     invited_by?: UserCreateAttrs | User | null;
     card_badge?: RestPayload | UserBadgeModel | null;
@@ -1811,8 +1807,10 @@ export default class User extends RestModel.extend(Evented) {
 
       if (Object.hasOwn(json.user, "groups")) {
         json.user.visibleGroups = json.user.groups!.map((groupJson, index) => {
-          // TODO(typescript-pending): Group omits group_user and serializer fields; remove when Group is typed.
-          const group = Group.create(groupJson) as Group & UserGroup;
+          // TODO(typescript-pending): RestModel.create drops required input fields;
+          // remove when its factory retains profile group identity.
+          const group = Group.create(groupJson) as Group &
+            Pick<UserGroup, "id" | "name">;
           group.group_user = json.user.group_users?.[index];
           return group;
         });
@@ -2046,7 +2044,7 @@ export default class User extends RestModel.extend(Evented) {
     );
   }
 
-  canManageGroup(group: Group & UserGroup) {
+  canManageGroup(group: Group) {
     return group.get("can_admin_group") || group.get("is_group_owner");
   }
 
