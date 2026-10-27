@@ -37,7 +37,7 @@ export default <template>
           {{/if}}
           {{#if @controller.filters.acting_user}}
             <DButton
-              class="filter btn-default"
+              class="filter btn-default staff-action-logs-filters__staff-user"
               @action={{fn @controller.clearFilter "acting_user"}}
               @suffixIcon="xmark"
               @translatedLabel={{concat
@@ -45,6 +45,7 @@ export default <template>
                 ": "
                 @controller.filters.acting_user
               }}
+              @translatedTitle={{@controller.filters.acting_user}}
             />
           {{/if}}
           {{#if @controller.filters.target_user}}
@@ -138,6 +139,7 @@ export default <template>
                         }}
                         @display="link"
                         @translatedLabel={{item.acting_user.username}}
+                        @translatedTitle={{item.acting_user.username}}
                       />
                     {{else}}
                       <span

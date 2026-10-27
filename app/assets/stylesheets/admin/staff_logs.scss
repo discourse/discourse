@@ -138,8 +138,13 @@
 
 .staff-user__filter {
   min-width: 0;
-  overflow-wrap: anywhere;
+  max-width: 20ch;
   text-align: start;
+
+  .d-button-label {
+    @include ellipsis;
+    display: block;
+  }
 }
 
 .staff-action-logs-controls {
@@ -198,6 +203,12 @@
     overflow-wrap: anywhere;
     text-align: start;
     white-space: normal;
+  }
+
+  .staff-action-logs-filters__staff-user .d-button-label {
+    @include ellipsis;
+    max-width: 24ch;
+    min-width: 0;
   }
 }
 
