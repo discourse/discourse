@@ -759,6 +759,14 @@ export default class ComposerService extends Service {
     return this.model?.composeState && this.model?.composeState !== "closed";
   }
 
+  get #untouchedForm() {
+    return (
+      this.hasFormTemplate &&
+      !this.model.anyDirty &&
+      !this.model.hasSavedFormTemplateDraft
+    );
+  }
+
   @observes("showPreview", "allowPreview")
   previewVisibilityChanged() {
     this.appEvents.trigger("composer:preview-toggled", this.isPreviewVisible);
@@ -1969,6 +1977,8 @@ export default class ComposerService extends Service {
       _allowPreview: null,
       formTemplateInitialValues: undefined,
     });
+    this.#formTemplateReady = false;
+    this.selectedFormTemplate = null;
 
     this.composerActionState.clear();
 
@@ -1983,6 +1993,11 @@ export default class ComposerService extends Service {
   @bind
   _beaconSaveDraft() {
     if (!this._saveDraftDebounce || !this.model || !this.model.canSaveDraft) {
+      return;
+    }
+
+    this.captureFormTemplateDraft();
+    if (this.#untouchedForm) {
       return;
     }
 
@@ -2180,11 +2195,7 @@ export default class ComposerService extends Service {
       this._saveDraftDebounce = discourseDebounce(this, this._saveDraft, 2000);
     } else {
       this.captureFormTemplateDraft();
-      if (
-        this.hasFormTemplate &&
-        !this.model.anyDirty &&
-        !this.model.hasSavedFormTemplateDraft
-      ) {
+      if (this.#untouchedForm) {
         return;
       }
 

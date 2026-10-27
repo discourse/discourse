@@ -601,6 +601,7 @@ class PostsController < ApplicationController
     guardian.ensure_can_see!(post_revision)
     guardian.ensure_can_edit!(post)
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
+         post_revision.modifications["form_data"].blank? &&
          post_revision.modifications["category_id"].blank? &&
          post_revision.modifications["tags"].blank? &&
          post_revision.modifications["reply_to_post_number"].blank?

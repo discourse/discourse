@@ -293,6 +293,21 @@ RSpec.describe PostsController do
       expect(form_post.reload.raw).to eq(submission.render)
       expect(form_post.form_submission.answers).to eq(answers)
     end
+
+    it "reverts a change to an answer the output template omits" do
+      changed = submission.with_answers(answers.merge("confirmed" => true))
+      PostRevisor.new(form_post).revise!(
+        user,
+        { raw: changed.render, form_data: changed.to_h },
+        force_new_version: true,
+      )
+      expect(form_post.reload.form_submission.answers["confirmed"]).to eq(true)
+
+      sign_in(Fabricate(:admin))
+      put "/posts/#{form_post.id}/revisions/2/revert.json"
+      expect(response.status).to eq(200)
+      expect(form_post.reload.form_submission.answers).to eq(answers)
+    end
   end
 
   describe "form preview" do

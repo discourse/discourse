@@ -296,8 +296,6 @@ class PostRevisor
 
     # some normalization
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
-    # Revisions serialize modifications as YAML, which cannot load indifferent hashes.
-    @fields[:form_data] = @fields[:form_data]&.to_hash if @fields.has_key?(:form_data)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
     if @fields.has_key?(:post_type)
