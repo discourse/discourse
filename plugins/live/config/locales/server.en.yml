@@ -67,6 +67,7 @@ en:
     chat:
       default_thread_title: "Voice chat in %{room}"
       default_thread_opener: "In %{room} - %{message}"
+      started_thread_opener: "Started a chat in %{room}"
     onebox:
       inline_to_room: "Live: %{room_name}"
       room_type:

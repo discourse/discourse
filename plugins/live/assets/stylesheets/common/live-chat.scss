@@ -60,6 +60,10 @@
 
   .empty-state__container {
     margin: auto;
+
+    .btn-primary {
+      width: 100%;
+    }
   }
 }
 
@@ -74,26 +78,6 @@
   .is-unavailable.live-chat & {
     .d-icon {
       color: var(--danger);
-    }
-  }
-}
-
-.chat-composer {
-  .live-chat:not(:has(.chat-replying-indicator-container)) & {
-    &__wrapper {
-      margin-bottom: var(--space-4);
-    }
-
-    &__inner-container {
-      padding-inline-start: var(--space-4);
-    }
-  }
-
-  &__wrapper {
-    &.--live {
-      @include viewport.until(sm) {
-        margin-left: var(--space-4);
-      }
     }
   }
 }

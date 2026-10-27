@@ -4,10 +4,9 @@ module Live
   # Bridges a live room to the Discourse chat plugin.
   #
   # A room is linked to a chat channel; each "chat session" lives in a thread on
-  # that channel. A session's thread is only created when someone actually sends
-  # a message: that first message roots the thread, prefixed with the room's
-  # hashtag so the opener links back to the room, and the thread is titled
-  # after the room.
+  # that channel. A session's thread is only created when someone starts the
+  # chat: a short opener posted as them roots the thread, linking back to the
+  # room through its hashtag, and the thread is titled after the room.
   #
   # From then on participants read and post through chat's own UI and API;
   # Live only tracks WHICH thread is the room's live session.
@@ -133,7 +132,8 @@ module Live
       # the channel and a thread is opened from it. Once a thread is live, messages flow through
       # chat's own API instead — this is only called by a panel that believes no
       # thread exists yet, so if one appeared in the meantime the message is
-      # delivered there rather than spawning a competing thread.
+      # delivered there rather than spawning a competing thread. Without a
+      # +message+ it only starts the thread, under a fixed opener.
       # Returns the session state.
       def post_message!(room, user, message)
         channel = ensure_channel!(room)
@@ -141,6 +141,8 @@ module Live
           roll_over_if_stale!(room)
 
           if (thread_id = live_thread_id(room))
+            next if message.blank?
+
             create_message!(
               guardian: user.guardian,
               channel_id: channel.id,
@@ -182,10 +184,9 @@ module Live
         DistributedMutex.synchronize("#{KEY_NAMESPACE}:#{room.id}:chat_lock", &blk)
       end
 
-      # Opens the session's thread from its first message: +message+ itself
-      # roots the thread, prefixed with the room's hashtag so the opener links
-      # back to the room. The change is published so every open panel picks
-      # the new thread up.
+      # Opens the session's thread from its opener (see #opener_for), which links
+      # back to the room through its hashtag. The change is published so every
+      # open panel picks the new thread up.
       def open_session_thread!(room, channel, user, message)
         # Bail before posting: if the channel can't hold a thread, thread
         # creation would be rejected and leave the message orphaned as a loose
@@ -339,11 +340,10 @@ module Live
       # I18n interpolation inserts the message verbatim (no re-interpolation),
       # so user text containing tokens like %{room} or gsub escapes is safe.
       def opener_for(room, message)
-        I18n.t(
-          "live.chat.default_thread_opener",
-          room: "##{room.slug}::#{Live::RoomHashtagDataSource.type}",
-          message: message,
-        )
+        room_hashtag = "##{room.slug}::#{Live::RoomHashtagDataSource.type}"
+        return I18n.t("live.chat.started_thread_opener", room: room_hashtag) if message.blank?
+
+        I18n.t("live.chat.default_thread_opener", room: room_hashtag, message: message)
       end
 
       def title_for(room)
