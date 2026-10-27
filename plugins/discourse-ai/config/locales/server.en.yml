@@ -1373,7 +1373,7 @@ en:
       no_brand_color_found: "%{domain} doesn't use a clear brand color. Ask the administrator which color to use."
       confirm_brand_color: "These are the likeliest brand colors on %{domain}. Ask the administrator which one is their brand color."
       theme_not_editable: "The current theme's colors can't be changed."
-      palette_limit: "This site can't have more color palettes."
+      palettes_unavailable: "New color palettes can't be created on this site."
       palettes_missing: "The palettes for that change were deleted."
       invalid_draft: "This appearance draft is invalid or has expired. Generate it again."
       draft_used: "This appearance draft has already been saved."
