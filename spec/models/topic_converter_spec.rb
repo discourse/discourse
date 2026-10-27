@@ -206,6 +206,68 @@ RSpec.describe TopicConverter do
         expect(Notification.exists?(admin_notification.id)).to eq(true)
       end
     end
+
+    describe "topic_converted_to_public_topic event" do
+      it "triggers once the conversion is committed, with the acting user" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq(
+          [[first_post.topic, { acting_user: admin }]],
+        )
+      end
+
+      it "triggers for silent conversions too" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(first_post.topic, admin, silent: true).convert_to_public_topic(
+              category.id,
+            )
+          end
+
+        expect(events.size).to eq(1)
+      end
+
+      it "doesn't trigger when the post revision fails" do
+        required_tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag)])
+        category.category_required_tag_groups.create!(tag_group: required_tag_group, min_count: 1)
+
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(first_post.topic, Fabricate(:moderator)).convert_to_public_topic(
+              category.id,
+            )
+          end
+
+        expect(first_post.topic.reload.archetype).to eq(Archetype.private_message)
+        expect(events).to be_empty
+      end
+
+      it "doesn't trigger for a topic that was already public" do
+        public_topic = Fabricate(:post).topic
+
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(public_topic, admin).convert_to_public_topic(category.id)
+          end
+
+        expect(events).to be_empty
+      end
+
+      it "doesn't trigger when an enclosing transaction rolls back" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            ActiveRecord::Base.transaction do
+              TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
+              raise ActiveRecord::Rollback
+            end
+          end
+
+        expect(events).to be_empty
+      end
+    end
   end
 
   describe "convert_to_private_message" do
@@ -399,6 +461,30 @@ RSpec.describe TopicConverter do
         topic.convert_to_private_message(admin)
 
         expect(author.user_profile.reload.featured_topic).to eq(nil)
+      end
+    end
+
+    describe "topic_converted_to_private_message event" do
+      it "triggers once the conversion is committed, with the acting user" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_private_message) do
+            topic.convert_to_private_message(admin)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: admin }]])
+      end
+
+      it "doesn't trigger when posters exceed max_allowed_message_recipients" do
+        SiteSetting.max_allowed_message_recipients = 2
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: topic)
+
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_private_message) do
+            topic.convert_to_private_message(admin)
+          end
+
+        expect(events).to be_empty
       end
     end
   end

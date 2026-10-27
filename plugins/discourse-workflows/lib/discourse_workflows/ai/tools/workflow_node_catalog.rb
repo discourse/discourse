@@ -304,6 +304,16 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:convert_to_public_topic" => [
+            {
+              name: "Make the trigger personal message a public topic in a category",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                category_id: 123,
+                actor_username: "system",
+              },
+            },
+          ],
         }.freeze
 
         MAX_TYPES = 10

@@ -59,6 +59,7 @@ module DiscourseWorkflows
         "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" },
         "tags": {
           "type": "array",
+          "description": "Missing when tagging is off, or for personal messages the user can't tag",
           "x-optional": true,
           "items": {
             "type": "object",

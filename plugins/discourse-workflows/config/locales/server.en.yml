@@ -228,6 +228,10 @@ en:
         not_allowed: "'%{username}' cannot change slow mode on topic %{topic_id}. Slow mode can only be changed by staff and trust level 4 users."
         invalid: "Slow mode could not be changed: %{errors}"
         failed: "Slow mode could not be changed on topic %{topic_id}."
+      topic_conversion:
+        to_personal_message_failed: "Topic %{topic_id} couldn't be converted to a personal message."
+        to_public_topic_failed: "Personal message %{topic_id} couldn't be converted to a public topic. Check that the topic has the tags the category requires and that the category accepts new topics."
+        banner: "Topic %{topic_id} is the banner. Remove the banner before converting it to a personal message."
       sort:
         code_missing_return: "Code must contain a return statement."
       summarize:
