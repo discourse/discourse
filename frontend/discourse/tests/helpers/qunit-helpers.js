@@ -11,10 +11,10 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
+import { resetInlineOneboxCache } from "pretty-text/inline-oneboxer";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
-import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
 import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
@@ -45,6 +45,7 @@ import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-d
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
+import { resetCategoryTagSearchCache } from "discourse/lib/category-tag-search";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
@@ -90,6 +91,7 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import { resetUserSearchCache } from "discourse/lib/user-search";
+import { destroyUserStatuses } from "discourse/lib/user-status-on-autocomplete";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
@@ -123,10 +125,10 @@ import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
-import { setupDNativeSelectAssertions } from "./d-native-select-assertions";
-import { setupFormKitAssertions } from "./form-kit-assertions";
-import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
-import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
+import { setupDNativeSelectAssertions } from "./d-native-select-assertions.js";
+import { setupFormKitAssertions } from "./form-kit-assertions.js";
+import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions.js";
+import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper.js";
 
 export function currentUser() {
   return User.create(
@@ -223,7 +225,6 @@ export function testCleanup(container, app) {
   resetMobile();
   noteKeyboardEvidence();
   resetAdditionalReportModes();
-  resetAdminDashboardReportRenderers();
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetDeferredClassModifications();
@@ -234,8 +235,11 @@ export function testCleanup(container, app) {
   resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
+  resetInlineOneboxCache();
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
+  resetCategoryTagSearchCache();
+  destroyUserStatuses();
   resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();

@@ -46,8 +46,7 @@ module DiscourseWorkflows
                 none: "discourse_workflows.post_created.group_inbox_id_placeholder",
               },
             },
-            **CATEGORY_FILTER_PROPERTIES,
-            **TAG_FILTER_PROPERTIES,
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
           },
         )
 
@@ -74,30 +73,20 @@ module DiscourseWorkflows
         end
 
         def output
-          { post: post_data(@post), topic: topic_data(@post.topic), user: user_data(@post.user) }
+          {
+            post: serialize_post(@post),
+            topic: serialize_topic_list_item(@post.topic),
+            user: serialize_user(@post.user),
+          }
         end
 
         def matches?(trigger_ctx)
           topic = @post.topic
 
-          matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
-            matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id")) &&
-            matches_category_ids?(
-              topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-            matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
-        end
+          return false if !matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type"))
+          return false if !matches_topic_filters?(topic, trigger_ctx)
 
-        private
-
-        def post_data(post)
-          serialize_post(post)
-        end
-
-        def user_data(user)
-          serialize_user(user)
+          matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id"))
         end
       end
     end

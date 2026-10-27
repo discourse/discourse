@@ -198,7 +198,7 @@ export default class PostStreamViewportTracker {
   /**
    * Map of post numbers to their post models and DOM elements that are currently on screen
    * Used to track which posts are visible in the viewport for eyeline calculations and screen tracking
-   * @type {Object<number, {post: Object, element: HTMLElement}>}
+   * @type {Record<number, {post: import("discourse/models/post").default, element: HTMLElement}>}
    * @private
    */
   #postsOnScreen = {};
@@ -406,7 +406,7 @@ export default class PostStreamViewportTracker {
 
   /**
    * Returns a map of post numbers to their post models and DOM elements that are currently on screen
-   * @returns {Object<number, {post: Object, element: HTMLElement}>} Map of visible posts
+   * @returns {Record<number, {post: import("discourse/models/post").default, element: HTMLElement}>} Map of visible posts
    */
   get postsOnScreen() {
     return this.#postsOnScreen;
@@ -522,12 +522,11 @@ export default class PostStreamViewportTracker {
    * Determines if a post should be cloaked based on its position relative to the viewport boundaries
    * Returns an object containing cloaking state and optional height style when cloaking is active
    *
-   * @param {Object} post - The post model
+   * @param {import("discourse/models/post").default | null | undefined} post - The post model
    * @param {Object} options - Cloaking boundary options
    * @param {number} options.above - The minimum post number to keep visible
    * @param {number} options.below - The maximum post number to keep visible
-   * @returns {Object} Object with active boolean and optional style string
-   *                   {active: boolean, style?: string}
+   * @returns {{ active: boolean, style?: import("@ember/template").TrustedHTML }} Object with active boolean and optional style
    */
   @bind
   getCloakingData(post, { above, below }) {

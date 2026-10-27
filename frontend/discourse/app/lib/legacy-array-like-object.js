@@ -75,7 +75,7 @@ export default class LegacyArrayLikeObject extends EmberObject {
   /**
    * Creates an instance of LegacyArrayLikeObject. Must be used instead of `new`.
    *
-   * @param {Object} attrs - Properties to set on the instance. `content` must be an array.
+   * @param {{ content?: unknown[] } & Record<string, unknown>} [attrs] - Properties to set on the instance. `content` must be an array.
    * @returns {LegacyArrayLikeObject}
    */
   static create(attrs = {}) {

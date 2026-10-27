@@ -10,10 +10,9 @@ import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
-import { eq } from "discourse/truth-helpers";
 import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ImageAltTextInput from "./image-alt-text-input";
+import ImageAltTextInput from "./image-alt-text-input.gjs";
 
 const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
 

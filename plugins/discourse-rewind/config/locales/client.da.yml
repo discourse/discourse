@@ -18,6 +18,10 @@ da:
           author: Dig
           author_others: "%{username}"
           status_online: "● online"
+        live_usage:
+          minutes:
+            one: "%{count} min"
+            other: "%{count} min"
         invites:
           label_invitations_sent: "Invitationer sendt:"
         writing_analysis:

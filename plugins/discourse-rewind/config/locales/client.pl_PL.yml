@@ -160,6 +160,29 @@ pl_PL:
           message_4: "Twoja średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
           message_5: "Twoje ulubione kanały:"
           dancing_baby_alt: "Tańczące dziecko"
+        live_usage:
+          title: Rachunek telefoniczny
+          subtitle: Twoje oświadczenie o połączeniu głosowym
+          subtitle_others: "Oświadczenie o połączeniu głosowym %{username}"
+          total_airtime: Całkowity czas połączeń
+          call_count:
+            one: "przez %{count} połączenie"
+            few: "przez %{count} połączenia"
+            many: "przez %{count} połączeń"
+            other: "przez %{count} połączeń"
+          top_contacts: Najczęściej rozmawiano z
+          top_rooms: Ulubione pokoje
+          hours:
+            one: "%{count} godzina"
+            few: "%{count} godziny"
+            many: "%{count} godzin"
+            other: "%{count} godzin"
+          minutes:
+            one: "%{count} minuta"
+            few: "%{count} minuty"
+            many: "%{count} minut"
+            other: "%{count} minut"
+          amount_due: "Kwota do zapłaty: nic, połączenia są na koszt firmy"
         invites:
           guest_book_title: Księga gości
           guest_book_subtitle: Zaproszenia do Twojej społeczności

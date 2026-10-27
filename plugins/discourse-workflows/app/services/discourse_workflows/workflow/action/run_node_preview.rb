@@ -4,8 +4,8 @@ module DiscourseWorkflows
   class Workflow::Action::RunNodePreview < Service::ActionBase
     MAX_ITEMS = 25
 
-    option :workflow_snapshot
-    option :node
+    option :workflow_snapshot, optional: true
+    option :node, optional: true
     option :node_type_class
     option :preview_context
     option :parameters, optional: true
@@ -20,6 +20,7 @@ module DiscourseWorkflows
     rescue DiscourseWorkflows::NodeError,
            DiscourseWorkflows::JsSandbox::SandboxError,
            DiscourseWorkflows::JsSandbox::BudgetExceededError,
+           DiscourseWorkflows::JsSandbox::PayloadTooLargeError,
            MiniRacer::Error => e
       error_payload(e.message)
     rescue StandardError => e
@@ -35,19 +36,18 @@ module DiscourseWorkflows
     def items
       @items ||=
         begin
-          pinned = workflow_snapshot.pinned_items_for(node)
+          pinned = workflow_snapshot&.pinned_items_for(node) if node
           pinned.presence || Array(preview_context["__input_items"])
         end
     end
 
     def node_parameters
-      @node_parameters ||= (parameters || node.parameters || {}).deep_stringify_keys
+      @node_parameters ||= (parameters || node&.parameters || {}).deep_stringify_keys
     end
 
     def execute_node(resolver)
-      node_type_class.new(parameters: node_parameters, credentials: {}).execute(
-        execution_context(resolver),
-      )
+      @execution_context = execution_context(resolver)
+      node_type_class.new(parameters: node_parameters, credentials: {}).execute(@execution_context)
     end
 
     def execution_context(resolver)
@@ -71,12 +71,18 @@ module DiscourseWorkflows
       {
         input_count: items.length,
         outputs: ports.map { |port| port.first(MAX_ITEMS) },
+        output_counts: ports.map(&:length),
         truncated: ports.any? { |port| port.length > MAX_ITEMS },
+        log: log_entries,
       }
     end
 
     def error_payload(message)
-      { input_count: items.length, outputs: [], error: message }
+      { input_count: items.length, outputs: [], error: message, log: log_entries }
+    end
+
+    def log_entries
+      @execution_context&.log&.as_json || []
     end
   end
 end

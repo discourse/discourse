@@ -1,6 +1,40 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
+  describe ".dsa_community_rules=" do
+    let(:rule) { { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." } }
+
+    it "accepts a 500 character contractual ground and rejects 501 characters" do
+      rule[:ground] = "é" * 500
+
+      SiteSetting.dsa_community_rules = [rule].to_json
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules).sole.fetch("ground")).to eq(rule[:ground])
+
+      rule[:ground] << "é"
+
+      expect { SiteSetting.dsa_community_rules = [rule].to_json }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "accepts a 2000 character explanation and rejects 2001 characters" do
+      rule[:explanation] = "é" * 2000
+
+      SiteSetting.dsa_community_rules = [rule].to_json
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules).sole.fetch("explanation")).to eq(
+        rule[:explanation],
+      )
+
+      rule[:explanation] << "é"
+
+      expect { SiteSetting.dsa_community_rules = [rule].to_json }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+  end
+
   describe "topic_title_length" do
     it "returns a range of min/max topic title length" do
       expect(SiteSetting.topic_title_length).to eq(
@@ -65,6 +99,16 @@ RSpec.describe SiteSetting do
 
       SiteSetting.update_pending_users_reminder_default = true
       expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(60)
+    end
+  end
+
+  describe "whispers_allowed_groups" do
+    it "defaults to staff while the update_whispers_allowed_groups_default change is enabled" do
+      expect(SiteSetting.whispers_allowed_groups).to eq("")
+
+      SiteSetting.update_whispers_allowed_groups_default = true
+      expect(SiteSetting.whispers_allowed_groups).to eq(Group::AUTO_GROUPS[:staff].to_s)
+      expect(Fabricate(:moderator)).to be_a_whisperer
     end
   end
 
@@ -663,6 +707,35 @@ RSpec.describe SiteSetting do
       SiteSetting.default_locale = "en"
 
       expect(SiteSetting.content_localization_locales).to eq(["en"])
+    end
+  end
+
+  describe ".ensure_consistency!" do
+    it "resets category settings whose category no longer exists" do
+      SiteSetting.default_composer_category = "999999"
+      SiteSetting.general_category_id = 999_999
+      SiteSetting.max_topics_per_day = 999
+
+      SiteSetting.ensure_consistency!
+
+      expect(SiteSetting.default_composer_category).to eq("")
+      expect(SiteSetting.general_category_id).to eq(-1)
+      expect(SiteSetting.max_topics_per_day).to eq(999)
+      expect(SiteSetting.uncategorized_category_id).not_to eq(-1)
+      expect(UserHistory.where(subject: "default_composer_category").last.details).to include(
+        "(id 999999) no longer exists",
+      )
+    end
+
+    it "disallows uncategorized topics when the uncategorized category no longer exists" do
+      SiteSetting.uncategorized_category_id = 999_999
+
+      SiteSetting.ensure_consistency!
+
+      expect(SiteSetting.uncategorized_category_id).to eq(
+        SiteSetting.defaults[:uncategorized_category_id],
+      )
+      expect(SiteSetting.allow_uncategorized_topics).to eq(false)
     end
   end
 end

@@ -1,12 +1,9 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class AssignedAdvancedSearch extends Component {
   static shouldRender(args, { currentUser }) {
     return currentUser?.can_assign_globally;
@@ -14,7 +11,7 @@ export default class AssignedAdvancedSearch extends Component {
 
   @action
   onChangeAssigned(value) {
-    this.outletArgs.onChangeSearchedTermField(
+    this.args.onChangeSearchedTermField(
       "assigned",
       "updateSearchTermForAssignedUsername",
       value
@@ -37,7 +34,7 @@ export default class AssignedAdvancedSearch extends Component {
               includeGroups=true
               customSearchOptions=(hash assignableGroups=true)
             }}
-            @value={{this.outletArgs.searchedTerms.assigned}}
+            @value={{@searchedTerms.assigned}}
           />
         </div>
       </div>

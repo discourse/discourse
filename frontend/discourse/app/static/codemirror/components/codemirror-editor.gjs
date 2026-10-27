@@ -15,9 +15,10 @@ import {
   ViewPlugin,
 } from "@codemirror/view";
 import { bind } from "discourse/lib/decorators";
-import { buildCmParams } from "../build-extensions";
+import { buildCmParams } from "../build-extensions.js";
 
 export default class CodemirrorEditor extends Component {
+  /** @type {import("@codemirror/view").EditorView | null} */
   @tracked view = null;
   #lastValue;
   #suppressChange = false;

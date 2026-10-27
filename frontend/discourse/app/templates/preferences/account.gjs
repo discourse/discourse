@@ -9,7 +9,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FlairChooser from "discourse/select-kit/components/flair-chooser";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -25,12 +24,7 @@ export default <template>
     <UsernamePreference @user={{@controller.model}} />
   </div>
 
-  {{#unless
-    (or
-      @controller.siteSettings.discourse_connect_overrides_avatar
-      @controller.siteSettings.auth_overrides_avatar
-    )
-  }}
+  {{#if @controller.model.can_edit_avatar}}
     <div class="control-group pref-avatar" data-setting-name="user-avatar">
       <label class="control-label" id="profile-picture">{{i18n
           "user.avatar.title"
@@ -52,7 +46,7 @@ export default <template>
         />
       </div>
     </div>
-  {{/unless}}
+  {{/if}}
 
   {{#if @controller.canCheckEmails}}
     <div class="control-group pref-email" data-setting-name="user-email">

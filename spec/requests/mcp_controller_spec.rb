@@ -78,6 +78,91 @@ describe "MCP transport" do
     McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
   end
 
+  it "filters hidden private-message content before paginating for MCP participants" do
+    participant = Fabricate(:user)
+    author = Fabricate(:user)
+    message = Fabricate(:private_message_post, user: author, recipient: participant)
+    hidden_post =
+      Fabricate(
+        :post,
+        topic: message.topic,
+        user: author,
+        hidden: true,
+        raw: "Restricted PM content",
+      )
+    visible_post = Fabricate(:post, topic: message.topic, user: author)
+    trailing_hidden_post =
+      Fabricate(
+        :post,
+        topic: message.topic,
+        user: author,
+        hidden: true,
+        raw: "Further restricted content",
+      )
+    tool_name = "discourse_read_private_message"
+    McpPrimitive.create!(kind: "tool", identifier: tool_name, enabled: true)
+    group = Fabricate(:group)
+    group.add(participant)
+    group.add(author)
+    McpGroupScope.create!(group: group, scope: "mcp:private-messages:read")
+
+    [participant, author, admin].each do |viewer|
+      grant =
+        DiscourseMcp::OAuth::AuthorizationGrant.create!(
+          user: viewer,
+          client: client,
+          redirect_uri: client.redirect_uris.first,
+          requested_scopes: %w[mcp:profile:read mcp:private-messages:read],
+        )
+      token = McpOauthAccessToken.issue!(authorization: grant)
+      read_payload =
+        payload.deep_merge(
+          params: {
+            name: tool_name,
+            arguments: {
+              topic_id: message.topic_id,
+              start_post_number: hidden_post.post_number,
+              post_limit: 1,
+            },
+          },
+        )
+
+      post "/mcp",
+           params: read_payload.to_json,
+           headers:
+             headers.merge("HTTP_AUTHORIZATION" => "Bearer #{token}", "HTTP_MCP_NAME" => tool_name)
+
+      expect(response.status).to eq(200)
+      result = response.parsed_body.fetch("result").fetch("structuredContent")
+      expected_post = viewer == participant ? visible_post : hidden_post
+      if viewer == participant
+        expect(response.body).not_to include(hidden_post.raw, trailing_hidden_post.raw)
+      end
+      expect(result.fetch("posts").pluck("id")).to eq([expected_post.id])
+      expect(result.fetch("posts").sole.fetch("raw")).to eq(expected_post.raw)
+      expect(result.fetch("meta")).to include("returned" => 1, "has_more" => viewer != participant)
+    end
+  end
+
+  it "returns a structured internal error when a tool unexpectedly fails" do
+    failure_message = "private implementation failure"
+    primitive = DiscourseMcp.registry.find(:tool, "discourse_current_user_get")
+    primitive.implementation.stubs(:call).raises(StandardError, failure_message)
+
+    post "/mcp", params: payload.to_json, headers: headers
+
+    expect(response.status).to eq(500)
+    expect(response.parsed_body).to eq(
+      "jsonrpc" => "2.0",
+      "id" => payload[:id],
+      "error" => {
+        "code" => -32_603,
+        "message" => "Internal error",
+      },
+    )
+    expect(response.body).not_to include(failure_message)
+  end
+
   context "when login is required" do
     before { SiteSetting.login_required = true }
 
@@ -215,6 +300,43 @@ describe "MCP transport" do
       'scope="mcp:profile:write"',
     )
     expect(admin.user_profile.reload.bio_raw).not_to eq("Changed without profile access")
+  end
+
+  it "omits submitted values from prompt validation errors" do
+    McpPrimitive.create!(kind: "prompt", identifier: "discourse.draft_reply", enabled: true)
+    prompt_headers = classic_headers
+    prompt_authorization =
+      DiscourseMcp::OAuth::AuthorizationGrant.create!(
+        user: admin,
+        client:,
+        redirect_uri: client.redirect_uris.first,
+        requested_scopes: [DiscourseMcp::INITIAL_SCOPE, DiscourseMcp::Scopes::CONTENT_READ],
+      )
+    prompt_token = McpOauthAccessToken.issue!(authorization: prompt_authorization)
+    instructions = "Confidential draft instructions"
+
+    post "/mcp",
+         params: {
+           jsonrpc: "2.0",
+           id: 1,
+           method: "prompts/get",
+           params: {
+             name: "discourse.draft_reply",
+             arguments: {
+               instructions:,
+             },
+           },
+         }.to_json,
+         headers: prompt_headers.merge("HTTP_AUTHORIZATION" => "Bearer #{prompt_token}")
+
+    expect(response.status).to eq(400)
+    expect(response.parsed_body.dig("error", "code")).to eq(-32_602)
+    expect(response.parsed_body.dig("error", "data", "errors")).to contain_exactly(
+      "type" => "required",
+      "data_pointer" => "",
+      "schema_pointer" => "",
+    )
+    expect(response.body).not_to include(instructions)
   end
 
   it "negotiates a compatible protocol through the standard initialize request" do

@@ -151,6 +151,9 @@ sw:
       banner:
         enabled: "Aligeuza hili kuwa bango %{when}. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
         disabled: "Aliondoa hili bango %{when}. Halitaonekana tena juu ya kila ukurasa."
+    reorder:
+      removed: "Amemtoa %{label}"
+      position: "%{position} chini ya %{total}"
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     software_update_prompt:
       dismiss: "Ondosha"
@@ -219,9 +222,6 @@ sw:
     max_of_count:
       one: "kiwango cha juu cha %{count}"
       other: "kiwango cha juu cha %{count}"
-    character_count:
-      one: "Herufi %{count}"
-      other: "Herufi %{count}"
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     admin_onboarding_banner:
@@ -318,6 +318,8 @@ sw:
       edit: "Hariri"
     choose_topic:
       none_found: "Hakuna mada zilizopatikana."
+    dsa_statements:
+      category: "Kikundi"
     review:
       explain:
         total: "Jumla"
@@ -1337,8 +1339,7 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
-      title_placeholder_redesign: "Kichwa cha Habari"
+      title_placeholder: "Kichwa cha Habari"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
       edit_reason_placeholder: "Kwa nini unahariri?"
       topic_featured_link_placeholder: "Ingiza linki inayoonyeshwa na kichwa"
@@ -2440,15 +2441,6 @@ sw:
         type_mismatch:
           default: "Tafadhali andika thamani sahihi."
           email: "Andika barua pepe iliyo sahihi."
-    table_builder:
-      edit:
-        modal:
-          cancel: "ghairi"
-          create: "Hifadhi"
-          reason: "Kwa nini unahariri?"
-      spreadsheet:
-        show: "Onyesha"
-        about: "Kuhusu"
     filter:
       description:
         yesterday: "Jana"
@@ -2533,6 +2525,7 @@ sw:
             block: "Zuia"
             presets:
               custom: "Binafsi"
+            automatic: "otomatiki"
           authorizations:
             user: "Mtumiaji"
             actions: "Vitendo"
@@ -3093,6 +3086,7 @@ sw:
           variable_name: "Jina la SCSS:"
           variable_name_invalid: "Jina lililoandikwa sio sahihi. Namba na herufi tu zinaruhusiwa. Lazima ianze na herufi. Lazima iwe ya kipekee."
           upload: "Pakia"
+          leave: "Ondoka"
           delete_upload_confirm: "Futa upakiaji huu (CSS ya Mandhari inaweza kuacha kufanya kazi!)"
           import_web_tip: "Hifadhi yenye mandhari"
           is_private: "Mandhari ipo ndani ya hifadhi binafsi ya git"

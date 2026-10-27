@@ -11,7 +11,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import { and, not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
@@ -32,20 +31,20 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatChannelEmptyState from "./chat/channel/empty-state";
-import ChatComposerChannel from "./chat/composer/channel";
-import ChatPinnedMessageBar from "./chat/pinned-message-bar";
-import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
-import ChatSelectionManager from "./chat/selection-manager";
-import ChatChannelFilter from "./chat-channel-filter";
-import ChatChannelPreviewCard from "./chat-channel-preview-card";
-import ChatMentionWarnings from "./chat-mention-warnings";
-import Message from "./chat-message";
-import ChatMessagesContainer from "./chat-messages-container";
-import ChatMessagesScroller from "./chat-messages-scroller";
-import ChatNotices from "./chat-notices";
-import ChatSkeleton from "./chat-skeleton";
-import ChatUploadDropZone from "./chat-upload-drop-zone";
+import ChatChannelEmptyState from "./chat/channel/empty-state.gjs";
+import ChatComposerChannel from "./chat/composer/channel.js";
+import ChatPinnedMessageBar from "./chat/pinned-message-bar.gjs";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow.gjs";
+import ChatSelectionManager from "./chat/selection-manager.gjs";
+import ChatChannelFilter from "./chat-channel-filter.gjs";
+import ChatChannelPreviewCard from "./chat-channel-preview-card.gjs";
+import ChatMentionWarnings from "./chat-mention-warnings.gjs";
+import Message from "./chat-message.gjs";
+import ChatMessagesContainer from "./chat-messages-container.gjs";
+import ChatMessagesScroller from "./chat-messages-scroller.gjs";
+import ChatNotices from "./chat-notices.gjs";
+import ChatSkeleton from "./chat-skeleton.gjs";
+import ChatUploadDropZone from "./chat-upload-drop-zone.gjs";
 
 export default class ChatChannel extends Component {
   @service capabilities;
@@ -341,7 +340,10 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
+    const message = this.messagesManager.findFirstMessageOfDay(
+      new Date(date),
+      this.currentUser.user_option.timezone
+    );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
@@ -718,7 +720,6 @@ export default class ChatChannel extends Component {
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-        client_created_at: message.createdAt.toISOString(),
         ...extractCurrentTopicInfo(this),
       });
 

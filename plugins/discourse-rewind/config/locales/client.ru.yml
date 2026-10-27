@@ -74,6 +74,12 @@ ru:
           author: Вы
           author_others: "%{username}"
           status_online: "● онлайн"
+        live_usage:
+          minutes:
+            one: "%{count} мин"
+            few: "%{count} мин"
+            many: "%{count} мин"
+            other: "%{count} мин"
         invites:
           label_invitations_sent: "Приглашений отправлены:"
         writing_analysis:

@@ -17,7 +17,6 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import DiscourseURL from "discourse/lib/url";
 import userSearch, { validateSearchResult } from "discourse/lib/user-search";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
@@ -30,10 +29,10 @@ import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
-import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval";
-import AiLogFeatureFilter from "./ai-log-feature-filter";
-import AiLogDetailModal from "./modal/ai-log-detail-modal";
-import AiLogRetentionModal from "./modal/ai-log-retention-modal";
+import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval.js";
+import AiLogFeatureFilter from "./ai-log-feature-filter.js";
+import AiLogDetailModal from "./modal/ai-log-detail-modal.gjs";
+import AiLogRetentionModal from "./modal/ai-log-retention-modal.gjs";
 
 const ALL_FILTER_VALUE = "__all__";
 const CUSTOM_DEFAULT_DAYS = 30;
@@ -129,6 +128,8 @@ export default class AiLogs extends Component {
         label: i18n("discourse_ai.logs.successful"),
       },
       { value: "failed", label: i18n("discourse_ai.logs.failed") },
+      { value: "empty", label: i18n("discourse_ai.logs.empty") },
+      { value: "truncated", label: i18n("discourse_ai.logs.truncated") },
     ];
   }
 

@@ -6,15 +6,37 @@ en:
           attributes:
             error_workflow_id:
               cannot_be_self: "cannot be set to the workflow itself"
+        discourse_workflows/variable:
+          attributes:
+            type_options:
+              enum_choices_required: "must include at least one choice for an enum field"
   discourse_workflows:
+    admin_assistant:
+      generating: "Generating and validating an unpublished workflow draft"
+      create_summary: "Save this workflow as an unpublished draft?"
+      not_allowed: "Only administrators who can manage workflows can create workflows."
+      invalid_request: "The workflow request is empty, contains a secret, or is too long. Please provide a shorter description without secrets."
+      invalid_draft: "This workflow draft reference is invalid, unavailable, or expired. Please generate a new draft."
+      incomplete_draft: "The generated workflow draft is incomplete. Please generate a new draft."
+      invalid_graph: "The generated workflow graph is no longer valid. Please generate a new draft."
+      secret_draft: "Workflow drafts cannot contain raw secrets or embedded credentials. Store credentials separately and generate a new draft that references them safely."
+      requester_not_admin: "The administrator who requested this workflow no longer has permission to manage workflows. Please request a new draft from an authorized administrator."
+      approval_required: "Saving this workflow requires human approval."
+      draft_used: "This workflow draft has already been used or is being saved. Please generate a new draft."
+      generation_failed: "The workflow could not be generated and validated. Please try again or refine your request."
+      clarification_required: "More information is needed before the workflow can be generated."
+      creation_failed: "The workflow could not be saved. No workflow was created."
+      availability:
+        available: "Workflow creation is available. Saving requires explicit approval."
+        restricted: "Workflow creation is unavailable on this site."
+        disabled: "Workflow authoring or Discourse AI is disabled. An administrator needs to enable the required features before creating workflows."
+        unconfigured: "The workflow-authoring AI model is not configured or usable."
     ai:
       default_code_node_name: "Code"
       error_agent_not_configured: "The workflow authoring agent is not configured."
       error_invalid_mode: "Invalid AI workflow authoring mode."
       error_invalid_patch: "The AI proposal did not pass workflow validation: %{errors}"
       error_invalid_response: "AI returned an invalid response."
-      error_invalid_script: "The AI generated Code node JavaScript that did not pass validation. Regenerate the proposal or ask the assistant to fix the script."
-      error_invalid_script_with_errors: "The AI generated Code node JavaScript that did not pass validation: %{errors}. Regenerate the proposal or ask the assistant to fix the script."
       error_message_required: "Enter a prompt for the workflow assistant."
       error_message_too_long: "The workflow assistant prompt is too long."
       error_no_operations: "The AI response did not include any workflow patch operations."
@@ -22,6 +44,9 @@ en:
       error_proposal_not_ready: "This AI proposal is not ready to apply."
       error_stale_proposal: "The workflow changed after this AI proposal was generated. Regenerate the proposal."
       clarification_message: "Choose answers so the assistant can continue drafting the workflow."
+      how_to_proceed:
+        question: "%{problem} How should the assistant proceed?"
+        fix: "Fix the problems and try again"
       tool_call_proposal_message: "The assistant drafted a workflow patch and the server validated it."
       tool_call_proposal_summary:
         one: "The assistant drafted one workflow patch operation. Review it before applying."
@@ -47,7 +72,23 @@ en:
       too_many_tags: "A workflow can have at most %{max} tags."
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."
+      workflow_variable:
+        invalid_value: "is not valid for this field's type"
+        incompatible_value_for_new_type: "has a current value that is not valid for the new type. Update or clear the value first."
       approval_timed_out: "Approval timed out"
+      run_timed_out:
+        one: "Execution ran for more than %{count} minute without pausing"
+        other: "Execution ran for more than %{count} minutes without pausing"
+      queue_timed_out:
+        one: "Execution was queued for more than %{count} minute without starting"
+        other: "Execution was queued for more than %{count} minutes without starting"
+      rate_limited:
+        global:
+          one: "This workflow wasn't run because %{count} workflow execution already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+          other: "This workflow wasn't run because %{count} workflow executions already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
+        per_workflow:
+          one: "This workflow wasn't run because it already started %{count} execution in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
+          other: "This workflow wasn't run because it already started %{count} executions in the last minute, which is the most allowed for a single workflow. Later runs will go through again once the last minute has fewer executions. If it's triggered this often on purpose, reduce how often its trigger fires, for example by filtering events earlier."
       step_execution:
         not_executable: "This node cannot be executed as a single step."
         waiting_not_supported: "Nodes that wait for a response cannot run during a step execution. Run the workflow or pin data past them first."
@@ -83,6 +124,13 @@ en:
       unknown_operation: "Unknown operation: %{operation}."
       actor:
         blank: "The user for '%{field}' resolved to a blank value."
+        not_found: "No user found with username '%{username}'."
+        id_not_found: "No user found with ID %{id}."
+        restricted:
+          staged: "The user '%{username}' is a staged user and can't perform actions."
+          silenced: "The user '%{username}' is silenced."
+          suspended: "The user '%{username}' is suspended."
+          inactive: "The user '%{username}' hasn't activated their account."
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
@@ -92,6 +140,7 @@ en:
         invalid_filter: "Invalid topic filter: %{fragments}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+        whisper_not_allowed: "%{username} cannot whisper. Check the whispers allowed groups site setting."
         edit_failed: "Failed to edit post."
         invalid_filter: "Invalid post filter: %{fragments}."
       flag_post:
@@ -185,6 +234,9 @@ en:
         invalid_query: "Invalid query: %{errors}"
         invalid_row: "Invalid row: %{errors}"
         filter_required: "Filter must not be empty"
+        no_columns_to_insert: "Cannot insert a row without any column values."
+        empty_column_expression: "Column '%{column}' has an empty expression."
+        invalid_columns: "Columns must be an object of column names to values, got '%{value}'."
       workflow_version:
         referenced_by_workflow: "Cannot delete a workflow version that is still referenced as the current or active version."
       workflow_call:
@@ -202,10 +254,12 @@ en:
       destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     user:
       check_email_context: "Workflow user node"
     flag_user:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+      flagged_by_agent: "Flagged following review by '%{agent_name}' in the '%{workflow_name}' workflow."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."
@@ -229,41 +283,60 @@ en:
           name: "Workflow author"
           description: "Builds and edits Discourse workflows from natural language"
       tool_help:
-        workflow_node_catalog: "Lists available workflow nodes and their configuration schema"
+        workflow_node_catalog: "Returns the configuration schema of workflow node types"
         workflow_ai_agent_catalog: "Lists existing Discourse AI agents that workflow drafts can reuse"
-        workflow_graph_context: "Describes the current workflow graph"
+        workflow_node_details: "Describes nodes in the current workflow, including recorded output"
         workflow_validate_patch: "Dry-runs and validates workflow patch operations"
         workflow_ask_questions: "Asks the workflow admin to choose clarification answers"
         workflow_authoring_result: "Returns the final workflow authoring result"
         workflow_resolve_entity: "Resolves Discourse names to workflow parameter values"
         search_chat_channels: "Searches chat channel names and IDs for workflow parameters"
         search_chat_integration_channels: "Searches external chat integration channel labels and IDs for workflow parameters"
-        workflow_script_context: "Returns context for writing workflow Code node JavaScript"
-        workflow_validate_script: "Validates workflow Code node JavaScript"
+        workflow_validate_script: "Runs workflow Code node JavaScript with test data"
+        data_table_schema: "Lists workflow data tables with their columns"
+        data_table_query: "Reads rows from a workflow data table"
+        data_table_write: "Inserts, updates, upserts or deletes workflow data table rows"
       tool_summary:
         workflow_node_catalog: "Reading workflow node catalog"
         workflow_ai_agent_catalog: "Reading AI agent catalog"
-        workflow_graph_context: "Reading workflow graph"
+        workflow_node_details: "Reading workflow nodes"
         workflow_validate_patch: "Validating workflow patch"
         workflow_ask_questions: "Asking clarification questions"
         workflow_authoring_result: "Returning workflow authoring result"
         workflow_resolve_entity: "Resolving Discourse entities"
         search_chat_channels: "Searching chat channels"
         search_chat_integration_channels: "Searching external chat integration channels"
-        workflow_script_context: "Loading script context"
-        workflow_validate_script: "Validating script"
+        workflow_validate_script: "Testing script"
+        data_table_schema: "Reading data table schema"
+        data_table_query: "Querying data table"
+        data_table_write: "Writing to data table"
       tool_description:
         workflow_node_catalog: "Read workflow node catalog"
         workflow_ai_agent_catalog: "Read AI agent catalog"
-        workflow_graph_context: "Read workflow graph"
+        workflow_node_details: "Read workflow nodes"
         workflow_validate_patch: "Validated workflow patch"
         workflow_ask_questions: "Asked clarification questions"
         workflow_authoring_result: "Returned workflow authoring result"
         workflow_resolve_entity: "Resolved Discourse entities"
         search_chat_channels: "Searched chat channels"
         search_chat_integration_channels: "Searched external chat integration channels"
-        workflow_script_context: "Loaded script context"
-        workflow_validate_script: "Validated script"
+        workflow_validate_script: "Tested script"
+        data_table_schema: "Read data table schema"
+        data_table_query: "Queried data table"
+        data_table_write: "Wrote to data table"
+      tool_options:
+        data_table_schema:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+        data_table_query:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+        data_table_write:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
   reviewables:
     reasons:
       workflow_flagged_user: "A workflow added this user to the review queue."

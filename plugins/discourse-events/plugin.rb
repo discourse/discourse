@@ -20,6 +20,7 @@ enabled_site_setting :discourse_events_enabled
 register_svg_icon "calendar-days"
 register_asset "stylesheets/common/event-calendar-prompt.scss"
 register_asset "stylesheets/common/full-calendar-ext.scss"
+register_asset "stylesheets/common/calendar-placeholder.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"
 register_asset "stylesheets/common/discourse-post-event.scss"
@@ -295,7 +296,10 @@ after_initialize do
   require_relative "app/jobs/regular/discourse_post_event_bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/discourse_post_event/warm_event_onebox"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
+  require_relative "jobs/regular/discourse_post_event/warm_recording_onebox"
+  require_relative "jobs/regular/discourse_post_event/publish_livestream_chat_transcript"
   require_relative "lib/discourse_events/events/chat_channel_sync"
   require_relative "lib/discourse_events/events/email_renderer"
   require_relative "lib/discourse_events/events/excerpt"
@@ -984,6 +988,25 @@ after_initialize do
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
+  add_to_serializer(:topic_view, :livestream_chat_active) do
+    !!object.topic.first_post&.event&.livestream_chat_active?
+  end
+
+  on(:discourse_post_event_event_ended) do |event, event_date|
+    if event.livestream?
+      Jobs.enqueue(:publish_livestream_chat_transcript, event_date_id: event_date.id)
+    end
+  end
+
+  # Any status set since the event closed the chat is deliberate, so a resumed
+  # event leaves it be.
+  on(:chat_channel_status_change) do |channel:, **|
+    DiscourseEvents::Livestream::TopicChatChannel.where(
+      chat_channel_id: channel.id,
+      closed_on_event_end: true,
+    ).update_all(closed_on_event_end: false)
+  end
 
   add_to_serializer(
     :topic_view,

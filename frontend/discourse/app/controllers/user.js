@@ -236,9 +236,16 @@ export default class UserController extends Controller {
     return this.viewingSelf || this.currentUser?.admin;
   }
 
-  @computed("model.name")
+  @computed("model.name", "siteSettings.enable_names")
+  get showName() {
+    return (
+      this.siteSettings.enable_names && this.model?.name?.trim().length > 0
+    );
+  }
+
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.model?.name);
+    return this.showName && prioritizeNameInUx(this.model.name);
   }
 
   @computed("model.badge_count")

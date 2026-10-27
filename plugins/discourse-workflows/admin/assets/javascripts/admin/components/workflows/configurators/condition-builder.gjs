@@ -7,21 +7,23 @@ import {
   isSingleValueOperator,
   operatorOptionsForType,
   operatorsForType,
-} from "../../../lib/workflows/condition-operators";
-import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview";
+} from "../../../lib/workflows/condition-operators.js";
+import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview.js";
 import {
   inputFieldPrefixForConnection,
   inputIndexForConnection,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import { isExpression } from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/expression-paths.js";
+import {
+  isExpression,
+  wholeExpressionBody,
+} from "../../../lib/workflows/property-engine.js";
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
-  resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import Collection from "./collection";
-import Field from "./field";
+} from "../../../lib/workflows/schema-graph.js";
+import Collection from "./collection.gjs";
+import Field from "./field.gjs";
 
 function flattenFields(fields, prefix = "", labelPrefix = "") {
   const result = [];
@@ -75,10 +77,7 @@ function leafKey(fieldPath) {
   }
   path = String(path);
 
-  const exprMatch = path.match(/^=\{\{\s*(.*?)\s*\}\}$/);
-  if (exprMatch) {
-    path = exprMatch[1];
-  }
+  path = wholeExpressionBody(path) ?? path;
 
   const bracketSegments = [
     ...path.matchAll(/\[((?:"(?:\\.|[^"\\])*")|(?:'(?:\\.|[^'\\])*'))\]/g),
@@ -169,10 +168,9 @@ export default class ConditionBuilder extends Component {
     const graph = {
       nodes: this.args.nodes || [],
       connections: this.args.connections || [],
-      nodeTypes: this.args.nodeTypes || [],
     };
     const runData = this.args.session?.lastExecutionRunData || {};
-    const declaredOutputSchemas = resolveDeclaredOutputSchemas(graph);
+    const declaredOutputSchemas = this.args.session?.outputSchemas;
     const inputConnections = inputConnectionsForNode(this.args.node, graph);
     const primaryConnection = inputConnections[0] || null;
 
@@ -197,7 +195,6 @@ export default class ConditionBuilder extends Component {
         sourceNode: previousNode,
         outputIndex,
         prefix,
-        graph,
         pinnedItems,
         declaredOutputSchemas,
       });

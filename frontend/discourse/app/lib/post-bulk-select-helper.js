@@ -4,6 +4,9 @@ import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 
 /**
+ * @typedef {{ id?: number | string, post_id?: number, draft_key?: string }} SelectablePost
+ */
+/**
  * Helper class for managing bulk selection of posts
  * Similar to BulkSelectHelper but specialized for posts
  *
@@ -15,8 +18,12 @@ import { trackedArray } from "@ember/reactive/collections";
  */
 export default class PostBulkSelectHelper {
   @tracked loading = false;
+
+  /** @type {SelectablePost | null} */
   @tracked lastClickedPost = null;
   @tracked bulkSelectEnabled = false;
+
+  /** @type {SelectablePost[] | null} */
   @tracked posts = null;
   selected = trackedArray();
 
@@ -33,6 +40,7 @@ export default class PostBulkSelectHelper {
     return this.selected.length > 0;
   }
 
+  /** @returns {boolean | null} */
   get allSelected() {
     return this.posts && this.selected.length === this.posts.length;
   }

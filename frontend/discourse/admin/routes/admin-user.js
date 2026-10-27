@@ -14,6 +14,10 @@ export default class AdminUserRoute extends DiscourseRoute {
     };
   }
 
+  /**
+   * @param {{ user_id: string | number }} params
+   * @returns {Promise<import("discourse/admin/models/admin-user").default>}
+   */
   model(params) {
     return AdminUser.find(get(params, "user_id"));
   }

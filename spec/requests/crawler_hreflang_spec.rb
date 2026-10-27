@@ -147,6 +147,74 @@ describe "Crawler hreflang tags" do
       end
     end
 
+    context "when viewing a later page of a topic" do
+      fab!(:replies) { Fabricate.times(25, :post, topic: post.topic, user:) }
+
+      let(:topic_url) { "#{Discourse.base_url}/t/#{post.topic.slug}/#{post.topic.id}" }
+
+      def hreflang_links
+        Nokogiri
+          .HTML5(response.body)
+          .css("link[rel='alternate'][hreflang]")
+          .map { |link| [link["hreflang"], link["href"]] }
+      end
+
+      it "points each language alternate to the same page" do
+        get "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=ja",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        expect(hreflang_links).to contain_exactly(
+          ["x-default", "#{topic_url}?page=2"],
+          ["en", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=en"],
+          ["ja", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=ja"],
+          ["es", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=es"],
+        )
+      end
+
+      it "points the alternates of a reply link to the page that holds the reply" do
+        get "#{topic_url}/#{replies.last.post_number}",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        expect(hreflang_links).to include(
+          ["x-default", "#{topic_url}?page=2"],
+          ["ja", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=ja"],
+        )
+      end
+    end
+
+    it "includes the subfolder once in language alternates" do
+      set_subfolder "/forum"
+
+      get "/t/#{post.topic.slug}/#{post.topic.id}",
+          env: {
+            "SCRIPT_NAME" => "/forum",
+          },
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      expect(response.body).to include(
+        %(<link rel="alternate" href="#{Discourse.base_url_no_prefix}/forum/t/#{post.topic.slug}/#{post.topic.id}" hreflang="x-default" />),
+      )
+    end
+
+    it "keeps language alternates on the forum when the topic canonicalizes to an embedding page on the same host" do
+      SiteSetting.embed_set_canonical_url = true
+      topic_embed = Fabricate(:topic_embed, post:, embed_url: "#{Discourse.base_url}/blog/article")
+      topic_url = "#{Discourse.base_url}/t/#{post.topic.slug}/#{post.topic.id}"
+
+      get topic_url, headers: { "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
+
+      expect(response.body).to include(
+        %(<link rel="alternate" href="#{topic_url}?#{Discourse::LOCALE_PARAM}=ja" hreflang="ja" />),
+      )
+      expect(response.body).not_to include("#{topic_embed.embed_url}?#{Discourse::LOCALE_PARAM}=")
+    end
+
     it "does not append ?tl= to canonical for non-crawler requests" do
       get "/t/#{post.topic.slug}/#{post.topic.id}?#{Discourse::LOCALE_PARAM}=ja"
 

@@ -5,13 +5,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `configure-menu-reorderable.gjs`
+// replaces it.
 class ConfigureRow extends Component {
   @service site;
 
@@ -154,6 +156,7 @@ class ConfigureRow extends Component {
 }
 
 export default class ConfigureMenu extends Component {
+  /** @type {number | null} */
   draggedIndex = null;
 
   get lastIndex() {

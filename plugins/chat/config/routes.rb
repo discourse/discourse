@@ -93,7 +93,7 @@ Chat::Engine.routes.draw do
        }
 
   # chat_controller routes
-  get "/" => "chat#respond"
+  get "/" => "chat#respond", :defaults => { crawler_directory: true }
   get "/disabled" => "chat#respond"
   get "/search" => "chat#respond"
   get "/new-message" => "chat#respond"
@@ -101,7 +101,7 @@ Chat::Engine.routes.draw do
   get "/channels" => "chat#respond"
   get "/starred-channels" => "chat#respond"
   get "/threads" => "chat#respond"
-  get "/browse" => "chat#respond"
+  get "/browse" => "chat#respond", :defaults => { crawler_directory: true }
   get "/browse/all" => "chat#respond"
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"

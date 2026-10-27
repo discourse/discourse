@@ -5,7 +5,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   after { SearchIndexer.disable }
 
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 
@@ -22,6 +22,25 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
+  end
+
+  it "keeps fresh research wrapper metadata but excludes already generated findings from evidence" do
+    tool =
+      described_class.new(
+        {},
+        bot_user: bot_user,
+        llm: llm,
+        context: DiscourseAi::Agents::BotContext.new(user: user),
+      )
+    result = {
+      dry_run: false,
+      goals: "Find facts",
+      filter: "topic:1",
+      results: ["Generated finding"],
+    }
+    expect(JSON.parse(tool.work_evidence(result))).to eq(result.merge(results: []).as_json)
+    failure = { error: "Research unavailable" }
+    expect(tool.work_evidence(failure)).to eq(failure.to_json)
   end
 
   it "uses custom researcher_llm and applies token limits correctly" do

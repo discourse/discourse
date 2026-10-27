@@ -132,6 +132,10 @@ tr_TR:
           message_4: "Ortalama mesaj uzunluğunuz <strong>%{length}</strong> karakterdi."
           message_5: "En sevdiğiniz kanallar:"
           dancing_baby_alt: "Dans eden bebek"
+        live_usage:
+          minutes:
+            one: "%{count} dk"
+            other: "%{count} dk"
         invites:
           guest_book_title: Ziyaretçi Defteri
           guest_book_subtitle: Topluluğunuzun Davetiyeleri

@@ -4,15 +4,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { and, not } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   addExtraUserClasses,
   renderAvatar,
 } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
-import UserTip from "../../user-tip";
-import UserStatusBubble from "./user-status-bubble";
+import UserTip from "../../user-tip.gjs";
+import UserStatusBubble from "./user-status-bubble.gjs";
 
 const DEFAULT_AVATAR_SIZE = "medium";
 

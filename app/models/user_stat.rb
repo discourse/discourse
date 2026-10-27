@@ -14,6 +14,43 @@ class UserStat < ActiveRecord::Base
   UPDATE_UNREAD_MINUTES_AGO = 10
   UPDATE_UNREAD_USERS_LIMIT = 10_000
 
+  COUNTABLE_POST_CONDITIONS = <<~SQL
+    p.deleted_at IS NULL
+    AND p.post_type = :regular_post_type
+    AND NOT p.hidden
+    AND t.deleted_at IS NULL
+    AND t.visible
+    AND t.archetype = 'regular'
+  SQL
+
+  def self.recalculate_likes!(user_ids)
+    DB.exec(
+      <<~SQL,
+        UPDATE user_stats
+        SET likes_given = (#{countable_user_actions_count_sql(:like_type)}),
+            likes_received = (#{countable_user_actions_count_sql(:was_liked_type)})
+        WHERE user_id IN (:user_ids)
+      SQL
+      user_ids:,
+      like_type: UserAction::LIKE,
+      was_liked_type: UserAction::WAS_LIKED,
+      regular_post_type: Post.types[:regular],
+    )
+  end
+
+  def self.countable_user_actions_count_sql(action_type)
+    <<~SQL
+      SELECT COUNT(*)
+      FROM user_actions ua
+      INNER JOIN posts p ON p.id = ua.target_post_id
+      INNER JOIN topics t ON t.id = p.topic_id
+      WHERE ua.user_id = user_stats.user_id
+        AND ua.action_type = :#{action_type}
+        AND #{COUNTABLE_POST_CONDITIONS}
+    SQL
+  end
+  private_class_method :countable_user_actions_count_sql
+
   def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
     DB.exec(
       <<~SQL,

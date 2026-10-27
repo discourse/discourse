@@ -6,6 +6,10 @@
 
 pt_BR:
   js:
+    dsa_notice:
+      title: "Denunciar conteúdo ilegal"
+      email: "Endereço de e-mail"
+      resend_email_code: "Reenviar código"
     user_api_key:
       title: 'Autorizar "%{application_name}"'
       authorize: "Autorizar"
@@ -294,7 +298,6 @@ pt_BR:
       zh_CN:
         name: Chinês simplificado
     share:
-      topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Compartilhar no X"
@@ -348,6 +351,12 @@ pt_BR:
     skip_to_last_reply: "Ir para a última resposta"
     skip_to_top: "Pular para o topo"
     skip_user_nav: "Pular para o conteúdo do perfil"
+    reorder:
+      remove: "Remover %{label}"
+      removed: "Removeu %{label}"
+      move_up: "Mover para cima"
+      move_down: "Mover para baixo"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     emails_are_disabled_no_smtp: "O envio de e-mails está desativado porque nenhum servidor SMTP foi configurado. Não é possível enviar nenhum tipo de e-mail."
     emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários(as) que não são da equipe."
@@ -477,9 +486,6 @@ pt_BR:
     max_of_count:
       one: "máx de %{count}"
       other: "máx de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     period_chooser:
       aria_label: "Filtrar por período"
     related_messages:
@@ -773,6 +779,10 @@ pt_BR:
       title:
         search: "Pesquisar mensagem"
         placeholder: "digite o título da mensagem, URL ou ID aqui"
+    dsa_statements:
+      category: "Categoria"
+      category_prompt: "Escolha uma categoria"
+      saving: "Salvando…"
     review:
       show_more: "Exibir mais"
       show_less: "Exibir menos"
@@ -2044,7 +2054,6 @@ pt_BR:
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: cortamos a sua imagem. A largura e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
-        use_custom: "Ou envie um avatar personalizado:"
       change_profile_background:
         title: "Cabeçalho do perfil"
         instructions: "Os cabeçalhos do perfil serão centralizados e terão largura padrão de 1110px."
@@ -2627,7 +2636,7 @@ pt_BR:
       hide_forever: "não, obrigado(a)"
       hidden_for_session: "Ok, vamos perguntar amanhã. Você sempre pode usar \"Entrar\" para criar uma conta também."
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
-      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente. :heart:"
+      value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente."
     offline_indicator:
       no_internet: "Sem conexão à internet."
       refresh_page: "Atualizar página"
@@ -3091,8 +3100,7 @@ pt_BR:
       cancel_edit: "Cancelar edição"
       draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
-      title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "Por que você está editando?"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
@@ -3109,8 +3117,6 @@ pt_BR:
       uploading: "Enviando…"
       show_preview: "exibir pré-visualização"
       hide_preview: "ocultar pré-visualização"
-      switch_to_markdown: "Mudar para o editor Markdown padrão (%{keyboardShortcut})"
-      switch_to_rich_text: "Mudar para o novo editor de rich text (%{keyboardShortcut})"
       quote_post_title: "Citar postagem inteira"
       bold_label: "N"
       bold_title: "Negrito"
@@ -3247,6 +3253,8 @@ pt_BR:
       onebox_toolbar:
         copy: "Copiar link"
         link_copied: "Link copiado!"
+      table:
+        default_heading: "Coluna %{number}"
       unsupported_token: "O editor avançado não oferece suporte a todos os recursos usados nesta postagem; mudando para o editor de Markdown."
     notifications:
       tooltip:
@@ -5035,9 +5043,6 @@ pt_BR:
       admin:
         title: "Administração"
     badges:
-      earned_n_times:
-        one: "Emblema obtido %{count} vez"
-        other: "Emblema obtido %{count} vezes"
       granted_on: "Concedido em %{date}"
       others_count:
         one: "Concedido a outros %{count} vez"
@@ -5530,63 +5535,6 @@ pt_BR:
           other: "A entrada deve ser maior que %{count}."
         pattern_mismatch: "Corresponda ao formato solicitado."
         bad_input: "Insira uma entrada válida."
-    table_builder:
-      title: "Construtor de tabela"
-      modal:
-        title: "Construtor de tabela"
-        create: "Construir tabela"
-        help:
-          title: "Usando editor de planilha"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "no final de uma linha para inserir uma nova linha."
-          new_col: "no final de uma coluna para inserir uma nova coluna."
-          options: "Clique com o botão direito nas células para acessar mais opções no menu suspenso."
-        confirm_close: "Tem certeza de que deseja fechar o construtor de tabelas? Todas as alterações não salvas serão perdidas."
-      edit:
-        btn_edit: "Editar tabela"
-        modal:
-          title: "Editar tabela"
-          cancel: "cancelar"
-          create: "Salvar"
-          reason: "Por que você está editando?"
-          trigger_reason: "Adicione o motivo para a edição"
-        default_edit_reason: "Atualizar tabela com o editor de tabelas"
-      default_header:
-        col_1: "Coluna 1"
-        col_2: "Coluna 2"
-        col_3: "Coluna 3"
-        col_4: "Coluna 4"
-      spreadsheet:
-        no_records_found: "Nenhum registro encontrado"
-        show: "Exibir"
-        entries: "entradas"
-        about: "Sobre"
-        prompts:
-          delete_selected_rows: "Tem certeza de que deseja excluir as linhas selecionadas?"
-          delete_selected_cols: "Tem certeza de que deseja excluir as colunas selecionadas?"
-          will_destroy_merged_cells: "Esta ação irá desfazer as células mescladas existentes. Tem certeza?"
-          will_clear_search_results: "Esta ação irá desfazer as células mescladas existentes. Tem certeza?"
-          conflicts_with_merged_cells: "Há um conflito com outra célula mesclada"
-        invalid_merge_props: "Propriedades mescladas inválidas"
-        cells_already_merged: "Células já mescladas"
-        no_cells_selected: "Nenhuma célula selecionada"
-        context_menu:
-          row:
-            before: "Inserir nova linha antes"
-            after: "Inserir nova linha depois"
-            delete: "Excluir linhas selecionadas"
-          col:
-            before: "Inserir nova coluna antes"
-            after: "Inserir nova coluna depois"
-            delete: "Excluir colunas selecionadas"
-            rename: "Renomear esta coluna"
-          order:
-            ascending: "Ordem crescente"
-            descending: "Ordem decrescente"
-          copy: "Copiar..."
-          paste: "Colar..."
-          save: "Salvar como..."
     powered_by_discourse: "Com tecnologia Discourse"
     safari_15_warning: "Em breve, seu navegador se tornará incompatível com esta comunidade. Para continuar participando, atualize seu navegador ou <a href='%{url}'>saiba mais</a>."
     filter:
@@ -5820,6 +5768,7 @@ pt_BR:
             use_preset: "Configurar"
             presets:
               custom: "Personalizadas"
+            automatic: "Automático"
           authorizations:
             user: "Usuário(a)"
             last_used: "Último uso"
@@ -7360,8 +7309,8 @@ pt_BR:
           upload: "Enviar"
           select_component: "Selecione um componente…"
           unsaved_changes_alert: "Você ainda não salvou as suas modificações, você deseja descartá-las e prosseguir?"
-          unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja prosseguir?"
           discard: "Descartar"
+          leave: "Sair"
           stay: "Permanecer"
           css_html: "Código personalizado"
           edit_css_html: "Editar código"

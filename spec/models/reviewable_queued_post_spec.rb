@@ -161,6 +161,24 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(Post.public_posts.count).to eq(post_count)
         end
 
+        context "when the dsa_reporting_enabled site setting is enabled" do
+          before do
+            SiteSetting.dsa_reporting_enabled = true
+            SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+          end
+
+          it "includes appeal instructions in the feedback message" do
+            reviewable.perform(
+              moderator,
+              :revise_and_reject_post,
+              revise_reason: "Duplicate",
+              revise_feedback: "This is old news",
+            )
+
+            expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+          end
+        end
+
         it "creates a private message to the creator of the post" do
           args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
           expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
@@ -472,6 +490,72 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   describe "penalty actions" do
     fab!(:reviewable, :reviewable_queued_post)
 
+    it "keeps the queued post pending when suspension details are invalid" do
+      result =
+        reviewable.perform(
+          moderator,
+          :reject_and_suspend,
+          reason: "",
+          suspend_until: 2.days.from_now,
+        )
+
+      expect(result).not_to be_success
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.target_created_by.reload).not_to be_suspended
+    end
+
+    it "keeps the queued post pending when silencing details are invalid" do
+      result =
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          reason: "",
+          silenced_till: 2.days.from_now,
+        )
+
+      expect(result).not_to be_success
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.target_created_by.reload).not_to be_silenced
+    end
+
+    it "keeps the queued post pending when the moderator cannot silence a related user" do
+      expect do
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          reason: "spam",
+          silenced_till: 2.days.from_now,
+          other_user_ids: [admin.id],
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.target_created_by.reload).not_to be_silenced
+      expect(admin.reload).not_to be_silenced
+    end
+
+    it "rejects a queued post and renews expired related silences without shortening active ones" do
+      expired_user = Fabricate(:user, silenced_till: 1.day.ago)
+      active_expiry = 3.days.from_now.change(usec: 0)
+      active_user = Fabricate(:user, silenced_till: active_expiry)
+      expiry = 2.days.from_now.change(usec: 0)
+
+      result =
+        reviewable.perform(
+          moderator,
+          :reject_and_silence,
+          reason: "spam",
+          silenced_till: expiry,
+          other_user_ids: [expired_user.id, active_user.id],
+        )
+
+      expect(result).to be_success
+      expect(reviewable.reload).to be_rejected
+      expect(reviewable.target_created_by.reload.silenced_till).to eq(expiry)
+      expect(expired_user.reload.silenced_till).to eq(expiry)
+      expect(active_user.reload.silenced_till).to eq(active_expiry)
+    end
+
     it "offers silence and suspend between the reject and delete actions" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       bundle = actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }
@@ -515,28 +599,294 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(actions.has?(:reject_and_suspend)).to eq(false)
     end
 
-    it "rejects the post and keeps the author, letting the client apply the suspension" do
+    it "rejects the post and suspends the author" do
       result = nil
-      expect { result = reviewable.perform(moderator, :reject_and_suspend) }.not_to change(
-        Post,
-        :count,
-      )
+      expect {
+        result =
+          reviewable.perform(
+            moderator,
+            :reject_and_suspend,
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+          )
+      }.not_to change { reviewable.topic.posts.count }
 
       expect(result.success?).to eq(true)
       expect(reviewable.rejected?).to eq(true)
-      expect(reviewable.target_created_by.suspended?).to eq(false)
+      expect(reviewable.target_created_by.reload).to be_suspended
     end
 
-    it "rejects the post and keeps the author, letting the client apply the silencing" do
+    it "rejects the post and silences the author" do
       result = nil
-      expect { result = reviewable.perform(moderator, :reject_and_silence) }.not_to change(
-        Post,
-        :count,
-      )
+      expect {
+        result =
+          reviewable.perform(
+            moderator,
+            :reject_and_silence,
+            reason: "spam",
+            silenced_till: 2.days.from_now,
+          )
+      }.not_to change { reviewable.topic.posts.count }
 
       expect(result.success?).to eq(true)
       expect(reviewable.rejected?).to eq(true)
-      expect(reviewable.target_created_by.silenced?).to eq(false)
+      expect(reviewable.target_created_by.reload).to be_silenced
+    end
+  end
+
+  describe "#perform" do
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      let(:reviewable) { Fabricate(:reviewable_queued_post) }
+
+      before do
+        freeze_time
+        SiteSetting.dsa_reporting_enabled = true
+      end
+
+      it "creates no statement when approve_post handles the queued post reviewable" do
+        expect { expect(reviewable.perform(admin, :approve_post)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when approve_post_closed handles the queued post reviewable" do
+        reviewable.topic.update!(closed: true)
+
+        expect {
+          expect(reviewable.perform(admin, :approve_post_closed)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "records automatic detection when a moderator rejects a queued post caught by a watched word" do
+        reviewable.add_score(
+          Discourse.system_user,
+          ReviewableScore.types[:needs_approval],
+          reason: "watched_word",
+        )
+
+        expect { reviewable.perform(admin, :reject_post) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was held for approval and rejected before publication.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => reviewable.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
+
+      it "records a statement when revise_and_reject_post handles the queued post reviewable" do
+        expect {
+          reviewable.perform(
+            admin,
+            :revise_and_reject_post,
+            revise_reason: "Please clarify the topic",
+            revise_feedback: "Add more detail.",
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was held for approval and rejected before publication.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => reviewable.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
+
+      it "creates no statement when the author withdraws their queued post reviewable" do
+        expect {
+          expect(reviewable.perform(reviewable.target_created_by, :delete)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when an API administrator deletes another author's queued post reviewable" do
+        request = ActionDispatch::Request.new(Auth::DefaultCurrentUserProvider::API_KEY_ENV => true)
+        guardian = Guardian.new(admin, request)
+
+        expect {
+          expect(reviewable.perform(admin, :delete, guardian:)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "records a statement when reject_and_suspend handles the queued post reviewable" do
+        expect {
+          reviewable.perform(
+            admin,
+            :reject_and_suspend,
+            reason: "Spam",
+            suspend_until: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of a post held for approval was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => reviewable.target_created_by.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when reject_and_silence handles the queued post reviewable" do
+        expect {
+          reviewable.perform(
+            admin,
+            :reject_and_silence,
+            reason: "Spam",
+            silenced_till: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of a post held for approval had their ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => reviewable.target_created_by.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records account and queued post statements when delete_user handles the queued post reviewable" do
+        content_date = reviewable.target_created_by.created_at.to_date.iso8601
+
+        expect { reviewable.perform(admin, :delete_user) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(2)
+
+        statement =
+          DsaStatementOfRecord.where(reviewable_id: reviewable.id).find_by!(
+            "payload ->> 'decision_account' = ?",
+            "DECISION_ACCOUNT_TERMINATED",
+          )
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of a post held for approval had their account deleted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => content_date,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        )
+
+        post_statement =
+          DsaStatementOfRecord.where(reviewable_id: reviewable.id).find_by!(
+            "payload -> 'decision_visibility' @> ?",
+            '["DECISION_VISIBILITY_CONTENT_DISABLED"]',
+          )
+
+        expect(post_statement).to be_pending
+        expect(post_statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was held for approval and rejected before publication.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => reviewable.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
+
+      it "records account and queued post statements when delete_user_block handles the queued post reviewable" do
+        content_date = reviewable.target_created_by.created_at.to_date.iso8601
+
+        expect { reviewable.perform(admin, :delete_user_block) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(2)
+
+        statement =
+          DsaStatementOfRecord.where(reviewable_id: reviewable.id).find_by!(
+            "payload ->> 'decision_account' = ?",
+            "DECISION_ACCOUNT_TERMINATED",
+          )
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of a post held for approval had their account deleted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => content_date,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        )
+
+        post_statement =
+          DsaStatementOfRecord.where(reviewable_id: reviewable.id).find_by!(
+            "payload -> 'decision_visibility' @> ?",
+            '["DECISION_VISIBILITY_CONTENT_DISABLED"]',
+          )
+
+        expect(post_statement).to be_pending
+        expect(post_statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was held for approval and rejected before publication.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => reviewable.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
     end
   end
 end

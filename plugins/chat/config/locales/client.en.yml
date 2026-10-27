@@ -40,6 +40,7 @@ en:
 
     chat:
       start_new_message: "New message"
+      homepage_option: "Chat channel"
       edit_category:
         tab_title: "Chat"
         channel: "Channel"
@@ -579,6 +580,8 @@ en:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat quote copied to clipboard"
         default_thread_title: "Thread"
+        transcript_label: "Transcript"
+        transcript_region: "Transcript from %{channel}"
 
       notification_levels:
         never: "Never"
@@ -669,7 +672,8 @@ en:
           alphabetical: "Alphabetically"
           recent_activity: "Recent activity"
           priority: "Priority"
-          priority_description: "Mentions, then unreads, then recent activity"
+          priority_description: "Mentions, then unreads, then recent activity, each sorted alphabetically"
+          priority_description_dms: "Mentions, then unreads, then recent activity"
         empty:
           filtered: "No channels match this filter."
           show_all: "Show all channels"
@@ -759,6 +763,9 @@ en:
 
       flagging:
         action: "Flag message"
+
+      anonymous_flagging:
+        description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
 
       emoji_picker:
         favorites: "Frequently used"
@@ -933,15 +940,26 @@ en:
         "action:chat_approval": "Chat approval"
         "trigger:chat_message_created": "Chat message created"
       node_descriptions:
-        "action:send_chat_message": "Send a message to a chat channel"
+        "action:send_chat_message": "Send a message to a chat channel, or a direct message to one or more users"
         "action:chat_approval": "Send an approval request to a chat channel and wait for a response"
         "trigger:chat_message_created": "Fires when a new chat message is created"
       chat_message_created:
         channel_id: "Channel"
         channel_id_description: "Leave blank to trigger for all chat channels."
       send_chat_message:
+        target: "Send to"
+        targets:
+          channel: "Channel"
+          user: "Users (a direct message each)"
+          group: "Group (one direct message with everyone)"
         channel_id: "Channel"
+        thread_id: "Thread ID"
+        thread_id_description: "Reply in this thread instead of the main channel. Leave blank to post in the channel."
+        target_usernames: "Recipients"
+        target_usernames_description: "Users to message. Use an expression such as $trigger.user.username to pick them from each item."
         message: "Message"
+        actor_username: "Sender"
+        actor_username_description: "Messages are sent as this user, and everyone sees them as written by them. When posting to a channel, the user must be a member of it."
       chat_approval:
         message: "Message"
         buttons: "Buttons"

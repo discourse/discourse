@@ -1,8 +1,9 @@
 import { trackedObject } from "@ember/reactive/collections";
+import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsShowHouseAdsShow extends DiscourseRoute {
-  model(params) {
+  async model(params) {
     const parentModel = this.modelFor("adminPlugins.show.houseAds");
 
     if (params.id === "new") {
@@ -20,6 +21,10 @@ export default class AdminPluginsShowHouseAdsShow extends DiscourseRoute {
       if (!houseAd) {
         return this.replaceWith("adminPlugins.show.houseAds.index");
       }
+
+      houseAd.categories = await Category.asyncFindByIds(
+        (houseAd.categories || []).map((category) => category.id)
+      );
 
       if (houseAd.groups && Array.isArray(houseAd.groups)) {
         houseAd.groups = houseAd.groups.map((g) =>

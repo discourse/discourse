@@ -1,9 +1,9 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { classNames, tagName } from "@ember-decorators/component";
 import cookie from "discourse/lib/cookie";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -14,27 +14,23 @@ export function incrementTopicsOpened() {
   numTopicsOpened++;
 }
 
-@tagName("div")
-@classNames("topic-above-footer-buttons-outlet", "patreon")
 export default class Patreon extends Component {
   static shouldRender(_args, context) {
     return context.currentUser;
   }
 
-  init() {
-    super.init(...arguments);
-    this.didInsertElement = function () {
-      const showDonationPrompt =
-        this.siteSettings.patreon_enabled &&
-        this.siteSettings.patreon_donation_prompt_enabled &&
-        this.siteSettings.patreon_donation_prompt_campaign_url !== "" &&
-        this.currentUser.show_donation_prompt &&
-        cookie(cookieName) !== "t" &&
-        numTopicsOpened >
-          this.siteSettings.patreon_donation_prompt_show_after_topics;
-      this.set("showDonationPrompt", showDonationPrompt);
-    };
-  }
+  @service currentUser;
+  @service siteSettings;
+
+  @tracked
+  showDonationPrompt =
+    this.siteSettings.patreon_enabled &&
+    this.siteSettings.patreon_donation_prompt_enabled &&
+    this.siteSettings.patreon_donation_prompt_campaign_url !== "" &&
+    this.currentUser.show_donation_prompt &&
+    cookie(cookieName) !== "t" &&
+    numTopicsOpened >
+      this.siteSettings.patreon_donation_prompt_show_after_topics;
 
   @action
   close() {
@@ -43,23 +39,25 @@ export default class Patreon extends Component {
     cookie(cookieName, "t", {
       expires,
     });
-    this.set("showDonationPrompt", false);
+    this.showDonationPrompt = false;
   }
 
   <template>
-    {{#if this.showDonationPrompt}}
-      <div class="patreon-donation-prompt">
-        <span class="close" role="button" {{on "click" this.close}}>
-          {{dIcon "xmark"}}
-        </span>
+    <div class="topic-above-footer-buttons-outlet patreon" ...attributes>
+      {{#if this.showDonationPrompt}}
+        <div class="patreon-donation-prompt">
+          <span class="close" role="button" {{on "click" this.close}}>
+            {{dIcon "xmark"}}
+          </span>
 
-        {{trustHTML
-          (i18n
-            "patreon.donation_prompt.body"
-            campaignUrl=this.siteSettings.patreon_donation_prompt_campaign_url
-          )
-        }}
-      </div>
-    {{/if}}
+          {{trustHTML
+            (i18n
+              "patreon.donation_prompt.body"
+              campaignUrl=this.siteSettings.patreon_donation_prompt_campaign_url
+            )
+          }}
+        </div>
+      {{/if}}
+    </div>
   </template>
 }

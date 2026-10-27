@@ -19,6 +19,7 @@ fr:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "Catégorie introuvable"
       draft_too_long: "Le brouillon est trop long"
       post_not_found: "Publication introuvable"
       topic_not_found: "Sujet non trouvé"
@@ -871,6 +872,7 @@ fr:
     post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description ou pour établir des règles :\n\n- À quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi est-elle différente des autres catégories existantes ?\n\n- Quels sont les sujets qui devraient figurer dans cette catégorie ?\n\n- Avons-nous besoin de cette catégorie ? Devrions-nous fusionner celle-ci avec une autre catégorie ?\n"
     errors:
       not_found: "Catégorie non trouvée !"
+      self_lockout: "Vous êtes sur le point de modifier les permissions de la catégorie de manière à supprimer votre propre accès. Voulez-vous vraiment continuer ?"
       uncategorized_parent: "La catégorie « Sans catégorie » ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
@@ -2334,7 +2336,6 @@ fr:
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
     reviewable_low_priority_threshold: "Le filtre de niveau de priorité masque les éléments à examiner dont le score est inférieur au niveau spécifié, sauf lorsque le filtre « (tous) » est appliqué."
     high_trust_flaggers_auto_hide_posts: "Les publications des nouveaux utilisateurs seront automatiquement masquées après avoir été signalées comme contenu indésirable par un utilisateur d'un niveau de confiance 3 et plus"
-    allow_all_users_to_flag_illegal_content: "Les utilisateurs anonymes verront des informations leur indiquant qu'ils doivent envoyer un e-mail aux administrateurs pour signaler du contenu illégal. Ce paramètre est prioritaire sur {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "Si ce champ est laissé vide, l'adresse e-mail par défaut de l'administrateur du site sera utilisée."
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
     slow_mode_prevents_editing: "Le mode lent empêche-t-il la modification après {{setting:editing_grace_period}} ?"
@@ -2677,13 +2678,11 @@ fr:
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
     enable_auto_grid_images: "Encapsule automatiquement les images dans des balises [grid] lorsque 3 images ou plus sont téléversées dans l'éditeur."
     enable_new_checkbox_style: "Active le nouveau style des cases à cocher FormKit."
-    enable_new_post_reactions_menu: "Active le menu repensé des mentions J'aime et des réactions aux publications, avec défilement infini et expérience mobile native."
     enable_composer_redesign: "Active le panneau d'édition repensé."
     prioritize_recently_used_tags: "Lors de l'ajout d'étiquettes pendant la création ou la modification d'un sujet, affiche en haut de la liste les étiquettes récemment utilisées par le membre sur ses propres sujets, avant les étiquettes les plus populaires du forum."
     experimental_impersonation_time_limit_minutes: "Durée avant la fin automatique d'une session pendant laquelle un administrateur se fait passer pour un autre utilisateur."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
-    about_page_hidden_groups: "N'affichez pas les membres de groupes spécifiques sur la page /about."
     about_page_extra_groups: "Groupes à afficher sur la page À propos sous les modérateurs."
     about_page_extra_groups_initial_members: "Nombre de membres à développer pour chaque groupe sur la page À propos."
     about_page_extra_groups_show_description: "Indique s'il faut inclure les descriptions des groupes sur la page À propos."
@@ -4412,34 +4411,18 @@ fr:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-      text_body_template: |
-        Votre compte sur le forum a été suspendu jusqu'à %{suspended_till}.
-
-        Motif : %{reason}
     account_suspended_forever:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-      text_body_template: |
-        Votre compte a été suspendu du forum.
-
-        Motif : %{reason}
     account_silenced:
       title: "Compte mis en sourdine"
       subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
       subject_template_improved: "Votre compte a été mis en sourdine"
-      text_body_template: |
-        Votre compte sur le forum a été mis en sourdine jusqu'à %{silenced_till}.
-
-        Motif : %{reason}
     account_silenced_forever:
       title: "Compte mis en sourdine"
       subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
       subject_template_improved: "Votre compte a été mis en sourdine"
-      text_body_template: |
-        Votre compte a été mis en sourdine sur le forum.
-
-        Motif : %{reason}
     account_deleted:
       title: "Compte supprimé"
       subject_template: "[%{email_prefix}] Votre compte a été supprimé"

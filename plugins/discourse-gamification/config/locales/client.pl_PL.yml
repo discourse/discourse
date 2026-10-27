@@ -26,6 +26,8 @@ pl_PL:
         name: "Nazwa"
         name_placeholder: "Nazwa..."
         new: "Nowa tabela wyników"
+        edit: "Edytuj tabelę wyników"
+        view: "Zobacz tabelę wyników"
         create_success: "Utworzono tabelę wyników"
         delete_success: "Usunięto tabelę wyników"
         save_success: "Zapisano tabelę wyników"
@@ -54,7 +56,7 @@ pl_PL:
         scoring_configuration: "Konfiguracja punktacji"
         scoring_configuration_description: "Zastąp globalne zasady punktacji dla tej tabeli wyników. Pozostaw pola puste, aby użyć domyślnych ustawień globalnych."
         scorable_categories: "Kategorie punktowane"
-        scorable_categories_help: "Kategorie do uwzględnienia w punktacji. Pozostaw puste, aby użyć ustawienia globalnego."
+        scorable_categories_help: "Wybierz kategorie, aby zliczać tylko aktywność opartą na kategoriach. Wizyty, czytanie, zaproszenia, flagi i czaty są wyłączone, a ręczne korekty punktacji są liczone tylko po przypisaniu do jednej z tych kategorii. Pozostaw puste, aby użyć globalnych ustawień punktacji."
         score_overrides: "Wagi wyników"
         score_overrides_help: "Zastąp wartości punktowe dla każdej akcji. Pozostaw puste, aby użyć globalnej wartości domyślnej. Ustaw na 0, aby wyłączyć."
         weight:
@@ -86,9 +88,8 @@ pl_PL:
       close: "Zamknij"
       delete: "Usuń"
       edit: "Edytuj"
-      back: "Poprzednia"
+      back_to_leaderboards: "Powrót do tabel wyników"
       save: "Zapisz"
-      apply: "Zastosuj"
       recalculate: "Przelicz wyniki"
       recalculating: "Przeliczanie wyników..."
       completed: "Gotowe! Wyniki zostały pomyślnie przeliczone."
@@ -109,6 +110,7 @@ pl_PL:
       admin:
         title: "Grywalizacja"
         name: "Nazwa"
+        created_by: "Stworzono przez"
         period: "Okres"
     discourse_workflows:
       node_unavailable:
@@ -125,3 +127,5 @@ pl_PL:
         date_description: "Data, do której odnoszą się punkty (RRRR-MM-DD). Domyślnie jest to dziś."
         description: "Opis"
         description_description: "Opcjonalna notatka wyświetlana obok zdarzenia."
+        category_id: "Kategoria"
+        category_id_description: "Opcjonalnie. Punkty przypisane do danej kategorii liczą się również w rankingach obejmujących tę kategorię."

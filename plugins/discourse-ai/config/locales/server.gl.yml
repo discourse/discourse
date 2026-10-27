@@ -31,6 +31,25 @@ gl:
           title: "Copias de seguranza"
       read_post:
         unknown_post: "publicación"
+      chat_tool_approval:
+        topic_states:
+          open: "Abrir"
+          closed: "Pechado"
+          active: "Activo"
+          deleted: "Eliminado"
+        solution_post: "Publicación #%{number}"
+        duration_label: "Duración:"
+        user_duration:
+          one: "%{count} día"
+          other: "%{count} días"
+        posts_label: "Publicacións"
+        category_label: "Categoría"
+        category_fields:
+          name: "nome"
+          description: "descrición"
+          color: "cor"
+        approve_label: "Si"
+        reject_label: "Non"
       tool_summary:
         search: "Buscar"
         time: "Hora"

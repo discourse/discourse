@@ -21,7 +21,7 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  attr_accessor :created_new
+  attr_accessor :created_new, :reopened
   validates :type, :status, :created_by_id, presence: true
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: "User"
@@ -34,6 +34,7 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :dsa_statement_of_records
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -150,6 +151,14 @@ class Reviewable < ActiveRecord::Base
     self.type_source = Reviewable.source_for(type)
   end
 
+  def title_for_notification(user)
+    topic&.title.presence || payload&.dig("title").presence ||
+      I18n.t(
+        topic_id ? "js.review.topics.deleted" : "js.review.title",
+        locale: user.effective_locale,
+      )
+  end
+
   def created_new!
     self.created_new = true
     self.topic = target.topic if topic.blank? && target.is_a?(Post)
@@ -229,8 +238,9 @@ class Reviewable < ActiveRecord::Base
         if old_status != statuses[:pending]
           # If we're transitioning back from reviewed to pending, we should recalculate
           # the score to prevent posts from being hidden.
-          reviewable.recalculate_score
-          reviewable.log_history(:transitioned, created_by)
+          reviewable.recalculate_score(event: :skip)
+          reviewable.log_history(:transitioned, Discourse.system_user)
+          reviewable.reopened = true
         end
       end
     end
@@ -280,7 +290,11 @@ class Reviewable < ActiveRecord::Base
     # Used flags cannot be deleted or update by admins, only disabled.
     Flag.reset_flag_settings! if PostActionType.notify_flag_type_ids.include?(reviewable_score_type)
 
-    DiscourseEvent.trigger(:reviewable_score_updated, self)
+    if reopened && !take_action
+      DiscourseEvent.trigger(:reviewable_transitioned_to, :pending, self)
+    else
+      DiscourseEvent.trigger(:reviewable_score_updated, self)
+    end
 
     rs
   end
@@ -428,6 +442,33 @@ class Reviewable < ActiveRecord::Base
       update_count = transition_to(result.transition_to, performed_by) if result.transition_to
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
+
+      if SiteSetting.dsa_reporting_enabled
+        attributes =
+          dsa_statement_attributes(
+            action_id:,
+            result:,
+            automated_detection: dsa_automated_detection,
+            automated_decision:
+              dsa_automated_decision(
+                performed_by:,
+                decision_automation: args[:decision_automation],
+              ),
+          )
+
+        if attributes
+          DsaStatementOfRecord.create!(
+            reviewable_id: id,
+            payload:
+              attributes.merge(
+                application_date: Date.current.iso8601,
+                territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
+                source_type: "SOURCE_VOLUNTARY",
+                decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+              ),
+          )
+        end
+      end
     end
 
     result.after_commit.call if result && result.after_commit
@@ -453,9 +494,9 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  # Includes pending scores plus disagreed ones, so re-approving a previously
-  # rejected reviewable correctly flips those scores back to "agreed".
   def updatable_reviewable_scores
+    return reviewable_scores.pending if !rejected?
+
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
@@ -466,14 +507,20 @@ class Reviewable < ActiveRecord::Base
       ReviewableClaimedTopic.release_manual_claim(topic_id, performed_by)
     end
 
+    scores = updatable_reviewable_scores
     self.status = status_symbol
     save!
 
     log_history(:transitioned, performed_by)
-    DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
+    DiscourseEvent.trigger(
+      :reviewable_transitioned_to,
+      status_symbol,
+      self,
+      acting_user: performed_by,
+    )
 
     if score_status = ReviewableScore.score_transitions[status_symbol]
-      updatable_reviewable_scores.update_all(
+      scores.update_all(
         status: score_status,
         reviewed_by_id: performed_by.id,
         reviewed_at: Time.zone.now,
@@ -496,6 +543,7 @@ class Reviewable < ActiveRecord::Base
 
   def self.viewable_by(user, order: nil, preload: true)
     return none if user.blank?
+    return none if !user.staff? && !user.category_group_moderator?
 
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
@@ -548,7 +596,7 @@ class Reviewable < ActiveRecord::Base
 
     result = exclude_private_messages_hidden_from(result, user)
     visible_target =
-      user.guardian.reviewable_post_scope.where("posts.id = reviewable_target.id").select(:id)
+      user.guardian.reviewable_post_scope.where("posts.id = reviewable_target.id").select(1)
 
     result.where(<<~SQL)
       NOT EXISTS (
@@ -561,8 +609,11 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.exclude_private_messages_hidden_from(result, user)
-    visible_private_message_ids =
-      user.guardian.private_message_topic_scope(Topic.unscoped).select(:id)
+    visible_private_message =
+      user
+        .guardian
+        .private_message_topic_scope(Topic.unscoped.where("topics.id = private_message.id"))
+        .select(1)
 
     result.where(<<~SQL, private_message: Archetype.private_message)
         NOT EXISTS (
@@ -570,7 +621,7 @@ class Reviewable < ActiveRecord::Base
           FROM topics private_message
           WHERE private_message.id = reviewables.topic_id
             AND private_message.archetype = :private_message
-            AND private_message.id NOT IN (#{visible_private_message_ids.to_sql})
+            AND NOT EXISTS (#{visible_private_message.to_sql})
         )
       SQL
   end
@@ -749,7 +800,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.user_menu_list_for(user, limit: 30)
-    list_for(user, limit: limit, status: :pending, include_claimed_by_others: false).to_a
+    list_for(user, limit:, status: :pending, include_claimed_by_others: false, preload: false).to_a
   end
 
   def self.basic_serializers_for_list(reviewables, user)
@@ -841,7 +892,7 @@ class Reviewable < ActiveRecord::Base
     SQL
   end
 
-  def recalculate_score
+  def recalculate_score(event: :trigger)
     # pending/agreed scores count
     sql = <<~SQL
       UPDATE reviewables
@@ -883,8 +934,9 @@ class Reviewable < ActiveRecord::Base
     )
 
     self.score = result[0].score
+    clear_attribute_changes([:score])
 
-    DiscourseEvent.trigger(:reviewable_score_updated, self)
+    DiscourseEvent.trigger(:reviewable_score_updated, self) if event == :trigger
 
     score
   end
@@ -996,6 +1048,138 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  # Returns the DSA statement attributes for a successfully completed action.
+  #
+  # Override in subclasses to declare each action's decision and subject metadata.
+  # Return nil when the action should not produce a statement.
+  #
+  # Called inside the moderation transaction after the action and reviewable updates
+  # succeed, when the dsa_reporting_enabled site setting is enabled. A hash creates
+  # one pending statement.
+  # Failure to save the statement rolls back the transaction.
+  #
+  # Keys must be symbols. Each hash must include :content_type, :content_date,
+  # :automated_detection, :automated_decision, :decision_facts, and at least one
+  # decision field.
+  #
+  # * :decision_facts [String] Required. Facts and circumstances known when the action
+  #   succeeds. Maximum 5000 characters. Core actions use fixed English wording.
+  #
+  # Decision fields:
+  #
+  # * :decision_visibility [Array<String>] One or more of:
+  #   * DECISION_VISIBILITY_CONTENT_REMOVED
+  #   * DECISION_VISIBILITY_CONTENT_DISABLED
+  #   * DECISION_VISIBILITY_CONTENT_DEMOTED
+  #   * DECISION_VISIBILITY_CONTENT_AGE_RESTRICTED
+  #   * DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED
+  #   * DECISION_VISIBILITY_CONTENT_LABELLED
+  #   * DECISION_VISIBILITY_OTHER
+  # * :decision_visibility_other [String] Required for DECISION_VISIBILITY_OTHER.
+  #   Maximum 500 characters.
+  # * :decision_account [String] One of:
+  #   * DECISION_ACCOUNT_SUSPENDED
+  #   * DECISION_ACCOUNT_TERMINATED
+  # * :decision_provision [String] One of:
+  #   * DECISION_PROVISION_PARTIAL_SUSPENSION
+  #   * DECISION_PROVISION_TOTAL_SUSPENSION
+  #   * DECISION_PROVISION_PARTIAL_TERMINATION
+  #   * DECISION_PROVISION_TOTAL_TERMINATION
+  # * :decision_monetary [String] One of:
+  #   * DECISION_MONETARY_SUSPENSION
+  #   * DECISION_MONETARY_TERMINATION
+  #   * DECISION_MONETARY_OTHER
+  # * :decision_monetary_other [String] Required for DECISION_MONETARY_OTHER.
+  #   Maximum 500 characters.
+  #
+  # Subject fields:
+  #
+  # * :content_type [Array<String>] Required. One or more of:
+  #   * CONTENT_TYPE_APP
+  #   * CONTENT_TYPE_AUDIO
+  #   * CONTENT_TYPE_IMAGE
+  #   * CONTENT_TYPE_PRODUCT
+  #   * CONTENT_TYPE_SYNTHETIC_MEDIA
+  #   * CONTENT_TYPE_TEXT
+  #   * CONTENT_TYPE_VIDEO
+  #   * CONTENT_TYPE_OTHER
+  # * :content_type_other [String] Required when :content_type includes
+  #   CONTENT_TYPE_OTHER. Maximum 500 characters. Use "User account" for accounts.
+  # * :content_date [String] Required. Subject creation date in YYYY-MM-DD format,
+  #   on or after 2000-01-01. Use the account creation date for account subjects.
+  # * :content_language [String] Optional. Uppercase ISO 639-1 language code.
+  #
+  # Restriction expiry fields, in YYYY-MM-DD format:
+  #
+  # * :end_date_visibility_restriction [String]
+  # * :end_date_account_restriction [String]
+  # * :end_date_service_restriction [String]
+  # * :end_date_monetary_restriction [String]
+  #
+  # These fields are optional. Omit them for an indefinite restriction.
+  # Each expiry must be on or after the application date.
+  #
+  # Automation fields:
+  #
+  # * :automated_detection [String] Required. "Yes" or "No", indicating whether
+  #   automated means identified the content.
+  # * :automated_decision [String] Required. One of:
+  #   * AUTOMATED_DECISION_FULLY
+  #   * AUTOMATED_DECISION_PARTIALLY
+  #   * AUTOMATED_DECISION_NOT_AUTOMATED
+  #
+  # Multiple decision fields may describe the same action. Reviewable#perform
+  # supplies :application_date, :territorial_scope, :source_type, and :decision_ground.
+  # The decision ground is DECISION_GROUND_INCOMPATIBLE_CONTENT.
+  # Pending statements receive their contractual ground, category, and supporting
+  # explanation during human classification.
+  #
+  # @param action_id [Symbol] Requested action ID, before alias resolution.
+  # @param result [Reviewable::PerformResult] Successful action result, including
+  #   :deleted_user or :removed_avatar when returned by the action.
+  # @param automated_detection [String] Computed detection value: "Yes" or "No".
+  # @param automated_decision [String] Computed AUTOMATED_DECISION_* value.
+  # @return [Hash{Symbol => String, Array<String>}, nil] Statement attributes,
+  #   or nil when no statement applies.
+  # @example Report a human decision on a manually flagged post
+  #   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+  #     return unless action_id == :agree_and_edit
+  #
+  #     {
+  #       decision_visibility: ["DECISION_VISIBILITY_OTHER"],
+  #       decision_visibility_other: "Content edited",
+  #       decision_facts: "The flagged post was edited.",
+  #       content_type: ["CONTENT_TYPE_TEXT"],
+  #       content_date: post.created_at.to_date.iso8601,
+  #       automated_detection:,
+  #       automated_decision:,
+  #     }
+  #   end
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    nil
+  end
+
+  def dsa_automated_detection
+    automated =
+      reviewable_scores.where(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: %w[watched_word fast_typer auto_silence_regex email_spam suspect_user],
+      ).exists?
+
+    if DiscoursePluginRegistry.apply_modifier(:reviewable_automated_detection, automated, self)
+      "Yes"
+    else
+      "No"
+    end
+  end
+
+  def dsa_automated_decision(performed_by:, decision_automation:)
+    return "AUTOMATED_DECISION_PARTIALLY" if decision_automation == :partial
+    return "AUTOMATED_DECISION_FULLY" if decision_automation == :full || !performed_by.human?
+
+    "AUTOMATED_DECISION_NOT_AUTOMATED"
+  end
 
   def can_review_target?(guardian)
     post = target_post

@@ -157,7 +157,7 @@ module DiscourseAi
         result = nil
 
         llm_args = {
-          max_tokens: max_output_tokens,
+          max_response_tokens: max_output_tokens,
           stop_sequences: stop_sequences,
           feature_context: {
             automation_id: automation&.id,
@@ -226,86 +226,89 @@ module DiscourseAi
 
           post.topic.update!(visible: false) if hide_topic
 
+          already_flagged = false
           if flag_post
-            # Check if another triage rule already created a reviewable for this post.
-            # We'll later use it to avoid sending multiple PMs to the user.
-            # We are doing this now before we create another flag.
-            already_flagged = flagged_by_another_triage_rule?(post)
+            DistributedMutex.synchronize("llm_triage_reviewable_#{post.id}") do
+              # Check if another triage rule already created a reviewable for this post.
+              # We'll later use it to avoid sending multiple PMs to the user.
+              # We are doing this now before we create another flag.
+              already_flagged = flagged_by_another_triage_rule?(post)
 
-            score_reason =
-              DiscourseAi::Automation.flag_post_reason(
-                reason: result,
-                automation_id: automation&.id.to_s,
-                automation_name: automation&.name,
-              )
-
-            automation_score_context =
-              DiscourseAi::Automation.triage_automation_score_context(automation&.id)
-
-            if !flagged_by_tool
-              if flag_type == :spam || flag_type == :spam_silence
-                spam_score_reason =
-                  DiscourseAi::Automation.spam_score_reason(
-                    automation_id: automation&.id.to_s,
-                    automation_name: automation&.name,
-                  )
-
-                spam_post_action_message =
-                  DiscourseAi::Automation.spam_post_action_message(
-                    reason: result,
-                    automation_id: automation&.id.to_s,
-                    automation_name: automation&.name,
-                  )
-
-                promote_post_reviewable_to_flagged!(post)
-
-                result =
-                  PostActionCreator.new(
-                    Discourse.system_user,
-                    post,
-                    PostActionType.types[:spam],
-                    message: spam_post_action_message,
-                    reason: spam_score_reason,
-                    context: automation_score_context,
-                    queue_for_review: true,
-                  ).perform
-
-                if flag_type == :spam_silence
-                  if result.success?
-                    SpamRule::AutoSilence.new(post.user, post).silence_user
-                  else
-                    Rails.logger.warn(
-                      "llm_triage: unable to flag post as spam, post action failed for #{post.id} with error: '#{result.errors.full_messages.join(",").truncate(3000)}'",
-                    )
-                  end
-                end
-              else
-                reviewable = review_reviewable_for(post)
-
-                reviewable.add_score(
-                  Discourse.system_user,
-                  ReviewableScore.types[:needs_approval],
-                  reason: score_reason,
-                  context: automation_score_context,
-                  force_review: true,
+              score_reason =
+                DiscourseAi::Automation.flag_post_reason(
+                  reason: result,
+                  automation_id: automation&.id.to_s,
+                  automation_name: automation&.name,
                 )
 
-                # We cannot do this through the PostActionCreator because hiding a post is reserved for auto action flags.
-                # Those flags are off_topic, inappropriate, and spam. We want a more generic type for triage, so none of those
-                # fit here.
-                if flag_type == :review_hide
-                  post.hide!(PostActionType.types[:notify_moderators])
-                elsif flag_type == :review_delete || flag_type == :review_delete_silence
-                  # Soft-delete the post so it is hidden from users until a moderator handles it in review.
-                  PostDestroyer.new(Discourse.system_user, post, context: "llm_triage").destroy
+              automation_score_context =
+                DiscourseAi::Automation.triage_automation_score_context(automation&.id)
 
-                  if flag_type == :review_delete_silence
-                    UserSilencer.silence(
-                      post.user,
-                      Discourse.system_user,
-                      message: :silenced_by_staff,
-                      post_id: post.id,
+              if !flagged_by_tool
+                if flag_type == :spam || flag_type == :spam_silence
+                  spam_score_reason =
+                    DiscourseAi::Automation.spam_score_reason(
+                      automation_id: automation&.id.to_s,
+                      automation_name: automation&.name,
                     )
+
+                  spam_post_action_message =
+                    DiscourseAi::Automation.spam_post_action_message(
+                      reason: result,
+                      automation_id: automation&.id.to_s,
+                      automation_name: automation&.name,
+                    )
+
+                  promote_post_reviewable_to_flagged!(post)
+
+                  result =
+                    PostActionCreator.new(
+                      Discourse.system_user,
+                      post,
+                      PostActionType.types[:spam],
+                      message: spam_post_action_message,
+                      reason: spam_score_reason,
+                      context: automation_score_context,
+                      queue_for_review: true,
+                    ).perform
+
+                  if flag_type == :spam_silence
+                    if result.success?
+                      SpamRule::AutoSilence.new(post.user, post).silence_user
+                    else
+                      Rails.logger.warn(
+                        "llm_triage: unable to flag post as spam, post action failed for #{post.id} with error: '#{result.errors.full_messages.join(",").truncate(3000)}'",
+                      )
+                    end
+                  end
+                else
+                  reviewable = review_reviewable_for(post)
+
+                  reviewable.add_score(
+                    Discourse.system_user,
+                    ReviewableScore.types[:needs_approval],
+                    reason: score_reason,
+                    context: automation_score_context,
+                    force_review: true,
+                  )
+
+                  # We cannot do this through the PostActionCreator because hiding a post is reserved for auto action flags.
+                  # Those flags are off_topic, inappropriate, and spam. We want a more generic type for triage, so none of those
+                  # fit here.
+                  if flag_type == :review_hide
+                    post.hide!(PostActionType.types[:notify_moderators])
+                  elsif flag_type == :review_delete || flag_type == :review_delete_silence
+                    # Soft-delete the post so it is hidden from users until a moderator handles it in review.
+                    PostDestroyer.new(Discourse.system_user, post, context: "llm_triage").destroy
+
+                    if flag_type == :review_delete_silence
+                      UserSilencer.silence(
+                        post.user,
+                        Discourse.system_user,
+                        message: :silenced_by_staff,
+                        post_id: post.id,
+                      )
+                    end
                   end
                 end
               end

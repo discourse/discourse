@@ -106,13 +106,11 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   });
 
   test("toggling @hasMenu moves the class and the menu together", async function (assert) {
-    const state = new (class {
-      @tracked hasMenu = false;
-    })();
+    const hasMenu = tracked(false);
 
     await render(
       <template>
-        <DComboButton @hasMenu={{state.hasMenu}} as |combo|>
+        <DComboButton @hasMenu={{hasMenu.value}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}}>content</combo.Menu>
         </DComboButton>
@@ -122,13 +120,13 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
     assert.dom(".d-combo-button").doesNotHaveClass("--has-menu");
     assert.dom(".d-combo-button-menu").doesNotExist();
 
-    state.hasMenu = true;
+    hasMenu.value = true;
     await rerender();
 
     assert.dom(".d-combo-button").hasClass("--has-menu");
     assert.dom(".d-combo-button-menu").exists();
 
-    state.hasMenu = false;
+    hasMenu.value = false;
     await rerender();
 
     assert.dom(".d-combo-button").doesNotHaveClass("--has-menu");
@@ -166,13 +164,11 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   });
 
   test("--has-menu survives a consumer's dynamic class changing", async function (assert) {
-    const state = new (class {
-      @tracked extra = "first";
-    })();
+    const extra = tracked("first");
 
     await render(
       <template>
-        <DComboButton class={{state.extra}} @hasMenu={{true}} as |combo|>
+        <DComboButton class={{extra.value}} @hasMenu={{true}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}}>content</combo.Menu>
         </DComboButton>
@@ -182,7 +178,7 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
     assert.dom(".d-combo-button").hasClass("--has-menu");
     assert.dom(".d-combo-button").hasClass("first");
 
-    state.extra = "second";
+    extra.value = "second";
     await rerender();
 
     assert

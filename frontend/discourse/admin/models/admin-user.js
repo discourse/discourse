@@ -16,7 +16,7 @@ export default class AdminUser extends User {
    * @param {string|number} user_id - The ID of the user to be retrieved.
    * @param {Object} [opts] - Options to customize the result format.
    * @param {boolean} [opts.raw=false] - If true, returns the raw response instead of formatting it using AdminUser.create.
-   * @return {Promise<Object|AdminUser>} A promise that resolves with either the raw response object or an instance of AdminUser.
+   * @return {Promise<Record<string, unknown>|AdminUser>} A promise that resolves with either the raw response object or an instance of AdminUser.
    */
   static async find(user_id, opts = { raw: false }) {
     const result = await ajax(`/admin/users/${user_id}.json`);

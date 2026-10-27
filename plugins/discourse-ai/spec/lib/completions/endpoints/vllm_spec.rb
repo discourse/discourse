@@ -179,6 +179,54 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
   before { enable_current_plugin }
 
+  it "classifies non-streaming reasoning-only output as empty" do
+    payload = {
+      choices: [
+        { message: { reasoning_content: "Considering", content: "" }, finish_reason: "length" },
+      ],
+      usage: {
+        prompt_tokens: 10,
+        completion_tokens: 100,
+        completion_tokens_details: {
+          reasoning_tokens: 100,
+        },
+      },
+    }
+    stub_request(:post, llm_model.url).to_return(body: payload.to_json)
+    llm_model.to_llm.generate("Input", user: user, output_thinking: true)
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+      stop_reason: "length",
+      reasoning_tokens: 100,
+      response_tokens: 100,
+    )
+  end
+
+  it "classifies streamed reasoning-only output as empty" do
+    payload = {
+      choices: [
+        { delta: { reasoning_content: "Considering", content: "" }, finish_reason: "length" },
+      ],
+      usage: {
+        prompt_tokens: 10,
+        completion_tokens: 100,
+        completion_tokens_details: {
+          reasoning_tokens: 100,
+        },
+      },
+    }
+    stub_request(:post, llm_model.url).to_return(
+      body: "data: #{payload.to_json}\n\ndata: [DONE]\n\n",
+    )
+    llm_model.to_llm.generate("Input", user: user, output_thinking: true) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+      stop_reason: "length",
+      reasoning_tokens: 100,
+      response_tokens: 100,
+    )
+  end
+
   def capture_payload_for_completion(**generation_args)
     captured_payload = nil
     stub =
@@ -196,6 +244,116 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
   end
 
   describe "tool support" do
+    %w[coalesced split].each do |delivery|
+      it "preserves interleaved tool progress with #{delivery} transport chunks" do
+        events = [
+          {
+            choices: [
+              {
+                delta: {
+                  tool_calls: [
+                    {
+                      index: 0,
+                      id: "tool-1",
+                      function: {
+                        name: "echo",
+                        arguments: '{"text":"one',
+                      },
+                    },
+                    {
+                      index: 1,
+                      id: "tool-2",
+                      function: {
+                        name: "echo",
+                        arguments: '{"text":"two',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            choices: [
+              {
+                delta: {
+                  tool_calls: [
+                    { index: 1, function: { arguments: '-done"}' } },
+                    { index: 0, function: { arguments: '-done"}' } },
+                  ],
+                },
+              },
+            ],
+          },
+          { choices: [{ delta: {}, finish_reason: "tool_calls" }] },
+        ]
+        chunks =
+          events.map { |event| "data: #{event.merge(id: "chatcmpl-tool-batch").to_json}\n\n" }
+        chunks << "data: [DONE]\n\n"
+        body = delivery == "coalesced" ? [chunks.join] : chunks.flat_map(&:chars)
+        response = []
+
+        vllm_mock.with_chunk_array_support do
+          stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+            status: 200,
+            body: body,
+          )
+          llm.generate(
+            "use both tools",
+            user: Discourse.system_user,
+            partial_tool_calls: true,
+          ) { |partial| response << partial.dup }
+        end
+
+        completed = response.reject(&:partial?)
+        expect(completed.map(&:id)).to eq(%w[tool-1 tool-2])
+        expect(completed.map(&:parameters)).to eq([{ text: "one-done" }, { text: "two-done" }])
+        expect(response.map(&:provider_data)).to all(
+          eq(vllm: { tool_batch_id: "chatcmpl-tool-batch" }),
+        )
+        progress = response.select(&:partial?)
+        if delivery == "split"
+          expect(progress.map(&:parameters)).to eq(
+            [{ text: "one" }, { text: "two" }, { text: "two-done" }, { text: "one-done" }],
+          )
+        else
+          expect(progress).to eq([])
+        end
+      end
+    end
+
+    it "assigns the provider batch to every tool call in a streamed event" do
+      event = {
+        id: "chatcmpl-tool-batch",
+        choices: [
+          {
+            index: 0,
+            delta: {
+              tool_calls: [
+                { index: 0, id: "tool-1", function: { name: "echo", arguments: '{"text":"one"}' } },
+                { index: 1, id: "tool-2", function: { name: "echo", arguments: '{"text":"two"}' } },
+              ],
+            },
+            finish_reason: "tool_calls",
+          },
+        ],
+      }
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: "data: #{event.to_json}\n\ndata: [DONE]\n\n",
+      )
+      response = []
+
+      llm.generate("use both tools", user: Discourse.system_user) { |partial| response << partial }
+
+      expect(response.map(&:id)).to eq(%w[tool-1 tool-2])
+      expect(response.map(&:parameters)).to eq([{ text: "one" }, { text: "two" }])
+      expect(response.map(&:provider_data)).to all(
+        eq(vllm: { tool_batch_id: "chatcmpl-tool-batch" }),
+      )
+      expect(response).to all(have_attributes(partial: false))
+    end
+
     it "is able to invoke XML tools correctly" do
       llm_model.update!(provider_params: { "disable_native_tools" => true })
 
@@ -840,7 +998,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
   end
 
   describe "request header providers" do
-    after { described_class.reset_request_headers_providers! }
+    after { DiscourseAi::RequestHeaders.reset! }
 
     def capture_headers(feature_name: nil)
       captured = nil
@@ -868,24 +1026,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
       expect(headers["X-Test-Feature"]).to eq("summarize")
     end
 
-    it "passes request context (llm_model, streaming, vision) to the provider" do
+    it "passes request context (model, streaming, vision) to the provider" do
       captured_context = nil
-      described_class.register_request_headers_provider do |context|
+      DiscourseAi::RequestHeaders.register do |context|
         captured_context = context
         {}
       end
 
       capture_headers(feature_name: "ai_helper")
 
-      expect(captured_context.llm_model).to eq(llm_model)
+      expect(captured_context.model).to eq(llm_model)
       expect(captured_context.feature_name).to eq("ai_helper")
       expect(captured_context.streaming).to eq(false)
       expect(captured_context.has_images).to eq(false)
     end
 
     it "isolates provider failures so the completion still succeeds" do
-      described_class.register_request_headers_provider { |_context| raise "boom" }
-      described_class.register_request_headers_provider { |_context| { "X-Test-Survivor" => "1" } }
+      DiscourseAi::RequestHeaders.register { |_context| raise "boom" }
+      DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Survivor" => "1" } }
 
       headers = nil
       expect { headers = capture_headers }.not_to raise_error

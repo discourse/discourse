@@ -42,21 +42,66 @@ const DIMENSION_KEYS = {
   ip: "ip_addresses",
 };
 
+/**
+ * @typedef {Object} SiteTrafficDimension
+ * @property {string} value
+ * @property {string} label
+ * @property {number} pageviews
+ */
+/**
+ * @typedef {Object} SiteTraffic
+ * @property {{ reason: string, available_start_date?: string, pageview_limit?: number, pageview_limit_start_at?: string } | null} partial_data
+ * @property {{ pageviews: number, distinct_sessions: number, logged_in_share: number, bounce_rate: number, average_session_duration_seconds: number }} summary
+ * @property {{ date: string, pageviews: number, logged_in_human_pageviews: number, anonymous_human_pageviews: number, likely_crawler_pageviews: number }[]} series
+ * @property {Record<"logged_in_human_pageviews" | "anonymous_human_pageviews" | "likely_crawler_pageviews", string>} series_colors
+ * @property {Record<"top_urls" | "entry_urls" | "referrers" | "countries" | "networks" | "browsers" | "languages" | "ip_addresses", SiteTrafficDimension[]>} dimensions
+ * @property {{ key: string, value: string, label: string }[]} [active_filters]
+ * @property {string} chart_start_date
+ * @property {string} chart_end_date
+ */
 export default class AdminSiteTrafficController extends Controller {
   @tracked range = DEFAULT_PERIOD;
+
+  /** @type {string | null} */
   @tracked start_date = null;
+
+  /** @type {string | null} */
   @tracked end_date = null;
+
+  /** @type {string | null} */
   @tracked traffic_type = null;
+
+  /** @type {string | null} */
   @tracked top_url = null;
+
+  /** @type {string | null} */
   @tracked entry_url = null;
+
+  /** @type {string | null} */
   @tracked referrer = null;
+
+  /** @type {string | null} */
   @tracked country = null;
+
+  /** @type {string | null} */
   @tracked network = null;
+
+  /** @type {string | null} */
   @tracked browser = null;
+
+  /** @type {string | null} */
   @tracked language = null;
+
+  /** @type {string | null} */
   @tracked ip = null;
+
+  /** @type {SiteTraffic | null} */
   @tracked traffic = null;
+
+  /** @type {"timeout" | "unexpected" | null} */
   @tracked fetchError = null;
+
+  /** @type {Record<string, string[]>} */
   @tracked draftFilters = Object.fromEntries(
     FILTER_KEYS.map((key) => [key, []])
   );

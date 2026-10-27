@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { eq, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
@@ -15,8 +14,8 @@ import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { loadCategories } from "../lib/boards-categories";
-import BoardsBoardSettings from "./modal/boards-board-settings";
+import { loadCategories } from "../lib/boards-categories.js";
+import BoardsBoardSettings from "./modal/boards-board-settings.gjs";
 
 export default class BoardsPage extends Component {
   @service modal;
@@ -162,13 +161,23 @@ export default class BoardsPage extends Component {
                 </div>
 
                 <div class="discourse-boards-board-card__footer">
-                  <DUserLink
-                    class="discourse-boards-board-card__creator discourse-boards-badge"
-                    @user={{board.created_by}}
+                  <div
+                    class="discourse-boards-board-card__owners discourse-boards-badge"
                   >
-                    {{i18n "boards.board.created_by"}}
-                    {{dAvatar board.created_by imageSize="micro"}}
-                  </DUserLink>
+                    <span>
+                      {{i18n "boards.board.owners" count=board.owners.length}}
+                    </span>
+                    <span class="discourse-boards-board-card__owner-avatars">
+                      {{#each board.owners as |owner|}}
+                        <DUserLink
+                          class="discourse-boards-board-card__owner"
+                          @user={{owner}}
+                        >
+                          {{dAvatar owner imageSize="micro"}}
+                        </DUserLink>
+                      {{/each}}
+                    </span>
+                  </div>
 
                   <span class="discourse-boards-badge">
                     {{i18n

@@ -8,6 +8,7 @@ export default class UserActivityController extends Controller {
   @service currentUser;
   @controller user;
 
+  /** @type {number | null | undefined} */
   @tracked userActionType = null;
 
   @computed("currentUser.draft_count")

@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation";
-import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
+import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation.gjs";
+import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager.js";
 
 // Matches the rule the sidebar uses to treat a topic as an AI conversation
 function isOwnBotConversation(routeInfo, currentUser) {

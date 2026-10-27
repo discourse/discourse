@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ruby "~> 3.4"
+ruby ">= 3.4", "< 4.1"
 
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
@@ -200,7 +200,7 @@ gem "pitchfork", require: false
 
 # Used by discourse-prometheus to collect socket queue stats.
 # Was previously a transitive dependency of the unicorn gem.
-gem "raindrops", require: false, platform: :ruby
+gem "raindrops", git: "https://github.com/discourse/raindrops", require: false, platform: :ruby
 
 gem "rbtrace", require: false, platform: :mri
 
@@ -311,7 +311,7 @@ gem "smarter_json", require: false
 gem "json_completer", require: false
 gem "discourse_ai-tokenizers", require: false
 
-# for the voice plugin
+# for the live plugin
 gem "discourse_voice_assets", require: false
 gem "ed25519" # TODO: remove this as existing ssl gem should handle this
 gem "Ascii85", require: false

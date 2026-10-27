@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
-import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
@@ -62,6 +61,7 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
   _INTERNAL_SOURCE_KEY,
@@ -164,7 +164,6 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
-import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
 
@@ -427,7 +426,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addBehaviorTransformerName(name) {
@@ -479,12 +478,12 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [R=unknown] - The expected behavior result; middleware may also return void.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({next, context})} behaviorCallback callback to be used to transform or override the behavior.
-   * @param {*} behaviorCallback.next callback that executes the remaining transformer queue producing the expected
-   * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
-   * the default behavior will be completely overridden
-   * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @param {import("discourse/lib/transformer").BehaviorTransformer<R, C>} behaviorCallback
+   * Middleware which can call next() to run the remaining queue, including the default behavior. If the callback
+   * doesn't call next(), the default behavior is completely overridden.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
@@ -516,7 +515,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addValueTransformerName(name) {
@@ -547,12 +546,14 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [T=unknown] - The value passed to the callback.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential
-   * errors or unexpected behavior the callback must be a pure function, i.e. return the transform value instead of
-   * mutating the input value, return the same output for the same input and not have any side effects.
-   * @param {*} valueCallback.value the value to be transformed
-   * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @param {import("discourse/lib/transformer").AnyValueTransformer<T, C>} valueCallback
+   * Receives the current value and context. To avoid potential errors or unexpected behavior the callback must be a
+   * pure function, i.e. return the transformed value instead of mutating the input value, return the same output for
+   * the same input and not have any side effects. Only hooks applied with `applyMutableValueTransformer` expect the
+   * callback to mutate the value instead; their return value is ignored.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
@@ -1132,7 +1133,7 @@ class _PluginApi {
    * @param {function} toolbarEvent.addText - Append the given text to the selected text in the composer.
    *
    * @callback condition
-   * @param {Object} composer - The composer service object.
+   * @param {import("discourse/services/composer").default} composer - The composer service object.
    * @returns {boolean} - Whether the button should be displayed.
    *
    * @param {Object} opts - An Object.
@@ -2764,7 +2765,7 @@ class _PluginApi {
    * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
    * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
    *
-   * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {(addCommunitySectionLinkCallback|{name: string, title: string, text: string, route?: string, href?: string, icon?: string})} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
@@ -2822,7 +2823,7 @@ class _PluginApi {
    * @param {Object} arg - An object
    * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
    * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
-   * @param {Object} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
+   * @param {Record<string, unknown>} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
    * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
    * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
    * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
@@ -3246,7 +3247,11 @@ class _PluginApi {
    * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
    */
   registerAdminDashboardReportRenderer(source, componentClass) {
-    registerAdminDashboardReportRenderer(source, componentClass);
+    this.registerValueTransformer(
+      "admin-dashboard-report-renderer",
+      ({ value, context }) =>
+        context.source === source ? componentClass : value
+    );
   }
 
   /**
@@ -3332,10 +3337,7 @@ class _PluginApi {
    * ```
    * api.registerModelTransformer("topic", async (topics) => {
    *   for (const topic of topics) {
-   *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
-   *     if (decryptedTitle) {
-   *       topic.fancy_title = decryptedTitle;
-   *     }
+   *     topic.fancy_title = await translateTitle(topic.fancy_title);
    *   }
    * });
    * ```
@@ -3565,8 +3567,8 @@ class _PluginApi {
    * ```
    *
    * @callback activityItemConfig
-   * @param {Object} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
-   * @returns {Object} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
+   * @param {Record<string, number>} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
+   * @returns {{icon: string, class: string, activityText: string, period: string}} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
    *
    * @param {string} name - a string that matches the string given to the `register_stat` server-side API.
    * @param {activityItemConfig} func - a callback that returns an object containing properties for the custom site activity item.
@@ -3731,7 +3733,7 @@ class _PluginApi {
    * - `previousTypes` - selection before this change
    * - `category`, `form`, and optionally `transientData`
    *
-   * @param {function(Object): (boolean|undefined|Promise<boolean|undefined>)} fn
+   * @param {(context: import("discourse/lib/on-before-category-types-change").OnBeforeCategoryTypesChangeContext) => (boolean|undefined|Promise<boolean|undefined>)} fn
    */
   registerOnBeforeCategoryTypesChange(fn) {
     registerOnBeforeCategoryTypesChange(fn);

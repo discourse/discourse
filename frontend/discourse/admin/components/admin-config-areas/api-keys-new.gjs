@@ -12,12 +12,35 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { clipboardCopy } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{
+ *   scope_id: string,
+ *   key: string,
+ *   name: string,
+ *   params: string[] | null,
+ *   urls: string[]
+ * }} ApiKeyScopeDefinition
+ */
+/**
+ * @typedef {{
+ *   scope_id: string,
+ *   key: string,
+ *   name: string,
+ *   params: string[]
+ * } & Record<string, string | string[] | undefined>} SelectedApiKeyScope
+ */
+/**
+ * @typedef {{
+ *   description: string,
+ *   scopeMode: "global" | "read_only" | "granular",
+ *   scopes: SelectedApiKeyScope[] | null
+ * }} CreatedApiKeyData
+ */
 export default class AdminConfigAreasApiKeysNew extends Component {
   @service modal;
   @service store;
@@ -25,9 +48,14 @@ export default class AdminConfigAreasApiKeysNew extends Component {
 
   @tracked username;
   @tracked loadingScopes = false;
+
+  /** @type {Record<string, ApiKeyScopeDefinition[]> | null} */
   @tracked scopes = null;
 
+  /** @type {string | null} */
   @tracked generatedApiKey = null;
+
+  /** @type {CreatedApiKeyData | null} */
   @tracked createdKeyData = null;
 
   userModes = [
@@ -39,6 +67,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     return { id: scopeMode, name: i18n(`admin.api.scopes.${scopeMode}`) };
   });
 
+  /** @type {ApiKeyScopeDefinition[] | null} */
   globalScopes = null;
 
   constructor() {

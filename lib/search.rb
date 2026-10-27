@@ -1020,7 +1020,7 @@ class Search
           nil
         elsif word =~ /\Atopic:(\d+)\z/i
           topic_id = $1.to_i
-          if topic_id > 1
+          if topic_id > 0
             topic = Topic.find_by(id: topic_id)
             @search_context = topic if @guardian.can_see?(topic)
           end
@@ -1277,7 +1277,8 @@ class Search
         posts = posts.where("#{user_search_fields} ILIKE ?", "%#{term_without_quote}%")
       else
         posts = posts.where(post_number: 1) if @in_title
-        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        weight_filter = weights == "ABCD" ? nil : weights
+        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter:)}")
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|

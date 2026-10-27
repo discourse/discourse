@@ -112,8 +112,14 @@ export default class TopicController extends Controller {
   @tracked model;
 
   @tracked multiSelect = false;
+
+  /** @type {boolean | null} */
   @tracked hasScrolled = null;
+
+  /** @type {string | null} */
   @tracked translationLocale = null;
+
+  /** @type {string | null} */
   @tracked translationTitle = null;
   @tracked editingTopicLocalization = false;
   @autoTrackedArray bookmarks = [];
@@ -122,22 +128,48 @@ export default class TopicController extends Controller {
   queryParams = TOPIC_QUERY_PARAMS;
 
   editingTopic = false;
+
+  /** @type {string | null} */
   enteredAt = null;
+
+  /** @type {number | null | undefined} */
   enteredIndex = null;
   retrying = false;
   userTriggeredProgress = null;
+
+  /** @type {string | null} */
   username_filters = null;
+
+  /** @type {number | string | null} */
   replies_to_post_number = null;
+
+  /** @type {string | null} */
   filter = null;
+
+  /** @type {string | null} */
   sort = null;
+
+  /** @type {string | number | null} */
   context = null;
   collapseReplies = false;
   quoteState = new QuoteState();
+
+  /** @type {number | null} */
   currentPostId = null;
+
+  /** @type {number | null | undefined} */
   userLastReadPostNumber = null;
+
+  /** @type {number | null} */
   highestPostNumber = null;
+
+  /** @type {Promise<{ id: number, topic_id: number, locale: string, title: string, fancy_title: string }> | null} */
   _localizationFetchPromise = null;
+
+  /** @type {string | null} */
   _originalTranslationTitle = null;
+
+  /** @type {number | null} */
   _progressIndex = null;
   _retryInProgress = false;
   _retryRateLimited = false;
@@ -1913,6 +1945,11 @@ export default class TopicController extends Controller {
     if (options.jump !== false) {
       this.model?.postStream?.focusPostOnRender(postNumber);
     }
+
+    this.model?.postStream?.highlightQuoteOnRender(
+      postNumber,
+      options.highlightQuote
+    );
   }
 
   _showRevision(postNumber, revision) {

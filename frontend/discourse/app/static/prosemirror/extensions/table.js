@@ -1,6 +1,6 @@
-import { tableChrome } from "../lib/table/chrome";
-import tableEditing from "../lib/table/editing";
-import { buildTableNodeView, TableCellView } from "../lib/table/node-view";
+import { tableChrome } from "../lib/table/chrome.js";
+import tableEditing from "../lib/table/editing.js";
+import { buildTableNodeView, TableCellView } from "../lib/table/node-view.js";
 
 // Markdown Table Example:
 //
@@ -50,6 +50,8 @@ const extension = {
     table_row: {
       content: "(table_cell | table_header_cell)+",
       tableRole: "row",
+      // Isolating cells would otherwise open gap cursor positions between them.
+      allowGapCursor: false,
       parseDOM: [{ tag: "tr" }],
       toDOM() {
         return ["tr", 0];
@@ -58,6 +60,7 @@ const extension = {
     table_header_cell: {
       content: "inline*",
       tableRole: "header_cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {
@@ -82,6 +85,7 @@ const extension = {
     table_cell: {
       content: "inline*",
       tableRole: "cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {
@@ -128,14 +132,15 @@ const extension = {
   },
   serializeNode: {
     table(state, node) {
+      // Checked before flushing, so the surrounding blocks stay separated.
+      if (!hasContent(node)) {
+        return;
+      }
+
       state.flushClose(1);
 
       // Normalize table structure
       node = normalizeTable(node);
-
-      if (!node.textContent.trim()) {
-        return;
-      }
 
       const prevInTable = state.inTable;
       state.inTable = true;
@@ -290,6 +295,25 @@ function createBodyRows(tbody, startIndex, maxColumns, schema) {
     bodyRows.push(schema.nodes.table_row.create({}, cells));
   });
   return bodyRows;
+}
+
+/**
+ * Pasted and quoted HTML often carries empty tables. Whitespace and line
+ * breaks don't count as content.
+ */
+function hasContent(table) {
+  let found = false;
+  table.descendants((node) => {
+    if (found) {
+      return false;
+    }
+    if (node.isText) {
+      found = node.text.trim() !== "";
+    } else if (node.isInline && node.isLeaf) {
+      found = node.type.name !== "hard_break";
+    }
+  });
+  return found;
 }
 
 function normalizeTable(tableNode) {

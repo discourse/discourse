@@ -18,5 +18,9 @@ fa_IR:
           author: شما
           author_others: "%{username}"
           status_online: "● آنلاین"
+        live_usage:
+          minutes:
+            one: "%{count} دقیقه"
+            other: "%{count} دقیقه"
         writing_analysis:
           menu_other: دیگر

@@ -4,8 +4,8 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PostEventInvitees from "../modal/post-event-invitees";
-import Invitee from "./invitee";
+import PostEventInvitees from "../modal/post-event-invitees/index.gjs";
+import Invitee from "./invitee.gjs";
 
 export default class DiscoursePostEventInvitees extends Component {
   @service modal;
@@ -29,6 +29,7 @@ export default class DiscoursePostEventInvitees extends Component {
     this.modal.show(PostEventInvitees, {
       model: {
         event: this.args.event,
+        isRecurring: Boolean(this.args.event.recurrence),
         title: this.args.event.title,
         extraClass: this.args.event.extraClass,
       },
@@ -60,6 +61,7 @@ export default class DiscoursePostEventInvitees extends Component {
       {{else}}
         {{#unless @event.isStandalone}}
           <section class="event__section event-invitees no-rsvp">
+            {{dIcon "users"}}
             <p class="no-rsvp-description">{{i18n
                 "discourse_post_event.models.invitee.status.going_count.other"
                 count="0"

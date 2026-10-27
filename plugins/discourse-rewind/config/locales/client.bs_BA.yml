@@ -15,5 +15,10 @@ bs_BA:
         chat_usage:
           author: Vi
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} min"
+            few: "%{count} min"
+            other: "%{count} minuta"
         writing_analysis:
           menu_other: Other

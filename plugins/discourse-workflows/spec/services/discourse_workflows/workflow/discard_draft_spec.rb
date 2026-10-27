@@ -75,6 +75,25 @@ RSpec.describe DiscourseWorkflows::Workflow::DiscardDraft do
         expect(workflow).not_to have_unpublished_changes
       end
 
+      it "restores the published version's variable value" do
+        variable =
+          workflow.variables.create!(
+            key: "priority",
+            variable_type: "string",
+            value: "urgent",
+            created_by: user,
+          )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        variable.update!(value: "changed")
+        workflow.snapshot!(user: user)
+
+        result
+
+        expect(workflow.reload.variables.find_by(key: "priority").value).to eq("urgent")
+      end
+
       it_behaves_like "expires workflow caches"
     end
   end

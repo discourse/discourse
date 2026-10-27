@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import NavbarActions from "discourse/plugins/chat/discourse/components/chat/navbar/actions";
@@ -22,6 +24,10 @@ const ChannelActions = <template>
     <a.OpenDrawerButton />
     <a.PinnedMessagesButton @channel={{@channel}} />
     <a.ThreadsListButton @channel={{@channel}} />
+    <PluginOutlet
+      @name="chat-channel-navbar-actions"
+      @outletArgs={{lazyHash channel=@channel}}
+    />
   </NavbarActions>
 </template>;
 

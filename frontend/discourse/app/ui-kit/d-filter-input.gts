@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import noop from "discourse/helpers/noop";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -19,7 +18,7 @@ interface DFilterInputSignature {
     filterAction?: (event: Event) => void;
 
     /** Handler fired when the clear button is clicked. */
-    onClearInput?: (event: Event) => void;
+    onClearInput?: () => void;
 
     /** Icons displayed inside the input. */
     icons?: {
@@ -69,8 +68,8 @@ export default class DFilterInput extends Component<DFilterInputSignature> {
   #input?: HTMLInputElement;
 
   @action
-  onClearInput(event: Event) {
-    this.args.onClearInput?.(event);
+  onClearInput() {
+    this.args.onClearInput?.();
     this.#input?.focus();
   }
 

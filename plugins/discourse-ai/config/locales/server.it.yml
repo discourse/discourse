@@ -25,7 +25,6 @@ it:
         description: "Report periodico basato su LLM"
   site_settings:
     discourse_ai_enabled: "Abilita il plugin Discourse AI."
-    ai_default_llm_model: "Il modello LLM predefinito da utilizzare per tutte le funzionalità AI"
     ai_artifact_security: "l sistema di artefatti IA genera IFRAME con codice eseguibile. La modalità Strict impone un clic extra per eseguire il codice. La modalità Lax esegue il codice direttamente. La modalità Hybrid permette all'utente di immettere data-ai-artifact-autorun per vedere subito il risultato. La modalità Disabled disabilita il sistema di artefatti."
     ai_toxicity_enabled: "Abilita il modulo tossicità."
     ai_toxicity_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo tossicità"
@@ -263,6 +262,26 @@ it:
       default_pm_prefix: "[MP di bot IA senza titolo]"
       read_post:
         unknown_post: "messaggio"
+      chat_tool_approval:
+        topic_states:
+          open: "Aperta"
+          closed: "Chiuso"
+          active: "Attivo"
+          deleted: "Eliminato"
+        solution_post: "Messaggio #%{number}"
+        duration_label: "Durata:"
+        user_duration:
+          one: "%{count} giorno"
+          other: "%{count} giorni"
+        posts_label: "Messaggi"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrizione"
+          color: "colore"
+          text_color: "colore del testo"
+        approve_label: "Sì"
+        reject_label: "No"
       agents:
         cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
         github_helper:

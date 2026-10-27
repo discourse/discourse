@@ -14,6 +14,8 @@ class Admin::EmailTemplatesController < Admin::AdminController
         custom_invite_forum_mailer
         custom_invite_mailer
         download_backup_mailer
+        dsa_notice_mailer
+        dsa_notice_verification
         email_login_code_mailer
         invite_forum_mailer
         invite_mailer
@@ -50,6 +52,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.email_reject_reply_user_not_matching
         system_messages.email_reject_screened_email
         system_messages.email_reject_silenced_user
+        system_messages.email_reject_site_archived
         system_messages.email_reject_strangers_not_allowed
         system_messages.email_reject_too_many_recipients
         system_messages.email_reject_topic_closed
@@ -89,6 +92,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.welcome_user
         test_mailer
         unsubscribe_mailer
+        user_notifications.account_associated
         user_notifications.account_created
         user_notifications.account_deleted
         user_notifications.account_exists

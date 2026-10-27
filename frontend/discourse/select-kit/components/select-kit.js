@@ -35,12 +35,69 @@ import {
 } from "discourse/select-kit/lib/plugin-api";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { i18n } from "discourse-i18n";
-import ErrorsCollection from "./select-kit/errors-collection";
-import SelectKitCollection from "./select-kit/select-kit-collection";
-import SelectKitFilter from "./select-kit/select-kit-filter";
-import SelectKitRow from "./select-kit/select-kit-row";
-import SelectedChoice from "./selected-choice";
-import SelectedName from "./selected-name";
+import ErrorsCollection from "./select-kit/errors-collection.gjs";
+import SelectKitCollection from "./select-kit/select-kit-collection.gjs";
+import SelectKitFilter from "./select-kit/select-kit-filter.gjs";
+import SelectKitRow from "./select-kit/select-kit-row.gjs";
+import SelectedChoice from "./selected-choice.gjs";
+import SelectedName from "./selected-name.gjs";
+
+/**
+ * @typedef {Object} SelectKitStateProperties
+ * @property {string} uniqueID
+ * @property {number} [totalCount]
+ * @property {boolean} [isDisabled]
+ * @property {string | ((item: unknown) => unknown) | null | undefined} valueProperty
+ * @property {string | ((item: unknown) => unknown) | null | undefined} nameProperty
+ * @property {string | ((item: unknown) => unknown) | null | undefined} labelProperty
+ * @property {string | ((item: unknown) => unknown) | null | undefined} titleProperty
+ * @property {string | ((item: unknown) => unknown) | null | undefined} langProperty
+ * @property {EmberObject & Record<string, unknown>} options
+ * @property {boolean} isLoading
+ * @property {boolean} isHidden
+ * @property {boolean} isExpanded
+ * @property {boolean} isPlacedAbove
+ * @property {boolean} isFilterExpanded
+ * @property {boolean} enterDisabled
+ * @property {boolean} hasSelection
+ * @property {boolean} hasNoContent
+ * @property {unknown} highlighted
+ * @property {unknown} noneItem
+ * @property {unknown} newItem
+ * @property {string | null | undefined} filter
+ * @property {SelectKit["_modifyContentWrapper"]} modifyContent
+ * @property {SelectKit["_modifySelectionWrapper"]} modifySelection
+ * @property {SelectKit["_modifyComponentForRowWrapper"]} modifyComponentForRow
+ * @property {SelectKit["_modifyContentForCollectionWrapper"]} modifyContentForCollection
+ * @property {SelectKit["_modifyComponentForCollectionWrapper"]} modifyComponentForCollection
+ * @property {SelectKit["_toggle"]} toggle
+ * @property {SelectKit["_close"]} close
+ * @property {SelectKit["_open"]} open
+ * @property {SelectKit["_highlightNext"]} highlightNext
+ * @property {SelectKit["_highlightPrevious"]} highlightPrevious
+ * @property {SelectKit["_highlightLast"]} highlightLast
+ * @property {SelectKit["_highlightFirst"]} highlightFirst
+ * @property {SelectKit["_deselectLast"]} deselectLast
+ * @property {SelectKit["_onChangeWrapper"]} change
+ * @property {SelectKit["select"]} select
+ * @property {SelectKit["deselect"]} deselect
+ * @property {SelectKit["deselectByValue"]} deselectByValue
+ * @property {SelectKit["append"]} append
+ * @property {SelectKit["_cancelSearch"]} cancelSearch
+ * @property {SelectKit["triggerSearch"]} triggerSearch
+ * @property {SelectKit["_focusFilter"]} focusFilter
+ * @property {SelectKit["_onOpenWrapper"]} onOpen
+ * @property {SelectKit["_onCloseWrapper"]} onClose
+ * @property {SelectKit["_onInput"]} onInput
+ * @property {SelectKit["_onClearSelection"]} onClearSelection
+ * @property {SelectKit["_onHover"]} onHover
+ * @property {SelectKit["_onKeydownWrapper"]} onKeydown
+ * @property {SelectKit["_mainElement"]} mainElement
+ * @property {SelectKit["_headerElement"]} headerElement
+ * @property {SelectKit["_bodyElement"]} bodyElement
+ */
+
+/** @typedef {EmberObject & SelectKitStateProperties} SelectKitState */
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -178,16 +235,34 @@ export default class SelectKit extends Component {
   multiSelect = false;
 
   @protoProp tabindex = 0;
+
+  /** @type {unknown[] | null | undefined} */
   @protoProp content = null;
+
+  /** @type {unknown} */
   @protoProp value = null;
+
+  /** @type {SelectKitState | null} */
   @protoProp selectKit = null;
+
+  /** @type {Record<string, unknown> | EmberObject | null | undefined} */
   @protoProp options = null;
   @protoProp valueProperty = "id";
   @protoProp nameProperty = "name";
+
+  /** @type {string | ((item: unknown) => unknown) | null | undefined} */
   @protoProp labelProperty = null;
+
+  /** @type {string | ((item: unknown) => unknown) | null | undefined} */
   @protoProp titleProperty = null;
+
+  /** @type {string | ((item: unknown) => unknown) | null | undefined} */
   @protoProp langProperty = null;
+
+  /** @type {unknown[] | null} */
   @autoTrackedArray mainCollection = null;
+
+  /** @type {string[] | null} */
   @autoTrackedArray errorsCollection = null;
 
   _handleNativeToggle = () => {
@@ -199,7 +274,8 @@ export default class SelectKit extends Component {
   init() {
     super.init(...arguments);
 
-    this._searchPromise = null;
+    this._searchPromise =
+      /** @type {Promise<unknown[] | undefined> | null | undefined} */ (null);
 
     this.errorsCollection = [];
     this._collections = [ERRORS_COLLECTION, MAIN_COLLECTION];
@@ -817,7 +893,9 @@ export default class SelectKit extends Component {
 
         if (this.selectKit.options.focusAfterOnChange) {
           this._safeAfterRender(() => {
-            this._focusFilter();
+            if (!this._focusMovedAway()) {
+              this._focusFilter();
+            }
           });
         }
       }
@@ -890,6 +968,10 @@ export default class SelectKit extends Component {
     return boundaryAction;
   }
 
+  /**
+   * @param {string | null | undefined} filter
+   * @returns {Promise<unknown[] | undefined>}
+   */
   _searchWrapper(filter) {
     if (this.isDestroying) {
       return Promise.resolve([]);
@@ -1182,6 +1264,16 @@ export default class SelectKit extends Component {
     }
   }
 
+  // onChange may move focus on purpose, e.g. into an input it revealed
+  _focusMovedAway() {
+    const active = document.activeElement;
+    return (
+      !!active &&
+      active !== document.body &&
+      !this.selectKit.mainElement()?.contains(active)
+    );
+  }
+
   _focusFilter(forceHeader = false) {
     if (!this.selectKit.mainElement()) {
       return;
@@ -1266,17 +1358,19 @@ export default class SelectKit extends Component {
   }
 
   _deprecateMutations() {
-    this.actions ??= {};
-
-    if (!this.onChange && !this.actions.onChange) {
+    if (!this.onChange && !this.actions?.onChange) {
       this._deprecated(
         "Implicit mutation has been deprecated, please use `onChange` handler"
       );
 
-      this.actions.onChange =
-        this.onSelect ||
-        this.actions.onSelect ||
-        ((value) => this.set("value", value));
+      // `actions` may come from the class prototype, shared by all instances
+      this.actions = {
+        ...this.actions,
+        onChange:
+          this.onSelect ||
+          this.actions?.onSelect ||
+          ((value) => this.set("value", value)),
+      };
     }
   }
 

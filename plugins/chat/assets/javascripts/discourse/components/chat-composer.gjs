@@ -40,7 +40,6 @@ import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
-import { not, or } from "discourse/truth-helpers";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dAutocomplete, { SKIP } from "discourse/ui-kit/modifiers/d-autocomplete";
@@ -311,6 +310,10 @@ export default class ChatComposer extends Component {
   }
 
   async reactingToLastMessage() {
+    if (!this.siteSettings.enable_emoji) {
+      return false;
+    }
+
     // Check if the message is a reaction to the latest message in the channel.
     const message = this.draft.message.trim();
     let reactionCode = "";

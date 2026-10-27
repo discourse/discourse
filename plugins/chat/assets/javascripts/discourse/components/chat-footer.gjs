@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

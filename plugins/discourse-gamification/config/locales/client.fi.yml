@@ -64,9 +64,7 @@ fi:
       close: "Sulje"
       delete: "Poista"
       edit: "Muokkaa"
-      back: "Takaisin"
       save: "Tallenna"
-      apply: "Käytä"
       recalculate: "Laske pisteet uudelleen"
       recalculating: "Pisteitä lasketaan uudelleen..."
       completed: "Valmista! Pisteet on laskettu uudelleen."
@@ -85,9 +83,11 @@ fi:
       admin:
         title: "Pelillistäminen"
         name: "Nimi"
+        created_by: "Luonut"
         period: "Jakso"
     discourse_workflows:
       gamification_score:
         username: "Käyttäjä"
         date: "Päivämäärä"
         description: "Kuvaus"
+        category_id: "Luokka"

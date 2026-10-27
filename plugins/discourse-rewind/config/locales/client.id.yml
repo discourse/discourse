@@ -17,6 +17,9 @@ id:
         chat_usage:
           author: Anda
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            other: "%{count} menit"
         invites:
           label_invitations_sent: "Undangan terkirim:"
         writing_analysis:

@@ -10,6 +10,7 @@ import DashboardReportEmptyState from "discourse/admin/components/dashboard/repo
 import DashboardReportErrorState from "discourse/admin/components/dashboard/report-error-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
+import ManageReportsReorderable from "discourse/admin/components/modal/manage-reports-reorderable";
 import { lookupAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { loadDashboardReports } from "discourse/admin/lib/dashboard-reports-loader";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -19,7 +20,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { eq, gt } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -125,11 +125,18 @@ class FollowPointer extends Modifier {
 export default class DashboardReports extends Component {
   @service currentUser;
   @service modal;
+  @service siteSettings;
 
   @tracked cards = [];
   @tracked loading = false;
+
+  /** @type {{ key: string, rows: number, cols: number } | null} */
   @tracked liveResize = null;
+
+  /** @type {{ key: string, rect: { left: number, top: number, width: number, height: number } } | null} */
   @tracked freeFollow = null;
+
+  /** @type {string | null} */
   @tracked activeResizeKey = null;
 
   measureCard = (handle) => handle.closest(".db-report__card");
@@ -253,7 +260,13 @@ export default class DashboardReports extends Component {
 
   @action
   openReportsConfig() {
-    this.modal.show(ManageReports, {
+    // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
+    // component once the change ships.
+    const Modal = this.siteSettings.enable_new_reordering_controls
+      ? ManageReportsReorderable
+      : ManageReports;
+
+    this.modal.show(Modal, {
       model: { onApplied: this.onLayoutChanged },
     });
   }

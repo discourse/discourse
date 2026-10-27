@@ -9,7 +9,6 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { gt } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
@@ -21,8 +20,8 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiAgent from "../admin/models/ai-agent";
-import AiAgentEditor from "./ai-agent-editor";
+import AiAgent from "discourse/plugins/discourse-ai/discourse/admin/models/ai-agent";
+import AiAgentEditor from "./ai-agent-editor.gjs";
 
 const LAYOUT_BUTTONS = [
   {

@@ -3,7 +3,6 @@ import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-ca
 import BackButton from "discourse/components/back-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
@@ -156,10 +155,6 @@ export default <template>
                 <AutomationField
                   @automation={{@controller.automation}}
                   @field={{field}}
-                  @saveAutomation={{fn
-                    @controller.saveAutomation
-                    @controller.automation
-                  }}
                 />
               {{/each}}
             {{/if}}
@@ -186,10 +181,6 @@ export default <template>
                     <AutomationField
                       @automation={{@controller.automation}}
                       @field={{field}}
-                      @saveAutomation={{fn
-                        @controller.saveAutomation
-                        @controller.automation
-                      }}
                     />
                   {{/each}}
                 </div>
@@ -199,11 +190,7 @@ export default <template>
             <div class="control-group">
               <DButton
                 class="btn-primary update-automation"
-                @action={{fn
-                  @controller.saveAutomation
-                  @controller.automation
-                  true
-                }}
+                @action={{fn @controller.saveAutomation true}}
                 @isLoading={{@controller.isUpdatingAutomation}}
                 @label="discourse_automation.update"
                 @type="submit"

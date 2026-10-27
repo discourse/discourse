@@ -25,7 +25,6 @@ fi:
         description: "Säännöllinen raportti laajan kielimallin perusteella"
   site_settings:
     discourse_ai_enabled: "Ota Discoursen tekoälylisäosa käyttöön."
-    ai_default_llm_model: "Oletusarvoinen LLM-malli, jota käytetään kaikkiin tekoälyominaisuuksiin"
     ai_artifact_security: "Tekoälyartefaktijärjestelmä luo iframe-kehyksiä suoritettavalla koodilla. Tiukka tila pakottaa ylimääräisen klikkauksen koodin suorittamiseksi. Löyhä tila suorittaa koodin välittömästi. Hybriditila antaa käyttäjälle mahdollisuuden syöttää data-ai-artifact-autorun-parametrin näytettäväksi heti. Pois käytöstä -tila poistaa artefaktijärjestelmän käytöstä."
     ai_toxicity_enabled: "Ota toksisuusmoduuli käyttöön."
     ai_toxicity_inference_service_api_endpoint: "URL-osoite, jossa toksisuusmoduulin API on käynnissä"
@@ -263,6 +262,26 @@ fi:
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
       read_post:
         unknown_post: "viesti"
+      chat_tool_approval:
+        topic_states:
+          open: "Avoinna"
+          closed: "Suljettu"
+          active: "Aktiivinen"
+          deleted: "Poistettu"
+        solution_post: "%{number}. Viesti"
+        duration_label: "Kesto:"
+        user_duration:
+          one: "%{count} päivä"
+          other: "%{count} päivää"
+        posts_label: "Viestit"
+        category_label: "Luokka"
+        category_fields:
+          name: "nimi"
+          description: "kuvaus"
+          color: "väri"
+          text_color: "tekstin väri"
+        approve_label: "Kyllä"
+        reject_label: "Ei"
       agents:
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
-import MobileEmbeddableChatModal from "./modal/mobile-embeddable-chat-modal";
+import MobileEmbeddableChatModal from "./modal/mobile-embeddable-chat-modal.gjs";
 
 export default class MobileLivestreamChatIcon extends Component {
   @service modal;

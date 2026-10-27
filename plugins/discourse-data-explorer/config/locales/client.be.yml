@@ -8,7 +8,6 @@ be:
   js:
     explorer:
       or: "або"
-      create: "стварыць"
       ai:
         generate: "згенераваць"
       types:

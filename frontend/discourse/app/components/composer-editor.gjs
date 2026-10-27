@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule, throttle } from "@ember/runloop";
@@ -19,6 +18,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
+import { decorateImageControls } from "discourse/lib/composer/image-controls";
 import { bind, debounce } from "discourse/lib/decorators";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import {
@@ -42,7 +42,6 @@ import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
-import { gt } from "discourse/truth-helpers";
 import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import DEditor from "discourse/ui-kit/d-editor";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
@@ -116,7 +115,7 @@ export default class ComposerEditor extends Component {
     this.warnedCannotSeeMentions = [];
     this.warnedGroupMentions = [];
 
-    this.uppyComposerUpload = new UppyComposerUpload(getOwner(this), {
+    this.uppyComposerUpload = new UppyComposerUpload(this, {
       composerEventPrefix: this.composerEventPrefix,
       composerModel: this.composer.model,
       uploadMarkdownResolvers,
@@ -310,11 +309,6 @@ export default class ComposerEditor extends Component {
     });
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.uppyComposerUpload.teardown();
-  }
-
   @observes("composer.focusTarget")
   setFocus() {
     if (this.composer.focusTarget === "editor") {
@@ -408,7 +402,13 @@ export default class ComposerEditor extends Component {
     const matchingPlaceholder = this.get("composer.model.reply").match(
       IMAGE_MARKDOWN_REGEX
     );
-    const match = matchingPlaceholder[index];
+    const match = matchingPlaceholder?.[index];
+
+    if (!match) {
+      this.resetImageControls(buttonWrapper);
+      return;
+    }
+
     const input = buttonWrapper.querySelector("input.alt-text-input");
     const replacement = match.replace(
       IMAGE_MARKDOWN_REGEX,
@@ -475,6 +475,8 @@ export default class ComposerEditor extends Component {
 
   @action
   previewUpdated(preview, helper) {
+    decorateImageControls(preview);
+
     this._renderMentions(preview);
     this._renderHashtags(preview);
     this._refreshOneboxes(preview);
@@ -663,10 +665,12 @@ export default class ComposerEditor extends Component {
     const loaded = loadOneboxes(
       preview,
       ajax,
-      this.get("composer.topic.id"),
-      this.get("composer.category.id"),
+      this.get("composer.model.topic.id"),
+      this.get("composer.model.category.id"),
       this.siteSettings.max_oneboxes_per_post,
-      refresh
+      refresh,
+      false,
+      (onebox) => onebox && this.appEvents.trigger("composer:refresh-preview")
     );
 
     if (refresh && loaded > 0) {
@@ -869,6 +873,11 @@ export default class ComposerEditor extends Component {
     const matchingPlaceholder = this.get("composer.model.reply").match(
       IMAGE_MARKDOWN_REGEX
     );
+
+    if (!matchingPlaceholder?.[index]) {
+      return;
+    }
+
     this.appEvents.trigger(
       `${this.composerEventPrefix}:replace-text`,
       matchingPlaceholder[index],
@@ -891,6 +900,10 @@ export default class ComposerEditor extends Component {
     const matches = reply.match(IMAGE_MARKDOWN_REGEX);
     const closingIndex =
       index + parseInt(event.target.dataset.imageCount, 10) - 1;
+
+    if (!matches?.[index] || !matches[closingIndex]) {
+      return;
+    }
 
     const textArea = this.element.querySelector(".d-editor-input");
     textArea.selectionStart = reply.indexOf(matches[index]);

@@ -415,6 +415,14 @@ class StaffActionLogger
     )
   end
 
+  def log_add_access_control_list_owner(target, user, opts = {})
+    log_access_control_list_owner_change(:add_access_control_list_owner, target, user, opts)
+  end
+
+  def log_remove_access_control_list_owner(target, user, opts = {})
+    log_access_control_list_owner_change(:remove_access_control_list_owner, target, user, opts)
+  end
+
   def theme_json(theme)
     ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
@@ -556,6 +564,7 @@ class StaffActionLogger
         action: UserHistory.actions[:suspend_user],
         target_user_id: user.id,
         details: details,
+        expires_at: user.suspended_till,
       )
     args[:post_id] = opts[:post_id] if opts[:post_id]
     UserHistory.create!(args)
@@ -748,7 +757,7 @@ class StaffActionLogger
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
-    if !old_permissions.empty? && (old_permissions != category_params[:permissions].to_h)
+    if old_permissions.present? && (old_permissions != category_params[:permissions].to_h)
       changed_attributes.merge!(
         permissions: [old_permissions.to_json, category_params[:permissions].to_json],
       )
@@ -821,6 +830,7 @@ class StaffActionLogger
         action: UserHistory.actions[:silence_user],
         target_user_id: user.id,
         details: opts[:details],
+        expires_at: user.silenced_till,
       )
     create_args[:post_id] = opts[:post_id] if opts[:post_id]
 
@@ -1292,6 +1302,18 @@ class StaffActionLogger
   end
 
   private
+
+  def log_access_control_list_owner_change(action, target, user, opts)
+    raise Discourse::InvalidParameters.new(:user) if !user.is_a?(User)
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[action],
+        subject: "#{target.class.polymorphic_name} (#{target.id})",
+        target_user_id: user.id,
+      ),
+    )
+  end
 
   def json_params(previous_value, new_value)
     if (previous_value && previous_value.length > UserHistory::MAX_JSON_LENGTH) ||

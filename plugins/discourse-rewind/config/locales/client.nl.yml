@@ -132,6 +132,10 @@ nl:
           message_4: "Je gemiddelde berichtlengte is <strong>%{length}</strong> tekens"
           message_5: "Je favoriete kanalen:"
           dancing_baby_alt: "Dansende baby"
+        live_usage:
+          minutes:
+            one: "%{count} min."
+            other: "%{count} min."
         invites:
           guest_book_title: Gastenboek
           guest_book_subtitle: Je community-uitnodigingen

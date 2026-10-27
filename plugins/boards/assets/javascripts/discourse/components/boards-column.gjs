@@ -5,22 +5,21 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { isRecencyColumn } from "../lib/boards-card-ordering";
+import { isRecencyColumn } from "../lib/boards-card-ordering.js";
 import {
   columnColorVariable,
   hasColumnColor,
-} from "../lib/boards-column-helpers";
-import { animateCardReorder, captureCardRects } from "../lib/boards-motion";
-import BoardsCard from "./boards-card";
-import BoardsAddTopicAsCardModal from "./modal/boards-add-topic-as-card";
-import BoardsCardDetailModal from "./modal/boards-card-detail";
+} from "../lib/boards-column-helpers.js";
+import { animateCardReorder, captureCardRects } from "../lib/boards-motion.js";
+import BoardsCard from "./boards-card.gjs";
+import BoardsAddTopicAsCardModal from "./modal/boards-add-topic-as-card.gjs";
+import BoardsCardDetailModal from "./modal/boards-card-detail.gjs";
 
 const RECENCY_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 

@@ -26,6 +26,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     this.siteSettings.ai_ask_ai_summary_detail = "balanced";
     this.siteSettings.ai_ask_ai_related_count = 2;
     this.currentUser.can_use_ask_ai = true;
+    // present only for readers the AI bot is enabled for
+    this.currentUser.ai_enabled_chat_bots = [];
 
     this.closeSearchMenuCalled = false;
     this.closeSearchMenu = () => {
@@ -149,10 +151,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -1,
         username: "forum_helper",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
@@ -204,10 +204,12 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
 
   test("a suggested follow-up steps aside when the field is focused", async function (assert) {
     this.currentUser.ai_enabled_agents = [
-      { id: -1, username: "forum_helper", allow_personal_messages: true },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+      {
+        id: -1,
+        username: "forum_helper",
+        allow_personal_messages: true,
+        has_default_llm: true,
+      },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
@@ -253,6 +255,29 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         "What changed in the latest release?",
         "and the next answer brings a suggestion of its own"
       );
+  });
+
+  test("the default toggle is left out under the combined search", async function (assert) {
+    this.siteSettings.enable_ai_combined_search = true;
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+
+    assert.dom(".ai-search-discoveries__default-preference").doesNotExist();
   });
 
   test("the default toggle can be dismissed for this browser", async function (assert) {
@@ -782,10 +807,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -1,
         username: "forum_helper",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
@@ -845,10 +868,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -1,
         username: "forum_helper",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_discover_agent = "-34";
     this.siteSettings.ai_ask_ai_follow_up_agent = "-1";
@@ -891,10 +912,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         id: -34,
         username: "discover",
         allow_personal_messages: true,
+        has_default_llm: true,
       },
-    ];
-    this.currentUser.ai_enabled_chat_bots = [
-      { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";

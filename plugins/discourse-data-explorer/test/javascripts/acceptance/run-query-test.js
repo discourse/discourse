@@ -40,11 +40,13 @@ acceptance("Run Query", function (needs) {
 
   let updateParams;
   let query2Tags;
+  let query2Deletes;
 
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
     updateParams = null;
-    query2Tags = ["existing"];
+    query2Tags = ["custom", "existing"];
+    query2Deletes = 0;
   });
 
   needs.hooks.afterEach(() => {
@@ -133,34 +135,8 @@ acceptance("Run Query", function (needs) {
       helper.response(["default", "existing"])
     );
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
-      return helper.response({
-        queries: [
-          {
-            id: -6,
-            name: "Top 100 Likers",
-            description:
-              "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            username: "system",
-            group_ids: [],
-            tags: ["default"],
-            last_run_at: "2021-02-11T08:29:59.337Z",
-            user_id: -1,
-            is_default: true,
-          },
-          {
-            id: 2,
-            name: "What about 0?",
-            description: "",
-            username: "system",
-            group_ids: [],
-            tags: ["existing"],
-            last_run_at: "2023-05-04T22:16:23.858Z",
-            user_id: 1,
-            is_default: false,
-          },
-        ],
-      });
+    server.get("/api/data-explorer/queries", () => {
+      return helper.response({ data: [] });
     });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/-6", () => {
@@ -183,6 +159,7 @@ acceptance("Run Query", function (needs) {
           username: "system",
           group_ids: [],
           tags: ["default", "existing"],
+          automatic_tags: ["default"],
           last_run_at: "2021-02-11T08:29:59.337Z",
           hidden: false,
           user_id: -1,
@@ -203,6 +180,7 @@ acceptance("Run Query", function (needs) {
           username: "system",
           group_ids: [],
           tags: query2Tags,
+          automatic_tags: ["custom"],
           last_run_at: "2023-05-04T22:16:23.858Z",
           hidden: false,
           user_id: 1,
@@ -277,6 +255,7 @@ acceptance("Run Query", function (needs) {
             param_info: [],
             group_ids: [],
             tags: query2Tags,
+            automatic_tags: ["custom"],
             hidden: false,
             user_id: 1,
           },
@@ -297,6 +276,7 @@ acceptance("Run Query", function (needs) {
             param_info: [],
             group_ids: [],
             tags: ["default", "monthly"],
+            automatic_tags: ["default"],
             hidden: false,
             user_id: -1,
             is_default: true,
@@ -304,6 +284,11 @@ acceptance("Run Query", function (needs) {
         });
       }
     );
+
+    server.delete("/admin/plugins/discourse-data-explorer/queries/2", () => {
+      query2Deletes += 1;
+      return helper.response({ success: true, errors: [] });
+    });
 
     server.get("/session/csrf.json", function () {
       return helper.response({
@@ -496,11 +481,41 @@ acceptance("Run Query", function (needs) {
     );
   });
 
+  test("deleting a query asks for confirmation first", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    await click(".query-action-bar__right .btn-danger");
+
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("explorer.delete_confirm"), "the confirmation is shown");
+    assert.strictEqual(query2Deletes, 0, "opening the dialog does not delete");
+
+    await click(".dialog-footer .btn-default");
+
+    assert.dom(".dialog-body").doesNotExist("cancelling closes the dialog");
+    assert.strictEqual(query2Deletes, 0, "cancelling does not delete");
+
+    await click(".query-action-bar__right .btn-danger");
+    await click(".dialog-footer .btn-danger");
+
+    assert.strictEqual(query2Deletes, 1, "confirming deletes the query");
+    assert
+      .dom(".query-action-bar__right .btn-danger")
+      .doesNotExist("the delete button is gone after deleting");
+    assert
+      .dom(".query-action-bar__right")
+      .includesText(i18n("explorer.recover"), "the undelete button is offered");
+  });
+
   test("adds a new tag while editing a query", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/2");
 
     const tags = selectKit(".query-edit .query-tag-chooser");
     await tags.expand();
+    assert
+      .dom(".query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag cannot be removed");
     assert.false(
       tags.displayedContent().some((row) => row.name === "default"),
       "the system-only default tag is not offered on user queries"
@@ -523,7 +538,7 @@ acceptance("Run Query", function (needs) {
 
     assert.deepEqual(
       updateParams.getAll("query[tags][]"),
-      ["existing", "Monthly"],
+      ["custom", "existing", "Monthly"],
       "the edited tags are saved"
     );
     assert.strictEqual(
@@ -553,7 +568,7 @@ acceptance("Run Query", function (needs) {
     );
     assert.deepEqual(
       updateParams.getAll("query[tags][]"),
-      [],
+      ["custom"],
       "the removed tag is absent from the request"
     );
 
@@ -563,6 +578,11 @@ acceptance("Run Query", function (needs) {
     assert
       .dom(".query-edit .query-tag-chooser .selected-choice")
       .doesNotExist("the removed tag stays absent after reloading the query");
+
+    await tags.expand();
+    assert
+      .dom(".query-edit .query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag remains");
   });
 
   test("edits additional tags on a default query", async function (assert) {
@@ -573,6 +593,10 @@ acceptance("Run Query", function (needs) {
     assert
       .dom(".query-tag-chooser .tag-choice.disabled")
       .hasText("default", "the default tag cannot be removed");
+    assert.false(
+      tags.displayedContent().some((row) => row.name === "custom"),
+      "the custom tag is not offered on default queries"
+    );
 
     await tags.deselectItemByValue("existing");
     await tags.fillInFilter("Monthly");

@@ -20,6 +20,10 @@ fi:
           author: Sinä
           author_others: "%{username}"
           status_online: "● online-tilassa"
+        live_usage:
+          minutes:
+            one: "%{count} minuutti"
+            other: "%{count} minuuttia"
         invites:
           label_invitations_sent: "Kutsut lähetettiin:"
         writing_analysis:

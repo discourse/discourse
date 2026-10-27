@@ -1,5 +1,4 @@
 import { LinkTo } from "@ember/routing";
-import { and } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title" with {
   discourseImport: "optional",

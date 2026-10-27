@@ -48,7 +48,6 @@ ja:
         description: "AI を使用してトピックを自動的にタグ付けします"
   site_settings:
     discourse_ai_enabled: "Discourse AI プラグインを有効にします。"
-    ai_default_llm_model: "すべての AI 機能に使用するデフォルトの LLM モデル"
     ai_artifact_security: "AI アーティファクトシステムは、実行可能なコードを含む IFRAME を生成します。厳格モードでは、コードを実行するためのクリックが追加で必要となります。ハイブリッドモードでは、ユーザーが data-ai-artifact-autorun を指定するとすぐに表示することができます。無効モードでは、アーティファクトシステムが無効になります。"
     ai_toxicity_enabled: "毒コメントモジュールを有効にします。"
     ai_toxicity_inference_service_api_endpoint: "毒コメントモジュールの API が実行している URL"
@@ -309,6 +308,28 @@ ja:
       thinking: "思考中"
       read_post:
         unknown_post: "投稿"
+      chat_tool_approval:
+        topic_states:
+          open: "オープン"
+          closed: "終了"
+          active: "アクティブ"
+          deleted: "削除済み"
+        solution_post: "投稿 #%{number}"
+        duration_label: "期間:"
+        user_duration:
+          other: "%{count} 日"
+        post_states:
+          locked: "ロック済み"
+        posts_label: "投稿"
+        category_label: "カテゴリ"
+        category_fields:
+          name: "名前"
+          description: "説明"
+          color: "色"
+          text_color: "テキストの色"
+        approve_label: "はい"
+        reject_label: "いいえ"
+        empty_value: "空"
       agents:
         cannot_have_duplicate_tools: "重複するツールは使用できません"
         github_helper:

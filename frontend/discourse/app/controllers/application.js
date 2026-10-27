@@ -24,6 +24,8 @@ export default class ApplicationController extends Controller {
   showTop = true;
 
   sidebarDisabledRouteOverride = false;
+
+  /** @type {string | null} */
   navigationMenuQueryParamOverride = null;
   _showSiteHeader = true;
   @tracked _showSidebar;

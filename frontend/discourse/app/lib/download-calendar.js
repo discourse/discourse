@@ -409,8 +409,8 @@ function _generateVTimezone(timezone, referenceMs) {
  * Generate ICS calendar data for the given dates
  *
  * @param {string} title - Event title
- * @param {Array} dates - Array of date objects with startsAt, endsAt, optional timezone, and optional allDay (date-only event)
- * @param {Object} options - Optional parameters (rrule, location, details, timezone)
+ * @param {Array<{ startsAt: string, endsAt?: string | null, timezone?: string, allDay?: boolean }>} dates - Array of date objects with startsAt, endsAt, optional timezone, and optional allDay (date-only event)
+ * @param {{ rrule?: string | null, location?: string | null, details?: string | null, timezone?: string | null }} [options] - Optional parameters (rrule, location, details, timezone)
  * @returns {string} - ICS formatted calendar data
  */
 export function generateIcsData(title, dates, options = {}) {

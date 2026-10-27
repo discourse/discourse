@@ -1,7 +1,7 @@
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { renderIcon } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
-import DateWithZoneHelper from "./date-with-zone-helper";
+import DateWithZoneHelper from "./date-with-zone-helper.js";
 
 const DATETIME_FORMAT = "LLL";
 const DATE_FORMAT = "LL";

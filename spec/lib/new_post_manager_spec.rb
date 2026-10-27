@@ -639,7 +639,7 @@ RSpec.describe NewPostManager do
                 raw: "this is a new topic",
                 title: "Let's start a new topic!",
                 category: category.id,
-                tags: tag.name,
+                tags: [tag.name],
               )
 
             result = manager.perform

@@ -33,6 +33,10 @@ fr:
         remove: "Supprimer ce « J'aime »"
         cant_remove: "Vous ne pouvez plus supprimer votre J'aime"
         unauthenticated: "Veuillez vous inscrire ou vous connecter pour aimer cet article"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Ajouté"
+        changes_removed: "Supprimé"
     notifications:
       reaction_1_user_multiple_posts:
         one: "a réagi à %{count} de vos messages"

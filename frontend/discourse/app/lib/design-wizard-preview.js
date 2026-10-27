@@ -8,8 +8,8 @@ function hex(colors, name, fallback) {
 /**
  * Builds the inline style for a palette swatch in the design wizard rail.
  *
- * @param {Object} palette - serialized palette with a `colors` map
- * @returns {ReturnType<typeof trustHTML>} inline style string
+ * @param {{ colors?: Record<string, string> } | null | undefined} palette - serialized palette with a `colors` map
+ * @returns {import("@ember/template").TrustedHTML} inline style string
  */
 export function swatchStyle(palette) {
   const bg = hex(palette?.colors, "secondary", "ffffff");

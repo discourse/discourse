@@ -12,12 +12,9 @@ cs:
     explorer:
       view_query: "Zobrazit"
       or: "nebo"
-      create: "Vytvořit"
       ai:
         generate: "Vygenerovat API klíč"
         optional: "volitelné"
-      import:
-        label: "Import"
       help:
         label: "Nápověda"
       schema:
@@ -44,7 +41,6 @@ cs:
       query_description: "Popis"
       query_user: "Vytvořil/a"
       reset_params: "obnovit výchozí"
-      search_placeholder: "Hledat…"
       form:
         errors:
           invalid_date: "%{date} je neplatné datum"

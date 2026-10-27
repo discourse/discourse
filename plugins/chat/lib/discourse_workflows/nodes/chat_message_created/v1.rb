@@ -49,16 +49,18 @@ if defined?(DiscourseWorkflows)
                         "chat_channel_id" => {
                           "type" => "integer",
                         },
+                        "url" => {
+                          "type" => "string",
+                        },
                       },
                     },
                     "channel" => {
                       "type" => "object",
                       "properties" => Chat::WorkflowChannelSerializer::PROPERTIES,
                     },
-                    "user" => {
-                      "type" => "object",
-                      "properties" => DiscourseWorkflows::Schema::BASIC_USER_PROPERTIES,
-                    },
+                    "user" => DiscourseWorkflows::Schema.nullable_user("Message author"),
+                    "actor" =>
+                      DiscourseWorkflows::Schema.nullable_user("User who sent the message"),
                   },
                 },
               },
@@ -118,6 +120,8 @@ if defined?(DiscourseWorkflows)
           end
 
           def output
+            user = serialize_user(@user)
+
             {
               message: {
                 id: @message.id,
@@ -127,21 +131,17 @@ if defined?(DiscourseWorkflows)
                 created_at: @message.created_at.iso8601,
                 thread_id: @message.thread_id,
                 chat_channel_id: @message.chat_channel_id,
+                url: @message.full_url,
               },
-              channel: channel_data,
-              user: user_data,
+              channel: serialize_channel,
+              user:,
+              actor: user,
             }
           end
 
           private
 
-          def user_data
-            return {} if @user.blank?
-
-            serialize_record(@user, BasicUserSerializer)
-          end
-
-          def channel_data
+          def serialize_channel
             scope = @user&.guardian || Discourse.system_user.guardian
             serialize_record(@channel, Chat::WorkflowChannelSerializer, scope:)
           end

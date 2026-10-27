@@ -16,4 +16,14 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
     assert.dom("[data-test-title]").exists();
     assert.dom("[data-test-body]").exists();
   });
+
+  test("@ctaDisabled", async function (assert) {
+    await render(
+      <template>
+        <DEmptyState @ctaDisabled={{true}} @ctaLabel="Show all" />
+      </template>
+    );
+
+    assert.dom(".empty-state__cta .btn").isDisabled();
+  });
 });

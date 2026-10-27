@@ -1,5 +1,27 @@
 # frozen_string_literal: true
 
+module ExternalReviewablePlugin
+  class ExternalEcho < DiscourseAi::Agents::Tools::Tool
+    def self.signature
+      { name: name, description: "Echoes an option", parameters: [] }
+    end
+
+    def self.name
+      "ExternalEcho"
+    end
+
+    def self.accepted_options
+      [option(:greeting, type: :string)]
+    end
+
+    def invoke
+      return error_response("no greeting") if options[:greeting] != "hello"
+
+      { status: "success" }
+    end
+  end
+end
+
 RSpec.describe ReviewableAiToolAction do
   fab!(:admin)
   fab!(:ai_agent)
@@ -10,13 +32,15 @@ RSpec.describe ReviewableAiToolAction do
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
+    ai_agent.reload
   end
 
-  def create_tool_action(tool_name: "close_topic", params: nil, post_id: nil)
+  def create_tool_action(tool_name: "close_topic", params: nil, post_id: nil, tool_options: {})
     params ||= { topic_id: topic.id, closed: true, reason: "Off-topic" }
     AiToolAction.create!(
       tool_name: tool_name,
       tool_parameters: params,
+      tool_options: tool_options,
       ai_agent: ai_agent,
       bot_user_id: bot_user.id,
       post_id: post_id,
@@ -121,6 +145,29 @@ RSpec.describe ReviewableAiToolAction do
   end
 
   describe "#perform_approve" do
+    it "rebuilds an externally registered tool with the options queued with the action" do
+      DiscourseAi.register_tools(
+        [ExternalReviewablePlugin::ExternalEcho],
+        plugin: Plugin::Instance.new,
+      )
+      tool_action =
+        create_tool_action(
+          tool_name: "ExternalEcho",
+          params: {
+          },
+          tool_options: {
+            greeting: "hello",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      expect(reviewable.perform(admin, :approve).success?).to eq(true)
+    ensure
+      DiscoursePluginRegistry._raw_external_ai_tools.reject! do |entry|
+        entry[:value] == ExternalReviewablePlugin::ExternalEcho
+      end
+    end
+
     it "executes the tool and transitions to approved" do
       tool_action = create_tool_action
       reviewable = create_reviewable(tool_action)
@@ -156,7 +203,7 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "creates a category from an approval card authored by the agent's user" do
-      agent_user = ai_agent.create_user!
+      agent_user = ai_agent.user
       source_post = Fabricate(:post, topic: topic)
       tool_action =
         create_tool_action(
@@ -183,7 +230,6 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "rejects an approval card copied by an unrelated agent" do
-      ai_agent.create_user!
       other_agent_user = Fabricate(:ai_agent).create_user!
       source_post = Fabricate(:post, topic: topic)
       reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
@@ -203,7 +249,7 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "rejects an agent's approval card copied to another topic" do
-      agent_user = ai_agent.create_user!
+      agent_user = ai_agent.user
       source_post = Fabricate(:post, topic: topic)
       reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
       copied_post =
@@ -452,7 +498,7 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "accepts inline rejection from the agent's user" do
-      agent_user = ai_agent.create_user!
+      agent_user = ai_agent.user
       source_post = Fabricate(:post, topic: topic)
       reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
       approval_post =
@@ -497,6 +543,530 @@ RSpec.describe ReviewableAiToolAction do
       reviewable = create_reviewable(tool_action)
 
       expect { reviewable.perform(bot_user, :reject) }.to raise_error(Discourse::InvalidAccess)
+    end
+  end
+
+  describe "#perform" do
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        freeze_time
+        SiteSetting.dsa_reporting_enabled = true
+      end
+
+      it "records a statement when an AI tool reviewable closes a topic" do
+        post = Fabricate(:post, topic:)
+        tool_action =
+          create_tool_action(
+            tool_name: "close_topic",
+            params: {
+              topic_id: topic.id,
+              closed: true,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The topic was closed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable reopens a topic" do
+        post = Fabricate(:post, topic:)
+        topic.update!(closed: true)
+        tool_action =
+          create_tool_action(
+            tool_name: "close_topic",
+            params: {
+              topic_id: topic.id,
+              closed: false,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a statement when an AI tool reviewable unlists a topic" do
+        post = Fabricate(:post, topic:)
+        tool_action =
+          create_tool_action(
+            tool_name: "unlist_topic",
+            params: {
+              topic_id: topic.id,
+              unlisted: true,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The topic was unlisted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DEMOTED"],
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable lists a topic" do
+        post = Fabricate(:post, topic:)
+        topic.update!(visible: false)
+        tool_action =
+          create_tool_action(
+            tool_name: "unlist_topic",
+            params: {
+              topic_id: topic.id,
+              unlisted: false,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a statement when an AI tool reviewable deletes a topic" do
+        post = Fabricate(:post, topic:)
+        tool_action =
+          create_tool_action(
+            tool_name: "delete_topic",
+            params: {
+              topic_id: topic.id,
+              deleted: true,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The topic was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable restores a topic" do
+        post = Fabricate(:post, topic:)
+        topic.trash!(admin)
+        tool_action =
+          create_tool_action(
+            tool_name: "delete_topic",
+            params: {
+              topic_id: topic.id,
+              deleted: false,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a statement when an AI tool reviewable locks a post" do
+        post = Fabricate(:post)
+        tool_action =
+          create_tool_action(
+            tool_name: "lock_post",
+            params: {
+              post_id: post.id,
+              locked: true,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was locked.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable unlocks a post" do
+        post = Fabricate(:post)
+        PostLocker.new(post, admin).lock
+        tool_action =
+          create_tool_action(
+            tool_name: "lock_post",
+            params: {
+              post_id: post.id,
+              locked: false,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a partly automated flagged post decision when a moderator approves an AI tool reviewable that hides it" do
+        flagged = Fabricate(:reviewable_flagged_post)
+        tool_action =
+          create_tool_action(
+            tool_name: "perform_reviewable_action",
+            params: {
+              reviewable_id: flagged.id,
+              action_id: "agree_and_hide",
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: flagged.id)
+
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => flagged.target.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
+
+      it "records a statement when an AI tool reviewable enables slow mode" do
+        post = Fabricate(:post, topic:)
+        tool_action =
+          create_tool_action(
+            tool_name: "set_slow_mode",
+            params: {
+              topic_id: topic.id,
+              slow_mode_seconds: 60,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The topic was placed in slow mode, limiting how often users can reply.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable disables slow mode" do
+        post = Fabricate(:post, topic:)
+        topic.update!(slow_mode_seconds: 60)
+        tool_action =
+          create_tool_action(
+            tool_name: "set_slow_mode",
+            params: {
+              topic_id: topic.id,
+              slow_mode_seconds: 0,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a statement when an AI tool reviewable edits a post" do
+        post = Fabricate(:post)
+        tool_action =
+          create_tool_action(
+            tool_name: "edit_post",
+            params: {
+              post_id: post.id,
+              raw: "Corrected content for this moderated post.",
+              edit_reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The post was edited.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_OTHER"],
+          "decision_visibility_other" => "Content edited",
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "records a statement when an AI tool reviewable suspends a user" do
+        user = Fabricate(:user)
+        tool_action =
+          create_tool_action(
+            tool_name: "suspend_user",
+            params: {
+              username: user.username,
+              duration_days: 7,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The account was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 7.days.from_now.to_date.iso8601,
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "records a statement when an AI tool reviewable silences a user" do
+        user = Fabricate(:user)
+        tool_action =
+          create_tool_action(
+            tool_name: "silence_user",
+            params: {
+              username: user.username,
+              duration_days: 7,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { reviewable.perform(admin, :approve) }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The account had its ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => 7.days.from_now.to_date.iso8601,
+          "automated_decision" => "AUTOMATED_DECISION_PARTIALLY",
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable moves a topic to a private category" do
+        post = Fabricate(:post, topic:)
+        category = Fabricate(:private_category, group: Fabricate(:group))
+        tool_action =
+          create_tool_action(
+            tool_name: "change_topic_category",
+            params: {
+              topic_id: topic.id,
+              category_id: category.id,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable moves a post to a private topic" do
+        Fabricate(:post, topic:)
+        post = Fabricate(:post, topic:)
+        destination =
+          Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+        Fabricate(:post, topic: destination)
+        tool_action =
+          create_tool_action(
+            tool_name: "move_posts",
+            params: {
+              topic_id: topic.id,
+              post_ids: [post.id],
+              destination_topic_id: destination.id,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable moves a topic to a public category" do
+        post = Fabricate(:post, topic:)
+        category = Fabricate(:category)
+        tool_action =
+          create_tool_action(
+            tool_name: "change_topic_category",
+            params: {
+              topic_id: topic.id,
+              category_id: category.id,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable moves a post to a public topic" do
+        Fabricate(:post, topic:)
+        post = Fabricate(:post, topic:)
+        destination = Fabricate(:topic)
+        Fabricate(:post, topic: destination)
+        tool_action =
+          create_tool_action(
+            tool_name: "move_posts",
+            params: {
+              topic_id: topic.id,
+              post_ids: [post.id],
+              destination_topic_id: destination.id,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when an AI tool reviewable creates a category" do
+        tool_action =
+          create_tool_action(
+            tool_name: "create_category",
+            params: {
+              name: "Bug reports",
+              reason: "Collect reports",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :approve)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when a moderator rejects an AI tool reviewable" do
+        tool_action =
+          create_tool_action(
+            tool_name: "close_topic",
+            params: {
+              topic_id: topic.id,
+              closed: true,
+              reason: "Moderation",
+            },
+          )
+        reviewable = create_reviewable(tool_action)
+
+        expect { expect(reviewable.perform(admin, :reject)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
     end
   end
 end

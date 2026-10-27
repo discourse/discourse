@@ -12,6 +12,12 @@ Much of this will be automatically consumed by IDEs with TypeScript/JavaScript s
 
 Core, themes and plugins can be authored directly in TypeScript. Use a `.ts` extension for plain modules, or `.gts` for Glimmer components with a `<template>` tag. Type syntax is stripped at build time, so no separate compilation step is required. Linting (`@discourse/lint-configs`) and type-checking (`pnpm lint:types`) both understand these files.
 
+## Strict checking
+
+`pnpm lint:types` runs in TypeScript's `strict` mode, and TypeScript in core and in the bundled plugins and themes must pass it. Plugins and themes outside this repository extend the same config, so they are checked under `strict` too. To opt out, set `"strict": false` in the `compilerOptions` of the plugin's or theme's own `tsconfig.json`.
+
+JavaScript files are not type-checked, but the published `@discourse/types` declarations for them are generated under `strict`. A field initialized to `null` is declared with the type `null`, so give public values like this a JSDoc type such as `/** @type {number | null} */`.
+
 ## Type tests
 
 Types whose meaning a runtime test can't capture (a generic's resolved type, an overload pick, a return type derived from arguments) can be asserted at compile time with [`expect-type`](https://github.com/mmkal/expect-type), in `.ts`/`.gts` files under `frontend/discourse/type-tests/` (e.g. `type-tests/truth-helpers/`). They are checked by `pnpm lint:types` but kept out of the test and production bundles.
@@ -20,7 +26,7 @@ Types whose meaning a runtime test can't capture (a generic's resolved type, an 
 
 - **CLI**: Run `pnpm lint:types`
 
-- **VSCode**: Install the [Glint v2](https://marketplace.visualstudio.com/items?itemName=typed-ember.glint2-vscode) extension. This is part of our [recommended config](https://github.com/discourse/discourse/blob/main/.vscode/extensions.json), so you may already have it. If anything isn't working, you may need to trigger "Restart extension host" from VSCode's command palette, or restart the IDE.
+- **VSCode**: Install the [TypeScript 7](https://marketplace.visualstudio.com/items?itemName=TypeScriptTeam.native-preview) and [Glint v2](https://marketplace.visualstudio.com/items?itemName=typed-ember.glint2-vscode) extensions. Glint 1.4.0 and newer hands `.gts`/`.gjs` files to TypeScript's own language server. Both are part of our [recommended config](https://github.com/discourse/discourse/blob/main/.vscode/extensions.json), so you may already have it. If anything isn't working, you may need to trigger "Restart extension host" from VSCode's command palette, or restart the IDE.
 
 - **JetBrains** (RubyMine, WebStorm, Intellij, etc.): Install the [EmberExperimental](https://plugins.jetbrains.com/plugin/15499-emberexperimental-js) plugin.
 
@@ -32,22 +38,17 @@ Ensure that you've run `pnpm install` recently
 
 Official themes/plugins, and the official skeletons, are all wired up for types. To enable it for your own plugin/theme, pull in the latest changes from the relevant skeleton (`package.json`, `tsconfig.json`)
 
-## Live type updates for bundled plugins and themes
+## Bundled plugins and themes
 
-If you're adding or changing core types and need to use those changes immediately in a bundled plugin or theme, use live type updates.
+Plugins and themes in this repository depend on `@discourse/types` through the pnpm workspace and reference the core project from their `tsconfig.json`. `pnpm lint:types` builds core first, so a core type change is checked against every bundled plugin in the same run, with no release or version bump in between.
 
-To do so, temporarily change the plugin or theme's `package.json` to:
+In the editor, the TypeScript 7 language server resolves core imports straight to core source. Editors still on TypeScript 6 read the declarations that the last `pnpm lint:types` emitted, so run it, or keep `pnpm types:watch` running, after changing core types.
 
-```json
-{
-  "private": true,
-  "dependencies": {
-    "discourse": "workspace:@discourse/types@*"
-  }
-}
-```
+External plugins and themes consume the published `@discourse/types` package. It is published from `main` by the `publish-types` workflow.
 
-Then run `pnpm install` and start the type watcher with `pnpm types:watch`.
+## Relative imports
+
+Relative imports name the file with its extension: `./foo.ts`, `./foo.js`, `./foo.gts`, `./foo.gjs`. TypeScript 7 only resolves a `.gts` or `.gjs` module when the specifier carries the extension, and the same rule is applied to every extension so that the type checker, the build and ESLint agree. ESLint reports a missing extension and adds it with `--fix`.
 
 ## Enable checking for a file
 

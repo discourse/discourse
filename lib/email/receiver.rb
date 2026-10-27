@@ -85,6 +85,9 @@ module Email
     class ReplyToDigestError < ProcessingError
     end
 
+    class SiteArchivedError < ProcessingError
+    end
+
     class TooManyRecipientsError < ProcessingError
       attr_reader :recipients_count
 
@@ -182,6 +185,7 @@ module Email
       raise NoSenderDetectedError if @from_email.blank?
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
+      raise SiteArchivedError if SiteSetting.site_archived
 
       user = @from_user
 
@@ -423,6 +427,10 @@ module Email
 
     def auth_res_action
       @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
+    rescue StandardError => e
+      # fail closed without losing the post: queue it for review
+      Discourse.warn_exception(e, message: "Failed to evaluate Authentication-Results")
+      @auth_res_action = :enqueue
     end
 
     def select_body

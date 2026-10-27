@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 import { i18n } from "discourse-i18n";
-import UserStatusBubble from "./user-dropdown/user-status-bubble";
+import UserStatusBubble from "./user-dropdown/user-status-bubble.gjs";
 
 export default class HeaderProfileToggle extends Component {
   @service currentUser;

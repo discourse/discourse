@@ -11,7 +11,7 @@ import { LinkTo } from "@ember/routing";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { isEmpty, isNone } from "@ember/utils";
+import { isEmpty } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import SettingBool from "discourse/admin/components/site-settings/bool";
 import SettingCategory from "discourse/admin/components/site-settings/category";
@@ -61,7 +61,6 @@ import { deepEqual } from "discourse/lib/object";
 import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -108,11 +107,18 @@ export default class SiteSettingComponent extends Component {
   @service messageBus;
   @service site;
 
+  /** @type {boolean | null | undefined} */
   @tracked isSecret = null;
+
+  /** @type {"enqueued" | "completed" | null} */
   @tracked status = null;
+
+  /** @type {string | null | undefined} */
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+
+  /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void>, submit: (event?: Event) => Promise<void> } | null} */
   formApi = null;
 
   #formKitData;
@@ -193,7 +199,8 @@ export default class SiteSettingComponent extends Component {
   }
 
   get showDependsOnNotice() {
-    return this.setting.depends_on?.length > 0;
+    // Inline dependents only appear under their parent once it is satisfied.
+    return !this.args.inline && this.setting.depends_on?.length > 0;
   }
 
   get dependsOnNoticeText() {
@@ -476,22 +483,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   settingIsDirty(setting) {
-    let bufferVal = this.buffered.get("value");
-    let settingVal = setting?.value;
-
-    if (setting !== this.setting) {
-      bufferVal = setting.buffered.get("value");
-    }
-
-    if (isNone(bufferVal)) {
-      bufferVal = "";
-    }
-
-    if (isNone(settingVal)) {
-      settingVal = "";
-    }
-
-    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
+    const dirty = setting.hasPendingChanges;
 
     if (this.trackChanges) {
       if (dirty) {

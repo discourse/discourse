@@ -36,7 +36,7 @@ import Site from "discourse/models/site";
 import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
-import Category from "./category";
+import Category from "./category.js";
 
 export function _addTrackedTopicProperty(propertyKey) {
   stampModelClass(Topic, "topic");

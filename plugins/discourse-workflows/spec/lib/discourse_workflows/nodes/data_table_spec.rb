@@ -67,6 +67,24 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     end
   end
 
+  describe "columns property" do
+    let(:display_options) { described_class.properties[:columns][:display_options] }
+
+    it "is hidden only for insert in auto mapping mode" do
+      {
+        %w[insert auto] => false,
+        %w[insert manual] => true,
+        %w[update auto] => true,
+        %w[upsert auto] => true,
+      }.each do |(operation, mapping_mode), visible|
+        expect(
+          DiscourseWorkflows::Schema.visible?(display_options, operation:, mapping_mode:),
+        ).to eq(visible),
+        "#{operation}/#{mapping_mode}"
+      end
+    end
+  end
+
   describe "error handling" do
     it "raises when data table does not exist" do
       expect {
@@ -78,18 +96,6 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
           },
         )
       }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it "raises for unknown column names" do
-      expect {
-        execute_data_table(
-          "operation" => "insert",
-          "data_table_id" => data_table.id.to_s,
-          "columns" => {
-            "nonexistent" => "test",
-          },
-        )
-      }.to raise_error(DiscourseWorkflows::NodeError, /Unknown column name/)
     end
 
     it "raises invalid row errors with the node error prefix" do
@@ -119,27 +125,104 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
         execute_data_table("operation" => "truncate", "data_table_id" => data_table.id.to_s)
       }.to raise_error(DiscourseWorkflows::NodeError, /Unknown operation/)
     end
-  end
 
-  describe "insert operation" do
     it "raises when the storage limit is exceeded" do
+      insert_data_table_row(data_table, "email" => "up@test.com", "score" => 1)
       allow(DiscourseWorkflows::DataTables::Facade).to receive(:within_storage_limit?).and_return(
         false,
       )
 
-      expect {
-        execute_data_table(
-          "operation" => "insert",
+      # upsert filters on a missing row so it takes the insert path
+      {
+        "insert" => "up@test.com",
+        "update" => "up@test.com",
+        "upsert" => "new@test.com",
+      }.each do |operation, email|
+        expect {
+          execute_data_table(
+            "operation" => operation,
+            "data_table_id" => data_table.id.to_s,
+            "filter" => [filter_condition("email", "equals", value: email)],
+            "columns" => {
+              "score" => "99",
+            },
+          )
+        }.to raise_error(DiscourseWorkflows::NodeError, "Data table storage limit exceeded"),
+        operation
+      end
+    end
+  end
+
+  describe "empty column expressions" do
+    fab!(:row) { insert_data_table_row(data_table, "email" => "up@test.com", "score" => 1) }
+
+    def execute_with_columns(operation, columns, mapping_mode: "manual", json: {})
+      execute_data_table_with_item(
+        {
+          "operation" => operation,
           "data_table_id" => data_table.id.to_s,
-          "columns" => {
-            "email" => "test@example.com",
-            "score" => "42",
-          },
-        )
-      }.to raise_error(DiscourseWorkflows::NodeError, "Data table storage limit exceeded")
+          "mapping_mode" => mapping_mode,
+          "filter" => [filter_condition("email", "equals", value: "up@test.com")],
+          "columns" => columns,
+        },
+        { "json" => json },
+      )
     end
 
+    it "raises instead of writing an empty string" do
+      [
+        %w[insert manual =],
+        ["update", "manual", "={{ }}"],
+        %w[update auto =],
+        ["upsert", "manual", "={{ }}"],
+      ].each do |operation, mapping_mode, value|
+        expect { execute_with_columns(operation, { "email" => value }, mapping_mode:) }.to(
+          raise_error(DiscourseWorkflows::NodeError, /Column 'email' has an empty expression/),
+          "#{operation}/#{mapping_mode} with #{value.inspect}",
+        )
+      end
+
+      expect {
+        execute_with_columns("update", [{ "columnName" => "email", "value" => "=" }])
+      }.to raise_error(DiscourseWorkflows::NodeError, /Column 'email' has an empty expression/)
+
+      expect(find_data_table_row(data_table, row["id"])).to eq(row)
+      expect(count_data_table_rows(data_table)).to eq(1)
+    end
+
+    it "ignores empty expressions when columns are not written" do
+      expect(execute_with_columns("get", { "email" => "=" }).size).to eq(1)
+
+      items =
+        execute_with_columns(
+          "insert",
+          { "email" => "=" },
+          mapping_mode: "auto",
+          json: {
+            "email" => "auto@example.com",
+          },
+        )
+      expect(items[0]["json"]).to include("email" => "auto@example.com")
+    end
+  end
+
+  describe "insert operation" do
     context "when mapping_mode is auto" do
+      it "raises when the item has no matching keys" do
+        expect {
+          execute_data_table_with_item(
+            {
+              "operation" => "insert",
+              "data_table_id" => data_table.id.to_s,
+              "mapping_mode" => "auto",
+            },
+            { "json" => { "ignored" => "value" } },
+          )
+        }.to raise_error(DiscourseWorkflows::NodeError, /Cannot insert a row without any column/)
+
+        expect(count_data_table_rows(data_table)).to eq(0)
+      end
+
       it "picks matching keys from the incoming item JSON" do
         items =
           execute_data_table_with_item(
@@ -323,21 +406,54 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       expect(count_data_table_rows(data_table)).to eq(2)
     end
 
-    it "raises when the storage limit is exceeded" do
-      allow(DiscourseWorkflows::DataTables::Facade).to receive(:within_storage_limit?).and_return(
-        false,
-      )
-
-      expect {
+    describe "column values" do
+      def update_columns(columns)
         execute_data_table(
           "operation" => "update",
           "data_table_id" => data_table.id.to_s,
-          "filter" => [filter_condition("email", "equals", value: "up@test.com")],
-          "columns" => {
-            "score" => "99",
-          },
+          "filter" => [filter_condition("score", "equals", value: 1, type: "number")],
+          "columns" => columns,
         )
-      }.to raise_error(DiscourseWorkflows::NodeError, "Data table storage limit exceeded")
+
+        find_data_table_row(data_table, row["id"])
+      end
+
+      it "writes present keys and leaves absent ones untouched" do
+        expect(update_columns("email" => "changed@test.com")).to include(
+          "email" => "changed@test.com",
+          "score" => 1,
+        )
+
+        [
+          [{ "email" => nil }, nil],
+          [{ "email" => "" }, ""],
+          [{ "email" => "={{ null }}" }, nil],
+          [{ "email" => '={{ "" }}' }, ""],
+        ].each do |columns, expected|
+          update_columns("email" => "up@test.com")
+
+          expect(update_columns(columns)).to include("email" => expected, "score" => 1),
+          columns.inspect
+        end
+      end
+
+      it "writes columns from an expression returning an object" do
+        expect(update_columns("={{ { score: 9, email: 'obj@test.com' } }}")).to include(
+          "email" => "obj@test.com",
+          "score" => 9,
+        )
+      end
+
+      it "raises when the columns are not an object" do
+        expect { update_columns("={{ 'oops' }}") }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          /Columns must be an object of column names to values, got 'oops'/,
+        )
+
+        expect {
+          update_columns(["oops", { "columnName" => "email", "value" => "=" }])
+        }.to raise_error(DiscourseWorkflows::NodeError, /Columns must be an object/)
+      end
     end
   end
 
@@ -532,23 +648,57 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       )
       expect(count_data_table_rows(data_table)).to eq(1)
     end
+  end
 
-    it "raises when the storage limit is exceeded" do
-      allow(DiscourseWorkflows::DataTables::Facade).to receive(:within_storage_limit?).and_return(
-        false,
-      )
+  describe ".output_schemas" do
+    let(:input_schema) { DiscourseWorkflows::Schema.document("marker" => { "type" => "string" }) }
 
-      expect {
-        execute_data_table(
-          "operation" => "upsert",
-          "data_table_id" => data_table.id.to_s,
-          "filter" => [filter_condition("email", "equals", value: "new@test.com")],
-          "columns" => {
-            "email" => "new@test.com",
-            "score" => "50",
-          },
-        )
-      }.to raise_error(DiscourseWorkflows::NodeError, "Data table storage limit exceeded")
+    it "declares the system and configured table columns" do
+      schema =
+        described_class.output_schemas(
+          { "operation" => "get", "data_table_id" => data_table.id.to_s },
+        ).first
+
+      expect(schema["properties"].keys).to eq(%w[id created_at updated_at email score])
+    end
+
+    it "declares only the system columns without a known table" do
+      schema = described_class.output_schemas({ "operation" => "insert" }).first
+
+      expect(schema["properties"].keys).to eq(%w[id created_at updated_at])
+    end
+
+    it "passes the input through for existence checks" do
+      expect(
+        described_class.output_schemas(
+          { "operation" => "row_exists", "data_table_id" => data_table.id.to_s },
+          input_schemas: [input_schema],
+        ),
+      ).to eq([input_schema])
+    end
+
+    it "matches every row returning operation" do
+      insert_data_table_row(data_table, "email" => "match@test.com", "score" => 1)
+      filter = [filter_condition("email", "equals", value: "match@test.com")]
+
+      [
+        { "operation" => "insert", "columns" => { "email" => "new@test.com", "score" => "2" } },
+        { "operation" => "get", "filter" => filter },
+        { "operation" => "update", "filter" => filter, "columns" => { "score" => "3" } },
+        { "operation" => "upsert", "filter" => filter, "columns" => { "score" => "4" } },
+        { "operation" => "delete", "filter" => filter },
+      ].each do |config|
+        configuration = config.merge("data_table_id" => data_table.id.to_s)
+        items = execute_data_table(configuration)
+
+        expect(items).to be_present
+        items.each do |item|
+          expect(item["json"]).to match_node_output_schema(
+            described_class,
+            configuration: configuration,
+          )
+        end
+      end
     end
   end
 end

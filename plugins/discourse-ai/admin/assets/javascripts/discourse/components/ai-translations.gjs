@@ -16,16 +16,15 @@ import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
-import { eq, not } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card";
-import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card";
-import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton";
+import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card.gjs";
+import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card.gjs";
+import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton.gjs";
 
 export default class AiTranslations extends Component {
   @service aiCredits;

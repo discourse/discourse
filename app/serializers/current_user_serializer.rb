@@ -71,6 +71,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :draft_count,
              :pending_posts_count,
              :grouped_unread_notifications,
+             :available_notification_types,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,

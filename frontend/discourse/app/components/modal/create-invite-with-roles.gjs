@@ -24,7 +24,6 @@ import Invite from "discourse/models/invite";
 import { FORMAT as DATE_INPUT_FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TopicChooser from "discourse/select-kit/components/topic-chooser";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";

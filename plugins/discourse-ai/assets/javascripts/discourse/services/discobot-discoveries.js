@@ -4,7 +4,7 @@ import { cancel, later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
-import SmoothStreamer from "../lib/smooth-streamer";
+import SmoothStreamer from "../lib/smooth-streamer.gjs";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
 
@@ -28,6 +28,7 @@ export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.
   // Similar to discourse/discourse#25504
   @service a11y;
+  @service appEvents;
 
   @tracked discovery = "";
   @tracked lastQuery = "";
@@ -98,6 +99,9 @@ export default class DiscobotDiscoveries extends Service {
 
     if (update.answerable !== undefined) {
       this.answerable = update.answerable;
+      if (update.done && update.answerable === false) {
+        this.appEvents.trigger("discourse-ai:answer-failed");
+      }
     }
 
     if (update.ai_discover_follow_up !== undefined) {
@@ -195,8 +199,15 @@ export default class DiscobotDiscoveries extends Service {
     this.lastQuery = "";
   }
 
+  /**
+   * @returns {Promise<Object|undefined>} the server's reply when a request was
+   *   made, which carries the decision model's intent when one was asked for
+   */
   @action
-  async triggerDiscovery(query) {
+  async triggerDiscovery(
+    query,
+    { scope, trigger, triggerReason, intentHeuristic, classifyIntent } = {}
+  ) {
     const normalizedQuery = query?.trim();
 
     // an answer that failed or timed out is worth asking again, even though the
@@ -231,12 +242,21 @@ export default class DiscobotDiscoveries extends Service {
 
       const response = await ajax("/discourse-ai/discoveries/reply", {
         type: "POST",
-        data: { query: normalizedQuery, request_id: requestId },
+        data: {
+          query: normalizedQuery,
+          request_id: requestId,
+          ...(scope && { scope }),
+          ...(trigger && { trigger }),
+          ...(triggerReason && { trigger_reason: triggerReason }),
+          ...(intentHeuristic && { intent_heuristic: intentHeuristic }),
+          ...(classifyIntent && { classify_intent: true }),
+        },
       });
 
       if (response.request_id !== requestId) {
         throw new Error("Discovery request ID mismatch");
       }
+      return response;
     } catch {
       if (this.activeRequestId === requestId) {
         this.failDiscovery(
@@ -260,6 +280,7 @@ export default class DiscobotDiscoveries extends Service {
     this.activeRequestId = "";
     this.smoothStreamer.resetStreaming();
     this.a11y.announce(message, "assertive");
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   timeoutDiscovery() {
@@ -279,6 +300,7 @@ export default class DiscobotDiscoveries extends Service {
       i18n("discourse_ai.discobot_discoveries.timed_out"),
       "assertive"
     );
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   scheduleDiscoveryTimeout() {

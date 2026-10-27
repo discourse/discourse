@@ -10,13 +10,15 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Composer from "discourse/models/composer";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ id: number, post_id: number, post_version: number, locale: string, raw: string, languageName: string, topic_localization?: { id: number, topic_id: number, locale: string, title: string, fancy_title: string } }} PostLocalizationWithLanguage
+ */
 export default class PostTranslationsModal extends Component {
   @service composer;
   @service dialog;
@@ -24,6 +26,7 @@ export default class PostTranslationsModal extends Component {
   @service siteSettings;
   @service toasts;
 
+  /** @type {PostLocalizationWithLanguage[] | null} */
   @tracked postLocalizations = null;
   @tracked loading = false;
   @tracked savingPostLocale = false;

@@ -7,7 +7,8 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import HomeLogo from "discourse/components/header/home-logo";
 import getURL from "discourse/lib/get-url";
-import { and } from "discourse/truth-helpers";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
+import { defaultHomepage } from "discourse/lib/utilities";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -50,7 +51,16 @@ export default class ChatHeader extends Component {
   }
 
   get forumLink() {
-    return getURL(this.previousURL ?? this.router.rootURL);
+    if (this.previousURL) {
+      return getURL(this.previousURL);
+    }
+
+    // `/` would lead straight back into chat
+    if (defaultHomepage() === "chat") {
+      return getURL(this.router.urlFor(discoveryHomepageRoute()));
+    }
+
+    return getURL(this.router.rootURL);
   }
 
   @action
@@ -64,7 +74,7 @@ export default class ChatHeader extends Component {
   }
 
   #updatePreviousURL() {
-    if (!this.isChatOpen) {
+    if (!this.router.currentRouteName?.startsWith("chat")) {
       this.previousURL = this.router.currentURL;
     }
   }

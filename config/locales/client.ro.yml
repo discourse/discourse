@@ -6,6 +6,8 @@
 
 ro:
   js:
+    dsa_notice:
+      email: "Adresă email"
     user_api_key:
       title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
@@ -319,7 +321,6 @@ ro:
       zh_CN:
         name: Chineză simplificată
     share:
-      topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
       post: "articol #%{postNumber} de @%{username}"
       close: "închide"
       twitter: "Partajează pe X"
@@ -367,6 +368,12 @@ ro:
     topic_admin_menu: "acțiuni subiect"
     skip_to_main_content: "Sari la conținutul principal"
     skip_user_nav: "Sari la conținutul profilului"
+    reorder:
+      remove: "Înlătură %{label}"
+      removed: "%{label} a fost eliminată"
+      move_up: "Mută sus"
+      move_down: "Mută jos"
+      position: "%{position} din %{total}"
     emails_are_disabled: "Trimiterea de e-mailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări pe e-mail de niciun fel."
     emails_are_disabled_non_staff: "Mesajele de e-mail de ieșire au fost dezactivate pentru utilizatorii care nu fac parte din echipă."
     software_update_prompt:
@@ -476,10 +483,6 @@ ro:
       one: "max din %{count}"
       few: "max din %{count}"
       other: "max din %{count}"
-    character_count:
-      one: "%{count} caracter"
-      few: "%{count} caractere"
-      other: "%{count} de caractere"
     period_chooser:
       aria_label: "Filtrează după perioadă"
     related_messages:
@@ -694,6 +697,8 @@ ro:
       title:
         search: "Caută mesaj"
         placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
+    dsa_statements:
+      category: "Categorie"
     review:
       show_more: "Arată mai multe"
       show_less: "Arată mai puține"
@@ -2343,8 +2348,7 @@ ro:
       discard: "Renunță"
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
-      title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
-      title_placeholder_redesign: "Titlu"
+      title_placeholder: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -2356,10 +2360,6 @@ ro:
       saving: "Se salvează"
       saved: "Salvat!"
       saved_draft: "Postează schița în curs. Atinge pentru a relua."
-      switch_to_markdown: "Comută la editorul standard Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Comută la noul editor de text îmbogățit (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Comută la editorul standard Markdown"
-      switch_to_rich_text_no_shortcut: "Comută la noul editor de text îmbogățit"
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
       bold_title: "Aldin"
@@ -3644,10 +3644,6 @@ ro:
       admin:
         title: "Administrator"
     badges:
-      earned_n_times:
-        one: "A primit acest ecuson o dată"
-        few: "A primit acest ecuson de %{count} ori"
-        other: "A primit acest ecuson de %{count} de ori"
       granted_on: "Acordat %{date}"
       title: Insigne
       multiple_grant: "Poți primi asta de mai multe ori"
@@ -3899,63 +3895,6 @@ ro:
       errors:
         type_mismatch:
           default: "Introduceţi o valoare validă."
-    table_builder:
-      title: "Constructor de tabel"
-      modal:
-        title: "Constructor de tabel"
-        create: "Construiește tabel"
-        help:
-          title: "Folosind Editorul de foi de calcul"
-          enter_key: "Enter"
-          tab_key: "Filă"
-          new_row: "la sfârșitul unui rând pentru a introduce un rând nou."
-          new_col: "la sfârșitul unei coloane pentru a introduce o coloană nouă."
-          options: "Dă clic dreapta pe celule pentru a accesa mai multe opțiuni într-un meniu derulant."
-        confirm_close: "Sigur vrei să închizi constructorul de tabel? Toate modificările nesalvate vor fi pierdute."
-      edit:
-        btn_edit: "Editează tabel"
-        modal:
-          title: "Editează tabel"
-          cancel: "anulează"
-          create: "Salvează"
-          reason: "De ce editezi?"
-          trigger_reason: "Adăugă motiv pentru editare"
-        default_edit_reason: "Actualizează tabel cu editor de tabele"
-      default_header:
-        col_1: "Coloana 1"
-        col_2: "Coloana 2"
-        col_3: "Coloana 3"
-        col_4: "Coloana 4"
-      spreadsheet:
-        no_records_found: "Nu s-a găsit nicio înregistrare"
-        show: "Arată"
-        entries: "intrări"
-        about: "Despre"
-        prompts:
-          delete_selected_rows: "Sigur vrei să ștergi rândurile selectate?"
-          delete_selected_cols: "Sigur vrei să ștergi coloanele selectate?"
-          will_destroy_merged_cells: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
-          will_clear_search_results: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
-          conflicts_with_merged_cells: "Există un conflict cu o altă celulă fuzionată"
-        invalid_merge_props: "Proprietăți fuzionate nevalide"
-        cells_already_merged: "Celulă deja fuzionată"
-        no_cells_selected: "Nicio celulă selectată"
-        context_menu:
-          row:
-            before: "Introdu un rând nou înainte"
-            after: "Introdu un rând nou după"
-            delete: "Șterge rândurile selectate"
-          col:
-            before: "Introdu o coloană nouă înainte"
-            after: "Introdu o coloană nouă după"
-            delete: "Șterge coloanele selectate"
-            rename: "Redenumește această coloană"
-          order:
-            ascending: "Ordine crescătoare"
-            descending: "Ordine descrescătoare"
-          copy: "Copiază..."
-          paste: "Lipește..."
-          save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
     safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
     filter:
@@ -4074,6 +4013,7 @@ ro:
             block: "Blochează"
             presets:
               custom: "Personalizat"
+            automatic: "Automat"
           authorizations:
             user: "Utilizator"
             last_used: "Ultima utilizare"
@@ -5053,6 +4993,7 @@ ro:
           variable_name: "Numele variabilei SCSS:"
           upload: "Urcă"
           discard: "Renunță"
+          leave: "Părăsește"
           installed: "Instalată"
           install_popular: "Populare"
           installing_message: "Se configurează noua ta temă…"

@@ -854,6 +854,39 @@ RSpec.describe PostAlerter do
       expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
     end
 
+    it "retains group mention records on unrelated revisions" do
+      Jobs.run_immediately!
+      post = create_post_with_alerts(raw: "Hello @group")
+
+      expect { post.revise(post.user, raw: "Hello again @group") }.not_to change(
+        evil_trout.notifications,
+        :count,
+      )
+      expect(GroupMention.where(post_id: post.id).pluck(:group_id)).to contain_exactly(group.id)
+    end
+
+    it "notifies only members of a newly added group on revision" do
+      Jobs.run_immediately!
+      post = create_post_with_alerts(raw: "Hello @group")
+      evil_trout.notifications.destroy_all
+
+      another_group =
+        Fabricate(:group, name: "another-group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      another_group.add(coding_horror)
+
+      expect { post.revise(post.user, raw: "Hello @group and @another-group") }.to not_change(
+        evil_trout.notifications,
+        :count,
+      ).and change(coding_horror.notifications, :count).by(1)
+      expect(coding_horror.notifications.last.notification_type).to eq(
+        Notification.types[:group_mentioned],
+      )
+      expect(GroupMention.where(post_id: post.id).pluck(:group_id)).to contain_exactly(
+        group.id,
+        another_group.id,
+      )
+    end
+
     it "triggers :before_create_notifications_for_users" do
       events = DiscourseEvent.track_events { post }
       expect(events).to include(
@@ -881,6 +914,45 @@ RSpec.describe PostAlerter do
           raw: "New raw content that still mentions @eviltrout",
         )
       }.not_to change(evil_trout.notifications, :count)
+    end
+
+    it "retains the existing notification when a mention is removed" do
+      post = mention_post
+      notification = evil_trout.notifications.last
+
+      expect(post.revise(post.user, raw: "Hello everyone")).to eq(true)
+
+      expect(evil_trout.notifications.reload).to contain_exactly(notification)
+    end
+
+    it "notifies only a newly mentioned user when the previous notification is gone" do
+      post = create_post_with_alerts(user: user, raw: "Hello @eviltrout")
+      evil_trout.notifications.destroy_all
+
+      expect { post.revise(post.user, raw: "Hello @eviltrout and @codinghorror") }.to not_change(
+        evil_trout.notifications,
+        :count,
+      ).and change(coding_horror.notifications, :count).by(1)
+      expect(coding_horror.notifications.last.notification_type).to eq(
+        Notification.types[:mentioned],
+      )
+    end
+
+    it "notifies a user mentioned directly after a group mention" do
+      mentionable_group =
+        Fabricate(
+          :group,
+          name: "mentionable-group",
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+      mentionable_group.add(evil_trout)
+      post = create_post_with_alerts(user: user, raw: "Hello @mentionable-group")
+
+      expect { post.revise(post.user, raw: "Hello @mentionable-group and @eviltrout") }.to change(
+        evil_trout.notifications,
+        :count,
+      ).by(1)
+      expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
     end
 
     it "doesn't notify the user who created the topic in regular mode" do
@@ -1209,6 +1281,14 @@ RSpec.describe PostAlerter do
       DiscoursePluginRegistry.clear_modifiers!
     end
 
+    it "does not add a display name when names are disabled" do
+      SiteSetting.enable_names = false
+
+      notification = PostAlerter.new.create_notification(user, type, post)
+
+      expect(notification.data_hash).not_to have_key(:display_name)
+    end
+
     it "applies modifiers to notification_data" do
       Plugin::Instance
         .new
@@ -1234,7 +1314,9 @@ RSpec.describe PostAlerter do
     end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
-      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+      let!(:original_filters) { DiscoursePluginRegistry._raw_push_notification_filters.dup }
+
+      after { DiscoursePluginRegistry._raw_push_notification_filters.replace(original_filters) }
 
       it "sends push notifications when all filters pass" do
         evil_trout.update!(last_seen_at: 10.minutes.ago)
@@ -1505,6 +1587,56 @@ RSpec.describe PostAlerter do
         :post_alerter_live_notification_payload,
         &modifier_block
       )
+    end
+
+    describe "with content localization" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.allow_user_locale = true
+        evil_trout.update!(locale: "ja")
+        post.update_columns(locale: "en")
+        post.topic.update_columns(locale: "en")
+        Fabricate(:topic_localization, topic: post.topic, locale: "ja", title: "翻訳されたタイトル")
+        Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>翻訳された投稿</p>")
+      end
+
+      def publish_alert(**opts)
+        MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:mentioned],
+            **opts,
+          )
+        end
+      end
+
+      it "sends the translation in the recipient's locale" do
+        messages = publish_alert
+
+        expect(messages.first.data[:topic_title]).to eq("翻訳されたタイトル")
+        expect(messages.first.data[:excerpt]).to eq("翻訳された投稿")
+      end
+
+      it "tells the push to keep an excerpt provided by the caller" do
+        evil_trout.update_columns(last_seen_at: 1.hour.ago)
+        Fabricate(:push_subscription, user: evil_trout)
+
+        expect_enqueued_with(
+          job: :deliver_push_notification,
+          args: {
+            user_id: evil_trout.id,
+            keep_excerpt: true,
+          },
+        ) { publish_alert(excerpt: "You were assigned") }
+      end
+
+      it "keeps an excerpt provided by the caller" do
+        messages = publish_alert(excerpt: "You were assigned")
+
+        expect(messages.first.data[:topic_title]).to eq("翻訳されたタイトル")
+        expect(messages.first.data[:excerpt]).to eq("You were assigned")
+      end
     end
 
     it "does nothing for suspended users" do

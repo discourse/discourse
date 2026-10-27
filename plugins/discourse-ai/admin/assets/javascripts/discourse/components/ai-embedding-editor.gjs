@@ -14,12 +14,11 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiSecretSelector from "./ai-secret-selector";
+import AiSecretSelector from "discourse/plugins/discourse-ai/discourse/components/ai-secret-selector";
 
 export default class AiEmbeddingEditor extends Component {
   @service toasts;
@@ -38,6 +37,9 @@ export default class AiEmbeddingEditor extends Component {
     super(...arguments);
     if (this.args.model) {
       this.currentProvider = this.args.model.provider;
+    }
+    if (this.args.preset && this.args.model?.isNew) {
+      this.configurePreset({ id: this.args.preset });
     }
   }
 
@@ -206,6 +208,13 @@ export default class AiEmbeddingEditor extends Component {
 
   @action
   resetForm() {
+    if (this.args.preset) {
+      this.router.transitionTo("adminPlugins.show.discourse-ai-models.new", {
+        queryParams: { type: "embedding" },
+      });
+      return;
+    }
+
     this.selectedPreset = null;
     this.currentProvider = null;
   }
@@ -232,9 +241,7 @@ export default class AiEmbeddingEditor extends Component {
       }
 
       if (isNew) {
-        this.router.transitionTo(
-          "adminPlugins.show.discourse-ai-embeddings.index"
-        );
+        this.router.transitionTo("adminPlugins.show.discourse-ai-models.index");
       } else {
         const savedProvider = this.currentProvider;
 
@@ -300,7 +307,7 @@ export default class AiEmbeddingEditor extends Component {
           .then(() => {
             removeValueFromArray(this.args.embeddings, this.args.model);
             this.router.transitionTo(
-              "adminPlugins.show.discourse-ai-embeddings.index"
+              "adminPlugins.show.discourse-ai-models.index"
             );
           })
           .catch(popupAjaxError);
@@ -316,8 +323,8 @@ export default class AiEmbeddingEditor extends Component {
   <template>
     {{#if this.showPresets}}
       <BackButton
-        @label="discourse_ai.embeddings.back"
-        @route="adminPlugins.show.discourse-ai-embeddings"
+        @label="discourse_ai.models.back"
+        @route="adminPlugins.show.discourse-ai-models"
       />
       <div class="control-group">
         <h2>{{i18n "discourse_ai.embeddings.presets"}}</h2>
@@ -359,8 +366,8 @@ export default class AiEmbeddingEditor extends Component {
           />
         {{else}}
           <BackButton
-            @label="discourse_ai.embeddings.back"
-            @route="adminPlugins.show.discourse-ai-embeddings"
+            @label="discourse_ai.models.back"
+            @route="adminPlugins.show.discourse-ai-models"
           />
         {{/if}}
 

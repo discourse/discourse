@@ -14,7 +14,14 @@ module DiscourseWorkflows
           group: "discourse_triggers",
           event: :topic_created,
           output_contracts: [
-            { schema: Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, Schema::POST_SCHEMA) },
+            {
+              schema:
+                Schema.merge(
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::POST_SCHEMA,
+                  Schema::USER_SCHEMA,
+                ),
+            },
           ],
           properties: {
             **TOPIC_TYPE_FILTER_PROPERTIES,
@@ -66,24 +73,18 @@ module DiscourseWorkflows
         end
 
         def output
-          { post: post_data(@topic.first_post), topic: topic_data(@topic) }
+          {
+            post: serialize_post(@topic.first_post),
+            topic: serialize_topic_list_item(@topic),
+            user: serialize_user(@topic.user),
+          }
         end
 
         def matches?(trigger_ctx)
-          matches_topic_type?(@topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
-            matches_group_inbox?(@topic, trigger_ctx.get_node_parameter("group_inbox_id")) &&
-            matches_category_ids?(
-              @topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-            matches_tags?(@topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
-        end
+          return false if !matches_topic_type?(@topic, trigger_ctx.get_node_parameter("topic_type"))
+          return false if !matches_topic_filters?(@topic, trigger_ctx)
 
-        private
-
-        def post_data(post)
-          serialize_post(post)
+          matches_group_inbox?(@topic, trigger_ctx.get_node_parameter("group_inbox_id"))
         end
       end
     end

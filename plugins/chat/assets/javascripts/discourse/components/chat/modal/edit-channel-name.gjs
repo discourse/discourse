@@ -10,7 +10,6 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
@@ -161,29 +160,31 @@ export default class ChatModalEditChannelName extends Component {
             {{on "input" this.onChangeChatChannelSlug}}
           />
         </div>
-        <div class="edit-channel-control">
-          <label class="edit-channel-label" for="channel-emoji">
-            {{i18n "chat.channel_edit_name_slug_modal.emoji"}}
-          </label>
+        {{#if this.siteSettings.enable_emoji}}
+          <div class="edit-channel-control">
+            <label class="edit-channel-label" for="channel-emoji">
+              {{i18n "chat.channel_edit_name_slug_modal.emoji"}}
+            </label>
 
-          <EmojiPicker
-            @btnClass="btn-default btn-emoji"
-            @context="channel-emoji"
-            @didSelectEmoji={{this.emojiSelected}}
-            @emoji={{this.editedEmoji}}
-            @inline={{true}}
-            @modalForMobile={{false}}
-            @showCaret={{true}}
-          />
+            <EmojiPicker
+              @btnClass="btn-default btn-emoji"
+              @context="channel-emoji"
+              @didSelectEmoji={{this.emojiSelected}}
+              @emoji={{this.editedEmoji}}
+              @inline={{true}}
+              @modalForMobile={{false}}
+              @showCaret={{true}}
+            />
 
-          <DButton
-            class="btn-flat edit-channel-clear-emoji"
-            @action={{this.resetEmoji}}
-            @disabled={{not this.editedEmoji}}
-            @label="chat.channel_edit_name_slug_modal.reset_emoji"
-          />
+            <DButton
+              class="btn-flat edit-channel-clear-emoji"
+              @action={{this.resetEmoji}}
+              @disabled={{not this.editedEmoji}}
+              @label="chat.channel_edit_name_slug_modal.reset_emoji"
+            />
 
-        </div>
+          </div>
+        {{/if}}
       </:body>
       <:footer>
         <DButton

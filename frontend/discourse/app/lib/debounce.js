@@ -7,12 +7,12 @@ import { isTesting } from "discourse/lib/environment";
   Original function will be called with the context and arguments from the last call made.
 **/
 
-export default function () {
+export default function (...params) {
   if (isTesting()) {
-    const lastArgument = arguments[arguments.length - 1];
+    const lastArgument = params[params.length - 1];
     const hasImmediateArgument = typeof lastArgument === "boolean";
 
-    let args = [].slice.call(arguments, 0, hasImmediateArgument ? -2 : -1);
+    let args = [].slice.call(params, 0, hasImmediateArgument ? -2 : -1);
 
     // Replace the time argument with 10ms
     args.push(10);
@@ -23,6 +23,6 @@ export default function () {
 
     return debounce.apply(undefined, args);
   } else {
-    return debounce(...arguments);
+    return debounce(...params);
   }
 }

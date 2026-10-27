@@ -31,6 +31,25 @@ ca:
           title: "Còpies de seguretat"
       read_post:
         unknown_post: "publicació"
+      chat_tool_approval:
+        topic_states:
+          open: "Obre"
+          closed: "Tancat"
+          active: "Actiu"
+          deleted: "Suprimit"
+        solution_post: "Publicació #%{number}"
+        duration_label: "Duració:"
+        user_duration:
+          one: "%{count} dia"
+          other: "%{count} dies"
+        posts_label: "Publicacions"
+        category_label: "Categoria"
+        category_fields:
+          name: "nom"
+          description: "descripció"
+          color: "color"
+        approve_label: "Sí"
+        reject_label: "No"
       tool_summary:
         search: "Cerca"
         time: "Hora"

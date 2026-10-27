@@ -3,14 +3,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { userPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
-import AdminTable from "../admin-table";
-import EmptyState from "../empty-state";
-import PaginatedListManager from "../paginated-list-manager";
+import AdminTable from "../admin-table.gjs";
+import EmptyState from "../empty-state.gjs";
+import PaginatedListManager from "../paginated-list-manager.js";
 
 export default class VersionsManager extends PaginatedListManager {
   @service router;
@@ -112,13 +112,13 @@ export default class VersionsManager extends PaginatedListManager {
             {{i18n "discourse_workflows.versions.author"}}
           </div>
           {{#if version.created_by}}
-            <a
+            <DUserLink
               class="workflows-versions__author"
-              href={{userPath version.created_by.username}}
+              @user={{version.created_by}}
             >
               {{dAvatar version.created_by imageSize="tiny"}}
               <span>{{version.created_by.username}}</span>
-            </a>
+            </DUserLink>
           {{/if}}
         </td>
         <td class="d-table__cell --detail">

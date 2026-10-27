@@ -62,7 +62,12 @@ export default class Results extends Component {
           link=(if @withTopicUrl true false)
         }}
         {{#if this.siteSettings.tagging_enabled}}
-          {{dDiscourseTags @result.topic tagName="span"}}
+          <PluginOutlet
+            @name="search-menu-results-topic-tags-wrapper"
+            @outletArgs={{lazyHash topic=@result.topic tags=@result.topic.tags}}
+          >
+            {{dDiscourseTags @result.topic tagName="span"}}
+          </PluginOutlet>
         {{/if}}
       </span>
     </span>

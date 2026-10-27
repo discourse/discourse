@@ -13,15 +13,14 @@ import { adjustedRangeEnd } from "discourse/lib/time-utils";
 import Group from "discourse/models/group";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { MAX_HOSTS } from "../../lib/constants";
-import { recurrenceContext } from "../../lib/event-recurrence";
+import { MAX_HOSTS } from "../../lib/constants.js";
+import { recurrenceContext } from "../../lib/event-recurrence.js";
 import {
   allDayTransition,
   attendanceTransition,
@@ -35,8 +34,9 @@ import {
   isLivestreamUrl,
   livestreamSource,
   reconcileDefaultReminder,
-} from "../../lib/raw-event-helper";
-import CompactEventEditor from "../compact-event-editor";
+  showRecordingField,
+} from "../../lib/raw-event-helper.js";
+import CompactEventEditor from "../compact-event-editor.gjs";
 
 export default class PostEventBuilder extends Component {
   @service dialog;
@@ -139,6 +139,17 @@ export default class PostEventBuilder extends Component {
     );
   }
 
+  get showRecording() {
+    return showRecordingField({
+      recording: this.event.recordingUrl,
+      livestream: this.event.livestream,
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      recurrence: this.event.recurrence,
+      recurrenceUntil: this.event.recurrenceUntil,
+    });
+  }
+
   get availableRecurrences() {
     const { weekday, ordinal } = recurrenceContext(this.startsAt || moment());
 
@@ -235,6 +246,7 @@ export default class PostEventBuilder extends Component {
       livestream: !!this.event.livestream,
       minimal: !!this.event.minimal,
       url: this.event.url ?? null,
+      recording: this.event.recordingUrl ?? null,
       image:
         this.event.imageUpload?.short_url ??
         this.event.imageUpload?.url ??
@@ -389,6 +401,7 @@ export default class PostEventBuilder extends Component {
     this.event.livestream = state.livestream;
     this.event.minimal = state.minimal;
     this.event.url = state.url;
+    this.event.recordingUrl = state.recording;
     this.event.recurrence = state.recurrence;
     this.event.recurrenceUntil = state.recurrenceUntil;
     this.event.reminders = state.reminders;
@@ -665,6 +678,7 @@ export default class PostEventBuilder extends Component {
       showLocalTime: !!this.event.showLocalTime,
       chatEnabled: !!this.event.chatEnabled,
       livestream: !!this.event.livestream,
+      recordingUrl: this.event.recordingUrl ?? "",
       attendanceMode: this.attendanceMode,
       maxAttendees: this.event.maxAttendees ?? null,
       eventType:
@@ -898,6 +912,25 @@ export default class PostEventBuilder extends Component {
                         "discourse_post_event.builder_modal.livestream.checkbox_label"
                       }}
                     </field.Control>
+                  </form.Field>
+                {{/if}}
+
+                {{#if this.showRecording}}
+                  <form.Field
+                    @format="full"
+                    @name="recordingUrl"
+                    @onSet={{fn this.syncFieldToEvent "recordingUrl"}}
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.recording.label"
+                    }}
+                    @type="input-url"
+                    as |field|
+                  >
+                    <field.Control
+                      placeholder={{i18n
+                        "discourse_post_event.builder_modal.recording.placeholder"
+                      }}
+                    />
                   </form.Field>
                 {{/if}}
 

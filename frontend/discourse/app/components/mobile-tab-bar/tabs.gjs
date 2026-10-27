@@ -1,7 +1,6 @@
 import { fn } from "@ember/helper";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { MORE_TAB } from "discourse/lib/mobile-tab-bar";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

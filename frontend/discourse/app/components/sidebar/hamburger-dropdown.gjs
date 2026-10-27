@@ -7,14 +7,13 @@ import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import SidebarAccountActions from "./account-actions";
-import ApiPanels from "./api-panels";
-import Footer from "./footer";
-import Sections from "./sections";
-import SidebarTabBar from "./tab-bar";
+import SidebarAccountActions from "./account-actions.gjs";
+import ApiPanels from "./api-panels.gjs";
+import Footer from "./footer.gjs";
+import Sections from "./sections.gjs";
+import SidebarTabBar from "./tab-bar.gjs";
 
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;

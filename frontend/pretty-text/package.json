@@ -12,15 +12,15 @@
   "dependencies": {
     "discourse": "workspace:*",
     "discourse-i18n": "workspace:1.0.0",
-    "xss": "^1.0.15"
+    "xss": "1.0.15"
   },
   "devDependencies": {
-    "ember-source": "~7.2.0"
+    "ember-source": "~7.3.0"
   },
   "engines": {
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   }
 }

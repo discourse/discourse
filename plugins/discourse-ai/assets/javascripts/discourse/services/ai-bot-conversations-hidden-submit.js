@@ -16,6 +16,7 @@ export default class AiBotConversationsHiddenSubmit extends Service {
   @tracked loading = false;
 
   agentId;
+  llmModelId;
   targetUsername;
 
   inputValue = "";
@@ -75,6 +76,7 @@ export default class AiBotConversationsHiddenSubmit extends Service {
           raw: rawContent,
           target_username: this.targetUsername,
           ai_agent_id: this.agentId,
+          ai_llm_model_id: this.llmModelId,
         },
       });
 

@@ -9,8 +9,8 @@ import {
   fetchTitleSuggestions,
   MIN_CHARACTER_COUNT,
   showSuggestionsError,
-} from "../../lib/ai-helper-suggestions";
-import AiTitleSuggestionsList from "./ai-title-suggestions-list";
+} from "../../lib/ai-helper-suggestions.js";
+import AiTitleSuggestionsList from "./ai-title-suggestions-list.gjs";
 
 export default class AiTitleSuggester extends Component {
   @tracked loading = false;

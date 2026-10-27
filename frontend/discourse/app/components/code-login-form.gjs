@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import CodeLoginNameField from "discourse/components/code-login-form/name-field";
+import CodeLoginUsernameField from "discourse/components/code-login-form/username-field";
 import Form from "discourse/components/form";
 import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -32,7 +33,6 @@ import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-hel
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import User, { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import DOtp from "discourse/ui-kit/d-otp";
@@ -54,12 +54,14 @@ export default class CodeLoginForm extends Component {
   @service sessionStore;
 
   @tracked email = this.args.initialEmail ?? "";
+  @tracked emailFormData = { email: this.email };
   @tracked verifying = false;
   @tracked codeError;
   @tracked notice;
   @tracked resendCooldown = 0;
   @tracked otpGeneration = 0;
   @tracked canUploadAvatar = false;
+  @tracked canEditAvatar = true;
   @tracked pendingAvatar;
   @tracked pendingAvatarUrl;
   @tracked name = "";
@@ -373,6 +375,7 @@ export default class CodeLoginForm extends Component {
     this.#clearPendingAvatarUrl();
     this.otpGeneration++;
     this.#clearSignupContinuation();
+    this.emailFormData = { email: this.email };
     this.step = "email";
     this.args.onChangeEmail?.();
   }
@@ -592,6 +595,7 @@ export default class CodeLoginForm extends Component {
     this._signupTrustLevel = result.trust_level ?? 0;
     this.canUploadAvatar =
       result.can_upload_avatar && allowsImages(false, this.siteSettings);
+    this.canEditAvatar = result.can_edit_avatar ?? true;
     if (this.generatedUsername) {
       this.usernameAvailable = !!this.username;
       schedule("afterRender", () => this.#autoCreateGeneratedAccount());
@@ -1145,7 +1149,7 @@ export default class CodeLoginForm extends Component {
 
           <Form
             class="code-login-form__email-step"
-            @data={{hash email=this.email}}
+            @data={{this.emailFormData}}
             @onSubmit={{this.submitEmail}}
             as |form|
           >
@@ -1261,72 +1265,22 @@ export default class CodeLoginForm extends Component {
                 '--with-username-generator'
               }}"
           >
-            <div class="code-login-form__username-field">
-              <label for="code-login-username">
-                {{i18n "code_login.username_label"}}
-              </label>
-              <div class="code-login-form__username-input">
-                <input
-                  aria-describedby="code-login-username-error"
-                  aria-invalid={{if this.usernameError "true"}}
-                  autocomplete="username"
-                  class="code-login-form__new-account-username
-                    {{if this.regenerating '--swapping'}}"
-                  id="code-login-username"
-                  name="username"
-                  placeholder={{i18n "code_login.username_placeholder"}}
-                  type="text"
-                  value={{this.username}}
-                  {{on "input" this.usernameChanged}}
-                />
-                {{#if this.siteSettings.enable_random_usernames}}
-                  <DButton
-                    aria-busy={{if this.regenerating "true"}}
-                    class="btn-default code-login-form__username-regen
-                      {{if this.regenerating '--rolling'}}"
-                    @action={{this.regenerateUsername}}
-                    @ariaLabel="code_login.regenerate_username"
-                    @icon="dice"
-                    @title="code_login.regenerate_username"
-                  />
-                {{/if}}
-              </div>
-              <div
-                aria-live="polite"
-                class="code-login-form__error"
-                id="code-login-username-error"
-                role="alert"
-              >
-                {{this.usernameError}}
-              </div>
-            </div>
+            <CodeLoginUsernameField
+              @autocomplete="username"
+              @error={{this.usernameError}}
+              @onInput={{this.usernameChanged}}
+              @onRegenerate={{this.regenerateUsername}}
+              @regenerating={{this.regenerating}}
+              @value={{this.username}}
+            />
 
             {{#if this.site.full_name_visible_in_signup}}
-              <div class="code-login-form__name-field">
-                <label for="code-login-name">
-                  {{i18n "user.name.title"}}
-                </label>
-                <input
-                  aria-describedby="code-login-name-error"
-                  aria-invalid={{if this.nameError "true"}}
-                  autocomplete="name"
-                  class="code-login-form__name"
-                  id="code-login-name"
-                  maxlength="255"
-                  name="name"
-                  type="text"
-                  value={{this.name}}
-                  {{on "input" this.nameChanged}}
-                />
-                <div
-                  aria-live="polite"
-                  class="code-login-form__error"
-                  id="code-login-name-error"
-                  role="alert"
-                >
-                  {{this.nameError}}
-                </div>
-              </div>
+              <CodeLoginNameField
+                @error={{this.nameError}}
+                @onInput={{this.nameChanged}}
+                @required={{this.nameRequired}}
+                @value={{this.name}}
+              />
             {{/if}}
 
             {{#if this.showOptionalPassword}}
@@ -1433,8 +1387,11 @@ export default class CodeLoginForm extends Component {
               <button
                 aria-label={{i18n "code_login.change_avatar"}}
                 class="code-login-form__avatar"
-                disabled={{this.verifying}}
-                title={{i18n "code_login.change_avatar"}}
+                disabled={{or this.verifying (not this.canEditAvatar)}}
+                title={{if
+                  this.canEditAvatar
+                  (i18n "code_login.change_avatar")
+                }}
                 type="button"
                 {{on "click" this.changeAvatar}}
               >
@@ -1445,52 +1402,22 @@ export default class CodeLoginForm extends Component {
                     {{dIcon "user"}}
                   </span>
                 {{/if}}
-                <span class="code-login-form__avatar-edit">
-                  {{dIcon "pencil"}}
-                </span>
+                {{#if this.canEditAvatar}}
+                  <span class="code-login-form__avatar-edit">
+                    {{dIcon "pencil"}}
+                  </span>
+                {{/if}}
               </button>
 
-              <div class="code-login-form__username-field">
-                <label for="code-login-username">
-                  {{i18n "code_login.username_label"}}
-                </label>
-                <div class="code-login-form__username-input">
-                  <input
-                    aria-describedby="code-login-username-error"
-                    aria-invalid={{if this.usernameError "true"}}
-                    autocomplete="off"
-                    class="code-login-form__new-account-username
-                      {{if this.regenerating '--swapping'}}"
-                    disabled={{this.verifying}}
-                    id="code-login-username"
-                    name="username"
-                    placeholder={{i18n "code_login.username_placeholder"}}
-                    type="text"
-                    value={{this.username}}
-                    {{on "input" this.usernameChanged}}
-                  />
-                  {{#if this.siteSettings.enable_random_usernames}}
-                    <DButton
-                      aria-busy={{if this.regenerating "true"}}
-                      class="btn-default code-login-form__username-regen
-                        {{if this.regenerating '--rolling'}}"
-                      @action={{this.regenerateUsername}}
-                      @ariaLabel="code_login.regenerate_username"
-                      @disabled={{this.verifying}}
-                      @icon="dice"
-                      @title="code_login.regenerate_username"
-                    />
-                  {{/if}}
-                </div>
-                <div
-                  aria-live="polite"
-                  class="code-login-form__error"
-                  id="code-login-username-error"
-                  role="alert"
-                >
-                  {{this.usernameError}}
-                </div>
-              </div>
+              <CodeLoginUsernameField
+                @autocomplete="off"
+                @disabled={{this.verifying}}
+                @error={{this.usernameError}}
+                @onInput={{this.usernameChanged}}
+                @onRegenerate={{this.regenerateUsername}}
+                @regenerating={{this.regenerating}}
+                @value={{this.username}}
+              />
             </div>
           {{/unless}}
 
@@ -1528,31 +1455,12 @@ export default class CodeLoginForm extends Component {
           {{/unless}}
 
           {{#if this.nameRequired}}
-            <div class="code-login-form__name-field">
-              <label for="code-login-name">
-                {{i18n "user.name.title"}}
-              </label>
-              <input
-                aria-describedby="code-login-name-error"
-                aria-invalid={{if this.nameError "true"}}
-                autocomplete="name"
-                class="code-login-form__name"
-                id="code-login-name"
-                maxlength="255"
-                name="name"
-                type="text"
-                value={{this.name}}
-                {{on "input" this.nameChanged}}
-              />
-              <div
-                aria-live="polite"
-                class="code-login-form__error"
-                id="code-login-name-error"
-                role="alert"
-              >
-                {{this.nameError}}
-              </div>
-            </div>
+            <CodeLoginNameField
+              @error={{this.nameError}}
+              @onInput={{this.nameChanged}}
+              @required={{true}}
+              @value={{this.name}}
+            />
           {{/if}}
 
           <div class="user-fields">

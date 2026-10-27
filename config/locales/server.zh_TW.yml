@@ -828,6 +828,7 @@ zh_TW:
     post_template: "%{replace_paragraph}\n\n請使用以下段落提供更完整的說明，或訂定分類指南或規則：\n\n- 為什麼大家應該使用此分類？它的用途是什麼？\n\n- 它與我們現有的其他分類究竟有何不同？\n\n- 此分類中的主題通常應包含哪些內容？\n\n- 我們需要這個分類嗎？能否與其他分類或子分類合併？"
     errors:
       not_found: "找不到分類！"
+      self_lockout: "你即將變更分類權限，且這項變更會移除你自己的存取權。確定要繼續嗎？"
       uncategorized_parent: "未分類不能有父分類"
       self_parent: "子分類的父分類不能是它自己。"
       depth: "您不能將一個子分類嵌套在其他子分類下。"
@@ -2287,7 +2288,6 @@ zh_TW:
     reviewable_default_visibility: "除非滿足此優先級，否則不顯示可審核條目"
     reviewable_low_priority_threshold: "除非使用「（任何）」篩選器，否則優先篩選器會隱藏未達此分數的可審核項目。"
     high_trust_flaggers_auto_hide_posts: "新使用者的貼文遭信任等級 3 以上使用者檢舉為垃圾內容後會自動隱藏"
-    allow_all_users_to_flag_illegal_content: "匿名使用者會看到必須透過電子郵件聯絡管理員，才能檢舉違法內容的資訊。此設定優先於 {{setting:flag_post_allowed_groups}}。"
     email_address_to_report_illegal_content: "若留空，將使用預設的網站管理員電子郵件地址。"
     cooldown_hours_until_reflag: "使用者必須等待多久才能再次檢舉貼文"
     slow_mode_prevents_editing: "「慢速模式」是否會在 {{setting:editing_grace_period}} 後阻止編輯？"
@@ -2633,13 +2633,11 @@ zh_TW:
     lazy_load_categories_groups: "只為這些群組的使用者延遲載入分類資訊。可提升具有大量分類之網站的效能。"
     enable_auto_grid_images: "在編輯器中上傳 3 張以上圖片時，自動使用 [grid] 標籤包住圖片。"
     enable_new_checkbox_style: "啟用重新設計的 FormKit 核取方塊樣式。"
-    enable_new_post_reactions_menu: "啟用重新設計的貼文按讚與回應選單，支援無限捲動及原生行動體驗。"
     enable_composer_redesign: "啟用重新設計的編輯器。"
     prioritize_recently_used_tags: "建立或編輯主題並新增標籤時，在論壇最熱門標籤之前，先於清單頂端顯示成員最近在自己主題中使用的標籤。"
     experimental_impersonation_time_limit_minutes: "模擬身分工作階段自動結束前的持續時間。"
     page_loading_indicator: "設定在 Discourse 內進行頁面導覽時顯示的載入指示器。「旋轉圖示」是全頁指示器；「滑動列」則在畫面頂端顯示窄條。"
     show_user_menu_avatars: "在使用者選單中顯示使用者大頭貼"
-    about_page_hidden_groups: "不要在 /about 頁面顯示特定群組的成員。"
     about_page_extra_groups: "在「關於」頁面的版主下方顯示的群組。"
     about_page_extra_groups_initial_members: "在「關於」頁面上每個群組展開顯示的成員人數。"
     about_page_extra_groups_show_description: "是否在「關於」頁面包含群組說明。"
@@ -4350,34 +4348,18 @@ zh_TW:
       title: "帳號已停權"
       subject_template: "[%{email_prefix}] 您的帳號已被停權"
       subject_template_improved: "您的帳號已被停權"
-      text_body_template: |
-        您的論壇帳號已被停權至 %{suspended_till}。
-
-        原因－%{reason}
     account_suspended_forever:
       title: "帳號已停權"
       subject_template: "[%{email_prefix}] 您的帳號已被停權"
       subject_template_improved: "您的帳號已被停權"
-      text_body_template: |
-        您的論壇帳號已被停權。
-
-        原因－%{reason}
     account_silenced:
       title: "帳號已禁言"
       subject_template: "[%{email_prefix}] 您的帳號已被禁言"
       subject_template_improved: "您的帳號已被禁言"
-      text_body_template: |
-        您的論壇帳號已被禁言至 %{silenced_till}。
-
-        原因－%{reason}
     account_silenced_forever:
       title: "帳號已禁言"
       subject_template: "[%{email_prefix}] 您的帳號已被禁言"
       subject_template_improved: "您的帳號已被禁言"
-      text_body_template: |
-        您的論壇帳號已被禁言。
-
-        原因－%{reason}
     account_deleted:
       title: "帳號已刪除"
       subject_template: "[%{email_prefix}] 您的帳號已被刪除"

@@ -311,7 +311,6 @@ be:
       zh_CN:
         name: Кітайская спрошчаная
     share:
-      topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       post: "допіс №%{postNumber} ад карыстальніка @%{username}"
       close: "закрыць"
       twitter: "Абагуліць у X"
@@ -414,11 +413,6 @@ be:
       few: "не больш за %{count}"
       many: "не больш за %{count}"
       other: "не больш за %{count}"
-    character_count:
-      one: "%{count} сімвал"
-      few: "%{count} сімвалы"
-      many: "%{count} сімвалаў"
-      other: "%{count} сімвалаў"
     related_messages:
       title: "Звязаныя паведамленні"
       pill: "Звязаныя паведамленні"
@@ -653,6 +647,9 @@ be:
       title:
         search: "Пошук паведамлення"
         placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар паведамлення"
+    dsa_statements:
+      category: "Катэгорыя"
+      saving: "Захаванне…"
     review:
       show_more: "Паказаць больш"
       show_less: "Паказаць менш"
@@ -1390,8 +1387,7 @@ be:
       reply: "Адказаць"
       cancel: "Скасаваць"
       create_topic: "Стварыць тэму"
-      title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
-      title_placeholder_redesign: "Загаловак"
+      title_placeholder: "Загаловак"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
       edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
@@ -2064,14 +2060,6 @@ be:
         type_mismatch:
           default: "Увядзіце правільнае значэнне."
           email: "Увядзіце правільны адрас электроннай пошты."
-    table_builder:
-      edit:
-        modal:
-          cancel: "скасаваць"
-          create: "Захаваць"
-          reason: "Чаму вы рэдагуеце допіс?"
-      spreadsheet:
-        about: "Пра сайт"
     filter:
       description:
         yesterday: "Учора"

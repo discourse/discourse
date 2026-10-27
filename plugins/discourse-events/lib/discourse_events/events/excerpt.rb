@@ -44,12 +44,20 @@ module DiscourseEvents
 
         all_day = event_node["data-all-day"] == "true"
         ends_at = event_node["data-end"]
+        ends_at = nil if all_day && same_day?(starts_at, ends_at)
         timezone = event_node["data-timezone"] || "UTC"
 
         dates = format_date(starts_at, all_day)
         dates = t("date_range", from: dates, to: format_date(ends_at, all_day)) if ends_at.present?
         dates = t("date_with_timezone", date: dates, timezone: timezone) unless all_day
         dates
+      end
+
+      def same_day?(starts_at, ends_at)
+        return false if ends_at.blank?
+        Date.parse(starts_at) == Date.parse(ends_at)
+      rescue ArgumentError
+        false
       end
 
       def format_date(value, all_day)

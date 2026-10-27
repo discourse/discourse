@@ -1,31 +1,37 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import { adjustedRangeEnd } from "discourse/lib/time-utils";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class DDateTimeInputRange extends Component {
-  from = null;
-  to = null;
-  toTimeFirst = false;
-  showToTime = true;
-  showFromTime = true;
-  clearable = false;
+  get toTimeFirst() {
+    return this.args.toTimeFirst ?? false;
+  }
+
+  get showToTime() {
+    return this.args.showToTime ?? true;
+  }
+
+  get showFromTime() {
+    return this.args.showFromTime ?? true;
+  }
+
+  get clearable() {
+    return this.args.clearable ?? false;
+  }
 
   @action
   onChangeRanges(options, value) {
-    if (!this.onChange) {
+    if (!this.args.onChange) {
       return;
     }
 
-    const from = options.prop === "from" ? value : this.from;
-    const to = options.prop === "from" ? this.to : value;
+    const from = options.prop === "from" ? value : this.args.from;
+    const to = options.prop === "from" ? this.args.to : value;
 
-    this.onChange({
+    this.args.onChange({
       from,
       to: adjustedRangeEnd(from, to, { dateOnly: !this.showToTime }),
     });
@@ -35,7 +41,7 @@ export default class DDateTimeInputRange extends Component {
     <div class="d-date-time-input-range" ...attributes>
       <DDateTimeInput
         class="from"
-        @date={{this.from}}
+        @date={{@from}}
         @onChange={{fn this.onChangeRanges (hash prop="from")}}
         @placeholder={{i18n "dates.from_placeholder"}}
         @showTime={{this.showFromTime}}
@@ -45,10 +51,10 @@ export default class DDateTimeInputRange extends Component {
       <DDateTimeInput
         class="to"
         @clearable={{this.clearable}}
-        @date={{this.to}}
+        @date={{@to}}
         @onChange={{fn this.onChangeRanges (hash prop="to")}}
         @placeholder={{i18n "dates.to_placeholder"}}
-        @relativeDate={{this.from}}
+        @relativeDate={{@from}}
         @showTime={{this.showToTime}}
         @timeFirst={{this.toTimeFirst}}
         @timezone={{@timezone}}

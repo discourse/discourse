@@ -1,5 +1,4 @@
 import { concat } from "@ember/helper";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -31,6 +30,7 @@ const DEmptyState = <template>
           <DButton
             class="btn-primary"
             @action={{@ctaAction}}
+            @disabled={{@ctaDisabled}}
             @href={{@ctaHref}}
             @icon={{@ctaIcon}}
             @route={{@ctaRoute}}
