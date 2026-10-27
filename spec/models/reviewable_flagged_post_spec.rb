@@ -509,6 +509,39 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.user_deleted?).to eq(false)
       expect(post.hidden?).to eq(false)
     end
+
+    context "with an anonymous author" do
+      fab!(:main_user, :user)
+      fab!(:shadow) do
+        Fabricate(:anonymous).tap { it.anonymous_user_master.update!(master_user: main_user) }
+      end
+      fab!(:post) { Fabricate(:post, user: shadow) }
+
+      before { SiteSetting.allow_anonymous_mode = true }
+
+      it "silences the account behind the author with agree_and_silence" do
+        reviewable.perform(
+          moderator,
+          :agree_and_silence,
+          reason: "spam",
+          silenced_till: 2.days.from_now,
+        )
+
+        expect(main_user.reload).to be_silenced
+        expect(shadow.reload).to be_silenced
+      end
+
+      it "unsilences the account behind the author when disagreeing, reporting the author" do
+        UserSilencer.silence(shadow, moderator, post_id: post.id)
+        post.hide!(PostActionType.types[:spam])
+
+        events =
+          DiscourseEvent.track_events(:user_unsilenced) { reviewable.perform(moderator, :disagree) }
+
+        expect(main_user.reload).not_to be_silenced
+        expect(events.map { it[:params].first[:user] }).to eq([shadow])
+      end
+    end
   end
 
   describe "pending count" do

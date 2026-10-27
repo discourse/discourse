@@ -311,6 +311,41 @@ RSpec.describe NewPostManager do
       end
     end
 
+    context "with an anonymous first post matching the auto silence regex" do
+      fab!(:shadow) do
+        Fabricate(:anonymous, refresh_auto_groups: true).tap do
+          it.anonymous_user_master.update!(master_user: user)
+        end
+      end
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        SiteSetting.auto_silence_first_post_regex = "spammy"
+      end
+
+      it "silences the account behind the anonymous poster and logs the poster" do
+        manager =
+          NewPostManager.new(
+            shadow,
+            raw: "this is some spammy content",
+            topic_id: topic.id,
+            first_post_checks: true,
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.reason).to eq(:auto_silence_regex)
+        expect(user.reload).to be_silenced
+        expect(shadow.reload).to be_silenced
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:silence_user],
+            reviewable_id: result.reviewable.id,
+          ).pluck(:target_user_id),
+        ).to eq([shadow.id])
+      end
+    end
+
     context "with media" do
       let(:empty_image_sizes) { {} }
       let(:manager_opts) do
