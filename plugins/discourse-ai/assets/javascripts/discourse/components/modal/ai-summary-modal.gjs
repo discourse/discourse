@@ -11,7 +11,6 @@ import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { smartShortDate } from "discourse/lib/formatter";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DModal from "discourse/ui-kit/d-modal";

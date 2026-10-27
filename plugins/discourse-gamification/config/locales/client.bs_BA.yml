@@ -28,9 +28,7 @@ bs_BA:
       close: "Zatvori"
       delete: "Delete"
       edit: "Izmijeni"
-      back: "Prethodno"
       save: "Sačuvaj"
-      apply: "Snimi"
       update_range:
         all_time: "Oduvijek"
       custom_range_from: "Od"

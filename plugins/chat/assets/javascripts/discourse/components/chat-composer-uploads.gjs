@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
+import { openLightbox } from "discourse/lib/lightbox";
 import { cloneJSON } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -31,6 +32,7 @@ export default class ChatComposerUploads extends Component {
         this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
           optimizeFn: (data, opts) =>
             this.mediaOptimizationWorker.optimizeImage(data, opts),
+          cancelFn: (fileId) => this.mediaOptimizationWorker.cancel(fileId),
           runParallel: !this.capabilities.isMobileDevice,
         });
       }
@@ -71,6 +73,7 @@ export default class ChatComposerUploads extends Component {
   existingUploads = null;
   uploadDropZone = null;
 
+  #previews = new WeakMap();
   _pasteTarget = null;
 
   get inProgressUploads() {
@@ -108,6 +111,39 @@ export default class ChatComposerUploads extends Component {
   removeUpload(upload) {
     removeValueFromArray(this.uploads, upload);
     this._triggerUploadsChanged();
+  }
+
+  @action
+  openPreview(upload) {
+    const shown = [...this.uploads, ...this.inProgressUploads].filter((item) =>
+      this.#previews.has(item)
+    );
+
+    // own links to unfinished files, so tiles can release theirs at any time
+    const localUrls = [];
+    const slides = shown.map((item) => {
+      const { type, element, alt } = this.#previews.get(item);
+      let src = element.currentSrc || element.src;
+      if (item.data instanceof Blob) {
+        src = URL.createObjectURL(item.data);
+        localUrls.push(src);
+      }
+      return { type, src, element, alt };
+    });
+
+    openLightbox(slides, { index: shown.indexOf(upload) }).finally(() =>
+      localUrls.forEach((url) => URL.revokeObjectURL(url))
+    );
+  }
+
+  @bind
+  registerPreview(upload, preview) {
+    this.#previews.set(upload, preview);
+    return () => {
+      if (this.#previews.get(upload) === preview) {
+        this.#previews.delete(upload);
+      }
+    };
   }
 
   // The input element changes when the composer switches editors.
@@ -153,6 +189,8 @@ export default class ChatComposerUploads extends Component {
             <ChatComposerUpload
               @isDone={{true}}
               @onCancel={{fn this.removeUpload upload}}
+              @onPreview={{fn this.openPreview upload}}
+              @registerPreview={{fn this.registerPreview upload}}
               @upload={{upload}}
             />
           {{/each}}
@@ -160,6 +198,8 @@ export default class ChatComposerUploads extends Component {
           {{#each this.inProgressUploads as |upload|}}
             <ChatComposerUpload
               @onCancel={{fn this.cancelUploading upload}}
+              @onPreview={{fn this.openPreview upload}}
+              @registerPreview={{fn this.registerPreview upload}}
               @upload={{upload}}
             />
           {{/each}}

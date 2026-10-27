@@ -266,3 +266,17 @@ body.discourse-calendar-livestream-zoom-full {
     display: none;
   }
 }
+
+.cooked .d-wrap[data-wrap="livestream-chat-transcript"] {
+  max-height: min(30rem, 60vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  > .chat-transcript:first-child {
+    margin-top: 0;
+  }
+
+  > .chat-transcript:last-child {
+    margin-bottom: 0;
+  }
+}

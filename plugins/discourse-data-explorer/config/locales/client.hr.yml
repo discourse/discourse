@@ -11,7 +11,6 @@ hr:
         no_results: "Nema rezultata"
     explorer:
       or: "ili"
-      create: "Stvorite"
       ai:
         generate: "Generiraj"
         optional: "neobvezno"
@@ -38,7 +37,6 @@ hr:
       query_description: "Opis"
       query_user: "Napravio"
       reset_params: "Resetirati"
-      search_placeholder: "Pretraži..."
     group:
       reports: "Izvještaji"
     discourse_workflows:

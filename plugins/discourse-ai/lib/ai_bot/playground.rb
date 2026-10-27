@@ -204,7 +204,7 @@ module DiscourseAi
           persist_agent: requested_agent_id.present? || topic_agent_id.blank?,
           persist_model:
             requested_model_id.present? || requested_agent_id.present? ||
-              (topic_model_id.blank? && !turn_only_agent_mention),
+              ((topic_model_id.blank? || route.replaced_topic_model) && !turn_only_agent_mention),
         )
         add_agent_to_private_message!(post.topic, route.speaker) if private_message
 

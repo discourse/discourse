@@ -169,6 +169,8 @@ module DiscourseAi
 
       def check_permissions!
         if ask_ai_action?
+          # the Ask service checks access itself
+          return if action_name == "reply"
           if !DiscourseAi::Discoveries.enabled_for_user?(current_user)
             raise Discourse::InvalidAccess
           end

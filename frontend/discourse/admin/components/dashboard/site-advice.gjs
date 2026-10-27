@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { compare } from "@ember/utils";
 import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

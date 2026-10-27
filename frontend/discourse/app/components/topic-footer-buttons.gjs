@@ -16,7 +16,6 @@ import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-butto
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
-import { eq, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

@@ -1610,7 +1610,9 @@ RSpec.describe Topic do
           2.times { topic.update_status("closed", true, user) }
         end
 
-      expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, "closed", true, { acting_user: user }]],
+      )
     end
 
     it "emits pin status events only when pin attributes change" do
@@ -1624,7 +1626,10 @@ RSpec.describe Topic do
         end
 
       expect(events.map { |event| event[:params] }).to eq(
-        [[topic, "pinned", true], [topic, "pinned", false]],
+        [
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned", false, { acting_user: user }],
+        ],
       )
     end
 
@@ -1642,9 +1647,9 @@ RSpec.describe Topic do
 
       expect(events.map { |event| event[:params] }).to eq(
         [
-          [topic, "pinned", true],
-          [topic, "pinned_globally", true],
-          [topic, "pinned_globally", true],
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
         ],
       )
     end

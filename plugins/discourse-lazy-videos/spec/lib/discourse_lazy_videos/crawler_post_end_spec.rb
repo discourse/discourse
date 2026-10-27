@@ -172,6 +172,28 @@ describe DiscourseLazyVideos::CrawlerPostEnd do
       end
     end
 
+    context "when the post text contains an HTML comment opener and a script tag" do
+      before { post1.update!(cooked: <<~HTML) }
+          <p>Why does &lt;!--&lt;script&gt; break my template?</p>
+          <div class="youtube-onebox lazy-video-container"
+            data-video-id="test123"
+            data-video-title="Test Video"
+            data-provider-name="youtube">
+            <a href="https://www.youtube.com/watch?v=test123">
+              <img src="https://img.youtube.com/vi/test123/maxresdefault.jpg">
+            </a>
+          </div>
+        HTML
+
+      it "keeps the script element closed and the description intact" do
+        fragment = Nokogiri::HTML5.fragment("#{post_crawler_schema.html}<p></p>")
+        schema = JSON.parse(fragment.at_css('script[type="application/ld+json"]').content)
+
+        expect(fragment.children.map(&:name)).to eq(%w[script p])
+        expect(schema["description"]).to start_with("Why does <!--<script> break my template?")
+      end
+    end
+
     context "with missing video data" do
       before { post1.update!(cooked: <<~HTML) }
           <div class="lazy-video-container"

@@ -69,8 +69,11 @@ module DiscourseAi
           answerable = partial.read_buffered_property(:answerable)
           values[:answerable] = answerable if !answerable.nil?
 
+          # Locking in a partial array would make later updates look like a changed selection.
           source_refs = partial.read_buffered_property(:source_refs)
-          values[:source_refs] = source_refs if !source_refs.nil?
+          if !source_refs.nil? && partial.property_complete?(:source_refs)
+            values[:source_refs] = source_refs
+          end
 
           title = partial.read_buffered_property(:title)
           values[:title] << title if title.present?
@@ -91,14 +94,17 @@ module DiscourseAi
         result =
           Result.new(
             answerable: values[:answerable] == true,
-            source_refs: Array(values[:source_refs]),
+            source_refs: known_source_refs(values[:source_refs], candidates:, related_count:),
             title: values[:title].to_s.strip,
             answer: answer_without_source_references(values[:answer]),
             follow_up: values[:follow_up].to_s.strip,
           )
-        return empty_result if !result.answerable
+        if !result.answerable || result.source_refs.empty? ||
+             !self.class.meaningful_answer?(result.answer)
+          return empty_result
+        end
 
-        valid_result?(result, candidates:, related_count:) ? result : empty_result
+        result
       end
 
       def self.meaningful_answer?(answer)
@@ -122,18 +128,12 @@ module DiscourseAi
         agent
       end
 
-      def valid_result?(result, candidates:, related_count:)
-        return false if result.source_refs.empty?
-        return false if result.source_refs.uniq.length != result.source_refs.length
-        return false if result.source_refs.length > related_count
-
+      def known_source_refs(source_refs, candidates:, related_count:)
         candidate_refs = candidates.pluck("source_ref")
-        if result.source_refs.any? { |source_ref| !candidate_refs.include?(source_ref) }
-          return false
-        end
-        return false if !self.class.meaningful_answer?(result.answer)
-
-        true
+        Array(source_refs)
+          .uniq
+          .select { |source_ref| candidate_refs.include?(source_ref) }
+          .first(related_count)
       end
 
       def empty_result
@@ -171,23 +171,27 @@ module DiscourseAi
         )
       end
 
+      # Most of each candidate is metadata rather than content, so it is kept
+      # to what the model can use: days rather than timestamps, links without
+      # the slug that repeats the title, and flags only when they are set.
+      # Whether a passage is the topic's first post shows in its post_number.
       def candidate_input(candidate)
         input =
           candidate.slice(
             "source_ref",
             "title",
-            "url",
             "username",
-            "created",
             "category",
             "likes",
             "topic_views",
             "topic_likes",
             "topic_replies",
             "tags",
-            "author_is_staff",
-            "is_topic_op",
+            "source_name",
           ).compact
+        input["url"] = slugless_url(candidate["url"]) if candidate["url"]
+        input["created"] = day(candidate["created"]) if candidate["created"]
+        input["author_is_staff"] = true if candidate["author_is_staff"]
         if candidate["passages"].present?
           input["passages"] = candidate["passages"].map do |passage|
             passage.slice("post_number", "excerpt").compact
@@ -195,8 +199,20 @@ module DiscourseAi
         else
           input["excerpt"] = candidate["excerpt"] if candidate["excerpt"]
         end
-        input["last_updated_at"] = candidate["post_updated_at"] if candidate["post_updated_at"]
-        input
+        last_updated_at = day(candidate["post_updated_at"] || candidate["published_at"])
+        input["last_updated_at"] = last_updated_at if last_updated_at != input["created"]
+        input.compact
+      end
+
+      def slugless_url(url)
+        url.sub(%r{\A(#{Regexp.escape(Discourse.base_path)}/t/)(?!\d+(?:/|\z))[^/]+/(?=\d)}, '\\1')
+      end
+
+      def day(value)
+        value = Time.iso8601(value) if value.is_a?(String)
+        value&.utc&.to_date&.iso8601
+      rescue ArgumentError
+        nil
       end
 
       def normalized_related_count(related_count)

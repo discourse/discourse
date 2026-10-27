@@ -1,4 +1,3 @@
-import { or } from "discourse/truth-helpers";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import SectionLink from "./section-link.gjs";
 
