@@ -755,7 +755,7 @@ class TagsController < ::ApplicationController
       super.merge(
         page: params[:page],
         topic_ids: param_to_integer_list(:topic_ids),
-        category: @filter_on_category ? @filter_on_category.id : params[:category],
+        category: @filter_on_category ? @filter_on_category.slug_path.join(":") : params[:category],
         order: params[:order],
         ascending: params[:ascending],
         min_posts: params[:min_posts],

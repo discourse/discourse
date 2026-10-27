@@ -2254,4 +2254,175 @@ RSpec.describe TopicsFilter do
       expect(filtered("in:watching,solved", Guardian.new(user))).to contain_exactly(solved_topic.id)
     end
   end
+
+  describe "#filter_from_options" do
+    def filter_by_options(options, guardian = Guardian.new)
+      TopicsFilter.new(guardian:, scope: Topic.all).filter_from_options(options).pluck(:id)
+    end
+
+    describe "category_id" do
+      fab!(:category)
+      fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+      fab!(:topic_in_category) { Fabricate(:topic, category: category) }
+      fab!(:topic_in_subcategory) { Fabricate(:topic, category: subcategory) }
+      fab!(:topic_outside, :topic)
+
+      it "includes topics in the category and its subcategories" do
+        expect(filter_by_options(category_id: category.id)).to include(
+          topic_in_category.id,
+          topic_in_subcategory.id,
+        )
+        expect(filter_by_options(category_id: category.id)).not_to include(topic_outside.id)
+      end
+
+      it "restricts to the exact category when no_subcategories is true" do
+        expect(
+          filter_by_options(category_id: category.id, no_subcategories: true),
+        ).to contain_exactly(topic_in_category.id)
+      end
+    end
+
+    describe "tags" do
+      fab!(:tag)
+      fab!(:other_tag, :tag)
+      fab!(:tagged_topic) { Fabricate(:topic, tags: [tag]) }
+      fab!(:other_tagged_topic) { Fabricate(:topic, tags: [other_tag]) }
+      fab!(:multi_tagged_topic) { Fabricate(:topic, tags: [tag, other_tag]) }
+      fab!(:untagged_topic, :topic)
+
+      it "filters to topics with any of the given tag names" do
+        expect(filter_by_options(tags: [tag.name])).to include(
+          tagged_topic.id,
+          multi_tagged_topic.id,
+        )
+        expect(filter_by_options(tags: [tag.name])).not_to include(
+          other_tagged_topic.id,
+          untagged_topic.id,
+        )
+      end
+
+      it "accepts integer tag IDs" do
+        expect(filter_by_options(tags: [tag.id])).to include(tagged_topic.id, multi_tagged_topic.id)
+        expect(filter_by_options(tags: [tag.id])).not_to include(other_tagged_topic.id)
+      end
+
+      it "requires all tags when match_all_tags is true" do
+        expect(
+          filter_by_options(tags: [tag.name, other_tag.name], match_all_tags: true),
+        ).to contain_exactly(multi_tagged_topic.id)
+      end
+
+      it "returns only untagged topics when no_tags is true" do
+        expect(filter_by_options(no_tags: true)).to contain_exactly(untagged_topic.id)
+      end
+
+      it "excludes topics with exclude_tag" do
+        ids = filter_by_options(tags: [tag.name, other_tag.name], exclude_tag: other_tag.name)
+        expect(ids).to include(tagged_topic.id)
+        expect(ids).not_to include(other_tagged_topic.id, multi_tagged_topic.id)
+      end
+
+      it "exposes resolved tag_ids" do
+        tf = TopicsFilter.new(guardian: Guardian.new, scope: Topic.all)
+        tf.filter_from_options(tags: [tag.name])
+        expect(tf.tag_ids).to include(tag.id)
+      end
+    end
+
+    describe "status" do
+      fab!(:open_topic, :topic)
+      fab!(:closed_topic) { Fabricate(:topic, closed: true) }
+
+      it "delegates to filter_status" do
+        expect(filter_by_options(status: "open")).to include(open_topic.id)
+        expect(filter_by_options(status: "open")).not_to include(closed_topic.id)
+        expect(filter_by_options(status: "closed")).to include(closed_topic.id)
+        expect(filter_by_options(status: "closed")).not_to include(open_topic.id)
+      end
+    end
+
+    describe "state" do
+      fab!(:watched_topic, :topic)
+      fab!(:other_topic, :topic)
+
+      before do
+        TopicUser.create!(
+          user: user,
+          topic: watched_topic,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+      end
+
+      it "filters by notification level for authenticated users" do
+        ids = filter_by_options({ state: "watching" }, user.guardian)
+        expect(ids).to contain_exactly(watched_topic.id)
+      end
+
+      it "returns no topics for watching_first_post when user is anonymous" do
+        expect(filter_by_options({ state: "watching_first_post" }, Guardian.new)).to be_empty
+      end
+    end
+
+    describe "min_posts/max_posts" do
+      fab!(:few_posts_topic) { Fabricate(:topic, posts_count: 2) }
+      fab!(:many_posts_topic) { Fabricate(:topic, posts_count: 10) }
+
+      it "filters by min_posts" do
+        expect(filter_by_options(min_posts: 5)).to include(many_posts_topic.id)
+        expect(filter_by_options(min_posts: 5)).not_to include(few_posts_topic.id)
+      end
+
+      it "filters by max_posts" do
+        expect(filter_by_options(max_posts: 5)).to include(few_posts_topic.id)
+        expect(filter_by_options(max_posts: 5)).not_to include(many_posts_topic.id)
+      end
+    end
+
+    describe "before/bumped_before" do
+      fab!(:old_topic) { Fabricate(:topic, created_at: 10.days.ago, bumped_at: 10.days.ago) }
+      fab!(:new_topic) { Fabricate(:topic, created_at: 1.day.ago, bumped_at: 1.day.ago) }
+
+      it "filters topics created before N days ago" do
+        expect(filter_by_options(before: 5)).to include(old_topic.id)
+        expect(filter_by_options(before: 5)).not_to include(new_topic.id)
+      end
+
+      it "filters topics bumped before N days ago" do
+        expect(filter_by_options(bumped_before: 5)).to include(old_topic.id)
+        expect(filter_by_options(bumped_before: 5)).not_to include(new_topic.id)
+      end
+    end
+
+    describe "topic_ids" do
+      fab!(:topic1, :topic)
+      fab!(:topic2, :topic)
+      fab!(:topic3, :topic)
+
+      it "restricts results to the given topic IDs" do
+        expect(filter_by_options(topic_ids: [topic1.id, topic2.id])).to contain_exactly(
+          topic1.id,
+          topic2.id,
+        )
+      end
+    end
+
+    describe "combining options with filter_from_query_string" do
+      fab!(:category)
+      fab!(:tag)
+      fab!(:closed_category_tagged_topic) do
+        Fabricate(:topic, category: category, closed: true, tags: [tag])
+      end
+      fab!(:open_category_tagged_topic) do
+        Fabricate(:topic, category: category, closed: false, tags: [tag])
+      end
+      fab!(:closed_other_topic) { Fabricate(:topic, closed: true) }
+
+      it "ANDs structured options with the DSL query string" do
+        tf = TopicsFilter.new(guardian: Guardian.new, scope: Topic.all)
+        tf.filter_from_options(category_id: category.id, tags: [tag.name])
+        tf.filter_from_query_string("status:closed")
+        expect(tf.scope.pluck(:id)).to contain_exactly(closed_category_tagged_topic.id)
+      end
+    end
+  end
 end

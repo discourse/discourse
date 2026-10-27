@@ -451,7 +451,7 @@ class ListController < ApplicationController
     @category = Category.find_by_slug_path_with_id(category_slug_path_with_id)
     raise Discourse::NotFound.new("category not found", check_permalinks: true) if @category.nil?
 
-    params[:category] = @category.id.to_s
+    params[:category] = @category.slug_path.join(":")
 
     if !guardian.can_see?(@category)
       if SiteSetting.detailed_404

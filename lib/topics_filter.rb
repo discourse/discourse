@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TopicsFilter
-  attr_reader :topic_ids, :topic_notification_levels, :invalid_filters
+  attr_reader :topic_ids, :topic_notification_levels, :invalid_filters, :scope, :tag_ids
 
   def initialize(guardian:, scope: nil, loaded_topic_users_reference: false)
     @loaded_topic_users_reference = loaded_topic_users_reference
@@ -10,6 +10,9 @@ class TopicsFilter
     @topic_notification_levels = Set.new
     @invalid_filters = []
   end
+
+  BOOLEAN_CASTER = ActiveModel::Type::Boolean.new
+  private_constant :BOOLEAN_CASTER
 
   FILTER_ALIASES = {
     "categories" => "category",
@@ -97,18 +100,7 @@ class TopicsFilter
     end
 
     keywords = query_string.scan(TOKENIZER_PATTERN).reject { |word| word.include?(":") }.join(" ")
-
-    if keywords.present? && keywords.length >= SiteSetting.min_search_term_length
-      ts_query = Search.ts_query(term: keywords)
-      @scope = @scope.where(<<~SQL)
-          topics.id IN (
-            SELECT topic_id
-            FROM post_search_data
-            JOIN posts ON posts.id = post_search_data.post_id
-            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
-          )
-        SQL
-    end
+    filter_by_search(keywords) if keywords.present?
 
     @scope
   end
@@ -309,6 +301,78 @@ class TopicsFilter
     results = DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
 
     results.each { |option| option[:prefixes] = [] if option[:name].start_with?("order:") }
+  end
+
+  def filter_from_options(options)
+    if (category_id = options[:category_id])
+      no_subcategories = BOOLEAN_CASTER.cast(options[:no_subcategories])
+
+      if no_subcategories
+        @scope = @scope.where("topics.category_id = ?", category_id)
+      else
+        @scope = @scope.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
+
+        if !SiteSetting.show_category_definitions_in_topic_lists
+          @scope =
+            @scope.where(
+              "topics.id NOT IN (SELECT topic_id FROM categories WHERE topic_id IS NOT NULL AND id != ?)",
+              category_id,
+            )
+        end
+      end
+    end
+
+    if SiteSetting.tagging_enabled?
+      filter_by_tag_options(
+        tags: options[:tags],
+        match_all: BOOLEAN_CASTER.cast(options[:match_all_tags]),
+        no_tags: BOOLEAN_CASTER.cast(options[:no_tags]),
+        exclude_tag: options[:exclude_tag],
+      )
+    end
+
+    if options[:status].present?
+      filter_status(status: options[:status], category_id: options[:category_id])
+    end
+
+    filter_in(values: [options[:state]]) if options[:state].present?
+
+    if options[:min_posts].present?
+      filter_by_range(
+        filter: "posts-min",
+        value: extract_and_validate_value_for("posts-min", [options[:min_posts].to_s]),
+      )
+    end
+
+    if options[:max_posts].present?
+      filter_by_range(
+        filter: "posts-max",
+        value: extract_and_validate_value_for("posts-max", [options[:max_posts].to_s]),
+      )
+    end
+
+    if (before = options[:before]) && before.to_i > 0
+      filter_by_range(
+        filter: "created-before",
+        value: extract_and_validate_value_for("created-before", [before.to_s]),
+      )
+    end
+
+    if (bumped_before = options[:bumped_before]) && bumped_before.to_i > 0
+      filter_by_range(
+        filter: "activity-before",
+        value: extract_and_validate_value_for("activity-before", [bumped_before.to_s]),
+      )
+    end
+
+    filter_by_search(options[:search]) if options[:search].present?
+
+    if options[:topic_ids].present?
+      ids = Array(options[:topic_ids]).map(&:to_i).select(&:positive?)
+      @scope = @scope.where("topics.id in (?)", ids).references(:topics) if ids.present?
+    end
+
+    @scope
   end
 
   private
@@ -887,5 +951,65 @@ class TopicsFilter
     else
       "AND #{table_alias}.post_type != #{Post.types[:whisper]}"
     end
+  end
+
+  def filter_by_tag_options(tags:, match_all:, no_tags:, exclude_tag:)
+    if tags.present?
+      tags_arg = String === tags ? tags.split : Array(tags)
+      by_name = tags_arg.first.is_a?(String)
+
+      resolved =
+        if by_name
+          DiscourseTagging.visible_tag_ids_resolving_synonyms(tags_arg, @guardian)
+        else
+          DiscourseTagging
+            .visible_tags(@guardian)
+            .where(id: tags_arg)
+            .select(:id, :target_tag_id)
+            .map { |t| t.target_tag_id || t.id }
+            .uniq
+        end
+
+      @tag_ids = resolved
+
+      if match_all
+        if tags_arg.length == resolved.length
+          include_topics_with_all_tags(resolved)
+        else
+          @scope = @scope.none
+        end
+      else
+        include_topics_with_any_tags(resolved)
+      end
+    elsif no_tags
+      @scope = @scope.where.not(id: TopicTag.distinct.select(:topic_id))
+    end
+
+    if exclude_tag.present? && !DiscourseTagging.hidden_tag_names(@guardian).include?(exclude_tag)
+      @scope = @scope.where(<<~SQL, name: exclude_tag)
+        topics.id NOT IN (
+          SELECT topic_tags.topic_id
+          FROM topic_tags
+          INNER JOIN tags ON tags.id = topic_tags.tag_id
+          WHERE tags.name = :name
+        )
+      SQL
+    end
+  end
+
+  def filter_by_search(term)
+    return if term.blank? || term.length < SiteSetting.min_search_term_length
+    ts_query = Search.ts_query(term: term)
+    @scope = @scope.where(<<~SQL)
+      topics.id IN (
+        SELECT topic_id
+        FROM post_search_data
+        JOIN posts ON posts.id = post_search_data.post_id
+        WHERE search_data @@ #{ts_query}
+          AND NOT posts.hidden
+          AND posts.deleted_at IS NULL
+          #{whisper_condition("posts")}
+      )
+    SQL
   end
 end
