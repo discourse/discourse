@@ -1587,6 +1587,33 @@ RSpec.describe PostsController do
     end
   end
 
+  describe "#unhide" do
+    before { post_by_user.hide!(PostActionType.types[:off_topic]) }
+
+    it "unhides the post as the staff member" do
+      sign_in(moderator)
+
+      events =
+        DiscourseEvent.track_events(:post_unhidden) { put "/posts/#{post_by_user.id}/unhide.json" }
+
+      expect(response.status).to eq(200)
+      expect(events.map { |event| event[:params] }).to eq(
+        [[post_by_user, { acting_user: moderator }]],
+      )
+    end
+
+    it "doesn't let non-staff unhide posts" do
+      sign_in(user)
+
+      events =
+        DiscourseEvent.track_events(:post_unhidden) { put "/posts/#{post_by_user.id}/unhide.json" }
+
+      expect(response).to be_forbidden
+      expect(events).to be_empty
+      expect(post_by_user.reload).to be_hidden
+    end
+  end
+
   describe "#create" do
     include_examples "action requires login", :post, "/posts.json"
 

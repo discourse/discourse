@@ -451,7 +451,7 @@ module DiscourseAi
             silencer.auto_silence
 
             # silencer will not hide tl1 posts, so we do this here
-            hide_post(post)
+            hide_post(post, acting_user: flagging_user)
           end
         else
           log.update!(
@@ -461,15 +461,28 @@ module DiscourseAi
         end
       end
 
-      def self.hide_post(post)
-        Post.where(id: post.id).update_all(
-          [
-            "hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)",
-            Post.hidden_reasons[:new_user_spam_threshold_reached],
-          ],
-        )
+      def self.hide_post(post, acting_user: flagging_user)
+        hidden =
+          Post.where(id: post.id, hidden: false).update_all(
+            [
+              "hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)",
+              Post.hidden_reasons[:new_user_spam_threshold_reached],
+            ],
+          ) > 0
 
         Topic.where(id: post.topic_id).update_all(visible: false) if post.post_number == 1
+
+        if hidden
+          post.reload
+          DB.after_commit do
+            DiscourseEvent.trigger(
+              :post_hidden,
+              post,
+              acting_user:,
+              post_action_type_id: PostActionType.types[:spam],
+            )
+          end
+        end
       end
 
       def self.post_has_existing_flag?(post)

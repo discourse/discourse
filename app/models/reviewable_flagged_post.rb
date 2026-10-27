@@ -300,7 +300,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    agree(performed_by, args) { |pa| post.hide!(pa.post_action_type_id) }
+    agree(performed_by, args) { |pa| post.hide!(pa.post_action_type_id, acting_user: performed_by) }
   end
 
   def perform_agree_and_restore(performed_by, args)
@@ -344,8 +344,7 @@ class ReviewableFlaggedPost < Reviewable
     # Undo hide/silence if applicable
     if post&.hidden? && !post.trashed?
       notify_poster(performed_by)
-      post.acting_user = performed_by
-      post.unhide!
+      post.unhide!(acting_user: performed_by)
       if UserSilencer.was_silenced_for?(post)
         UserSilencer.unsilence(post.user, performed_by, reviewable_id: id)
       end

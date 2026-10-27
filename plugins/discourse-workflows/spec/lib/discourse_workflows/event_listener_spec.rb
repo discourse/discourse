@@ -62,6 +62,33 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "unliked-trigger")
   end
 
+  it "runs Post hidden once when flags hide a post, and Post unhidden once when its author edits it" do
+    author = Fabricate(:user, refresh_auto_groups: true)
+    post = Fabricate(:post, topic:, user: author)
+    create_published_workflow("hidden-trigger", "trigger:post_hidden")
+    create_published_workflow("unhidden-trigger", "trigger:post_unhidden")
+    create_published_workflow("edited-trigger", "trigger:post_edited", type_version: "2.0")
+    Reviewable.set_priorities(high: 3.0)
+    SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
+
+    2.times { PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post) }
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("hidden-trigger")
+    expect(trigger_data_for("hidden-trigger")).to include(
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    PostRevisor.new(post.reload).revise!(
+      author,
+      { raw: "#{post.raw} with an edit by its author" },
+      revised_at: post.updated_at + 11.minutes,
+    )
+
+    expect(enqueued_trigger_node_ids).to eq(%w[unhidden-trigger edited-trigger])
+    expect(trigger_data_for("unhidden-trigger")).to include("actor" => include("id" => author.id))
+  end
+
   it "runs Slow mode cleared workflows, and not Topic timer completed ones, when slow mode expires" do
     create_published_workflow("slow-mode-trigger", "trigger:topic_slow_mode_cleared")
     create_published_workflow("completed-trigger", "trigger:topic_timer_completed")

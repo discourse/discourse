@@ -98,8 +98,7 @@ class ReviewablePost < Reviewable
   end
 
   def perform_approve_and_unhide(performed_by, _args)
-    post.acting_user = performed_by
-    post.unhide!
+    post.unhide!(acting_user: performed_by)
 
     create_result(:success, :approved, [created_by_id], false)
   end

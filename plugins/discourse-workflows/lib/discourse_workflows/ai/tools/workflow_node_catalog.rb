@@ -321,6 +321,25 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:hide_post" => [
+            {
+              name: "Hide the trigger post as spam",
+              parameters: {
+                post_id: "={{ $json.post.id }}",
+                flag_reason: "spam",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:unhide_post" => [
+            {
+              name: "Unhide the trigger post",
+              parameters: {
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
           "action:convert_to_public_topic" => [
             {
               name: "Make the trigger personal message a public topic in a category",

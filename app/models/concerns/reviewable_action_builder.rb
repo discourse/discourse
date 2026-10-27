@@ -111,13 +111,12 @@ module ReviewableActionBuilder
   end
 
   def perform_hide_post(performed_by, _args)
-    target_post.hide!(PostActionType.types[:inappropriate])
+    target_post.hide!(PostActionType.types[:inappropriate], acting_user: performed_by)
     create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_unhide_post(performed_by, _args)
-    target_post.acting_user = performed_by
-    target_post.unhide!
+    target_post.unhide!(acting_user: performed_by)
     create_result(:success, :approved, [created_by_id], false)
   end
 

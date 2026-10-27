@@ -1656,6 +1656,53 @@ RSpec.describe Post do
       }.from(1).to(0)
     end
 
+    it "fires post_hidden with the acting user and flag type" do
+      moderator = Fabricate(:moderator)
+
+      events =
+        DiscourseEvent.track_events(:post_hidden) do
+          post.hide!(PostActionType.types[:off_topic], acting_user: moderator)
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[post, { acting_user: moderator, post_action_type_id: PostActionType.types[:off_topic] }]],
+      )
+    end
+
+    it "reports the acting user set on the post, and no actor rather than the author otherwise" do
+      moderator = Fabricate(:moderator)
+      other_post = Fabricate(:post)
+      other_post.acting_user = moderator
+
+      events =
+        DiscourseEvent.track_events(:post_hidden) do
+          post.hide!(PostActionType.types[:spam])
+          other_post.hide!(PostActionType.types[:spam])
+        end
+
+      expect(events.map { |event| event[:params].last[:acting_user] }).to eq([nil, moderator])
+    end
+
+    it "fires nothing for a post that is already hidden" do
+      post.hide!(PostActionType.types[:off_topic])
+
+      expect(
+        DiscourseEvent.track_events(:post_hidden) { post.hide!(PostActionType.types[:spam]) },
+      ).to be_empty
+    end
+
+    it "fires nothing when the hide is rolled back" do
+      events =
+        DiscourseEvent.track_events(:post_hidden) do
+          ActiveRecord::Base.transaction(requires_new: true) do
+            post.hide!(PostActionType.types[:off_topic])
+            raise ActiveRecord::Rollback
+          end
+        end
+
+      expect(events).to be_empty
+    end
+
     it "changes topic visible status to false if it is the first post" do
       t = post.topic
       expect(t.visible).to eq(true)
@@ -1747,6 +1794,49 @@ RSpec.describe Post do
       expect(hidden_topic.visible).to eq(false)
     end
 
+    it "fires post_unhidden with the acting user" do
+      moderator = Fabricate(:moderator)
+      post.hide!(PostActionType.types[:off_topic])
+
+      events = DiscourseEvent.track_events(:post_unhidden) { post.unhide!(acting_user: moderator) }
+
+      expect(events.map { |event| event[:params] }).to eq([[post, { acting_user: moderator }]])
+    end
+
+    it "reports the acting user set on the post, and no actor rather than the author otherwise" do
+      moderator = Fabricate(:moderator)
+      other_post = Fabricate(:post)
+      post.hide!(PostActionType.types[:off_topic])
+      other_post.hide!(PostActionType.types[:off_topic])
+      other_post.acting_user = moderator
+
+      events =
+        DiscourseEvent.track_events(:post_unhidden) do
+          post.unhide!
+          other_post.unhide!
+        end
+
+      expect(events.map { |event| event[:params].last[:acting_user] }).to eq([nil, moderator])
+    end
+
+    it "fires nothing for a post that isn't hidden" do
+      expect(DiscourseEvent.track_events(:post_unhidden) { post.unhide! }).to be_empty
+    end
+
+    it "fires nothing when the unhide is rolled back" do
+      post.hide!(PostActionType.types[:off_topic])
+
+      events =
+        DiscourseEvent.track_events(:post_unhidden) do
+          ActiveRecord::Base.transaction(requires_new: true) do
+            post.unhide!
+            raise ActiveRecord::Rollback
+          end
+        end
+
+      expect(events).to be_empty
+    end
+
     it "increases user_stat topic_count for the first post" do
       post.hide!(PostActionType.types[:off_topic])
 
@@ -1781,8 +1871,7 @@ RSpec.describe Post do
 
       post.reload
 
-      post.acting_user = moderator
-      expect { post.unhide! }.not_to raise_error
+      expect { post.unhide!(acting_user: moderator) }.not_to raise_error
       expect(post.reload.hidden).to eq(false)
     end
 
@@ -1805,7 +1894,11 @@ RSpec.describe Post do
 
       post = Post.find(post.id)
 
-      expect { post.unhide! }.to raise_error(ActiveRecord::RecordInvalid)
+      events =
+        DiscourseEvent.track_events(:post_unhidden) do
+          expect { post.unhide! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      expect(events).to be_empty
     end
 
     context "in a topic with multiple replies" do

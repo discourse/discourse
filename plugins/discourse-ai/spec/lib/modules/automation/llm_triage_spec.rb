@@ -355,16 +355,21 @@ describe DiscourseAi::Automation::LlmTriage do
   end
 
   it "can handle flag + hide" do
-    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
-      triage(
-        post: post,
-        triage_agent_id: ai_agent.id,
-        search_for_text: "bad",
-        flag_post: true,
-        flag_type: :review_hide,
-        automation: nil,
-      )
-    end
+    events =
+      DiscourseEvent.track_events(:post_hidden) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+          triage(
+            post: post,
+            triage_agent_id: ai_agent.id,
+            search_for_text: "bad",
+            flag_post: true,
+            flag_type: :review_hide,
+            automation: nil,
+          )
+        end
+      end
+
+    expect(events.map { |event| event[:params].last[:acting_user] }).to eq([Discourse.system_user])
 
     reviewable = ReviewablePost.last
 

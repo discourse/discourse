@@ -81,16 +81,21 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
   end
 
   it "applies the configured flag_type option" do
-    result =
-      tool(
-        { flag_post: true, reason: "Needs review" },
-        agent_options: {
-          flag_type: "review_hide",
-        },
-      ).invoke
+    result = nil
+    events =
+      DiscourseEvent.track_events(:post_hidden) do
+        result =
+          tool(
+            { flag_post: true, reason: "Needs review" },
+            agent_options: {
+              flag_type: "review_hide",
+            },
+          ).invoke
+      end
 
     expect(result[:status]).to eq("flagged")
     expect(post.reload).to be_hidden
+    expect(events.map { |event| event[:params].last[:acting_user] }).to eq([Discourse.system_user])
   end
 
   it "sanitizes the llm response and renders the automation name literally" do
