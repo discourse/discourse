@@ -105,6 +105,7 @@ register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"
 register_svg_icon "sliders"
+register_svg_icon "microphone"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
