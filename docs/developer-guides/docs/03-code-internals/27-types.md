@@ -51,7 +51,7 @@ With this file in place, `topic.sticker_count` is a `number | undefined`, and `s
 - Type each field from what the server sends. Make it optional unless every payload that builds the model includes it, and add `| null` when the serializer can return `nil`.
 - The file must be a module, so keep at least one `import type` or an `export {};`. Without one, the `declare module` blocks replace the core modules instead of extending them. Avoid a bare `import "discourse/models/topic";` for this, because it stays in the bundle as a runtime import.
 - Use a `.ts` file, not `.d.ts`. Type checking skips declaration files, so a field that clashes with the type core declares is only reported from a `.ts` file. The file compiles to an empty module.
-- Key the registries by the exact string the plugin passes to the store. Names that aren't registered fall back to `RestModel`.
+- Registry keys and lookup names are matched after the resolver's model name normalization. For example, `postStream`, `post_stream` and `post-stream` match the same key. The exported `NormalizeModelName` type describes this normalization. Keys that normalize to the same name produce a union of their registered types. Names without a matching registration and dynamic strings fall back to `RestModel`. Only the model class lookup is normalized. The identity map and `__type` retain the raw string, and request URLs are still derived from that raw string through the adapter.
 
 ## Usage
 
