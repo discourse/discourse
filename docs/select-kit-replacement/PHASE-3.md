@@ -12,8 +12,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 
 - ☐ **Category family:** chooser, drop, selector, search and report choosers. Two recipes,
   `DSelectCategory` and `DSelectCategoryFilter`, plus FormKit's `category-chooser` control; every
-  call site is branched and the category modules joined `MIGRATED_SELECT_KIT_MODULES`. Rows reuse
-  `categoryLinkHTML`.
+  call site is branched and the category modules joined `MIGRATED_SELECT_KIT_MODULES`. Rows render
+  through `dCategoryBadge`.
   - ☑ **Engine prerequisites:** server lists without a default row ceiling (`@maxLoaded` opts
     in), an opaque paging cursor, an end edge re-armed after pages that add no rows, and an abort
     signal on `control.update` work.
@@ -22,8 +22,15 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     active filter with `--filtering`, and chooser rows show topic counts.
   - ☐ **Awaiting a decision:** the drop holds its level name as a value, so its accessible name
     repeats it ("subcategories, subcategories") and no `placeholder` route exists for an empty
-    level; the tag drop shares the pattern. Also the source's paging shape and the "and all
-    subcategories" rows.
+    level; the tag drop shares the pattern.
+  - ☑ **Recipe rework (2026-10-27):** the recipes stopped re-implementing what the engine, the
+    `Category` model and ui-kit helpers already do. Paging, sizing and de-duplication are the
+    engine's; lazy pages come from `Category.asyncSearch` (now with `only_postable`), held ids from
+    `Category.asyncFindByIds`, and the subcategory walk from `Category.asyncFindDescendants`;
+    `lib/category-source` is gone. `@multiple` is forwarded unchanged (single unless `true`),
+    `@exclude` never offers a category even when held, the drop searches through
+    `Category.search` and draws the core caret, and rows render through `dCategoryBadge`. A
+    loader that answers without a promise is no longer debounced, so no recipe sets `@debounce`.
   - ☑ **VoiceOver pass and visual review** across themes and color modes (2026-10-26). Rows read
     their name, topic count ("2 topics in this category") and position; searches announce the
     result count; "and all subcategories" rows read by name. Open findings:
@@ -35,6 +42,13 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     - ☐ Emoji-style category badges read the emoji's short name ("card_file_box Uncategorized"),
       as select-kit rows did.
     - ☐ The mobile panel's search field has no side gutter, for every DSelect.
+- ☐ **Tag recipe rework**, the follow-up to the category rework: `cleanTagName` and
+  `sortTagRows` in `lib/tag-source.ts` copy select-kit's `tag-utils` service
+  (`createContentFromInput`, `sortSearchResults`); the tag filter draws its own caret from the
+  `caretDownIcon`/`caretUpIcon` kind options instead of the core `caretIcon`; `SelectTagBase.multiple`
+  flips DSelect's default to `true`; and `DSelectTagFilter.multiple` only turns `undefined` into
+  `false`, which DSelect already does. The tag model has no search or lookup API, so the source's
+  server helpers fill a real gap and stay.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
   dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic

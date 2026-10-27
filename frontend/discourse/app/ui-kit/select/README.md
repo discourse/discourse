@@ -633,7 +633,8 @@ The category family has two recipes:
     with several lists passes each list only the categories the other lists hold.
   - `@scope`, `@prioritize` and `@readOnly` are the composer's rules. While browsing, scope and
     prioritize act one level up: the category's parent and that parent's children.
-    `@readOnly` categories show as disabled rows.
+    `@readOnly` categories show as disabled rows, described as read-only, and stay listed while
+    a search matches them.
   - `@placeholder` is the trigger text with no value. `@noneLabel` adds a selectable "none" row
     instead.
   - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.
@@ -643,14 +644,18 @@ The category family has two recipes:
   a time. Its value is a category, `ALL_CATEGORIES_ID` or `NO_CATEGORIES_ID` (exported by the
   module), and `@parentCategory` names the level. `@items` is the caller's list for the level, so
   the page decides what the level shows. A search covers the whole site at the top level, or the
-  parent's direct children below it, and ranks top-level and prefix matches first. The filter
+  parent's direct children below it. It ranks through `Category.search` (prefix, then substring
+  and slug matches, restricted categories last), with top-level categories first. The filter
   never navigates; the call site routes the pick. A long lazy level shows 15 rows, and the
   `:footer` block receives the number left out and the parent, so the caller can link to the
   rest.
 
 When the site preloads its categories, both recipes answer from them without a request, in the
-site's order. A site that loads categories lazily searches the server instead, and the list
-keeps the server's order. Held ids resolve either way.
+site's order, returning every matching row for the engine to window. A site that loads
+categories lazily pages `Category.asyncSearch` instead, leaves every rule to the server, and keeps
+the server's order; the scope's own category and read-only categories, which the server pages
+leave out, are special rows. Held ids resolve through `Category.asyncFindByIds` either way, and
+"and all subcategories" walks the tree through `Category.asyncFindDescendants`.
 
 Until cleanup, `DSelectCategory` defaults `@legacyKind` to `category-chooser` (single) or
 `category-selector` (multiple), and the filter to `category-drop`. Call sites that replaced other
