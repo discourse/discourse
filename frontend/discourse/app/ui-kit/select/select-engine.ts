@@ -180,6 +180,12 @@ export interface SelectLoadOptions {
   offset?: number;
   /** Opaque cursor returned by the previous successful page; cleared for a new query. */
   cursor?: unknown;
+  /**
+   * The 1-based page number for a source that pages by number: 1 on a query's first request,
+   * then one more after each settled page, barren pages included. A failed or abandoned
+   * request is asked again under the same number. Set for `load` only.
+   */
+  page?: number;
   /** Cancels a superseded request. */
   signal?: AbortSignal;
 }
@@ -383,7 +389,7 @@ export interface SelectEngineOptions {
     | ((options: SelectResolvedOptions) => SelectItem[] | null | undefined);
 
   /**
-   * `(filter, { signal, offset, limit, context, options }) => items | { items, total?, hasMore? }`,
+   * `(filter, { signal, offset, limit, page, cursor, context, options }) => items | { items, total?, hasMore?, cursor? }`,
    * synchronously or as a promise. Pagination starts without a limit so the source defines
    * its page size.
    *

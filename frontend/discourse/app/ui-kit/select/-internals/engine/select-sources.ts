@@ -225,6 +225,7 @@ export class PagedSource implements SelectSource {
   #serverKeys = new Set<string>();
   #serverOffset = 0;
   #serverCursor?: unknown;
+  #serverPage = 1;
   #serverPageSize?: number;
   #serverGeneration = 0;
   #serverBarrenPages = 0;
@@ -399,6 +400,7 @@ export class PagedSource implements SelectSource {
     this.#serverKeys.clear();
     this.#serverOffset = 0;
     this.#serverCursor = undefined;
+    this.#serverPage = 1;
     this.#serverPageSize = undefined;
     this.#serverBarrenPages = 0;
     this.#barrenReveals = 0;
@@ -436,6 +438,7 @@ export class PagedSource implements SelectSource {
     const key = this.#loadKey;
     const offset = this.#serverOffset;
     const cursor = this.#serverCursor;
+    const page = this.#serverPage;
     const limit = this.#serverPageSize;
     // Started after the current task rather than inside it: this runs during render, where a
     // loader writing tracked state would fail the render and its tracked reads would turn into
@@ -450,6 +453,7 @@ export class PagedSource implements SelectSource {
         offset,
         limit,
         cursor,
+        page,
       });
       this.#answeredSynchronously =
         typeof (result as PromiseLike<unknown>)?.then !== "function";
@@ -495,6 +499,7 @@ export class PagedSource implements SelectSource {
       const truncated = this.#appendServerItems(items);
       this.#serverOffset += items.length;
       this.#serverCursor = cursor;
+      this.#serverPage++;
       const added = this.#serverItems.length - before;
 
       // Reachable only under `hasMore: true`, since silence now ends paging on its own. It is

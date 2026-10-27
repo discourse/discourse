@@ -163,11 +163,13 @@ may derive an equal array on every render (`@exclude` rebuilt after each pick) w
 an array changed in place still counts. Other values, including nested ones, compare by identity.
 
 `@load(query, opts)` returns an item array or `{ items, total?, hasMore?, cursor? }`.
-Paged sources receive the raw row `opts.offset` and a page-size `opts.limit` hint.
+Paged sources receive the raw row `opts.offset`, a page-size `opts.limit` hint, and a 1-based
+`opts.page` for an endpoint that pages by number. `opts.page` counts settled pages, barren ones
+included; a failed or abandoned page is asked again under the same number.
 The engine passes an opaque response `cursor` unchanged as the next request's `opts.cursor`.
 Only a successful, current-query page advances it; a failed page keeps the previous cursor,
-and a filter change or reload clears it. A `spec.load` wrapper must forward `(query, opts)`
-and preserve the response metadata, including `cursor`.
+and a filter change or reload clears it, as it restarts `opts.page` at 1. A `spec.load` wrapper
+must forward `(query, opts)` and preserve the response metadata, including `cursor`.
 
 Server lists have no row ceiling by default. Set `@maxLoaded` to stop at that many unique
 loaded rows and show the filter-to-narrow hint when results remain or rows were discarded.
@@ -594,8 +596,9 @@ Sources (`-internals/engine/select-sources.ts`):
 - `@items` is a client source (`LocalSource`); `@load` is a server source (`PagedSource`), even
   when it answers synchronously.
 - A `@load` that returns a plain array has returned the complete set. Return
-  `{ items, total, hasMore, cursor }` only to page: the engine keeps the offset and the cursor,
-  hands them back as `opts.offset`/`opts.cursor`, and asks again on a reveal.
+  `{ items, total, hasMore, cursor }` only to page: the engine keeps the offset, the page number and
+  the cursor, hands them back as `opts.offset`/`opts.page`/`opts.cursor`, and asks again on a
+  reveal. A recipe never counts pages itself.
 - Without `hasMore`, `total` decides whether more pages remain, and sizes the list for
   `aria-setsize`. An explicit `hasMore` wins, and `hasMore: false` ends paging. Give `hasMore`
   instead of `total` when the rows do not map one to one to the counted records.

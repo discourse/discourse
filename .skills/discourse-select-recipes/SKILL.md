@@ -41,6 +41,7 @@ Each of these means existing code is being re-implemented. Use the alternative, 
 |---|---|
 | Slicing rows by `offset`, computing `total`/`hasMore` from positions, a page size constant | Return the full array from a client loader; for a server, return `{ items, total, cursor }` and let the engine page |
 | A cursor object that counts received rows | `total` (or `hasMore` when rows and records differ); the engine counts |
+| A cursor that counts pages, or a page computed from `offset` | `opts.page`, the engine's 1-based count of settled pages |
 | De-duplicating rows (`findIndex`, `Set` of seen ids) across pages | The engine de-duplicates by key |
 | Injecting extra rows into a page and correcting `total` | `@specialItems`, with the source leaving those rows out. `@specialItems` is synchronous, so a lazy loader resolves the records those rows need before it answers; the list is built only after the load resolves |
 | Checking `signal`, `throwIfAborted`, aborting requests, caching responses | The engine drops superseded responses; models cache. Inside `control.update`, call the scope's methods after the work: they do nothing once a later change supersedes it, so no abort handling is needed |

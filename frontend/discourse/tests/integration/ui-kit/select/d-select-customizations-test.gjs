@@ -45,8 +45,10 @@ module(
         )
       );
       const cursors = [];
+      const pages = [];
       const load = (_query, opts = {}) => {
         cursors.push(opts.cursor);
+        pages.push(opts.page);
         return {
           items: [{ id: cursors.length, name: `Item ${cursors.length}` }],
           hasMore: true,
@@ -71,6 +73,11 @@ module(
         cursors.slice(0, 2),
         [undefined, "after-1"],
         "the wrapped source receives the cursor its previous page returned"
+      );
+      assert.deepEqual(
+        pages.slice(0, 2),
+        [1, 2],
+        "the wrapped source receives the page number"
       );
     });
 

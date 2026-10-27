@@ -1615,6 +1615,141 @@ module(
       );
     });
 
+    test("opts.page numbers settled pages from 1, barren ones included", async function (assert) {
+      const pages = [];
+      const load = (_filter, opts = {}) => {
+        pages.push(opts.page);
+        // The second page repeats the first, so it adds nothing but still settles.
+        const offset = pages.length === 2 ? 0 : (pages.length - 1) * 10;
+        return Promise.resolve({ items: page(offset, 10), hasMore: true });
+      };
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(pages, [1, 2, 3], "each settled page advances by one");
+    });
+
+    test("opts.page restarts at 1 for a new filter and a reload", async function (assert) {
+      const pages = [];
+      const load = (_filter, opts = {}) => {
+        pages.push(opts.page);
+        return Promise.resolve({
+          items: page(pages.length * 10, 10),
+          hasMore: true,
+        });
+      };
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+
+      engine.setFilter("q");
+      await engine.loadItems(engine.loadContext);
+
+      engine.reload();
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(pages, [1, 2, 1, 1], "a new query starts again");
+    });
+
+    test("opts.page repeats for the retry of a failed page", async function (assert) {
+      const pages = [];
+      const load = (_filter, opts = {}) => {
+        pages.push(opts.page);
+        if (pages.length === 2) {
+          return Promise.reject(new Error("offline"));
+        }
+        return Promise.resolve({
+          items: page(pages.length * 10, 10),
+          hasMore: true,
+        });
+      };
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await assert.rejects(engine.loadItems(engine.loadContext), /offline/);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(pages, [1, 2, 2], "a failure is not counted");
+    });
+
+    test("opts.page repeats for a re-ask after an aborted page", async function (assert) {
+      const pages = [];
+      let release;
+      const load = (_filter, opts = {}) => {
+        pages.push(opts.page);
+        if (pages.length === 2) {
+          return new Promise((resolve) => (release = resolve));
+        }
+        return Promise.resolve({
+          items: page(pages.length * 10, 10),
+          hasMore: true,
+        });
+      };
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      const controller = new AbortController();
+      const aborted = engine.loadItems(engine.loadContext, {
+        signal: controller.signal,
+      });
+      await Promise.resolve();
+      await Promise.resolve();
+      controller.abort();
+      await engine.loadItems(engine.loadContext);
+      release({ items: page(10, 10), hasMore: true });
+      await aborted;
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(
+        pages,
+        [1, 2, 2, 3],
+        "the aborted page is asked again under its number, and its late answer is not counted"
+      );
+    });
+
+    test("opts.page ignores a superseded query's late page", async function (assert) {
+      const pages = [];
+      let release;
+      const load = (filter, opts = {}) => {
+        pages.push(opts.page);
+        if (!filter) {
+          return new Promise((resolve) => (release = resolve));
+        }
+        return Promise.resolve({
+          items: page(pages.length * 10, 10),
+          hasMore: true,
+        });
+      };
+      const engine = new SelectEngine({ load });
+
+      const stale = engine.loadItems(engine.loadContext);
+      await Promise.resolve();
+      await Promise.resolve();
+      engine.setFilter("current");
+      await engine.loadItems(engine.loadContext);
+      release({ items: page(0, 10), hasMore: true });
+      await stale;
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(
+        pages,
+        [1, 1, 2],
+        "only the current query's pages count"
+      );
+    });
+
     test("de-duplicates each row once, not once per later page", async function (assert) {
       let keyReads = 0;
       const countedPage = (offset) =>
