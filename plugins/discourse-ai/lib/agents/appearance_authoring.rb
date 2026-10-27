@@ -5,8 +5,8 @@ module DiscourseAi
     # What the Admin Assistant's appearance tools share: who can use them, the
     # drafts they sign, and how they describe palettes on approval cards.
     module AppearanceAuthoring
-      # Changing colors and fonts, and creating a new theme, are separate
-      # features, since a site can allow one without the other.
+      # Changing colors and fonts, and creating a new theme, are checked as
+      # separate features.
       FEATURE = :appearance_authoring
       THEME_FEATURE = :theme_authoring
 

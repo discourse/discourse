@@ -264,7 +264,7 @@ module DiscourseAi
         def target_theme
           guardian = context.user.guardian
           if !guardian.can_create_color_scheme?
-            refuse(I18n.t("discourse_ai.appearance_authoring.palette_limit"))
+            refuse(I18n.t("discourse_ai.appearance_authoring.palettes_unavailable"))
           end
           return if new_theme?
 
