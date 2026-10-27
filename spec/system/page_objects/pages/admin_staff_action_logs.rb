@@ -61,27 +61,6 @@ module PageObjects
         click_button(staff_user_filter_label(user))
       end
 
-      def scroll_to_bottom
-        page.scroll_to(:bottom)
-      end
-
-      def has_loading_spinner?
-        has_css?(".staff-actions .spinner")
-      end
-
-      def has_no_loading_spinner?
-        has_no_css?(".staff-actions .spinner")
-      end
-
-      def layout_dimensions
-        page.evaluate_script(<<~JS)
-          ({
-            document_width: document.documentElement.scrollWidth,
-            viewport_width: window.innerWidth
-          })
-        JS
-      end
-
       def click_export_button
         find(".export-staff-action-logs").click
       end

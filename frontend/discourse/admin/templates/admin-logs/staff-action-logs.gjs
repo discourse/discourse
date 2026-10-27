@@ -218,10 +218,8 @@ export default <template>
             {{/each}}
           </tbody>
         </table>
-      {{else}}
-        {{#unless @controller.model.loadingMore}}
-          {{i18n "search.no_results"}}
-        {{/unless}}
+      {{else if (not @controller.model.loadingMore)}}
+        {{i18n "search.no_results"}}
       {{/if}}
       <DConditionalLoadingSpinner
         @condition={{@controller.model.loadingMore}}
