@@ -142,7 +142,11 @@ RSpec.describe PluginGem do
         locked_ruby_version: nil,
         bundler_version_to_lock: Bundler.gem_version,
       )
+    # `bundle lock` runs with the Gemfile's directory as Bundler.root and
+    # writes path gems relative to it.
+    allow(Bundler).to receive(:root).and_return(Pathname.new(dir))
     File.write(lockfile, Bundler::LockfileGenerator.generate(lock_definition))
+    allow(Bundler).to receive(:root).and_call_original
   end
 
   def locked_spec(name, version, dependencies, source)
