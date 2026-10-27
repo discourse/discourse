@@ -115,9 +115,30 @@ module(
           <template><DSelectCategoryFilter @items={{items}} /></template>
         );
 
-        assert.dom(".d-icon-angle-right", select().element()).exists();
+        assert.dom(".d-select__caret").hasClass("d-icon-angle-right");
         await select().open();
-        assert.dom(".d-icon-angle-down", select().element()).exists();
+        assert.dom(".d-select__caret").hasClass("d-icon-angle-down");
+      });
+
+      test("a customization can replace the caret", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-category-filter", (spec) =>
+              spec.options(() => ({
+                caretIcon: { open: "chevron-up", closed: "chevron-right" },
+              }))
+            );
+          })
+        );
+        const items = topLevel();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+
+        assert.dom(".d-select__caret").hasClass("d-icon-chevron-right");
+        await select().open();
+        assert.dom(".d-select__caret").hasClass("d-icon-chevron-up");
       });
 
       test("with no value it names the level", async function (assert) {
@@ -803,30 +824,35 @@ module(
         );
       });
 
-      test("mounts one local page and reports the full matching count", async function (assert) {
-        const categories = setPagedCategories();
-        await render(
-          <template><DSelectCategoryFilter @items={{categories}} /></template>
-        );
-        await dSelect().open();
-        assert.true(
-          optionValues().length < categories.length,
-          "browsing mounts one page, not the whole list"
-        );
-        assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
-        await dSelect().search("Paged category");
-        assert.true(
-          optionValues().length < categories.length,
-          "search mounts one page, not the whole list"
-        );
-        assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
-        assert.deepEqual(
-          optionValues(),
-          categories
-            .slice(0, optionValues().length)
-            .map((category) => String(category.id)),
-          "the first page retains activity order"
-        );
+      test("mounts a window of the local list and reports the full matching count", async function (assert) {
+        enableVirtualization();
+        try {
+          const categories = setPagedCategories();
+          await render(
+            <template><DSelectCategoryFilter @items={{categories}} /></template>
+          );
+          await dSelect().open();
+          assert.true(
+            optionValues().length < categories.length,
+            "browsing mounts a window, not the whole list"
+          );
+          assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
+          await dSelect().search("Paged category");
+          assert.true(
+            optionValues().length < categories.length,
+            "search mounts a window, not the whole list"
+          );
+          assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
+          assert.deepEqual(
+            optionValues(),
+            categories
+              .slice(0, optionValues().length)
+              .map((category) => String(category.id)),
+            "the window starts in activity order"
+          );
+        } finally {
+          disableVirtualization();
+        }
       });
 
       test("reveals every local search page in order", async function (assert) {

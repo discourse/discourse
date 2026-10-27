@@ -3,12 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import {
-  fetchCategoryPage,
-  knownCategories,
-} from "discourse/lib/category-source";
+import Category from "discourse/models/category";
 import type User from "discourse/models/user";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import DSelect from "discourse/ui-kit/select/d-select";
 import type {
@@ -19,11 +15,7 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
-import {
-  CategoryBadge,
-  categoryItem,
-  normalizeCategoryName,
-} from "./category-renderers.gts";
+import { CategoryBadge, categoryItem } from "./category-renderers.gts";
 import type {
   CategoryItem,
   CategoryRecord,
@@ -102,7 +94,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   @service declare siteSettings: CategorySettings;
 
   @tracked moreCount = 0;
-  @tracked private _expanded = false;
 
   get levelName() {
     if (this.args.noSubcategories || this.args.value === NO_CATEGORIES_ID) {
@@ -124,7 +115,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (typeof value !== "object" || !value) {
       return { id: value ?? ALL_CATEGORIES_ID, name: this.levelName };
     }
-    const category = knownCategories([value.id])[0];
+    const category: CategoryRecord | undefined = Category.findById(value.id);
     if (category) {
       return categoryItem(category);
     }
@@ -157,15 +148,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   }
 
   @action
-  caret(options: SelectResolvedOptions) {
-    const icon = this._expanded ? options.caretUpIcon : options.caretDownIcon;
-    if (typeof icon === "string") {
-      return icon;
-    }
-    return this._expanded ? "angle-down" : "angle-right";
-  }
-
-  @action
   load(
     query: string,
     opts: SelectLoadOptions
@@ -177,37 +159,27 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (this.site.lazy_load_categories) {
       return this.#loadPage(query, opts);
     }
-    const parent = this.args.parentCategory;
     const uncategorized = this.#uncategorized;
     const uncategorizedId = this.site.uncategorized_category_id;
-    const descriptions = this.#descriptions;
     this.moreCount = 0;
-    if (!query) {
-      const categories = (this.args.items ?? []).filter(
-        (category) => uncategorized || category.id !== uncategorizedId
+    let categories: CategoryRecord[];
+    if (query) {
+      // Every match: the list is windowed, so the model's default cap of five is not needed.
+      categories = (
+        Category.search(query, {
+          parentCategoryId: this.args.parentCategory?.id,
+          limit: Infinity,
+        }) as CategoryRecord[]
+      ).sort(
+        (a, b) =>
+          Number(!!a.parent_category_id) - Number(!!b.parent_category_id)
       );
-      return this.#localPage(categories, opts, descriptions);
+    } else {
+      categories = [...(this.args.items ?? [])];
     }
-    const term = normalizeCategoryName(query);
-    const buckets: CategoryRecord[][] = Array.from({ length: 8 }, () => []);
-    for (const category of this.site.sortedCategories) {
-      if (
-        (!uncategorized && category.id === uncategorizedId) ||
-        (parent && category.parent_category_id !== parent.id)
-      ) {
-        continue;
-      }
-      const name = normalizeCategoryName(category.name);
-      if (!name.includes(term)) {
-        continue;
-      }
-      const rank =
-        Number(!!category.parent_category_id) * 4 +
-        Number(!!category.read_restricted) * 2 +
-        Number(!name.startsWith(term));
-      buckets[rank].push(category);
-    }
-    return this.#localPage(buckets.flat(), opts, descriptions);
+    return categories
+      .filter((category) => uncategorized || category.id !== uncategorizedId)
+      .map((category) => categoryItem(category, this.#descriptions));
   }
 
   @action
@@ -224,10 +196,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (!item || Array.isArray(item)) {
       return;
     }
-    const category =
-      typeof id === "number" || typeof id === "string"
-        ? knownCategories([id])[0]
-        : undefined;
+    const category: CategoryRecord | undefined = Category.findById(id);
     if (category) {
       this.args.onChange?.(category);
       return;
@@ -235,31 +204,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (this.#isCategoryItem(item)) {
       this.args.onChange?.(item);
     }
-  }
-
-  @action
-  onClose() {
-    this._expanded = false;
-  }
-
-  @action
-  onShow() {
-    this._expanded = true;
-  }
-
-  #localPage(
-    categories: readonly CategoryRecord[],
-    opts: SelectLoadOptions,
-    descriptions: boolean
-  ) {
-    const offset = opts.offset ?? 0;
-    return {
-      items: categories
-        .slice(offset, offset + 32)
-        .map((category) => categoryItem(category, descriptions)),
-      total: categories.length,
-      hasMore: offset + 32 < categories.length,
-    };
   }
 
   #shortcuts(query: string): CategoryItem[] {
@@ -294,50 +238,40 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   }
 
   async #loadPage(query: string, opts: SelectLoadOptions) {
-    const result = await fetchCategoryPage({
-      term: query,
-      cursor: opts.cursor ?? null,
+    const page = typeof opts.cursor === "number" ? opts.cursor : 1;
+    const { categories, categoriesCount } = await Category.asyncSearch(query, {
+      includeAncestors: true,
+      includeUncategorized: this.#uncategorized,
+      page,
       parentCategoryId:
         this.args.parentCategory?.id ?? (query ? undefined : -1),
-      includeUncategorized: this.#uncategorized,
-      signal: opts.signal,
     });
-    opts.signal?.throwIfAborted();
-    const categories = result.categories.filter(
-      (category) =>
-        this.#uncategorized ||
-        category.id !== this.site.uncategorized_category_id
+    const items = categories.map((category: CategoryRecord) =>
+      categoryItem(category, this.#descriptions)
     );
-    this.moreCount = !query && result.total > 18 ? result.total - 15 : 0;
-    const shown = this.moreCount ? categories.slice(0, 15) : categories;
-    const hasMore = !!query && result.hasMore;
-    return {
-      items: shown.map((category) =>
-        categoryItem(category, this.#descriptions)
-      ),
-      hasMore,
-      total: hasMore ? result.total : undefined,
-      cursor: result.cursor,
-    };
+    if (query) {
+      this.moreCount = 0;
+      return { items, total: categoriesCount, cursor: page + 1 };
+    }
+    // A long level shows its first rows and names the rest in the footer, as the legacy drop did.
+    this.moreCount = categoriesCount > 18 ? categoriesCount - 15 : 0;
+    return this.moreCount ? items.slice(0, 15) : items;
   }
 
   <template>
     <DSelect
       class={{if this.filtering "category-drop --filtering" "category-drop"}}
       ...attributes
+      @caretIcon={{hash closed="angle-right" open="angle-down"}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @kind="select-category-filter"
       @kindContext={{hash value=@value parentCategory=@parentCategory}}
-      @kindOptions={{hash caretDownIcon="angle-right" caretUpIcon="angle-down"}}
       @label={{if @label @label this.levelName}}
       @legacyKind={{if @legacyKind @legacyKind "category-drop"}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
       @onChange={{this.onChange}}
-      @onClose={{this.onClose}}
-      @onShow={{this.onShow}}
-      @showCaret={{false}}
       @specialItems={{this.specialItems}}
       @suppressFooter={{not this.moreCount}}
       @value={{this.selection.id}}
@@ -360,11 +294,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
         {{#if (has-block "selection")}}
           {{yield item options to="selection"}}
         {{else}}
-          <span class="d-category-filter__selection">
-            {{~! Keep the badge and caret adjacent. ~}}
-            <CategoryBadge @item={{item}} />
-            {{~dIcon (this.caret options)~}}
-          </span>
+          <CategoryBadge @item={{item}} />
         {{/if}}
       </:selection>
       <:footer as |state options|>

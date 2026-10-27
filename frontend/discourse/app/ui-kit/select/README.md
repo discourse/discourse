@@ -667,16 +667,16 @@ their base values:
 ```gjs
 <DSelect
   @identifier={{@identifier}}
-  @kind="select-category-filter"
-  @kindContext={{hash value=@value parentCategory=@parentCategory}}
-  @kindOptions={{hash caretDownIcon="angle-right" caretUpIcon="angle-down"}}
+  @kind="select-example"
+  @kindOptions={{hash shownRows=15}}
   @load={{this.load}}
   @onChange={{this.onChange}}
->
-  <:selection as |item options|>…</:selection>
-</DSelect>
+/>
 ```
 
+- Declare a key only for a rule the engine has no option for. The caret, for one, is the core
+  `caretIcon` (`@caretIcon={{hash open="angle-down" closed="angle-right"}}`), which extensions
+  already override.
 - `@kindOptions` requires `@kind`, and a key named like a core key asserts. A `null` value counts
   as absent, but the key stays declared.
 - The keys are fixed when the select is created; their values stay live.
