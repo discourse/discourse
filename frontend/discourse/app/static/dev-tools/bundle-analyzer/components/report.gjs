@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { brotliLabel } from "./analysis.js";
+import { brotliLabel } from "../models/analysis.js";
 import AnalyzerToolbar from "./analyzer-toolbar.gjs";
 import EntrypointCard from "./entrypoint-card.gjs";
 import PluginCard, { pluginMatches } from "./plugin-card.gjs";

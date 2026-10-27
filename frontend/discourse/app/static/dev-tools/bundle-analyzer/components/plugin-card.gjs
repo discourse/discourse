@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { brotliLabel, fmt, matches } from "./analysis.js";
+import { brotliLabel, fmt, matches } from "../models/analysis.js";
+import Expansion from "../models/expansion.js";
+import { routeBundlesByFile } from "../models/plugins-analysis.js";
 import EntrypointCard from "./entrypoint-card.gjs";
-import Expansion from "./expansion.js";
-import { routeBundlesByFile } from "./plugins-analysis.js";
 import Row from "./row.gjs";
 
 // One plugin, expanding to the cards the core tab is built from. `main` is the

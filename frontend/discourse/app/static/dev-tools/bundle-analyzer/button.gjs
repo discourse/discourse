@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import BundleAnalyzerModal from "./modal.gjs";
+import BundleAnalyzerModal from "./components/modal.gjs";
 
 export default class BundleAnalyzerButton extends Component {
   @service modal;

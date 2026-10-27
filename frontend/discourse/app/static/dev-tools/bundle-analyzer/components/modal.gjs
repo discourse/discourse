@@ -3,14 +3,14 @@ import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import "./styles.css";
+import "../styles.css";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
-import Analysis from "./analysis.js";
-import LoadedChunks from "./loaded-chunks.js";
-import PluginsAnalysis from "./plugins-analysis.js";
+import Analysis from "../models/analysis.js";
+import LoadedChunks from "../models/loaded-chunks.js";
+import PluginsAnalysis from "../models/plugins-analysis.js";
+import ViewFilter from "../models/view-filter.js";
 import Report from "./report.gjs";
-import ViewFilter from "./view-filter.js";
 
 export default class BundleAnalyzerModal extends Component {
   @tracked analysis;

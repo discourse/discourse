@@ -8,8 +8,8 @@ import {
   matches,
   routeName,
   sizeOrDash,
-} from "./analysis.js";
-import Expansion from "./expansion.js";
+} from "../models/analysis.js";
+import Expansion from "../models/expansion.js";
 import Row from "./row.gjs";
 
 // One expandable chunk row. `@root` marks the card's own chunk rather than one

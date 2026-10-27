@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { brotliLabel, fmt, label, routeName } from "./analysis.js";
+import { brotliLabel, fmt, label, routeName } from "../models/analysis.js";
+import Expansion from "../models/expansion.js";
 import ChunkRow from "./chunk-row.gjs";
-import Expansion from "./expansion.js";
 import Row from "./row.gjs";
 
 // One entrypoint as an expandable card of the chunks it pulls in. `@baseline`
