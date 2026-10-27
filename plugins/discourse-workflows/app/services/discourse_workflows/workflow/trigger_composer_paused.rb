@@ -5,7 +5,6 @@ module DiscourseWorkflows
     include Service::Base
 
     MAX_DRAFT_KEY_LENGTH = 100
-    MAX_SESSION_ID_LENGTH = 64
 
     params do
       attribute :workflow_id, :integer
@@ -22,7 +21,11 @@ module DiscourseWorkflows
       validates :workflow_id, presence: true
       validates :trigger_node_id, presence: true
       validates :draft_key, presence: true, length: { maximum: MAX_DRAFT_KEY_LENGTH }
-      validates :session_id, presence: true, length: { maximum: MAX_SESSION_ID_LENGTH }
+      validates :session_id,
+                presence: true,
+                length: {
+                  maximum: ComposerSnapshot::MAX_SESSION_ID_LENGTH,
+                }
       validates :composer_action, inclusion: { in: ComposerSnapshot::ACTIONS }
       validates :topic_id, presence: true, if: -> { composer_action == ComposerSnapshot::REPLY }
       validate :text_within_limits
@@ -70,6 +73,7 @@ module DiscourseWorkflows
         user: guardian.user,
         action: params.composer_action,
         draft_key: params.draft_key,
+        session_id: params.session_id,
         title: params.title,
         raw: params.raw,
         category_id: params.category_id,

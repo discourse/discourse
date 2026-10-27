@@ -174,6 +174,7 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerComposerPaused do
           Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
         expect(trigger_data["topic"]).to include("id" => topic.id)
         expect(trigger_data["composer"]).to include(
+          "session_id" => "session-1",
           "topic_id" => topic.id,
           "reply_to_post_number" => 1,
         )

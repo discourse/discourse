@@ -31,20 +31,36 @@ acceptance("Discourse Workflows | Composer paused", function (needs) {
   });
 
   let requests = [];
+  let drafts = [];
 
   needs.pretender((server, helper) => {
     server.post("/discourse-workflows/trigger-composer-paused", (request) => {
       requests.push(helper.parsePostData(request.requestBody));
       return helper.response(204, "");
     });
+    server.post("/drafts.json", (request) => {
+      drafts.push(JSON.parse(helper.parsePostData(request.requestBody).data));
+      return helper.response({ success: "OK", draft_sequence: 1 });
+    });
   });
 
   needs.hooks.beforeEach(() => {
     requests = [];
+    drafts = [];
   });
 
   function channel() {
     return `/discourse-workflows/composer-message/${loggedInUser().id}`;
+  }
+
+  function composerModel(owner) {
+    return owner.lookup("service:composer").model;
+  }
+
+  function sessionId(owner) {
+    return owner
+      .lookup("service:workflows-composer-session")
+      .idFor(composerModel(owner));
   }
 
   test("fires the trigger when the user pauses after a phrase", async function (assert) {
@@ -56,19 +72,52 @@ acceptance("Discourse Workflows | Composer paused", function (needs) {
     assert.strictEqual(requests.length, 1);
     assert.strictEqual(
       requests[0].draft_key,
-      this.owner.lookup("service:composer").model.draftKey
+      composerModel(this.owner).draftKey
     );
     assert.strictEqual(requests[0].raw, "Meet me at the food stand");
+    assert.strictEqual(requests[0].session_id, sessionId(this.owner));
   });
 
-  test("shows a composer message for the open draft", async function (assert) {
+  test("a reply sends the post it targets, until it replies to the topic instead", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_3 button.reply");
+    await fillIn(".d-editor-input", "Meet me at the food stand");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Y");
+
+    assert.strictEqual(requests.length, 1);
+    assert.strictEqual(requests[0].reply_to_post_number, "3");
+
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='reply_to_topic']");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Y");
+
+    assert.strictEqual(requests.length, 2, "the new reply fires again");
+    assert.false(
+      "reply_to_post_number" in requests[1],
+      "the reply to the topic has no target"
+    );
+  });
+
+  test("autosaves carry the composer session", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const draftKey = this.owner.lookup("service:composer").model.draftKey;
+    await fillIn(".d-editor-input", "Meet me at the food stand");
+
+    assert.strictEqual(
+      drafts.at(-1)?.workflowsSessionId,
+      sessionId(this.owner)
+    );
+  });
+
+  test("shows a composer message for the open composer", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const draftKey = composerModel(this.owner).draftKey;
 
     await publishToMessageBus(channel(), {
       type: "show_composer_message",
       draft_key: "topic_1",
+      session_id: sessionId(this.owner),
       title: "Not this draft",
       body: "<p>Ignored</p>",
     });
@@ -80,6 +129,21 @@ acceptance("Discourse Workflows | Composer paused", function (needs) {
     await publishToMessageBus(channel(), {
       type: "show_composer_message",
       draft_key: draftKey,
+      session_id: "another-composer",
+      title: "Not this composer",
+      body: "<p>Ignored</p>",
+    });
+    await settled();
+    assert
+      .dom(".workflows-composer-message")
+      .doesNotExist(
+        "ignores messages for another composer with the same draft"
+      );
+
+    await publishToMessageBus(channel(), {
+      type: "show_composer_message",
+      draft_key: draftKey,
+      session_id: sessionId(this.owner),
       title: "Food resources",
       body: "<p>Our community can <a href='/categories'>help</a>.</p>",
     });
@@ -96,12 +160,14 @@ acceptance("Discourse Workflows | Composer paused", function (needs) {
   test("doesn't show a composer message once the composer is minimized", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const draftKey = this.owner.lookup("service:composer").model.draftKey;
+    const draftKey = composerModel(this.owner).draftKey;
+    const session = sessionId(this.owner);
     await click(".toggle-minimize");
 
     await publishToMessageBus(channel(), {
       type: "show_composer_message",
       draft_key: draftKey,
+      session_id: session,
       title: "Food resources",
       body: "<p>Hello</p>",
     });

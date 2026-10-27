@@ -20,6 +20,9 @@ module DiscourseWorkflows
           "draft_key" => {
             "type" => "string",
           },
+          "session_id" => {
+            "type" => %w[string null],
+          },
           "title" => {
             "type" => %w[string null],
           },

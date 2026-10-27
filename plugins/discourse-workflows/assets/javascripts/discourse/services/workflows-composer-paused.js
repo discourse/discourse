@@ -114,9 +114,9 @@ function matchesCategory(trigger, categoryId) {
 export default class WorkflowsComposerPaused extends Service {
   @service site;
   @service siteSettings;
+  @service workflowsComposerSession;
 
-  #states = new WeakMap();
-  #sessionIds = new WeakMap();
+  #sessions = new WeakMap();
   #triggers = (this.site.composer_paused_workflows || []).map((trigger) => ({
     ...trigger,
     hasPhrases: trigger.patterns.length > 0,
@@ -125,7 +125,13 @@ export default class WorkflowsComposerPaused extends Service {
 
   typingPaused(composer) {
     const action = COMPOSER_ACTIONS[composer?.action];
-    if (!action || !composer.viewOpenOrFullscreen || composer.privateMessage) {
+    // A restored reply loads its target post after opening.
+    if (
+      !action ||
+      !composer.viewOpenOrFullscreen ||
+      composer.privateMessage ||
+      composer.loading
+    ) {
       return;
     }
 
@@ -152,7 +158,7 @@ export default class WorkflowsComposerPaused extends Service {
     }
   }
 
-  // State lives on the composer model, so reopening the composer starts over.
+  // State lives in the composer session, so reopening the composer starts over.
   // Returns the newly matched patterns, or null when there is nothing to send.
   #newMatches(composer, trigger, text) {
     const state = this.#stateFor(composer, trigger);
@@ -180,29 +186,23 @@ export default class WorkflowsComposerPaused extends Service {
   }
 
   #stateFor(composer, trigger) {
-    let states = this.#states.get(composer);
-    if (!states) {
-      states = new Map();
-      this.#states.set(composer, states);
+    const sessionId = this.workflowsComposerSession.idFor(composer);
+    let session = this.#sessions.get(composer);
+    if (session?.id !== sessionId) {
+      session = { id: sessionId, states: new Map() };
+      this.#sessions.set(composer, session);
     }
 
     const key = `${trigger.workflow_id}:${trigger.trigger_node_id}`;
-    if (!states.has(key)) {
-      states.set(key, {
+    if (!session.states.has(key)) {
+      session.states.set(key, {
         matched: new Set(),
         pending: new Set(),
         text: null,
         firedAt: -Infinity,
       });
     }
-    return states.get(key);
-  }
-
-  #sessionIdFor(composer) {
-    if (!this.#sessionIds.has(composer)) {
-      this.#sessionIds.set(composer, crypto.randomUUID());
-    }
-    return this.#sessionIds.get(composer);
+    return session.states.get(key);
   }
 
   // A phrase only counts as fired once the server answered, so a failed
@@ -231,12 +231,14 @@ export default class WorkflowsComposerPaused extends Service {
         workflow_id: trigger.workflow_id,
         trigger_node_id: trigger.trigger_node_id,
         draft_key: composer.draftKey,
-        session_id: this.#sessionIdFor(composer),
+        session_id: this.workflowsComposerSession.idFor(composer),
         composer_action: action,
         title: draft.title,
         raw: draft.reply,
         category_id: composer.categoryId,
         topic_id: composer.topic?.id,
+        // A reply targets `post`; `reply_to_post_number` only changes when a
+        // post is edited.
         reply_to_post_number: composer.post?.post_number,
       },
     });

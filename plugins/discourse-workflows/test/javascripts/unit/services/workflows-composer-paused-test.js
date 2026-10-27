@@ -12,6 +12,7 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import { SESSION_ID_FIELD } from "discourse/plugins/discourse-workflows/discourse/services/workflows-composer-session";
 
 // Same shape as the server's watched word regexps.
 const WORD = "[\\p{L}\\p{M}\\p{N}\\p{Pc}]";
@@ -117,6 +118,61 @@ module(
         this.requests[2].session_id,
         "a new draft gets a new session"
       );
+    });
+
+    test("reopening a composer starts a new session", async function (assert) {
+      this.setTriggers([trigger({ patterns: [pattern("Magic words")] })]);
+      const composer = this.openDraft();
+
+      await this.pause(composer, "Magic words");
+      // opening the composer again restores the draft's fields
+      composer.set(SESSION_ID_FIELD, "saved-in-the-draft");
+      await this.pause(composer, "Magic words!");
+
+      assert.strictEqual(this.requests.length, 2, "the phrase fires again");
+      assert.notStrictEqual(
+        this.requests[0].session_id,
+        this.requests[1].session_id,
+        "in a new session"
+      );
+      assert.strictEqual(
+        composer.get(SESSION_ID_FIELD),
+        this.requests[1].session_id,
+        "which the draft keeps"
+      );
+    });
+
+    test("a reply sends the post it targets", async function (assert) {
+      this.setTriggers([trigger({ patterns: [pattern("Magic words")] })]);
+      const topic = { id: 2, category_id: 1 };
+
+      await this.pause(
+        this.openDraft({ action: REPLY, topic, post: { post_number: 3 } }),
+        "Magic words"
+      );
+      await this.pause(this.openDraft({ action: REPLY, topic }), "Magic words");
+
+      assert.strictEqual(this.requests[0].reply_to_post_number, "3");
+      assert.false(
+        "reply_to_post_number" in this.requests[1],
+        "a reply to the topic has no target"
+      );
+    });
+
+    test("a restored reply waits for its target post to load", async function (assert) {
+      this.setTriggers([trigger({ patterns: [pattern("Magic words")] })]);
+      const composer = this.openDraft({
+        action: REPLY,
+        topic: { id: 2, category_id: 1 },
+        loading: true,
+      });
+
+      await this.pause(composer, "Magic words");
+      assert.strictEqual(this.requests.length, 0, "skips pauses while loading");
+
+      composer.setProperties({ loading: false, post: { post_number: 3 } });
+      await this.pause(composer, "Magic words!");
+      assert.strictEqual(this.requests[0].reply_to_post_number, "3");
     });
 
     test("a phrase fires again only when the request failed", async function (assert) {

@@ -10,9 +10,12 @@ RSpec.describe DiscourseWorkflows::ComposerTarget do
     )
   end
 
-  it "reads the draft key from the trigger, not the current items" do
-    expect(described_class.from(exec_ctx({ "composer" => { "draft_key" => "topic_12" } }))).to eq(
+  it "reads the composer from the trigger, not the current items" do
+    trigger_data = { "composer" => { "draft_key" => "topic_12", "session_id" => "session-1" } }
+
+    expect(described_class.from(exec_ctx(trigger_data))).to eq(
       draft_key: "topic_12",
+      session_id: "session-1",
     )
   end
 
@@ -22,7 +25,10 @@ RSpec.describe DiscourseWorkflows::ComposerTarget do
       { "composer" => { "draft_key" => "topic_12" } },
     ]
 
-    expect(described_class.from(exec_ctx(trigger_data), 1)).to eq(draft_key: "topic_12")
+    expect(described_class.from(exec_ctx(trigger_data), 1)).to eq(
+      draft_key: "topic_12",
+      session_id: nil,
+    )
   end
 
   it "returns nil when another trigger started the workflow" do

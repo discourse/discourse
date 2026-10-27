@@ -50,6 +50,7 @@ module DiscourseWorkflows
             {
               type: "show_composer_message",
               draft_key: target[:draft_key],
+              session_id: target[:session_id],
               title: exec_ctx.get_node_parameter("title", 0).to_s,
               body: PrettyText.cook(exec_ctx.get_node_parameter("body", 0).to_s),
             },

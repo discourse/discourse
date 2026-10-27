@@ -10,7 +10,10 @@ module DiscourseWorkflows
       return if !trigger_data.is_a?(Hash)
 
       draft_key = trigger_data.dig("composer", "draft_key")
-      { draft_key: } if draft_key.is_a?(String) && draft_key.present?
+      return if !draft_key.is_a?(String) || draft_key.blank?
+
+      session_id = trigger_data.dig("composer", "session_id")
+      { draft_key:, session_id: session_id.is_a?(String) ? session_id : nil }
     end
   end
 end

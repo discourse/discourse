@@ -27,6 +27,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ComposerPaused::V1 do
       expect(output[:composer]).to eq(
         action: "create_topic",
         draft_key: "new_topic",
+        session_id: nil,
         title: "Lunch review",
         raw: "Some text",
         category_id: category.id,
@@ -42,6 +43,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ComposerPaused::V1 do
           snapshot(
             action: "reply",
             draft_key: "topic_#{topic.id}",
+            session_id: "session-1",
             topic:,
             reply_to_post_number: 2,
           ),
@@ -51,6 +53,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ComposerPaused::V1 do
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output[:composer]).to include(
         action: "reply",
+        session_id: "session-1",
         topic_id: topic.id,
         category_id: category.id,
         reply_to_post_number: 2,

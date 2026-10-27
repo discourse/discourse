@@ -43,7 +43,7 @@ RSpec.describe DiscourseWorkflows::ComposerPausedDraftListener do
   end
 
   it "fires once per phrase for each draft" do
-    save_draft("Some magic words", title: "Lunch review")
+    save_draft("Some magic words", title: "Lunch review", workflowsSessionId: "session-1")
     save_draft("Some magic words, and more magic words")
     save_draft("Magic words. food stand")
 
@@ -52,7 +52,8 @@ RSpec.describe DiscourseWorkflows::ComposerPausedDraftListener do
     )
     expect(enqueued_trigger_data.first).to include(
       "user" => include("id" => user.id),
-      "composer" => include("draft_key" => "new_topic", "title" => "Lunch review"),
+      "composer" =>
+        include("draft_key" => "new_topic", "session_id" => "session-1", "title" => "Lunch review"),
     )
     expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.first["args"].first["user_id"]).to eq(
       user.id,
@@ -78,7 +79,28 @@ RSpec.describe DiscourseWorkflows::ComposerPausedDraftListener do
 
     expect(enqueued_trigger_data.first).to include(
       "topic" => include("id" => topic.id),
-      "composer" => include("action" => "reply", "topic_id" => topic.id),
+      "composer" =>
+        include("action" => "reply", "topic_id" => topic.id, "reply_to_post_number" => nil),
+    )
+  end
+
+  it "reads a reply's target from the draft's post" do
+    draft_key = "topic_#{topic.id}"
+    target = Fabricate(:post, topic:)
+
+    [target.id, Fabricate(:post).id, [target.id]].each do |post_id|
+      save_draft(
+        "Magic words",
+        draft_key:,
+        action: "reply",
+        postId: post_id,
+        reply_to_post_number: nil,
+      )
+      Draft.clear(user, draft_key, DraftSequence.current(user, draft_key))
+    end
+
+    expect(enqueued_trigger_data.map { |data| data.dig("composer", "reply_to_post_number") }).to eq(
+      [target.post_number, nil, nil],
     )
   end
 

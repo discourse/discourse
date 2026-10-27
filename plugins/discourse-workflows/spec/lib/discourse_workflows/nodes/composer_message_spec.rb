@@ -8,7 +8,9 @@ RSpec.describe DiscourseWorkflows::Nodes::ComposerMessage::V1 do
 
   let(:config) { { "title" => "Food resources", "body" => "Visit [our guide](/t/1)" } }
   let(:context_user) { user }
-  let(:trigger_data) { { "composer" => { "draft_key" => "new_topic" } } }
+  let(:trigger_data) do
+    { "composer" => { "draft_key" => "new_topic", "session_id" => "session-1" } }
+  end
   let(:execution_context) do
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: [{ "json" => { "anything" => true } }],
@@ -36,6 +38,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ComposerMessage::V1 do
       expect(messages.first.data).to eq(
         type: "show_composer_message",
         draft_key: "new_topic",
+        session_id: "session-1",
         title: "Food resources",
         body: PrettyText.cook("Visit [our guide](/t/1)"),
       )

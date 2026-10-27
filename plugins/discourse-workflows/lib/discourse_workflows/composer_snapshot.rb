@@ -7,6 +7,10 @@ module DiscourseWorkflows
     REPLY = "reply"
     ACTIONS = [CREATE_TOPIC, REPLY].freeze
     DRAFT_ACTIONS = { "createTopic" => CREATE_TOPIC, "reply" => REPLY }.freeze
+    # The browser keeps its composer session in the draft, so an autosave's workflow can answer
+    # the composer that saved it.
+    DRAFT_SESSION_ID_FIELD = "workflowsSessionId"
+    MAX_SESSION_ID_LENGTH = 64
 
     # Attributes are capped so that a tag without its closing bracket can't make
     # scanning quadratic.
@@ -18,6 +22,7 @@ module DiscourseWorkflows
     attr_reader :user,
                 :action,
                 :draft_key,
+                :session_id,
                 :title,
                 :raw,
                 :category_id,
@@ -42,12 +47,20 @@ module DiscourseWorkflows
         user:,
         action:,
         draft_key:,
+        session_id: data[DRAFT_SESSION_ID_FIELD],
         title: data["title"],
         raw: data["reply"],
         category_id: data["categoryId"],
         topic:,
-        reply_to_post_number: data["reply_to_post_number"],
+        reply_to_post_number: topic && reply_target_post_number(topic, data["postId"]),
       )
+    end
+
+    # A reply's draft keeps its target as `postId`; its `reply_to_post_number` only changes
+    # when a post is edited.
+    def self.reply_target_post_number(topic, post_id)
+      post_id = Integer(post_id, exception: false)
+      topic.posts.where(id: post_id).pick(:post_number) if post_id
     end
 
     # Drafts can be far longer than a post, so every step here is linear in the text length.
@@ -102,6 +115,7 @@ module DiscourseWorkflows
       action:,
       draft_key:,
       raw:,
+      session_id: nil,
       title: nil,
       category_id: nil,
       topic: nil,
@@ -110,6 +124,9 @@ module DiscourseWorkflows
       @user = user
       @action = action.to_s
       @draft_key = draft_key.to_s
+      if session_id.is_a?(String) && session_id.length <= MAX_SESSION_ID_LENGTH
+        @session_id = session_id.presence
+      end
       # Matching never looks past what a post can hold.
       @title = title.to_s[0, SiteSetting.max_topic_title_length].presence
       @raw = raw.to_s[0, SiteSetting.max_post_length]
@@ -149,6 +166,7 @@ module DiscourseWorkflows
       {
         action:,
         draft_key:,
+        session_id:,
         title:,
         raw:,
         category_id: filter_category_id,
