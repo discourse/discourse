@@ -316,17 +316,15 @@ class PostActionCreator
       end
     end
 
-    if post_action
-      case @post_action_type_id
-      when *@post_action_type_view.notify_flag_type_ids
-        DiscourseEvent.trigger(:flag_created, post_action, self)
-      when @post_action_type_view.types[:like]
+    case @post_action_type_id
+    when *@post_action_type_view.notify_flag_type_ids
+      DiscourseEvent.trigger(:flag_created, post_action, self)
+    when @post_action_type_view.types[:like]
+      # A like that lost a race with a concurrent one fails validation and was never saved.
+      if post_action.persisted? && post_action.errors.empty?
         DiscourseEvent.trigger(:like_created, post_action, self)
+        GivenDailyLike.increment_for(@created_by.id)
       end
-    end
-
-    if @post_action_type_id == @post_action_type_view.types[:like]
-      GivenDailyLike.increment_for(@created_by.id)
     end
 
     post_action

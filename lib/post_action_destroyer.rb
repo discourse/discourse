@@ -31,7 +31,8 @@ class PostActionDestroyer
 
     finder =
       PostAction.where(user: @destroyed_by, post: @post, post_action_type_id: @post_action_type_id)
-    finder = finder.with_deleted if @destroyed_by.staff?
+    # A trashed like is already undone, so undoing it again would double count the unlike.
+    finder = finder.with_deleted if @destroyed_by.staff? && !like?
     post_action = finder.first
 
     if post_action.blank?
@@ -58,9 +59,7 @@ class PostActionDestroyer
       post_action.post.acting_user = @destroyed_by
       post_action.post.unhide!
     end
-    if @post_action_type_id == post_action_type_view.types[:like]
-      GivenDailyLike.decrement_for(@destroyed_by.id)
-    end
+    GivenDailyLike.decrement_for(@destroyed_by.id) if like?
 
     case @post_action_type_id
     when *post_action_type_view.notify_flag_type_ids
@@ -80,6 +79,10 @@ class PostActionDestroyer
   end
 
   protected
+
+  def like?
+    @post_action_type_id == post_action_type_view.types[:like]
+  end
 
   def notify_subscribers
     name = post_action_type_view.types[@post_action_type_id]
