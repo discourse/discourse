@@ -175,6 +175,8 @@ after_initialize do
       SiteSetting.live_screen_share_allowed_groups.present?
   end
 
+  add_to_serializer(:site, :live_reaction_emojis) { Live::Reactions.emojis }
+
   Live::DefaultRoomSeeder.ensure! if SiteSetting.live_enabled?
   Live::AgentBot.ensure! if SiteSetting.live_enabled?
 

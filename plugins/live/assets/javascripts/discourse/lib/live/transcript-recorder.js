@@ -1,5 +1,7 @@
 // Accumulates a meeting transcript from the subtitles pipeline: one entry per
 // final utterance, with the speaker and the utterance's start wall-clock.
+// In-call reactions are interleaved as entries carrying `reactions` instead
+// of `text`.
 //
 // Recording is scoped to a single room. Interim captions never land here —
 // only finals do — and a null-text final withdraws the entry (a VAD misfire,
@@ -14,6 +16,7 @@ export default class TranscriptRecorder {
   // so a consumer can still attribute the finished transcript.
   #entriesRoomId = null;
   #startedAt = null;
+  #reactionCounter = 0;
 
   constructor({ onChange }) {
     this.#onChange = onChange;
@@ -102,4 +105,51 @@ export default class TranscriptRecorder {
     ];
     this.#onChange();
   }
+
+  // Reactions between two utterances fold into one entry per reacting user,
+  // so a burst of applause reads as a single line instead of drowning out
+  // what was said.
+  recordReaction(roomId, userId, username, emoji, at = Date.now()) {
+    if (!this.recording || Number(roomId) !== Number(this.#roomId)) {
+      return;
+    }
+
+    const lastUtterance = this.#entries.findLastIndex(
+      (entry) => !entry.reactions
+    );
+    const groupIndex = this.#entries.findIndex(
+      (entry, index) =>
+        index > lastUtterance && Number(entry.userId) === Number(userId)
+    );
+
+    if (groupIndex === -1) {
+      this.#entries = [
+        ...this.#entries,
+        {
+          reactionId: ++this.#reactionCounter,
+          userId,
+          username,
+          reactions: [{ emoji, count: 1 }],
+          startedAt: at,
+        },
+      ];
+    } else {
+      this.#entries = this.#entries.map((entry, index) =>
+        index === groupIndex
+          ? { ...entry, reactions: addReaction(entry.reactions, emoji) }
+          : entry
+      );
+    }
+    this.#onChange();
+  }
+}
+
+function addReaction(reactions, emoji) {
+  return reactions.some((reaction) => reaction.emoji === emoji)
+    ? reactions.map((reaction) =>
+        reaction.emoji === emoji
+          ? { ...reaction, count: reaction.count + 1 }
+          : reaction
+      )
+    : [...reactions, { emoji, count: 1 }];
 }
