@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import type RouterService from "@ember/routing/router-service";
 import { service } from "@ember/service";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -12,16 +13,128 @@ import {
   isTrackedTopic,
 } from "discourse/lib/topic-list-tracked-filter";
 import Category from "discourse/models/category";
+import type { RestModelStoreAttrs } from "discourse/models/rest";
 import Site from "discourse/models/site";
+import type TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
+import type SiteSettingsService from "discourse/services/site-settings";
+import type StoreService from "discourse/services/store";
 import { i18n } from "discourse-i18n";
 
-export default class NavItem extends EmberObject {
-  static extraArgsCallbacks = [];
-  static customNavItemHrefs = [];
-  static extraNavItemDescriptors = [];
+export interface NavItemContext {
+  category?: Category;
+  tag?: { id?: number; slug?: string };
+  noSubcategories?: boolean;
+}
 
-  static pathFor(filterType, context) {
+/** Build options preserve filterType and filterMode as distinct inputs. */
+export interface NavItemOptions extends NavItemContext {
+  tagId?: number;
+  currentRouteQueryParams?: Record<string, unknown>;
+  /** TODO(typescript-pending): the site-settings factory has no typed setting keys; remove the extension when it declares top_menu. */
+  siteSettings?: {
+    [K in keyof ReturnType<typeof SiteSettingsService.create>]: unknown;
+  } & {
+    top_menu: string;
+  };
+  filterType?: string;
+  filterMode?: string;
+  skipCategoriesNavItem?: boolean;
+}
+
+/** Creation-only state; getters and tracked fields are declared on the class. */
+export interface NavItemFields
+  extends
+    RestModelStoreAttrs,
+    Omit<
+      NavItemOptions,
+      | "tag"
+      | "siteSettings"
+      | "filterMode"
+      | "filterType"
+      | "skipCategoriesNavItem"
+    > {
+  active?: boolean;
+  hasIcon?: boolean;
+  includeCategoryId?: boolean;
+  classNames?: string;
+}
+
+/** Filter callbacks are tested for truthiness; existing extensions also return user objects. */
+export type ExtraNavItemFilter = (
+  category: Category | null | undefined,
+  args: NavItemOptions
+) => unknown;
+
+/** Direct registrations receive two context arguments; init receives the item first. */
+export interface NavItemDescriptor extends Partial<NavItemFields> {
+  name: string;
+  displayName?: string;
+  title?: string;
+  href?: string;
+  count?: number;
+  before?: string;
+  customFilter?: ExtraNavItemFilter | null;
+  customHref?: (
+    category: Category | null | undefined,
+    args: NavItemOptions
+  ) => string | undefined;
+  forceActive?: ExtraNavItemFilter;
+  init?: (
+    item: ExtraNavItem,
+    category: Category | null | undefined,
+    args: NavItemOptions
+  ) => void;
+}
+
+/** The plugin API appends the router before registering the descriptor. */
+export interface NavigationBarItem extends Omit<
+  NavItemDescriptor,
+  "customFilter" | "customHref" | "forceActive" | "init"
+> {
+  customFilter?: (
+    category: Category | null | undefined,
+    args: NavItemOptions,
+    router: RouterService
+  ) => unknown;
+  customHref?: (
+    category: Category | null | undefined,
+    args: NavItemOptions,
+    router: RouterService
+  ) => string | undefined;
+  forceActive?: (
+    category: Category | null | undefined,
+    args: NavItemOptions,
+    router: RouterService
+  ) => unknown;
+  init?: (
+    item: ExtraNavItem,
+    category: Category | null | undefined,
+    args: NavItemOptions,
+    router: RouterService
+  ) => void;
+}
+
+export type ExtraNavItemPropertiesCallback = (
+  this: typeof NavItem,
+  filterType: string,
+  opts: NavItemOptions
+) => Partial<NavItem>;
+export type CustomNavItemHrefCallback = (
+  this: NavItem,
+  item: NavItem
+) => string | null | undefined;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface NavItem extends NavItemFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export default class NavItem extends EmberObject {
+  static extraArgsCallbacks: ExtraNavItemPropertiesCallback[] = [];
+  static customNavItemHrefs: CustomNavItemHrefCallback[] = [];
+  static extraNavItemDescriptors: NavItemDescriptor[] = [];
+
+  static pathFor(filterType: string, context: NavItemContext): string {
     let path = getURL("");
     let includesCategoryContext = false;
     let includesTagContext = false;
@@ -53,7 +166,7 @@ export default class NavItem extends EmberObject {
 
     if (includesTagContext) {
       // use canonical URL format with slug/id when id is available
-      path += tag.id ? `/${tag.slug}/${tag.id}` : `/${tag.slug}`;
+      path += tag!.id ? `/${tag!.slug}/${tag!.id}` : `/${tag!.slug}`;
     }
 
     if (includesTagContext || includesCategoryContext) {
@@ -68,9 +181,8 @@ export default class NavItem extends EmberObject {
     return path;
   }
 
-  // Create a nav item given a filterType. It returns null if there is not
-  // valid nav item. The name is a historical artifact.
-  static fromText(filterType, opts) {
+  /** Create a nav item given a filterType, or null if unavailable. The name is a historical artifact. */
+  static fromText(filterType: string, opts?: NavItemOptions): NavItem | null {
     const anonymous = !User.current();
 
     opts = opts || {};
@@ -85,11 +197,15 @@ export default class NavItem extends EmberObject {
     if (!Category.list() && filterType === "categories") {
       return null;
     }
-    if (!Site.currentProp("top_menu_items").includes(filterType)) {
+    if (!Site.currentProp("top_menu_items")!.includes(filterType)) {
       return null;
     }
 
-    let args = { name: filterType, hasIcon: filterType === "unread" };
+    // eslint-disable-next-line prefer-const -- Preserve the original declaration in this types-only port.
+    let args: Partial<NavItem> = {
+      name: filterType,
+      hasIcon: filterType === "unread",
+    };
     if (opts.category) {
       args.category = opts.category;
     }
@@ -106,11 +222,16 @@ export default class NavItem extends EmberObject {
       deepMerge(args, cb.call(this, filterType, opts))
     );
 
+    // TODO(typescript-pending): remove the store assertion when getOwnerWithFallback publishes typed service lookups.
+    // eslint-disable-next-line prefer-const -- Preserve the original declaration in this types-only port.
     let store = getOwnerWithFallback(this).lookup("service:store");
-    return store.createRecord("nav-item", args);
+    return (store as StoreService).createRecord("nav-item", args);
   }
 
-  static buildList(category, args) {
+  static buildList(
+    category: Category | undefined,
+    args?: NavItemOptions
+  ): NavItem[] {
     args = args || {};
 
     if (category) {
@@ -126,19 +247,20 @@ export default class NavItem extends EmberObject {
         "service:site-settings"
       );
     }
-    let items = args.siteSettings.top_menu.split("|");
+    let items: (string | NavItem | null)[] =
+      args.siteSettings!.top_menu.split("|");
 
     const user = getOwnerWithFallback(this).lookup("service:current-user");
     if (user?.unified_new_enabled) {
       items = items.filter((item) => item !== "unread");
     }
-    const filterType = (args.filterMode || "").split("/").pop();
+    const filterType = (args.filterMode || "").split("/").pop()!;
 
     if (!items.some((i) => filterType === i)) {
       items.push(filterType);
     }
 
-    items = items
+    items = (items as string[])
       .map((i) => NavItem.fromText(i, args))
       .filter((i) => {
         if (i === null) {
@@ -162,9 +284,12 @@ export default class NavItem extends EmberObject {
       noSubcategories: args.noSubcategories,
     };
 
+    // TODO(typescript-pending): remove the descriptor assertion when deepMerge preserves its input shapes.
     const extraItems = NavItem.extraNavItemDescriptors
       .map((descriptor) =>
-        ExtraNavItem.create(deepMerge({}, context, descriptor))
+        ExtraNavItem.create(
+          deepMerge({}, context, descriptor) as NavItemDescriptor
+        )
       )
       .filter((item) => {
         if (!item.customFilter) {
@@ -184,7 +309,7 @@ export default class NavItem extends EmberObject {
       if (before) {
         let i;
         for (i = 0; i < items.length; i++) {
-          if (items[i].name === before) {
+          if ((items[i] as NavItem).name === before) {
             break;
           }
         }
@@ -194,7 +319,8 @@ export default class NavItem extends EmberObject {
       }
 
       if (item.customHref) {
-        item.href = item.customHref(category, args);
+        // The public href contract is string; an untyped extension can still return undefined.
+        item.href = item.customHref(category, args) as string;
       } else if (item.href) {
         item.href = getURL(item.href);
       }
@@ -209,24 +335,24 @@ export default class NavItem extends EmberObject {
 
     if (forceActive) {
       items.forEach((i) => {
-        if (i.active === undefined) {
-          i.active = false;
+        if ((i as NavItem).active === undefined) {
+          (i as NavItem).active = false;
         }
       });
     }
-    return items;
+    return items as NavItem[];
   }
 
-  @service topicTrackingState;
-  @service currentUser;
+  @service declare topicTrackingState: TopicTrackingState;
+  @service declare currentUser: User | null;
 
-  @tracked name;
-  @tracked tag;
+  @tracked name!: string;
+  @tracked tag?: NavItemContext["tag"];
 
-  @tracked _title;
-  @tracked _displayName;
+  @tracked _title?: string;
+  @tracked _displayName?: string;
 
-  @tracked _filterTypeOverride;
+  @tracked _filterTypeOverride?: string;
 
   @dependentKeyCompat
   get filterType() {
@@ -236,7 +362,7 @@ export default class NavItem extends EmberObject {
     return this.name;
   }
 
-  set filterType(value) {
+  set filterType(value: string) {
     this._filterTypeOverride = value;
   }
 
@@ -255,7 +381,7 @@ export default class NavItem extends EmberObject {
     return i18n("filters." + nameKey + ".help", {});
   }
 
-  set title(value) {
+  set title(value: string) {
     this._title = value;
   }
 
@@ -274,6 +400,7 @@ export default class NavItem extends EmberObject {
       count = 0;
     }
 
+    // eslint-disable-next-line prefer-const -- Preserve the original declaration in this types-only port.
     let extra = { count };
     const titleKey = count === 0 ? ".title" : ".title_with_count";
 
@@ -282,15 +409,15 @@ export default class NavItem extends EmberObject {
     );
   }
 
-  set displayName(value) {
+  set displayName(value: string) {
     this._displayName = value;
   }
 
   @computed("filterType", "category", "noSubcategories", "tag")
-  get href() {
-    let customHref = null;
+  get href(): string {
+    let customHref: string | null | undefined = null;
 
-    NavItem.customNavItemHrefs.forEach(function (cb) {
+    NavItem.customNavItemHrefs.forEach(function (this: NavItem, cb) {
       customHref = cb.call(this, this);
       if (customHref) {
         return false;
@@ -331,7 +458,7 @@ export default class NavItem extends EmberObject {
     "currentRouteQueryParams",
     "topicTrackingState.messageCount"
   )
-  get count() {
+  get count(): number | undefined {
     return this.topicTrackingState?.lookupCount({
       type: this.name,
       category: this.category,
@@ -344,19 +471,50 @@ export default class NavItem extends EmberObject {
   }
 }
 
-export class ExtraNavItem extends NavItem {
-  @tracked href;
-  @tracked count = 0;
+/** Erased constructor view permits the writable tracked overrides of computed accessors. */
+type WritableNavItemBase = Omit<typeof NavItem, "prototype"> & {
+  new (...args: ConstructorParameters<typeof NavItem>): Omit<
+    NavItem,
+    "href" | "count" | "init"
+  > & {
+    init(properties?: object): void;
+  };
+};
 
-  /** @type {((category: Category | null | undefined, args: Record<string, unknown>) => boolean) | null} */
-  customFilter = null;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export interface ExtraNavItem extends Pick<
+  NavItemDescriptor,
+  "before" | "customHref" | "forceActive"
+> {
+  init: {
+    (properties?: object): void;
+    (
+      item: ExtraNavItem,
+      category: Category | undefined,
+      args: NavItemOptions
+    ): void;
+  };
 }
 
-export function extraNavItemProperties(cb) {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export class ExtraNavItem extends (NavItem as WritableNavItemBase) {
+  declare static create: <C extends new (...args: never[]) => ExtraNavItem>(
+    this: C,
+    attrs?: Partial<Omit<InstanceType<C>, "init">> &
+      Pick<NavItemDescriptor, "init">
+  ) => InstanceType<C>;
+
+  @tracked href!: string;
+  @tracked count = 0;
+
+  customFilter: ExtraNavItemFilter | null = null;
+}
+
+export function extraNavItemProperties(cb: ExtraNavItemPropertiesCallback) {
   NavItem.extraArgsCallbacks.push(cb);
 }
 
-export function customNavItemHref(cb) {
+export function customNavItemHref(cb: CustomNavItemHrefCallback) {
   NavItem.customNavItemHrefs.push(cb);
 }
 
@@ -366,6 +524,6 @@ export function clearNavItems() {
   NavItem.extraNavItemDescriptors.length = 0;
 }
 
-export function addNavItem(item) {
+export function addNavItem(item: NavItemDescriptor) {
   NavItem.extraNavItemDescriptors.push(item);
 }

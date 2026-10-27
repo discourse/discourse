@@ -7,31 +7,79 @@ import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import PreloadStore from "discourse/lib/preload-store";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import type {
+  CategoryFields,
+  default as Category,
+} from "discourse/models/category";
 import Site from "discourse/models/site";
-import Topic from "discourse/models/topic";
+import Topic, { type TopicCreateAttrs } from "discourse/models/topic";
+import type { TopicListParams } from "discourse/models/topic-list";
+import type StoreService from "discourse/services/store";
 import { i18n } from "discourse-i18n";
+
+/** Detailed categories contain listable topic payloads and recursively serialized children. */
+export interface CategoryListCategory extends Omit<
+  CategoryFields,
+  "topics" | "subcategory_list"
+> {
+  topics?: (TopicCreateAttrs<Topic> | Topic)[];
+  subcategory_list?: CategoryListCategory[];
+}
+
+export interface CategoryListEnvelope {
+  category_list?: {
+    categories?: CategoryListCategory[];
+    can_create_category?: boolean;
+    can_create_topic?: boolean;
+  };
+}
+
+/** Only the combined categories page installs loadBefore; it does not initialize params. */
+export interface CategoryListFields {
+  params?: TopicListParams;
+  loadBefore?: (topicIds: number[], storeInSession?: boolean) => Promise<void>;
+}
+
+export type CategoryListCreateAttrs<M = CategoryList> = Partial<
+  Omit<M, "parentCategory">
+> & {
+  categories?: Category[];
+  parentCategory?: Pick<Category, "id"> | null;
+} & Record<string, unknown>;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface CategoryList extends CategoryListFields {}
 
 const STAT_PERIODS = ["week", "month"];
 
 /**
  * Represents a list of categories with their related metadata and functionality
  */
-export default class CategoryList extends LegacyArrayLikeObject {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export default class CategoryList extends LegacyArrayLikeObject<Category> {
   /**
    * Creates category objects from API result data
    *
-   * @param {import("discourse/services/store").default} store - The store instance
-   * @param {Record<string, unknown>} result - The API result containing category data
-   * @param {import("discourse/models/category").default | null} [parentCategory] - Optional parent category
-   * @returns {CategoryList} A new CategoryList instance with the processed categories
+   * @param store - The store instance
+   * @param result - The API result containing category data
+   * @param parentCategory - Optional parent category
    */
-  static categoriesFrom(store, result, parentCategory = null) {
+  static categoriesFrom(
+    store: StoreService,
+    result: CategoryListEnvelope | null | undefined,
+    parentCategory: Pick<Category, "id"> | null = null
+  ) {
     // Find the period that is most relevant
     const list = result?.category_list?.categories || [];
     const statPeriod =
       STAT_PERIODS.find(
         (period) =>
-          list.filter((c) => c?.[`topics_${period}`] > 0).length >=
+          list.filter(
+            (c) =>
+              (c?.[
+                `topics_${period}` as "topics_week" | "topics_month"
+              ] as number) > 0
+          ).length >=
           list.length * 0.66
       ) || "all";
 
@@ -40,13 +88,14 @@ export default class CategoryList extends LegacyArrayLikeObject {
     list.forEach((c) => Site.current().updateCategory(c));
 
     const categories = CategoryList.create({ store });
-    list.forEach((c) => {
+    list.forEach((c: CategoryListCategory | Category) => {
       c = this._buildCategoryResult(c, statPeriod);
       if (
         (parentCategory && c.parent_category_id === parentCategory.id) ||
         (!parentCategory && !c.parent_category_id)
       ) {
-        categories.content.push(c);
+        // The reassigned callback parameter now holds the hydrated Category.
+        categories.content.push(c as Category);
       }
     });
     return categories;
@@ -54,19 +103,27 @@ export default class CategoryList extends LegacyArrayLikeObject {
 
   /**
    * Builds a category result object with stats and topic data
-   * @param {Object} rawCategoryData - The raw category data
-   * @param {string} statPeriod - The period to use for stats ('week', 'month', or 'all')
-   * @returns {Category} The processed category object
-   * @private
+   * @param rawCategoryData - The raw category data
+   * @param statPeriod - The period to use for stats ('week', 'month', or 'all')
+   * @internal
    */
-  static _buildCategoryResult(rawCategoryData, statPeriod) {
+  static _buildCategoryResult(
+    rawCategoryData: CategoryListCategory,
+    statPeriod: string
+  ) {
     if (rawCategoryData.topics?.length) {
       rawCategoryData.topics = rawCategoryData.topics.map((t) =>
-        Topic.create(t)
+        Topic.create(t as TopicCreateAttrs<Topic>)
       );
     }
 
-    const stat = rawCategoryData[`topics_${statPeriod}`];
+    const stat =
+      rawCategoryData[
+        `topics_${statPeriod}` as
+          | "topics_week"
+          | "topics_month"
+          | "topics_all_time"
+      ]!;
     const isTimedPeriod = statPeriod === "week" || statPeriod === "month";
     if (isTimedPeriod && stat > 0) {
       const unit = i18n(`categories.topic_stat_unit.${statPeriod}`);
@@ -86,17 +143,17 @@ export default class CategoryList extends LegacyArrayLikeObject {
 
       rawCategoryData.pickAll = false;
     } else {
-      rawCategoryData.stat = `<span class="value">${number(rawCategoryData.topics_all_time)}</span>`;
+      rawCategoryData.stat = `<span class="value">${number(rawCategoryData.topics_all_time!)}</span>`;
       rawCategoryData.statTitle = i18n("categories.topic_sentence", {
-        count: rawCategoryData.topics_all_time,
+        count: rawCategoryData.topics_all_time!,
       });
       rawCategoryData.pickAll = true;
     }
 
     if (Site.current().mobileView) {
       rawCategoryData.statTotal = i18n("categories.topic_stat_all_time", {
-        count: rawCategoryData.topics_all_time,
-        number: `<span class="value">${number(rawCategoryData.topics_all_time)}</span>`,
+        count: rawCategoryData.topics_all_time!,
+        number: `<span class="value">${number(rawCategoryData.topics_all_time!)}</span>`,
       });
     }
 
@@ -108,7 +165,10 @@ export default class CategoryList extends LegacyArrayLikeObject {
   /**
    * @deprecated Use list() instead
    */
-  static listForParent(store, parentCategory) {
+  static listForParent(
+    store: StoreService,
+    parentCategory: Pick<Category, "id"> | null
+  ) {
     deprecated(
       "The listForParent method of CategoryList is deprecated. Use list instead",
       { id: "discourse.category-list.listForParent" }
@@ -120,15 +180,18 @@ export default class CategoryList extends LegacyArrayLikeObject {
   /**
    * Fetches and creates a list of categories
    *
-   * @param {import("discourse/services/store").default} store - The store instance
-   * @param {import("discourse/models/category").default | null} [parentCategory] - Optional parent category to filter by
-   * @returns {Promise<CategoryList>} A promise that resolves to the CategoryList
+   * @param store - The store instance
+   * @param parentCategory - Optional parent category to filter by
    */
-  static async list(store, parentCategory = null) {
-    const result = await PreloadStore.getAndRemove(
+  static async list(
+    store: StoreService,
+    parentCategory: Pick<Category, "id"> | null = null
+  ) {
+    // TODO(typescript-pending): remove this payload assertion when PreloadStore and ajax preserve response types.
+    const result = (await PreloadStore.getAndRemove(
       "categories_list",
       async () => {
-        const data = {};
+        const data: { parent_category_id?: number } = {};
         if (parentCategory) {
           data.parent_category_id = parentCategory.id;
         }
@@ -138,7 +201,7 @@ export default class CategoryList extends LegacyArrayLikeObject {
           }),
         });
       }
-    );
+    )) as CategoryListEnvelope | null | undefined;
 
     const categoryList = result?.category_list || {};
     return CategoryList.create(
@@ -160,25 +223,28 @@ export default class CategoryList extends LegacyArrayLikeObject {
   /**
    * Creates a new CategoryList instance
    *
-   * @param {Record<string, unknown>} [attrs] - The attributes to initialize with
-   * @returns {CategoryList} A new CategoryList instance
+   * @param attrs - The attributes to initialize with
    */
-  static create(attrs = {}) {
+  static create<M extends LegacyArrayLikeObject>(
+    this: new (...args: never[]) => M,
+    attrs?: CategoryListCreateAttrs<M>
+  ): M;
+
+  static create(attrs: Partial<CategoryList> & Record<string, unknown> = {}) {
     const { categories, ...properties } = attrs;
     return super.create({ content: categories, ...properties });
   }
 
-  @tracked can_create_category;
-  @tracked can_create_topic;
+  @tracked can_create_category?: boolean;
+  @tracked can_create_topic?: boolean;
   @tracked fetchedLastPage = false;
   @tracked isLoading = false;
   @tracked page = 1;
-  @tracked parentCategory;
-  @autoTrackedArray topics;
-  store;
+  @tracked parentCategory?: Category | null;
+  @autoTrackedArray topics?: Topic[];
+  store!: StoreService;
 
   /**
-   * @returns {Proxy} The proxied content for compatibility
    * @deprecated use the category list instance instead
    */
   get categories() {
@@ -191,7 +257,6 @@ export default class CategoryList extends LegacyArrayLikeObject {
 
   /**
    * Loads more categories from the server
-   * @returns {Promise<void>}
    */
   @bind
   async loadMore() {
@@ -210,7 +275,10 @@ export default class CategoryList extends LegacyArrayLikeObject {
         }),
       };
 
-      const result = await ajax("/categories.json", { data });
+      // TODO(typescript-pending): ajax does not publish response types; remove the assertion when its response is generic.
+      const result = (await ajax("/categories.json", {
+        data,
+      })) as CategoryListEnvelope;
 
       this.page = nextPage;
 
