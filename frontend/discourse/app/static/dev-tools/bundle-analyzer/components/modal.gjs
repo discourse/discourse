@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import "../styles.css";
+import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import Analysis from "../models/analysis.js";
@@ -23,11 +24,22 @@ export default class BundleAnalyzerModal extends Component {
 
   view = new ViewFilter();
 
-  // Resolved through the page's import map, which Rails rebuilds from what the
-  // builds left on disk, so each specifier names the current report. Fetched
-  // together, and either can be missing without taking the other down.
+  // Core and every plugin build write their own report, so the server lists the
+  // ones it has and they are fetched from there. Either half can be missing
+  // without taking the other down.
   load = async () => {
-    const core = this.#fetch("discourse/bundle-analysis").then(
+    let index;
+
+    try {
+      index = await this.#fetch(getURL("/bundle-analysis.json"));
+    } catch (e) {
+      if (!this.#destroyed) {
+        this.error = e.message;
+      }
+      return;
+    }
+
+    const core = this.#fetch(index.core).then(
       (data) => (this.analysis = this.#prepare(new Analysis(data))),
       (e) => {
         if (!this.#destroyed) {
@@ -36,8 +48,13 @@ export default class BundleAnalyzerModal extends Component {
       }
     );
 
-    const plugins = this.#fetch("discourse/bundle-analysis-plugins").then(
-      (data) => (this.plugins = this.#prepare(new PluginsAnalysis(data))),
+    const plugins = Promise.all(
+      index.plugins.map((url) => this.#fetch(url))
+    ).then(
+      (reports) =>
+        (this.plugins = this.#prepare(
+          new PluginsAnalysis({ plugins: reports })
+        )),
       (e) => {
         if (!this.#destroyed) {
           this.pluginError = e.message;
@@ -82,8 +99,8 @@ export default class BundleAnalyzerModal extends Component {
     return analysis;
   }
 
-  async #fetch(specifier) {
-    const response = await fetch(import.meta.resolve(specifier));
+  async #fetch(url) {
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }

@@ -125,13 +125,6 @@ module ApplicationHelper
       imports[real_url.sub(File.basename(real), File.basename(stable))] = real_url
     end
 
-    {
-      "discourse/bundle-analysis" => EmberAssets.bundle_analysis_asset,
-      "discourse/bundle-analysis-plugins" => Plugin::JsManager.bundle_analysis_asset,
-    }.each do |specifier, report|
-      imports[specifier] = asset_cdn_path(report, brotli: true) if report.present?
-    end
-
     JSON.pretty_generate({ imports: }).html_safe
   end
 

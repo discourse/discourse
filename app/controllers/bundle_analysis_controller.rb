@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+
+# Where the bundle analyzer dev tool finds the reports the builds left behind.
+# One per plugin, since each plugin compiles on its own, plus core's.
+class BundleAnalysisController < ApplicationController
+  skip_before_action :preload_json, :check_xhr
+
+  def index
+    render json: {
+             core: report_url(EmberAssets.bundle_analysis_asset),
+             plugins: Plugin::JsManager.bundle_analysis_assets.map { report_url(it) },
+           }
+  end
+
+  private
+
+  def report_url(logical_path)
+    view_context.asset_cdn_path(logical_path, brotli: true) if logical_path
+  end
+end
