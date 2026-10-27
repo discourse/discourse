@@ -196,15 +196,9 @@ class ShrinkUploadedImage
   private
 
   def transform_post(post, upload_before, upload_after)
-    post.raw = transform_raw(post.raw.dup, upload_before, upload_after)
-    if post.form_data
-      submission =
-        post.form_submission.rewrite_text do |text|
-          transform_raw(text.dup, upload_before, upload_after)
-        end
-      post.form_data = submission.to_h
-      post.raw = submission.normalized_raw
-    end
+    post.assign_attributes(
+      post.rewritten_content { |text| transform_raw(text.dup, upload_before, upload_after) },
+    )
   end
 
   def transform_raw(raw, upload_before, upload_after)

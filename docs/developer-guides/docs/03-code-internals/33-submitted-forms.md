@@ -37,6 +37,23 @@ identities, and template expressions intact. Render the returned submission agai
 conditions and filters evaluate the new values, so the resulting output need not
 equal a substitution in the previous output.
 
+For a live post, use `Post#rewritten_content` to obtain matching attributes for
+both ordinary posts and forms:
+
+```ruby
+post.with_lock do
+  content = post.rewritten_content { |text| text.gsub(old_reference, new_reference) }
+  post.assign_attributes(content)
+  post.save!
+end
+```
+
+The helper does not select records or persist them. The caller chooses whether to
+create a revision, invalidate cooked output, or rebake. Select candidates from
+saved answers as well as rendered output: hidden answers have no `quoted_posts`,
+`group_mentions`, or rendered-link entry. Multiple identity remappings must use
+one pass over the original text so overlapping old/new identifiers do not cascade.
+
 Keep complete mentions, quote markup, hashtags, and image references in textual
 answers when they need automatic rewriting. Arbitrary template expressions that
 construct an identifier from otherwise unrelated values do not establish a
@@ -45,7 +62,10 @@ inferring such identities is outside this API.
 
 Existing username and display-name jobs also rewrite historical snapshots and
 grace-period originals. Hotlinked-image localization, image replacement, and
-hashtag remapping update live snapshots with their rendered text.
+hashtag remapping update live snapshots with their rendered text. Post moves also
+remap quote references in live snapshots across topics, including references to
+chronologically shifted posts. Group renaming includes omitted answers, and the
+deleted-post upload-cleanup automation removes markup from saved answers too.
 
 New submissions are limited to 64 KB, including the definition. System rewrites
 may expand saved snapshots beyond that intake limit. Such snapshots remain
@@ -69,3 +89,27 @@ Administrative import and repair scripts that bypass validation must preserve
 the same relationship between answers and text. Database backups preserve the
 snapshot columns normally; ordinary rendered-content serializers and search use
 `raw` or `cooked`, not omitted answers.
+
+## Rewrite boundaries
+
+A new rendered string cannot be mapped back to answers in general: output may
+omit, repeat, filter, or conditionally render an answer. Keep structured answers
+as the source of truth and pass the transformation itself to the rewrite API.
+Model callbacks cannot enforce this for SQL updates or `update_columns`.
+
+The following administrative paths bypass the rewrite API and require explicit
+form handling before use on saved submissions:
+
+- `DbHelper.remap` and `DbHelper.regexp_replace` operate on SQL text columns;
+  they do not visit JSONB snapshots. This also affects storage-migration callers.
+- `Upload.migrate_to_new_scheme` and the legacy inline-image conversion in
+  `FileStore::ToS3Migration` write rendered text directly.
+- The `posts:remap`, inline-upload repair, and import normalization tasks operate
+  on rendered text, sometimes with validation disabled.
+
+Raw-only plugin edits through normal validation are rejected for form posts.
+Such plugins must either edit structured answers explicitly or supply a text
+transformation; silently applying a rendered-text diff to every answer is unsafe.
+Historical snapshots and grace-period caches have separate lifecycle semantics;
+`rewritten_content` changes neither. A job that intentionally rewrites history
+must also handle `PostRevision#rewrite_form_data` and cached originals explicitly.

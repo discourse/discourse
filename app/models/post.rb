@@ -1140,6 +1140,15 @@ class Post < ActiveRecord::Base
     super(fragments:)
   end
 
+  def rewritten_content(&rewrite)
+    if form_data
+      submission = form_submission.rewrite_text(&rewrite)
+      { raw: submission.normalized_raw, form_data: submission.to_h }
+    else
+      { raw: rewrite.call(raw.dup) }
+    end
+  end
+
   def form_submission
     FormTemplate::Submission.new(form_data) if form_data
   end

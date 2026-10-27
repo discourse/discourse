@@ -25,12 +25,9 @@ class HashtagRemapper
 
     def self.write!(post, raw, &rewrite)
       post.with_lock do
-        if post.form_data && rewrite
-          submission = post.form_submission.rewrite_text(&rewrite)
-          post.form_data = submission.to_h
-          raw = submission.normalized_raw
-        elsif rewrite
-          raw = rewrite.call(post.raw)
+        if rewrite
+          post.assign_attributes(post.rewritten_content(&rewrite))
+          raw = post.raw
         end
         super(post, raw)
       end

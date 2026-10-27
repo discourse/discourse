@@ -22,14 +22,10 @@ module Jobs
             hotlinked_map[normalized_match_src]&.upload
           end
         end
-        raw = rewrite.call(post.raw)
-        submission = post.form_submission&.rewrite_text(&rewrite)
-        form_data = submission&.to_h
-        raw = submission.render if submission
+        content = post.rewritten_content(&rewrite)
 
-        if post.raw != raw || post.form_data != form_data
-          changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
-          changes[:form_data] = form_data if form_data
+        if content.any? { |field, value| post.public_send(field) != value }
+          changes = content.merge(edit_reason: I18n.t("upload.edit_reason"))
           post.revise(
             Discourse.system_user,
             changes,

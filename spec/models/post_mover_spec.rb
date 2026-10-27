@@ -4,6 +4,117 @@ RSpec.describe PostMover do
   fab!(:admin)
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
+  describe "remapping quotes in form submissions" do
+    fab!(:source_op, :post)
+    fab!(:reply) { Fabricate(:post, topic: source_op.topic) }
+    fab!(:form_template) do
+      Fabricate(
+        :form_template,
+        template: [
+          { id: "quote", type: "textarea" },
+          { id: "notes", type: "input" },
+        ].as_json.to_yaml,
+        output_template: "{{ answers.quote }}\n{{ answers.notes }}",
+      )
+    end
+
+    def quote_for(post)
+      %[[quote="someone, post:#{post.post_number}, topic:#{post.topic_id}, full:true"]Quoted text[/quote]]
+    end
+
+    def attach_form(post, quote, hidden: false)
+      template = form_template
+      template.output_template =
+        hidden ? "{{ answers.notes }}" : "{{ answers.quote }}\n{{ answers.notes }}"
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "quote" => quote,
+            "notes" => "A sufficiently long form note.",
+          },
+        )
+      post.update!(raw: submission.normalized_raw, form_data: submission.to_h)
+      post.rebake!
+      post
+    end
+
+    it "remaps visible and omitted quotes in forms outside the moved topic before later edits" do
+      old_quote = quote_for(reply)
+      visible = attach_form(Fabricate(:post), old_quote)
+      hidden = attach_form(Fabricate(:post), old_quote, hidden: true)
+      lookalike_reference = ", post:#{reply.post_number}, topic:#{reply.topic_id}"
+      unrelated =
+        attach_form(
+          Fabricate(:post),
+          "#{quote_for(source_op)}\nPlain text#{lookalike_reference}\n[quoted#{lookalike_reference}]",
+        )
+      original_unrelated_data = unrelated.form_data
+      expect(QuotedPost.where(post_id: hidden.id)).to be_empty
+
+      described_class.new(source_op.topic, admin, [reply.id]).to_new_topic("Moved quoted reply")
+
+      expected_quote = quote_for(reply.reload)
+      [visible, hidden].each do |post|
+        post.reload
+        expect(post.form_submission.answers["quote"]).to eq(expected_quote)
+        edited =
+          post.form_submission.with_answers(
+            post.form_submission.answers.merge("notes" => "An updated sufficiently long note."),
+          )
+        expect(post.revise(post.user, raw: edited.normalized_raw, form_data: edited.to_h)).to eq(
+          true,
+        )
+        expect(post.reload.form_submission.answers["quote"]).to eq(expected_quote)
+        expect(post.raw).to eq(edited.normalized_raw)
+      end
+      expect(visible.raw).to include(expected_quote)
+      expect(hidden.raw).not_to include(expected_quote)
+      expect(unrelated.reload.form_data).to eq(original_unrelated_data)
+    end
+
+    it "remaps quotes inside a form moved with the quoted reply" do
+      attach_form(source_op, quote_for(reply))
+
+      destination =
+        described_class.new(source_op.topic, admin, [source_op.id, reply.id]).to_new_topic(
+          "Moved form and its quoted reply",
+        )
+
+      moved_form = destination.first_post
+      expect(moved_form.form_submission.answers["quote"]).to eq(quote_for(reply.reload))
+      expect(moved_form.raw).to eq(moved_form.form_submission.normalized_raw)
+      expect(moved_form.raw).to include(quote_for(reply))
+    end
+
+    it "remaps chronological shifts once, including multiple quotes in an external form" do
+      destination_op = Fabricate(:post, created_at: source_op.created_at - 1.hour)
+      reply.update!(created_at: source_op.created_at + 1.minute)
+      first_shifted =
+        Fabricate(:post, topic: destination_op.topic, created_at: reply.created_at + 1.minute)
+      second_shifted =
+        Fabricate(:post, topic: destination_op.topic, created_at: reply.created_at + 2.minutes)
+      external =
+        attach_form(
+          Fabricate(:post),
+          [quote_for(first_shifted), quote_for(second_shifted)].join("\n"),
+        )
+      hidden = attach_form(Fabricate(:post), quote_for(second_shifted), hidden: true)
+
+      described_class.new(source_op.topic, admin, [reply.id]).to_topic(
+        destination_op.topic_id,
+        chronological_order: true,
+      )
+
+      expect(first_shifted.reload.post_number).to eq(3)
+      expect(second_shifted.reload.post_number).to eq(4)
+      expected_quotes = [quote_for(first_shifted), quote_for(second_shifted)].join("\n")
+      expect(external.reload.form_submission.answers["quote"]).to eq(expected_quotes)
+      expect(external.raw).to eq(external.form_submission.normalized_raw)
+      expect(hidden.reload.form_submission.answers["quote"]).to eq(quote_for(second_shifted))
+    end
+  end
+
   describe "moving form submissions" do
     fab!(:source_op, :post)
     fab!(:destination_op) { Fabricate(:post, created_at: source_op.created_at - 1.minute) }

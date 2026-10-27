@@ -512,8 +512,48 @@ class PostMover
                         ', post:' || mp.new_post_number || ', topic:' || mp.new_topic_id),
           baked_version = NULL
       FROM temp_moved_posts mp, quoted_posts qp
-      WHERE p.id = qp.post_id AND mp.old_post_id = qp.quoted_post_id
+      WHERE p.id = qp.post_id AND mp.old_post_id = qp.quoted_post_id AND p.form_data IS NULL
     SQL
+
+    update_form_quotes
+  end
+
+  def update_form_quotes
+    moves =
+      DB
+        .query("SELECT * FROM temp_moved_posts")
+        .to_h do |move|
+          [
+            [move.old_post_number, move.old_topic_id],
+            ", post:#{move.new_post_number}, topic:#{move.new_topic_id}",
+          ]
+        end
+    rewrite = ->(text) do
+      text.gsub(/\[quote(?:=|\s)[^\]]*\]/i) do |header|
+        # Resolve all references against the original numbers; shifts may overlap.
+        header.gsub(/, post:(\d+), topic:(\d+)(?=[,"\]])/) do |reference|
+          moves.fetch([$1.to_i, $2.to_i], reference)
+        end
+      end
+    end
+
+    # Omitted answers have no quoted_posts row and may belong to any topic.
+    Post
+      .with_deleted
+      .where.not(form_data: nil)
+      .where(<<~SQL)
+        EXISTS (
+          SELECT 1 FROM temp_moved_posts mp
+          WHERE posts.form_data::text LIKE ('%, topic:' || mp.old_topic_id || '%')
+        )
+      SQL
+      .find_each do |post|
+        post.with_lock do
+          content = post.rewritten_content(&rewrite)
+          next if content[:form_data] == post.form_data
+          post.update_columns(**content, baked_version: nil)
+        end
+      end
   end
 
   def move_first_post_replies
