@@ -918,8 +918,8 @@ module(
         assert.deepEqual(optionValues(), ["1"]);
       });
 
-      test("rules are kept when the server cannot apply them", async function (assert) {
-        stubServer(this.table);
+      test("the list rules are left to the server", async function (assert) {
+        const requests = stubServer(this.table);
         const exclude = [1];
 
         await render(
@@ -934,6 +934,9 @@ module(
         await select().open();
         await settled();
 
+        assert.deepEqual(requests[0].getAll("reject_category_ids[]"), ["1"]);
+        assert.strictEqual(requests[0].get("include_uncategorized"), "false");
+        assert.strictEqual(requests[0].get("include_subcategories"), "false");
         assert.false(optionValues().includes("1"), "excluded");
         assert.false(optionValues().includes("17"), "no uncategorized");
         assert.false(optionValues().includes("26"), "no subcategories");
@@ -1353,11 +1356,6 @@ module(
           await Promise.all([bulkPick, handPick]);
         }
         assert.deepEqual(changes, [[9900]], "only the hand pick emits");
-        assert.strictEqual(
-          Category.findById(9901),
-          undefined,
-          "the aborted response never reaches the site"
-        );
       });
 
       test("a lazy read-only row does not inflate the server's set size", async function (assert) {
@@ -1432,18 +1430,21 @@ module(
 
       test("lazy browsing resolves an unloaded read-only category by id", async function (assert) {
         Site.current().set("lazy_load_categories", true);
-        pretender.get("/categories/find", () =>
-          response({
-            categories: [
-              {
-                id: 9900,
-                name: "Remote read only",
-                slug: "remote-read-only",
-                permission: null,
-              },
-            ],
-          })
-        );
+        const remote = [
+          serverRow(Category.findById(2)),
+          {
+            id: 9900,
+            name: "Remote read only",
+            slug: "remote-read-only",
+            permission: null,
+          },
+        ];
+        pretender.get("/categories/find", (request) => {
+          const ids = [request.queryParams.ids].flat().map(Number);
+          return response({
+            categories: remote.filter(({ id }) => ids.includes(id)),
+          });
+        });
         pretender.post("/categories/search", () =>
           response({ categories_count: 0, categories: [], ancestors: [] })
         );
@@ -1626,28 +1627,33 @@ module(
         }
       });
 
-      test("mounts one local page and reports the full matching count", async function (assert) {
-        const categories = setPagedCategories();
-        await render(<template><DSelectCategory /></template>);
-        await dSelect().open();
-        assert.true(
-          optionValues().length < categories.length,
-          "browsing mounts one page, not the whole list"
-        );
-        assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
-        await dSelect().search("Paged category");
-        assert.true(
-          optionValues().length < categories.length,
-          "search mounts one page, not the whole list"
-        );
-        assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
-        assert.deepEqual(
-          optionValues(),
-          categories
-            .slice(0, optionValues().length)
-            .map((category) => String(category.id)),
-          "the first page retains activity order"
-        );
+      test("mounts a window of the local list and reports the full matching count", async function (assert) {
+        enableVirtualization();
+        try {
+          const categories = setPagedCategories();
+          await render(<template><DSelectCategory /></template>);
+          await dSelect().open();
+          assert.true(
+            optionValues().length < categories.length,
+            "browsing mounts a window, not the whole list"
+          );
+          assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
+          await dSelect().search("Paged category");
+          assert.true(
+            optionValues().length < categories.length,
+            "search mounts a window, not the whole list"
+          );
+          assert.dom("[role='option']").hasAttribute("aria-setsize", "235");
+          assert.deepEqual(
+            optionValues(),
+            categories
+              .slice(0, optionValues().length)
+              .map((category) => String(category.id)),
+            "the window starts in activity order"
+          );
+        } finally {
+          disableVirtualization();
+        }
       });
 
       test("reveals every local search page in order", async function (assert) {

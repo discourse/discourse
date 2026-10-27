@@ -3,12 +3,8 @@ import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import {
-  fetchCategoryPage,
-  knownCategories,
-  loadDescendants,
-  resolveCategories,
-} from "discourse/lib/category-source";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
 import DSelect from "discourse/ui-kit/select/d-select";
 import type {
@@ -141,12 +137,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   }
 
   get #readOnly(): number[] {
-    const value = this.args.readOnly;
-    if (value == null) {
-      return [];
-    }
-    const ids = Array.isArray(value) ? value : [value];
-    return ids.map(Number);
+    return makeArray(
+      this.args.readOnly as number | string | (number | string)[]
+    ).map(Number);
   }
 
   get #uncategorized() {
@@ -198,7 +191,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       .fixed_category_positions_on_create
       ? Category.sortCategories(this.site.categories)
       : this.site.sortedCategories;
-    const family = this.#localFamily(this.args.scope ?? this.args.prioritize);
+    const family = this.#familyId(this.args.scope ?? this.args.prioritize);
     const allowed = this.#categoryAllowed();
     const readOnly = new Set(this.#readOnly);
     const term = normalizeCategoryName(query);
@@ -222,49 +215,38 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       }
       categories = prioritized.concat(rest);
     }
-    const offset = opts.offset ?? 0;
-    const { items, total } = this.#rows(categories, query, offset, 32);
-    return {
-      items,
-      total,
-      hasMore: offset + items.length < total,
-    };
+    return this.#rows(categories, query);
   }
 
   @action
-  async resolveValues(values: unknown[], opts: SelectLoadOptions) {
-    const records = await resolveCategories(
-      values.filter(
-        (id): id is string | number =>
-          typeof id === "number" || typeof id === "string"
-      )
-    );
-    opts.signal?.throwIfAborted();
+  async resolveValues(values: unknown[]) {
+    const records: CategoryRecord[] = await Category.asyncFindByIds(values);
     return records.map((category) => categoryItem(category));
   }
 
   @action
   specialItems(snapshot: SelectSnapshot): CategoryItem[] {
-    return this.multiple && this.args.noneLabel && !snapshot.filter
-      ? [
-          {
-            id: "category-none",
-            name: this.args.noneLabel,
-            onSelect: (control) => control.clear(),
-          },
-        ]
-      : [];
+    const rows: CategoryItem[] = [];
+    if (this.multiple && this.args.noneLabel && !snapshot.filter) {
+      rows.push({
+        id: "category-none",
+        name: this.args.noneLabel,
+        onSelect: (control) => control.clear(),
+      });
+    }
+    if (this.site.lazy_load_categories && !this.args.load) {
+      rows.push(...this.#rows(this.#pinned(snapshot.filter), snapshot.filter));
+    }
+    return rows;
   }
 
   @action
   onChange(value: SelectValue) {
-    let ids: (number | string)[] = [];
-    if (Array.isArray(value)) {
-      ids = value as (number | string)[];
-    } else if (typeof value === "number" || typeof value === "string") {
-      ids = [value];
-    }
-    const result = this.args.emit === "ids" ? ids : knownCategories(ids);
+    const ids = makeArray(value) as (number | string)[];
+    const result =
+      this.args.emit === "ids"
+        ? ids
+        : (Category.findByIds(ids) as CategoryRecord[]);
     this.args.onChange?.(this.multiple ? result : (result[0] ?? null));
   }
 
@@ -295,32 +277,45 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
-  #categoryKeys(value?: CategoryValue): (number | string)[] {
-    if (value == null) {
-      return [];
-    }
-    return [typeof value === "object" ? value.id : value];
+  #idOf(value?: CategoryValue) {
+    return typeof value === "object" ? value.id : value;
   }
 
-  #localFamily(value?: CategoryValue): number | undefined {
-    const category = knownCategories(this.#categoryKeys(value))[0];
+  /** The id of the family one level up from a category: its parent, or itself at the top. */
+  #familyId(value?: CategoryValue): number | undefined {
+    const category: CategoryRecord | undefined = Category.findById(
+      this.#idOf(value)
+    );
     return category?.parent_category_id || category?.id;
+  }
+
+  /** Lazy rows the server pages leave out: the scope's family root while browsing, and read-only categories. */
+  #pinned(query: string): CategoryRecord[] {
+    const term = normalizeCategoryName(query);
+    const root = query ? [] : [this.#familyId(this.args.scope)];
+    const readOnly = (
+      Category.findByIds(this.#readOnly) as CategoryRecord[]
+    ).filter((category) => !query || this.#matches(category, term));
+    return uniqueItemsFromArray([
+      ...(Category.findByIds(root) as CategoryRecord[]),
+      ...readOnly,
+    ]).filter(this.#categoryAllowed());
   }
 
   #inFamily(category: CategoryRecord, id: number) {
     return category.id === id || category.parent_category_id === id;
   }
 
-  #rows(
-    categories: CategoryRecord[],
-    query: string,
-    offset = 0,
-    limit = Infinity
-  ) {
-    const descendantsEnabled =
+  #offersDescendants(query: string) {
+    return (
       query.length >= 2 &&
       this.multiple &&
-      this.args.selectDescendants !== false;
+      this.args.selectDescendants !== false
+    );
+  }
+
+  #rows(categories: CategoryRecord[], query: string): CategoryItem[] {
+    const descendantsEnabled = this.#offersDescendants(query);
     const byParent = descendantsEnabled
       ? this.site.categoriesByParentId
       : undefined;
@@ -328,25 +323,16 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const descriptions = this.args.descriptions ?? !this.multiple;
     const readOnlyDescription = i18n("category_row.read_only_description");
     const items: CategoryItem[] = [];
-    let total = 0;
     for (const category of categories) {
       const isReadOnly = readOnly.has(category.id);
-      const withDescendants =
-        descendantsEnabled &&
-        !isReadOnly &&
-        (category.has_children || byParent?.has(category.id));
-      const position = total;
-      total += withDescendants ? 2 : 1;
-      if (position >= offset && position < offset + limit) {
-        const row = categoryItem(category, descriptions);
-        row.disabled = isReadOnly;
-        row.description = isReadOnly ? readOnlyDescription : row.description;
-        items.push(row);
-      }
+      const row = categoryItem(category, descriptions);
+      row.disabled = isReadOnly;
+      row.description = isReadOnly ? readOnlyDescription : row.description;
+      items.push(row);
       if (
-        !withDescendants ||
-        position + 1 < offset ||
-        position + 1 >= offset + limit
+        !descendantsEnabled ||
+        isReadOnly ||
+        !(category.has_children || byParent?.has(category.id))
       ) {
         continue;
       }
@@ -358,17 +344,8 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         category,
         onSelect: (control) => {
           void control.update(async (scope) => {
-            let descendants: CategoryRecord[];
-            try {
-              descendants = await loadDescendants(category, {
-                signal: scope.signal,
-              });
-            } catch (error) {
-              if (scope.signal.aborted) {
-                return;
-              }
-              throw error;
-            }
+            const descendants: CategoryRecord[] =
+              await Category.asyncFindDescendants(category);
             const allowed = this.#categoryAllowed();
             const excluded = new Set((this.args.exclude ?? []).map(Number));
             const locked = new Set(this.#readOnly);
@@ -386,31 +363,33 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         },
       });
     }
-    return { items, total };
+    return items;
   }
 
   async #loadPage(query: string, opts: SelectLoadOptions) {
-    const first = !opts.offset;
-    const [scope, prioritize, readOnly] = await Promise.all([
-      resolveCategories(this.#categoryKeys(this.args.scope)),
-      resolveCategories(this.#categoryKeys(this.args.prioritize)),
-      resolveCategories(this.#readOnly),
-    ]);
-    opts.signal?.throwIfAborted();
-    const scopeId =
-      !query && scope[0]
-        ? scope[0].parent_category_id || scope[0].id
-        : undefined;
-    const prioritizeId =
-      !query && prioritize[0]
-        ? prioritize[0].parent_category_id || prioritize[0].id
-        : undefined;
-    const result = await fetchCategoryPage({
-      term: query,
-      cursor: opts.cursor ?? null,
-      parentCategoryId: scopeId,
-      prioritizedId: prioritizeId,
-      rejectIds: [
+    const page = typeof opts.cursor === "number" ? opts.cursor : 1;
+    // `#pinned` and the family ids below read these records synchronously from the site.
+    await Category.asyncFindByIds(
+      [this.args.scope, this.args.prioritize]
+        .map((value) => this.#idOf(value))
+        .filter((id) => id != null)
+    );
+    await Category.asyncFindByIds(
+      [this.#familyId(this.args.scope), ...this.#readOnly].filter(
+        (id) => id != null
+      )
+    );
+    const { categories, categoriesCount } = await Category.asyncSearch(query, {
+      includeAncestors: true,
+      includeSubcategories: this.args.subcategories !== false,
+      includeUncategorized: this.#uncategorized,
+      onlyPostable: this.args.permission === "create",
+      page,
+      parentCategoryId: query ? undefined : this.#familyId(this.args.scope),
+      prioritizedCategoryId: query
+        ? undefined
+        : this.#familyId(this.args.prioritize),
+      rejectCategoryIds: [
         ...new Set([
           ...(this.args.exclude ?? [])
             .map(Number)
@@ -418,51 +397,12 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
           ...this.#readOnly,
         ]),
       ],
-      includeUncategorized: this.#uncategorized,
-      includeSubcategories: this.args.subcategories !== false,
-      onlyPostable: this.args.permission === "create",
-      signal: opts.signal,
     });
-    const extras: CategoryRecord[] = [];
-    if (scopeId) {
-      extras.push(...(await resolveCategories([scopeId])));
-    }
-    extras.push(
-      ...readOnly.filter(
-        (category) =>
-          !query || this.#matches(category, normalizeCategoryName(query))
-      )
-    );
-    opts.signal?.throwIfAborted();
-    const allowed = this.#categoryAllowed();
-    const injected = extras.filter(
-      (category, index) =>
-        extras.findIndex((other) => other.id === category.id) === index &&
-        allowed(category)
-    );
-    const categories = [
-      ...(first ? injected : []),
-      ...result.categories,
-    ].filter(
-      (category, index, all) =>
-        all.findIndex((other) => other.id === category.id) === index &&
-        allowed(category)
-    );
-    const hasMore = result.hasMore;
-    return {
-      items: this.#rows(categories, query).items,
-      cursor: result.cursor,
-      hasMore,
-      total:
-        hasMore &&
-        !(
-          this.multiple &&
-          query.length >= 2 &&
-          this.args.selectDescendants !== false
-        )
-          ? result.total + injected.length
-          : undefined,
-    };
+    const items = this.#rows(categories, query);
+    // Descendant rows outnumber the categories, so the server's count cannot size the list.
+    return this.#offersDescendants(query)
+      ? { items, cursor: page + 1, hasMore: categories.length > 0 }
+      : { items, cursor: page + 1, total: categoriesCount };
   }
 
   <template>
