@@ -3,6 +3,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
+import { engineKey } from "discourse/ui-kit/select/-internals/engine/row-keys";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
 /**
@@ -38,7 +39,7 @@ export default class LoadFeedbackTracker {
   #engine: SelectEngine;
   #frontierSkeletons: readonly SkeletonRow[] = Array.from(
     { length: FRONTIER_SKELETON_COUNT },
-    (_, i) => ({ key: `__skeleton:${i}`, isSkeleton: true })
+    (_, i) => ({ key: engineKey(`skeleton:${i}`), isSkeleton: true })
   );
   #getFilterDebounceDelay: () => number;
   #getSkeletonCountArg: () => number | undefined;

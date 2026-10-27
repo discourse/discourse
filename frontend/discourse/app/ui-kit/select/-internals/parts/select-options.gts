@@ -19,6 +19,7 @@ import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordi
 import WindowedListCoordinator, {
   ListRow,
 } from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
+import { engineKey } from "discourse/ui-kit/select/-internals/engine/row-keys";
 import SelectEngine, {
   type SelectItem as SelectItemModel,
   selectItemLabel,
@@ -86,7 +87,7 @@ function placeholderRows(
           ? row.label
           : selectItemLabel(row.item, labelField),
       }))
-    : [{ key: "__skeleton:empty", isSkeleton: true }];
+    : [{ key: engineKey("skeleton:empty"), isSkeleton: true }];
 }
 
 /** Keeps popup hosts unchanged when they do not observe listbox presence. */

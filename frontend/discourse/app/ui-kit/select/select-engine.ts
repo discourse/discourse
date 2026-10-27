@@ -101,7 +101,11 @@ export interface SelectItem {
  * `:item` / `:selection`, and the row `flags` so components read state from one place.
  */
 export interface SelectDescriptor {
-  /** Stable `{{#each}}` key — the normalized value, or a synthetic key for a value-less row. */
+  /**
+   * Stable `{{#each}}` key: the normalized value for a record, or an engine key (prefixed
+   * `__ds:`) for a row the engine builds, such as a group row, which follows its group rather
+   * than its position. A record key that already starts with the prefix is escaped.
+   */
   key: string;
   /** The row's id (raw, from `valueField`). */
   value: SelectItemId;

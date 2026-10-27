@@ -1,4 +1,4 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
@@ -283,6 +283,130 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
     function options(rows) {
       return rows.filter((row) => !row.flags.group && !row.flags.divider);
     }
+
+    module("stable keys", function () {
+      const keyOf = (rows, predicate) => rows.find(predicate)?.key;
+      const isHeader = (label) => (row) =>
+        row.flags.group && row.item.label === label;
+
+      test("a header keeps its key when the create row disappears", function (assert) {
+        const fruits = [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Apricot", group: "Fruits" },
+        ];
+        const engine = new SelectEngine({
+          items: fruits,
+          groupBy: "group",
+          groupLabel: identityLabel,
+          allowCreate: true,
+          createItem: (filter) => ({ id: filter, name: filter }),
+        });
+
+        engine.setFilter("ap");
+        const withCreate = engine.buildItems(fruits);
+        engine.setFilter("apple");
+        const withoutCreate = engine.buildItems(fruits);
+
+        assert.true(
+          withCreate.some((row) => row.flags.__create),
+          "the first build offers the create row"
+        );
+        assert.false(
+          withoutCreate.some((row) => row.flags.__create),
+          "the second build does not"
+        );
+        assert.strictEqual(
+          keyOf(withoutCreate, isHeader("Fruits")),
+          keyOf(withCreate, isHeader("Fruits")),
+          "the header's key does not follow its position"
+        );
+      });
+
+      test("emptying an earlier group does not move a later group's keys", function (assert) {
+        const produce = [
+          { id: 1, name: "Carrot", group: "Vegetables" },
+          { id: 2, name: "Apple", group: "Fruits" },
+        ];
+        const value = trackedArray([]);
+        const engine = new SelectEngine({
+          items: produce,
+          multiple: true,
+          hideSelected: true,
+          getValue: () => value,
+          groupBy: "group",
+          groupLabel: identityLabel,
+        });
+
+        const before = keyOf(engine.buildItems(produce), isHeader("Fruits"));
+        value.push(1);
+        const after = engine.buildItems(produce);
+
+        assert.false(
+          after.some(isHeader("Vegetables")),
+          "the emptied group is gone"
+        );
+        assert.strictEqual(
+          keyOf(after, isHeader("Fruits")),
+          before,
+          "the later header keeps its key"
+        );
+      });
+
+      test("the none row never shares a key with a record", function (assert) {
+        const records = [{ id: "__row:0", name: "Looks synthetic" }];
+        const engine = new SelectEngine({ items: records, noneLabel: "None" });
+
+        const keys = engine.buildItems(records).map((row) => row.key);
+
+        assert.strictEqual(keys.length, 2, "both rows are listed");
+        assert.strictEqual(new Set(keys).size, 2, "their keys differ");
+      });
+
+      test("a record whose id looks like an engine key is escaped", function (assert) {
+        const engine = new SelectEngine({
+          items: [],
+          groupBy: "group",
+          groupLabel: identityLabel,
+        });
+        const sample = [{ id: 1, name: "Apple", group: "Fruits" }];
+        const headerKey = keyOf(engine.buildItems(sample), isHeader("Fruits"));
+
+        const rows = engine.buildItems([
+          ...sample,
+          { id: headerKey, name: "Impostor", group: "Fruits" },
+        ]);
+        const keys = rows.map((row) => row.key);
+
+        assert.strictEqual(
+          new Set(keys).size,
+          keys.length,
+          "every key is unique"
+        );
+        assert.strictEqual(
+          keyOf(rows, isHeader("Fruits")),
+          headerKey,
+          "the header keeps its own key"
+        );
+      });
+
+      test("group keys that print the same form one group", function (assert) {
+        const numbered = [
+          { id: 1, name: "One", group: 1 },
+          { id: 2, name: "Two", group: "1" },
+        ];
+        const engine = new SelectEngine({
+          items: numbered,
+          groupBy: "group",
+          groupLabel: (key) => `Group ${key}`,
+        });
+
+        assert.deepEqual(
+          kinds(engine.buildItems(numbered)),
+          ["H:Group 1", 1, 2],
+          "the number 1 and the string 1 share a header"
+        );
+      });
+    });
 
     test("groupBy injects a header before each group in first-appearance order", function (assert) {
       const engine = new SelectEngine({

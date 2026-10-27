@@ -8,6 +8,7 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectContentContext } from "./customizations.ts";
+import { engineKey, groupIdentity, recordKey } from "./row-keys.ts";
 
 export default class ListComposer {
   #options: SelectOptionsView;
@@ -309,9 +310,7 @@ export default class ListComposer {
       !this.#isStructural(item) &&
       typeof item.onSelect !== "function";
     return {
-      // A value-less synthetic row (e.g. a null-id special) has no natural key; fall back to
-      // its position, which is stable within the ordered special/create prefix.
-      key: this.#options.valueKey(value) ?? `__row:${index}`,
+      key: this.#rowKey(item, value, index),
       value,
       item,
       flags: {
@@ -331,6 +330,25 @@ export default class ListComposer {
         __none: !!item.__none,
       },
     };
+  }
+
+  /**
+   * Group rows and the none row take engine keys that follow what they stand for, not where they
+   * sit, so they keep their DOM rows when earlier rows come and go.
+   */
+  #rowKey(item: SelectItem, value: SelectItemId, index: number): string {
+    if ((item.__header || item.__divider) && Object.hasOwn(item, "groupKey")) {
+      return engineKey(
+        `${item.__header ? "h" : "d"}:${groupIdentity(item.groupKey)}`
+      );
+    }
+    if (item.__none) {
+      return engineKey("none");
+    }
+    const key = this.#options.valueKey(value);
+    // A value-less row (a null-id special, or a structural row a loader returned) has no
+    // natural key; its position is stable within the ordered special/create prefix.
+    return key == null ? engineKey(`row:${index}`) : recordKey(key);
   }
 
   #isStructural(item: SelectItem): boolean {
@@ -378,7 +396,10 @@ export default class ListComposer {
    * splitter suppressed because it separates nothing.
    */
   #groupItems(options: SelectItem[]): SelectItem[] {
-    const groups = new Map<SelectItemId, SelectItem[]>();
+    const groups = new Map<
+      string,
+      { key: SelectItemId; items: SelectItem[] }
+    >();
     for (const item of options) {
       // Grouping addresses options only. A structural row that reached the source (e.g. an
       // upstream transformer) is skipped rather than passed to `groupBy`, which would throw on
@@ -387,16 +408,17 @@ export default class ListComposer {
         continue;
       }
       const key = this.#groupKey(item);
-      const bucket = groups.get(key);
+      const identity = groupIdentity(key);
+      const bucket = groups.get(identity);
       if (bucket) {
-        bucket.push(item);
+        bucket.items.push(item);
       } else {
-        groups.set(key, [item]);
+        groups.set(identity, { key, items: [item] });
       }
     }
 
     const out: SelectItem[] = [];
-    for (const [key, groupItems] of groups) {
+    for (const { key, items: groupItems } of groups.values()) {
       const label = this.#groupLabel(key);
       if (label != null) {
         out.push({ __header: true, groupKey: key, label });
