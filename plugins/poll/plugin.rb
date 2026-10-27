@@ -216,15 +216,21 @@ after_initialize do
       end
   end
 
-  add_to_serializer(:post, :polls, include_condition: -> { preloaded_polls.present? }) do
-    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) }
+  add_to_class(PostSerializer, :can_see_post_polls?) do
+    !object.hidden? || scope.can_see_hidden_post?(object)
   end
+
+  add_to_serializer(
+    :post,
+    :polls,
+    include_condition: -> { preloaded_polls.present? && can_see_post_polls? },
+  ) { preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) } }
 
   add_to_serializer(
     :post,
     :polls_votes,
     include_condition: -> do
-      scope.user&.id.present? && preloaded_polls.present? &&
+      scope.user&.id.present? && preloaded_polls.present? && can_see_post_polls? &&
         preloaded_polls.any? { |p| p.has_voted?(scope.user) }
     end,
   ) do
