@@ -6446,8 +6446,6 @@ en:
 
     mobile_tab_bar:
       label: "Site sections"
-      profile: "Profile"
-      notifications: "Notifications"
       more: "More"
       new_topic: "New topic"
       menu: "Menu"

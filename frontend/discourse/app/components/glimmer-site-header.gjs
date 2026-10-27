@@ -247,7 +247,10 @@ export default class GlimmerSiteHeader extends Component {
         let animationFinished;
         let finalPosition = PANEL_WIDTH;
         this._swipeMenuOrigin = "right";
-        if (this.slideInMode && this.#opensFromLeft(panel)) {
+        if (
+          this.slideInMode &&
+          panel.parentElement.classList.contains(this.leftMenuClass)
+        ) {
           this._swipeMenuOrigin = "left";
           finalPosition = -PANEL_WIDTH;
         }
@@ -354,12 +357,6 @@ export default class GlimmerSiteHeader extends Component {
       ],
       { fill: "forwards" }
     );
-  }
-
-  // A panel marked `--end` opens from the other side of its usual one
-  #opensFromLeft(panel) {
-    const wrapper = panel.parentElement.classList;
-    return wrapper.contains(this.leftMenuClass) !== wrapper.contains("--end");
   }
 
   _handleArrowKeysNav(event) {

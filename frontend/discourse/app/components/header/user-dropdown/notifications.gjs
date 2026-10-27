@@ -17,7 +17,6 @@ const DEFAULT_AVATAR_SIZE = "medium";
 
 export default class Notifications extends Component {
   @service currentUser;
-  @service mobileTabBar;
   @service siteSettings;
 
   get avatar() {
@@ -55,11 +54,7 @@ export default class Notifications extends Component {
 
   <template>
     <PluginOutlet @name="user-dropdown-notifications__before" />
-    {{#if this.mobileTabBar.splitsProfileMenu}}
-      {{dIcon "bell"}}
-    {{else}}
-      {{this.avatar}}
-    {{/if}}
+    {{this.avatar}}
 
     {{#if this._shouldHighlightAvatar}}
       <UserTip
@@ -74,9 +69,7 @@ export default class Notifications extends Component {
       />
     {{/if}}
 
-    {{#if
-      (and this.currentUser.status (not this.mobileTabBar.splitsProfileMenu))
-    }}
+    {{#if this.currentUser.status}}
       <UserStatusBubble
         @status={{this.currentUser.status}}
         @timezone={{this.currentUser.user_option.timezone}}

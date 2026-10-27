@@ -19,7 +19,6 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 @disableImplicitInjections
 export default class SidebarState extends Service {
   @service keyValueStore;
-  @service mobileTabBar;
   @service router;
 
   @tracked mode = COMBINED_MODE;
@@ -70,13 +69,8 @@ export default class SidebarState extends Service {
     return this.panels.find((panel) => panel.key === this.currentPanelKey);
   }
 
-  // Each sidebar tab shows a single panel
   get combinedMode() {
-    return (
-      this.mode === COMBINED_MODE &&
-      !this.mobileTabBar.sidebarTabsEnabled &&
-      !this.#panelTransformed
-    );
+    return this.mode === COMBINED_MODE && !this.#panelTransformed;
   }
 
   get showMainPanel() {
@@ -141,12 +135,8 @@ export default class SidebarState extends Service {
 
   setCombinedMode() {
     this.mode = COMBINED_MODE;
+    this._requestedPanelKey = MAIN_PANEL;
     this.hideSwitchPanelButtons();
-
-    // Runs while the app boots, too early to ask whether the tabs show
-    if (!this.mobileTabBar.sidebarTabsConfigured) {
-      this._requestedPanelKey = MAIN_PANEL;
-    }
   }
 
   showSwitchPanelButtons() {

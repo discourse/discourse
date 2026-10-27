@@ -1,9 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import scrollLock from "discourse/lib/scroll-lock";
 import { MAIN_PANEL, USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
-import User from "discourse/models/user";
 
 /**
  * Hands the sidebar over to the user nav panel while the user routes are
@@ -11,7 +9,6 @@ import User from "discourse/models/user";
  * `AdminSidebarStateManager` makes for the admin area.
  */
 export default class UserNavSidebarStateManager extends Service {
-  @service currentUser;
   @service header;
   @service mobileTabBar;
   @service routeHistory;
@@ -27,15 +24,6 @@ export default class UserNavSidebarStateManager extends Service {
    */
   @tracked entryURL = null;
 
-  /**
-   * A `user` controller of its own for the current user's profile, so the
-   * panel can show your profile from anywhere without touching the page's
-   * controller.
-   */
-  @tracked ownProfileController = null;
-
-  #ownProfileLoading = null;
-
   get enteredFromAdmin() {
     return !!this.entryURL?.startsWith("/admin");
   }
@@ -45,51 +33,11 @@ export default class UserNavSidebarStateManager extends Service {
   }
 
   /**
-   * @returns {Object|undefined} The controller holding the user the panel
-   * shows and its visibility rules. Routes that force the panel put their user
-   * on the `user` controller; otherwise the panel shows your own profile.
+   * With the mobile tab bar, the menu stays with the active tab, so profiles
+   * keep their navigation on the page.
    */
-  get navController() {
-    if (this.sidebarState.forcingSidebarPanel === USER_NAV_PANEL) {
-      return getOwner(this).lookup("controller:user");
-    }
-
-    return this.ownProfileController;
-  }
-
-  /**
-   * With the mobile tab bar, someone else's profile keeps its navigation on
-   * the page, so the menu can stay with the active tab.
-   *
-   * @param {Object} user The user whose profile is shown.
-   * @returns {boolean} Whether the panel serves that profile.
-   */
-  servesProfileOf(user) {
-    return (
-      this.enabled &&
-      (!this.mobileTabBar.splitsProfileMenu ||
-        user?.id === this.currentUser?.id)
-    );
-  }
-
-  /**
-   * Loads the current user's full profile, which the panel needs to show it
-   * outside a profile page.
-   */
-  loadOwnProfile() {
-    if (!this.currentUser) {
-      return;
-    }
-
-    this.#ownProfileLoading ??= User.findByUsername(
-      this.currentUser.username
-    ).then((user) => {
-      this.ownProfileController = getOwner(this)
-        .factoryFor("controller:user")
-        .create({ model: user });
-    });
-
-    return this.#ownProfileLoading;
+  get servesProfiles() {
+    return this.enabled && !this.mobileTabBar.enabled;
   }
 
   captureEntryPoint() {

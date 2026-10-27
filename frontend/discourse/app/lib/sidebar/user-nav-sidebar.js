@@ -552,9 +552,7 @@ export function isUserRoute(routeInfo) {
 // The `user` controller owns the nav visibility rules and holds the user being
 // viewed, which is not necessarily the current user.
 function navContext(owner) {
-  const controller = owner.lookup(
-    "service:user-nav-sidebar-state-manager"
-  ).navController;
+  const controller = owner.lookup("controller:user");
 
   return {
     owner,

@@ -312,7 +312,7 @@ export default class UserController extends Controller {
   // always in the DOM to be matched — collapsed, narrow and mobile all serve it
   // from the menu button instead — so the navs it replaces cannot key on it.
   get userNavPanelActive() {
-    return this.userNavSidebarStateManager.servesProfileOf(this.model);
+    return this.userNavSidebarStateManager.servesProfiles;
   }
 
   get silencingsRouteQuery() {

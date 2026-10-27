@@ -5,7 +5,6 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BackToForum extends Component {
-  @service mobileTabBar;
   @service routeHistory;
 
   get href() {
@@ -31,13 +30,10 @@ export default class BackToForum extends Component {
   }
 
   <template>
-    {{! The sidebar's tabs already lead back to the forum }}
-    {{#unless this.mobileTabBar.sidebarTabsEnabled}}
-      <a class="sidebar-sections__back-to-forum" href={{this.href}}>
-        {{dIcon "arrow-left"}}
+    <a class="sidebar-sections__back-to-forum" href={{this.href}}>
+      {{dIcon "arrow-left"}}
 
-        <span>{{i18n this.label}}</span>
-      </a>
-    {{/unless}}
+      <span>{{i18n this.label}}</span>
+    </a>
   </template>
 }

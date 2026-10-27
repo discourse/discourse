@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import HeaderProfileToggle from "discourse/components/header/profile-toggle";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
@@ -145,9 +144,6 @@ export default class Icons extends Component {
               @active={{this.header.userVisible}}
               @toggleUserMenu={{@toggleUserMenu}}
             />
-            {{#if this.mobileTabBar.splitsProfileMenu}}
-              <HeaderProfileToggle />
-            {{/if}}
           {{/if}}
         {{else if (eq entry.key "interface-color-selector")}}
           {{#if this.interfaceColor.selectorAvailableInHeader}}

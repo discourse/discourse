@@ -118,191 +118,183 @@ export default class UserMenuProfileTabContent extends Component {
 
   <template>
     <ul aria-labelledby={{@ariaLabelledby}} class={{@class}}>
-      {{#unless @hideStatusControls}}
-        {{#if this.siteSettings.enable_user_status}}
-          <li class="set-user-status">
-            <DButton
-              class="btn-flat profile-tab-btn"
-              @action={{this.setUserStatusClick}}
-            >
-              {{#if this.currentUser.status}}
-                {{dEmoji this.currentUser.status.emoji}}
-                <span class="item-label">
-                  {{this.currentUser.status.description}}
-                  {{#if this.currentUser.status.ends_at}}
-                    {{dAgeWithTooltip this.currentUser.status.ends_at}}
-                  {{/if}}
-                </span>
-              {{else}}
-                {{dIcon "circle-plus"}}
-                <span class="item-label">
-                  {{i18n "user_status.set_custom_status"}}
-                </span>
-              {{/if}}
-            </DButton>
-          </li>
-        {{/if}}
-
-        <li
-          class={{dConcatClass
-            "presence-toggle"
-            (unless this.isPresenceHidden "enabled")
-          }}
-          title={{i18n "presence_toggle.title"}}
-        >
+      {{#if this.siteSettings.enable_user_status}}
+        <li class="set-user-status">
           <DButton
             class="btn-flat profile-tab-btn"
-            @action={{this.togglePresence}}
+            @action={{this.setUserStatusClick}}
           >
-            {{dIcon (if this.isPresenceHidden "toggle-off" "toggle-on")}}
-            <span class="item-label">
-              {{#if this.isPresenceHidden}}
-                {{i18n "presence_toggle.offline"}}
-              {{else}}
-                {{i18n "presence_toggle.online"}}
-              {{/if}}
-            </span>
-          </DButton>
-        </li>
-
-        <li
-          class={{dConcatClass
-            "do-not-disturb"
-            (if this.isInDoNotDisturb "enabled")
-          }}
-        >
-          <DButton
-            class="btn-flat profile-tab-btn"
-            @action={{this.doNotDisturbClick}}
-          >
-            {{dIcon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
-            <span class="item-label">
-              {{#if this.isInDoNotDisturb}}
-                <span>{{i18n "pause_notifications.label"}}</span>
-                {{#if this.showDoNotDisturbEndDate}}
-                  {{dAgeWithTooltip this.doNotDisturbDateTime}}
+            {{#if this.currentUser.status}}
+              {{dEmoji this.currentUser.status.emoji}}
+              <span class="item-label">
+                {{this.currentUser.status.description}}
+                {{#if this.currentUser.status.ends_at}}
+                  {{dAgeWithTooltip this.currentUser.status.ends_at}}
                 {{/if}}
-              {{else}}
-                {{i18n "pause_notifications.label"}}
-              {{/if}}
-            </span>
+              </span>
+            {{else}}
+              {{dIcon "circle-plus"}}
+              <span class="item-label">
+                {{i18n "user_status.set_custom_status"}}
+              </span>
+            {{/if}}
           </DButton>
         </li>
+      {{/if}}
 
-      {{/unless}}
+      <li
+        class={{dConcatClass
+          "presence-toggle"
+          (unless this.isPresenceHidden "enabled")
+        }}
+        title={{i18n "presence_toggle.title"}}
+      >
+        <DButton
+          class="btn-flat profile-tab-btn"
+          @action={{this.togglePresence}}
+        >
+          {{dIcon (if this.isPresenceHidden "toggle-off" "toggle-on")}}
+          <span class="item-label">
+            {{#if this.isPresenceHidden}}
+              {{i18n "presence_toggle.offline"}}
+            {{else}}
+              {{i18n "presence_toggle.online"}}
+            {{/if}}
+          </span>
+        </DButton>
+      </li>
 
-      {{#unless @hideProfileLinks}}
-        <hr />
-
-        <li class="summary">
-          <LinkTo @model={{this.currentUser}} @route="user.summary">
-            {{dIcon "user"}}
-            <span class="item-label">
-              {{i18n "user.summary.title"}}
-            </span>
-          </LinkTo>
-        </li>
-
-        <li class="activity">
-          <LinkTo @model={{this.currentUser}} @route="userActivity">
-            {{dIcon "bars-staggered"}}
-            <span class="item-label">
-              {{i18n "user.activity_stream"}}
-            </span>
-          </LinkTo>
-        </li>
-
-        {{#if this.currentUser.can_invite_to_forum}}
-          <li class="invites">
-            <LinkTo @model={{this.currentUser}} @route="userInvited">
-              {{dIcon "user-plus"}}
-              <span class="item-label">
-                {{i18n "user.invited.title"}}
-              </span>
-            </LinkTo>
-          </li>
-        {{/if}}
-
-        <li class="drafts">
-          <LinkTo @model={{this.currentUser}} @route="userActivity.drafts">
-            {{dIcon "user_menu.drafts"}}
-            <span class="item-label">
-              {{#if this.currentUser.draft_count}}
-                {{i18n
-                  "drafts.label_with_count"
-                  count=this.currentUser.draft_count
-                }}
-              {{else}}
-                {{i18n "drafts.label"}}
+      <li
+        class={{dConcatClass
+          "do-not-disturb"
+          (if this.isInDoNotDisturb "enabled")
+        }}
+      >
+        <DButton
+          class="btn-flat profile-tab-btn"
+          @action={{this.doNotDisturbClick}}
+        >
+          {{dIcon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
+          <span class="item-label">
+            {{#if this.isInDoNotDisturb}}
+              <span>{{i18n "pause_notifications.label"}}</span>
+              {{#if this.showDoNotDisturbEndDate}}
+                {{dAgeWithTooltip this.doNotDisturbDateTime}}
               {{/if}}
-            </span>
-          </LinkTo>
-        </li>
+            {{else}}
+              {{i18n "pause_notifications.label"}}
+            {{/if}}
+          </span>
+        </DButton>
+      </li>
 
-        <li class="preferences">
-          <LinkTo @model={{this.currentUser}} @route="preferences">
-            {{dIcon "gear"}}
+      <hr />
+
+      <li class="summary">
+        <LinkTo @model={{this.currentUser}} @route="user.summary">
+          {{dIcon "user"}}
+          <span class="item-label">
+            {{i18n "user.summary.title"}}
+          </span>
+        </LinkTo>
+      </li>
+
+      <li class="activity">
+        <LinkTo @model={{this.currentUser}} @route="userActivity">
+          {{dIcon "bars-staggered"}}
+          <span class="item-label">
+            {{i18n "user.activity_stream"}}
+          </span>
+        </LinkTo>
+      </li>
+
+      {{#if this.currentUser.can_invite_to_forum}}
+        <li class="invites">
+          <LinkTo @model={{this.currentUser}} @route="userInvited">
+            {{dIcon "user-plus"}}
             <span class="item-label">
-              {{i18n "user.preferences.title"}}
+              {{i18n "user.invited.title"}}
             </span>
           </LinkTo>
         </li>
+      {{/if}}
 
-      {{/unless}}
+      <li class="drafts">
+        <LinkTo @model={{this.currentUser}} @route="userActivity.drafts">
+          {{dIcon "user_menu.drafts"}}
+          <span class="item-label">
+            {{#if this.currentUser.draft_count}}
+              {{i18n
+                "drafts.label_with_count"
+                count=this.currentUser.draft_count
+              }}
+            {{else}}
+              {{i18n "drafts.label"}}
+            {{/if}}
+          </span>
+        </LinkTo>
+      </li>
 
-      {{#unless @hideSessionControls}}
-        {{#if this.showToggleAnonymousButton}}
-          <li
-            class={{if
-              this.currentUser.is_anonymous
-              "disable-anonymous"
-              "enable-anonymous"
-            }}
-          >
-            <DButton
-              class="btn-flat profile-tab-btn"
-              @action={{this.toggleAnonymous}}
-            >
-              {{#if this.currentUser.is_anonymous}}
-                {{dIcon "ban"}}
-                <span class="item-label">
-                  {{i18n "switch_from_anon"}}
-                </span>
-              {{else}}
-                {{dIcon "user-secret"}}
-                <span class="item-label">
-                  {{i18n "switch_to_anon"}}
-                </span>
-              {{/if}}
-            </DButton>
-          </li>
-        {{/if}}
+      <li class="preferences">
+        <LinkTo @model={{this.currentUser}} @route="preferences">
+          {{dIcon "gear"}}
+          <span class="item-label">
+            {{i18n "user.preferences.title"}}
+          </span>
+        </LinkTo>
+      </li>
 
-        {{#each this.extraItems as |item|}}
-          <li class={{item.className}}>
-            <a href={{item.href}}>
-              {{#if item.icon}}
-                {{dIcon item.icon}}
-              {{/if}}
-              <span class="item-label">
-                {{item.content}}
-              </span>
-            </a>
-          </li>
-        {{/each}}
-
-        <li class="logout">
+      {{#if this.showToggleAnonymousButton}}
+        <li
+          class={{if
+            this.currentUser.is_anonymous
+            "disable-anonymous"
+            "enable-anonymous"
+          }}
+        >
           <DButton
             class="btn-flat profile-tab-btn"
-            @action={{routeAction "logout"}}
+            @action={{this.toggleAnonymous}}
           >
-            {{dIcon "right-from-bracket"}}
-            <span class="item-label">
-              {{i18n "user.log_out"}}
-            </span>
+            {{#if this.currentUser.is_anonymous}}
+              {{dIcon "ban"}}
+              <span class="item-label">
+                {{i18n "switch_from_anon"}}
+              </span>
+            {{else}}
+              {{dIcon "user-secret"}}
+              <span class="item-label">
+                {{i18n "switch_to_anon"}}
+              </span>
+            {{/if}}
           </DButton>
         </li>
-      {{/unless}}
+      {{/if}}
+
+      {{#each this.extraItems as |item|}}
+        <li class={{item.className}}>
+          <a href={{item.href}}>
+            {{#if item.icon}}
+              {{dIcon item.icon}}
+            {{/if}}
+            <span class="item-label">
+              {{item.content}}
+            </span>
+          </a>
+        </li>
+      {{/each}}
+
+      <li class="logout">
+        <DButton
+          class="btn-flat profile-tab-btn"
+          @action={{routeAction "logout"}}
+        >
+          {{dIcon "right-from-bracket"}}
+          <span class="item-label">
+            {{i18n "user.log_out"}}
+          </span>
+        </DButton>
+      </li>
     </ul>
   </template>
 }

@@ -6,14 +6,10 @@ import { service } from "@ember/service";
 import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
 import DButton from "discourse/ui-kit/d-button";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import SidebarAccountActions from "./account-actions.gjs";
 import ApiPanels from "./api-panels.gjs";
 import Footer from "./footer.gjs";
 import Sections from "./sections.gjs";
-import SidebarTabBar from "./tab-bar.gjs";
 
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
@@ -28,14 +24,6 @@ export default class SidebarHamburgerDropdown extends Component {
     } else {
       return this.args.collapsableSections;
     }
-  }
-
-  // Your profile menu opens from the side of the avatar that opens it
-  get opensFromEnd() {
-    return (
-      this.mobileTabBar.splitsProfileMenu &&
-      this.mobileTabBar.menuPanelKey === USER_NAV_PANEL
-    );
   }
 
   get menuAction() {
@@ -65,9 +53,7 @@ export default class SidebarHamburgerDropdown extends Component {
   }
 
   <template>
-    <div
-      class={{dConcatClass "hamburger-panel" (if this.opensFromEnd "--end")}}
-    >
+    <div class="hamburger-panel">
       <div
         class="revamped menu-panel drop-down"
         data-max-width="320"
@@ -80,9 +66,6 @@ export default class SidebarHamburgerDropdown extends Component {
                 class="sidebar-hamburger-dropdown"
                 {{didInsert this.focusFirstLink}}
               >
-                {{#unless @forceMainSidebarPanel}}
-                  <SidebarTabBar />
-                {{/unless}}
                 {{#if this.menuAction}}
                   <div class="sidebar-menu-action">
                     <DButton
@@ -93,7 +76,6 @@ export default class SidebarHamburgerDropdown extends Component {
                     />
                   </div>
                 {{/if}}
-                <SidebarAccountActions @status={{true}} />
                 <PluginOutlet
                   @name="before-sidebar-sections"
                   @outletArgs={{lazyHash
@@ -118,7 +100,6 @@ export default class SidebarHamburgerDropdown extends Component {
                   />
                 {{/if}}
                 <PluginOutlet @name="after-sidebar-sections" />
-                <SidebarAccountActions />
                 <Footer />
               </div>
             </DeferredRender>

@@ -10,11 +10,6 @@ module PageObjects
         self
       end
 
-      def open_profile_menu
-        find(".header-profile-toggle button").click
-        self
-      end
-
       def open_section_menu
         find(".header-section-nav button").click
         self
