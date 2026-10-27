@@ -731,6 +731,32 @@ RSpec.describe PostsController do
       }
     end
 
+    context "with staff_edit_locks_post" do
+      before { SiteSetting.staff_edit_locks_post = true }
+
+      it "locks a member's first post when a moderator only changes the topic title" do
+        first_post = create_post(user:, title: "Original topic title", raw: "Original topic body")
+        sign_in(moderator)
+
+        events =
+          DiscourseEvent.track_events(:post_locked) do
+            put "/posts/#{first_post.id}.json",
+                params: {
+                  title: "A title only a moderator changed",
+                  post: {
+                    raw: first_post.raw,
+                  },
+                }
+          end
+
+        expect(response.status).to eq(200)
+        expect(first_post.reload).to be_locked
+        expect(events.map { |event| event[:params] }).to eq(
+          [[first_post, { acting_user: moderator }]],
+        )
+      end
+    end
+
     context "when a trust level 1 user edits a public wiki post" do
       it "does not publish a hidden new user profile onebox" do
         author = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
@@ -4950,6 +4976,28 @@ RSpec.describe PostsController do
       expect(response.status).to eq(200)
       public_post.reload
       expect(public_post).not_to be_locked
+    end
+
+    it "fires post_locked and post_unlocked as the moderator, once per change" do
+      events =
+        DiscourseEvent.track_events do
+          put "/posts/#{public_post.id}/locked.json", params: { locked: "true" }
+          put "/posts/#{public_post.id}/locked.json", params: { locked: "true" }
+          put "/posts/#{public_post.id}/locked.json", params: { locked: "false" }
+        end
+
+      expect(
+        events.filter_map do |event|
+          if %i[post_locked post_unlocked].include?(event[:event_name])
+            [event[:event_name], event[:params]]
+          end
+        end,
+      ).to eq(
+        [
+          [:post_locked, [public_post, { acting_user: moderator }]],
+          [:post_unlocked, [public_post, { acting_user: moderator }]],
+        ],
+      )
     end
   end
 

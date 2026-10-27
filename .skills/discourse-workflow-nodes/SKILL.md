@@ -26,7 +26,10 @@ of what it does, and has a trigger counterpart when it changes state.
    by `TopicTimerChanged::V1.description_for_change("set")`.
 4. **Actions don't keep a hidden generic.** Picking the direction from data is an If node feeding two actions.
 5. **Share code, not nodes.** Nodes that differ only by direction share a module (see `PostLifecycle`).
-   Never add an intermediate base class: every `NodeType` subclass registers itself as a node.
+   Never add an intermediate base class: every `NodeType` subclass registers itself as a node. That module
+   builds on the entity's base when there is one: `TopicChangeAction` and `PostChangeAction` (description,
+   per-item loop, `changed` output) for actions, `TopicEventTrigger` and `PostModerationTrigger` for triggers
+   whose event passes `acting_user:`.
 
 ## Naming
 
@@ -98,6 +101,7 @@ Trigger nodes receive it as a trailing hash: `def initialize(topic, status, enab
 - When the change only happens in a controller, move it into a core service that fires the event after its transaction, only when something changed, and call that service from the controller and the action alike (`Topic::UpdateSlowMode`).
 - When a model method wraps the change in a transaction that can still roll back, register the event with `DB.after_commit` after its success check, and only when the state really changed, so a failed or no-op call never fires it (`TopicConverter` checks the archetype it started from).
 - When a record's `acting_user` falls back to its owner (`Post#acting_user` returns the author), never read that method for the event, or automatic changes report the owner as actor. Take an `acting_user:` keyword defaulting to the explicitly set value, and pass it from every caller (`Post#hide!` / `#unhide!`).
+- When a writer repeats a change on purpose (re-locking a locked post records the new locker and logs again), keep its writes and fire only on the transition, comparing the state read before the write (`PostLocker`).
 - Bulk writers of the same state (`update_all`, raw SQL) fire the event once per record they actually changed: limit the update to records not yet in that state and fire for the ids it returns (`UserSilencer#hide_posts`).
 - When several emitters report a change, listen to the event fired by the model method that makes it and ignore wrappers: Topic deleted listens to `Topic#trash!`'s `:topic_trashed`, not `PostDestroyer`'s `:topic_destroyed` (also fired when authors only mark their topic for deletion, and on permanent deletes). When a wrapper fires the same event itself for a different change, have it say so with an extra kwarg the trigger checks: `PostDestroyer` fires `:topic_recovered` with `from_trash: false` when authors cancel their own pending deletion, and Topic recovered ignores it.
 - Pass every positional argument, even when it's `nil`, so the trailing hash never binds to an optional positional.
@@ -138,6 +142,10 @@ end
 - `NodeUpgrader` keeps the node's id, name, position, credentials and settings, so connections, expressions and pinned data still find it.
 - A saved node goes through at most one upgrade: never deprecate towards another deprecated version, and when a node is both versioned and split, do both in one step.
 - Spec every route with `Foo::V1.upgrade(parameters)`, including the configurations that return nil.
+
+## Finding records
+
+- Actions staff take from the post menu (hide, lock…) find the post with `PostModerationLookup#find_post`, which mirrors `PostsController#find_post_using`: deleted posts and posts in deleted topics for those who can moderate the topic, and the topic loaded with deleted ones so guardian checks don't fail on it.
 
 ## Output conventions
 

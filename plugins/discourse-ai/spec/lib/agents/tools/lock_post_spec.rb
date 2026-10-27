@@ -49,6 +49,20 @@ RSpec.describe DiscourseAi::Agents::Tools::LockPost do
     expect(post.reload.locked_by_id).to be_nil
   end
 
+  it "fires post_locked and post_unlocked as the bot user" do
+    locked =
+      DiscourseEvent.track_events(:post_locked) do
+        tool(post_id: post.id, locked: true, reason: "Preventing edits").invoke
+      end
+    unlocked =
+      DiscourseEvent.track_events(:post_unlocked) do
+        tool(post_id: post.id, locked: false, reason: "Allowing edits again").invoke
+      end
+
+    expect(locked.map { |event| event[:params] }).to eq([[post, { acting_user: bot_user }]])
+    expect(unlocked.map { |event| event[:params] }).to eq([[post, { acting_user: bot_user }]])
+  end
+
   it "returns an error when post is not found" do
     result = tool(post_id: -1, locked: true, reason: "Test").invoke
 

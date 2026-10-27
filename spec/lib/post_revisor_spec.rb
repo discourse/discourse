@@ -1494,6 +1494,33 @@ describe PostRevisor do
           staff_post.reload
           expect(staff_post).not_to be_locked
         end
+
+        it "fires post_locked as the editor on the first staff edit only" do
+          first_edit =
+            DiscourseEvent.track_events(:post_locked) do
+              post_revisor.revise!(moderator, raw: "lets totally update the body")
+            end
+          second_edit =
+            DiscourseEvent.track_events(:post_locked) do
+              PostRevisor.new(post.reload).revise!(moderator, raw: "and update it once more")
+            end
+
+          expect(first_edit.map { |event| event[:params] }).to eq(
+            [[post, { acting_user: moderator }]],
+          )
+          expect(second_edit).to be_empty
+        end
+
+        it "doesn't fire post_locked for edits that don't lock the post" do
+          events =
+            DiscourseEvent.track_events(:post_locked) do
+              post_revisor.revise!(moderator, title: "New topic title, cool!")
+              post_revisor.revise!(user, raw: "lets totally update the body")
+              post_revisor.revise!(Discourse.system_user, raw: "I usually replace hotlinked images")
+            end
+
+          expect(events).to be_empty
+        end
       end
     end
 

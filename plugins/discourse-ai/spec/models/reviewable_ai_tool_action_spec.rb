@@ -741,6 +741,45 @@ RSpec.describe ReviewableAiToolAction do
         )
       end
 
+      it "fires post_locked once, as the tool's bot user, when a moderator approves a lock" do
+        post = Fabricate(:post)
+        reviewable =
+          create_reviewable(
+            create_tool_action(
+              tool_name: "lock_post",
+              params: {
+                post_id: post.id,
+                locked: true,
+                reason: "Moderation",
+              },
+            ),
+          )
+
+        events = DiscourseEvent.track_events(:post_locked) { reviewable.perform(admin, :approve) }
+
+        expect(events.map { |event| event[:params] }).to eq([[post, { acting_user: bot_user }]])
+      end
+
+      it "fires post_unlocked once, as the tool's bot user, when a moderator approves an unlock" do
+        post = Fabricate(:post)
+        PostLocker.new(post, admin).lock
+        reviewable =
+          create_reviewable(
+            create_tool_action(
+              tool_name: "lock_post",
+              params: {
+                post_id: post.id,
+                locked: false,
+                reason: "Moderation",
+              },
+            ),
+          )
+
+        events = DiscourseEvent.track_events(:post_unlocked) { reviewable.perform(admin, :approve) }
+
+        expect(events.map { |event| event[:params] }).to eq([[post, { acting_user: bot_user }]])
+      end
+
       it "creates no statement when an AI tool reviewable unlocks a post" do
         post = Fabricate(:post)
         PostLocker.new(post, admin).lock
