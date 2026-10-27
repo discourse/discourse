@@ -401,13 +401,9 @@ export default async function setupTests(config) {
       console.clear();
     }
     // Color preferences persist in cookies, which would force a later test's color mode
-    for (const name of [
-      "forced_color_mode",
-      "color_scheme_id",
-      "dark_scheme_id",
-    ]) {
-      removeCookie(name, { path: "/" });
-    }
+    removeCookie("forced_color_mode", { path: "/" });
+    removeCookie("color_scheme_id", { path: "/" });
+    removeCookie("dark_scheme_id", { path: "/" });
     enableLoadMoreObserver();
     enableVirtualization();
 
