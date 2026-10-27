@@ -282,7 +282,8 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return (
       query.length >= 2 &&
       this.args.multiple &&
-      this.args.selectDescendants !== false
+      this.args.selectDescendants !== false &&
+      this.args.subcategories !== false
     );
   }
 
@@ -336,14 +337,16 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const page = typeof opts.cursor === "number" ? opts.cursor : 1;
     // `#pinned` and the family ids below read these records synchronously from the site.
     await Category.asyncFindByIds(
-      [this.args.scope, this.args.prioritize]
-        .map((value) => this.#idOf(value))
-        .filter((id) => id != null)
+      [
+        ...[this.args.scope, this.args.prioritize].map((value) =>
+          this.#idOf(value)
+        ),
+        ...this.#readOnly,
+      ].filter((id) => id != null)
     );
+    // The scope's family root may be a parent the first lookup did not cover.
     await Category.asyncFindByIds(
-      [this.#familyId(this.args.scope), ...this.#readOnly].filter(
-        (id) => id != null
-      )
+      [this.#familyId(this.args.scope)].filter((id) => id != null)
     );
     const { categories, categoriesCount } = await Category.asyncSearch(query, {
       includeAncestors: true,

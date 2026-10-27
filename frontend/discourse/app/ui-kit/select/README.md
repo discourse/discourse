@@ -704,10 +704,11 @@ The category family has two recipes:
   `:footer` block receives the number left out and the parent, so the caller can link to the
   rest.
 
-When the site preloads its categories, both recipes answer from them without a request, in the
-site's order, returning every matching row for the engine to window. A site that loads
-categories lazily pages `Category.asyncSearch` instead, leaves every rule to the server, and keeps
-the server's order; the scope's own category and read-only categories, which the server pages
+When the site preloads its categories, both recipes answer from them without a request,
+returning every matching row for the engine to window: the picker in the site's order, the drop
+in its caller's `@items` order while browsing and in `Category.search`'s ranking while searching.
+A site that loads categories lazily pages `Category.asyncSearch` instead (the drop then ignores
+`@items`), leaves every rule to the server, and keeps the server's order; the scope's own category and read-only categories, which the server pages
 leave out, are special rows. Held ids resolve through `Category.asyncFindByIds` either way, and
 "and all subcategories" walks the tree through `Category.asyncFindDescendants`.
 

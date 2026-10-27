@@ -932,6 +932,18 @@ module(
         );
         assert.deepEqual(optionValues().sort(), ["1001", "1002"]);
       });
+
+      test("no descendants rows when subcategories are left out", async function (assert) {
+        await render(
+          <template>
+            <Host @multiple={{true}} @subcategories={{false}} />
+          </template>
+        );
+        await select().open();
+        await select().search("Parent Category");
+
+        assert.deepEqual(optionValues(), ["1001"], "only the category itself");
+      });
     });
 
     module("lazy loading", function (nestedHooks) {
