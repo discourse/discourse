@@ -87,11 +87,14 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // the topmost message, so the loading skeleton and the empty state don't count
     const update = () => {
       const card = element.querySelector(".admin-onboarding-banner__wrap");
+      const firstMessage = content.querySelector(".chat-message-container");
       const covered =
         !!card &&
-        content.getBoundingClientRect().top <
+        !!firstMessage &&
+        firstMessage.getBoundingClientRect().top <
           card.getBoundingClientRect().bottom;
       element.classList.toggle("--over-content", covered);
     };
