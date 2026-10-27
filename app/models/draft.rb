@@ -180,7 +180,7 @@ class Draft < ActiveRecord::Base
     Draft
       .discarded
       .where("deleted_at <= ?", cutoff)
-      .in_batches(of: 1000) { |batch| delete_discarded!(batch.ids) }
+      .in_batches(of: 1000) { |batch| delete_discarded!(batch.ids, cutoff: cutoff) }
   end
 
   # Discarded rows don't count towards `max_drafts_per_user`, so cap them at the same number
@@ -197,12 +197,14 @@ class Draft < ActiveRecord::Base
     delete_discarded!(excess_ids)
   end
 
-  def self.delete_discarded!(ids)
+  def self.delete_discarded!(ids, cutoff: nil)
     return if ids.empty?
 
     # rows go first so a draft restored meanwhile keeps its upload references
-    purged_ids = DB.query_single(<<~SQL, ids: ids)
-      DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NOT NULL RETURNING id
+    purged_ids = DB.query_single(<<~SQL, ids: ids, cutoff: cutoff)
+      DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NOT NULL
+      #{"AND deleted_at <= :cutoff" if cutoff}
+      RETURNING id
     SQL
     UploadReference.where(target_type: "Draft", target_id: purged_ids).delete_all
   end
@@ -210,23 +212,29 @@ class Draft < ActiveRecord::Base
   private_class_method :evict_excess_discarded!, :delete_discarded!
 
   def restore!
-    sequence = DraftSequence.current(user_id, draft_key)
+    Draft.transaction(requires_new: true) do
+      # Invalidate saves from browsers still editing a previously discarded version.
+      sequence = DB.query_single(<<~SQL, user_id: user_id, draft_key: draft_key).first
+        INSERT INTO draft_sequences (user_id, draft_key, sequence)
+        VALUES (:user_id, :draft_key, 1)
+        ON CONFLICT (user_id, draft_key) DO UPDATE
+        SET sequence = draft_sequences.sequence + 1
+        RETURNING sequence
+      SQL
 
-    begin
       count =
         Draft
           .discarded
           .where(id: id)
           .where.not(Draft.live.where(user_id: user_id, draft_key: draft_key).arel.exists)
           .update_all(deleted_at: nil, sequence: sequence, updated_at: Time.zone.now)
-    rescue ActiveRecord::RecordNotUnique
-      count = 0
+      raise RestoreConflict if count == 0
+
+      UserStat.update_draft_count(user_id)
+      reload
     end
-
-    raise RestoreConflict if count == 0
-
-    UserStat.update_draft_count(user_id)
-    reload
+  rescue ActiveRecord::RecordNotUnique
+    raise RestoreConflict
   end
 
   def recoverable?

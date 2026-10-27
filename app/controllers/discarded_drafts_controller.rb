@@ -57,7 +57,11 @@ class DiscardedDraftsController < ApplicationController
   end
 
   def destroy
-    find_discarded_draft.destroy!
+    draft = find_discarded_draft
+    draft.with_lock do
+      raise Discourse::NotFound if draft.deleted_at.nil?
+      draft.destroy!
+    end
     head :no_content
   end
 

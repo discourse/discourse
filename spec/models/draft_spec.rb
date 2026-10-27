@@ -423,7 +423,7 @@ RSpec.describe Draft do
     end
 
     describe "#restore!" do
-      it "brings the draft back at the current sequence" do
+      it "brings the draft back with a new sequence" do
         Draft.set(user, key, 0, content)
         discard(user, key)
         DraftSequence.next!(user, key)
@@ -431,8 +431,24 @@ RSpec.describe Draft do
         Draft.discarded.find_by(user: user).restore!
 
         sequence = DraftSequence.current(user, key)
+        expect(sequence).to eq(2)
         expect(Draft.get(user, key, sequence)).to eq(content)
         expect(user.user_stat.reload.draft_count).to eq(1)
+      end
+
+      it "rejects stale saves after restoring an earlier discarded version" do
+        Draft.set(user, key, 0, content)
+        discard(user, key)
+        original = Draft.discarded.find_by!(user: user, draft_key: key)
+        stale_sequence = Draft.set(user, key, 0, { reply: "second version" }.to_json)
+        discard(user, key)
+
+        original.restore!
+
+        expect do
+          Draft.set(user, key, stale_sequence, { reply: "late save" }.to_json)
+        end.to raise_error(Draft::OutOfSequence)
+        expect(Draft.get(user, key, original.sequence)).to eq(content)
       end
 
       it "refuses to replace a live draft with the same key" do
@@ -448,6 +464,29 @@ RSpec.describe Draft do
     end
 
     describe ".purge_discarded!" do
+      it "keeps a candidate discarded again after restoration with its upload references" do
+        SiteSetting.discarded_drafts_retention_days = 7
+        upload = Fabricate(:upload)
+        Draft.set(user, key, 0, { reply: "![image](#{upload.short_url})" }.to_json)
+        freeze_time(8.days.ago) { discard(user, key) }
+        draft = Draft.discarded.find_by!(user: user, draft_key: key)
+
+        interleaved = false
+        allow(DB).to receive(:query_single).and_wrap_original do |original, *args|
+          if !interleaved && args.first.include?("DELETE FROM drafts")
+            interleaved = true
+            draft.restore!
+            discard(user, key)
+          end
+          original.call(*args)
+        end
+
+        Draft.purge_discarded!
+
+        expect(Draft.discarded.where(id: draft.id)).to exist
+        expect(UploadReference.where(target_type: "Draft", target_id: draft.id)).to exist
+      end
+
       it "deletes discarded drafts past the retention window with their upload references" do
         SiteSetting.discarded_drafts_retention_days = 3
         upload = Fabricate(:upload)

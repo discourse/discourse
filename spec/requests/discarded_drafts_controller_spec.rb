@@ -80,6 +80,29 @@ RSpec.describe DiscardedDraftsController do
   end
 
   describe "#destroy" do
+    it "keeps a draft restored after the deletion request loads it" do
+      upload = Fabricate(:upload)
+      key = "new_topic_1"
+      Draft.set(user, key, 0, { reply: "![image](#{upload.short_url})" }.to_json)
+      Draft.clear(user, key, 0)
+      draft = Draft.discarded.find_by!(user: user, draft_key: key)
+      sign_in(user)
+
+      allow_any_instance_of(DiscardedDraftsController).to receive(
+        :find_discarded_draft,
+      ).and_wrap_original do |original, *args|
+        loaded = original.call(*args)
+        Draft.find(loaded.id).restore!
+        loaded
+      end
+
+      delete "/discarded_drafts/#{draft.id}.json"
+
+      expect(response.status).to eq(404)
+      expect(Draft.live.where(id: draft.id)).to exist
+      expect(UploadReference.where(target_type: "Draft", target_id: draft.id)).to exist
+    end
+
     it "deletes the draft permanently" do
       draft = discarded_draft(user)
       sign_in(user)
