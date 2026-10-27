@@ -59,28 +59,13 @@ module DiscourseWorkflows
       end
 
       def timestamp(exec_ctx, config, prefix, item_index)
-        value = config["#{prefix}_until"].to_s.presence
-        return if value.nil?
-
-        zone = ActiveSupport::TimeZone[resolve_timezone(exec_ctx, item_index)]
-        parsed =
-          begin
-            zone&.parse(value)
-          rescue ArgumentError
-            nil
-          end
-
-        if parsed.nil?
-          raise_node_error!(
-            I18n.t(
-              "discourse_workflows.errors.topic_pin.invalid_timestamp",
-              field: "#{prefix}_until",
-              value: value,
-            ),
-          )
-        end
-
-        parsed.iso8601
+        parse_time_in_timezone(
+          exec_ctx,
+          config["#{prefix}_until"],
+          item_index:,
+          field: "#{prefix}_until",
+          error_key: "discourse_workflows.errors.topic_pin.invalid_timestamp",
+        )&.iso8601
       end
     end
   end

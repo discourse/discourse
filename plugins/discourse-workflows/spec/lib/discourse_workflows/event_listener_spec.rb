@@ -33,6 +33,17 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(job["args"].first["workflow_id"]).to eq(workflow.id)
   end
 
+  it "runs the hidden timer trigger and the matching per-change trigger once each" do
+    create_published_workflow("changed-trigger", "trigger:topic_timer_changed")
+    create_published_workflow("set-trigger", "trigger:topic_timer_set")
+    create_published_workflow("cleared-trigger", "trigger:topic_timer_cleared")
+
+    topic.set_or_create_timer(TopicTimer.types[:close], 24, by_user: admin)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "set-trigger")
+    expect(trigger_data_for("set-trigger")).to include("actor" => include("id" => admin.id))
+  end
+
   it "does not enqueue when plugin is disabled" do
     SiteSetting.enable_discourse_workflows = false
 
