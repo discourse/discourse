@@ -196,6 +196,28 @@ RSpec.describe PostsController do
       expect(response.status).to eq(200)
       expect(form_post.reload.form_submission.answers).to eq(answers)
     end
+
+    it "re-renders the text when reverting an answer-only revision from the middle of the history" do
+      confirmed = submission.with_answers(answers.merge("confirmed" => true))
+      PostRevisor.new(form_post).revise!(
+        user,
+        { raw: confirmed.render, form_data: confirmed.to_h },
+        force_new_version: true,
+      )
+      described = confirmed.with_answers(confirmed.answers.merge("description" => "A later one."))
+      PostRevisor.new(form_post).revise!(
+        user,
+        { raw: described.render, form_data: described.to_h },
+        force_new_version: true,
+      )
+      expect(form_post.reload.version).to eq(3)
+
+      sign_in(Fabricate(:admin))
+      put "/posts/#{form_post.id}/revisions/2/revert.json"
+      expect(response.status).to eq(200)
+      expect(form_post.reload.raw).to eq(submission.render)
+      expect(form_post.form_submission.answers).to eq(answers)
+    end
   end
 
   describe "form preview" do

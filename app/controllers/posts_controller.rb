@@ -613,6 +613,10 @@ class PostsController < ApplicationController
     if post_revision.modifications["form_data"].present? &&
          post_revision.modifications["form_data"][0] != post.form_data
       changes[:form_data] = post_revision.modifications["form_data"][0]
+      # An answer-only revision has no raw change, so raw comes from the restored form.
+      if !changes.key?(:raw) && (raw = restored_form_raw(changes[:form_data])) && raw != post.raw
+        changes[:raw] = raw
+      end
     end
     if post_revision.modifications["reply_to_post_number"].present? &&
          post_revision.modifications["reply_to_post_number"][0] != post.reply_to_post_number
@@ -1124,6 +1128,12 @@ class PostsController < ApplicationController
       end
     end
     render_post_json(post)
+  end
+
+  def restored_form_raw(form_data)
+    FormTemplate::Submission.new(form_data, validate: false).normalized_raw
+  rescue ArgumentError, FormTemplate::InvalidAnswers
+    nil
   end
 
   def find_post_from_params
