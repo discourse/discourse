@@ -70,6 +70,65 @@ RSpec.describe PostsController do
       expect(result.created_post.form_data).to eq(submission.to_h)
     end
 
+    it "retains an omitted attachment through queued approval, editing, and author recovery" do
+      SiteSetting.editing_grace_period = 5.minutes
+      upload = Fabricate(:upload, user:)
+      form_template.update!(
+        template: (form_template.fields + [{ "id" => "attachment", "type" => "upload" }]).to_yaml,
+      )
+      category.form_templates << form_template
+      category.update!(require_topic_approval: true)
+      submitted_answers = answers.merge("attachment" => "![attachment](#{upload.short_url})")
+
+      post "/posts.json",
+           params: {
+             title: "A queued form with an omitted attachment",
+             category: category.id,
+             form_template_data: { id: form_template.id, answers: submitted_answers }.to_json,
+           }
+      expect(response.status).to eq(200)
+      reviewable = ReviewableQueuedPost.last
+      expect(
+        UploadReference.where(target_type: "ReviewableQueuedPost", target_id: reviewable.id).pluck(
+          :upload_id,
+        ),
+      ).to eq([upload.id])
+
+      approval = reviewable.perform(Fabricate(:admin), :approve_post)
+      expect(approval).to be_success
+      created = approval.created_post
+      expect(created.form_submission.answers).to eq(submitted_answers)
+      expect(created.upload_references.pluck(:upload_id)).to eq([upload.id])
+      expect(created.raw).not_to include(upload.short_url)
+
+      edited_answers = submitted_answers.merge("description" => "An updated form description.")
+      put "/posts/#{created.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: edited_answers }.to_json,
+              form_state_token: created.form_state_token,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(created.reload.form_submission.answers).to eq(edited_answers)
+      expect(created.upload_references.pluck(:upload_id)).to eq([upload.id])
+      expect(created.version).to eq(1)
+      edited_data = created.form_data
+      edited_raw = created.raw
+
+      delete "/t/#{created.topic_id}.json"
+      expect(response.status).to eq(200)
+      expect(created.reload).to be_user_deleted
+      expect(created.form_data).to be_nil
+
+      put "/t/#{created.topic_id}/recover.json"
+      expect(response.status).to eq(200)
+      expect(created.reload).not_to be_user_deleted
+      expect(created.form_data).to eq(edited_data)
+      expect(created.raw).to eq(edited_raw)
+      expect(created.upload_references.pluck(:upload_id)).to eq([upload.id])
+    end
+
     it "persists the server definition and typed answers" do
       category.form_templates << form_template
       post "/posts.json",

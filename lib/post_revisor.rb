@@ -801,6 +801,9 @@ class PostRevisor
   end
 
   def use_cached_original_for_created_revision?
+    # Author recovery must restore the content immediately before deletion.
+    return false if @opts[:deleting_post]
+
     @previous_last_editor_id == @editor.id &&
       !PostRevision.exists?(post_id: @post.id, number: @post.version - 1)
   end
