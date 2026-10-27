@@ -1219,7 +1219,7 @@ No arguments passed to this event.
 
 </details>
 
-#### post:show-revision [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post-stream.js#L1306)
+#### post:show-revision [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post-stream.ts#L1625)
 
 | Position | Argument            | Type     | Always Present | Description |
 | -------- | ------------------- | -------- | -------------- | ----------- |
@@ -1228,7 +1228,7 @@ No arguments passed to this event.
 
 ### post-stream
 
-#### post-stream:filter-replies [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post-stream.js#L278)
+#### post-stream:filter-replies [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post-stream.ts#L473)
 
 | Position | Argument               | Type     | Always Present | Description |
 | -------- | ---------------------- | -------- | -------------- | ----------- |
@@ -1243,7 +1243,7 @@ No arguments passed to this event.
 | -------- | ----------------------- | -------- | -------------- | ----------- |
 | 1        | this.args.streamFilters | property | True           | -           |
 
-#### post-stream:filter-upwards [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post-stream.js#L305)
+#### post-stream:filter-upwards [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/post-stream.ts#L495)
 
 | Position | Argument            | Type     | Always Present | Description |
 | -------- | ------------------- | -------- | -------------- | ----------- |
