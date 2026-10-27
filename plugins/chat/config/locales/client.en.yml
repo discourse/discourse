@@ -313,6 +313,7 @@ en:
         read_only: "Channel is read only, you cannot send new messages right now."
       placeholder_silenced: "You cannot send messages at this time."
       remove_upload: "Remove file"
+      preview_upload: "Preview %{filename}"
       react: "React with emoji"
       reply: "Reply"
       message_actions: "Message actions"
