@@ -265,6 +265,7 @@
   // font lives here so the expanding textarea's sizing copy inherits it too
   .edit-title__wrapper {
     flex: 1 1 100%;
+    min-width: 0;
     font-family: var(--heading-font-family);
     font-size: var(--edit-topic-title-font-size);
     font-weight: var(--heading-font-weight);

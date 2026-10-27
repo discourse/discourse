@@ -43,10 +43,22 @@ export default class TopicTitleEditor extends Component {
   @action
   updateTitle(event) {
     const textarea = event.target;
-    const title = textarea.value.replace(/\s*\n\s*/g, " ");
+    const { selectionStart, selectionEnd, selectionDirection } = textarea;
+    let start = selectionStart;
+    let end = selectionEnd;
+    const title = textarea.value.replace(/\s*\n\s*/g, (match, offset) => {
+      if (selectionStart > offset) {
+        start -= Math.min(selectionStart - offset, match.length) - 1;
+      }
+      if (selectionEnd > offset) {
+        end -= Math.min(selectionEnd - offset, match.length) - 1;
+      }
+      return " ";
+    });
 
     if (title !== textarea.value) {
       textarea.value = title;
+      textarea.setSelectionRange(start, end, selectionDirection);
     }
 
     if (this.args.isEditingLocalization) {
