@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import GroupLink from "discourse/components/group-link";
 import { groupPath } from "discourse/lib/url";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 

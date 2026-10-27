@@ -4,7 +4,6 @@ import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-ca
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>
