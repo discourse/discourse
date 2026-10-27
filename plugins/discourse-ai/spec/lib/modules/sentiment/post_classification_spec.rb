@@ -6,6 +6,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
   before do
     enable_current_plugin
     SiteSetting.ai_sentiment_enabled = true
+    SiteSetting.ai_sentiment_emotion_enabled = true
     SiteSetting.ai_sentiment_model_configs =
       "[{\"model_name\":\"SamLowe/roberta-base-go_emotions\",\"endpoint\":\"http://samlowe-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"j-hartmann/emotion-english-distilroberta-base\",\"endpoint\":\"http://jhartmann-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"cardiffnlp/twitter-roberta-base-sentiment-latest\",\"endpoint\":\"http://cardiffnlp-sentiment.com\",\"api_key\":\"123\"}]"
   end
@@ -24,7 +25,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       expect(described_class.active_model_name_for(:sentiment)).to eq("custom/sentiment-model")
     end
 
-    it "uses a single legacy untyped custom classifier for sentiment read paths" do
+    it "uses a single dedicated untyped custom classifier for sentiment read paths" do
       SiteSetting.ai_sentiment_model_configs = [
         {
           model_name: "custom/classifier",
@@ -36,7 +37,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       expect(described_class.active_model_name_for(:sentiment)).to eq("custom/classifier")
     end
 
-    it "prefers the default emotion classifier when multiple legacy emotion classifiers are configured" do
+    it "prefers the default emotion classifier when multiple dedicated emotion classifiers are configured" do
       expect(described_class.active_model_name_for(:emotion)).to eq(
         DiscourseAi::Sentiment::Constants::EMOTION_MODEL,
       )
@@ -163,16 +164,20 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         )
       end
 
-      it "skips a lone legacy untyped sentiment config when sentiment strategy is agent" do
+      it "skips a lone dedicated untyped sentiment config when sentiment strategy is agent" do
         SiteSetting.ai_sentiment_model_configs = [
-          { model_name: "custom/legacy", endpoint: "https://legacy.example.com", api_key: "123" },
+          {
+            model_name: "custom/dedicated",
+            endpoint: "https://dedicated.example.com",
+            api_key: "123",
+          },
         ].to_json
         SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
         SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
 
         model_names = post_classification.classifiers.map { |c| c[:model_name] }
         expect(model_names).to include(DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL)
-        expect(model_names).not_to include("custom/legacy")
+        expect(model_names).not_to include("custom/dedicated")
       end
 
       it "skips storing when the agent returns no usable classification" do
@@ -213,12 +218,9 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         SiteSetting.ai_sentiment_sentiment_agent = agent_without_default_llm.id
 
         classifier =
-          post_classification.send(
-            :agent_classifier,
-            :sentiment,
-            agent_without_default_llm.id,
-            DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL,
-          )
+          post_classification.classifiers.find do |entry|
+            entry[:classification_type] == "sentiment"
+          end
 
         expect(classifier[:model]).to eq(newest_llm_model)
       end

@@ -1427,4 +1427,32 @@ module("Unit | Model | post-stream", function (hooks) {
       (error) => error.jqXHR && error.jqXHR.status === 500
     );
   });
+
+  test("stagePost keeps the server's shape for last_posted_at", function (assert) {
+    const postStream = buildStream.call(this, 10101, [1]);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", { id: 1, post_number: 1, topic_id: 10101 })
+    );
+    const user = store.createRecord("user", { username: "eviltrout", id: 321 });
+    const stagedPost = store.createRecord("post", {
+      raw: "hello world this is my new post",
+      topic_id: 10101,
+    });
+    postStream.topic.setProperties({ posts_count: 1, highest_post_number: 1 });
+
+    postStream.stagePost(stagedPost, user);
+
+    const lastPostedAt = postStream.topic.last_posted_at;
+    assert.strictEqual(
+      typeof lastPostedAt,
+      "string",
+      "last_posted_at is a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(lastPostedAt).toISOString(),
+      lastPostedAt,
+      "last_posted_at is an ISO 8601 timestamp"
+    );
+  });
 });

@@ -312,9 +312,12 @@ after_initialize do
   require_relative "lib/discourse_events/events/guardian_extensions"
   require_relative "lib/discourse_events/events/post_extension"
   require_relative "lib/discourse_events/events/topic_extension"
+  require_relative "lib/discourse_events/events/topics_filter"
   require_relative "lib/discourse_events/events/rrule_generator"
   require_relative "lib/discourse_events/events/rrule_configurator"
   require_relative "lib/discourse_events/events/web_hook_extension"
+
+  DiscourseEvents::Events::TopicsFilter.register(self)
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
 

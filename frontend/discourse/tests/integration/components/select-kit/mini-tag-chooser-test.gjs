@@ -340,7 +340,12 @@ module(
       assert.dom(".select-kit-header button[data-name='potato']").exists();
 
       const filterInput = ".select-kit-header .filter-input";
-      await click(filterInput);
+      await triggerKeyEvent(".select-kit-header", "keydown", 77);
+
+      assert.dom(filterInput).isFocused();
+      assert.dom(filterInput).hasValue("m");
+
+      await this.subject.emptyFilter();
 
       await triggerKeyEvent(filterInput, "keydown", "ArrowDown");
       await triggerKeyEvent(filterInput, "keydown", "Enter");

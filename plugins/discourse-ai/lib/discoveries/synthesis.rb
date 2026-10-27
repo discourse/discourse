@@ -192,9 +192,10 @@ module DiscourseAi
         input["url"] = slugless_url(candidate["url"]) if candidate["url"]
         input["created"] = day(candidate["created"]) if candidate["created"]
         input["author_is_staff"] = true if candidate["author_is_staff"]
+        input["solved"] = true if candidate["solved"]
         if candidate["passages"].present?
           input["passages"] = candidate["passages"].map do |passage|
-            passage.slice("post_number", "excerpt").compact
+            passage.slice("post_number", "excerpt", "answer").compact
           end
         else
           input["excerpt"] = candidate["excerpt"] if candidate["excerpt"]

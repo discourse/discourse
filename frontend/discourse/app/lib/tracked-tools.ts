@@ -1,6 +1,12 @@
 import { setCustomTagFor } from "@glimmer/manager";
 import { tracked } from "@glimmer/tracking";
-import { dirtyTagFor, tagFor, track, updateTag } from "@glimmer/validator";
+import {
+  dirtyTagFor,
+  tagFor,
+  track,
+  type UpdatableTag,
+  updateTag,
+} from "@glimmer/validator";
 import { meta as metaFor, peekMeta } from "@ember/-internals/meta";
 import { TrackedDescriptor } from "@ember/-internals/metal";
 import {
@@ -10,18 +16,53 @@ import {
 } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 
+/** Babel's legacy field descriptor, with values kept unknown until validated. */
+interface FieldDescriptor<Value = unknown> {
+  initializer?: (this: object) => Value;
+  get?: (this: object) => Value;
+  set?: (this: object, value: Value) => void;
+  value?: Value;
+  writable?: boolean;
+  enumerable?: boolean;
+  configurable?: boolean;
+  isTracked?: boolean;
+}
+
+/** Accessors returned by the legacy tracked field decorators. */
+interface TrackedAccessor<Value = unknown> {
+  get: (this: object) => Value;
+  set: (this: object, value: Value) => void;
+}
+
 /**
- * Define a tracked property on an object without needing to use the @tracked decorator.
+ * TODO(typescript-pending): Ember's descriptor overload permits undefined and
+ * untyped accessors, and omits isTracked. Remove when it exposes the field
+ * decorator's guaranteed accessors and preserves the initializer's value type.
+ */
+type TrackedFieldDecorator = <Value>(
+  target: object,
+  key: string,
+  desc: FieldDescriptor<Value>
+) => TrackedAccessor<Value>;
+
+type ArrayValue = readonly unknown[] | null | undefined;
+
+/**
+ * Define a tracked property on an object without needing to use the `@tracked` decorator.
  * Useful when meta-programming the creation of properties on an object.
  *
  * This must be run before the property is first accessed, so it normally makes sense for
  * this to only be called from a constructor.
  */
-export function defineTrackedProperty(target, key, value) {
+export function defineTrackedProperty(
+  target: object,
+  key: string,
+  value: unknown
+): void {
   Object.defineProperty(
     target,
     key,
-    tracked(target, key, { enumerable: true, value })
+    (tracked as TrackedFieldDecorator)(target, key, { enumerable: true, value })
   );
 }
 
@@ -39,11 +80,10 @@ export function defineTrackedProperty(target, key, value) {
  * 1. Registers `setCustomTagFor` so `tagForProperty()` bypasses `setupMandatorySetter`
  * 2. Intercepts `set` to also call `dirtyTagFor()` for classic chain tag invalidation
  *
- * @template {object} T
- * @param {T} obj - The object to wrap in a tracked proxy.
- * @returns {T} A proxy that supports both native autotracking and classic `@computed` chains.
+ * @param obj - The object to wrap in a tracked proxy.
+ * @returns A proxy that supports both native autotracking and classic `@computed` chains.
  */
-export function trackedObjectWithComputedSupport(obj) {
+export function trackedObjectWithComputedSupport<T extends object>(obj: T): T {
   const inner = trackedObject(obj);
 
   const outer = new Proxy(inner, {
@@ -60,11 +100,14 @@ export function trackedObjectWithComputedSupport(obj) {
 }
 
 class ResettableTrackedState {
-  @tracked currentValue;
-  previousUpstreamValue;
+  @tracked currentValue: unknown;
+  previousUpstreamValue: unknown;
 }
 
-function getOrCreateState(map, instance) {
+function getOrCreateState(
+  map: WeakMap<object, ResettableTrackedState>,
+  instance: object
+): ResettableTrackedState {
   let state = map.get(instance);
   if (!state) {
     state = new ResettableTrackedState();
@@ -94,15 +137,26 @@ function getOrCreateState(map, instance) {
  * `this.args.fullName`.
  *
  */
-export function resettableTracked(prototype, key, descriptor) {
+export function resettableTracked(prototype: object, key: string): void;
+export function resettableTracked(
+  prototype: object,
+  key: string,
+  descriptor: FieldDescriptor
+): TrackedAccessor;
+export function resettableTracked(
+  prototype: object,
+  key: string,
+  descriptor?: FieldDescriptor
+): TrackedAccessor {
+  // Babel supplies the descriptor even though TypeScript checks fields with two arguments.
   // One WeakMap per-property-per-class. Keys are instances of the class
-  const states = new WeakMap();
+  const states = new WeakMap<object, ResettableTrackedState>();
 
   return {
-    get() {
+    get(this: object) {
       const state = getOrCreateState(states, this);
 
-      const upstreamValue = descriptor.initializer?.call(this);
+      const upstreamValue = descriptor!.initializer?.call(this);
 
       if (upstreamValue !== state.previousUpstreamValue) {
         state.currentValue = upstreamValue;
@@ -112,7 +166,7 @@ export function resettableTracked(prototype, key, descriptor) {
       return state.currentValue;
     },
 
-    set(value) {
+    set(this: object, value: unknown) {
       const state = getOrCreateState(states, this);
       state.currentValue = value;
     },
@@ -139,16 +193,27 @@ export function resettableTracked(prototype, key, descriptor) {
  * ```
  *
  */
-export function dedupeTracked(target, key, desc) {
-  let { initializer } = desc;
-  let { get, set } = tracked(target, key, desc);
+export function dedupeTracked(target: object, key: string): void;
+export function dedupeTracked(
+  target: object,
+  key: string,
+  desc: FieldDescriptor
+): TrackedAccessor;
+export function dedupeTracked(
+  target: object,
+  key: string,
+  desc?: FieldDescriptor
+): TrackedAccessor {
+  // Babel supplies desc even though TypeScript checks fields with two arguments.
+  const { initializer } = desc!;
+  const { get, set } = (tracked as TrackedFieldDecorator)(target, key, desc!);
 
-  let values = new WeakMap();
+  const values = new WeakMap<object, unknown>();
 
   return {
-    get() {
+    get(this: object) {
       if (!values.has(this)) {
-        let value = initializer?.call(this);
+        const value = initializer?.call(this);
         values.set(this, value);
         set.call(this, value);
       }
@@ -156,7 +221,7 @@ export function dedupeTracked(target, key, desc) {
       return get.call(this);
     },
 
-    set(value) {
+    set(this: object, value: unknown) {
       if (!values.has(this) || values.get(this) !== value) {
         values.set(this, value);
         set.call(this, value);
@@ -165,56 +230,56 @@ export function dedupeTracked(target, key, desc) {
   };
 }
 
-export class DeferredTrackedSet {
-  #set;
+export class DeferredTrackedSet<T = unknown> {
+  #set: Set<T>;
 
-  constructor(value) {
+  constructor(value?: Iterable<T> | null) {
     this.#set = trackedSet(value);
   }
 
-  get size() {
+  get size(): number {
     return this.#set.size;
   }
 
-  get [Symbol.toStringTag]() {
+  get [Symbol.toStringTag](): string {
     return this.#set[Symbol.toStringTag];
   }
 
-  has(value) {
+  has(value: T): boolean {
     return this.#set.has(value);
   }
 
-  entries() {
+  entries(): SetIterator<[T, T]> {
     return this.#set.entries();
   }
 
-  keys() {
+  keys(): SetIterator<T> {
     return this.#set.keys();
   }
 
-  values() {
+  values(): SetIterator<T> {
     return this.#set.values();
   }
 
-  forEach(fn) {
+  forEach(fn: (value: T, value2: T, set: Set<T>) => void): void {
     return this.#set.forEach(fn);
   }
 
-  [Symbol.iterator]() {
+  [Symbol.iterator](): SetIterator<T> {
     return this.#set[Symbol.iterator]();
   }
 
-  add(value) {
+  add(value: T): this {
     next(() => this.#set.add(value));
     return this;
   }
 
-  delete(value) {
+  delete(value: T): this {
     next(() => this.#set.delete(value));
     return this;
   }
 
-  clear() {
+  clear(): void {
     next(() => this.#set.clear());
   }
 }
@@ -233,22 +298,25 @@ const trackedArrayPrototype = Object.getPrototypeOf(trackedArray());
  * `@ember-compat/tracked-built-ins`. Only arrays produced by Ember's
  * `trackedArray()` function share the prototype used for detection.
  *
- * @param {unknown} value - The value to check.
- * @returns {boolean} `true` if the value is a tracked array, `false` otherwise.
+ * @param value - The value to check.
+ * @returns `true` if the value is a tracked array, `false` otherwise.
  */
-export function isTrackedArray(value) {
+export function isTrackedArray(value: unknown): value is unknown[] {
   return value != null && trackedArrayPrototype.isPrototypeOf(value);
 }
 
 /**
  * Converts a value to TrackedArray if needed and validates the type.
  *
- * @param {TrackedArray|Array|null|undefined} value - Value to convert
- * @returns {TrackedArray|null|undefined} - Returns the value converted to TrackedArray if needed,
+ * @param value - Value to convert
+ * @returns - Returns the value converted to TrackedArray if needed,
  *                                         or null/undefined if those values were passed
- * @throws {Error} If value is not an array, TrackedArray, null or undefined
+ * @throws Error if value is not an array, TrackedArray, null or undefined
  */
-function ensureTrackedArray(value, propertyName) {
+function ensureTrackedArray(
+  value: unknown,
+  propertyName: string
+): unknown[] | null | undefined {
   if (typeof value === "undefined" || value === null) {
     return value;
   }
@@ -270,33 +338,53 @@ function ensureTrackedArray(value, propertyName) {
  * @decorator
  * Same as `@tracked`, but initializes the value as a TrackedArray.
  *
- * @param {object} target - The target object
- * @param {string|symbol} key - The property key
- * @param {{ initializer?: () => unknown, get?: () => unknown, set?: (value: unknown) => void, value?: unknown, writable?: boolean, enumerable?: boolean, configurable?: boolean }} desc - The property descriptor
- * @returns {{ get: () => unknown, set: (value: unknown) => void, enumerable: boolean, configurable: boolean, isTracked: boolean }} Modified property descriptor that wraps arrays in TrackedArray
+ * @param target - The target object
+ * @param key - The property key
+ * @param desc - The property descriptor
+ * @returns Modified property descriptor that wraps arrays in TrackedArray
  *
  * @example
+ * ```js
  * class TodoList {
  *   @autoTrackedArray todos = ['Buy milk', 'Walk dog'];
  * }
+ * ```
  */
-export function autoTrackedArray(target, key, desc) {
-  if (desc.initializer) {
-    const originalInitializer = desc.initializer;
-    desc.initializer = function () {
+export function autoTrackedArray<Key extends string>(
+  target: { [Property in Key]?: ArrayValue },
+  key: Key
+): void;
+export function autoTrackedArray(
+  target: object,
+  key: string,
+  desc: FieldDescriptor<ArrayValue>
+): TrackedAccessor<ArrayValue> & {
+  enumerable: boolean;
+  configurable: boolean;
+  isTracked: boolean;
+};
+export function autoTrackedArray(
+  target: object,
+  key: string,
+  desc?: FieldDescriptor<ArrayValue>
+) {
+  // Babel supplies desc even though TypeScript checks fields with two arguments.
+  if (desc!.initializer) {
+    const originalInitializer = desc!.initializer;
+    desc!.initializer = function () {
       const initialValue = originalInitializer.apply(this);
       return ensureTrackedArray(initialValue, key);
     };
   }
 
-  const { get, set } = tracked(target, key, {
+  const { get, set } = (tracked as TrackedFieldDecorator)(target, key, {
     ...desc,
     enumerable: true,
     configurable: true,
     isTracked: true,
   });
 
-  function autoTrackedArraySetter(value) {
+  function autoTrackedArraySetter(this: object, value: unknown) {
     set.call(this, ensureTrackedArray(value, key));
   }
 
@@ -309,7 +397,7 @@ export function autoTrackedArray(target, key, desc) {
   // that are already @tracked). The getter captures the TrackedArray's
   // collection tag via track(), then updates tagFor(obj, key) so that
   // @computed properties watching this key see content changes.
-  function autoTrackedArrayGetter() {
+  function autoTrackedArrayGetter(this: object) {
     // Read the value outside track() to avoid a tag cycle. get.call(this)
     // consumes the property's own tag (tagFor(this, key)) via the tracked
     // storage. If we captured that inside track() and then called updateTag
@@ -324,7 +412,9 @@ export function autoTrackedArray(target, key, desc) {
       // setValue(collection, null).
       const propertyTag = tagFor(this, key);
       const collectionTag = track(() => value.length);
-      updateTag(propertyTag, collectionTag);
+      // TODO(typescript-pending): tagFor's declared ConstantTag union is broader
+      // than its implementation, which creates UpdatableTags. Remove when aligned.
+      updateTag(propertyTag as UpdatableTag, collectionTag);
     }
 
     return value;
@@ -357,11 +447,12 @@ export { autoTrackedArray as trackedArray };
  * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
  * which are not part of the public API and may change without notice in future Ember versions.
  *
- * @param {object | null | undefined} obj - The object instance to enumerate tracked keys from
- * @returns {Array<string>} An array of tracked property keys.
+ * @param obj - The object instance to enumerate tracked keys from
+ * @returns An array of tracked property keys.
  *                          Returns an empty array if the object has no prototype or no tracked properties.
  *
  * @example
+ * ```js
  * class MyClass {
  *   @tracked name = "Alice";
  *   @tracked age = 30;
@@ -371,14 +462,15 @@ export { autoTrackedArray as trackedArray };
  * const instance = new MyClass();
  * const trackedKeys = enumerateTrackedKeys(instance);
  * // Returns: ["name", "age"]
+ * ```
  */
-export function enumerateTrackedKeys(obj) {
+export function enumerateTrackedKeys(obj: object | null | undefined): string[] {
   const prototype = obj?.constructor?.prototype;
   if (!prototype) {
     return [];
   }
 
-  const result = new Set();
+  const result = new Set<string>();
 
   // Walk the prototype chain to collect tracked keys from parent classes too
   let meta = peekMeta(prototype);
@@ -405,11 +497,12 @@ export function enumerateTrackedKeys(obj) {
  * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
  * which are not part of the public API and may change without notice in future Ember versions.
  *
- * @param {object | null | undefined} obj - The object instance to enumerate tracked entries from
- * @returns {Array<[string, unknown]>} An array of [key, value] pairs for all tracked properties.
+ * @param obj - The object instance to enumerate tracked entries from
+ * @returns An array of [key, value] pairs for all tracked properties.
  *                                  Returns an empty array if the object has no prototype or no tracked properties.
  *
  * @example
+ * ```js
  * class MyClass {
  *   @tracked name = "Alice";
  *   @tracked age = 30;
@@ -419,10 +512,15 @@ export function enumerateTrackedKeys(obj) {
  * const instance = new MyClass();
  * const trackedEntries = enumerateTrackedEntries(instance);
  * // Returns: [["name", "Alice"], ["age", 30]]
+ * ```
  */
-export function enumerateTrackedEntries(obj) {
+export function enumerateTrackedEntries(
+  obj: object | null | undefined
+): [string, unknown][] {
   const keys = enumerateTrackedKeys(obj);
-  return keys.map((key) => [key, obj[key]]);
+  // Tracked keys come from Ember's dynamic descriptor registry, not keyof obj.
+  // A nullish obj produces no keys, so the callback only indexes an object.
+  return keys.map((key) => [key, (obj as Record<string, unknown>)[key]]);
 }
 
 /**
@@ -433,7 +531,6 @@ export function enumerateTrackedEntries(obj) {
  *
  * Consuming state you do not use is generally a violation of Ember's declarative
  * patterns, so reach for this only when absolutely necessary.
- *
- * @type {(value: unknown) => void}
  */
+export function manuallyTrack(value: unknown): void;
 export function manuallyTrack() {}

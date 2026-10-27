@@ -9,6 +9,7 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import PostActionType from "discourse/models/post-action-type";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
 
@@ -96,7 +97,7 @@ export default class AdminFlagsForm extends Component {
         type: "POST",
         data,
       });
-      this.site.flagTypes.push(response.flag);
+      this.site.flagTypes.push(PostActionType.create(response.flag));
       this.router.transitionTo("adminConfig.flags");
     } catch (error) {
       popupAjaxError(error);

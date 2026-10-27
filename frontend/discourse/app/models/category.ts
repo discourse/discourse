@@ -25,13 +25,203 @@ import { removeAccents } from "discourse/lib/utilities";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import type User from "discourse/models/user";
+import type StoreService from "discourse/services/store";
 import Topic from "./topic.js";
 
-const CATEGORY_ASYNC_SEARCH_CACHE = {};
-const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
+/** Category badge styles. */
+export type CategoryStyle = "square" | "icon" | "emoji";
+
+/** Who requires review before posting in a category. */
+export type CategoryPostingReviewMode =
+  | "no_one"
+  | "everyone"
+  | "everyone_except"
+  | "no_one_except";
+
+/** A group permission on a category, as edited in its settings. */
+export interface CategoryPermission {
+  group_name: string;
+  permission_type: number | null;
+  group_id: number;
+}
+
+/** A tag allowed in the category. */
+export interface CategoryAllowedTag {
+  id: number | string;
+  name: string;
+  slug?: string;
+}
+
+/** A tag group requirement on a category. */
+export interface CategoryRequiredTagGroup {
+  min_count: number;
+  name?: string | null;
+}
+
+/** An uploaded image, including the empty upload placeholder. */
+export type CategoryUpload =
+  | { id: number; url: string; width?: number | null; height?: number | null }
+  | { id: null; url: null };
+
+/** Optional category settings sent by the server. */
+export interface CategorySetting {
+  auto_bump_cooldown_days?: number | null;
+  num_auto_bump_daily?: number | null;
+  require_reply_approval?: boolean;
+  require_topic_approval?: boolean;
+  nested_replies_default?: boolean;
+  topic_posting_review_mode?: CategoryPostingReviewMode;
+  reply_posting_review_mode?: CategoryPostingReviewMode;
+}
+
+/** A translated category name and description. */
+export interface CategoryLocalization {
+  id: number;
+  locale: string;
+  name: string;
+  description: string | null;
+}
+
+/** A localization being edited; entries added before saving have no id yet. */
+export type CategoryEditableLocalization = Omit<CategoryLocalization, "id"> & {
+  id?: number;
+  category_id?: number;
+};
+
+/** Metadata published by a category type, including type-specific additions. */
+export interface CategoryTypeMetadata {
+  id: string;
+  name: string;
+  title: string;
+  available: boolean;
+  visible: boolean;
+  description?: string;
+  icon?: string | null;
+  configuration_schema: Record<string, Record<string, unknown>[]>;
+  [key: string]: unknown;
+}
+
+type CategorySearchOptions = {
+  parentCategoryId?: number;
+  includeUncategorized?: boolean;
+  selectCategoryIds?: number[];
+  rejectCategoryIds?: number[];
+  includeSubcategories?: boolean;
+  includeAncestors?: boolean;
+  prioritizedCategoryId?: number;
+  limit?: number;
+  page?: number;
+};
+
+type CategorySearchResponse = {
+  categories: CategoryFields[];
+  ancestors: CategoryFields[];
+  categories_count: number;
+};
+
+type CategorySearchResult = {
+  ancestors: Category[];
+  categories: Category[];
+  categoriesCount: number;
+};
+
+/** Server payload fields and values assigned by core; plugins can augment this interface. */
+export interface CategoryFields {
+  id?: number;
+  name?: string;
+  slug?: string | null;
+  color?: string;
+  text_color?: string;
+  style_type?: CategoryStyle;
+  icon?: string | null;
+  emoji?: string | null;
+  description?: string | null;
+  description_text?: string | null;
+  description_excerpt?: string | null;
+  topic_url?: string | null;
+  topic_count?: number;
+  post_count?: number;
+  position?: number | null;
+  read_restricted?: boolean;
+  permission?: number | null;
+  parent_category_id?: number | null;
+  notification_level?: number | null;
+  can_edit?: boolean;
+  can_delete?: true;
+  cannot_delete_reason?: string;
+  is_special?: true;
+  is_uncategorized?: true;
+  topic_template?: string | null;
+  topic_title_placeholder?: string | null;
+  has_children?: boolean | null;
+  subcategory_count?: number | null;
+  subcategory_ids?: number[] | null;
+  subcategory_list?: object[];
+  subcategory_list_style?: string | null;
+  sort_order?: string | null;
+  sort_ascending?: boolean | null;
+  show_subcategory_list?: boolean | null;
+  num_featured_topics?: number | null;
+  default_view?: string | null;
+  default_top_period?: string | null;
+  default_list_filter?: string | null;
+  minimum_required_tags?: number | null;
+  navigate_to_first_post_after_read?: boolean;
+  custom_fields?: Record<string, unknown>;
+  uploaded_logo?: CategoryUpload | null;
+  uploaded_logo_dark?: CategoryUpload | null;
+  uploaded_background?: CategoryUpload | null;
+  uploaded_background_dark?: CategoryUpload | null;
+  allow_global_tags?: boolean;
+  read_only_banner?: string | null;
+  form_template_ids?: number[];
+  category_types?: Record<string, CategoryTypeMetadata>;
+  locale?: string | null;
+  available_groups?: string[];
+  allowed_tags?: (CategoryAllowedTag | string)[];
+  allowed_tag_groups?: string[];
+  auto_close_hours?: number | null;
+  auto_close_based_on_last_post?: boolean | null;
+  group_permissions?: CategoryPermission[];
+  email_in?: string | null;
+  email_in_allow_strangers?: boolean | null;
+  mailinglist_mirror?: boolean;
+  all_topics_wiki?: boolean;
+  allow_unlimited_owner_edits_on_first_post?: boolean;
+  allow_badges?: boolean;
+  topic_featured_link_allowed?: boolean | null;
+  search_priority?: number | null;
+  default_slow_mode_seconds?: number | null;
+  moderating_group_ids?: number[];
+  topic_posting_review_group_ids?: number[];
+  reply_posting_review_group_ids?: number[];
+  category_setting?: CategorySetting | null;
+  category_localizations?: CategoryLocalization[];
+  available_category_types?: CategoryTypeMetadata[];
+  category_type_settings?: Record<string, unknown>;
+  category_type_site_settings?: Record<string, unknown>;
+  site_texts?: Record<string, string>;
+  topics?: object[];
+  topics_day?: number;
+  topics_week?: number;
+  topics_month?: number;
+  topics_year?: number;
+  topics_all_time?: number;
+  pickAll?: boolean;
+  stat?: string;
+  statTitle?: string;
+  statTotal?: string;
+}
+
+const CATEGORY_ASYNC_SEARCH_CACHE: Record<string, CategorySearchResponse> = {};
+const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE: Record<
+  string,
+  { categories: CategoryFields[] }
+> = {};
 const HTTP_NOT_FOUND = 404;
 
-let _uncategorized;
+let _uncategorized: Category | undefined;
 
 /**
  * @internal
@@ -39,43 +229,57 @@ let _uncategorized;
  *
  * Intended to be used only in the plugin API.
  *
- * @param {string} propertyKey - The key of the property to include.
+ * @param propertyKey - The key of the property to include.
  */
-export function _addCategoryPropertyForSave(propertyKey) {
+export function _addCategoryPropertyForSave(propertyKey: string) {
   registerModelSaveProperty("category", propertyKey);
 }
 
+// `create()` assigns the server fields at runtime, so the class declares none of
+// them. Merging an interface of the same name adds them to the class type, and
+// lets plugins add theirs by augmenting `CategoryFields`.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface Category extends CategoryFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class Category extends RestModel {
   // Sort subcategories directly under parents
-  static sortCategories(categories) {
-    const children = new Map();
+  static sortCategories<
+    T extends Pick<CategoryFields, "id" | "parent_category_id">,
+  >(categories: T[]): T[] {
+    const children = new Map<number | undefined, T[]>();
 
     categories.forEach((category) => {
-      const parentId = parseInt(category.parent_category_id, 10) || -1;
+      // parseInt coerces numeric and missing parent IDs at runtime.
+      const parentId =
+        parseInt(category.parent_category_id as unknown as string, 10) || -1;
       const group = children.get(parentId) || [];
       group.push(category);
 
       children.set(parentId, group);
     });
 
-    const reduce = (values) =>
-      values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
+    // The flattened entries are category objects, not nested array values.
+    const reduce = (values: T[]): T[] =>
+      values
+        .flatMap((c) => [c, reduce(children.get(c.id) || [])])
+        .flat() as T[];
 
     return reduce(children.get(-1) || []);
   }
 
-  static isUncategorized(categoryId) {
+  static isUncategorized(categoryId: number | null | undefined): boolean {
     return categoryId === Site.currentProp("uncategorized_category_id");
   }
 
-  static slugEncoded() {
-    let siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+  static slugEncoded(): boolean {
+    const siteSettings: RestModel["siteSettings"] = getOwnerWithFallback(
+      this
+    ).lookup("service:site-settings");
     return siteSettings.slug_generation_method === "encoded";
   }
 
-  static findUncategorized() {
+  static findUncategorized(): Category | undefined {
     _uncategorized =
       _uncategorized ||
       Category.list().find(
@@ -85,7 +289,14 @@ export default class Category extends RestModel {
     return _uncategorized;
   }
 
-  static slugFor(category, separator = "/", depth = 3) {
+  static slugFor(
+    category:
+      | Pick<Category, "id" | "slug" | "parentCategory">
+      | null
+      | undefined,
+    separator = "/",
+    depth = 3
+  ): string {
     if (!category) {
       return "";
     }
@@ -106,19 +317,19 @@ export default class Category extends RestModel {
       : result + slug;
   }
 
-  static list() {
+  static list(): Category[] {
     return Site.currentProp("categoriesList");
   }
 
-  static listByActivity() {
+  static listByActivity(): Category[] {
     return Site.currentProp("sortedCategories");
   }
 
-  static _idMap() {
+  static _idMap(): Map<number | undefined, Category> {
     return Site.currentProp("categoriesById");
   }
 
-  static findSingleBySlug(slug) {
+  static findSingleBySlug(slug: string): Category | undefined {
     if (!this.slugEncoded()) {
       return Category.list().find((c) => Category.slugFor(c) === slug);
     } else {
@@ -128,7 +339,9 @@ export default class Category extends RestModel {
     }
   }
 
-  static findById(id) {
+  static findById(
+    id: number | string | null | undefined
+  ): Category | undefined {
     if (!id) {
       return;
     }
@@ -140,24 +353,33 @@ export default class Category extends RestModel {
     return Category._idMap().get(id);
   }
 
-  static findByIds(ids = []) {
-    return ids.map((id) => Category.findById(id)).filter(Boolean);
+  static findByIds(ids: (number | string)[] = []): Category[] {
+    // Boolean filtering removes missing lookups without changing the predicate.
+    return ids.map((id) => Category.findById(id)).filter(Boolean) as Category[];
   }
 
-  static hasAsyncFoundAll(ids) {
+  static hasAsyncFoundAll(ids: (number | string)[]): boolean {
     const loadedCategoryIds = Site.current().loadedCategoryIds || new Set();
-    return ids.every((id) => loadedCategoryIds.has(id));
+    // Only parsed numeric ids are loaded, so a string id never matches.
+    return ids.every((id) => loadedCategoryIds.has(id as number));
   }
 
-  static async asyncFindByIds(ids = []) {
-    ids = ids.map((x) => parseInt(x, 10));
+  static async asyncFindByIds(
+    ids: (number | string)[] = []
+  ): Promise<Category[]> {
+    // parseInt also coerces numeric IDs supplied by callers.
+    ids = ids.map((x) => parseInt(x as string, 10));
     const site = Site.current();
 
     if (!site.lazy_load_categories || this.hasAsyncFoundAll(ids)) {
       return this.findByIds(ids);
     }
 
-    const result = await categoryMultiCache.fetch(ids);
+    // TODO(typescript-pending): MultiCache loses its callback's value type; remove when generic.
+    const result = (await categoryMultiCache.fetch(ids)) as Map<
+      number | string,
+      CategoryFields | undefined
+    >;
     if (categoryMultiCache.hadTooManyCalls()) {
       warn(
         "Multiple calls to Category.asyncFindByIds within a second. Could they be combined?",
@@ -175,18 +397,24 @@ export default class Category extends RestModel {
       } else {
         site.removeCategory(id);
       }
-      loadedCategoryIds.add(id);
+      // `ids` holds the numbers parsed at the top of this method.
+      loadedCategoryIds.add(id as number);
     }
     site.set("loadedCategoryIds", loadedCategoryIds);
 
     return this.findByIds(ids);
   }
 
-  static async asyncFindById(id) {
+  static async asyncFindById(
+    id: number | string
+  ): Promise<Category | undefined> {
     return (await Category.asyncFindByIds([id]))[0];
   }
 
-  static findBySlugAndParent(slug, parentCategory) {
+  static findBySlugAndParent(
+    slug: string,
+    parentCategory: Category | null | undefined
+  ): Category | undefined {
     if (this.slugEncoded()) {
       slug = encodeURI(slug);
     }
@@ -198,8 +426,8 @@ export default class Category extends RestModel {
     });
   }
 
-  static findBySlugPath(slugPath) {
-    let category = null;
+  static findBySlugPath(slugPath: string[]): Category | null {
+    let category: Category | null | undefined = null;
 
     for (const slug of slugPath) {
       category = this.findBySlugAndParent(slug, category);
@@ -212,29 +440,44 @@ export default class Category extends RestModel {
     return category;
   }
 
-  static async asyncFindBySlugPath(slugPath, opts = {}) {
-    const data = { slug_path: slugPath };
+  static async asyncFindBySlugPath(
+    slugPath: string,
+    opts: { includePermissions?: boolean } = {}
+  ): Promise<Category | undefined> {
+    const data: { slug_path: string; include_permissions?: boolean } = {
+      slug_path: slugPath,
+    };
     if (opts.includePermissions) {
       data.include_permissions = true;
     }
 
-    const result = await ajax("/categories/find", { data });
+    // TODO(typescript-pending): ajax does not type response payloads yet.
+    const result = (await ajax("/categories/find", { data })) as {
+      categories: CategoryFields[];
+    };
 
-    const categories = result["categories"].map((category) => {
-      category = Site.current().updateCategory(category);
-      if (opts.includePermissions) {
-        category.setupGroupsAndPermissions();
+    const categories = result["categories"].map(
+      (category: CategoryFields | Category) => {
+        category = Site.current().updateCategory(category);
+        // `Category` extends `CategoryFields`, so the reassignment above does not
+        // narrow the union; `updateCategory` returns the model.
+        if (opts.includePermissions) {
+          (category as Category).setupGroupsAndPermissions();
+        }
+        return category as Category;
       }
-      return category;
-    });
+    );
 
     return categories[categories.length - 1];
   }
 
-  static async asyncFindBySlugPathWithID(slugPathWithID) {
-    const result = await ajax("/categories/find", {
+  static async asyncFindBySlugPathWithID(
+    slugPathWithID: string
+  ): Promise<Category | undefined> {
+    // TODO(typescript-pending): ajax does not type response payloads yet.
+    const result = (await ajax("/categories/find", {
       data: { slug_path_with_id: slugPathWithID },
-    });
+    })) as { categories: CategoryFields[] };
 
     const categories = result["categories"].map((category) =>
       Site.current().updateCategory(category)
@@ -243,7 +486,9 @@ export default class Category extends RestModel {
     return categories[categories.length - 1];
   }
 
-  static findBySlugPathWithID(slugPathWithID) {
+  static findBySlugPathWithID(
+    slugPathWithID: string
+  ): Category | null | undefined {
     let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in ember do not automatically url decode - ensure that these are decoded
     if (this.slugEncoded()) {
@@ -252,7 +497,8 @@ export default class Category extends RestModel {
     let category;
 
     if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
-      const id = parseInt(parts.pop(), 10);
+      // The branch's length check guarantees a final path segment.
+      const id = parseInt(parts.pop()!, 10);
 
       category = Category.findById(id);
     } else {
@@ -263,7 +509,8 @@ export default class Category extends RestModel {
         parts.length > 0 &&
         parts[parts.length - 1].match(/^\d+-category/)
       ) {
-        const id = parseInt(parts.pop(), 10);
+        // The branch's length check guarantees a final path segment.
+        const id = parseInt(parts.pop()!, 10);
 
         category = Category.findById(id);
       }
@@ -272,7 +519,7 @@ export default class Category extends RestModel {
     return category;
   }
 
-  static findBySlug(slug, parentSlug) {
+  static findBySlug(slug: string, parentSlug?: string): Category | undefined {
     const categories = Category.list();
     let category;
 
@@ -312,34 +559,49 @@ export default class Category extends RestModel {
     return category;
   }
 
-  static fetchVisibleGroups(id) {
+  static fetchVisibleGroups(id: number): Promise<{ groups: string[] }> {
     return ajax(`/c/${id}/visible_groups.json`);
   }
 
-  static reloadById(id) {
+  static reloadById(
+    id: number | string
+  ): Promise<{ category: CategoryFields }> {
     return ajax(`/c/${id}/show.json`);
   }
 
-  static reloadBySlugPath(slugPath) {
+  static reloadBySlugPath(
+    slugPath: string
+  ): Promise<{ category: CategoryFields }> {
     return ajax(`/c/${slugPath}/find_by_slug.json`);
   }
 
-  static reloadCategoryWithPermissions(params, store, site) {
+  static reloadCategoryWithPermissions(
+    params: { slug: string },
+    store: StoreService,
+    site: Site
+  ): Promise<Category> {
     return this.reloadBySlugPath(params.slug).then((result) =>
       this._includePermissions(result.category, store, site)
     );
   }
 
-  static _includePermissions(category, store, site) {
+  static _includePermissions(
+    category: CategoryFields,
+    store: StoreService,
+    site: Site
+  ): Category {
     const model = site.updateCategory(category);
     model.setupGroupsAndPermissions();
     model.setupCategoryTypes();
     return model;
   }
 
-  static search(term, opts) {
+  static search(
+    term: string,
+    opts?: Pick<CategorySearchOptions, "limit" | "parentCategoryId">
+  ): Category[] {
     let limit = 5;
-    let parentCategoryId;
+    let parentCategoryId: number | undefined;
 
     if (opts) {
       if (opts.limit === 0) {
@@ -355,7 +617,9 @@ export default class Category extends RestModel {
     const emptyTerm = term === "";
     let slugTerm = term;
 
-    const normalize = (str) => removeAccents(str.toLowerCase());
+    // Search assumes the loaded categories have names and slugs.
+    const normalize = (str: string | null | undefined): string =>
+      removeAccents(str!.toLowerCase());
 
     if (!emptyTerm) {
       term = normalize(term);
@@ -366,13 +630,13 @@ export default class Category extends RestModel {
     const categories = Category.listByActivity();
     const length = categories.length;
     let i;
-    let data = [];
+    const data: Category[] = [];
 
     const done = () => {
       return data.length === limit;
     };
 
-    const validCategoryParent = (category) => {
+    const validCategoryParent = (category: Category) => {
       return (
         !parentCategoryId ||
         category.get("parent_category_id") === parentCategoryId
@@ -411,7 +675,10 @@ export default class Category extends RestModel {
     return data.sort((a, b) => compare(a?.read_restricted, b?.read_restricted));
   }
 
-  static async asyncHierarchicalSearch(term, opts) {
+  static async asyncHierarchicalSearch(
+    term: string,
+    opts?: { only?: number[]; except?: number[]; page?: number }
+  ): Promise<Category[]> {
     opts ||= {};
 
     const data = {
@@ -442,7 +709,25 @@ export default class Category extends RestModel {
     });
   }
 
-  static async asyncSearch(term, opts) {
+  static asyncSearch(
+    term: string,
+    opts: CategorySearchOptions & { includeAncestors: true }
+  ): Promise<CategorySearchResult>;
+
+  static asyncSearch(
+    term: string,
+    opts?: CategorySearchOptions & { includeAncestors?: false }
+  ): Promise<Category[]>;
+
+  static asyncSearch(
+    term: string,
+    opts?: CategorySearchOptions
+  ): Promise<Category[] | CategorySearchResult>;
+
+  static async asyncSearch(
+    term: string,
+    opts?: CategorySearchOptions
+  ): Promise<Category[] | CategorySearchResult> {
     opts ||= {};
 
     const data = {
@@ -478,34 +763,36 @@ export default class Category extends RestModel {
     }
   }
 
-  @service currentUser;
+  @service declare currentUser: User | null;
 
-  @tracked color;
-  @tracked emoji;
-  @tracked icon;
-  @tracked localizations = this.category_localizations;
-  @tracked minimum_required_tags;
-  @tracked styleType = this.style_type;
-  @tracked allowed_tags;
-  @tracked categoryTypes;
-  @autoTrackedArray available_groups;
-  @autoTrackedArray permissions;
-  @autoTrackedArray required_tag_groups;
+  @tracked color?: string;
+  @tracked emoji?: string | null;
+  @tracked icon?: string | null;
+  @tracked
+  localizations: CategoryEditableLocalization[] | undefined =
+    this.category_localizations;
+  @tracked minimum_required_tags?: number | null;
+  @tracked styleType: CategoryStyle | undefined = this.style_type;
+  @tracked allowed_tags?: (CategoryAllowedTag | string)[];
+  @tracked categoryTypes!: Record<string, CategoryTypeMetadata>;
+  @autoTrackedArray available_groups?: string[];
+  @autoTrackedArray permissions?: CategoryPermission[];
+  @autoTrackedArray required_tag_groups?: CategoryRequiredTagGroup[];
 
-  init() {
-    super.init(...arguments);
+  init(...args: Parameters<RestModel["init"]>) {
+    super.init(...args);
     this.setupGroupsAndPermissions();
     this.setupCategoryTypes();
   }
 
   @computed("parent_category_id", "site.categories.[]")
-  get parentCategory() {
+  get parentCategory(): Category | undefined {
     if (this.parent_category_id) {
       return Category.findById(this.parent_category_id);
     }
   }
 
-  set parentCategory(newParentCategory) {
+  set parentCategory(newParentCategory: Category | undefined) {
     this.set("parent_category_id", newParentCategory?.id);
   }
 
@@ -540,7 +827,7 @@ export default class Category extends RestModel {
     );
   }
 
-  get subcategories() {
+  get subcategories(): Category[] {
     return applyValueTransformer(
       "category-subcategories",
       this.site.categoriesByParentId.get(this.id) || [],
@@ -549,15 +836,24 @@ export default class Category extends RestModel {
   }
 
   get unloadedSubcategoryCount() {
-    return this.subcategory_count - this.subcategories.length;
+    // This count is read on payloads that include the subcategory count.
+    return this.subcategory_count! - this.subcategories.length;
   }
 
   @computed("subcategory_list")
   get serializedSubcategories() {
-    return this.subcategory_list?.map((c) => {
+    // TODO(typescript-pending): serialized subcategories include topic payloads; remove when typed at the source.
+    return (
+      this.subcategory_list as
+        | (CategoryFields & { topics?: Record<string, unknown>[] })[]
+        | undefined
+    )?.map((c) => {
       const subcategory = Category.create({
         ...c,
-        topics: c.topics?.map((t) => Topic.create(t)),
+        // TODO(typescript-pending): Topic.create forwards attrs but its JS signature omits them.
+        topics: c.topics?.map((t) =>
+          (Topic as typeof Topic & { create(attrs: object): Topic }).create(t)
+        ),
       });
       return subcategory;
     });
@@ -565,44 +861,60 @@ export default class Category extends RestModel {
 
   @dependentKeyCompat
   get minimumRequiredTags() {
-    if (this.required_tag_groups?.length > 0) {
+    // An absent group list still follows the original comparison's false branch.
+    if ((this.required_tag_groups?.length as number) > 0) {
       // it should require the max between the bare minimum set in the category and the sum of the min_count of the
       // required_tag_groups
       return Math.max(
-        this.required_tag_groups.reduce((sum, rtg) => sum + rtg.min_count, 0),
+        // The length comparison above guarantees the group list exists.
+        this.required_tag_groups!.reduce((sum, rtg) => sum + rtg.min_count, 0),
         this.minimum_required_tags || 0
       );
     } else {
-      return this.minimum_required_tags > 0 ? this.minimum_required_tags : null;
+      // Missing/null minima still compare false without introducing a fallback.
+      return this.minimum_required_tags! > 0
+        ? this.minimum_required_tags
+        : null;
     }
   }
 
   @computed
   get availablePermissions() {
+    // TODO(typescript-pending): PermissionType reads its create-assigned id but does not declare it.
     return [
-      PermissionType.create({ id: PermissionType.FULL }),
-      PermissionType.create({ id: PermissionType.CREATE_POST }),
-      PermissionType.create({ id: PermissionType.READONLY }),
+      PermissionType.create({
+        id: PermissionType.FULL,
+      } as Partial<PermissionType> & { id: number }),
+      PermissionType.create({
+        id: PermissionType.CREATE_POST,
+      } as Partial<PermissionType> & { id: number }),
+      PermissionType.create({
+        id: PermissionType.READONLY,
+      } as Partial<PermissionType> & { id: number }),
     ];
   }
 
   @computed("id")
-  get searchContext() {
+  get searchContext(): {
+    type: string;
+    id: number | undefined;
+    category: Category;
+  } {
     return {
       type: "category",
       id: this.id,
-      /** @type Category */
+      /** The category model. */
       category: this,
     };
   }
 
   @computed("parentCategory.ancestors")
-  get ancestors() {
+  get ancestors(): Category[] {
     return [...(this.parentCategory?.ancestors || []), this];
   }
 
   @computed("parentCategory", "parentCategory.predecessors")
-  get predecessors() {
+  get predecessors(): Category[] {
     if (this.parentCategory) {
       return [
         this.parentCategory,
@@ -613,8 +925,8 @@ export default class Category extends RestModel {
     }
   }
 
-  get descendants() {
-    const descendants = [this];
+  get descendants(): Category[] {
+    const descendants: Category[] = [this];
     for (let i = 0; i < descendants.length; i++) {
       if (descendants[i].subcategories) {
         descendants.push(...descendants[i].subcategories);
@@ -624,7 +936,7 @@ export default class Category extends RestModel {
   }
 
   @computed("parentCategory.level")
-  get level() {
+  get level(): number {
     if (!this.parentCategory?.level) {
       return this.parentCategory?.level === 0 ? 1 : 0;
     } else {
@@ -655,7 +967,7 @@ export default class Category extends RestModel {
   }
 
   @computed("isMuted", "subcategories")
-  get isHidden() {
+  get isHidden(): boolean {
     if (!this.isMuted) {
       return false;
     } else if (!this.subcategories) {
@@ -670,7 +982,7 @@ export default class Category extends RestModel {
   }
 
   @computed("isMuted", "subcategories")
-  get hasMuted() {
+  get hasMuted(): boolean {
     if (this.isMuted) {
       return true;
     } else if (!this.subcategories) {
@@ -688,7 +1000,9 @@ export default class Category extends RestModel {
   get notificationLevelString() {
     // Get the key from the value
     const notificationLevelString = Object.keys(NotificationLevels).find(
-      (key) => NotificationLevels[key] === this.notification_level
+      (key) =>
+        NotificationLevels[key as keyof typeof NotificationLevels] ===
+        this.notification_level
     );
     if (notificationLevelString) {
       return notificationLevelString.toLowerCase();
@@ -701,7 +1015,7 @@ export default class Category extends RestModel {
   }
 
   @computed("path")
-  get url() {
+  get url(): string {
     return getURL(this.path);
   }
 
@@ -712,7 +1026,8 @@ export default class Category extends RestModel {
 
   @computed("name")
   get nameLower() {
-    return this.name.toLowerCase();
+    // Name-dependent views assume the category name is loaded.
+    return this.name!.toLowerCase();
   }
 
   @computed("url")
@@ -732,15 +1047,18 @@ export default class Category extends RestModel {
 
   @computed("topic_count")
   get moreTopics() {
-    return this.topic_count > (this.num_featured_topics || 2);
+    // The comparison keeps JavaScript's handling of a missing count.
+    return this.topic_count! > (this.num_featured_topics || 2);
   }
 
   @computed("topic_count", "subcategories.[]")
-  get totalTopicCount() {
-    let topicCount = this.topic_count;
+  get totalTopicCount(): number | undefined {
+    // Transient preview categories have no topic count; the sum keeps JavaScript's
+    // handling of a missing one.
+    let topicCount = this.topic_count as number;
     if (this.subcategories) {
       this.subcategories.forEach((subcategory) => {
-        topicCount += subcategory.topic_count;
+        topicCount += subcategory.topic_count!;
       });
     }
     return topicCount;
@@ -755,14 +1073,15 @@ export default class Category extends RestModel {
 
   @computed("notification_level")
   get isTracked() {
-    return this.notification_level >= NotificationLevels.TRACKING;
+    // Preserve the comparison when notification_level is absent or null.
+    return this.notification_level! >= NotificationLevels.TRACKING;
   }
 
-  get unreadTopicsCount() {
+  get unreadTopicsCount(): number {
     return this.topicTrackingState.countUnread({ categoryId: this.id });
   }
 
-  get newTopicsCount() {
+  get newTopicsCount(): number {
     return this.topicTrackingState.countNew({ categoryId: this.id });
   }
 
@@ -806,13 +1125,18 @@ export default class Category extends RestModel {
 
     if (this.group_permissions) {
       this.permissions = this.group_permissions.map((elem) => {
-        removeValueFromArray(this.available_groups, elem.group_name);
+        // setup requires available_groups; the guard above established it before mapping.
+        removeValueFromArray(this.available_groups!, elem.group_name);
         return trackedObject(elem);
       });
     }
   }
 
-  save() {
+  /**
+   * @param categoryTypeIds - ids of the category's types; when
+   *   omitted, the server leaves the category's types unchanged.
+   */
+  save(categoryTypeIds?: string[]): Promise<{ category: CategoryFields }> {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
 
@@ -876,64 +1200,71 @@ export default class Category extends RestModel {
         style_type: this.style_type,
         emoji: this.emoji,
         icon: this.icon,
-        ...(this.siteSettings.content_localization_enabled && {
+        // TODO(typescript-pending): the settings factory does not publish property types yet.
+        ...((this.siteSettings.content_localization_enabled as boolean) && {
           locale: this.locale,
           category_localizations: this.localizations,
         }),
-        ...this._categoryTypeSaveProperties(id),
+        ...this._categoryTypeSaveProperties(id, categoryTypeIds),
         ...this._pluginSaveProperties(),
-        category_types: this.category_types,
+        category_types: categoryTypeIds,
       }),
       type: id ? "PUT" : "POST",
     });
   }
 
-  destroy() {
+  destroy(this: never, ...args: never[]): never;
+  destroy(): Promise<unknown>;
+  destroy(): Promise<unknown> {
     return ajax(`/categories/${this.id || this.slug}`, {
       type: "DELETE",
     });
   }
 
-  addPermission(permission) {
-    addUniqueValueToArray(this.permissions, trackedObject(permission));
-    removeValueFromArray(this.available_groups, permission.group_name);
+  addPermission(permission: CategoryPermission) {
+    // Permission editing requires the edit form's initialized permission/group arrays.
+    addUniqueValueToArray(this.permissions!, trackedObject(permission));
+    removeValueFromArray(this.available_groups!, permission.group_name);
   }
 
-  removePermission(group_name) {
-    const permission = this.permissions.find(
+  removePermission(group_name: string) {
+    // Permission editing requires the edit form's initialized permission/group arrays.
+    const permission = this.permissions!.find(
       (p) => p.group_name === group_name
     );
 
     if (permission) {
-      removeValueFromArray(this.permissions, permission);
-      addUniqueValueToArray(this.available_groups, group_name);
+      removeValueFromArray(this.permissions!, permission);
+      addUniqueValueToArray(this.available_groups!, group_name);
     }
   }
 
-  updatePermission(group_name, type) {
-    this.permissions.forEach((p, i) => {
+  updatePermission(group_name: string, type: number | null) {
+    // Permission editing requires the edit form's initialized permission array.
+    this.permissions!.forEach((p, i) => {
       if (p.group_name === group_name) {
-        this.permissions[i].permission_type = type;
+        this.permissions![i].permission_type = type;
       }
     });
   }
 
-  isType(type) {
+  isType(type: string) {
     return Object.keys(this.categoryTypes ?? {}).includes(type);
   }
 
-  getType(type) {
+  getType(type: string): CategoryTypeMetadata | undefined {
     return this.categoryTypes?.[type];
   }
 
-  removeType(type) {
+  removeType(type: string) {
     delete this.categoryTypes[type];
   }
 
-  setNotification(notification_level) {
-    this.currentUser.set(
+  setNotification(notification_level: number): Promise<void> {
+    // Notification changes require a signed-in user.
+    this.currentUser!.set(
       "muted_category_ids",
-      this.currentUser.calculateMutedIds(
+      this.currentUser!.calculateMutedIds(
         notification_level,
         this.id,
         "muted_category_ids"
@@ -943,7 +1274,8 @@ export default class Category extends RestModel {
     const url = `/category/${this.id}/notifications`;
     return ajax(url, { data: { notification_level }, type: "POST" }).then(
       (data) => {
-        this.currentUser.set(
+        // Notification changes require a signed-in user through completion.
+        this.currentUser!.set(
           "indirectly_muted_category_ids",
           data.indirectly_muted_category_ids
         );
@@ -953,15 +1285,22 @@ export default class Category extends RestModel {
     );
   }
 
-  _categoryTypeSaveProperties(id) {
-    const props = {
+  _categoryTypeSaveProperties(
+    id: number | undefined,
+    categoryTypeIds?: string[]
+  ) {
+    const props: {
+      category_type_site_settings: CategoryFields["category_type_site_settings"];
+      category_type_settings: CategoryFields["category_type_settings"];
+      category_type?: string;
+    } = {
       category_type_site_settings: this.category_type_site_settings,
       category_type_settings: this.category_type_settings,
     };
 
     if (!id && this.categoryTypes) {
       const primaryType = Object.keys(this.categoryTypes)[0];
-      if (this.category_types?.includes(primaryType)) {
+      if (categoryTypeIds?.includes(primaryType)) {
         props.category_type = primaryType;
       }
     }
@@ -974,8 +1313,9 @@ export default class Category extends RestModel {
   }
 
   _permissionsForUpdate() {
-    const permissions = this.permissions;
-    let rval = {};
+    // Saving permissions requires the edit form's initialized permission array.
+    const permissions = this.permissions!;
+    const rval: Record<string, number | null> = {};
     if (permissions.length) {
       permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
     } else {
@@ -987,12 +1327,19 @@ export default class Category extends RestModel {
   }
 }
 
-const categoryMultiCache = new MultiCache(async (ids) => {
+const categoryMultiCache = new MultiCache(async (ids: number[]) => {
   try {
-    const { categories } = await ajax("/categories/find", { data: { ids } });
+    // TODO(typescript-pending): ajax does not type response payloads yet.
+    const { categories } = (await ajax("/categories/find", {
+      data: { ids },
+    })) as { categories: CategoryFields[] };
     return new Map(categories.map((category) => [category.id, category]));
   } catch (error) {
-    if (error.jqXHR?.status === HTTP_NOT_FOUND) {
+    // TODO(typescript-pending): ajax rejects with its jqXHR wrapper; remove when errors are typed.
+    if (
+      (error as { jqXHR?: { status?: number } }).jqXHR?.status ===
+      HTTP_NOT_FOUND
+    ) {
       return new Map();
     }
 

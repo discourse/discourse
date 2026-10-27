@@ -152,7 +152,9 @@ export default class AdminLogsStaffActionLogsController extends Controller {
 
   @action
   loadMore() {
-    this.model.loadMore();
+    if (!this.initialModelLoading) {
+      this.model.loadMore();
+    }
   }
 
   @action
