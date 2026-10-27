@@ -215,6 +215,14 @@ RSpec.describe PluginGem do
     )
   end
 
+  it "fails when the highest shared lock version does not satisfy another plugin" do
+    add_plugin("one", %(gem "shared", "< 1.1"\n), lock: { "shared" => "1.0.0" })
+    add_plugin("two", %(gem "shared"\n), lock: { "shared" => "1.1.0" })
+
+    expect { boot }.to raise_error(/Resolving plugin gems failed for .*shared/m)
+    expect(installed).to be_empty
+  end
+
   it "fails when a plugin needs a version of a gem the application has at another one" do
     add_plugin("one", %(gem "rack", "> #{rack}"\n), lock: { "rack" => "99.0.0" })
 
