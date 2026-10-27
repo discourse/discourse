@@ -176,6 +176,23 @@ RSpec.describe PostActionCreator do
       expect(event_names).not_to include(:flag_created)
     end
 
+    it "does not report a like that lost a race with a concurrent like" do
+      creator = PostActionCreator.new(user, post, like_type_id)
+      creator.post_can_act?
+      PostAction.create!(user:, post:, post_action_type_id: like_type_id)
+
+      result = nil
+      events =
+        DiscourseEvent.track_events(:like_created) do
+          expect { result = creator.perform }.not_to change {
+            GivenDailyLike.find_for(user.id, Date.today).pick(:likes_given)
+          }
+        end
+
+      expect(result.failed?).to eq(true)
+      expect(events).to be_empty
+    end
+
     it "sends the right event arguments" do
       events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :like) }
       event = events.find { |e| e[:event_name] == :like_created }
