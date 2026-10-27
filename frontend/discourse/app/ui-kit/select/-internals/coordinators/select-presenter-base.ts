@@ -77,12 +77,14 @@ export default class SelectPresenterBase {
 
   /**
    * How long a filter change waits before the list asks the source, in milliseconds. Defaults to
-   * the input delay for a server-backed source (`engine.isAsync`), so a client source never
-   * flashes a skeleton; a consumer can force a delay with `true`/a number or disable it with
-   * `false`.
+   * the input delay for a server-backed source (`engine.isAsync`) whose loader last answered with
+   * a promise, so a client source or a loader that answers synchronously never waits; a consumer
+   * can force a delay with `true`/a number or disable it with `false`.
    */
   get filterDebounceDelay(): number {
-    const debounce = this.#getArgs().debounce ?? this.#engine.isAsync;
+    const debounce =
+      this.#getArgs().debounce ??
+      (this.#engine.isAsync && !this.#engine.answersSynchronously);
     return debounce === true ? INPUT_DELAY : debounce || 0;
   }
 

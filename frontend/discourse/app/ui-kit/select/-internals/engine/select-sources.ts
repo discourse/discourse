@@ -123,6 +123,8 @@ export class SelectState {
 }
 
 export interface SelectSource {
+  /** Whether the latest answer arrived without a promise, so a filter change need not wait. */
+  answersSynchronously(): boolean;
   /** Records a rendered source's transformed option count. */
   noteVisible(visible: number, input: number): void;
   rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]>;
@@ -154,6 +156,10 @@ export class LocalSource implements SelectSource {
 
   rows(): SelectItem[] {
     return this.#filtered() as SelectItem[];
+  }
+
+  answersSynchronously(): boolean {
+    return true;
   }
 
   /** Client sources have no paging progress to measure. */
@@ -224,6 +230,9 @@ export class PagedSource implements SelectSource {
   #serverBarrenPages = 0;
   #serverRequest?: Promise<SelectLoadResult>;
 
+  /** Whether the loader's latest call returned its answer rather than a promise. */
+  #answeredSynchronously = false;
+
   /** Consecutive measured reveals that added no visible options. */
   #barrenReveals = 0;
 
@@ -261,6 +270,10 @@ export class PagedSource implements SelectSource {
 
   rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]> {
     return this.#loadServerItems(this.#state.filter, opts);
+  }
+
+  answersSynchronously(): boolean {
+    return this.#answeredSynchronously;
   }
 
   total(): number | undefined {
@@ -432,7 +445,15 @@ export class PagedSource implements SelectSource {
         return [];
       }
       this.#queryLoad ??= this.#resolveLoad(filter);
-      return this.#queryLoad(filter, { ...opts, offset, limit, cursor });
+      const result = this.#queryLoad(filter, {
+        ...opts,
+        offset,
+        limit,
+        cursor,
+      });
+      this.#answeredSynchronously =
+        typeof (result as PromiseLike<unknown>)?.then !== "function";
+      return result;
     });
     this.#serverRequest = request;
     // An abandoned request must not keep answering for the one that replaces it. The consumer

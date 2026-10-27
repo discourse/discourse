@@ -1157,6 +1157,63 @@ module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
       "it is sent once the debounce ends"
     );
   });
+
+  test("a loader that answers synchronously filters without the debounce", async function (assert) {
+    const filters = [];
+    const load = (filter) => {
+      filters.push(filter);
+      return [
+        { id: 1, name: "One" },
+        { id: 2, name: "Two" },
+      ].filter((item) => item.name.toLowerCase().includes(filter));
+    };
+
+    await render(
+      <template><DSelect @load={{load}} @variant="button" /></template>
+    );
+    await click(".d-select__trigger");
+
+    // Dispatched raw: `fillIn` awaits `settled()`, which would wait out any debounce.
+    const input = find(".d-select__filter");
+    input.value = "tw";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await rerender();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await rerender();
+
+    assert.true(filters.includes("tw"), "the query is asked at once");
+    assert.deepEqual(
+      findAll("[role='option']").map((option) => option.dataset.value),
+      ["2"],
+      "the list already shows its answer"
+    );
+    await settled();
+  });
+
+  test("an explicit debounce still delays a synchronous loader", async function (assert) {
+    const filters = [];
+    const load = (filter) => {
+      filters.push(filter);
+      return [{ id: 1, name: "One" }];
+    };
+
+    await render(
+      <template>
+        <DSelect @debounce={{true}} @load={{load}} @variant="button" />
+      </template>
+    );
+    await click(".d-select__trigger");
+
+    const input = find(".d-select__filter");
+    input.value = "on";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await rerender();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await rerender();
+
+    assert.false(filters.includes("on"), "the consumer's delay wins");
+    await settled();
+  });
 });
 
 module(

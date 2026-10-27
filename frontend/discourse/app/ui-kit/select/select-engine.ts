@@ -876,6 +876,11 @@ export default class SelectEngine {
     return this.#options.isAsync;
   }
 
+  /** Whether the source's latest answer arrived without a promise. */
+  get answersSynchronously(): boolean {
+    return this.#source.answersSynchronously();
+  }
+
   /** The minimum filter length before the list searches (`0` = no minimum). */
   get minChars(): number {
     return this.#options.minChars;

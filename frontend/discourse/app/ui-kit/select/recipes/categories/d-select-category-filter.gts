@@ -325,7 +325,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     <DSelect
       class={{if this.filtering "category-drop --filtering" "category-drop"}}
       ...attributes
-      @debounce={{if this.site.lazy_load_categories true false}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @kind="select-category-filter"

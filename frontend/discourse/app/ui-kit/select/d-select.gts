@@ -197,9 +197,10 @@ interface DSelectSignature {
     retryable?: boolean;
     /**
      * Debounce the list source between re-filters: `true` uses the shared input delay, a number
-     * sets the milliseconds, `false` is instant. Defaults to whether the source is server-backed,
-     * so a client source never flashes a loading skeleton while an async one is throttled. Only a
-     * filter change waits; a reveal or a reload fetches at once.
+     * sets the milliseconds, `false` is instant. Defaults to whether the source is server-backed
+     * and its loader last answered with a promise, so a client source or a synchronous loader
+     * never flashes a loading skeleton while an async one is throttled. Only a filter change
+     * waits; a reveal or a reload fetches at once.
      */
     debounce?: boolean | number;
     /**

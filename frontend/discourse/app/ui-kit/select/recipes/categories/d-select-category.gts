@@ -469,7 +469,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     <DSelect
       ...attributes
       @clearable={{@clearable}}
-      @debounce={{if this.site.lazy_load_categories true false}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @icon={{@icon}}

@@ -714,7 +714,9 @@ by mechanism.
 - Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and an
   optional server row ceiling (`@maxLoaded`, uncapped by default); opaque paging cursors;
   `@filterBy` field or predicate; `@minChars` gate; `@debounce` (filter changes only; reveals
-  and reloads fetch at once).
+  and reloads fetch at once). By default a server source waits the input delay, unless its
+  loader last answered without a promise; a synchronous `@load` filters at once, so a recipe
+  never needs to toggle `@debounce` itself.
 - Create-on-the-fly (`@allowCreate` + `@createItem`); prepended special rows (`@specialItems`).
 - Async value resolution for held-but-unfetched ids (`@resolveValue` / `@resolveValues`) with a
   named unresolved fallback (`@createUnresolvedItem`). A resolver may answer synchronously, so a
