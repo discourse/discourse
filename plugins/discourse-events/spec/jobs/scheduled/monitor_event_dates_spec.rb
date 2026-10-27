@@ -1665,6 +1665,83 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         end
       end
 
+      it "keeps a renamed host linked to the archived and successor Events" do
+        host = Fabricate(:user, refresh_auto_groups: true)
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring Event whose host was renamed"
+        old_username = host.username
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week" hosts="#{old_username}"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        occurrence = post.reload.event.event_dates.pending.first
+        expect(post.event.hosts.map(&:id)).to eq([host.id])
+
+        new_username = "renamedhost#{host.id}"
+        host.update_columns(username: new_username, username_lower: new_username.downcase)
+        expect(User.find_by(username_lower: old_username.downcase)).to be_nil
+
+        freeze_time(ends_at + 1.hour)
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        archived = post.reload
+        expect(archived.raw).to include("hosts=#{new_username}")
+        expect(archived.raw).not_to include(old_username)
+        expect(archived.raw).to include("Meeting notes.")
+        expect(archived.event.reload.hosts.map(&:id)).to eq([host.id])
+        expect(archived.event.recurrence).to be_nil
+        expect(occurrence.reload.finished_at).to be_present
+
+        successor = Topic.where(title:).where.not(id: post.topic_id).sole.first_post.reload
+        expect(successor.event.hosts.map(&:id)).to eq([host.id])
+        expect(successor.event.recurrence).to eq("every_week")
+      end
+
+      it "removes unresolvable deleted-host references without blocking archival" do
+        former_host = Fabricate(:user, refresh_auto_groups: true)
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring Event whose host was deleted"
+        old_username = former_host.username
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week" hosts="#{old_username}"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        occurrence = post.reload.event.event_dates.pending.first
+        expect(post.event.hosts.map(&:id)).to eq([former_host.id])
+
+        # Reproduce the relevant consequences of user deletion: the EventHost
+        # association is removed, and the original username no longer resolves.
+        DiscourseEvents::Events::EventHost.where(
+          post_id: post.id,
+          user_id: former_host.id,
+        ).delete_all
+        new_username = "unavailablehost#{former_host.id}"
+        former_host.update_columns(username: new_username, username_lower: new_username.downcase)
+        expect(User.find_by(username_lower: old_username.downcase)).to be_nil
+
+        freeze_time(ends_at + 1.hour)
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        archived = post.reload
+        expect(archived.raw).not_to match(/\shosts=/)
+        expect(archived.raw).to include("Meeting notes.")
+        expect(archived.event.reload.hosts).to be_empty
+        expect(archived.event.recurrence).to be_nil
+        expect(occurrence.reload.finished_at).to be_present
+
+        successor = Topic.where(title:).where.not(id: post.topic_id).sole.first_post.reload
+        expect(successor.event.hosts).to be_empty
+        expect(successor.event.recurrence).to eq("every_week")
+      end
+
       it "omits a subsequently suspended host from the successor but preserves the archived hosts" do
         continuing_host = Fabricate(:user, refresh_auto_groups: true)
         suspended_host = Fabricate(:user, refresh_auto_groups: true)

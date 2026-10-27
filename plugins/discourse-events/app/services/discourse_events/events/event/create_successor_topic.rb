@@ -97,8 +97,11 @@ module DiscourseEvents
             user_id: post.user_id,
           },
         )
-        # Revalidate inherited hosts for the *new* Event, without changing
-        # the hosts recorded on the completed occurrence.
+        # Archived host references must resolve against their persisted
+        # identities, not usernames that may have been renamed or deleted.
+        # Suspended hosts remain linked to the historical Event.
+        context[:archived_hostnames] = event.hosts.map(&:username)
+        # A successor is a new Event and must independently validate hosts.
         context[:successor_hostnames] = eligible_successor_hostnames
         context[:invitees] = snapshot_invitees
         context[:successor_post] = nil
@@ -108,7 +111,7 @@ module DiscourseEvents
         )
       end
 
-      def archive_occurrence(event_date:, event:, rewriter:, original_title:)
+      def archive_occurrence(event_date:, event:, rewriter:, original_title:, archived_hostnames:)
         topic.acting_user = Discourse.system_user
 
         archived_raw =
@@ -118,6 +121,7 @@ module DiscourseEvents
             "recurrence" => nil,
             "recurrence-until" => nil,
             "recurrenceUntil" => nil,
+            "hosts" => archived_hostnames.presence&.join(","),
           )
 
         # SyncFromPost runs on post_edited. Persist the archived attributes
