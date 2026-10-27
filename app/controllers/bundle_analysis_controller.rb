@@ -6,9 +6,15 @@ class BundleAnalysisController < ApplicationController
   skip_before_action :preload_json, :check_xhr
 
   def index
+    enabled = Discourse.plugins.select(&:enabled?).map(&:directory_name).to_set
+    reports =
+      Plugin::JsManager.bundle_analysis_assets.filter_map do |name, path|
+        path if enabled.include?(name)
+      end
+
     render json: {
              core: report_url(EmberAssets.bundle_analysis_asset),
-             plugins: Plugin::JsManager.bundle_analysis_assets.map { report_url(it) },
+             plugins: reports.map { report_url(it) },
            }
   end
 
