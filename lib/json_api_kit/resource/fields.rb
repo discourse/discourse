@@ -37,6 +37,14 @@ module JsonApiKit
 
         def relationships = Declarations::Relationships.new(declared_relationships)
 
+        def related_resource(name)
+          relationships
+            .fetch(name.to_s) do
+              raise UnknownRelationship, "There is no relationship named #{name}."
+            end
+            .resource
+        end
+
         def fields(names = nil, guardian:)
           Declarations::Fields.for(
             names,

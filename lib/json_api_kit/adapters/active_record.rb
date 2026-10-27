@@ -27,7 +27,7 @@ module JsonApiKit
       def requested_page(request) = Page::Requested.from(request, adapter: self)
 
       def related_records(relationship, owners:, owner_resource:)
-        RelatedRecords.new(resource, relationship, owners:, owner_resource:)
+        RelatedRecords.for(resource, relationship, owners:, owner_resource:)
       end
 
       def related_scope(name, owner_id:)

@@ -44,6 +44,8 @@ module JsonApiKit
 
         def page(requested) = requested
 
+        def rows(page) = page.rows
+
         def pairing_keys = []
 
         private

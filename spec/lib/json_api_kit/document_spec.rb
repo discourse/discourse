@@ -165,7 +165,9 @@ RSpec.describe JsonApiKit::Document do
       end
 
       it "reuses one resource for the related listing", :aggregate_failures do
-        expect(users_resource).to have_received(:new).with(guardian:, edition:).once
+        expect(users_resource).to have_received(:new).with(
+          a_hash_including(guardian:, edition:),
+        ).once
         expect(users).to have_received(:all).once
       end
 

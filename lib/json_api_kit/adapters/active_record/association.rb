@@ -16,18 +16,16 @@ module JsonApiKit
         def to_scoping = Scoping::PerOwner.new(related_scope, owner_key: related_key)
 
         def pair(related_records)
-          related_by_key = related_records.group_by { related_value(it) }
-          positions = related_by_key.keys.each_with_index.to_h
-          related_keys.transform_values do |keys|
-            keys.sort_by { positions.fetch(it, 0) }.flat_map { related_by_key.fetch(it, []) }
-          end
+          pair_groups(GroupedRecords.new(related_records.group_by { related_value(it) }))
         end
 
         private
 
         attr_reader :scope, :owner_records, :owner_key, :related_key
 
-        def related_keys = owner_records.to_h { [it, [owner_value(it)]] }
+        def pair_groups(groups)
+          owner_records.to_h { [it, groups.for(owner_value(it))] }
+        end
 
         def owner_values = owner_records.filter_map { owner_value(it) }.uniq
 

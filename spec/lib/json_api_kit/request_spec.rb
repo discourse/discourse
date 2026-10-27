@@ -9,7 +9,9 @@ RSpec.describe JsonApiKit::Request do
   let(:guardian) { Guardian.new }
 
   describe "#for_sideload" do
-    subject(:for_sideload) { request.for_sideload(JsonApiKit::Paths.new(%w[groups])) }
+    subject(:for_sideload) do
+      request.for_sideload(JsonApiKit::Paths.new(%w[groups]), through: "user")
+    end
 
     let(:params) do
       {

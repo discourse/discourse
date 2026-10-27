@@ -22,7 +22,11 @@ module JsonApiKit
 
     def including = @including ||= Paths.new(params[:include])
 
-    def for_sideload(paths) = { fields:, include: paths }
+    def for_sideload(paths, through:)
+      { fields:, include: paths }.merge(
+        params.fetch(:forwarded_filters, {}).fetch(through.to_s, {}).symbolize_keys,
+      )
+    end
 
     def page = page_params
 
