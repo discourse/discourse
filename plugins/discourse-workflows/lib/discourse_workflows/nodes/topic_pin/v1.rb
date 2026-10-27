@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module TopicPin
       class V1 < NodeType
+        include TopicPinning
+
         OPERATIONS = %w[add remove].freeze
         PIN_TYPES = %w[pin banner].freeze
 
@@ -135,6 +137,32 @@ module DiscourseWorkflows
           },
         )
 
+        # Each combination of operation and pin type became its own node.
+        deprecated(
+          replaced_by: %w[
+            action:pin_topic
+            action:unpin_topic
+            action:make_banner
+            action:remove_banner
+          ],
+        ) do |parameters|
+          shared = parameters.slice("topic_id", "actor_username")
+          notes = ["discourse_workflows.node_upgrades.topic_pin_output"]
+
+          case [parameters.fetch("operation", "add"), parameters.fetch("pin_type", "pin")]
+          when %w[add pin]
+            pin = parameters.slice("pinned_globally", "pinned_until", "timezone")
+            { type: "action:pin_topic", parameters: shared.merge(pin), notes: }
+          when %w[remove pin]
+            { type: "action:unpin_topic", parameters: shared, notes: }
+          when %w[add banner]
+            banner = parameters.slice("bannered_until", "timezone")
+            { type: "action:make_banner", parameters: shared.merge(banner), notes: }
+          when %w[remove banner]
+            { type: "action:remove_banner", parameters: shared, notes: }
+          end
+        end
+
         def self.validate_configuration(configuration, errors)
           validate_timezone_configuration(configuration, errors)
         end
@@ -220,63 +248,6 @@ module DiscourseWorkflows
           else
             topic.make_banner!(actor, timestamp(exec_ctx, config, "bannered", item_index))
           end
-        end
-
-        def ensure_can_pin!(topic, actor, globally:)
-          guardian = actor.guardian
-          allowed = globally ? guardian.can_moderate?(topic) : guardian.can_pin_unpin_topic?(topic)
-          return if allowed
-
-          denied!(globally ? "pin_globally_not_allowed" : "pin_not_allowed", actor, topic)
-        end
-
-        def ensure_can_banner!(topic, actor)
-          return if actor.guardian.can_banner_topic?(topic)
-
-          if topic.private_message?
-            raise_node_error!(I18n.t("discourse_workflows.errors.topic_pin.banner_private_message"))
-          elsif topic.category&.read_restricted?
-            raise_node_error!(
-              I18n.t("discourse_workflows.errors.topic_pin.banner_restricted_category"),
-            )
-          else
-            denied!("banner_not_allowed", actor, topic)
-          end
-        end
-
-        def denied!(key, actor, topic)
-          raise_node_error!(
-            I18n.t(
-              "discourse_workflows.errors.topic_pin.#{key}",
-              username: actor.username,
-              topic_id: topic.id,
-            ),
-          )
-        end
-
-        def timestamp(exec_ctx, config, prefix, item_index)
-          value = config["#{prefix}_until"].to_s.presence
-          return if value.nil?
-
-          zone = ActiveSupport::TimeZone[resolve_timezone(exec_ctx, item_index)]
-          parsed =
-            begin
-              zone&.parse(value)
-            rescue ArgumentError
-              nil
-            end
-
-          if parsed.nil?
-            raise_node_error!(
-              I18n.t(
-                "discourse_workflows.errors.topic_pin.invalid_timestamp",
-                field: "#{prefix}_until",
-                value: value,
-              ),
-            )
-          end
-
-          parsed.iso8601
         end
 
         def validated(value, allowed, error_key, param)
