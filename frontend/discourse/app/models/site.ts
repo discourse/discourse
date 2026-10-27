@@ -283,10 +283,7 @@ export interface SiteFields {
 type SiteSettings = RestModel["siteSettings"];
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging, @typescript-eslint/no-empty-object-type
-export default interface Site extends Omit<
-  SiteFields,
-  "categories" | "groups"
-> {}
+export default interface Site extends SiteFields {}
 
 @singleton
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
