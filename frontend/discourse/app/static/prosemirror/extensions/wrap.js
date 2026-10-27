@@ -27,6 +27,7 @@ const wrapNodeViewDescriptor = {
 
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["d-wrap"],
   nodeViews: {
     wrap_block: wrapNodeViewDescriptor,
     wrap_inline: wrapNodeViewDescriptor,

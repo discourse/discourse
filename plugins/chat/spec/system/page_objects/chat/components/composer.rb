@@ -57,7 +57,7 @@ module PageObjects
         end
 
         def rich_editor?
-          component.has_css?(".chat-composer__input.ProseMirror", wait: 0)
+          input.tag_name != "textarea"
         end
 
         def has_rich_editor?
@@ -79,7 +79,7 @@ module PageObjects
         def has_value?(expected)
           return has_field?(input[:id], with: expected) unless rich_editor?
 
-          try_until_success { expect(value).to match(expected) }
+          try_until_success { expect(value).to eq(expected) }
           true
         rescue RSpec::Expectations::ExpectationNotMetError
           false
@@ -87,10 +87,33 @@ module PageObjects
 
         def toggle_editor
           rich = rich_editor?
-          component.find(".chat-composer-dropdown__trigger-btn").click
-          find(".chat-composer-dropdown__action-btn.toggle-editor").click
+          click_dropdown_toggle("toggle-editor")
           rich ? has_markdown_editor? : has_rich_editor?
           self
+        end
+
+        def toggle_formatting_bar
+          shown = component.has_css?(".chat-composer__formatting-bar", wait: 0)
+          click_dropdown_toggle("toggle-formatting")
+          if shown
+            component.has_no_css?(".chat-composer__formatting-bar")
+          else
+            component.has_css?(".chat-composer__formatting-bar")
+          end
+          self
+        end
+
+        def open_dropdown
+          component.find(".chat-composer-dropdown__trigger-btn").click
+        end
+
+        def click_dropdown_toggle(id)
+          trigger = component.find(".chat-composer-dropdown__trigger-btn")
+          trigger.click
+          find(".chat-composer-dropdown__toggle.#{id} .d-toggle-switch__checkbox-slider").click
+          # toggles leave the menu open
+          trigger.click
+          has_no_css?(".chat-composer-dropdown__list")
         end
 
         def reply_to_last_message_shortcut

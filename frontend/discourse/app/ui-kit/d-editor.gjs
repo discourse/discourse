@@ -4,41 +4,37 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { cancel, schedule, scheduleOnce } from "@ember/runloop";
+import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isNone, isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import curryComponent from "ember-curry-component";
-import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { translations } from "pretty-text/emoji/data";
-import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import DEditorPreview from "discourse/components/d-editor-preview";
-import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
-import Toolbar from "discourse/lib/composer/toolbar";
+import {
+  emojiAutocompleteOptions,
+  mentionAutocompleteOptions,
+} from "discourse/lib/composer/autocomplete-options";
+import { setCompositionMode } from "discourse/lib/composer/composition-mode";
+import Toolbar, {
+  buildToolbarEvent,
+  shortcutKeymap,
+} from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
-import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import userSearch, { validateSearchResult } from "discourse/lib/user-search";
-import {
-  destroyUserStatuses,
-  initUserStatusHtml,
-  renderUserStatusHtml,
-} from "discourse/lib/user-status-on-autocomplete";
+import { generateCookFunction } from "discourse/lib/text";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
@@ -46,11 +42,6 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import {
-  EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
-  SKIP,
-} from "discourse/ui-kit/modifiers/d-autocomplete";
-import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
 
@@ -117,32 +108,10 @@ export default class DEditor extends Component {
   }
 
   get keymap() {
-    const keymap = {};
-
-    // These are defined in lib/composer/toolbar.js via addButton.
-    // It includes shortcuts for top level toolbar buttons, as well
-    // as the toolbar popup menu option shortcuts.
-
     // TODO (martin) Might be nice to automatically add these shortcuts
     // to keyboard-shortcuts-help.gjs at some point (the modal launched with
     // ?)
-    const shortcuts = this.get("toolbar.shortcuts");
-    Object.keys(shortcuts).forEach((sc) => {
-      const button = shortcuts[sc];
-      keymap[sc] = () => {
-        const customAction = shortcuts[sc].shortcutAction;
-
-        const toolbarEvent = this.newToolbarEvent();
-        if (customAction) {
-          if (!button.condition || button.condition(toolbarEvent)) {
-            customAction(toolbarEvent);
-          }
-        } else {
-          button.action(toolbarEvent);
-        }
-        return false;
-      };
-    });
+    const keymap = shortcutKeymap(this.toolbar, () => this.newToolbarEvent());
 
     // This refers to the "special" composer toolbar popup menu which
     // is launched from the (+) button in the toolbar. This menu is customizable
@@ -261,35 +230,10 @@ export default class DEditor extends Component {
    * @returns {ToolbarEvent} An object with toolbar event actions
    */
   newToolbarEvent(trimLeading) {
-    const selected = this.textManipulation.getSelected(trimLeading, {
-      lineVal: true,
-    });
-    return {
-      commands: this.textManipulation.commands,
-      state: this.textManipulation.state,
-      selected,
-      selectText: (from, length) =>
-        this.textManipulation.selectText(from, length, { scroll: false }),
-      applySurround: (head, tail, exampleKey, opts) =>
-        this.textManipulation.applySurround(
-          selected,
-          head,
-          tail,
-          exampleKey,
-          opts
-        ),
-      applyList: (head, exampleKey, opts) =>
-        this.textManipulation.applyList(selected, head, exampleKey, opts),
-      applyHeading: (level, exampleKey) =>
-        this.textManipulation.applyHeading(selected, level, exampleKey),
-      formatCode: () => this.textManipulation.formatCode(),
-      addText: (text) => this.textManipulation.addText(selected, text),
-      applyLink: (url) => this.textManipulation.applyLink(url),
+    return buildToolbarEvent(this.textManipulation, {
+      trimLeading,
       getText: () => this.value,
-      toggleDirection: () => this.textManipulation.toggleDirection(),
-      replaceText: (oldVal, newVal, opts) =>
-        this.textManipulation.replaceText(oldVal, newVal, opts),
-    };
+    });
   }
 
   @action
@@ -369,14 +313,12 @@ export default class DEditor extends Component {
       ? TextareaEditor
       : await loadRichEditor();
 
-    const preference = this.isRichEditorEnabled
-      ? USER_OPTION_COMPOSITION_MODES.rich
-      : USER_OPTION_COMPOSITION_MODES.markdown;
-
-    // optimistically set the preference
-    this.currentUser.set("user_option.composition_mode", preference);
-
-    this.#debounceSaveRichEditorPreference(preference);
+    setCompositionMode(
+      this.currentUser,
+      this.isRichEditorEnabled
+        ? USER_OPTION_COMPOSITION_MODES.rich
+        : USER_OPTION_COMPOSITION_MODES.markdown
+    );
   }
 
   @action
@@ -478,18 +420,38 @@ export default class DEditor extends Component {
     }
   }
 
-  #debounceSaveRichEditorPreference(preference) {
-    this._debounceSaveRichEditorPreference = discourseDebounce(
-      this,
-      this.#saveRichEditorPreference,
-      preference,
-      1000
-    );
-  }
+  #openEmojiPicker(term) {
+    this.textManipulation.autocomplete({ cancel: true });
 
-  #saveRichEditorPreference(preference) {
-    this.currentUser.set("user_option.composition_mode", preference);
-    return this.currentUser.save(["composition_mode"]);
+    const caretCoords =
+      this.textManipulation.autocompleteHandler.getCaretCoords(
+        this.textManipulation.autocompleteHandler.getCaretPosition()
+      );
+    const rect = document
+      .querySelector(".d-editor-input")
+      .getBoundingClientRect();
+    const marginLeft = 18;
+    const marginTop = 10;
+
+    this.menuInstance = this.menu.show(
+      {
+        getBoundingClientRect: () => ({
+          left: rect.left + caretCoords.left + marginLeft,
+          top: rect.top + caretCoords.top + marginTop,
+          width: 0,
+          height: 0,
+        }),
+      },
+      {
+        identifier: "emoji-picker",
+        component: EmojiPickerDetached,
+        modalForMobile: true,
+        data: {
+          didSelectEmoji: (emoji) => this.textManipulation.emojiSelected(emoji),
+          term,
+        },
+      }
+    );
   }
 
   _readyNow() {
@@ -503,8 +465,6 @@ export default class DEditor extends Component {
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
-    cancel(this._debounceSaveRichEditorPreference);
-
     this._cachedCookFunction = null;
   }
 
@@ -559,8 +519,13 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      component: EmojiAutocompleteResults,
-      key: EmojiAutocompleteResults.TRIGGER_KEY,
+      ...emojiAutocompleteOptions({
+        site: this.site,
+        siteSettings: this.siteSettings,
+        emojiStore: this.emojiStore,
+        context: "topic",
+        openPicker: (term) => this.#openEmojiPicker(term),
+      }),
       afterComplete: () => {
         schedule(
           "afterRender",
@@ -568,146 +533,6 @@ export default class DEditor extends Component {
           this.textManipulation.blurAndFocus
         );
       },
-
-      onKeyUp: (text, cp) => {
-        const matches = new RegExp(
-          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?)$`,
-          "gi"
-        ).exec(text.substring(0, cp));
-
-        if (matches && matches[1]) {
-          return [matches[1]];
-        }
-      },
-
-      transformComplete: (v) => {
-        if (v.code) {
-          this.emojiStore.trackEmojiForContext(v.code, "topic");
-          return `${v.code}:`;
-        } else {
-          this.textManipulation.autocomplete({ cancel: true });
-
-          const menuOptions = {
-            identifier: "emoji-picker",
-            component: EmojiPickerDetached,
-            modalForMobile: true,
-            data: {
-              didSelectEmoji: (emoji) => {
-                this.textManipulation.emojiSelected(emoji);
-              },
-              term: v.term,
-            },
-          };
-
-          const caretCoords =
-            this.textManipulation.autocompleteHandler.getCaretCoords(
-              this.textManipulation.autocompleteHandler.getCaretPosition()
-            );
-
-          const rect = document
-            .querySelector(".d-editor-input")
-            .getBoundingClientRect();
-
-          const marginLeft = 18;
-          const marginTop = 10;
-
-          const virtualElement = {
-            getBoundingClientRect: () => ({
-              left: rect.left + caretCoords.left + marginLeft,
-              top: rect.top + caretCoords.top + marginTop,
-              width: 0,
-              height: 0,
-            }),
-          };
-          this.menuInstance = this.menu.show(virtualElement, menuOptions);
-          return "";
-        }
-      },
-
-      dataSource: (term) => {
-        return new Promise((resolve) => {
-          const full = `:${term}`;
-          term = term.toLowerCase();
-
-          if (term.length < this.siteSettings.emoji_autocomplete_min_chars) {
-            return resolve(SKIP);
-          }
-
-          if (term === "") {
-            const favorites = this.emojiStore.favoritesForContext("topic");
-            if (favorites.length) {
-              return resolve(
-                favorites
-                  .filter((f) => !this.site.denied_emojis?.includes(f))
-                  .slice(0, 5)
-              );
-            } else {
-              return resolve([
-                "slight_smile",
-                "smile",
-                "wink",
-                "sunny",
-                "blush",
-              ]);
-            }
-          }
-
-          // note this will only work for emojis starting with :
-          // eg: :-)
-          const emojiTranslation =
-            this.get("site.custom_emoji_translation") || {};
-          const allTranslations = Object.assign(
-            {},
-            translations,
-            emojiTranslation
-          );
-          if (allTranslations[full]) {
-            return resolve([allTranslations[full]]);
-          }
-
-          const emojiDenied = this.get("site.denied_emojis") || [];
-          const match = term.match(/^:?(.*?):t([2-6])?$/);
-          if (match) {
-            const name = match[1];
-            const scale = match[2];
-
-            if (isSkinTonableEmoji(name) && !emojiDenied.includes(name)) {
-              if (scale) {
-                return resolve([`${name}:t${scale}`]);
-              } else {
-                return resolve([2, 3, 4, 5, 6].map((x) => `${name}:t${x}`));
-              }
-            }
-          }
-
-          loadEmojiSearchAliases().then((searchAliases) => {
-            const options = emojiSearch(term, {
-              maxResults: 5,
-              diversity: this.emojiStore.diversity,
-              exclude: emojiDenied,
-              searchAliases,
-            });
-
-            resolve(options);
-          });
-        })
-          .then((list) => {
-            if (list === SKIP) {
-              return [];
-            }
-
-            return list.map((code) => {
-              return { code, src: emojiUrlFor(code) };
-            });
-          })
-          .then((list) => {
-            if (list.length) {
-              list.push({ label: i18n("composer.more_emoji"), term });
-            }
-            return list;
-          });
-      },
-
       triggerRule: async () => !(await this.textManipulation.inCodeBlock()),
     });
   }
@@ -718,27 +543,15 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      component: UserAutocompleteResults,
-      key: UserAutocompleteResults.TRIGGER_KEY,
-      dataSource: (term) => {
-        destroyUserStatuses();
-        return userSearch({
-          term,
+      ...mentionAutocompleteOptions({
+        owner: getOwner(this),
+        searchOptions: () => ({
           searchContext: "mention",
           topicId: this.topicId,
           categoryId: this.categoryId,
-          includeGroups: true,
           prioritizedUserId: this.replyingToUserId,
-        }).then((result) => {
-          initUserStatusHtml(getOwner(this), result.users);
-          return result;
-        });
-      },
-      onRender: (options) => renderUserStatusHtml(options),
-      transformComplete: (v) => {
-        validateSearchResult(v);
-        return v.username || v.name;
-      },
+        }),
+      }),
       afterComplete: () => {
         schedule(
           "afterRender",
@@ -747,7 +560,6 @@ export default class DEditor extends Component {
         );
       },
       triggerRule: async () => !(await this.textManipulation.inCodeBlock()),
-      onClose: destroyUserStatuses,
     });
   }
 
@@ -855,8 +667,10 @@ export default class DEditor extends Component {
             @keymap={{this.keymap}}
             @markdownOptions={{this.markdownOptions}}
             @onSetup={{this.setupEditor}}
+            @onSubmit={{@onSubmit}}
             @placeholder={{@placeholder}}
             @replaceToolbar={{this.replaceToolbar}}
+            @submitOnEnter={{@submitOnEnter}}
             @toggleRichEditor={{this.toggleRichEditor}}
             @topicId={{@topicId}}
             @value={{this.value}}

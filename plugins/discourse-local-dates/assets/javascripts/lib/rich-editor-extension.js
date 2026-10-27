@@ -101,6 +101,7 @@ function buildFormatOptions(nodeAttrs, includeRecurring = false) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["discourse-local-dates"],
   nodeViews: {
     local_date: createLocalDateNodeView,
     local_date_range: createLocalDateNodeView,

@@ -3,6 +3,7 @@ import PollNodeView from "../discourse/components/poll-node-view.gjs";
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["poll"],
   nodeViews: {
     poll: { component: PollNodeView, name: "poll", hasContent: true },
   },

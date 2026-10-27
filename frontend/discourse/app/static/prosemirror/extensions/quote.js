@@ -119,6 +119,7 @@ function createQuoteNodeView({ getContext }) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["quotes"],
   nodeViews: { quote: createQuoteNodeView },
 
   nodeSpec: {

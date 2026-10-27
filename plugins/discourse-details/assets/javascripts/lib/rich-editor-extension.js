@@ -1,5 +1,6 @@
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["details"],
   nodeSpec: {
     details: {
       attrs: { open: { default: true } },

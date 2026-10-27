@@ -201,4 +201,32 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
       .dom(".shortcut-category-application tbody tr")
       .exists({ count: countBefore + 1 });
   });
+
+  test("a plugin can list a shortcut in the help modal without binding it", async function (assert) {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
+    const countBefore = document.querySelectorAll(
+      ".shortcut-category-application tbody tr"
+    ).length;
+    await click(".modal-close");
+
+    const handler = sinon.stub();
+    withPluginApi((api) => {
+      api.addKeyboardShortcut("meta+[", handler, { anonymous: true });
+      api.addKeyboardShortcutHelp({
+        category: "application",
+        name: "application.test",
+        definition: { keys1: ["["] },
+      });
+    });
+
+    await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
+    assert
+      .dom(".shortcut-category-application tbody tr")
+      .exists({ count: countBefore + 1 }, "the help modal lists it");
+
+    await click(".modal-close");
+    await triggerKeyEvent(document, "keydown", "[", { metaKey: true });
+    assert.true(handler.calledOnce, "the existing binding still fires");
+  });
 });

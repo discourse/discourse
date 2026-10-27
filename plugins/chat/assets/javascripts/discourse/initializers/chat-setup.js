@@ -21,12 +21,6 @@ const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
 
 replaceIcon("d-chat", "comment");
 
-function formattingToggleLabel() {
-  return this.showFormattingBar
-    ? "chat.composer.hide_formatting"
-    : "chat.composer.show_formatting";
-}
-
 class ChatSetupInit {
   @service router;
   @service("chat") chatService;
@@ -156,35 +150,28 @@ class ChatSetupInit {
       }
 
       api.registerChatComposerButton({
-        id: "toggle-formatting",
-        icon: "font",
-        title: formattingToggleLabel,
-        label: formattingToggleLabel,
-        ariaLabel: formattingToggleLabel,
-        classNames() {
-          return this.showFormattingBar ? ["--active"] : [];
+        id: "toggle-editor",
+        label: "chat.composer.rich_text",
+        position: "dropdown",
+        shortcut: "ctrl+m",
+        toggled() {
+          return this.useRichEditor;
         },
-        position() {
-          return this.site.desktopView ? "inline" : "dropdown";
-        },
-        action: "toggleFormattingBar",
+        action: "toggleEditor",
         displayed() {
           return !!this.currentUser && this.canUseRichEditor;
         },
       });
 
       api.registerChatComposerButton({
-        id: "toggle-editor",
-        icon() {
-          return this.useRichEditor ? "fab-markdown" : "a";
-        },
-        label() {
-          return this.useRichEditor
-            ? "chat.composer.switch_to_markdown"
-            : "chat.composer.switch_to_rich_text";
-        },
+        id: "toggle-formatting",
+        label: "chat.composer.formatting_bar",
         position: "dropdown",
-        action: "toggleEditor",
+        shortcut: "mod+shift+f",
+        toggled() {
+          return this.showFormattingBar;
+        },
+        action: "toggleFormattingBar",
         displayed() {
           return !!this.currentUser && this.canUseRichEditor;
         },

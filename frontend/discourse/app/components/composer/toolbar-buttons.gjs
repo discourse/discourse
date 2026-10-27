@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu-options";
+import { isButtonDisabled } from "discourse/lib/composer/toolbar";
 import DButton from "discourse/ui-kit/d-button";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -29,7 +30,12 @@ export default class ComposerToolbarButtons extends Component {
   }
 
   isActionable(button) {
-    return button.type !== "separator" && !button.disabled;
+    return button.type !== "separator" && !this.isButtonDisabled(button);
+  }
+
+  @action
+  isButtonDisabled(button) {
+    return isButtonDisabled(button, this.args.data.context);
   }
 
   @action
@@ -88,7 +94,7 @@ export default class ComposerToolbarButtons extends Component {
                 tabindex={{this.tabIndex button}}
                 target={{if button.href "_blank"}}
                 @action={{unless button.href button.action}}
-                @disabled={{button.disabled}}
+                @disabled={{this.isButtonDisabled button}}
                 @href={{button.href}}
                 @icon={{button.icon}}
                 @label={{button.label}}

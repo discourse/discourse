@@ -175,9 +175,11 @@ function convertCodeBlockToParagraphs(schema) {
       const endPos = editorState.selection.$from.end() + 1;
 
       // Create paragraph nodes
-      const paragraphNodes = paragraphs.map((text) =>
-        schema.nodes.paragraph.create(null, schema.text(text))
-      );
+      const paragraphNodes = paragraphs.length
+        ? paragraphs.map((text) =>
+            schema.nodes.paragraph.create(null, schema.text(text))
+          )
+        : [schema.nodes.paragraph.create()];
 
       const tr = editorState.tr.replaceWith(startPos, endPos, paragraphNodes);
 
@@ -264,7 +266,12 @@ function convertSelectionToCodeBlock(schema) {
     const { from, to } = editorState.selection;
     // Extract plain text with proper block separators
     const textContent =
-      editorState.doc.textBetween(from, to, "\n\n", "\n") || "code";
+      editorState.doc.textBetween(
+        from,
+        to,
+        "\n\n",
+        (node) => node.type.spec.leafText?.(node) ?? "\n"
+      ) || "code";
 
     const codeBlock = schema.nodes.code_block.create(
       {},
@@ -287,6 +294,7 @@ function convertSelectionToCodeBlock(schema) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownItRules: ["fence"],
   nodeSpec: {
     code_block: {
       createGapCursor: true,
