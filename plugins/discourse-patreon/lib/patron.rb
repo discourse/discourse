@@ -37,9 +37,13 @@ module Patreon
 
         group_user_ids = GroupUser.where(group: group).pluck(:user_id)
 
-        User.where(id: (user_ids - group_user_ids)).each { |user| group.add user }
+        User
+          .where(id: (user_ids - group_user_ids))
+          .each { |user| group.add(user, acting_user: Discourse.system_user) }
 
-        User.where(id: (group_user_ids - user_ids)).each { |user| group.remove user }
+        User
+          .where(id: (group_user_ids - user_ids))
+          .each { |user| group.remove(user, acting_user: Discourse.system_user) }
       end
     end
 
@@ -63,9 +67,9 @@ module Patreon
         is_existing_member = GroupUser.exists?(group: group, user: user)
 
         if is_member && !is_existing_member
-          group.add user
+          group.add(user, acting_user: Discourse.system_user)
         elsif !is_member && is_existing_member
-          group.remove user
+          group.remove(user, acting_user: Discourse.system_user)
         end
       end
     end

@@ -943,7 +943,7 @@ after_initialize do
     Assignment.deactivate!(topic: topic)
   end
 
-  on(:user_added_to_group) do |user, group, automatic:|
+  on(:user_added_to_group) do |user, group|
     group.assignments.active.find_each do |assignment|
       Jobs.enqueue(:assign_notification, assignment_id: assignment.id, user_id: user.id)
     end

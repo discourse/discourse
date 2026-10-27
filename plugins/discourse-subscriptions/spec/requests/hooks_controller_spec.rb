@@ -223,6 +223,15 @@ RSpec.describe DiscourseSubscriptions::HooksController do
 
           expect(response.status).to eq 200
         end
+
+        it "reports the system user as the actor of the group addition" do
+          events = DiscourseEvent.track_events(:user_added_to_group) { post "/s/hooks.json" }
+
+          expect(events).to contain_exactly(
+            event_name: :user_added_to_group,
+            params: [user, group, { automatic: false, acting_user: Discourse.system_user }],
+          )
+        end
       end
 
       it "does not create records or add the user to the group when payment_status is not paid" do

@@ -1276,6 +1276,18 @@ RSpec.describe Topic do
               expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
             end
 
+            it "reports the inviter as the actor of the membership event" do
+              events =
+                DiscourseEvent.track_events(:user_added_to_group) do
+                  topic.invite(inviter, invitee.email, [group.id])
+                end
+
+              expect(events).to contain_exactly(
+                event_name: :user_added_to_group,
+                params: [invitee, group, { automatic: false, acting_user: inviter }],
+              )
+            end
+
             describe "when group ids are not given" do
               it "does not invite the user" do
                 expect do

@@ -19,6 +19,32 @@ RSpec.describe GroupManager do
       expect(manager.add([])).to eq([])
       expect(manager.add(nil)).to eq([])
     end
+
+    it "passes the acting user to each added user's event" do
+      admin = Fabricate(:admin)
+
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          manager.add([user.id, user2.id], automatic: true, acting_user: admin)
+        end
+
+      expect(events).to contain_exactly(
+        {
+          event_name: :user_added_to_group,
+          params: [user, group, { automatic: true, acting_user: admin }],
+        },
+        {
+          event_name: :user_added_to_group,
+          params: [user2, group, { automatic: true, acting_user: admin }],
+        },
+      )
+    end
+
+    it "passes a nil acting user when none is given" do
+      events = DiscourseEvent.track_events(:user_added_to_group) { manager.add([user.id]) }
+
+      expect(events.first[:params].last).to eq(automatic: false, acting_user: nil)
+    end
   end
 
   describe "user_count" do
@@ -73,6 +99,26 @@ RSpec.describe GroupManager do
         end
 
       expect(events.map { |event| event[:params][0] }).to contain_exactly(user)
+    end
+
+    it "passes the acting user to each removed user's event" do
+      admin = Fabricate(:admin)
+
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          manager.remove([user.id, user2.id], acting_user: admin)
+        end
+
+      expect(events).to contain_exactly(
+        { event_name: :user_removed_from_group, params: [user, group, { acting_user: admin }] },
+        { event_name: :user_removed_from_group, params: [user2, group, { acting_user: admin }] },
+      )
+    end
+
+    it "passes a nil acting user when none is given" do
+      events = DiscourseEvent.track_events(:user_removed_from_group) { manager.remove([user.id]) }
+
+      expect(events.first[:params].last).to eq(acting_user: nil)
     end
 
     context "when a concurrent removal deletes a member first" do

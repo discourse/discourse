@@ -13,7 +13,9 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :user_removed_from_group,
-          output_contracts: [{ schema: Schema::USER_REMOVED_FROM_GROUP_SCHEMA }],
+          output_contracts: [
+            { schema: Schema.merge(Schema::USER_REMOVED_FROM_GROUP_SCHEMA, Schema::ACTOR_SCHEMA) },
+          ],
           properties: {
             group_id: {
               type: :integer,
@@ -45,10 +47,11 @@ module DiscourseWorkflows
           end
         end
 
-        def initialize(user, group)
+        def initialize(user, group, payload = {})
           super(parameters: {})
           @user = user
           @group = group
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -63,6 +66,7 @@ module DiscourseWorkflows
               action: "removed",
               automatic: nil,
             },
+            actor: serialize_user(@actor),
           }
         end
 

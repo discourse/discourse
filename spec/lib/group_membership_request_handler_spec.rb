@@ -31,6 +31,18 @@ describe GroupMembershipRequestHandler do
       )
     end
 
+    it "reports the accepting user as the actor of the event" do
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          described_class.handle(owner.guardian, group, user, accept: true)
+        end
+
+      expect(events).to contain_exactly(
+        event_name: :user_added_to_group,
+        params: [user, group, { automatic: false, acting_user: owner }],
+      )
+    end
+
     it "clears the request without adding the user when denied" do
       expect { described_class.handle(owner.guardian, group, user, accept: false) }.to change {
         GroupRequest.count

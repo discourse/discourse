@@ -491,6 +491,30 @@ RSpec.describe InviteRedeemer do
         expect(user.trust_level).to eq(2)
       end
 
+      it "reports the inviter as the actor of the membership event" do
+        group = Fabricate(:group)
+        InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+        group.add_owner(invite.invited_by)
+
+        user = nil
+        events =
+          DiscourseEvent.track_events(:user_added_to_group) do
+            user =
+              InviteRedeemer.new(
+                invite: invite,
+                email: invite.email,
+                username: username,
+                name: name,
+                password: password,
+              ).redeem
+          end
+
+        expect(events).to include(
+          event_name: :user_added_to_group,
+          params: [user, group, { automatic: false, acting_user: invite.invited_by }],
+        )
+      end
+
       it "adds an entry to the group logs when the invited user is added to a group" do
         group = Fabricate(:group)
         InvitedGroup.create(group_id: group.id, invite_id: invite.id)

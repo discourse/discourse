@@ -183,7 +183,7 @@ module DiscourseSubscriptions
     def finalize_transaction(transaction, plan)
       group = plan_group(plan)
 
-      group.add(current_user) if group
+      group.add(current_user, acting_user: current_user) if group
 
       customer =
         Customer.create(

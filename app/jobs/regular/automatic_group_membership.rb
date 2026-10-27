@@ -16,7 +16,7 @@ module Jobs
         .automatic_membership_users(domains)
         .find_each do |user|
           next unless user.email_confirmed?
-          group.add(user, automatic: true)
+          group.add(user, automatic: true, acting_user: Discourse.system_user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
     end

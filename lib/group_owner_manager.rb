@@ -23,7 +23,7 @@ class GroupOwnerManager
 
     users.each do |user|
       next if member_ids.include?(user.id)
-      group.add(user)
+      group.add(user, acting_user: guardian.user)
       logger.log_add_user_to_group(user)
     end
 

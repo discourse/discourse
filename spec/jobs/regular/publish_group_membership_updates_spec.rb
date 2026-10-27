@@ -14,7 +14,7 @@ describe Jobs::PublishGroupMembershipUpdates do
 
     expect(events).to include(
       event_name: :user_added_to_group,
-      params: [user, group, { automatic: group.automatic }],
+      params: [user, group, { automatic: group.automatic, acting_user: Discourse.system_user }],
     )
   end
 
@@ -24,7 +24,10 @@ describe Jobs::PublishGroupMembershipUpdates do
         job.execute(user_ids: [user.id], group_id: group.id, type: "remove")
       end
 
-    expect(events).to include(event_name: :user_removed_from_group, params: [user, group])
+    expect(events).to include(
+      event_name: :user_removed_from_group,
+      params: [user, group, { acting_user: Discourse.system_user }],
+    )
   end
 
   it "does nothing if the group doesn't exist" do
@@ -33,7 +36,7 @@ describe Jobs::PublishGroupMembershipUpdates do
 
     expect(events).not_to include(
       event_name: :user_added_to_group,
-      params: [user, group, { automatic: group.automatic }],
+      params: [user, group, { automatic: group.automatic, acting_user: Discourse.system_user }],
     )
   end
 
@@ -51,7 +54,7 @@ describe Jobs::PublishGroupMembershipUpdates do
 
     expect(events).not_to include(
       event_name: :user_added_to_group,
-      params: [user, group, { automatic: group.automatic }],
+      params: [user, group, { automatic: group.automatic, acting_user: Discourse.system_user }],
     )
   end
 end

@@ -9,7 +9,7 @@ class GroupSelfMembership
     raise Discourse::InvalidAccess if !group.public_admission
     return false if group.users.exists?(id: user.id)
 
-    added_user_ids = GroupManager.new(group).add([user.id])
+    added_user_ids = GroupManager.new(group).add([user.id], acting_user: user)
     GroupActionLogger.new(user, group).bulk_log_add_users_to_group(added_user_ids)
     true
   end
@@ -19,7 +19,7 @@ class GroupSelfMembership
     rate_limit!(user)
     raise Discourse::InvalidAccess if group.automatic
     raise Discourse::InvalidAccess if !group.public_exit
-    return false if !group.remove(user)
+    return false if !group.remove(user, acting_user: user)
 
     GroupActionLogger.new(user, group).log_remove_user_from_group(user)
     true
