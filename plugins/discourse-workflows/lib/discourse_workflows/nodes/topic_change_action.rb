@@ -5,7 +5,7 @@ module DiscourseWorkflows
     # Per-item actions on a topic, outputting the topic and whether it changed. Including modules or nodes
     # define a private `change(exec_ctx, topic, actor, item_index)` returning the item.
     module TopicChangeAction
-      def self.description(name:, icon:, color:, i18n_scope:, changed:)
+      def self.description(name:, icon:, color:, i18n_scope:, changed:, properties: {}, output: {})
         {
           name:,
           version: "1.0",
@@ -23,7 +23,13 @@ module DiscourseWorkflows
               schema:
                 Schema.merge(
                   Schema::TOPIC_LIST_ITEM_SCHEMA,
-                  Schema.document("changed" => { "type" => "boolean", "description" => changed }),
+                  Schema.document(
+                    "changed" => {
+                      "type" => "boolean",
+                      "description" => changed,
+                    },
+                    **output,
+                  ),
                 ),
             },
           ],
@@ -32,6 +38,7 @@ module DiscourseWorkflows
               type: :string,
               required: true,
             },
+            **properties,
             **NodeType.actor_property,
           },
         }

@@ -92,6 +92,20 @@ module DiscourseWorkflows
       { actor_username: property.merge(options) }
     end
 
+    def self.timezone_property(none:, **options)
+      property = {
+        type: :string,
+        required: false,
+        ui: {
+          control: :timezone,
+        },
+        control_options: {
+          none:,
+        },
+      }
+      { timezone: property.merge(options) }
+    end
+
     DESCRIPTION_DEFAULTS = {
       version: "1.0",
       defaults: {

@@ -17,6 +17,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
         "DiscourseWorkflows::Nodes::PostRecovered::V1",
         "DiscourseWorkflows::Nodes::Topic::V1",
         "DiscourseWorkflows::Nodes::TopicModeration::V1",
+        "DiscourseWorkflows::Nodes::TopicPin::V1",
         "DiscourseWorkflows::Nodes::TopicReceivedVote::V1",
         "DiscourseWorkflows::Nodes::Unassigned::V1",
       )
