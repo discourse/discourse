@@ -276,6 +276,14 @@ module PageObjects
           JS
       end
 
+      def has_elevated_overlays?
+        has_css?(".chat-channel__overlays.--over-content")
+      end
+
+      def has_no_elevated_overlays?
+        has_no_css?(".chat-channel__overlays.--over-content")
+      end
+
       def has_notices_below_onboarding_banner?
         has_css?(".chat-notices .chat-retention-reminder") && page.evaluate_script(<<~JS)
             document.querySelector(".chat-notices").getBoundingClientRect().top >=

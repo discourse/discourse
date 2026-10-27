@@ -125,6 +125,19 @@ RSpec.describe "Chat channel as the homepage" do
       expect(banner.step_completed?("start_posting")).to eq(true)
     end
 
+    it "raises the checklist only once messages run beneath it" do
+      visit("/")
+
+      expect(channel_page).to have_onboarding_banner_below_header
+      expect(channel_page).to have_no_elevated_overlays
+
+      Fabricate.times(40, :chat_message, chat_channel: channel_1)
+      page.refresh
+
+      expect(channel_page).to have_onboarding_banner_below_header
+      expect(channel_page).to have_elevated_overlays
+    end
+
     it "keeps the pinned message bar and channel notices clear of the checklist" do
       SiteSetting.chat_pinned_messages = true
       Fabricate(

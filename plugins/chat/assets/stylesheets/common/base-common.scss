@@ -253,6 +253,10 @@ body.has-full-page-chat {
   .admin-onboarding-banner__wrap {
     pointer-events: auto;
     background: var(--secondary);
+    transition: box-shadow 150ms ease;
+  }
+
+  &.--over-content .admin-onboarding-banner__wrap {
     box-shadow: var(--shadow-card);
   }
 }
