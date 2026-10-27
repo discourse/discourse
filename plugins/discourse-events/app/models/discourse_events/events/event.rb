@@ -45,8 +45,10 @@ module DiscourseEvents
       after_save :sync_hosts
       after_commit :create_livestream_chat_channel, on: %i[create update]
       after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
+      after_commit :enqueue_warm_recording_onebox, on: %i[create update]
       after_commit :destroy_topic_custom_field, on: %i[destroy]
       after_commit :create_or_update_event_date, on: %i[create update]
+      after_commit :reopen_livestream_chat_channel, on: :update
       after_save do
         if saved_change_to_image_upload_id?
           UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
@@ -63,6 +65,7 @@ module DiscourseEvents
       validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
       validates :location, length: { maximum: MAX_LOCATION_LENGTH }
       validates :url, length: { maximum: MAX_URL_LENGTH }
+      validates :recording_url, length: { maximum: MAX_URL_LENGTH }
       validates :max_attendees,
                 numericality: {
                   only_integer: true,
@@ -109,6 +112,22 @@ module DiscourseEvents
         DiscourseEvents::Livestream.handle_topic_chat_channel_creation(post.topic)
       end
 
+      # The chat closes once the event ends, so an event moved back into the
+      # future, or made recurring, needs it open again.
+      def reopen_livestream_chat_channel
+        return unless livestream? && SiteSetting.chat_enabled
+        return if !occurrences_remaining?
+
+        topic_chat_channel =
+          DiscourseEvents::Livestream::TopicChatChannel.includes(:chat_channel).find_by(
+            topic_id: post&.topic_id,
+            closed_on_event_end: true,
+          )
+        return if !topic_chat_channel&.chat_channel&.closed?
+
+        topic_chat_channel.chat_channel.open!(Discourse.system_user)
+      end
+
       def has_cached_livestream_onebox?
         livestream? && livestream_url.present? && Oneboxer.cached_onebox(livestream_url).present?
       end
@@ -123,11 +142,27 @@ module DiscourseEvents
         Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: livestream_url)
       end
 
+      # The raw allows a recording without a scheme; oneboxing needs one.
+      def recording_link
+        return if recording_url.blank?
+        recording_url.match?(%r{\Ahttps?://}i) ? recording_url : "https://#{recording_url}"
+      end
+
+      def has_cached_recording_onebox?
+        recording_link.present? && Oneboxer.cached_onebox(recording_link).present?
+      end
+
+      def enqueue_warm_recording_onebox
+        return if recording_link.blank? || !saved_change_to_recording_url?
+        return if has_cached_recording_onebox?
+        Jobs.enqueue(:warm_recording_onebox, event_id: id, url: recording_link)
+      end
+
       # Fetches the onebox and tells clients to re-render the post with it. Only
-      # ever called from the background job, never during a request.
-      def warm_livestream_onebox!
-        return if has_cached_livestream_onebox?
-        Oneboxer.onebox(livestream_url)
+      # ever called from a background job, never during a request.
+      def warm_onebox!(url)
+        return if Oneboxer.cached_onebox(url).present?
+        Oneboxer.onebox(url)
         post&.publish_change_to_clients!(:revised)
       end
 
@@ -154,8 +189,10 @@ module DiscourseEvents
         return unless sync_event_date
 
         reset_invitees_for_next_occurrence
-        notify_if_new_event
-        publish_update!
+        DB.after_commit do
+          notify_if_new_event
+          publish_update!
+        end
       end
 
       def set_topic_bump
@@ -224,6 +261,13 @@ module DiscourseEvents
 
       def starts_at
         current_event_date&.starts_at || original_starts_at
+      end
+
+      # Between occurrences of a recurring livestream there is nothing to chat
+      # alongside, so the chat only docks around each one.
+      def livestream_chat_active?
+        return false if !livestream? || expired?
+        !recurring? || currently_within_event_timeframe?
       end
 
       def ends_at
@@ -417,6 +461,14 @@ module DiscourseEvents
 
       def recurring?
         recurrence.present?
+      end
+
+      # Unlike `expired?`, also false for a series whose cutoff falls after its
+      # last occurrence.
+      def occurrences_remaining?(after: Time.current)
+        return false if expired?
+        return true if !recurring?
+        calculate_next_occurrence_from(after).present?
       end
 
       def most_likely_going(limit = SiteSetting.displayed_invitees_limit)
@@ -833,6 +885,7 @@ end
 #  original_ends_at   :datetime
 #  original_starts_at :datetime         not null
 #  raw_invitees       :string           is an Array
+#  recording_url      :string(1000)
 #  recurrence         :string
 #  recurrence_until   :datetime
 #  reminders          :string

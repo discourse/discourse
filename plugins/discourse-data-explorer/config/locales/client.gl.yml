@@ -8,12 +8,9 @@ gl:
   js:
     explorer:
       or: "ou"
-      create: "Crear"
       ai:
         generate: "Xerar"
         optional: "opcional"
-      import:
-        label: "Importar"
       help:
         label: "Axuda"
       schema:
@@ -32,7 +29,6 @@ gl:
       query_description: "Descrición"
       query_user: "Creado por"
       reset_params: "Restabelecer"
-      search_placeholder: "Buscar..."
     group:
       reports: "Informes"
     discourse_workflows:

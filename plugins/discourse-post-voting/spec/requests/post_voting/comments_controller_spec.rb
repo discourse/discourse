@@ -270,6 +270,62 @@ RSpec.describe PostVoting::CommentsController do
       expect(body["cooked"]).to eq("<p>this is some new raw</p>")
     end
 
+    it "returns 403 when the author is silenced" do
+      UserSilencer.silence(comment.user, Discourse.system_user)
+      sign_in(comment.user)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(403)
+      expect(comment.reload.raw).not_to eq("this is some new raw")
+    end
+
+    it "returns 403 when the author edits a comment on a closed topic" do
+      topic.update!(closed: true)
+      sign_in(comment.user)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(403)
+      expect(comment.reload.raw).not_to eq("this is some new raw")
+    end
+
+    it "returns 403 when the author edits a comment on an archived topic" do
+      topic.update!(archived: true)
+      sign_in(comment.user)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(403)
+      expect(comment.reload.raw).not_to eq("this is some new raw")
+    end
+
+    it "still allows staff to edit a comment on a closed topic" do
+      topic.update!(closed: true)
+      sign_in(admin)
+
+      put "/post_voting/comments.json",
+          params: {
+            comment_id: comment.id,
+            raw: "this is some new raw",
+          }
+
+      expect(response.status).to eq(200)
+      expect(comment.reload.raw).to eq("this is some new raw")
+    end
+
     it "updates the user's own comment and publishes the change" do
       sign_in(comment.user)
 

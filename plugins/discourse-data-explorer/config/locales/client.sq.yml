@@ -8,12 +8,9 @@ sq:
   js:
     explorer:
       or: "ose"
-      create: "Krijo"
       ai:
         generate: "Gjenero"
         optional: "opsionale"
-      import:
-        label: "Importo"
       help:
         label: "Ndihmë"
       types:

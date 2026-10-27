@@ -8,7 +8,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { shortDate } from "discourse/lib/formatter";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";

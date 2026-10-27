@@ -19,7 +19,6 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.discourse_ai_enabled && ::DecisionModel.exists? },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_decision_model",
             i18n_prefix: "discourse_ai.discourse_workflows",
-            output_schema_resolver: "classify",
             capabilities: {
               run_scope: "per_item",
             },
@@ -180,6 +179,7 @@ if defined?(DiscourseWorkflows)
                 properties["level"] = { "type" => "string" }
               end
             end
+            properties.each { |key, property| property["x-optional"] = true if key != "type" }
             { "type" => "object", "properties" => properties }
           end
 

@@ -35,7 +35,6 @@ tr_TR:
       admins_only: "Veri gezgini yalnızca yöneticiler tarafından kullanılabilir."
       allow_groups: "Grupların bu sorguya erişmesine izin ver"
       title: "Veri Gezgini"
-      create: "Oluştur"
       create_placeholder: "Sorgu adı ..."
       description_placeholder: "Buraya bir açıklama girin"
       ai:
@@ -51,7 +50,6 @@ tr_TR:
         sql_label: "SQL"
         optional: "i̇steğe bağlı"
       import:
-        label: "İçe Aktar"
         unparseable_json: "Ayrıştırılamayan JSON dosyası."
         wrong_json: "Yanlış JSON dosyası. Bir JSON dosyası, en azından bir \"sql\" özelliğine sahip olması gereken bir \"query\" nesnesi içermelidir."
       help:
@@ -81,7 +79,6 @@ tr_TR:
         form:
           label: "Grafik tipi"
           bar: "Çubuk"
-      others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
       run_time: "Sorgu %{value} ms'de tamamlandı."
       cached_result_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
       result_count:
@@ -101,7 +98,6 @@ tr_TR:
       column: "%{number}. sütun"
       save_params: "Varsayılanları ayarla"
       reset_params: "Sıfırla"
-      search_placeholder: "Ara..."
       no_search_results: "Üzgünüz, metninizle eşleşen bir sonuç bulamadık."
       form:
         errors:

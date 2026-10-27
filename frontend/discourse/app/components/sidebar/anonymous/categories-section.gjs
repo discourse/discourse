@@ -3,7 +3,6 @@ import { service } from "@ember/service";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import Category from "discourse/models/category";
-import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllCategoriesSectionLink from "../common/all-categories-section-link.gjs";
 import SidebarCommonCategoriesSection from "../common/categories-section.gjs";

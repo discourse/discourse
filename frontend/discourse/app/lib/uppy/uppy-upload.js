@@ -270,7 +270,6 @@ export default class UppyUpload {
     });
 
     this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
-      this.uppyWrapper.addNeedProcessing(files.length);
       this.processing = true;
       this.cancellable = false;
       files.forEach((file) => {

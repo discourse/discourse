@@ -274,30 +274,21 @@ module DiscourseAi
       def store_result(user_id:, request_id:, query:, answer:, sources:, agent_id:, follow_up: "")
         return if !valid_request_id?(request_id) || query.blank? || sources.blank?
 
-        posts =
-          Post
-            .where(id: sources.map { |source| source.fetch("post_id") }, deleted_at: nil)
-            .includes(:topic)
-            .index_by(&:id)
         stored_sources =
-          sources.filter_map do |source|
-            post = posts[source.fetch("post_id")]
-            topic = post&.topic
-            next if topic.nil? || topic.id != source.fetch("topic_id")
-
-            {
-              post_id: post.id,
-              topic_id: topic.id,
-              category_id: topic.category_id,
-              post_updated_at: post.updated_at.iso8601(6),
-            }
+          sources.map do |source|
+            if ExternalSource.candidate?(source)
+              source.slice("kind", "title", "url")
+            else
+              source.slice("post_id", "topic_id")
+            end
           end
-        return if stored_sources.length != sources.length
-
         payload = { query:, answer:, sources: stored_sources, agent_id:, follow_up: }.to_json
         Discourse.redis.set(result_key(user_id, request_id), payload, ex: REQUEST_TTL)
       end
 
+      # The result is read back for follow-ups well after it was answered, so it
+      # expires once any source is out of the user's sight: its answer was
+      # written from all of them.
       def cached_result_for(user:, request_id:)
         return if user.nil? || !valid_request_id?(request_id)
 
@@ -308,31 +299,29 @@ module DiscourseAi
         sources = Array(result["sources"])
         return if result["query"].blank? || !result.key?("answer") || sources.empty?
 
-        posts =
-          Post
-            .where(id: sources.pluck("post_id"), deleted_at: nil)
-            .includes(topic: :category)
-            .index_by(&:id)
+        forum_sources = sources.reject { |source| ExternalSource.candidate?(source) }
+        posts = Post.where(id: forum_sources.pluck("post_id")).includes(:topic).index_by(&:id)
         guardian = Guardian.new(user)
-        visible_sources = []
-        all_sources_visible =
-          sources.all? do |source|
-            post = posts[source["post_id"]]
-            topic = post&.topic
-            visible =
-              topic && topic.id == source["topic_id"] &&
-                [Archetype.default, Archetype.private_message].include?(topic.archetype) &&
-                topic.deleted_at.nil? && topic.visible? && guardian.can_see?(post) &&
-                topic.category_id == source["category_id"] &&
-                post.updated_at.iso8601(6) == source["post_updated_at"]
+        if forum_sources.any? { |source|
+             post = posts[source["post_id"]]
+             post&.topic.nil? || !guardian.can_see?(post)
+           }
+          return
+        end
 
-            if visible
-              visible_sources << source.merge("title" => topic.title, "url" => post.full_url)
-            end
-            visible
-          end
+        result.merge(
+          "sources" =>
+            sources.map do |source|
+              next source if ExternalSource.candidate?(source)
 
-        result.merge("sources" => visible_sources) if all_sources_visible
+              post = posts[source["post_id"]]
+              source.merge(
+                "topic_id" => post.topic_id,
+                "title" => post.topic.title,
+                "url" => post.full_url,
+              )
+            end,
+        )
       rescue JSON::ParserError
         nil
       end

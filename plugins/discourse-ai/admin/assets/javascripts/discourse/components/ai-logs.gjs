@@ -17,7 +17,6 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import DiscourseURL from "discourse/lib/url";
 import userSearch, { validateSearchResult } from "discourse/lib/user-search";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";

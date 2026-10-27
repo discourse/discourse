@@ -28,9 +28,7 @@ ko:
       close: "닫기"
       delete: "삭제"
       edit: "편집"
-      back: "뒤로"
       save: "저장"
-      apply: "적용"
       update_range:
         last_10_days: "지난 10일"
         last_30_days: "지난 30일"

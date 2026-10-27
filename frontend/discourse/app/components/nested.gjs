@@ -14,7 +14,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
-import { and, gt, includes, not } from "discourse/truth-helpers";
+import { includes } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";

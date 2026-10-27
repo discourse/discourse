@@ -140,6 +140,26 @@ RSpec.describe UserSilencer do
         expect(post.topic.title).to eq("override title")
         expect(post.raw).to eq("override raw")
       end
+
+      context "when the dsa_reporting_enabled site setting is enabled" do
+        before do
+          SiteSetting.dsa_reporting_enabled = true
+          SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+        end
+
+        it "includes appeal instructions in plugin customized messages" do
+          UserSilencer.silence(user, admin, message: :plugin_silence_notice)
+          # force a reload in case instance has no posts
+          system_user = User.find(Discourse::SYSTEM_USER_ID)
+
+          post = system_user.posts.order("posts.id desc").first
+
+          expect(post.topic.title).to eq("override title")
+          expect(post.raw).to eq(
+            "override raw\n\nTo appeal this decision, contact appeals@example.com",
+          )
+        end
+      end
     end
   end
 
@@ -163,6 +183,22 @@ RSpec.describe UserSilencer do
         ).count
 
       expect(count).to eq(1)
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the unsilence notice" do
+        user.update!(silenced_till: 1.year.from_now)
+
+        UserSilencer.unsilence(user, admin)
+
+        pm = user.topics_allowed.order("topics.id desc").first
+        expect(pm.first_post.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
     end
 
     it "does nothing when the user is not silenced" do
