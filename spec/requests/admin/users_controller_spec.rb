@@ -622,6 +622,40 @@ RSpec.describe Admin::UsersController do
         )
       end
 
+      it "reports a suspended user whose penalty history was reset as already suspended" do
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "because I said so",
+            }
+        delete "/admin/users/#{user.id}/penalty_history.json"
+
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "because I said so too",
+            }
+
+        expect(response.status).to eq(409)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("user.already_suspended_without_details"),
+        )
+      end
+
+      it "suspends the user once when their own id is among the other users" do
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "because I said so",
+              other_user_ids: [user.id],
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          UserHistory.where(target_user: user, action: UserHistory.actions[:suspend_user]).count,
+        ).to eq(1)
+      end
+
       context "with webhook" do
         fab!(:user_web_hook)
 
@@ -2339,6 +2373,40 @@ RSpec.describe Admin::UsersController do
               ),
           ),
         )
+      end
+
+      it "reports a silenced user whose penalty history was reset as already silenced" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              silenced_till: 5.hours.from_now,
+              reason: "because I said so",
+            }
+        delete "/admin/users/#{user.id}/penalty_history.json"
+
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              silenced_till: 5.hours.from_now,
+              reason: "because I said so too",
+            }
+
+        expect(response.status).to eq(409)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("user.already_silenced_without_details"),
+        )
+      end
+
+      it "silences the user once when their own id is among the other users" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              silenced_till: 5.hours.from_now,
+              reason: "because I said so",
+              other_user_ids: [user.id],
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          UserHistory.where(target_user: user, action: UserHistory.actions[:silence_user]).count,
+        ).to eq(1)
       end
 
       it "can silence multiple users" do

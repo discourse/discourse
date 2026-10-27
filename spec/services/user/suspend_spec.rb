@@ -49,11 +49,67 @@ RSpec.describe User::Suspend do
     end
 
     context "when user is already suspended" do
+      fab!(:moderator)
+
+      let(:policy_reason) { result["result.policy.not_suspended_already"].reason }
+
       before do
-        UserSuspender.new(user, by_user: admin, suspended_till: suspend_until, reason:).suspend
+        UserSuspender.new(user, by_user: moderator, suspended_till: suspend_until, reason:).suspend
       end
 
       it { is_expected.to fail_a_policy(:not_suspended_already) }
+
+      it "says who suspended them" do
+        expect(policy_reason).to eq(
+          I18n.t(
+            "user.already_suspended",
+            staff: moderator.username,
+            time_ago:
+              AgeWords.time_ago_in_words(
+                user.suspend_record.created_at,
+                true,
+                scope: :"datetime.distance_in_words_verbose",
+              ),
+          ),
+        )
+      end
+
+      context "when their penalty history was reset" do
+        before { user.suspend_record.update!(action: UserHistory.actions[:removed_suspend_user]) }
+
+        it "says they are already suspended" do
+          expect(policy_reason).to eq(I18n.t("user.already_suspended_without_details"))
+        end
+      end
+
+      context "when the moderator who suspended them was deleted" do
+        before { UserDestroyer.new(admin).destroy(moderator) }
+
+        it "says they are already suspended" do
+          expect(policy_reason).to eq(I18n.t("user.already_suspended_without_details"))
+        end
+      end
+    end
+
+    context "when the account behind an anonymous shadow is suspended" do
+      fab!(:shadow) do
+        Fabricate(:anonymous).tap { it.anonymous_user_master.update!(master_user: user) }
+      end
+
+      let(:user_id) { shadow.id }
+      let(:other_user_ids) { nil }
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        UserSuspender.new(user, by_user: admin, suspended_till: suspend_until, reason:).suspend
+      end
+
+      it "says the shadow is already suspended without naming who suspended the account" do
+        expect(result).to fail_a_policy(:not_suspended_already)
+        expect(result["result.policy.not_suspended_already"].reason).to eq(
+          I18n.t("user.already_suspended_without_details"),
+        )
+      end
     end
 
     context "when all users cannot be suspended" do
@@ -79,6 +135,19 @@ RSpec.describe User::Suspend do
 
       it "exposes the full reason in the result object" do
         expect(result[:full_reason]).to eq("spam\n\nit was spam")
+      end
+
+      context "when the user's own id is among the other users" do
+        let(:other_user_ids) { [user.id, other_user.id].join(",") }
+
+        it "suspends them once" do
+          events = DiscourseEvent.track_events(:user_suspended) { result }
+
+          expect(events.map { it[:params].first[:user] }).to contain_exactly(user, other_user)
+          expect(
+            UserHistory.where(target_user: user, action: UserHistory.actions[:suspend_user]).count,
+          ).to eq(1)
+        end
       end
     end
   end
