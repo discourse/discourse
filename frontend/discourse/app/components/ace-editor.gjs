@@ -100,7 +100,7 @@ export default class AceEditor extends Component {
     deprecated(
       "<AceEditor> is deprecated. Use <CodeEditor> instead: @content becomes @value, @mode becomes @language, @save and @submit become @onSave and @onSubmit, @setWarning becomes @lineWarnings, @editorId becomes @inputId, and an HTML placeholder is passed through trustHTML() rather than @htmlPlaceholder.",
       {
-        since: "2026.10.0",
+        since: "2026.11.0",
         id: "discourse.ace-editor",
       }
     );
