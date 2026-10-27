@@ -283,6 +283,7 @@ html.discourse-touch .live-call-widget {
   // and the control bar sits on the bottom row, level with the chat panel's
   // composer next door.
   &__stage {
+    position: relative;
     flex: 1;
     min-height: 0;
     display: flex;
@@ -673,6 +674,115 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     margin-inline: auto;
     height: auto;
     font-size: var(--font-up-2);
+  }
+}
+
+// Each item spans the overlay's full height with its content pinned to the
+// bottom, so a percentage translate rises relative to the overlay — keeping
+// the animation on the compositor regardless of how tall the stage is.
+.live-reactions {
+  position: absolute;
+  inset: 0 0 var(--live-reactions-bottom, 4rem);
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+
+  .live-call-widget & {
+    --live-reactions-bottom: 3.5rem;
+  }
+
+  &__item {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: var(--live-reaction-offset, 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    row-gap: 0.15rem;
+    animation: live-reaction-float 4s ease-out forwards;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation-name: live-reaction-fade;
+    }
+  }
+
+  &__emoji .emoji {
+    width: 2.25rem;
+    height: 2.25rem;
+
+    .live-call-widget & {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &__username {
+    max-width: 8rem;
+    padding: 0 0.4em;
+    overflow: hidden;
+    border-radius: var(--d-border-radius);
+    background: rgb(0 0 0 / 55%);
+    color: #fff;
+    font-size: var(--font-down-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@keyframes live-reaction-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate(-50%, -8%) scale(1);
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(1);
+  }
+}
+
+@keyframes live-reaction-fade {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+
+  15%,
+  75% {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+.live-reaction-picker {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+
+  &__emoji {
+    padding: var(--space-1);
+
+    .emoji {
+      width: 1.75rem;
+      height: 1.75rem;
+      transition: transform 0.1s ease-out;
+    }
+
+    &:hover .emoji,
+    &:focus-visible .emoji {
+      transform: scale(1.2);
+    }
   }
 }
 

@@ -13,6 +13,9 @@ en:
         title: "Live rooms"
         create: "Create room"
         empty: "No live rooms yet."
+      reactions:
+        title: "Send a reaction"
+        rate_limited: "You're sending reactions too quickly. Try again in a moment."
       room:
         join: "Join live room"
         leave: "Leave room"
@@ -209,6 +212,7 @@ en:
         draft_topic: "Open transcript draft"
         stop_and_open: "Stop recording and open draft"
         draft_title: "Call transcript: %{room}"
+        reaction_count: "%{emoji} ×%{count}"
         source_label: "Call transcript"
         unknown_speaker: "unknown speaker"
       stage:

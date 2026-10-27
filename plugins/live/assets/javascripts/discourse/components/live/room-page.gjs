@@ -34,6 +34,8 @@ import LiveCallControls from "./call-controls.gjs";
 import LiveCallSubmenu from "./call-submenu.gjs";
 import LiveCaptionOverlay from "./caption-overlay.gjs";
 import LiveChatPanel from "./chat-panel.gjs";
+import LiveReactionOverlay from "./reaction-overlay.gjs";
+import LiveReactionPicker from "./reaction-picker.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
 import LiveRoomHeader from "./room-header.gjs";
 import LiveSpeakQueue from "./speak-queue.gjs";
@@ -657,11 +659,13 @@ export default class LiveRoomPage extends Component {
           {{/if}}
           {{#if this.joined}}
             <LiveCaptionOverlay @room={{this.room}} />
+            <LiveReactionOverlay @room={{this.room}} />
           {{/if}}
 
           <footer class="live-room-page__controls">
             {{#if this.joined}}
               <LiveCallControls @room={{this.room}} />
+              <LiveReactionPicker @room={{this.room}} />
               {{#if this.isStageRoom}}
                 <DMenu
                   @ariaLabel={{i18n "live.stage.queue_title"}}
