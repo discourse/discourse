@@ -417,6 +417,26 @@ module("Unit | Model | composer", function (hooks) {
     assert.strictEqual(draft.reply_to_user.username, "alice");
   });
 
+  test("original form answers are sent with form edits", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const answers = { description: "A description.", confirmed: false };
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      topic: store.createRecord("topic", { id: 1 }),
+      post: store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        form_submission: { template_id: 3, template: "", answers },
+      }),
+    });
+    await composer.open({ action: EDIT, post: composer.post });
+
+    assert.strictEqual(composer.originalFormAnswers, JSON.stringify(answers));
+
+    composer.set("formSubmission", null);
+    assert.strictEqual(composer.originalFormAnswers, undefined);
+  });
+
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
     const composer = openComposer.call(this, {

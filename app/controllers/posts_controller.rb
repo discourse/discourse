@@ -251,6 +251,12 @@ class PostsController < ApplicationController
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
+    # Answers the output template omits never reach raw, so they need their own check.
+    original_answers = params[:post][:original_form_answers]
+    if original_answers.present? && !post.form_submission&.answers_match?(original_answers)
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
+
     # to stay consistent with the create api, we allow for title & category changes here
     if post.is_first_post?
       if params[:title]

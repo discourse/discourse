@@ -197,6 +197,40 @@ RSpec.describe PostsController do
       expect(form_post.reload.form_submission.answers).to eq(answers)
     end
 
+    it "detects conflicting edits to answers the output template omits" do
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: answers.merge("confirmed" => true) }.to_json,
+              original_text: form_post.raw,
+              original_form_answers: answers.to_json,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(form_post.reload.form_submission.answers["confirmed"]).to eq(true)
+
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: }.to_json,
+              original_text: form_post.raw,
+              original_form_answers: answers.to_json,
+            },
+          }
+      expect(response.status).to eq(409)
+      expect(form_post.reload.form_submission.answers["confirmed"]).to eq(true)
+
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: }.to_json,
+              original_text: form_post.raw,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(form_post.reload.form_submission.answers).to eq(answers)
+    end
+
     it "falls back to markdown editing after a raw-only edit" do
       put "/posts/#{form_post.id}.json",
           params: {

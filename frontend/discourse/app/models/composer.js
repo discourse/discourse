@@ -82,6 +82,7 @@ const CLOSED = "closed",
   },
   _update_serializer = {
     form_template_data: "formTemplateData",
+    original_form_answers: "originalFormAnswers",
     raw: "reply",
     topic_id: "topic.id",
     original_text: "originalText",
@@ -450,6 +451,13 @@ export default class Composer extends RestModel {
       return !deepEqual(this.formTemplateDraft, this.originalFormTemplateDraft);
     }
     return (this.reply || "").trim() !== (this.originalText || "").trim();
+  }
+
+  @computed("formSubmission", "originalFormTemplateDraft")
+  get originalFormAnswers() {
+    if (this.formSubmission && this.originalFormTemplateDraft) {
+      return JSON.stringify(this.originalFormTemplateDraft.answers);
+    }
   }
 
   @computed("title", "originalTitle")
@@ -1207,6 +1215,7 @@ export default class Composer extends RestModel {
     // user clicked "overwrite edits" button
     if (this.editConflict) {
       delete props.original_text;
+      delete props.original_form_answers;
       delete props.original_title;
       delete props.original_tags;
     }

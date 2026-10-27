@@ -75,6 +75,13 @@ class FormTemplate::Submission
     @data["answers"].deep_dup
   end
 
+  def answers_match?(payload)
+    payload.is_a?(String) && payload.bytesize <= MAX_BYTES &&
+      JSON.parse(payload, max_nesting: 20) == @data["answers"]
+  rescue JSON::JSONError
+    false
+  end
+
   def template_id
     @data["template_id"]
   end

@@ -468,6 +468,7 @@ class PostRevisor
       unless cached_original_raw
         self.original_raw = @post.raw
         self.original_cooked = @post.cooked
+        self.original_form_data = @post.form_data
       end
       revise
     end
@@ -519,6 +520,17 @@ class PostRevisor
     @cached_original_cooked ||= Discourse.redis.get(original_cooked_key)
   end
 
+  def original_form_data_key
+    "original_form_data_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
+  end
+
+  def cached_original_form_data
+    @cached_original_form_data ||=
+      if (cached = Discourse.redis.get(original_form_data_key))
+        JSON.parse(cached)
+      end
+  end
+
   def original_raw
     cached_original_raw || @post.raw
   end
@@ -531,6 +543,16 @@ class PostRevisor
   def original_cooked=(val)
     @cached_original_cooked = val
     Discourse.redis.setex(original_cooked_key, SiteSetting.editing_grace_period + 1, val)
+  end
+
+  def original_form_data=(val)
+    return if val.nil?
+    @cached_original_form_data = val
+    Discourse.redis.setex(
+      original_form_data_key,
+      SiteSetting.editing_grace_period + 1,
+      JSON.generate(val),
+    )
   end
 
   def diff_size(before, after)
@@ -732,6 +754,10 @@ class PostRevisor
 
       if modifications["cooked"]
         modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
+      end
+
+      if modifications["form_data"]
+        modifications["form_data"][0] = cached_original_form_data || modifications["form_data"][0]
       end
     end
 

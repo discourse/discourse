@@ -30,11 +30,14 @@ PostRevisor.new(post).revise!(
 ```
 
 The editing endpoint accepts `post[form_template_data]` containing JSON
-`{ "answers": { ... } }`. Clients cannot supply a replacement definition, and
-the existing `original_text` check detects concurrent edits.
+`{ "answers": { ... } }`. Clients cannot supply a replacement definition. The
+existing `original_text` check detects concurrent edits to the rendered post;
+`post[original_form_answers]` (the answers the editor started from) does the
+same for answers the output template omits, which never change `raw`.
 
 `form_data` is a tracked field in `PostRevisor`, so revisions record it next to
-`raw` and a revert restores both.
+`raw` and a revert restores both, including the original snapshot cached during
+the editing grace period.
 
 A text rewrite that should keep the form editable can apply the same
 transformation to the saved answers with `Submission#rewrite_answers`; the

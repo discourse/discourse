@@ -25,8 +25,8 @@ module Jobs
 
       if post.raw != raw
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
-        if (submission = post.form_submission)
-          changes[:form_data] = submission.rewrite_answers(&rewrite).to_h
+        if (form_data = rewritten_form_data(post, rewrite))
+          changes[:form_data] = form_data
         end
         post.revise(
           Discourse.system_user,
@@ -36,6 +36,16 @@ module Jobs
           skip_validations: true,
         )
       end
+    end
+
+    private
+
+    # A rewritten snapshot can outgrow the size cap; the post then falls back to
+    # markdown editing instead of blocking the raw rewrite.
+    def rewritten_form_data(post, rewrite)
+      post.form_submission&.rewrite_answers(&rewrite)&.to_h
+    rescue ArgumentError
+      nil
     end
   end
 end
