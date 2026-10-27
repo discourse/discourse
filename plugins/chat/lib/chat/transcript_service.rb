@@ -185,7 +185,8 @@ module Chat
 
       # We are getting only the OP of the thread, let's expand it to
       # include all the replies for the thread.
-      if messages.count == 1 && thread&.original_message_id == messages.first.id
+      if !@opts[:no_thread_expansion] && messages.count == 1 &&
+           thread&.original_message_id == messages.first.id
         @messages = [messages.first] + messages.first.thread.replies
       end
 

@@ -76,6 +76,8 @@ en:
       manage:
         access_permission_editor: "Editor"
         access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_owner: "Owner"
+        access_permission_owner_description: "Owner has total control over this %{target}, and can add or remove other owners."
         access_permission_viewer: "Viewer"
         access_permission_viewer_description: "Can view content for this entity"
         access_permission_remove: "Remove"
@@ -85,6 +87,7 @@ en:
         mandatory: "Mandatory"
         disallowed: "Disallowed"
         required_permission_not_added: "At least one grantee must have %{permission} permission for this %{typeName}"
+        owner_required: "At least one user must remain an owner of this %{typeName}"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -9739,6 +9742,9 @@ en:
             configure_category_type: "configure category type"
             unconfigure_category_type: "unconfigure category type"
             change_access_control_list_permissions: "change access control list permissions"
+            add_access_control_list_owner: "add access control list owner"
+            remove_access_control_list_owner: "remove access control list owner"
+            assume_access_control_ownership: "assume access control ownership"
             admin_onboarding_step_completed: "complete admin onboarding step"
             admin_onboarding_completed: "complete admin onboarding"
             admin_onboarding_dismissed: "dismiss admin onboarding"

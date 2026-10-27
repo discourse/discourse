@@ -42,7 +42,32 @@ RSpec.describe DiscardedDraftsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["draft"]).to eq(content)
-      expect(Draft.get(user, "new_topic_1", response.parsed_body["draft_sequence"])).to eq(content)
+      restored_sequence = response.parsed_body["draft_sequence"]
+      expect(restored_sequence).to eq(1)
+      expect(Draft.get(user, "new_topic_1", restored_sequence)).to eq(content)
+
+      post "/drafts.json",
+           params: {
+             draft_key: "new_topic_1",
+             sequence: 0,
+             data: { reply: "stale" }.to_json,
+           }
+
+      expect(response.status).to eq(409)
+      expect(Draft.get(user, "new_topic_1", restored_sequence)).to eq(content)
+
+      edited_content = { reply: "edited after restoring" }.to_json
+      post "/drafts.json",
+           params: {
+             draft_key: "new_topic_1",
+             sequence: restored_sequence,
+             data: edited_content,
+           }
+
+      expect(response.status).to eq(200)
+      expect(Draft.get(user, "new_topic_1", response.parsed_body["draft_sequence"])).to eq(
+        edited_content,
+      )
     end
 
     it "returns a conflict when a live draft has the same key" do
@@ -54,6 +79,8 @@ RSpec.describe DiscardedDraftsController do
 
       expect(response.status).to eq(409)
       expect(draft.reload.deleted_at).to be_present
+      expect(DraftSequence.current(user, "new_topic_1")).to eq(0)
+      expect(Draft.get(user, "new_topic_1", 0)).to eq({ reply: "newer" }.to_json)
     end
 
     it "enforces the draft limit" do

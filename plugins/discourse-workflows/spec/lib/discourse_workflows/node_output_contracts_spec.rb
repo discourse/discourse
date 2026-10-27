@@ -13,14 +13,29 @@ RSpec.describe DiscourseWorkflows::NodeType do
     }
   end
 
-  it "requires nodes that override output_schemas to name an editor-side resolver" do
-    overriding =
-      DiscourseWorkflows::NodeType.registered_nodes.select do |node_class|
-        node_class.singleton_class.instance_methods(false).include?(:output_schemas)
-      end
+  it "requires every node without a user-defined output to declare it" do
+    user_defined_output = %w[
+      action:code
+      action:modal
+      action:set_fields
+      action:split_out
+      action:sql
+      action:workflow_call
+      flow:sticky_note
+      trigger:manual
+      trigger:workflow_call
+    ]
 
-    expect(overriding).to be_present
-    expect(overriding.reject(&:output_schema_resolver)).to be_empty
+    undeclared =
+      DiscourseWorkflows::Registry
+        .nodes(include_disabled_plugins: true)
+        .select do |node_class|
+          next false if user_defined_output.include?(node_class.identifier)
+          next false if node_class.singleton_class.instance_methods(false).include?(:output_schemas)
+          Array(node_class.description.fetch(:output_contracts)).empty?
+        end
+
+    expect(undeclared.map(&:identifier)).to be_empty
   end
 
   it "preserves declarations through nodes that only forward or reorder items" do
@@ -93,11 +108,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
   it "unions the group variants in contention when the operation is an expression" do
     node_class = DiscourseWorkflows::Nodes::Group::V1
-    add_remove_schema =
-      DiscourseWorkflows::Schema.merge(
-        DiscourseWorkflows::Schema::GROUP_SCHEMA,
-        DiscourseWorkflows::Schema::BASIC_USER_SCHEMA,
-      )
+    add_remove_schema = node_class::GROUP_ACTION_SCHEMA
 
     expect(
       node_class.output_schemas({ "operation" => "add" }, input_schemas: [input_schema]),

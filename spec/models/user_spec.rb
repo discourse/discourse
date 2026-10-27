@@ -3438,6 +3438,60 @@ RSpec.describe User do
   end
 
   describe "#destroy!" do
+    it "destroys an unsaved user without attempting an ownership handoff" do
+      user = Fabricate.build(:user)
+
+      user.destroy!
+
+      expect(user).to be_destroyed
+    end
+
+    it "transfers owned ACLs after removing the user record" do
+      user = Fabricate(:user)
+      admin = Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+
+      queries = track_sql_queries { user.destroy! }
+
+      expect(user).to be_destroyed
+      expect(owner_acl.reload.allowed_user_ids).to eq([admin.id])
+      deletion_index = queries.index { |query| query.match?(/DELETE FROM "users"/) }
+      transfer_index = queries.index { |query| query.match?(/UPDATE "access_control_lists"/) }
+      expect(deletion_index).to be < transfer_index
+    end
+
+    it "rolls back ownership and its audit entry when a later destruction callback fails" do
+      user = Fabricate(:user)
+      Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+      user.stubs(:clear_acls).raises(ActiveRecord::RecordNotDestroyed)
+      audit_count =
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count
+
+      expect { user.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+
+      expect(User.exists?(user.id)).to eq(true)
+      expect(owner_acl.reload.allowed_user_ids).to eq([user.id])
+      expect(
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count,
+      ).to eq(audit_count)
+    end
+
+    it "preserves the user and ownership if the assumption cannot be audited" do
+      user = Fabricate(:user)
+      Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+      StaffActionLogger
+        .any_instance
+        .stubs(:log_assume_access_control_ownership)
+        .raises(ActiveRecord::RecordInvalid)
+
+      expect { user.destroy! }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(User.exists?(user.id)).to eq(true)
+      expect(owner_acl.reload.allowed_user_ids).to eq([user.id])
+    end
+
     it "clears up associated data on destroy!" do
       user = Fabricate(:user)
       post = Fabricate(:post)

@@ -340,6 +340,9 @@ export default async function setupTests(config) {
     // A pending ceremony never settles in headless Chrome, so it would retain the app
     WebauthnAbortHandler.controller?.abort();
 
+    // An open lightbox is a window global that would stop later tests opening one
+    window.pswp?.destroy();
+
     // Test modules can keep fakes after the test; their unformatted error stacks,
     // call history and pending timers would retain the test's owner
     for (const fake of sinon.getFakes()) {

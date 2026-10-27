@@ -28,6 +28,7 @@ Arguments:
 - `@acl`: flattened ACL entries from the backend or form state. The backend can emit group and user entries, and this component can add groups from the preloaded `@groups` list plus user/group search results from the ACL grantee search endpoint.
 - `@onChange`: called with the next flattened ACL array when the user adds/removes/changes a row.
 - `@aclTarget`: optional object with `type`, `id`, and `name`. `type` identifies the registered Ruby target class, `id` identifies an existing target when present, and `name` is used in validation copy. The component uses `type` to load mandatory and banned ACL metadata.
+- `@isNew`: prevents ordinary user rows from being promoted to owners during target creation. Initial ownership remains the responsibility of the create service.
 - `@transformPermissionOptions`: optional callback to customize default permission labels/descriptions or add target-specific permissions whose IDs are declared in the target's server-side `ACL_PERMISSIONS`.
 
 Example target descriptor:
@@ -57,9 +58,9 @@ aclChanged(acl) {
 }
 ```
 
-Mandatory ACL rows are injected for display from `this.site.access_control`. The component does not call `@onChange` during render when it injects mandatory rows. Backend saves must still call `AccessControlListManager` with the submitted ACL array so mandatory entries are injected server-side too.
+Mandatory ACL rows are injected for display from `this.site.access_control`. The component does not call `@onChange` during render when it injects mandatory rows. Backend saves must still call `AccessControlList::Apply` with the submitted ACL array so mandatory entries are injected server-side too.
 
-Banned ACL rows are also read from `this.site.access_control`. The component filters matching permission options for the row's grantee by comparing `permission`, `type`, and `id`. This is only a UX guard; backend saves must still go through `AccessControlListManager`, which rejects banned entries.
+Banned ACL rows are also read from `this.site.access_control`. The component filters matching permission options for the row's grantee by comparing `permission`, `type`, and `id`. This is only a UX guard; backend saves must still go through `AccessControlList::Apply`, which rejects banned entries.
 
 ## Permission Options
 
@@ -88,7 +89,7 @@ transformPermissionOptions(options) {
 }
 ```
 
-Every permission option added by `transformPermissionOptions(options)` must have an `id` that exactly matches a string in the target's server-side `ACL_PERMISSIONS.values`. For the example above, the target must declare `ACL_PERMISSIONS = Acl::Permissions.new(:view, :edit, :manage)`. Adding an option in JavaScript does not register a permission on the server: `AccessControlListManager` rejects unsupported IDs before changing ACL rows. The `remove` option is a UI action that deletes a grant, not a persisted permission, so do not add it to `ACL_PERMISSIONS`.
+Every permission option added by `transformPermissionOptions(options)` must have an `id` that exactly matches a string in the target's server-side `ACL_PERMISSIONS.values`. For the example above, the target must declare `ACL_PERMISSIONS = Acl::Permissions.new(:view, :edit, :manage)`. Adding an option in JavaScript does not register a permission on the server: `AccessControlList::Apply` rejects unsupported IDs before changing ACL rows. The `remove` option is a UI action that deletes a grant, not a persisted permission, so do not add it to `ACL_PERMISSIONS`.
 
 Keep permission copy aligned with backend semantics. If a displayed `manage` role also requires a global site setting or staff gate, make that clear in the surrounding UI or choose a different label.
 
@@ -96,11 +97,15 @@ Target-specific options added via `@transformPermissionOptions` can still be ban
 
 ## Row Behavior
 
-- Rows are sorted with mandatory rows first, then by group name.
+- Rows are sorted with mandatory rows first, owner rows second, then regular groups and users.
+- Owner rows do not display the mandatory badge. Their permission control is enabled only when `@canManageOwners` is true.
 - Mandatory rows show a lock icon, are styled with `--mandatory`, and have their permission select disabled.
 - A mandatory ACL replaces an existing row for the same type/id in the component's display list.
 - Banned permissions are filtered per row only when the banned entry's `type`, `id`, and `permission` match the row.
-- The remove action remains available unless the row is mandatory.
+- The remove action remains available unless the row is mandatory, except authorized owner rows expose Remove.
+- When `@canManageOwners` is true, user rows expose Owner unless `@isNew` is true, and owner rows expose only Owner and Remove. Group rows never expose Owner. Ownership still uses a dedicated save payload rather than `@transformPermissionOptions` or ordinary ACL params.
+- Owner options use `@aclTarget.name` in their description, so consumers should provide a translated, sentence-compatible target name such as `board`.
+- Submit the dedicated `owner_user_ids` payload only when editing an existing target and the actor can manage its owners. Omit it during ordinary edits by non-owners, and omit it during creation unless an admin is intentionally choosing the initial owner set. An empty owner array is still an ownership mutation, not "unchanged".
 - Newly added regular groups default to `edit`.
 - Read-only default auto groups (`anonymous_users`, `everyone`, `trust_level_0`) default to `view`.
 - Already selected grantees are removed from the add-group chooser's preloaded and remote results.
@@ -158,7 +163,7 @@ Keep post-save lifecycle behavior in the consumer. For example, a modal can set 
 
 `preventSubmit()` only affects the current validation pass. It does not roll back the edited ACL, mark the form invalid, or affect a later submission attempt.
 
-Use low-level `DAccessControl` directly only when the surrounding UI is not a FormKit form or needs a materially different validation flow. Client validation and evaluation are UX safeguards; rely on server-side validation, authorization, and `AccessControlListManager` for enforcement.
+Use low-level `DAccessControl` directly only when the surrounding UI is not a FormKit form or needs a materially different validation flow. Client validation and evaluation are UX safeguards; rely on server-side validation, authorization, and `AccessControlList::Apply` for enforcement.
 
 ## Testing
 
@@ -170,6 +175,9 @@ Consumer tests should cover:
 - `@aclTarget` renders mandatory rows from `site.access_control`
 - `@aclTarget` filters banned permissions from `site.access_control` for the matching grantee only
 - mandatory rows are locked and not duplicated
+- mandatory rows precede owner rows; owner rows are user-only, have no mandatory badge, are locked without owner-management permission, are labelled Owner, and are unavailable as a selectable permission for other rows
+- new targets do not offer Owner for ordinary user rows, even when the actor can manage owners
+- creation and non-owner edit forms omit `owner_user_ids`, while authorized ownership edits submit the complete owner set
 - `@onChange` updates parent/form state when the user changes a row
 - default ACL construction for new records includes expected groups, if the consumer builds defaults
 - selectors use `.d-access-control__row[data-row-type="group"][data-row-id="..."]` for row assertions
