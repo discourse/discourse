@@ -43,7 +43,6 @@ export default <template>
         {{#if @controller.showResults}}
           <div class="query-run-actions__right">
             <QueryResultDownloadButtons
-              class="query-result-download-buttons--inline"
               @content={{@controller.results}}
               @group={{@controller.group}}
               @query={{@controller.model}}

@@ -1,5 +1,3 @@
-import { gt } from "discourse/truth-helpers";
-
 /**
  * Displays a reason for a reviewable flag in the review process.
  * Renders the flag type, title, and the number of times this flag has been raised.

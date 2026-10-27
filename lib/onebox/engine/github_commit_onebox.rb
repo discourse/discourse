@@ -64,9 +64,16 @@ module Onebox
         result["committed_at_time"] = committed_at.strftime("%T")
 
         result["link"] = link
+        result["layout_class"] = "github-onebox"
+        result["repository"] = "#{match[:org]}/#{match[:repository]}"
         ulink = URI(link)
         result["domain"] = "#{ulink.host}/#{ulink.path.split("/")[1]}/#{ulink.path.split("/")[2]}"
-        result["i18n"] = { committed: I18n.t("onebox.github.committed") }
+        result["i18n"] = {
+          committed: I18n.t("onebox.github.committed"),
+          header: {
+            commit: I18n.t("onebox.github.header.commit"),
+          },
+        }
 
         result
       end

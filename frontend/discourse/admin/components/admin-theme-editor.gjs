@@ -11,7 +11,6 @@ import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";

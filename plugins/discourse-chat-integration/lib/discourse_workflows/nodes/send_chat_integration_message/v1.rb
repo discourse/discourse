@@ -46,7 +46,7 @@ if defined?(DiscourseWorkflows)
                 },
                 ui: {
                   control: :combo_box,
-                  dynamic_value: :chat_channel_id,
+                  dynamic_value: :chat_integration_channel_id,
                 },
                 control_options: {
                   action_icon: "wrench",

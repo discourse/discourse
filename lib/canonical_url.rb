@@ -53,6 +53,15 @@ module CanonicalURL
     def canonical_link_tag(url = nil)
       tag("link", rel: "canonical", href: url || @canonical_url || default_canonical)
     end
+
+    # Pass nil for the x-default URL.
+    def canonical_url_for_locale(locale)
+      uri = Addressable::URI.parse(@hreflang_url || @canonical_url || default_canonical)
+      query = (uri.query_values || {}).except(Discourse::LOCALE_PARAM)
+      query[Discourse::LOCALE_PARAM] = locale if locale
+      uri.query_values = query.presence
+      uri.to_s
+    end
   end
 end
 

@@ -40,7 +40,6 @@ ar:
       admins_only: "مستكشف البيانات متاح للمسؤولين فقط."
       allow_groups: "السماح للمجموعات بالوصول إلى هذا الاستعلام"
       title: "مستكشف البيانات"
-      create: "إنشاء"
       create_placeholder: "اسم الاستعلام..."
       description_placeholder: "أدخِل وصفًا هنا"
       ai:
@@ -58,7 +57,6 @@ ar:
         sql_label: "SQL"
         optional: "اختياري"
       import:
-        label: "استيراد"
         unparseable_json: "ملف JSON غير قابل للتحليل"
         wrong_json: "ملف JSON خاطئ. يجب أن يحتوي ملف JSON على كائن \"استعلام\"، والذي يجب أن يحتوي على الأقل على خاصية \"sql\"."
       help:
@@ -112,7 +110,6 @@ ar:
         results_json: "النتائج (JSON)"
         results_csv: "النتائج (CSV)"
         query_json: "تعريف الاستعلام (JSON)"
-      others_dirty: "يحتوي الاستعلام على تغييرات غير محفوظة سيتم فقدها إذا انتقلت بعيدًا."
       run_time: "اكتمل الاستعلام في %{value} مللي ثانية."
       cached_result_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
       result_count:
@@ -140,7 +137,6 @@ ar:
       column: "العمود %{number}"
       save_params: "الضبط على الإعدادات الافتراضية"
       reset_params: "إعادة التعيين"
-      search_placeholder: "بحث..."
       no_search_results: "عذرًا، لم نتمكن من العثور على أي نتائج مطابقة لنصك."
       form:
         errors:

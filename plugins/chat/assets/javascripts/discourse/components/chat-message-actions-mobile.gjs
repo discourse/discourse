@@ -8,7 +8,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import { and, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

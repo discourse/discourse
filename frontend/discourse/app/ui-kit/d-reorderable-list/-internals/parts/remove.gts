@@ -1,6 +1,5 @@
 import type { TOC } from "@ember/component/template-only";
 import { fn } from "@ember/helper";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import type { Row } from "discourse/ui-kit/d-reorderable-list/types";
 

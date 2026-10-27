@@ -94,5 +94,24 @@ RSpec.describe PostActionDestroyer do
         expect(messages.last.data[:type]).to eq(:acted)
       end
     end
+
+    context "with a custom flag created after an earlier flag" do
+      after { Flag.reset_flag_settings! }
+
+      it "notifies subscribers" do
+        other_post = Fabricate(:post)
+        PostActionCreator.spam(admin, other_post)
+        PostActionDestroyer.destroy(admin, other_post, :spam)
+        flag = Fabricate(:flag, name: "custom flag", notify_type: true)
+        PostActionCreator.new(user, post, flag.id).perform
+
+        messages =
+          MessageBus.track_publish("/topic/#{post.topic_id}") do
+            PostActionDestroyer.new(user, post, flag.id).perform
+          end
+
+        expect(messages.map { |message| message.data[:type] }).to include(:acted)
+      end
+    end
   end
 end

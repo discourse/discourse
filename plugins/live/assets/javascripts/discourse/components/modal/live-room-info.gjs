@@ -8,7 +8,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import { eq, notEq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
@@ -299,7 +298,7 @@ export default class LiveRoomInfoModal extends Component {
                         {{/if}}
                       </div>
 
-                      {{#if (notEq membership.user_id this.room.creator_id)}}
+                      {{#if (neq membership.user_id this.room.creator_id)}}
                         <div class="live-room-info-modal__member-actions">
                           <ComboBox
                             class="live-room-info-modal__role-select"

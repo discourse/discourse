@@ -13,7 +13,6 @@ import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";

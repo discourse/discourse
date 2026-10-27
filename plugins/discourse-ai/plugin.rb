@@ -148,6 +148,7 @@ after_initialize do
   register_problem_check ProblemCheck::AiLlmStatus
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
+  register_problem_check ProblemCheck::AiAskAiExternalSource
 
   register_modifier(:reviewable_automated_detection) do |automated, reviewable|
     scores = reviewable.reviewable_scores

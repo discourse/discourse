@@ -531,6 +531,7 @@ pl_PL:
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
         email_alias_not_allowed: "Dzieje się tak, gdy adres nadawcy jest aliasem adresu już zarejestrowanego na koncie, a znormalizowane adresy e-mail muszą być unikalne."
+        site_archived_error: "Dzieje się tak, gdy witryna jest w trybie archiwizacji."
       unrecognized_error: "Niezidentyfikowany błąd"
     secure_uploads_placeholder: "Redacted: Ta strona ma włączone bezpieczne przesyłanie plików, odwiedź temat lub kliknij wyświetl media, aby zobaczyć załączone pliki."
     view_redacted_media: "Wyświetl załączniki"
@@ -930,6 +931,7 @@ pl_PL:
         many: "Nie można ustawić domyślnego poziomu powiadomień dla grup większych niż %{count} użytkowników. Nieprawidłowa grupa: %{group_name}"
         other: "Nie można ustawić domyślnego poziomu powiadomień dla grup większych niż %{count} użytkowników. Nieprawidłowa grupa: %{group_name}"
       grant_trust_level_not_valid: "\"%{trust_level}\" nie jest prawidłowym poziomem zaufania."
+      flair_upload_not_owned: "Jako znak rozpoznawczy grupy możesz użyć tylko obrazka, który sam wrzuciłeś."
       can_not_modify_automatic: "Nie można modyfikować automatyczną grupę"
       member_already_exist:
         one: "'%{username}' należy już do tej grupy."
@@ -2209,6 +2211,7 @@ pl_PL:
     unavailable: "Nie udało się wygenerować losowej nazwy użytkownika. Sprawdź listy słów w losowej nazwie użytkownika w ustawieniach swojej witryny."
   site_settings:
     dsa_notice_group: "Grupa, która dostaje powiadomienia o nielegalnych treściach, gdy włączona jest opcja {{setting:dsa_reporting_enabled}}. Członkowie mogą przeglądać powiadomienia i dane kontaktowe osoby, która zgłosiła naruszenie. Domyślnie są to administratorzy, którzy też dostają powiadomienia, jeśli wybrana grupa nie istnieje lub jest pusta."
+    dsa_moderation_appeal_email: "Użytkownicy mogą odwołać się od decyzji moderatorów, wysyłając wiadomość e-mail na ten adres. Pozostaw puste pole, aby pominąć instrukcje dotyczące odwołania. Wymagane jest włączenie opcji {{setting:dsa_reporting_enabled}}."
     dsa_community_rules: "Reguły społeczności są dostępne dla klasyfikacji DSA, gdy włączona jest opcja {{setting:dsa_reporting_enabled}} . Każda reguła wymaga dokładnego odniesienia umownego (do 500 znaków) oraz wyjaśnienia (do 2000 znaków). Pozostaw puste, aby wyłączyć klasyfikację."
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -3937,6 +3940,7 @@ pl_PL:
         other: "%{mentions} Wiadomości zostały wysłane ponad %{count} godzin temu. [Sprawdź je](%{base_url}/review)."
     private_topic_title: "Temat#%{id}"
     contents_hidden: "Proszę przejść do wpisu, aby wyświetlić jego zawartość."
+    moderation_appeal_instructions: "Aby odwołać się od tej decyzji, skontaktuj się z %{email}"
     post_hidden:
       title: "Ukryty wpis"
       preview: "Wpis został ukryty z powodu flag zgłoszonych przez członków społeczności."
@@ -4490,6 +4494,14 @@ pl_PL:
         Próbowałeś wysłać wiadomość e-mail do więcej niż %{max_recipients_count} osób, a nasz system automatycznie otagował Twój e-mail jako spam.
 
         Jeśli uważasz, że jest to błąd, [skontaktuj się z członkiem personelu](%{base_url}/about).
+    email_reject_site_archived:
+      title: "Archiwum witryny odrzucającej wiadomości e-mail"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail — witryna zarchiwizowana"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – witryna zarchiwizowana"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana na adres %{destination} (zatytułowana %{former_title}) nie zadziałała.
+
+        Ta witryna została zarchiwizowana i nie akceptuje nowych wpisów.
     email_error_notification:
       title: "Błąd emaila powiadomienie"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd autoryzacji POP"
@@ -4974,6 +4986,7 @@ pl_PL:
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_silenced:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Konto uciszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
       subject_template_improved: "Twoje konto zostało wyciszone"

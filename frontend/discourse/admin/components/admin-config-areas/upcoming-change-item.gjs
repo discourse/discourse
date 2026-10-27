@@ -22,7 +22,6 @@ import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import { sanitize } from "discourse/lib/text";
 import Group from "discourse/models/group";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";

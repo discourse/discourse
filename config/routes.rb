@@ -2104,6 +2104,10 @@ Discourse::Application.routes.draw do
       get "/test_postgres_readonly" => "test_requests#test_postgres_readonly"
     end
 
+    namespace :api do
+      resources :groups, only: :show
+    end
+
     # This catch-all route should always be last
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end

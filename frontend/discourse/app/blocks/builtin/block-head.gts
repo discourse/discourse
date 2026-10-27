@@ -3,7 +3,6 @@ import { service } from "@ember/service";
 import { block } from "discourse/blocks";
 import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
 import type Blocks from "discourse/services/blocks";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 interface HeadBlockSignature {

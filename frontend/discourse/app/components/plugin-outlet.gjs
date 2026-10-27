@@ -17,7 +17,6 @@ import {
   connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
-import { or } from "discourse/truth-helpers";
 
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";

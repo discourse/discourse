@@ -224,6 +224,11 @@ module Email
         body = @opts[:body].dup
       end
 
+      if key = @template_args[:body_suffix_key]
+        paragraph = I18n.t(key, @template_args)
+        body = "#{body.rstrip}\n\n#{paragraph}"
+      end
+
       if @template_args[:unsubscribe_instructions].present?
         body << "\n"
         body << @template_args[:unsubscribe_instructions]

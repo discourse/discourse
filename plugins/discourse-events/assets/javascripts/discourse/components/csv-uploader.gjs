@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 

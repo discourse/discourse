@@ -11,7 +11,6 @@ import sinon from "sinon";
 import { resetSiteDirForTesting } from "discourse/lib/text-direction";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
-import { eq } from "discourse/truth-helpers";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 const ITEMS = Array.from({ length: 10 }, (_, index) => `Item ${index + 1}`);

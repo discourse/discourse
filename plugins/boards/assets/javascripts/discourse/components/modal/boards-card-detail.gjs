@@ -7,7 +7,6 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";

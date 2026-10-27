@@ -19,8 +19,8 @@ module DiscourseAi
           column_names = { name: "Name", public_topic_count: "Topic Count" }
 
           tags =
-            Tag
-              .where("public_topic_count > 0")
+            DiscourseTagging
+              .filter_visible(Tag.where("public_topic_count > 0"), Guardian.new)
               .order(public_topic_count: :desc)
               .limit(100)
               .pluck(*column_names.keys)

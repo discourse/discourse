@@ -2,7 +2,6 @@ import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import getURL from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
-import { or } from "discourse/truth-helpers";
 
 const setupLightbox = modifier((element, _positional, { post }) => {
   // Pass the post so the lightbox's quote-image action can build a reply
