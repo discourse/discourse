@@ -17,7 +17,6 @@ import { bind, debounce } from "discourse/lib/decorators";
 import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
@@ -535,7 +534,15 @@ export default class TopicTimelineScrollArea extends Component {
           <div class="topic-header-extra">
             {{#if this.showTags}}
               <div class="list-tags">
-                {{dDiscourseTags @model mode="list" tags=@model.tags}}
+                <PluginOutlet
+                  @name="timeline-tags-wrapper"
+                  @outletArgs={{lazyHash
+                    topic=@model
+                    tags=@model.visibleListTags
+                  }}
+                >
+                  {{dDiscourseTags @model mode="list" tags=@model.tags}}
+                </PluginOutlet>
               </div>
             {{/if}}
             {{#if this.siteSettings.topic_featured_link_enabled}}

@@ -22,6 +22,16 @@ end
 Discourse::Application.routes.draw do
   get "/api/data-explorer/queries" => "discourse_data_explorer/queries#index"
   get "/api/data-explorer/queries/:id" => "discourse_data_explorer/queries#show"
+  get "/api/data-explorer/queries/:id/relationships/groups" =>
+        "discourse_data_explorer/query_relationships#show",
+      :defaults => {
+        relationship: "groups",
+      }
+  get "/api/data-explorer/queries/:id/groups" =>
+        "discourse_data_explorer/query_related_resources#index",
+      :defaults => {
+        relationship: "groups",
+      }
 
   get "/g/:group_name/reports" => "discourse_data_explorer/query#group_reports_index"
   get "/g/:group_name/reports/:id" => "discourse_data_explorer/query#group_reports_show"

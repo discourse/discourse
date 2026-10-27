@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import ChildTree from "discourse/admin/components/schema-setting/editor/child-tree";
-import { gt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 

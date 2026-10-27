@@ -14,7 +14,6 @@ import {
 } from "discourse/lib/reviewable-penalty";
 import { sanitize } from "discourse/lib/text";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";

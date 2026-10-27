@@ -10,6 +10,7 @@ import {
 import getURL from "discourse/lib/get-url";
 import pretender, {
   middlewareRateLimit,
+  response,
   TOO_MANY_REQUESTS,
 } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
@@ -153,6 +154,22 @@ module("Unit | Lib | ajax-error", function (hooks) {
       extractError(await ajaxError("/controller-limit")),
       i18n("generic_error_with_reason", { error: SERVER_MESSAGE }),
       "prefers the localized message from the server"
+    );
+  });
+
+  test("extractError reads the detail of a JSON:API error object", async function (assert) {
+    pretender.get("/json-api-forbidden", () =>
+      response(403, {
+        errors: [{ title: "Forbidden", detail: "Not allowed." }],
+      })
+    );
+
+    assert.strictEqual(
+      extractError(await ajaxError("/json-api-forbidden")),
+      i18n("generic_error_with_reason", {
+        error: "Not allowed.",
+      }),
+      "shows the error detail"
     );
   });
 });

@@ -29,9 +29,7 @@ da:
       close: "Luk"
       delete: "Slet"
       edit: "Rediger"
-      back: "Tilbage"
       save: "Gem"
-      apply: "Anvend"
       update_range:
         last_10_days: "Seneste 10 dage"
         last_30_days: "Seneste 30 dage"

@@ -149,6 +149,12 @@ en:
     livestream:
       chat:
         topic_reference_message: "This channel is for the event [%{title}](%{url}) — visit the topic for details and to RSVP."
+        transcript_heading: "Chat transcript"
+        transcript_heading_dated: "Chat transcript for %{date}"
+        transcript_edit_reason: "Added the livestream chat transcript"
+        transcript_earlier_messages:
+          one: "%{count} earlier message is in the [chat channel](%{url})."
+          other: "%{count} earlier messages are in the [chat channel](%{url})."
       zoom:
         frame_title: "Zoom webinar"
         frame_join: "Join webinar"
@@ -193,6 +199,7 @@ en:
           invalid_recurrence: "Recurrence must be one of: %{recurrences}."
           invalid_timezone: "Timezone not recognized."
           invalid_url: "URL must be a valid web address."
+          invalid_recording_url: "Recording must be a valid web address."
           acting_user_not_allowed_to_create_event: "Current user is not allowed to create events."
           acting_user_not_allowed_to_act_on_this_event: "Current user is not allowed to act on this event."
           invalid_allowed_groups: "Invalid allowed groups."
@@ -210,6 +217,8 @@ en:
             length: "Event URL is limited to %{maximum} characters."
           location:
             length: "Event location is limited to %{maximum} characters."
+          recording:
+            length: "Event recording link is limited to %{maximum} characters."
   discourse_push_notifications:
     popup:
       event_reminder: "Event Reminder"

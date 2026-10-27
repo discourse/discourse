@@ -10,7 +10,6 @@ import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const TYPE_TO_FIELD_MAP = {

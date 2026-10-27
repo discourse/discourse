@@ -5,6 +5,33 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  dsa_notice:
+    subject: "[%{reference}] 举报可能违法的内容"
+    summary: "**举报编号： %{reference}**\n\n**邮箱地址：** %{reporter_email}\n\n**姓名或机构名称：** %{reporter_name}\n\n**内容的完整URL：** %{content_url}\n\n**您认为此内容违法的原因是什么？**\n\n%{explanation}"
+    verification_invalid: "邮件验证码错误或已过期。请检查验证码或申请新的验证码。"
+    invalid_parameters: "该报告包含无效值。"
+    invalid_url: "必须是有效的 HTTP 或 HTTPS URL，无需登录凭据"
+    invalid_email: "必须是有效的电子邮件地址"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] 您的报告验证码"
+    text_body_template: |
+      使用此代码验证您的电子邮件地址，以便举报 %{site_title}上的非法内容：
+
+      ## %{verification_code}
+
+      此代码将在 %{expires_in_minutes} 分钟后过期。如果您未申请此验证，则可以忽略此电子邮件。
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] 您举报的潜在非法内容 %{reference}"
+    text_body_template: |
+      %{site_title} 已收到您的报告。
+
+      审核团队将通过电子邮件告知您审核结果。此收据并不代表已做出决定或内容已被删除。
+
+      %{summary}
+
+      **声明：**
+
+      我确认，我确信本通知中的信息和指控准确完整。
   dsa_statements:
     classification_note: "已将此审核决定归类为 DSA 报告。\n社区规则： %{ground}\n类别： %{category}"
     errors:
@@ -432,6 +459,7 @@ zh_CN:
       unrecognized_error: "无法识别的错误"
     secure_uploads_placeholder: "已编辑：此网站已启用安全上传，请访问话题或点击“查看媒体”以查看附加的上传。"
     view_redacted_media: "查看媒体"
+    view_diagram: "查看图表"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
@@ -1919,6 +1947,7 @@ zh_CN:
   random_username:
     unavailable: "无法生成随机用户名。请检查网站设置中的随机用户名词库。"
   site_settings:
+    dsa_notice_group: "启用 {{setting:dsa_reporting_enabled}} 后，群组将收到非法内容通知。成员可以阅读通知和举报人联系方式。默认通知发送给管理员，如果所选群组不存在或为空，管理员也会收到通知。"
     dsa_community_rules: "启用 {{setting:dsa_reporting_enabled}} 后，即可使用社区规则进行 DSA 分类。每条规则都需要一个准确的合同参考（最多 500 个字符）和一个解释（最多 2000 个字符）。留空则禁用分类。"
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -2771,6 +2800,7 @@ zh_CN:
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
     enable_desktop_push_notifications: "激活桌面界面的推送通知。此功能可将实时警报从网站直接发送到您的桌面，从而增强参与度并确保用户始终获得最新信息。不过，此功能的有效性依赖于浏览器对推送通知的支持。"
     push_notification_time_window_mins: "在发送推送通知前等待 (n) 分钟。有助于避免向活跃的在线用户发送推送通知。"
+    push_notification_localization_max_wait_mins: "在将新帖子翻译成收件人语言之前，推送通知的最长等待时间（以分钟为单位）。设置为 0 则无需等待即可发送。"
     base_font: "用于网站上大多数文本的基础字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
     heading_font: "用于网站上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
     enable_sitemap: "为您的网站生成网站地图并将其包含在 robots.txt 文件中。"
@@ -2819,6 +2849,7 @@ zh_CN:
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
+    about_page_hidden_groups: "不要在 /about 页面上显示同时也是这些特定群组成员的管理员或版主。"
     about_page_extra_groups: "显示在“关于”页面版主下方的群组。"
     about_page_extra_groups_initial_members: "“关于”页面上每个群组上可以展开的成员数量。"
     about_page_extra_groups_show_description: "是否在“关于”页面中包含群组描述。"
@@ -4546,21 +4577,55 @@ zh_CN:
 
         %{respond_instructions}
     account_suspended:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
+      text_body_template: |
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停，直至 %{suspended_till}。
+
+        原因 - %{reason}
+
+        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_suspended_forever:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
+      text_body_template: |
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停。
+
+        原因 - %{reason}
+
+        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_silenced:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "帐户被禁言"
       subject_template: "[%{email_prefix}] 您的帐户已被禁言"
       subject_template_improved: "您的帐户已被禁言"
+      text_body_template: |
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言，直至 %{silenced_till}。
+
+        原因 - %{reason}
+
+        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_silenced_forever:
       title: "帐户被禁言"
       subject_template: "[%{email_prefix}] 您的帐户已被禁言"
       subject_template_improved: "您的帐户已被禁言"
+      text_body_template: |
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言。
+
+        原因 - %{reason}
+
+        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_deleted:
       title: "帐户已删除"
       subject_template: "[%{email_prefix}] 您的帐户已被删除"

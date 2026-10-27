@@ -7,7 +7,6 @@ import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
-import { and, eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { toPlainObject } from "../lib/utilities.js";
 import AiSecretSelector from "./ai-secret-selector.gjs";

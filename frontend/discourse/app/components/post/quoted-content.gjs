@@ -18,7 +18,6 @@ import {
 } from "discourse/lib/quote";
 import DiscourseURL from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

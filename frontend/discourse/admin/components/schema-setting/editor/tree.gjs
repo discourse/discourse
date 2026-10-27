@@ -1,7 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import TreeNode from "discourse/admin/components/schema-setting/editor/tree-node";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 

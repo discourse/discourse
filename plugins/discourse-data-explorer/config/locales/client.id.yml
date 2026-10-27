@@ -8,7 +8,6 @@ id:
   js:
     explorer:
       or: "atau"
-      create: "Buat"
       ai:
         optional: "opsional"
       help:
@@ -27,7 +26,6 @@ id:
       query_tags: "Label"
       query_description: "Deskripsi"
       reset_params: "Reset"
-      search_placeholder: "Cari..."
     discourse_workflows:
       sql:
         output:

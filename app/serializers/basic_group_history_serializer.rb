@@ -26,7 +26,7 @@ class BasicGroupHistorySerializer < ApplicationSerializer
   def redact_email_setting_value(value)
     return value if value.blank?
     return value if !EMAIL_SETTING_SUBJECTS.include?(object.subject)
-    return value if scope&.can_admin_group?(object.group)
+    return value if scope&.is_admin?
 
     I18n.t("staff_action_logs.redacted")
   end

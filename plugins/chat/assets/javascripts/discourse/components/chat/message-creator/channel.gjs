@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { not } from "discourse/truth-helpers";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class Channel extends Component {

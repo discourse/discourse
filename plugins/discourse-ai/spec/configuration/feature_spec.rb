@@ -12,6 +12,53 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
   before { enable_current_plugin }
 
+  describe ".sentiment_features" do
+    it "toggles each capability separately and keeps module enablement as their union" do
+      sentiment, emotion = described_class.sentiment_features
+      sentiment_module =
+        DiscourseAi::Configuration::Module.find_by(
+          id: DiscourseAi::Configuration::Module::SENTIMENT_ID,
+        )
+
+      expect(sentiment_module.enabled_by_setting).to be_nil
+
+      [
+        [false, false],
+        [true, false],
+        [false, true],
+        [true, true],
+      ].each do |sentiment_enabled, emotion_enabled|
+        SiteSetting.ai_sentiment_enabled = sentiment_enabled
+        SiteSetting.ai_sentiment_emotion_enabled = emotion_enabled
+
+        expect(sentiment.enabled?).to eq(sentiment_enabled)
+        expect(emotion.enabled?).to eq(emotion_enabled)
+        expect(sentiment_module.enabled?).to eq(sentiment_enabled || emotion_enabled)
+      end
+    end
+
+    it "only reports agent usage for capabilities using the agent backend" do
+      SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+      SiteSetting.ai_sentiment_emotion_agent = ai_agent.id
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+      SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
+
+      sentiment, emotion = described_class.sentiment_features
+
+      expect(sentiment.agent_ids).to eq([ai_agent.id])
+      expect(sentiment.llm_models).to eq([llm_model])
+      expect(sentiment.metadata).to eq(backend: "agent", ready: true)
+      expect(emotion.agent_ids).to eq([])
+      expect(emotion.llm_models).to eq([])
+      expect(emotion.metadata).to eq(backend: "decision_model", ready: false, decision_model: nil)
+      expect(
+        described_class
+          .find_features_using(agent_id: ai_agent.id)
+          .select { |feature| feature.module_name == "sentiment" },
+      ).to eq([sentiment])
+    end
+  end
+
   describe "#llm_model" do
     context "when agent is not found" do
       it "returns nil when agent_id is invalid" do

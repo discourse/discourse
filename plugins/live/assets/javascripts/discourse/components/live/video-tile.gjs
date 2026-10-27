@@ -10,7 +10,6 @@ import { trustHTML } from "@ember/template";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

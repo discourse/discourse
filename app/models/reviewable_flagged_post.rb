@@ -502,6 +502,7 @@ class ReviewableFlaggedPost < Reviewable
       user_id: post.user_id,
       message_type: "flags_disagreed",
       message_options: {
+        **Dsa::AppealInstructions.message_options,
         flagged_post_raw_content: post.raw,
         url: post.url,
       },

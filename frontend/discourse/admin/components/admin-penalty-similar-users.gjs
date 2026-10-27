@@ -6,7 +6,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import { not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";

@@ -11,9 +11,18 @@ module DiscourseDataExplorer
     attribute :created_at
     attribute :last_run_at
     attribute(:tags) { it.tag_names }
-    attribute :sql, readable: ->(guardian) { guardian.is_admin? }
+    attribute(:automatic_tags) { Query.automatic_tag_names(it.id) }
+    attribute :sql, readable: :is_admin?.to_proc
     attribute(:param_info) { it.params.uniq(&:identifier).map(&:to_hash) }
     attribute(:is_default) { it.id.negative? }
+
+    attribute :dashboard_mountable, readable: :is_admin?.to_proc do |query|
+      AdminDashboardReportProvider.mountable?(query)
+    end
+
+    attribute :dashboard_mounted, readable: :is_admin?.to_proc do |query|
+      query.dashboard_report.present?
+    end
 
     has_one :user
     has_many :groups
@@ -36,7 +45,7 @@ module DiscourseDataExplorer
     end
 
     filter :tag do |scope, value|
-      scope.filter_by_tags(QueryTag.normalize_name(value))
+      scope.filter_by_tags(QueryTag.normalize_all(value))
     end
   end
 end

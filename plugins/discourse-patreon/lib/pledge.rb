@@ -3,6 +3,9 @@
 module Patreon
   class Pledge
     def self.create!(data, adapter: ApiVersion.current)
+      if adapter.replace_pledge_on_create? && all.key?(adapter.get_patreon_id(data))
+        delete!(data, adapter: adapter)
+      end
       save!([data], true, adapter: adapter)
     end
 
@@ -67,6 +70,14 @@ module Patreon
 
       def self.set(value)
         Patreon.set(KEY, value)
+      end
+
+      def self.expired
+        grace_period_days = SiteSetting.patreon_declined_pledges_grace_period_days
+
+        all.select do |_, declined_since|
+          declined_since.blank? || Time.now.to_date - declined_since.to_date > grace_period_days
+        end
       end
     end
   end

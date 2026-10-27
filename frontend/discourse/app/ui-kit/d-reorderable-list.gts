@@ -15,7 +15,6 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import type MenuService from "discourse/float-kit/services/menu";
 import type A11yService from "discourse/services/a11y";
-import { and, eq, not } from "discourse/truth-helpers";
 import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
 import { step } from "discourse/ui-kit/-internals/cursor/navigation";
 import {
