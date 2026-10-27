@@ -140,7 +140,7 @@ end
 ## Output conventions
 
 - URLs are absolute (`Discourse.base_url + ...`, `full_url`). Keep existing relative keys such as `post_url`.
-- Actions that may no-op output `changed` (boolean), computed by comparing state before and after (see badge, group, post_like).
+- Actions that may no-op output `changed` (boolean), computed by comparing state before and after (see `TopicStatusAction`), or from the result of a service that reports whether it acted, so a concurrent request making the same change doesn't report it too (see `PostLiking`).
 - Actions that mutate a topic also return `topic`.
 - Cap user lists with a named constant (e.g. `PostEventScoping::MAX_GOING_USERNAMES`).
 
