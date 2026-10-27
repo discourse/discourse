@@ -1433,6 +1433,10 @@ class User < ActiveRecord::Base
     main_user_record[:silenced_till]
   end
 
+  def main_user_record
+    (anonymous? && master_user) ? master_user : self
+  end
+
   def silenced?
     !!(silenced_till && silenced_till > Time.zone.now)
   end
@@ -2350,10 +2354,6 @@ class User < ActiveRecord::Base
 
         shadow.log_out!
       end
-  end
-
-  def main_user_record
-    (anonymous? && master_user) ? master_user : self
   end
 
   def set_default_sidebar_section_links(update: false)

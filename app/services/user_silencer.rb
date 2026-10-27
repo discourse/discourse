@@ -12,6 +12,9 @@ class UserSilencer
 
   def initialize(user, by_user = nil, opts = {})
     @user, @by_user, @opts = user, by_user, opts
+    # An anonymous shadow reads its silence from the account behind it (User#silenced_till),
+    # but everything reported keeps naming the shadow so it cannot unmask that account.
+    @account = user.main_user_record
   end
 
   def self.silence(user, by_user = nil, opts = {})
@@ -33,11 +36,11 @@ class UserSilencer
   end
 
   def silence
-    return false if @user.staff?
+    return false if @account.staff?
     hide_posts unless @opts[:keep_posts]
-    return false if @user.silenced?
-    @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
-    if @user.save
+    return false if @account.silenced?
+    @account.silenced_till = @opts[:silenced_till] || 1000.years.from_now
+    if @account.save
       message_type = @opts[:message] || :silenced_by_staff
 
       details = StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body]).format
@@ -60,7 +63,7 @@ class UserSilencer
         message: @opts[:message_body],
         user_history: @user_history,
         post_id: @opts[:post_id],
-        silenced_till: @user.silenced_till,
+        silenced_till: @account.silenced_till,
         silenced_at: DateTime.now,
         silence_message_params: silence_message_params,
       )
@@ -112,10 +115,10 @@ class UserSilencer
   end
 
   def unsilence
-    return false if @user.silenced_till.blank?
+    return false if @account.silenced_till.blank?
 
-    @user.silenced_till = nil
-    if @user.save
+    @account.silenced_till = nil
+    if @account.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)
       SystemMessage.create(@user, :unsilenced, Dsa::AppealInstructions.message_options)
       if @by_user

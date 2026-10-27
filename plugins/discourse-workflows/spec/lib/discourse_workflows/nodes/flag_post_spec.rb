@@ -226,6 +226,26 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
       expect(result).to include("post_deleted" => true, "user_silenced" => true)
     end
 
+    it "silences the account behind an anonymous author with review_delete_silence",
+       :aggregate_failures do
+      SiteSetting.allow_anonymous_mode = true
+      shadow = Fabricate(:anonymous)
+      shadow.anonymous_user_master.update!(master_user: author)
+      anonymous_post = Fabricate(:post, user: shadow)
+
+      result =
+        execute_node(
+          configuration: {
+            "post_id" => anonymous_post.id.to_s,
+            "flag_type" => "review_delete_silence",
+            "actor_username" => moderator.username,
+          },
+        )
+
+      expect(author.reload.silenced?).to eq(true)
+      expect(result).to include("post_deleted" => true, "user_silenced" => true)
+    end
+
     it "flags the post as spam and hides it", :aggregate_failures do
       result = nil
 
