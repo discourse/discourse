@@ -100,8 +100,14 @@ RSpec.describe DiscourseEvents::Events::SchemaMarkup do
       )
     end
 
-    it "returns no markup when the event has neither a location nor a URL" do
-      expect(described_class.build(topic_view(event_double(url: nil)))).to be_nil
+    it "uses the topic URL when the event has neither a location nor a URL" do
+      expect(schema_from(described_class.build(topic_view(event_double(url: nil))))).to include(
+        "eventAttendanceMode" => "https://schema.org/OnlineEventAttendanceMode",
+        "location" => {
+          "@type" => "VirtualLocation",
+          "url" => "https://test.localhost/t/community-hangout/123",
+        },
+      )
     end
   end
 

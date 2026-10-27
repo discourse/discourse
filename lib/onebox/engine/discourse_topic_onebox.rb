@@ -27,9 +27,7 @@ module Onebox
           event_date_month: event_date&.strftime("%b"),
           event_description: event_description,
           event_ends_at: raw[:event_ends_at],
-          event_has_banner_image: event_has_banner_image?,
-          event_has_letterboxed_image: event_has_letterboxed_image?,
-          event_has_portrait_image: event_has_portrait_image?,
+          event_onebox_classes: event_onebox_classes,
           event_starts_at: raw[:event_starts_at],
           event_time: event_time,
           event_timezone: event_timezone,
@@ -90,6 +88,15 @@ module Onebox
       def event_has_portrait_image?
         width, height = event_image_dimensions
         width.present? && height > width
+      end
+
+      def event_onebox_classes
+        [
+          "discourse-event-onebox",
+          ("--banner-image" if event_has_banner_image?),
+          ("--letterboxed-image" if event_has_letterboxed_image?),
+          ("--portrait-image" if event_has_portrait_image?),
+        ].compact.join(" ")
       end
 
       def event_image_dimensions

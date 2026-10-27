@@ -90,7 +90,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
           event_all_day: false,
           event_date_day: "22",
           event_date_month: "Oct",
-          event_has_banner_image: false,
+          event_onebox_classes: "discourse-event-onebox",
           event_starts_at: "2026-10-22T09:00:00.000-04:00",
           event_ends_at: "2026-10-22T10:00:00.000-04:00",
           event_timezone: "UTC-04:00",
@@ -138,10 +138,8 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         let(:event_image_json) { image_object_json(500, 500) }
 
         it "letterboxes the image in the banner layout" do
-          expect(data).to include(
-            event_has_banner_image: true,
-            event_has_letterboxed_image: true,
-            event_has_portrait_image: false,
+          expect(data[:event_onebox_classes]).to eq(
+            "discourse-event-onebox --banner-image --letterboxed-image",
           )
           expect(onebox.to_html).to include("--banner-image --letterboxed-image")
         end
@@ -151,7 +149,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         let(:event_image_json) { image_object_json(800, 1200) }
 
         it "uses the portrait image layout" do
-          expect(data).to include(event_has_banner_image: false, event_has_portrait_image: true)
+          expect(data[:event_onebox_classes]).to eq("discourse-event-onebox --portrait-image")
           expect(onebox.to_html).to include("--portrait-image")
         end
       end
@@ -160,7 +158,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         let(:event_image_json) { image_object_json(800, 600) }
 
         it "uses the banner image layout" do
-          expect(data).to include(event_has_banner_image: true, event_has_letterboxed_image: false)
+          expect(data[:event_onebox_classes]).to eq("discourse-event-onebox --banner-image")
         end
       end
 
@@ -168,7 +166,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         let(:event_image_json) { image_object_json(690, 362) }
 
         it "uses the banner image layout" do
-          expect(data).to include(event_has_banner_image: true, event_has_letterboxed_image: false)
+          expect(data[:event_onebox_classes]).to eq("discourse-event-onebox --banner-image")
           expect(onebox.to_html).to include("--banner-image")
           expect(onebox.to_html).not_to include("--letterboxed-image")
         end
@@ -178,7 +176,9 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         let(:event_image_json) { image_object_json(1500, 500) }
 
         it "letterboxes the image in the banner layout" do
-          expect(data).to include(event_has_banner_image: true, event_has_letterboxed_image: true)
+          expect(data[:event_onebox_classes]).to eq(
+            "discourse-event-onebox --banner-image --letterboxed-image",
+          )
         end
       end
 
@@ -193,7 +193,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
           JSON
 
         it "reads the dimensions" do
-          expect(data).to include(event_has_portrait_image: true)
+          expect(data[:event_onebox_classes]).to eq("discourse-event-onebox --portrait-image")
         end
       end
 

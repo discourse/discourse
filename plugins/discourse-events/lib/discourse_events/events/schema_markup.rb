@@ -9,7 +9,7 @@ module DiscourseEvents
       #
       # - Only an event attached to the topic's first post is represented
       # - Event times include their configured timezone; all-day events use dates
-      # - Events without a location or URL are skipped, since search engines require a location
+      # - Events without a location or URL use the topic URL as their virtual location
       # - Descriptions are reduced to plain text suitable for structured data
       # - The event's own image is included so link previews don't fall back to the topic's
       #
@@ -25,9 +25,7 @@ module DiscourseEvents
         event = first_post(topic_view)&.event
         return if event.blank? || event.deleted_at.present?
 
-        locations = locations(event)
-        return if locations.empty?
-
+        locations = locations(event, topic.url)
         json_ld_tag(schema(topic, event, locations))
       end
 
@@ -58,7 +56,7 @@ module DiscourseEvents
         }.compact
       end
 
-      private_class_method def self.locations(event)
+      private_class_method def self.locations(event, fallback_url)
         locations = []
 
         place = plain_text(event.location, event)
@@ -73,6 +71,8 @@ module DiscourseEvents
         if web_url?(event.url) && locations.none? { |location| location["url"] == event.url }
           locations << { "@type" => "VirtualLocation", "url" => event.url }
         end
+
+        locations << { "@type" => "VirtualLocation", "url" => fallback_url } if locations.empty?
 
         locations
       end
