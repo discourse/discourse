@@ -102,15 +102,6 @@ export interface CategoryTypeMetadata {
   [key: string]: unknown;
 }
 
-/** TODO(typescript-pending): singleton adds these statics at runtime; remove when Site exposes them. */
-type CategorySiteClass = typeof Site & {
-  current(): Site & {
-    lazy_load_categories?: boolean;
-    loadedCategoryIds?: Set<number | string>;
-  };
-  currentProp(key: string): unknown;
-};
-
 type CategorySearchOptions = {
   parentCategoryId?: number;
   includeUncategorized?: boolean;
@@ -278,10 +269,7 @@ export default class Category extends RestModel {
   }
 
   static isUncategorized(categoryId: number | null | undefined): boolean {
-    return (
-      categoryId ===
-      (Site as CategorySiteClass).currentProp("uncategorized_category_id")
-    );
+    return categoryId === Site.currentProp("uncategorized_category_id");
   }
 
   static slugEncoded(): boolean {
@@ -296,8 +284,7 @@ export default class Category extends RestModel {
       _uncategorized ||
       Category.list().find(
         (category) =>
-          category.id ===
-          (Site as CategorySiteClass).currentProp("uncategorized_category_id")
+          category.id === Site.currentProp("uncategorized_category_id")
       );
     return _uncategorized;
   }
@@ -331,25 +318,15 @@ export default class Category extends RestModel {
   }
 
   static list(): Category[] {
-    // TODO(typescript-pending): Site's category collections are untyped; remove when Site is typed.
-    return (Site as CategorySiteClass).currentProp(
-      "categoriesList"
-    ) as Category[];
+    return Site.currentProp("categoriesList");
   }
 
   static listByActivity(): Category[] {
-    // TODO(typescript-pending): Site's category collections are untyped; remove when Site is typed.
-    return (Site as CategorySiteClass).currentProp(
-      "sortedCategories"
-    ) as Category[];
+    return Site.currentProp("sortedCategories");
   }
 
-  static _idMap(): Map<number, Category> {
-    // TODO(typescript-pending): Site's category collections are untyped; remove when Site is typed.
-    return (Site as CategorySiteClass).currentProp("categoriesById") as Map<
-      number,
-      Category
-    >;
+  static _idMap(): Map<number | undefined, Category> {
+    return Site.currentProp("categoriesById");
   }
 
   static findSingleBySlug(slug: string): Category | undefined {
@@ -382,9 +359,9 @@ export default class Category extends RestModel {
   }
 
   static hasAsyncFoundAll(ids: (number | string)[]): boolean {
-    const loadedCategoryIds =
-      (Site as CategorySiteClass).current().loadedCategoryIds || new Set();
-    return ids.every((id) => loadedCategoryIds.has(id));
+    const loadedCategoryIds = Site.current().loadedCategoryIds || new Set();
+    // Only parsed numeric ids are loaded, so a string id never matches.
+    return ids.every((id) => loadedCategoryIds.has(id as number));
   }
 
   static async asyncFindByIds(
@@ -392,7 +369,7 @@ export default class Category extends RestModel {
   ): Promise<Category[]> {
     // parseInt also coerces numeric IDs supplied by callers.
     ids = ids.map((x) => parseInt(x as string, 10));
-    const site = (Site as CategorySiteClass).current();
+    const site = Site.current();
 
     if (!site.lazy_load_categories || this.hasAsyncFoundAll(ids)) {
       return this.findByIds(ids);
@@ -420,7 +397,8 @@ export default class Category extends RestModel {
       } else {
         site.removeCategory(id);
       }
-      loadedCategoryIds.add(id);
+      // `ids` holds the numbers parsed at the top of this method.
+      loadedCategoryIds.add(id as number);
     }
     site.set("loadedCategoryIds", loadedCategoryIds);
 
@@ -480,10 +458,7 @@ export default class Category extends RestModel {
 
     const categories = result["categories"].map(
       (category: CategoryFields | Category) => {
-        // TODO(typescript-pending): Site.updateCategory returns the model without types.
-        category = (Site as CategorySiteClass)
-          .current()
-          .updateCategory(category) as Category;
+        category = Site.current().updateCategory(category);
         // `Category` extends `CategoryFields`, so the reassignment above does not
         // narrow the union; `updateCategory` returns the model.
         if (opts.includePermissions) {
@@ -504,12 +479,8 @@ export default class Category extends RestModel {
       data: { slug_path_with_id: slugPathWithID },
     })) as { categories: CategoryFields[] };
 
-    const categories = result["categories"].map(
-      (category) =>
-        // TODO(typescript-pending): Site.updateCategory returns the model without types.
-        (Site as CategorySiteClass)
-          .current()
-          .updateCategory(category) as Category
+    const categories = result["categories"].map((category) =>
+      Site.current().updateCategory(category)
     );
 
     return categories[categories.length - 1];
@@ -619,8 +590,7 @@ export default class Category extends RestModel {
     store: StoreService,
     site: Site
   ): Category {
-    // TODO(typescript-pending): Site.updateCategory returns the model without types.
-    const model = site.updateCategory(category) as Category;
+    const model = site.updateCategory(category);
     model.setupGroupsAndPermissions();
     model.setupCategoryTypes();
     return model;
@@ -728,12 +698,8 @@ export default class Category extends RestModel {
     );
     const result = CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[cacheKey];
 
-    return result["categories"].map(
-      (category) =>
-        // TODO(typescript-pending): Site.updateCategory returns the model without types.
-        (Site as CategorySiteClass)
-          .current()
-          .updateCategory(category) as Category
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
     );
   }
 
@@ -782,29 +748,17 @@ export default class Category extends RestModel {
 
     if (opts.includeAncestors) {
       return {
-        ancestors: result["ancestors"].map(
-          (category) =>
-            // TODO(typescript-pending): Site.updateCategory returns the model without types.
-            (Site as CategorySiteClass)
-              .current()
-              .updateCategory(category) as Category
+        ancestors: result["ancestors"].map((category) =>
+          Site.current().updateCategory(category)
         ),
-        categories: result["categories"].map(
-          (category) =>
-            // TODO(typescript-pending): Site.updateCategory returns the model without types.
-            (Site as CategorySiteClass)
-              .current()
-              .updateCategory(category) as Category
+        categories: result["categories"].map((category) =>
+          Site.current().updateCategory(category)
         ),
         categoriesCount: result["categories_count"],
       };
     } else {
-      return result["categories"].map(
-        (category) =>
-          // TODO(typescript-pending): Site.updateCategory returns the model without types.
-          (Site as CategorySiteClass)
-            .current()
-            .updateCategory(category) as Category
+      return result["categories"].map((category) =>
+        Site.current().updateCategory(category)
       );
     }
   }
@@ -876,10 +830,7 @@ export default class Category extends RestModel {
   get subcategories(): Category[] {
     return applyValueTransformer(
       "category-subcategories",
-      // TODO(typescript-pending): Site's category collections are untyped; remove when Site is typed.
-      (
-        this.site.categoriesByParentId as Map<number | undefined, Category[]>
-      ).get(this.id) || [],
+      this.site.categoriesByParentId.get(this.id) || [],
       { category: this }
     );
   }
@@ -1369,15 +1320,8 @@ export default class Category extends RestModel {
       permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
     } else {
       // empty permissions => staff-only access
-      // TODO(typescript-pending): Site's group map omits its entry types; remove when Site is typed.
-      rval[
-        (
-          (Site as CategorySiteClass).currentProp("groupsById") as Record<
-            number,
-            { name: string }
-          >
-        )[AUTO_GROUPS.staff.id].name
-      ] = PermissionType.FULL;
+      rval[Site.currentProp("groupsById")[AUTO_GROUPS.staff.id].name] =
+        PermissionType.FULL;
     }
     return rval;
   }
