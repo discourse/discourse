@@ -584,7 +584,7 @@ module DiscourseWorkflows
         rescue ArgumentError
           nil
         end
-      raise_node_error!(I18n.t(error_key, field:, value:)) if parsed.nil?
+      raise_node_error!(I18n.t(error_key, field:, value:), item_index:) if parsed.nil?
 
       parsed
     end

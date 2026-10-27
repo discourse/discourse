@@ -83,6 +83,73 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(trigger_data_for("unlocked-trigger")).to include("actor" => include("id" => admin.id))
   end
 
+  it "runs User suspended and the hidden moderation trigger once each for an admin suspension" do
+    create_published_workflow("changed-trigger", "trigger:user_moderation_changed")
+    create_published_workflow("suspended-trigger", "trigger:user_suspended")
+    create_published_workflow("silenced-trigger", "trigger:user_silenced")
+
+    User::Suspend.call(
+      guardian: admin.guardian,
+      params: {
+        user_id: user.id,
+        reason: "Spam",
+        suspend_until: 1.day.from_now,
+      },
+    )
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "suspended-trigger")
+    expect(trigger_data_for("suspended-trigger")).to include(
+      "user" => include("id" => user.id),
+      "actor" => include("id" => admin.id),
+      "reason" => "Spam",
+    )
+  end
+
+  it "runs User silenced as the reviewer for review queue silences, as system for automatic ones" do
+    moderator = Fabricate(:moderator)
+    flagged = Fabricate(:reviewable_flagged_post)
+    create_published_workflow("silenced-trigger", "trigger:user_silenced")
+
+    flagged.perform(
+      moderator,
+      :agree_and_silence,
+      reason: "Spam",
+      silenced_till: 1.day.from_now.iso8601,
+    )
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("silenced-trigger")
+    expect(trigger_data_for("silenced-trigger")).to include(
+      "user" => include("id" => flagged.target_created_by_id),
+      "actor" => include("id" => moderator.id),
+    )
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    SpamRule::AutoSilence.new(user).silence_user
+
+    expect(trigger_data_for("silenced-trigger")).to include(
+      "user" => include("id" => user.id),
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
+  it "runs User unsuspended as the system user when a suspension expires" do
+    create_published_workflow("unsuspended-trigger", "trigger:user_unsuspended")
+    UserSuspender.new(user, suspended_till: 1.hour.from_now, reason: "Spam", by_user: admin).suspend
+
+    freeze_time 2.hours.from_now
+    Jobs::UserSuspensionExpired.new.execute(
+      user_id: user.id,
+      suspended_at: user.suspended_at.iso8601(6),
+      suspended_till: user.suspended_till.iso8601(6),
+    )
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("unsuspended-trigger")
+    expect(trigger_data_for("unsuspended-trigger")).to match(
+      "user" => include("id" => user.id),
+      "actor" => include("id" => Discourse.system_user.id),
+    )
+  end
+
   it "runs Post hidden once when flags hide a post, and Post unhidden once when its author edits it" do
     author = Fabricate(:user, refresh_auto_groups: true)
     post = Fabricate(:post, topic:, user: author)
