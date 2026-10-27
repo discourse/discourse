@@ -72,16 +72,15 @@ module("Integration | Lib | openLightbox", function (hooks) {
   test("resizes an image slide to the loaded image", async function (assert) {
     // no element, so the slide starts from the 800x600 fallback
     openLightbox([{ src: "/images/avatar.png" }]);
-    await waitUntil(() => window.pswp?.currSlide?.content.state === "loaded");
 
-    const img = document.querySelector(
-      ".pswp__img:not(.pswp__img--placeholder)"
-    );
-    assert.strictEqual(
-      img.style.width,
-      img.style.height,
-      "uses the square image's aspect ratio"
-    );
+    // the resize follows the image's load event, which can come after the slide reports loaded
+    await waitUntil(() => {
+      const img = document.querySelector(
+        ".pswp__img:not(.pswp__img--placeholder)"
+      );
+      return img?.style.width && img.style.width === img.style.height;
+    });
+    assert.true(true, "uses the square image's aspect ratio");
   });
 
   test("resizes a video slide once its metadata loads", async function (assert) {
@@ -92,16 +91,12 @@ module("Integration | Lib | openLightbox", function (hooks) {
     try {
       // no element, so the slide starts from the 1280x720 fallback
       openLightbox([{ type: "video", src }]);
-      await waitUntil(
-        () => document.querySelector("video.pswp__video")?.readyState >= 1
-      );
 
-      const video = document.querySelector("video.pswp__video");
-      assert.strictEqual(
-        video.style.width,
-        video.style.height,
-        "uses the square video's aspect ratio"
-      );
+      await waitUntil(() => {
+        const video = document.querySelector("video.pswp__video");
+        return video?.style.width && video.style.width === video.style.height;
+      });
+      assert.true(true, "uses the square video's aspect ratio");
     } finally {
       URL.revokeObjectURL(src);
     }
