@@ -63,5 +63,57 @@ RSpec.describe GroupManager do
       expect(manager.remove([])).to eq([])
       expect(manager.remove(nil)).to eq([])
     end
+
+    it "skips users who aren't members" do
+      non_member = Fabricate(:user)
+
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          expect(manager.remove([user.id, non_member.id])).to contain_exactly(user.id)
+        end
+
+      expect(events.map { |event| event[:params][0] }).to contain_exactly(user)
+    end
+
+    context "when a concurrent removal deletes a member first" do
+      fab!(:group_user_web_hook)
+
+      before do
+        user.update!(primary_group: group)
+        group.update!(title: "Leader")
+        user.update!(title: "Leader")
+
+        allow(DB).to receive(:query_hash).and_wrap_original do |original, sql, *args, **kwargs|
+          if sql.include?("DELETE FROM group_users")
+            GroupUser.where(group:, user:).delete_all
+            Group.update_counters(group.id, user_count: -1)
+          end
+          original.call(sql, *args, **kwargs)
+        end
+      end
+
+      it "reports, announces and cleans up only the members it removed" do
+        events = nil
+
+        expect {
+          events =
+            DiscourseEvent.track_events(:user_removed_from_group) do
+              expect(manager.remove([user.id, user2.id])).to contain_exactly(user2.id)
+            end
+        }.to change { group.reload.user_count }.from(2).to(0)
+
+        expect(events.map { |event| event[:params][0] }).to contain_exactly(user2)
+        removal_payloads =
+          Jobs::EmitWebHookEvent
+            .jobs
+            .map { |job| job["args"].first }
+            .select { |args| args["event_name"] == "user_removed_from_group" }
+            .map { |args| JSON.parse(args["payload"]) }
+        expect(removal_payloads).to contain_exactly(
+          include("user_id" => user2.id, "group_id" => group.id),
+        )
+        expect(user.reload).to have_attributes(primary_group_id: group.id, title: "Leader")
+      end
+    end
   end
 end
