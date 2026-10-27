@@ -601,6 +601,12 @@ discourse_ai:
     default: 0
     min: 0
     area: "ai-features/search"
+  ai_ask_ai_endorsed_reply_groups:
+    type: group_list
+    list_type: compact
+    default: "3" # 3: @staff
+    allow_any: false
+    area: "ai-features/search"
   ai_ask_ai_external_sources:
     type: list
     list_type: compact

@@ -106,6 +106,21 @@ describe DiscourseAi::Discoveries::Synthesis do
     )
   end
 
+  it "passes on who endorsed a reply" do
+    passage = { "post_number" => 3, "excerpt" => "Restart it.", "endorsed_by" => %w[topic_author] }
+    candidate = { "source_ref" => "source_1", "title" => "Robot stuck", "passages" => [passage] }
+
+    supplied_candidates =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ answerable: false, source_refs: [], title: "", answer: "" }],
+      ) do |_, _, prompts|
+        synthesis.call(query: "robot stuck", candidates: [candidate])
+        JSON.parse(prompts.first.messages.last[:content]).fetch("candidates")
+      end
+
+    expect(supplied_candidates.first.fetch("passages")).to eq([passage])
+  end
+
   it "sends an external candidate's publish date as a day and its link unchanged" do
     candidate = {
       "source_ref" => "source_1",

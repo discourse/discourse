@@ -49,6 +49,7 @@ module DiscourseAi
           - Do not include an unrelated source merely to reach the limit.
           - Prefer authoritative guides and direct answers over discussions that only repeat the question.
           - A solved candidate's accepted_answer passage is the answer its community accepted. Prefer it as evidence for how to fix or do something.
+          - A passage with endorsed_by is a reply liked by the topic author or by members the forum trusts. Treat it as strong evidence, but weaker than an accepted answer, and do not call it the solution.
           - Topic authors, staff, and documentation categories are useful signals. Treat likes as a weak signal only.
           - Consider freshness only for time-sensitive questions.
 

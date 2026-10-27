@@ -353,7 +353,9 @@ module DiscourseAi
             .where(id: candidates.pluck("post_id").compact)
             .includes(:user, topic: [{ category: :parent_category }, :tags])
             .index_by(&:id)
-        accepted_answers = accepted_answers_by_topic_id(posts.values.map(&:topic_id))
+        topic_ids = posts.values.map(&:topic_id).uniq
+        accepted_answers = accepted_answers_by_topic_id(topic_ids)
+        endorsed_replies = endorsed_replies_by_topic_id(topic_ids - accepted_answers.keys)
         hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
 
         candidates.filter_map do |candidate|
@@ -382,8 +384,17 @@ module DiscourseAi
               "is_topic_op" => post.post_number == 1,
               "topic_bumped_at" => topic.bumped_at&.iso8601,
             )
-          answers = accepted_answers[topic.id]
-          answers.present? ? with_accepted_answers(candidate, answers) : candidate
+          if (answers = accepted_answers[topic.id])
+            with_passages(candidate, answers) { { "accepted_answer" => true } }.merge(
+              "solved" => true,
+            )
+          elsif (endorsed_by = endorsed_replies[topic.id])
+            with_passages(candidate, endorsed_by.keys) do |reply|
+              { "endorsed_by" => endorsed_by[reply] }
+            end
+          else
+            candidate
+          end
         end
       end
 
@@ -406,25 +417,101 @@ module DiscourseAi
           .group_by(&:topic_id)
       end
 
-      # Retrieval mostly matches the question in a topic's first post, so an
-      # accepted answer would rarely reach the model unless it is added.
-      def with_accepted_answers(candidate, answers)
-        answer_ids = answers.map(&:id)
-        passages =
-          Array(candidate["passages"]).map do |passage|
-            next passage if answer_ids.exclude?(passage["post_id"])
+      # A reply liked by the topic's author, or by a member of the groups the site
+      # trusts, is the best answer an unsolved topic has. One per topic, preferring
+      # the author's like.
+      def endorsed_replies_by_topic_id(topic_ids)
+        group_ids = SiteSetting.ai_ask_ai_endorsed_reply_groups_map
+        return {} if group_ids.empty? || topic_ids.empty?
 
-            passage.merge("accepted_answer" => true)
+        params = {
+          topic_ids:,
+          group_ids:,
+          # every like comes from a logged-in user
+          any_liker:
+            group_ids.intersect?(
+              [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]],
+            ),
+          like: PostActionType::LIKE_POST_ACTION_ID,
+          regular: Post.types[:regular],
+        }
+        rows = DB.query(<<~SQL, **params)
+          SELECT post_id, liked_by_topic_author, liked_by_group_member
+          FROM (
+            SELECT
+              posts.id AS post_id,
+              BOOL_OR(post_actions.user_id = topics.user_id) AS liked_by_topic_author,
+              BOOL_OR(
+                post_actions.user_id <> topics.user_id
+                AND (
+                  :any_liker
+                  OR post_actions.user_id IN (
+                    SELECT user_id FROM group_users WHERE group_id IN (:group_ids)
+                  )
+                )
+              ) AS liked_by_group_member,
+              ROW_NUMBER() OVER (
+                PARTITION BY posts.topic_id
+                ORDER BY
+                  BOOL_OR(post_actions.user_id = topics.user_id) DESC,
+                  posts.like_count DESC,
+                  posts.post_number
+              ) AS rank
+            FROM posts
+            JOIN topics ON topics.id = posts.topic_id
+            JOIN post_actions
+              ON post_actions.post_id = posts.id
+              AND post_actions.post_action_type_id = :like
+              AND post_actions.deleted_at IS NULL
+            WHERE posts.topic_id IN (:topic_ids)
+              AND posts.post_number > 1
+              AND posts.post_type = :regular
+              AND NOT posts.hidden
+              AND posts.deleted_at IS NULL
+              AND (
+                post_actions.user_id = topics.user_id
+                OR :any_liker
+                OR post_actions.user_id IN (
+                  SELECT user_id FROM group_users WHERE group_id IN (:group_ids)
+                )
+              )
+            GROUP BY posts.id
+          ) endorsed
+          WHERE rank = 1
+        SQL
+        return {} if rows.empty?
+
+        endorsements =
+          rows.to_h do |row|
+            endorsed_by = []
+            endorsed_by << "topic_author" if row.liked_by_topic_author
+            endorsed_by << "group_member" if row.liked_by_group_member
+            [row.post_id, endorsed_by]
           end
-        answers.each do |answer|
-          next if passages.any? { |passage| passage["post_id"] == answer.id }
+        guardian = Guardian.new(@user)
+        Post
+          .where(id: endorsements.keys)
+          .includes(:topic)
+          .select { |post| guardian.can_see_post?(post) }
+          .to_h { |post| [post.topic_id, { post => endorsements[post.id] }] }
+      end
 
-          passages << passage_from_source(source_from_post(answer, excerpt: answer.cooked)).merge(
-            "accepted_answer" => true,
-          )
+      # Retrieval mostly matches the question in a topic's first post, so an
+      # answer would rarely reach the model unless it is added.
+      def with_passages(candidate, answers)
+        passages = Array(candidate["passages"]).dup
+        answers.each do |answer|
+          flags = yield(answer)
+          if (index = passages.index { |passage| passage["post_id"] == answer.id })
+            passages[index] = passages[index].merge(flags)
+          else
+            passages << passage_from_source(source_from_post(answer, excerpt: answer.cooked)).merge(
+              flags,
+            )
+          end
         end
 
-        candidate.merge("solved" => true, "passages" => passages)
+        candidate.merge("passages" => passages)
       end
 
       def plain_text(value)

@@ -184,6 +184,7 @@ en:
     ai_ask_ai_keyword_search_enabled: "Search the forum by keyword for Ask AI answers."
     ai_ask_ai_semantic_search_enabled: "Search the forum semantically for Ask AI answers. Requires embeddings."
     ai_ask_ai_search_categories: "Only search these categories, and their subcategories, for Ask AI answers. Personal messages are still searched when asked for. Leave empty to search all categories."
+    ai_ask_ai_endorsed_reply_groups: "Also give Ask AI one reply from each topic without an accepted answer, chosen from replies liked by the topic's author or by members of these groups. The topic author's likes rank first. Leave empty to turn this off."
     ai_ask_ai_search_max_age_days: "Only search posts created in this many days for Ask AI answers. Set to 0 to search posts of any age."
     ai_ask_ai_external_sources: "Custom tools Ask AI searches alongside the forum. Each is called with the user's query and must return a list of results, each with a title, an http(s) url, and optionally a blurb, content and published_at. Queries are sent to whatever services the tools call."
     ai_ask_ai_external_sources_timeout: "Seconds Ask AI waits for its external sources, all searched at once, before answering without the ones still running. Counts towards the 20 seconds an Ask AI request may take, so a longer wait leaves less time to write the answer."
