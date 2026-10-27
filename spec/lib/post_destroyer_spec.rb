@@ -8,49 +8,6 @@ RSpec.describe PostDestroyer do
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   let(:post) { create_post }
 
-  it "restores the latest grace-period edit on author recovery" do
-    SiteSetting.editing_grace_period = 5.minutes
-    saved = create_post(raw: "The original post description.")
-    edited_raw = "The updated post description."
-    saved.revise(saved.user, { raw: edited_raw })
-    expect(saved.reload.version).to eq(1)
-    destroyer = described_class.new(saved.user, saved)
-
-    destroyer.mark_for_deletion
-
-    expect(saved.revisions.last.modifications["raw"][0]).to eq(edited_raw)
-
-    destroyer.user_recovered
-
-    expect(saved.reload.raw).to eq(edited_raw)
-    expect(saved).not_to be_user_deleted
-  end
-
-  it "keeps deleted form answers in history and restores them on author recovery" do
-    template =
-      Fabricate(
-        :form_template,
-        template: [{ id: "note", type: "input" }].as_json.to_yaml,
-        output_template: "An invitation with an omitted note.",
-      )
-    submission =
-      FormTemplate::Submission.from_template(template, answers: { "note" => "Saved note" })
-    saved = create_post(raw: submission.render, form_data: submission.to_h)
-    destroyer = described_class.new(saved.user, saved)
-
-    destroyer.mark_for_deletion
-
-    expect(saved.reload.form_data).to be_nil
-    expect(saved.user_deleted?).to eq(true)
-    expect(saved.revisions.last.form_data_changes).to eq([submission.to_h, nil])
-
-    destroyer.user_recovered
-
-    expect(saved.reload.form_data).to eq(submission.to_h)
-    expect(saved.raw).to eq(submission.render)
-    expect(saved.user_deleted?).to eq(false)
-  end
-
   describe "destroy_old_hidden_posts" do
     it "destroys posts that have been hidden for 30 days" do
       now = Time.now

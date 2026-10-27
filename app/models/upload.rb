@@ -625,13 +625,10 @@ class Upload < ActiveRecord::Base
             ],
           )
 
-          DbHelper.rewrite_form_data { |text| text.gsub(previous_url, upload.url) }
-
           remap_scope ||=
             Post
               .with_deleted
               .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
-              .where(form_data: nil)
               .select(:id, :raw, :cooked)
               .all
 

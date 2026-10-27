@@ -15,25 +15,26 @@ module Jobs
 
       hotlinked_map = post.post_hotlinked_media.preload(:upload).index_by { |r| r.url }
 
-      post.with_lock do
-        rewrite = ->(text) do
-          InlineUploads.replace_hotlinked_image_urls(raw: text) do |match_src|
-            normalized_match_src = PostHotlinkedMedia.normalize_src(match_src)
-            hotlinked_map[normalized_match_src]&.upload
-          end
+      rewrite = ->(text) do
+        InlineUploads.replace_hotlinked_image_urls(raw: text) do |match_src|
+          normalized_match_src = PostHotlinkedMedia.normalize_src(match_src)
+          hotlinked_map[normalized_match_src]&.upload
         end
-        content = post.rewritten_content(&rewrite)
+      end
+      raw = rewrite.call(post.raw)
 
-        if content.any? { |field, value| post.public_send(field) != value }
-          changes = content.merge(edit_reason: I18n.t("upload.edit_reason"))
-          post.revise(
-            Discourse.system_user,
-            changes,
-            bypass_bump: true,
-            skip_staff_log: true,
-            skip_validations: true,
-          )
+      if post.raw != raw
+        changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
+        if (submission = post.form_submission)
+          changes[:form_data] = submission.rewrite_answers(&rewrite).to_h
         end
+        post.revise(
+          Discourse.system_user,
+          changes,
+          bypass_bump: true,
+          skip_staff_log: true,
+          skip_validations: true,
+        )
       end
     end
   end

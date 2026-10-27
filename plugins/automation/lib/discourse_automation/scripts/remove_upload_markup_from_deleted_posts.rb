@@ -44,8 +44,7 @@ DiscourseAutomation::Scriptable.add(
       .distinct
       .limit(DiscourseAutomation::REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE)
       .each do |post|
-        content = post.rewritten_content { |text| text.gsub(upload_and_attachment_regex, "") }
-        if content.any? { |field, value| post.public_send(field) != value }
+        if updated_raw = post.raw.gsub!(upload_and_attachment_regex, "")
           topic =
             if post.topic.nil?
               Topic.with_deleted.find_by_id(post.topic_id)
@@ -56,7 +55,7 @@ DiscourseAutomation::Scriptable.add(
           if ok =
                PostRevisor.new(post, topic).revise!(
                  Discourse.system_user,
-                 content.merge(edit_reason: edit_reason),
+                 { raw: updated_raw, edit_reason: edit_reason },
                  { force_new_version: true, skip_validations: true },
                )
             post.custom_fields["uploads_removed_at"] = uploads_removed_at

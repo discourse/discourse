@@ -24,7 +24,7 @@ RSpec.describe FormTemplate::Submission do
   let(:submission) { described_class.from_template(form_template, answers:) }
 
   describe ".from_template" do
-    it "rejects oversized new submissions" do
+    it "rejects oversized submissions" do
       expect do
         described_class.from_template(
           form_template,
@@ -62,67 +62,19 @@ RSpec.describe FormTemplate::Submission do
     end
   end
 
-  describe "#rewrite_text" do
-    it "allows system rewrites to grow saved snapshots while limiting subsequent edits" do
-      original = submission.to_h
-      original["answers"]["description"] = "@old "
-      original["answers"]["description"] += "x" *
-        (described_class::MAX_BYTES - JSON.generate(original).bytesize)
-      saved = described_class.new(original)
+  describe "#rewrite_answers" do
+    it "rewrites textual answers without touching the definition or typed values" do
+      rewritten =
+        submission.rewrite_answers { |text| text.gsub("Second", "Third").gsub("first", "last") }
 
-      rewritten = saved.rewrite_text { |text| text.gsub("@old", "@longer_username") }
-      reopened = described_class.new(rewritten.to_h)
-      expect(reopened.render).to include("@longer_username")
-      expect(JSON.generate(reopened.to_h).bytesize).to be > described_class::MAX_BYTES
-      expect(reopened.with_answers(reopened.answers).to_h).to eq(rewritten.to_h)
-      expect do
-        reopened.with_answers(
-          reopened.answers.merge("description" => reopened.answers["description"] + "x"),
-        )
-      end.to raise_error(ArgumentError)
-      shortened = reopened.with_answers(reopened.answers.merge("description" => "Shorter answer"))
-      expect do shortened.with_answers(reopened.answers) end.to raise_error(ArgumentError)
-    end
-
-    it "evaluates conditions and filters using rewritten answers" do
-      data = submission.to_h
-      data["answers"]["description"] = "@old"
-      data["definition"][
-        "output_template"
-      ] = "{% if answers.description == '@old' %}Original{% else %}{{ answers.description | upcase }}{% endif %}"
-
-      rewritten = described_class.new(data).rewrite_text { |text| text.gsub("@old", "@new") }
-
-      expect(rewritten.answers["description"]).to eq("@new")
-      expect(rewritten.render).to eq("@NEW")
-      expect(rewritten.to_h["definition"]).to eq(data["definition"])
-    end
-
-    it "rewrites labels, choices and literal output while preserving field references and typed values" do
-      data = submission.to_h
-      data["definition"]["fields"] << { "id" => "@old", "type" => "input" }
-      data["definition"]["fields"].find { |field| field["id"] == "options" }["choices"] = ["@old"]
-      data["answers"].merge!(
-        "@old" => "A reply",
-        "description" => "Ask @old",
-        "options" => ["@old"],
-      )
-      data["definition"]["output_template"] = '@old: {{ answers["description"] }}'
-      rewritten = described_class.new(data).rewrite_text { |text| text.gsub("@old", "@new") }
-
-      expect(rewritten.render).to eq("@new: Ask @new")
       expect(rewritten.answers).to eq(
-        data["answers"].merge("description" => "Ask @new", "options" => ["@new"]),
+        answers.merge(
+          "description" => "First paragraph\n\n**Third paragraph**",
+          "options" => %w[last second],
+        ),
       )
-      fields = rewritten.to_h.dig("definition", "fields")
-      expect(fields.last).to eq(
-        "id" => "@old",
-        "type" => "input",
-        "attributes" => {
-          "label" => "@new",
-        },
-      )
-      expect(fields.find { |field| field["id"] == "options" }["choices"]).to eq(["@new"])
+      expect(rewritten.to_h["definition"]).to eq(submission.to_h["definition"])
+      expect(rewritten.render).to eq("## Invitation\nFirst paragraph\n\n**Third paragraph**")
     end
   end
 
@@ -137,28 +89,13 @@ RSpec.describe FormTemplate::Submission do
       saved = described_class.from_template(form_template, answers: {})
       group.update!(permissions: { staff: :full })
 
-      data = saved.editor_data(raw: saved.render, guardian: Fabricate(:user).guardian)
+      data = saved.editor_data(guardian: Fabricate(:user).guardian)
       field = YAML.safe_load(data[:template]).first
       expect(field["choices"]).to eq([])
       expect(field.dig("attributes", "tag_choices")).to eq({})
       expect(saved.to_h.dig("definition", "fields", 0, "choices")).to eq(
         [{ "id" => tag.id, "name" => tag.name }],
       )
-    end
-  end
-
-  describe "#state_token" do
-    it "ignores object key order while covering answers and raw" do
-      raw = submission.render
-      reordered = described_class.new(submission.to_h.to_a.reverse.to_h)
-      reordered_data = reordered.to_h
-      reordered_data["answers"] = answers.to_a.reverse.to_h
-      reordered = described_class.new(reordered_data)
-      expect(reordered.state_token(raw:)).to eq(submission.state_token(raw:))
-      changed = submission.with_answers(answers.merge("confirmed" => true))
-      expect(changed.render).to eq(raw)
-      expect(changed.state_token(raw:)).not_to eq(submission.state_token(raw:))
-      expect(submission.state_token(raw: "Other body")).not_to eq(submission.state_token(raw:))
     end
   end
 end

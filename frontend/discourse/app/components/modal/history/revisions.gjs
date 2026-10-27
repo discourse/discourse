@@ -21,13 +21,6 @@ function tagClasses(tagChanges, state, className) {
   }, {});
 }
 
-function answerText(value) {
-  if (typeof value === "boolean") {
-    return i18n(value ? "yes_value" : "no_value");
-  }
-  return Array.isArray(value) ? value.join(", ") : (value ?? "—");
-}
-
 export default class Revisions extends Component {
   @service languageNameLookup;
 
@@ -71,18 +64,6 @@ export default class Revisions extends Component {
       id="revisions"
       ...attributes
     >
-      {{#each @model.form_answer_changes as |change|}}
-        <div class="row revision__form-answer">
-          <div class="revision-content --previous">
-            <strong>{{change.label}}</strong>
-            <div class="diff-del">{{answerText change.previous}}</div>
-          </div>
-          <div class="revision-content --current">
-            <strong>{{change.label}}</strong>
-            <div class="diff-ins">{{answerText change.current}}</div>
-          </div>
-        </div>
-      {{/each}}
       {{#if @model.locale_changes}}
         <div class="row revision__locale">
           <div class="revision-content --previous">

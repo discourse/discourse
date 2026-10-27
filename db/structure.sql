@@ -9418,8 +9418,7 @@ CREATE TABLE public.post_revisions (
     number integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    hidden boolean DEFAULT false NOT NULL,
-    form_data_changes jsonb
+    hidden boolean DEFAULT false NOT NULL
 );
 
 
@@ -26167,7 +26166,6 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20261024203308'),
 ('20261022212458'),
 ('20261022152814'),
 ('20261021063131'),

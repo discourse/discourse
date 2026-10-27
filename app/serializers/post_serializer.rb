@@ -430,11 +430,16 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_form_submission?
-    include_raw? && object.form_data.present? && scope.can_edit?(object)
+    include_raw? && object.form_data.present? && scope.can_edit?(object) &&
+      saved_form_submission.present?
   end
 
   def form_submission
-    object.form_submission.editor_data(raw: object.raw, guardian: scope)
+    saved_form_submission.editor_data(guardian: scope)
+  end
+
+  def saved_form_submission
+    @saved_form_submission ||= object.form_submission
   end
 
   def include_raw?

@@ -126,32 +126,6 @@ RSpec.describe TopicsController do
       SiteSetting.tagging_enabled = true
     end
 
-    it "returns a clear error when a move would turn a form into a reply" do
-      template = Fabricate(:form_template)
-      submission =
-        FormTemplate::Submission.from_template(
-          template,
-          answers: {
-            "name" => "A sufficiently long form answer",
-          },
-        )
-      form_post = Fabricate(:post, raw: submission.render, form_data: submission.to_h)
-      destination_post = Fabricate(:post)
-      sign_in(moderator)
-
-      %w[move-posts merge-topic].each do |action|
-        post "/t/#{form_post.topic_id}/#{action}.json",
-             params: {
-               destination_topic_id: destination_post.topic_id,
-               post_ids: [form_post.id],
-             }
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"].join).to include(
-          I18n.t("move_posts.form_must_remain_first"),
-        )
-      end
-    end
-
     it "needs you to be logged in" do
       post "/t/111/move-posts.json", params: { title: "blah", post_ids: [1, 2, 3] }
       expect(response.status).to eq(403)

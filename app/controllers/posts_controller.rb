@@ -235,10 +235,6 @@ class PostsController < ApplicationController
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
     if params[:post][:form_template_data].present?
-      if params[:post][:form_state_token].present? &&
-           params[:post][:form_state_token] != post.form_state_token
-        return render_json_error(I18n.t("edit_conflict"), status: 409)
-      end
       submission =
         FormTemplate::Submission.for_edit(
           post,
@@ -298,9 +294,6 @@ class PostsController < ApplicationController
     revisor = PostRevisor.new(post, topic)
     revisor.revise!(current_user, changes, opts)
 
-    if post.errors.of_kind?(:base, :edit_conflict)
-      return render_json_error(I18n.t("edit_conflict"), status: 409)
-    end
     return render_json_error(post) if post.errors.present?
     return render_json_error(topic) if topic.errors.present?
 
@@ -604,22 +597,20 @@ class PostsController < ApplicationController
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
          post_revision.modifications["category_id"].blank? &&
          post_revision.modifications["tags"].blank? &&
-         post_revision.modifications["reply_to_post_number"].blank? &&
-         post_revision.form_data_changes.blank?
+         post_revision.modifications["reply_to_post_number"].blank?
       return render_json_error(I18n.t("revert_version_same"))
     end
 
     topic = Topic.with_deleted.find(post.topic_id)
 
     changes = {}
-    if post_revision.form_data_changes.present? &&
-         post_revision.form_data_changes[0] != post.form_data
-      changes[:form_data] = post_revision.form_data_changes[0]
-    end
     changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications[
       "raw"
     ].present? && post_revision.modifications["raw"][0] != post.raw
-    changes[:raw] = FormTemplate::Submission.new(changes[:form_data]).render if changes[:form_data]
+    if post_revision.modifications["form_data"].present? &&
+         post_revision.modifications["form_data"][0] != post.form_data
+      changes[:form_data] = post_revision.modifications["form_data"][0]
+    end
     if post_revision.modifications["reply_to_post_number"].present? &&
          post_revision.modifications["reply_to_post_number"][0] != post.reply_to_post_number
       changes[:reply_to_post_number] = post_revision.modifications["reply_to_post_number"][0]
@@ -844,7 +835,7 @@ class PostsController < ApplicationController
 
     post = find_post_from_params
 
-    post_revision = PostRevision.without_form_data.find_by(post_id: post.id, number: revision)
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
     raise Discourse::NotFound unless post_revision
 
     post_revision.post = post
@@ -856,7 +847,7 @@ class PostsController < ApplicationController
   def find_latest_post_revision_from_params
     post = find_post_from_params
 
-    finder = PostRevision.without_form_data.where(post_id: post.id).order(:number)
+    finder = PostRevision.where(post_id: post.id).order(:number)
     finder = finder.where(hidden: false) unless guardian.is_staff?
     post_revision = finder.last
 
@@ -889,12 +880,7 @@ class PostsController < ApplicationController
   private
 
   def markdown_for_revision
-    revision = find_post_revision_from_topic_id
-    if (form_data = revision.form_data_changes&.last)
-      FormTemplate::Submission.new(form_data).normalized_raw
-    else
-      revision.modifications[:raw].last
-    end
+    find_post_revision_from_topic_id.modifications[:raw].last
   end
 
   def markdown_for_post

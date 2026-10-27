@@ -5,42 +5,6 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:admin)
 
-  describe "#save!" do
-    it "retains uploads in rendered output and omitted form answers while pending review" do
-      rendered_upload = Fabricate(:upload)
-      omitted_upload = Fabricate(:upload)
-      template =
-        Fabricate(
-          :form_template,
-          template: [{ id: "attachment", type: "upload" }].as_json.to_yaml,
-          output_template: "A submission with ![image](#{rendered_upload.short_url})",
-        )
-      submission =
-        FormTemplate::Submission.from_template(
-          template,
-          answers: {
-            "attachment" => "![attachment](#{omitted_upload.short_url})",
-          },
-        )
-
-      reviewable =
-        Fabricate(
-          :reviewable_queued_post_topic,
-          payload: {
-            raw: submission.render,
-            form_data: submission.to_h,
-            title: "A form submission awaiting review",
-          },
-        )
-
-      expect(
-        UploadReference.where(target_type: "ReviewableQueuedPost", target_id: reviewable.id).pluck(
-          :upload_id,
-        ),
-      ).to contain_exactly(rendered_upload.id, omitted_upload.id)
-    end
-  end
-
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }

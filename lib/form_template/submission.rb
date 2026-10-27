@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "digest/sha2"
 require "liquid"
 
 class FormTemplate::Submission
@@ -20,15 +19,26 @@ class FormTemplate::Submission
         "answers" => answers,
       },
       validate:,
-      max_bytes: MAX_BYTES,
     )
   end
 
-  def initialize(data, validate: true, max_bytes: nil)
+  def self.for_edit(post, payload:, guardian:, validate: true)
+    guardian.ensure_can_edit!(post)
+    submission = post.form_submission
+    unless submission && payload.is_a?(String) && payload.bytesize <= MAX_BYTES
+      raise Discourse::InvalidParameters.new(:form_template_data)
+    end
+    data = JSON.parse(payload, max_nesting: 20)
+    raise ArgumentError unless data.is_a?(Hash)
+    submission.with_answers(data.fetch("answers"), validate:)
+  rescue JSON::JSONError, ArgumentError, KeyError
+    raise Discourse::InvalidParameters.new(:form_template_data)
+  end
+
+  def initialize(data, validate: true)
     raise ArgumentError unless data.is_a?(Hash)
     encoded = JSON.generate(data, max_nesting: 20)
-    @bytesize = encoded.bytesize
-    raise ArgumentError if max_bytes && @bytesize > max_bytes
+    raise ArgumentError if encoded.bytesize > MAX_BYTES
     @data = JSON.parse(encoded, max_nesting: 20)
     # JSONB cannot store NUL, including in answers omitted from the rendered post.
     raise ArgumentError if contains_nul?(@data)
@@ -80,46 +90,25 @@ class FormTemplate::Submission
   end
 
   def with_answers(answers, validate: true)
-    self.class.new(@data.merge("answers" => answers), validate:, max_bytes: max_edit_bytes)
+    self.class.new(@data.merge("answers" => answers), validate:)
   end
 
-  def max_edit_bytes
-    [MAX_BYTES, @bytesize].max
-  end
-
-  def rewrite_text
+  def rewrite_answers
     data = to_h
-    data["definition"]["fields"].each do |field|
-      label = field.dig("attributes", "label") || field["id"].to_s
-      rewritten_label = yield(label)
-      (field["attributes"] ||= {})["label"] = rewritten_label if rewritten_label != label
-
-      next if field["type"] == "tag-chooser"
-
-      id = field["id"].to_s
-      value = data["answers"][id]
-      if value.is_a?(String)
-        data["answers"][id] = yield(value)
-      elsif value.is_a?(Array)
-        data["answers"][id] = value.map { |item| yield(item) }
-      end
-      if %w[dropdown multi-select].include?(field["type"])
-        field["choices"]&.map! { |choice| choice.is_a?(String) ? yield(choice) : choice }
+    data["answers"].transform_values! do |value|
+      case value
+      when String
+        yield(value)
+      when Array
+        value.map { |item| item.is_a?(String) ? yield(item) : item }
+      else
+        value
       end
     end
-
-    if (output = data["definition"]["output_template"])
-      # Expressions remain template logic, rather than editable post text.
-      data["definition"]["output_template"] = output
-        .split(/({{.*?}}|{%.*?%})/m)
-        .map { |part| part.start_with?("{{", "{%") ? part : yield(part) }
-        .join
-    end
-
     self.class.new(data, validate: false)
   end
 
-  def editor_data(raw:, guardian:)
+  def editor_data(guardian:)
     fields = @data["definition"]["fields"].deep_dup
     tag_fields = fields.select { |field| field["type"] == "tag-chooser" }
     if tag_fields.present?
@@ -134,24 +123,7 @@ class FormTemplate::Submission
         end
       end
     end
-    { template_id:, template: fields.to_yaml, answers:, state_token: state_token(raw:) }
-  end
-
-  def self.for_edit(post, payload:, guardian:, validate: true)
-    guardian.ensure_can_edit!(post)
-    submission = post.form_submission
-    unless submission && payload.is_a?(String) && payload.bytesize <= submission.max_edit_bytes
-      raise Discourse::InvalidParameters.new(:form_template_data)
-    end
-    data = JSON.parse(payload, max_nesting: 20)
-    raise ArgumentError unless data.is_a?(Hash)
-    submission.with_answers(data.fetch("answers"), validate:)
-  rescue JSON::JSONError, ArgumentError, KeyError
-    raise Discourse::InvalidParameters.new(:form_template_data)
-  end
-
-  def state_token(raw:)
-    Digest::SHA256.hexdigest(canonical_value([raw, @data]).to_json)
+    { template_id:, template: fields.to_yaml, answers: }
   end
 
   private
@@ -185,16 +157,5 @@ class FormTemplate::Submission
       FormTemplateYamlValidator::ALLOWED_TYPES.include?(field["type"]) &&
       %w[attributes validations].all? { |key| field[key].nil? || field[key].is_a?(Hash) } &&
       (field["choices"].nil? || field["choices"].is_a?(Array))
-  end
-
-  def canonical_value(value)
-    case value
-    when Hash
-      value.keys.sort.to_h { |key| [key, canonical_value(value[key])] }
-    when Array
-      value.map { |item| canonical_value(item) }
-    else
-      value
-    end
   end
 end

@@ -3576,7 +3576,6 @@ en:
       max_post_length: "Posts cannot be merged because the combined post length is more than allowed."
 
   move_posts:
-    form_must_remain_first: "A submitted form must remain the first post in its topic. Move replies instead, or move the form to a new topic."
     new_topic_moderator_post:
       one: "A post was split to a new topic: %{topic_link}"
       other: "%{count} posts were split to a new topic: %{topic_link}"
@@ -6777,7 +6776,6 @@ en:
       unsafe: "Payload URL cannot be used because it's unsafe"
 
   form_templates:
-    raw_managed_by_form: "This post is managed by a form. Edit its form answers instead of replacing the post text."
     invalid_answer: "The answer for %{field} is invalid."
     output_unavailable: "This form's output template could not be rendered. Please contact a staff member."
     errors:

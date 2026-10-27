@@ -1869,31 +1869,48 @@ RSpec.describe Post do
     expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
-  it "retains uploads in omitted form answers until those answers are removed" do
-    upload = Fabricate(:upload)
-    template =
+  describe "#form_submission" do
+    fab!(:form_template) do
       Fabricate(
         :form_template,
-        template: [
-          { id: "note", type: "composer" },
-          { id: "attachment", type: "upload" },
-        ].as_json.to_yaml,
-        output_template: "An invitation with an omitted attachment.",
+        template: [{ id: "description", type: "input" }].as_json.to_yaml,
+        output_template: "## Invitation\n{{ answers.description }}",
       )
-    submission =
+    end
+    let(:submission) do
       FormTemplate::Submission.from_template(
-        template,
+        form_template,
         answers: {
-          "note" => "```",
-          "attachment" => "![attachment](#{upload.short_url})",
+          "description" => "A sufficiently long description.",
         },
       )
-    post = create_post(raw: submission.render, form_data: submission.to_h)
-    expect(post.upload_references.pluck(:upload_id)).to eq([upload.id])
+    end
 
-    changed = submission.with_answers({})
-    PostRevisor.new(post).revise!(post.user, { raw: changed.render, form_data: changed.to_h })
-    expect(post.reload.upload_references).to be_empty
+    it "returns the saved form only while it still renders the current raw" do
+      post = Fabricate(:post, raw: submission.render, form_data: submission.to_h)
+      expect(post.form_submission.answers).to eq(submission.answers)
+
+      post.update_columns(raw: "Rewritten outside the form.")
+      expect(post.reload.form_submission).to be_nil
+
+      post.update_columns(raw: submission.render, form_data: { "unexpected" => true })
+      expect(post.reload.form_submission).to be_nil
+    end
+
+    it "tracks form_data in revisions and restores it with a revert" do
+      post = Fabricate(:post, raw: submission.render, form_data: submission.to_h)
+      changed = submission.with_answers({ "description" => "A revised description." })
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: changed.render, form_data: changed.to_h }.with_indifferent_access,
+        force_new_version: true,
+      )
+      expect(post.revisions.last.modifications["form_data"]).to eq([submission.to_h, changed.to_h])
+
+      post.revert_to(1)
+      expect(post.raw).to eq(submission.render)
+      expect(post.form_submission.answers).to eq(submission.answers)
+    end
   end
 
   describe "video_thumbnails" do

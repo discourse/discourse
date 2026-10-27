@@ -225,8 +225,6 @@ class PostMover
       end
     end
 
-    ensure_forms_remain_first(posts, @move_map)
-
     posts.each do |post|
       metadata = movement_metadata(post, new_post_number: @move_map[post.post_number])
       new_post = post.is_first_post? ? create_first_post(post) : move(post)
@@ -285,9 +283,6 @@ class PostMover
       next_post_number += 1
     end
 
-    ensure_forms_remain_first(posts, @move_map)
-    ensure_forms_remain_first(destination_posts, @shift_map)
-
     moved_posts.reverse_each do |post|
       if post.topic_id == destination_topic.id
         metadata = movement_metadata(post, new_post_number: @shift_map[post.post_number])
@@ -306,14 +301,6 @@ class PostMover
 
     # change topic owner if there's a new first post
     destination_topic.update_column(:user_id, posts.first.user_id) if initial_post_number == 1
-  end
-
-  def ensure_forms_remain_first(moving_posts, post_numbers)
-    if moving_posts.any? { |post|
-         post.form_data.present? && post_numbers.fetch(post.post_number, post.post_number) != 1
-       }
-      raise Discourse::InvalidParameters, I18n.t("move_posts.form_must_remain_first")
-    end
   end
 
   def create_first_post(post)
@@ -341,7 +328,6 @@ class PostMover
     PostRevision.copy(post, new_post)
 
     attrs_to_update = {
-      form_data: @move_map[post.post_number] == 1 ? post.form_data : nil,
       reply_count: @reply_count[1] || 0,
       version: post.version,
       public_version: post.public_version,
@@ -512,48 +498,8 @@ class PostMover
                         ', post:' || mp.new_post_number || ', topic:' || mp.new_topic_id),
           baked_version = NULL
       FROM temp_moved_posts mp, quoted_posts qp
-      WHERE p.id = qp.post_id AND mp.old_post_id = qp.quoted_post_id AND p.form_data IS NULL
+      WHERE p.id = qp.post_id AND mp.old_post_id = qp.quoted_post_id
     SQL
-
-    update_form_quotes
-  end
-
-  def update_form_quotes
-    moves =
-      DB
-        .query("SELECT * FROM temp_moved_posts")
-        .to_h do |move|
-          [
-            [move.old_post_number, move.old_topic_id],
-            ", post:#{move.new_post_number}, topic:#{move.new_topic_id}",
-          ]
-        end
-    rewrite = ->(text) do
-      text.gsub(/\[quote(?:=|\s)[^\]]*\]/i) do |header|
-        # Resolve all references against the original numbers; shifts may overlap.
-        header.gsub(/, post:(\d+), topic:(\d+)(?=[,"\]])/) do |reference|
-          moves.fetch([$1.to_i, $2.to_i], reference)
-        end
-      end
-    end
-
-    # Omitted answers have no quoted_posts row and may belong to any topic.
-    Post
-      .with_deleted
-      .where.not(form_data: nil)
-      .where(<<~SQL)
-        EXISTS (
-          SELECT 1 FROM temp_moved_posts mp
-          WHERE posts.form_data::text LIKE ('%, topic:' || mp.old_topic_id || '%')
-        )
-      SQL
-      .find_each do |post|
-        post.with_lock do
-          content = post.rewritten_content(&rewrite)
-          next if content[:form_data] == post.form_data
-          post.update_columns(**content, baked_version: nil)
-        end
-      end
   end
 
   def move_first_post_replies

@@ -292,9 +292,6 @@ module FileStore
         if @dry_run
           log "REPLACING '#{from}' WITH '#{to}'"
         else
-          form_urls =
-            [Discourse.base_url, Discourse.asset_host, ""].compact.map { |host| "#{host}#{from}" }
-          DbHelper.rewrite_form_data { |text| text.gsub(Regexp.union(form_urls), to) }
           DbHelper.remap(from, to, anchor_left: true)
         end
 

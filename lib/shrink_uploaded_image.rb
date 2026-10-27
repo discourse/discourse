@@ -96,7 +96,7 @@ class ShrinkUploadedImage
     posts.each do |post|
       transform_post(post, original_upload, upload)
 
-      if post.raw_changed? || post.form_data_changed?
+      if post.raw_changed?
         log "Updating post"
       elsif post.post_hotlinked_media.exists?(upload_id: original_upload.id)
         log "A hotlinked, unreferenced image"
@@ -169,9 +169,7 @@ class ShrinkUploadedImage
           post = current_post
         end
 
-        if post.raw_changed? || post.form_data_changed?
-          post.update_columns(raw: post.raw, form_data: post.form_data, updated_at: Time.zone.now)
-        end
+        post.update_columns(raw: post.raw, updated_at: Time.zone.now) if post.raw_changed?
 
         if existing_upload
           post
@@ -196,36 +194,34 @@ class ShrinkUploadedImage
   private
 
   def transform_post(post, upload_before, upload_after)
-    post.assign_attributes(
-      post.rewritten_content { |text| transform_raw(text.dup, upload_before, upload_after) },
-    )
-  end
-
-  def transform_raw(raw, upload_before, upload_after)
-    raw.gsub!(
+    post.raw.gsub!(
       %r{upload://#{upload_before.base62_sha1}(\.#{upload_before.extension})?}i,
       upload_after.short_url,
     )
-    raw.gsub!(Discourse.store.cdn_url(upload_before.url), Discourse.store.cdn_url(upload_after.url))
-    raw.gsub!(
+    post.raw.gsub!(
+      Discourse.store.cdn_url(upload_before.url),
+      Discourse.store.cdn_url(upload_after.url),
+    )
+    post.raw.gsub!(
       "#{Discourse.base_url}#{upload_before.short_path}",
       "#{Discourse.base_url}#{upload_after.short_path}",
     )
 
     if SiteSetting.enable_s3_uploads
-      raw.gsub!(Discourse.store.url_for(upload_before), Discourse.store.url_for(upload_after))
+      post.raw.gsub!(Discourse.store.url_for(upload_before), Discourse.store.url_for(upload_after))
 
       path = SiteSetting.Upload.s3_upload_bucket.split("/", 2)[1]
-      raw.gsub!(
-        %r{<img src=\"https://.+?/#{path}/uploads/default/optimized/.+?/#{upload_before.sha1}_\d_(?<width>\d+)x(?<height>\d+).*?\" alt=\"(?<alt>.*?)\"/?>}i,
-      ) { "![#{$~[:alt]}|#{$~[:width]}x#{$~[:height]}](#{upload_after.short_url})" }
+      post
+        .raw
+        .gsub!(
+          %r{<img src=\"https://.+?/#{path}/uploads/default/optimized/.+?/#{upload_before.sha1}_\d_(?<width>\d+)x(?<height>\d+).*?\" alt=\"(?<alt>.*?)\"/?>}i,
+        ) { "![#{$~[:alt]}|#{$~[:width]}x#{$~[:height]}](#{upload_after.short_url})" }
     end
 
-    raw.gsub!(
+    post.raw.gsub!(
       %r{!\[(.*?)\]\(/uploads/.+?/#{upload_before.sha1}(\.#{upload_before.extension})?\)}i,
       "![\\1](#{upload_after.short_url})",
     )
-    raw
   end
 
   def log(*args)

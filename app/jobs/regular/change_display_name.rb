@@ -29,28 +29,18 @@ module Jobs
     attr_reader :user, :old_display_name, :new_display_name, :quote_rewriter
 
     def update_posts
-      posts = Post.with_deleted
-      quoted_posts = posts.joins(quoted("posts.id")).where("p.user_id = :user_id", user_id: user.id)
-      posts
-        .where(id: quoted_posts.select("posts.id"))
-        .or(posts.where("form_data::text ~* ?", saved_quote_pattern))
+      Post
+        .with_deleted
+        .joins(quoted("posts.id"))
+        .where("p.user_id = :user_id", user_id: user.id)
         .find_each { |post| update_post(post) }
     end
 
     def update_revisions
-      quoted_revisions =
-        PostRevision.joins(quoted("post_revisions.post_id")).where(
-          "p.user_id = :user_id",
-          user_id: user.id,
-        )
       PostRevision
-        .where(id: quoted_revisions.select("post_revisions.id"))
-        .or(PostRevision.where("form_data_changes::text ~* ?", saved_quote_pattern))
+        .joins(quoted("post_revisions.post_id"))
+        .where("p.user_id = :user_id", user_id: user.id)
         .find_each { |revision| update_revision(revision) }
-    end
-
-    def saved_quote_pattern
-      "\\[quote[^]]*username:[[:space:]]*#{Regexp.escape(user.username)}[^[:alnum:]_.-]"
     end
 
     def quoted(post_id_column)
@@ -61,32 +51,11 @@ module Jobs
     end
 
     def update_post(post)
-      post.with_lock do
-        rewritten = update_content(post.raw, post.cooked)
-        if post.form_data
-          submission = post.form_submission.rewrite_text { |text| update_content(text, nil)[:raw] }
-          rewritten[:form_data] = submission.to_h
-          rewritten[:raw] = submission.normalized_raw
-          rewritten[:cooked] = post.cook(rewritten[:raw])
-          PostRevisor
-            .new(post)
-            .rewrite_cached_original do |field, value|
-              case field
-              when :raw
-                update_content(value, nil)[:raw]
-              when :cooked
-                value
-              when :form_data
-                value &&
-                  FormTemplate::Submission
-                    .new(value, validate: false)
-                    .rewrite_text { |text| update_content(text, nil)[:raw] }
-                    .to_h
-              end
-            end
-        end
-        post.update_columns(rewritten)
-      end
+      rewritten = update_content(post.raw, post.cooked)
+      post.raw = rewritten[:raw]
+      post.cooked = rewritten[:cooked]
+
+      post.update_columns(raw: post.raw, cooked: post.cooked)
       post.sync_first_post_caches
 
       SearchIndexer.index(post, force: true) if post.topic
@@ -95,19 +64,17 @@ module Jobs
     end
 
     def update_revision(revision)
-      revision.with_lock do
-        raw_versions = revision.modifications["raw"]
-        cooked_versions = revision.modifications["cooked"]
+      raw_versions = revision.modifications["raw"]
+      cooked_versions = revision.modifications["cooked"]
+      return if raw_versions.blank?
 
-        raw_versions&.each_index do |index|
-          rewritten = update_content(raw_versions[index], cooked_versions&.at(index))
-          raw_versions[index] = rewritten[:raw]
-          cooked_versions[index] = rewritten[:cooked] if cooked_versions
-        end
-
-        revision.rewrite_form_data { |text| update_content(text, nil)[:raw] }
-        revision.save! if revision.changed?
+      raw_versions.each_index do |index|
+        rewritten = update_content(raw_versions[index], cooked_versions&.at(index))
+        raw_versions[index] = rewritten[:raw]
+        cooked_versions[index] = rewritten[:cooked] if cooked_versions
       end
+
+      revision.save!
     rescue => e
       Discourse.warn_exception(e, message: "Failed to update post revision with id #{revision.id}")
     end

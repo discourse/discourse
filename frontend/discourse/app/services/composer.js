@@ -31,7 +31,7 @@ import { shortDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { cloneJSON, deepEqual } from "discourse/lib/object";
+import { deepEqual } from "discourse/lib/object";
 import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -1905,50 +1905,20 @@ export default class ComposerService extends Service {
     });
   }
 
-  async saveAndCloseComposer() {
-    const model = this.model;
+  saveAndCloseComposer() {
     this.captureFormTemplateDraft();
-    if (!model.anyDirty) {
+    if (!this.model.anyDirty) {
       return this.cancelComposer();
     }
 
     this.skipAutoSave = true;
-    try {
-      if (this._saveDraftPromise) {
-        await this._saveDraftPromise;
-      }
-      if (this.model !== model) {
-        return false;
-      }
-      this.captureFormTemplateDraft();
-      const submittedState = this.#draftState(model);
-      const saved = await this._saveDraft(true);
-      if (this.model !== model) {
-        return false;
-      }
-      this.captureFormTemplateDraft();
-      if (
-        !saved ||
-        saved.conflict_user ||
-        !deepEqual(submittedState, this.#draftState(model))
-      ) {
-        return false;
-      }
-      model.clearState();
-      this.close();
-      this.appEvents.trigger("composer:cancelled");
-      return true;
-    } catch {
-      return false;
-    } finally {
-      this.skipAutoSave = false;
-      if (
-        this.model?.viewOpen &&
-        (this.model.anyDirty || this.model.hasSavedFormTemplateDraft)
-      ) {
-        this._shouldSaveDraft();
-      }
-    }
+    this._saveDraft(true);
+    this.model.clearState();
+    this.close();
+    this.appEvents.trigger("composer:cancelled");
+    this.skipAutoSave = false;
+
+    return true;
   }
 
   unshrink() {
@@ -2008,13 +1978,6 @@ export default class ComposerService extends Service {
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
     this.appEvents.trigger("composer-service:last-validated-at-cleared");
-  }
-
-  #draftState(model) {
-    const state = cloneJSON(model.serializeDraftData());
-    delete state.composerTime;
-    delete state.typingTime;
-    return state;
   }
 
   @bind

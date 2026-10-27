@@ -65,7 +65,6 @@ class DbHelper
       end
     end
 
-    rewrite_form_data_for_transform(text_columns, transforms, query_params)
     finish!
   end
 
@@ -111,53 +110,7 @@ class DbHelper
       end
     end
 
-    rewrite_form_data_for_transform(text_columns, transforms, query_params)
     finish!
-  end
-
-  # Storage migrations also call this for URLs whose posts are excluded from the
-  # bulk text-column remap. Never substitute inside serialized JSON or template logic.
-  def self.rewrite_form_data(excluded_tables: [], &rewrite)
-    if excluded_tables.exclude?("posts")
-      Post
-        .with_deleted
-        .where.not(form_data: nil)
-        .find_each do |post|
-          post.with_lock do
-            content = post.rewritten_content(&rewrite)
-            if content[:form_data] != post.form_data
-              post.update_columns(content.merge(cooked: post.cook(content[:raw])))
-            end
-            PostRevisor
-              .new(post)
-              .rewrite_cached_original do |field, value|
-                if field == :form_data
-                  value &&
-                    FormTemplate::Submission.new(value, validate: false).rewrite_text(&rewrite).to_h
-                else
-                  rewrite.call(value)
-                end
-              end
-          end
-        end
-    end
-
-    if excluded_tables.exclude?("post_revisions")
-      PostRevision
-        .where.not(form_data_changes: nil)
-        .find_each do |revision|
-          changed =
-            revision.form_data_changes.any? do |data|
-              data &&
-                FormTemplate::Submission.new(data, validate: false).rewrite_text(&rewrite).to_h !=
-                  data
-            end
-          next unless changed
-
-          revision.rewrite_form_data(&rewrite)
-          revision.save! if revision.changed?
-        end
-    end
   end
 
   def self.find(needle, anchor_left: false, anchor_right: false, excluded_tables: [])
@@ -186,20 +139,6 @@ class DbHelper
   end
 
   private
-
-  def self.rewrite_form_data_for_transform(text_columns, transforms, query_params)
-    excluded_tables = %w[posts post_revisions] - text_columns.keys
-    rewrite_form_data(excluded_tables:) do |text|
-      # Use PostgreSQL for matching and replacement so anchors, flags and
-      # backreferences retain exactly the same semantics as text-column remaps.
-      DB.query_single(<<~SQL, query_params.merge(value: text)).first
-        SELECT CASE WHEN #{transforms[:condition].call("value")}
-                    THEN #{transforms[:replacement].call("value")}
-                    ELSE "value" END
-          FROM (SELECT :value::text AS "value") AS input
-      SQL
-    end
-  end
 
   def self.finish!
     SiteSetting.refresh!

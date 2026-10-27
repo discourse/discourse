@@ -71,7 +71,6 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
-  validates_with PostFormDataValidator
   MAX_EDIT_REASON_LENGTH = 1000
   validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
 
@@ -1125,48 +1124,22 @@ class Post < ActiveRecord::Base
     replies.reject { |r| !secured_ids.include?(r[:id]) }
   end
 
-  def link_post_uploads(fragments: nil)
-    if form_data
-      answer_html =
-        form_submission
-          .answers
-          .values
-          .flatten
-          .grep(String)
-          .map { |text| PrettyText.cook(text, markdown_options) }
-          .join("\n")
-      additional_fragments = Nokogiri::HTML5.fragment(answer_html)
-    end
-    super(fragments:, additional_fragments:)
-  end
-
-  def rewritten_content(&rewrite)
-    if form_data
-      submission = form_submission.rewrite_text(&rewrite)
-      { raw: submission.normalized_raw, form_data: submission.to_h }
-    else
-      { raw: rewrite.call(raw.dup) }
-    end
-  end
-
+  # The saved form is only usable while it still renders the current raw; any
+  # other rewrite of raw turns the post back into an ordinary markdown post.
   def form_submission
-    FormTemplate::Submission.new(form_data, validate: false) if form_data
-  end
-
-  def form_state_token
-    form_submission&.state_token(raw: raw)
+    return if form_data.nil?
+    submission = FormTemplate::Submission.new(form_data, validate: false)
+    submission if submission.normalized_raw == raw
+  rescue ArgumentError, FormTemplate::InvalidAnswers
+    nil
   end
 
   def revert_to(number)
     return if number >= version
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
-    post_revision.modifications_with_form_data.each do |attribute, change|
+    post_revision.modifications.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
       self[attribute] = change[0]
-    end
-    if post_revision.form_data_changes && form_data
-      self.raw = form_submission.normalized_raw
-      self.cooked = cook(raw)
     end
   end
 

@@ -3,39 +3,31 @@
 module HasPostUploadReferences
   extend ActiveSupport::Concern
 
-  def link_post_uploads(fragments: nil, additional_fragments: nil)
+  def link_post_uploads(fragments: nil)
     upload_ids = []
 
-    # Additional fragments retain files without selecting public topic images.
-    sources = [[fragments, true]]
-    sources << [additional_fragments, false] if additional_fragments
-    sources.each do |source, rendered|
-      each_upload_url(fragments: source) do |url, _, sha1|
-        upload = Upload.fetch_from(sha1:, url:)
+    each_upload_url(fragments: fragments) do |url, _, sha1|
+      upload = Upload.fetch_from(sha1:, url:)
 
-        # Link any video thumbnails
-        if SiteSetting.video_thumbnails_enabled && upload.present? &&
-             FileHelper.supported_video.include?(upload.extension&.downcase)
-          # Video thumbnails have the filename of the video file sha1 with a .png or .jpg extension.
-          # This is because at time of upload in the composer we don't know the topic/post id yet
-          # and there is no thumbnail info added to the markdown to tie the thumbnail to the topic/post after
-          # creation.
-          thumbnail =
-            Upload
-              .where("original_filename like ?", "#{upload.sha1}.%")
-              .order(id: :desc)
-              .first if upload.sha1.present?
-          if thumbnail.present?
-            upload_ids << thumbnail.id
-            if rendered && respond_to?(:handle_video_thumbnail, true)
-              handle_video_thumbnail(thumbnail)
-            end
-          end
+      # Link any video thumbnails
+      if SiteSetting.video_thumbnails_enabled && upload.present? &&
+           FileHelper.supported_video.include?(upload.extension&.downcase)
+        # Video thumbnails have the filename of the video file sha1 with a .png or .jpg extension.
+        # This is because at time of upload in the composer we don't know the topic/post id yet
+        # and there is no thumbnail info added to the markdown to tie the thumbnail to the topic/post after
+        # creation.
+        thumbnail =
+          Upload
+            .where("original_filename like ?", "#{upload.sha1}.%")
+            .order(id: :desc)
+            .first if upload.sha1.present?
+        if thumbnail.present?
+          upload_ids << thumbnail.id
+          handle_video_thumbnail(thumbnail) if respond_to?(:handle_video_thumbnail, true)
         end
-        upload_ids << upload.id if upload.present?
       end
+      upload_ids << upload.id if upload.present?
     end
-    upload_ids.uniq!
 
     upload_references =
       upload_ids.map do |upload_id|

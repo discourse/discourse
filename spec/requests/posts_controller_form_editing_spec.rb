@@ -108,65 +108,6 @@ RSpec.describe PostsController do
       expect(result.created_post.form_data).to eq(submission.to_h)
     end
 
-    it "retains an omitted attachment through queued approval, editing, and author recovery" do
-      SiteSetting.editing_grace_period = 5.minutes
-      upload = Fabricate(:upload, user:)
-      form_template.update!(
-        template: (form_template.fields + [{ "id" => "attachment", "type" => "upload" }]).to_yaml,
-      )
-      category.form_templates << form_template
-      category.update!(require_topic_approval: true)
-      submitted_answers = answers.merge("attachment" => "![attachment](#{upload.short_url})")
-
-      post "/posts.json",
-           params: {
-             title: "A queued form with an omitted attachment",
-             category: category.id,
-             form_template_data: { id: form_template.id, answers: submitted_answers }.to_json,
-           }
-      expect(response.status).to eq(200)
-      reviewable = ReviewableQueuedPost.last
-      expect(
-        UploadReference.where(target_type: "ReviewableQueuedPost", target_id: reviewable.id).pluck(
-          :upload_id,
-        ),
-      ).to eq([upload.id])
-
-      approval = reviewable.perform(Fabricate(:admin), :approve_post)
-      expect(approval).to be_success
-      created = approval.created_post
-      expect(created.form_submission.answers).to eq(submitted_answers)
-      expect(created.upload_references.pluck(:upload_id)).to eq([upload.id])
-      expect(created.raw).not_to include(upload.short_url)
-
-      edited_answers = submitted_answers.merge("description" => "An updated form description.")
-      put "/posts/#{created.id}.json",
-          params: {
-            post: {
-              form_template_data: { answers: edited_answers }.to_json,
-              form_state_token: created.form_state_token,
-            },
-          }
-      expect(response.status).to eq(200)
-      expect(created.reload.form_submission.answers).to eq(edited_answers)
-      expect(created.upload_references.pluck(:upload_id)).to eq([upload.id])
-      expect(created.version).to eq(1)
-      edited_data = created.form_data
-      edited_raw = created.raw
-
-      delete "/t/#{created.topic_id}.json"
-      expect(response.status).to eq(200)
-      expect(created.reload).to be_user_deleted
-      expect(created.form_data).to be_nil
-
-      put "/t/#{created.topic_id}/recover.json"
-      expect(response.status).to eq(200)
-      expect(created.reload).not_to be_user_deleted
-      expect(created.form_data).to eq(edited_data)
-      expect(created.raw).to eq(edited_raw)
-      expect(created.upload_references.pluck(:upload_id)).to eq([upload.id])
-    end
-
     it "persists the server definition and typed answers" do
       category.form_templates << form_template
       post "/posts.json",
@@ -186,10 +127,17 @@ RSpec.describe PostsController do
     it "exposes editable state only to an authorized editor" do
       get "/posts/#{form_post.id}.json"
       expect(response.parsed_body["form_submission"]).to eq(
-        submission.editor_data(raw: form_post.raw, guardian: user.guardian).as_json,
+        submission.editor_data(guardian: user.guardian).as_json,
       )
 
       sign_in(Fabricate(:user))
+      get "/posts/#{form_post.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("form_submission")
+    end
+
+    it "omits the form once raw no longer matches the saved answers" do
+      form_post.update_columns(raw: "Rewritten outside the form.")
       get "/posts/#{form_post.id}.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body).not_to have_key("form_submission")
@@ -211,121 +159,29 @@ RSpec.describe PostsController do
 
       expect(response.status).to eq(200)
       expect(form_post.topic.reload.title).to eq("Updated deleted form title")
-      expect(form_post.reload.form_data).to eq(submission.to_h)
+      expect(form_post.reload.form_submission.answers).to eq(answers)
     end
 
-    it "reopens and edits a system-expanded snapshot without allowing further growth" do
-      form_template.update!(
-        template: (form_template.fields + [{ "id" => "note", "type" => "composer" }]).to_yaml,
-      )
-      data = submission.to_h
-      data["answers"]["note"] = "old "
-      data["answers"]["note"] += "x" *
-        (FormTemplate::Submission::MAX_BYTES - JSON.generate(data).bytesize)
-      expanded =
-        FormTemplate::Submission
-          .new(data)
-          .rewrite_text { |text| text.gsub("old ", "longer " * 200) }
-      form_post.update!(raw: expanded.render, form_data: expanded.to_h)
-
-      get "/posts/#{form_post.id}.json"
-      expect(response.status).to eq(200)
-      expect(response.parsed_body.dig("form_submission", "answers")).to eq(expanded.answers)
-      edited_answers = expanded.answers.merge("confirmed" => true)
-      payload = { answers: edited_answers }.to_json
-      expect(payload.bytesize).to be > FormTemplate::Submission::MAX_BYTES
-
-      put "/posts/#{form_post.id}.json", params: { post: { form_template_data: payload } }
-      expect(response.status).to eq(200)
-      expect(form_post.reload.form_submission.answers).to eq(edited_answers)
-
-      edited_answers["note"] += "More text"
-      put "/posts/#{form_post.id}.json",
-          params: {
-            post: {
-              form_template_data: { answers: edited_answers }.to_json,
-            },
-          }
-      expect(response.status).to eq(400)
-      expect(form_post.reload.form_submission.answers["note"]).to eq(expanded.answers["note"])
-    end
-
-    it "preserves username rewrites when editing another answer" do
-      Jobs.run_immediately!
-      UserActionManager.enable
-      SiteSetting.allow_uppercase_posts = true
-      mentioned = Fabricate(:user, username: "formfriend")
-      form_template.update!(
-        output_template:
-          "{% if answers.description %}{{ answers.description | upcase }}{% endif %}",
-      )
-      original =
-        submission.with_answers(
-          answers.merge("description" => "Playing with @formfriend this evening."),
-        )
-      saved = create_post(user:, raw: original.render, form_data: original.to_h)
-      changed =
-        original.with_answers(
-          original.answers.merge("description" => "Playing with @formfriend tomorrow evening."),
-        )
-      PostRevisor.new(saved).revise!(
-        user,
-        { raw: changed.render, form_data: changed.to_h },
-        force_new_version: true,
-      )
-      toggled = changed.with_answers(changed.answers.merge("confirmed" => true))
-      PostRevisor.new(saved).revise!(
-        user,
-        { raw: toggled.render, form_data: toggled.to_h },
-        force_new_version: true,
-      )
-
-      expect(UsernameChanger.new(mentioned, "renamedfriend").change(asynchronous: false)).to eq(
-        true,
-      )
-      saved.reload
-      expect(saved.form_submission.render).to eq(saved.raw)
-      expect(saved.raw).to include("@RENAMEDFRIEND")
-      saved.revisions.each do |revision|
-        expect(revision.form_data_changes.map { |data| data.dig("answers", "description") }).to all(
-          include("@renamedfriend"),
-        )
-      end
-
-      put "/posts/#{saved.id}.json",
-          params: {
-            post: {
-              form_template_data: {
-                answers: saved.form_submission.answers.merge("confirmed" => false),
-              }.to_json,
-              form_state_token: saved.form_state_token,
-            },
-          }
-      expect(response.status).to eq(200)
-      expect(saved.reload.raw).to include("@RENAMEDFRIEND")
-      expect(saved.form_submission.answers["confirmed"]).to eq(false)
-    end
-
-    it "uses the saved definition after template deletion and rejects stale answer-only edits" do
-      token = form_post.form_state_token
+    it "uses the saved definition after template deletion and detects conflicting edits" do
+      original_text = form_post.raw
       form_template.destroy!
-      changed = answers.merge("confirmed" => true)
+      changed = answers.merge("description" => "A revised sufficiently long description.")
       put "/posts/#{form_post.id}.json",
           params: {
             post: {
               form_template_data: { answers: changed }.to_json,
-              form_state_token: token,
+              original_text:,
             },
           }
       expect(response.status).to eq(200)
-      expect(form_post.reload.raw).to eq(submission.render)
+      expect(form_post.reload.raw).to eq("## Invitation\nA revised sufficiently long description.")
       expect(form_post.form_submission.answers).to eq(changed)
 
       put "/posts/#{form_post.id}.json",
           params: {
             post: {
               form_template_data: { answers: }.to_json,
-              form_state_token: token,
+              original_text:,
             },
           }
       expect(response.status).to eq(409)
@@ -341,32 +197,57 @@ RSpec.describe PostsController do
       expect(form_post.reload.form_submission.answers).to eq(answers)
     end
 
-    it "rejects raw-only writes and unauthorized structured writes" do
-      original = form_post.form_data
+    it "falls back to markdown editing after a raw-only edit" do
       put "/posts/#{form_post.id}.json",
           params: {
             post: {
               raw: "An unrelated replacement of the form.",
             },
           }
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to include(
-        I18n.t("form_templates.raw_managed_by_form"),
-      )
-      expect(form_post.reload.form_data).to eq(original)
-      expect(form_post.raw).to eq(submission.render)
-      expect(form_post.revisions.count).to eq(0)
+      expect(response.status).to eq(200)
+      expect(form_post.reload.raw).to eq("An unrelated replacement of the form.")
+      expect(form_post.form_submission).to be_nil
 
+      get "/posts/#{form_post.id}.json"
+      expect(response.parsed_body).not_to have_key("form_submission")
+
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: }.to_json,
+            },
+          }
+      expect(response.status).to eq(400)
+    end
+
+    it "rejects structured edits from users who cannot edit the post" do
       sign_in(Fabricate(:user))
       put "/posts/#{form_post.id}.json",
           params: {
             post: {
               form_template_data: { answers: }.to_json,
-              form_state_token: form_post.form_state_token,
             },
           }
       expect(response.status).to eq(403)
-      expect(form_post.reload.form_data).to eq(original)
+      expect(form_post.reload.form_submission.answers).to eq(answers)
+    end
+  end
+
+  describe "#revert" do
+    it "restores the saved answers together with the text" do
+      changed = submission.with_answers(answers.merge("description" => "A revised description."))
+      PostRevisor.new(form_post).revise!(
+        user,
+        { raw: changed.render, form_data: changed.to_h },
+        force_new_version: true,
+      )
+      expect(form_post.reload.form_submission.answers).to eq(changed.answers)
+
+      sign_in(Fabricate(:admin))
+      put "/posts/#{form_post.id}/revisions/2/revert.json"
+      expect(response.status).to eq(200)
+      expect(form_post.reload.raw).to eq(submission.render)
+      expect(form_post.form_submission.answers).to eq(answers)
     end
   end
 
@@ -381,16 +262,6 @@ RSpec.describe PostsController do
 
       sign_in(Fabricate(:user))
       post("/form-templates/render.json", params:)
-      expect(response.status).to eq(403)
-    end
-
-    it "rejects previews by users who cannot edit the form" do
-      sign_in(Fabricate(:user))
-      post "/form-templates/render.json",
-           params: {
-             post_id: form_post.id,
-             form_template_data: { answers: }.to_json,
-           }
       expect(response.status).to eq(403)
     end
 

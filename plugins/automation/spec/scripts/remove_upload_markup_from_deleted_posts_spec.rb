@@ -52,39 +52,6 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       )
     end
 
-    it "removes required uploads retained only by omitted form answers" do
-      template =
-        Fabricate(
-          :form_template,
-          template: [
-            { id: "attachment", type: "upload", validations: { required: true } },
-          ].as_json.to_yaml,
-          output_template: "A form with an omitted attachment.",
-        )
-      submission =
-        FormTemplate::Submission.from_template(
-          template,
-          answers: {
-            "attachment" => upload.to_markdown,
-          },
-        )
-      form_post =
-        Fabricate(
-          :post,
-          raw: submission.normalized_raw,
-          form_data: submission.to_h,
-          deleted_at: 1.month.ago,
-        )
-      Fabricate(:upload_reference, upload:, target: form_post)
-
-      automation.trigger!
-
-      expect(form_post.reload.form_submission.answers["attachment"]).to eq("")
-      expect(form_post.raw).to eq(submission.normalized_raw)
-      expect(form_post.upload_references).to be_empty
-      expect(form_post.custom_fields["uploads_removed_at"]).to be_present
-    end
-
     it "removes uploads from deleted posts" do
       expect {
         automation.trigger!

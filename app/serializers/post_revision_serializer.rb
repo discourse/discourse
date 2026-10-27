@@ -23,7 +23,6 @@ class PostRevisionSerializer < ApplicationSerializer
              # all the changes
              :edit_reason,
              :body_changes,
-             :form_answer_changes,
              :title_changes,
              :user_changes,
              :reply_to_post_number_changes,
@@ -149,28 +148,6 @@ class PostRevisionSerializer < ApplicationSerializer
     nil
   end
 
-  def include_form_answer_changes?
-    scope.can_edit?(post) && !suppress_hidden_diffs? &&
-      previous["form_data"] != current["form_data"]
-  end
-
-  def form_answer_changes
-    old_data = previous["form_data"] || {}
-    new_data = current["form_data"] || {}
-    old_answers = old_data["answers"] || {}
-    new_answers = new_data["answers"] || {}
-    fields = new_data.dig("definition", "fields") || old_data.dig("definition", "fields") || []
-    fields.filter_map do |field|
-      id = field["id"].to_s
-      next if old_answers[id] == new_answers[id]
-      {
-        label: field.dig("attributes", "label").presence || id,
-        previous: old_answers[id],
-        current: new_answers[id],
-      }
-    end
-  end
-
   def title_changes
     return if suppress_hidden_diffs?
 
@@ -293,9 +270,8 @@ class PostRevisionSerializer < ApplicationSerializer
   def all_revisions
     return @all_revisions if @all_revisions
 
-    history = scope.can_edit?(post) ? PostRevision.all : PostRevision.without_form_data
     post_revisions =
-      history.where(post_id: object.post_id).order(number: :desc).limit(99).to_a.reverse
+      PostRevision.where(post_id: object.post_id).order(number: :desc).limit(99).to_a.reverse
 
     latest_modifications = {
       "raw" => [post.raw],
@@ -307,8 +283,6 @@ class PostRevisionSerializer < ApplicationSerializer
       "locale" => [post.locale],
       "reply_to_post_number" => [post.reply_to_post_number],
     }
-
-    latest_modifications["form_data"] = [post.form_data] if scope.can_edit?(post)
 
     # Retrieve any `tracked_topic_fields`
     PostRevisor.tracked_topic_fields.each_key do |field|
@@ -341,8 +315,7 @@ class PostRevisionSerializer < ApplicationSerializer
       revision[:revision] = pr.number
       revision[:hidden] = pr.hidden
 
-      changes = scope.can_edit?(post) ? pr.modifications_with_form_data : pr.modifications
-      changes.each { |field, (value, _)| revision[field] = value }
+      pr.modifications.each { |field, (value, _)| revision[field] = value }
 
       @all_revisions << revision
     end

@@ -86,20 +86,18 @@ class HashtagRemapper
 
     rewrite_bare = bare_ref_belongs_to_record?(store, record)
 
-    rewrite = ->(text) do
+    new_raw =
       HashtagRewriter
-        .new(text, store.cook_options(record))
+        .new(raw, store.cook_options(record))
         .rewrite do |ref|
           next new_suffixed if ref.casecmp?(old_suffixed)
           next bare_new_ref(store) if rewrite_bare && ref.casecmp?(old_ref)
         end
-    end
-    new_raw = rewrite.call(raw)
 
-    return false unless store.rewrite_changes_content?(record, new_raw, &rewrite)
+    return false if new_raw == raw
     return false if store.raw(record.reload) != raw
 
-    store.write!(record, new_raw, &rewrite)
+    store.write!(record, new_raw)
     rewritten << [store, record.id]
     true
   end

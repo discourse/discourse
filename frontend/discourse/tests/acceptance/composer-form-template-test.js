@@ -5,7 +5,6 @@ import {
   find,
   settled,
   visit,
-  waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
@@ -168,70 +167,6 @@ acceptance("Composer Form Template", function (needs) {
       topicList.post_stream.posts[2].post_type = 4;
       return helper.response(topicList);
     });
-  });
-
-  test("keeps form answers open when saving the draft fails", async function (assert) {
-    this.siteSettings.show_preview_for_form_templates = false;
-    pretender.post("/drafts.json", () =>
-      response(500, { errors: ["Unavailable"] })
-    );
-    await visit("/");
-    const composer = this.owner.lookup("service:composer");
-    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[0] });
-    await settled();
-    await fillIn("input[name='full-name']", "Saved host name");
-    await composer.saveAndCloseComposer();
-    await settled();
-    assert.dom("#reply-control").hasClass("open");
-    assert.dom("input[name='full-name']").hasValue("Saved host name");
-  });
-
-  test("preserves input entered while Save & close is waiting", async function (assert) {
-    this.siteSettings.show_preview_for_form_templates = false;
-    await visit("/");
-    const composer = this.owner.lookup("service:composer");
-    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[0] });
-    await settled();
-    await fillIn("input[name='full-name']", "Original name");
-
-    let receiveRequest;
-    const pending = new Promise((resolve) => (receiveRequest = resolve));
-    pretender.post(
-      "/drafts.json",
-      (request) => {
-        receiveRequest(request);
-        return response({ success: true });
-      },
-      true
-    );
-    const closing = composer.saveAndCloseComposer();
-    const request = await pending;
-    let savedDraft;
-    pretender.post("/drafts.json", (nextRequest) => {
-      savedDraft = JSON.parse(parsePostData(nextRequest.requestBody).data);
-      return response({ success: true });
-    });
-    const typing = fillIn("input[name='full-name']", "");
-    await waitUntil(() => find("input[name='full-name']").value === "");
-    pretender.resolve(request);
-    await closing;
-    await typing;
-    assert
-      .dom("#reply-control")
-      .hasClass("open", "new input keeps the composer open");
-    assert
-      .dom("input[name='full-name']")
-      .hasValue("", "returning to the original value is retained");
-    assert.strictEqual(
-      savedDraft.formTemplateDraft.answers["full-name"],
-      "",
-      "the original value replaces the draft saved while closing"
-    );
-    await composer.saveAndCloseComposer();
-    await settled();
-    assert
-      .dom("#reply-control")
-      .hasClass("closed", "closing succeeds after saving the latest input");
   });
 
   test("autosaves answers returned to their original values", async function (assert) {

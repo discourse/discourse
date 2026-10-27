@@ -586,49 +586,6 @@ RSpec.describe Upload do
   end
 
   describe ".migrate_to_new_scheme" do
-    it "migrates URLs saved only in form answers before removing the old file" do
-      SiteSetting.migrate_to_new_scheme = true
-      db = RailsMultisite::ConnectionManagement.current_db
-      upload = Fabricate(:upload, url: "/uploads/#{db}/123/logo.png")
-      old_url = upload.url
-      old_path = Discourse.store.path_for(upload)
-      FileUtils.mkdir_p(File.dirname(old_path))
-      FileUtils.cp(image.path, old_path)
-      template =
-        Fabricate(
-          :form_template,
-          template: [
-            { id: "image", type: "composer" },
-            { id: "description", type: "input" },
-          ].as_json.to_yaml,
-          output_template: "Description: {{ answers.description }}",
-        )
-      submission =
-        FormTemplate::Submission.from_template(
-          template,
-          answers: {
-            "image" => "![image](#{old_url})",
-            "description" => "Before",
-          },
-        )
-      post = Fabricate(:post, raw: submission.normalized_raw, form_data: submission.to_h)
-
-      expect(Upload.migrate_to_new_scheme).to eq([])
-
-      expect(upload.reload.url).not_to eq(old_url)
-      expect(File.exist?(old_path)).to eq(false)
-      expect(File.exist?(Discourse.store.path_for(upload))).to eq(true)
-      edited =
-        post.reload.form_submission.with_answers(
-          post.form_submission.answers.merge("description" => "After"),
-        )
-      expect(edited.answers["image"]).to eq("![image](#{upload.url})")
-      expect(post.update(raw: edited.normalized_raw, form_data: edited.to_h)).to eq(true)
-    ensure
-      FileUtils.rm_f(old_path) if old_path
-      FileUtils.rm_f(Discourse.store.path_for(upload)) if upload
-    end
-
     it "does not migrate system uploads" do
       SiteSetting.migrate_to_new_scheme = true
 

@@ -82,7 +82,6 @@ const CLOSED = "closed",
   },
   _update_serializer = {
     form_template_data: "formTemplateData",
-    form_state_token: "formStateToken",
     raw: "reply",
     topic_id: "topic.id",
     original_text: "originalText",
@@ -100,7 +99,6 @@ const CLOSED = "closed",
   _draft_serializer = {
     formTemplateDraft: "formTemplateDraft",
     originalFormTemplateDraft: "originalFormTemplateDraft",
-    formStateToken: "formStateToken",
     reply: "reply",
     action: "action",
     title: "title",
@@ -1124,7 +1122,6 @@ export default class Composer extends RestModel {
       originalFormTemplateDraft: null,
       formTemplateData: null,
       formSubmission: null,
-      formStateToken: null,
       formTemplateId: null,
       originalText: null,
       originalTitle: null,
@@ -1209,7 +1206,6 @@ export default class Composer extends RestModel {
 
     // user clicked "overwrite edits" button
     if (this.editConflict) {
-      delete props.form_state_token;
       delete props.original_text;
       delete props.original_title;
       delete props.original_tags;
@@ -1550,7 +1546,6 @@ export default class Composer extends RestModel {
       formTemplateDraft: opts.formTemplateDraft,
       hasSavedFormTemplateDraft: !!opts.formTemplateDraft,
       originalFormTemplateDraft: opts.originalFormTemplateDraft,
-      formStateToken: opts.formStateToken,
       formTemplateId: opts.formTemplateDraft?.id || opts.formTemplateId,
       draftKey: opts.draftKey,
       draftSequence: opts.draftSequence,
@@ -1700,7 +1695,6 @@ export default class Composer extends RestModel {
         this.setProperties({
           formSubmission: submission,
           formTemplateId: submission.template_id,
-          formStateToken: opts.formStateToken || submission.state_token,
           formTemplateDraft: opts.formTemplateDraft || draft,
           originalFormTemplateDraft: opts.originalFormTemplateDraft || draft,
         });
