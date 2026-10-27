@@ -699,7 +699,7 @@ class PostRevisor
         action.remove_act!(Discourse.system_user)
       end
 
-    @post.unhide!
+    @post.unhide!(acting_user: @editor)
     PostActionNotifier.after_post_unhide(@post, flaggers)
   end
 

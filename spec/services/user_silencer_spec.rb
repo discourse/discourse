@@ -107,6 +107,29 @@ RSpec.describe UserSilencer do
       expect(old_post.topic).to be_visible
     end
 
+    it "reports each post it newly hides as hidden by the silencing user" do
+      already_hidden = Fabricate(:post, user: user)
+      already_hidden.hide!(PostActionType.types[:spam])
+
+      events = DiscourseEvent.track_events(:post_hidden) { UserSilencer.silence(user, admin) }
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[post, { acting_user: admin, post_action_type_id: nil }]],
+      )
+      expect(events.first[:params].first).to have_attributes(
+        hidden: true,
+        hidden_reason_id: Post.hidden_reasons[:new_user_spam_threshold_reached],
+      )
+    end
+
+    it "reports the system user as the actor when silencing without a user" do
+      events = DiscourseEvent.track_events(:post_hidden) { UserSilencer.silence(user) }
+
+      expect(events.map { |event| event[:params].last[:acting_user] }).to eq(
+        [Discourse.system_user],
+      )
+    end
+
     it "links the staff action log to the reviewable when passed via opts" do
       reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
 

@@ -162,10 +162,15 @@ describe ReviewableAiPost do
 
     describe "agree variations" do
       it "hides the topic when performing the agree_and_hide action" do
-        result = reviewable.perform(admin, :agree_and_hide)
+        result = nil
+        events =
+          DiscourseEvent.track_events(:post_hidden) do
+            result = reviewable.perform(admin, :agree_and_hide)
+          end
 
         expect(result.transition_to).to eq :approved
         expect(target.reload.hidden?).to eq(true)
+        expect(events.map { |event| event[:params].last[:acting_user] }).to eq([admin])
       end
 
       it "doesn't unhide the topic when performing the agree_and_keep_hidden action" do
@@ -202,6 +207,15 @@ describe ReviewableAiPost do
         result = reviewable.perform(admin, :disagree)
 
         expect(result.transition_to).to eq :rejected
+      end
+
+      it "disagree unhides a hidden post as the reviewer" do
+        target.hide!(ReviewableScore.types[:inappropriate])
+
+        events =
+          DiscourseEvent.track_events(:post_unhidden) { reviewable.perform(admin, :disagree) }
+
+        expect(events.map { |event| event[:params] }).to eq([[target, { acting_user: admin }]])
       end
     end
 
