@@ -21,6 +21,10 @@ module PageObjects
           component.hover
         end
 
+        def has_flag?
+          component.has_css?(".chat-message-info__flag")
+        end
+
         def open_more_menu
           hover
           page.find(".chat-message-actions-container")

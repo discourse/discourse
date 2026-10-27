@@ -459,6 +459,34 @@ RSpec.describe PostVoting::CommentsController do
 
     before { sign_in(flagger) }
 
+    it "requires the DSA form for illegal reports only when DSA reporting is enabled" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect do
+        put "/post_voting/comments/flag.json",
+            params: {
+              comment_id: comment.id,
+              flag_type_id: ReviewableScore.types[:illegal],
+            }
+      end.not_to change(ReviewableScore, :count)
+
+      expect(response).to be_forbidden
+      expect(Reviewable.exists?(target: comment)).to eq(false)
+
+      SiteSetting.dsa_reporting_enabled = false
+
+      put "/post_voting/comments/flag.json",
+          params: {
+            comment_id: comment.id,
+            flag_type_id: ReviewableScore.types[:illegal],
+          }
+
+      expect(response).to be_successful
+      expect(
+        Reviewable.find_by!(target: comment).reviewable_scores.pluck(:reviewable_score_type),
+      ).to eq([ReviewableScore.types[:illegal]])
+    end
+
     it "returns 403 when flagging a comment on an inaccessible post" do
       category.set_permissions(group => :full)
       category.save!

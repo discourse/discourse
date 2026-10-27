@@ -6,6 +6,12 @@ module Dsa
 
     belongs_to :post, -> { with_deleted }, optional: true
 
+    def self.verified_account_email(user)
+      return unless user&.active? && !user.anonymous_user_master && user.email_confirmed?
+
+      user.email
+    end
+
     def self.create_with_post!(attributes:, group:)
       transaction do
         notice = create!(attributes)

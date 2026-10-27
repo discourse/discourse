@@ -7,10 +7,11 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
+import ReportIllegalContentModal from "discourse/components/modal/report-illegal-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { bind } from "discourse/lib/decorators";
-import getURL from "discourse/lib/get-url";
+import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
 import { DEFAULT_DIVERSITY } from "discourse/services/emoji-store";
@@ -132,6 +133,15 @@ export default class ChatMessageInteractor {
     return this.canInteractWithMessage && this.siteSettings.enable_emoji;
   }
 
+  get canReportMessage() {
+    return (
+      this.canFlagMessage ||
+      (this.siteSettings.dsa_reporting_enabled &&
+        !this.message?.chatWebhookEvent &&
+        !this.message?.deletedAt)
+    );
+  }
+
   get canFlagMessage() {
     if (!this.currentUser) {
       return (
@@ -237,7 +247,7 @@ export default class ChatMessageInteractor {
       });
     }
 
-    if (this.canFlagMessage) {
+    if (this.canReportMessage) {
       buttons.push({
         id: "flag",
         name: i18n("chat.flag"),
@@ -290,7 +300,7 @@ export default class ChatMessageInteractor {
       });
     }
 
-    if (this.canFlagMessage) {
+    if (this.canReportMessage) {
       buttons.push({ id: "flag", name: i18n("chat.flag"), icon: "flag" });
     }
 
@@ -433,11 +443,22 @@ export default class ChatMessageInteractor {
 
   @action
   flag() {
+    if (!this.currentUser && this.siteSettings.dsa_reporting_enabled) {
+      this.modal.show(ReportIllegalContentModal, {
+        model: { contentUrl: getAbsoluteURL(this.message.url) },
+      });
+      return;
+    }
+
     const model = new ChatMessage(this.message.channel, this.message);
+    if (!this.canFlagMessage) {
+      model.availableFlags = [];
+    }
     model.username = this.message.user?.username;
     model.user_id = this.message.user?.id;
     this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
       model: {
+        allowIllegalContentReport: true,
         flagTarget: new ChatMessageFlag(getOwner(this)),
         flagModel: model,
         setHidden: () => model.set("hidden", true),
