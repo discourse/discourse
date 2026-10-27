@@ -360,4 +360,30 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       include(parameters: include(post_id: "={{ $json.post.id }}")),
     )
   end
+
+  it "includes examples penalising the trigger post's author for a duration", :aggregate_failures do
+    result = invoke_tool(%w[action:suspend_user action:silence_user])
+
+    result[:nodes].each do |node|
+      parameters = node[:examples].sole[:parameters]
+      node_class = DiscourseWorkflows::Registry.latest_node_type(node[:type])
+
+      expect(parameters).to include(
+        username: "={{ $json.user.username }}",
+        schedule: "after_duration",
+        post_id: "={{ $json.post.id }}",
+      )
+      expect(node_class.properties.keys).to include(*parameters.keys)
+    end
+    expect(result[:nodes].pluck(:type)).to contain_exactly(
+      "action:suspend_user",
+      "action:silence_user",
+    )
+  end
+
+  it "leaves the hidden user moderation trigger out, but not its per-change triggers" do
+    result = invoke_tool(%w[trigger:user_moderation_changed trigger:user_suspended])
+
+    expect(result[:nodes].pluck(:type)).to eq(["trigger:user_suspended"])
+  end
 end

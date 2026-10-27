@@ -208,7 +208,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicPin::V1 do
               execute_node(configuration: config, item: item, workflow: workflow)
             }.to raise_error(
               DiscourseWorkflows::NodeError,
-              "'pinned_until' is not a valid date and time: 'soon'.",
+              "'pinned_until' is not a valid date and time: 'soon'. [item 0]",
             )
           end
 
@@ -223,7 +223,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicPin::V1 do
               execute_node(configuration: config, item: item, workflow: workflow)
             }.to raise_error(
               DiscourseWorkflows::NodeError,
-              "'pinned_until' is not a valid date and time: '2026-13-45'.",
+              "'pinned_until' is not a valid date and time: '2026-13-45'. [item 0]",
             )
           end
         end

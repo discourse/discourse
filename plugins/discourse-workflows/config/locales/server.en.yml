@@ -232,6 +232,20 @@ en:
         failed: "Slow mode could not be changed on topic %{topic_id}."
       post_liking:
         failed: "The like on post %{post_id} couldn't be changed."
+      user_moderation_action:
+        suspend_not_allowed: "'%{username}' can't suspend '%{target}'. Only staff can suspend users, and staff can't be suspended."
+        unsuspend_not_allowed: "'%{username}' can't unsuspend '%{target}'. Only staff can, and only admins can unsuspend staff."
+        silence_not_allowed: "'%{username}' can't silence '%{target}'. Only staff can silence users, and staff can't be silenced."
+        unsilence_not_allowed: "'%{username}' can't unsilence '%{target}'. Only staff can, and only admins can unsilence staff."
+        invalid_schedule: "Unknown schedule: %{schedule}."
+        invalid_duration_unit: "Unknown duration unit: %{duration_unit}."
+        invalid_duration: "'duration' must be a whole number greater than 0 and at most 1000 years: '%{value}'."
+        invalid_time: "'%{field}' is not a valid date and time: '%{value}'."
+        time_required: "'%{field}' must be set to end the penalty at a time."
+        time_in_past: "'%{field}' must be in the future: '%{value}'."
+        post_not_found: "Post %{post_id} doesn't exist."
+        invalid: "'%{username}' couldn't be penalised: %{errors}"
+        failed: "'%{username}' couldn't be penalised."
       post_hiding:
         not_allowed: "'%{username}' can't hide or unhide post %{post_id}. Only staff can."
         unknown_flag_reason: "Unknown flag reason: %{flag_reason}."

@@ -349,6 +349,34 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:suspend_user" => [
+            {
+              name: "Suspend the author of the trigger post for a week",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                schedule: "after_duration",
+                duration: 7,
+                duration_unit: "days",
+                reason: "Repeated rule violations",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:silence_user" => [
+            {
+              name: "Silence the author of the trigger post for a day",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                schedule: "after_duration",
+                duration: 1,
+                duration_unit: "days",
+                reason: "Posting spam",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
           "action:convert_to_public_topic" => [
             {
               name: "Make the trigger personal message a public topic in a category",
