@@ -488,6 +488,27 @@ describe DiscourseAi::Discoveries::Retrieval do
       )
     end
 
+    it "adds the topic author's liked follow-up ahead of a group member's like" do
+      follow_up =
+        Fabricate(:post, topic: topic_1, user: topic_1.user, raw: "Fixed it, the cache was stale")
+      PostActionCreator.like(Fabricate(:user), follow_up)
+      PostActionCreator.like(moderator, liked_reply)
+      PostActionCreator.like(Fabricate(:user), liked_reply)
+
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to contain_exactly(
+        include("post_id" => follow_up.id, "answer" => true),
+      )
+    end
+
+    it "ignores the topic author's liked posts before anyone else replied" do
+      topic = Fabricate(:topic, category:)
+      first_post = Fabricate(:post, topic:, user: topic.user)
+      addendum = Fabricate(:post, topic:, user: topic.user)
+      PostActionCreator.like(Fabricate(:user), addendum)
+
+      expect(answer_passages(call([source(first_post)]).candidates.first)).to be_empty
+    end
+
     it "marks an endorsed reply that retrieval matched instead of repeating it" do
       PostActionCreator.like(topic_1.user, liked_reply)
 

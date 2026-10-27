@@ -413,9 +413,9 @@ module DiscourseAi
           .group_by(&:topic_id)
       end
 
-      # A reply liked by the topic's author, or by a member of the groups the site
-      # trusts, is the best answer an unsolved topic has. One per topic, preferring
-      # the author's like.
+      # The best answer an unsolved topic has is a reply its author liked, the
+      # author's own liked follow-up after others replied, or a reply a member of
+      # the groups the site trusts liked, in that order. One per topic.
       def endorsed_replies_by_topic_id(topic_ids)
         group_ids = SiteSetting.ai_ask_ai_endorsed_reply_groups_map
         return {} if group_ids.empty? || topic_ids.empty?
@@ -440,6 +440,7 @@ module DiscourseAi
                 PARTITION BY posts.topic_id
                 ORDER BY
                   BOOL_OR(post_actions.user_id = topics.user_id) DESC,
+                  posts.user_id = topics.user_id DESC,
                   posts.like_count DESC,
                   posts.post_number
               ) AS rank
@@ -460,8 +461,20 @@ module DiscourseAi
                 OR post_actions.user_id IN (
                   SELECT user_id FROM group_users WHERE group_id IN (:group_ids)
                 )
+                OR (
+                  posts.user_id = topics.user_id
+                  AND EXISTS (
+                    SELECT 1
+                    FROM posts earlier
+                    WHERE earlier.topic_id = posts.topic_id
+                      AND earlier.post_number BETWEEN 2 AND posts.post_number - 1
+                      AND earlier.user_id <> topics.user_id
+                      AND earlier.post_type = :regular
+                      AND earlier.deleted_at IS NULL
+                  )
+                )
               )
-            GROUP BY posts.id
+            GROUP BY posts.id, topics.id
           ) endorsed
           WHERE rank = 1
         SQL

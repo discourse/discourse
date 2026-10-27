@@ -830,6 +830,30 @@ describe Jobs::StreamDiscoverReply do
       )
     end
 
+    it "retains the posts of every passage the model saw" do
+      answer_post = Fabricate(:post, topic: source_post.topic)
+      allow(retrieval).to receive(:call).and_return(
+        DiscourseAi::Discoveries::Retrieval::Result.new(
+          candidates: [
+            candidate.merge(
+              "passages" => [
+                { "post_id" => source_post.id },
+                { "post_id" => answer_post.id, "answer" => true },
+              ],
+            ),
+          ],
+        ),
+      )
+      allow(retrieval).to receive(:sources_for).and_return([])
+      allow(synthesis).to receive(:call).and_return(
+        DiscourseAi::Discoveries::Synthesis::Result.new(answerable: false, source_refs: []),
+      )
+
+      job.execute(args)
+
+      expect(ask_log.reload.candidate_post_ids).to eq([source_post.id, answer_post.id])
+    end
+
     it "records retrieval errors before any answer is available" do
       allow(retrieval).to receive(:call).and_raise(StandardError)
 
