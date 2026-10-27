@@ -242,7 +242,6 @@
 
 .edit-topic-title {
   --edit-topic-title-font-size: var(--font-up-4);
-  --edit-topic-title-control-height: 2em;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -341,9 +340,12 @@
     }
   }
 
-  // aligns picker content with the title text
   .edit-category__wrapper,
   .edit-tags__wrapper {
+    display: flex;
+    align-self: stretch; // matches the height of the buttons sharing the row
+
+    // aligns picker content with the title text
     margin-inline-start: calc(-1 * var(--space-2));
   }
 
@@ -380,7 +382,7 @@
   .select-kit.combo-box .select-kit-header,
   .select-kit.multi-select .multi-select-header {
     align-items: center;
-    min-height: var(--edit-topic-title-control-height);
+    min-height: 2em;
     padding-block: 0.15em;
     background: transparent;
     border-color: transparent;
@@ -438,11 +440,6 @@
     align-items: center;
     gap: var(--space-1);
     margin-inline-start: auto;
-
-    .btn {
-      height: var(--edit-topic-title-control-height);
-      padding-block: 0;
-    }
   }
 
   .remove-featured-link {
