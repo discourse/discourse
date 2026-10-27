@@ -407,7 +407,7 @@ describe DiscourseAi::Discoveries::Retrieval do
             "post_id" => answer.id,
             "post_number" => answer.post_number,
             "excerpt" => "Restart the robot to fix it",
-            "accepted_answer" => true,
+            "answer" => true,
           ),
         )
         expect(candidates.second).not_to include("solved")
@@ -417,7 +417,7 @@ describe DiscourseAi::Discoveries::Retrieval do
         candidates = call([source(answer)]).candidates
 
         expect(candidates.first.fetch("passages")).to contain_exactly(
-          include("post_id" => answer.id, "accepted_answer" => true),
+          include("post_id" => answer.id, "answer" => true),
         )
       end
 
@@ -454,8 +454,8 @@ describe DiscourseAi::Discoveries::Retrieval do
       ).call("robot")
     end
 
-    def endorsed_passages(candidate)
-      candidate.fetch("passages").select { |passage| passage.key?("endorsed_by") }
+    def answer_passages(candidate)
+      candidate.fetch("passages").select { |passage| passage["answer"] }
     end
 
     it "adds the reply the topic author liked ahead of more liked ones" do
@@ -466,15 +466,15 @@ describe DiscourseAi::Discoveries::Retrieval do
 
       candidates = call([source(post_1), source(post_2)]).candidates
 
-      expect(endorsed_passages(candidates.first)).to contain_exactly(
+      expect(answer_passages(candidates.first)).to contain_exactly(
         include(
           "post_id" => author_liked_reply.id,
           "excerpt" => "Restart the robot",
-          "endorsed_by" => %w[topic_author group_member],
+          "answer" => true,
         ),
       )
       expect(candidates.first).not_to include("solved")
-      expect(endorsed_passages(candidates.second)).to be_empty
+      expect(answer_passages(candidates.second)).to be_empty
     end
 
     it "adds a reply liked only by a member of the endorsing groups" do
@@ -483,8 +483,8 @@ describe DiscourseAi::Discoveries::Retrieval do
 
       candidates = call([source(post_1)]).candidates
 
-      expect(endorsed_passages(candidates.first)).to contain_exactly(
-        include("post_id" => liked_reply.id, "endorsed_by" => %w[group_member]),
+      expect(answer_passages(candidates.first)).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
       )
     end
 
@@ -494,7 +494,7 @@ describe DiscourseAi::Discoveries::Retrieval do
       candidates = call([source(liked_reply)]).candidates
 
       expect(candidates.first.fetch("passages")).to contain_exactly(
-        include("post_id" => liked_reply.id, "endorsed_by" => %w[topic_author]),
+        include("post_id" => liked_reply.id, "answer" => true),
       )
     end
 
@@ -503,15 +503,15 @@ describe DiscourseAi::Discoveries::Retrieval do
       liked_reply.update!(hidden: true)
       PostActionCreator.like(Fabricate(:user), author_liked_reply)
 
-      expect(endorsed_passages(call([source(post_1)]).candidates.first)).to be_empty
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to be_empty
     end
 
     it "counts any like when the endorsing groups include everyone" do
       SiteSetting.ai_ask_ai_endorsed_reply_groups = Group::AUTO_GROUPS[:everyone].to_s
       PostActionCreator.like(Fabricate(:user), liked_reply)
 
-      expect(endorsed_passages(call([source(post_1)]).candidates.first)).to contain_exactly(
-        include("post_id" => liked_reply.id, "endorsed_by" => %w[group_member]),
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to contain_exactly(
+        include("post_id" => liked_reply.id, "answer" => true),
       )
     end
 
@@ -519,11 +519,11 @@ describe DiscourseAi::Discoveries::Retrieval do
       SiteSetting.ai_ask_ai_endorsed_reply_groups = ""
       PostActionCreator.like(topic_1.user, liked_reply)
 
-      expect(endorsed_passages(call([source(post_1)]).candidates.first)).to be_empty
+      expect(answer_passages(call([source(post_1)]).candidates.first)).to be_empty
     end
 
     if defined?(DiscourseSolved)
-      it "adds no endorsed reply to a solved topic" do
+      it "keeps the accepted answer as a solved topic's only answer" do
         SiteSetting.solved_enabled = true
         Fabricate(:solved_topic, topic: topic_1, answer_post: liked_reply)
         PostActionCreator.like(topic_1.user, author_liked_reply)
@@ -531,7 +531,7 @@ describe DiscourseAi::Discoveries::Retrieval do
         candidate = call([source(post_1)]).candidates.first
 
         expect(candidate).to include("solved" => true)
-        expect(endorsed_passages(candidate)).to be_empty
+        expect(answer_passages(candidate).pluck("post_id")).to eq([liked_reply.id])
       end
     end
   end

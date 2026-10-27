@@ -385,13 +385,9 @@ module DiscourseAi
               "topic_bumped_at" => topic.bumped_at&.iso8601,
             )
           if (answers = accepted_answers[topic.id])
-            with_passages(candidate, answers) { { "accepted_answer" => true } }.merge(
-              "solved" => true,
-            )
-          elsif (endorsed_by = endorsed_replies[topic.id])
-            with_passages(candidate, endorsed_by.keys) do |reply|
-              { "endorsed_by" => endorsed_by[reply] }
-            end
+            with_answers(candidate, answers).merge("solved" => true)
+          elsif (replies = endorsed_replies[topic.id])
+            with_answers(candidate, replies)
           else
             candidate
           end
@@ -435,21 +431,11 @@ module DiscourseAi
           like: PostActionType::LIKE_POST_ACTION_ID,
           regular: Post.types[:regular],
         }
-        rows = DB.query(<<~SQL, **params)
-          SELECT post_id, liked_by_topic_author, liked_by_group_member
+        post_ids = DB.query_single(<<~SQL, **params)
+          SELECT post_id
           FROM (
             SELECT
               posts.id AS post_id,
-              BOOL_OR(post_actions.user_id = topics.user_id) AS liked_by_topic_author,
-              BOOL_OR(
-                post_actions.user_id <> topics.user_id
-                AND (
-                  :any_liker
-                  OR post_actions.user_id IN (
-                    SELECT user_id FROM group_users WHERE group_id IN (:group_ids)
-                  )
-                )
-              ) AS liked_by_group_member,
               ROW_NUMBER() OVER (
                 PARTITION BY posts.topic_id
                 ORDER BY
@@ -479,34 +465,26 @@ module DiscourseAi
           ) endorsed
           WHERE rank = 1
         SQL
-        return {} if rows.empty?
+        return {} if post_ids.empty?
 
-        endorsements =
-          rows.to_h do |row|
-            endorsed_by = []
-            endorsed_by << "topic_author" if row.liked_by_topic_author
-            endorsed_by << "group_member" if row.liked_by_group_member
-            [row.post_id, endorsed_by]
-          end
         guardian = Guardian.new(@user)
         Post
-          .where(id: endorsements.keys)
+          .where(id: post_ids)
           .includes(:topic)
           .select { |post| guardian.can_see_post?(post) }
-          .to_h { |post| [post.topic_id, { post => endorsements[post.id] }] }
+          .group_by(&:topic_id)
       end
 
       # Retrieval mostly matches the question in a topic's first post, so an
       # answer would rarely reach the model unless it is added.
-      def with_passages(candidate, answers)
+      def with_answers(candidate, answers)
         passages = Array(candidate["passages"]).dup
         answers.each do |answer|
-          flags = yield(answer)
           if (index = passages.index { |passage| passage["post_id"] == answer.id })
-            passages[index] = passages[index].merge(flags)
+            passages[index] = passages[index].merge("answer" => true)
           else
             passages << passage_from_source(source_from_post(answer, excerpt: answer.cooked)).merge(
-              flags,
+              "answer" => true,
             )
           end
         end
