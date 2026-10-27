@@ -5,7 +5,7 @@ module DiscourseWorkflows
     # Per-item actions on a post, outputting the post, the actor and whether the post changed. Including
     # modules define a private `change_post(exec_ctx, item_index)` returning the item, usually #post_output.
     module PostChangeAction
-      def self.description(name:, icon:, color:, i18n_scope:, changed:)
+      def self.description(name:, icon:, color:, i18n_scope:, changed:, properties: {})
         {
           name:,
           version: "1.0",
@@ -33,6 +33,7 @@ module DiscourseWorkflows
               type: :string,
               required: true,
             },
+            **properties,
             **NodeType.actor_property(allow_anonymous: false),
           },
         }

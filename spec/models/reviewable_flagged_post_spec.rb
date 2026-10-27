@@ -363,6 +363,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post).to be_hidden
     end
 
+    it "agree_and_hide hides the post as the reviewer, with the flag type" do
+      events =
+        DiscourseEvent.track_events(:post_hidden) { reviewable.perform(moderator, :agree_and_hide) }
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[post, { acting_user: moderator, post_action_type_id: PostActionType.types[:spam] }]],
+      )
+    end
+
     it "agree_and_restore agrees with the flags and restores the post" do
       post.update(user_deleted: true)
       reviewable.perform(moderator, :agree_and_restore)
@@ -481,6 +490,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       reviewable.perform(moderator, :disagree)
       expect(reviewable).to be_rejected
       expect(score.reload).to be_disagreed
+    end
+
+    it "unhides a hidden post as the reviewer when disagreeing" do
+      post.hide!(PostActionType.types[:spam])
+
+      events =
+        DiscourseEvent.track_events(:post_unhidden) { reviewable.perform(moderator, :disagree) }
+
+      expect(events.map { |event| event[:params] }).to eq([[post, { acting_user: moderator }]])
     end
 
     it "disagrees with the flags and restores the post" do

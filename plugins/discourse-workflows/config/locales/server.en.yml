@@ -232,6 +232,10 @@ en:
         failed: "Slow mode could not be changed on topic %{topic_id}."
       post_liking:
         failed: "The like on post %{post_id} couldn't be changed."
+      post_hiding:
+        not_allowed: "'%{username}' can't hide or unhide post %{post_id}. Only staff can."
+        unknown_flag_reason: "Unknown flag reason: %{flag_reason}."
+        unhide_failed: "Post %{post_id} couldn't be unhidden: %{errors}"
       topic_conversion:
         to_personal_message_failed: "Topic %{topic_id} couldn't be converted to a personal message."
         to_public_topic_failed: "Personal message %{topic_id} couldn't be converted to a public topic. Check that the topic has the tags the category requires and that the category accepts new topics."

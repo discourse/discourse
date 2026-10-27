@@ -141,6 +141,42 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
       expect(result).to include("post_hidden" => true, "post_deleted" => false)
     end
 
+    it "hides the post with review_hide as the actor" do
+      events =
+        DiscourseEvent.track_events(:post_hidden) do
+          execute_node(
+            configuration: {
+              "post_id" => post.id.to_s,
+              "flag_type" => "review_hide",
+              "actor_username" => moderator.username,
+            },
+          )
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [
+            post,
+            {
+              acting_user: moderator,
+              post_action_type_id: PostActionType.types[:notify_moderators],
+            },
+          ],
+        ],
+      )
+    end
+
+    it "reports no hide with review_hide on a post that is already hidden" do
+      post.hide!(PostActionType.types[:spam])
+
+      events =
+        DiscourseEvent.track_events(:post_hidden) do
+          execute_node(configuration: { "post_id" => post.id.to_s, "flag_type" => "review_hide" })
+        end
+
+      expect(events).to be_empty
+    end
+
     it "soft-deletes the post with review_delete", :aggregate_failures do
       result =
         execute_node(

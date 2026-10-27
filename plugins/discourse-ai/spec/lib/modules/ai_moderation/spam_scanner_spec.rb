@@ -317,6 +317,25 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       )
     end
 
+    it "reports the post as hidden for spam by the flagging user, once" do
+      events =
+        DiscourseEvent.track_events(:post_hidden) do
+          2.times { described_class.hide_post(spam_post) }
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [
+            spam_post,
+            {
+              acting_user: described_class.flagging_user,
+              post_action_type_id: PostActionType.types[:spam],
+            },
+          ],
+        ],
+      )
+    end
+
     it "doesn't hide the topic for non-first posts" do
       described_class.hide_post(second_spam_post)
 
@@ -408,13 +427,25 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       described_class.new_post(post)
 
       prompt = nil
-      DiscourseAi::Completions::Llm.with_prepared_responses(
-        [{ spam: true, reason: "spam detected" }],
-      ) do |_, _, _prompts|
-        # force a rebake so we actually scan
-        post.rebake!
-        prompt = _prompts.first
-      end
+      hidden_events =
+        DiscourseEvent.track_events(:post_hidden) do
+          DiscourseAi::Completions::Llm.with_prepared_responses(
+            [{ spam: true, reason: "spam detected" }],
+          ) do |_, _, _prompts|
+            # force a rebake so we actually scan
+            post.rebake!
+            prompt = _prompts.first
+          end
+        end
+
+      expect(hidden_events.map { |event| event[:params].last }).to eq(
+        [
+          {
+            acting_user: described_class.flagging_user,
+            post_action_type_id: PostActionType.types[:spam],
+          },
+        ],
+      )
 
       # its an array so lets just stringify it to make testing easier
       content = prompt.messages[1][:content][0]

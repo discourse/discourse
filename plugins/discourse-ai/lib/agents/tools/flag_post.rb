@@ -112,7 +112,10 @@ module DiscourseAi
             )
 
             if flag_type == "review_hide"
-              post.hide!(PostActionType.types[:notify_moderators])
+              post.hide!(
+                PostActionType.types[:notify_moderators],
+                acting_user: Discourse.system_user,
+              )
             elsif %w[review_delete review_delete_silence].include?(flag_type)
               PostDestroyer.new(Discourse.system_user, post, context: "flag_post").destroy
 

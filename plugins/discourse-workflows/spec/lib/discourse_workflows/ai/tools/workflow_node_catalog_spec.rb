@@ -341,4 +341,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       include(leftValue: "={{ $json.user.trust_level }}", rightValue: "1"),
     )
   end
+
+  it "includes examples for hiding and unhiding posts" do
+    result = invoke_tool(%w[action:hide_post action:unhide_post])
+
+    expect(result[:nodes].to_h { |node| [node[:type], node[:examples]] }).to match(
+      "action:hide_post" => [
+        include(parameters: include(post_id: "={{ $json.post.id }}", flag_reason: "spam")),
+      ],
+      "action:unhide_post" => [include(parameters: include(post_id: "={{ $json.post.id }}"))],
+    )
+  end
 end

@@ -815,6 +815,61 @@ describe PostRevisor do
           raw: ["Hello world", "hello world"],
         )
       end
+
+      it "unhides a post hidden by flags as its author, before reporting the edit" do
+        post.update(hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+
+        events =
+          DiscourseEvent.track_events do
+            PostRevisor.new(post).revise!(
+              post.user,
+              { raw: "hello world" },
+              revised_at: post.updated_at + 11.minutes,
+            )
+          end
+
+        expect(
+          events.filter_map do |event|
+            event[:event_name] if %i[post_unhidden post_edited].include?(event[:event_name])
+          end,
+        ).to eq(%i[post_unhidden post_edited])
+        expect(events.find { |event| event[:event_name] == :post_unhidden }[:params]).to eq(
+          [post, { acting_user: post.user }],
+        )
+      end
+
+      it "doesn't unhide it when the revision is rolled back" do
+        post.update(hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+
+        events =
+          DiscourseEvent.track_events(:post_unhidden) do
+            result =
+              PostRevisor.new(post).revise!(
+                post.user,
+                { raw: "hello world", title: "x" },
+                revised_at: post.updated_at + 11.minutes,
+              )
+            expect(result).to eq(false)
+          end
+
+        expect(events).to be_empty
+        expect(post.reload).to be_hidden
+      end
+
+      it "doesn't unhide it when someone else edits it" do
+        post.update(hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+
+        events =
+          DiscourseEvent.track_events(:post_unhidden) do
+            PostRevisor.new(post).revise!(
+              moderator,
+              { raw: "hello world" },
+              revised_at: post.updated_at + 11.minutes,
+            )
+          end
+
+        expect(events).to be_empty
+      end
     end
 
     describe "revision much later" do

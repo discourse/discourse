@@ -166,6 +166,17 @@ RSpec.describe ReviewablePost do
         expect(result.transition_to).to eq :approved
         expect(post.reload.hidden).to eq(false)
       end
+
+      it "unhides the post as the reviewer" do
+        post.update!(hidden: true)
+
+        events =
+          DiscourseEvent.track_events(:post_unhidden) do
+            reviewable.reload.perform(admin, :approve_and_unhide)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq([[post, { acting_user: admin }]])
+      end
     end
 
     describe "#perform_reject_and_delete" do

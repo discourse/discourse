@@ -55,10 +55,7 @@ class PostActionDestroyer
 
     post_action.remove_act!(@destroyed_by)
     remove_reviewable_score if post_action.is_flag?
-    if post_action.staff_took_action
-      post_action.post.acting_user = @destroyed_by
-      post_action.post.unhide!
-    end
+    post_action.post.unhide!(acting_user: @destroyed_by) if post_action.staff_took_action
     GivenDailyLike.decrement_for(@destroyed_by.id) if like?
 
     case @post_action_type_id

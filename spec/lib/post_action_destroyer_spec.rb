@@ -127,6 +127,39 @@ RSpec.describe PostActionDestroyer do
       end
     end
 
+    context "with a flag staff took action on" do
+      fab!(:moderator)
+
+      before do
+        PostActionCreator.new(
+          moderator,
+          post,
+          PostActionType.types[:inappropriate],
+          take_action: true,
+        ).perform
+      end
+
+      it "unhides the post as the staff member removing the flag" do
+        events =
+          DiscourseEvent.track_events(:post_unhidden) do
+            PostActionDestroyer.destroy(moderator, post, :inappropriate)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq([[post, { acting_user: moderator }]])
+      end
+
+      it "reports no unhide when the post was already visible again" do
+        post.reload.unhide!
+
+        events =
+          DiscourseEvent.track_events(:post_unhidden) do
+            PostActionDestroyer.destroy(moderator, post, :inappropriate)
+          end
+
+        expect(events).to be_empty
+      end
+    end
+
     context "with a custom flag created after an earlier flag" do
       after { Flag.reset_flag_settings! }
 
