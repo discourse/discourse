@@ -97,6 +97,9 @@ module DiscourseEvents
             user_id: post.user_id,
           },
         )
+        # Revalidate inherited hosts for the *new* Event, without changing
+        # the hosts recorded on the completed occurrence.
+        context[:successor_hostnames] = eligible_successor_hostnames
         context[:invitees] = snapshot_invitees
         context[:successor_post] = nil
         context[:recurrence_anchor] = event.recurrence_anchor_starts_at
@@ -152,13 +155,20 @@ module DiscourseEvents
         end
       end
 
-      def create_successor(rewriter:, next_occurrence:, original_title:, recurrence_anchor:)
+      def create_successor(
+        rewriter:,
+        next_occurrence:,
+        original_title:,
+        recurrence_anchor:,
+        successor_hostnames:
+      )
         return if next_occurrence.nil?
 
         successor_raw =
           rewriter.rewrite(
             "start" => format_date(next_occurrence[:starts_at]),
             "end" => formatted_end(next_occurrence[:ends_at]),
+            "hosts" => successor_hostnames.presence&.join(","),
           )
 
         context[:successor_post] = create_successor_post(
@@ -207,6 +217,19 @@ module DiscourseEvents
             },
           },
         ).reload
+      end
+
+      # An existing Event may retain a host who has subsequently become
+      # ineligible. A successor is a new Event, so it must only inherit hosts
+      # meeting the current new-host validation requirements.
+      def eligible_successor_hostnames
+        category = topic.category
+        event.hosts.filter_map do |host|
+          next if !host.active? || host.suspended? || host.staged?
+          next if category && !host.guardian.can_see_category?(category)
+
+          host.username
+        end
       end
 
       def snapshot_invitees

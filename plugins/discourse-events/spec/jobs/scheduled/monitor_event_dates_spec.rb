@@ -1637,6 +1637,75 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         end
       end
 
+      it "omits a subsequently suspended host from the successor but preserves the archived hosts" do
+        continuing_host = Fabricate(:user, refresh_auto_groups: true)
+        suspended_host = Fabricate(:user, refresh_auto_groups: true)
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring event with an inherited suspended host"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week" hosts="#{continuing_host.username},#{suspended_host.username}"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        event = post.reload.event
+        event_date = event.event_dates.pending.first
+        expect(event.hosts.map(&:id)).to contain_exactly(continuing_host.id, suspended_host.id)
+
+        suspended_host.update_columns(suspended_till: 1.year.from_now)
+        expect(suspended_host.reload.suspended?).to eq(true)
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        archived = post.reload
+        expect(archived.event.reload.recurrence).to be_nil
+        expect(archived.event.hosts.map(&:id)).to contain_exactly(
+          continuing_host.id,
+          suspended_host.id,
+        )
+        expect(archived.raw).to include(suspended_host.username)
+        expect(event_date.reload.finished_at).to be_present
+
+        successor_topic = Topic.where(title:).where.not(id: post.topic_id).sole
+        successor_post = successor_topic.first_post.reload
+        expect(successor_post.event.hosts.map(&:id)).to eq([continuing_host.id])
+        expect(successor_post.raw).to include(continuing_host.username)
+        expect(successor_post.raw).not_to include(suspended_host.username)
+        expect(successor_post.event.recurrence).to eq("every_week")
+      end
+
+      it "removes the successor hosts attribute when no inherited host remains eligible" do
+        suspended_host = Fabricate(:user, refresh_auto_groups: true)
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring event with no eligible remaining hosts"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week" hosts="#{suspended_host.username}"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        event_date = post.reload.event.event_dates.pending.first
+        suspended_host.update_columns(suspended_till: 1.year.from_now)
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        expect(post.reload.event.hosts.map(&:id)).to eq([suspended_host.id])
+        expect(event_date.reload.finished_at).to be_present
+
+        successor_topic = Topic.where(title:).where.not(id: post.topic_id).sole
+        successor_post = successor_topic.first_post.reload
+        expect(successor_post.event.hosts).to be_empty
+        expect(successor_post.raw).not_to match(/\shosts=/)
+        expect(successor_post.event.recurrence).to eq("every_week")
+      end
+
       it "does not publish a successor for a silenced event author" do
         author = Fabricate(:user, refresh_auto_groups: true)
         SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
