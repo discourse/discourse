@@ -55,7 +55,12 @@ For cleanup behavior:
 - Destroying a group enqueues `:cleanup_acls_for_deleted`.
 - `Jobs::CleanupAclsForDeleted` removes the group id from ACL rows.
 - Destroying a user enqueues `:cleanup_acls_for_deleted`.
+- After the user row is deleted and before the destruction transaction completes, all their owner grants transfer to the same randomly selected eligible admin (or the system user if none exists), preserving co-owners and ACL `source` and removing redundant lower grants for the recipient. The service uses a supplied `user_id`, `username`, and `deleted_at` snapshot without looking up the deleted user.
+- Each transferred target has an `assume_access_control_ownership` staff action with the recipient admin as actor, and the deleted user's ID, username, and deletion timestamp in context, including for quiet deletions.
+- Failed deletion rolls back ownership transfers and their audit records. Repeated handoffs and cleanup jobs do not remove or duplicate replacement ownership.
+- Handoffs support stored target types whose classes are unavailable.
 - `Jobs::CleanupAclsForDeleted` removes the user id from ACL rows.
+- Cleanup skips user IDs that currently exist, while still processing a deleted group supplied in the same job.
 - ACL rows with no remaining group or user ids are deleted.
 - ACL rows that still have user ids are preserved.
 - ACL rows that still have group ids are preserved.

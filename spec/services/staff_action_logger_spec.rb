@@ -47,6 +47,33 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "#log_assume_access_control_ownership" do
+    fab!(:deleted_user, :user)
+    fab!(:owner_acl) do
+      Fabricate(:access_control_list_with_users, permission: "owner", users: [deleted_user])
+    end
+
+    it "records the new owner, target, and departing user's identity" do
+      deleted_at = Time.zone.parse("2026-10-26T01:23:45Z")
+      entry =
+        logger.log_assume_access_control_ownership(
+          owner_acl,
+          user_id: deleted_user.id,
+          username: deleted_user.username,
+          deleted_at:,
+        )
+
+      expect(entry).to have_attributes(
+        action: UserHistory.actions[:assume_access_control_ownership],
+        acting_user_id: admin.id,
+        target_user_id: admin.id,
+        subject: "#{owner_acl.target_type} (#{owner_acl.target_id})",
+        context:
+          "deleted_user_id: #{deleted_user.id}\ndeleted_username: #{deleted_user.username}\ndeleted_at: #{deleted_at.iso8601}",
+      )
+    end
+  end
+
   describe "log_user_deletion" do
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 
