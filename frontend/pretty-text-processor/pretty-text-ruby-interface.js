@@ -99,14 +99,6 @@ export class PrettyTextRubyInterface {
     return this.#processor(optInput).cook(text);
   }
 
-  static updateBBCodeAttributes(raw, tagName, attributes, optInput) {
-    return this.#processor(optInput).updateBBCodeAttributes(
-      raw,
-      tagName,
-      attributes
-    );
-  }
-
   static scanBBCodeTags(raw, tag) {
     return scanBBCodeTags(raw, tag);
   }

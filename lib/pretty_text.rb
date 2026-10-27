@@ -258,19 +258,6 @@ module PrettyText
     protect { v8.call("__PrettyText.spliceHashtags", raw.to_s, replacements) }
   end
 
-  def self.update_bbcode_attributes(raw, tag_name, attributes, opts = {})
-    protect do
-      DiscourseEvent.trigger(:markdown_context, v8)
-      v8.call(
-        "__PrettyText.updateBBCodeAttributes",
-        raw,
-        tag_name,
-        attributes,
-        markdown_options(opts),
-      )
-    end
-  end
-
   def self.scan_bbcode_tags(raw, tag:)
     protect { v8.call("__PrettyText.scanBBCodeTags", raw.to_s, tag.to_s) }
   end

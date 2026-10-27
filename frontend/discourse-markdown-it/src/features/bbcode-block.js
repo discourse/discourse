@@ -111,30 +111,6 @@ export function serializeBBCodeAttr(value, name) {
   return ` ${name}="${stringValue.replaceAll('"', "")}"`;
 }
 
-export function updateBBCodeTag(tag, attributes) {
-  const remaining = { ...attributes };
-  const matches = [...tag.matchAll(new RegExp(BBCODE_ATTR_REGEXP))].slice(1);
-
-  for (const match of matches.reverse()) {
-    const name = match[1];
-    if (!Object.hasOwn(attributes, name)) {
-      continue;
-    }
-
-    const start = tag.slice(0, match.index).search(/\s*$/);
-    tag =
-      tag.slice(0, start) +
-      serializeBBCodeAttr(attributes[name], name) +
-      tag.slice(match.index + match[0].length);
-    delete remaining[name];
-  }
-
-  const added = Object.entries(remaining)
-    .map(([name, value]) => serializeBBCodeAttr(value, name))
-    .join("");
-  return tag.slice(0, -1) + added + "]";
-}
-
 /** Return the source spans of attributes using the Markdown parser's grammar. */
 export function bbCodeAttributeTokens(opening) {
   const matches = [
