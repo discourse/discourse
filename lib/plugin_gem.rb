@@ -147,7 +147,7 @@ module PluginGem
       .temporary(frozen: true) do
         definition = Bundler::Definition.build(gemfile, "#{gemfile}.lock", nil)
         definition.ensure_equivalent_gemfile_and_lockfile(true)
-        unless definition.locked_checksums
+        if !definition.locked_checksums
           raise "Plugin #{File.basename(dir)}'s Gemfile.lock has no checksums; run `bundle lock --add-checksums` in #{dir} and commit it"
         end
         definition.locked_gems
