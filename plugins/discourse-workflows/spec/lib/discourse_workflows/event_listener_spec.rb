@@ -62,6 +62,27 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "unliked-trigger")
   end
 
+  it "runs Post locked once per lock, including the lock a staff edit makes, and Post unlocked on unlock" do
+    moderator = Fabricate(:moderator)
+    post = Fabricate(:post, topic:, user:)
+    create_published_workflow("locked-trigger", "trigger:post_locked")
+    create_published_workflow("unlocked-trigger", "trigger:post_unlocked")
+    create_published_workflow("edited-trigger", "trigger:post_edited", type_version: "2.0")
+    SiteSetting.staff_edit_locks_post = true
+
+    PostRevisor.new(post).revise!(moderator, { raw: "#{post.raw} with an edit by a moderator" })
+    PostLocker.new(post.reload, admin).lock
+
+    expect(enqueued_trigger_node_ids).to eq(%w[locked-trigger edited-trigger])
+    expect(trigger_data_for("locked-trigger")).to include("actor" => include("id" => moderator.id))
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    PostLocker.new(post, admin).unlock
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("unlocked-trigger")
+    expect(trigger_data_for("unlocked-trigger")).to include("actor" => include("id" => admin.id))
+  end
+
   it "runs Post hidden once when flags hide a post, and Post unhidden once when its author edits it" do
     author = Fabricate(:user, refresh_auto_groups: true)
     post = Fabricate(:post, topic:, user: author)
