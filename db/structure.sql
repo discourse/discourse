@@ -21989,6 +21989,13 @@ CREATE INDEX index_directory_items_on_period_type_and_posts_read_and_id ON publi
 
 
 --
+-- Name: index_directory_items_on_period_type_and_solutions_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directory_items_on_period_type_and_solutions_and_id ON public.directory_items USING btree (period_type, solutions, id);
+
+
+--
 -- Name: index_directory_items_on_period_type_and_topic_count_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26164,6 +26171,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261027013355'),
 ('20261026231322'),
 ('20261026231200'),
 ('20261021063131'),

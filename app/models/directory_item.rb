@@ -262,6 +262,7 @@ end
 #  index_directory_items_on_period_type_and_likes_received_and_id  (period_type,likes_received,id)
 #  index_directory_items_on_period_type_and_post_count_and_id      (period_type,post_count,id)
 #  index_directory_items_on_period_type_and_posts_read_and_id      (period_type,posts_read,id)
+#  index_directory_items_on_period_type_and_solutions_and_id       (period_type,solutions,id)
 #  index_directory_items_on_period_type_and_topic_count_and_id     (period_type,topic_count,id)
 #  index_directory_items_on_period_type_and_topics_entered_and_id  (period_type,topics_entered,id)
 #  index_directory_items_on_period_type_and_user_id                (period_type,user_id) UNIQUE
