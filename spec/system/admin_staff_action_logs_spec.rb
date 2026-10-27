@@ -30,7 +30,6 @@ describe "Admin staff action logs" do
   end
 
   let(:staff_action_logs_page) { PageObjects::Pages::AdminStaffActionLogs.new }
-  let(:cdp) { PageObjects::CDP.new }
 
   before { sign_in(current_user) }
 
