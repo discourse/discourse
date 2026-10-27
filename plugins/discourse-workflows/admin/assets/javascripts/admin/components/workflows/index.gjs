@@ -15,7 +15,6 @@ import DiscourseURL, {
   applyQueryParams,
   searchParamsFromPath,
 } from "discourse/lib/url";
-import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -337,7 +336,7 @@ export default class WorkflowsIndex extends Component {
         >
           <:head>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.workflow_name"
+                "discourse_workflows.name"
               }}</th>
             <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.creator"

@@ -29,9 +29,7 @@ ug:
       close: "تاقا"
       delete: "ئۆچۈر"
       edit: "تەھرىر"
-      back: "كەينى"
       save: "ساقلا"
-      apply: "قوللان"
       update_range:
         all_time: "ھەممە ۋاقىت"
       custom_range_from: "كىمدىن"

@@ -22,7 +22,6 @@ import discourseLater from "discourse/lib/later";
 import DiscourseURL from "discourse/lib/url";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import { or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";

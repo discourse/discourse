@@ -35,20 +35,31 @@ module Boards
 
     def update_acl(board:, guardian:)
       raw = context[:raw_board_params] || {}
-      return if !raw.key?("acl")
-      flattened_acl = raw["acl"]
+      return if !raw.key?("acl") && !raw.key?("owner_user_ids")
+      flattened_acl =
+        raw["acl"] ||
+          AccessControlList
+            .where(target: board)
+            .flattened_list
+            .reject { |entry| entry[:permission] == Acl::Permissions::OWNER }
 
-      AccessControlListManager.call(
+      AccessControlList::Apply.call(
         guardian:,
         params: {
-          target: board,
-          flattened_acl: flattened_acl,
-          owner: Boards::PLUGIN_NAME,
+          acl_target_type: board.class.name,
+          acl_target_id: board.id,
+          acl_entries: flattened_acl,
+          source: Boards::PLUGIN_NAME,
+          initial_owner_user_id: board.created_by_id,
+          owner_user_ids: raw["owner_user_ids"],
         },
       ) do |result|
-        on_success do |previous_permissions:, new_permissions:|
+        on_success do |current_acl:, replacement:|
           context[:histories] ||= {}
-          context[:histories][:permissions_changed] = { previous_permissions:, new_permissions: }
+          context[:histories][:permissions_changed] = {
+            previous_permissions: current_acl.permission_lookup,
+            new_permissions: replacement.permissions,
+          }
         end
 
         on_failure do
@@ -66,7 +77,7 @@ module Boards
       if raw.key?("tag_names")
         raw["tag_ids"] = VisibleTagResolver.resolve_names!(raw.delete("tag_names"), guardian:)
       end
-      board.assign_attributes(raw.except("columns", "acl"))
+      board.assign_attributes(raw.except("columns", "acl", "owner_user_ids"))
       board.updated_by_id = guardian.user.id
 
       if board.name_changed?

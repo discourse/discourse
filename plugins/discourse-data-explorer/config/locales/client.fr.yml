@@ -40,7 +40,6 @@ fr:
       admins_only: "L'explorateur de données n'est disponible que pour les administrateurs."
       allow_groups: "Autoriser les groupes à accéder à cette requête"
       title: "Explorateur de données"
-      create: "Créer"
       create_placeholder: "Nom de la requête…"
       description_placeholder: "Saisissez une description ici"
       ai:
@@ -58,7 +57,6 @@ fr:
         sql_label: "SQL"
         optional: "facultatif"
       import:
-        label: "Téléverser"
         unparseable_json: "Fichier JSON non analysable."
         wrong_json: "Fichier JSON incorrect. Un fichier JSON doit contenir un objet « query », qui doit au moins avoir une propriété « sql »."
       help:
@@ -112,7 +110,6 @@ fr:
         results_json: "Résultats (JSON)"
         results_csv: "Résultats (CSV)"
         query_json: "Définition de la requête (JSON)"
-      others_dirty: "Une requête comporte des modifications non enregistrées qui seront perdues si vous quittez la page"
       run_time: "Requête exécutée en %{value} millisecondes."
       cached_result_notice: "Affichage des résultats mis en cache datant de %{relative_time}."
       result_count:
@@ -132,7 +129,6 @@ fr:
       column: "Colonne %{number}"
       save_params: "Définir les valeurs par défaut"
       reset_params: "Réinitialiser"
-      search_placeholder: "Recherche…"
       no_search_results: "Désolé, nous n'avons trouvé aucun résultat correspondant à votre texte."
       form:
         errors:

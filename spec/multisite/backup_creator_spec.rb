@@ -14,7 +14,10 @@ RSpec.describe BackupRestore::Creator, type: :multisite do
       observations << [group, Thread.current, RailsMultisite::ConnectionManagement.current_db]
     end
 
-    Timeout.timeout(10) { creator.send(:download_upload_groups, [1, 2]) }
+    # Workers opening a new site connection at once deadlock the test transaction setup.
+    RailsMultisite::ConnectionManagement.with_connection(database) do
+      Timeout.timeout(10) { creator.send(:download_upload_groups, [1, 2]) }
+    end
 
     results = 2.times.map { observations.pop }
     expect(results.map(&:first).sort).to eq([1, 2])

@@ -561,14 +561,30 @@
       width: auto;
       padding-top: 0;
       height: auto;
+    }
+  }
 
-      .avatar-flair {
-        background-size: 12px 12px;
-        width: 12px;
-        height: 12px;
-        right: -3px;
-        bottom: -2px;
-      }
+  // Scale flair to the small avatar wherever it renders (gutter on desktop,
+  // header on mobile); core sizes it for the 45px topic avatar.
+  .topic-avatar .avatar-flair {
+    background-size: 12px 12px;
+    width: 12px;
+    height: 12px;
+    right: -3px;
+    bottom: -2px;
+
+    &.rounded {
+      background-size: 9px 9px;
+      border-radius: 50%;
+      width: 13px;
+      height: 13px;
+      right: -4px;
+      bottom: -3px;
+    }
+
+    .d-icon {
+      width: 8px;
+      height: 8px;
     }
   }
 
@@ -1354,77 +1370,82 @@
   }
 
   // ── Individual nested post overrides ──
-  // Gutter stays wide enough for the avatar so sticky avatars remain attached
-  // to the mobile rail, while children remain indented in the content column.
+  // Avatars render inline in the header (see the post template), so the
+  // gutter only holds a thin rail and each level costs ~12px of indent.
   .nested-post {
-    --nested-line-gutter: var(--nested-avatar-size);
+    --nested-line-gutter: 0.5rem;
+    --nested-line-width: 2px;
     --nested-column-gap: var(--space-1);
-    --nested-mobile-line-offset: calc(var(--nested-line-gutter) / 2);
-    --nested-line-center-adjust: var(--nested-line-width);
-    --nested-mobile-line-nudge: calc(-1 * var(--space-1));
-    --nested-mobile-line-start: calc(var(--nested-avatar-size) + 6px);
-    grid-template-columns: var(--nested-line-gutter) 1fr;
+    --nested-vertical-gap: var(--space-1);
+    --nested-rail-color: var(--primary-low);
+    grid-template-columns: var(--nested-line-gutter) minmax(0, 1fr);
     column-gap: var(--nested-column-gap);
 
-    // Tighter vertical spacing between siblings
-    --nested-vertical-gap: 0.25em;
-
-    // Keep the gutter bounded to the post row on mobile too. The depth-line
-    // remains available as the collapse target for this post, but the sticky
-    // avatar stops with the post instead of following the entire child subtree.
     > .nested-post__gutter {
       grid-row: 1;
       position: relative;
-      z-index: 1;
-      pointer-events: none;
+      margin-bottom: 0;
 
-      .topic-avatar,
-      .nested-post__placeholder-avatar {
-        pointer-events: auto;
+      // Tint the rail with the poster's avatar colour, clamping lightness so
+      // near-white or near-black avatars stay visible in both colour schemes.
+      &.--avatar-color {
+        --nested-rail-color: color-mix(
+          in srgb,
+          var(--nested-avatar-color) 75%,
+          var(--primary-medium)
+        );
+
+        @supports (color: oklch(from red l c h)) {
+          --nested-rail-color: oklch(
+            from var(--nested-avatar-color) clamp(0.55, l, 0.72) c h
+          );
+        }
       }
     }
 
-    // Depth-line: vertical bar under the avatar, no decorative hooks.
+    // Posts without a collapse target (e.g. capped at max depth) still get
+    // a rail so every level reads the same.
+    > .nested-post__gutter:not(:has(.nested-post__depth-line))::after {
+      content: "";
+      position: absolute;
+      left: calc(50% - var(--nested-line-width) / 2);
+      top: var(--space-1);
+      bottom: var(--space-1);
+      width: var(--nested-line-width);
+      border-radius: var(--nested-line-width);
+      background: var(--nested-rail-color);
+    }
+
+    // The rail spans this post only; children draw their own, one level in.
     > .nested-post__gutter .nested-post__depth-line {
       position: absolute;
-      top: var(--nested-mobile-line-start);
-      bottom: 0;
-      left: var(--nested-mobile-line-nudge);
+      inset: 0;
       min-height: 0;
-      pointer-events: auto;
 
-      &::after {
-        left: calc(
-          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
-        );
-        top: 0;
-        bottom: 0;
+      // Widen the tap target beyond the visible rail.
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0 calc(-1 * var(--nested-column-gap)) 0 -0.25rem;
       }
 
-      // Override the desktop L-bend on collapsed lines — straight bar
+      &::after,
       &--collapsed::after {
-        border: none;
-        background: var(--primary-low);
+        left: calc(50% - var(--nested-line-width) / 2);
+        top: var(--space-1);
+        bottom: var(--space-1);
         width: var(--nested-line-width);
-        border-radius: 0;
-        left: calc(
-          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
-        );
-        bottom: 0;
+        border: none;
+        border-radius: var(--nested-line-width);
+        background: var(--nested-rail-color);
+        opacity: 1;
       }
     }
 
-    // Hide the collapse icon — tapping the line itself collapses
     .nested-post__depth-line-icon {
       display: none;
     }
 
-    .nested-post__collapsed-bar {
-      padding-inline: 0;
-    }
-
-    // Mobile strips desktop connector hooks, so the desktop padding used to
-    // make room for those hooks must not shift the post's internal grid math.
     &:not(.--depth-0) {
       padding-top: 0;
 
@@ -1434,38 +1455,157 @@
       }
     }
 
-    &:not(.--depth-0) + &:not(.--depth-0) {
+    &:not(.--depth-0) + &:not(.--depth-0),
+    .nested-post-children > &:first-child {
       margin-top: var(--nested-vertical-gap);
     }
 
-    // No hover interaction on touch — depth-line handles collapse
     > .nested-post__parent-line-btn {
       display: none;
     }
 
-    // Root threads rendered as full-width white cards.
-    // padding-left: 0 so the gutter starts at the card edge (= viewport
-    // edge after negative margins), giving consistent line spacing.
+    // Root threads are full-width cards, so the card edge already separates
+    // them; dropping their rail gives every level below one step of indent.
+    // The depth-line stays in the DOM (0-width) for assistive tech, and the
+    // header tap covers touch.
     &.--depth-0 {
+      grid-template-columns: 0 minmax(0, 1fr);
+      column-gap: 0;
       background: var(--secondary);
       border-radius: 0;
-      padding: 0.5em 0.5em 0.5em 0;
+      padding: var(--space-2);
       margin-top: 0;
+
+      > .nested-post__gutter::after,
+      > .nested-post__gutter .nested-post__depth-line::before,
+      > .nested-post__gutter .nested-post__depth-line::after {
+        content: none;
+      }
     }
 
-    // Compact post headers
+    // Single-line header: avatar · name · title ········ date
     .nested-post__header {
-      flex-wrap: wrap;
+      align-items: center;
       gap: var(--space-2);
+      min-height: var(--nested-avatar-size);
+
+      > .topic-avatar {
+        flex: none;
+        width: auto;
+        margin: 0;
+        padding: 0;
+        border-top: none;
+        float: none;
+      }
 
       .topic-meta-data {
+        display: contents;
         margin-left: 0;
+
+        .names {
+          flex: 0 1 auto;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          align-items: baseline;
+          gap: var(--space-1);
+          min-width: 0;
+          overflow: hidden;
+          white-space: nowrap;
+
+          span {
+            margin: 0;
+          }
+
+          .first {
+            flex: none;
+            font-size: var(--font-down-1);
+          }
+
+          // One identity per post; .first already follows the
+          // username/full-name priority setting.
+          .second {
+            display: none;
+          }
+
+          .user-title {
+            flex: 0 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: var(--font-down-2);
+            font-weight: normal;
+            color: var(--primary-medium);
+
+            a {
+              color: inherit;
+            }
+          }
+        }
       }
+
+      .post-infos {
+        flex: none;
+        order: 2;
+        transform: none;
+      }
+    }
+
+    // Fills the gap between name and date; bleeds vertically for a
+    // comfortable tap target without growing the header.
+    .nested-post__header-collapse {
+      order: 1;
+      flex: 1 1 0;
+      align-self: stretch;
+      min-width: 0;
+      margin-block: calc(-1 * var(--space-2));
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
     }
 
     .nested-post__content {
       overflow-x: auto;
+      margin-top: var(--space-1);
     }
+
+    .nested-post__menu {
+      margin: 0;
+
+      nav.post-controls .actions .btn {
+        min-height: 0;
+        padding-block: var(--space-1);
+      }
+    }
+
+    .nested-post__collapsed-bar {
+      padding-inline: 0;
+    }
+
+    .nested-post__collapsed-avatar {
+      display: flex;
+    }
+
+    .nested-post__placeholder--ignored {
+      min-height: var(--nested-avatar-size);
+      padding-bottom: var(--space-2);
+    }
+
+    .nested-post__placeholder--deleted {
+      margin-top: 0;
+      padding-bottom: var(--space-2);
+    }
+
+    .nested-post__placeholder-avatar {
+      position: static;
+      flex: none;
+    }
+  }
+
+  // Set on the element itself so it wins over the depth colour it inherits.
+  .nested-post__depth-line:focus-visible,
+  .nested-post__depth-line--highlighted {
+    --nested-rail-color: var(--tertiary);
   }
 }
 

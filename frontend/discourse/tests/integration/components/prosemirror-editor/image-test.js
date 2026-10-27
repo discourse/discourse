@@ -1,4 +1,11 @@
-import { click, find, settled } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  settled,
+  triggerKeyEvent,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -230,6 +237,38 @@ module(
       assert
         .dom(".composer-video-node__error")
         .doesNotExist("a missing thumbnail is not an error");
+    });
+
+    test("lightbox shows the document's images, skipping videos and audio", async function (assert) {
+      pretender.post("/uploads/lookup-urls", (request) =>
+        videoLookupResponse(request, "galleryVideoHash")
+      );
+      const [editor] = await setupRichEditor(
+        assert,
+        "![one](/images/avatar.png)\n\n![clip|video](upload://galleryVideoHash.mp4)\n\n![song|audio](upload://galleryAudioHash.mp3)\n\n![two](/images/avatar.png?2)"
+      );
+      const { view } = editor;
+      let secondImagePos;
+      view.state.doc.descendants((node, pos) => {
+        if (node.attrs.alt === "two") {
+          secondImagePos = pos;
+        }
+      });
+
+      view.dispatch(
+        view.state.tr.setSelection(
+          NodeSelection.create(view.state.doc, secondImagePos)
+        )
+      );
+      await settled();
+      await click(view.nodeDOM(secondImagePos).querySelector("img"));
+      await waitFor(".pswp--open");
+
+      assert.dom(".pswp__counter", document.body).hasText("2 / 2");
+      assert.dom(".pswp__caption-title", document.body).hasText("two");
+
+      await triggerKeyEvent(".pswp", "keydown", "Escape");
+      await waitUntil(() => !document.querySelector(".pswp"));
     });
 
     test("video player can be selected before and after playback", async function (assert) {

@@ -3,6 +3,7 @@
 RSpec.describe DiscourseWorkflows::Nodes::UserModerationChanged::V1 do
   fab!(:user)
   fab!(:admin)
+  fab!(:post) { Fabricate(:post, user: user) }
 
   it "dispatches moderation changes with safe actor data and filters selected changes" do
     freeze_time
@@ -18,9 +19,24 @@ RSpec.describe DiscourseWorkflows::Nodes::UserModerationChanged::V1 do
       end
     Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
 
-    UserSuspender.new(user, by_user: admin, reason: "Spam", suspended_till: expiry).suspend
+    UserSuspender.new(
+      user,
+      by_user: admin,
+      reason: "Spam",
+      message: "Bye",
+      post_id: post.id,
+      suspended_till: expiry,
+    ).suspend
     UserSuspender.unsuspend(user, by_user: admin)
-    UserSilencer.silence(user, admin, reason: "Spam", silenced_till: expiry, keep_posts: true)
+    UserSilencer.silence(
+      user,
+      admin,
+      reason: "Spam",
+      message_body: "Hush",
+      post_id: post.id,
+      silenced_till: expiry,
+      keep_posts: true,
+    )
     UserSilencer.unsilence(user, admin)
 
     jobs = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map { |job| job["args"].first }
@@ -28,6 +44,8 @@ RSpec.describe DiscourseWorkflows::Nodes::UserModerationChanged::V1 do
     expect(data.pluck("change")).to eq(%w[suspended unsuspended silenced unsilenced])
     expect(data.pluck("reason")).to eq(["Spam", nil, "Spam", nil])
     expect(data.pluck("expires_at")).to eq([expiry.iso8601, nil, expiry.iso8601, nil])
+    expect(data.pluck("post_id")).to eq([post.id, nil, post.id, nil])
+    expect(data.pluck("message")).to eq(["Bye", nil, "Hush", nil])
     expect(
       jobs.filter_map do |job|
         job["trigger_data"]["change"] if job["trigger_node_id"] == "suspended"
@@ -46,7 +64,13 @@ RSpec.describe DiscourseWorkflows::Nodes::UserModerationChanged::V1 do
 
     output = described_class.from_event(:user_silenced, user: user).output
 
-    expect(output).to include(actor: nil, reason: nil, expires_at: user.silenced_till.iso8601)
+    expect(output).to include(
+      actor: nil,
+      reason: nil,
+      message: nil,
+      post_id: nil,
+      expires_at: user.silenced_till.iso8601,
+    )
     expect(output).to match_node_output_schema(described_class)
   end
 

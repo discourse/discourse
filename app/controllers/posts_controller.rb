@@ -1014,6 +1014,9 @@ class PostsController < ApplicationController
 
     PostRevisor.tracked_topic_fields.each_key do |f|
       if f == :tags
+        if params[f].present? && !params[f].is_a?(Array)
+          raise Discourse::InvalidParameters.new(:tags)
+        end
         params.permit(tags: %i[id name])
       else
         params.permit(f => [])

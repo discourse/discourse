@@ -1926,6 +1926,49 @@ RSpec.describe PostsController do
 
       before { sign_in(user) }
 
+      it "rejects scalar tags before queuing a post" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.approve_post_count = 1
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: "macos",
+               }
+        end.not_to change(ReviewableQueuedPost, :count)
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_params", message: "tags"))
+      end
+
+      it "queues and approves a topic with blank tags" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.approve_post_count = 1
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is the test title for the topic",
+               tags: "",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["action"]).to eq("enqueued")
+        queued_post = ReviewableQueuedPost.find_by!(target_created_by: user)
+
+        sign_in(admin)
+        put "/review/#{queued_post.id}/perform/approve_post.json",
+            params: {
+              version: queued_post.version,
+            }
+
+        expect(response.status).to eq(200)
+        expect(queued_post.reload).to be_approved
+        expect(queued_post.target.topic.tags).to be_empty
+      end
+
       context "when fast typing" do
         before do
           SiteSetting.fast_typing_threshold = "standard"

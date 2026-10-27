@@ -32,6 +32,7 @@ pl_PL:
       default_query_notice: "To jest zapytanie domyślne, którego nie można edytować. Aby edytować zapytanie SQL, utwórz nowe zapytanie."
       view_query: "Widok"
       queries: "Zapytania"
+      back_to_queries: "Powrót do zapytań"
       query_created: "Zapytanie utworzone!"
       mode:
         label: "Tryb tworzenia zapytań"
@@ -42,7 +43,7 @@ pl_PL:
       hidden_relation: "Nie masz dostępu do tej treści."
       allow_groups: "Zezwól grupom na dostęp do tego zapytania"
       title: "Eksplorator danych"
-      create: "Utwórz"
+      create: "Utwórz zapytanie"
       new_query: "Nowe zapytanie"
       create_placeholder: "Nazwa zapytania…"
       description_placeholder: "Wprowadź opis zapytania"
@@ -63,7 +64,7 @@ pl_PL:
         sql_label: "SQL"
         optional: "opcjonalne"
       import:
-        label: "Import"
+        label: "Importuj zapytanie"
         unparseable_json: "Nieprzetwarzalny plik JSON."
         wrong_json: "Nieprawidłowy plik JSON. Plik JSON powinien zawierać obiekt 'query', który powinien mieć przynajmniej właściwość 'sql'."
       help:
@@ -125,7 +126,6 @@ pl_PL:
         results_json: "Wyniki (JSON)"
         results_csv: "Wyniki (CSV)"
         query_json: "Definicja zapytania (JSON)"
-      others_dirty: "Zapytanie ma niezapisane zmiany, które utracisz, jeśli przejdziesz w inne miejsce."
       run_time: "Zapytanie zakończone w %{value} ms."
       cached_result_notice: "Wyświetlanie wyników z pamięci podręcznej z %{relative_time}."
       result_count:
@@ -150,7 +150,7 @@ pl_PL:
       column: "Kolumna %{number}"
       save_params: "Ustaw wartości domyślne"
       reset_params: "Przywróć"
-      search_placeholder: "Wyszukiwanie..."
+      search_placeholder: "Wyszukaj zapytania…"
       filter_by_tag: "Filtruj według tagu"
       filter_by_this_tag: "Filtruj listę według tego tagu"
       no_search_results: "Nie znaleziono żadnych wyników."

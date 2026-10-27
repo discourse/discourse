@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq } from "discourse/truth-helpers";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";

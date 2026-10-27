@@ -4,7 +4,6 @@ import {
   SCROLLER_HEIGHT,
   timelineDate,
 } from "discourse/components/topic-timeline/container";
-import { and, not } from "discourse/truth-helpers";
 import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button.gjs";

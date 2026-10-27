@@ -73,7 +73,6 @@ async function initLightbox(elem, additionalData = {}) {
   const { default: PhotoSwipeLightbox } = await waitForPromise(
     import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
   );
-  const isTestEnv = isTesting() || isRailsTesting();
   const canDownload =
     !siteSettings.prevent_anons_from_downloading_files || !!currentUser;
   const canQuoteImage = !!currentUser;
@@ -95,47 +94,21 @@ async function initLightbox(elem, additionalData = {}) {
   });
 
   const lightboxEl = new PhotoSwipeLightbox({
+    ...sharedOptions(() => lightboxEl.pswp),
     dataSource: items,
-    arrowPrevTitle: i18n("lightbox.previous"),
-    arrowNextTitle: i18n("lightbox.next"),
-    closeTitle: i18n("lightbox.close"),
-    zoomTitle: i18n("lightbox.zoom"),
-    errorMsg: i18n("lightbox.error"),
-    showHideAnimationType: isTestEnv ? "none" : "zoom",
     counter: false,
-    escKey: false,
-    tapAction,
     paddingFn,
-    pswpModule: async () =>
-      await waitForPromise(
-        import(/* dynamicChunkName: "photoswipe" */ "photoswipe")
-      ),
-    appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 
-  const keyDownHandler = function (event) {
-    if (event.key !== "Escape") {
-      return;
-    }
-
-    event.stopPropagation();
-    event.preventDefault();
-
-    lightboxEl.pswp.close();
-  };
+  closeOnEscape(lightboxEl);
 
   lightboxEl.on("afterInit", () => {
     const el = lightboxEl.pswp.currSlide.data.element;
     el.querySelector(".meta")?.classList.add("open");
-
-    lightboxEl.pswp.element.addEventListener("keydown", (event) =>
-      keyDownHandler(event)
-    );
   });
 
   lightboxEl.on("close", function () {
     lightboxEl.pswp.element.classList.add("pswp--behind-header");
-    lightboxEl.pswp.element.removeEventListener("keydown", keyDownHandler);
   });
 
   lightboxEl.on("destroy", () => {
@@ -411,15 +384,6 @@ async function initLightbox(elem, additionalData = {}) {
         })
     )
   );
-  function tapAction(pt, event) {
-    const pswp = lightboxEl.pswp;
-    if (event.target.classList.contains("pswp__img")) {
-      pswp?.element?.classList.toggle("pswp--ui-visible");
-    } else {
-      pswp?.close();
-    }
-  }
-
   function paddingFn(viewportSize, itemData) {
     if (viewportSize.x < 1200 || caps.isMobileDevice) {
       return { top: 0, bottom: 0, left: 0, right: 0 };
@@ -433,4 +397,209 @@ async function initLightbox(elem, additionalData = {}) {
   }
 
   lightboxEl.init();
+}
+
+/**
+ * Opens a lightbox over standalone media elements, for content that isn't
+ * rendered as `.lightbox` links (editor images, pending uploads).
+ *
+ * @param {Array<{type?: "image"|"video", src: string, element?: HTMLImageElement|HTMLVideoElement, alt?: string}>} items
+ *   `alt` labels the slide and its caption; images default to the element's alt
+ * @param {{index?: number}} [options]
+ * @returns {Promise<void>} resolves when the lightbox closes, or right away
+ *   when another lightbox is already open
+ */
+export async function openLightbox(items, { index = 0 } = {}) {
+  const dataSource = items.map(buildSlideData);
+
+  // loaded up front: with a lazily loaded core, two quick opens race and one never settles
+  const [{ default: PhotoSwipeLightbox }, { default: PhotoSwipe }] =
+    await waitForPromise(
+      Promise.all([
+        import(
+          /* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox"
+        ),
+        import(/* dynamicChunkName: "photoswipe" */ "photoswipe"),
+      ])
+    );
+  const lightboxEl = new PhotoSwipeLightbox({
+    ...sharedOptions(() => lightboxEl.pswp),
+    dataSource,
+    pswpModule: PhotoSwipe,
+  });
+
+  closeOnEscape(lightboxEl);
+
+  lightboxEl.on("uiRegister", function () {
+    lightboxEl.pswp.ui.registerElement({
+      name: "caption",
+      order: 11,
+      isButton: false,
+      appendTo: "root",
+      html: "",
+      onInit: (caption, pswp) => {
+        const titleEl = document.createElement("div");
+        titleEl.className = "pswp__caption-title";
+        caption.appendChild(titleEl);
+
+        pswp.on("change", () => {
+          titleEl.textContent = pswp.currSlide?.data.alt || "";
+        });
+      },
+    });
+  });
+
+  lightboxEl.on("contentLoad", (event) => {
+    const { content } = event;
+    if (content.type !== "video") {
+      return;
+    }
+
+    event.preventDefault();
+
+    const video = document.createElement("video");
+    video.className = "pswp__video";
+    video.src = content.data.src;
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    if (content.data.alt) {
+      video.setAttribute("aria-label", content.data.alt);
+    }
+    video.addEventListener(
+      "loadedmetadata",
+      () => syncSlideSize(content, video.videoWidth, video.videoHeight),
+      { once: true }
+    );
+    // native controls swallow key and pointer events while focused, so Escape
+    // would never reach the lightbox; media events are all they let through
+    const refocus = () => video.focus({ preventScroll: true });
+    for (const type of ["play", "pause", "seeked", "volumechange"]) {
+      video.addEventListener(type, refocus);
+    }
+    content.element = video;
+  });
+
+  lightboxEl.on("contentLoadImage", ({ content }) => {
+    const image = content.element;
+    image.addEventListener(
+      "load",
+      () => syncSlideSize(content, image.naturalWidth, image.naturalHeight),
+      { once: true }
+    );
+  });
+
+  lightboxEl.on("contentDeactivate", ({ content }) => {
+    if (content.type === "video") {
+      content.element?.pause();
+    }
+  });
+
+  lightboxEl.on("pointerDown", (event) => {
+    if (event.originalEvent.target.closest?.(".pswp__video")) {
+      event.preventDefault();
+    }
+  });
+
+  return new Promise((resolve) => {
+    lightboxEl.addFilter("thumbEl", (thumbEl, itemData) =>
+      itemData.element?.isConnected ? itemData.element : undefined
+    );
+    lightboxEl.on("close", resolve);
+    lightboxEl.on("closingAnimationEnd", () => lightboxEl.destroy());
+
+    lightboxEl.init();
+    if (!lightboxEl.loadAndOpen(index)) {
+      lightboxEl.destroy();
+      resolve();
+    }
+  });
+}
+
+function sharedOptions(getPswp) {
+  return {
+    arrowPrevTitle: i18n("lightbox.previous"),
+    arrowNextTitle: i18n("lightbox.next"),
+    closeTitle: i18n("lightbox.close"),
+    zoomTitle: i18n("lightbox.zoom"),
+    errorMsg: i18n("lightbox.error"),
+    showHideAnimationType: isTesting() || isRailsTesting() ? "none" : "zoom",
+    escKey: false,
+    tapAction: (pt, event) => {
+      if (event.target.closest(".pswp__video")) {
+        return;
+      }
+
+      const pswp = getPswp();
+      if (event.target.classList.contains("pswp__img")) {
+        pswp?.element?.classList.toggle("pswp--ui-visible");
+      } else {
+        pswp?.close();
+      }
+    },
+    pswpModule: () =>
+      waitForPromise(import(/* dynamicChunkName: "photoswipe" */ "photoswipe")),
+    appendToEl: isTesting() && document.getElementById("ember-testing"),
+  };
+}
+
+// keeps Escape from also reaching handlers underneath the overlay
+function closeOnEscape(lightboxEl) {
+  const onKeyDown = (event) => {
+    if (event.key !== "Escape") {
+      return;
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+    lightboxEl.pswp.close();
+  };
+
+  lightboxEl.on("afterInit", () => {
+    lightboxEl.pswp.element.addEventListener("keydown", onKeyDown);
+  });
+}
+
+// initial sizes come from thumbnails, which may not have loaded yet
+function syncSlideSize(content, width, height) {
+  if (!width || !height) {
+    return;
+  }
+  if (content.width === width && content.height === height) {
+    return;
+  }
+
+  content.width = content.data.width = width;
+  content.height = content.data.height = height;
+
+  if (content.slide) {
+    content.slide.width = width;
+    content.slide.height = height;
+    content.slide.resize();
+    // resize() skips this when the slide is zoomed in
+    content.slide.updateContentSize(true);
+  }
+}
+
+function buildSlideData({ type = "image", src, element, alt }) {
+  if (type === "video") {
+    return {
+      type,
+      src,
+      element,
+      alt: alt || "",
+      width: element?.videoWidth || 1280,
+      height: element?.videoHeight || 720,
+    };
+  }
+
+  return {
+    src,
+    msrc: element?.currentSrc || src,
+    element,
+    width: element?.naturalWidth || 800,
+    height: element?.naturalHeight || 600,
+    alt: alt ?? (element?.alt || ""),
+    thumbCropped: true,
+  };
 }

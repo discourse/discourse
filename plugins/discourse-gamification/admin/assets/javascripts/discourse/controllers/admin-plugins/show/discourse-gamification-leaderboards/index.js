@@ -12,13 +12,6 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
   @service dialog;
   @service toasts;
 
-  creatingNew = false;
-
-  @action
-  resetNewLeaderboard() {
-    this.set("creatingNew", false);
-  }
-
   @action
   async destroyLeaderboard(leaderboard, closeMenu) {
     await closeMenu();

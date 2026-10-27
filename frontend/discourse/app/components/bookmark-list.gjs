@@ -22,7 +22,6 @@ import {
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
 import BulkSelectBookmarksDropdown from "discourse/select-kit/components/bulk-select-bookmarks-dropdown";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";

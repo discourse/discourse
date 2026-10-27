@@ -36,7 +36,6 @@ import loadRichEditor from "discourse/lib/load-rich-editor";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { generateCookFunction } from "discourse/lib/text";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";

@@ -22,14 +22,11 @@ ur:
       or: "یا"
       admins_only: "ڈیٹا ایکسپلورر صرف منتظمین کو دستیاب ہے۔"
       title: "ڈیٹا ایکسپلورر"
-      create: "بنائیں"
       create_placeholder: "ڈیٹا کمانڈ کا نام..."
       description_placeholder: "یہاں تفصیل درج کریں"
       ai:
         generate: "تخلیق کریں"
         optional: "اختیاری"
-      import:
-        label: "درآمد"
       help:
         label: "مدد"
       schema:
@@ -47,7 +44,6 @@ ur:
       chart:
         form:
           bar: "بار"
-      others_dirty: "ایک ڈیٹا کمانڈ کی غیرمحفوظ کردہ تبدیلیاں موجود ہیں جو آپ کے یہاں سے جانے کے بعد کھو جائیں گی۔"
       result_count:
         one: "%{count} نتیجہ۔"
         other: "%{count} نتائج۔"
@@ -59,7 +55,6 @@ ur:
       query_time: "چلا آخری دفعہ"
       query_user: "نے بنایا"
       reset_params: "رِی سَیٹ"
-      search_placeholder: "تلاش کریں..."
       no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہیں ملے۔"
     group:
       reports: "رپورٹیں"

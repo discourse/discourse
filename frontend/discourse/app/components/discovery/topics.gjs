@@ -15,7 +15,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
-import { or } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import DLoadMore from "discourse/ui-kit/d-load-more";

@@ -5,7 +5,6 @@ import { getOwner } from "@ember/owner";
 import type { WithBoundArgs } from "@glint/template";
 import curryComponent from "ember-curry-component";
 import DMenu, { DMenuSignature } from "discourse/float-kit/components/d-menu";
-import { or } from "discourse/truth-helpers";
 import DButton, { DButtonSignature } from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 

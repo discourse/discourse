@@ -144,6 +144,12 @@ function canUserReceiveNotifications(user) {
 
 // Call-in point from message bus
 async function onNotification(data, siteSettings, user, appEvents) {
+  // handlers run first: the permission request below can reject, or stay
+  // pending until a background tab is shown again
+  desktopNotificationHandlers.forEach((handler) =>
+    handler(data, siteSettings, user)
+  );
+
   const showNotifications = canUserReceiveNotifications(user) && liveEnabled;
 
   if (showNotifications) {
@@ -184,10 +190,6 @@ async function onNotification(data, siteSettings, user, appEvents) {
       { once: true }
     );
   }
-
-  desktopNotificationHandlers.forEach((handler) =>
-    handler(data, siteSettings, user)
-  );
 }
 
 // Utility function

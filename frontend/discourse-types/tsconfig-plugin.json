@@ -23,7 +23,6 @@
       "ember-modifier",
       "ember-qunit",
       "ember-source",
-      "ember-truth-helpers",
       "ember__render-modifiers",
       "ember__string",
       "ember__test-helpers",

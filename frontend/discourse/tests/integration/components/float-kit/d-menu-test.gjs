@@ -24,7 +24,6 @@ import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { getLockState } from "discourse/lib/body-scroll-lock";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dElement from "discourse/ui-kit/helpers/d-element";

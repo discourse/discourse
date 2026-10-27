@@ -22,14 +22,12 @@ sk:
       admins_only: "Prieskumník údajov je dostupný iba administrátorom."
       allow_groups: "Povolenie prístupu skupín k tomuto dotazu"
       title: "Prieskumník údajov"
-      create: "Vytvoriť"
       create_placeholder: "Názov dotazu..."
       description_placeholder: "Sem zadajte popis"
       ai:
         generate: "Generovať"
         optional: "voliteľné"
       import:
-        label: "Import"
         unparseable_json: "Súbor JSON, ktorý sa nedá rozdeliť."
         wrong_json: "Nesprávny súbor JSON. Súbor JSON by mal obsahovať objekt \"query\", ktorý by mal mať aspoň vlastnosť \"sql\"."
       help:
@@ -52,7 +50,6 @@ sk:
       chart:
         form:
           bar: "Lišta"
-      others_dirty: "Dotaz obsahuje neuložené zmeny, ktoré sa stratia, ak prejdete preč."
       run_time: "Dotaz bol dokončený za %{value} ms."
       result_count:
         one: "%{count} výsledok."
@@ -74,7 +71,6 @@ sk:
       query_user: "Vytvoril"
       column: "Stĺpec %{number}"
       reset_params: "Resetovať"
-      search_placeholder: "Hľadať"
       no_search_results: "Prepáčte, nenašli sme žiadne výsledky zodpovedajúce vášmu textu."
       form:
         errors:

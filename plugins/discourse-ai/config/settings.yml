@@ -531,6 +531,32 @@ discourse_ai:
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     validator: "DiscourseAi::Configuration::AskAiFollowUpAgentValidator"
     area: "ai-features/search"
+  ai_ask_ai_keyword_search_enabled:
+    default: true
+    area: "ai-features/search"
+  ai_ask_ai_semantic_search_enabled:
+    default: true
+    area: "ai-features/search"
+  ai_ask_ai_search_categories:
+    type: category_list
+    default: ""
+    area: "ai-features/search"
+  ai_ask_ai_search_max_age_days:
+    default: 0
+    min: 0
+    area: "ai-features/search"
+  ai_ask_ai_external_sources:
+    type: list
+    list_type: compact
+    default: ""
+    allow_any: false
+    enum: "DiscourseAi::Configuration::AiToolEnumerator"
+    area: "ai-features/search"
+  ai_ask_ai_external_sources_timeout:
+    default: 8
+    min: 1
+    max: 12
+    area: "ai-features/search"
   ai_ask_ai_allowed_groups:
     type: group_list
     list_type: compact
