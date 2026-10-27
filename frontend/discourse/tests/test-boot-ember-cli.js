@@ -93,6 +93,23 @@ export async function startTests() {
     for (const [key, value] of Object.entries(rawModules)) {
       availableModules[key] = value.default;
     }
+  } else if (!hasThemeJs) {
+    availableModules = {};
+    for (const name of Object.keys(requirejs.entries)) {
+      if (name.startsWith("discourse/plugins/") && name.endsWith("-test")) {
+        const module = requirejs(name);
+        if (module?.__discourseTestModule) {
+          availableModules[name] = module.default;
+        } else if (module?.__discourseTestModuleError) {
+          availableModules[name] = () =>
+            QUnit.module(name, () =>
+              QUnit.test("is a valid test module", () => {
+                throw new Error(module.__discourseTestModuleError);
+              })
+            );
+        }
+      }
+    }
   }
 
   await awaitVisualReadiness();

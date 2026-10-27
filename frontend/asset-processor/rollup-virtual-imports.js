@@ -213,7 +213,7 @@ export default {
       labelFor(opts)
     );
 
-    // QUnit only finds a test by running the module that registers it, so tests stay eager.
+    // Test wrappers must be imported eagerly for discovery through requirejs.entries.
     if (entrypointName === "test" || !frontendConfig?.staticModules) {
       const { lines, identifiers } = renderImports(records);
 
