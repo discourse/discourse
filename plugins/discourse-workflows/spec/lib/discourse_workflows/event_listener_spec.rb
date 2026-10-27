@@ -44,6 +44,24 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(trigger_data_for("set-trigger")).to include("actor" => include("id" => admin.id))
   end
 
+  it "runs the hidden like trigger and the matching per-change trigger once each" do
+    liker = Fabricate(:user)
+    post = Fabricate(:post, topic:)
+    create_published_workflow("changed-trigger", "trigger:post_like_changed", type_version: "2.0")
+    create_published_workflow("liked-trigger", "trigger:post_liked")
+    create_published_workflow("unliked-trigger", "trigger:post_unliked")
+
+    PostActionCreator.like(liker, post)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "liked-trigger")
+    expect(trigger_data_for("liked-trigger")).to include("actor" => include("id" => liker.id))
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    PostActionDestroyer.destroy(liker, post, :like)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("changed-trigger", "unliked-trigger")
+  end
+
   it "runs Slow mode cleared workflows, and not Topic timer completed ones, when slow mode expires" do
     create_published_workflow("slow-mode-trigger", "trigger:topic_slow_mode_cleared")
     create_published_workflow("completed-trigger", "trigger:topic_timer_completed")

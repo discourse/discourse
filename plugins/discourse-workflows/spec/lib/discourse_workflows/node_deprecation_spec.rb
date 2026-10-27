@@ -12,6 +12,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
         "DiscourseWorkflows::Nodes::PostDestroyed::V1",
         "DiscourseWorkflows::Nodes::PostEdited::V1",
         "DiscourseWorkflows::Nodes::PostLike::V1",
+        "DiscourseWorkflows::Nodes::PostLike::V2",
         "DiscourseWorkflows::Nodes::PostLikeChanged::V1",
         "DiscourseWorkflows::Nodes::PostReactionChanged::V1",
         "DiscourseWorkflows::Nodes::PostRecovered::V1",
