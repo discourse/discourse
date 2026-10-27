@@ -4028,6 +4028,39 @@ RSpec.describe SessionController do
   end
 
   describe "#destroy" do
+    it "completes logout when push subscription endpoints are malformed" do
+      SiteSetting.log_out_strict = false
+      user = Fabricate(:user)
+      subscription = Fabricate(:push_subscription, user: user)
+
+      [nil, "", 1].each do |endpoint|
+        sign_in(user)
+        cookies["authentication_data"] = "stale"
+
+        events =
+          DiscourseEvent.track_events(:user_logged_out) do
+            delete "/session/#{user.username}.json",
+                   params: {
+                     push_subscription: {
+                       endpoint: endpoint,
+                       keys: {
+                         auth: "key",
+                       },
+                     },
+                   },
+                   xhr: true,
+                   as: :json
+          end
+
+        expect(response.status).to eq(200)
+        expect(events).to contain_exactly(event_name: :user_logged_out, params: [user])
+        expect(user.user_auth_tokens.reload).to be_empty
+        expect(cookies["_t"]).to be_blank
+        expect(cookies["authentication_data"]).to be_blank
+        expect(user.push_subscriptions.reload).to contain_exactly(subscription)
+      end
+    end
+
     it "removes the session variable and the auth token cookies" do
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json"

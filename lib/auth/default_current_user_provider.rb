@@ -370,7 +370,11 @@ class Auth::DefaultCurrentUserProvider
       user.logged_out
     elsif user && @user_token
       @user_token.destroy
-      PushNotificationPusher.unsubscribe(user, push_subscription) if push_subscription
+      begin
+        PushNotificationPusher.unsubscribe(user, push_subscription) if push_subscription
+      rescue Discourse::InvalidParameters
+        # Invalid push data must not interrupt logout cleanup or hooks.
+      end
       DiscourseEvent.trigger(:user_logged_out, user)
     end
 
