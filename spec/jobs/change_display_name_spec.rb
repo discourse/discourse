@@ -30,6 +30,39 @@ RSpec.describe Jobs::ChangeDisplayName do
   let(:args) { { user_id: user.id, old_name: old_display_name, new_name: new_display_name } }
 
   describe "#execute" do
+    it "rewrites quotes in deleted forms with incomplete required answers" do
+      upload = Fabricate(:upload)
+      template =
+        Fabricate(
+          :form_template,
+          template: [
+            { id: "quote", type: "composer" },
+            { id: "attachment", type: "upload", validations: { required: true } },
+          ].as_json.to_yaml,
+          output_template: "{{ answers.quote }}",
+        )
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "quote" => post_attributes[:raw],
+            "attachment" => upload.to_markdown,
+          },
+        )
+      saved = create_post(raw: submission.render, form_data: submission.to_h)
+      saved.trash!
+      cleaned =
+        submission.with_answers(submission.answers.merge("attachment" => ""), validate: false)
+      saved.update_columns(raw: cleaned.normalized_raw, form_data: cleaned.to_h)
+
+      described_class.new.execute(args)
+
+      expect(saved.reload.form_submission.answers["quote"]).to include(new_display_name)
+      expect(saved.raw).to include(new_display_name)
+      expect(saved.cooked).to include(new_display_name)
+      expect(saved.form_submission.answers["attachment"]).to eq("")
+    end
+
     it "keeps form answers and revisions aligned with quote display names" do
       template =
         Fabricate(

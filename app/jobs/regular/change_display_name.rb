@@ -64,10 +64,7 @@ module Jobs
       post.with_lock do
         rewritten = update_content(post.raw, post.cooked)
         if post.form_data
-          submission =
-            FormTemplate::Submission
-              .new(post.form_data)
-              .rewrite_text { |text| update_content(text, nil)[:raw] }
+          submission = post.form_submission.rewrite_text { |text| update_content(text, nil)[:raw] }
           rewritten[:form_data] = submission.to_h
           rewritten[:raw] = submission.normalized_raw
           rewritten[:cooked] = post.cook(rewritten[:raw])

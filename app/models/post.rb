@@ -1135,9 +1135,9 @@ class Post < ActiveRecord::Base
           .grep(String)
           .map { |text| PrettyText.cook(text, markdown_options) }
           .join("\n")
-      fragments = Nokogiri::HTML5.fragment("#{fragments || cooked}\n#{answer_html}")
+      additional_fragments = Nokogiri::HTML5.fragment(answer_html)
     end
-    super(fragments:)
+    super(fragments:, additional_fragments:)
   end
 
   def rewritten_content(&rewrite)

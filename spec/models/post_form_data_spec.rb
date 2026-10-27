@@ -32,4 +32,41 @@ RSpec.describe Post do
       expect(saved.reload.form_data).to eq(complete.to_h)
     end
   end
+
+  describe "linking uploads from saved answers" do
+    it "retains omitted videos and thumbnails without publishing them as topic images" do
+      SiteSetting.video_thumbnails_enabled = true
+      video = Fabricate(:upload, extension: "mp4")
+      thumbnail = Fabricate(:upload, original_filename: "#{video.sha1}.png")
+      template =
+        Fabricate(
+          :form_template,
+          template: [{ id: "video", type: "composer" }].as_json.to_yaml,
+          output_template: "A form with an omitted video answer.",
+        )
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "video" => "<video controls><source src=\"#{Discourse.base_url}#{video.url}\"></video>",
+          },
+        )
+      saved = Fabricate(:post, raw: submission.normalized_raw, form_data: submission.to_h)
+
+      CookedPostProcessor.new(saved).post_process
+
+      expect(saved.upload_references.pluck(:upload_id)).to contain_exactly(video.id, thumbnail.id)
+      expect(saved.topic.reload.image_upload_id).to be_nil
+      expect(saved.topic.topic_thumbnails).to be_empty
+
+      data = submission.to_h
+      data["definition"]["output_template"] = "{{ answers.video }}"
+      visible = FormTemplate::Submission.new(data)
+      saved.update!(raw: visible.normalized_raw, form_data: visible.to_h)
+      saved.link_post_uploads
+
+      expect(saved.topic.reload.image_upload_id).to eq(thumbnail.id)
+      expect(saved.upload_references.pluck(:upload_id)).to contain_exactly(video.id, thumbnail.id)
+    end
+  end
 end
