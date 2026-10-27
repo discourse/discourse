@@ -153,7 +153,7 @@ export default class WindowedListCoordinator {
    * `??`, never `||`: index 0 is a legitimate index to keep mounted.
    */
   mountedRows = (rows: readonly ListRow[]) => {
-    const kept = this._activeMountedIndex ?? this.revealRowIndex(rows);
+    const kept = this.#keptIndex(rows) ?? this.revealRowIndex(rows);
     const headerIndices = this.#headerIndices(rows);
 
     return (indices: readonly number[]) => {
@@ -194,6 +194,12 @@ export default class WindowedListCoordinator {
   // the jump handler to clamp a target. Kept off the template so a jump never clamps against a
   // stale window.
   #logicalNavCount = 0;
+
+  /**
+   * The cursor row's key, so the row stays mounted where it now sits when rows shift ahead of
+   * it. Kept even for a pointer press, which shows no highlight but still moves the cursor.
+   */
+  #activeMountedKey: string | null = null;
 
   // The active row's RAW array index (its virtualizer `data-index`), fed to the window extension
   // alongside the headers for mounted groups. Not a logical option ordinal: with group headers
@@ -253,6 +259,7 @@ export default class WindowedListCoordinator {
         // before the first arrow keypress would otherwise scroll with nothing kept mounted, unmount
         // the focused row, and drop focus to `<body>`.
         this.activeOptionKey = target.dataset.optionKey ?? null;
+        this.#activeMountedKey = this.activeOptionKey;
         this._activeMountedIndex =
           target.dataset.index == null
             ? undefined
@@ -333,6 +340,7 @@ export default class WindowedListCoordinator {
     // `--active` (the modifier reports the active option only while it moves the cursor, so
     // it never reports the clearing on teardown).
     this.activeOptionKey = null;
+    this.#activeMountedKey = null;
     this._activeMountedIndex = undefined;
     this.#listboxApi = null;
     this.#listboxRoving = null;
@@ -346,6 +354,7 @@ export default class WindowedListCoordinator {
     this.#jumpTimer = undefined;
     this.#listboxRoving?.clear();
     this.activeOptionKey = null;
+    this.#activeMountedKey = null;
     this._activeMountedIndex = undefined;
   }
 
@@ -401,6 +410,7 @@ export default class WindowedListCoordinator {
     this.activeOptionKey = meta?.pointer
       ? null
       : (element?.dataset.optionKey ?? null);
+    this.#activeMountedKey = element?.dataset.optionKey ?? null;
     this._activeMountedIndex =
       element?.dataset.index == null
         ? undefined
@@ -409,6 +419,21 @@ export default class WindowedListCoordinator {
 
   #clampJumpTarget(target: number): number {
     return Math.max(0, Math.min(target, this.#logicalNavCount - 1));
+  }
+
+  /** The cursor row's index in `rows`, found by key first, then by its last known index. */
+  #keptIndex(rows: readonly ListRow[]): number | undefined {
+    // Read first so the window extension re-runs on every cursor move: the key is written with
+    // the index but is not tracked itself.
+    const lastIndex = this._activeMountedIndex;
+    const key = this.#activeMountedKey;
+    if (key != null) {
+      const index = rows.findIndex((row) => this.optionRow(row)?.key === key);
+      if (index !== -1) {
+        return index;
+      }
+    }
+    return lastIndex;
   }
 
   #reconcileJump(
