@@ -30,6 +30,7 @@ import type {
   TopicCreateAttrs,
 } from "discourse/models/topic";
 import type TopicList from "discourse/models/topic-list";
+import type TopicTrackingState from "discourse/models/topic-tracking-state";
 import type { default as User, UserCreateAttrs } from "discourse/models/user";
 import type UserDraft from "discourse/models/user-draft";
 
@@ -46,6 +47,7 @@ export interface ModelRegistry {
   site: Site;
   topic: Topic;
   "topic-list": TopicList;
+  "topic-tracking-state": TopicTrackingState;
   user: User;
   "user-draft": UserDraft;
 }
