@@ -15,7 +15,7 @@
     "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/preset-env": "^7.29.2",
     "@csstools/postcss-light-dark-function": "^3.0.7",
-    "@glimmer/syntax": "^0.95.0",
+    "@glimmer/syntax": "^0.96.0",
     "@rollup/browser": "^4.64.5",
     "@rollup/plugin-babel": "^7.0.0",
     "autoprefixer": "^10.6.1",

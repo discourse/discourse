@@ -270,8 +270,8 @@ importers:
         specifier: ^3.0.7
         version: 3.0.7(postcss@8.5.29)
       '@glimmer/syntax':
-        specifier: ^0.95.0
-        version: 0.95.0
+        specifier: ^0.96.0
+        version: 0.96.0
       '@rollup/browser':
         specifier: ^4.64.5
         version: 4.64.5
@@ -420,8 +420,8 @@ importers:
         specifier: ^6.1.20
         version: 6.1.20(@fullcalendar/core@6.1.20)
       '@glimmer/syntax':
-        specifier: 0.95.0
-        version: 0.95.0
+        specifier: 0.96.0
+        version: 0.96.0
       '@glint/ember-tsc':
         specifier: ^1.11.6
         version: 1.11.6(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
@@ -2225,6 +2225,9 @@ packages:
 
   '@glimmer/syntax@0.95.0':
     resolution: {integrity: sha512-W/PHdODnpONsXjbbdY9nedgIHpglMfOzncf/moLVrKIcCfeQhw2vG07Rs/YW8KeJCgJRCLkQsi+Ix7XvrurGAg==}
+
+  '@glimmer/syntax@0.96.0':
+    resolution: {integrity: sha512-1GjU9SufrUL8FPCi1rcU6Pz+llegiQpiM4KGNU8y8w0JwjwZSR+Z/urfACYI+IQVPHuGwqUQDdXv6JXXPA8c3Q==}
 
   '@glimmer/util@0.94.8':
     resolution: {integrity: sha512-HfCKeZ74clF9BsPDBOqK/yRNa/ke6niXFPM6zRn9OVYw+ZAidLs7V8He/xljUHlLRL322kaZZY8XxRW7ALEwyg==}
@@ -9840,6 +9843,10 @@ snapshots:
       '@handlebars/parser': 2.2.2
       simple-html-tokenizer: 0.5.11
 
+  '@glimmer/syntax@0.96.0':
+    dependencies:
+      simple-html-tokenizer: 0.5.11
+
   '@glimmer/util@0.94.8':
     dependencies:
       '@glimmer/interfaces': 0.94.6
@@ -11200,18 +11207,18 @@ snapshots:
 
   babel-plugin-ember-template-compilation@2.4.1:
     dependencies:
-      '@glimmer/syntax': 0.95.0
+      '@glimmer/syntax': 0.96.0
       babel-import-util: 3.0.1
 
   babel-plugin-ember-template-compilation@3.1.0:
     dependencies:
-      '@glimmer/syntax': 0.95.0
+      '@glimmer/syntax': 0.96.0
       babel-import-util: 3.0.1
       import-meta-resolve: 4.2.0
 
   babel-plugin-ember-template-compilation@4.0.1:
     dependencies:
-      '@glimmer/syntax': 0.95.0
+      '@glimmer/syntax': 0.96.0
       babel-import-util: 3.0.1
       import-meta-resolve: 4.2.0
 
