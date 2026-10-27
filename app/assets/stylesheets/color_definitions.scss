@@ -20,6 +20,8 @@
   --d-selected-hover: #{$selected-hover};
   --d-hover: #{$hover};
   --always-black-rgb: 0, 0, 0;
+
+  // Deprecated, kept for themes; core reads the color variables with color-mix()
   --primary-rgb: #{hexToRGB($primary)};
   --primary-low-rgb: #{hexToRGB($primary-low)};
   --primary-very-low-rgb: #{hexToRGB($primary-very-low)};

@@ -14,3 +14,11 @@ old_name,new_name,type,notes
 --d-post-control-border-radius,--d-comp-PostMenu-button-border-radius,rename,PostMenu button part.
 --d-tag-border-radius,--d-comp-DDiscourseTag-border-radius,rename,Owner from ui-kit/helpers/d-discourse-tag.js.
 --category-badge-border-radius,--d-comp-DCategoryBadge-border-radius,rename,Owner from ui-kit/helpers/d-category-badge.js.
+--primary-rgb,--primary,rgb,
+--primary-low-rgb,--primary-low,rgb,
+--primary-very-low-rgb,--primary-very-low,rgb,
+--secondary-rgb,--secondary,rgb,
+--header_background-rgb,--header_background,rgb,
+--tertiary-rgb,--tertiary,rgb,
+--highlight-rgb,--highlight,rgb,No reads in core.
+--success-rgb,--success,rgb,No reads in core.

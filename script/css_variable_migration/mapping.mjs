@@ -2,14 +2,17 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import rewriteRgbTwins from "../../frontend/asset-processor/rgb-twin-rewriter.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
 export const ROOT = join(HERE, "../..");
 export const RENAMES_FILE = "app/assets/stylesheets/variable-renames.json";
+export const TWINS_FILE = "app/assets/stylesheets/variable-rgb-twins.json";
 export const CORE_STYLESHEETS = "app/assets/stylesheets/";
 
-const TYPES = new Set(["rename", "merge"]);
+const TYPES = new Set(["rename", "merge", "rgb"]);
+const RGB_CALL = /\brgba?\(/gi;
 const NAME = /^--[\w-]+$/;
 
 const EXTENSIONS = new Set([
@@ -33,8 +36,9 @@ const EXCLUDED = [
   /^script\/css_variable_migration\//,
   /(^|\/)vendor\//,
   /^public\//,
-  // Tests the renamer with old names on purpose
+  // Use old names on purpose, as examples and test cases
   /^frontend\/asset-processor\/postcss-variable-renamer\.test\.mjs$/,
+  /^frontend\/asset-processor\/rgb-twin-rewriter(\.test)?\.mjs$/,
 ];
 
 export function loadMapping() {
@@ -42,6 +46,7 @@ export function loadMapping() {
   const definitions = readCsv("definitions.csv");
   const renames = new Map();
   const merged = new Set();
+  const twins = new Map();
   const errors = [];
 
   for (const row of rows) {
@@ -52,8 +57,12 @@ export function loadMapping() {
     if (!NAME.test(row.old_name) || !NAME.test(row.new_name)) {
       errors.push(`${where}: names must look like --some-name`);
     }
-    if (renames.has(row.old_name)) {
+    if (renames.has(row.old_name) || twins.has(row.old_name)) {
       errors.push(`${where}: ${row.old_name} is mapped more than once`);
+    }
+    if (row.type === "rgb") {
+      twins.set(row.old_name, row.new_name);
+      continue;
     }
     renames.set(row.old_name, row.new_name);
     if (row.type === "merge") {
@@ -61,8 +70,8 @@ export function loadMapping() {
     }
   }
 
-  for (const newName of new Set(renames.values())) {
-    if (renames.has(newName)) {
+  for (const newName of new Set([...renames.values(), ...twins.values()])) {
+    if (renames.has(newName) || twins.has(newName)) {
       errors.push(`${newName} is both an old name and a new name`);
     }
   }
@@ -73,7 +82,7 @@ export function loadMapping() {
     if (!NAME.test(definition.name)) {
       errors.push(`${where}: names must look like --some-name`);
     }
-    if (renames.has(definition.name)) {
+    if (renames.has(definition.name) || twins.has(definition.name)) {
       errors.push(`${where}: ${definition.name} is an old name`);
     }
     if (defined.has(definition.name)) {
@@ -87,15 +96,16 @@ export function loadMapping() {
     defined.add(definition.name);
   }
 
-  return { renames, merged, definitions, errors };
+  return { renames, merged, twins, definitions, errors };
 }
 
-export function renamesJson(renames) {
-  return JSON.stringify(Object.fromEntries(renames), null, 2) + "\n";
+export function toJson(map) {
+  return JSON.stringify(Object.fromEntries(map), null, 2) + "\n";
 }
 
 export function namePattern(names, flags = "g") {
-  return new RegExp(`(?<![\\w-])(?:${[...names].join("|")})(?![\\w-])`, flags);
+  const alternatives = [...names].join("|") || "(?!)";
+  return new RegExp(`(?<![\\w-])(?:${alternatives})(?![\\w-])`, flags);
 }
 
 export function listFiles() {
@@ -113,8 +123,46 @@ export function listFiles() {
     );
 }
 
+export function rewriteTwinReads(text, twins) {
+  const twinObject = Object.fromEntries(twins);
+  let result = "";
+  let last = 0;
+  let rewritten = 0;
+
+  for (const match of text.matchAll(RGB_CALL)) {
+    if (match.index < last) {
+      continue;
+    }
+    const end = closingParen(text, match.index + match[0].length - 1);
+    if (end === -1) {
+      continue;
+    }
+    const call = text.slice(match.index, end + 1);
+    const { value } = rewriteRgbTwins(call, twinObject);
+    if (value !== call) {
+      result += text.slice(last, match.index) + value;
+      last = end + 1;
+      rewritten++;
+    }
+  }
+
+  return { text: result + text.slice(last), rewritten };
+}
+
 export function isRootRule(node) {
   return node.type === "rule" && node.selector.trim() === ":root";
+}
+
+function closingParen(text, open) {
+  let depth = 0;
+  for (let i = open; i < text.length; i++) {
+    if (text[i] === "(") {
+      depth++;
+    } else if (text[i] === ")" && --depth === 0) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 function readCsv(name) {

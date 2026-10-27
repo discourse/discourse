@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-// Checks that the working tree matches the mapping: the renamer list is in sync,
-// no old name is left, and every definition is in place.
+// Checks that the working tree matches the mapping: the renamer and twin lists
+// are in sync, no old name is left, no -rgb read is left that apply.mjs could
+// rewrite, and every definition is in place.
 //
 //   node script/css_variable_migration/check.mjs
 
@@ -13,18 +14,26 @@ import {
   loadMapping,
   namePattern,
   RENAMES_FILE,
-  renamesJson,
+  rewriteTwinReads,
   ROOT,
+  toJson,
+  TWINS_FILE,
 } from "./mapping.mjs";
 
-const { renames, definitions, errors } = loadMapping();
+const { renames, twins, definitions, errors } = loadMapping();
 const warnings = [];
 
-if (readFileSync(join(ROOT, RENAMES_FILE), "utf8") !== renamesJson(renames)) {
-  errors.push(`${RENAMES_FILE} does not match mapping.csv`);
+for (const [file, map] of [
+  [RENAMES_FILE, renames],
+  [TWINS_FILE, twins],
+]) {
+  if (readFileSync(join(ROOT, file), "utf8") !== toJson(map)) {
+    errors.push(`${file} does not match mapping.csv`);
+  }
 }
 
 const pattern = namePattern(renames.keys());
+const twinPattern = namePattern(twins.keys());
 const oldNames = [...renames.keys()];
 
 for (const file of listFiles()) {
@@ -33,6 +42,16 @@ for (const file of listFiles()) {
   lines.forEach((line, index) => {
     for (const [name] of line.matchAll(pattern)) {
       errors.push(`${file}:${index + 1}: ${name} is still used`);
+    }
+    if (rewriteTwinReads(line, twins).rewritten) {
+      errors.push(`${file}:${index + 1}: an -rgb read can still be rewritten`);
+    } else {
+      for (const match of line.matchAll(twinPattern)) {
+        const rest = line.slice(match.index + match[0].length);
+        if (!/^\s*:/.test(rest)) {
+          warnings.push(`${file}:${index + 1}: ${match[0]} is still read`);
+        }
+      }
     }
     if (!isStylesheet) {
       return;
@@ -65,5 +84,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(
-  `Check passed: ${renames.size} mapping rows, ${definitions.length} definitions.`
+  `Check passed: ${renames.size + twins.size} mapping rows, ${definitions.length} definitions.`
 );

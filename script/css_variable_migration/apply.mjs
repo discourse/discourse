@@ -18,15 +18,19 @@ import {
   loadMapping,
   namePattern,
   RENAMES_FILE,
-  renamesJson,
+  rewriteTwinReads,
   ROOT,
+  toJson,
+  TWINS_FILE,
 } from "./mapping.mjs";
 
-const { renames, merged, definitions, errors } = loadMapping();
+const { renames, merged, twins, definitions, errors } = loadMapping();
 const pattern = namePattern(renames.keys());
-const mergedPattern = merged.size ? namePattern(merged, "") : null;
+const mergedPattern = namePattern(merged, "");
+const twinPattern = namePattern(twins.keys(), "");
 const report = [];
 const results = new Map();
+let twinReads = 0;
 
 const definitionsByFile = new Map();
 for (const definition of definitions) {
@@ -45,12 +49,18 @@ if (errors.length === 0) {
     if (
       isStylesheet &&
       file.startsWith(CORE_STYLESHEETS) &&
-      mergedPattern?.test(text)
+      mergedPattern.test(text)
     ) {
       text = removeMergedDefinitions(text, file);
     }
 
     text = text.replace(pattern, (name) => renames.get(name));
+
+    if (twinPattern.test(text)) {
+      const rewrite = rewriteTwinReads(text, twins);
+      text = rewrite.text;
+      twinReads += rewrite.rewritten;
+    }
 
     if (isStylesheet && (text !== original || definitionsByFile.has(file))) {
       text = tidy(text, file, definitionsByFile.get(file) ?? []);
@@ -68,14 +78,15 @@ if (errors.length) {
   process.exit(1);
 }
 
-results.set(RENAMES_FILE, renamesJson(renames));
+results.set(RENAMES_FILE, toJson(renames));
+results.set(TWINS_FILE, toJson(twins));
 for (const [file, text] of results) {
   writeFileSync(join(ROOT, file), text);
 }
 
 console.log(report.join("\n"));
 console.log(
-  `Applied ${renames.size} mapping rows and ${definitions.length} definitions to ${results.size} files.`
+  `Applied ${renames.size + twins.size} mapping rows and ${definitions.length} definitions to ${results.size} files, rewriting ${twinReads} -rgb reads.`
 );
 
 function removeMergedDefinitions(text, file) {
