@@ -375,6 +375,37 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
+  describe ".timezone_property" do
+    it "builds an optional timezone property with its own empty label and extra options" do
+      expect(
+        described_class.timezone_property(
+          none: "discourse_workflows.test.timezone_none",
+          display_options: {
+            show: {
+              schedule: ["at_time"],
+            },
+          },
+        ),
+      ).to eq(
+        timezone: {
+          type: :string,
+          required: false,
+          ui: {
+            control: :timezone,
+          },
+          control_options: {
+            none: "discourse_workflows.test.timezone_none",
+          },
+          display_options: {
+            show: {
+              schedule: ["at_time"],
+            },
+          },
+        },
+      )
+    end
+  end
+
   describe ".normalize_ids" do
     it "coerces scalars, arrays, and mixed values to unique integer ids" do
       expect(described_class.normalize_ids(nil)).to eq([])

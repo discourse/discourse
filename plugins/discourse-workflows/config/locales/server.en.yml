@@ -12,6 +12,7 @@ en:
               enum_choices_required: "must include at least one choice for an enum field"
   discourse_workflows:
     node_upgrades:
+      topic_pin_output: "The output no longer has topic_id, pinned, pinned_globally, pinned_at or banner. Use topic.id, topic.pinned and topic.pinned_globally instead, and topic.archetype, which is banner for the banner topic. Pin topic keeps pinned_until and Make banner keeps bannered_until, and the new changed is false when the topic was already in that state."
       topic_post_removed: "The output no longer includes the topic's first post. If a later step uses post, add a Topic node with the Get operation to read it."
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
