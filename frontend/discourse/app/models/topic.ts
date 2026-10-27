@@ -328,21 +328,9 @@ const _customLastUnreadUrlCallbacks: ((
   topic: Topic
 ) => string | null | undefined)[] = [];
 
-/** Declares the TopicFields the class does not redeclare as members, so create can assign them without field initializers. */
+/** Merges in TopicFields so create can assign them without field initializers. */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
-export default interface Topic extends Omit<
-  TopicFields,
-  | "chunk_size"
-  | "deleted_at"
-  | "deleted_by"
-  | "highest_post_number"
-  | "last_posted_at"
-  | "last_read_post_number"
-  | "posts_count"
-  | "suggested_topics"
-  | "bookmarks"
-  | "pending_posts"
-> {}
+export default interface Topic extends TopicFields {}
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class Topic extends RestModel {
