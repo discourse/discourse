@@ -1269,7 +1269,7 @@ export default class Category extends RestModel {
       "muted_category_ids",
       this.currentUser!.calculateMutedIds(
         notification_level,
-        this.id,
+        this.id!,
         "muted_category_ids"
       )
     );

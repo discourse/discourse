@@ -231,9 +231,6 @@ type PostTopicDetails = Omit<Topic["details"], "notification_level"> & {
   notification_level?: number;
 };
 
-/** TODO(typescript-pending): User forwarders omit server identity/admin fields; remove when User is typed. */
-type PostCurrentUser = User & { id: number; admin: boolean };
-
 /** TODO(typescript-pending): Topic user_badges is only object; remove when its badge payload and Badge are typed. */
 type PostTopicBadges = {
   users: Record<number, { badge_ids: number[] }>;
@@ -333,9 +330,7 @@ export default class Post extends RestModel {
     }
 
     if (json && json.reply_to_user) {
-      json.reply_to_user = User.create(
-        json.reply_to_user as RestModelAttrs<User>
-      );
+      json.reply_to_user = User.create(json.reply_to_user);
     }
 
     return json as PostMungedPayload;
@@ -421,7 +416,7 @@ export default class Post extends RestModel {
     return ajax(`/posts/${postId}/raw-email.json`);
   }
 
-  @service declare currentUser: PostCurrentUser | null;
+  @service declare currentUser: User | null;
   @service declare site: Site;
 
   @tracked action_code?: string;
@@ -664,13 +659,12 @@ export default class Post extends RestModel {
     return !!this.currentUser;
   }
 
-  /** TODO(typescript-pending): User.staff is inferred from untyped role fields; remove its cast when User is typed. */
   get canDelete() {
     return (
       this.can_delete &&
       !this.deleted_at &&
       this.currentUser &&
-      ((this.currentUser.staff as boolean) || !this.user_deleted)
+      (this.currentUser.staff || !this.user_deleted)
     );
   }
 
@@ -690,9 +684,8 @@ export default class Post extends RestModel {
     return !this.topic!.deleted && !isEmpty(this.flagsAvailable);
   }
 
-  /** TODO(typescript-pending): User.canManageTopic has no return type; remove its cast when User is typed. */
   get canManage() {
-    return this.currentUser?.canManageTopic as boolean | undefined;
+    return this.currentUser?.canManageTopic;
   }
 
   get canPermanentlyDelete() {
@@ -1015,8 +1008,7 @@ export default class Post extends RestModel {
         deleted_by: deletedBy,
         can_delete: false,
         can_permanently_delete:
-          this.siteSettings.can_permanently_delete &&
-          (deletedBy as PostCurrentUser).admin,
+          this.siteSettings.can_permanently_delete && deletedBy.admin,
         can_recover: true,
       });
     } else {
@@ -1096,7 +1088,7 @@ export default class Post extends RestModel {
       ...modelFieldNames("post"),
     ].forEach((key) => {
       // Plugin field names are open-ended; the reply-user branch is the only structural read.
-      // TODO(typescript-pending): User omits username; remove the structural casts when User is typed.
+      // TODO(typescript-pending): plugin-registered field names have no typed map; remove these structural casts when that map is typed.
       let value = (otherPost as unknown as Record<string, unknown>)[key],
         oldValue = (this as unknown as Record<string, unknown>)[key];
 

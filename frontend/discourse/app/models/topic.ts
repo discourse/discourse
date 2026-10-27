@@ -1336,7 +1336,6 @@ export default class Topic extends RestModel {
     deleted_by: User,
     opts: { force_destroy?: boolean; [key: string]: unknown } = {}
   ): globalThis.Promise<void> {
-    // TODO(typescript-pending): User omits server-assigned admin, visibleGroups and can_delete_all_posts_and_topics; remove when User is typed.
     return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname, ...opts },
       type: "DELETE",
@@ -1348,19 +1347,15 @@ export default class Topic extends RestModel {
           "details.can_delete": false,
           "details.can_recover": true,
           "details.can_permanently_delete":
-            this.siteSettings.can_permanently_delete &&
-            (deleted_by as User & { admin: boolean }).admin,
+            this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
         if (
           opts.force_destroy ||
           (!deleted_by.staff &&
-            !(
-              deleted_by as User & { visibleGroups: { id: number }[] }
-            ).visibleGroups.some((group) =>
+            !deleted_by.visibleGroups!.some((group) =>
               this.category?.moderating_group_ids?.includes(group.id)
             ) &&
-            !(deleted_by as User & { can_delete_all_posts_and_topics: boolean })
-              .can_delete_all_posts_and_topics)
+            !deleted_by.can_delete_all_posts_and_topics)
         ) {
           DiscourseURL.redirectTo("/");
         }

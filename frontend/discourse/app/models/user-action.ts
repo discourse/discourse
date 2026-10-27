@@ -53,9 +53,6 @@ export interface UserActionFields {
   >;
 }
 
-/** TODO(typescript-pending): User omits its server username; remove when User declares it. */
-type UserActionCurrentUser = User & { username: string };
-
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
 export default interface UserAction extends UserActionFields {}
 
@@ -146,7 +143,7 @@ export default class UserAction extends RestModel {
     return collapsed;
   }
 
-  @service currentUser!: UserActionCurrentUser | null;
+  @service currentUser!: User | null;
 
   @computed("name", "username")
   get presentName(): string | null | undefined {

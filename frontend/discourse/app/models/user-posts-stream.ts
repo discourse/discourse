@@ -3,13 +3,13 @@ import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import type User from "discourse/models/user";
 import UserAction, {
   type UserActionFields,
 } from "discourse/models/user-action";
-import type { UserStreamUser } from "discourse/models/user-stream";
 
 export interface UserPostsStreamFields {
-  user?: UserStreamUser;
+  user?: User;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
