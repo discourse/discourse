@@ -773,6 +773,15 @@ class PostRevisor
     @post_revision.save!
   end
 
+  # Hashes read back from jsonb reorder keys, so their strings differ when they are equal.
+  def revision_value_changed?(old_value, new_value)
+    if old_value.is_a?(Hash) || new_value.is_a?(Hash)
+      old_value != new_value
+    else
+      old_value.to_s != new_value.to_s
+    end
+  end
+
   def use_cached_original_for_created_revision?
     @previous_last_editor_id == @editor.id &&
       !PostRevision.exists?(post_id: @post.id, number: @post.version - 1)
@@ -787,7 +796,7 @@ class PostRevisor
       if revision.modifications.has_key?(field)
         old_value = revision.modifications[field][0]
         new_value = modifications[field][1]
-        if old_value.to_s != new_value.to_s
+        if revision_value_changed?(old_value, new_value)
           revision.modifications[field] = [old_value, new_value]
         else
           revision.modifications.delete(field)

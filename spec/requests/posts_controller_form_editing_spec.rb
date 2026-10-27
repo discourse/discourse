@@ -249,9 +249,19 @@ RSpec.describe PostsController do
           params: {
             post: {
               form_template_data: { answers: }.to_json,
+              original_text: submission.render,
             },
           }
-      expect(response.status).to eq(400)
+      expect(response.status).to eq(409)
+
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: }.to_json,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(form_post.reload.form_submission.answers).to eq(answers)
     end
 
     it "rejects structured edits from users who cannot edit the post" do

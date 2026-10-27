@@ -33,7 +33,10 @@ The editing endpoint accepts `post[form_template_data]` containing JSON
 `{ "answers": { ... } }`. Clients cannot supply a replacement definition. The
 existing `original_text` check detects concurrent edits to the rendered post;
 `post[original_form_answers]` (the answers the editor started from) does the
-same for answers the output template omits, which never change `raw`.
+same for answers the output template omits, which never change `raw`. A form
+edit sent without either check replaces `raw` with the rendered answers using
+the saved definition, which is how "overwrite" recovers a form after another
+edit rewrote the post.
 
 `form_data` is a tracked field in `PostRevisor`, so revisions record it next to
 `raw` and a revert restores both, including the original snapshot cached during

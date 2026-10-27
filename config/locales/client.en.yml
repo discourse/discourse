@@ -6729,6 +6729,7 @@ en:
       upload_field:
         upload: "Upload"
         uploading: "Uploading"
+        remove: "Remove"
       errors:
         value_missing:
           default: "Please fill out this field."

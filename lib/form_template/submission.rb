@@ -24,13 +24,12 @@ class FormTemplate::Submission
 
   def self.for_edit(post, payload:, guardian:, validate: true)
     guardian.ensure_can_edit!(post)
-    submission = post.form_submission
-    unless submission && payload.is_a?(String) && payload.bytesize <= MAX_BYTES
+    unless post.form_data && payload.is_a?(String) && payload.bytesize <= MAX_BYTES
       raise Discourse::InvalidParameters.new(:form_template_data)
     end
     data = JSON.parse(payload, max_nesting: 20)
     raise ArgumentError unless data.is_a?(Hash)
-    submission.with_answers(data.fetch("answers"), validate:)
+    new(post.form_data, validate: false).with_answers(data.fetch("answers"), validate:)
   rescue JSON::JSONError, ArgumentError, KeyError
     raise Discourse::InvalidParameters.new(:form_template_data)
   end
@@ -119,13 +118,13 @@ class FormTemplate::Submission
     fields = @data["definition"]["fields"].deep_dup
     tag_fields = fields.select { |field| field["type"] == "tag-chooser" }
     if tag_fields.present?
-      ids = tag_fields.flat_map { |field| Array(field["choices"]).pluck("id") }
+      ids = tag_fields.flat_map { |field| Array(field["choices"]).grep(Hash).pluck("id") }
       visible_ids = DiscourseTagging.filter_visible(Tag.where(id: ids), guardian).pluck(:id).to_set
       tag_fields.each do |field|
-        field["choices"] = Array(field["choices"]).select do |choice|
-          visible_ids.include?(choice["id"])
-        end
-        if field.dig("attributes", "tag_choices")
+        field["choices"] = Array(field["choices"])
+          .grep(Hash)
+          .select { |choice| visible_ids.include?(choice["id"]) }
+        if field.dig("attributes", "tag_choices").is_a?(Hash)
           field["attributes"]["tag_choices"].slice!(*field["choices"].pluck("name"))
         end
       end

@@ -1936,6 +1936,27 @@ RSpec.describe Post do
       post.revert_to(1)
       expect(post.form_submission.answers).to eq(submission.answers)
     end
+
+    it "drops a revision whose form change is undone within the grace period" do
+      SiteSetting.editing_grace_period = 1.minute
+      form_template.update!(output_template: "{{ answers.description }}")
+      post = create_post(raw: submission.render, form_data: submission.to_h).reload
+      changed = submission.with_answers({ "description" => "A revised description." })
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: changed.render, form_data: changed.to_h },
+        force_new_version: true,
+      )
+      expect(post.reload.version).to eq(2)
+
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: submission.render, form_data: submission.to_h },
+        revised_at: post.updated_at + 10.seconds,
+      )
+      expect(post.reload.version).to eq(1)
+      expect(post.revisions).to be_empty
+    end
   end
 
   describe "video_thumbnails" do

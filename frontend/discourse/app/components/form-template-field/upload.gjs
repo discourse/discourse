@@ -176,7 +176,7 @@ export default class FormTemplateFieldUpload extends Component {
                 @action={{fn this.removeUpload index}}
                 @disabled={{this.disabled}}
                 @icon="xmark"
-                @label="remove"
+                @label="form_templates.upload_field.remove"
               />
             </li>
           {{/each}}

@@ -234,17 +234,6 @@ class PostsController < ApplicationController
 
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
-    if params[:post][:form_template_data].present?
-      submission =
-        FormTemplate::Submission.for_edit(
-          post,
-          payload: params[:post][:form_template_data],
-          guardian:,
-        )
-      changes[:raw] = submission.render
-      changes[:form_data] = submission.to_h
-    end
-
     # keep `raw_old` for backwards compatibility
     original_text = params[:post][:original_text] || params[:post][:raw_old]
     if original_text.present? && original_text != post.raw
@@ -255,6 +244,17 @@ class PostsController < ApplicationController
     original_answers = params[:post][:original_form_answers]
     if original_answers.present? && !post.form_submission&.answers_match?(original_answers)
       return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
+
+    if params[:post][:form_template_data].present?
+      submission =
+        FormTemplate::Submission.for_edit(
+          post,
+          payload: params[:post][:form_template_data],
+          guardian:,
+        )
+      changes[:raw] = submission.render
+      changes[:form_data] = submission.to_h
     end
 
     # to stay consistent with the create api, we allow for title & category changes here

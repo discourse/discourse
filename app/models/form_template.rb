@@ -50,7 +50,7 @@ class FormTemplate < ActiveRecord::Base
       next form_field unless form_field["tag_group"]
 
       tag_group_name = form_field["tag_group"]
-      tags = tag_groups[tag_group_name].base_tags
+      tags = tag_groups[tag_group_name]&.base_tags || []
       ordered_field = {}
 
       tags =

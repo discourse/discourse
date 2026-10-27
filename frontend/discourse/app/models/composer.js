@@ -1552,6 +1552,8 @@ export default class Composer extends RestModel {
     }
 
     this.setProperties({
+      formSubmission: null,
+      formTemplateData: null,
       formTemplateDraft: opts.formTemplateDraft,
       hasSavedFormTemplateDraft: !!opts.formTemplateDraft,
       originalFormTemplateDraft: opts.originalFormTemplateDraft,
