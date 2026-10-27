@@ -163,7 +163,7 @@ RSpec.describe PluginGem do
 
   def checksum(name, version)
     gem = "#{repo}/gems/#{name}-#{version}.gem"
-    return "sha256=#{Digest::SHA256.file(gem).hexdigest}" if File.exist?(gem)
+    return Bundler::Checksum.from_gem_package(Gem::Package.new(gem)).to_lock if File.exist?(gem)
 
     # The application's lock has no checksums for its path and git gems, so
     # those get a made-up one.
