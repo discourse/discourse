@@ -569,17 +569,17 @@ aside.onebox.github-onebox {
 
   &.githubpullrequest.--github-open {
     --github-onebox-status-color: var(--primary-high);
-    --github-onebox-header-background: color-mix(
-      in srgb,
-      var(--primary) 10%,
-      var(--secondary)
-    );
+
+    .github-onebox__label svg {
+      color: light-dark(#1a7f37, #3fb950);
+    }
   }
 
+  &.githubpullrequest.--github-open,
   &.--github-draft {
     --github-onebox-header-background: color-mix(
       in srgb,
-      var(--primary) 3%,
+      var(--primary) 10%,
       var(--secondary)
     );
   }
