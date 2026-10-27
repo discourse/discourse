@@ -151,6 +151,64 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     end
   end
 
+  context "with palettes the site already has" do
+    let(:horizon) { Theme.horizon_theme }
+    let(:clover) { ColorScheme.find_by(theme: horizon, name: "Clover") }
+    let(:clover_dark) { ColorScheme.find_by(theme: horizon, name: "Clover Dark") }
+    let(:draft_attributes) do
+      {
+        kind: "existing_palettes",
+        theme_id: horizon.id,
+        name: "Clover",
+        light_palette_id: clover.id,
+        dark_palette_id: clover_dark.id,
+        light_colors: clover.resolved_colors,
+        dark_colors: clover_dark.resolved_colors,
+        site_settings: {
+        },
+      }
+    end
+
+    before { SystemThemesManager.sync_theme!("horizon") }
+
+    it "saves the choice without creating palettes once approved" do
+      expect(tool.approval_title).to eq("Use palettes: Clover")
+
+      result = nil
+      expect { result = approve_as(other_admin, build_reviewable) }.not_to change {
+        ColorScheme.count
+      }
+      expect(result).to include(status: "success", name: "Clover")
+      expect(AppearanceChange.find(result[:appearance_change_id])).to have_attributes(
+        kind: "existing_palettes",
+        theme: horizon,
+        light_color_scheme: clover,
+        dark_color_scheme: clover_dark,
+      )
+    end
+  end
+
+  it "doesn't save new palettes once they're no longer allowed" do
+    reviewable = build_reviewable
+    plugin = Plugin::Instance.new
+    modifier =
+      proc do |decision, request|
+        if request.feature == :palette_authoring
+          decision.deny!("New palettes aren't available here.")
+        end
+        decision
+      end
+    plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+    expect(approve_as(other_admin, reviewable)).to eq(
+      status: "error",
+      error: "New palettes aren't available here.",
+    )
+    expect(AppearanceChange.count).to eq(0)
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_feature_access, &modifier)
+  end
+
   it "doesn't save anything without approval" do
     expect(tool.invoke).to eq(
       status: "error",

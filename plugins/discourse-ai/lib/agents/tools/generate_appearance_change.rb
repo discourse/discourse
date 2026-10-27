@@ -76,7 +76,7 @@ module DiscourseAi
 
         def self.custom_system_message
           <<~TEXT
-            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. These tools only change colors and fonts. A new theme starts from Foundation, core's default design, so warn a site using another theme that its layout will change.
+            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. When the result has a note, the site can't have new palettes, so it uses the closest palettes the site already has: pass the note on and name the palettes. If it returns no_change, tell the administrator nothing needs to change. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. These tools only change colors and fonts. A new theme starts from Foundation, core's default design, so warn a site using another theme that its layout will change.
           TEXT
         end
 
@@ -105,14 +105,26 @@ module DiscourseAi
           end
 
           theme = target_theme
-          palettes =
-            ColorSchemes::Action::BuildFromBrand.call(
-              brand:,
-              accent: colors[:accent_color] || design&.accent,
-              header: colors[:header_color] || design&.header,
-            )
+          accent = colors[:accent_color] || design&.accent
+          header = colors[:header_color] || design&.header
           site_settings = fonts.reverse_merge(website_fonts(design))
 
+          reason = AppearanceAuthoring.palette_denial(user: context.user, phase: :generation)
+          if theme && reason
+            return(
+              existing_palettes_draft(
+                theme,
+                reason:,
+                brand:,
+                accent:,
+                header:,
+                site_settings:,
+                design:,
+              )
+            )
+          end
+
+          palettes = ColorSchemes::Action::BuildFromBrand.call(brand:, accent:, header:)
           draft = {
             kind: theme ? "palettes" : "theme",
             theme_id: theme&.id,
@@ -127,7 +139,7 @@ module DiscourseAi
             draft_token: AppearanceAuthoring::Draft.sign(draft, user: context.user),
             name: draft[:name],
             saves_as: saves_as(theme),
-            colors: key_colors(palettes),
+            colors: key_colors(light: palettes.light, dark: palettes.dark),
             readability_adjustments: palettes.adjustments.map { |adjustment| describe(adjustment) },
             fonts: site_settings.transform_values { |key| AppearanceAuthoring.font_name(key) },
             website: website_summary(design),
@@ -259,20 +271,87 @@ module DiscourseAi
           }.filter_map { |setting_name, font| [setting_name, font.key] if font&.exact }.to_h
         end
 
-        # New palettes go on the current default theme, unless the
-        # administrator asked for a new theme.
+        # Palettes go on the current default theme, unless the administrator
+        # asked for a new theme.
         def target_theme
-          guardian = context.user.guardian
-          if !guardian.can_create_color_scheme?
-            refuse(I18n.t("discourse_ai.appearance_authoring.palettes_unavailable"))
-          end
           return if new_theme?
 
           theme = Theme.find_default
-          if theme.nil? || !guardian.can_edit_theme?(theme)
+          if theme.nil? || !context.user.guardian.can_edit_theme?(theme)
             refuse(I18n.t("discourse_ai.appearance_authoring.theme_not_editable"))
           end
           theme
+        end
+
+        # Without new palettes, uses the closest of the ones the theme can
+        # already use. `reason` says why there are no new palettes.
+        def existing_palettes_draft(
+          theme,
+          reason:,
+          brand:,
+          accent:,
+          header:,
+          site_settings:,
+          design:
+        )
+          choice = AppearanceAuthoring::PaletteChoice.closest(theme:, brand:, accent:, header:)
+          refuse(reason) if choice.nil?
+
+          if same_palettes?(theme, choice)
+            return(
+              {
+                status: "no_change",
+                message:
+                  I18n.t(
+                    "discourse_ai.appearance_authoring.already_closest",
+                    palette: choice.name,
+                    theme: theme.name,
+                  ),
+                note: reason,
+              }
+            )
+          end
+
+          draft = {
+            kind: "existing_palettes",
+            theme_id: theme.id,
+            name: choice.name,
+            light_palette_id: choice.light_palette_id,
+            dark_palette_id: choice.dark_palette_id,
+            light_colors: choice.light_colors,
+            dark_colors: choice.dark_colors,
+            site_settings:,
+          }
+
+          {
+            status: "success",
+            draft_token: AppearanceAuthoring::Draft.sign(draft, user: context.user),
+            name: choice.name,
+            saves_as:
+              I18n.t(
+                "discourse_ai.appearance_authoring.existing_palettes_target",
+                palette: choice.name,
+                theme: theme.name,
+              ),
+            note: reason,
+            colors: key_colors(light: choice.light_colors, dark: choice.dark_colors),
+            fonts: site_settings.transform_values { |key| AppearanceAuthoring.font_name(key) },
+            website: website_summary(design),
+          }.compact_blank
+        end
+
+        # Hover and selected colors are derived from the others when a palette
+        # doesn't set them, so they don't tell palettes apart.
+        def same_palettes?(theme, choice)
+          compared = ColorScheme.base_colors.keys - %w[hover selected]
+          current = AppearanceAuthoring.theme_palettes(theme)
+
+          [
+            [current[:light], choice.light_colors],
+            [current[:dark], choice.dark_colors],
+          ].all? do |colors, chosen|
+            colors.present? && colors.slice(*compared) == chosen.slice(*compared)
+          end
         end
 
         def saves_as(theme)
@@ -291,9 +370,9 @@ module DiscourseAi
           end
         end
 
-        def key_colors(palettes)
+        def key_colors(light:, dark:)
           AppearanceAuthoring::KEY_COLORS.to_h do |mode, name|
-            palette = mode == "dark" ? palettes.dark : palettes.light
+            palette = mode == "dark" ? dark : light
             [AppearanceAuthoring.color_label(mode, name), "##{palette[name]}"]
           end
         end

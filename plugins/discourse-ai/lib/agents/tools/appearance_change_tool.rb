@@ -16,6 +16,7 @@ module DiscourseAi
           not_applied: "already_live",
           applied: "not_live",
           palettes_exist: "palettes_missing",
+          palettes_available_to_theme: "palettes_missing",
           restorable: "cannot_restore",
         }.freeze
 

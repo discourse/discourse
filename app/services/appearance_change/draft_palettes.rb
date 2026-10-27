@@ -5,7 +5,7 @@
 class AppearanceChange::DraftPalettes
   include Service::Base
 
-  params base_class: AppearanceChange::Contract do
+  params base_class: AppearanceChange::PalettesContract do
     attribute :theme_id, :integer
 
     validates :theme_id, presence: true

@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
 # A change to a site's appearance that is saved without going live, so it can
-# be previewed first, then made live and switched back. It is either a light
-# and a dark palette for an existing theme, or a new theme with its own
-# palettes. The fonts it sets apply when it goes live.
+# be previewed first, then made live and switched back. It is one of:
+#
+# - palettes: a new light and dark palette for an existing theme
+# - existing_palettes: a light and dark palette the site already has, for an
+#   existing theme
+# - theme: a new theme with its own new palettes
+#
+# The fonts it sets apply when it goes live.
 class AppearanceChange < ActiveRecord::Base
   # the site-wide settings a change can set when it goes live
   SITE_SETTING_NAMES = %w[base_font heading_font].freeze
   # drafts that never go live are removed after this long
   DRAFT_LIFETIME = 7.days
 
-  enum :kind, { palettes: 0, theme: 1 }, prefix: true
+  enum :kind, { palettes: 0, theme: 1, existing_palettes: 2 }, prefix: true
 
   belongs_to :theme
   belongs_to :light_color_scheme, class_name: "ColorScheme", optional: true
@@ -65,7 +70,7 @@ class AppearanceChange < ActiveRecord::Base
   # The site settings making the change live sets: its fonts and, for a new
   # theme, the default theme.
   def activation_site_settings
-    return site_settings if kind_palettes?
+    return site_settings if !kind_theme?
 
     site_settings.merge("default_theme_id" => theme_id)
   end
@@ -101,11 +106,16 @@ class AppearanceChange < ActiveRecord::Base
     transaction do
       destroy!
       theme.destroy! if kind_theme? && disposable_theme?
-      palettes.each { |palette| palette.destroy! if disposable_palette?(palette) }
+      created_palettes.each { |palette| palette.destroy! if disposable_palette?(palette) }
     end
   end
 
   private
+
+  # Palettes the site already had aren't the change's to remove.
+  def created_palettes
+    kind_existing_palettes? ? [] : palettes
+  end
 
   def only_supported_site_settings
     errors.add(:site_settings, :invalid) if (site_settings.keys - SITE_SETTING_NAMES).present?

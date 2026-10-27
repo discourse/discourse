@@ -62,6 +62,19 @@ RSpec.describe AppearanceChange do
       ).to be_empty
     end
 
+    it "keeps palettes the site already had" do
+      appearance_change = Fabricate(:appearance_change, kind: :existing_palettes)
+
+      appearance_change.discard!
+
+      expect(described_class.exists?(appearance_change.id)).to eq(false)
+      expect(
+        ColorScheme.where(
+          id: [appearance_change.light_color_scheme_id, appearance_change.dark_color_scheme_id],
+        ).count,
+      ).to eq(2)
+    end
+
     it "keeps a theme members can choose, and the palettes it uses" do
       appearance_change = Fabricate(:theme_appearance_change)
       appearance_change.theme.update!(user_selectable: true)

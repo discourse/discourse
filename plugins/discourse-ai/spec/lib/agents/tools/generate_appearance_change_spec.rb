@@ -114,6 +114,97 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
     DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_feature_access, &modifier)
   end
 
+  context "when the site can't have new palettes" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier) { access_modifier(:palette_authoring, "New palettes aren't available here.") }
+    let(:horizon) { Theme.horizon_theme }
+
+    before do
+      SystemThemesManager.sync_theme!("horizon")
+      horizon.set_default!
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+    end
+
+    after do
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+
+    it "uses the closest of the palettes the theme can use, and says why" do
+      clover = ColorScheme.find_by(theme: horizon, name: "Clover")
+      clover_dark = ColorScheme.find_by(theme: horizon, name: "Clover Dark")
+      result = nil
+
+      expect { result = invoke(name: "Acme", brand_color: "#1ed760") }.not_to change {
+        ColorScheme.count
+      }
+      expect(result).to include(
+        status: "success",
+        name: "Clover",
+        note: "New palettes aren't available here.",
+        saves_as:
+          I18n.t(
+            "discourse_ai.appearance_authoring.existing_palettes_target",
+            palette: "Clover",
+            theme: horizon.name,
+          ),
+      )
+      expect(draft(result)).to include(
+        kind: "existing_palettes",
+        theme_id: horizon.id,
+        light_palette_id: clover.id,
+        dark_palette_id: clover_dark.id,
+      )
+    end
+
+    it "says when the theme already uses the closest palettes" do
+      horizon.update!(
+        color_scheme: ColorScheme.find_by(theme: horizon, name: "Clover"),
+        dark_color_scheme: ColorScheme.find_by(theme: horizon, name: "Clover Dark"),
+      )
+
+      expect(invoke(name: "Acme", brand_color: "#1ed760")).to eq(
+        status: "no_change",
+        message:
+          I18n.t(
+            "discourse_ai.appearance_authoring.already_closest",
+            palette: "Clover",
+            theme: horizon.name,
+          ),
+        note: "New palettes aren't available here.",
+      )
+    end
+
+    it "doesn't draft a new theme, which would need new palettes" do
+      expect(invoke(name: "Acme", brand_color: "#1ed760", new_theme: true)[:error]).to eq(
+        "New palettes aren't available here.",
+      )
+    end
+  end
+
+  it "uses existing palettes once the site can't create more" do
+    plugin = Plugin::Instance.new
+    modifier = proc { false }
+    plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier)
+
+    result = invoke(name: "Acme", brand_color: "#0033cc")
+
+    expect(result).to include(
+      status: "success",
+      note: I18n.t("discourse_ai.appearance_authoring.palettes_unavailable"),
+    )
+    expect(draft(result)[:kind]).to eq("existing_palettes")
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(
+      plugin,
+      :user_guardian_can_create_color_scheme,
+      &modifier
+    )
+  end
+
   it "doesn't draft a new theme on a site that can't create themes" do
     plugin = Plugin::Instance.new
     modifier = proc { false }

@@ -6,7 +6,20 @@ module DiscourseAi
       # Saves an approved appearance draft without making it live, so the
       # administrator can preview it first.
       class SaveAppearanceChange < AppearanceChangeTool
-        KINDS = %w[palettes theme].freeze
+        SERVICES = {
+          "palettes" => AppearanceChange::DraftPalettes,
+          "existing_palettes" => AppearanceChange::DraftExistingPalettes,
+          "theme" => AppearanceChange::DraftTheme,
+        }.freeze
+        SERVICE_PARAMS = %i[
+          theme_id
+          name
+          light_colors
+          dark_colors
+          light_palette_id
+          dark_palette_id
+          site_settings
+        ].freeze
 
         def self.name
           "save_appearance_change"
@@ -68,6 +81,7 @@ module DiscourseAi
               user: context.user,
               phase: execution_phase,
               new_theme: theme_draft?,
+              new_palettes: valid_draft? && draft[:kind] == "palettes",
             )
           return error_response(refusal) if refusal
           if !valid_draft?
@@ -110,10 +124,9 @@ module DiscourseAi
         private
 
         def save(reviewable)
-          service = theme_draft? ? AppearanceChange::DraftTheme : AppearanceChange::DraftPalettes
           result =
-            service.call(
-              params: draft.slice(:theme_id, :name, :light_colors, :dark_colors, :site_settings),
+            SERVICES.fetch(draft[:kind]).call(
+              params: draft.slice(*SERVICE_PARAMS),
               guardian: context.user.guardian,
             )
           if result.failure?
@@ -154,9 +167,15 @@ module DiscourseAi
           @draft = AppearanceAuthoring::Draft.read(draft_token)
         end
 
+        # Drafts of existing palettes carry their colors too, for the approval
+        # card.
         def valid_draft?
-          draft.present? && KINDS.include?(draft[:kind]) && draft[:name].present? &&
-            draft[:light_colors].is_a?(Hash) && draft[:dark_colors].is_a?(Hash)
+          draft.present? && SERVICES.key?(draft[:kind]) && draft[:name].present? &&
+            draft[:light_colors].is_a?(Hash) && draft[:dark_colors].is_a?(Hash) &&
+            (
+              draft[:kind] != "existing_palettes" ||
+                [draft[:light_palette_id], draft[:dark_palette_id]].all?(Integer)
+            )
         end
 
         def theme_draft?
