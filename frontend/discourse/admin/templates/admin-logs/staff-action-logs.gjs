@@ -129,8 +129,16 @@ export default <template>
                     {{#if item.acting_user}}
                       <LinkTo @model={{item.acting_user}} @route="adminUser">
                         {{dAvatar item.acting_user imageSize="tiny"}}
-                        {{item.acting_user.username}}
                       </LinkTo>
+                      <DButton
+                        class="staff-user__filter"
+                        @action={{fn
+                          @controller.filterByStaffUser
+                          item.acting_user
+                        }}
+                        @display="link"
+                        @translatedLabel={{item.acting_user.username}}
+                      />
                     {{else}}
                       <span
                         class="deleted-user"
@@ -210,13 +218,14 @@ export default <template>
             {{/each}}
           </tbody>
         </table>
-      {{else if @controller.model.loadingMore}}
-        <DConditionalLoadingSpinner
-          @condition={{@controller.model.loadingMore}}
-        />
       {{else}}
-        {{i18n "search.no_results"}}
+        {{#unless @controller.model.loadingMore}}
+          {{i18n "search.no_results"}}
+        {{/unless}}
       {{/if}}
+      <DConditionalLoadingSpinner
+        @condition={{@controller.model.loadingMore}}
+      />
     </DLoadMore>
   </StaffActions>
 </template>

@@ -30,6 +30,7 @@ describe "Admin staff action logs" do
   end
 
   let(:staff_action_logs_page) { PageObjects::Pages::AdminStaffActionLogs.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before { sign_in(current_user) }
 
@@ -199,6 +200,85 @@ describe "Admin staff action logs" do
     job = Jobs::ExportCsvFile.jobs.last
     args = job["args"].first["args"]
     expect(args).to include({ "action_id" => UserHistory.actions[:change_site_setting].to_s })
+  end
+
+  it "lets staff filter an action by who performed it and clear the user filter" do
+    history_1.update!(acting_user: current_user)
+    other_history = Fabricate(:site_setting_change_history)
+
+    staff_action_logs_page.visit
+    staff_action_logs_page.filter_by_action(:change_site_setting)
+
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_log_row(other_history)
+
+    staff_action_logs_page.filter_by_staff_user(current_user)
+
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+
+    page.refresh
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(other_history)
+
+    staff_action_logs_page.clear_staff_user_filter(current_user)
+
+    expect(staff_action_logs_page).to have_log_row(other_history)
+    expect(staff_action_logs_page).to have_no_log_row(history_2)
+  end
+
+  it "lets staff filter by a long username on mobile", mobile: true do
+    SiteSetting.max_username_length = 60
+    current_user.update!(username: "StaffLogs_LongUsername_ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789")
+    history_1.update!(acting_user: current_user)
+
+    staff_action_logs_page.visit
+
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    dimensions = staff_action_logs_page.layout_dimensions
+    expect(dimensions["document_width"]).to be <= dimensions["viewport_width"]
+
+    staff_action_logs_page.filter_by_staff_user(current_user)
+
+    expect(staff_action_logs_page).to have_staff_user_filter(current_user)
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(history_2)
+
+    dimensions = staff_action_logs_page.layout_dimensions
+    expect(dimensions["document_width"]).to be <= dimensions["viewport_width"]
+  end
+
+  it "shows staff a spinner while loading the next page of logs" do
+    oldest_history =
+      Fabricate(:user_history, action: UserHistory.actions[:suspend_user], created_at: 2.days.ago)
+    histories =
+      Fabricate.times(
+        Admin::StaffActionLogsController::INDEX_LIMIT,
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        acting_user: current_user,
+      )
+
+    staff_action_logs_page.visit
+
+    expect(staff_action_logs_page).to have_log_row(histories.last)
+    expect(staff_action_logs_page).to have_no_log_row(oldest_history)
+
+    cdp.with_paused_request(%r{/admin/logs/staff_action_logs(?:\.json)?\?.*page=1\b}) do |request|
+      staff_action_logs_page.scroll_to_bottom
+      request.wait
+
+      expect(staff_action_logs_page).to have_loading_spinner
+      expect(staff_action_logs_page).to have_log_row(histories.last)
+
+      request.resume
+
+      expect(staff_action_logs_page).to have_log_row(oldest_history)
+      expect(staff_action_logs_page).to have_no_loading_spinner
+    end
   end
 
   it "displays no result" do
