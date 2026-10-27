@@ -1750,6 +1750,95 @@ module(
       );
     });
 
+    /**
+     * A loader whose `held`-th call answers only when released, for requests abandoned in
+     * flight. Every other call answers its page at once.
+     */
+    function heldLoad(held) {
+      const pages = [];
+      const gate = {};
+      const load = (_filter, opts = {}) => {
+        pages.push(opts.page);
+        const response = {
+          items: page((opts.page - 1) * 10, 10),
+          hasMore: true,
+        };
+        if (pages.length === held) {
+          return new Promise(
+            (resolve) => (gate.release = () => resolve(response))
+          );
+        }
+        return Promise.resolve(response);
+      };
+      return { load, pages, gate };
+    }
+
+    /** Aborts the held request once the loader has received it. */
+    async function abandon(engine, gate) {
+      const controller = new AbortController();
+      const request = engine.loadItems(engine.loadContext, {
+        signal: controller.signal,
+      });
+      for (let tick = 0; !gate.release && tick < 50; tick++) {
+        await Promise.resolve();
+      }
+      controller.abort();
+      // Wrapped so awaiting the helper does not wait for the held request itself.
+      return { request };
+    }
+
+    test("an abandoned request that settles last leaves paging open", async function (assert) {
+      const { load, pages, gate } = heldLoad(2);
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      const { request: abandoned } = await abandon(engine, gate);
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+      gate.release();
+      await abandoned;
+
+      assert.deepEqual(pages, [1, 2, 2, 3], "the retry and a later page ran");
+      assert.true(
+        engine.canRevealMore,
+        "the late answer does not mark the list as loading again"
+      );
+      assert.true(engine.revealMore(), "another page can be revealed");
+    });
+
+    test("an abandoned first request that settles last leaves paging open", async function (assert) {
+      const { load, gate } = heldLoad(1);
+      const engine = new SelectEngine({ load });
+
+      const { request: abandoned } = await abandon(engine, gate);
+      await engine.loadItems(engine.loadContext);
+      gate.release();
+      await abandoned;
+
+      assert.true(engine.canRevealMore, "the retried first page counts");
+    });
+
+    test("an abandoned request that was never retried still finishes its load", async function (assert) {
+      const { load, pages, gate } = heldLoad(2);
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      engine.revealMore();
+      const { request: abandoned } = await abandon(engine, gate);
+      gate.release();
+      await abandoned;
+
+      assert.true(
+        engine.canRevealMore,
+        "the abandoned request ends its load instead of leaving it pending"
+      );
+      engine.revealMore();
+      await engine.loadItems(engine.loadContext);
+      assert.deepEqual(pages, [1, 2, 2], "the reveal asks again for its page");
+    });
+
     test("de-duplicates each row once, not once per later page", async function (assert) {
       let keyReads = 0;
       const countedPage = (offset) =>

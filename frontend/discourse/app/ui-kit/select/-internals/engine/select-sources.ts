@@ -231,6 +231,12 @@ export class PagedSource implements SelectSource {
   #serverBarrenPages = 0;
   #serverRequest?: Promise<SelectLoadResult>;
 
+  /**
+   * The request this generation started last. An abort releases `#serverRequest` but not this,
+   * so only the latest request, abandoned or not, may mark the load complete.
+   */
+  #latestServerRequest?: Promise<SelectLoadResult>;
+
   /** Whether the loader's latest call returned its answer rather than a promise. */
   #answeredSynchronously = false;
 
@@ -409,6 +415,7 @@ export class PagedSource implements SelectSource {
     this.#visibleMeasured = false;
     this.#serverGeneration++;
     this.#serverRequest = undefined;
+    this.#latestServerRequest = undefined;
     this.#queryLoad = undefined;
   }
 
@@ -460,12 +467,14 @@ export class PagedSource implements SelectSource {
       return result;
     });
     this.#serverRequest = request;
+    this.#latestServerRequest = request;
     // An abandoned request must not keep answering for the one that replaces it. The consumer
     // aborts on teardown, so a panel closed mid-flight and reopened before the abort settles
     // would otherwise hit the in-flight short-circuit above and be handed the accumulator —
     // empty, on a first page — as a synchronous answer, leaving the query reading "no results"
     // with nothing left to re-ask. Releasing the handle is enough: the generation deliberately
-    // does NOT move, so the settle below still stamps `serverCompletedKey` (see its comment).
+    // does NOT move, so the settle below still stamps `serverCompletedKey` unless a retry has
+    // started since (see its comment).
     opts.signal?.addEventListener(
       "abort",
       () => {
@@ -539,12 +548,15 @@ export class PagedSource implements SelectSource {
       if (this.#serverRequest === request) {
         this.#serverRequest = undefined;
       }
-      if (generation === this.#serverGeneration) {
+      if (
+        generation === this.#serverGeneration &&
+        this.#latestServerRequest === request
+      ) {
         // Completion covers rejection AND abort: this request is over either way. Skipping
         // it on abort left the key behind the live one forever, pinning `aria-busy` on and
         // making `canRevealMore` permanently false — the list could never be revealed
-        // again. The cost is that a same-key retry reads as settled while it is genuinely
-        // in flight, which is a brief missing busy signal rather than a dead control.
+        // again. Only the latest request stamps: an abandoned one that settles after its
+        // retry and a later reveal would otherwise move the key back to its own load.
         this.#state.serverCompletedKey = key;
         if (settled) {
           // Only a success may authorise reusing the accumulator. Marking a failed key
