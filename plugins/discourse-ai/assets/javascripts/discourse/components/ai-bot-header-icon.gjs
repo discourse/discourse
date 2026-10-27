@@ -6,6 +6,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import { conversationAgents } from "../lib/ai-bot-agents.js";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager.js";
 
 export default class AiBotHeaderIcon extends Component {
@@ -16,19 +17,7 @@ export default class AiBotHeaderIcon extends Component {
   @service aiConversationsSidebarManager;
 
   get bots() {
-    if (
-      !this.siteSettings.ai_bot_enabled ||
-      !this.currentUser?.ai_available_llm_models
-    ) {
-      return [];
-    }
-
-    const hasSelectableModel = this.currentUser.ai_available_llm_models?.length;
-    return (this.currentUser.ai_enabled_agents || []).filter(
-      (agent) =>
-        agent.allow_personal_messages &&
-        (agent.has_default_llm || hasSelectableModel)
-    );
+    return conversationAgents(this.currentUser, this.siteSettings);
   }
 
   get showHeaderButton() {

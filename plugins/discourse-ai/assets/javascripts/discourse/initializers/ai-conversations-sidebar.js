@@ -1,6 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation.gjs";
+import { conversationAgents } from "../lib/ai-bot-agents.js";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager.js";
 
 // Matches the rule the sidebar uses to treat a topic as an AI conversation
@@ -26,6 +27,7 @@ export default {
     withPluginApi((api) => {
       const currentUser = api.container.lookup("service:current-user");
       const site = api.container.lookup("service:site");
+      const siteSettings = api.container.lookup("service:site-settings");
       if (!currentUser && !site.ai_bot_anonymous_preview) {
         return;
       }
@@ -44,11 +46,7 @@ export default {
             expandActiveSection = true;
 
             get mobileTab() {
-              const hasBot = currentUser?.ai_enabled_chat_bots?.some(
-                (bot) => !bot.is_agent || bot.has_default_llm
-              );
-
-              if (!hasBot) {
+              if (!conversationAgents(currentUser, siteSettings).length) {
                 return null;
               }
 
