@@ -297,6 +297,9 @@ export default class SelectionActions {
       additions.push(item);
     }
     if (additions.length === 0) {
+      if (held + limit > 0) {
+        this.#options.onBulkUnchanged?.({ held, limit });
+      }
       return;
     }
     for (const item of additions) {

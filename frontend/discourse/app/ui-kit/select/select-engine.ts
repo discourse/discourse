@@ -637,6 +637,9 @@ export interface SelectEngineOptions {
   /** Called when a programmatic pick confirms an already held item. */
   onReconfirm?: (item: SelectItem, origin: SelectionOrigin) => void;
 
+  /** Called when a batch adds nothing because every eligible item was held or over the limit. */
+  onBulkUnchanged?: (skipped: { held: number; limit: number }) => void;
+
   /** Called when asynchronous work becomes pending; the reader checks its authority. */
   onUpdateStart?: (isCurrent: () => boolean) => void;
 

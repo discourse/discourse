@@ -1644,6 +1644,62 @@ module(
       );
       assert.strictEqual(priority, "polite", "bulk feedback is polite");
     });
+
+    test("a paste of held items alone is announced", async function (assert) {
+      const a11y = this.owner.lookup("service:a11y");
+      const announce = sinon.spy(a11y, "announce");
+      const onChange = sinon.spy();
+      const parsePaste = () => [ITEMS[0]];
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{array 1}}
+          />
+        </template>
+      );
+      await click("input[role='combobox']");
+      announce.resetHistory();
+      pasteBulk("one|two");
+      await settled();
+
+      assert.true(onChange.notCalled, "nothing is added");
+      assert.deepEqual(
+        announce.args.map(([message]) => message),
+        [i18n("d_select.all_already_selected")],
+        "one announcement says everything was already selected"
+      );
+    });
+
+    test("a paste stopped entirely by the limit is announced", async function (assert) {
+      const a11y = this.owner.lookup("service:a11y");
+      const announce = sinon.spy(a11y, "announce");
+      const parsePaste = () => [ITEMS[1]];
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @maximum={{1}}
+            @multiple={{true}}
+            @parsePaste={{parsePaste}}
+            @value={{array 1}}
+          />
+        </template>
+      );
+      await click("input[role='combobox']");
+      announce.resetHistory();
+      pasteBulk("one|two");
+      await settled();
+
+      const [message] = announce.lastCall?.args ?? [];
+      assert.true(
+        message?.includes("1 not added: over the limit"),
+        `the limit is spoken: ${message}`
+      );
+    });
   }
 );
 

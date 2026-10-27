@@ -509,6 +509,9 @@ select's whole life. It exposes:
   It skips disabled, action, structural, already-held and duplicate items, and truncates to
   the remaining `@maximum` capacity. It caches added items for display. Empty and locked
   batches emit nothing; even an all-held or fully capped batch supersedes older update work.
+  A batch that adds nothing because its items were held or over the limit emits no change,
+  but is announced ("All already selected", or the skipped count with its reason), pastes
+  included.
   On a single-select it selects the first new eligible item.
 - `deselect(item)` to remove a multi value, or clear a single value only if that item is held.
 - `clear()` to clear a nonempty selection.

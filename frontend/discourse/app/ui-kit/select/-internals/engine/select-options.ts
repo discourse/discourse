@@ -82,6 +82,7 @@ export default class SelectOptionsView {
   #readCloseOnSelect: boolean | undefined;
   #onChange?: SelectEngineOptions["onChange"];
   #onReconfirm?: SelectEngineOptions["onReconfirm"];
+  #onBulkUnchanged?: SelectEngineOptions["onBulkUnchanged"];
   #onUpdateStart?: SelectEngineOptions["onUpdateStart"];
   #requestClose?: SelectEngineOptions["requestClose"];
   #readValue: () => SelectValue;
@@ -143,6 +144,7 @@ export default class SelectOptionsView {
     this.#readCloseOnSelect = opts.closeOnSelect;
     this.#onChange = opts.onChange;
     this.#onReconfirm = opts.onReconfirm;
+    this.#onBulkUnchanged = opts.onBulkUnchanged;
     this.#onUpdateStart = opts.onUpdateStart;
     this.#requestClose = opts.requestClose;
     this.#legacy = opts.legacy ?? null;
@@ -325,6 +327,10 @@ export default class SelectOptionsView {
 
   get onReconfirm(): SelectEngineOptions["onReconfirm"] {
     return this.#onReconfirm;
+  }
+
+  get onBulkUnchanged(): SelectEngineOptions["onBulkUnchanged"] {
+    return this.#onBulkUnchanged;
   }
 
   get onUpdateStart(): SelectEngineOptions["onUpdateStart"] {

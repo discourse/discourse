@@ -3576,6 +3576,7 @@ en:
         one: "%{count} not added: over the limit"
         other: "%{count} not added: over the limit"
       bulk_add_summary: "%{added}, %{not_added}"
+      all_already_selected: "All already selected"
       item_removed: "Removed %{item}"
       expand: "Show options"
       load_error: "Couldn't load results."

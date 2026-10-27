@@ -1699,3 +1699,67 @@ module("Integration | ui-kit | select | DSelect action rows", function (hooks) {
       .exists();
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect (zero-add bulk)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    const PRODUCE = [
+      { id: 1, name: "Apple", group: "Fruit" },
+      { id: 2, name: "Banana", group: "Fruit" },
+      { id: 3, name: "Carrot", group: "Vegetables" },
+    ];
+    const addGroup = (key, rows) => ({
+      id: `all:${key}`,
+      name: `All ${key}`,
+      onSelect: (control) => control.selectMany(rows),
+    });
+
+    test("a footer whose group is all held says so and changes nothing", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const changes = [];
+      withPluginApi((api) => {
+        api.modifySelectKit("zero-add").onChange(() => changes.push("legacy"));
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.change((next) => {
+                changes.push("middleware");
+                return next();
+              })
+            )
+        );
+      });
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <DSelect
+            @groupBy="group"
+            @groupFooter={{addGroup}}
+            @identifier="zero-add"
+            @items={{PRODUCE}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await click("[role='option'][data-value='all:Fruit']");
+
+      const polite = find("#a11y-announcements-polite").textContent;
+      assert.true(
+        polite.includes(i18n("d_select.all_already_selected")),
+        `the reader hears why nothing changed: ${polite}`
+      );
+      assert.true(onChange.notCalled, "the value is unchanged");
+      assert.deepEqual(changes, [], "no change middleware or callback runs");
+    });
+  }
+);

@@ -230,6 +230,7 @@ export default class SelectHost {
       groupFooter: this.#options.getArgs().groupFooter,
       onChange: this.handleChange,
       onReconfirm: (item, origin) => this.announcer.reconfirm(item, origin),
+      onBulkUnchanged: (skipped) => this.announcer.bulkUnchanged(skipped),
       onUpdateStart: (isCurrent) => this.announcer.updateStarted(isCurrent),
       requestClose: () => this.#options.requestClose(),
       legacy: {

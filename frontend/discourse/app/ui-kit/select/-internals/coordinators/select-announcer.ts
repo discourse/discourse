@@ -437,6 +437,20 @@ export default class SelectAnnouncer {
     }
   }
 
+  /** Speaks a batch that added nothing, so the skipped rows are not met with silence. */
+  bulkUnchanged({ held, limit }: { held: number; limit: number }): void {
+    if (!this.#canReport()) {
+      return;
+    }
+    this.suppressCount();
+    this.#a11y.announce(
+      limit === 0
+        ? i18n("d_select.all_already_selected")
+        : this.#bulkSummary(0, held, limit),
+      "polite"
+    );
+  }
+
   /** Delays feedback so work that finishes quickly stays silent. */
   updateStarted(isCurrent: () => boolean): void {
     cancel(this.#updateTimer);
@@ -462,20 +476,8 @@ export default class SelectAnnouncer {
   ): void {
     if (origin?.bulk) {
       const { added, held, limit } = origin.bulk;
-      let message = i18n("d_select.items_added", { count: added });
-      for (const [key, count] of [
-        ["items_not_added_held", held],
-        ["items_not_added_limit", limit],
-      ] as const) {
-        if (count > 0) {
-          message = i18n("d_select.bulk_add_summary", {
-            added: message,
-            not_added: i18n(`d_select.${key}`, { count }),
-          });
-        }
-      }
       this.suppressCount();
-      this.#a11y.announce(message, "polite");
+      this.#a11y.announce(this.#bulkSummary(added, held, limit), "polite");
       return;
     }
     if (reason === "clear" && this.#engine.hasValue) {
@@ -535,6 +537,22 @@ export default class SelectAnnouncer {
     }
     this.#suppressionTimers.clear();
     this.#suppressNextCount = false;
+  }
+
+  #bulkSummary(added: number, held: number, limit: number): string {
+    let message = i18n("d_select.items_added", { count: added });
+    for (const [key, count] of [
+      ["items_not_added_held", held],
+      ["items_not_added_limit", limit],
+    ] as const) {
+      if (count > 0) {
+        message = i18n("d_select.bulk_add_summary", {
+          added: message,
+          not_added: i18n(`d_select.${key}`, { count }),
+        });
+      }
+    }
+    return message;
   }
 
   #cancelReveal(): void {
