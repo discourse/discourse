@@ -6,7 +6,8 @@ RSpec.describe DiscourseWorkflows::NodeType do
       deprecated =
         DiscourseWorkflows::Registry.nodes(include_disabled_plugins: true).select(&:deprecated?)
 
-      expect(deprecated.map(&:name)).to contain_exactly(
+      # Plugins outside this repository may deprecate their own nodes too.
+      expect(deprecated.map(&:name)).to include(
         "DiscourseWorkflows::Nodes::AssignTopic::V1",
         "DiscourseWorkflows::Nodes::Assigned::V1",
         "DiscourseWorkflows::Nodes::Badge::V1",
