@@ -258,6 +258,14 @@ GEM
     fiber-local (1.1.0)
       fiber-storage
     fiber-storage (1.0.1)
+    git (3.1.1)
+      activesupport (>= 5.0)
+      addressable (~> 2.8)
+      process_executer (~> 1.3)
+      rchardet (~> 1.9)
+    gitlab-crystalball (1.1.3)
+      git (< 4)
+      ostruct (< 1)
     globalid (1.4.0)
       activesupport (>= 6.1)
     goldiloader (6.0.0)
@@ -498,6 +506,7 @@ GEM
     prettier_print (1.2.1)
     prettyprint (0.2.0)
     prism (1.9.0)
+    process_executer (1.3.0)
     propshaft (1.3.2)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -561,6 +570,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
+    rchardet (1.10.2)
     rdoc (8.1.0)
       erb
       prism (>= 1.6.0)
@@ -872,6 +882,7 @@ DEPENDENCIES
   faraday-retry
   fast_blank
   fastimage
+  gitlab-crystalball (~> 1.1.3)
   goldiloader
   hashery
   highline
@@ -1081,6 +1092,8 @@ CHECKSUMS
   fiber-annotation (0.2.0) sha256=7abfadf1d119f508867d4103bf231c0354d019cc39a5738945dec2edadaf6c03
   fiber-local (1.1.0) sha256=c885f94f210fb9b05737de65d511136ea602e00c5105953748aa0f8793489f06
   fiber-storage (1.0.1) sha256=f48e5b6d8b0be96dac486332b55cee82240057065dc761c1ea692b2e719240e1
+  git (3.1.1) sha256=f057fe24046aa52016678b4c383dd092a711f16479018d16331d69846c667592
+  gitlab-crystalball (1.1.3) sha256=ea9a90d659704a042d763ce6d343a9f664cd650e0787a19adec7036ea4390861
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   goldiloader (6.0.0) sha256=613db1b28e9964291255a67a521f04d481b6afd6b9ca56ea1a612fd86e9a89c7
   google-protobuf (4.36.2-aarch64-linux-gnu) sha256=c3279ec6eaa59f6ed6276eda2a33cffb4306471183ab79a332e698b8564f5169
@@ -1198,6 +1211,7 @@ CHECKSUMS
   prettier_print (1.2.1) sha256=a72838b5f23facff21f90a5423cdcdda19e4271092b41f4ea7f50b83929e6ff9
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
+  process_executer (1.3.0) sha256=3b01a22d27e13204598d8f73118b5b1c3b59576969724a380b712a72edd5546f
   propshaft (1.3.2) sha256=1d56a3e56a92c21bfc29caf07406b5386b00d4c47ddf357cf989a5a234b1389e
   pry (0.16.0) sha256=d76c69065698ed1f85e717bd33d7942c38a50868f6b0673c636192b3d1b6054e
   pry-rails (0.3.11) sha256=a69e28e24a34d75d1f60bcf241192a54253f8f7ef8a62cba1e75750a9653593d
@@ -1222,6 +1236,7 @@ CHECKSUMS
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rbs (4.2.0) sha256=51f7b886dcc05bc09e10b901daa6a81829f6adc03101d6ca9ea4aac6103e0674
   rbtrace (0.5.5) sha256=ed0200ffeac4251f3464412e52f36cd64c473673c2739129e0b48c568672fe68
+  rchardet (1.10.2) sha256=e041cb195f464dc10e49ab130f78c8b5956cd9a4f4f6df84e0c183b87c135f33
   rdoc (8.1.0) sha256=befc37880a5cfd36dcb176c748b5fd5ee39dd3536a75e81824e4972ce230f60a
   redcarpet (3.6.1) sha256=d444910e6aa55480c6bcdc0cdb057626e8a32c054c29e793fa642ba2f155f445
   redis (6.0.0) sha256=de71c10edd106986b759ec7ecdd08b63b9c0ee7414a0d0c1da73d31ba2bccda6
