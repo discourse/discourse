@@ -941,11 +941,10 @@ export default class Topic extends RestModel {
 
   @computed
   get postStream(): PostStream {
-    // TODO(typescript-pending): store has no postStream registry entry; remove when PostStream is typed.
     return this.store.createRecord("postStream", {
       id: this.id,
       topic: this,
-    }) as PostStream;
+    });
   }
 
   @computed("tags")
@@ -1221,36 +1220,27 @@ export default class Topic extends RestModel {
 
   firstPost(): globalThis.Promise<Post> {
     const postStream = this.postStream;
-    // TODO(typescript-pending): PostStream does not type its post collection; remove when PostStream is typed.
-    const firstPost = postStream.posts[0] as
-      | (Post & { post_number: number })
-      | undefined;
+    const firstPost = postStream.posts[0];
 
     if (firstPost && firstPost.post_number === 1) {
       return Promise.resolve(firstPost);
     }
 
-    // TODO(typescript-pending): PostStream's id lookup is untyped; remove when PostStream is typed.
-    const postId = postStream.findPostIdForPostNumber(1) as number | undefined;
+    const postId = postStream.findPostIdForPostNumber(1);
     if (postId) {
       return this.postById(postId);
     } else {
-      // TODO(typescript-pending): PostStream's load result is untyped; remove when PostStream is typed.
-      return this.postStream.loadPostByPostNumber(
-        1
-      ) as globalThis.Promise<Post>;
+      return this.postStream.loadPostByPostNumber(1);
     }
   }
 
   postById(id: number): globalThis.Promise<Post> {
-    // TODO(typescript-pending): PostStream's loaded-post lookup is untyped; remove when PostStream is typed.
-    const loaded = this.postStream.findLoadedPost(id) as Post | undefined;
+    const loaded = this.postStream.findLoadedPost(id);
     if (loaded) {
       return Promise.resolve(loaded);
     }
 
-    // TODO(typescript-pending): PostStream's load result is untyped; remove when PostStream is typed.
-    return this.postStream.loadPost(id) as globalThis.Promise<Post>;
+    return this.postStream.loadPost(id);
   }
 
   deleteBookmarks(): globalThis.Promise<unknown> {
@@ -1294,10 +1284,7 @@ export default class Topic extends RestModel {
       )
       .map((bookmark) => (bookmark as TopicBookmarkData).bookmarkable_id);
     postIds.forEach((postId) => {
-      // TODO(typescript-pending): PostStream's loaded-post lookup is untyped; remove when PostStream is typed.
-      const loadedPost = this.postStream.findLoadedPost(postId) as
-        | Post
-        | undefined;
+      const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {
         loadedPost.clearBookmark();
       }

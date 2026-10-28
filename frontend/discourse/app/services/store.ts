@@ -11,6 +11,7 @@ import WeakValueMap from "discourse/lib/weak-value-map";
 import type Category from "discourse/models/category";
 import type PendingPost from "discourse/models/pending-post";
 import type { default as Post, PostCreateAttrs } from "discourse/models/post";
+import type PostStream from "discourse/models/post-stream";
 import type PublishedPage from "discourse/models/published-page";
 import RestModel, {
   type RestModelAttrs,
@@ -32,6 +33,7 @@ export interface ModelRegistry {
   category: Category;
   "pending-post": PendingPost;
   post: Post;
+  "post-stream": PostStream;
   "published-page": PublishedPage;
   site: Site;
   topic: Topic;
