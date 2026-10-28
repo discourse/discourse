@@ -821,9 +821,8 @@ aside.onebox.github-onebox {
   }
 
   > .source.github-onebox__header {
-    flex-direction: row-reverse;
-    flex-wrap: nowrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(max-content, 1fr);
     gap: 0.5em 1em;
     margin: 0;
     padding: 0.5em 1em;
@@ -846,15 +845,15 @@ aside.onebox.github-onebox {
   }
 
   .github-onebox__label {
-    flex-shrink: 0;
+    grid-area: 1 / 2;
+    justify-self: end;
     color: var(--github-onebox-status-color);
     font-weight: var(--token-font-weight-semibold);
     white-space: nowrap;
   }
 
   .github-onebox__repo[href] {
-    flex: 1;
-    max-width: 20rem;
+    grid-area: 1 / 1;
     color: var(--primary);
 
     > span {
@@ -876,6 +875,10 @@ aside.onebox.github-onebox {
   }
 
   @container github-onebox (width < 28rem) {
+    > .source.github-onebox__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
     .github-onebox__label {
       gap: 0;
 
