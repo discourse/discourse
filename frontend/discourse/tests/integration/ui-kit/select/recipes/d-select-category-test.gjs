@@ -1073,6 +1073,24 @@ module(
         }
       });
 
+      test("the footer sets its subcategories apart from its count, as the count is from the name", async function (assert) {
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+        await select().search("Category");
+
+        const footer = find("[data-value='category-descendants-1001']");
+        const gapBefore = (selector) =>
+          parseFloat(
+            getComputedStyle(footer.querySelector(selector)).marginInlineStart
+          );
+        assert.true(gapBefore(".topic-count") > 0, "the count has a gap");
+        assert.strictEqual(
+          gapBefore(".plus-subcategories"),
+          gapBefore(".topic-count"),
+          "the subcategories mark has the same gap"
+        );
+      });
+
       test("picking a footer adds the family and every level below it", async function (assert) {
         const onChange = sinon.spy();
 

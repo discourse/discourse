@@ -37,7 +37,8 @@
 }
 
 .d-select__option {
-  .badge-category__wrapper .topic-count {
+  .badge-category__wrapper .topic-count,
+  .badge-category__wrapper .plus-subcategories {
     margin-inline-start: 0.5em;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
