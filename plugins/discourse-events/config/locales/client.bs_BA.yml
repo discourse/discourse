@@ -52,6 +52,8 @@ bs_BA:
               title: "Javno"
             private:
               title: "Privatno"
+      recording_modal:
+        save: "Sačuvaj"
       composer:
         url_placeholder: "Add URL"
         reminder:

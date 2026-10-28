@@ -29,7 +29,9 @@ hy:
           other: "%{count} պատասխան"
         assign: "Վերագրել"
         unassign: "Ետ կանչել վերագրումը"
-        created_by: "Ստեղծել է՝"
+        owners:
+          one: "Սեփականատեր"
+          other: "Սեփականատերեր"
       manage:
         name: "Անուն"
         constraint_categories: "Կատեգորիաներ"

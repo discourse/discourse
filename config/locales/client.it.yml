@@ -28,6 +28,7 @@ it:
     access_control:
       manage:
         access_permission_editor: "Redattore"
+        access_permission_owner: "Proprietario"
         access_permission_remove: "Rimuovi"
     number:
       format:

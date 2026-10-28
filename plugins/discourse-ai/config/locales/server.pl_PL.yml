@@ -19,6 +19,7 @@ pl_PL:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
       ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
       ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
+      ai_ask_ai_external_source: "Zapytaj AI pominęło swoje zewnętrzne źródło <a href='%{base_path}/admin/plugins/discourse-ai/ai-tools/%{target}/edit'>%{tool_name}</a> w %{skipped} podczas ostatnich %{searches} wyszukiwań w ciągu ostatnich %{hours} godzin: %{timed_out} zajęło więcej czasu niż oczekiwanie na źródło zewnętrzne, %{failed} nie powiodło się, a %{busy} zostały pominięte, bo zbyt wiele wyszukiwań wciąż czekało na źródła zewnętrzne."
       ai_image_caption_agent: "Podpisy AI do obrazów są włączone, ale wybrany agent podpisów do obrazów nie jest gotowy: %{reason}. <a href='%{url}'>Przejrzyj agenta podpisów do obrazów</a>."
       ai_image_caption_agent_reasons:
         agent_missing: "wybrany agent nie istnieje"
@@ -94,15 +95,20 @@ pl_PL:
     ai_toxicity_flag_threshold_threat: "Zagrożenie"
     ai_toxicity_flag_threshold_sexual_explicit: "Treści erotyczne"
     ai_toxicity_groups_bypass: "Posty użytkowników w tych grupach nie będą klasyfikowane według modułu toksyczności."
-    ai_sentiment_enabled: "Włącz moduł sentymentu."
+    ai_sentiment_enabled: "Klasyfikuj wpisy jako pozytywne, neutralne lub negatywne."
+    ai_sentiment_emotion_enabled: "Klasyfikuj emocje wyrażone we wpisach."
     ai_sentiment_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API dla modułu sentymentu"
     ai_sentiment_inference_service_api_key: "Klucz dla API sentymentu"
     ai_sentiment_model_configs: "Punkty końcowe modelu klasyfikacji do wykorzystania we wnioskowaniu. Odczucie klasyfikuje wpisy jako pozytywne, neutralne lub negatywne. Emocja klasyfikuje wpisy według obsługiwanych etykiet emocji."
     ai_sentiment_models: "Punkty końcowe modelu klasyfikacji do wykorzystania we wnioskowaniu. Odczucie klasyfikuje wpisy jako pozytywne, neutralne lub negatywne. Emocja klasyfikuje posty według obsługiwanych etykiet emocji."
-    ai_sentiment_sentiment_classification_strategy: "Backend klasyfikacji odczuć."
-    ai_sentiment_sentiment_agent: "Agent używany do klasyfikowania odczuć, gdy zapleczem odczuć jest agent."
-    ai_sentiment_emotion_classification_strategy: "Backend klasyfikacji emocji."
-    ai_sentiment_emotion_agent: "Agent do wykorzystania w klasyfikacji emocji, gdy zapleczem emocji jest agent."
+    ai_sentiment_sentiment_classification_strategy: "Zaplecze klasyfikacji sentymentów."
+    ai_sentiment_sentiment_agent: "Agent klasyfikacji sentymentów."
+    ai_sentiment_sentiment_decision_model: "Model decyzyjny do klasyfikacji sentymentu. Jego zmiana nie powoduje reklasyfikacji istniejących wyników."
+    ai_sentiment_emotion_decision_model: "Model decyzyjny do klasyfikacji emocji. Wyniki są rozdzielone na 28 emocji. Zmiana nie powoduje reklasyfikacji istniejących wyników."
+    ai_sentiment_emotion_classification_strategy: "Zaplecze klasyfikacji emocji."
+    ai_sentiment_emotion_agent: "Agent klasyfikacji emocji."
+    ai_sentiment_backfill_maximum_posts_per_hour: "Przybliżony limit godzinowy dla 5-minutowego skanowania. Każdy włączony klasyfikator może generować żądanie na wpis. Odmowy mogą być ponawiane. 0 zatrzymuje zaplanowane skanowanie, w tym nowe wpisy; edytowane wpisy są sprawdzane osobno."
+    ai_sentiment_backfill_post_max_age_days: "Skanuj tylko wpisy utworzone w ciągu podanej liczby dni. 0 oznacza dzisiaj, a nie nieograniczoną historię."
     ai_nsfw_detection_enabled: "Włącz moduł NSFW."
     ai_nsfw_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API dla modułu NSFW"
     ai_nsfw_inference_service_api_key: "Klucz dla NSFW API"
@@ -174,6 +180,12 @@ pl_PL:
     ai_ask_ai_agent: "Agent wybierający źródła i piszący odpowiedzi Zapytaj AI."
     ai_ask_ai_query_rewriter_agent: "Agent używany do przygotowywania oddzielnych zapytań dotyczących słów kluczowych i semantyki dla Zapytaj AI. Jeśli ten agent lub jego model są niedostępne, Zapytaj AI wyszukuje według oryginalnego zapytania użytkownika."
     ai_ask_ai_follow_up_agent: "Agent używany, gdy użytkownik chce śledzić wynik Zapytaj AI. Wybrany agent musi być włączony, zezwalać na wiadomości prywatne i być dostępny dla użytkownika."
+    ai_ask_ai_keyword_search_enabled: "Przeszukaj forum według słów kluczowych, aby znaleźć odpowiedzi na pytanie Zapytaj AI."
+    ai_ask_ai_semantic_search_enabled: "Przeszukaj forum semantycznie, aby znaleźć odpowiedzi na pytanie Zapytaj AI. Wymaga osadzenia."
+    ai_ask_ai_search_categories: "Przeszukuj tylko te kategorie i ich podkategorie, aby znaleźć odpowiedzi na pytania Zapytaj AI. Wiadomości osobiste nadal będą przeszukiwane, gdy o nie zapytasz. Pozostaw puste, aby przeszukać wszystkie kategorie."
+    ai_ask_ai_search_max_age_days: "Szukaj odpowiedzi na Zapytaj AI tylko we wpisach utworzonych w ciągu tej liczby dni. Ustaw 0, aby wyszukiwać posty z dowolnego wieku."
+    ai_ask_ai_external_sources: "Niestandardowe narzędzia Zapytaj AI przeszukują forum równolegle z nim. Każde z nich jest wywoływane wraz z zapytaniem użytkownika i musi zwrócić listę wyników, każdy z tytułem, adresem URL http(s) oraz opcjonalnie opisem, treścią i adresem published_at. Zapytania są wysyłane do wszystkich usług, do których wywołują te narzędzia."
+    ai_ask_ai_external_sources_timeout: "Sekundy, gdy Zapytaj AI czeka na wszystkie zewnętrzne źródła, przeszukane jednocześnie, zanim odpowie, nie uruchamiając tych, które są już aktywne. Wlicza się to do 20 sekund, które może zająć zapytanie Zapytaj AI, więc dłuższe oczekiwanie pozostawia mniej czasu na napisanie odpowiedzi."
     ai_ask_ai_allowed_groups: "Grupy mogą korzystać z Zapytaj AI i funkcji przekazywania kolejnych wiadomości. Uprawnienia agenta Zapytaj AI, agenta przekazującego kolejne wiadomości oraz standardowe tematy, kategorie i widoczność wiadomości osobistych nadal obowiązują. Semantyczne wyszukiwanie wiadomości osobistych wymaga wartości {{setting:ai_embeddings_generate_for_pms}}. Treści widoczne dla uprawnionego użytkownika, w tym tematy zastrzeżone i wiadomości osobiste, mogą być wysyłane do skonfigurowanego dostawcy LLM."
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX dla Google Custom Search API"
@@ -204,93 +216,93 @@ pl_PL:
       description: "Raport ten umożliwia analizę nastrojów dotyczących postów pogrupowanych według kategorii, przypisując każdemu postowi i kategorii pozytywne, negatywne i neutralne oceny."
     overall_sentiment:
       title: "Ogólny sentyment"
-      description: "Wykres porównuje liczbę wpisów sklasyfikowanych jako pozytywne lub negatywne. Są one obliczane, gdy wynik pozytywny lub negatywny przekracza ustalony próg. Oznacza to, że posty neutralne nie są wyświetlane. Wiadomości prywatne (PW) również są wykluczane. W zależności od wybranej metody klasyfikacji sentymentu wpisy są klasyfikowane za pomocą skonfigurowanego modelu klasyfikacji sentymentu („cardiffnlp/twitter-roberta-base-sentiment-latest”) lub skonfigurowanego agenta klasyfikacji sentymentu."
+      description: "Wykres przedstawia liczbę pozytywnych wpisów pomniejszoną o liczbę negatywnych wpisów każdego dnia. Wpisy liczą się jako pozytywne lub negatywne, gdy ich wynik przekroczy próg. Wpisy neutralne i wiadomości prywatne (PW) są wyłączone. Wyniki pochodzą z wybranego zaplecza klasyfikacji sentymentu."
       xaxis: "Pozytywny(%)"
       yaxis: "Data"
     emotion_admiration:
       title: "🤩 Podziw"
-      description: "Posty sklasyfikowane pod kątem podziwu emocjonalnego za pośrednictwem sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „podziw” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_amusement:
       title: "😄 Rozrywka"
-      description: "Posty sklasyfikowane pod kątem emocji rozrywki za pomocą sztucznej inteligencji, przy użyciu modelu 'SamLowe/roberta-base-go_emotions'."
+      description: "Wpisy oznaczone jako „zabawa” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_anger:
       title: "😠 Gniew"
-      description: "Posty sklasyfikowane według emocji gniew za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „gniew” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_annoyance:
       title: "😒 Irytacja"
-      description: "Posty sklasyfikowane pod kątem emocji irytacji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „irytacja” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_approval:
       title: "👍Aprobata"
-      description: "Posty sklasyfikowane na podstawie akceptacji emocji przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „pozytywne” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_caring:
       title: "🤗 Troskliwy"
-      description: "Posty klasyfikowane pod kątem emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „troska” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_confusion:
       title: "😕 Zamieszanie"
-      description: "Posty sklasyfikowane pod kątem emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „zdezorientowanie” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_curiosity:
       title: "🤔 Ciekawość"
-      description: "Posty klasyfikowane pod kątem ciekawości emocjonalnej za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „ciekawość” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_desire:
       title: "😍 Pragnienie"
-      description: "Posty sklasyfikowane według pożądanej emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „pragnienie” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_disappointment:
       title: "😞 Rozczarowanie"
-      description: "Posty sklasyfikowane pod kątem emocji rozczarowania przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „rozczarowanie” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_disapproval:
       title: "👎 Niezadowolenie"
-      description: "Posty sklasyfikowane pod kątem emocji dezaprobaty przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „niezadowolenie” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_disgust:
       title: "🤢 Niesmak"
-      description: "Posty sklasyfikowane za pomocą sztucznej inteligencji z emocją wstrętu, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „wstręt” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_embarrassment:
       title: "😳 Zażenowanie"
-      description: "Posty sklasyfikowane pod kątem emocji zażenowania przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „zawstydzenie” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_excitement:
       title: "🤪 Podniecenie"
-      description: "Posty klasyfikowane według emocji wywołanych przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „podekscytowanie” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_fear:
       title: "😨 Strach"
-      description: "Posty sklasyfikowane za pomocą sztucznej inteligencji, z uwzględnieniem emocji strachu, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „strach” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_gratitude:
       title: "🙏 Wdzięczność"
-      description: "Posty sklasyfikowane pod kątem wdzięczności za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „wdzięczność” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_grief:
       title: "😢 Żal"
-      description: "Posty sklasyfikowane pod kątem emocji żałoby za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „smutek” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_joy:
       title: "😊 Radość"
-      description: "Posty sklasyfikowane według emocji „radość” za pomocą sztucznej inteligencji, wykorzystując model „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „radość” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_love:
       title: '❤️ Miłość'
-      description: "Posty sklasyfikowane według emocji „miłość” za pomocą sztucznej inteligencji, wykorzystując model „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „miłość” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_nervousness:
       title: "😰 Nerwowość"
-      description: "Posty sklasyfikowane pod kątem emocji związanych z nerwowością za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „nerwowość” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_neutral:
       title: "😐 Neutralne"
-      description: "Posty sklasyfikowane jako neutralne emocjonalnie przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „neutralne” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_optimism:
       title: "🌟 Optymizm"
-      description: "Posty sklasyfikowane pod kątem optymizmu emocjonalnego za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „optymizm” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_pride:
       title: "🦁 Duma"
-      description: "Posty sklasyfikowane za pomocą sztucznej inteligencji z emocją dumy, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone emocją „duma” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_realization:
       title: "💡 Uświadomienie"
-      description: "Posty sklasyfikowane pod kątem realizacji emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „uświadomienie” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_relief:
       title: "😌 Ulga"
-      description: "Posty sklasyfikowane pod kątem ulgi emocjonalnej za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „ulga” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_remorse:
       title: "😔 Wyrzuty sumienia"
-      description: "Posty sklasyfikowane pod kątem wyrzutów sumienia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „wyrzuty sumienia” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_sadness:
       title: "😭 Smutek"
-      description: "Posty sklasyfikowane według emocji smutek za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „smutek” przy użyciu wybranego modułu klasyfikacji emocji."
     emotion_surprise:
       title: "😲 Niespodzianka"
-      description: "Posty sklasyfikowane według emocji zaskoczenia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
+      description: "Wpisy oznaczone jako „zaskoczenie” przy użyciu wybranego modułu klasyfikacji emocji."
   discourse_ai:
     ask_ai_reports:
       no_model: "Przed wygenerowaniem raportów skonfiguruj domyślny model języka sztucznej inteligencji."
@@ -449,6 +461,9 @@ pl_PL:
         llm_missing: "Agent podpisów obrazów AI musi używać LLM."
         llm_vision_disabled: "Agent podpisujący obrazy za pomocą sztucznej inteligencji musi używać LLM z obsługą obrazu."
     ask_ai:
+      external_sources:
+        invalid_output: "Źródła Zapytaj AI muszą zwrócić listę wyników."
+        invalid_result: "Wynik %{position} wymaga tytułu i adresu URL http(s)."
       configuration:
         agent_missing: "Wybierz istniejącego agenta, aby wykonać dalsze czynności w ramach usługi Zapytaj AI."
         agent_disabled: "Agent Zapytaj AI musi być włączony."

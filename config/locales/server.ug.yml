@@ -4545,6 +4545,9 @@ ug:
       truncated_file: "بۇ ھۆججەت قىسقارتىلدى."
       show_original: "ئەسلىنى كۆرسەت"
     github:
+      header:
+        file: "ھۆججەت"
+        success: "مۇۋەپپەقىيەتلىك"
       binary_file: "بۇ ئىككىلىك ھۆججەت."
       truncated_file: "بۇ ھۆججەت قىسقارتىلدى."
       show_original: "ئەسلىنى كۆرسەت"
@@ -4558,8 +4561,9 @@ ug:
       review_by: "تەكشۈرگۈچى"
       pr_summary: "%{commits} تاپشۇرۇش ئۆزگەرتىلگەندىن كېيىنكى %{changed_files} ھۆججەتنى يوللىدى، ئۇنىڭدا %{additions} يېڭىدىن قوشۇلغان ھۆججەت، %{deletions} ئۆچۈرۈلگەن ھۆججەت"
       no_description: "GitHub دا ھېسابات قۇرۇپ %{repo} ئىجادىيىتىگە تۆھپە قوشقىلى بولىدۇ."
-      status_date:
-        open: "ئېچىلدى"
+      pr_status:
+        draft: "دەسلەپكى نۇسخا"
+        open: "ئاچ"
         approved: "تەستىقلاندى"
         closed: "تاقالدى"
   discourse_push_notifications:

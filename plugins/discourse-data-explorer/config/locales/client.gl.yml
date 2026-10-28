@@ -10,7 +10,6 @@ gl:
       or: "ou"
       ai:
         generate: "Xerar"
-        optional: "opcional"
       help:
         label: "Axuda"
       schema:
@@ -24,6 +23,7 @@ gl:
         form:
           label: "Tipo de gráfica"
           bar: "Barra"
+      name: "Nome"
       query_groups: "Grupos"
       query_tags: "Etiquetas"
       query_description: "Descrición"

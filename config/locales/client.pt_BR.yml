@@ -49,6 +49,7 @@ pt_BR:
     access_control:
       manage:
         access_permission_editor: "Editor(a)"
+        access_permission_owner: "Proprietário(a)"
         access_permission_remove: "Remover"
     carousel:
       go_to_slide: "Ir para o slide %{index}"

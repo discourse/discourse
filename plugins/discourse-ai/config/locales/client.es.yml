@@ -270,7 +270,6 @@ es:
         none: "Ninguna"
       features:
         short_title: "Características"
-        description: "Estas son las características de IA disponibles para los visitantes de tu sitio. Se pueden configurar para usar agentes y LLM específicos, y los grupos pueden controlar su acceso."
         back: "Volver a las características de IA"
         settings_save_error: "Algunos ajustes no se han podido guardar."
         disabled: "(desactivado)"
@@ -284,6 +283,7 @@ es:
         no_llm: "No hay LLM seleccionados"
         no_agent: "No establecido"
         no_groups: "Ninguna"
+        classification_model: "Modelo:"
         edit: "Ajustes"
         expand_list:
           one: "(%{count} más)"
@@ -302,10 +302,17 @@ es:
           enabled: "Activado"
         filters:
           all: "Todo"
-          text: "Buscar características, agentes, LLM o grupos..."
           no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
         no_automations: "Aún no hay automatizaciones"
+        sentiment:
+          sentiment: "Sentimiento"
+          emotion: "Emoción"
+          enabled: "Activado"
+          agent: "Agente"
+          setting_groups:
+            sentiment: "Sentimiento"
+            emotion: "Emoción"
         summarization:
           name: "Resúmenes"
           description: "Pone a disposición un botón de resumen que permite que los visitantes puedan resumir temas"

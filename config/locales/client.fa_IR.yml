@@ -28,6 +28,7 @@ fa_IR:
     access_control:
       manage:
         access_permission_editor: "ویرایشگر"
+        access_permission_owner: "مالک"
         access_permission_remove: "پاک کردن"
     number:
       format:

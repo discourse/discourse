@@ -425,7 +425,6 @@ fi:
               one: "%{count} käyttäjä kutsuttu"
               other: "%{count} käyttäjää kutsuttu"
         event:
-          expired: "Vanhentunut"
           closed: "Suljettu"
           status:
             standalone:
@@ -437,6 +436,8 @@ fi:
             private:
               title: "Yksityinen"
               description: "Yksityiseen tapahtumaan voivat liittyä vain kutsutut käyttäjät."
+      recording_modal:
+        save: "Tallenna"
       composer:
         name_placeholder: "Tapahtuman nimi"
         url_placeholder: "Lisää URL"

@@ -48,6 +48,8 @@ lv:
               title: "Publisks"
             private:
               title: "Privāts"
+      recording_modal:
+        save: "Saglabāt"
       composer:
         url_placeholder: "Pievienot URL"
         reminder:

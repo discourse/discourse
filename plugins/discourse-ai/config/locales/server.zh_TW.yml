@@ -85,15 +85,12 @@ zh_TW:
     ai_toxicity_flag_threshold_threat: "威脅"
     ai_toxicity_flag_threshold_sexual_explicit: "性露骨內容"
     ai_toxicity_groups_bypass: "這些群組中的使用者，其貼文不會由有害內容模組分類。"
-    ai_sentiment_enabled: "啟用情緒分析模組。"
     ai_sentiment_inference_service_api_endpoint: "情緒分析模組 API 的執行 URL"
     ai_sentiment_inference_service_api_key: "情緒分析 API 的 API 金鑰"
     ai_sentiment_model_configs: "用於推論的分類模型端點。情感分析會將貼文分為正面、中性或負面；情緒分析會依支援的情緒標籤分類貼文。"
     ai_sentiment_models: "用於推論的分類模型端點。情感分析會將貼文分為正面、中性或負面；情緒分析會依支援的情緒標籤分類貼文。"
     ai_sentiment_sentiment_classification_strategy: "情感分類後端。"
-    ai_sentiment_sentiment_agent: "情感分析後端為代理程式時，用於情感分類的代理程式。"
     ai_sentiment_emotion_classification_strategy: "情緒分類後端。"
-    ai_sentiment_emotion_agent: "情緒分析後端為代理程式時，用於情緒分類的代理程式。"
     ai_nsfw_detection_enabled: "啟用 NSFW 模組。"
     ai_nsfw_inference_service_api_endpoint: "NSFW 模組 API 的執行 URL"
     ai_nsfw_inference_service_api_key: "NSFW API 的 API 金鑰"
@@ -182,93 +179,64 @@ zh_TW:
       description: "此報告提供依分類分組的貼文情感分析，並列出每篇貼文及每個分類的正面、負面和中性分數。"
     overall_sentiment:
       title: "整體情感"
-      description: "圖表比較分類為正面或負面的貼文數量。正面或負面分數高於設定的門檻分數時才會計入，因此不會顯示中性貼文，也會排除私人訊息。依所選的情感分類方法，貼文會由設定的情感分類模型（「cardiffnlp/twitter-roberta-base-sentiment-latest」）或設定的情感分類代理程式進行分類。"
       xaxis: "正面（%）"
       yaxis: "日期"
     emotion_admiration:
       title: "🤩 欽佩"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「欽佩」情緒的貼文。"
     emotion_amusement:
       title: "😄 歡樂"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「歡樂」情緒的貼文。"
     emotion_anger:
       title: "😠 憤怒"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「憤怒」情緒的貼文。"
     emotion_annoyance:
       title: "😒 煩躁"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「煩躁」情緒的貼文。"
     emotion_approval:
       title: "👍 認同"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「認同」情緒的貼文。"
     emotion_caring:
       title: "🤗 關懷"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「關懷」情緒的貼文。"
     emotion_confusion:
       title: "😕 困惑"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「困惑」情緒的貼文。"
     emotion_curiosity:
       title: "🤔 好奇"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「好奇」情緒的貼文。"
     emotion_desire:
       title: "😍 渴望"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「渴望」情緒的貼文。"
     emotion_disappointment:
       title: "😞 失望"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「失望」情緒的貼文。"
     emotion_disapproval:
       title: "👎 不認同"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「不認同」情緒的貼文。"
     emotion_disgust:
       title: "🤢 厭惡"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「厭惡」情緒的貼文。"
     emotion_embarrassment:
       title: "😳 尷尬"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「尷尬」情緒的貼文。"
     emotion_excitement:
       title: "🤪 興奮"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「興奮」情緒的貼文。"
     emotion_fear:
       title: "😨 恐懼"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「恐懼」情緒的貼文。"
     emotion_gratitude:
       title: "🙏 感激"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「感激」情緒的貼文。"
     emotion_grief:
       title: "😢 悲痛"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「悲痛」情緒的貼文。"
     emotion_joy:
       title: "😊 喜悅"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「喜悅」情緒的貼文。"
     emotion_love:
       title: '❤️ 愛'
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「愛」情緒的貼文。"
     emotion_nervousness:
       title: "😰 緊張"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「緊張」情緒的貼文。"
     emotion_neutral:
       title: "😐 中性"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「中性」情緒的貼文。"
     emotion_optimism:
       title: "🌟 樂觀"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「樂觀」情緒的貼文。"
     emotion_pride:
       title: "🦁 自豪"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「自豪」情緒的貼文。"
     emotion_realization:
       title: "💡 領悟"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「領悟」情緒的貼文。"
     emotion_relief:
       title: "😌 如釋重負"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「如釋重負」情緒的貼文。"
     emotion_remorse:
       title: "😔 懊悔"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「懊悔」情緒的貼文。"
     emotion_sadness:
       title: "😭 悲傷"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「悲傷」情緒的貼文。"
     emotion_surprise:
       title: "😲 驚訝"
-      description: "透過 AI 使用模型「SamLowe/roberta-base-go_emotions」分類為「驚訝」情緒的貼文。"
   discourse_ai:
     ai_artifact:
       errors:

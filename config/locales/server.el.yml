@@ -3049,13 +3049,16 @@ el:
     gitlab:
       show_original: "εμφάνιση πρωτότυπου"
     github:
+      header:
+        success: "Επιτυχία"
       show_original: "εμφάνιση πρωτότυπου"
       closed: "κλειστό"
       review_by: "Έλεγχος από"
-      status_date:
-        draft: "προσχέδιο"
-        approved: "εγκεκριμένο"
-        closed: "κλειστή"
+      pr_status:
+        draft: "Προσχέδιο"
+        open: "Άνοιγμα"
+        approved: "Εγκρίθηκε "
+        closed: "Κλειστή"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} σε ανέφερε στο "%{topic}" - %{site_title}'

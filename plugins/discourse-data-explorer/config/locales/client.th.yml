@@ -8,8 +8,6 @@ th:
   js:
     explorer:
       or: "หรือ"
-      ai:
-        optional: "ทางเลือก"
       help:
         label: "ช่วยเหลือ"
       schema:
@@ -19,6 +17,7 @@ th:
           yes: "ใช่"
           no: "ไม่ใช่"
       delete: "ลบ"
+      name: "ชื่อ"
       query_groups: "กลุ่ม"
       query_tags: "ป้าย"
       query_description: "รายละเอียด"

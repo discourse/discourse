@@ -141,7 +141,11 @@ pl_PL:
         constraint_fix_tags: "Dodaj tag tablicy"
         constraint_fix_confirm: "Przenieś i zaktualizuj"
         constraint_tooltip: "Na tym forum dozwolone są wyłącznie tematy zawierające poniższe kategorie i tagi."
-        created_by: "Stworzono przez"
+        owners:
+          one: "Właściciel"
+          few: "Właściciele"
+          many: "Właściciele"
+          other: "Właściciele"
         show_older_cards: "Pokaż starsze karty: %{count}"
         errors:
           category_unavailable: "Kategoria docelowa nie jest już dostępna. Zaktualizuj ustawienia tablicy lub kolumny przed utworzeniem tematu."

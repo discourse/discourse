@@ -55,13 +55,14 @@ lt:
         status: "Statusas"
       models:
         event:
-          expired: "Baigėsi galiojimo laikas"
           closed: "Uždaryta"
           status:
             public:
               title: "Vieša"
             private:
               title: "Privatu"
+      recording_modal:
+        save: "Saugoti"
       composer:
         location_or_url_placeholder: "Pridėti vietą arba URL"
         url_placeholder: "Pridėti URL"

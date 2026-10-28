@@ -43,6 +43,7 @@ es:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Propietario"
         access_permission_remove: "Eliminar"
     carousel:
       go_to_slide: "Ir a la diapositiva %{index}"

@@ -54,6 +54,7 @@ ro:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Deținător"
         access_permission_remove: "Elimină"
     number:
       format:
