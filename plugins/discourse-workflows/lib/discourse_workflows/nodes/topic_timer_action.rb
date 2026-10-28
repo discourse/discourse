@@ -2,7 +2,7 @@
 
 module DiscourseWorkflows
   module Nodes
-    # Set and clear topic timer share the topic's timer types and the topics controller's permission checks.
+    # Set and clear topic timer share the topic's timer types and the timer permission the topics controller uses.
     # Each node defines #change_timer, returning the timer and whether it changed.
     module TopicTimerAction
       include TopicChangeAction
@@ -69,9 +69,7 @@ module DiscourseWorkflows
       end
 
       def ensure_can_change_timer!(topic, actor, type_id)
-        guardian = actor.guardian
-        guardian.ensure_can_set_topic_timer!(topic)
-        guardian.ensure_can_delete!(topic) if ::TopicTimer.destructive_types.value?(type_id)
+        actor.guardian.ensure_can_change_topic_timer!(topic, type_id)
       end
     end
   end
