@@ -119,6 +119,7 @@ export interface UserOption {
   notification_level_when_replying?: number;
   notify_on_linked_posts?: boolean;
   oldest_search_log_date?: string | null;
+  prefer_flat_replies?: boolean;
   push_notification_level?: string;
   redirected_to_top?: { reason: string | null; period: string | number } | null;
   seen_popups?: number[] | null;
