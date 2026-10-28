@@ -26,8 +26,12 @@ module Middleware
 
     def transform_response(request:, response:)
       locale = request.params[Discourse::LOCALE_PARAM]
+      # Set by the controller when the page's tags use the plain URL for the default locale.
+      plain_url =
+        locale == SiteSetting.default_locale &&
+          request.env[ContentLocalization::PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV]
 
-      if ContentLocalization.crawler_locale_param_enabled? && locale.present?
+      if ContentLocalization.crawler_locale_param_enabled? && locale.present? && !plain_url
         html_fragment = Nokogiri::HTML5.parse(response.body)
 
         html_fragment
