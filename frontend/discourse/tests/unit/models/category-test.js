@@ -34,6 +34,59 @@ module("Unit | Model | category", function (hooks) {
     assert.strictEqual(baz.parentCategory, foo);
   });
 
+  test("descriptionPlainText reverses the server's escaping of the description", function (assert) {
+    const category = Site.current().updateCategory({
+      id: 12360,
+      slug: "escaped",
+      description_text:
+        "Q&amp;A on &lt;b&gt;tags&lt;/b&gt;, &quot;quotes&quot; and it&#39;s",
+    });
+
+    assert.strictEqual(
+      category.descriptionPlainText,
+      `Q&A on <b>tags</b>, "quotes" and it's`
+    );
+  });
+
+  test("descriptionPlainText decodes each entity once", function (assert) {
+    const category = Site.current().updateCategory({
+      id: 12361,
+      slug: "literal-entities",
+      description_text: "Write &amp;lt;b&amp;gt; or &amp;hellip; literally",
+    });
+
+    assert.strictEqual(
+      category.descriptionPlainText,
+      "Write &lt;b&gt; or &hellip; literally",
+      "text that spelled an entity keeps it as typed"
+    );
+  });
+
+  test("descriptionPlainText decodes the transformed description", function (assert) {
+    withPluginApi((api) =>
+      api.registerValueTransformer(
+        "category-description-text",
+        ({ value }) => `${value} &amp; more`
+      )
+    );
+    const category = Site.current().updateCategory({
+      id: 12362,
+      slug: "transformed",
+      description_text: "Tips &amp; tricks",
+    });
+
+    assert.strictEqual(category.descriptionPlainText, "Tips & tricks & more");
+  });
+
+  test("descriptionPlainText is undefined without a description", function (assert) {
+    const category = Site.current().updateCategory({
+      id: 12363,
+      slug: "no-description",
+    });
+
+    assert.strictEqual(category.descriptionPlainText, undefined);
+  });
+
   test("slugFor", function (assert) {
     const store = getOwner(this).lookup("service:store");
 

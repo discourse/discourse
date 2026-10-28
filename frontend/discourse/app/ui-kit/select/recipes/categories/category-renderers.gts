@@ -18,14 +18,13 @@ export function normalizeCategoryName(text: string): string {
   return removeAccents(text.toLowerCase());
 }
 
-/** Decodes transformed descriptions without treating their text as markup. */
+/** A row's description: the category's plain-text description, cut to 200 characters. */
 export function categoryDescription(category: Category): string | undefined {
-  const text = category.descriptionText;
+  const text = category.descriptionPlainText;
   if (!text || text === "null") {
     return;
   }
-  const decoded = decodeCategoryText(text);
-  return decoded.length > 200 ? `${decoded.slice(0, 200)}…` : decoded;
+  return text.length > 200 ? `${text.slice(0, 200)}…` : text;
 }
 
 /** Builds an engine row while keeping the site's model as the emitted value. */

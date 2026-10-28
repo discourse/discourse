@@ -244,6 +244,15 @@ const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE: Record<
 > = {};
 const HTTP_NOT_FOUND = 404;
 
+/** The entities the server's HTML escaping produces, and the characters they stand for. */
+const ESCAPED_ENTITIES: Record<string, string> = {
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">",
+  "&quot;": '"',
+  "&#39;": "'",
+};
+
 /** The server's page size limit for `/categories/search`, which the local answer mirrors. */
 const SEARCH_PAGE_LIMIT = 25;
 const SEARCH_TERM_LENGTH = 250;
@@ -1268,6 +1277,22 @@ export default class Category extends RestModel {
       {
         category: this,
       }
+    );
+  }
+
+  /**
+   * The description as plain text, for places that render it escaped. The server sends
+   * `description_text` HTML-escaped, so this reverses exactly that escaping and never parses
+   * markup: tags stay literal text.
+   */
+  get descriptionPlainText(): string | undefined {
+    const text = this.descriptionText;
+    if (typeof text !== "string") {
+      return;
+    }
+    return text.replace(
+      /&(?:amp|lt|gt|quot|#39);/g,
+      (entity) => ESCAPED_ENTITIES[entity]
     );
   }
 
