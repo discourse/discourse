@@ -31,7 +31,7 @@ module DiscourseWorkflows
         else
           result = perform_change(post, actor)
           # A concurrent request by the same actor can make the change first: it then reports it, not this one.
-          changed = result.success?
+          changed = result.success? && !result.try(:already_existed)
           if !changed && liked?(post, actor) != self.class::LIKED
             raise_node_error!(
               result.errors.full_messages.join(", ").presence ||
