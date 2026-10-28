@@ -48,6 +48,7 @@ module DiscourseWorkflows
         "id": { "type": "integer" },
         "title": { "type": "string" },
         "fancy_title": { "type": "string" },
+        "fancy_title_localized": { "type": "boolean", "description": "Whether fancy_title is a translation" },
         "slug": { "type": "string" },
         "url": { "type": "string", "description": "Absolute URL of the topic" },
         "archetype": { "type": "string", "description": "regular for topics, private_message for PMs" },
@@ -55,6 +56,7 @@ module DiscourseWorkflows
         "category_id": { "type": ["integer", "null"] },
         "user_id": { "type": "integer" },
         "username": { "type": ["string", "null"], "description": "Username of the topic author" },
+        "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" },
         "tags": {
           "type": "array",
           "x-optional": true,
@@ -109,7 +111,8 @@ module DiscourseWorkflows
         "reply_count": { "type": "integer" },
         "score": { "type": ["number", "null"] },
         "tags": { "type": "array", "items": { "type": "string" } },
-        "upload_ids": { "type": "array", "items": { "type": "integer" } }
+        "upload_ids": { "type": "array", "items": { "type": "integer" } },
+        "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" }
       }
     JSON
 
@@ -128,7 +131,8 @@ module DiscourseWorkflows
         "silenced": { "type": "boolean" },
         "suspended": { "type": "boolean" },
         "uploaded_avatar_id": { "type": ["integer", "null"] },
-        "avatar_template": { "type": "string" }
+        "avatar_template": { "type": "string" },
+        "locale": { "type": "string", "description": "Interface locale, the site default when the user has not chosen one" }
       }
     JSON
 
