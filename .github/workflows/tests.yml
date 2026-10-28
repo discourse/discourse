@@ -47,6 +47,7 @@ jobs:
         continue-on-error: true
         with:
           name: rspec-core-selection
+          overwrite: true
           path: tmp/rspec-mapping/selection.json
           retention-days: 7
 
@@ -327,6 +328,7 @@ jobs:
         continue-on-error: true
         with:
           name: rspec-core-selection
+          overwrite: true
           path: tmp/rspec-mapping
 
       - name: Prepare RSpec mapping collection
@@ -346,6 +348,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: rspec-core-mapping-main
+          overwrite: true
           path: tmp/rspec-mapping/mapping.json
           if-no-files-found: error
           retention-days: 14
@@ -519,7 +522,7 @@ jobs:
           overwrite: true
 
   merge:
-    if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
+    if: always() && needs.build.result == 'success' && github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: build
     steps:

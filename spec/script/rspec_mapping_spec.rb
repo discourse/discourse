@@ -126,7 +126,7 @@ RSpec.describe Crystalball do
     end
   end
 
-  it "merges complete worker mappings and rejects incomplete collection" do
+  it "merges complete worker mappings and rejects invalid collection" do
     Dir.mktmpdir do |directory|
       output_directory = "#{directory}/tmp/rspec-mapping"
       FileUtils.mkdir_p(output_directory)
@@ -163,22 +163,21 @@ RSpec.describe Crystalball do
       )
       expect(mapping.fetch("shared_globs")).to eq(["frontend/pretty-text/**/*.js"])
 
-      File.write(
-        "#{output_directory}/worker-incomplete.json",
-        JSON.generate(worker.merge(complete: false)),
-      )
+      [worker.merge(complete: false), worker.merge(revision: "b" * 40)].each do |invalid_worker|
+        File.write("#{output_directory}/worker-invalid.json", JSON.generate(invalid_worker))
 
-      output, status =
-        Open3.capture2e(
-          { "GITHUB_SHA" => revision },
-          "ruby",
-          Rails.root.join("script/ci/rspec_selection.rb").to_s,
-          "merge",
-          chdir: directory,
-        )
+        output, status =
+          Open3.capture2e(
+            { "GITHUB_SHA" => revision },
+            "ruby",
+            Rails.root.join("script/ci/rspec_selection.rb").to_s,
+            "merge",
+            chdir: directory,
+          )
 
-      expect(status.success?).to eq(false)
-      expect(output).to include("Incomplete RSpec mapping")
+        expect(status.success?).to eq(false)
+        expect(output).to include("Incomplete RSpec mapping")
+      end
     end
   end
 end
