@@ -283,7 +283,12 @@ class UserUpdater
           user_notification_schedule.destroy_scheduled_timings
         end
       end
-      DiscourseEvent.trigger(:user_updated, user, changed_columns(user, user_profile))
+      DiscourseEvent.trigger(
+        :user_updated,
+        user,
+        changed_columns(user, user_profile),
+        acting_user: @actor,
+      )
 
       if attributes[:custom_fields].present? && user.needs_required_fields_check?
         UserHistory.create!(

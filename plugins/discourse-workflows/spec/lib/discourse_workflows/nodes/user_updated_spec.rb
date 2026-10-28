@@ -87,6 +87,15 @@ RSpec.describe DiscourseWorkflows::Nodes::UserUpdated::V1 do
       expect(described_class.new(user, %w[trust_level]).output[:changed]).to eq([])
     end
 
+    it "outputs whoever updated the user as actor" do
+      admin = Fabricate(:admin)
+
+      event =
+        DiscourseEvent.track(:user_updated) { UserUpdater.new(admin, user).update(name: "Renamed") }
+
+      expect(described_class.new(*event[:params]).output[:actor]).to include(id: admin.id)
+    end
+
     it "reports nil when the event did not say what changed" do
       expect(described_class.new(user).output[:changed]).to be_nil
     end

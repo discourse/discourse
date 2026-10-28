@@ -114,7 +114,12 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.create_tag.errors.not_allowed"))
           end
 
-          tag = Tag.new(name: clean_name, description: parameters[:description].presence)
+          tag =
+            Tag.new(
+              name: clean_name,
+              description: parameters[:description].presence,
+              created_by: guardian.user,
+            )
 
           if tag.save
             StaffActionLogger.new(guardian.user).log_custom("created_tag", subject: tag.name)

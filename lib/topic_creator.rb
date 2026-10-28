@@ -385,6 +385,7 @@ class TopicCreator
           username: UserNameSuggester.suggest(username.presence || email),
           name: display_name.presence || User.suggest_name(email),
           staged: true,
+          created_by: @user,
         )
     end
 

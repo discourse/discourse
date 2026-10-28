@@ -227,6 +227,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Who created the account, for `:user_created` (not stored): the user when they sign up.
+  attr_accessor :created_by
+
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
   after_commit :deactivate_anonymous_shadow_users!, on: :update, if: :deactivated?
@@ -2406,7 +2409,7 @@ class User < ActiveRecord::Base
   end
 
   def trigger_user_updated_event
-    DiscourseEvent.trigger(:user_updated, self, %w[uploaded_avatar_id])
+    DiscourseEvent.trigger(:user_updated, self, %w[uploaded_avatar_id], acting_user: nil)
     true
   end
 
@@ -2435,7 +2438,7 @@ class User < ActiveRecord::Base
   end
 
   def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self)
+    DiscourseEvent.trigger(:user_created, self, acting_user: created_by)
     true
   end
 

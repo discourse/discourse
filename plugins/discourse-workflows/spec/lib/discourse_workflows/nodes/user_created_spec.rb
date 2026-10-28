@@ -37,6 +37,14 @@ RSpec.describe DiscourseWorkflows::Nodes::UserCreated::V1 do
       expect(output).to match_node_output_schema(described_class)
     end
 
+    it "outputs whoever created the account as actor" do
+      admin = Fabricate(:admin)
+
+      event = DiscourseEvent.track(:user_created) { Fabricate(:user, created_by: admin) }
+
+      expect(described_class.new(*event[:params]).output[:actor]).to include(id: admin.id)
+    end
+
     it "flags staged users in the payload" do
       staged_user = Fabricate(:user, staged: true)
 
