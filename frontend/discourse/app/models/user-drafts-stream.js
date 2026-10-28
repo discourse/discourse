@@ -15,6 +15,7 @@ export default class UserDraftsStream extends RestModel {
   limit = 30;
   loading = false;
   hasMore = false;
+  discarded = false;
 
   /** @type {UserDraft[] | null} */
   content = null;
@@ -40,7 +41,7 @@ export default class UserDraftsStream extends RestModel {
   remove(draft) {
     this.set(
       "content",
-      this.content.filter((item) => item.draft_key !== draft.draft_key)
+      this.content.filter((item) => item.id !== draft.id)
     );
   }
 
@@ -55,14 +56,14 @@ export default class UserDraftsStream extends RestModel {
 
     this.set("loading", true);
 
-    const url = `/drafts.json?offset=${this.content.length}&limit=${this.limit}`;
+    const path = this.discarded ? "/discarded_drafts.json" : "/drafts.json";
+    const url = `${path}?offset=${this.content.length}&limit=${this.limit}`;
     return ajax(url)
       .then((result) => {
-        if (!result) {
-          return;
-        }
-
-        if (!result.drafts) {
+        const drafts = this.discarded
+          ? result?.discarded_drafts
+          : result?.drafts;
+        if (!drafts) {
           return;
         }
 
@@ -70,9 +71,9 @@ export default class UserDraftsStream extends RestModel {
           Site.current().updateCategory(category)
         );
 
-        this.set("hasMore", result.drafts.size >= this.limit);
+        this.set("hasMore", drafts.length >= this.limit);
 
-        const promises = result.drafts.map((draft) => {
+        const promises = drafts.map((draft) => {
           draft.data = JSON.parse(draft.data);
           return cook(draft.data.reply).then((cooked) => {
             draft.excerpt = excerpt(cooked.toString(), 300);

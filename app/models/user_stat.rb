@@ -255,7 +255,7 @@ class UserStat < ActiveRecord::Base
     if user_id.present?
       draft_count = DB.query_single(<<~SQL, user_id: user_id).first
         UPDATE user_stats
-        SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
+        SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id AND deleted_at IS NULL)
         WHERE user_id = :user_id
         RETURNING draft_count
       SQL
@@ -271,7 +271,7 @@ class UserStat < ActiveRecord::Base
         SET draft_count = new_user_stats.draft_count
         FROM (SELECT user_stats.user_id, COUNT(drafts.id) draft_count
               FROM user_stats
-              LEFT JOIN drafts ON user_stats.user_id = drafts.user_id
+              LEFT JOIN drafts ON user_stats.user_id = drafts.user_id AND drafts.deleted_at IS NULL
               GROUP BY user_stats.user_id) new_user_stats
         WHERE user_stats.user_id = new_user_stats.user_id
           AND user_stats.draft_count <> new_user_stats.draft_count

@@ -6,20 +6,19 @@ export default class UserActivityDrafts extends DiscourseRoute {
   @service router;
   @service currentUser;
 
-  templateName = "user/stream";
+  templateName = "user-activity/drafts";
 
   beforeModel() {
     if (!this.currentUser) {
       return this.router.transitionTo("discovery.latest");
     }
     if (!this.isCurrentUser(this.modelFor("user"))) {
-      return this.router.transitionTo("userActivity.drafts", this.currentUser);
+      return this.router.transitionTo(this.routeName, this.currentUser);
     }
   }
 
   async model() {
-    const user = this.modelFor("user");
-    const draftsStream = user.get("userDraftsStream");
+    const draftsStream = this.createStream(this.modelFor("user"));
     draftsStream.reset();
 
     await draftsStream.findItems(this.site);
@@ -28,6 +27,10 @@ export default class UserActivityDrafts extends DiscourseRoute {
       stream: draftsStream,
       emptyState: this.emptyState(),
     };
+  }
+
+  createStream(user) {
+    return user.get("userDraftsStream");
   }
 
   emptyState() {

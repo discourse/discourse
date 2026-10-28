@@ -1185,7 +1185,7 @@ describe DiscourseMcp::Tools::DeleteDraft do
       )
 
     expect(result.dig(:structuredContent)).to eq(draft_key: Draft::NEW_TOPIC, deleted: true)
-    expect(Draft.find_by(user:, draft_key: Draft::NEW_TOPIC)).to be_nil
+    expect(Draft.live.find_by(user:, draft_key: Draft::NEW_TOPIC)).to be_nil
   end
 end
 

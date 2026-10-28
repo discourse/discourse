@@ -5,7 +5,9 @@ require_relative "post_item_excerpt"
 class DraftSerializer < ApplicationSerializer
   include PostItemExcerpt
 
-  attributes :created_at,
+  attributes :id,
+             :created_at,
+             :deleted_at,
              :draft_key,
              :sequence,
              :draft_username,

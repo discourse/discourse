@@ -897,6 +897,15 @@ en:
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
+      restore: "Restore"
+      delete_permanently: "Delete permanently"
+      delete_permanently_confirmation: "Delete this draft permanently? This can’t be undone."
+      discarded:
+        title: "Recently discarded"
+        back: "Back to drafts"
+        description:
+          one: "Discarded drafts are kept for %{count} day before they are deleted permanently."
+          other: "Discarded drafts are kept for %{count} days before they are deleted permanently."
       bulk_delete: "Delete selected"
       bulk_delete_confirmation: "Delete drafts"
       bulk_delete_message:
@@ -6485,6 +6494,8 @@ en:
       no_replies_body: "When you <a href='%{searchUrl}'>discover</a> an interesting conversation that you wish to contribute to, press the <kbd>Reply</kbd> button directly under any post to begin replying to that specific post. Or, if you’d prefer to reply to the general topic rather than any individual post or person, look for the <kbd>Reply</kbd> button at the very bottom of the topic, or under the topic timeline."
       no_drafts_title: "You haven’t started any drafts"
       no_drafts_body: "Not quite ready to post? We’ll automatically save a new draft and list it here whenever you start composing a topic, reply, or personal message. Select the cancel button to discard or save your draft to continue later."
+      no_discarded_drafts_title: "No discarded drafts"
+      no_discarded_drafts_body: "Drafts you discard will show up here for a while, so you can bring them back if you change your mind."
       no_likes_title: "You haven’t liked any topics yet"
       no_likes_title_others: "%{username} has not liked any topics yet"
       no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"

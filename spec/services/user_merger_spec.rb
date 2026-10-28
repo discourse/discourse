@@ -152,6 +152,18 @@ RSpec.describe UserMerger do
       expect(DraftSequence.where(user_id: source_user.id).count).to eq(0)
       expect(Draft.where(user_id: source_user.id).count).to eq(0)
     end
+
+    it "moves a live draft when the target only has a discarded one with the same key" do
+      key = "#{Draft::EXISTING_TOPIC}21"
+      create_draft(target_user, key, { reply: "discarded by alice" }.to_json)
+      Draft.clear(target_user, key, DraftSequence.current(target_user, key))
+      create_draft(source_user, key, { reply: "draft by alice1" }.to_json)
+
+      merge_users!
+
+      expect(current_target_user_draft(key)).to eq({ reply: "draft by alice1" }.to_json)
+      expect(Draft.discarded.where(user_id: target_user.id, draft_key: key).count).to eq(1)
+    end
   end
 
   it "updates email logs" do

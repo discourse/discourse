@@ -35,6 +35,13 @@ export default class UserStreamComponent extends Component {
     return this.router.currentRouteName === "userActivity.drafts";
   }
 
+  get isAnyDraftsRoute() {
+    return (
+      this.isDraftsRoute ||
+      this.router.currentRouteName === "userActivity.discardedDrafts"
+    );
+  }
+
   get bulkSelectEnabled() {
     return this.isDraftsRoute && this.args.stream?.content?.length > 0;
   }
@@ -69,7 +76,7 @@ export default class UserStreamComponent extends Component {
     // We want the draft_username for the drafts route,
     // in-case you are editing a post that was created by another user
     // the draft username will show the post item to show the editing user
-    if (this.router.currentRouteName === "userActivity.drafts") {
+    if (this.isAnyDraftsRoute) {
       return "draft_username";
     }
 
@@ -95,6 +102,17 @@ export default class UserStreamComponent extends Component {
 
   @action
   async resumeDraft(item) {
+    let draftData;
+    if (item.discarded) {
+      try {
+        draftData = await Draft.restoreDiscarded(item.id);
+      } catch (error) {
+        popupAjaxError(error);
+        return;
+      }
+      this.args.stream.remove(item);
+    }
+
     if (this.composer.get("model.viewOpen")) {
       this.composer.close();
     }
@@ -102,7 +120,7 @@ export default class UserStreamComponent extends Component {
       DiscourseURL.routeTo(item.get("postUrl"));
     } else {
       try {
-        const draftData = await Draft.get(item.draft_key);
+        draftData ??= await Draft.get(item.draft_key);
         const draft = draftData.draft || item.data;
         if (!draft) {
           return;
@@ -121,10 +139,18 @@ export default class UserStreamComponent extends Component {
   @action
   removeDraft(draft) {
     this.dialog.deleteConfirm({
-      title: i18n("drafts.remove_confirmation"),
+      title: i18n(
+        draft.discarded
+          ? "drafts.delete_permanently_confirmation"
+          : "drafts.remove_confirmation"
+      ),
       didConfirm: async () => {
         try {
-          await Draft.clear(draft.draft_key, draft.sequence);
+          if (draft.discarded) {
+            await Draft.destroyDiscarded(draft.id);
+          } else {
+            await Draft.clear(draft.draft_key, draft.sequence);
+          }
           this.args.stream.remove(draft);
         } catch (error) {
           popupAjaxError(error);

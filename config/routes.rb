@@ -1023,6 +1023,10 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
+      get "#{root_path}/:username/activity/drafts/discarded" => "users#show",
+          :constraints => {
+            username: RouteFormat.username,
+          }
       get "#{root_path}/:username/badges" => "users#badges",
           :constraints => {
             username: RouteFormat.username,
@@ -1764,6 +1768,10 @@ Discourse::Application.routes.draw do
 
     resources :drafts, only: %i[index create show destroy] do
       collection { delete :bulk_destroy }
+    end
+
+    resources :discarded_drafts, only: %i[index destroy] do
+      member { put :restore }
     end
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
