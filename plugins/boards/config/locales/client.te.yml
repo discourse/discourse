@@ -27,7 +27,9 @@ te:
         topic_reply_count:
           one: "%{count} ప్రత్యుత్తరం"
           other: "%{count} ప్రత్యుత్తరాలు"
-        created_by: "సృష్టికర్త"
+        owners:
+          one: "యజమాని"
+          other: "యజమానులు"
       manage:
         name: "పేరు"
         slug: "స్లగ్"

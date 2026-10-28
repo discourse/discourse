@@ -30,6 +30,7 @@ sv:
     access_control:
       manage:
         access_permission_editor: "Redigerare"
+        access_permission_owner: "Ägare"
         access_permission_remove: "Ta bort"
     carousel:
       go_to_slide: "Gå till bild %{index}"

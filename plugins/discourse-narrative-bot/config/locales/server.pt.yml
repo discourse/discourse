@@ -7,11 +7,11 @@
 pt:
   site_settings:
     discourse_narrative_bot_enabled: "Ativar o Bot Narrativo do Discourse (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Desativar a publicação de boas-vindas do Discourse Narrative Bot"
+    disable_discourse_narrative_bot_welcome_post: "Desativar o post de boas-vindas do Bot Narrativo do Discourse"
     discourse_narrative_bot_ignored_usernames: "Nomes de utilizador que o Discourse Narrative Bot deverá ignorar"
     discourse_narrative_bot_disable_public_replies: "Desativar as respostas públicas do Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_type: "O tipo de publicação de boas-vindas que Discourse Narrative Bot deverá enviar"
-    discourse_narrative_bot_welcome_post_delay: "Aguardar (n) segundos antes de enviar a publicação de boas-vindas de Discourse Narrative Bot."
+    discourse_narrative_bot_welcome_post_delay: "Aguardar (n) segundos antes de enviar a publicação de boas-vindas do Discurso Narrativa Bot."
     discourse_narrative_bot_skip_tutorials: "Tutoriais do Bot Narrativo do Discourse para pular"
   badges:
     certified:
@@ -141,7 +141,7 @@ pt:
         discobot_disabled: Você me desativou em suas preferências. Você precisa ativar as dicas de integração de novos usuários para interagir comigo.
       do_not_understand:
         first_response: |-
-          Olá, obrigado pela resposta!
+          Olá, obrigado(a) pela resposta!
 
           Infelizmente, como um robô fraco programado, eu não consigo entender isso. :sombrio:
         track_response: Você pode tentar novamente, ou se quiser pular esta etapa, diga `%{skip_trigger}`. Caso contrário, para começar de novo, diga `%{reset_trigger}`.
@@ -170,17 +170,17 @@ pt:
           Legal! Isso vai funcionar para a maioria dos <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Lembre-se, ele deve estar em uma linha _apenas ele_, sem nada mais na frente, ou após.
       images:
         instructions: |-
-          Aqui está uma imagem de um unicórnio:
+          Aqui está uma foto de um unicórnio:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Se gostou (e quem não iria gostar!) vá em frente e pressione o botão :heart: gostar por debaixo desta publicação para me informar.
+          Se você gostou (e quem não iria gostar!) vá em frente e pressione o botão like :heart: abaixo deste post para me informar.
 
-          Pode **responder com uma imagem?** Qualquer imagem servirá! Arraste e largue, pressione o botão de enviar, ou até mesmo copie e cole-a.
+          Você pode **responder com uma imagem?** Qualquer imagem servirá! Arraste e solte, pressione o botão de upload, ou até mesmo copie e cole ela.
         reply: |-
           Imagem bacana - eu apertei o botão curtir :heart: para que você soubesse o quanto eu gostei :heart_eyes:
         like_not_found: |-
-          Esqueceu-se de :heart: gostar a minha [post?] (%{url}) :crying_cat_face:
+          Você se esqueceu de curtir :heart: meu [post?] (%{url}) :crying_cat_face:
         not_found: |-
           Parece que você não carregou uma imagem, então eu escolhi uma que tenho _ certeza_ de que você vai gostar.
 
@@ -189,18 +189,18 @@ pt:
           Tente fazer o upload dela em seguida, ou colar o link em uma linha exclusiva para ela!
       likes:
         instructions: |-
-          Aqui está uma imagem de um unicórnio:
+          Aqui está uma foto de um unicórnio:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Se gostou (e quem não gostaria!) vá em frente e pressione o botão :heart: gostar por debaixo desta publicação para me informar.
+          Se você gostou (e quem não gostaria!) vá em frente e pressione o botão Like :heart: abaixo desta postagem para me informar.
         reply: |-
-          Obrigado por gostar da minha publicação!
+          Obrigado por gostar do meu post!
         not_found: |-
-          Esqueceu-se de :heart: gostar a minha [post?] (%{url}) :crying_cat_face:
+          Você esqueceu de curtir :heart: meu [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-
-          Pode colocar algumas palavras em **negrito** ou _itálico_ na sua resposta?
+          Você pode colocar algumas palavras em **negrito** ou _itálico_ em sua resposta?
 
           - digite `**negrito**` ou `_itálico_`
 
@@ -208,9 +208,9 @@ pt:
         reply: |-
           Ótimo trabalho! HTML e BBCode também funcionam para formatação — para saber mais, [experimente este tutorial] (https://commonmark.org/help) :nerd:
         not_found: |-
-          Aww, eu não encontrei nenhuma formatação na sua resposta. :pencil2:
+          Aww, eu não encontrei nenhuma formatação em sua resposta. :pencil2:
 
-          Pode tentar novamente? Utilize os botões <kbd><b>B</b></kbd> negrito ou <kbd><i>I</i></kbd> itálico no editor se tiver dúvidas.
+          Você pode tentar de novo? Use os <kbd><b>B</b></kbd> negrito ou <kbd><i>I</i></kbd> itálico no editor se tiver dúvidas.
       quoting:
         instructions: |-
           Você pode tentar me citar quando responder, para eu saber exatamente à qual parte você está respondendo?
@@ -247,18 +247,18 @@ pt:
         reply: |-
           Isso é :sparkles: _emojitástico! _ :sparkles:
         not_found: |-
-          Ups, eu não vejo nenhum Emoji na sua resposta? Oh não! :sob:
+          Opa, eu não vejo nenhum emoji em sua resposta? Oh não! :sob:
 
-          Tente digitar dois pontos <kbd>:</kbd> para abrir o seletor de emojis, depois digite as primeiras letras do que quer, tal como `:bird:`
+          Tente digitar dois pontos <kbd>:</kbd> para abrir o seletor de emojis, depois digite as primeiras letras do que você quer, como `:bird:`
 
           Ou, pressione o botão de emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> no editor.
 
-          (Se estiver num dispositivo móvel, também pode inserir o Emoji diretamente do seu teclado.)
+          (Se estiver em um dispositivo móvel, você também pode inserir Emoji diretamente do seu teclado, também.)
       mention:
         instructions: |-
-          Às vezes, pode querer chamar a atenção de uma pessoa, mesmo que não esteja a responder diretamente a ela. Digite `@` e preencha o nome de utilizador para mencioná-los.
+          Às vezes, você pode querer chamar a atenção de uma pessoa, mesmo que você não esteja respondendo diretamente a ela. Digite `@` e preencha o nome de usuário para mencioná-los.
 
-          Pode mencionar **`@%{discobot_username}`** na sua resposta?
+          Você poderia mencionar **`@%{discobot_username}`** na sua resposta?
         reply: |-
           _Alguém disse meu nome!? _ :raised_hand: Eu acredito que você fez! :wave: Bem, aqui estou eu! Obrigado por me mencionar. :ok_hand:
         not_found: |-
@@ -299,7 +299,7 @@ pt:
     advanced_user_narrative:
       reset_trigger: "tutorial avançado"
       cert_title: "Como reconhecimento da conclusão bem-sucedida do tutorial do utilizador avançado"
-      title: ":arrow_up: Funcionalidades avançadas de utilizador"
+      title: ":arrow_up: Funcionalidades avançadas do utilizador"
       start_message: |-
         Como um usuário _avançado_, você já visitou [sua página de preferências] (%{base_uri}/my/preferences) @%{username}? Existem várias maneiras de personalizar sua experiência, como selecionar um tema escuro ou claro.
 

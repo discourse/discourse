@@ -24,6 +24,7 @@ ko:
     access_control:
       manage:
         access_permission_editor: "에디터"
+        access_permission_owner: "소유자"
         access_permission_remove: "제거"
     number:
       format:

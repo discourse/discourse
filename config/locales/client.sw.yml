@@ -20,6 +20,7 @@ sw:
     access_control:
       manage:
         access_permission_editor: "Mhariri"
+        access_permission_owner: "Mmiliki"
         access_permission_remove: "Ondoa"
     number:
       format:

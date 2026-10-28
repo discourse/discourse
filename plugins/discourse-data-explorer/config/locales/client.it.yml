@@ -26,7 +26,6 @@ it:
       description_placeholder: "Inserisci una descrizione qui"
       ai:
         generate: "Genera"
-        optional: "opzionale"
       import:
         unparseable_json: "File JSON non analizzabile."
         wrong_json: "File JSON errato. Un file JSON dovrebbe contenere un oggetto \"query\" contenente almeno una proprietà \"sql\"."
@@ -58,7 +57,7 @@ it:
       max_result_count:
         one: "Visualizzazione del primo (%{count}) risultato"
         other: "Visualizzazione dei primi %{count} risultati."
-      query_name: "Query"
+      name: "Nome"
       query_groups: "Gruppi"
       query_tags: "Etichette"
       link: "Collegamento per"

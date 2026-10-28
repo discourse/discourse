@@ -43,6 +43,7 @@ tr_TR:
     access_control:
       manage:
         access_permission_editor: "Düzenleyici"
+        access_permission_owner: "Sahip"
         access_permission_remove: "Kaldır"
     carousel:
       go_to_slide: "%{index} numaralı slayta git"

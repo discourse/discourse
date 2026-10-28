@@ -600,10 +600,13 @@ lv:
     google_meet:
       meeting_code: "Kods:"
     github:
+      header:
+        success: "Veiksmīgi"
       closed: "slēgts"
-      status_date:
-        approved: "apstiprināt"
-        closed: "slēgts"
+      pr_status:
+        open: "Atvērt"
+        approved: "Apstiprināt"
+        closed: "Slēgts"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'

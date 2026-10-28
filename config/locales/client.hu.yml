@@ -43,6 +43,7 @@ hu:
     access_control:
       manage:
         access_permission_editor: "Szerkesztő"
+        access_permission_owner: "Tulajdonos"
         access_permission_remove: "Eltávolítás"
     carousel:
       go_to_slide: "%{index} elemre ugrás"

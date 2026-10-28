@@ -22,6 +22,7 @@ sq:
     access_control:
       manage:
         access_permission_editor: "Redaktor"
+        access_permission_owner: "Pronar"
         access_permission_remove: "Hiq"
     number:
       format:

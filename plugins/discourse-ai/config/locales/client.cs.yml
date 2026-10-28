@@ -78,6 +78,7 @@ cs:
         groups: "Skupiny:"
         no_agent: "Nenastaveno"
         no_groups: "Žádná"
+        classification_model: "Model:"
         edit: "Nastavení"
         expand_list:
           one: "(%{count} další)"
@@ -90,6 +91,11 @@ cs:
         filters:
           all: "Vše"
           reset: "obnovit výchozí"
+        sentiment:
+          sentiment: "Sentiment"
+          enabled: "Zapnuto"
+          setting_groups:
+            sentiment: "Sentiment"
         search:
           name: "Vyhledávání"
           ask_ai: "Zeptejte se AI"

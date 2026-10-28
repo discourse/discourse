@@ -24,6 +24,7 @@ gl:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Propietario"
         access_permission_remove: "Retirar"
     number:
       format:

@@ -1132,10 +1132,14 @@ et:
     google_meet:
       meeting_code: "Kood:"
     github:
+      header:
+        success: "Korras"
       closed: "suletud"
-      status_date:
-        approved: "heakskiidetud"
-        closed: "suletud"
+      pr_status:
+        draft: "Mustand"
+        open: "Ava"
+        approved: "Heakskiidetud"
+        closed: "Suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'

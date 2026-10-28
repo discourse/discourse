@@ -246,6 +246,7 @@ ja:
         no_llm: "LLM が選択されていません"
         no_agent: "未設定"
         no_groups: "なし"
+        classification_model: "モデル:"
         edit: "設定"
         expand_list:
           other: "(他 %{count})"
@@ -266,6 +267,13 @@ ja:
           no_results: "フィルタに一致する機能は見つかりませんでした。"
           reset: "リセット"
         no_automations: "まだ自動化はありません"
+        sentiment:
+          sentiment: "センチメント"
+          emotion: "感情"
+          enabled: "有効"
+          setting_groups:
+            sentiment: "センチメント"
+            emotion: "感情"
         summarization:
           name: "要約"
           description: "訪問者がトピックを要約できる要約ボタンを使用可能にします"

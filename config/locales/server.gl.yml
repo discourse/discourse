@@ -3448,10 +3448,14 @@ gl:
     google_meet:
       meeting_code: "Código:"
     github:
+      header:
+        success: "Feito"
       closed: "pechado"
-      status_date:
-        approved: "aprobado"
-        closed: "pechado"
+      pr_status:
+        draft: "Borrador"
+        open: "Abrir"
+        approved: "Aprobado"
+        closed: "Pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'

@@ -29,6 +29,9 @@ et:
           other: "%{count} vastust"
         assign: "Määra"
         unassign: "Eemalda määramine"
+        owners:
+          one: "Omanik"
+          other: "Omanikud"
       manage:
         name: "Nimi"
         constraint_categories: "Liigid"

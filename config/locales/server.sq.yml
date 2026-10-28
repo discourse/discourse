@@ -1478,9 +1478,11 @@ sq:
     google_meet:
       meeting_code: "Kodi:"
     github:
-      status_date:
-        approved: "aprovuar"
-        closed: "mbyllur"
+      pr_status:
+        draft: "Draft"
+        open: "Fillo"
+        approved: "Aprovuar"
+        closed: "Mbyllur"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'

@@ -451,7 +451,6 @@ zh_TW:
             invited_count:
               other: "已邀請 %{count} 位使用者"
         event:
-          expired: "已過期"
           closed: "已關閉"
           full: "名額已滿"
           status:
@@ -464,6 +463,8 @@ zh_TW:
             private:
               title: "私人"
               description: "僅受邀使用者可以加入私人活動。"
+      recording_modal:
+        save: "儲存"
       composer:
         name_placeholder: "活動名稱"
         end_date_placeholder: "結束日期"

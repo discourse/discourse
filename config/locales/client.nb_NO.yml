@@ -24,6 +24,7 @@ nb_NO:
     access_control:
       manage:
         access_permission_editor: "Tekstbehandler"
+        access_permission_owner: "Eier"
         access_permission_remove: "Fjern"
     number:
       format:
