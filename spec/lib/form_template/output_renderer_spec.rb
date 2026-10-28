@@ -44,6 +44,14 @@ RSpec.describe FormTemplate::OutputRenderer do
       expect(described_class.render(values, source)).to eq(" 1 ")
     end
 
+    it "does not expand number answers beyond what a float can hold" do
+      values.answers["seats"] = "1e-999999999"
+      expect(described_class.render(values, "{{ answers.seats }}")).to eq("0.0")
+
+      values.answers["seats"] = "1e-320"
+      expect(described_class.render(values, "{{ answers.seats }}").bytesize).to eq(322)
+    end
+
     it "does not interpret answer content" do
       values.answers["description"] = "{{ answers.games | join: '' }} {% if true %}x{% endif %}"
       expect(described_class.render(values, "{{ answers.description }}")).to eq(

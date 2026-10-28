@@ -68,7 +68,11 @@ class FormTemplate::FieldValues
 
   def to_number(value)
     return if value.empty?
-    value.match?(/\A-?[0-9]+\z/) ? Integer(value, 10) : BigDecimal(value)
+    return Integer(value, 10) if value.match?(/\A-?[0-9]+\z/)
+
+    # Liquid writes decimals out digit by digit, so an exponent that underflows
+    # a float would expand a few typed bytes into gigabytes.
+    Float(value).zero? ? BigDecimal(0) : BigDecimal(value)
   end
 
   # Numbers keep the spelling typed into the control, so a round trip through
