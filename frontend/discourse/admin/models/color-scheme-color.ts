@@ -7,27 +7,40 @@ import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
-export default class ColorSchemeColor extends EmberObject {
-  @tracked hex;
+/** A palette color; custom colors without a base default send a null `default_hex`. */
+export interface ColorSchemeColorFields {
+  name: string;
+  is_advanced?: boolean;
+  originals: { hex: string };
+}
 
-  @tracked originalHex;
-  @tracked default_hex;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface ColorSchemeColor extends ColorSchemeColorFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export default class ColorSchemeColor extends EmberObject {
+  /** Revert copies `default_hex`, so this can be null or absent too. */
+  @tracked hex: string | null | undefined;
+
+  @tracked originalHex: string | null | undefined;
+  @tracked default_hex: string | null | undefined;
 
   // Whether the current value is different than Discourse's default color scheme.
 
-  init(object) {
-    super.init(...arguments);
+  init(object: { hex?: string | null }) {
+    // eslint-disable-next-line prefer-rest-params
+    super.init(...(arguments as unknown as [object]));
     this.originalHex = object.hex;
   }
 
   @dependentKeyCompat
-  get overridden() {
+  get overridden(): boolean {
     return !deepEqual(this.hex, this.default_hex);
   }
 
   // Whether value has changed since it was last saved.
   @computed("hex")
-  get changed() {
+  get changed(): boolean {
     if (!this.originals) {
       return false;
     }
@@ -39,7 +52,7 @@ export default class ColorSchemeColor extends EmberObject {
 
   // Whether the saved value is different than Discourse's default color scheme.
   @computed("default_hex", "hex")
-  get savedIsOverriden() {
+  get savedIsOverriden(): boolean {
     if (!this.default_hex) {
       return false;
     }
@@ -47,28 +60,24 @@ export default class ColorSchemeColor extends EmberObject {
   }
 
   @computed("name")
-  get translatedName() {
+  get translatedName(): string {
     return i18n(`admin.customize.colors.${this.name}.name`, {
       defaultValue: this.name,
     });
   }
 
   @computed("name")
-  get description() {
+  get description(): string {
     return i18n(`admin.customize.colors.${this.name}.description`, {
       defaultValue: "",
     });
   }
 
-  /**
-    brightness returns a number between 0 (darkest) to 255 (brightest).
-    Undefined if hex is not a valid color.
-
-    @property brightness
-  **/
+  /** Brightness from 0 (darkest) to 255 (brightest), or undefined when hex is not a valid color. */
   @computed("hex")
-  get brightness() {
-    let hex = this.hex;
+  get brightness(): number | undefined {
+    // A missing hex throws here.
+    let hex = this.hex!;
     if (hex.length === 6 || hex.length === 3) {
       hex = normalizeHex(hex);
       return Math.round(
@@ -81,16 +90,16 @@ export default class ColorSchemeColor extends EmberObject {
   }
 
   @computed("hex")
-  get valid() {
+  get valid(): boolean {
     return isValidHex(this.hex);
   }
 
-  discardColorChange() {
+  discardColorChange(): void {
     this.hex = this.originalHex;
   }
 
   @on("init")
-  startTrackingChanges() {
+  startTrackingChanges(): void {
     this.set("originals", {
       hex: this.hex || "FFFFFF",
     });
@@ -99,18 +108,18 @@ export default class ColorSchemeColor extends EmberObject {
     this.notifyPropertyChange("hex");
   }
 
-  revert() {
+  revert(): void {
     this.set("hex", this.default_hex);
   }
 
-  undo() {
+  undo(): void {
     if (this.originals) {
       this.set("hex", this.originals.hex);
     }
   }
 
   @observes("hex")
-  hexValueChanged() {
+  hexValueChanged(): void {
     if (this.hex) {
       this.set("hex", this.hex.toString().replace(/[^0-9a-fA-F]/g, ""));
     }
