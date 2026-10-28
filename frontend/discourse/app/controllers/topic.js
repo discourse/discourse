@@ -122,6 +122,10 @@ export default class TopicController extends Controller {
   /** @type {string | null} */
   @tracked translationTitle = null;
   @tracked editingTopicLocalization = false;
+
+  // Set by the route once a view's data is loaded, so switching views keeps
+  // the current one on screen until the other is ready.
+  @tracked shouldRenderNestedView = false;
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];
 
@@ -223,11 +227,6 @@ export default class TopicController extends Controller {
   )
   get topicPageQueryParams() {
     return getProperties(this, TOPIC_PAGE_QUERY_PARAM_PROPERTIES);
-  }
-
-  @computed("model.rendersNested")
-  get shouldRenderNestedView() {
-    return this.model?.rendersNested;
   }
 
   @computed("model.isPrivateMessage")

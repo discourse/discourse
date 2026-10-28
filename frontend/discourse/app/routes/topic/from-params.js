@@ -151,6 +151,10 @@ export default class TopicFromParams extends DiscourseRoute {
   }
 
   setupController(controller, params, { _discourse_anchor }) {
+    this.controllerFor("topic").shouldRenderNestedView = params._loading_error
+      ? this.modelFor("topic").rendersNested
+      : Boolean(params._nested);
+
     // Don't do anything else if we couldn't load
     // TODO: Tests require this but it seems bad
     if (params._loading_error) {
