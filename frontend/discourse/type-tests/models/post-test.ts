@@ -2,7 +2,10 @@ import type EmberObject from "@ember/object";
 import type { TrustedHTML } from "@ember/template";
 import { expectTypeOf } from "expect-type";
 import type ActionSummary from "discourse/models/action-summary";
-import type Category from "discourse/models/category";
+import type {
+  CategoryFields,
+  default as Category,
+} from "discourse/models/category";
 import Post, {
   _addTrackedPostProperty,
   clearAddedTrackedPostProperties,
@@ -289,6 +292,11 @@ Post.hideRevision(1, 2);
 Post.showRevision(1, 2);
 Post.permanentlyDeleteRevisions(1);
 Post.loadRawEmail(1);
+
+// An edit that moves the topic sends back the new category with every saved-category field.
+expectTypeOf<
+  NonNullable<Parameters<Post["afterUpdate"]>[0]["category"]>
+>().toEqualTypeOf<CategoryFields>();
 
 /* Plugin field registration. */
 

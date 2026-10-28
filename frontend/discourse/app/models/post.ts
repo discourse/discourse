@@ -25,7 +25,10 @@ import ActionSummary, {
   type ActionSummaryFields,
 } from "discourse/models/action-summary";
 import Badge from "discourse/models/badge";
-import type Category from "discourse/models/category";
+import type {
+  CategoryFields,
+  default as Category,
+} from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import RestModel, {
   type RestModelAttrs,
@@ -379,8 +382,8 @@ export default class Post extends RestModel {
     version: number
   ): globalThis.Promise<EmberObject> {
     return ajax(`/posts/${postId}/revisions/${version}.json`).then(
-      (result: RestPayload & { categories?: RestModelAttrs<Category>[] }) => {
-        result.categories?.forEach((c: RestModelAttrs<Category>) =>
+      (result: RestPayload & { categories?: CategoryFields[] }) => {
+        result.categories?.forEach((c: CategoryFields) =>
           Site.current().updateCategory(c)
         );
         return EmberObject.create(result as object);
@@ -913,7 +916,7 @@ export default class Post extends RestModel {
   }
 
   override afterUpdate(
-    res: RestModelSaveResult & { category?: RestModelAttrs<Category> }
+    res: RestModelSaveResult & { category?: CategoryFields }
   ) {
     if (res.category) {
       this.site.updateCategory(res.category);
