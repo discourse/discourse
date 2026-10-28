@@ -1,0 +1,17 @@
+<article class="blog-article">
+  <header class="blog-article__header">
+    <a class="blog__eyebrow" href="{{ site.url }}">← {{ labels.all_articles }}</a>
+    <h1>{{ article.title }}</h1>
+    {% if article.standfirst %}<p class="blog-article__standfirst">{{ article.standfirst }}</p>{% endif %}
+    <div class="blog__meta"><span>{{ article.author }}</span><span>·</span>
+      {% if article.published_at %}<time datetime="{{ article.published_at }}">{{ article.date }}</time><span>·</span>{% endif %}
+      <span>{{ article.reading_time }}</span>
+    </div>
+    {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
+  </header>
+  <div class="blog-article__body cooked">{{ article.body_html }}</div>
+  <footer class="blog-article__footer">
+    <div class="blog__tags">{% for tag in article.tags %}<a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</div>
+    <a href="{{ article.discussion_url }}">{{ labels.view_topic }} ↗</a>
+  </footer>
+</article>

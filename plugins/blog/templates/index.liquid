@@ -1,0 +1,35 @@
+<header class="blog__intro">
+  <div class="blog__intro-copy">
+    <p class="blog__eyebrow">{{ page.eyebrow }}</p>
+    <h1>{{ page.heading }}</h1>
+    <p class="blog__description">{{ site.description }}</p>
+  </div>
+  <div class="blog__emblem" aria-hidden="true"><span>✳</span><span class="blog__emblem-orbit"></span></div>
+</header>
+{% if page.archive %}
+<form class="blog__search" action="{{ site.archive_url }}" method="get" role="search">
+  {% if page.preview_token %}<input type="hidden" name="blog_theme_preview" value="{{ page.preview_token }}">{% endif %}
+  <label for="blog-search">{{ labels.search }}</label>
+  <input id="blog-search" name="q" type="search" value="{{ page.query }}" maxlength="100" placeholder="{{ labels.search_placeholder }}">
+  <button type="submit">{{ labels.search }}</button>
+</form>
+{% endif %}
+<div class="blog__section-heading"><h2>{{ labels.latest_stories }}</h2><a href="{{ site.archive_url }}">{{ labels.explore_archive }} ↗</a></div>
+<div class="blog__articles">
+  {% for article in articles %}
+  <article class="blog-card">
+    {% if article.image_url %}<a class="blog-card__image" href="{{ article.url }}" tabindex="-1" aria-hidden="true"><img src="{{ article.image_url }}" alt="" loading="lazy"></a>
+    {% else %}<a class="blog-card__art" href="{{ article.url }}" tabindex="-1" aria-hidden="true"><span class="blog-card__art-index">{{ article.index }}</span><span class="blog-card__art-mark">✳</span><span class="blog-card__art-caption">{{ site.title }}</span></a>{% endif %}
+    <div class="blog-card__content">
+      <div class="blog__meta"><time datetime="{{ article.published_at }}">{{ article.date }}</time><span>·</span><span>{{ article.reading_time }}</span>{% if article.featured %}<span class="blog__badge">{{ labels.featured }}</span>{% endif %}</div>
+      <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
+      <p class="blog-card__excerpt">{{ article.excerpt }}</p>
+      <div class="blog-card__footer"><span>{{ article.author }}</span><a href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a></div>
+    </div>
+  </article>
+  {% else %}<div class="blog__empty"><h2>{{ labels.empty_title }}</h2><p>{{ labels.empty_body }}</p></div>{% endfor %}
+</div>
+<nav class="blog__pagination" aria-label="{{ labels.pagination }}">
+  {% if page.previous_url %}<a rel="prev" href="{{ page.previous_url }}">← {{ labels.newer }}</a>{% endif %}
+  {% if page.next_url %}<a rel="next" href="{{ page.next_url }}">{{ labels.older }} →</a>{% endif %}
+</nav>

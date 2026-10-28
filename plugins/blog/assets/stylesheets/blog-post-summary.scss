@@ -1,0 +1,24 @@
+.blog-post-summary {
+  padding: 1em var(--topic-body-width-padding);
+
+  &__label {
+    margin: 0 0 0.75em;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+  }
+
+  &__excerpt {
+    margin: 0 0 1em;
+    color: var(--primary);
+    font-size: var(--font-up-1);
+    line-height: 1.6;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1em;
+  }
+}

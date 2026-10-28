@@ -31,6 +31,7 @@ packages:
 - "frontend/discourse-types"
 - "frontend/playwright-runner"
 - "plugins/automation"
+- "plugins/blog"
 - "plugins/boards"
 - "plugins/chat"
 - "plugins/checklist"

@@ -1,0 +1,14 @@
+<header class="blog__header">
+  <a class="blog__brand" href="{{ site.url }}">{{ site.title }}<span class="blog__brand-dot" aria-hidden="true">.</span></a>
+  <nav class="blog__nav" aria-label="{{ labels.navigation }}">
+    <a href="{{ site.archive_url }}">{{ labels.archive }}</a>
+    <a href="{{ site.about_url }}">{{ labels.about }}</a>
+    <a href="{{ site.community_url }}">{{ labels.community }} ↗</a>
+    <a href="{{ site.feed_url }}">{{ labels.rss }}</a>
+  </nav>
+</header>
+<main id="main" class="blog__main">{{ content_html }}</main>
+<footer class="blog__footer">
+  <span>{{ site.title }} · {{ labels.footer }}</span>
+  <a href="{{ site.editor_url }}">{{ labels.editor }}</a>
+</footer>

@@ -1,0 +1,39 @@
+<header class="discourse-journal__intro">
+  <h1>{{ page.heading }}</h1>
+  <p>{{ site.description }}</p>
+</header>
+<div class="discourse-journal__listing">
+  <div class="discourse-journal__toolbar">
+    <a href="{{ site.archive_url }}">{{ labels.all_articles }} ↗</a>
+    <form class="discourse-journal__search" action="{{ site.archive_url }}" method="get" role="search">
+      {% if page.preview_token %}<input type="hidden" name="blog_theme_preview" value="{{ page.preview_token }}">{% endif %}
+      <input type="search" name="q" value="{{ page.query }}" maxlength="100" aria-label="{{ labels.search }}" placeholder="{{ labels.search_placeholder }}">
+      <button type="submit" aria-label="{{ labels.search }}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="6"></circle><path d="m15 15 6 6"></path></svg></button>
+    </form>
+  </div>
+  <div class="discourse-journal__grid">
+    {% for article in articles %}
+    <article class="discourse-journal__card{% if forloop.first %} --lead{% endif %}">
+      {% if article.image_url %}
+      <a class="discourse-journal__cover" href="{{ article.url }}" tabindex="-1" aria-hidden="true"><img src="{{ article.image_url }}" alt="" {% unless forloop.first %}loading="lazy"{% endunless %}></a>
+      {% elsif forloop.first %}
+      <a class="discourse-journal__art" href="{{ article.url }}" tabindex="-1" aria-hidden="true"><span>{{ article.title }}</span><span class="discourse-journal__art-brand">{{ site.title }}</span></a>
+      {% endif %}
+      <div class="discourse-journal__card-content">
+        {% if article.featured %}<p class="discourse-journal__category">{{ labels.featured }}</p>{% endif %}
+        <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
+        <p class="discourse-journal__excerpt">{{ article.excerpt }}</p>
+        <div class="discourse-journal__byline">
+          <span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>
+          <div><strong>{{ article.author }}</strong><div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
+        </div>
+        <a class="discourse-journal__replies" href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a>
+      </div>
+    </article>
+    {% else %}<section class="discourse-journal__empty"><h2>{{ labels.empty_title }}</h2><p>{{ labels.empty_body }}</p></section>{% endfor %}
+  </div>
+  <nav class="blog__pagination" aria-label="{{ labels.pagination }}">
+    {% if page.previous_url %}<a rel="prev" href="{{ page.previous_url }}">← {{ labels.newer }}</a>{% endif %}
+    {% if page.next_url %}<a rel="next" href="{{ page.next_url }}">{{ labels.older }} →</a>{% endif %}
+  </nav>
+</div>

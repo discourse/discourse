@@ -1,0 +1,303 @@
+en:
+  admin_js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            blog_submit: Submit blog revision
+            blog_approve: Approve blog revision
+            blog_schedule: Schedule blog publication
+            blog_review_create: Create draft review link
+            blog_review_revoke: Revoke draft review link
+            blog_theme_save: Save blog theme draft
+            blog_theme_activate: Activate blog theme
+            blog_theme_delete: Delete blog theme
+      site_settings:
+        categories:
+          blog: Blog
+    blog:
+      admin:
+        title: Blog
+        open_blog: Open blog
+        safe_mode: Open without custom code
+        identity: Blog identity
+        blog_title: Blog name
+        tagline: Tagline
+        accent: Accent color
+        paper: Paper color
+        ink: Ink color
+        about: About page
+        authoring_design: Design
+        authoring_sections: Theme editor sections
+        template_builtin_state: Built-in template. Customize it to make changes.
+        template_custom_state: Custom template. Restore the default to discard your changes.
+        overridden: Custom
+        customize_template: Customize this template
+        restore_default: Restore default
+        restore_confirm: Discard this template override and use the built-in template? Save the theme to keep this change.
+        variable_reference: Variables and examples
+        find_variable: Find a variable
+        no_variables: No variables match that search.
+        insert: Insert
+        sample_article: Sample published article
+        array_value: List
+        trusted_html: Trusted HTML
+        escaped_text: Escaped value
+        layout_content: The rendered page and discussion. Use once inside the layout’s main element.
+        insert_hint: Examples use public content only. Insert appends the Liquid snippet to this template. Ordinary values are escaped; trusted HTML fragments render as markup.
+        retry_reference: Reload authoring reference
+        working_preview_hint: Preview your unsaved changes without saving or activating them. Changing the page or sample article updates the preview.
+        preview_article_unavailable: Article previews need a published article.
+        preview_page: Page to preview
+        preview_home: Homepage
+        preview_archive: Archive
+        preview_article: Article
+        preview_size: Preview size
+        desktop: Desktop
+        mobile: Mobile
+        open_working_preview: Open preview in a new tab
+        template_layout: Site layout
+        template_index: Homepage and archive
+        template_article: Article
+        template_about: About page
+        template_not_found: Not found page
+        code_warning:
+          "Add only code you trust: it runs with the blog origin's privileges and is
+          publicly downloadable. It never runs in authenticated Discuss previews."
+        css: Custom CSS
+        css_description: Plain CSS, up to 65,536 bytes. Loads after the base stylesheet.
+        js: Custom JavaScript
+        js_description:
+          Plain JavaScript, up to 65,536 bytes. Script tags are not parsed — load
+          another script by appending a script element (document.createElement("script")).
+        save: Save identity
+        saved: Blog identity saved. Reload the blog to see your changes.
+        identity_tab: Identity
+        identity_description: The name, introduction, and About content shared by all blog themes.
+        themes_index_description: Choose a theme to edit. Draft changes stay private until you activate them.
+        thumbnail:
+          journal: The journal
+          headline: Stay curious.
+          excerpt: Notes on making things, staying curious, and finding meaning in the everyday.
+          palette: Theme palette
+        back_to_themes: Back to themes
+        editor_description: Edit this theme, save a draft, then preview or activate it.
+        preview_short: Preview draft
+        new_theme_short: New theme
+        git_source: Git source
+        no_themes: No saved themes yet
+        no_themes_description: Create a theme from your current design or import one from Git.
+        themes: Themes
+        themes_description: Keep multiple designs and iterate without changing the live blog. Readers see the last activated snapshot, not your draft edits or Git updates.
+        theme_name: Theme name
+        edit: Edit
+        activate: Activate
+        preview: Preview
+        theme_actions: Theme actions
+        local_edits_badge: Local edits
+        new_theme_name: New blog theme
+        new_theme: New theme from active design
+        import: Import
+        import_description: "Import a theme from a Git repository or ZIP file. Imports create new drafts without changing the active theme."
+        import_source: Import from
+        import_file: ZIP file
+        theme_file: Theme file
+        choose_theme_file: Choose ZIP file
+        import_file_description: "Choose an exported blog theme ZIP (up to 2 MB). Discourse forum theme exports are not supported."
+        export: Export
+        export_description: "Download the last saved version as a ZIP file. Save any changes before exporting."
+        import_git: Git repository
+        git_description: "Import a public HTTPS repository containing blog-theme.json (version, name, accent_color, paper_color, ink_color), optional blog.css and blog.js, and, for version 2, optional templates/*.liquid overrides at its root. Files are plain, without a build step. Imports create drafts only."
+        repository: Public Git repository URL
+        branch: Branch (leave blank for the default)
+        active_theme: "Active design: %{name} · revision %{revision}"
+        active: Active
+        revision: Draft revision
+        save_draft: Save draft
+        draft_saved: Theme draft saved. The live blog is unchanged.
+        save_before_activate: Save your changes before activating this draft.
+        activate_theme: Activate saved draft
+        activate_confirm: "Activate %{name}? This replaces the design readers see. Your other saved themes remain available."
+        activated: Theme activated. The live blog now uses this saved revision.
+        pull_git: Pull latest from Git
+        pull_confirm: Pull the latest commit? This replaces the saved draft, including local edits. The active design will not change.
+        local_edits: This draft has local edits since its last Git import.
+        delete_theme: Delete theme
+        delete_confirm: "Delete %{name} and its saved draft? This cannot be undone."
+  js:
+    blog:
+      panel:
+        aria_label: Blog publication
+        badge:
+          draft: Draft
+          live: Live
+          changes_pending: Changes pending
+          scheduled: Scheduled
+          unpublished: Unpublished
+        headline:
+          draft: Not on the blog yet
+          live: Live on the blog
+          changes_pending: Live article is out of date
+          scheduled: "Publishes %{date}"
+          unpublished: Removed from the blog
+        will_publish_to: "Will publish to %{url}"
+        saved: "Saved %{age}"
+        published_as: "Published %{date} as revision %{id}"
+        view_live: View live ↗
+        edits_since:
+          one: "%{count} edit since"
+          other: "%{count} edits since"
+        scheduled_revision: "Revision %{id}, approved by %{user}"
+        scheduled_notice: Edits you make now are not included unless you reschedule
+        last_published: "Last published %{date}"
+        unpublished_notice: The public discussion stays open
+        preview: Preview
+        preview_revision: "Preview revision %{id}"
+        share_for_review: Share for review
+        publish: Publish
+        publish_correction: Publish correction
+        publish_now: Publish now
+        publish_now_hint: Copies the article to the blog immediately
+        publish_correction_hint: Replaces the live article immediately
+        more_options: More publishing options
+        options: Options
+        schedule: Schedule…
+        schedule_hint: Pick a date and time
+        schedule_title: Schedule publication
+        schedule_notice: Schedules the article as it is now. Later edits are not included unless you reschedule.
+        schedule_time: Publish at
+        schedule_time_hint: Uses your local timezone. Choose a time at least one minute ahead.
+        schedule_submit: Schedule
+        submit: Submit for approval
+        submit_hint: Ask another publisher to sign off first
+        submitted: "Revision %{id} submitted, awaiting approval"
+        approve_and_publish: "Approve and publish revision %{id}"
+        unpublish_hint: Remove from the blog; the discussion stays public
+        cancel_schedule: Cancel schedule
+        published: "Published — revision %{id} is live on the blog."
+        publish_confirm: "Publish “%{title}” to the blog now? Only the article is copied; this topic and its replies stay private."
+        publish_correction_confirm: "Replace the live article with the current draft? The article keeps its URL and public discussion."
+        changes_title: What changes on the blog
+        changed: "Changed: %{fields}"
+        change:
+          title: title
+          body: body
+          path: path
+          excerpt: excerpt
+          featured: featured flag
+          published_at: publication date
+          revision: submitted revision
+        show_diff: Show diff
+        hide_diff: Hide diff
+        diff_error: The change is too large to show as a diff. Use Preview instead.
+        settings: Article settings
+        settings_hint: Path, excerpt, date, featured
+        feedback:
+          none: No private feedback yet
+          count:
+            one: "%{count} private feedback"
+            other: "%{count} private feedback"
+          no_active_links: no active review links
+          active_links:
+            one: "%{count} active review link"
+            other: "%{count} active review links"
+          show: Read feedback
+          hide: Hide feedback
+          manage_links: Review links
+        discussion:
+          live: Live on the blog
+          not_live: Not on the blog
+          intro: "This is the public discussion for %{article}."
+          intro_not_live: This topic is not on the blog.
+          working_copy: "Edits go through the %{link}."
+          working_copy_pending: "Edits go through the %{link}, which has unpublished changes."
+          working_copy_link: private working copy
+          no_working_copy: Edit privately to prepare changes in a private working copy without touching this topic.
+          edit_privately: Edit privately
+      review:
+        anonymous: Anonymous reviewer
+        page_title: Draft review
+        expires: "Expires %{date}"
+        manage: Share for review and feedback
+        discard_metadata: Discard unsaved publication settings and share the saved article?
+        sharing_notice: "Create a frozen copy of the saved article for seven days. Anyone with the link can read it and send private feedback, without an account. Later edits are not included. Existing upload URLs are not protected: do not use this for confidential attachments."
+        label: Reviewer or review-round label
+        create: Create seven-day review link
+        copy_notice: Anyone with this link can read the article revision it was created from. Revoke it to stop it working.
+        link: Review link
+        copy: Copy link
+        copied: Review link copied
+        copy_failed: Copying was blocked by your browser. Select and copy the review link from the field instead.
+        open: Open review
+        links: Review links
+        version: "Article revision %{version}"
+        active: Active
+        inactive: Expired or revoked
+        revoke: Revoke link
+        revoke_confirm: Revoke this review link? It will immediately stop accepting new views and feedback. Existing feedback stays private and available here.
+        feedback_count: "Feedback (%{count})"
+        no_links: No review links yet.
+        feedback_for: "Private feedback on revision %{version}"
+        unverified: Names and email addresses are supplied by reviewers and are not verified. This feedback is never published with the article.
+        no_feedback: No feedback on this review link yet.
+        unavailable: This review link has expired, was revoked, or is no longer available. Ask the editor for a new link.
+        reader_notice: "Draft for review · frozen article revision %{version}. This link can expire or be revoked by the editor."
+        leave_feedback: Leave feedback
+        feedback_privacy: Your feedback is private to the article editors. No account is required. Your name and email are optional; add an email if you would like the editor to contact you.
+        message: Feedback
+        name: Your name
+        email: Your email
+        send_feedback: Send private feedback
+        thanks: Thank you. Your feedback has been saved privately for the editors.
+      article_summary:
+        from_blog: "From the %{blog} blog"
+        read: Read the article
+        expand: Expand article here
+        collapse: Collapse article
+      editor_pagination_hint: Search and status filters apply to all articles. Load more adds up to 30 results.
+      editor_search: Search articles
+      editor_search_hint: Search by title or article path
+      search_articles: Search
+      editor_no_results: No matching articles
+      editor_no_results_hint: Try another search or status filter, or start a new draft.
+      editor_title: Blog editor
+      editor_description:
+        Draft in private. Publish with intention. Keep the conversation
+        going.
+      new_draft: New draft
+      settings: Configure blog settings
+      all: All articles
+      drafts: Drafts
+      published: Published
+      visit_blog: Visit blog
+      refresh: Refresh articles
+      drafts_hint:
+        Published titles open the live blog article. Open a draft to publish, schedule, or correct it from its topic. Editorial working copies remain private after publication; public discussions stay in the Blog category.
+      private_draft: Draft
+      draft_correction: Draft correction
+      edit_privately: Edit privately
+      open_draft: Open draft
+      public_discussion: Public discussion
+      not_published: Not on the blog
+      preview: Preview
+      load_more: Load more
+      unpublish_confirm:
+        Remove this article from the blog? The topic and its replies
+        will remain public in Discuss. Existing copies in feeds and search engines
+        cannot be recalled.
+      path: Article path
+      path_hint:
+        Start with / and use lowercase letters, numbers, hyphens, and optional
+        path segments. Old paths redirect automatically after a change.
+      excerpt: Excerpt
+      excerpt_hint:
+        A short introduction for article cards and search previews. Leave
+        blank to generate an excerpt from the article.
+      date: Publication date
+      date_hint:
+        Leave blank to use the first publication time. For imported articles,
+        choose a date in the past. Dates use UTC.
+      featured: Feature on the homepage
+      save: Save settings
+      unpublish: Unpublish
+      appearance_link: Appearance

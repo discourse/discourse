@@ -8,6 +8,14 @@ plugins:
       - discourse_automation_stats
       - discourse_automation_user_global_notices
     columns: {}
+  blog:
+    tables:
+      - blog_paths
+      - blog_publications
+      - blog_review_feedback
+      - blog_reviews
+      - blog_revisions
+    columns: {}
   boards:
     tables:
       - discourse_kanban_board_histories
@@ -267,6 +275,7 @@ plugins:
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
   boards: b1410e9ce903ab8c722282afd4cf5b9f
+  blog: '6c0d00988b72f923405b233d85c5daa1'
   chat: dfdf8b56a5fcd06326c693011990c36a
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
