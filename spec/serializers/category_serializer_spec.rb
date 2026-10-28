@@ -71,6 +71,60 @@ RSpec.describe CategorySerializer do
       category.save!
     end
 
+    context "with pseudogroup permissions" do
+      before do
+        Group.refresh_automatic_groups!(:anonymous_users, :logged_in_users)
+        category.set_permissions(
+          group.name => :create_post,
+          :anonymous_users => :readonly,
+          :logged_in_users => :full,
+        )
+        category.save!
+      end
+
+      it "includes anonymous and logged-in user groups when granular permissions are enabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+
+        json = described_class.new(category, scope: admin.guardian, root: false).as_json
+
+        expect(json[:group_permissions]).to eq(
+          [
+            {
+              permission_type: CategoryGroup.permission_types[:create_post],
+              group_name: group.name,
+              group_id: group.id,
+            },
+            {
+              permission_type: CategoryGroup.permission_types[:readonly],
+              group_name: "anonymous_users",
+              group_id: Group::AUTO_GROUPS[:anonymous_users],
+            },
+            {
+              permission_type: CategoryGroup.permission_types[:full],
+              group_name: "logged_in_users",
+              group_id: Group::AUTO_GROUPS[:logged_in_users],
+            },
+          ],
+        )
+      end
+
+      it "returns only regular groups when granular permissions are disabled" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+
+        json = described_class.new(category, scope: admin.guardian, root: false).as_json
+
+        expect(json[:group_permissions]).to eq(
+          [
+            {
+              permission_type: CategoryGroup.permission_types[:create_post],
+              group_name: group.name,
+              group_id: group.id,
+            },
+          ],
+        )
+      end
+    end
+
     it "does not include the attribute for an anon user" do
       json = described_class.new(category, scope: Guardian.new, root: false).as_json
 
