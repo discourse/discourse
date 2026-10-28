@@ -354,6 +354,32 @@ RSpec.describe DiscourseConnect do
     ).to eq(true)
   end
 
+  it "announces the memberships it adds and removes, as the system user", :aggregate_failures do
+    user = Fabricate(:user)
+    added_group = Fabricate(:group, name: "joined")
+    removed_group = Fabricate(:group, name: "left")
+    removed_group.add(user)
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.add_groups = added_group.name
+    sso.remove_groups = removed_group.name
+
+    events = DiscourseEvent.track_events { sso.lookup_or_create_user(ip_address) }
+
+    added = events.select { it[:event_name] == :user_added_to_group }
+    removed = events.select { it[:event_name] == :user_removed_from_group }
+    expect(added.map { it[:params] }).to include(
+      [user, added_group, { automatic: false, acting_user: Discourse.system_user }],
+    )
+    expect(removed.map { it[:params] }).to include(
+      [user, removed_group, { acting_user: Discourse.system_user }],
+    )
+  end
+
   it "creates group logs when users are removed from groups" do
     user = Fabricate(:user)
     group = Fabricate(:group, name: "group1")
