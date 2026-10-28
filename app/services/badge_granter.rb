@@ -170,6 +170,10 @@ class BadgeGranter
 
   def self.revoke(user_badge, options = {})
     UserBadge.transaction do
+      # A concurrent revoke of the same grant raises RecordNotFound here
+      # instead of logging and firing :user_badge_revoked a second time.
+      user_badge.lock!
+      user_badge.revoked_by = options[:revoked_by]
       user_badge.destroy!
       if options[:revoked_by]
         StaffActionLogger.new(options[:revoked_by]).log_badge_revoke(user_badge)

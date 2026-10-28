@@ -549,6 +549,31 @@ RSpec.describe BadgeGranter do
         expect(user.reload.title).to eq(nil)
       end
     end
+
+    it "says who revoked the badge in :user_badge_revoked" do
+      event =
+        DiscourseEvent.track(:user_badge_revoked, args: [{ user_badge:, acting_user: admin }]) do
+          BadgeGranter.revoke(user_badge, revoked_by: admin)
+        end
+
+      expect(event).to be_present
+    end
+
+    it "doesn't revoke a grant again once it's gone" do
+      stale_user_badge = UserBadge.find(user_badge.id)
+      BadgeGranter.revoke(user_badge, revoked_by: admin)
+
+      events =
+        DiscourseEvent.track_events(:user_badge_revoked) do
+          expect { BadgeGranter.revoke(stale_user_badge, revoked_by: admin) }.to raise_error(
+            ActiveRecord::RecordNotFound,
+          )
+        end
+
+      expect(events).to be_empty
+      expect(badge.reload.grant_count).to eq(0)
+      expect(UserHistory.where(action: UserHistory.actions[:revoke_badge]).count).to eq(1)
+    end
   end
 
   describe "revoke_all" do
