@@ -114,6 +114,9 @@ RSpec.describe NewPostManager do
       end
 
       it "doesn't return a result action" do
+        # Plugins add handlers, which enable the queue whatever the settings say.
+        NewPostManager.stubs(:handlers).returns([NewPostManager.method(:default_handler)])
+
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(false)
         expect(result).to eq(nil)
