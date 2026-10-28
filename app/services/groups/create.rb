@@ -119,6 +119,8 @@ class Groups::Create
     step :log_group_histories
   end
 
+  step :announce_members
+
   private
 
   def can_create_group(guardian:)
@@ -159,5 +161,14 @@ class Groups::Create
 
   def log_group_histories(guardian:, group:)
     GroupActionLogger.new(guardian.user, group).log_group_creation
+  end
+
+  def announce_members(group:, guardian:)
+    group
+      .group_users
+      .includes(:user)
+      .each do |group_user|
+        group.trigger_user_added_event(group_user.user, false, acting_user: guardian.user)
+      end
   end
 end
