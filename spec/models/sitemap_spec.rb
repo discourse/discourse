@@ -47,6 +47,32 @@ RSpec.describe Sitemap do
       expect(first_page).to be_nil
     end
 
+    it "creates enough pages for every listed topic, including category definitions" do
+      SiteSetting.sitemap_page_size = 1
+      Fabricate(:category_with_definition)
+
+      described_class.regenerate_sitemaps
+
+      page_names =
+        Sitemap
+          .where(enabled: true)
+          .where.not(name: [Sitemap::NEWS_SITEMAP_NAME, Sitemap::RECENT_SITEMAP_NAME])
+          .pluck(:name)
+      expect(page_names).to contain_exactly("1", "2")
+    end
+
+    it "sets each page's last_posted_at to the newest topic on that page" do
+      SiteSetting.sitemap_page_size = 1
+      newer_topic = Fabricate(:topic)
+      topic.update_columns(updated_at: 2.days.ago)
+      newer_topic.update_columns(updated_at: 1.day.ago)
+
+      described_class.regenerate_sitemaps
+
+      expect(Sitemap.find_by(name: "1").last_posted_at).to eq_time(topic.updated_at)
+      expect(Sitemap.find_by(name: "2").last_posted_at).to eq_time(newer_topic.updated_at)
+    end
+
     it "disable empty pages" do
       unused_page = Sitemap.touch("10")
 
