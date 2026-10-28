@@ -88,14 +88,14 @@ expectTypeOf(typeMetadata["type_specific_extra"]).toEqualTypeOf<unknown>();
 
 // Every data field core sends or assigns, with its presence and nullability.
 interface ExpectedCategoryFields {
-  id?: number;
-  name?: string;
-  slug?: string | null;
-  color?: string;
-  text_color?: string;
-  style_type?: ExpectedStyle;
-  icon?: string | null;
-  emoji?: string | null;
+  id: number;
+  name: string;
+  slug: string | null;
+  color: string;
+  text_color: string;
+  style_type: ExpectedStyle;
+  icon: string | null;
+  emoji: string | null;
   description?: string | null;
   description_text?: string | null;
   description_excerpt?: string | null;
@@ -103,7 +103,7 @@ interface ExpectedCategoryFields {
   topic_count?: number;
   post_count?: number;
   position?: number | null;
-  read_restricted?: boolean;
+  read_restricted: boolean;
   permission?: number | null;
   parent_category_id?: number | null;
   notification_level?: number | null;
@@ -284,3 +284,9 @@ Category.create({ style_type: "circle" });
 declare const store: StoreService;
 expectTypeOf<ModelFor<"category">>().toEqualTypeOf<Category>();
 expectTypeOf(store.createRecord("category")).toEqualTypeOf<Category>();
+
+// New categories are built without an id until they are saved.
+expectTypeOf(Category.create({ name: "Draft" })).toEqualTypeOf<Category>();
+expectTypeOf(
+  store.createRecord("category", { name: "Draft" })
+).toEqualTypeOf<Category>();

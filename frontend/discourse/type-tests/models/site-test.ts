@@ -296,9 +296,7 @@ expectTypeOf(site.desktopView).toEqualTypeOf<boolean>();
 expectTypeOf(site.mobileView).toEqualTypeOf<boolean>();
 expectTypeOf(site.isMobileDevice).toEqualTypeOf<boolean>();
 expectTypeOf(site.categoriesByCount).toEqualTypeOf<Category[]>();
-expectTypeOf(site.categoriesById).toEqualTypeOf<
-  Map<number | undefined, Category>
->();
+expectTypeOf(site.categoriesById).toEqualTypeOf<Map<number, Category>>();
 expectTypeOf(site.categoriesByParentId).toEqualTypeOf<
   Map<number | null | undefined, Category[]>
 >();
@@ -327,11 +325,28 @@ expectTypeOf(site.topicFlagTypeById(1)).toEqualTypeOf<
 expectTypeOf(site.topicFlagTypeById("1")).toEqualTypeOf<
   PostActionType | undefined
 >();
+// The smallest payload a saved category arrives with, from the badge serializer.
+const badgeCategory = {
+  id: 1,
+  name: "Bugs",
+  slug: "bugs",
+  color: "0088CC",
+  text_color: "FFFFFF",
+  style_type: "square",
+  icon: null,
+  emoji: null,
+  read_restricted: false,
+} as const;
+expectTypeOf(site.updateCategory(badgeCategory)).toEqualTypeOf<Category>();
 expectTypeOf(
-  site.updateCategory({ id: 1, permission: null })
+  site.updateCategory({ ...badgeCategory, permission: null })
 ).toEqualTypeOf<Category>();
 expectTypeOf(
-  site.updateCategory({ id: 1, has_children: null, plugin_payload: true })
+  site.updateCategory({
+    ...badgeCategory,
+    has_children: null,
+    plugin_payload: true,
+  })
 ).toEqualTypeOf<Category>();
 expectTypeOf(site.removeCategory(1)).toEqualTypeOf<void>();
 expectTypeOf(site.removeCategory("1")).toEqualTypeOf<void>();
@@ -355,7 +370,7 @@ site.isReadOnly = false;
 // @ts-expect-error the read-only setter keeps the boolean backing field's type
 site.isReadOnly = "false";
 // @ts-expect-error category updates use numeric server ids
-site.updateCategory({ id: "1" });
+site.updateCategory({ ...badgeCategory, id: "1" });
 // @ts-expect-error category removal accepts an id, not a category payload
 site.removeCategory({ id: 1 });
 
@@ -373,7 +388,7 @@ expectTypeOf(Site.currentProp("isReadOnly", true)).toEqualTypeOf<
   boolean | undefined
 >();
 expectTypeOf(Site.currentProp("categoriesById")).toEqualTypeOf<
-  Map<number | undefined, Category>
+  Map<number, Category>
 >();
 expectTypeOf(Site.currentProp("type_test_plugin_flag")).toEqualTypeOf<
   boolean | undefined
