@@ -1,5 +1,6 @@
 import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { userPath } from "discourse/lib/url";
 
 const ANON_KEY = "prefer_flat_replies";
@@ -39,6 +40,48 @@ export async function adoptAnonymousFlatRepliesPreference(
 }
 
 function currentPostNumber(router, topic) {
+  let viewportTop = headerOffset();
+  if (topic.rendersNested) {
+    const controls = document.querySelector(
+      ".nested-view:not(.nested-context-view) > .nested-view__controls, .nested-context-view__banner"
+    );
+    const rect = controls?.getBoundingClientRect();
+    if (rect && rect.top <= viewportTop && rect.bottom > viewportTop) {
+      viewportTop = rect.bottom;
+    }
+  }
+
+  const selector = topic.rendersNested
+    ? ".nested-view [data-post-number]"
+    : ".topic-post[data-post-number]";
+  let visiblePost;
+  let closestTop = Infinity;
+
+  for (const element of document.querySelectorAll(selector)) {
+    const rect = element.getBoundingClientRect();
+    const postNumber = Number(element.dataset.postNumber);
+    if (
+      !Number.isInteger(postNumber) ||
+      postNumber < 1 ||
+      rect.width === 0 ||
+      rect.height === 0 ||
+      rect.bottom <= viewportTop ||
+      rect.top >= window.innerHeight
+    ) {
+      continue;
+    }
+
+    const top = Math.max(rect.top, viewportTop);
+    if (top < closestTop) {
+      closestTop = top;
+      visiblePost = postNumber;
+    }
+  }
+
+  if (visiblePost) {
+    return visiblePost;
+  }
+
   if (!topic.rendersNested) {
     return topic.currentPost;
   }
@@ -53,8 +96,12 @@ function currentPostNumber(router, topic) {
  * other, staying on the post the user was reading. Same-topic URL changes are
  * otherwise handled in place, which skips that setup.
  */
-export function switchTopicView(router, topic, applyChange) {
-  const postNumber = currentPostNumber(router, topic);
+export function switchTopicView(
+  router,
+  topic,
+  applyChange,
+  postNumber = currentPostNumber(router, topic)
+) {
   const targetsPost = Number.isInteger(postNumber) && postNumber > 1;
   const current = router.currentRoute;
 
@@ -83,6 +130,7 @@ export async function toggleFlatRepliesPreference({
   topic,
 }) {
   const preferFlat = topic.rendersNested;
+  const postNumber = currentPostNumber(router, topic);
 
   if (!currentUser) {
     return switchTopicView(router, topic, () => {
@@ -103,7 +151,10 @@ export async function toggleFlatRepliesPreference({
     data: { prefer_flat_replies: preferFlat },
   });
 
-  return switchTopicView(router, topic, () =>
-    currentUser.set("user_option.prefer_flat_replies", preferFlat)
+  return switchTopicView(
+    router,
+    topic,
+    () => currentUser.set("user_option.prefer_flat_replies", preferFlat),
+    postNumber
   );
 }

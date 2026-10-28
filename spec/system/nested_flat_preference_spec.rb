@@ -54,15 +54,27 @@ RSpec.describe "Nested replies flat view preference" do
 
   it "keeps the post being read when switching views" do
     sign_in(user)
-    nested_view.visit_nested_context(topic, post_number: 3)
-    expect(nested_view).to have_context_view
+    nested_view.visit_nested(topic)
+    expect(nested_view).to have_nested_view
+    nested_view.scroll_post_near_top(replies.find { |post| post.post_number == 3 })
 
     find(".nested-view-toggle.--to-flat").click
 
     expect(nested_view).to have_no_nested_view
     expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}/3", ignore_query: true)
     expect(topic_page).to have_post_number(3)
-    expect(flat_view_set_up?).to eq(true)
+    try_until_success do
+      visible = topic_page.post_by_number(3).evaluate_script(<<~JS)
+        (() => {
+          const rect = this.getBoundingClientRect();
+          const header = parseInt(
+            document.documentElement.style.getPropertyValue("--header-offset"), 10
+          ) || 0;
+          return rect.bottom > header && rect.top < window.innerHeight;
+        })()
+      JS
+      expect(visible).to eq(true)
+    end
   end
 
   it "carries an anonymous flat view over to the account on login" do

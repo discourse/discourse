@@ -1,6 +1,10 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { adoptAnonymousFlatRepliesPreference } from "discourse/lib/nested-view-preference";
+import {
+  adoptAnonymousFlatRepliesPreference,
+  switchTopicView,
+  toggleFlatRepliesPreference,
+} from "discourse/lib/nested-view-preference";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
@@ -48,5 +52,130 @@ module("Unit | Lib | nested-view-preference", function (hooks) {
 
     assert.strictEqual(requests, 0);
     assert.false(!!user.user_option.prefer_flat_replies);
+  });
+
+  module("visible post when switching", function (switchHooks) {
+    switchHooks.beforeEach(function () {
+      this.container = document.createElement("div");
+      this.container.className = "nested-view";
+      document.querySelector("#qunit-fixture").appendChild(this.container);
+      this.headerOffset =
+        document.documentElement.style.getPropertyValue("--header-offset");
+      document.documentElement.style.setProperty("--header-offset", "60px");
+      this.topic = {
+        id: 123,
+        slug: "example",
+        rendersNested: true,
+        currentPost: 3,
+      };
+      this.router = {
+        currentRoute: {
+          name: "topic.fromParamsNear",
+          params: { nearPost: "3" },
+        },
+        replaceWith: (path) => (this.path = path),
+        refresh: () => (this.refreshed = true),
+      };
+      this.addPost = (number, top, bottom, width = 600) => {
+        const element = document.createElement("article");
+        element.className = "topic-post";
+        element.dataset.postNumber = number;
+        element.getBoundingClientRect = () => ({
+          top,
+          bottom,
+          width,
+          height: bottom - top,
+        });
+        this.container.appendChild(element);
+        return element;
+      };
+      this.switch = () =>
+        switchTopicView(this.router, this.topic, () => {
+          this.topic.rendersNested = !this.topic.rendersNested;
+        });
+    });
+
+    switchHooks.afterEach(function () {
+      this.container.remove();
+      document.documentElement.style.setProperty(
+        "--header-offset",
+        this.headerOffset
+      );
+    });
+
+    test("nested context uses the visible reply instead of the URL", function (assert) {
+      this.addPost(3, -200, 50);
+      this.addPost(8, 70, 300);
+      this.switch();
+      assert.strictEqual(this.path, "/t/example/123/8");
+    });
+
+    test("nested root preserves a long post crossing the viewport top", function (assert) {
+      this.router.currentRoute = { name: "topic.fromParams" };
+      this.addPost(8, -1000, 200);
+      this.addPost(9, 210, 400);
+      this.switch();
+      assert.strictEqual(this.path, "/t/example/123/8");
+    });
+
+    test("ignores hidden posts and posts covered by the sticky controls", function (assert) {
+      const controls = document.createElement("div");
+      controls.className = "nested-view__controls";
+      controls.getBoundingClientRect = () => ({ top: 60, bottom: 110 });
+      this.container.appendChild(controls);
+      this.addPost(3, 60, 100);
+      this.addPost(4, 110, 200, 0);
+      this.addPost(8, 120, 300);
+      this.switch();
+      assert.strictEqual(this.path, "/t/example/123/8");
+    });
+
+    test("flat view uses the visible post instead of stale tracking state", function (assert) {
+      this.topic.rendersNested = false;
+      this.addPost(8, 70, 300);
+      this.switch();
+      assert.strictEqual(this.path, "/t/example/123/8");
+    });
+
+    test("refreshes when the visible post already matches the route", function (assert) {
+      this.addPost(3, 70, 300);
+      this.switch();
+      assert.true(this.refreshed);
+      assert.strictEqual(this.path, undefined);
+    });
+
+    test("falls back to the route when no post is visible", function (assert) {
+      this.addPost(8, -200, 0);
+      this.switch();
+      assert.true(this.refreshed);
+    });
+
+    test("a visible OP takes precedence over the context URL", function (assert) {
+      this.addPost(1, 70, 300);
+      this.switch();
+      assert.strictEqual(this.path, "/t/example/123");
+    });
+
+    test("captures the visible post before saving the preference", async function (assert) {
+      const user = logIn(this.owner);
+      const post = this.addPost(8, 70, 300);
+      pretender.put("/u/eviltrout.json", () => {
+        post.getBoundingClientRect = () => ({
+          top: -300,
+          bottom: -100,
+          width: 600,
+          height: 200,
+        });
+        this.addPost(9, 70, 300);
+        return response(200, { user: {} });
+      });
+      await toggleFlatRepliesPreference({
+        currentUser: user,
+        keyValueStore: this.keyValueStore,
+        router: this.router,
+        topic: this.topic,
+      });
+      assert.strictEqual(this.path, "/t/example/123/8");
+    });
   });
 });
