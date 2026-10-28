@@ -23,6 +23,7 @@ import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
 import { clearExtraAttributes } from "discourse/data/extra-attributes";
+import { removeCookie } from "discourse/lib/cookie";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
@@ -399,6 +400,10 @@ export default async function setupTests(config) {
       // eslint-disable-next-line no-console
       console.clear();
     }
+    // Color preferences persist in cookies, which would force a later test's color mode
+    removeCookie("forced_color_mode", { path: "/" });
+    removeCookie("color_scheme_id", { path: "/" });
+    removeCookie("dark_scheme_id", { path: "/" });
     enableLoadMoreObserver();
     enableVirtualization();
 
