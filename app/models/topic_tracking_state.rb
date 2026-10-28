@@ -445,8 +445,10 @@ class TopicTrackingState
            NOT c.read_restricted #{append} OR c.id IN (
               SELECT c2.id FROM categories c2
               JOIN category_groups cg ON cg.category_id = c2.id
-              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
-              WHERE c2.read_restricted )
+              WHERE c2.read_restricted AND (
+                cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)
+                #{SiteSetting.granular_anonymous_and_logged_in_groups_permissions ? "OR cg.group_id = #{Group::AUTO_GROUPS[:logged_in_users]}" : ""}
+              ))
           ) AND
         SQL
       end

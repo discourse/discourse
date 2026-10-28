@@ -123,6 +123,7 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
   validate :ensure_slug
   validate :permissions_compatibility_validator
+  validate :pseudogroup_permissions_validator
   validate :special_category_permissions_validator, on: :update
   validate :posting_review_groups_validator
 
@@ -514,12 +515,16 @@ class Category < ActiveRecord::Base
                 SELECT category_id
                   FROM category_groups
                  WHERE permission_type IN (:permissions)
-                   AND (group_id = :everyone OR group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
+                   AND (group_id = :everyone
+                        OR (:granular_permissions AND group_id = :logged_in_users)
+                        OR group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
              )",
         staged: guardian.is_staged?,
         permissions: permissions,
         user_id: guardian.user.id,
         everyone: Group::AUTO_GROUPS[:everyone],
+        granular_permissions: SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+        logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
       )
     end
   end
@@ -919,6 +924,13 @@ class Category < ActiveRecord::Base
       read_restricted = false if group == everyone
     end
 
+    if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
+         (
+           Group::AUTO_GROUPS.values_at(:anonymous_users, :logged_in_users) - mapped.map(&:first)
+         ).empty?
+      read_restricted = false
+    end
+
     [read_restricted, mapped]
   end
 
@@ -1224,6 +1236,20 @@ class Category < ActiveRecord::Base
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true
+    end
+  end
+
+  def pseudogroup_permissions_validator
+    return if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions || !@permissions
+
+    group_ids = @permissions.map(&:first)
+
+    # NOTE (martin): This is kind of temporary, maybe one day we will want to allow certain
+    # groups and anonymous users but not other logged in users to view a category? For now
+    # we do this to have parity with the existing `everyone` group
+    if group_ids.include?(Group::AUTO_GROUPS[:anonymous_users]) &&
+         !group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+      errors.add(:base, I18n.t("category.errors.anonymous_requires_logged_in_users"))
     end
   end
 

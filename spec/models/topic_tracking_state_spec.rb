@@ -832,6 +832,21 @@ RSpec.describe TopicTrackingState do
   end
 
   describe ".report" do
+    [false, true].each do |enabled|
+      it "reports logged-in pseudogroup topics with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+        author = Fabricate(:admin)
+        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+        public_post = create_post(category: category, user: author)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        create_post(category: private_category, user: author)
+
+        report = TopicTrackingState.report(user)
+
+        expect(report.map(&:topic_id)).to eq(enabled ? [public_post.topic_id] : [])
+      end
+    end
+
     it "correctly reports topics with staff posts" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       create_post(raw: "this is a test post", topic: topic, user: post.user)

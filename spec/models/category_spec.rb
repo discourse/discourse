@@ -287,11 +287,97 @@ RSpec.describe Category do
   end
 
   describe "resolve_permissions" do
+    [false, true].each do |enabled|
+      it "resolves pseudogroup read access with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+        read_restricted, resolved =
+          Category.resolve_permissions(anonymous_users: :readonly, logged_in_users: :full)
+
+        expect(read_restricted).to eq(!enabled)
+        expect(resolved).to contain_exactly(
+          [Group::AUTO_GROUPS[:anonymous_users], CategoryGroup.permission_types[:readonly]],
+          [Group::AUTO_GROUPS[:logged_in_users], CategoryGroup.permission_types[:full]],
+        )
+        expect(Category.resolve_permissions(logged_in_users: :full).first).to eq(true)
+      end
+    end
+
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(everyone: :full)
 
       expect(read_restricted).to be false
       expect(resolved).to be_blank
+    end
+  end
+
+  describe "pseudogroup permission validation" do
+    fab!(:category)
+    fab!(:group)
+
+    before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true }
+
+    it "requires logged-in users when anonymous users are granted access on creation" do
+      new_category = Fabricate.build(:category, permissions: { anonymous_users: :readonly })
+
+      expect(new_category.save).to eq(false)
+      expect(new_category.errors[:base]).to include(
+        I18n.t("category.errors.anonymous_requires_logged_in_users"),
+      )
+    end
+
+    it "rejects anonymous access without logged-in users even alongside other groups" do
+      [
+        { anonymous_users: :readonly },
+        { :anonymous_users => :readonly, group.name => :full },
+        { anonymous_users: :readonly, everyone: :readonly },
+      ].each do |permissions|
+        expect(category.update(permissions: permissions)).to eq(false)
+        expect(category.errors[:base]).to include(
+          I18n.t("category.errors.anonymous_requires_logged_in_users"),
+        )
+      end
+      expect(category.reload.category_groups).to be_empty
+    end
+
+    it "keeps distinct permissions for both pseudogroups on a public category" do
+      category.update!(permissions: { anonymous_users: :readonly, logged_in_users: :create_post })
+
+      expect(category.reload.read_restricted).to eq(false)
+      expect(category.permissions_params).to eq(
+        "anonymous_users" => CategoryGroup.permission_types[:readonly],
+        "logged_in_users" => CategoryGroup.permission_types[:create_post],
+      )
+    end
+
+    it "preserves legacy behavior when granular permissions are disabled" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+
+      expect(category.update(permissions: { anonymous_users: :readonly })).to eq(true)
+      expect(category.reload.read_restricted).to eq(true)
+    end
+  end
+
+  describe "logged-in pseudogroup posting permissions" do
+    fab!(:user)
+    fab!(:category)
+
+    [false, true].each do |enabled|
+      it "honors permission levels with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+        %i[readonly create_post full].each do |permission|
+          category.update!(permissions: { logged_in_users: permission })
+
+          expect(Category.topic_create_allowed(user.guardian).exists?(id: category.id)).to eq(
+            enabled && permission == :full,
+          )
+          expect(Category.post_create_allowed(user.guardian).exists?(id: category.id)).to eq(
+            enabled && permission != :readonly,
+          )
+          expect(Category.post_create_allowed(Guardian.new).exists?(id: category.id)).to eq(false)
+        end
+      end
     end
   end
 
