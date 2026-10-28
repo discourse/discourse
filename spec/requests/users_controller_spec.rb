@@ -6137,6 +6137,51 @@ RSpec.describe UsersController do
         expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
       end
     end
+
+    context "when plugins register user cards preloaders" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:preloaded) { [] }
+
+      before do
+        user2.upsert_custom_fields("plugin_field" => "plugin value")
+
+        plugin.register_user_cards_preloaded_custom_field(:plugin_field)
+        plugin.register_user_cards_preloader do |users, guardian|
+          users.each do |card_user|
+            preloaded << [card_user.id, card_user.custom_fields["plugin_field"], guardian.user&.id]
+          end
+        end
+      end
+
+      after do
+        DiscoursePluginRegistry.reset_register!(:user_cards_preloaded_custom_fields)
+        DiscoursePluginRegistry.reset_register!(:user_cards_preloaders)
+      end
+
+      it "passes the visible users to the preloaders with plugin custom fields preloaded" do
+        hidden_user = Fabricate(:user)
+        hidden_user.user_option.update_columns(hide_profile: true)
+        sign_in(another_user)
+
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id},#{hidden_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(preloaded).to contain_exactly(
+          [user.id, nil, another_user.id],
+          [user2.id, "plugin value", another_user.id],
+        )
+        expect(response.parsed_body["users"].map { |card| card["custom_fields"] }).to all(be_blank)
+      end
+
+      it "skips preloaders of disabled plugins" do
+        allow(plugin).to receive(:enabled?).and_return(false)
+
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+
+        expect(response.status).to eq(200)
+        expect(preloaded).to be_empty
+      end
+    end
   end
 
   describe "#badges" do
