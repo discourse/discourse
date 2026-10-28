@@ -5,10 +5,11 @@ class GroupManager
     @group = group
   end
 
-  def add(user_ids, automatic: false, acting_user: nil)
+  # `owner: true` adds them as owners, so listeners already see them as such.
+  def add(user_ids, automatic: false, acting_user: nil, owner: false)
     return [] if user_ids.blank?
 
-    added_user_ids = bulk_add_transaction(user_ids)
+    added_user_ids = bulk_add_transaction(user_ids, owner:)
     return [] if added_user_ids.blank?
 
     bulk_publish_category_updates(added_user_ids)
@@ -66,17 +67,18 @@ class GroupManager
 
   private
 
-  def bulk_add_transaction(user_ids)
+  def bulk_add_transaction(user_ids, owner: false)
     added_user_ids = nil
 
     Group.transaction do
       sql = <<~SQL
       INSERT INTO group_users
-        (group_id, user_id, notification_level, created_at, updated_at)
+        (group_id, user_id, notification_level, owner, created_at, updated_at)
       SELECT
         :group_id,
         u.id,
         :notification_level,
+        :owner,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
       FROM users AS u
@@ -96,6 +98,7 @@ class GroupManager
           group_id: @group.id,
           user_ids: user_ids,
           notification_level: @group.default_notification_level,
+          owner:,
         )
 
       return added_user_ids if added_user_ids.blank?
