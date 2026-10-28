@@ -40,16 +40,82 @@ export interface ModelCreateAttrsRegistry {
   topic: TopicCreateAttrs<Topic>;
 }
 
+type ModelNameLowercaseLetter =
+  | "a"
+  | "b"
+  | "c"
+  | "d"
+  | "e"
+  | "f"
+  | "g"
+  | "h"
+  | "i"
+  | "j"
+  | "k"
+  | "l"
+  | "m"
+  | "n"
+  | "o"
+  | "p"
+  | "q"
+  | "r"
+  | "s"
+  | "t"
+  | "u"
+  | "v"
+  | "w"
+  | "x"
+  | "y"
+  | "z";
+
+type ModelNameDigit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+
+/** Keep original casing for the resolver's ASCII boundary rule, then lowercase once. */
+type NormalizeModelNameCharacters<
+  Name extends string,
+  Previous extends string = "",
+  Result extends string = "",
+> = Name extends `${infer First}${infer Rest}`
+  ? NormalizeModelNameCharacters<
+      Rest,
+      First,
+      `${Result}${Previous extends ModelNameLowercaseLetter | ModelNameDigit
+        ? First extends Uppercase<ModelNameLowercaseLetter>
+          ? "-"
+          : ""
+        : ""}${First extends "." ? "/" : First extends "_" | " " ? "-" : First}`
+    >
+  : Lowercase<Result>;
+
+/**
+ * Normalizes literal model names as the resolver does. Open-ended strings remain
+ * string because they have no required property keys and cannot prove a match.
+ */
+export type NormalizeModelName<K extends string> = K extends unknown
+  ? Record<never, never> extends Record<K, never>
+    ? string
+    : NormalizeModelNameCharacters<
+        K extends `${infer Name}:${string}` ? Name : K
+      >
+  : never;
+
+type NormalizedModelRegistry<Registry> = {
+  [K in keyof Registry & string as NormalizeModelName<K>]: Registry[K];
+};
+
 /** Unregistered names, including dynamic strings, fall back to the base REST model. */
-export type ModelFor<K extends string> = K extends keyof ModelRegistry
-  ? ModelRegistry[K]
-  : RestModel;
+export type ModelFor<K extends string> = K extends unknown
+  ? NormalizeModelName<K> extends keyof NormalizedModelRegistry<ModelRegistry>
+    ? NormalizedModelRegistry<ModelRegistry>[NormalizeModelName<K>]
+    : RestModel
+  : never;
 
 /** Uses registered creation attributes, falling back to the model's declared fields. */
-export type ModelCreateAttrsFor<K extends string> =
-  K extends keyof ModelCreateAttrsRegistry
-    ? ModelCreateAttrsRegistry[K]
-    : RestModelAttrs<ModelFor<K>>;
+export type ModelCreateAttrsFor<K extends string> = K extends unknown
+  ? NormalizeModelName<K> extends keyof NormalizedModelRegistry<ModelCreateAttrsRegistry>
+    ? NormalizedModelRegistry<ModelCreateAttrsRegistry>[NormalizeModelName<K>]
+    : RestModelAttrs<ModelFor<K>>
+  : never;
 
 /** The content property is supplied by the legacy array proxy at runtime. */
 export type ResultSetOf<M> = ResultSet & { content: M[] };
@@ -276,7 +342,11 @@ export default class StoreService extends Service {
     opts?: object
   ): Promise<ModelFor<K> | ResultSetOf<ModelFor<K>> | undefined>;
 
-  find(type: string, findArgs?: FindArgs, opts?: object) {
+  find(
+    type: string,
+    findArgs?: FindArgs,
+    opts?: object
+  ): Promise<RestModel | ResultSetOf<RestModel> | undefined> {
     const adapter = this.adapterFor(type);
     return adapter.find(this, type, findArgs, opts).then((result) => {
       let hydrated = this._hydrateFindResults(result, type, findArgs, opts);
