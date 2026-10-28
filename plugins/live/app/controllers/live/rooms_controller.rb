@@ -639,10 +639,11 @@ module Live
       guardian.ensure_can_join_live_room!(@room)
       ensure_participant_session!
 
+      # Before validation, which may look the emoji up in shared caches.
+      RateLimiter.new(current_user, "live-reactions", REACTIONS_PER_USER, 10.seconds).performed!
+
       emoji = params.require(:emoji)
       raise Discourse::InvalidParameters.new(:emoji) if !Live::Reactions.valid?(emoji)
-
-      RateLimiter.new(current_user, "live-reactions", REACTIONS_PER_USER, 10.seconds).performed!
 
       Live::RoomBroadcaster.publish_reaction(@room, current_user, emoji)
 
