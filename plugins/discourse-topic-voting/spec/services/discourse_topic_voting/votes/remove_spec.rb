@@ -122,6 +122,28 @@ RSpec.describe DiscourseTopicVoting::Votes::Remove do
       it "does not enqueue the backfill badges job" do
         expect { result }.not_to change(Jobs::DiscourseTopicVoting::BackfillBadges.jobs, :size)
       end
+
+      it "fires topic_voting_vote_destroyed with the voter", :aggregate_failures do
+        vote_id = active_vote.id
+        vote, payload = DiscourseEvent.track(:topic_voting_vote_destroyed) { result }[:params]
+
+        expect(vote.id).to eq(vote_id)
+        expect(payload).to eq(acting_user: user)
+      end
+
+      context "when a concurrent request removed the vote first" do
+        before { DiscourseTopicVoting::Vote.where(id: active_vote.id).delete_all }
+
+        it "reports nothing", :aggregate_failures do
+          Fabricate(:topic_voting_web_hook)
+
+          events = DiscourseEvent.track_events(:topic_voting_vote_destroyed) { result }
+
+          expect(result).to run_successfully
+          expect(events).to be_empty
+          expect(Jobs::EmitWebHookEvent.jobs).to be_empty
+        end
+      end
     end
   end
 end
