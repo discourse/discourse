@@ -92,6 +92,27 @@ RSpec.describe DiscourseWorkflows::Nodes::GamificationScore::V1 do
       expect { execute_node(configuration: config) }.to raise_error(DiscourseWorkflows::NodeError)
     end
 
+    it "fails only the unknown user's item when continuing on error" do
+      config = { "username" => "={{ $json.username }}", "points" => 10 }
+      input_items = [
+        { "json" => { "username" => user.username } },
+        { "json" => { "username" => "nonexistent" } },
+        { "json" => { "username" => user.username } },
+      ]
+
+      output =
+        execute_node_output(
+          configuration: config,
+          input_items:,
+          node_settings: {
+            "onError" => "continueErrorOutput",
+          },
+        )
+
+      expect(output.first.map { |item| item.key?("__failed") }).to eq([false, true, false])
+      expect(DiscourseGamification::GamificationScoreEvent.where(user:).count).to eq(2)
+    end
+
     it "raises when points is zero" do
       config = { "username" => user.username, "points" => 0 }
 
