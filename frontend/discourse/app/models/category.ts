@@ -113,18 +113,40 @@ type CategorySearchOptions = {
   prioritizedCategoryId?: number;
   limit?: number;
   page?: number;
+  /**
+   * With a term, keeps each family's rows together, ranked by its best match, with the key
+   * category first. The result's `familyKeys` then names each row's family.
+   */
+  groupFamilies?: boolean;
+  /**
+   * Without a term, lists each category right after its parent, with siblings by topic count
+   * or by position.
+   */
+  treeOrder?: "topics" | "position";
 };
+
+/**
+ * Each returned category's family: its own id when it has an eligible descendant, otherwise
+ * its parent's id when the parent does, otherwise null.
+ */
+type CategoryFamilyKeys = Record<number, number | null>;
 
 type CategorySearchResponse = {
   categories: CategoryFields[];
   ancestors: CategoryFields[];
   categories_count: number;
+  family_keys?: CategoryFamilyKeys;
 };
 
 type CategorySearchResult = {
   ancestors: Category[];
   categories: Category[];
   categoriesCount: number;
+};
+
+/** A search answer; `familyKeys` is set only when `groupFamilies` took effect. */
+type CategorySearchAnswer = CategorySearchResult & {
+  familyKeys: CategoryFamilyKeys | undefined;
 };
 
 /** Server payload fields and values assigned by core; plugins can augment this interface. */
@@ -221,6 +243,32 @@ const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE: Record<
   { categories: CategoryFields[] }
 > = {};
 const HTTP_NOT_FOUND = 404;
+
+/** The server's page size limit for `/categories/search`, which the local answer mirrors. */
+const SEARCH_PAGE_LIMIT = 25;
+const SEARCH_TERM_LENGTH = 250;
+const SEARCH_WORDS = 25;
+
+/** Ruby's `strip` and `\S+` treat only ASCII whitespace as space, unlike JS `trim` and `\s`. */
+const SEARCH_TERM_EDGES = /^[\0\t\n\v\f\r ]+|[\0\t\n\v\f\r ]+$/g;
+const SEARCH_WORD_BREAK = /[\t\n\v\f\r ]+/;
+
+function normalizeSearchText(text: string | null | undefined): string {
+  return removeAccents((text ?? "").toLowerCase());
+}
+
+/** The trimmed, truncated term and its normalized words, as the server reads them. */
+function parseSearchTerm(term: unknown): { text: string; words: string[] } {
+  const text = Array.from(String(term ?? "").replace(SEARCH_TERM_EDGES, ""))
+    .slice(0, SEARCH_TERM_LENGTH)
+    .join("");
+  const words = text
+    .split(SEARCH_WORD_BREAK)
+    .filter(Boolean)
+    .slice(0, SEARCH_WORDS)
+    .map(normalizeSearchText);
+  return { text, words };
+}
 
 let _uncategorized: Category | undefined;
 
@@ -773,8 +821,69 @@ export default class Category extends RestModel {
     term: string,
     opts?: CategorySearchOptions
   ): Promise<Category[] | CategorySearchResult> {
-    opts ||= {};
+    const { ancestors, categories, categoriesCount } =
+      await this.searchCategories(term, opts);
 
+    if (opts?.includeAncestors) {
+      return { ancestors, categories, categoriesCount };
+    } else {
+      return categories;
+    }
+  }
+
+  /**
+   * Searches categories with the server's matching and order. A site that loads every category
+   * answers from them synchronously, so callers get no input delay; a lazy site asks the server
+   * and returns a promise. Without a `limit`, a local answer returns every match as one page.
+   * A local answer folds fewer characters than the server's `unaccent` (such as `ß` or
+   * fullwidth forms) and matches the name the site serialized, which may be localized.
+   */
+  static searchCategories(
+    term: string,
+    opts: CategorySearchOptions = {}
+  ): CategorySearchAnswer | Promise<CategorySearchAnswer> {
+    if (Site.current().lazy_load_categories) {
+      return this.#searchServer(term, opts);
+    }
+    return this.#searchLocal(term, opts);
+  }
+
+  /**
+   * The ids' categories: synchronously when they are already known, otherwise the promise of
+   * loading them.
+   */
+  static findByIdsOrLoad(
+    ids: (number | string)[] = []
+  ): Category[] | Promise<Category[]> {
+    const parsedIds = ids.map((id) => parseInt(id as string, 10));
+    if (
+      !Site.current().lazy_load_categories ||
+      this.hasAsyncFoundAll(parsedIds)
+    ) {
+      return this.findByIds(parsedIds);
+    }
+    return this.asyncFindByIds(parsedIds);
+  }
+
+  /** Whether the category's name contains every word of the term, as a search matches it. */
+  static matchesSearch(category: Category, term: string): boolean {
+    const name = normalizeSearchText(category.name);
+    return parseSearchTerm(term).words.every((word) => name.includes(word));
+  }
+
+  /**
+   * The categories a local search reads, or `undefined` on a lazy site. Reading it consumes
+   * the site's collection, so a caller that keys work on it sees categories being added.
+   */
+  static localSearchCategories(): Category[] | undefined {
+    const site = Site.current();
+    return site.lazy_load_categories ? undefined : [...site.categories];
+  }
+
+  static async #searchServer(
+    term: string,
+    opts: CategorySearchOptions
+  ): Promise<CategorySearchAnswer> {
     const data = {
       term,
       only_postable: opts.onlyPostable,
@@ -787,20 +896,314 @@ export default class Category extends RestModel {
       prioritized_category_id: opts.prioritizedCategoryId,
       limit: opts.limit,
       page: opts.page,
+      group_families: opts.groupFamilies,
+      tree_order: opts.treeOrder,
     };
 
-    const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
-      await ajax("/categories/search", { method: "POST", data }));
+    // Ordered requests are never cached: topic counts change, and one list must not mix pages
+    // fetched at different times.
+    const ordered =
+      data.group_families !== undefined || data.tree_order !== undefined;
+    const fetch = (): Promise<CategorySearchResponse> =>
+      ajax("/categories/search", { method: "POST", data });
+    const result = ordered
+      ? await fetch()
+      : (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||= await fetch());
 
-    if (opts.includeAncestors) {
-      return {
-        ancestors: this.#registerLoaded(result["ancestors"]),
-        categories: this.#registerLoaded(result["categories"]),
-        categoriesCount: result["categories_count"],
-      };
+    return {
+      ancestors: opts.includeAncestors
+        ? this.#registerLoaded(result["ancestors"])
+        : [],
+      categories: this.#registerLoaded(result["categories"]),
+      categoriesCount: result["categories_count"],
+      familyKeys: result["family_keys"],
+    };
+  }
+
+  /** Mirrors the server's search over the site's categories. */
+  static #searchLocal(
+    term: string,
+    opts: CategorySearchOptions
+  ): CategorySearchAnswer {
+    const visible = Site.current().categories;
+    const { text, words } = parseSearchTerm(term);
+    const eligible = visible.filter((category) =>
+      this.#passesSearchFilters(category, opts)
+    );
+    const matched = eligible.filter((category) => {
+      const name = normalizeSearchText(category.name);
+      return words.every((word) => name.includes(word));
+    });
+
+    let ordered: Category[];
+    let keys: Map<Category, number | null> | undefined;
+    if (text && opts.groupFamilies) {
+      const ranked = this.#rankBySearch(
+        matched,
+        normalizeSearchText(text),
+        opts.prioritizedCategoryId
+      );
+      keys = this.#familyKeys(visible, eligible, ranked);
+      ordered = this.#groupFamilies(ranked, keys);
+    } else if (!text && opts.treeOrder) {
+      ordered = this.#treeOrder(
+        visible,
+        matched,
+        opts.treeOrder,
+        opts.prioritizedCategoryId
+      );
     } else {
-      return this.#registerLoaded(result["categories"]);
+      ordered = this.#rankBySearch(
+        matched,
+        normalizeSearchText(text),
+        opts.prioritizedCategoryId
+      );
     }
+
+    const page = Math.max(1, parseInt(String(opts.page), 10) || 0);
+    let categories: Category[];
+    if (opts.limit == null) {
+      categories = page === 1 ? ordered : [];
+    } else {
+      const limit = Math.min(
+        Math.max(parseInt(String(opts.limit), 10) || 0, 1),
+        SEARCH_PAGE_LIMIT
+      );
+      categories = ordered.slice((page - 1) * limit, page * limit);
+    }
+
+    return {
+      ancestors: opts.includeAncestors ? this.#searchAncestors(categories) : [],
+      categories,
+      categoriesCount: matched.length,
+      familyKeys: keys
+        ? Object.fromEntries(
+            categories.map((category) => [category.id!, keys.get(category)!])
+          )
+        : undefined,
+    };
+  }
+
+  static #passesSearchFilters(
+    category: Category,
+    opts: CategorySearchOptions
+  ): boolean {
+    const parentId = category.parent_category_id ?? null;
+    if (opts.parentCategoryId != null) {
+      const wanted =
+        opts.parentCategoryId === -1 ? null : opts.parentCategoryId;
+      if (parentId !== wanted) {
+        return false;
+      }
+    }
+    if (
+      opts.includeUncategorized === false &&
+      this.isUncategorized(category.id)
+    ) {
+      return false;
+    }
+    // The client never sends an empty list, so an empty one is no filter.
+    if (
+      opts.selectCategoryIds?.length &&
+      !opts.selectCategoryIds.map(Number).includes(category.id!)
+    ) {
+      return false;
+    }
+    if (opts.rejectCategoryIds?.map(Number).includes(category.id!)) {
+      return false;
+    }
+    if (opts.includeSubcategories === false && parentId !== null) {
+      return false;
+    }
+    if (opts.onlyPostable && !this.#canCreateTopicIn(category)) {
+      return false;
+    }
+    return true;
+  }
+
+  /** The server's `topic_create_allowed`, which also keeps non-staff out of Uncategorized. */
+  static #canCreateTopicIn(category: Category): boolean {
+    if (!category.canCreateTopic) {
+      return false;
+    }
+    if (!this.isUncategorized(category.id)) {
+      return true;
+    }
+    const owner = getOwnerWithFallback(this);
+    const siteSettings: RestModel["siteSettings"] = owner.lookup(
+      "service:site-settings"
+    );
+    const currentUser = owner.lookup("service:current-user") as User | null;
+    return !!siteSettings.allow_uncategorized_topics || !!currentUser?.staff;
+  }
+
+  /** The rows in the server's base search order. */
+  static #rankBySearch(
+    rows: Category[],
+    prefix: string,
+    prioritizedId: number | undefined
+  ): Category[] {
+    const rank = new Map(
+      rows.map((category) => [
+        category,
+        [
+          normalizeSearchText(category.name).startsWith(prefix) ? 0 : 1,
+          category.parent_category_id == null ? 0 : 1,
+          prioritizedId != null && category.id === prioritizedId ? 0 : 1,
+          prioritizedId != null && category.parent_category_id === prioritizedId
+            ? 0
+            : 1,
+          category.id!,
+        ],
+      ])
+    );
+    return [...rows].sort((a, b) => {
+      const left = rank.get(a)!;
+      const right = rank.get(b)!;
+      const index = left.findIndex((value, i) => value !== right[i]);
+      return index === -1 ? 0 : left[index] - right[index];
+    });
+  }
+
+  /**
+   * Each row's family key. A family is a visible category with an eligible descendant, one that
+   * passes every filter but the term, reached through visible categories; two hops reach every
+   * level, since nesting is capped at three.
+   */
+  static #familyKeys(
+    visible: Category[],
+    eligible: Category[],
+    rows: Category[]
+  ): Map<Category, number | null> {
+    const eligibleParents = new Set(
+      eligible.map((category) => category.parent_category_id).filter(Boolean)
+    );
+    const visibleIds = new Set(visible.map((category) => category.id!));
+    const families = new Set<number>();
+    for (const category of visible) {
+      if (!eligibleParents.has(category.id!)) {
+        continue;
+      }
+      families.add(category.id!);
+      const parentId = category.parent_category_id;
+      if (parentId && visibleIds.has(parentId)) {
+        families.add(parentId);
+      }
+    }
+
+    return new Map(
+      rows.map((category) => {
+        const parentId = category.parent_category_id;
+        if (families.has(category.id!)) {
+          return [category, category.id!];
+        } else if (parentId && families.has(parentId)) {
+          return [category, parentId];
+        }
+        return [category, null];
+      })
+    );
+  }
+
+  /** Keeps each family's rows together, by its best-ranked row, with the key category first. */
+  static #groupFamilies(
+    ranked: Category[],
+    keys: Map<Category, number | null>
+  ): Category[] {
+    const groupOf = (category: Category) => keys.get(category) ?? -category.id!;
+    const groupRank = new Map<number, number>();
+    ranked.forEach((category, index) => {
+      const group = groupOf(category);
+      if (!groupRank.has(group)) {
+        groupRank.set(group, index);
+      }
+    });
+    const position = new Map(
+      ranked.map((category, index) => [category, index])
+    );
+
+    return [...ranked].sort(
+      (a, b) =>
+        groupRank.get(groupOf(a))! - groupRank.get(groupOf(b))! ||
+        Number(keys.get(b) === b.id) - Number(keys.get(a) === a.id) ||
+        position.get(a)! - position.get(b)!
+    );
+  }
+
+  /**
+   * The rows in the tree order of every visible category, so filters only remove rows. A
+   * category whose parent is hidden sorts as a root.
+   */
+  static #treeOrder(
+    visible: Category[],
+    rows: Category[],
+    mode: "topics" | "position",
+    prioritizedId: number | undefined
+  ): Category[] {
+    const visibleById = new Map(
+      visible.map((category) => [category.id!, category])
+    );
+    const parentOf = (category: Category) => {
+      const parentId = category.parent_category_id;
+      return parentId && visibleById.has(parentId) ? parentId : null;
+    };
+    const children = new Map<number | null, Category[]>();
+    for (const category of visible) {
+      const parentId = parentOf(category);
+      const siblings = children.get(parentId);
+      if (siblings) {
+        siblings.push(category);
+      } else {
+        children.set(parentId, [category]);
+      }
+    }
+
+    const byPosition = (a: Category, b: Category) =>
+      (a.position ?? Infinity) - (b.position ?? Infinity) || a.id! - b.id!;
+    const compareSiblings =
+      mode === "topics"
+        ? (a: Category, b: Category) =>
+            (b.topic_count ?? 0) - (a.topic_count ?? 0) || byPosition(a, b)
+        : byPosition;
+
+    const treeIndex = new Map<Category, number>();
+    const rootOf = new Map<Category, number>();
+    const visit = (parentId: number | null, root: number | null) => {
+      for (const category of (children.get(parentId) ?? []).sort(
+        compareSiblings
+      )) {
+        treeIndex.set(category, treeIndex.size);
+        rootOf.set(category, root ?? category.id!);
+        visit(category.id!, root ?? category.id!);
+      }
+    };
+    visit(null, null);
+
+    const prioritized =
+      prioritizedId == null ? undefined : visibleById.get(prioritizedId);
+    const priorityRoot = prioritized ? rootOf.get(prioritized) : undefined;
+    const firstForPriority = (category: Category) =>
+      priorityRoot !== undefined && rootOf.get(category) === priorityRoot
+        ? 0
+        : 1;
+
+    return [...rows].sort(
+      (a, b) =>
+        firstForPriority(a) - firstForPriority(b) ||
+        treeIndex.get(a)! - treeIndex.get(b)!
+    );
+  }
+
+  /** The visible ancestors of the rows, as the server's `ancestors_of` walks them. */
+  static #searchAncestors(rows: Category[]): Category[] {
+    const ancestors = new Set<Category>();
+    for (const row of rows) {
+      let parent = this.findById(row.parent_category_id);
+      while (parent && !ancestors.has(parent)) {
+        ancestors.add(parent);
+        parent = this.findById(parent.parent_category_id);
+      }
+    }
+    return [...ancestors];
   }
 
   /**

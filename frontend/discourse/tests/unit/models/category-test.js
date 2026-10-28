@@ -901,6 +901,7 @@ module(
     setupTest(hooks);
 
     test("asyncSearch asks for postable categories only when told", async function (assert) {
+      Site.current().set("lazy_load_categories", true);
       const sent = [];
       pretender.post("/categories/search", (request) => {
         sent.push(
@@ -917,6 +918,7 @@ module(
     });
 
     test("clearAsyncSearchCache makes the next search ask the server again", async function (assert) {
+      Site.current().set("lazy_load_categories", true);
       let requests = 0;
       pretender.post("/categories/search", () => {
         requests++;

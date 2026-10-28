@@ -1,0 +1,1693 @@
+{
+  "notes": [
+    "Expected orders and family assignments are hand-derived from the specification. Symbols follow creation/id order; Uncategorized is the seeded lowest id.",
+    "The client's jQuery parameter serialization omits empty select_category_ids and reject_category_ids arrays, so local searches ignore them and request specs omit those parameters. The server treats an explicitly empty select_category_ids list as select nothing.",
+    "branch is reply-only; reply is read-only; group is restricted to the signed-in user group. hidden and secret are invisible.",
+    "topics browsing agrees with site.sortedCategories on position-ordered serialized input, except orphan: the new tree treats it as a root while existing eager browsing drops it.",
+    "hollow > hidden > orphan also pins that an eligible grandchild reached through an invisible middle category cannot make hollow a family.",
+    "A positive parent_category_id combined with include_subcategories:false returns nothing; parent_category_id:-1 and include_subcategories:false both keep top-level categories. Grouping still applies for a nonblank term.",
+    "forge is created before blue, and both names start with Blue; only blue starts with the entire term Blue ember. This distinguishes whole-term prefix ranking from first-word prefix ranking.",
+    "An explicit groupFamilies:false is sent as group_families:false and bypasses the lazy request cache because the request carries that field; it does not enable grouping.",
+    "Non-breaking-space-only and em-space-only terms are present in Discourse and remain one literal search word because stripping and word splitting use only ASCII whitespace. They bypass tree_order and enable requested grouping. Only nbsp contains a non-breaking space, so that term returns one row; no category name contains an em space, so that grouped term returns no rows and empty family_keys. A non-breaking space between words also stays literal.",
+    "Fullwidth percent and underscore normalization is server-only coverage in the request spec: PostgreSQL unaccent folds them to ASCII percent and underscore, which must still match literally. The client's folding does not cover these fullwidth forms; this is an accepted difference."
+  ],
+  "categories": [
+    {
+      "symbol": "uncategorized",
+      "name": "Uncategorized",
+      "parent": null,
+      "topic_count": 0,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "root",
+      "name": "Café ember",
+      "parent": null,
+      "topic_count": 40,
+      "position": 30,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "branch",
+      "name": "Ember branch",
+      "parent": "root",
+      "topic_count": 10,
+      "position": 20,
+      "access": "reply",
+      "visible": true
+    },
+    {
+      "symbol": "leaf",
+      "name": "Ember leaf",
+      "parent": "branch",
+      "topic_count": 90,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "sibling",
+      "name": "Ember sibling",
+      "parent": "root",
+      "topic_count": 10,
+      "position": 10,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "solo",
+      "name": "Ember solo",
+      "parent": null,
+      "topic_count": 40,
+      "position": 10,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "reply",
+      "name": "Other ember",
+      "parent": "solo",
+      "topic_count": 3,
+      "position": null,
+      "access": "readonly",
+      "visible": true
+    },
+    {
+      "symbol": "group",
+      "name": "Ember group",
+      "parent": null,
+      "topic_count": 5,
+      "position": 20,
+      "access": "group",
+      "visible": true
+    },
+    {
+      "symbol": "hidden",
+      "name": "Ember hidden",
+      "parent": "hollow",
+      "topic_count": 100,
+      "position": 1,
+      "access": "hidden",
+      "visible": false
+    },
+    {
+      "symbol": "orphan",
+      "name": "Ember orphan",
+      "parent": "hidden",
+      "topic_count": 50,
+      "position": 5,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "hollow",
+      "name": "Ember hollow",
+      "parent": null,
+      "topic_count": 5,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "secret",
+      "name": "Ember secret child",
+      "parent": "hollow",
+      "topic_count": 1,
+      "position": 15,
+      "access": "hidden",
+      "visible": false
+    },
+    {
+      "symbol": "underscore",
+      "name": "Ember_under",
+      "parent": null,
+      "topic_count": 1,
+      "position": 50,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "underscore_decoy",
+      "name": "EmberXunder",
+      "parent": null,
+      "topic_count": 1,
+      "position": 40,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "percent",
+      "name": "Ember%rate",
+      "parent": null,
+      "topic_count": 1,
+      "position": 60,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "percent_decoy",
+      "name": "EmberXrate",
+      "parent": null,
+      "topic_count": 1,
+      "position": 70,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "accent",
+      "name": "Façade São müller",
+      "parent": null,
+      "topic_count": 2,
+      "position": 80,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "plain",
+      "name": "Facade Sao muller",
+      "parent": null,
+      "topic_count": 2,
+      "position": 90,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "forge",
+      "name": "Blue forge ember",
+      "parent": null,
+      "topic_count": 2,
+      "position": 110,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "blue",
+      "name": "Blue ember forge",
+      "parent": null,
+      "topic_count": 2,
+      "position": 100,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "numeric",
+      "name": "123",
+      "parent": null,
+      "topic_count": 0,
+      "position": 120,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "nbsp",
+      "name": "Blue forge",
+      "parent": null,
+      "topic_count": 0,
+      "position": 130,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "quarry1",
+      "name": "Quarry 1",
+      "parent": null,
+      "topic_count": 0,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "quarry2",
+      "name": "Quarry 2",
+      "parent": null,
+      "topic_count": 0,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "quarry3",
+      "name": "Quarry 3",
+      "parent": null,
+      "topic_count": 0,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "quarry4",
+      "name": "Quarry 4",
+      "parent": null,
+      "topic_count": 0,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "quarry5",
+      "name": "Quarry 5",
+      "parent": null,
+      "topic_count": 0,
+      "position": null,
+      "access": "full",
+      "visible": true
+    },
+    {
+      "symbol": "quarry6",
+      "name": "Quarry 6",
+      "parent": null,
+      "topic_count": 0,
+      "position": null,
+      "access": "full",
+      "visible": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "grouped full",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "reply",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "root",
+          "sibling",
+          "orphan",
+          "forge",
+          "blue"
+        ],
+        "count": 15,
+        "family_keys": {
+          "solo": "solo",
+          "reply": "solo",
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "branch": "branch",
+          "leaf": "branch",
+          "root": "root",
+          "sibling": "root",
+          "orphan": null,
+          "blue": null,
+          "forge": null
+        }
+      }
+    },
+    {
+      "name": "grouped page 1",
+      "params": {
+        "limit": 3,
+        "term": "ember",
+        "group_families": true,
+        "page": 1
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "reply",
+          "group"
+        ],
+        "count": 15,
+        "family_keys": {
+          "solo": "solo",
+          "reply": "solo",
+          "group": null
+        }
+      }
+    },
+    {
+      "name": "grouped page 3",
+      "params": {
+        "limit": 3,
+        "term": "ember",
+        "group_families": true,
+        "page": 3
+      },
+      "expected": {
+        "categories": [
+          "percent",
+          "percent_decoy",
+          "branch"
+        ],
+        "count": 15,
+        "family_keys": {
+          "percent": null,
+          "percent_decoy": null,
+          "branch": "branch"
+        }
+      }
+    },
+    {
+      "name": "grouped page 4",
+      "params": {
+        "limit": 3,
+        "term": "ember",
+        "group_families": true,
+        "page": 4
+      },
+      "expected": {
+        "categories": [
+          "leaf",
+          "root",
+          "sibling"
+        ],
+        "count": 15,
+        "family_keys": {
+          "leaf": "branch",
+          "root": "root",
+          "sibling": "root"
+        }
+      }
+    },
+    {
+      "name": "base ranking",
+      "params": {
+        "limit": 25,
+        "term": "ember"
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "sibling",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 15
+      }
+    },
+    {
+      "name": "base nested priority",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "prioritized_category_id": "leaf"
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "leaf",
+          "branch",
+          "sibling",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 15
+      }
+    },
+    {
+      "name": "grouped nested priority",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "prioritized_category_id": "leaf"
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "reply",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "root",
+          "sibling",
+          "orphan",
+          "forge",
+          "blue"
+        ],
+        "count": 15,
+        "family_keys": {
+          "solo": "solo",
+          "reply": "solo",
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "branch": "branch",
+          "leaf": "branch",
+          "root": "root",
+          "sibling": "root",
+          "orphan": null,
+          "blue": null,
+          "forge": null
+        }
+      }
+    },
+    {
+      "name": "tree topics full",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics"
+      },
+      "expected": {
+        "categories": [
+          "orphan",
+          "solo",
+          "reply",
+          "root",
+          "sibling",
+          "branch",
+          "leaf",
+          "group",
+          "hollow",
+          "accent",
+          "plain",
+          "blue",
+          "forge",
+          "underscore_decoy",
+          "underscore",
+          "percent",
+          "percent_decoy",
+          "numeric",
+          "nbsp",
+          "uncategorized",
+          "quarry1",
+          "quarry2",
+          "quarry3",
+          "quarry4",
+          "quarry5"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree topics page 1",
+      "params": {
+        "limit": 8,
+        "term": "",
+        "tree_order": "topics",
+        "page": 1
+      },
+      "expected": {
+        "categories": [
+          "orphan",
+          "solo",
+          "reply",
+          "root",
+          "sibling",
+          "branch",
+          "leaf",
+          "group"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree topics page 2",
+      "params": {
+        "limit": 8,
+        "term": "",
+        "tree_order": "topics",
+        "page": 2
+      },
+      "expected": {
+        "categories": [
+          "hollow",
+          "accent",
+          "plain",
+          "blue",
+          "forge",
+          "underscore_decoy",
+          "underscore",
+          "percent"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree topics page 4",
+      "params": {
+        "limit": 8,
+        "term": "",
+        "tree_order": "topics",
+        "page": 4
+      },
+      "expected": {
+        "categories": [
+          "quarry5",
+          "quarry6"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree position full",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "position"
+      },
+      "expected": {
+        "categories": [
+          "orphan",
+          "solo",
+          "reply",
+          "group",
+          "root",
+          "sibling",
+          "branch",
+          "leaf",
+          "underscore_decoy",
+          "underscore",
+          "percent",
+          "percent_decoy",
+          "accent",
+          "plain",
+          "blue",
+          "forge",
+          "numeric",
+          "nbsp",
+          "uncategorized",
+          "hollow",
+          "quarry1",
+          "quarry2",
+          "quarry3",
+          "quarry4",
+          "quarry5"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree position page 1",
+      "params": {
+        "limit": 8,
+        "term": "",
+        "tree_order": "position",
+        "page": 1
+      },
+      "expected": {
+        "categories": [
+          "orphan",
+          "solo",
+          "reply",
+          "group",
+          "root",
+          "sibling",
+          "branch",
+          "leaf"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree position page 2",
+      "params": {
+        "limit": 8,
+        "term": "",
+        "tree_order": "position",
+        "page": 2
+      },
+      "expected": {
+        "categories": [
+          "underscore_decoy",
+          "underscore",
+          "percent",
+          "percent_decoy",
+          "accent",
+          "plain",
+          "blue",
+          "forge"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree position page 4",
+      "params": {
+        "limit": 8,
+        "term": "",
+        "tree_order": "position",
+        "page": 4
+      },
+      "expected": {
+        "categories": [
+          "quarry5",
+          "quarry6"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree nested priority",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics",
+        "prioritized_category_id": "leaf"
+      },
+      "expected": {
+        "categories": [
+          "root",
+          "sibling",
+          "branch",
+          "leaf",
+          "orphan",
+          "solo",
+          "reply",
+          "group",
+          "hollow",
+          "accent",
+          "plain",
+          "blue",
+          "forge",
+          "underscore_decoy",
+          "underscore",
+          "percent",
+          "percent_decoy",
+          "numeric",
+          "nbsp",
+          "uncategorized",
+          "quarry1",
+          "quarry2",
+          "quarry3",
+          "quarry4",
+          "quarry5"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree postable survivors",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics",
+        "only_postable": true
+      },
+      "expected": {
+        "categories": [
+          "orphan",
+          "solo",
+          "root",
+          "sibling",
+          "leaf",
+          "group",
+          "hollow",
+          "accent",
+          "plain",
+          "blue",
+          "forge",
+          "underscore_decoy",
+          "underscore",
+          "percent",
+          "percent_decoy",
+          "numeric",
+          "nbsp",
+          "quarry1",
+          "quarry2",
+          "quarry3",
+          "quarry4",
+          "quarry5",
+          "quarry6"
+        ],
+        "count": 23
+      }
+    },
+    {
+      "name": "tree selected survivors",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics",
+        "select_category_ids": [
+          "leaf",
+          "solo",
+          "group"
+        ]
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "leaf",
+          "group"
+        ],
+        "count": 3
+      }
+    },
+    {
+      "name": "tree rejected ancestor priority",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics",
+        "prioritized_category_id": "leaf",
+        "reject_category_ids": [
+          "root",
+          "branch"
+        ]
+      },
+      "expected": {
+        "categories": [
+          "sibling",
+          "leaf",
+          "orphan",
+          "solo",
+          "reply",
+          "group",
+          "hollow",
+          "accent",
+          "plain",
+          "blue",
+          "forge",
+          "underscore_decoy",
+          "underscore",
+          "percent",
+          "percent_decoy",
+          "numeric",
+          "nbsp",
+          "uncategorized",
+          "quarry1",
+          "quarry2",
+          "quarry3",
+          "quarry4",
+          "quarry5",
+          "quarry6"
+        ],
+        "count": 24
+      }
+    },
+    {
+      "name": "grouped postable",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "only_postable": true
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "leaf",
+          "root",
+          "sibling",
+          "orphan",
+          "forge",
+          "blue"
+        ],
+        "count": 13,
+        "family_keys": {
+          "solo": null,
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "leaf": "branch",
+          "root": "root",
+          "sibling": "root",
+          "orphan": null,
+          "blue": null,
+          "forge": null
+        }
+      }
+    },
+    {
+      "name": "grouped rejected bridge and only children",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "reject_category_ids": [
+          "branch",
+          "sibling",
+          "reply"
+        ]
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "leaf",
+          "orphan",
+          "root",
+          "forge",
+          "blue"
+        ],
+        "count": 12,
+        "family_keys": {
+          "solo": null,
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "leaf": "branch",
+          "orphan": null,
+          "root": "root",
+          "blue": null,
+          "forge": null
+        }
+      }
+    },
+    {
+      "name": "grouped selected two hop bridge",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "select_category_ids": [
+          "root",
+          "leaf",
+          "solo",
+          "reply"
+        ]
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "reply",
+          "leaf",
+          "root"
+        ],
+        "count": 4,
+        "family_keys": {
+          "solo": "solo",
+          "reply": "solo",
+          "leaf": "branch",
+          "root": "root"
+        }
+      }
+    },
+    {
+      "name": "grouped parent children",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "parent_category_id": "root"
+      },
+      "expected": {
+        "categories": [
+          "branch",
+          "sibling"
+        ],
+        "count": 2,
+        "family_keys": {
+          "branch": "root",
+          "sibling": "root"
+        }
+      }
+    },
+    {
+      "name": "grouped top level filter",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "include_subcategories": false
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "root",
+          "forge",
+          "blue"
+        ],
+        "count": 10,
+        "family_keys": {
+          "solo": null,
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "root": null,
+          "blue": null,
+          "forge": null
+        }
+      }
+    },
+    {
+      "name": "grouped parent minus one",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "parent_category_id": -1
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "root",
+          "forge",
+          "blue"
+        ],
+        "count": 10,
+        "family_keys": {
+          "solo": null,
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "root": null,
+          "blue": null,
+          "forge": null
+        }
+      }
+    },
+    {
+      "name": "grouped parent and top level contradiction",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "parent_category_id": "root",
+        "include_subcategories": false
+      },
+      "expected": {
+        "categories": [],
+        "count": 0,
+        "family_keys": {}
+      }
+    },
+    {
+      "name": "grouped includes uncategorized",
+      "params": {
+        "limit": 25,
+        "term": "un",
+        "group_families": true
+      },
+      "expected": {
+        "categories": [
+          "uncategorized",
+          "underscore",
+          "underscore_decoy"
+        ],
+        "count": 3,
+        "family_keys": {
+          "uncategorized": null,
+          "underscore": null,
+          "underscore_decoy": null
+        }
+      }
+    },
+    {
+      "name": "grouped excludes uncategorized",
+      "params": {
+        "limit": 25,
+        "term": "un",
+        "group_families": true,
+        "include_uncategorized": false
+      },
+      "expected": {
+        "categories": [
+          "underscore",
+          "underscore_decoy"
+        ],
+        "count": 2,
+        "family_keys": {
+          "underscore": null,
+          "underscore_decoy": null
+        }
+      }
+    },
+    {
+      "name": "empty id filters",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "select_category_ids": [],
+        "reject_category_ids": []
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "sibling",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 15
+      }
+    },
+    {
+      "name": "literal underscore",
+      "params": {
+        "limit": 25,
+        "term": "_"
+      },
+      "expected": {
+        "categories": [
+          "underscore"
+        ],
+        "count": 1
+      }
+    },
+    {
+      "name": "literal percent",
+      "params": {
+        "limit": 25,
+        "term": "%"
+      },
+      "expected": {
+        "categories": [
+          "percent"
+        ],
+        "count": 1
+      }
+    },
+    {
+      "name": "multi word prefix",
+      "params": {
+        "limit": 25,
+        "term": "blue ember"
+      },
+      "expected": {
+        "categories": [
+          "blue",
+          "forge"
+        ],
+        "count": 2
+      }
+    },
+    {
+      "name": "trimmed mixed case",
+      "params": {
+        "limit": 25,
+        "term": "  eMbEr \t\n"
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "sibling",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 15
+      }
+    },
+    {
+      "name": "unaccented term",
+      "params": {
+        "limit": 25,
+        "term": "facade sao muller"
+      },
+      "expected": {
+        "categories": [
+          "accent",
+          "plain"
+        ],
+        "count": 2
+      }
+    },
+    {
+      "name": "accented term",
+      "params": {
+        "limit": 25,
+        "term": "FAÇADÉ SÃO MÜLLER"
+      },
+      "expected": {
+        "categories": [
+          "accent",
+          "plain"
+        ],
+        "count": 2
+      }
+    },
+    {
+      "name": "ASCII whitespace words",
+      "params": {
+        "limit": 25,
+        "term": "blue\t\n\r\f\u000bforge"
+      },
+      "expected": {
+        "categories": [
+          "forge",
+          "blue",
+          "nbsp"
+        ],
+        "count": 3
+      }
+    },
+    {
+      "name": "non breaking space stays literal",
+      "params": {
+        "limit": 25,
+        "term": "blue forge"
+      },
+      "expected": {
+        "categories": [
+          "nbsp"
+        ],
+        "count": 1
+      }
+    },
+    {
+      "name": "numeric term",
+      "params": {
+        "limit": 25,
+        "term": 123
+      },
+      "expected": {
+        "categories": [
+          "numeric"
+        ],
+        "count": 1
+      }
+    },
+    {
+      "name": "first 25 words",
+      "params": {
+        "limit": 25,
+        "term": "ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember ember absent"
+      },
+      "expected": {
+        "categories": [
+          "root",
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "forge",
+          "blue",
+          "branch",
+          "leaf",
+          "sibling",
+          "reply",
+          "orphan"
+        ],
+        "count": 15
+      }
+    },
+    {
+      "name": "first 250 characters",
+      "params": {
+        "limit": 25,
+        "term": "  ember                                                                                                                                                                                                                                                    Xabsent  "
+      },
+      "expected": {
+        "categories": [
+          "underscore_decoy",
+          "percent_decoy"
+        ],
+        "count": 2
+      }
+    },
+    {
+      "name": "ancestors of returned leaf",
+      "params": {
+        "limit": 25,
+        "term": "leaf",
+        "include_ancestors": true
+      },
+      "expected": {
+        "categories": [
+          "leaf"
+        ],
+        "count": 1,
+        "ancestors": [
+          "root",
+          "branch"
+        ]
+      }
+    },
+    {
+      "name": "ancestors stay visible",
+      "params": {
+        "limit": 25,
+        "term": "orphan",
+        "include_ancestors": true
+      },
+      "expected": {
+        "categories": [
+          "orphan"
+        ],
+        "count": 1,
+        "ancestors": []
+      }
+    },
+    {
+      "name": "non breaking space term matches literally and bypasses topics tree",
+      "params": {
+        "limit": 25,
+        "term": "\u00a0",
+        "tree_order": "topics"
+      },
+      "expected": {
+        "categories": [
+          "nbsp"
+        ],
+        "count": 1
+      }
+    },
+    {
+      "name": "em space term matches literally and enables grouping with no matches",
+      "params": {
+        "limit": 25,
+        "term": "\u2003",
+        "group_families": true
+      },
+      "expected": {
+        "categories": [],
+        "count": 0,
+        "family_keys": {}
+      }
+    },
+    {
+      "name": "grouping ignored for blank",
+      "params": {
+        "limit": 2,
+        "term": " \t ",
+        "group_families": true
+      },
+      "expected": {
+        "categories": [
+          "uncategorized",
+          "root"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "tree ignored for term",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "tree_order": "position"
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "sibling",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 15
+      }
+    },
+    {
+      "name": "grouping wins for term",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "tree_order": "topics",
+        "group_families": true
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "reply",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "root",
+          "sibling",
+          "orphan",
+          "forge",
+          "blue"
+        ],
+        "count": 15,
+        "family_keys": {
+          "solo": "solo",
+          "reply": "solo",
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "branch": "branch",
+          "leaf": "branch",
+          "root": "root",
+          "sibling": "root",
+          "orphan": null,
+          "blue": null,
+          "forge": null
+        }
+      }
+    },
+    {
+      "name": "tree wins for blank",
+      "params": {
+        "limit": 8,
+        "term": "",
+        "tree_order": "topics",
+        "group_families": true
+      },
+      "expected": {
+        "categories": [
+          "orphan",
+          "solo",
+          "reply",
+          "root",
+          "sibling",
+          "branch",
+          "leaf",
+          "group"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "limit lower clamp and page lower clamp",
+      "params": {
+        "limit": 0,
+        "term": "",
+        "page": 0
+      },
+      "expected": {
+        "categories": [
+          "uncategorized"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "limit upper clamp",
+      "params": {
+        "limit": 99,
+        "term": ""
+      },
+      "expected": {
+        "categories": [
+          "uncategorized",
+          "root",
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "accent",
+          "plain",
+          "forge",
+          "blue",
+          "numeric",
+          "nbsp",
+          "quarry1",
+          "quarry2",
+          "quarry3",
+          "quarry4",
+          "quarry5",
+          "quarry6",
+          "branch",
+          "leaf",
+          "sibling",
+          "reply"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "limit upper clamp page 2",
+      "params": {
+        "limit": 99,
+        "term": "",
+        "page": 2
+      },
+      "expected": {
+        "categories": [
+          "orphan"
+        ],
+        "count": 26
+      }
+    },
+    {
+      "name": "page beyond results",
+      "params": {
+        "limit": 3,
+        "term": "ember",
+        "group_families": true,
+        "page": 6
+      },
+      "expected": {
+        "categories": [],
+        "count": 15,
+        "family_keys": {}
+      }
+    },
+    {
+      "name": "postable uncategorized disabled",
+      "params": {
+        "limit": 25,
+        "term": "un",
+        "only_postable": true
+      },
+      "expected": {
+        "categories": [
+          "underscore",
+          "underscore_decoy"
+        ],
+        "count": 2
+      }
+    },
+    {
+      "name": "postable uncategorized enabled",
+      "params": {
+        "limit": 25,
+        "term": "un",
+        "only_postable": true
+      },
+      "expected": {
+        "categories": [
+          "uncategorized",
+          "underscore",
+          "underscore_decoy"
+        ],
+        "count": 3
+      },
+      "settings": {
+        "allow_uncategorized_topics": true
+      }
+    },
+    {
+      "name": "grouped nonmatching eligible child",
+      "params": {
+        "term": "solo",
+        "group_families": true,
+        "limit": 25
+      },
+      "expected": {
+        "categories": [
+          "solo"
+        ],
+        "count": 1,
+        "family_keys": {
+          "solo": "solo"
+        }
+      }
+    },
+    {
+      "name": "explicit false grouping",
+      "params": {
+        "term": "ember",
+        "group_families": false,
+        "limit": 25
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "leaf",
+          "sibling",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 15
+      }
+    },
+    {
+      "name": "acute accent fold",
+      "params": {
+        "term": "CAFE",
+        "limit": 25
+      },
+      "expected": {
+        "categories": [
+          "root"
+        ],
+        "count": 1
+      }
+    },
+    {
+      "name": "parent minus one and top level filters agree",
+      "params": {
+        "term": "ember",
+        "parent_category_id": -1,
+        "include_subcategories": false,
+        "group_families": true,
+        "limit": 25
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "root",
+          "forge",
+          "blue"
+        ],
+        "count": 10,
+        "family_keys": {
+          "solo": null,
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "root": null,
+          "forge": null,
+          "blue": null
+        }
+      }
+    },
+    {
+      "name": "base parent priority",
+      "params": {
+        "term": "ember",
+        "prioritized_category_id": "root",
+        "limit": 25
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "branch",
+          "sibling",
+          "leaf",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 15
+      }
+    }
+  ]
+}
