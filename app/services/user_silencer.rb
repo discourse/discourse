@@ -98,12 +98,25 @@ class UserSilencer
         .where(user_id: @user.id, post_number: 1)
         .where("created_at > ?", 24.hours.ago)
         .pluck(:topic_id)
+    acting_user = @by_user || Discourse.system_user
+
     unless topic_ids.empty?
-      Topic.where(id: topic_ids).update_all(visible: false)
+      unlisted_topic_ids =
+        DB.query_single(
+          "UPDATE topics SET visible = false WHERE id IN (:topic_ids) AND visible RETURNING id",
+          topic_ids:,
+        )
       CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
+
+      Topic
+        .where(id: unlisted_topic_ids)
+        .each do |topic|
+          DB.after_commit do
+            DiscourseEvent.trigger(:topic_status_updated, topic, "visible", false, acting_user:)
+          end
+        end
     end
 
-    acting_user = @by_user || Discourse.system_user
     Post
       .where(id: hidden_post_ids)
       .includes(:topic)
