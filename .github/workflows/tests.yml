@@ -15,7 +15,6 @@ on:
       - release/*
 
 concurrency:
-  # Integrations require every main run to complete.
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_id || github.ref }}
   cancel-in-progress: true
 
