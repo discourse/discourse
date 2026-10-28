@@ -26,15 +26,49 @@ module("Unit | Lib | event-calendar-details", function (hooks) {
     );
   });
 
-  for (const description of [undefined, null, "", " \n "]) {
-    test(`includes the post URL with description ${JSON.stringify(description)}`, function (assert) {
-      assert.strictEqual(
-        eventCalendarDetails({ description, post: { url: "/t/workshop/123" } }),
-        "https://forum.example/t/workshop/123",
-        "blank descriptions leave just the absolute post URL"
-      );
-    });
-  }
+  test("includes the post URL with a missing description", function (assert) {
+    assert.strictEqual(
+      eventCalendarDetails({
+        description: undefined,
+        post: { url: "/t/workshop/123" },
+      }),
+      "https://forum.example/t/workshop/123",
+      "blank descriptions leave just the absolute post URL"
+    );
+  });
+
+  test("includes the post URL with a null description", function (assert) {
+    assert.strictEqual(
+      eventCalendarDetails({
+        description: null,
+        post: { url: "/t/workshop/123" },
+      }),
+      "https://forum.example/t/workshop/123",
+      "blank descriptions leave just the absolute post URL"
+    );
+  });
+
+  test("includes the post URL with a empty description", function (assert) {
+    assert.strictEqual(
+      eventCalendarDetails({
+        description: "",
+        post: { url: "/t/workshop/123" },
+      }),
+      "https://forum.example/t/workshop/123",
+      "blank descriptions leave just the absolute post URL"
+    );
+  });
+
+  test("includes the post URL with a whitespace-only description", function (assert) {
+    assert.strictEqual(
+      eventCalendarDetails({
+        description: " \n ",
+        post: { url: "/t/workshop/123" },
+      }),
+      "https://forum.example/t/workshop/123",
+      "blank descriptions leave just the absolute post URL"
+    );
+  });
 
   test("handles missing post data", function (assert) {
     assert.strictEqual(

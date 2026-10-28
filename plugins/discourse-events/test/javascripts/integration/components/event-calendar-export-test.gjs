@@ -9,6 +9,61 @@ import formKit from "discourse/tests/helpers/form-kit-helper";
 import CalendarPrompt from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/calendar-prompt";
 import MoreMenu from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/more-menu";
 
+async function exportCalendar(context, calendar) {
+  context.currentUser.set(
+    "user_option.default_calendar",
+    context.useModal ? "none_selected" : calendar
+  );
+
+  await render(
+    <template>
+      <ModalContainer />
+      {{#if context.fromMenu}}
+        <MoreMenu @event={{context.event}} />
+      {{else}}
+        <CalendarPrompt @event={{context.event}} />
+      {{/if}}
+    </template>
+  );
+
+  if (context.fromMenu) {
+    await click(".discourse-post-event-more-menu-trigger");
+    await click(".add-to-calendar button");
+  } else {
+    await click(".event-calendar-prompt__actions .btn-primary");
+  }
+
+  if (context.useModal) {
+    await formKit().field("calendar").select(calendar);
+    await click(".download-calendar-modal .btn-primary");
+  }
+}
+
+function assertGoogleDetails(assert, context, expected) {
+  assert.true(context.openWindow.calledOnce, "opens one calendar draft");
+  const url = new URL(context.openWindow.firstCall.args[0]);
+  assert.strictEqual(
+    url.searchParams.get("details"),
+    expected,
+    "Google Calendar details preserve the description and topic URL"
+  );
+}
+
+async function assertIcsDetails(assert, context, expected) {
+  assert.true(context.createObjectURL.calledOnce, "creates one ICS download");
+  const file = context.createObjectURL.firstCall.args[0];
+  const ics = (await file.text()).replace(/\r\n[ \t]/g, "");
+  const details = ics
+    .split("\r\n")
+    .find((line) => line.startsWith("DESCRIPTION:"))
+    ?.slice("DESCRIPTION:".length);
+  assert.strictEqual(
+    details,
+    expected,
+    "ICS details preserve the escaped description and topic URL"
+  );
+}
+
 module("Integration | Component | EventCalendarExport", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -33,76 +88,215 @@ module("Integration | Component | EventCalendarExport", function (hooks) {
     restoreBaseUri();
   });
 
-  for (const entryPoint of ["menu", "prompt"]) {
-    for (const calendar of ["google", "ics"]) {
-      for (const useModal of [false, true]) {
-        for (const description of [
-          null,
-          "Bring snacks; tea, coffee\nC:\\notes",
-        ]) {
-          test(`${entryPoint} exports ${calendar} ${useModal ? "through the modal" : "with a saved preference"} ${description ? "with" : "without"} a description`, async function (assert) {
-            this.event.description = description;
-            this.currentUser.set(
-              "user_option.default_calendar",
-              useModal ? "none_selected" : calendar
-            );
-            this.fromMenu = entryPoint === "menu";
+  module("Event menu", function (menuHooks) {
+    menuHooks.beforeEach(function () {
+      this.fromMenu = true;
+    });
 
-            await render(
-              <template>
-                <ModalContainer />
-                {{#if this.fromMenu}}
-                  <MoreMenu @event={{this.event}} />
-                {{else}}
-                  <CalendarPrompt @event={{this.event}} />
-                {{/if}}
-              </template>
-            );
+    module("Saved preference", function (preferenceHooks) {
+      preferenceHooks.beforeEach(function () {
+        this.useModal = false;
+      });
 
-            if (this.fromMenu) {
-              await click(".discourse-post-event-more-menu-trigger");
-              await click(".add-to-calendar button");
-            } else {
-              await click(".event-calendar-prompt__actions .btn-primary");
-            }
+      test("Google Calendar includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "google");
 
-            if (useModal) {
-              await formKit().field("calendar").select(calendar);
-              await click(".download-calendar-modal .btn-primary");
-            }
+        assertGoogleDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
 
-            const postUrl = "https://forum.example/t/workshop/123";
-            const exportSpy =
-              calendar === "google" ? this.openWindow : this.createObjectURL;
-            assert.true(exportSpy.calledOnce, "exports the event once");
+      test("Google Calendar includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
 
-            let actualDetails;
-            let expectedDetails;
-            if (calendar === "google") {
-              const url = new URL(this.openWindow.firstCall.args[0]);
-              actualDetails = url.searchParams.get("details");
-              expectedDetails = description
-                ? `${description}\n${postUrl}`
-                : postUrl;
-            } else {
-              const file = this.createObjectURL.firstCall.args[0];
-              const ics = (await file.text()).replace(/\r\n[ \t]/g, "");
-              actualDetails = ics
-                .split("\r\n")
-                .find((line) => line.startsWith("DESCRIPTION:"))
-                ?.slice("DESCRIPTION:".length);
-              expectedDetails = description
-                ? `Bring snacks\\; tea\\, coffee\\nC:\\\\notes\\n${postUrl}`
-                : postUrl;
-            }
-            assert.strictEqual(
-              actualDetails,
-              expectedDetails,
-              "the exported description includes the topic URL and preserves the description"
-            );
-          });
-        }
-      }
-    }
-  }
+        await exportCalendar(this, "google");
+
+        assertGoogleDetails(
+          assert,
+          this,
+          "Bring snacks; tea, coffee\nC:\\notes\nhttps://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
+
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "Bring snacks\\; tea\\, coffee\\nC:\\\\notes\\nhttps://forum.example/t/workshop/123"
+        );
+      });
+    });
+
+    module("Calendar modal", function (modalHooks) {
+      modalHooks.beforeEach(function () {
+        this.useModal = true;
+      });
+
+      test("Google Calendar includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "google");
+
+        assertGoogleDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
+
+      test("Google Calendar includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
+
+        await exportCalendar(this, "google");
+
+        assertGoogleDetails(
+          assert,
+          this,
+          "Bring snacks; tea, coffee\nC:\\notes\nhttps://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
+
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "Bring snacks\\; tea\\, coffee\\nC:\\\\notes\\nhttps://forum.example/t/workshop/123"
+        );
+      });
+    });
+  });
+
+  module("RSVP prompt", function (promptHooks) {
+    promptHooks.beforeEach(function () {
+      this.fromMenu = false;
+    });
+
+    module("Saved preference", function (preferenceHooks) {
+      preferenceHooks.beforeEach(function () {
+        this.useModal = false;
+      });
+
+      test("Google Calendar includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "google");
+
+        assertGoogleDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
+
+      test("Google Calendar includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
+
+        await exportCalendar(this, "google");
+
+        assertGoogleDetails(
+          assert,
+          this,
+          "Bring snacks; tea, coffee\nC:\\notes\nhttps://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
+
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "Bring snacks\\; tea\\, coffee\\nC:\\\\notes\\nhttps://forum.example/t/workshop/123"
+        );
+      });
+    });
+
+    module("Calendar modal", function (modalHooks) {
+      modalHooks.beforeEach(function () {
+        this.useModal = true;
+      });
+
+      test("Google Calendar includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "google");
+
+        assertGoogleDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
+
+      test("Google Calendar includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
+
+        await exportCalendar(this, "google");
+
+        assertGoogleDetails(
+          assert,
+          this,
+          "Bring snacks; tea, coffee\nC:\\notes\nhttps://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL without a description", async function (assert) {
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "https://forum.example/t/workshop/123"
+        );
+      });
+
+      test("ICS includes the topic URL with a description", async function (assert) {
+        this.event.description = "Bring snacks; tea, coffee\nC:\\notes";
+
+        await exportCalendar(this, "ics");
+
+        await assertIcsDetails(
+          assert,
+          this,
+          "Bring snacks\\; tea\\, coffee\\nC:\\\\notes\\nhttps://forum.example/t/workshop/123"
+        );
+      });
+    });
+  });
 });

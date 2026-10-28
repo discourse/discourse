@@ -68,29 +68,45 @@ module("Integration | Component | Dates", function (hooks) {
     await settled();
   }
 
-  for (const description of [null, "Bring your laptop"]) {
-    test(`embedded ICS includes the topic URL ${description ? "with" : "without"} a description`, async function (assert) {
-      const event = {
-        ...events.currentYear.today,
-        description,
-        post: { url: "/t/workshop/123" },
-      };
+  test("embedded ICS includes the topic URL without a description", async function (assert) {
+    const event = {
+      ...events.currentYear.today,
+      description: null,
+      post: { url: "/t/workshop/123" },
+    };
 
-      await render(<template><Dates @event={{event}} /></template>);
-      await waitForDates();
+    await render(<template><Dates @event={{event}} /></template>);
+    await waitForDates();
 
-      const ics = bbcodeAttributeDecode(
-        find(".discourse-local-date").dataset.ics
-      ).replace(/\r\n[ \t]/g, "");
-      const postUrl = getAbsoluteURL(event.post.url);
-      assert.true(
-        ics.includes(
-          `DESCRIPTION:${description ? `${description}\\n` : ""}${postUrl}\r\n`
-        ),
-        "the date popover's ICS preserves the description and links to the topic"
-      );
-    });
-  }
+    const ics = bbcodeAttributeDecode(
+      find(".discourse-local-date").dataset.ics
+    ).replace(/\r\n[ \t]/g, "");
+    const postUrl = getAbsoluteURL(event.post.url);
+    assert.true(
+      ics.includes(`DESCRIPTION:${postUrl}\r\n`),
+      "the date popover's ICS links to the topic"
+    );
+  });
+
+  test("embedded ICS includes the topic URL with a description", async function (assert) {
+    const event = {
+      ...events.currentYear.today,
+      description: "Bring your laptop",
+      post: { url: "/t/workshop/123" },
+    };
+
+    await render(<template><Dates @event={{event}} /></template>);
+    await waitForDates();
+
+    const ics = bbcodeAttributeDecode(
+      find(".discourse-local-date").dataset.ics
+    ).replace(/\r\n[ \t]/g, "");
+    const postUrl = getAbsoluteURL(event.post.url);
+    assert.true(
+      ics.includes(`DESCRIPTION:Bring your laptop\\n${postUrl}\r\n`),
+      "the date popover's ICS preserves the description and links to the topic"
+    );
+  });
 
   module("dates without time", function () {
     test("formats weekdays within range 1 day before and 2 days after the specified day", async function (assert) {
