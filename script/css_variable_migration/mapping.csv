@@ -22,3 +22,124 @@ old_name,new_name,type,notes
 --tertiary-rgb,--tertiary,rgb,
 --highlight-rgb,--highlight,rgb,No reads in core.
 --success-rgb,--success,rgb,No reads in core.
+--d-button-transition,--d-comp-DButton-motion-transition,rename,
+--d-button-default-text-color,--d-comp-DButton-color-text-default,rename,
+--d-button-default-text-color--hover,--d-comp-DButton-color-text-default-hovered,rename,
+--d-button-default-bg-color,--d-comp-DButton-color-background-default,rename,Stays a DButton token (themes change button kinds separately); its value becomes var(--d-sys-color-background-neutral).
+--d-button-default-bg-color--hover,--d-comp-DButton-color-background-default-hovered,rename,
+--d-button-default-icon-color,--d-comp-DButton-color-icon-default,rename,
+--d-button-default-icon-color--hover,--d-comp-DButton-color-icon-default-hovered,rename,
+--d-button-primary-text-color,--d-comp-DButton-color-text-primary,rename,
+--d-button-primary-text-color--hover,--d-comp-DButton-color-text-primary-hovered,rename,
+--d-button-primary-bg-color,--d-comp-DButton-color-background-primary,rename,
+--d-button-primary-bg-color--hover,--d-comp-DButton-color-background-primary-hovered,rename,
+--d-button-primary-icon-color,--d-comp-DButton-color-icon-primary,rename,
+--d-button-primary-icon-color--hover,--d-comp-DButton-color-icon-primary-hovered,rename,
+--d-button-danger-text-color,--d-comp-DButton-color-text-danger,rename,
+--d-button-danger-text-color--hover,--d-comp-DButton-color-text-danger-hovered,rename,
+--d-button-danger-bg-color,--d-comp-DButton-color-background-danger,rename,
+--d-button-danger-bg-color--hover,--d-comp-DButton-color-background-danger-hovered,rename,
+--d-button-danger-icon-color,--d-comp-DButton-color-icon-danger,rename,
+--d-button-danger-icon-color--hover,--d-comp-DButton-color-icon-danger-hovered,rename,
+--d-button-success-text-color,--d-comp-DButton-color-text-success,rename,
+--d-button-success-text-color--hover,--d-comp-DButton-color-text-success-hovered,rename,
+--d-button-success-bg-color,--d-comp-DButton-color-background-success,rename,
+--d-button-success-bg-color--hover,--d-comp-DButton-color-background-success-hovered,rename,
+--d-button-success-icon-color,--d-comp-DButton-color-icon-success,rename,
+--d-button-success-icon-color--hover,--d-comp-DButton-color-icon-success-hovered,rename,
+--d-button-flat-text-color,--d-comp-DButton-color-text-flat,rename,
+--d-button-flat-text-color--hover,--d-comp-DButton-color-text-flat-hovered,rename,
+--d-button-flat-icon-color,--d-comp-DButton-color-icon-flat,rename,
+--d-button-flat-icon-color--hover,--d-comp-DButton-color-icon-flat-hovered,rename,
+--d-button-flat-bg-color,--d-comp-DButton-color-background-flat,rename,
+--d-button-flat-bg-color--hover,--d-comp-DButton-color-background-flat-hovered,rename,
+--d-button-flat-bg-color--focus,--d-comp-DButton-color-background-flat-focused,rename,
+--d-button-flat-text-color--disabled,--d-comp-DButton-color-text-flat-disabled,rename,
+--d-button-flat-close-text-color,--d-comp-DButton-color-text-close,rename,
+--d-button-flat-close-bg-color,--d-comp-DButton-color-background-close,rename,
+--d-button-flat-close-icon-color,--d-comp-DButton-color-icon-close,rename,
+--d-button-flat-close-icon-color--hover,--d-comp-DButton-color-icon-close-hovered,rename,
+--d-button-transparent-text-color,--d-comp-DButton-color-text-transparent,rename,
+--d-button-transparent-text-color--hover,--d-comp-DButton-color-text-transparent-hovered,rename,
+--d-button-transparent-icon-color,--d-comp-DButton-color-icon-transparent,rename,
+--d-button-transparent-icon-color--hover,--d-comp-DButton-color-icon-transparent-hovered,rename,
+--token-color-text-default,--d-sys-color-text-default,rename,
+--token-color-text-subtle,--d-sys-color-text-muted,rename,
+--token-color-text-subtlest,--d-sys-color-text-faint,rename,
+--token-color-text-accent,--d-sys-color-text-accent,rename,
+--token-color-text-accent-bolder,--d-sys-color-text-accent-bold,rename,
+--token-color-text-inverse,--d-sys-color-text-inverse,rename,
+--token-color-icon-default,--d-sys-color-icon-default,rename,
+--token-color-icon-subtle,--d-sys-color-icon-muted,rename,
+--token-color-icon-subtlest,--d-sys-color-icon-faint,rename,
+--token-color-icon-danger,--d-sys-color-icon-danger,rename,
+--token-color-border-input,--d-sys-color-border-input,rename,
+--token-color-border-default,--d-sys-color-border-default,rename,Same value as --content-border-color.
+--token-color-border-focused,--d-sys-color-border-input-focused,rename,Check the 16 uses are all inputs.
+--token-color-border-accent,--d-sys-color-border-accent,rename,
+--token-color-surface,--d-sys-color-background-default,rename,
+--token-color-surface-pressed,--d-sys-color-background-default-pressed,rename,
+--token-color-surface-focused,--d-sys-color-background-default-focused,rename,
+--token-color-background-input,--d-sys-color-background-input,rename,
+--token-color-surface-selected,--d-sys-color-background-default-selected,rename,Same value as --d-selected.
+--token-color-background-accent-subtlest,--d-sys-color-background-accent-subtlest,rename,"tertiary-200, 87%."
+--token-color-background-accent-subtlest-hovered,--d-sys-color-background-accent-subtlest-hovered,rename,Unused.
+--token-color-background-accent-subtlest-pressed,--d-sys-color-background-accent-subtlest-pressed,rename,Unused.
+--token-color-background-accent-subtle,--d-sys-color-background-accent-subtle,rename,
+--token-color-background-accent-subtle-hovered,--d-sys-color-background-accent-subtle-hovered,rename,Unused.
+--token-color-background-accent-subtle-pressed,--d-sys-color-background-accent-subtle-pressed,rename,Unused.
+--token-color-background-accent-bolder,--d-sys-color-background-accent,rename,"Value is --tertiary, the base step, not bold."
+--token-border-width,--d-sys-border-width-sm,rename,
+--token-font-weight-semibold,--d-sys-font-weight-semibold,rename,
+--token-font-weight-medium,--d-sys-font-weight-medium,rename,
+--token-font-weight-regular,--d-sys-font-weight-regular,rename,
+--d-selected,--d-sys-color-background-default-selected,rename,
+--d-selected-text-color,--d-sys-color-text-default-selected,rename,
+--d-selected-hover,--d-sys-color-background-default-selected-hovered,rename,
+--highlight-bg,--d-sys-color-background-highlight-subtlest,rename,"70%: highlight's faintest tint, so subtlest (other intents' subtlest is 80–93%; yellow needs more strength). Warning borrows it: warning-subtlest."
+--highlight-low,--d-sys-color-background-highlight-subtlest,rename,Identical value to --highlight-bg in both modes.
+--highlight-medium,--d-sys-color-background-highlight-subtle,rename,50%: the next step after --highlight-bg.
+--danger-low,--d-sys-color-background-danger-subtlest,rename,90%. Also the icon color of danger buttons (DButton token).
+--danger-low-mid,--d-sys-color-background-danger-subtle,rename,50% with 70% opacity.
+--danger-hover,--d-sys-color-background-danger-hovered,rename,
+--success-very-low,--d-sys-color-background-success-subtlest,rename,90%.
+--success-medium,--d-sys-color-background-success-subtle,rename,50%.
+--success-hover,--d-sys-color-background-success-hovered,rename,
+--love-low,--d-sys-color-background-love-subtlest,rename,
+--wiki,--d-comp-PostMetaData-wiki-color-text,rename,Part of PostMetaData: one rule styles the wiki edit indicator and the last-wiki-edit date (two child components). Value is the CSS keyword green; see core fixes.
+--hljs-attr,--d-comp-CodeBlock-attr-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-attribute,--d-comp-CodeBlock-attribute-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-addition,--d-comp-CodeBlock-addition-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-bg,--d-comp-CodeBlock-color-background,rename,Code block background (pattern CodeBlock).
+--inline-code-bg,--d-comp-InlineCode-color-background,rename,Inline code background (pattern InlineCode).
+--hljs-comment,--d-comp-CodeBlock-comment-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-deletion,--d-comp-CodeBlock-deletion-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-keyword,--d-comp-CodeBlock-keyword-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-title,--d-comp-CodeBlock-title-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-name,--d-comp-CodeBlock-name-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-punctuation,--d-comp-CodeBlock-punctuation-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-symbol,--d-comp-CodeBlock-symbol-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-variable,--d-comp-CodeBlock-variable-color-text,rename,highlight.js token type as a part of CodeBlock.
+--hljs-string,--d-comp-CodeBlock-string-color-text,rename,highlight.js token type as a part of CodeBlock.
+--d-link-color,--d-sys-color-text-link,rename,
+--title-color--read,--d-comp-TopicListItem-color-text-read,rename,
+--content-border-color,--d-sys-color-border-default,rename,320 uses.
+--table-border-color,--d-comp-Table-color-border,rename,
+--d-badge-card-background-color,--d-comp-DBadgeCard-color-background,rename,ui-kit/d-badge-card.gjs.
+--mention-background-color,--d-sys-color-background-neutral,rename,No component token: the mention mixin (mentions and hashtags) uses the system neutral fill.
+--title-color--header,--d-comp-Header-color-text-default,rename,Same value as --header_primary.
+--shadow-modal,--d-sys-shadow-dialog,rename,
+--shadow-card,--d-sys-shadow-raised,rename,
+--shadow-dropdown,--d-sys-shadow-overlay,rename,menu-panel.scss redefines it locally with another value.
+--shadow-menu-panel,--d-sys-shadow-overlay,rename,
+--shadow-header,--d-sys-shadow-overflow,rename,The hairline is the overflow value.
+--float-kit-arrow-stroke-color,--d-comp-FloatKit-color-border,rename,"Pattern FloatKit: menu and tooltip boxes and their arrow read it, so they change together. Default var(--d-sys-color-border-default). User tips set it in their scope."
+--float-kit-arrow-fill-color,--d-comp-FloatKit-color-background,rename,"Pattern FloatKit: menu and tooltip boxes and their arrow read it, so they change together. Default var(--d-sys-color-background-overlay). User tips set it in their scope."
+--topic-timeline-border-color,--d-comp-TopicTimeline-color-border,rename,
+--topic-timeline-handle-color,--d-comp-TopicTimelineScroller-color-background,rename,Handle lives in topic-timeline/scroller.gjs; check.
+--d-header-icon-color,--d-comp-HeaderIcons-color-icon-default,rename,"Owner HeaderIcons (header/icons.gjs renders the icon list); defaults to Header-color-icon-default (header run, owner audit)."
+--d-header-icon-color--hover,--d-comp-HeaderIcons-color-icon-default-hovered,rename,Horizon sets it to -medium (header run).
+--d-header-icon-color--active,--d-comp-HeaderIcons-color-icon-default-pressed,rename,Header run.
+--d-header-icon-background--hover,--d-comp-HeaderIcons-color-background-hovered,rename,"Background of the icon buttons on hover (header run, owner audit)."
+--d-header-icon-background--active,--d-comp-HeaderIcons-color-background-pressed,rename,Header run.
+--d-header-padding-x,--d-comp-Header-space-padding-inline,rename,Moved to the Header block in header.scss (header run).
