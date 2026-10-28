@@ -3873,6 +3873,33 @@ RSpec.describe Topic do
     end
   end
 
+  describe "slow mode inherited from the category" do
+    fab!(:slow_category) { Fabricate(:category, default_slow_mode_seconds: 600) }
+
+    it "announces slow mode as the system user when a topic gets it from its category",
+       :aggregate_failures do
+      topic = Fabricate(:topic)
+
+      events =
+        DiscourseEvent.track_events(:topic_slow_mode_set) { topic.update!(category: slow_category) }
+
+      expect(topic.reload.slow_mode_seconds).to eq(600)
+      expect(events.sole[:params]).to eq([topic, nil, { acting_user: Discourse.system_user }])
+    end
+
+    it "announces nothing when the topic already had that interval" do
+      topic = Fabricate(:topic, category: slow_category)
+      other_slow_category = Fabricate(:category, default_slow_mode_seconds: 600)
+
+      events =
+        DiscourseEvent.track_events(:topic_slow_mode_set) do
+          topic.update!(category: other_slow_category)
+        end
+
+      expect(events).to be_empty
+    end
+  end
+
   describe "#reset_bumped_at" do
     it "ignores hidden, deleted, moderator and small action posts when resetting the topic's bump date" do
       post1 = create_post(created_at: 10.hours.ago)

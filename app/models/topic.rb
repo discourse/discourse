@@ -452,6 +452,9 @@ class Topic < ActiveRecord::Base
     end
 
     SearchIndexer.index(self)
+
+    trigger_inherited_slow_mode_event if @slow_mode_inherited && saved_change_to_slow_mode_seconds?
+    @slow_mode_inherited = false
   end
 
   after_update do
@@ -1693,6 +1696,25 @@ class Topic < ActiveRecord::Base
   def inherit_slow_mode_from_category
     if category&.default_slow_mode_seconds
       self.slow_mode_seconds = category&.default_slow_mode_seconds
+      @slow_mode_inherited = true
+    end
+  end
+
+  # Taking a category's default changes slow mode like the slow mode service does, so it's announced the same
+  # way, as the system user.
+  def trigger_inherited_slow_mode_event
+    DB.after_commit do
+      if slow_mode_seconds.to_i > 0
+        ends_at = topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])&.execute_at
+        DiscourseEvent.trigger(
+          :topic_slow_mode_set,
+          self,
+          ends_at,
+          acting_user: Discourse.system_user,
+        )
+      else
+        DiscourseEvent.trigger(:topic_slow_mode_cleared, self, acting_user: Discourse.system_user)
+      end
     end
   end
 
