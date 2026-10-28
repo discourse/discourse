@@ -879,18 +879,17 @@ export default class Category extends RestModel {
   }
 
   @computed
-  get availablePermissions() {
-    // TODO(typescript-pending): PermissionType reads its create-assigned id but does not declare it.
+  get availablePermissions(): PermissionType[] {
     return [
       PermissionType.create({
         id: PermissionType.FULL,
-      } as Partial<PermissionType> & { id: number }),
+      }),
       PermissionType.create({
         id: PermissionType.CREATE_POST,
-      } as Partial<PermissionType> & { id: number }),
+      }),
       PermissionType.create({
         id: PermissionType.READONLY,
-      } as Partial<PermissionType> & { id: number }),
+      }),
     ];
   }
 

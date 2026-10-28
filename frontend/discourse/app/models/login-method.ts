@@ -4,11 +4,26 @@ import { updateCsrfToken } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import Session from "discourse/models/session";
-import Site from "discourse/models/site";
+import Site, { type SiteAuthProvider } from "discourse/models/site";
 import { i18n } from "discourse-i18n";
 
+/** Provider payload plus optional client hooks and cached display flags. */
+export interface LoginMethodFields extends SiteAuthProvider {
+  /** Optional login hook; no production writer is currently known. */
+  customLogin?: () => void;
+  isGoogle?: boolean;
+  isDiscourseID?: boolean;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface LoginMethod extends LoginMethodFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class LoginMethod extends EmberObject {
-  static buildPostForm(url, params = {}) {
+  static buildPostForm(
+    url: string,
+    params: Record<string, unknown> = {}
+  ): globalThis.Promise<HTMLFormElement> {
     // Login always happens in an anonymous context, with no CSRF token
     // So we need to fetch it before sending a POST request
     return updateCsrfToken().then(() => {
@@ -19,13 +34,18 @@ export default class LoginMethod extends EmberObject {
 
       const csrfInput = document.createElement("input");
       csrfInput.setAttribute("name", "authenticity_token");
-      csrfInput.setAttribute("value", Session.currentProp("csrfToken"));
+      // setAttribute coerces nullish tokens just as it does other form values.
+      csrfInput.setAttribute(
+        "value",
+        Session.currentProp("csrfToken") as string
+      );
       form.appendChild(csrfInput);
 
       Object.keys(params).forEach((key) => {
         const input = document.createElement("input");
         input.setAttribute("name", key);
-        input.setAttribute("value", params[key]);
+        // Preserve the DOM's coercion of arbitrary authentication parameters.
+        input.setAttribute("value", params[key] as string);
         form.appendChild(input);
       });
 
@@ -36,17 +56,17 @@ export default class LoginMethod extends EmberObject {
   }
 
   @computed
-  get title() {
+  get title(): string {
     return this.title_override || i18n(`login.${this.name}.title`);
   }
 
   @computed
-  get icon() {
+  get icon(): string {
     return this.icon_override || "user";
   }
 
   @computed
-  get screenReaderTitle() {
+  get screenReaderTitle(): string {
     return (
       this.title_override ||
       i18n(`login.${this.name}.sr_title`, { defaultValue: this.title })
@@ -54,18 +74,28 @@ export default class LoginMethod extends EmberObject {
   }
 
   @computed
-  get prettyName() {
+  get prettyName(): string {
     return this.pretty_name_override || i18n(`login.${this.name}.name`);
   }
 
-  doLogin({ reconnect = false, signup = false, params = {} } = {}) {
+  /** Adds login flags, email and origin to the caller's params object in place. */
+  doLogin({
+    reconnect = false,
+    signup = false,
+    params = {},
+  }: {
+    reconnect?: boolean;
+    signup?: boolean;
+    params?: Record<string, unknown>;
+  } = {}): globalThis.Promise<void> {
     if (this.customLogin) {
       this.customLogin();
       return Promise.resolve();
     }
 
     if (this.custom_url) {
-      window.location = this.custom_url;
+      // Window's setter accepts a URL string; the global intersection obscures it.
+      (window as Window).location = this.custom_url;
       return Promise.resolve();
     }
 
@@ -93,9 +123,9 @@ export default class LoginMethod extends EmberObject {
   }
 }
 
-let methods;
+let methods: LoginMethod[] | undefined;
 
-export function findAll() {
+export function findAll(): LoginMethod[] {
   if (methods) {
     return methods;
   }
@@ -112,6 +142,6 @@ export function findAll() {
   return methods;
 }
 
-export function clearAuthMethods() {
+export function clearAuthMethods(): void {
   methods = undefined;
 }
