@@ -264,6 +264,10 @@ RSpec.describe "External draft review", type: :request do
   end
 
   it "excludes unrelated plugins, themes, and analytics from the review boot" do
+    # Backend CI doesn't build plugin JS, so give every plugin a bundle to filter.
+    allow(Plugin::JsManager).to receive(:read_manifest) do |name|
+      { "main" => { "fileName" => "#{name}.js", "imports" => [], "externalPluginImports" => [] } }
+    end
     _, token = issue_review
     get "https://blog.example.com/review", params: { review_token: token }
     expect(response.status).to eq(200)
