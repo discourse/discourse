@@ -44,7 +44,15 @@ require_relative "lib/discourse_solved/engine"
 
 after_initialize do
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node { DiscourseWorkflows::Nodes::SolutionChanged::V1 }
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::SolutionChanged::V1,
+        DiscourseWorkflows::Nodes::SolutionAccepted::V1,
+        DiscourseWorkflows::Nodes::SolutionUnaccepted::V1,
+        DiscourseWorkflows::Nodes::AcceptSolution::V1,
+        DiscourseWorkflows::Nodes::UnacceptSolution::V1,
+      ]
+    end
   end
 
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-solved/db/fixtures").to_s
