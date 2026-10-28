@@ -2,11 +2,12 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import DiscourseURL from "discourse/lib/url";
+import { toggleFlatRepliesPreference } from "discourse/lib/nested-view-preference";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class NestedViewToggle extends Component {
   @service currentUser;
+  @service router;
 
   get showToggle() {
     return this.currentUser && this.args.topic.is_nested_view;
@@ -14,20 +15,15 @@ export default class NestedViewToggle extends Component {
 
   @action
   async toggle() {
-    const topic = this.args.topic;
-    const preferFlat = !this.currentUser.user_option.prefer_flat_replies;
-
-    this.currentUser.set("user_option.prefer_flat_replies", preferFlat);
-
     try {
-      await this.currentUser.save(["prefer_flat_replies"]);
+      await toggleFlatRepliesPreference({
+        currentUser: this.currentUser,
+        router: this.router,
+        topic: this.args.topic,
+      });
     } catch (e) {
-      this.currentUser.set("user_option.prefer_flat_replies", !preferFlat);
       popupAjaxError(e);
-      return;
     }
-
-    DiscourseURL.routeTo(`/t/${topic.slug}/${topic.id}`);
   }
 
   <template>

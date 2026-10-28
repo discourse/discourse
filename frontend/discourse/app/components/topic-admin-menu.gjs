@@ -6,7 +6,7 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
-import DiscourseURL from "discourse/lib/url";
+import { switchTopicView } from "discourse/lib/nested-view-preference";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -19,6 +19,7 @@ import { i18n } from "discourse-i18n";
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;
   @service currentUser;
+  @service router;
   @service siteSettings;
 
   get extraButtons() {
@@ -181,13 +182,9 @@ export default class TopicAdminMenu extends Component {
         type: "PUT",
         data: { enabled: newValue },
       });
-      topic.set("is_nested_view", newValue);
-
-      if (newValue) {
-        DiscourseURL.routeTo(`/t/${slug}/${topicId}`);
-      } else {
-        DiscourseURL.routeTo(`/t/${slug}/${topicId}`);
-      }
+      switchTopicView(this.router, topic, () =>
+        topic.set("is_nested_view", newValue)
+      );
     } catch (e) {
       popupAjaxError(e);
     }

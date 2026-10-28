@@ -1,10 +1,13 @@
 import ShareTopicModal from "discourse/components/modal/share-topic";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { toggleFlatRepliesPreference } from "discourse/lib/nested-view-preference";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 const SHARE_PRIORITY = 1000;
 const BOOKMARK_PRIORITY = 900;
 const ARCHIVE_PRIORITY = 800;
 const FLAG_PRIORITY = 700;
+const NESTED_VIEW_PRIORITY = 600;
 const DEFER_PRIORITY = 500;
 
 export default {
@@ -104,6 +107,37 @@ export default {
       },
       displayed() {
         return this.canArchive;
+      },
+    });
+
+    registerTopicFooterButton({
+      id: "nested-view",
+      icon: "bars-staggered",
+      priority: NESTED_VIEW_PRIORITY,
+      label: "nested_replies.nested_view",
+      title: "nested_replies.nested_view_title",
+      async action() {
+        try {
+          await toggleFlatRepliesPreference({
+            currentUser: this.currentUser,
+            router: owner.lookup("service:router"),
+            topic: this.topic,
+          });
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+      classNames: ["toggle-nested-view"],
+      dependentKeys: ["topic.is_nested_view", "topic.rendersNested"],
+      dropdown() {
+        return this.site.mobileView;
+      },
+      displayed() {
+        return (
+          this.currentUser &&
+          this.topic.is_nested_view &&
+          !this.topic.rendersNested
+        );
       },
     });
 

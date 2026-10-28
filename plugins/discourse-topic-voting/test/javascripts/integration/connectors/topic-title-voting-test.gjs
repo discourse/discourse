@@ -9,6 +9,7 @@ function buildTopic(overrides = {}) {
     can_vote: true,
     closed: false,
     is_nested_view: false,
+    rendersNested: false,
     postStream: {
       firstPostPresent: false,
       loaded: false,
@@ -61,7 +62,7 @@ module("Integration | Connector | TopicTitleVoting", function (hooks) {
 
   test("renders for nested topics before the flat topic stream is loaded", async function (assert) {
     this.outletArgs = {
-      model: buildTopic({ is_nested_view: true }),
+      model: buildTopic({ is_nested_view: true, rendersNested: true }),
     };
 
     await render(

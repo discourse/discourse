@@ -157,9 +157,9 @@ class TopicListItemSerializer < ListableTopicSerializer
     object.nested_view?
   end
 
-  # The *only* "topic has new content" signal we render for nested topics —
-  # the existing unread_posts/new_posts/unseen badges are deliberately not
-  # shown when is_nested_view is true (see post-count-or-badges.gjs).
+  # The *only* "topic has new content" signal we render for topics shown
+  # nested; the unread_posts/new_posts/unseen badges are deliberately hidden
+  # for them (see post-count-or-badges.gjs).
   def has_new_replies
     true
   end
