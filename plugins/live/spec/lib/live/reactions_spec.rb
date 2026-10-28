@@ -23,4 +23,34 @@ RSpec.describe Live::Reactions do
       )
     end
   end
+
+  describe ".valid?" do
+    before do
+      SiteSetting.discourse_reactions_enabled = true
+      SiteSetting.discourse_reactions_reaction_for_like = "heart"
+      SiteSetting.discourse_reactions_enabled_reactions = "clap"
+    end
+
+    it "accepts only the reaction set when any emoji isn't allowed" do
+      SiteSetting.discourse_reactions_allow_any_emoji = false
+
+      expect(%w[heart clap rocket].map { described_class.valid?(_1) }).to eq([true, true, false])
+    end
+
+    it "accepts any existing emoji, toned ones included, when any emoji is allowed" do
+      SiteSetting.discourse_reactions_allow_any_emoji = true
+
+      expect(%w[rocket clap:t3 not_an_emoji].map { described_class.valid?(_1) }).to eq(
+        [true, true, false],
+      )
+    end
+
+    it "ignores the any emoji setting while post reactions are disabled" do
+      SiteSetting.discourse_reactions_allow_any_emoji = true
+      SiteSetting.discourse_reactions_enabled = false
+
+      expect(described_class.allow_any_emoji?).to eq(false)
+      expect(described_class.valid?("rocket")).to eq(false)
+    end
+  end
 end

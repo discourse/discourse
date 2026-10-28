@@ -176,6 +176,7 @@ after_initialize do
   end
 
   add_to_serializer(:site, :live_reaction_emojis) { Live::Reactions.emojis }
+  add_to_serializer(:site, :live_reactions_allow_any_emoji) { Live::Reactions.allow_any_emoji? }
 
   Live::DefaultRoomSeeder.ensure! if SiteSetting.live_enabled?
   Live::AgentBot.ensure! if SiteSetting.live_enabled?

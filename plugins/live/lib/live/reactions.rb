@@ -8,6 +8,7 @@ module Live
     ENABLED_SETTING = :discourse_reactions_enabled
     LIST_SETTING = :discourse_reactions_enabled_reactions
     MAIN_SETTING = :discourse_reactions_reaction_for_like
+    ANY_EMOJI_SETTING = :discourse_reactions_allow_any_emoji
 
     # Used only when the post reactions settings aren't registered at all.
     FALLBACK = %w[heart +1 laughing open_mouth clap confetti_ball hugs].freeze
@@ -15,18 +16,22 @@ module Live
     def self.emojis
       return FALLBACK if !SiteSetting.has_setting?(LIST_SETTING)
 
-      read =
-        if SiteSetting.get(ENABLED_SETTING)
-          ->(name) { SiteSetting.get(name) }
-        else
-          ->(name) { SiteSetting.defaults[name] }
-        end
+      [setting(MAIN_SETTING), *setting(LIST_SETTING).to_s.split("|")].compact_blank.uniq
+    end
 
-      [read.(MAIN_SETTING), *read.(LIST_SETTING).to_s.split("|")].compact_blank.uniq
+    def self.allow_any_emoji?
+      SiteSetting.has_setting?(ANY_EMOJI_SETTING) && !!setting(ANY_EMOJI_SETTING)
     end
 
     def self.valid?(emoji)
-      emojis.include?(emoji)
+      return false if emoji.blank?
+
+      emojis.include?(emoji) || (allow_any_emoji? && Emoji.exists?(emoji))
     end
+
+    def self.setting(name)
+      SiteSetting.get(ENABLED_SETTING) ? SiteSetting.get(name) : SiteSetting.defaults[name]
+    end
+    private_class_method :setting
   end
 end
