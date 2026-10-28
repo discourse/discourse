@@ -13,9 +13,7 @@ module Jobs
           if user.main_user_record != user
             user.update_columns(silenced_till: nil)
           else
-            # The batch may be stale: staff can silence the user again meanwhile.
-            next if user.reload.silenced?
-            UserSilencer.unsilence(user, Discourse.system_user)
+            UserSilencer.unsilence(user, Discourse.system_user, expired_only: true)
           end
         end
     end
