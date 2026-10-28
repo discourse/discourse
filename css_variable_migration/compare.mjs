@@ -6,7 +6,7 @@
 // same side, such as Sass random(), are ignored. Scoped overrides on ancestors and values
 // set at runtime are not covered.
 //
-//   node script/css_variable_migration/compare.mjs [--base REF] [--no-compile]
+//   node css_variable_migration/compare.mjs [--base REF] [--no-compile]
 
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -22,8 +22,7 @@ const UNSET = Symbol("unset");
 const IGNORED_VARIABLE = /csstools/;
 // Left at HEAD while compiling the base: they do not change the CSS, and the
 // asset processor refuses to build when the lockfile and node_modules differ
-const KEEP =
-  /^(script\/css_variable_migration\/|package\.json$|pnpm-lock\.yaml$)/;
+const KEEP = /^(css_variable_migration\/|package\.json$|pnpm-lock\.yaml$)/;
 
 const { values: options } = parseArgs({
   options: {
@@ -77,9 +76,7 @@ writeFileSync(join(OUTPUT, "report.json"), JSON.stringify(report, null, 2));
 printReport(report);
 
 function compileBaseAndHead(base) {
-  if (
-    git("status", "--porcelain", "--", ".", ":!script/css_variable_migration")
-  ) {
+  if (git("status", "--porcelain", "--", ".", ":!css_variable_migration")) {
     console.error("Commit or stash your changes first.");
     process.exit(1);
   }
@@ -124,7 +121,7 @@ function compile(side) {
   console.log(`Compiling ${side}...`);
   const result = spawnSync(
     "bin/rails",
-    ["runner", "script/css_variable_migration/compile.rb", dir],
+    ["runner", "css_variable_migration/compile.rb", dir],
     { cwd: ROOT, encoding: "utf8" }
   );
   if (result.status !== 0) {

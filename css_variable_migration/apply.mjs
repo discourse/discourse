@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-// Applies mapping.csv and definitions.csv to core, bundled plugins and themes.
+// Applies mapping.json and definitions.json to core, bundled plugins and themes.
 // Running it again gives the same result. After changing the mapping, reset the
 // working tree to the commit before the last run, then run it again.
 //
-//   node script/css_variable_migration/apply.mjs
+//   node css_variable_migration/apply.mjs
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -151,8 +151,8 @@ function tidy(text, file, fileDefinitions) {
   return root.toString(scss);
 }
 
-function define(root, file, { line, name, value, after }) {
-  const where = `definitions.csv:${line}`;
+function define(root, file, { name, value, after }) {
+  const where = `definitions.json: ${name}`;
   const rule = root.nodes.find(isRootRule);
   if (!rule) {
     errors.push(`${where}: ${file} has no top-level :root rule`);

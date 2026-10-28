@@ -2,11 +2,11 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import rewriteRgbTwins from "../../frontend/asset-processor/rgb-twin-rewriter.mjs";
+import rewriteRgbTwins from "../frontend/asset-processor/rgb-twin-rewriter.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
-export const ROOT = join(HERE, "../..");
+export const ROOT = join(HERE, "..");
 export const RENAMES_FILE = "app/assets/stylesheets/variable-renames.json";
 export const TWINS_FILE = "app/assets/stylesheets/variable-rgb-twins.json";
 export const CORE_STYLESHEETS = "app/assets/stylesheets/";
@@ -33,7 +33,7 @@ const EXTENSIONS = new Set([
 ]);
 
 const EXCLUDED = [
-  /^script\/css_variable_migration\//,
+  /^css_variable_migration\//,
   /(^|\/)vendor\//,
   /^public\//,
   // Use old names on purpose, as examples and test cases
@@ -42,31 +42,32 @@ const EXCLUDED = [
 ];
 
 export function loadMapping() {
-  const rows = readCsv("mapping.csv");
-  const definitions = readCsv("definitions.csv");
+  const errors = [];
+  const mapping = readJson("mapping.json", errors);
   const renames = new Map();
   const merged = new Set();
   const twins = new Map();
-  const errors = [];
 
-  for (const row of rows) {
-    const where = `mapping.csv:${row.line}`;
-    if (!TYPES.has(row.type)) {
-      errors.push(`${where}: unsupported type "${row.type}"`);
-    }
-    if (!NAME.test(row.old_name) || !NAME.test(row.new_name)) {
-      errors.push(`${where}: names must look like --some-name`);
-    }
-    if (renames.has(row.old_name) || twins.has(row.old_name)) {
-      errors.push(`${where}: ${row.old_name} is mapped more than once`);
-    }
-    if (row.type === "rgb") {
-      twins.set(row.old_name, row.new_name);
+  for (const [type, entries] of Object.entries(mapping)) {
+    if (!TYPES.has(type)) {
+      errors.push(`mapping.json: unsupported type "${type}"`);
       continue;
     }
-    renames.set(row.old_name, row.new_name);
-    if (row.type === "merge") {
-      merged.add(row.old_name);
+    for (const [oldName, entry] of Object.entries(entries)) {
+      const newName = typeof entry === "string" ? entry : entry?.to;
+      if (!NAME.test(oldName) || !NAME.test(newName)) {
+        errors.push(
+          `mapping.json: ${oldName}: names must look like --some-name`
+        );
+      }
+      if (type === "rgb") {
+        twins.set(oldName, newName);
+        continue;
+      }
+      renames.set(oldName, newName);
+      if (type === "merge") {
+        merged.add(oldName);
+      }
     }
   }
 
@@ -76,24 +77,25 @@ export function loadMapping() {
     }
   }
 
-  const defined = new Set();
-  for (const definition of definitions) {
-    const where = `definitions.csv:${definition.line}`;
-    if (!NAME.test(definition.name)) {
+  const definitions = Object.entries(readJson("definitions.json", errors)).map(
+    ([name, definition]) => ({ name, ...definition })
+  );
+  for (const { name, value, file } of definitions) {
+    const where = `definitions.json: ${name}`;
+    if (!NAME.test(name)) {
       errors.push(`${where}: names must look like --some-name`);
     }
-    if (renames.has(definition.name) || twins.has(definition.name)) {
-      errors.push(`${where}: ${definition.name} is an old name`);
+    if (renames.has(name) || twins.has(name)) {
+      errors.push(`${where}: ${name} is an old name`);
     }
-    if (defined.has(definition.name)) {
-      errors.push(`${where}: ${definition.name} is defined more than once`);
+    if (typeof value !== "string") {
+      errors.push(`${where}: value must be a string`);
     }
-    if (!/\.s?css$/.test(definition.file)) {
-      errors.push(`${where}: ${definition.file} is not a stylesheet`);
-    } else if (!existsSync(join(ROOT, definition.file))) {
-      errors.push(`${where}: ${definition.file} does not exist`);
+    if (!/\.s?css$/.test(file)) {
+      errors.push(`${where}: ${file} is not a stylesheet`);
+    } else if (!existsSync(join(ROOT, file))) {
+      errors.push(`${where}: ${file} does not exist`);
     }
-    defined.add(definition.name);
   }
 
   return { renames, merged, twins, definitions, errors };
@@ -165,47 +167,21 @@ function closingParen(text, open) {
   return -1;
 }
 
-function readCsv(name) {
-  const [header, ...rows] = parseCsv(readFileSync(join(HERE, name), "utf8"));
-  return rows.map((cells, index) => ({
-    line: index + 2,
-    ...Object.fromEntries(header.map((key, i) => [key, cells[i] ?? ""])),
-  }));
-}
-
-function parseCsv(text) {
-  const rows = [];
-  let row = [];
-  let field = "";
-  let quoted = false;
-
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    if (quoted) {
-      if (char === '"' && text[i + 1] === '"') {
-        field += '"';
-        i++;
-      } else if (char === '"') {
-        quoted = false;
-      } else {
-        field += char;
-      }
-    } else if (char === '"') {
-      quoted = true;
-    } else if (char === ",") {
-      row.push(field);
-      field = "";
-    } else if (char === "\n") {
-      rows.push([...row, field]);
-      row = [];
-      field = "";
-    } else if (char !== "\r") {
-      field += char;
+// JSON.parse keeps only the last of two equal keys, so look for them in the text
+function readJson(name, errors) {
+  const text = readFileSync(join(HERE, name), "utf8");
+  const seen = new Set();
+  for (const [, key] of text.matchAll(/"(--[\w-]+)"\s*:/g)) {
+    if (seen.has(key)) {
+      errors.push(`${name}: ${key} is listed more than once`);
     }
-  }
-  if (field || row.length) {
-    rows.push([...row, field]);
+    seen.add(key);
   }
 
-  return rows;
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    errors.push(`${name}: ${error.message}`);
+    return {};
+  }
 }

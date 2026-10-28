@@ -4,7 +4,7 @@
 # light and dark, and writes them with a manifest that lists the stylesheets
 # each page loads, in order, for compare.mjs.
 #
-#   bin/rails runner script/css_variable_migration/compile.rb OUTPUT_DIR
+#   bin/rails runner css_variable_migration/compile.rb OUTPUT_DIR
 
 output = ARGV.fetch(0)
 FileUtils.mkdir_p(output)

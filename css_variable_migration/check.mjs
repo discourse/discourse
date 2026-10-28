@@ -3,7 +3,7 @@
 // are in sync, no old name is left, no -rgb read is left that apply.mjs could
 // rewrite, and every definition is in place.
 //
-//   node script/css_variable_migration/check.mjs
+//   node css_variable_migration/check.mjs
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -28,7 +28,7 @@ for (const [file, map] of [
   [TWINS_FILE, twins],
 ]) {
   if (readFileSync(join(ROOT, file), "utf8") !== toJson(map)) {
-    errors.push(`${file} does not match mapping.csv`);
+    errors.push(`${file} does not match mapping.json`);
   }
 }
 
@@ -64,13 +64,13 @@ for (const file of listFiles()) {
   });
 }
 
-for (const { line, name, value, file } of definitions) {
+for (const { name, value, file } of definitions) {
   const root = scss.parse(readFileSync(join(ROOT, file), "utf8"));
   const decl = root.nodes
     .find(isRootRule)
     ?.nodes.find((n) => n.type === "decl" && n.prop === name);
   if (decl?.value !== value) {
-    errors.push(`definitions.csv:${line}: ${name} is not ${value} in ${file}`);
+    errors.push(`definitions.json: ${name} is not ${value} in ${file}`);
   }
 }
 

@@ -1,2 +1,0 @@
-name,value,file,after
---d-sys-border-radius-sm,calc(var(--d-sys-border-radius-md) / 2),app/assets/stylesheets/common/foundation/base.scss,--d-sys-border-radius-md
