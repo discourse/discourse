@@ -2,6 +2,7 @@ import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
+import AdminNewBotButton from "discourse/admin/components/admin-new-bot-button";
 import { USER_ACCOUNT_TYPES } from "discourse/admin/lib/user-account-types";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -55,11 +56,7 @@ export default <template>
   <DPageSubheader @titleLabel={{@controller.title}}>
     <:actions as |actions|>
       {{#if (and (eq @controller.query "bots") @controller.currentUser.admin)}}
-        <actions.Primary
-          class="admin-users__subheader-new-bot"
-          @label="admin.users.bots.new"
-          @route="adminBotsNew"
-        />
+        <AdminNewBotButton @actions={{actions}} />
       {{/if}}
       {{#if @controller.canCheckEmails}}
         {{#if @controller.showEmails}}

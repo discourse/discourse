@@ -10017,6 +10017,10 @@ en:
         source: "Source"
         bots:
           new: "New bot"
+          new_options:
+            bot:
+              label: "General-purpose bot"
+              description: "An account for integrations, webhooks, or automated posting through the API."
           back: "Back to bots"
           help: "Bots are user accounts that can't log in, for integrations and automated posting."
           generate_api_key: "Generate API key"

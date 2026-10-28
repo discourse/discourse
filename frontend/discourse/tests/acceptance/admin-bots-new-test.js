@@ -10,9 +10,11 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import { setPrefix } from "discourse/lib/get-url";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import pretender from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance, currentUser } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 const NEW_BOT_BUTTON = ".admin-users__subheader-new-bot";
@@ -122,6 +124,57 @@ acceptance("Admin - New bot", function (needs) {
         });
       });
     });
+  });
+
+  test("offers a menu explaining each path when other bot flows are registered", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("admin-new-bot-options", ({ value }) => [
+        ...value,
+        {
+          id: "other",
+          icon: "key",
+          label: "admin.api.new_key",
+          description: "admin.users.bots.help",
+          route: "adminApiKeys.new",
+        },
+      ]);
+    });
+
+    const dropdown = selectKit(NEW_BOT_BUTTON);
+
+    await visit("/admin/users/list/bots");
+    await dropdown.expand();
+
+    assert.strictEqual(
+      dropdown.rows().length,
+      2,
+      "lists the generic bot and the registered flow"
+    );
+    assert.strictEqual(
+      dropdown.rowByValue("bot").label(),
+      i18n("admin.users.bots.new_options.bot.label")
+    );
+    assert.strictEqual(
+      dropdown.rowByValue("bot").description(),
+      i18n("admin.users.bots.new_options.bot.description"),
+      "explains when to choose each path"
+    );
+
+    await dropdown.selectRowByValue("other");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/api/keys/new",
+      "opens the registered flow"
+    );
+
+    await visit("/admin/users/list/bots");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("bot");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/bots/new",
+      "opens the generic bot form"
+    );
   });
 
   test("only the Bots subheader has the primary creation action", async function (assert) {
