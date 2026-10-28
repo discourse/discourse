@@ -5600,7 +5600,10 @@ CREATE TABLE public.discourse_workflows_executions (
     finished_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    job_id character varying
+    job_id character varying,
+    workflow_test_id bigint,
+    workflow_test_digest character varying(64),
+    pin_data_digest character varying(64)
 );
 
 
@@ -5898,6 +5901,51 @@ CREATE SEQUENCE public.discourse_workflows_workflow_tags_id_seq
 --
 
 ALTER SEQUENCE public.discourse_workflows_workflow_tags_id_seq OWNED BY public.discourse_workflows_workflow_tags.id;
+
+
+--
+-- Name: discourse_workflows_workflow_tests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_tests (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    trigger_node_id character varying NOT NULL,
+    trigger_type character varying NOT NULL,
+    trigger_type_version integer DEFAULT 1 NOT NULL,
+    trigger_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    source_execution_id bigint NOT NULL,
+    captured_outputs jsonb DEFAULT '{}'::jsonb NOT NULL,
+    captured_at timestamp(6) without time zone,
+    pasted_responses jsonb DEFAULT '{}'::jsonb NOT NULL,
+    checks jsonb DEFAULT '[]'::jsonb NOT NULL,
+    definition_digest character varying(64) NOT NULL,
+    latest_execution_id bigint,
+    created_by_id bigint NOT NULL,
+    updated_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflow_tests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflow_tests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflow_tests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflow_tests_id_seq OWNED BY public.discourse_workflows_workflow_tests.id;
 
 
 --
@@ -15119,6 +15167,13 @@ ALTER TABLE ONLY public.discourse_workflows_workflow_tags ALTER COLUMN id SET DE
 
 
 --
+-- Name: discourse_workflows_workflow_tests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_tests ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_tests_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_workflows id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17832,6 +17887,14 @@ ALTER TABLE ONLY public.discourse_workflows_workflow_tags
 
 
 --
+-- Name: discourse_workflows_workflow_tests discourse_workflows_workflow_tests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_tests
+    ADD CONSTRAINT discourse_workflows_workflow_tests_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_workflow_versions discourse_workflows_workflow_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -20155,6 +20218,13 @@ CREATE INDEX idx_dwf_executions_on_workflow_created_at_id_desc ON public.discour
 
 
 --
+-- Name: idx_dwf_executions_on_workflow_test_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_executions_on_workflow_test_created_at ON public.discourse_workflows_executions USING btree (workflow_test_id, created_at) WHERE (workflow_test_id IS NOT NULL);
+
+
+--
 -- Name: idx_dwf_executions_on_workflow_version_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20278,6 +20348,13 @@ CREATE UNIQUE INDEX idx_dwf_workflow_tags_on_tag_workflow ON public.discourse_wo
 --
 
 CREATE UNIQUE INDEX idx_dwf_workflow_tags_on_workflow_tag ON public.discourse_workflows_workflow_tags USING btree (workflow_id, workflow_tag_id);
+
+
+--
+-- Name: idx_dwf_workflow_tests_on_workflow_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_workflow_tests_on_workflow_created_at ON public.discourse_workflows_workflow_tests USING btree (workflow_id, created_at);
 
 
 --
@@ -26164,6 +26241,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261027143317'),
+('20261027143314'),
+('20261027143311'),
 ('20261021063131'),
 ('20261021063122'),
 ('20261021061850'),

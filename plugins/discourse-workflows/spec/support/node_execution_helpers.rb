@@ -54,6 +54,53 @@ module NodeExecutionHelpers
     sandbox&.dispose
   end
 
+  def simulate_node_output(
+    configuration:,
+    item: nil,
+    input_items: nil,
+    user: nil,
+    node_name: "Step under test",
+    simulation: nil,
+    &block
+  )
+    item = { "json" => {} } if item.nil? && input_items.nil?
+    input_items = input_items || [item]
+    node_credentials = configuration.fetch("credentials") { {} }
+    node_parameters = configuration.except("credentials")
+    node = described_class.new(parameters: node_parameters, credentials: node_credentials)
+    resolver_context = { "$json" => input_items.first&.dig("json") || {} }
+    sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context, user: user)
+    resolver =
+      DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox, user: user)
+    simulation ||= DiscourseWorkflows::Simulation::RunState.new
+    ctx =
+      DiscourseWorkflows::Executor::NodeExecutionContext.new(
+        input_items: input_items,
+        resolver: resolver,
+        parameters: node_parameters,
+        credentials: node_credentials,
+        property_schema: described_class.property_schema,
+        credential_schema: described_class.credentials,
+        node_identifier: described_class.identifier,
+        node_name: node_name,
+        resolver_context: resolver_context,
+        user: user,
+        execution_mode: :simulation,
+        simulation: simulation,
+      )
+    output_arrays = node.execute_simulation(ctx)
+    DiscourseWorkflows::ItemContract.validate_output_arrays!(
+      output_arrays,
+      source: described_class.name,
+      ports: described_class.ports(node_parameters),
+    )
+    block&.call(simulation, ctx)
+    output_arrays
+  ensure
+    resolver&.dispose
+    sandbox&.dispose
+  end
+
   def execute_node(configuration:, item: { "json" => {} }, workflow: nil)
     result = execute_node_output(configuration: configuration, item: item, workflow: workflow)
     result.first.first["json"]

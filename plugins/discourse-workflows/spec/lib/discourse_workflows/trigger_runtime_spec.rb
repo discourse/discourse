@@ -32,3 +32,65 @@ RSpec.describe DiscourseWorkflows::TriggerRuntime do
     end
   end
 end
+
+RSpec.describe DiscourseWorkflows::TriggerRuntime, ".collect_payload_for" do
+  fab!(:user, :admin)
+
+  def schedule_workflow
+    graph =
+      build_workflow_graph do |graph_builder|
+        graph_builder.node "trigger-1",
+                           "trigger:schedule",
+                           name: "Every hour",
+                           configuration: {
+                             "rule" => {
+                               "interval" => [{ "field" => "hours", "hoursInterval" => 1 }],
+                             },
+                           }
+      end
+    Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+  end
+
+  it "returns the schedule payload without committing trigger state or static data" do
+    workflow = schedule_workflow
+    trigger_node = workflow.find_node("trigger-1")
+
+    payload = described_class.collect_payload_for(workflow:, trigger_node:, user:)
+
+    expect(payload).to include("timestamp")
+    expect(workflow.reload.static_data).to eq({})
+    expect(workflow.node_trigger_state(trigger_node["id"])).to be_blank
+  end
+
+  it "returns an empty payload for the manual trigger" do
+    graph =
+      build_workflow_graph { |graph_builder| graph_builder.node "trigger-1", "trigger:manual" }
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+    payload =
+      described_class.collect_payload_for(
+        workflow:,
+        trigger_node: workflow.find_node("trigger-1"),
+        user:,
+      )
+
+    expect(payload).to eq({})
+  end
+
+  it "returns nil for a trigger that offers no sample input" do
+    graph =
+      build_workflow_graph do |graph_builder|
+        graph_builder.node "trigger-1", "trigger:topic_created"
+      end
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+    payload =
+      described_class.collect_payload_for(
+        workflow:,
+        trigger_node: workflow.find_node("trigger-1"),
+        user:,
+      )
+
+    expect(payload).to be_nil
+  end
+end

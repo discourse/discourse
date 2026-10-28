@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module If
       class V1 < NodeType
+        simulation { pure }
+
         description(
           name: "condition:if",
           version: "1.0",

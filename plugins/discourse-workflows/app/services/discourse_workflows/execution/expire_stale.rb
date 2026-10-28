@@ -17,8 +17,13 @@ module DiscourseWorkflows
 
     def fetch_stale_executions
       timeout = SiteSetting.discourse_workflows_run_timeout_minutes.minutes
+      simulation_timeout = DiscourseWorkflows::Executor::SIMULATION_TIMEOUT
       DiscourseWorkflows::Execution
+        .not_simulations
         .stale((timeout + GRACE_PERIOD).ago)
+        .or(
+          DiscourseWorkflows::Execution.simulations.stale((simulation_timeout + GRACE_PERIOD).ago),
+        )
         .includes(:execution_data)
         .limit(500)
     end

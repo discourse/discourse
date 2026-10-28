@@ -4,6 +4,13 @@ module DiscourseWorkflows
   module Nodes
     module Topic
       class V1 < NodeType
+        simulation do
+          supported "create", "close", "archive", "bump"
+          pure "get", "list"
+          lookup "get", "list"
+          unsupported "set_custom_fields"
+        end
+
         OPERATIONS = %w[create get list close archive bump set_custom_fields].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
@@ -259,32 +266,134 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           items =
-            exec_ctx.input_items.flat_map.with_index do |_item, item_index|
-              config = {
-                "operation" =>
-                  exec_ctx.get_node_parameter("operation", item_index, default: "create"),
-                "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
-                "silent" => exec_ctx.get_node_parameter("silent", item_index, default: false),
-                "title" => exec_ctx.get_node_parameter("title", item_index),
-                "raw" => exec_ctx.get_node_parameter("raw", item_index),
-                "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
-                "tag_names" => exec_ctx.get_node_parameter("tag_names", item_index),
-                "query" => exec_ctx.get_node_parameter("query", item_index),
-                "custom_field_names" =>
-                  exec_ctx.get_node_parameter("custom_field_names", item_index, default: []),
-                "custom_fields" =>
-                  exec_ctx.get_node_parameter("custom_fields.values", item_index, default: []),
-                "limit" => exec_ctx.get_node_parameter("limit", item_index, default: DEFAULT_LIMIT),
-                "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
-              }
-
-              Array.wrap(execute_with_config(exec_ctx, config, item_index))
+            exec_ctx.input_items.flat_map.with_index do |item, item_index|
+              operation = exec_ctx.get_node_parameter("operation", item_index, default: "create")
+              config = resolve_config(exec_ctx, item:, item_index:, operation:)
+              Array.wrap(
+                execute_with_config(exec_ctx, config.merge("operation" => operation), item_index),
+              )
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+            "silent" => exec_ctx.get_node_parameter("silent", item_index, default: false),
+            "title" => exec_ctx.get_node_parameter("title", item_index),
+            "raw" => exec_ctx.get_node_parameter("raw", item_index),
+            "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
+            "tag_names" => exec_ctx.get_node_parameter("tag_names", item_index),
+            "query" => exec_ctx.get_node_parameter("query", item_index),
+            "custom_field_names" =>
+              exec_ctx.get_node_parameter("custom_field_names", item_index, default: []),
+            "custom_fields" =>
+              exec_ctx.get_node_parameter("custom_fields.values", item_index, default: []),
+            "limit" => exec_ctx.get_node_parameter("limit", item_index, default: DEFAULT_LIMIT),
+            "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
+          }
+        end
+
+        def execute_item(exec_ctx, dispatch)
+          config = dispatch.config.merge("operation" => dispatch.operation)
+          Array.wrap(execute_with_config(exec_ctx, config, dispatch.item_index))
+        end
+
+        def simulate_item(exec_ctx, dispatch)
+          config = dispatch.config
+          case dispatch.operation
+          when "create"
+            wrap(simulate_create_topic(exec_ctx, config, dispatch.item_index))
+          when "close", "archive"
+            wrap(simulate_status_change(exec_ctx, config, dispatch.item_index, dispatch.operation))
+          when "bump"
+            wrap(simulate_bump(exec_ctx, config, dispatch.item_index))
+          end
+        end
+
         private
+
+        def simulate_create_topic(exec_ctx, config, item_index)
+          author = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = author.guardian
+          category_id = config["category_id"].presence&.to_i
+          category = Category.find_by(id: category_id) if category_id
+          tag_names = normalize_tag_names(config["tag_names"])
+
+          unless guardian.can_create?(Topic, category)
+            raise_node_error!(I18n.t("discourse_workflows.errors.topic.create_failed"))
+          end
+
+          exec_ctx.record_effect(
+            :topic_created,
+            { title: config["title"], category_id: category&.id, raw: config["raw"] },
+            item_index:,
+          )
+
+          topic =
+            exec_ctx.synthetic_topic(
+              user: author,
+              title: config["title"],
+              category_id: category&.id,
+            )
+          topic.tags = ::Tag.where(name: tag_names).to_a if tag_names.present?
+          post = exec_ctx.synthetic_post(topic:, user: author, raw: config["raw"])
+
+          synthetic_output(
+            topic: serialize_topic(topic, guardian: guardian),
+            post: serialize_topic_post(post, guardian),
+            post_id: post.id,
+            post_number: post.post_number,
+          )
+        end
+
+        def simulate_status_change(exec_ctx, config, item_index, status)
+          topic = read_topic(exec_ctx, config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          if status == "close"
+            guardian.ensure_can_close_topic!(topic)
+            effect = :topic_closed
+            topic.closed = true
+          else
+            guardian.ensure_can_archive_topic!(topic)
+            effect = :topic_archived
+            topic.archived = true
+          end
+
+          exec_ctx.record_effect(
+            effect,
+            { topic_id: topic.id },
+            item_index:,
+            touches: [[:topic, topic.id]],
+          )
+
+          serialize_topic_with_post(topic, guardian)
+        end
+
+        def simulate_bump(exec_ctx, config, item_index)
+          topic = read_topic(exec_ctx, config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          guardian.ensure_can_see!(topic)
+          guardian.ensure_can_update_bumped_at!
+
+          exec_ctx.record_effect(
+            :topic_bumped,
+            { topic_id: topic.id },
+            item_index:,
+            touches: [[:topic, topic.id]],
+          )
+          topic.bumped_at = exec_ctx.now
+
+          serialize_topic_with_post(topic, guardian)
+        end
+
+        def read_topic(exec_ctx, topic_id)
+          exec_ctx.read_record(:topic, topic_id) ||
+            raise(ActiveRecord::RecordNotFound, "Couldn't find Topic with 'id'=#{topic_id}")
+        end
 
         def execute_with_config(exec_ctx, config, item_index)
           case config["operation"]
@@ -349,7 +458,7 @@ module DiscourseWorkflows
         end
 
         def get_topic(exec_ctx, config, item_index)
-          topic = ::Topic.find(config["topic_id"])
+          topic = read_topic(exec_ctx, config["topic_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           actor.guardian.ensure_can_see!(topic)
           custom_field_names = config["custom_field_names"]

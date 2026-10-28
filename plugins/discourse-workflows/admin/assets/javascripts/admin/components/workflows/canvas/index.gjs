@@ -17,6 +17,10 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import {
+  requestAutoRun,
+  requestPreview,
+} from "../../../lib/workflows/workflow-tests-store.js";
 import BuildWithAiModal from "../build-with-ai-modal.gjs";
 import PublishBanner from "../publish-banner.gjs";
 import {
@@ -455,6 +459,26 @@ export default class WorkflowCanvas extends Component {
   openImportDialog(closeFn) {
     closeFn();
     this.fileInput?.click();
+  }
+
+  @action
+  previewWithCurrentData(closeFn) {
+    closeFn();
+    requestPreview(this.args.workflow.id);
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-workflows.show.workflow-tests.index",
+      this.args.workflow.id
+    );
+  }
+
+  @action
+  runTests(closeFn) {
+    closeFn();
+    requestAutoRun(this.args.workflow.id);
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-workflows.show.workflow-tests.index",
+      this.args.workflow.id
+    );
   }
 
   @action
@@ -1117,6 +1141,28 @@ export default class WorkflowCanvas extends Component {
                         }}
                       />
                     </dropdown.item>
+                    {{#if this.siteSettings.discourse_workflows_tests_enabled}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent"
+                          @action={{fn this.previewWithCurrentData args.close}}
+                          @icon="bolt"
+                          @translatedLabel={{i18n
+                            "discourse_workflows.tests.preview_now"
+                          }}
+                        />
+                      </dropdown.item>
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent"
+                          @action={{fn this.runTests args.close}}
+                          @icon="flask"
+                          @translatedLabel={{i18n
+                            "discourse_workflows.tests.run_tests"
+                          }}
+                        />
+                      </dropdown.item>
+                    {{/if}}
                     <dropdown.item>
                       <DButton
                         class="btn-transparent"

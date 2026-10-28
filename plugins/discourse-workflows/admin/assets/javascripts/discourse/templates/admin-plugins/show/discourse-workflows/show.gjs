@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -12,6 +13,8 @@ import WorkflowTagsEditor from "discourse/plugins/discourse-workflows/admin/comp
 import { workflowUrl } from "discourse/plugins/discourse-workflows/admin/lib/workflows/urls";
 
 class WorkflowShowPage extends Component {
+  @service siteSettings;
+
   get workflow() {
     return this.args.controller.model.workflow;
   }
@@ -69,6 +72,12 @@ class WorkflowShowPage extends Component {
             @label="discourse_workflows.tabs.executions"
             @route="adminPlugins.show.discourse-workflows.show.executions"
           />
+          {{#if this.siteSettings.discourse_workflows_tests_enabled}}
+            <DNavItem
+              @label="discourse_workflows.tabs.tests"
+              @route="adminPlugins.show.discourse-workflows.show.workflow-tests"
+            />
+          {{/if}}
           <DNavItem
             @label="discourse_workflows.tabs.workflow_variables"
             @route="adminPlugins.show.discourse-workflows.show.variables"

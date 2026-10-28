@@ -18,15 +18,17 @@ module DiscourseWorkflows
     end
 
     class ExecutionTimedOut < StandardError
-      def initialize(reason = :run_timed_out)
+      def initialize(reason = :run_timed_out, minutes: nil)
         super(
           I18n.t(
             "discourse_workflows.errors.#{reason}",
-            count: SiteSetting.discourse_workflows_run_timeout_minutes,
+            count: minutes || SiteSetting.discourse_workflows_run_timeout_minutes,
           ),
         )
       end
     end
+
+    SIMULATION_TIMEOUT = 10.minutes
 
     delegate :execution, to: :@store
 
@@ -40,6 +42,9 @@ module DiscourseWorkflows
           trigger_data.deep_stringify_keys
         end
       @options = options
+      if @options.simulation?
+        @simulation = Simulation::RunState.new(now: @options.now, test: @options.workflow_test)
+      end
       workflow_version = @options.workflow_version
       workflow_nodes =
         if @options.workflow_snapshot
@@ -66,6 +71,7 @@ module DiscourseWorkflows
           execution_context: @context,
           execution_mode: @options.execution_mode,
           options: @options,
+          simulation: @simulation,
         )
       @steps = []
       reset_queue!
@@ -253,7 +259,7 @@ module DiscourseWorkflows
     end
 
     def execute_flow(setup_method, *setup_args)
-      @deadline = SiteSetting.discourse_workflows_run_timeout_minutes.minutes.from_now
+      @deadline = run_timeout.from_now
 
       begin
         return execution if send(setup_method, *setup_args) == false
@@ -271,8 +277,14 @@ module DiscourseWorkflows
 
       @store.fail!(error: e, steps: @steps)
     ensure
-      commit_static_data!
+      commit_static_data! unless @options.simulation?
       @sandbox&.dispose
+    end
+
+    def run_timeout
+      return SIMULATION_TIMEOUT if @options.simulation?
+
+      SiteSetting.discourse_workflows_run_timeout_minutes.minutes
     end
 
     # Persists any static_data mutations made by action nodes during the run.
@@ -338,7 +350,16 @@ module DiscourseWorkflows
       end
 
       issues = NodeIssues.for_node(node, node_type_class)
-      return handle_node_issues(node, input_items, issues) if issues.any?
+      if issues.any?
+        if @simulation
+          raise Simulation::SafetyError.new(
+                  :invalid_configuration,
+                  step: node.name,
+                  issues: issues.map { |issue| "#{issue[:path]}: #{issue[:message]}" }.join(", "),
+                )
+        end
+        return handle_node_issues(node, input_items, issues)
+      end
 
       step = record_step(node, input_items)
       capture_operation_metadata(step, node, node_type_class)
@@ -360,12 +381,18 @@ module DiscourseWorkflows
             resolver_ctx,
             runtime_state,
           )
-        result =
+        node_instance =
           node_type_class.new(
             parameters: node.parameters,
             credentials: node.credentials,
             webhook_id: node.webhook_id,
-          ).execute(exec_ctx)
+          )
+        result =
+          if @options.simulation?
+            node_instance.execute_simulation(exec_ctx)
+          else
+            node_instance.execute(exec_ctx)
+          end
 
         attach_form_completion(step, node, resolver)
 
@@ -549,7 +576,7 @@ module DiscourseWorkflows
     end
 
     def resolved_pin_data
-      return {} unless @options.execution_mode == :manual
+      return {} if %i[manual simulation].exclude?(@options.execution_mode)
 
       data =
         if @options.workflow_snapshot
@@ -597,6 +624,8 @@ module DiscourseWorkflows
         resolver_context: resolver_ctx,
         workflow_dependencies: preloaded_workflow_dependencies,
         workflow_snapshot: @snapshot,
+        simulation: @simulation,
+        occurrence: Array(@context.context.dig("__node_runs", node.name.to_s)).length,
         webhook_context: @options.webhook_context,
         workflow_call_stack: @workflow_call_stack,
         runtime_state:,
@@ -606,7 +635,12 @@ module DiscourseWorkflows
     end
 
     def check_deadline!
-      raise ExecutionTimedOut if @deadline.past?
+      return unless @deadline.past?
+      if @options.simulation?
+        raise ExecutionTimedOut.new(:simulation_timed_out, minutes: SIMULATION_TIMEOUT.in_minutes)
+      end
+
+      raise ExecutionTimedOut
     end
 
     def normalize_result(result, node, ports, input_groups)
@@ -720,7 +754,7 @@ module DiscourseWorkflows
     end
 
     def continued_error_outputs(node, input_groups, error)
-      return if error.is_a?(ExecutionTimedOut)
+      return if error.is_a?(ExecutionTimedOut) || error.is_a?(Simulation::SafetyError)
 
       case node_error_mode(node)
       when "continueRegularOutput"
@@ -1034,7 +1068,7 @@ module DiscourseWorkflows
         return false
       end
 
-      if (rate_limit_message = rate_limiter.exceeded_limit_message)
+      if !@options.simulation? && (rate_limit_message = rate_limiter.exceeded_limit_message)
         @store.create_rate_limited_execution(error: rate_limit_message)
         return false
       end
@@ -1147,6 +1181,7 @@ module DiscourseWorkflows
           vars: preloaded_vars,
           workflow_vars: preloaded_workflow_vars,
           budget_tracker: sandbox_budget_tracker,
+          now: @simulation&.now,
         )
     end
 

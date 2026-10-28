@@ -45,3 +45,11 @@ plugins:
     min: 0
     max: 16777216
     hidden: true
+  discourse_workflows_tests_enabled:
+    default: false
+    client: true
+  discourse_workflows_max_simulations_per_hour:
+    default: 60
+    min: 1
+    max: 10000
+    hidden: true

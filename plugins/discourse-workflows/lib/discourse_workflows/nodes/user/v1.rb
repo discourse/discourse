@@ -4,6 +4,12 @@ module DiscourseWorkflows
   module Nodes
     module User
       class V1 < NodeType
+        simulation do
+          pure "get"
+          lookup "get"
+          supported "edit"
+        end
+
         OPERATIONS = %w[get edit].freeze
         UPDATE_OPTIONS = [
           { name: "bio_raw", type: :string, required: false, ui: { control: :textarea } },
@@ -103,19 +109,57 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           items =
-            exec_ctx.input_items.map.with_index do |_item, item_index|
+            exec_ctx.input_items.map.with_index do |item, item_index|
               operation = exec_ctx.get_node_parameter("operation", item_index, default: "get")
-              user =
-                exec_ctx.find_user(username: exec_ctx.get_node_parameter("username", item_index))
-              actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-
-              wrap(process(exec_ctx, user, actor, operation, item_index))
+              config = resolve_config(exec_ctx, item:, item_index:, operation:)
+              wrap(run_operation(exec_ctx, operation, config, item_index))
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          { "username" => exec_ctx.get_node_parameter("username", item_index) }
+        end
+
+        def execute_item(exec_ctx, dispatch)
+          wrap(run_operation(exec_ctx, dispatch.operation, dispatch.config, dispatch.item_index))
+        end
+
+        def simulate_item(exec_ctx, dispatch)
+          item_index = dispatch.item_index
+          user = exec_ctx.read_user(username: dispatch.config["username"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          extensions = requested_extensions(exec_ctx, item_index)
+          updates = update_parameters(exec_ctx, item_index)
+          attributes = editable_attributes(updates)
+
+          guardian.ensure_can_edit!(user) if attributes.present? || updates["remove_avatar"]
+          guardian.ensure_can_grant_title!(user, attributes[:title]) if attributes.key?(:title)
+          if updates.key?("trust_level") || updates.key?("trust_level_locked")
+            guardian.ensure_can_change_trust_level!(user)
+            normalize_trust_level(updates["trust_level"]) if updates.key?("trust_level")
+          end
+
+          exec_ctx.record_effect(
+            :user_updated,
+            { username: user.username },
+            item_index:,
+            touches: [[:user, user.id]],
+          )
+
+          wrap({ user: serialize_user_details(user, guardian, extensions:) })
+        end
+
         private
+
+        def run_operation(exec_ctx, operation, config, item_index)
+          user = exec_ctx.read_user(username: config["username"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          @simulating = exec_ctx.simulating?
+          process(exec_ctx, user, actor, operation, item_index)
+        end
 
         def process(exec_ctx, user, actor, operation, item_index)
           extensions = requested_extensions(exec_ctx, item_index)
@@ -303,7 +347,7 @@ module DiscourseWorkflows
         def emails_extension(user, guardian)
           return { email: nil, secondary_emails: [] } unless guardian.can_check_emails?(user)
 
-          log_email_check(user, guardian)
+          log_email_check(user, guardian) unless @simulating
 
           { email: user.email, secondary_emails: user.secondary_emails }
         end

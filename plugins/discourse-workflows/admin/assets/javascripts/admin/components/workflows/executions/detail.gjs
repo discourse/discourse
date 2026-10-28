@@ -6,6 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -23,6 +24,7 @@ import {
   localeKeyPart,
   propertyOptionLabel,
 } from "../../../lib/workflows/property-engine.js";
+import { workflowTestsStore } from "../../../lib/workflows/workflow-tests-store.js";
 
 function formatJson(data) {
   if (Array.isArray(data) && data.length === 0) {
@@ -239,6 +241,8 @@ function conditionPassed(step) {
 
 export default class ExecutionDetail extends Component {
   @service messageBus;
+  @service router;
+  @service siteSettings;
   @service workflowsNodeTypes;
 
   @tracked liveExecution;
@@ -326,6 +330,13 @@ export default class ExecutionDetail extends Component {
 
   get executionErrorType() {
     return this.execution.status === "error" ? "error" : "warning";
+  }
+
+  get canSaveAsTest() {
+    return (
+      this.siteSettings.discourse_workflows_tests_enabled &&
+      ["success", "error"].includes(this.execution.status)
+    );
   }
 
   @action
@@ -439,6 +450,23 @@ export default class ExecutionDetail extends Component {
     a.download = `discourse-workflows-execution-${execution.id}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  @action
+  async saveAsTest() {
+    const workflowId = this.execution.workflow_id;
+    try {
+      const test = await workflowTestsStore(workflowId).createFromExecution(
+        this.execution.id
+      );
+      this.router.transitionTo(
+        "adminPlugins.show.discourse-workflows.show.workflow-tests.show",
+        workflowId,
+        test.id
+      );
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   #syncLiveUpdates() {
@@ -862,6 +890,14 @@ export default class ExecutionDetail extends Component {
               (if this.isRunning this.currentTime)
             }}
           </div>
+          {{#if this.canSaveAsTest}}
+            <DButton
+              class="btn-default btn-small workflows-execution-detail__save-as-test"
+              @action={{this.saveAsTest}}
+              @icon="flask"
+              @label="discourse_workflows.tests.save_as_test"
+            />
+          {{/if}}
           <DButton
             class="btn-default btn-small workflows-execution-detail__export"
             @action={{this.exportAsText}}

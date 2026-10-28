@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module LoopOverItems
       class V1 < NodeType
+        simulation { pure }
+
         description(
           name: "flow:loop_over_items",
           version: "1.0",

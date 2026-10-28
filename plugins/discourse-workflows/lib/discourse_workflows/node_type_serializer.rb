@@ -19,11 +19,24 @@ module DiscourseWorkflows
         icon: latest.dig(:ui, :icon),
         color: latest.dig(:ui, :color),
         branching: latest.dig(:capabilities, :branching),
+        simulation: simulation_summary,
         manually_triggerable: latest.dig(:capabilities, :manually_triggerable),
       ).compact
     end
 
     private
+
+    def simulation_summary
+      declaration =
+        Registry.find_node_type(@identifier, version: @latest_version)&.simulation_declaration
+      return if declaration.nil?
+
+      {
+        modes: declaration.single_mode? ? declaration.mode_for(nil) : declaration.modes,
+        lookups: declaration.lookups,
+        records: declaration.records?,
+      }
+    end
 
     def version_descriptions
       @available_versions.index_with do |version|

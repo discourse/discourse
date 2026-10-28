@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module MarkdownTable
       class V1 < NodeType
+        simulation { pure }
+
         MAPPING_MODES = %w[manual auto].freeze
         OUTPUT_SCHEMA = {
           "$schema" => Schema::DRAFT_URI,

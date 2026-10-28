@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Merge
       class V1 < NodeType
+        simulation { pure }
+
         description(
           name: "flow:merge",
           version: "1.0",

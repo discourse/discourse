@@ -41,6 +41,10 @@ module DiscourseWorkflows
              class_name: "DiscourseWorkflows::WorkflowTagMapping",
              foreign_key: "workflow_id",
              dependent: :delete_all
+    has_many :workflow_tests,
+             class_name: "DiscourseWorkflows::WorkflowTest",
+             foreign_key: "workflow_id",
+             dependent: :destroy
     has_many :variables,
              class_name: "DiscourseWorkflows::Variable",
              foreign_key: "workflow_id",
@@ -333,6 +337,10 @@ module DiscourseWorkflows
 
     def update_node_trigger_state!(node_id, data)
       update!(trigger_state: (trigger_state || {}).merge(node_id.to_s => data))
+    end
+
+    def pin_data_digest
+      CanonicalDigest.of(pin_data || {})
     end
 
     def node_pin_data(node_name)

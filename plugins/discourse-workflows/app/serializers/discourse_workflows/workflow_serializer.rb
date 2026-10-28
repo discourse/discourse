@@ -22,7 +22,8 @@ module DiscourseWorkflows
                :last_execution_run_data,
                :pin_data,
                :variables,
-               :tags
+               :tags,
+               :tests_summary
 
     attribute :created_by
     attribute :updated_by
@@ -134,6 +135,15 @@ module DiscourseWorkflows
 
     def include_variables?
       !object.attributes.key?("last_execution_status_value")
+    end
+
+    def tests_summary
+      states = object.workflow_tests.includes(latest_execution: :execution_data).map(&:state)
+      WorkflowTest::STATES.index_with { |state| states.count(state) }.merge("total" => states.size)
+    end
+
+    def include_tests_summary?
+      SiteSetting.discourse_workflows_tests_enabled && include_variables?
     end
   end
 end

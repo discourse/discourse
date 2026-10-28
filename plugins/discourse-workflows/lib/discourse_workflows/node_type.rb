@@ -303,6 +303,46 @@ module DiscourseWorkflows
       description_value(:max_nodes)
     end
 
+    def self.simulation(&block)
+      @simulation_declaration = Simulation::Declaration.new(&block)
+    end
+
+    def self.simulation_declaration
+      return @simulation_declaration if defined?(@simulation_declaration)
+
+      superclass.simulation_declaration if superclass.respond_to?(:simulation_declaration)
+    end
+
+    def self.simulation_declared?
+      !simulation_declaration.nil?
+    end
+
+    def self.simulation_mode_for(operation)
+      simulation_declaration&.mode_for(operation)
+    end
+
+    def self.lookup_operation?(operation)
+      simulation_declaration&.lookup?(operation) == true
+    end
+
+    def self.fingerprint_excluded_keys
+      simulation_declaration&.fingerprint_excluded || []
+    end
+
+    def self.operation_property?
+      property_schema.key?(:operation)
+    end
+
+    def self.operation_options
+      Array(property_schema.dig(:operation, :options)).map do |option|
+        option.is_a?(Hash) ? (option[:value] || option["value"]).to_s : option.to_s
+      end
+    end
+
+    def self.default_operation
+      property_schema.dig(:operation, :default)&.to_s
+    end
+
     def self.description_value(key, configuration: nil)
       value = description.fetch(key)
       return value unless value.respond_to?(:call)
@@ -398,6 +438,60 @@ module DiscourseWorkflows
       raise NotImplementedError
     end
 
+    # Simulation never calls `execute` directly. Each input item is resolved once
+    # into an immutable dispatch and routed by the operation's declared mode, so a
+    # mutating branch can't be reached through a value that resolves differently
+    # on a second read.
+    def execute_simulation(exec_ctx)
+      declaration = self.class.simulation_declaration
+      if declaration.nil?
+        raise Simulation::SafetyError.new(:unsupported_step, step: exec_ctx.node_name)
+      end
+
+      if declaration.single_mode? && !self.class.operation_property? &&
+           declaration.mode_for(nil) == :pure
+        return execute(exec_ctx)
+      end
+
+      outputs =
+        exec_ctx.input_items.flat_map.with_index do |item, item_index|
+          dispatch = build_simulation_dispatch(exec_ctx, item, item_index)
+          Array.wrap(simulate_dispatch(exec_ctx, dispatch))
+        end
+
+      [outputs]
+    end
+
+    def resolve_config(_exec_ctx, item:, item_index:, operation:)
+      {}
+    end
+
+    def execute_item(exec_ctx, dispatch)
+      raise Simulation::SafetyError.new(
+              :unsupported_operation,
+              step: exec_ctx.node_name,
+              operation: dispatch.operation,
+            )
+    end
+
+    def simulate_item(exec_ctx, dispatch)
+      raise Simulation::SafetyError.new(
+              :unsupported_operation,
+              step: exec_ctx.node_name,
+              operation: dispatch.operation,
+            )
+    end
+
+    # Recorded nodes resolve and validate their request so a broken draft can't
+    # pass on an old response, then record what they would have sent.
+    def validate_recorded_request(exec_ctx, dispatch)
+      raise Simulation::SafetyError.new(
+              :unsupported_operation,
+              step: exec_ctx.node_name,
+              operation: dispatch.operation,
+            )
+    end
+
     def trigger(trigger_ctx)
       raise NotImplementedError
     end
@@ -419,6 +513,85 @@ module DiscourseWorkflows
     end
 
     private
+
+    def build_simulation_dispatch(exec_ctx, item, item_index)
+      operation = resolve_simulation_operation(exec_ctx, item_index)
+      config = resolve_config(exec_ctx, item:, item_index:, operation:)
+      Simulation::Dispatch.new(item:, item_index:, operation:, config: deep_freeze(config))
+    end
+
+    def resolve_simulation_operation(exec_ctx, item_index)
+      return nil unless self.class.operation_property?
+
+      operation =
+        exec_ctx.get_node_parameter("operation", item_index, default: self.class.default_operation)
+      exec_ctx.ensure_no_expression_errors!
+
+      if operation.blank? || self.class.operation_options.exclude?(operation.to_s)
+        raise Simulation::SafetyError.new(
+                :unresolved_operation,
+                step: exec_ctx.node_name,
+                operation: operation.to_s,
+              )
+      end
+
+      operation.to_s
+    end
+
+    def simulate_dispatch(exec_ctx, dispatch)
+      case self.class.simulation_mode_for(dispatch.operation)
+      when :pure
+        if self.class.lookup_operation?(dispatch.operation)
+          exec_ctx.replay_or_capture(dispatch, kind: :lookup) do
+            exec_ctx.read_only { execute_item(exec_ctx, dispatch) }
+          end
+        else
+          exec_ctx.read_only { execute_item(exec_ctx, dispatch) }
+        end
+      when :supported
+        simulate_item(exec_ctx, dispatch)
+      when :recorded
+        validate_recorded_request(exec_ctx, dispatch)
+        exec_ctx.replay_or_capture(
+          dispatch,
+          kind: :recorded,
+          exclude: self.class.fingerprint_excluded_keys,
+        )
+      else
+        raise Simulation::SafetyError.new(
+                :unsupported_operation,
+                step: exec_ctx.node_name,
+                operation: dispatch.operation.to_s,
+              )
+      end
+    end
+
+    def deep_freeze(value)
+      case value
+      when Hash
+        value
+          .each_with_object({}) { |(key, entry), result| result[key] = deep_freeze(entry) }
+          .freeze
+      when Array
+        value.map { |entry| deep_freeze(entry) }.freeze
+      when String
+        value.frozen? ? value : value.dup.freeze
+      else
+        value
+      end
+    end
+
+    def synthetic_topic(exec_ctx, **)
+      exec_ctx.synthetic_topic(**)
+    end
+
+    def synthetic_post(exec_ctx, **)
+      exec_ctx.synthetic_post(**)
+    end
+
+    def synthetic_output(data)
+      data.merge(__synthetic: true)
+    end
 
     def normalize_tag_names(value)
       self.class.normalize_tag_names(value)

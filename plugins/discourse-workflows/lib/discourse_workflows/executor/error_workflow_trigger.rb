@@ -11,6 +11,8 @@ module DiscourseWorkflows
       end
 
       def trigger_error_workflow(error)
+        return if @execution_mode == :simulation
+
         error_workflow = error_workflow_for_failure
         return unless error_workflow&.published?
         return if @execution_mode == :error_mode && error_workflow.id == @workflow.id

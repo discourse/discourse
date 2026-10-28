@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Filter
       class V1 < NodeType
+        simulation { pure }
+
         description(
           name: "condition:filter",
           version: "1.0",

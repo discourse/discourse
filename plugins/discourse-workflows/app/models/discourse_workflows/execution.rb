@@ -5,6 +5,10 @@ module DiscourseWorkflows
     self.table_name = "discourse_workflows_executions"
 
     belongs_to :workflow, class_name: "DiscourseWorkflows::Workflow", foreign_key: "workflow_id"
+    belongs_to :workflow_test,
+               class_name: "DiscourseWorkflows::WorkflowTest",
+               foreign_key: "workflow_test_id",
+               optional: true
 
     has_one :execution_data,
             class_name: "DiscourseWorkflows::ExecutionData",
@@ -18,9 +22,9 @@ module DiscourseWorkflows
 
     enum :status,
          { pending: 0, running: 1, success: 2, error: 3, waiting: 4, rate_limited: 5, skipped: 6 }
-    enum :execution_mode, { normal: 0, error_mode: 1, manual: 2 }
+    enum :execution_mode, { normal: 0, error_mode: 1, manual: 2, simulation: 3 }
 
-    after_create { ExecutionStat.log(workflow_id) unless rate_limited? }
+    after_create { ExecutionStat.log(workflow_id) unless rate_limited? || simulation? }
 
     scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id:) : all }
     scope :recent, ->(period = 7.days) { where("created_at >= ?", period.ago) }
@@ -30,6 +34,8 @@ module DiscourseWorkflows
 
     scope :expired_waiting, -> { where(status: :waiting).where("waiting_until < ?", Time.current) }
     scope :stale, ->(cutoff) { where(status: %i[pending running]).where("updated_at < ?", cutoff) }
+    scope :simulations, -> { where(execution_mode: :simulation) }
+    scope :not_simulations, -> { where.not(execution_mode: :simulation) }
 
     CLEARED_WAIT_STATE = {
       resume_token: nil,
@@ -73,6 +79,51 @@ module DiscourseWorkflows
           ExecutionData.create!(
             execution:,
             workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+          )
+        end
+      end.tap do |execution|
+        ExecutionProgressPublisher.publish_created(
+          execution,
+          workflow_name: workflow.name,
+          trigger_node: workflow.find_node(trigger_node_id),
+        )
+      end
+    end
+
+    def self.create_pending_simulation!(
+      workflow:,
+      trigger_node_id:,
+      trigger_data:,
+      workflow_test: nil
+    )
+      transaction do
+        create!(
+          workflow:,
+          workflow_version_id: workflow.version_id,
+          trigger_node_id:,
+          trigger_data:,
+          status: :pending,
+          execution_mode: :simulation,
+          workflow_test_id: workflow_test&.id,
+          workflow_test_digest: workflow_test&.definition_digest,
+          pin_data_digest: workflow.pin_data_digest,
+        ).tap do |execution|
+          ExecutionData.create!(
+            execution:,
+            workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+            data: {
+              "entries" => {
+              },
+              "context" => {
+              },
+              "node_contexts" => {
+              },
+              "run_data" => {
+              },
+              "simulation" => {
+                "checks" => workflow_test&.checks || [],
+              },
+            },
           )
         end
       end.tap do |execution|
@@ -323,24 +374,27 @@ end
 #
 # Table name: discourse_workflows_executions
 #
-#  id                  :bigint           not null, primary key
-#  error               :text
-#  execution_mode      :integer          default("normal"), not null
-#  finished_at         :datetime
-#  resume_token        :string(64)
-#  run_time_ms         :integer
-#  started_at          :datetime
-#  status              :integer          default("pending"), not null
-#  timeout_action      :string(32)
-#  trigger_data        :jsonb
-#  waiting_until       :datetime
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  job_id              :string
-#  trigger_node_id     :string(100)
-#  waiting_node_id     :string(100)
-#  workflow_id         :bigint           not null
-#  workflow_version_id :string(36)       not null
+#  id                   :bigint           not null, primary key
+#  error                :text
+#  execution_mode       :integer          default("normal"), not null
+#  finished_at          :datetime
+#  pin_data_digest      :string(64)
+#  resume_token         :string(64)
+#  run_time_ms          :integer
+#  started_at           :datetime
+#  status               :integer          default("pending"), not null
+#  timeout_action       :string(32)
+#  trigger_data         :jsonb
+#  waiting_until        :datetime
+#  workflow_test_digest :string(64)
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  job_id               :string
+#  trigger_node_id      :string(100)
+#  waiting_node_id      :string(100)
+#  workflow_id          :bigint           not null
+#  workflow_test_id     :bigint
+#  workflow_version_id  :string(36)       not null
 #
 # Indexes
 #
@@ -350,5 +404,6 @@ end
 #  idx_dwf_executions_on_status_waiting_until         (status,waiting_until)
 #  idx_dwf_executions_on_waiting_until                (waiting_until) WHERE ((waiting_until IS NOT NULL) AND (status = 4))
 #  idx_dwf_executions_on_workflow_created_at_id_desc  (workflow_id,created_at DESC,id DESC)
+#  idx_dwf_executions_on_workflow_test_created_at     (workflow_test_id,created_at) WHERE (workflow_test_id IS NOT NULL)
 #  idx_dwf_executions_on_workflow_version_id          (workflow_version_id)
 #

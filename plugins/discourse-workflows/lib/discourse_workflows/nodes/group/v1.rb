@@ -4,6 +4,12 @@ module DiscourseWorkflows
   module Nodes
     module Group
       class V1 < NodeType
+        simulation do
+          supported "add", "remove"
+          pure "get", "check_membership"
+          lookup "get", "check_membership"
+        end
+
         OPERATIONS = %w[add remove get check_membership].freeze
         GROUP_ACTION_SCHEMA =
           Schema.merge(
@@ -116,37 +122,95 @@ module DiscourseWorkflows
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.map.with_index do |item, item_index|
-              config = {
-                "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "add"),
-                "username" => exec_ctx.get_node_parameter("username", item_index),
-                "group_id" => exec_ctx.get_node_parameter("group_id", item_index),
-                "set_primary_group" =>
-                  exec_ctx.get_node_parameter("set_primary_group", item_index, default: false),
-              }
-
-              if config["operation"] == "check_membership"
-                next check_membership(exec_ctx, item, config, item_index)
-              end
-
-              wrap(process(exec_ctx, config, item_index))
+              operation = exec_ctx.get_node_parameter("operation", item_index, default: "add")
+              config = resolve_config(exec_ctx, item:, item_index:, operation:)
+              run_operation(exec_ctx, operation, config, item, item_index)
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "username" => exec_ctx.get_node_parameter("username", item_index),
+            "group_id" => exec_ctx.get_node_parameter("group_id", item_index),
+            "set_primary_group" =>
+              exec_ctx.get_node_parameter("set_primary_group", item_index, default: false),
+          }
+        end
+
+        def execute_item(exec_ctx, dispatch)
+          run_operation(
+            exec_ctx,
+            dispatch.operation,
+            dispatch.config,
+            dispatch.item,
+            dispatch.item_index,
+          )
+        end
+
+        def simulate_item(exec_ctx, dispatch)
+          config = dispatch.config
+          group, guardian = visible_group(exec_ctx, config, dispatch.item_index)
+          guardian.ensure_can_edit_group!(group)
+          user = exec_ctx.read_user(username: config["username"])
+
+          effect = dispatch.operation == "remove" ? :group_member_removed : :group_member_added
+          exec_ctx.record_effect(
+            effect,
+            { username: user.username, group_id: group.id },
+            item_index: dispatch.item_index,
+            touches: [[:group, group.id]],
+          )
+          if dispatch.operation == "add" && config["set_primary_group"]
+            guardian.ensure_can_change_primary_group!(user, group)
+            exec_ctx.record_effect(
+              :user_updated,
+              { username: user.username },
+              item_index: dispatch.item_index,
+              touches: [[:user, user.id]],
+            )
+          end
+
+          member = user.in_any_groups?([group.id])
+          changed = dispatch.operation == "remove" ? member : !member
+          wrap(
+            {
+              group: serialize_group(group, guardian),
+              user: serialize_user(user, guardian:),
+              changed:,
+            },
+          )
+        end
+
         private
 
-        def process(exec_ctx, config, item_index)
-          group = ::Group.find(config["group_id"])
+        def run_operation(exec_ctx, operation, config, item, item_index)
+          if operation == "check_membership"
+            return check_membership(exec_ctx, item, config, item_index)
+          end
+
+          wrap(process(exec_ctx, config.merge("operation" => operation), item_index))
+        end
+
+        def visible_group(exec_ctx, config, item_index)
+          group =
+            exec_ctx.read_record(:group, config["group_id"]) ||
+              raise(ActiveRecord::RecordNotFound, "Couldn't find Group #{config["group_id"]}")
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           guardian = actor.guardian
           guardian.ensure_can_see_group!(group)
+          [group, guardian, actor]
+        end
+
+        def process(exec_ctx, config, item_index)
+          group, guardian, actor = visible_group(exec_ctx, config, item_index)
 
           return { group: serialize_group(group, guardian) } if config["operation"] == "get"
 
           guardian.ensure_can_edit_group!(group)
 
-          user = exec_ctx.find_user(username: config["username"])
+          user = exec_ctx.read_user(username: config["username"])
 
           logger = GroupActionLogger.new(actor, group)
 
@@ -177,12 +241,8 @@ module DiscourseWorkflows
         end
 
         def check_membership(exec_ctx, item, config, item_index)
-          group = ::Group.find(config["group_id"])
-          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          guardian = actor.guardian
-          guardian.ensure_can_see_group!(group)
-
-          user = exec_ctx.find_user(username: config["username"])
+          group, _guardian = visible_group(exec_ctx, config, item_index)
+          user = exec_ctx.read_user(username: config["username"])
           membership_data = {
             "group_id" => group.id,
             "group_name" => group.name,

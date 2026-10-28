@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module FlagPost
       class V1 < NodeType
+        simulation { unsupported }
+
         FLAG_TYPES = %w[
           review
           review_hide

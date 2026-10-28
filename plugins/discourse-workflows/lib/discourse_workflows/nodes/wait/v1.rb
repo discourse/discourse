@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Wait
       class V1 < NodeType
+        simulation { supported }
+
         WAIT_UNITS = %w[seconds minutes hours days].freeze
 
         description(
@@ -132,6 +134,17 @@ module DiscourseWorkflows
             produces_data: false,
           },
         )
+
+        # A timed wait is one effect for the whole collection; a webhook wait has
+        # nothing to continue with in a simulation.
+        def execute_simulation(exec_ctx)
+          resume_mode = exec_ctx.get_node_parameter("resume", 0, default: "time_interval")
+          if resume_mode == "webhook"
+            raise Simulation::SafetyError.new(:webhook_wait, step: exec_ctx.node_name)
+          end
+
+          execute(exec_ctx)
+        end
 
         def execute(exec_ctx)
           resume_mode = exec_ctx.get_node_parameter("resume", 0, default: "time_interval")

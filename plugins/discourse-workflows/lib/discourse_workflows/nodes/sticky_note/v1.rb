@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module StickyNote
       class V1 < NodeType
+        simulation { pure }
+
         description(
           name: "flow:sticky_note",
           version: "1.0",

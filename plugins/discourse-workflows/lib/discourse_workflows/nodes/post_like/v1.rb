@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module PostLike
       class V1 < NodeType
+        simulation { unsupported "like", "unlike" }
+
         OPERATIONS = %w[like unlike].freeze
         OUTPUT_SCHEMA =
           Schema.merge(

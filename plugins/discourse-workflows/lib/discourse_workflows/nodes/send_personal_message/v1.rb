@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module SendPersonalMessage
       class V1 < NodeType
+        simulation { supported }
+
         description(
           name: "action:send_personal_message",
           version: "1.0",
@@ -80,20 +82,66 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           items =
-            exec_ctx.input_items.map.with_index do |_item, item_index|
-              config = {
-                "recipient_usernames" =>
-                  exec_ctx.get_node_parameter("recipient_usernames", item_index),
-                "recipient_group_names" =>
-                  exec_ctx.get_node_parameter("recipient_group_names", item_index),
-                "title" => exec_ctx.get_node_parameter("title", item_index),
-                "raw" => exec_ctx.get_node_parameter("raw", item_index),
-              }
-
+            exec_ctx.input_items.map.with_index do |item, item_index|
+              config = resolve_config(exec_ctx, item:, item_index:, operation: nil)
               wrap(process(exec_ctx, config, item_index))
             end
 
           [items]
+        end
+
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "recipient_usernames" => exec_ctx.get_node_parameter("recipient_usernames", item_index),
+            "recipient_group_names" =>
+              exec_ctx.get_node_parameter("recipient_group_names", item_index),
+            "title" => exec_ctx.get_node_parameter("title", item_index),
+            "raw" => exec_ctx.get_node_parameter("raw", item_index),
+          }
+        end
+
+        def simulate_item(exec_ctx, dispatch)
+          sender = exec_ctx.actor_from_parameter("sender_username", dispatch.item_index)
+          args = post_args(dispatch.config)
+          usernames = args[:target_usernames].to_s.split(",")
+          usernames.each do |username|
+            exec_ctx.resolve_user(username:, item_index: dispatch.item_index)
+          end
+          group_names = args[:target_group_names].to_s.split(",")
+          missing_group = group_names.find { |name| ::Group.find_by(name:).nil? }
+          raise_node_error!("Unknown group: #{missing_group}") if missing_group
+
+          exec_ctx.record_effect(
+            :personal_message,
+            {
+              recipient: (usernames + group_names).join(","),
+              title: args[:title],
+              body: args[:raw],
+            },
+            item_index: dispatch.item_index,
+          )
+
+          topic =
+            synthetic_topic(
+              exec_ctx,
+              user: sender,
+              title: args[:title],
+              archetype: args[:archetype],
+            )
+          post = synthetic_post(exec_ctx, topic:, user: sender, raw: args[:raw])
+
+          wrap(
+            synthetic_output(
+              topic: serialize_topic_list_item(topic, scope: sender.guardian),
+              post:
+                serialize_post(
+                  post,
+                  guardian: sender.guardian,
+                  include_raw: true,
+                  include_cooked: true,
+                ),
+            ),
+          )
         end
 
         private

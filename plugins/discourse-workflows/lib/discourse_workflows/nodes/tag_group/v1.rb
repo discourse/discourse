@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module TagGroup
       class V1 < NodeType
+        simulation { unsupported "add", "remove" }
+
         OPERATIONS = %w[add remove].freeze
 
         description(

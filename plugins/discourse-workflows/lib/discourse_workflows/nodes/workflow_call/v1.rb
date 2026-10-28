@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module WorkflowCall
       class V1 < NodeType
+        simulation { unsupported }
+
         AUTO = "auto"
         MANUAL = "manual"
         MAPPING_MODES = [AUTO, MANUAL].freeze

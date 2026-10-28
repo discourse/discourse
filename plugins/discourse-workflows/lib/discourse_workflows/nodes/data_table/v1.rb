@@ -4,6 +4,12 @@ module DiscourseWorkflows
   module Nodes
     module DataTable
       class V1 < NodeType
+        simulation do
+          pure "get", "row_exists", "row_not_exists"
+          lookup "get", "row_exists", "row_not_exists"
+          unsupported "insert", "update", "delete", "upsert"
+        end
+
         OPERATIONS = %w[insert get update delete upsert row_exists row_not_exists].freeze
         PASSTHROUGH_OPERATIONS = %w[row_exists row_not_exists].freeze
         COLUMN_SCHEMAS = {
@@ -239,40 +245,53 @@ module DiscourseWorkflows
           empty_column = empty_column_expression(exec_ctx)
           items =
             exec_ctx.input_items.flat_map.with_index do |item, item_index|
-              config = {
-                "operation" =>
-                  exec_ctx.get_node_parameter("operation", item_index, default: "insert"),
-                "data_table_id" => exec_ctx.get_node_parameter("data_table_id", item_index),
-                "mapping_mode" =>
-                  exec_ctx.get_node_parameter("mapping_mode", item_index, default: "manual"),
-                "columns" => exec_ctx.get_node_parameter("columns", item_index, default: {}),
-                "filter_combinator" =>
-                  exec_ctx.get_node_parameter("filter_combinator", item_index, default: "and"),
-                "filter" => exec_ctx.get_node_parameter("filter", item_index),
-                "limit" => exec_ctx.get_node_parameter("limit", item_index),
-                "sort_column" => exec_ctx.get_node_parameter("sort_column", item_index),
-                "sort_direction" =>
-                  exec_ctx.get_node_parameter("sort_direction", item_index, default: "asc"),
-              }
-              if empty_column && manual_columns?(config)
-                raise_node_error!(
-                  I18n.t(
-                    "discourse_workflows.errors.data_table.empty_column_expression",
-                    column: empty_column,
-                  ),
+              operation = exec_ctx.get_node_parameter("operation", item_index, default: "insert")
+              config =
+                resolve_config(exec_ctx, item:, item_index:, operation:).merge(
+                  "operation" => operation,
                 )
-              end
-              begin
-                pair_output_items(execute_with_config(config, item, exec_ctx), exec_ctx, item)
-              rescue ArgumentError => e
-                raise_node_error!(e.message)
-              end
+              run_with_config(exec_ctx, config, item, empty_column)
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "data_table_id" => exec_ctx.get_node_parameter("data_table_id", item_index),
+            "mapping_mode" =>
+              exec_ctx.get_node_parameter("mapping_mode", item_index, default: "manual"),
+            "columns" => exec_ctx.get_node_parameter("columns", item_index, default: {}),
+            "filter_combinator" =>
+              exec_ctx.get_node_parameter("filter_combinator", item_index, default: "and"),
+            "filter" => exec_ctx.get_node_parameter("filter", item_index),
+            "limit" => exec_ctx.get_node_parameter("limit", item_index),
+            "sort_column" => exec_ctx.get_node_parameter("sort_column", item_index),
+            "sort_direction" =>
+              exec_ctx.get_node_parameter("sort_direction", item_index, default: "asc"),
+          }
+        end
+
+        def execute_item(exec_ctx, dispatch)
+          config = dispatch.config.merge("operation" => dispatch.operation)
+          run_with_config(exec_ctx, config, dispatch.item, empty_column_expression(exec_ctx))
+        end
+
         private
+
+        def run_with_config(exec_ctx, config, item, empty_column)
+          if empty_column && manual_columns?(config)
+            raise_node_error!(
+              I18n.t(
+                "discourse_workflows.errors.data_table.empty_column_expression",
+                column: empty_column,
+              ),
+            )
+          end
+          pair_output_items(execute_with_config(config, item, exec_ctx), exec_ctx, item)
+        rescue ArgumentError => e
+          raise_node_error!(e.message)
+        end
 
         # An empty expression resolves to "", which would silently overwrite the column.
         # Raw values don't depend on the item, so this is scanned once per run.

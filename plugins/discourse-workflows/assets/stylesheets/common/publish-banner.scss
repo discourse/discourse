@@ -59,3 +59,25 @@
     gap: var(--space-1);
   }
 }
+
+.workflows-publish-banner__tests {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+
+  &.--passed {
+    color: var(--success);
+  }
+
+  &.--failed {
+    color: var(--danger);
+  }
+
+  &-link {
+    padding: 0;
+    font-size: inherit;
+  }
+}

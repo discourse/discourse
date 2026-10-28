@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module SiteSettingUpdate
       class V1 < NodeType
+        simulation { unsupported }
+
         description(
           name: "action:site_setting",
           version: "1.0",

@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module TimeWindow
       class V1 < NodeType
+        simulation { pure }
+
         WEEKDAY_OPTIONS = [1, 2, 3, 4, 5, 6, 0].freeze
         WEEKDAYS = (1..5).to_a.freeze
         WEEKENDS = [0, 6].freeze
@@ -140,7 +142,7 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          now = Time.zone.now
+          now = exec_ctx.now
 
           exec_ctx
             .input_items

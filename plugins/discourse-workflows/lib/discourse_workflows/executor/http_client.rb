@@ -50,6 +50,21 @@ module DiscourseWorkflows
         )
       end
 
+      def validate(method:, url:, headers: {}, body: nil, options: {})
+        config = build_config(method, url, headers, body, options)
+        request_method, uri, _request_headers, request_body =
+          DiscourseWorkflows::Nodes::HttpRequest::RequestBuilder.new(
+            config,
+            @exec_ctx,
+            @item_index,
+          ).build
+        {
+          method: request_method.to_s.upcase,
+          url: filtered_url_for_logging(uri.to_s),
+          body: request_body.is_a?(String) ? request_body : request_body&.to_json,
+        }
+      end
+
       private
 
       def error_body_description(response)

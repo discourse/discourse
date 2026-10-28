@@ -35,6 +35,12 @@ DiscourseWorkflows::Engine.routes.draw do
             variable_id: /\d+/,
           }
       get "/workflows/:id/versions" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/tests" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/tests/:test_id" => "admin#index",
+          :constraints => {
+            id: /\d+/,
+            test_id: /\d+/,
+          }
     end
 
     scope format: :json do
@@ -48,6 +54,14 @@ DiscourseWorkflows::Engine.routes.draw do
       put "/workflows/:id" => "workflows#update"
       post "/workflows/:id/discard-draft" => "workflows#discard_draft"
       put "/workflows/:id/pin-data" => "workflows#update_pin_data"
+      get "/workflows/:workflow_id/tests" => "workflow_tests#index"
+      post "/workflows/:workflow_id/tests" => "workflow_tests#create"
+      post "/workflows/:workflow_id/tests/run" => "workflow_tests#run"
+      get "/workflows/:workflow_id/tests/:test_id" => "workflow_tests#show"
+      put "/workflows/:workflow_id/tests/:test_id" => "workflow_tests#update"
+      delete "/workflows/:workflow_id/tests/:test_id" => "workflow_tests#destroy"
+      post "/workflows/:workflow_id/tests/:test_id/refresh" => "workflow_tests#refresh"
+      post "/workflows/:workflow_id/previews" => "previews#create"
       post "/workflows/:id/form-test-sessions" => "form_test_sessions#create"
       post "/workflows/:id/webhook-test-listeners" => "webhook_test_listeners#create"
       delete "/workflows/:id/webhook-test-listeners/:listener_id" =>

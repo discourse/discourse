@@ -11,6 +11,109 @@ en:
             type_options:
               enum_choices_required: "must include at least one choice for an enum field"
   discourse_workflows:
+    tests:
+      default_name: "Test from run #%{execution_id}"
+      errors:
+        not_enabled: "Workflow tests are not enabled."
+        too_many_tests: "A workflow can have at most %{limit} tests."
+        too_many_checks: "A test can have at most %{limit} checks."
+        too_many_conditions: "A check can have at most %{limit} conditions."
+        unknown_effect: "\"%{effect}\" is not something a test can check."
+        unknown_mode: "\"%{mode}\" is not a valid check mode."
+        unknown_field: "\"%{field}\" is not a field of %{effect}."
+        unknown_operator: "\"%{operator}\" is not a valid comparison."
+        invalid_count: "A count must be a whole number between 0 and %{limit}."
+        value_too_long: "A condition value can be at most %{limit} characters."
+        definition_too_large: "This test is too large to save."
+        source_has_no_input: "This run can't be saved as a test because its trigger input was not recorded."
+        unknown_pasted_step: "One of the pasted responses names a step that is not in this workflow."
+        invalid_pasted_response: "A pasted response is not valid JSON output."
+        checks_required: "Add at least one check before running this test."
+        no_sample_input: "This trigger has no sample input to preview with. Save a run as a test instead."
+      effects:
+        personal_message:
+          one: "a personal message"
+          other: "%{count} personal messages"
+        post_created:
+          one: "a post"
+          other: "%{count} posts"
+        post_edited:
+          one: "a post edit"
+          other: "%{count} post edits"
+        post_deleted:
+          one: "a post deletion"
+          other: "%{count} post deletions"
+        post_recovered:
+          one: "a post recovery"
+          other: "%{count} post recoveries"
+        topic_created:
+          one: "a topic"
+          other: "%{count} topics"
+        topic_closed:
+          one: "a closed topic"
+          other: "%{count} closed topics"
+        topic_archived:
+          one: "an archived topic"
+          other: "%{count} archived topics"
+        topic_bumped:
+          one: "a bumped topic"
+          other: "%{count} bumped topics"
+        topic_tagged:
+          one: "a tagged topic"
+          other: "%{count} tagged topics"
+        topic_category_changed:
+          one: "a category change"
+          other: "%{count} category changes"
+        topic_pinned:
+          one: "a pinned topic"
+          other: "%{count} pinned topics"
+        topic_unpinned:
+          one: "an unpinned topic"
+          other: "%{count} unpinned topics"
+        badge_granted:
+          one: "a badge grant"
+          other: "%{count} badge grants"
+        badge_revoked:
+          one: "a badge revocation"
+          other: "%{count} badge revocations"
+        group_member_added:
+          one: "a group membership"
+          other: "%{count} group memberships"
+        group_member_removed:
+          one: "a group removal"
+          other: "%{count} group removals"
+        user_updated:
+          one: "a user update"
+          other: "%{count} user updates"
+        http_request:
+          one: "an external request"
+          other: "%{count} external requests"
+        delay:
+          one: "a delay"
+          other: "%{count} delays"
+      sentences:
+        effect: "%{effect} with %{details}"
+      reasons:
+        could_not_run: "The test could not run."
+        stopped_with_error: "The workflow stopped with an error at %{step}: %{message}"
+        something_happened: "%{count} things would have happened, starting with %{first}."
+        unexpected_effect: "%{first} would have happened."
+        wrong_count: "Expected %{expected}, but %{actual} would have happened."
+        stopped_before: "Expected %{expected}, but the workflow stopped at %{step} first."
+        no_match: "Expected %{expected}, but the closest match was %{first}."
+        missing_effect: "Expected %{expected}, but it would not have happened."
+    simulation:
+      unsupported_step: "%{step} can't be simulated yet, so the test could not run."
+      invalid_configuration: "%{step} has configuration issues (%{issues}), so the test could not run."
+      unsupported_operation: "%{step} can't be simulated for the %{operation} operation yet, so the test could not run."
+      unresolved_operation: "%{step} resolved its operation to \"%{operation}\", which is not one of its operations, so the test could not run."
+      write_in_pure_step: "%{step} tried to change data while being simulated as a read-only step, so the test stopped before anything was changed."
+      needs_recorded_response: "%{step} needs a saved response before the test can run. Paste a response for %{step}."
+      lookup_mismatch: "%{step} looked up something different from the captured data. Refresh test data to capture it again."
+      recorded_mismatch: "%{step} would make a different request from the one its saved response was captured for. Paste a response for %{step}."
+      touched_record: "%{producer} would change %{record}, and %{consumer} would then read it. A test can't see that change yet."
+      too_many_effects: "The run produced more than %{limit} effects, which is more than a test can evaluate."
+      webhook_wait: "%{step} waits for a webhook, which a test has nothing to answer with, so the test could not run."
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
       create_summary: "Save this workflow as an unpublished draft?"
@@ -82,6 +185,9 @@ en:
       queue_timed_out:
         one: "Execution was queued for more than %{count} minute without starting"
         other: "Execution was queued for more than %{count} minutes without starting"
+      simulation_timed_out:
+        one: "Simulation ran for more than %{count} minute"
+        other: "Simulation ran for more than %{count} minutes"
       rate_limited:
         global:
           one: "This workflow wasn't run because %{count} workflow execution already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
@@ -273,6 +379,7 @@ en:
         already_resolved: "'%{username}' already has a review item with status '%{status}'. Turn on \"Reopen resolved reviews\" if this workflow should send them back to the queue."
   site_settings:
     enable_discourse_workflows: "Enable the discourse-workflows plugin."
+    discourse_workflows_tests_enabled: "EXPERIMENTAL: Let admins preview workflows with current data and save tests that run without real side effects."
     discourse_workflows_ai_authoring_enabled: "Enable AI-assisted workflow authoring."
     discourse_workflows_ai_authoring_max_prompt_length: "Maximum length for AI workflow authoring prompts."
     discourse_workflows_ai_authoring_rate_limit_per_minute: "Maximum AI workflow authoring requests per minute per user."

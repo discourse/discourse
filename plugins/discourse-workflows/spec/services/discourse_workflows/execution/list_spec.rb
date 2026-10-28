@@ -159,4 +159,36 @@ RSpec.describe DiscourseWorkflows::Execution::List do
       end
     end
   end
+
+  describe ".call with an execution mode filter" do
+    fab!(:admin)
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
+    fab!(:manual_execution) do
+      Fabricate(:discourse_workflows_completed_execution, workflow:, execution_mode: :manual)
+    end
+    fab!(:simulation_execution) do
+      Fabricate(:discourse_workflows_completed_execution, workflow:, execution_mode: :simulation)
+    end
+
+    def ids(params)
+      described_class.call(
+        params: {
+          workflow_id: workflow.id,
+          **params,
+        },
+        guardian: admin.guardian,
+      )[
+        :executions
+      ].map(&:id)
+    end
+
+    it "hides simulations unless asked for" do
+      expect(ids({})).to eq([manual_execution.id])
+      expect(ids(execution_mode: "all")).to contain_exactly(
+        manual_execution.id,
+        simulation_execution.id,
+      )
+      expect(ids(execution_mode: "simulation")).to eq([simulation_execution.id])
+    end
+  end
 end

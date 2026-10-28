@@ -28,6 +28,14 @@ module DiscourseWorkflows
       data["run_data"] || {}
     end
 
+    def simulation
+      data["simulation"]
+    end
+
+    def test_result
+      simulation&.dig("test_result")
+    end
+
     def steps_array
       all_steps.sort_by { |s| s["position"] || 0 }
     end

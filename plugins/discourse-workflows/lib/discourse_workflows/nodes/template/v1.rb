@@ -6,6 +6,8 @@ module DiscourseWorkflows
   module Nodes
     module Template
       class V1 < NodeType
+        simulation { pure }
+
         DEFAULT_TEMPLATE = <<~LIQUID
           Items:
           {% for item in items -%}

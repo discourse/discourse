@@ -6,6 +6,8 @@ module DiscourseWorkflows
       class V1 < NodeType
         COMPLETION_PAGE_TYPE = "completion"
 
+        simulation { unsupported }
+
         description(
           name: "action:form",
           version: "1.0",

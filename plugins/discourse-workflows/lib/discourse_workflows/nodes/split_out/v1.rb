@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module SplitOut
       class V1 < NodeType
+        simulation { pure }
+
         MAX_SPLIT_ITEMS = 1_000
 
         description(

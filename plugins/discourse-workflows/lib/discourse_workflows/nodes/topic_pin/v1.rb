@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module TopicPin
       class V1 < NodeType
+        simulation { supported "add", "remove" }
+
         OPERATIONS = %w[add remove].freeze
         PIN_TYPES = %w[pin banner].freeze
 
@@ -141,26 +143,67 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           items =
-            exec_ctx.input_items.map.with_index do |_item, item_index|
-              config = {
-                "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "add"),
-                "pin_type" => exec_ctx.get_node_parameter("pin_type", item_index, default: "pin"),
-                "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
-                "pinned_globally" =>
-                  exec_ctx.get_node_parameter("pinned_globally", item_index, default: false),
-                "pinned_until" => exec_ctx.get_node_parameter("pinned_until", item_index),
-                "bannered_until" => exec_ctx.get_node_parameter("bannered_until", item_index),
-              }
-
-              wrap(process(exec_ctx, config, item_index))
+            exec_ctx.input_items.map.with_index do |item, item_index|
+              operation = exec_ctx.get_node_parameter("operation", item_index, default: "add")
+              config = resolve_config(exec_ctx, item:, item_index:, operation:)
+              wrap(process(exec_ctx, config.merge("operation" => operation), item_index))
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "pin_type" => exec_ctx.get_node_parameter("pin_type", item_index, default: "pin"),
+            "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+            "pinned_globally" =>
+              exec_ctx.get_node_parameter("pinned_globally", item_index, default: false),
+            "pinned_until" => exec_ctx.get_node_parameter("pinned_until", item_index),
+            "bannered_until" => exec_ctx.get_node_parameter("bannered_until", item_index),
+          }
+        end
+
+        def simulate_item(exec_ctx, dispatch)
+          config = dispatch.config
+          item_index = dispatch.item_index
+          operation, pin_type, topic, actor =
+            prepare_pin(exec_ctx, config.merge("operation" => dispatch.operation), item_index)
+
+          if pin_type == "banner"
+            ensure_can_banner!(topic, actor)
+            if operation == "remove"
+              topic.archetype = ::Archetype.default if topic.archetype == ::Archetype.banner
+            else
+              topic.archetype = ::Archetype.banner
+              topic.bannered_until = timestamp(exec_ctx, config, "bannered", item_index)
+            end
+          else
+            globally = operation == "add" && config["pinned_globally"].present?
+            ensure_can_pin!(topic, actor, globally: globally)
+            if operation == "remove"
+              topic.pinned_at = nil
+              topic.pinned_globally = false
+              topic.pinned_until = nil
+            else
+              topic.pinned_at = exec_ctx.now
+              topic.pinned_globally = globally
+              topic.pinned_until = timestamp(exec_ctx, config, "pinned", item_index)
+            end
+          end
+
+          exec_ctx.record_effect(
+            operation == "remove" ? :topic_unpinned : :topic_pinned,
+            { topic_id: topic.id },
+            item_index:,
+            touches: [[:topic, topic.id]],
+          )
+
+          wrap(pin_output(topic, actor))
+        end
+
         private
 
-        def process(exec_ctx, config, item_index)
+        def prepare_pin(exec_ctx, config, item_index)
           operation =
             validated(
               config["operation"],
@@ -176,15 +219,17 @@ module DiscourseWorkflows
               :pin_type,
             )
 
-          topic = ::Topic.find(config["topic_id"])
+          topic =
+            exec_ctx.read_record(:topic, config["topic_id"]) ||
+              raise(
+                ActiveRecord::RecordNotFound,
+                "Couldn't find Topic with 'id'=#{config["topic_id"]}",
+              )
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          [operation, pin_type, topic, actor]
+        end
 
-          if pin_type == "banner"
-            change_banner(exec_ctx, topic, actor, operation, config, item_index)
-          else
-            change_pin(exec_ctx, topic, actor, operation, config, item_index)
-          end
-
+        def pin_output(topic, actor)
           {
             topic_id: topic.id,
             pinned: topic.pinned_at.present?,
@@ -193,8 +238,20 @@ module DiscourseWorkflows
             pinned_until: topic.pinned_until&.utc&.iso8601,
             banner: topic.archetype == ::Archetype.banner,
             bannered_until: topic.bannered_until&.utc&.iso8601,
-            topic: serialize_topic(topic.reload, guardian: actor.guardian),
+            topic: serialize_topic(topic, guardian: actor.guardian),
           }
+        end
+
+        def process(exec_ctx, config, item_index)
+          operation, pin_type, topic, actor = prepare_pin(exec_ctx, config, item_index)
+
+          if pin_type == "banner"
+            change_banner(exec_ctx, topic, actor, operation, config, item_index)
+          else
+            change_pin(exec_ctx, topic, actor, operation, config, item_index)
+          end
+
+          pin_output(topic.reload, actor)
         end
 
         def change_pin(exec_ctx, topic, actor, operation, config, item_index)

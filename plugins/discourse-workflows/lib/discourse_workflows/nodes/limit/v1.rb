@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Limit
       class V1 < NodeType
+        simulation { pure }
+
         description(
           name: "action:limit",
           version: "1.0",

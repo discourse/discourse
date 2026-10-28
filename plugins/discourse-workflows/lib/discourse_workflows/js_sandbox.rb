@@ -24,10 +24,12 @@ module DiscourseWorkflows
       vars: nil,
       workflow_vars: nil,
       capture_logs: false,
-      budget_tracker: nil
+      budget_tracker: nil,
+      now: nil
     )
       @workflow_context = workflow_context
       @user = user
+      @now = now
       @vars = vars || DiscourseWorkflows::Variable.where(workflow_id: nil).pluck(:key, :value).to_h
       @workflow_vars = workflow_vars || {}
       @budget_tracker = budget_tracker
@@ -118,6 +120,28 @@ module DiscourseWorkflows
       )
     end
 
+    # A simulation runs on one instant, so time-derived expressions and code
+    # replay identically. Only the clock is shadowed; parsing and arithmetic
+    # keep the real Date.
+    def pin_clock!
+      pinned_ms = (@now.to_f * 1000).to_i
+      self.eval(<<~JS)
+        (function () {
+          const RealDate = Date;
+          const pinned = #{pinned_ms};
+          function PinnedDate(...args) {
+            if (!new.target) return new RealDate(pinned).toString();
+            return args.length ? new RealDate(...args) : new RealDate(pinned);
+          }
+          PinnedDate.now = () => pinned;
+          PinnedDate.parse = RealDate.parse;
+          PinnedDate.UTC = RealDate.UTC;
+          PinnedDate.prototype = RealDate.prototype;
+          Object.defineProperty(globalThis, "Date", { value: PinnedDate, writable: false, configurable: false });
+        })();
+      JS
+    end
+
     def setup_core_environment!
       @js_context.attach("__getSiteSetting", method(:fetch_site_setting))
       @js_context.attach("__getNodeItem", method(:fetch_node_item))
@@ -127,13 +151,14 @@ module DiscourseWorkflows
       @js_context.attach("__isNodeExecuted", method(:node_executed?))
       @js_context.attach("__absoluteUrl", method(:absolute_url))
 
+      pin_clock! if @now
       execution = @workflow_context.fetch("__execution") { {} }
       declare_json("__vars", @vars)
       declare_json("__workflow_vars", @workflow_vars)
       declare_json("__executionData", execution)
       declare_json("__currentUser", build_current_user)
 
-      eval(<<~JS)
+      self.eval(<<~JS)
         Object.defineProperty(this, '$vars', {
           value: Object.freeze(__vars)
         });
@@ -293,7 +318,7 @@ module DiscourseWorkflows
       @js_context.attach("__captureWarn", proc { |*args| capture.call(:warn, *args) })
       @js_context.attach("__captureError", proc { |*args| capture.call(:error, *args) })
 
-      eval(<<~JS)
+      self.eval(<<~JS)
         Object.defineProperty(this, 'console', {
           value: Object.freeze({
             log: function() { __captureLog(...arguments); },

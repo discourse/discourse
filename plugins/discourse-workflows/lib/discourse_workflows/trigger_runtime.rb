@@ -36,18 +36,27 @@ module DiscourseWorkflows
       end
 
       def manual_payload_for(workflow:, trigger_node:, user:)
+        payload_for(workflow:, trigger_node:, user:, commit: true) || {}
+      end
+
+      # Returns nil when the trigger has no sample input to offer.
+      def collect_payload_for(workflow:, trigger_node:, user:)
+        payload_for(workflow:, trigger_node:, user:, commit: false)
+      end
+
+      def payload_for(workflow:, trigger_node:, user:, commit:)
         return {} if trigger_node["type"] == "trigger:manual"
 
         node_type_class = node_type_for(trigger_node)
         if node_type_class.respond_to?(:trigger_data_for)
           return node_type_class.trigger_data_for(TriggerNodeContext.new(trigger_node))
         end
-        return {} unless node_type_class&.capability_enabled?(:synthesizes_manual_data)
+        return nil unless node_type_class&.capability_enabled?(:synthesizes_manual_data)
 
-        manual_trigger_data(workflow:, trigger_node:, user:)
+        manual_trigger_data(workflow:, trigger_node:, user:, commit:)
       end
 
-      def manual_trigger_data(workflow:, trigger_node:, user:)
+      def manual_trigger_data(workflow:, trigger_node:, user:, commit: true)
         workflow_version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
         node_type_class = node_type_for(trigger_node)
         return {} unless node_type_class&.capability_enabled?(:synthesizes_manual_data)
@@ -66,7 +75,7 @@ module DiscourseWorkflows
           )
         result = instantiate(node_type_class, trigger_node).trigger(ctx)
         result[:manual_trigger_function]&.call if result.is_a?(Hash)
-        commit_runtime_state!(published_trigger, runtime_state)
+        commit_runtime_state!(published_trigger, runtime_state) if commit
         runtime_state.collected_trigger_data.first || {}
       end
 

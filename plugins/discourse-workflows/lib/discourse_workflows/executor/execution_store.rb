@@ -13,11 +13,19 @@ module DiscourseWorkflows
 
       attr_reader :trigger_node_id, :execution, :workflow_snapshot, :existing_run_data
 
-      def initialize(trigger_node_id:, execution_context:, execution_mode:, options:)
+      def initialize(
+        trigger_node_id:,
+        execution_context:,
+        execution_mode:,
+        options:,
+        simulation: nil
+      )
         @trigger_node_id = trigger_node_id.to_s
         @execution_context = execution_context
         @execution_mode = execution_mode
         @options = options
+        @simulation = simulation
+        @simulation_failure = nil
         @workflow_snapshot = nil
         @duplicate_job = false
         @existing_run_data = {}
@@ -83,9 +91,10 @@ module DiscourseWorkflows
           error: error.message.to_s.truncate(1000),
           **finished_attributes(steps),
         }
+        @simulation_failure = simulation_failure_for(error, steps) if @simulation
         return execution unless persist_if_active!(steps, **attributes)
 
-        execution.trigger_error_workflow(error, steps:)
+        execution.trigger_error_workflow(error, steps:) unless @options.simulation?
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
         )
@@ -138,8 +147,10 @@ module DiscourseWorkflows
       def persist_if_active!(steps, **attributes)
         execution.transaction do
           if Execution.where(id: execution.id, status: %i[running waiting]).lock.exists?
+            evaluate_test!(attributes) if @simulation
             save!(steps)
             execution.update!(attributes)
+            complete_test!(attributes) if @simulation
             true
           else
             Rails.logger.warn(
@@ -264,25 +275,37 @@ module DiscourseWorkflows
         )
       end
 
+      # The simulation document rides along every compaction stage, including
+      # the minimal fallback, so a run is never evaluated against a log that
+      # compaction silently emptied.
       def bounded_execution_data(entries, run_data)
         truncated_context = { "__truncated" => true }
+        simulation = simulation_document
         payload =
           execution_data_payload(
             entries,
             stored_context,
             @execution_context.node_contexts,
             run_data,
+            simulation,
           )
         return payload if within_size_limit?(payload)
 
         log_oversized_execution_data("exceeds #{MAX_EXECUTION_DATA_SIZE} bytes, truncating context")
-        payload = execution_data_payload(entries, truncated_context, {}, run_data)
+        payload = execution_data_payload(entries, truncated_context, {}, run_data, simulation)
         return payload if within_size_limit?(payload)
 
         log_oversized_execution_data(
           "still exceeds #{MAX_EXECUTION_DATA_SIZE} bytes, truncating entries",
         )
-        payload = execution_data_payload(compact_entries(entries), truncated_context, {}, run_data)
+        payload =
+          execution_data_payload(
+            compact_entries(entries),
+            truncated_context,
+            {},
+            run_data,
+            simulation,
+          )
         return payload if within_size_limit?(payload)
 
         log_oversized_execution_data(
@@ -294,26 +317,80 @@ module DiscourseWorkflows
             truncated_context,
             {},
             compact_run_data(run_data),
+            simulation,
           )
         return payload if within_size_limit?(payload)
 
         log_oversized_execution_data(
           "still exceeds #{MAX_EXECUTION_DATA_SIZE} bytes after all truncation attempts, storing minimal record",
         )
-        execution_data_payload({}, truncated_context, {}, {})
+        execution_data_payload({}, truncated_context, {}, {}, simulation)
+      end
+
+      def simulation_document
+        return if @simulation.nil?
+
+        document = @simulation.document(**(@simulation_failure || {}))
+        document["test_result"] = @test_result if @test_result
+        document
+      end
+
+      def finished_status?(attributes)
+        %i[success error].include?(attributes[:status])
+      end
+
+      def evaluate_test!(attributes)
+        test = @options.workflow_test
+        return if test.nil? || test.checks.empty? || !finished_status?(attributes)
+
+        @test_result =
+          WorkflowTestEvaluator.call(
+            checks: test.checks,
+            effects: @simulation.effects,
+            error_message: attributes[:error],
+            **(@simulation_failure || {}),
+          )
+      end
+
+      def complete_test!(attributes)
+        on_complete = @options.workflow_test&.on_complete
+        return if on_complete.nil? || !finished_status?(attributes)
+
+        on_complete.call(execution, @simulation)
+      end
+
+      def simulation_failure_for(error, steps)
+        failed_step = steps.reverse_each.find(&:error?)
+        kind =
+          case error
+          when Simulation::SafetyError
+            "safety"
+          when ExecutionTimedOut
+            "timeout"
+          else
+            failed_step ? "node" : "engine"
+          end
+        { error_kind: kind, failed_step: failed_step&.node_name }
       end
 
       def stored_context
         @execution_context.context.except("__node_runs")
       end
 
-      def execution_data_payload(entries, context, node_contexts = {}, run_data = {})
+      def execution_data_payload(
+        entries,
+        context,
+        node_contexts = {},
+        run_data = {},
+        simulation = nil
+      )
         {
           "entries" => entries,
           "context" => context,
           "node_contexts" => node_contexts,
           "run_data" => run_data,
-        }
+          "simulation" => simulation,
+        }.compact
       end
 
       def within_size_limit?(payload)
@@ -546,7 +623,7 @@ module DiscourseWorkflows
         return if @last_execution_run_data.blank? && !force
 
         MessageBus.publish(
-          "/discourse-workflows/workflow/#{workflow.id}",
+          run_data_channel,
           {
             type: "execution_completed",
             execution: {
@@ -559,6 +636,15 @@ module DiscourseWorkflows
           },
           group_ids: [Group::AUTO_GROUPS[:admins]],
         )
+      end
+
+      # Simulations never feed the editor's last-run panels.
+      def run_data_channel
+        if @options.simulation?
+          "/discourse-workflows/simulations/#{workflow.id}"
+        else
+          "/discourse-workflows/workflow/#{workflow.id}"
+        end
       end
     end
   end

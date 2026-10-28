@@ -29,8 +29,10 @@ module DiscourseWorkflows
         vars:,
         workflow_vars:,
         flow_context:,
-        runtime_state:
+        runtime_state:,
+        now: nil
       )
+        @now = now
         @input_items = input_items
         @parameters = parameters
         @input_context = input_context
@@ -119,6 +121,7 @@ module DiscourseWorkflows
             workflow_vars: @workflow_vars,
             capture_logs: capture_logs,
             budget_tracker: sandbox_budget_tracker,
+            now: @now,
           )
         yield sandbox
       ensure

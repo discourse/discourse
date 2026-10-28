@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Sort
       class V1 < NodeType
+        simulation { pure }
+
         RUN_CODE = "runCode"
 
         description(

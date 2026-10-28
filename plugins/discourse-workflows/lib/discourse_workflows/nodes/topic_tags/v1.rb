@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module TopicTags
       class V1 < NodeType
+        simulation { supported "add", "remove" }
+
         OPERATIONS = %w[add remove].freeze
 
         description(
@@ -63,31 +65,66 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           items =
-            exec_ctx.input_items.map.with_index do |_item, item_index|
-              config = {
-                "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "add"),
-                "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
-                "tag_names" => exec_ctx.get_node_parameter("tag_names", item_index),
-              }
-
-              wrap(process(exec_ctx, config, item_index))
+            exec_ctx.input_items.map.with_index do |item, item_index|
+              operation = exec_ctx.get_node_parameter("operation", item_index, default: "add")
+              config = resolve_config(exec_ctx, item:, item_index:, operation:)
+              wrap(process(exec_ctx, config.merge("operation" => operation), item_index))
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+            "tag_names" => exec_ctx.get_node_parameter("tag_names", item_index),
+          }
+        end
+
+        def simulate_item(exec_ctx, dispatch)
+          config = dispatch.config
+          topic, actor, names = prepare_tagging(exec_ctx, config, dispatch.item_index)
+          actor.guardian.ensure_can_edit_tags!(topic)
+          old_tag_names = topic.tags.pluck(:name)
+
+          result =
+            if dispatch.operation == "remove"
+              { tag_names: old_tag_names & names, topic_id: topic.id }
+            else
+              { tag_names: names, topic_id: topic.id }
+            end
+          exec_ctx.record_effect(
+            :topic_tagged,
+            { topic_id: topic.id, tags: result[:tag_names] },
+            item_index: dispatch.item_index,
+            touches: [[:topic, topic.id]],
+          )
+
+          wrap(result)
+        end
+
         private
 
-        def process(exec_ctx, config, item_index)
-          topic = ::Topic.find(config["topic_id"])
+        def prepare_tagging(exec_ctx, config, item_index)
+          topic =
+            exec_ctx.read_record(:topic, config["topic_id"]) ||
+              raise(
+                ActiveRecord::RecordNotFound,
+                "Couldn't find Topic with 'id'=#{config["topic_id"]}",
+              )
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          guardian = actor.guardian
 
           names = normalize_tag_names(config["tag_names"])
           if names.empty?
             raise_node_error!(I18n.t("discourse_workflows.errors.topic_tags.no_tag_names"))
           end
           ensure_can_tag_personal_message!(topic, actor)
+          [topic, actor, names]
+        end
+
+        def process(exec_ctx, config, item_index)
+          topic, actor, names = prepare_tagging(exec_ctx, config, item_index)
+          guardian = actor.guardian
 
           case config["operation"]
           when "remove"

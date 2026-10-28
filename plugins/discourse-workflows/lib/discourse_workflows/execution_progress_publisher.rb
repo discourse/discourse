@@ -59,7 +59,10 @@ module DiscourseWorkflows
         EXECUTIONS_CHANNEL,
         {
           type: "execution_update",
-          execution: execution_summary(execution).except(:workflow_name),
+          execution:
+            execution_summary(execution).except(:workflow_name).merge(
+              execution_mode: execution.execution_mode,
+            ),
         },
         **publish_options,
       )

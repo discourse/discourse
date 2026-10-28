@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Log
       class V1 < NodeType
+        simulation { pure }
+
         RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
         RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
 

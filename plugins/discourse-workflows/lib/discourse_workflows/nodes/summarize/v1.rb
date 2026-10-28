@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Summarize
       class V1 < NodeType
+        simulation { pure }
+
         AGGREGATIONS = %w[
           append
           average

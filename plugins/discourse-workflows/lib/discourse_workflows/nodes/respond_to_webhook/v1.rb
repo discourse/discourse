@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module RespondToWebhook
       class V1 < NodeType
+        simulation { unsupported }
+
         include Nodes::HttpHelpers
 
         DEFAULT_STATUS_CODES = {

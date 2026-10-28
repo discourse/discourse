@@ -18,6 +18,9 @@ export default {
           this.route("edit", { path: "/:variable_id/edit" });
         });
         this.route("versions");
+        this.route("workflow-tests", { path: "tests" }, function () {
+          this.route("show", { path: "/:test_id" });
+        });
       });
     });
     this.route("discourse-workflows-templates", { path: "templates" });

@@ -10,6 +10,13 @@ module DiscourseWorkflows
       attribute :workflow_id, :integer
       attribute :cursor, :integer
       attribute :limit, :integer
+      attribute :execution_mode, :string
+
+      validates :execution_mode,
+                inclusion: {
+                  in: DiscourseWorkflows::Execution.execution_modes.keys + %w[all],
+                },
+                allow_nil: true
 
       before_validation do
         self.limit =
@@ -35,6 +42,10 @@ module DiscourseWorkflows
           .with_snapshot_summary
           .includes(workflow: :active_version)
       scope = scope.where("discourse_workflows_executions.id < ?", params.cursor) if params.cursor
+      scope = scope.not_simulations if params.execution_mode.nil?
+      if params.execution_mode.present? && params.execution_mode != "all"
+        scope = scope.where(execution_mode: params.execution_mode)
+      end
 
       scope.limit(params.effective_limit + 1).to_a
     end

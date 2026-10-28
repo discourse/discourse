@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module TopicCategory
       class V1 < NodeType
+        simulation { supported }
+
         description(
           name: "action:topic_category",
           version: "1.0",
@@ -52,22 +54,52 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           items =
-            exec_ctx.input_items.map.with_index do |_item, item_index|
-              config = {
-                "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
-                "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
-              }
-
+            exec_ctx.input_items.map.with_index do |item, item_index|
+              config = resolve_config(exec_ctx, item:, item_index:, operation: nil)
               wrap(process(exec_ctx, config, item_index))
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+            "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
+          }
+        end
+
+        def simulate_item(exec_ctx, dispatch)
+          topic, category_id, old_category_id, guardian =
+            prepare_move(exec_ctx, dispatch.config, dispatch.item_index)
+
+          exec_ctx.record_effect(
+            :topic_category_changed,
+            { topic_id: topic.id, category_id: category_id },
+            item_index: dispatch.item_index,
+            touches: [[:topic, topic.id]],
+          )
+
+          topic.category_id = category_id
+          wrap(
+            {
+              topic_id: topic.id,
+              category_id: category_id,
+              old_category_id: old_category_id,
+              topic: serialize_topic(topic, guardian:),
+            },
+          )
+        end
+
         private
 
-        def process(exec_ctx, config, item_index)
-          topic = ::Topic.find(config["topic_id"])
+        def prepare_move(exec_ctx, config, item_index)
+          topic =
+            exec_ctx.read_record(:topic, config["topic_id"]) ||
+              raise(
+                ActiveRecord::RecordNotFound,
+                "Couldn't find Topic with 'id'=#{config["topic_id"]}",
+              )
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           guardian = actor.guardian
 
@@ -87,6 +119,12 @@ module DiscourseWorkflows
               I18n.t("discourse_workflows.errors.topic_category.uncategorized_not_allowed"),
             )
           end
+
+          [topic, category_id, old_category_id, guardian]
+        end
+
+        def process(exec_ctx, config, item_index)
+          topic, category_id, old_category_id, guardian = prepare_move(exec_ctx, config, item_index)
 
           if !topic.change_category_to_id(category_id) || topic.errors.present?
             errors = topic.errors.full_messages.presence

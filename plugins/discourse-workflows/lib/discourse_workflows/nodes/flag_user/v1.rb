@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module FlagUser
       class V1 < NodeType
+        simulation { unsupported }
+
         # A fixed reason so the review queue renders a translated sentence rather
         # than a workflow-supplied string. Provenance lives in a note.
         SCORE_REASON = "workflow_flagged_user"

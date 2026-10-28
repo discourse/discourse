@@ -4,6 +4,12 @@ module DiscourseWorkflows
   module Nodes
     module Post
       class V1 < NodeType
+        simulation do
+          supported "create", "edit", "delete", "recover"
+          pure "get", "list"
+          lookup "get", "list"
+        end
+
         OPERATIONS = %w[create edit get list delete recover].freeze
         STATUS_OPTIONS = %w[
           any
@@ -328,22 +334,77 @@ module DiscourseWorkflows
           },
         )
 
+        PARAMETERS_BY_OPERATION = {
+          "create" => %w[raw topic_id reply_to_post_number whisper bypass_permission_checks],
+          "edit" => %w[post_id raw],
+          "delete" => %w[post_id],
+          "recover" => %w[post_id],
+          "get" => %w[post_id include_raw include_cooked body_character_limit],
+          "list" => %w[
+            query
+            created_after
+            created_before
+            topic_created_after
+            topic_created_before
+            categories
+            exact_category_match
+            exclude_categories
+            tags
+            exclude_tags
+            topics
+            usernames
+            groups
+            keywords
+            topic_keywords
+            post_type
+            status
+            order
+            advanced_filter
+            limit
+            offset
+            include_raw
+            include_cooked
+            body_character_limit
+          ],
+        }.freeze
+
         def execute(exec_ctx)
           items =
-            exec_ctx.input_items.flat_map.with_index do |_item, item_index|
-              config = config_for(exec_ctx, item_index)
-              Array.wrap(execute_with_config(exec_ctx, config, item_index))
+            exec_ctx.input_items.flat_map.with_index do |item, item_index|
+              operation =
+                exec_ctx.get_node_parameter("operation", item_index, default: DEFAULTS["operation"])
+              config = resolve_config(exec_ctx, item:, item_index:, operation:)
+              Array.wrap(
+                execute_with_config(exec_ctx, config.merge("operation" => operation), item_index),
+              )
             end
 
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          PARAMETERS_BY_OPERATION
+            .fetch(operation.to_s) { [] }
+            .index_with do |key|
+              exec_ctx.get_node_parameter(key, item_index, default: DEFAULTS[key])
+            end
+        end
+
+        def execute_item(exec_ctx, dispatch)
+          run_dispatch(exec_ctx, dispatch)
+        end
+
+        # The context's post helpers own the mutation region and branch on
+        # simulation themselves, so the adapter is the real path.
+        def simulate_item(exec_ctx, dispatch)
+          run_dispatch(exec_ctx, dispatch)
+        end
+
         private
 
-        def config_for(exec_ctx, item_index)
-          Hash.new do |config, key|
-            config[key] = exec_ctx.get_node_parameter(key, item_index, default: DEFAULTS[key])
-          end
+        def run_dispatch(exec_ctx, dispatch)
+          config = dispatch.config.merge("operation" => dispatch.operation)
+          Array.wrap(execute_with_config(exec_ctx, config, dispatch.item_index))
         end
 
         def execute_with_config(exec_ctx, config, item_index)
@@ -423,7 +484,12 @@ module DiscourseWorkflows
         end
 
         def get_post(exec_ctx, config, item_index)
-          post = ::Post.find(config["post_id"])
+          post =
+            exec_ctx.read_record(:post, config["post_id"]) ||
+              raise(
+                ActiveRecord::RecordNotFound,
+                "Couldn't find Post with 'id'=#{config["post_id"]}",
+              )
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
 

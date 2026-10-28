@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module SetFields
       class V1 < NodeType
+        simulation { pure }
+
         description(
           name: "action:set_fields",
           version: "1.0",

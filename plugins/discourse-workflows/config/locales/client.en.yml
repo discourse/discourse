@@ -175,6 +175,7 @@ en:
         settings: "Settings"
         workflow_variables: "Variables"
         versions: "Versions"
+        tests: "Tests"
         data_tables: "Data tables"
         templates: "Templates"
         credentials: "Credentials"
@@ -237,6 +238,256 @@ en:
         reverted: "Reverted to version %{version}"
         empty_title: "No versions yet"
         empty_description: "Each time you save changes, a new version is recorded here."
+      tests:
+        title: "Tests"
+        description: "A test replays a saved run against the current draft with real effects held back, then checks what would have happened."
+        preview_now: "Preview with current data"
+        run_all: "Run all tests"
+        run: "Run"
+        run_test: "Run test"
+        delete: "Delete"
+        delete_confirm: "Delete the test \"%{name}\"?"
+        back_to_tests: "Back to tests"
+        save: "Save test"
+        saved: "Test saved"
+        save_as_test: "Save as test"
+        run_tests: "Run tests"
+        empty_title: "No tests yet"
+        empty_description: "Open a run on the Executions tab and choose Save as test, or preview the draft with current data and save that."
+        summary:
+          all_passed:
+            one: "%{count} test passed"
+            other: "All %{count} tests passed"
+          some_failed:
+            one: "%{count} test failed"
+            other: "%{count} tests failed"
+          could_not_run:
+            one: "%{count} test could not run"
+            other: "%{count} tests could not run"
+          not_run:
+            one: "%{count} not run on this draft"
+            other: "%{count} not run on this draft"
+          last_run: "Last run"
+        banner:
+          none: "No tests yet"
+          passing:
+            one: "%{count} test passing"
+            other: "%{count} tests passing"
+          failing:
+            one: "%{count} test failing"
+            other: "%{count} tests failing"
+          could_not_run:
+            one: "%{count} test could not run"
+            other: "%{count} tests could not run"
+          not_run:
+            one: "%{count} test not run on this draft"
+            other: "%{count} tests not run on this draft"
+          run_all: "Run all tests"
+          view: "View tests"
+        preview:
+          title: "What would happen right now"
+          description: "Simulated against the current draft with live data. Nothing was changed."
+          dismiss: "Dismiss"
+          running: "Previewing with current data…"
+          no_sample_input_title: "This trigger has no sample input"
+          no_sample_input: "%{trigger} only fires on real events, so there is nothing to preview with. Run the workflow once and save that run as a test."
+          go_to_executions: "Go to executions"
+        table:
+          name: "Test"
+          checks: "Checks"
+          checks_count:
+            one: "%{count} check"
+            other: "%{count} checks"
+          result: "Result"
+          last_run: "Last run"
+          input_from: "Test input from run #%{id}"
+          captured_on: "Captured on"
+          needs_response:
+            one: "%{count} step needs a response"
+            other: "%{count} steps need a response"
+          never_run: "Never run"
+        statuses:
+          passed: "Passed"
+          failed: "Failed"
+          could_not_run: "Could not run"
+          not_run: "Not run"
+          run_again: "Run again"
+          running: "Running"
+        disclosure:
+          external_replayed: "%{step} was replayed from a saved response. The call itself was not made."
+          external_not_previewed: "Steps after %{step} were not previewed because the call is not made in a preview."
+          pinned: "Pinned data was used for: %{steps}."
+          unsupported: "Not simulated yet: %{steps}."
+          live_actors: "Users who act or receive messages are resolved from the live site."
+        editor:
+          name: "Name"
+          name_placeholder: "Describe the situation, e.g. TL1 member posts in Support"
+          input_title: "Test input"
+          input_from: "Test input from run #%{id}"
+          captured_on: "captured on"
+          input_description: "The trigger data is frozen so the test always describes the same situation. Data the workflow looks up is captured the first time the test runs, not during the source run."
+          refresh_data: "Refresh test data"
+          data_refreshed: "Test data refreshed"
+          trigger_data: "Trigger data"
+          trigger_data_help: "What the workflow receives when %{node} fires."
+          captured_title: "Captured data"
+          captured_description: "Lookups replay what was captured when the test first ran. External calls replay a saved response and are never made."
+          not_captured: "Not captured yet"
+          needs_response: "Needs a response"
+          replayed_response: "Replayed from saved response"
+          paste_response: "Paste a response for %{step}"
+          paste_help: "Paste the response %{step} should receive. The call will not be made."
+          save_response: "Save response"
+          response_saved: "Response saved"
+          checks_title: "Checks"
+          checks_description: "What should happen as a result of the run. At least one check is needed to run the test."
+          add_check: "Add check"
+          add_as_check: "Add as check"
+          check_added: "Check added"
+          effect: "Outcome"
+          mode: "Expectation"
+          count: "Times"
+          field: "Field"
+          operator: "Operator"
+          value: "Value"
+          add_condition: "Add condition"
+          remove_condition: "Remove condition"
+          result_title: "Last result"
+          result_description: "Run against the draft"
+          effects_title: "What would have happened"
+          no_effects: "Nothing. The run finished without any effects."
+          no_result: "This test has not been run yet. Save it, then run it."
+        modes:
+          happens: "happens"
+          not_happens: "does not happen"
+          count: "happens exactly N times"
+        effects:
+          personal_message:
+            one: "a personal message is sent"
+            other: "%{count} personal messages are sent"
+          post_created:
+            one: "a post is created"
+            other: "%{count} posts are created"
+          post_edited:
+            one: "a post is edited"
+            other: "%{count} posts are edited"
+          post_deleted:
+            one: "a post is deleted"
+            other: "%{count} posts are deleted"
+          post_recovered:
+            one: "a post is recovered"
+            other: "%{count} posts are recovered"
+          topic_created:
+            one: "a topic is created"
+            other: "%{count} topics are created"
+          topic_closed:
+            one: "a topic is closed"
+            other: "%{count} topics are closed"
+          topic_archived:
+            one: "a topic is archived"
+            other: "%{count} topics are archived"
+          topic_bumped:
+            one: "a topic is bumped"
+            other: "%{count} topics are bumped"
+          topic_tagged:
+            one: "a topic is tagged"
+            other: "%{count} topics are tagged"
+          topic_category_changed:
+            one: "a topic is moved to a category"
+            other: "%{count} topics are moved to a category"
+          topic_pinned:
+            one: "a topic is pinned"
+            other: "%{count} topics are pinned"
+          topic_unpinned:
+            one: "a topic is unpinned"
+            other: "%{count} topics are unpinned"
+          badge_granted:
+            one: "a badge is granted"
+            other: "%{count} badges are granted"
+          badge_revoked:
+            one: "a badge is revoked"
+            other: "%{count} badges are revoked"
+          group_member_added:
+            one: "a user is added to a group"
+            other: "%{count} users are added to a group"
+          group_member_removed:
+            one: "a user is removed from a group"
+            other: "%{count} users are removed from a group"
+          user_updated:
+            one: "a user is updated"
+            other: "%{count} users are updated"
+          http_request:
+            one: "an HTTP request is made"
+            other: "%{count} HTTP requests are made"
+          delay:
+            one: "the workflow waits"
+            other: "the workflow waits %{count} times"
+        fields:
+          personal_message:
+            recipient: "recipient"
+            title: "title"
+            body: "body"
+          post_created:
+            topic_id: "topic"
+            raw: "text"
+          post_edited:
+            post_id: "post"
+            raw: "text"
+          post_deleted:
+            post_id: "post"
+          post_recovered:
+            post_id: "post"
+          topic_created:
+            title: "title"
+            category_id: "category"
+            raw: "text"
+          topic_closed:
+            topic_id: "topic"
+          topic_archived:
+            topic_id: "topic"
+          topic_bumped:
+            topic_id: "topic"
+          topic_tagged:
+            topic_id: "topic"
+            tags: "tags"
+          topic_category_changed:
+            topic_id: "topic"
+            category_id: "category"
+          topic_pinned:
+            topic_id: "topic"
+          topic_unpinned:
+            topic_id: "topic"
+          badge_granted:
+            username: "user"
+            badge_id: "badge"
+          badge_revoked:
+            username: "user"
+            badge_id: "badge"
+          group_member_added:
+            username: "user"
+            group_id: "group"
+          group_member_removed:
+            username: "user"
+            group_id: "group"
+          user_updated:
+            username: "user"
+          http_request:
+            method: "method"
+            url: "URL"
+            body: "body"
+          delay:
+            seconds: "seconds"
+        sentences:
+          happens: "%{effect}"
+          not_happens: "No %{effect}"
+          count: "Exactly %{effect}"
+          nothing: "Nothing happens"
+          finishes: "Workflow finishes without errors"
+          where: " where %{conditions}"
+          and: " and "
+          condition: "%{field} %{operator} \"%{value}\""
+          effect: "%{effect}: %{details}"
+          effect_field: "%{field} %{value}"
       add_node:
         title: "Add step"
         first_step: "Add first step"

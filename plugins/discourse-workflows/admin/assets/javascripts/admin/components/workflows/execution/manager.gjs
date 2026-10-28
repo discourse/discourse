@@ -233,8 +233,9 @@ export default class ExecutionsManager extends Component {
 
     const update = message.execution;
     if (
-      this.args.workflowId &&
-      update.workflow_id !== Number(this.args.workflowId)
+      update.execution_mode === "simulation" ||
+      (this.args.workflowId &&
+        update.workflow_id !== Number(this.args.workflowId))
     ) {
       return;
     }

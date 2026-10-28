@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { registerEffectTypes } from "discourse/plugins/discourse-workflows/admin/lib/workflows/workflow-test-checks";
 
 function sortForStableStringify(value) {
   if (Array.isArray(value)) {
@@ -43,6 +44,7 @@ export default class WorkflowsNodeTypes extends Service {
   @tracked nodeTypes = null;
   @tracked credentialTypes = null;
   @tracked expressionContext = {};
+  @tracked effectTypes = [];
   @tracked workflowVars = null;
 
   nodeTypeMap = new Map();
@@ -60,6 +62,8 @@ export default class WorkflowsNodeTypes extends Service {
       this.nodeTypes = result.node_types || [];
       this.credentialTypes = result.credential_types || [];
       this.expressionContext = result.expression_context || {};
+      this.effectTypes = result.effect_types || [];
+      registerEffectTypes(this.effectTypes);
       this.nodeTypeMap = new Map(
         this.nodeTypes.flatMap((nt) => [
           [nt.name, nt],
@@ -173,6 +177,7 @@ export default class WorkflowsNodeTypes extends Service {
     this.nodeTypes = null;
     this.credentialTypes = null;
     this.expressionContext = {};
+    this.effectTypes = [];
     this.nodeTypeMap = new Map();
     this._nodeParameterOptionsCache = new Map();
     this.invalidateWorkflowVars();

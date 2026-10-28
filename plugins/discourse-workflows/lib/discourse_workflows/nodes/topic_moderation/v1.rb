@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module TopicModeration
       class V1 < NodeType
+        simulation { unsupported "unlist_topic" }
+
         OPERATIONS = %w[unlist_topic].freeze
 
         description(

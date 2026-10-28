@@ -4,6 +4,11 @@ module DiscourseWorkflows
   module Nodes
     module HttpRequest
       class V1 < NodeType
+        simulation do
+          recorded
+          fingerprint_except "body_json", "body_raw", "body_form", "headers", "authentication"
+        end
+
         include HttpHelpers
 
         FULL_RESPONSE_SCHEMA =
@@ -217,50 +222,62 @@ module DiscourseWorkflows
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.flat_map.with_index do |item, item_index|
-              config = {
-                "method" => exec_ctx.get_node_parameter("method", item_index, default: "GET"),
-                "url" => exec_ctx.get_node_parameter("url", item_index),
-                "authentication" =>
-                  exec_ctx.get_node_parameter("authentication", item_index, default: "none"),
-                "content_type" =>
-                  exec_ctx.get_node_parameter("content_type", item_index, default: "json"),
-                "body_json" => exec_ctx.get_node_parameter("body_json", item_index),
-                "body_raw" => exec_ctx.get_node_parameter("body_raw", item_index),
-                "raw_content_type" =>
-                  exec_ctx.get_node_parameter(
-                    "raw_content_type",
-                    item_index,
-                    default: "text/plain",
-                  ),
-                "never_error" =>
-                  exec_ctx.get_node_parameter("never_error", item_index, default: false),
-                "full_response" =>
-                  exec_ctx.get_node_parameter("full_response", item_index, default: false),
-                "max_response_size_kb" =>
-                  exec_ctx.get_node_parameter("max_response_size_kb", item_index, default: 1024),
-              }
+              config = resolve_config(exec_ctx, item:, item_index:, operation: nil)
               result = process(config, item_index, exec_ctx)
               wrap_result(result, paired_item: exec_ctx.paired_item_for(item))
             end
           [items]
         end
 
+        def resolve_config(exec_ctx, item:, item_index:, operation:)
+          {
+            "method" => exec_ctx.get_node_parameter("method", item_index, default: "GET"),
+            "url" => exec_ctx.get_node_parameter("url", item_index),
+            "authentication" =>
+              exec_ctx.get_node_parameter("authentication", item_index, default: "none"),
+            "content_type" =>
+              exec_ctx.get_node_parameter("content_type", item_index, default: "json"),
+            "body_json" => exec_ctx.get_node_parameter("body_json", item_index),
+            "body_raw" => exec_ctx.get_node_parameter("body_raw", item_index),
+            "raw_content_type" =>
+              exec_ctx.get_node_parameter("raw_content_type", item_index, default: "text/plain"),
+            "never_error" => exec_ctx.get_node_parameter("never_error", item_index, default: false),
+            "full_response" =>
+              exec_ctx.get_node_parameter("full_response", item_index, default: false),
+            "max_response_size_kb" =>
+              exec_ctx.get_node_parameter("max_response_size_kb", item_index, default: 1024),
+            "headers" => exec_ctx.get_node_parameter("headers.values", item_index, default: []),
+            "body_form" => exec_ctx.get_node_parameter("body_form.values", item_index, default: []),
+            "query_params" =>
+              exec_ctx.get_node_parameter("query_params.values", item_index, default: []),
+          }
+        end
+
+        def validate_recorded_request(exec_ctx, dispatch)
+          method, headers, body, options = request_parts(dispatch.config)
+          fields =
+            exec_ctx.validate_http_request(
+              method:,
+              url: dispatch.config["url"],
+              headers:,
+              body:,
+              options:,
+              item_index: dispatch.item_index,
+            )
+          exec_ctx.record_effect(:http_request, fields, item_index: dispatch.item_index)
+        end
+
         private
 
-        def process(config, item_index, exec_ctx)
+        def request_parts(config)
           method = config.fetch("method") { "GET" }.downcase.to_sym
-          headers =
-            normalize_headers(
-              exec_ctx.get_node_parameter("headers.values", item_index, default: []),
-            )
-          body =
-            build_body(
-              method,
-              config,
-              headers,
-              form_params: exec_ctx.get_node_parameter("body_form.values", item_index, default: []),
-            )
-          query_params = exec_ctx.get_node_parameter("query_params.values", item_index, default: [])
+          headers = normalize_headers(config["headers"] || [])
+          body = build_body(method, config, headers, form_params: config["body_form"] || [])
+          [method, headers, body, request_options(config, config["query_params"] || [])]
+        end
+
+        def process(config, item_index, exec_ctx)
+          method, headers, body, options = request_parts(config)
           response =
             exec_ctx.http_request(
               method: method,
@@ -268,7 +285,7 @@ module DiscourseWorkflows
               headers: headers,
               body: body,
               item_index: item_index,
-              options: request_options(config, query_params),
+              options: options,
             )
           if full_response?(config)
             {

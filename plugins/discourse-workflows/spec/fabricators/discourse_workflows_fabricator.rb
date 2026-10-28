@@ -126,3 +126,17 @@ Fabricator(
   latest_response { {} }
   proposed_patch { {} }
 end
+
+Fabricator(:discourse_workflows_workflow_test, class_name: "DiscourseWorkflows::WorkflowTest") do
+  workflow { Fabricate(:discourse_workflows_workflow) }
+  name { sequence(:name) { |index| "Test #{index}" } }
+  trigger_node_id "trigger-1"
+  trigger_type "trigger:manual"
+  trigger_data { {} }
+  source_execution do |attrs|
+    Fabricate(:discourse_workflows_completed_execution, workflow: attrs[:workflow])
+  end
+  checks { [DiscourseWorkflows::WorkflowTestChecks.finishes] }
+  created_by { |attrs| attrs[:workflow].created_by }
+  updated_by { |attrs| attrs[:workflow].created_by }
+end

@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Code
       class V1 < NodeType
+        simulation { pure }
+
         DEFAULT_CODE = <<~JS
           // Available variables:
           //   $input.item.json       - current item's JSON data

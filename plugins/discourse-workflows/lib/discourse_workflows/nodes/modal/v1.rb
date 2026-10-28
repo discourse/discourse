@@ -4,6 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module Modal
       class V1 < NodeType
+        simulation { unsupported }
+
         USER_CHANNEL_PREFIX = "/discourse-workflows/user-modal"
         BUTTON_STYLES = %w[default primary danger].freeze
         DEFAULT_BUTTON_STYLE = "default"

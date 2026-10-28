@@ -81,6 +81,7 @@ module DiscourseWorkflows
                   :vars,
                   :execution_id,
                   :node_id,
+                  :node_name,
                   :webhook_ctx,
                   :workflow_call_stack,
                   :deadline
@@ -115,7 +116,9 @@ module DiscourseWorkflows
         workflow_call_stack: [],
         runtime_state: RuntimeState.new,
         static_data_state: nil,
-        deadline: nil
+        deadline: nil,
+        simulation: nil,
+        occurrence: 0
       )
         @input_groups = normalize_input_groups(input_groups, input_items)
         @input_items = @input_groups[0] || []
@@ -153,6 +156,91 @@ module DiscourseWorkflows
         @workflow_call_stack = Array(workflow_call_stack).map(&:to_s)
         @static_data_state = static_data_state
         @deadline = deadline
+        @simulation = simulation
+        @occurrence = occurrence
+      end
+
+      def simulating?
+        !@simulation.nil?
+      end
+
+      def now
+        @simulation&.now || Time.zone.now
+      end
+
+      def record_effect(type, fields, item_index: nil, touches: [])
+        raise "effects can only be recorded while simulating" unless simulating?
+
+        @simulation.record_effect(type, fields, step: node_name, item_index:, touches:)
+      end
+
+      def synthetic_id(record_type)
+        raise "synthetic ids only exist while simulating" unless simulating?
+
+        @simulation.synthetic_id(record_type)
+      end
+
+      RECORD_CLASSES = {
+        "topic" => ::Topic,
+        "post" => ::Post,
+        "user" => ::User,
+        "group" => ::Group,
+        "badge" => ::Badge,
+      }.freeze
+
+      # Reads a record a step depends on. In simulation it refuses records an
+      # earlier step would have created or changed, because the read would see
+      # the live database rather than that change.
+      def read_record(record_type, id)
+        klass = RECORD_CLASSES.fetch(record_type.to_s) { raise ArgumentError, record_type }
+        ensure_readable!(record_type, id)
+        klass.find_by(id:)
+      end
+
+      def ensure_readable!(record_type, id)
+        return unless simulating?
+        return if !@simulation.synthetic?(record_type, id) && !@simulation.touched?(record_type, id)
+
+        raise Simulation::SafetyError.new(
+                :touched_record,
+                consumer: node_name,
+                record: "#{record_type} #{id}",
+                producer: @simulation.effects.last&.dig("step"),
+              )
+      end
+
+      # Unsaved records with negative ids stand in for what a run would create, so
+      # adapters can reuse the real serializers and downstream reads can be caught.
+      def synthetic_topic(user:, title:, archetype: Archetype.default, category_id: nil)
+        ::Topic.new(
+          id: synthetic_id(:topic),
+          title:,
+          fancy_title: title,
+          user:,
+          last_poster: user,
+          archetype:,
+          category_id:,
+          created_at: now,
+          updated_at: now,
+          bumped_at: now,
+          last_posted_at: now,
+          posts_count: 1,
+          highest_post_number: 1,
+        )
+      end
+
+      def synthetic_post(topic:, user:, raw:, post_number: 1)
+        ::Post.new(
+          id: synthetic_id(:post),
+          topic:,
+          topic_id: topic.id,
+          user:,
+          raw:,
+          cooked: PrettyText.cook(raw.to_s, user_id: user.id),
+          post_number:,
+          created_at: now,
+          updated_at: now,
+        )
       end
 
       # Static data access.
@@ -297,6 +385,102 @@ module DiscourseWorkflows
         parameter_resolver.resolve(path, item_index, default:, options:)
       end
 
+      # Actors and recipients are resolved from the live site even in simulation.
+      def resolve_user(username: nil, id: nil, item_index: nil)
+        find_user(username:, id:, item_index:)
+      end
+
+      # A user a step acts on or inspects; unlike an actor, it is a dependency the
+      # simulation tracks.
+      def read_user(username: nil, id: nil, item_index: nil)
+        user = find_user(username:, id:, item_index:)
+        read_record(:user, user.id)
+        user
+      end
+
+      # Runs a pure simulation step under two guards: ActiveRecord's write
+      # prevention, and a Postgres read-only savepoint that also stops writes
+      # issued through the raw connection and `FOR UPDATE` locks. The savepoint is
+      # always rolled back; a pure step has nothing to commit.
+      def read_only
+        result = nil
+        ActiveRecord::Base.transaction(requires_new: true) do
+          ActiveRecord::Base.connection.execute("SET TRANSACTION READ ONLY")
+          result = ActiveRecord::Base.while_preventing_writes { yield }
+          raise ActiveRecord::Rollback
+        end
+        result
+      rescue ActiveRecord::ReadOnlyError, PG::ReadOnlySqlTransaction
+        raise Simulation::SafetyError.new(:write_in_pure_step, step: node_name)
+      rescue ActiveRecord::StatementInvalid => e
+        raise if !e.cause.is_a?(PG::ReadOnlySqlTransaction)
+
+        raise Simulation::SafetyError.new(:write_in_pure_step, step: node_name)
+      end
+
+      def fingerprint(config, exclude: [])
+        Simulation.fingerprint(config, exclude:, placeholders: run_specific_placeholders)
+      end
+
+      # Replays a captured output for this occurrence and item when its
+      # fingerprint still matches; otherwise runs the block and, when the run is
+      # capturing, keeps the result for later runs. A recorded call never runs
+      # the block: it replays, uses a pasted response, or stops.
+      def replay_or_capture(dispatch, kind:, exclude: [])
+        key_fingerprint = fingerprint(dispatch.config, exclude:)
+        entry = @simulation.recorded_entry(node_name, @occurrence, dispatch.item_index)
+
+        if entry
+          if entry["fingerprint"] && entry["fingerprint"] != key_fingerprint
+            raise Simulation::SafetyError.new(
+                    kind == :recorded ? :recorded_mismatch : :lookup_mismatch,
+                    step: node_name,
+                  )
+          end
+          if entry["fingerprint"].nil? && @simulation.capture?
+            @simulation.capture!(
+              node_name,
+              @occurrence,
+              dispatch.item_index,
+              key_fingerprint,
+              entry["outputs"],
+            )
+          end
+          return entry["outputs"]
+        end
+
+        if kind == :recorded
+          pasted = @simulation.pasted_response(node_name)
+          return pasted if pasted
+          raise Simulation::SafetyError.new(:needs_recorded_response, step: node_name)
+        end
+
+        outputs = Array.wrap(yield)
+        if @simulation.capture?
+          @simulation.capture!(
+            node_name,
+            @occurrence,
+            dispatch.item_index,
+            key_fingerprint,
+            outputs,
+          )
+        end
+        outputs
+      end
+
+      # Builds and validates a request exactly as the real path would, without
+      # sending it. Returns the request as the effect fields.
+      def validate_http_request(method:, url:, headers: {}, body: nil, options: {}, item_index: 0)
+        HttpClient.new(self, item_index).validate(method:, url:, headers:, body:, options:)
+      end
+
+      def run_specific_placeholders
+        {
+          @execution_id.to_s => "{execution_id}",
+          @resume_token.to_s => "{resume_token}",
+        }.reject { |actual, _| actual.blank? }
+      end
+
       def ensure_no_expression_errors!
         error = expression_errors.first
         return unless error
@@ -371,7 +555,9 @@ module DiscourseWorkflows
         whisper: false,
         bypass_permission_checks: false
       )
-        topic = ::Topic.find(topic_id)
+        topic =
+          read_record(:topic, topic_id) ||
+            raise(ActiveRecord::RecordNotFound, "Couldn't find Topic with 'id'=#{topic_id}")
         bypass_permission_checks = ActiveModel::Type::Boolean.new.cast(bypass_permission_checks)
         guardian = bypass_permission_checks ? Discourse.system_user.guardian : user.guardian
 
@@ -410,14 +596,35 @@ module DiscourseWorkflows
           post_args[:skip_staff_author_pm_membership_sync] = true
         end
 
+        if simulating?
+          record_effect(
+            :post_created,
+            { topic_id: topic.id, raw: raw },
+            touches: [[:topic, topic.id]],
+          )
+          return(
+            synthetic_post(topic:, user:, raw:, post_number: topic.highest_post_number.to_i + 1)
+          )
+        end
+
         post = PostCreator.new(user, post_args).create!
         record_permission_bypass!(post) if bypass_permission_checks
         post
       end
 
       def edit_post(user:, post_id:, raw:)
-        post = ::Post.find(post_id)
+        post =
+          read_record(:post, post_id) ||
+            raise(ActiveRecord::RecordNotFound, "Couldn't find Post with 'id'=#{post_id}")
         raise Discourse::InvalidAccess if !user.guardian.can_edit_post?(post)
+
+        if simulating?
+          record_effect(:post_edited, { post_id: post.id, raw: raw }, touches: [[:post, post.id]])
+          post.raw = raw
+          post.cooked = PrettyText.cook(raw.to_s, user_id: post.user_id)
+          post.updated_at = now
+          return post
+        end
 
         opts = { skip_workflows: true, force_new_version: true }
 
@@ -431,16 +638,33 @@ module DiscourseWorkflows
       end
 
       def destroy_post(user:, post_id:)
-        post = ::Post.find(post_id)
+        post =
+          read_record(:post, post_id) ||
+            raise(ActiveRecord::RecordNotFound, "Couldn't find Post with 'id'=#{post_id}")
         raise Discourse::InvalidAccess if !user.guardian.can_delete_post_or_topic?(post)
+
+        if simulating?
+          record_effect(:post_deleted, { post_id: post.id }, touches: [[:post, post.id]])
+          post.deleted_at = now
+          post.deleted_by_id = user.id
+          return post
+        end
 
         post_destroyer(user, post).destroy
         post
       end
 
       def recover_post(user:, post_id:)
+        ensure_readable!(:post, post_id)
         post = ::Post.with_deleted.find(post_id)
         raise Discourse::InvalidAccess if !user.guardian.can_recover_post?(post)
+
+        if simulating?
+          record_effect(:post_recovered, { post_id: post.id }, touches: [[:post, post.id]])
+          post.deleted_at = nil
+          post.deleted_by_id = nil
+          return post
+        end
 
         post_destroyer(user, post).recover
         post
@@ -452,6 +676,12 @@ module DiscourseWorkflows
         payload: {},
         timeout_action: nil
       )
+        if simulating?
+          seconds = waiting_until ? [(waiting_until - now).to_i, 0].max : 0
+          record_effect(:delay, { seconds: })
+          return
+        end
+
         @runtime_state.request_wait(
           waiting_until,
           kind: kind,
@@ -733,6 +963,7 @@ module DiscourseWorkflows
             vars: @vars,
             workflow_vars: @workflow_vars,
             flow_context: @flow_context,
+            now: simulating? ? now : nil,
             runtime_state: @runtime_state,
           )
       end

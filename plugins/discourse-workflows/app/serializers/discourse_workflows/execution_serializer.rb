@@ -12,9 +12,33 @@ module DiscourseWorkflows
                :started_at,
                :finished_at,
                :created_at,
+               :execution_mode,
                :workflow_call_caller
 
     attribute :steps
+    attribute :simulation
+    attribute :test_result
+    attribute :workflow_test_id
+
+    def simulation
+      object.execution_data&.simulation&.except("test_result", "captures", "checks")
+    end
+
+    def include_simulation?
+      object.simulation?
+    end
+
+    def test_result
+      object.execution_data&.test_result
+    end
+
+    def include_test_result?
+      object.workflow_test_id.present?
+    end
+
+    def include_workflow_test_id?
+      object.workflow_test_id.present?
+    end
 
     def workflow_name
       object.workflow_snapshot_name

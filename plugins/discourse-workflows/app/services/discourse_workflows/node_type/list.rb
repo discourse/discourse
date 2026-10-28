@@ -9,6 +9,7 @@ module DiscourseWorkflows
     model :node_types
     model :credential_types
     model :expression_context
+    model :effect_types
 
     private
 
@@ -39,6 +40,10 @@ module DiscourseWorkflows
 
     def fetch_expression_context
       DiscourseWorkflows::ExpressionContextSchema.to_hash
+    end
+
+    def fetch_effect_types
+      DiscourseWorkflows::Effects.serialized
     end
   end
 end
