@@ -70,7 +70,17 @@ function formatTimed(startsAt, endsAt, timezone) {
     value = `${value} → ${endsAt.format(format)}`;
   }
 
-  return `${value} (${timezone})`;
+  return `${value} (${timezoneLabel(startsAt, timezone)})`;
+}
+
+// Zones without a common abbreviation format as a bare offset like "-03", so the location reads better
+function timezoneLabel(date, timezone) {
+  const abbreviation = date.format("z");
+  if (!/^[+-]/.test(abbreviation)) {
+    return abbreviation;
+  }
+
+  return timezone.split("/").pop().replaceAll("_", " ");
 }
 
 function parseDate(value, { allDay, timezone }) {
