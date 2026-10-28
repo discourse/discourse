@@ -1,4 +1,4 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
@@ -63,22 +63,12 @@ module("Integration | ui-kit | DAnimatedEmoji", function (hooks) {
     assert.dom(".d-animated-emoji").doesNotExist();
   });
 
-  test("falls back to the static image when the emoji has no animation", async function (assert) {
-    await render(
-      <template>
-        <DAnimatedEmoji @code="thinking" />
-        <DAnimatedEmoji @code="thinking" />
-      </template>
-    );
+  test("renders emojis without an animation static", async function (assert) {
+    await render(<template><DAnimatedEmoji @code="abacus" /></template>);
 
-    const image = document.querySelector(".d-animated-emoji img");
-    Object.defineProperty(image, "currentSrc", {
-      value: `${location.origin}/images/emoji/noto_animated/thinking.avif?v=${v}`,
-    });
-    await triggerEvent(image, "error");
-
+    assert.dom(".d-animated-emoji source").doesNotExist();
     assert
-      .dom(".d-animated-emoji source")
-      .doesNotExist("every instance stops requesting the missing animation");
+      .dom(".d-animated-emoji img")
+      .hasAttribute("src", `/images/emoji/twitter/abacus.png?v=${v}`);
   });
 });

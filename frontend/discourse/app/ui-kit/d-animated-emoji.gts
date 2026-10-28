@@ -1,12 +1,5 @@
 import Component from "@glimmer/component";
-import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { trackedSet } from "@ember/reactive/collections";
 import { animatedEmojiUrlFor, emojiUrlFor } from "discourse/lib/text";
-
-// Shared so every instance, current and future, stops requesting an emoji
-// that has no animation after the first miss.
-const missingAnimations = trackedSet<string>();
 
 interface DAnimatedEmojiSignature {
   Args: {
@@ -34,24 +27,11 @@ export default class DAnimatedEmoji extends Component<DAnimatedEmojiSignature> {
   }
 
   get animatedUrl(): string | undefined {
-    if (!missingAnimations.has(this.code)) {
-      return animatedEmojiUrlFor(this.code);
-    }
+    return animatedEmojiUrlFor(this.code);
   }
 
   get title() {
     return this.args.title ?? this.code;
-  }
-
-  @action
-  handleError(event: Event) {
-    const image = event.target as HTMLImageElement;
-    const animatedUrl = this.animatedUrl;
-
-    // Dropping the source makes the browser pick the static image instead.
-    if (animatedUrl && image.currentSrc.endsWith(animatedUrl)) {
-      missingAnimations.add(this.code);
-    }
   }
 
   <template>
@@ -70,7 +50,6 @@ export default class DAnimatedEmoji extends Component<DAnimatedEmojiSignature> {
           src={{this.staticUrl}}
           title={{this.title}}
           ...attributes
-          {{on "error" this.handleError}}
         />
       </picture>
     {{/if}}
