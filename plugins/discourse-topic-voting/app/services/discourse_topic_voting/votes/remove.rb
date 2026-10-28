@@ -21,7 +21,10 @@ module DiscourseTopicVoting
           step :refresh_vote_count
         end
 
-        step :enqueue_topic_unvote_webhook
+        only_if :vote_destroyed? do
+          step :enqueue_topic_unvote_webhook
+          step :publish_vote_destroyed_event
+        end
       end
 
       private
@@ -42,8 +45,14 @@ module DiscourseTopicVoting
         active_vote.present?
       end
 
+      # A concurrent removal of the same vote finds nothing left to delete, so it reports nothing.
       def destroy_active_vote(active_vote:)
-        active_vote.destroy!
+        context[:vote_destroyed] = DiscourseTopicVoting::Vote.where(id: active_vote.id).delete_all >
+          0
+      end
+
+      def vote_destroyed?(vote_destroyed:)
+        vote_destroyed
       end
 
       def refresh_vote_count(topic:)
@@ -61,6 +70,14 @@ module DiscourseTopicVoting
         }
 
         WebHook.enqueue_topic_voting_hooks(:topic_unvote, topic, payload.to_json)
+      end
+
+      def publish_vote_destroyed_event(active_vote:, guardian:)
+        DiscourseEvent.trigger(
+          :topic_voting_vote_destroyed,
+          active_vote,
+          acting_user: guardian.user,
+        )
       end
     end
   end
