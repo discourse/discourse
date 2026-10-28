@@ -8,7 +8,15 @@ function offsetStyle(reaction) {
 }
 
 export default class LiveReactionOverlay extends Component {
+  @service emojiStore;
   @service liveReactions;
+
+  constructor() {
+    super(...arguments);
+    // Reactions learn which emojis are animated from the emoji list; fetching
+    // it on joining the call means even the first one can float animated.
+    this.emojiStore.loadList().catch(() => {});
+  }
 
   get reactions() {
     return this.liveReactions.reactionsFor(this.args.room.id);

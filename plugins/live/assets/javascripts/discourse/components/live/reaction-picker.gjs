@@ -12,7 +12,6 @@ import { reactionGridColumns } from "../../lib/live/reaction-grid.js";
 
 export default class LiveReactionPicker extends Component {
   @service capabilities;
-  @service emojiStore;
   @service liveReactions;
   @service menu;
   @service site;
@@ -49,14 +48,6 @@ export default class LiveReactionPicker extends Component {
     this.#menuApi = api;
   }
 
-  // Floating reactions learn which emojis are animated from the emoji list,
-  // so fetch it while the user is still choosing. Not awaited: the menu
-  // waits on this hook before opening.
-  @action
-  prefetchEmojiList() {
-    this.emojiStore.loadList().catch(() => {});
-  }
-
   // The menu stays open so a burst of applause doesn't need a reopen per clap.
   @action
   react(emoji) {
@@ -90,7 +81,6 @@ export default class LiveReactionPicker extends Component {
         @icon="far-face-smile"
         @identifier="live-reaction-menu"
         @onRegisterApi={{this.registerMenu}}
-        @onShow={{this.prefetchEmojiList}}
         @placement="top"
         @title={{this.title}}
         @triggerClass="btn-default live-reaction-picker__trigger"
