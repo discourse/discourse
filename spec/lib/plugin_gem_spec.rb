@@ -552,6 +552,29 @@ RSpec.describe PluginGem do
     expect(loaded_specs.fetch("native").missing_extensions?).to eq(false)
   end
 
+  it "waits for another process that installs plugin gems, even with a lock file it can't write" do
+    add_plugin("one", %(gem "alpha"), lock: alpha_lock)
+    FileUtils.mkdir_p(gems_dir)
+    FileUtils.touch(File.join(gems_dir, "install.lock"))
+    File.chmod(0444, File.join(gems_dir, "install.lock"))
+
+    File.open(File.join(gems_dir, "install.lock"), File::RDONLY) do |lock|
+      lock.flock(File::LOCK_EX)
+      release =
+        Thread.new do
+          sleep 1
+          lock.flock(File::LOCK_UN)
+        end
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+      boot
+
+      expect(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).to be >= 1
+      release.join
+    end
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
+  end
+
   it "does nothing without a plugin that opts in" do
     add_plugin("one", %(gem "alpha"), lock: nil, opt_in: false)
 

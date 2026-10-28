@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "fileutils"
 require "json"
 
 module PluginGem
@@ -130,15 +131,40 @@ module PluginGem
 
     # First try with the installed gems only. That works offline and is enough
     # unless a lock changed. Only then ask the gem servers.
-    [{ local: true }, {}].each do |options|
-      specs = resolve(dsl, pins, locked, locks.values, app_lock, options)
-      puts "Resolved #{specs.size} plugin gems from #{gemfiles.size} Gemfiles"
-      return specs
-    rescue Bundler::GemNotFound, Bundler::SolveFailure
-      raise unless options[:local]
+    with_install_lock do
+      [{ local: true }, {}].each do |options|
+        specs = resolve(dsl, pins, locked, locks.values, app_lock, options)
+        puts "Resolved #{specs.size} plugin gems from #{gemfiles.size} Gemfiles"
+        return specs
+      rescue Bundler::GemNotFound, Bundler::SolveFailure
+        raise unless options[:local]
+      end
     end
   rescue Bundler::BundlerError => e
     raise "Resolving plugin gems failed for #{gemfiles.join(", ")}: #{e.message}"
+  end
+
+  # Processes that boot at the same time, like the web server and the job
+  # runner, would each install the missing gems: they decide that before
+  # bundler's own install lock. Behind this lock the later ones find the gems
+  # installed. Bundler's lock can't be used for this, it's taken again inside
+  # the installer. flock doesn't need write access, so a lock file created by
+  # another user still works. Without access to the directory there is nothing
+  # to install, so there is no lock either.
+  def self.with_install_lock
+    file =
+      begin
+        FileUtils.mkdir_p(GEMS_DIR)
+        File.open(File.join(GEMS_DIR, "install.lock"), File::RDONLY | File::CREAT)
+      rescue Errno::EACCES, Errno::EROFS
+        nil
+      end
+    return yield if !file
+
+    file.flock(File::LOCK_EX)
+    yield
+  ensure
+    file&.close
   end
 
   # Runs bundler's frozen-mode check on the plugin's Gemfile and
