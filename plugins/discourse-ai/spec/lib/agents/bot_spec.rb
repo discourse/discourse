@@ -68,6 +68,40 @@ RSpec.describe DiscourseAi::Agents::Bot do
       )
     end
 
+    it "sends no max_tokens when neither the caller nor the model configures a limit" do
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "test" }],
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Answer"]) do |_, _, _, options|
+        bot.reply(context) { |_partial| }
+
+        expect(options.last[:max_tokens]).to be_nil
+      end
+    end
+
+    it "admits child generations on unconfigured Anthropic models below the model cap" do
+      anthropic = Fabricate(:anthropic_model)
+      child_bot =
+        described_class.as(bot_user, agent: DiscourseAi::Agents::General.new, model: anthropic)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "test" }],
+          subagent_depth: 1,
+          turn_token_budget: 2000,
+        )
+
+      raw = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Answer"]) do
+        raw = child_bot.reply(context) { |_partial| }
+      end
+
+      expect(raw.map(&:first)).to include("Answer")
+    end
+
     it "requests Gemini thought summaries when thinking is shown" do
       gemini = Fabricate(:gemini_model)
       captured_kwargs = []
@@ -350,7 +384,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
               "Fitting answer",
             )
             expect(options.map { |option| option[:max_tokens] }).to eq(
-              [mode == :tools ? 2000 : mode == :final ? 2048 : 4000],
+              [mode == :tools ? 2000 : mode == :final ? 4096 : 4000],
             )
             expect(options.map { |option| option[:feature_name] }).to eq(["bot"])
             expect(prompts.first.tool_choice).to eq(mode == :final ? :none : nil)
@@ -412,7 +446,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         # Simulate a provider whose mandatory reasoning cannot be disabled for finalization.
         allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
           :prompt_capacity,
-        ).and_return([100, 20_000, 4096])
+        ).and_return([100, 20_000, 8192])
         DiscourseAi::Completions::Llm.with_prepared_responses([]) do |canned|
           expect {
             described_class.as(
@@ -505,7 +539,11 @@ RSpec.describe DiscourseAi::Agents::Bot do
           expect(raw.select { |entry| entry[2] == "tool" }.map(&:first)).to eq([result.to_json])
           expect(context.execution_context.work_budget.used).to be > 5000
           expect(prompts.last.tool_choice).to eq(:none)
-          expect(options.last[:max_tokens]).to be <= described_class::MAX_FINAL_ANSWER_TOKENS
+          expect(options.last[:max_response_tokens]).to be <=
+            described_class::MAX_FINAL_ANSWER_TOKENS
+          expect(options.last[:max_tokens]).to be <=
+            described_class::MAX_FINAL_ANSWER_TOKENS +
+              DiscourseAi::Completions::TurnWorkBudget::MAX_FINAL_THINKING_ALLOWANCE
           expect(options.last[:thinking_effort]).to eq("none")
           expect(canned.completions).to eq(2)
           expect(context.execution_context.work_budget.snapshot[:final_answer_claimed]).to eq(true)
@@ -913,6 +951,9 @@ RSpec.describe DiscourseAi::Agents::Bot do
       tool =
         DiscourseAi::Agents::Tools::CloseTopic.new(
           { topic_id: topic.id, closed: true, reason: "Off-topic" },
+          agent_options: {
+            "max_closes" => "1",
+          },
           bot_user: test_bot_user,
           llm: bot.llm,
         )
@@ -923,7 +964,12 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       expect(result[:status]).to eq("pending_approval")
       expect(topic.reload.closed).to eq(false)
-      expect(AiToolAction.last.tool_name).to eq("close_topic")
+      expect(AiToolAction.last).to have_attributes(
+        tool_name: "close_topic",
+        tool_options: {
+          "max_closes" => "1",
+        },
+      )
       expect(ReviewableAiToolAction.count).to eq(1)
     end
 

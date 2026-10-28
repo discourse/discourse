@@ -74,7 +74,6 @@ uk:
   site_settings:
     discourse_ai_enabled: "Увімкнкти плагін ШІ для Discourse"
     enable_ai_bot_starred_conversations: "Дозвольте користувачам відмічати діалоги ШІ-ботів і показувати їх у розділі \"Відмічені\" на бічній панелі."
-    ai_default_llm_model: "Модель LLM за замовчуванням для всіх функцій ШІ"
     ai_artifact_security: "Система артефактів штучного інтелекту генерує IFRAME з виконуваним кодом. Строгий режим вимагає додаткового кліку для запуску коду. Нечіткий режим запускає код негайно. Гібридний режим дозволяє користувачеві вказати data-ai-artifact-autorun для негайного відображення. Вимкнений режим вимикає систему артефактів."
     ai_toxicity_enabled: "Увімкнути модуль перевірки на токсичність"
     ai_toxicity_inference_service_api_endpoint: "URL-адреса, де працює API для модуля перевірки на токсичність"
@@ -89,15 +88,12 @@ uk:
     ai_toxicity_flag_threshold_threat: "Погроза"
     ai_toxicity_flag_threshold_sexual_explicit: "Відверто сексуальний"
     ai_toxicity_groups_bypass: "Користувачі цих груп не матимуть можливості класифікувати свої дописи за модулем токсичності."
-    ai_sentiment_enabled: "Увімкніть модуль настроїв."
     ai_sentiment_inference_service_api_endpoint: "URL-адреса, на якій запущено API для модуля настрою"
     ai_sentiment_inference_service_api_key: "Ключ API для API настрою"
     ai_sentiment_model_configs: "Кінцеві точки моделі класифікації, які використовуються для висновків. Настрій класифікує дописи як позитивні, нейтральні або негативні. Емоція класифікує дописи за підтримуваними емоційними мітками."
     ai_sentiment_models: "Кінцеві точки моделі класифікації, які використовуються для висновків. Настрій класифікує дописи як позитивні, нейтральні або негативні. Емоція класифікує дописи за підтримуваними емоційними мітками."
     ai_sentiment_sentiment_classification_strategy: "Бекенд класифікації настроїв."
-    ai_sentiment_sentiment_agent: "Агент, який буде використовуватися для класифікації настроїв, коли серверною частиною настроїв є агент."
     ai_sentiment_emotion_classification_strategy: "Бекенд класифікації емоцій."
-    ai_sentiment_emotion_agent: "Агент, який використовується для класифікації емоцій, коли бекенд емоцій є агентом."
     ai_nsfw_detection_enabled: "Увімкнути модуль перевірки NSFW."
     ai_nsfw_inference_service_api_endpoint: "URL-адреса, на якій запущено API для модуля NSFW"
     ai_nsfw_inference_service_api_key: "Ключ API для API NSFW"
@@ -147,7 +143,6 @@ uk:
     ai_pm_summarization_allowed_groups: "Групи дозволили створювати та переглядати підсумки в особистих повідомленнях."
     ai_summary_gists_enabled: "Автоматично генерувати короткі зведення останніх відповідей у темах"
     ai_summary_gists_agent: "Агент використовується для створення коротких описів тем. Генерація GIST завжди використовує вбудований інструмент для створення остаточних описів; інші інструменти та формати структурованих відповідей, налаштовані на агенті, ігноруються."
-    ai_summary_backfill_maximum_topics_per_hour: "Кількість коротких описів тем для заповнення за годину. Кожен локалізований сумарний опис враховується в цьому ліміті."
     ai_bot_enabled: "Увімкніть модуль AI Bot."
     ai_bot_enabled_llms: "LLM доступні для вибору для бесід з AI-ботами"
     ai_bot_enable_chat_warning: "Відображати попередження, коли ініційовано чат особистих повідомлень. Можна змінити, відредагувавши рядок перекладу: discourse_ai.ai_bot.pm_warning"
@@ -195,95 +190,68 @@ uk:
       description: "Цей звіт містить аналіз настроїв для публікацій, згрупованих за категоріями, з позитивними, негативними та нейтральними оцінками для кожної публікації та категорії."
     overall_sentiment:
       title: "Загальний настрій"
-      description: "На діаграмі порівнюється кількість публікацій, класифікованих як позитивні або негативні. Вони обчислюються, коли позитивні або негативні оцінки перевищують встановлений пороговий бал. Це означає, що нейтральні публікації не відображаються. Особисті повідомлення (ПП) також виключаються. Залежно від вибраного методу класифікації настроїв, публікації класифікуються або за допомогою налаштованої моделі класифікації настроїв ('cardiffnlp/twitter-roberta-base-sentiment-latest'), або за допомогою налаштованого агента класифікації настроїв."
       xaxis: "Позитивні (%)"
       yaxis: "Дата"
     emotion_admiration:
       title: "🤩 Захоплення"
-      description: "Дописи, класифіковані з емоцією захоплення за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_amusement:
       title: "😄 Розваги"
-      description: "Дописи, класифіковані з емоцією розваги за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_anger:
       title: "😠 Гнів"
-      description: "Пости класифіковані за емоцією гнів за допомогою штучного інтелекту, використовуючи модель «SamLowe/roberta-base-go_emotions»."
     emotion_annoyance:
       title: "😒 Роздратування"
-      description: "Дописи, класифіковані за емоцією роздратування за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_approval:
       title: "👍 Схвалення"
-      description: "Дописи, класифіковані зі схваленням емоцій за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_caring:
       title: "🤗 Турбота"
-      description: "Дописи класифіковані з урахуванням емоцій за допомогою штучного інтелекту, використовуючи модель «SamLowe/roberta-base-go_emotions»."
     emotion_confusion:
       title: "😕 Плутанина"
-      description: "Дописи, класифіковані з плутаниною емоцій за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_curiosity:
       title: "🤔 Цікавість"
-      description: "Дописи класифіковані з урахуванням емоційної цікавості за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_desire:
       title: "😍 Бажання"
-      description: "Дописи класифіковані за бажаністю емоції за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_disappointment:
       title: "😞 Розчарування"
-      description: "Дописи, класифіковані з емоцією розчарування за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_disapproval:
       title: "👎 Несхвалення"
-      description: "Дописи, класифіковані з емоцією несхвалення за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_disgust:
       title: "🤢 Огида"
-      description: "Дописи, класифіковані за емоцією \"огида\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_embarrassment:
       title: "😳 Збентеження"
-      description: "Дописи, класифіковані з емоцією збентеження за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_excitement:
       title: "🤪 Хвилювання"
-      description: "Дописи класифіковані за емоційним збудженням за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_fear:
       title: "😨 Страх"
-      description: "Дописи, класифіковані з емоцією \"страх\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_gratitude:
       title: "🙏 Вдячність"
-      description: "Дописи, класифіковані з емоцією подяки за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_grief:
       title: "😢 Горе"
-      description: "Дописи класифіковані з емоцією горе за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
       title: "😊 Радість"
-      description: "Дописи класифіковані за допомогою емоції радості за допомогою штучного інтелекту, використовуючи модель «SamLowe/roberta-base-go_emotions»."
     emotion_love:
       title: '❤️ Любов'
-      description: "Дописи, класифіковані з емоцією love за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_nervousness:
       title: "😰 Нервозність"
-      description: "Дописи класифіковані за емоцією \"нервозність\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_neutral:
       title: "😐 Нейтральна"
-      description: "Дописи класифіковані як нейтральні за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_optimism:
       title: "🌟 Оптимізм"
-      description: "Дописи, класифіковані з емоцією оптимізму за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_pride:
       title: "🦁 Гордість"
-      description: "Дописи, класифіковані з емоцією гордість за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_realization:
       title: "💡 Реалізація"
-      description: "Дописи, класифіковані з реалізацією емоцій за допомогою ШІ, з використанням моделі \"SamLowe/roberta-base-go_emotions\"."
     emotion_relief:
       title: "😌 Полегшення"
-      description: "Дописи, класифіковані з урахуванням емоцій за допомогою ШІ, з використанням моделі \"SamLowe/roberta-base-go_emotions\"."
     emotion_remorse:
       title: "😔 Докори сумління"
-      description: "Дописи, класифіковані з емоцією каяття за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_sadness:
       title: "😭 Смуток"
-      description: "Дописи, класифіковані з емоцією смуток за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_surprise:
       title: "😲 Сюрприз"
-      description: "Дописи, класифіковані за емоцією \"сюрприз\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
     ai_artifact:
+      share_version_conflict: "За цим посиланням вже опубліковано іншу версію. Оновіть сторінку та виберіть «Оновити закріплену версію», щоб змінити її."
+      uploads_cannot_be_shared: "Цей артефакт посилається на завантаження, які можуть бути приватними. Видаліть посилання на завантаження, перш ніж публікувати окреме посилання."
       errors:
         max_keys_exceeded:
           one: "Ви можете мати лише %{count} ключ в артефакті."
@@ -461,8 +429,8 @@ uk:
           title: "Резервні копії"
       ai_users: "Користувачі штучного інтелекту"
       errors:
-        invalid_agent_id: "Вказаний агент штучного інтелекту не існує, або у вас немає до нього доступу"
         cannot_send_pm_to_agent: "Ви не можете надсилати особисті повідомлення цьому агенту штучного інтелекту"
+        invalid_agent_id: "Вказаний агент штучного інтелекту не існує, або у вас немає до нього доступу"
       reply_error: "Вибачте, схоже, наша система зіткнулася з несподіваною проблемою під час спроби відповісти.\n\n[details='Деталі помилки']\n%{details}\n[/details]"
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
       thinking: "Мислення"
@@ -488,11 +456,35 @@ uk:
         missing_model: "Запитаний субагент не має доступної мовної моделі."
         call_limit: "Досягнуто ліміту делегованих викликів."
         completion_limit: "Досягнуто ліміту завершення делегування."
-        token_limit: "Бюджет токенів делегування досягнуто."
         cancelled: "Делеговане завдання скасовано."
         execution_failed: "Делеговане завдання не вдалося виконати."
         approval_unavailable: "Інструменти, що потребують схвалення, недоступні в делегованих запусках."
       chat_tool_approval:
+        topic_states:
+          open: "Відкрити"
+          closed: "Закриті"
+          active: "Активний"
+          deleted: "Вилучено"
+        solution_post: "Повідомлення №%{number}"
+        duration_label: "Тривалість:"
+        user_duration:
+          one: "%{count} день"
+          few: "%{count} дні"
+          many: "%{count} днів"
+          other: "%{count} днів"
+        post_states:
+          locked: "Заблоковано"
+          unlocked: "Розблоковано"
+        posts_label: "Дописи"
+        category_label: "Розділ"
+        category_fields:
+          name: "імʼя"
+          description: "опис"
+          color: "колір"
+          text_color: "колір тексту"
+        approve_label: "Так"
+        reject_label: "Ні"
+        empty_value: "Порожній"
         approved: "Схвалено @%{username}."
         rejected: "Відхилено користувачем @%{username}."
         failed: "Не вдалося завершити дію: %{error}"
@@ -865,7 +857,6 @@ uk:
         create_tag: "Створення тегу '%{name}'"
         edit_tag: "Редагування тегу '%{name}' (%{fields})"
         create_category: "Створення категорії '%{name}'"
-        edit_category: "Редагування категорії %{category_id} (%{fields})"
         change_topic_category: "Переміщення теми %{topic_id} до категорії %{category_id}"
         set_topic_timer: "Встановлення таймера %{timer_type} на тему %{topic_id} (%{duration_hours}h)"
         set_slow_mode: "Встановлення повільного режиму для теми %{topic_id} (%{slow_mode_seconds}с)"
@@ -1227,8 +1218,8 @@ uk:
         disable_embeddings: "Спершу потрібно вимкнути функцію «AI embeddings enabled»."
         choose_model: "Спочатку встановіть 'ai embeddings selected model'."
         model_test_failed: "Нам не вдалося створити тестове вбудовування з цією моделлю. Перевірте, чи правильно налаштовано."
-    secrets:
-      delete_failed_in_use: "Ці облікові дані наразі використовуються одним або кількома LLM, вбудовуваннями чи інструментами та не можуть бути видалені."
+    decision_models:
+      secret_not_found: "Вибраний обліковий запис не існує"
     llm_models:
       missing_provider_param: "%{param} не може бути пустим"
       invalid_provider_param: "%{param} має недійсний формат"

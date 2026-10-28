@@ -1,6 +1,6 @@
 import { parseAst } from "rolldown/parseAst";
 import { describe, expect, it } from "vitest";
-import discourseRegisterComponents from "./discourse-register-components";
+import discourseRegisterComponents from "./discourse-register-components.js";
 
 const basePath = "discourse/plugins/chat/";
 

@@ -35,10 +35,22 @@ RSpec.describe DiscourseDataExplorer::QueryTag do
         described_class.sync!(query:, names: 11.times.map { |index| "tag-#{index}" })
       }.to raise_error(
         ActiveRecord::RecordInvalid,
-        "Validation failed: A query can have at most 10 tags.",
+        "Validation failed: A query can have at most 10 tags, not counting automatic tags.",
       )
 
       expect(query.tags).to be_empty
+    end
+
+    it "doesn't count automatic tags toward the limit" do
+      names = 10.times.map { |index| "tag-#{index}" }
+      bundled_query = DiscourseDataExplorer::Query.find(-1)
+      bundled_query.save!
+
+      described_class.sync!(query:, names: ["custom", *names])
+      described_class.sync!(query: bundled_query, names: ["default", "users", *names])
+
+      expect(query.tags.size).to eq(10)
+      expect(bundled_query.tags.size).to eq(10)
     end
 
     it "reserves the default tag for system queries" do
@@ -56,8 +68,37 @@ RSpec.describe DiscourseDataExplorer::QueryTag do
 
       described_class.sync!(query: bundled_query, names: %w[Default Staff])
 
-      expect(bundled_query.tag_names).to eq(%w[default staff])
+      expect(bundled_query.tag_names).to eq(%w[default users staff])
       expect(bundled_query.tags.map(&:name)).to eq(["staff"])
+    end
+
+    it "reserves the custom tag for user-created queries" do
+      bundled_query = DiscourseDataExplorer::Query.find(-1)
+      bundled_query.save!
+
+      expect { described_class.sync!(query: bundled_query, names: ["Custom"]) }.to raise_error(
+        ActiveRecord::RecordInvalid,
+        "Validation failed: The custom tag is reserved for user-created queries.",
+      )
+    end
+
+    it "keeps the custom tag virtual for user-created queries" do
+      described_class.sync!(query:, names: %w[Custom Ops])
+
+      expect(query.tag_names).to eq(%w[custom ops])
+      expect(query.tags.map(&:name)).to eq(["ops"])
+      expect(described_class.exists?(name: "custom")).to eq(false)
+    end
+
+    it "keeps automatic tags virtual for bundled queries" do
+      bundled_query = DiscourseDataExplorer::Query.find(-42)
+      bundled_query.save!
+
+      described_class.sync!(query: bundled_query, names: %w[Traffic Staff])
+
+      expect(bundled_query.tag_names).to eq(%w[default traffic staff])
+      expect(bundled_query.tags.map(&:name)).to eq(["staff"])
+      expect(described_class.exists?(name: "traffic")).to eq(false)
     end
   end
 end

@@ -11,7 +11,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { allowsImages, validateUploadedFile } from "discourse/lib/uploads";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
@@ -45,6 +44,8 @@ export default class AvatarSelectorModal extends Component {
 
   @tracked gravatarRefreshDisabled = false;
   @tracked gravatarFailed = false;
+
+  /** @type {string | null} */
   @tracked _selected = null;
   @tracked _pendingFile;
   @tracked _filePreview;

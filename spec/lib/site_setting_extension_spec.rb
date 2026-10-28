@@ -1594,6 +1594,15 @@ RSpec.describe SiteSettingExtension do
         SiteSetting.refresh!
       end
 
+      it "ignores stored groups in the generated getter when the change becomes permanent" do
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "10|11")
+        expect(SiteSetting.enable_upload_debug_mode_groups_map).to eq([10, 11])
+
+        mock_upcoming_change_metadata(setting_name => { status: :permanent })
+
+        expect(SiteSetting.enable_upload_debug_mode_groups_map).to eq([])
+      end
+
       it "returns the stored value when it differs from the default" do
         SiteSetting.public_send("#{setting_name}=", !default_value)
         expect(SiteSetting.public_send(setting_name)).to eq(!default_value)

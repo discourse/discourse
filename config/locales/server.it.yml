@@ -18,6 +18,7 @@ it:
       link: "Link"
   mcp:
     errors:
+      category_not_found: "Categoria non trovata"
       draft_too_long: "La bozza è troppo lunga"
       topic_not_found: "Argomento non trovato"
     oauth:
@@ -2391,7 +2392,6 @@ it:
     enable_auto_grid_images: "Inserisce automaticamente le immagini nell'etichetta [grid] quando vengono caricate 3 o più immagini nel compositore."
     page_loading_indicator: "Configura l'indicatore di caricamento che appare durante la navigazione delle pagine all'interno di Discourse. 'Spinner' come un indicatore a pagina intera. 'Slider' mostra una barra stretta nella parte superiore dello schermo."
     show_user_menu_avatars: "Mostra gli avatar utente nel menu utente"
-    about_page_hidden_groups: "Non mostrare i membri di gruppi specifici nella pagina /about."
     about_page_extra_groups: "Gruppi da mostrare nella pagina Informazioni sotto i moderatori."
     about_page_extra_groups_initial_members: "Numero di membri da espandere per ciascun gruppo nella pagina Informazioni."
     about_page_extra_groups_show_description: "Se includere o meno le descrizioni dei gruppi nella pagina di presentazione."
@@ -3687,31 +3687,15 @@ it:
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
-      text_body_template: |
-        Sei stato sospeso dal forum fino a %{suspended_till}.
-
-        Motivo: %{reason}
     account_suspended_forever:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
-      text_body_template: |
-        Sei stato sospeso/a dal forum.
-
-        Motivo: %{reason}
     account_silenced:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
-      text_body_template: |
-        Sei stato silenziato nel forum fino a %{silenced_till}.
-
-        Motivo: %{reason}
     account_silenced_forever:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
-      text_body_template: |
-        Ti abbiamo silenziato/a sul forum.
-
-        Motivo: %{reason}.
     account_deleted:
       title: "Account eliminato"
       subject_template: "[%{email_prefix}] Il tuo account è stato eliminato"
@@ -4471,6 +4455,8 @@ it:
       truncated_file: "Questo file è stato troncato."
       show_original: "mostra originale"
     github:
+      header:
+        success: "Operazione riuscita"
       binary_file: "Questo file è binario."
       truncated_file: "Questo file è stato troncato."
       show_original: "mostra originale"
@@ -4484,10 +4470,11 @@ it:
       review_by: "Revisione di"
       pr_summary: "%{commits} commit, %{changed_files} file modificati con %{additions} aggiunte e %{deletions} eliminazioni"
       no_description: "Contribuisci allo sviluppo di %{repo} creando un account su GitHub."
-      status_date:
-        open: "aperto"
-        approved: "approvato"
-        closed: "chiuso"
+      pr_status:
+        draft: "Bozza"
+        open: "Aperta"
+        approved: "Approvato"
+        closed: "Chiuso"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'

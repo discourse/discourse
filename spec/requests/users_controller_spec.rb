@@ -413,6 +413,8 @@ RSpec.describe UsersController do
       end
 
       it "sets the users timezone if the param is present" do
+        user1.user_option.update!(timezone: nil)
+
         get "/u/password-reset/#{email_token.token}"
         expect(user1.user_option.timezone).to eq(nil)
 
@@ -9120,6 +9122,14 @@ RSpec.describe UsersController do
         end
       end
 
+      it "looks up acting users of unread and read notifications at once" do
+        SiteSetting.show_user_menu_avatars = true
+
+        queries = track_sql_queries { get "/u/#{user.username}/user-menu-private-messages" }
+        expect(response.status).to eq(200)
+        expect(queries.grep(/username_lower/).size).to eq(1)
+      end
+
       it "sends an array of read group_message_summary notifications" do
         read_group_message_summary_notification2 =
           Fabricate(
@@ -9164,6 +9174,16 @@ RSpec.describe UsersController do
         expect(topics.map { |topic| topic["id"] }).to eq(
           [group_message1.id, message_without_notification.id, message_with_read_notification.id],
         )
+      end
+
+      it "includes the last poster of each message without loading posts" do
+        queries = track_sql_queries { get "/u/#{user.username}/user-menu-private-messages" }
+        expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "posts"/)).to be_empty
+
+        topic =
+          response.parsed_body["topics"].find { |t| t["id"] == message_without_notification.id }
+        expect(topic["last_poster"]["id"]).to eq(message_without_notification.last_post_user_id)
       end
 
       it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with PM topics" do

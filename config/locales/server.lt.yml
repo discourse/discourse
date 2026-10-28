@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 lt:
+  dsa_statements:
+    classification_note: "Šis moderavimo sprendimas priskirtas DSA ataskaitoms.\nBendruomenės taisyklė: %{ground}\nKategorija: %{category}"
+    errors:
+      statements_changed: "Šio vertinimo teiginiai pasikeitė. Atnaujinkite puslapį, kad pamatytumėte dabartinę jų klasifikaciją."
+      failed: "Klasifikacijos išsaugoti nepavyko. Bandykite dar kartą."
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "Gyvūnų gerovė"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Vartotojų informacijos pažeidimai"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "Kibernetinis smurtas"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Kibernetinis smurtas prieš moteris"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Duomenų apsaugos ir privatumo pažeidimai"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Neteisėta arba žalinga kalba"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Intelektinės nuosavybės pažeidimai"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Neigiamas poveikis pilietinei diskusijai ar rinkimams"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Pranešėjas nenurodė tariamai neteisėto turinio rūšies"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Kitas sąlygų ir nuostatų pažeidimas"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Nepilnamečių apsauga"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Rizika visuomenės saugumui"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Sukčiavimas ir apgaulė"
+      STATEMENT_CATEGORY_SELF_HARM: "Savęs žalojimas"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Nesaugūs arba draudžiami produktai"
+      STATEMENT_CATEGORY_VIOLENCE: "Smurtas"
   markdown_endpoints:
     latest: "Naujausia"
     categories: "Kategorijos"
@@ -12,14 +34,50 @@ lt:
     previous_page: "Praeitas puslapis"
     next_page: "Kitas puslapis"
     replies: "Atsakymai"
+    post_author: "**Autorius:** %{author}"
+    post_date: "**Įrašo data:** %{timestamp}"
     last_updated: "Paskutinį kartą atnaujinta"
     event:
       name: "Įvykis"
+      start: "Pradžia"
+      end: "Pabaiga"
       location: "Vieta"
-      link: "nuoroda"
+      link: "Nuoroda"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_create_failed: "Kategorijos nepavyko sukurti"
+      category_delete_confirmation_required: "Kategorijos ištrynimas turi būti patvirtintas"
+      category_delete_name_mismatch: "Kategorijos pavadinimas nesutampa"
+      category_not_found: "Kategorija nerasta"
+      category_update_failed: "Kategorijos atnaujinti nepavyko"
+      category_update_required: "Reikia užpildyti bent vieną kategorijos lauką"
+      group_create_failed: "Nepavyko sukurti grupės"
+      group_delete_confirmation_required: "Grupės ištrynimas turi būti patvirtintas"
+      group_delete_name_mismatch: "Grupės pavadinimas nesutampa"
+      group_member_selector_required: "Pateikite tik vieną iš: usernames, user_ids arba user_emails"
+      group_user_limit:
+        one: "Pasirinkite ne daugiau kaip %{count} vartotoją."
+        few: "Pasirinkite ne daugiau kaip %{count} vartotojus."
+        many: "Pasirinkite ne daugiau kaip %{count} vartotojų."
+        other: "Pasirinkite ne daugiau kaip %{count} vartotojų."
+      group_membership_request_not_found: "Šis naudotojas neturi laukiančių narystės prašymų grupei"
+      group_post_single_cursor: "Nurodykite „before_post_id“ arba „before“, bet ne abu kartu"
+      group_request_reason_required: "Norint pateikti prašymą dėl narystės grupėje, reikia nurodyti priežastį"
+      group_update_existing_users_required:
+        one: "Šis pakeitimas taip pat turi įtakos esamam „ %{count} “ nariui. Vykdykite komandą dar kartą, naudodami „update_existing_users“, kad nuspręstumėte, ar šį pakeitimą taikyti jam."
+        few: "Šis pakeitimas taip pat turi įtakos esamiems „ %{count} “ nariams. Vykdykite komandą dar kartą, naudodami „update_existing_users“, kad nuspręstumėte, ar šį pakeitimą taikyti jiems."
+        many: "Šis pakeitimas taip pat turi įtakos esamiems „ %{count} “ nariams. Vykdykite komandą dar kartą, naudodami „update_existing_users“, kad nuspręstumėte, ar šį pakeitimą taikyti jiems."
+        other: "Šis pakeitimas taip pat turi įtakos esamiems „ %{count} “ nariams. Vykdykite komandą dar kartą, naudodami „update_existing_users“, kad nuspręstumėte, ar šį pakeitimą taikyti jiems."
+      group_update_failed: "Grupės atnaujinti nepavyko"
+      group_update_required: "Nurodykite bent vieną grupės lauką, kurį reikia atnaujinti"
+      theme_create_failed: "Temos sukurti nepavyko"
+      theme_not_found: "Tema nerasta"
+      theme_update_failed: "Temos atnaujinti nepavyko"
+      theme_update_required: "Nurodykite bent vieną temos lauką, kurį reikia atnaujinti"
       topic_not_found: "Tema nerasta"
+      user_create_failed: "Vartotojo sukurti nepavyko"
+      user_deactivation_pending_review: "Prieš deaktyvuodami paskyrą, peržiūrėkite šio vartotojo patvirtinimo laukiančią paraišką."
     oauth:
       deny: "Atsisakyti"
       approve: "Leisti"
@@ -72,7 +130,7 @@ lt:
   posts: "žinutės"
   views: "peržiūros"
   loading: "Kraunama"
-  powered_by_html: 'Sukurta <a href="https://www.discourse.org">Discourse</a>, geriausias žiūrimumas su JavaScript igalinimu'
+  powered_by_html: 'Veikia  <a href="https://www.discourse.org">Discourse</a> pagrindu; geriausiai veikia įjungus „JavaScript“'
   sign_up: "Registruotis"
   log_in: "Prisijungti"
   submit: "Pateikti"
@@ -120,7 +178,7 @@ lt:
       enum_value_not_valid: "Pasirinkta vertė nėra viena iš enum pasirinkimų."
       number_value_not_valid_min_max: "Vertė turi būti nuo %{min} iki %{max}."
       objects:
-        not_valid_integer_value: "privalo buti integruotas"
+        not_valid_integer_value: "privalo būti integruotas"
     locale_errors:
       top_level_locale: "Aukščiausio lygio raktas lokalės faile turi atitikti lokalės pavadinimą"
       invalid_yaml: "Vertimas YAML negaliojantis"
@@ -149,7 +207,7 @@ lt:
         unsubscribe_not_allowed: "Tai atsitinka, kai šiam vartotojui neleidžiama atsisakyti prenumeratos el. paštu."
         email_not_allowed: "Tai atsitinka, kai el. pašto adreso nėra leidimų sąraše arba jis yra blokuojamame sąraše."
       unrecognized_error: "Nenustatyta klaida"
-    view_redacted_media: "Žiūrėti mediją"
+    view_redacted_media: "Peržiūrėti mediją"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
@@ -166,7 +224,7 @@ lt:
       exclusion: yra rezervuotas
       greater_than: turi būti didesnis nei %{count}
       greater_than_or_equal_to: turi būti didesnis arba lygus %{count}
-      inclusion: yra neitrauktas i sąrasą
+      inclusion: nėra įtrauktas į sąrašą
       invalid: netinkamas
       is_invalid: "atrodo neaišku, ar tai visas sakinys?"
       is_invalid_meaningful: "atrodo neaišku, ar daugumoje žodžių kartojasi tos pačios raidės?"
@@ -175,11 +233,11 @@ lt:
       contains_censored_words: "yra šie cenzūruojami žodžiai: %{censored_words}"
       less_than: turi būti mažesnis nei %{count}
       less_than_or_equal_to: turi būti mažesnis arba lygus %{count}
-      not_a_number: nera skaičius
+      not_a_number: nėra skaičius
       not_an_integer: privalo buti integruotas
       odd: turi būti nelyginis
       record_invalid: ! "Patvirtinimas nepavyko: %{errors}"
-      max_emojis: "negali turėti daugiau nei %{max_emojis_count}emoji"
+      max_emojis: "negali turėti daugiau nei %{max_emojis_count} emoji"
       emojis_disabled: "negali turėti jaustukų"
       ip_address_already_screened: "jau įtraukta į esamą taisyklę"
       other_than: "turi būti kitoks nei %{count}"
@@ -187,7 +245,7 @@ lt:
     template:
       body: ! "Kilo problemų dėl šių laukų:"
     embed:
-      load_from_remote: "Klaida ikeliant įrašą"
+      load_from_remote: "Klaida įkeliant įrašą"
     site_settings:
       invalid_category_id: "Jūs nurodėte kategoriją, kuri neegzistuoja"
       default_categories_already_selected: "Negalite pasirinkti kitame sąraše naudojamos kategorijos."
@@ -269,10 +327,10 @@ lt:
     start_discussion: "Pradėti diskusiją"
     continue: "Tęsti diskusiją"
     error: "Klaida įterpiant"
-    referer: "Referreris:"
+    referer: "Nuorodos šaltinis:"
     error_topics: "Svetainės nustatymas „Įterpti temų sąrašą“ nebuvo įjungtas"
     no_hosts: "Įterpimui nebuvo nustatyta jokių šeimininkų."
-    configure: "Konfiguruoti įterpimą"
+    configure: "Konfigūruoti įterpimą"
     more_replies:
       one: "dar %{count} atsakymas"
       few: "dar %{count} atsakymai"
@@ -376,6 +434,8 @@ lt:
       cant_allow_membership_requests: "Negalite leisti narystės prašymų grupei be savininkų."
       already_requested_membership: "Jūs jau pateikėte užklausą dėl šios grupės narystės."
       usernames_or_emails_required: "Turi būti nurodyti vartotojo vardai arba el. pašto adresai"
+      users_not_found: "Nerasta atitinkančių vartotojo paskyrų: %{values}"
+      conflicting_notification_defaults: "Kiekvienai kategorijai ar žymai gali būti nustatytas tik vienas numatytasis pranešimų lygis."
       no_invites_with_discourse_connect: "Galite pakviesti tik registruotus vartotojus, kai įgalintas „DiscourseConnect“"
       no_invites_without_local_logins: "Galite pakviesti tik registruotus vartotojus, kai vietiniai prisijungimai yra išjungti"
     default_names:
@@ -430,7 +490,7 @@ lt:
               warning_requires_pm: "Jūsų galite prisegti įspėjimus tik asmeninėse žinutėse."
               too_many_users: "Vienu metu jūs galite siųsti įspėjimus tik vienam vartotojui."
               cant_send_pm: "Atsiprašome, jūs negalite siųsti žinutės šiam nariui."
-              no_user_selected: "Privalote pasiringti esamą narį."
+              no_user_selected: "Privalote pasirinkti esamą narį."
               reply_by_email_disabled: "Atsakymas el. paštu išjungtas."
               send_to_email_disabled: "Atsiprašome, negalite siųsti asmeninių žinučių el. paštu."
               target_user_not_found: "Nepavyko rasti vieno iš vartotojų, kuriam siunčiate šį pranešimą."
@@ -500,7 +560,7 @@ lt:
             base:
               invalid_url: "Pakeitimo URL neteisingas"
       <<: *errors
-  uncategorized_category_name: "Nekategorizuota"
+  uncategorized_category_name: "Neklasifikuota"
   general_category_name: "Bendrieji"
   meta_category_name: "Puslapio atsiliepimai"
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
@@ -511,12 +571,14 @@ lt:
     post_template: "%{replace_paragraph}\n\nNaudokite šias pastraipas ilgesniam aprašymui arba kategorijų gairėms ar taisyklėms nustatyti:\n\n– Kodėl žmonės turėtų naudoti šią kategoriją? Kam tai?\n\n– Kuo tai skiriasi nuo kitų jau turimų kategorijų?\n\n– Kas apskritai turėtų būti šios kategorijos temose?\n\n– Ar mums reikia šios kategorijos? Ar galime sujungti su kita kategorija ar subkategorija?\n"
     errors:
       not_found: "Kategorijos nėra!"
+      self_lockout: "Ketinate pakeisti kategorijos leidimus taip, kad nebegalėsite pasiekti savo teisių. Ar tikrai norite tęsti?"
       uncategorized_parent: "(Be kategorijos) kategorija negali turėti subkategorijų"
       depth: "Negalite įdėti subkategorijos po kita"
       invalid_email_in: "'%{email}' nėra galiojantis el. pašto adresas."
       email_already_used_in_group: "„%{email}“ jau naudoja grupė „%{group_name}“."
       email_already_used_in_category: "„%{email}“ jau naudojamas kategorijoje „%{category_name}“."
       description_incomplete: "Kategorijos aprašymo įraše turi būti bent viena pastraipa."
+      special_category_permissions: "Tai iš anksto sukurta kategorija, kurios saugumo nustatymų negalima redaguoti. Jei nenorite naudoti šios kategorijos, ją ištrinkite, o ne keiskite jos paskirtį."
       permission_conflict: "Bet kuriai grupei, kuriai leidžiama patekti į subkategoriją, taip pat turi būti leidžiama patekti į pagrindinę kategoriją. Šios grupės turi prieigą prie vienos iš subkategorijų, tačiau neturi prieigos prie pagrindinės kategorijos: %{group_names}."
       disallowed_topic_tags: "Šioje temoje yra žymų, kurių neleidžia ši kategorija: „%{tags}“"
       disallowed_tags_generic: "Šioje temoje yra neleidžiamų žymų."
@@ -1266,9 +1328,12 @@ lt:
         anon_views: Anonimas
         total_views: Viso
   dashboard:
+    reports:
+      cap_reached: "Administratorių skydelyje jau rodomas maksimalus ataskaitų skaičius: %{max} . Prieš pridėdami kitą ataskaitą, pašalinkite vieną iš jų."
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
   site_settings:
+    dsa_community_rules: "Bendruomenės taisyklės, kurias galima naudoti DSA klasifikavimui, kai įjungta funkcija „ {{setting:dsa_reporting_enabled}} “. Kiekvienai taisyklei reikia nurodyti tikslią nuorodą į sutartį (iki 500 simbolių) ir paaiškinimą (iki 2000 simbolių). Norėdami išjungti klasifikavimą, palikite lauką tuščią."
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
     censored_words: "Žodžiai, kurie bus automatiškai pakeisti &#9632;&#9632;&#9632;&#9632;"
@@ -1400,6 +1465,7 @@ lt:
     privacy_policy_url: "Jei turite Privatumo politikos dokumentą, talpinamą kitur, kurį norite naudoti, pateikite visą URL čia."
     num_flaggers_to_close_topic: "Mažiausias unikalių pranešimų skaičius, kurio reikia, kad tema būtų automatiškai sustabdyta intervencijai"
     num_hours_to_close_topic: "Valandų skaičius pristabdyti temą intervencijai."
+    allow_all_users_to_flag_illegal_content: "Leisti pranešti apie neteisėtą turinį visiems, įskaitant 0 patikimumo lygio ir nutildytus vartotojus. Anoniminiai vartotojai matys informaciją, kurią jie turi siųsti el. paštu administratoriams, norėdami pranešti apie neteisėtą turinį. Šis nustatymas turi pirmenybę prieš {{setting:flag_post_allowed_groups}}."
     incoming_email_prefer_html: "Įeinantiems el. laiškams naudokite HTML, o ne tekstą."
     display_name_on_email_from: "Rodyti visus vardus el. pašte iš laukų"
     unsubscribe_via_email: "Leiskite naudotojams atšaukti el. laiškų prenumeratą išsiųsdami el. laišką, kurio temoje arba tekste yra „atsisakyti prenumeratos“."
@@ -1462,6 +1528,10 @@ lt:
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."
     force_lowercase_tags: "Priversti visas naujas žymas rašyti mažosiomis raidėmis."
     push_notifications_icon: "Ženklelio piktograma, rodoma pranešimų kampe. Rekomenduojamas 96 × 96 vienspalvis PNG su skaidrumu."
+    enable_new_reordering_controls: "Naudokite bendrus elementų perrikiavimo valdiklius sąrašo tipo nustatymuose, administravimo sąrašuose, naudotojų katalogo stulpeliuose ir šoninės juostos nuorodose, kad visur būtų taikoma tas pats vilkimo valdiklis, perkėlimo meniu ir valdymas klaviatūra."
+    enable_main_outlet_grid_layout_change: "Įdėkite redagavimo skydelį pagrindiniame tinklelyje, kad temos galėtų jį išdėstyti tinklelio stulpelyje, ir naudokite siauresnę šoninę juostą."
+    update_whispers_allowed_groups_default: "Atnaujiname numatytąjį „ {{setting:whispers_allowed_groups}} “ nustatymą, kad darbuotojai iš pradžių galėtų siųsti privačias žinutes. Jei anksčiau buvote pakeitę šį nustatymą, jūsų konfigūracija nesikeis, nebent nustatymą atstatytumėte į numatytąjį."
+    sidebar_user_navigation: "Perkelia vartotojo puslapių navigaciją — profilį, veiklą, pranešimus, žinutes, kvietimus ir nustatymus — iš horizontalių skirtukų juostų į atskirą šoninį skydelį, kaip tai daroma administratoriaus srityje. Mobiliajame įrenginyje šis skydelis pasiekiamas per svetainės meniu kampe."
     errors:
       invalid_email: "Neteisingas el. pašto adresas."
       invalid_username: "Nėra vartotojo su tokiu vartotojo vardu."
@@ -1478,6 +1548,7 @@ lt:
       empty_selectable_avatars: "Prieš įgalindami šį nustatymą, pirmiausia turite įkelti bent du pasirinktus avatarus."
       allowed_unicode_usernames:
         leading_trailing_slash: "Reguliarioji išraiška neturi prasidėti ir baigtis pasviruoju brūkšniu."
+      uncategorized_category_missing: "Funkcijos „leisti neklasifikuotas temas“ neįmanoma įjungti, nes kategorija „Neklasifikuotos“ nebeegzistuoja."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -1544,8 +1615,9 @@ lt:
     new_registrations_disabled: "Šiuo metu naujų paskyrų registracija neleidžiama."
     password_too_long: "Slaptažodžiai ribojami iki 200 simbolių."
     email_too_long: "Jūsų pateiktas el. pašto adresas per ilgas. Pašto dėžutės pavadinimai turi būti ne ilgesni kaip 254 simboliai, o domenų vardai – ne ilgesni kaip 253 simboliai."
-    wrong_invite_code: "Įvestas pakvieto kodas buvo neteisingas."
+    wrong_invite_code: "Įvestas pakvietimo kodas buvo neteisingas."
     reserved_username: "Šis vartotojo vardas neleidžiamas."
+    missing_user_field_details: "Užpildykite privalomą vartotojo laukelį „%{name}“ (ID: %{id})."
     missing_username: "Prašome įvesti vartotojo vardą"
     auth_complete: "Autentifikavimas baigtas."
     click_to_continue: "Jei norite tęsti, paspauskite čia."
@@ -1570,8 +1642,13 @@ lt:
     username:
       too_long: "yra per ilgas"
       characters: "turi būti tik skaičiai, raidės, brūkšneliai, taškai ir pabraukimai"
-      unique: "privalo buti unikalus"
+      unique: "privalo būti unikalus"
       must_end_with_alphanumeric: "turi baigtis raide arba skaičiumi"
+      contains_blocked_words:
+        one: "yra užblokuotas žodis „%{words}“"
+        few: "yra užblokuoti žodžiai „%{words}“"
+        many: "yra užblokuoti žodžiai „%{words}“"
+        other: "yra užblokuoti žodžiai „%{words}“"
     email:
       invalid: "netinkamas."
       not_allowed: "neleidžiama iš šio el. pašto teikėjo. Prašome naudoti kitą el. pašto adresą."
@@ -1711,7 +1788,7 @@ lt:
         Mėgaukitės viešnage!
     welcome_tl1_user:
       title: "Sveikas TL1 Narį"
-      subject_template: "Dėkojeme jog praleidžiate laika su mumis"
+      subject_template: "Dėkojame jog praleidžiate laiką su mumis"
     welcome_invite:
       preview: "Sveiki atvykę į %{site_name}!"
       subject_template: "Sveiki atvykę į %{site_name}!"
@@ -2073,6 +2150,16 @@ lt:
       title: "Dviejų veiksnių autentifikavimas išjungtas"
       subject_template: "[%{email_prefix}] Dviejų veiksnių autentifikavimas išjungtas"
       subject_template_improved: "Dviejų veiksnių autentifikavimas išjungtas"
+    account_associated:
+      title: "Nauja susieta paskyra"
+      subject_template: "[%{email_prefix}] Nauja susieta paskyra"
+      subject_template_improved: "Nauja susieta paskyra"
+      text_body_template: |
+        „ %{provider_name} “ paskyra ką tik buvo susieta su jūsų paskyra adresu „ %{site_name}“. Dabar su ja galima prisijungti.
+
+        Jei tai padarėte jūs, nieko daugiau daryti nereikia.
+
+        Jei tai padarė ne jūs, kažkas gali turėti prieigą prie jūsų paskyros. [Peržiūrėkite susietas paskyras](%{base_url}/my/preferences/account), [peržiūrėkite esamas sesijas](%{base_url}/my/preferences/security) ir apsvarstykite galimybę pakeisti slaptažodį.
     digest:
       since_last_visit: "Nuo paskutinio jūsų apsilankymo"
       new_topics: "Naujos temos"
@@ -2410,7 +2497,7 @@ lt:
     great_topic:
       name: Puiki tema
       long_description: |
-        Šis ženklelis suteikiamas, kai jūsų tema sulaukia 50 įvertinimų. Jūs pradėjote idomų pokalbį, o bendruomenei patiko dėl to kilusi gyva diskusija!
+        Šis ženklelis suteikiamas, kai jūsų tema sulaukia 50 įvertinimų. Jūs pradėjote įdomų pokalbį, o bendruomenei patiko dėl to kilusi gyva diskusija!
     nice_share:
       name: Gražus pasidalinimas
       description: Pasidalintas pranešimas su 25 unikaliais lankytojais
@@ -2507,7 +2594,7 @@ lt:
       long_description: |
         Šis ženklelis suteikiamas, kai 5 dienas naudojate visus %{max_likes_per_day} savo dienos "patinka" paspaudimus. Dėkojame, kad skyrėte laiko aktyviai skatinant geriausius pokalbius kiekvieną dieną!
     crazy_in_love:
-      name: Įsimylėjas
+      name: Įsimylėjęs
       long_description: |
         Šis ženklelis suteikiamas, kai 20 dienų naudojate visus %{max_likes_per_day} savo dienos "patinka" paspaudimus. Oho! Jūs esate sektinas pavyzdys, skatinantis savo kolegas, bendruomenės narius!
     thank_you:
@@ -2573,6 +2660,11 @@ lt:
     restricted_tag_disallowed: 'Jūs negalite naudoti žymos „%{tag}“.'
     restricted_tag_remove_disallowed: 'Negalite pašalinti žymos „%{tag}“.'
     forbidden:
+      required_tag_group:
+        one: 'Prieš naudodami šią žymą, iš žymų grupės „%{tag_group_name}“ pasirinkite žymą „ %{count}“'
+        few: 'Prieš naudodami šias žymas, iš žymų grupės „%{tag_group_name}“ pasirinkite žymas „ %{count}“'
+        many: 'Prieš naudodami šias žymas, iš žymų grupės „%{tag_group_name}“ pasirinkite žymas „ %{count}“'
+        other: 'Prieš naudodami šias žymas, iš žymų grupės „%{tag_group_name}“ pasirinkite žymas „ %{count}“'
       has_synonyms: '„%{tag_name}“ negalima naudoti, nes jis turi sinonimų.'
     invalid_target_tag: "negali būti sinonimo sinonimas"
     synonyms_exist: "neleidžiama, kol yra sinonimų"
@@ -2614,10 +2706,14 @@ lt:
     google_meet:
       meeting_code: "Kodas:"
     github:
+      header:
+        success: "Sėkmingai"
       closed: "uždaryta"
-      status_date:
-        approved: "patvirtinta"
-        closed: "uždaryta"
+      pr_status:
+        draft: "Juodraštis"
+        open: "Atidaryti"
+        approved: "Patvirtinta"
+        closed: "Uždaryta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
@@ -2632,8 +2728,11 @@ lt:
       confirm_body: "Pavyko! Pranešimai buvo įgalinti."
       custom: "Pranešimas nuo %{username} %{site_title}"
   staff_action_logs:
+    admin_onboarding_topic_option: "Pasirinkta opcija: %{option}\nOpcijos ID: %{option_id}"
     not_found: "nerastas"
     unknown: "nežinoma"
+    site_setting:
+      missing_category_reset: "Atkurti numatytuosius nustatymus, nes kategorija, į kurią ji nukreipė (id %{category_id}), nebeegzistuoja."
     user_merged: "%{username} buvo sujungtas į šią paskyrą"
     webhook_deactivation_reason: "Jūsų žiniatinklio užraktas buvo automatiškai išjungtas. Gavome kelis „%{status}“ HTTP būsenos klaidų atsakymus."
     api_key:

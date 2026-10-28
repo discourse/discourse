@@ -155,7 +155,7 @@ primitive with dozens of consumers gets its own.
 
 ## The runtime pitfall (the one that bites)
 
-**`ember-tsc` does NOT catch runtime module-resolution errors in non-`@ts-check` `.js`/`.gjs`
+**`tsc` does NOT catch runtime module-resolution errors in non-`@ts-check` `.js`/`.gjs`
 consumers.** When you rename `x.gjs` to `x.gts`, any consumer that imported it with the
 **explicit old extension**
 

@@ -5,22 +5,22 @@ import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
-import { createRovingFocusApi } from "./d-roving-focus/api";
-import { apiStep } from "./d-roving-focus/api-navigation";
+import { createRovingFocusApi } from "./d-roving-focus/api.ts";
+import { apiStep } from "./d-roving-focus/api-navigation.ts";
 import {
   type DRovingFocusConfig,
   normalizeConfig,
-} from "./d-roving-focus/config";
-import createRovingFocusDiagnostics from "./d-roving-focus/diagnostics";
-import KeyboardRouter from "./d-roving-focus/keyboard";
-import ActiveDescendantStrategy from "./d-roving-focus/strategies/active-descendant";
-import RovingTabindexStrategy from "./d-roving-focus/strategies/roving-tabindex";
+} from "./d-roving-focus/config.ts";
+import createRovingFocusDiagnostics from "./d-roving-focus/diagnostics.ts";
+import KeyboardRouter from "./d-roving-focus/keyboard.ts";
+import ActiveDescendantStrategy from "./d-roving-focus/strategies/active-descendant.ts";
+import RovingTabindexStrategy from "./d-roving-focus/strategies/roving-tabindex.ts";
 import type {
   DRovingFocusApi,
   DRovingFocusArgs,
   DRovingFocusSignature,
   DRovingFocusStrategy,
-} from "./d-roving-focus/types";
+} from "./d-roving-focus/types.ts";
 
 export type {
   DRovingFocusApi,
@@ -28,7 +28,7 @@ export type {
   DRovingFocusEntry,
   DRovingFocusStepResult,
   DRovingFocusStrategy,
-} from "./d-roving-focus/types";
+} from "./d-roving-focus/types.ts";
 
 /**
  * Keyboard navigation for a one-dimensional list or a two-dimensional grid of

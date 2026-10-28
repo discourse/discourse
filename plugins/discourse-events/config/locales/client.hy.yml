@@ -52,13 +52,14 @@ hy:
         status: "Ստատուս"
       models:
         event:
-          expired: "Ժամկետանց"
           closed: "Փակված է"
           status:
             public:
               title: "Հանրային"
             private:
               title: "Մասնավոր"
+      recording_modal:
+        save: "Պահպանել"
       composer:
         url_placeholder: "Ավելացնել URL"
         reminder:

@@ -23,6 +23,35 @@ describe "Admin House Ad" do
       expect(page).to have_no_css(".alert-error")
     end
 
+    [false, true].each do |lazy_load_categories|
+      it "lets an admin search for a category and save it with lazy loading #{lazy_load_categories ? "enabled" : "disabled"}" do
+        SiteSetting.lazy_load_categories_groups =
+          lazy_load_categories ? Group::AUTO_GROUPS[:admins].to_s : ""
+        category = Fabricate(:category, name: "OpenPanel")
+        another_category = Fabricate(:category, name: "Security summary")
+        Fabricate(:category_sidebar_section_link, user: admin, linkable: category)
+        house_ads_page.visit_new
+
+        form.field("name").fill_in("Category ad")
+        form.field("html").fill_in("<p>Category ad</p>")
+        form.field("categories").select(category.name)
+        form.submit
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+        page.refresh
+        expect(form.field("categories")).to have_value(category.id.to_s)
+        expect(house_ads_page).to have_selected_category(category)
+
+        form.field("categories").select(another_category.name)
+        form.submit
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+        page.refresh
+        expect(house_ads_page).to have_selected_category(category)
+        expect(house_ads_page).to have_selected_category(another_category)
+      end
+    end
+
     it "supports the full house ad lifecycle" do
       house_ads_page.visit_page
       expect(house_ads_page).to have_empty_state

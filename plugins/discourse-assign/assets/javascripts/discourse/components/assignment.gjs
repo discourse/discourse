@@ -4,11 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { not } from "discourse/truth-helpers";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AssignmentChooser from "./assignment-chooser";
 
 export default class Assignment extends Component {
   @service siteSettings;
@@ -30,15 +29,8 @@ export default class Assignment extends Component {
     return this.taskActions.suggestionsFor(this.targetId, this.targetType);
   }
 
-  get allowedGroups() {
-    return this.taskActions.allowedGroupsFor(this.targetId, this.targetType);
-  }
-
-  get allowedGroupsForAssignment() {
-    return this.taskActions.allowedGroupsForAssignmentFor(
-      this.targetId,
-      this.targetType
-    );
+  get searchUrl() {
+    return this.taskActions.searchUrlFor(this.targetId, this.targetType);
   }
 
   get status() {
@@ -76,8 +68,8 @@ export default class Assignment extends Component {
   }
 
   @action
-  setAssignee([newAssignee]) {
-    if (this.allowedGroupsForAssignment.includes(newAssignee)) {
+  setAssignee([newAssignee], [item]) {
+    if (item?.isGroup) {
       this.args.assignment.username = null;
       this.args.assignment.group_name = newAssignee;
     } else {
@@ -99,18 +91,14 @@ export default class Assignment extends Component {
         {{if this.showAssigneeIeEmptyError 'assignee-error'}}"
     >
       <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
-      <AssignmentChooser
+      <EmailGroupUserChooser
         autocomplete="off"
         @id="assignee-chooser"
         @onChange={{this.setAssignee}}
         @options={{hash
           mobilePlacementStrategy="absolute"
-          includeGroups=true
-          customSearchOptions=(hash
-            assignableGroups=true defaultSearchResults=this.suggestions
-          )
-          assignmentGroups=this.allowedGroupsForAssignment
-          groupMembersOf=this.allowedGroups
+          searchUrl=this.searchUrl
+          customSearchOptions=(hash defaultSearchResults=this.suggestions)
           maximum=1
           tabindex=1
           expandedOnInsert=(not this.assignee)

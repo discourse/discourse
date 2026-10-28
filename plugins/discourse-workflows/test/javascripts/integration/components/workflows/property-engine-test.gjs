@@ -1344,6 +1344,23 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("condition builder supports declared integer and array fields", async function (assert) {
+    this.session.outputSchemas = {
+      trigger: [
+        {
+          type: "object",
+          properties: {
+            post: {
+              type: "object",
+              properties: {
+                id: { type: "integer" },
+                mixed: { type: ["integer", "string"] },
+                tags: { type: "array", items: { type: "string" } },
+              },
+            },
+          },
+        },
+      ],
+    };
     this.setProperties({
       configuration: { conditions: [] },
       formApi: null,
@@ -1369,35 +1386,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
         {
           sourceClientId: "trigger",
           targetClientId: "branch",
-        },
-      ],
-      nodeTypes: [
-        {
-          name: "trigger:sample",
-          versions: {
-            "1.0": {
-              output_contracts: [
-                {
-                  schema: {
-                    type: "object",
-                    properties: {
-                      post: {
-                        type: "object",
-                        properties: {
-                          id: { type: "integer" },
-                          mixed: { type: ["integer", "string"] },
-                          tags: {
-                            type: "array",
-                            items: { type: "string" },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          },
         },
       ],
       nodeType: "condition:if",
@@ -1464,6 +1452,69 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert
       .dom(".workflows-url-preview code")
       .includesText("/workflows/webhooks/my-hook");
+  });
+
+  test("summarize placeholders use server output keys and add/remove notify changes", async function (assert) {
+    this.session.outputSchemas = {
+      "summarize-1": [
+        {
+          type: "object",
+          properties: { region: {}, sum_a_total: {}, sum_b_total: {} },
+        },
+      ],
+    };
+    this.setProperties({
+      configuration: {
+        fields_to_summarize: {
+          values: [
+            { aggregation: "sum", field: "a.total", output_field_name: "" },
+            { aggregation: "sum", field: "b.total", output_field_name: "" },
+          ],
+        },
+      },
+      node: { clientId: "summarize-1", type: "action:summarize" },
+      nodeType: "action:summarize",
+      onChange: sinon.spy(),
+      schema: {
+        fields_to_summarize: {
+          type: "fixed_collection",
+          ui: { control: "summarize_aggregations" },
+          type_options: { multiple_values: true },
+          options: [
+            {
+              name: "values",
+              values: {
+                aggregation: {
+                  type: "options",
+                  options: ["sum"],
+                  no_data_expression: true,
+                },
+                field: { type: "string", no_data_expression: true },
+                output_field_name: {
+                  type: "string",
+                  no_data_expression: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    await renderEngine(this);
+
+    assert.deepEqual(
+      findAll(".workflows-summarize-row__control--derived input").map(
+        (input) => input.placeholder
+      ),
+      ["sum_a_total", "sum_b_total"]
+    );
+
+    await click(".workflows-property-engine__collection-delete");
+    assert.true(this.onChange.calledOnce);
+
+    await click("button.btn-default:has(.d-icon-plus)");
+    assert.true(this.onChange.calledTwice);
   });
 
   test("renders form trigger test and production URL controls", async function (assert) {
@@ -1778,7 +1829,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert
       .dom(".workflows-property-engine__select-with-action > .btn")
-      .hasText("Open workflow");
+      .hasAttribute("title", "Open workflow")
+      .hasAria("label", "Open workflow");
 
     await click(".workflows-property-engine__select-with-action > .btn");
 

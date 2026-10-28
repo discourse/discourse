@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 module DiscourseGamification
   class Solutions < Scorable
+    def self.supports_category_scoping?
+      true
+    end
+
     def self.enabled?(leaderboard: nil)
       defined?(DiscourseSolved) && SiteSetting.solved_enabled && super
     end

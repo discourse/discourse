@@ -14,19 +14,19 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
-import { and, gt, includes, not } from "discourse/truth-helpers";
+import { includes } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import NestedFloatingActions from "./nested/floating-actions";
-import NestedHeader from "./nested/header";
-import NestedOp from "./nested/op";
-import NestedPost from "./nested/post";
-import NestedSortSelector from "./nested/sort-selector";
-import NestedTopicActions from "./nested/topic-actions";
+import NestedFloatingActions from "./nested/floating-actions.gjs";
+import NestedHeader from "./nested/header.gjs";
+import NestedOp from "./nested/op.gjs";
+import NestedPost from "./nested/post.gjs";
+import NestedSortSelector from "./nested/sort-selector.gjs";
+import NestedTopicActions from "./nested/topic-actions.gjs";
 
 const postExcerpt = helper(([post]) => {
   const element = document.createElement("div");
@@ -42,6 +42,9 @@ const STORED_SCROLL_ANCHORS = Object.create(null);
 // Exported so system specs can wait out the full restoration window.
 export const SCROLL_RESTORE_WINDOW_MS = 1250;
 
+/**
+ * @typedef {{ post: import("discourse/models/post").default, children: NestedPostNode[], _renderKey?: number | string }} NestedPostNode
+ */
 export default class Nested extends Component {
   @service appEvents;
   @service currentUser;
@@ -55,6 +58,8 @@ export default class Nested extends Component {
   @tracked cloakBelow = 0;
   @tracked focusDirection = "forward";
   @tracked focusedPath = [];
+
+  /** @type {{ postNumber: number, offsetFromTop: number, scrollY?: number } | null} */
   @tracked mobileReturnAnchor = null;
   viewportTracker = new PostStreamViewportTracker();
   #initialFocusedPathKey = null;
@@ -166,6 +171,7 @@ export default class Nested extends Component {
     this.viewportTracker.destroy();
   }
 
+  /** @returns {NestedPostNode[]} */
   get emptyPath() {
     return [];
   }

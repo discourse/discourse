@@ -17,6 +17,7 @@ nb_NO:
       location: "Sted"
   mcp:
     errors:
+      category_not_found: "Kategorien finnes ikke"
       topic_not_found: "Fant ikke emnet"
     oauth:
       deny: "Avslå"
@@ -1391,10 +1392,14 @@ nb_NO:
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Suksess"
       closed: "lukket"
-      status_date:
-        approved: "godkjent"
-        closed: "lukket"
+      pr_status:
+        draft: "Utkast"
+        open: "Åpne"
+        approved: "Godkjent"
+        closed: "Lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'

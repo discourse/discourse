@@ -20,5 +20,9 @@ pt:
           author: Você
           author_others: "%{username}"
           status_online: "● online"
+        live_usage:
+          minutes:
+            one: "%{count} minuto"
+            other: "%{count} minutos"
         writing_analysis:
           menu_other: Outro

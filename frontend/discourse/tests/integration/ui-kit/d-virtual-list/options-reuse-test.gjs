@@ -18,11 +18,6 @@ function buildRows(count, from = 0) {
   }));
 }
 
-class State {
-  @tracked items = buildRows(COUNT);
-  @tracked edgeThreshold = 8;
-}
-
 module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -39,7 +34,8 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
   // arg change that moves nothing still walks every index in the list. The cost is
   // proportional to the whole list rather than the window.
   test("options reuse: an unrelated arg change does not re-estimate the whole list", async function (assert) {
-    const state = new State();
+    const items = tracked(buildRows(COUNT));
+    const edgeThreshold = tracked(8);
     let estimateCalls = 0;
     const countingEstimate = () => {
       estimateCalls++;
@@ -56,9 +52,9 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
           }
         </style>
         <DVirtualList
-          @edgeThreshold={{state.edgeThreshold}}
+          @edgeThreshold={{edgeThreshold.value}}
           @estimateSize={{countingEstimate}}
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           as |item|
         >
@@ -75,7 +71,7 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
 
     // Changes nothing about geometry, keys, or the window. It exists only to force
     // the modifier to rebuild its engine options.
-    state.edgeThreshold = 4;
+    edgeThreshold.value = 4;
     await settled();
 
     assert.true(
@@ -88,8 +84,7 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
   // the item COUNT rather than on the items themselves would survive this suite's
   // happy paths and quietly key a new list by the outgoing list's rows.
   test("options reuse: replacing items with a same-length set still keys the new rows", async function (assert) {
-    const state = new State();
-    state.items = buildRows(20);
+    const items = tracked(buildRows(20));
     const estimate = () => ROW_PX;
 
     await render(
@@ -103,7 +98,7 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
         </style>
         <DVirtualList
           @estimateSize={{estimate}}
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           @overscan={{0}}
           as |item|
@@ -118,7 +113,7 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
       .hasText("row 0", "precondition: the first list is rendered");
 
     // Same length, entirely different keys.
-    state.items = buildRows(20, 500);
+    items.value = buildRows(20, 500);
     await settled();
 
     const texts = findAll(".d-virtual-list__item .row").map((row) =>

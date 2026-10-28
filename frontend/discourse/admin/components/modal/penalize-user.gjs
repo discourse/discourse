@@ -10,7 +10,6 @@ import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-pos
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
 import { extractError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
@@ -26,7 +25,7 @@ export default class PenalizeUser extends Component {
 
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
-  @tracked postEdit = this.args.model.postEdit; // eslint-disable-line discourse/no-unnecessary-tracked
+  @tracked postEdit = this.args.model.postEdit;
   @tracked flash;
   @tracked reason;
   @tracked message;
@@ -109,10 +108,14 @@ export default class PenalizeUser extends Component {
 
       if (this.args.model.penaltyType === "suspend") {
         opts.suspend_until = this.penalizeUntil;
-        result = await this.args.model.user.suspend(opts);
+        result = await (this.args.model.perform
+          ? this.args.model.perform(opts)
+          : this.args.model.user.suspend(opts));
       } else if (this.args.model.penaltyType === "silence") {
         opts.silenced_till = this.penalizeUntil;
-        result = await this.args.model.user.silence(opts);
+        result = await (this.args.model.perform
+          ? this.args.model.perform(opts)
+          : this.args.model.user.silence(opts));
       } else {
         // eslint-disable-next-line no-console
         console.error("Unknown penalty type:", this.args.model.penaltyType);
@@ -191,18 +194,28 @@ export default class PenalizeUser extends Component {
                 {{trustHTML (i18n "admin.user.suspend_reason_label")}}
               {{/if}}
             </div>
+          {{else if (eq @model.penaltyType "silence")}}
+            <div class="penalty-reason-visibility">
+              {{#if this.siteSettings.hide_silencing_reasons}}
+                {{trustHTML (i18n "admin.user.silence_reason_hidden_label")}}
+              {{else}}
+                {{trustHTML (i18n "admin.user.silence_reason_label")}}
+              {{/if}}
+            </div>
           {{/if}}
           <AdminPenaltyReason
             @message={{this.message}}
+            @onChangeMessage={{fn (mut this.message)}}
+            @onChangeReason={{fn (mut this.reason)}}
             @penaltyType={{@model.penaltyType}}
-            @reason={{this.reason}}
           />
           {{#if @model.postId}}
             <AdminPenaltyPostAction
+              @onChangePostAction={{fn (mut this.postAction)}}
+              @onChangePostEdit={{fn (mut this.postEdit)}}
               @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
-              @postId={{@model.postId}}
               @user={{@model.user}}
             />
           {{/if}}

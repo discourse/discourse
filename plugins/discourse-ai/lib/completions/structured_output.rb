@@ -24,6 +24,19 @@ module DiscourseAi
         @done = false
       end
 
+      def content?
+        raw = @raw_response.strip
+        return false if raw.empty? || raw.match?(/\A\{\s*\}\z/)
+        return false if raw == "{" && (@prefilled || !finished?)
+
+        true
+      end
+
+      def prefill
+        @prefilled = true
+        self << "{"
+      end
+
       def to_s
         # we may want to also normalize the JSON here for the broken case
         @raw_response.to_s
@@ -92,6 +105,12 @@ module DiscourseAi
         chunk = read_buffered_property(prop_name)
         yield chunk if !chunk.nil? && !chunk.empty?
         chunk
+      end
+
+      # Until a later key starts or the response finishes, a streamed value may
+      # still be growing, e.g. an array whose last item is half written.
+      def property_complete?(prop_name)
+        @done || @partial_json_tracker.last_key != prop_name.to_s
       end
 
       def notify_progress(key, value)

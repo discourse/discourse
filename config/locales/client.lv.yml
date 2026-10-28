@@ -19,6 +19,7 @@ lv:
         failed: "neizdevies"
     access_control:
       manage:
+        access_permission_owner: "Īpašnieks"
         access_permission_remove: "Atcelt"
     number:
       format:
@@ -142,7 +143,6 @@ lv:
         last_7_days: "Pēdējās 7 dienas"
         last_30_days: "Pēdējās 30 dienas"
     share:
-      topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       close: "aizvērt"
       facebook: "Dalīties Facebook"
       email: "Sūtīt pa e -pastu"
@@ -179,6 +179,9 @@ lv:
         enabled: "Padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
         disabled: "Noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
     topic_admin_menu: "tēmas darbības"
+    reorder:
+      removed: "Izdzēsa %{label}"
+      position: "%{position} no %{total}"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
       dismiss: "Nerādīt"
@@ -265,10 +268,6 @@ lv:
       zero: "ne vairāk kā %{count}"
       one: "ne vairāk kā %{count}"
       other: "ne vairāk kā %{count}"
-    character_count:
-      zero: "%{count} zīmes"
-      one: "%{count} zīme"
-      other: "%{count} zīmes"
     related_messages:
       title: "Saistītās ziņas"
       pill: "Saistītās ziņas"
@@ -383,6 +382,8 @@ lv:
       title:
         search: "Meklēt ziņojumu"
         placeholder: "šeit ierakstiet tēmas nosaukumu, URL vai ID"
+    dsa_statements:
+      category: "Sadaļa"
     review:
       order_by: "Kārtot pēc"
       in_reply_to: "atbildot uz"
@@ -1747,8 +1748,7 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       discard: "Izmest"
-      title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
-      title_placeholder_redesign: "Virsraksts"
+      title_placeholder: "Virsraksts"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
@@ -2725,10 +2725,6 @@ lv:
       admin:
         title: "Administrators"
     badges:
-      earned_n_times:
-        zero: "Nopelnīja šo žetonu %{count} reizes"
-        one: "Nopelnīja šo žetonu %{count} reizi"
-        other: "Nopelnīja šo žetonu %{count} reizes"
       granted_on: "Piešķirts %{date}"
       title: Žetoni
       allow_title: "Jūs varat izmantot šo žetonu kā titulu"
@@ -2905,18 +2901,6 @@ lv:
         type_mismatch:
           default: "Lūdzu ievadiet derīgu vērtību "
           email: "Lūdzu ievadiet derīgu e-pasta adresi."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Ievadīt"
-      edit:
-        modal:
-          cancel: "atcelt"
-          create: "Saglabāt"
-          reason: "Kāpēc jūs rediģējat?"
-      spreadsheet:
-        show: "Parādīt"
-        about: "Par"
     filter:
       description:
         yesterday: "Vakar"
@@ -2996,6 +2980,7 @@ lv:
           clients:
             actions: "Darbības"
             block: "Bloķēt"
+            automatic: "Automātiski"
           authorizations:
             user: "Lietotājs"
             status: "Statuss"
@@ -3544,6 +3529,7 @@ lv:
           add_upload: "Pievienot augšupielādējamu resursu"
           upload: "Augšupielādēt"
           discard: "Izmest"
+          leave: "Iziet"
           delete_upload_confirm: "Dzēst šo resursu? (Dizaina CSS var pārtraukt darboties!)"
           import_web_tip: "Repozitorijs, kas satur dizainu"
           installed: "Uzinstalēts"

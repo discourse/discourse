@@ -5,37 +5,65 @@ module DiscourseAi
     class DiscoveriesController < ::ApplicationController
       include AiCreditLimitHandler
 
-      MAX_QUERY_LENGTH = 1000
-
       requires_plugin PLUGIN_NAME
       requires_login
       before_action :check_permissions!
+      before_action :rate_limit_ask, only: :reply, if: -> { params[:request_id].present? }
 
       def reply
         return legacy_reply if params[:request_id].blank?
 
-        query = normalized_query
-        request_id = params[:request_id].to_s
-        if !DiscourseAi::Discoveries.valid_request_id?(request_id)
-          render_json_error(
-            I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
-            status: :bad_request,
-          )
-          return
+        DiscourseAi::AskAi::Ask.call(service_params) do |result|
+          on_success do
+            render json: DiscourseAi::AskAi::AskSerializer.new(result, root: false).as_json
+          end
+          on_failed_contract do |contract|
+            if contract.errors.include?(:query)
+              raise Discourse::InvalidParameters.new(invalid_query_message)
+            elsif contract.errors.include?(:request_id)
+              render_json_error(
+                I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
+                status: :bad_request,
+              )
+            else
+              raise Discourse::InvalidParameters.new(:scope)
+            end
+          end
+          on_failed_policy(:can_ask_ai) { raise Discourse::InvalidAccess }
+          on_failed_policy(:request_id_matches_query) do
+            render_json_error(
+              I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
+              status: :conflict,
+            )
+          end
+          # a step that raised, such as the answer job failing to queue
+          on_failure do
+            Rails.logger.error("Discourse AI ask failed\n#{result.inspect_steps}")
+            render_json_error(
+              I18n.t("discourse_ai.ai_bot.discoveries.errors.processing_failed"),
+              status: :unprocessable_entity,
+            )
+          end
         end
+      end
 
-        RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
+      def record_tabs
+        RateLimiter.new(
+          current_user,
+          "ai_discover_tabs_#{current_user.id}",
+          60,
+          1.minute,
+        ).performed!
 
-        DiscourseAi::Discoveries.enqueue_reply(user: current_user, request_id:, query:)
-
-        DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
-
-        render json: { request_id: }, status: :ok
-      rescue DiscourseAi::Discoveries::RequestConflict
-        render_json_error(
-          I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
-          status: :conflict,
+        DiscourseAi::Discoveries.record_tabs(
+          user: current_user,
+          ask_log_id: params.require(:ask_log_id),
+          opened: params[:tab_opened].presence,
+          opened_reason: params[:tab_opened_reason].to_s,
+          switched_to: params[:tab_switched_to].presence,
+          switched_after_ms: params[:tab_switched_after_ms],
         )
+        head :no_content
       end
 
       def recent
@@ -85,7 +113,7 @@ module DiscourseAi
         end
 
         query = normalized_query
-        RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
+        rate_limit_ask
         Jobs.enqueue(:stream_discover_reply, user_id: current_user.id, query:)
         render json: {}, status: :ok
       end
@@ -141,6 +169,8 @@ module DiscourseAi
 
       def check_permissions!
         if ask_ai_action?
+          # the Ask service checks access itself
+          return if action_name == "reply"
           if !DiscourseAi::Discoveries.enabled_for_user?(current_user)
             raise Discourse::InvalidAccess
           end
@@ -156,21 +186,33 @@ module DiscourseAi
       end
 
       def ask_ai_action?
-        %w[recent clear_recent].include?(action_name) || params[:request_id].present?
+        %w[recent clear_recent record_tabs].include?(action_name) || params[:request_id].present?
+      end
+
+      def rate_limit_ask
+        RateLimiter.new(
+          current_user,
+          "ai_discover_#{current_user.id}",
+          DiscourseAi::Discoveries::ASK_RATE_LIMIT,
+          1.minute,
+        ).performed!
       end
 
       def normalized_query
         query = params[:query].to_s.strip
-        if query.blank? || query.length > MAX_QUERY_LENGTH || query.include?("\0")
-          raise Discourse::InvalidParameters.new(
-                  I18n.t(
-                    "discourse_ai.ai_bot.discoveries.errors.invalid_query",
-                    max: MAX_QUERY_LENGTH,
-                  ),
-                )
+        if query.blank? || query.length > DiscourseAi::Discoveries::MAX_QUERY_LENGTH ||
+             query.include?("\0")
+          raise Discourse::InvalidParameters.new(invalid_query_message)
         end
 
         query
+      end
+
+      def invalid_query_message
+        I18n.t(
+          "discourse_ai.ai_bot.discoveries.errors.invalid_query",
+          max: DiscourseAi::Discoveries::MAX_QUERY_LENGTH,
+        )
       end
     end
   end

@@ -151,6 +151,8 @@ zh_TW:
       muted: "已設為免打擾"
       joined: "已加入"
       empty_state:
+        direct_message_cta: "發起私人聊天或群組聊天"
+        direct_message: "你也可以與一位或多位使用者發起私人聊天或群組聊天。"
         title: "找不到頻道"
         my_threads: "您還沒有任何消息串。您參與的消息串將在此處顯示。"
       email_frequency:
@@ -306,6 +308,8 @@ zh_TW:
       message_too_long: "消息過長，最多只能包含 %{count} 個字符。"
       retry_staged_message:
         title: "網絡錯誤"
+        rate_limited_title: "訊息傳送過於頻繁"
+        rate_limited_waiting: "訊息傳送過於頻繁，請稍候"
         action: "重新發送？"
       bookmark_message: "書籤"
       bookmark_message_edit: "編輯書簽"
@@ -585,21 +589,38 @@ zh_TW:
       direct_messages:
         title: "直接消息"
         aria_label: "切換到直接消息"
+        new: "新增私人聊天"
         new_group: "新建群組聊天"
         create: "開始"
         leave: "離開頻道"
         close: "關閉頻道"
         cannot_create: "抱歉，您無法發送直接消息。"
       channel_list:
+        apply_filters: "套用頻道篩選條件"
         title: "頻道"
         aria_label: "切換到頻道列表"
         options:
+          title: "頻道清單選項"
           filter: "篩選"
+          sort: "排序"
+          current_filter: "篩選：%{filter}"
+          current_sort: "排序：%{sort}"
         filter:
+          title: "頻道篩選條件："
           all: "所有頻道"
+          active: "僅限活躍頻道"
+          active_description: "最近 %{days} 天內有新活動"
+          unread: "未讀"
           mentions: "提及"
         sort:
+          title: "頻道排序方式："
+          alphabetical: "名稱字母順序"
+          recent_activity: "近期活動"
           priority: "優先級"
+          priority_description_dms: "先顯示有提及的頻道，再顯示有未讀訊息的頻道，最後依近期活動排序"
+        empty:
+          filtered: "沒有符合此篩選條件的頻道。"
+          show_all: "顯示所有頻道"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "選擇一個頻道"
@@ -745,6 +766,11 @@ zh_TW:
           direct_html: '<span>%{username}</span> <span>在“%{channel}”中提及您</span>'
           other_plain: '在“%{channel}”中提及“%{identifier}”'
           other_html: '<span>%{username}</span> <span>在“%{channel}”中提及“%{identifier}”</span>'
+        direct_message_chat_mention:
+          direct: "在私人聊天中提及你"
+          direct_html: "<span>%{username}</span> <span>在私人聊天中提及你</span>"
+          other_plain: "在私人聊天中提及 %{identifier}"
+          other_html: "<span>%{username}</span> <span>在私人聊天中提及 %{identifier}</span>"
         chat_message: "新的聊天消息"
         chat_quoted: "%{username} 引用了您的聊天消息"
       titles:
@@ -813,6 +839,9 @@ zh_TW:
         chat:
           title: 聊天
     sidebar:
+      start_new_dm:
+        text: 發起私人聊天或群組聊天
+        title: 新增私人聊天或群組聊天
       panels:
         chat:
           label: "聊天"
@@ -824,15 +853,19 @@ zh_TW:
         "action:chat_approval": "聊天審批"
         "trigger:chat_message_created": "已創建聊天消息"
       node_descriptions:
-        "action:send_chat_message": "向聊天頻道發送消息"
         "action:chat_approval": "向聊天頻道發送審批請求并等待回復"
         "trigger:chat_message_created": "創建新聊天消息時觸發"
       chat_message_created:
         channel_id: "頻道"
         channel_id_description: "留空可觸發所有聊天頻道。"
       send_chat_message:
+        target: "寄送至"
+        targets:
+          channel: "頻道"
         channel_id: "頻道"
+        target_usernames: "收件者"
         message: "訊息"
+        actor_username: "發送人"
       chat_approval:
         message: "訊息"
         buttons: "按鈕"

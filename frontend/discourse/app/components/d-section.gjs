@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import bodyClass from "discourse/helpers/body-class";
 import deprecated from "discourse/lib/deprecated";
-import { notEq } from "discourse/truth-helpers";
 
 // Can add a body class from within a component
 export default class DSection extends Component {
@@ -26,7 +25,7 @@ export default class DSection extends Component {
       {{bodyClass @bodyClass}}
     {{/if}}
 
-    {{#if (notEq @tagName "")}}
+    {{#if (neq @tagName "")}}
       <section class={{@class}} id={{@id}} ...attributes>{{yield}}</section>
     {{else}}
       {{yield}}

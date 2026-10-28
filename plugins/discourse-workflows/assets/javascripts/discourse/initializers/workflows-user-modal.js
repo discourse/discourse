@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
-import WorkflowsUserModal from "../components/workflows-user-modal";
+import WorkflowsUserModal from "../components/workflows-user-modal.gjs";
 
 // modal.show() only activates a modal once core's keyboard-close wait is
 // over (capped at 1s in discourse/lib/wait-for-keyboard), so a close landing

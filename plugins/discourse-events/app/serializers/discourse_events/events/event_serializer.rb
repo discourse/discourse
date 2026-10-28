@@ -39,6 +39,8 @@ module DiscourseEvents
       # comes from chat_enabled on the event, we dont need 2 channels per event
       attributes :livestream_chat_channel_id
       attributes :is_zoom_livestream
+      attributes :recording_url
+      attributes :recording_onebox
       attributes :channel
       attributes :rrule
       attributes :max_attendees
@@ -203,6 +205,19 @@ module DiscourseEvents
 
       def include_url?
         object.url.present?
+      end
+
+      def include_recording_url?
+        object.recording_url.present?
+      end
+
+      def include_recording_onebox?
+        include_recording_url?
+      end
+
+      # Cache only, as with `livestream_onebox`; `warm_recording_onebox` fills it.
+      def recording_onebox
+        Oneboxer.cached_onebox(object.recording_link).presence
       end
 
       def include_description_html?

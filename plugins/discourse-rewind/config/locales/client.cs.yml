@@ -108,6 +108,12 @@ cs:
           message_4: "Průměrná délka tvé zprávy byla <strong>%{length}</strong> znaků"
           message_5: "Tvé oblíbené kanály:"
           dancing_baby_alt: "Dancing baby"
+        live_usage:
+          minutes:
+            one: "%{count} minuta"
+            few: "%{count} minuty"
+            many: "%{count} minut"
+            other: "%{count} minut"
         invites:
           guest_book_title: Kniha hostů
           guest_book_subtitle: Tvé pozvánky do komunity

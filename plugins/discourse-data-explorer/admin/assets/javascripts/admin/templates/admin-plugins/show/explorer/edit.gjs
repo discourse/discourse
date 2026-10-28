@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, eq, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
@@ -43,7 +43,7 @@ export default class QueriesEdit extends Component {
     <div class="admin-detail">
       <div class="query-edit__top-bar">
         <BackButton
-          @label="explorer.queries"
+          @label="explorer.back_to_queries"
           @route="adminPlugins.show.explorer.index"
         />
 
@@ -97,35 +97,38 @@ export default class QueriesEdit extends Component {
         {{/if}}
 
         {{#unless @controller.model.destroyed}}
-          <div class="query-edit__metadata-fields">
-            <div class="query-edit__metadata-field">
-              <span class="query-edit__metadata-label">
-                {{i18n "explorer.allow_groups"}}
-              </span>
-              <GroupChooser
-                @content={{@controller.groupOptions}}
-                @onChange={{@controller.updateGroupIds}}
-                @value={{@controller.model.group_ids}}
-              />
-            </div>
+          <AdminConfigAreaCard
+            class="query-edit__details"
+            @heading="explorer.query_details"
+          >
+            <:content>
+              <div class="query-edit__metadata-fields">
+                <div class="query-edit__metadata-field">
+                  <span class="query-edit__metadata-label">
+                    {{i18n "explorer.allow_groups"}}
+                  </span>
+                  <GroupChooser
+                    @content={{@controller.groupOptions}}
+                    @onChange={{@controller.updateGroupIds}}
+                    @value={{@controller.model.group_ids}}
+                  />
+                </div>
 
-            <div class="query-edit__metadata-field">
-              <span class="query-edit__metadata-label">
-                {{i18n "explorer.query_tags"}}
-              </span>
-              <QueryTagChooser
-                @allowDefaultTag={{@controller.model.is_default}}
-                @availableTags={{@controller.availableTags}}
-                @mandatoryValues={{@controller.mandatoryTags}}
-                @mandatoryValueTitle={{i18n "explorer.default_tag_mandatory"}}
-                @onChange={{@controller.updateTags}}
-                @value={{@controller.model.tags}}
-              />
-            </div>
-          </div>
+                <div class="query-edit__metadata-field">
+                  <span class="query-edit__metadata-label">
+                    {{i18n "explorer.query_tags"}}
+                  </span>
+                  <QueryTagChooser
+                    @automaticTags={{@controller.model.automatic_tags}}
+                    @availableTags={{@controller.availableTags}}
+                    @onChange={{@controller.updateTags}}
+                    @value={{@controller.model.tags}}
+                  />
+                </div>
+              </div>
+            </:content>
+          </AdminConfigAreaCard>
         {{/unless}}
-
-        <div class="clear"></div>
 
         {{#if (eq @controller.mode "ai")}}
           <QueryAiPrompt
@@ -165,8 +168,6 @@ export default class QueriesEdit extends Component {
               </div>
 
               <PaneSeparator @controller={{@controller}} />
-
-              <div class="clear"></div>
             {{else}}
               <div class="sql">
                 <CodeView
@@ -259,7 +260,7 @@ export default class QueriesEdit extends Component {
           {{else if this.showDestroyQuery}}
             <DButton
               class="btn-danger"
-              @action={{@controller.destroyQuery}}
+              @action={{@controller.confirmDestroyQuery}}
               @disabled={{@controller.actionsBusy}}
               @icon="trash-can"
               @label="explorer.delete"
@@ -301,8 +302,6 @@ export default class QueriesEdit extends Component {
             </div>
 
             <PaneSeparator @controller={{@controller}} />
-
-            <div class="clear"></div>
           {{else}}
             <div class="sql">
               <CodeView
@@ -315,7 +314,7 @@ export default class QueriesEdit extends Component {
         </div>
       {{/if}}
 
-      {{#if (notEq @controller.view "sql")}}
+      {{#if (neq @controller.view "sql")}}
         <QueryResultsWrapper
           @cachedAt={{@controller.cachedAt}}
           @content={{@controller.results}}

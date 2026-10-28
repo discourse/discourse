@@ -43,6 +43,13 @@ lv:
         type: "Tips"
         error: "Kļūda..."
         response: "Atbilde"
+      discourse_workflows:
+        classify:
+          text: "Teksts"
+          upload_ids: "Attēli"
+          name: "Vārds"
+          type: "Tips"
+          type_score: "Rezultāts"
       ai_tool_approval:
         loading: "Ielādē..."
         tool: "Darbība"
@@ -67,6 +74,8 @@ lv:
         filters:
           all: "Visi"
           reset: "Atlikt"
+        sentiment:
+          enabled: "Ieslēgts"
         search:
           name: "Meklēt"
         image_caption:
@@ -188,6 +197,11 @@ lv:
         edit: "Labot"
         delete: "Dzēst"
         embedding: "Ieguldīšana"
+      decision_models:
+        no_preset: "Nav"
+        display_name: "Vārds"
+        edit: "Labot"
+        delete: "Dzēst"
       mcp_servers:
         name: "Vārds"
         description: "Apraksts"
@@ -198,6 +212,14 @@ lv:
         delete: "Dzēst"
         tools_modal:
           required: "Nepieciešams"
+      models:
+        name: "Vārds"
+        type: "Tips"
+        edit: "Labot"
+        types:
+          embedding: "Ieguldīšana"
+        filters:
+          all: "Visi veidi"
       llms:
         display_name: "Vārds"
         vision_modes:
@@ -237,6 +259,13 @@ lv:
         display_name: "Vārds"
         providers:
           google: "Google"
+      ai_artifact:
+        editor:
+          version: "Versij"
+          default: "Noklusējums"
+          apply: "Pielietot"
+        share: "Dalīties"
+        filter_all: "Visi"
       ai_bot:
         debug_ai_modal:
           duration_label: "Ilgums:"
@@ -260,6 +289,14 @@ lv:
             category: "Sadaļa"
           table:
             total_count: "Kopā"
+      ai_search:
+        related_replies:
+          zero: "%{count} atbildes"
+          one: "%{count} atbilde"
+          other: "%{count} atbildes"
+        tabs:
+          topics: "Tēmas"
+          messages: "Ziņās"
       discobot_discoveries:
         legacy:
           regular_results: "Tēmas"

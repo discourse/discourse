@@ -3,9 +3,8 @@
 // suppresses reporting elsewhere in its file, which would let a positive pass
 // against a broken declaration. Positives live in d-button-action-test.gts.
 //
-// Each case stays on one line, hence the short names: the strict and non-strict
-// projects report a multi-line invocation's error on different lines, and a
-// directive only covers the line after it.
+// Each case stays on one line, hence the short names, so the directive above it
+// covers the whole invocation.
 import DButton from "discourse/ui-kit/d-button";
 
 interface Topic {
@@ -22,10 +21,10 @@ declare function withEvent(topic: Topic, event: Event): void;
 declare function readEvent(param: undefined, event: Event): void;
 declare function save(draft: Draft): void;
 
-// A handler that needs a parameter while `@actionParam` is omitted is also rejected,
-// but only under `strictNullChecks`, where `undefined` stops fitting every type. This
-// file is checked by the non-strict project as well, so that case is not asserted here.
 const Negatives = <template>
+  {{! @glint-expect-error - the handler wants a Draft but @actionParam is omitted }}
+  <DButton @action={{save}} />
+
   {{! @glint-expect-error - the handler wants a Draft but @actionParam is a Topic }}
   <DButton @action={{save}} @actionParam={{topic}} />
 

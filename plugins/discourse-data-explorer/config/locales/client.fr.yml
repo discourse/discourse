@@ -40,7 +40,6 @@ fr:
       admins_only: "L'explorateur de données n'est disponible que pour les administrateurs."
       allow_groups: "Autoriser les groupes à accéder à cette requête"
       title: "Explorateur de données"
-      create: "Créer"
       create_placeholder: "Nom de la requête…"
       description_placeholder: "Saisissez une description ici"
       ai:
@@ -56,15 +55,12 @@ fr:
         save_query: "Enregistrer la requête"
         write_manually: "Écrire le code SQL manuellement"
         sql_label: "SQL"
-        optional: "facultatif"
       import:
-        label: "Téléverser"
         unparseable_json: "Fichier JSON non analysable."
         wrong_json: "Fichier JSON incorrect. Un fichier JSON doit contenir un objet « query », qui doit au moins avoir une propriété « sql »."
       help:
         label: "Aide"
         modal_title: "Aide de l'explorateur de données"
-        auto_resolution: "<h2>Résolution automatique des entités</h2> <p>Lorsque votre requête renvoie l'identifiant d'une entité, Data Explorer peut le remplacer automatiquement par le nom de l'entité et d'autres informations utiles dans les résultats de la requête. La résolution automatique est disponible pour <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> et <i><b>badge_id</b></i>. Pour essayer cette fonctionnalité, exécutez la requête suivante :</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>Création de paramètres personnalisés</h2> <p>Pour créer des paramètres personnalisés pour vos requêtes, placez ce qui suit en haut de votre requête et respectez ce format :</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Remarque : la première ligne contenant [params] est obligatoire, de même que les deux tirets qui la précèdent et qui précèdent chaque paramètre personnalisé que vous souhaitez déclarer.</i></p>"
         default_values: "<h3>Valeurs par défaut</h3> <p>Vous pouvez déclarer des paramètres avec ou sans valeur par défaut. Les valeurs par défaut apparaîtront dans un champ de texte sous l'éditeur de requête, que vous pourrez modifier selon vos besoins. Les paramètres déclarés sans valeur par défaut généreront tout de même un champ de texte, mais celui-ci sera vide et surligné en rouge.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
         data_types: "<h3>Types de données</h3> <p>Voici les types de données couramment utilisables :</p> <ul><li><b>integer</b> : entier signé sur quatre octets</li><li><b>text</b> : chaîne de caractères de longueur variable</li><li><b>boolean</b> : true/false</li><li><b>date</b> : date calendaire (année, mois, jour)</li><li><b>current_user_id</b> : identifiant de l'utilisateur qui exécute la requête (injecté automatiquement, utile pour les rapports de groupe)</li></ul><p>Pour en savoir plus sur les types de données, consultez <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>ce site Web</a>.</p>"
@@ -113,7 +109,6 @@ fr:
         results_json: "Résultats (JSON)"
         results_csv: "Résultats (CSV)"
         query_json: "Définition de la requête (JSON)"
-      others_dirty: "Une requête comporte des modifications non enregistrées qui seront perdues si vous quittez la page"
       run_time: "Requête exécutée en %{value} millisecondes."
       cached_result_notice: "Affichage des résultats mis en cache datant de %{relative_time}."
       result_count:
@@ -122,7 +117,7 @@ fr:
       max_result_count:
         one: "Affichage du premier (%{count}) résultat."
         other: "Affichage des %{count} premiers résultats."
-      query_name: "Requête"
+      name: "Nom"
       query_groups: "Groupes"
       query_tags: "Étiquettes"
       link: "Lien pour"
@@ -133,7 +128,6 @@ fr:
       column: "Colonne %{number}"
       save_params: "Définir les valeurs par défaut"
       reset_params: "Réinitialiser"
-      search_placeholder: "Recherche…"
       no_search_results: "Désolé, nous n'avons trouvé aucun résultat correspondant à votre texte."
       form:
         errors:

@@ -43,6 +43,13 @@ nb_NO:
         type: "Type"
         error: "Feil"
         response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Bilder"
+          name: "Navn"
+          type: "Type"
+          type_score: "Poeng"
       ai_tool_approval:
         loading: "Laster…"
         tool: "Handling"
@@ -68,6 +75,8 @@ nb_NO:
         filters:
           all: "Alle"
           reset: "Tilbakestill"
+        sentiment:
+          enabled: "Aktivert"
         search:
           name: "Søk"
         image_caption:
@@ -196,6 +205,12 @@ nb_NO:
         edit: "Rediger"
         delete: "Slett"
         embedding: "Innbygging"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Navn"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        delete: "Slett"
       mcp_servers:
         name: "Navn"
         description: "Beskrivelse"
@@ -207,6 +222,16 @@ nb_NO:
         delete: "Slett"
         tools_modal:
           required: "Påkrevd"
+      models:
+        name: "Navn"
+        type: "Type"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        select_type: "Velg"
+        types:
+          embedding: "Innbygging"
+        filters:
+          all: "Alle typer"
       llms:
         display_name: "Navn"
         provider: "Tilbyder"
@@ -259,6 +284,13 @@ nb_NO:
         providers:
           google: "Google"
           fake: "Egendefinert"
+      ai_artifact:
+        editor:
+          version: "Versjon"
+          default: "Forvalg"
+          apply: "Bruk"
+        share: "Del"
+        filter_all: "Alle"
       ai_bot:
         debug_ai_modal:
           duration_label: "Varighet:"
@@ -285,6 +317,13 @@ nb_NO:
       summarization:
         chat:
           summarize: "Oppsummer"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Emner"
+          messages: "Meldinger"
       discobot_discoveries:
         legacy:
           regular_results: "Emner"

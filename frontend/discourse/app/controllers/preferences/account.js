@@ -20,10 +20,20 @@ export default class AccountController extends Controller {
   @controller user;
 
   canSaveUser = true;
+
+  /** @type {string | null | undefined} */
   newNameInput = null;
+
+  /** @type {string | null | undefined} */
   newTitleInput = null;
+
+  /** @type {number | null | undefined} */
   newPrimaryGroupInput = null;
+
+  /** @type {{ description: string, emoji: string, ends_at?: string | null, message_bus_last_id?: number } | null | undefined} */
   newStatus = null;
+
+  /** @type {Record<string, boolean> | null} */
   revoking = null;
 
   init() {

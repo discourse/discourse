@@ -201,4 +201,33 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
       end
     end
   end
+
+  describe "independent capability enable flags" do
+    fab!(:post)
+    fab!(:admin)
+
+    [[false, false], [true, false], [false, true], [true, true]].each do |sentiment, emotion|
+      it "gates edited-post jobs and report visibility with sentiment=#{sentiment} and emotion=#{emotion}" do
+        SiteSetting.ai_sentiment_enabled = sentiment
+        SiteSetting.ai_sentiment_emotion_enabled = emotion
+        Fabricate(:sentiment_classification, target: post)
+
+        PostRevisor.new(post).revise!(post.user, raw: "#{post.raw} Edited content")
+
+        expect(job_enqueued?(job: :post_sentiment_analysis, args: { post_id: post.id })).to eq(
+          sentiment || emotion,
+        )
+        serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+        expect(serializer.can_see_sentiment_reports).to eq(sentiment || emotion)
+      end
+    end
+
+    it "keeps report visibility off without stored results even when emotion is enabled" do
+      SiteSetting.ai_sentiment_emotion_enabled = true
+
+      serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+
+      expect(serializer.can_see_sentiment_reports).to eq(false)
+    end
+  end
 end

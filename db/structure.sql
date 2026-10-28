@@ -187,12 +187,13 @@ CREATE TABLE public.access_control_lists (
     id bigint NOT NULL,
     target_type character varying(255) NOT NULL,
     target_id bigint NOT NULL,
-    owner character varying(100) NOT NULL,
+    owner character varying(100),
     permission character varying(100) NOT NULL,
     allowed_user_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
     allowed_group_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    source character varying(100) NOT NULL
 );
 
 
@@ -540,7 +541,10 @@ CREATE TABLE public.ai_api_audit_logs (
     response_status integer,
     request_attempts jsonb,
     estimated_cost numeric(20,10),
-    time_to_first_token_msecs integer
+    time_to_first_token_msecs integer,
+    completion_state smallint,
+    reasoning_tokens integer,
+    stop_reason character varying(50)
 );
 
 
@@ -639,6 +643,79 @@ CREATE SEQUENCE public.ai_artifact_key_values_id_seq
 --
 
 ALTER SEQUENCE public.ai_artifact_key_values_id_seq OWNED BY public.ai_artifact_key_values.id;
+
+
+--
+-- Name: ai_artifact_share_key_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_artifact_share_key_values (
+    id bigint NOT NULL,
+    ai_artifact_share_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    key character varying(50) NOT NULL,
+    value character varying(20000) NOT NULL,
+    public boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_artifact_share_key_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_artifact_share_key_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_artifact_share_key_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_artifact_share_key_values_id_seq OWNED BY public.ai_artifact_share_key_values.id;
+
+
+--
+-- Name: ai_artifact_shares; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_artifact_shares (
+    id bigint NOT NULL,
+    ai_artifact_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    share_key character varying NOT NULL,
+    name character varying NOT NULL,
+    version_number integer DEFAULT 0 NOT NULL,
+    html character varying(65535),
+    css character varying(65535),
+    js character varying(65535),
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_artifact_shares_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_artifact_shares_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_artifact_shares_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_artifact_shares_id_seq OWNED BY public.ai_artifact_shares.id;
 
 
 --
@@ -1044,7 +1121,8 @@ CREATE TABLE public.ai_tool_actions (
     bot_user_id integer NOT NULL,
     post_id integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    tool_options jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -1366,7 +1444,19 @@ CREATE TABLE public.ask_ai_logs (
     asked_at timestamp(6) without time zone NOT NULL,
     time_to_first_answer_ms integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    ask_trigger character varying DEFAULT ''::character varying NOT NULL,
+    ask_trigger_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_heuristic character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_model character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_probability double precision DEFAULT 0.0 NOT NULL,
+    ask_tab_opened character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_opened_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_to character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_after_ms integer DEFAULT 0 NOT NULL,
+    ask_scope character varying DEFAULT ''::character varying NOT NULL,
+    ask_scope_model character varying DEFAULT ''::character varying NOT NULL,
+    ask_scope_probability double precision DEFAULT 0.0 NOT NULL
 );
 
 
@@ -4025,6 +4115,143 @@ ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_ta
 
 
 --
+-- Name: decision_model_credit_allocations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_model_credit_allocations (
+    id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    daily_credits bigint NOT NULL,
+    soft_limit_percentage integer DEFAULT 80 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_model_credit_allocations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_model_credit_allocations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_model_credit_allocations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_model_credit_allocations_id_seq OWNED BY public.decision_model_credit_allocations.id;
+
+
+--
+-- Name: decision_model_credit_daily_usages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_model_credit_daily_usages (
+    id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    usage_date date NOT NULL,
+    credits_used bigint DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_model_credit_daily_usages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_model_credit_daily_usages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_model_credit_daily_usages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_model_credit_daily_usages_id_seq OWNED BY public.decision_model_credit_daily_usages.id;
+
+
+--
+-- Name: decision_model_feature_credit_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_model_feature_credit_costs (
+    id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    feature_name character varying NOT NULL,
+    credits_per_token numeric(10,4) DEFAULT 1.0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_model_feature_credit_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_model_feature_credit_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_model_feature_credit_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_model_feature_credit_costs_id_seq OWNED BY public.decision_model_feature_credit_costs.id;
+
+
+--
+-- Name: decision_models; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_models (
+    id bigint NOT NULL,
+    display_name character varying(100) NOT NULL,
+    name character varying(255) NOT NULL,
+    provider character varying(50) NOT NULL,
+    url character varying(1000) NOT NULL,
+    ai_secret_id bigint,
+    vision_enabled boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    custom_headers jsonb DEFAULT '[]'::jsonb NOT NULL,
+    api_key character varying
+);
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_models_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_models_id_seq OWNED BY public.decision_models.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4737,7 +4964,8 @@ CREATE TABLE public.discourse_post_event_events (
     max_attendees integer,
     all_day boolean DEFAULT false NOT NULL,
     image_upload_id bigint,
-    livestream boolean DEFAULT false NOT NULL
+    livestream boolean DEFAULT false NOT NULL,
+    recording_url character varying(1000)
 );
 
 
@@ -5284,7 +5512,8 @@ CREATE TABLE public.discourse_workflows_data_tables (
     created_by_id integer,
     updated_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    column_order character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -5395,6 +5624,37 @@ ALTER SEQUENCE public.discourse_workflows_executions_id_seq OWNED BY public.disc
 
 
 --
+-- Name: discourse_workflows_reviewable_agents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_reviewable_agents (
+    id bigint NOT NULL,
+    reviewable_id bigint NOT NULL,
+    ai_agent_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_reviewable_agents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_reviewable_agents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_reviewable_agents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_reviewable_agents_id_seq OWNED BY public.discourse_workflows_reviewable_agents.id;
+
+
+--
 -- Name: discourse_workflows_tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5432,11 +5692,14 @@ ALTER SEQUENCE public.discourse_workflows_tags_id_seq OWNED BY public.discourse_
 CREATE TABLE public.discourse_workflows_variables (
     id bigint NOT NULL,
     key character varying(100) NOT NULL,
-    value character varying(1000) DEFAULT ''::character varying NOT NULL,
+    value text,
     description text,
     created_by_id integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    workflow_id bigint,
+    variable_type character varying(30) DEFAULT 'string'::character varying NOT NULL,
+    type_options jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -5654,7 +5917,8 @@ CREATE TABLE public.discourse_workflows_workflow_versions (
     created_by_id integer NOT NULL,
     updated_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    variables_schema jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -5831,6 +6095,57 @@ CREATE SEQUENCE public.drafts_id_seq
 --
 
 ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
+
+
+--
+-- Name: dsa_notices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dsa_notices (
+    id bigint NOT NULL,
+    post_id bigint,
+    content_url text NOT NULL,
+    explanation text NOT NULL,
+    name character varying,
+    email character varying,
+    receipt_sent_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: dsa_notices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dsa_notices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dsa_notices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dsa_notices_id_seq OWNED BY public.dsa_notices.id;
+
+
+--
+-- Name: dsa_statement_of_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dsa_statement_of_records (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    reviewable_id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    payload jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    classified_by_id bigint,
+    classified_at timestamp(6) without time zone
+);
 
 
 --
@@ -6299,7 +6614,8 @@ CREATE TABLE public.gamification_score_events (
     points integer NOT NULL,
     description text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    category_id integer
 );
 
 
@@ -7281,6 +7597,230 @@ ALTER SEQUENCE public.linked_topics_id_seq OWNED BY public.linked_topics.id;
 
 
 --
+-- Name: live_co_presences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.live_co_presences (
+    id bigint NOT NULL,
+    user_id_1 integer NOT NULL,
+    user_id_2 integer NOT NULL,
+    date date NOT NULL,
+    total_seconds integer DEFAULT 0 NOT NULL,
+    session_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT chk_live_co_presences_user_order CHECK ((user_id_1 < user_id_2))
+);
+
+
+--
+-- Name: live_co_presences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.live_co_presences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: live_co_presences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.live_co_presences_id_seq OWNED BY public.live_co_presences.id;
+
+
+--
+-- Name: live_invites; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.live_invites (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    invited_by_id bigint NOT NULL,
+    source integer DEFAULT 0 NOT NULL,
+    redeemed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: live_invites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.live_invites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: live_invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.live_invites_id_seq OWNED BY public.live_invites.id;
+
+
+--
+-- Name: live_recordings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.live_recordings (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    started_by_id bigint NOT NULL,
+    egress_id character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    filepath character varying NOT NULL,
+    filename character varying,
+    location character varying,
+    duration_ms bigint,
+    size_bytes bigint,
+    started_at timestamp(6) without time zone NOT NULL,
+    ended_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: live_recordings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.live_recordings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: live_recordings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.live_recordings_id_seq OWNED BY public.live_recordings.id;
+
+
+--
+-- Name: live_room_memberships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.live_room_memberships (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    role integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: live_room_memberships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.live_room_memberships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: live_room_memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.live_room_memberships_id_seq OWNED BY public.live_room_memberships.id;
+
+
+--
+-- Name: live_rooms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.live_rooms (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description text,
+    public boolean DEFAULT false NOT NULL,
+    max_participants integer,
+    creator_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    cooked_description text,
+    room_type integer DEFAULT 0 NOT NULL,
+    video_enabled boolean DEFAULT true NOT NULL,
+    chat_channel_id bigint,
+    chat_idle_minutes integer DEFAULT 15 NOT NULL,
+    livekit_enabled boolean DEFAULT false NOT NULL,
+    max_quality_profile integer,
+    ephemeral boolean DEFAULT false NOT NULL,
+    last_occupied_at timestamp(6) without time zone
+);
+
+
+--
+-- Name: live_rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.live_rooms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: live_rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.live_rooms_id_seq OWNED BY public.live_rooms.id;
+
+
+--
+-- Name: live_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.live_sessions (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    joined_at timestamp(6) without time zone NOT NULL,
+    left_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: live_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.live_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: live_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.live_sessions_id_seq OWNED BY public.live_sessions.id;
+
+
+--
 -- Name: livestream_topic_chat_channels; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7290,7 +7830,9 @@ CREATE TABLE public.livestream_topic_chat_channels (
     chat_channel_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    reference_message_id bigint
+    reference_message_id bigint,
+    last_transcribed_message_id bigint,
+    closed_on_event_end boolean DEFAULT false NOT NULL
 );
 
 
@@ -12608,7 +13150,8 @@ CREATE TABLE public.user_histories (
     post_id integer,
     custom_type character varying,
     category_id integer,
-    reviewable_id bigint
+    reviewable_id bigint,
+    expires_at timestamp(6) without time zone
 );
 
 
@@ -13303,230 +13846,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: voice_co_presences; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.voice_co_presences (
-    id bigint NOT NULL,
-    user_id_1 integer NOT NULL,
-    user_id_2 integer NOT NULL,
-    date date NOT NULL,
-    total_seconds integer DEFAULT 0 NOT NULL,
-    session_count integer DEFAULT 0 NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT chk_voice_co_presences_user_order CHECK ((user_id_1 < user_id_2))
-);
-
-
---
--- Name: voice_co_presences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.voice_co_presences_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: voice_co_presences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.voice_co_presences_id_seq OWNED BY public.voice_co_presences.id;
-
-
---
--- Name: voice_invites; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.voice_invites (
-    id bigint NOT NULL,
-    room_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    invited_by_id bigint NOT NULL,
-    source integer DEFAULT 0 NOT NULL,
-    redeemed_at timestamp(6) without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: voice_invites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.voice_invites_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: voice_invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.voice_invites_id_seq OWNED BY public.voice_invites.id;
-
-
---
--- Name: voice_recordings; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.voice_recordings (
-    id bigint NOT NULL,
-    room_id bigint NOT NULL,
-    started_by_id bigint NOT NULL,
-    egress_id character varying NOT NULL,
-    status integer DEFAULT 0 NOT NULL,
-    filepath character varying NOT NULL,
-    filename character varying,
-    location character varying,
-    duration_ms bigint,
-    size_bytes bigint,
-    started_at timestamp(6) without time zone NOT NULL,
-    ended_at timestamp(6) without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: voice_recordings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.voice_recordings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: voice_recordings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.voice_recordings_id_seq OWNED BY public.voice_recordings.id;
-
-
---
--- Name: voice_room_memberships; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.voice_room_memberships (
-    id bigint NOT NULL,
-    room_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    role integer DEFAULT 0 NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: voice_room_memberships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.voice_room_memberships_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: voice_room_memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.voice_room_memberships_id_seq OWNED BY public.voice_room_memberships.id;
-
-
---
--- Name: voice_rooms; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.voice_rooms (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    description text,
-    public boolean DEFAULT false NOT NULL,
-    max_participants integer,
-    creator_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    cooked_description text,
-    room_type integer DEFAULT 0 NOT NULL,
-    video_enabled boolean DEFAULT true NOT NULL,
-    chat_channel_id bigint,
-    chat_idle_minutes integer DEFAULT 15 NOT NULL,
-    livekit_enabled boolean DEFAULT false NOT NULL,
-    max_quality_profile integer,
-    ephemeral boolean DEFAULT false NOT NULL,
-    last_occupied_at timestamp(6) without time zone
-);
-
-
---
--- Name: voice_rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.voice_rooms_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: voice_rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.voice_rooms_id_seq OWNED BY public.voice_rooms.id;
-
-
---
--- Name: voice_sessions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.voice_sessions (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    room_id bigint NOT NULL,
-    joined_at timestamp(6) without time zone NOT NULL,
-    left_at timestamp(6) without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: voice_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.voice_sessions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: voice_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.voice_sessions_id_seq OWNED BY public.voice_sessions.id;
-
-
---
 -- Name: watched_word_groups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13852,6 +14171,20 @@ ALTER TABLE ONLY public.ai_api_request_stats ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.ai_artifact_key_values ALTER COLUMN id SET DEFAULT nextval('public.ai_artifact_key_values_id_seq'::regclass);
+
+
+--
+-- Name: ai_artifact_share_key_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_share_key_values ALTER COLUMN id SET DEFAULT nextval('public.ai_artifact_share_key_values_id_seq'::regclass);
+
+
+--
+-- Name: ai_artifact_shares id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_shares ALTER COLUMN id SET DEFAULT nextval('public.ai_artifact_shares_id_seq'::regclass);
 
 
 --
@@ -14436,6 +14769,34 @@ ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: decision_model_credit_allocations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_allocations ALTER COLUMN id SET DEFAULT nextval('public.decision_model_credit_allocations_id_seq'::regclass);
+
+
+--
+-- Name: decision_model_credit_daily_usages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_daily_usages ALTER COLUMN id SET DEFAULT nextval('public.decision_model_credit_daily_usages_id_seq'::regclass);
+
+
+--
+-- Name: decision_model_feature_credit_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_feature_credit_costs ALTER COLUMN id SET DEFAULT nextval('public.decision_model_feature_credit_costs_id_seq'::regclass);
+
+
+--
+-- Name: decision_models id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models ALTER COLUMN id SET DEFAULT nextval('public.decision_models_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14702,6 +15063,13 @@ ALTER TABLE ONLY public.discourse_workflows_executions ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: discourse_workflows_reviewable_agents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_reviewable_agents_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14783,6 +15151,13 @@ ALTER TABLE ONLY public.draft_sequences ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.drafts ALTER COLUMN id SET DEFAULT nextval('public.drafts_id_seq'::regclass);
+
+
+--
+-- Name: dsa_notices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_notices ALTER COLUMN id SET DEFAULT nextval('public.dsa_notices_id_seq'::regclass);
 
 
 --
@@ -15049,6 +15424,48 @@ ALTER TABLE ONLY public.javascript_caches ALTER COLUMN id SET DEFAULT nextval('p
 --
 
 ALTER TABLE ONLY public.linked_topics ALTER COLUMN id SET DEFAULT nextval('public.linked_topics_id_seq'::regclass);
+
+
+--
+-- Name: live_co_presences id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_co_presences ALTER COLUMN id SET DEFAULT nextval('public.live_co_presences_id_seq'::regclass);
+
+
+--
+-- Name: live_invites id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_invites ALTER COLUMN id SET DEFAULT nextval('public.live_invites_id_seq'::regclass);
+
+
+--
+-- Name: live_recordings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_recordings ALTER COLUMN id SET DEFAULT nextval('public.live_recordings_id_seq'::regclass);
+
+
+--
+-- Name: live_room_memberships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_room_memberships ALTER COLUMN id SET DEFAULT nextval('public.live_room_memberships_id_seq'::regclass);
+
+
+--
+-- Name: live_rooms id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_rooms ALTER COLUMN id SET DEFAULT nextval('public.live_rooms_id_seq'::regclass);
+
+
+--
+-- Name: live_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_sessions ALTER COLUMN id SET DEFAULT nextval('public.live_sessions_id_seq'::regclass);
 
 
 --
@@ -16158,48 +16575,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: voice_co_presences id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_co_presences ALTER COLUMN id SET DEFAULT nextval('public.voice_co_presences_id_seq'::regclass);
-
-
---
--- Name: voice_invites id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_invites ALTER COLUMN id SET DEFAULT nextval('public.voice_invites_id_seq'::regclass);
-
-
---
--- Name: voice_recordings id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_recordings ALTER COLUMN id SET DEFAULT nextval('public.voice_recordings_id_seq'::regclass);
-
-
---
--- Name: voice_room_memberships id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_room_memberships ALTER COLUMN id SET DEFAULT nextval('public.voice_room_memberships_id_seq'::regclass);
-
-
---
--- Name: voice_rooms id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_rooms ALTER COLUMN id SET DEFAULT nextval('public.voice_rooms_id_seq'::regclass);
-
-
---
--- Name: voice_sessions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_sessions ALTER COLUMN id SET DEFAULT nextval('public.voice_sessions_id_seq'::regclass);
-
-
---
 -- Name: watched_word_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16334,6 +16709,22 @@ ALTER TABLE ONLY public.ai_api_request_stats
 
 ALTER TABLE ONLY public.ai_artifact_key_values
     ADD CONSTRAINT ai_artifact_key_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_artifact_share_key_values ai_artifact_share_key_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_share_key_values
+    ADD CONSTRAINT ai_artifact_share_key_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_artifact_shares ai_artifact_shares_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_artifact_shares
+    ADD CONSTRAINT ai_artifact_shares_pkey PRIMARY KEY (id);
 
 
 --
@@ -17033,6 +17424,38 @@ ALTER TABLE ONLY public.data_explorer_tags
 
 
 --
+-- Name: decision_model_credit_allocations decision_model_credit_allocations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_allocations
+    ADD CONSTRAINT decision_model_credit_allocations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_model_credit_daily_usages decision_model_credit_daily_usages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_daily_usages
+    ADD CONSTRAINT decision_model_credit_daily_usages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_model_feature_credit_costs decision_model_feature_credit_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_feature_credit_costs
+    ADD CONSTRAINT decision_model_feature_credit_costs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_models decision_models_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models
+    ADD CONSTRAINT decision_models_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: developers developers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17345,6 +17768,14 @@ ALTER TABLE ONLY public.discourse_workflows_executions
 
 
 --
+-- Name: discourse_workflows_reviewable_agents discourse_workflows_reviewable_agents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents
+    ADD CONSTRAINT discourse_workflows_reviewable_agents_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_tags discourse_workflows_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17446,6 +17877,22 @@ ALTER TABLE ONLY public.draft_sequences
 
 ALTER TABLE ONLY public.drafts
     ADD CONSTRAINT drafts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dsa_notices dsa_notices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_notices
+    ADD CONSTRAINT dsa_notices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dsa_statement_of_records dsa_statement_of_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_statement_of_records
+    ADD CONSTRAINT dsa_statement_of_records_pkey PRIMARY KEY (id);
 
 
 --
@@ -17750,6 +18197,54 @@ ALTER TABLE ONLY public.javascript_caches
 
 ALTER TABLE ONLY public.linked_topics
     ADD CONSTRAINT linked_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: live_co_presences live_co_presences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_co_presences
+    ADD CONSTRAINT live_co_presences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: live_invites live_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_invites
+    ADD CONSTRAINT live_invites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: live_recordings live_recordings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_recordings
+    ADD CONSTRAINT live_recordings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: live_room_memberships live_room_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_room_memberships
+    ADD CONSTRAINT live_room_memberships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: live_rooms live_rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_rooms
+    ADD CONSTRAINT live_rooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: live_sessions live_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.live_sessions
+    ADD CONSTRAINT live_sessions_pkey PRIMARY KEY (id);
 
 
 --
@@ -19065,54 +19560,6 @@ ALTER TABLE ONLY public.user_search_data
 
 
 --
--- Name: voice_co_presences voice_co_presences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_co_presences
-    ADD CONSTRAINT voice_co_presences_pkey PRIMARY KEY (id);
-
-
---
--- Name: voice_invites voice_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_invites
-    ADD CONSTRAINT voice_invites_pkey PRIMARY KEY (id);
-
-
---
--- Name: voice_recordings voice_recordings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_recordings
-    ADD CONSTRAINT voice_recordings_pkey PRIMARY KEY (id);
-
-
---
--- Name: voice_room_memberships voice_room_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_room_memberships
-    ADD CONSTRAINT voice_room_memberships_pkey PRIMARY KEY (id);
-
-
---
--- Name: voice_rooms voice_rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_rooms
-    ADD CONSTRAINT voice_rooms_pkey PRIMARY KEY (id);
-
-
---
--- Name: voice_sessions voice_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.voice_sessions
-    ADD CONSTRAINT voice_sessions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: watched_word_groups watched_word_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19264,6 +19711,13 @@ CREATE INDEX idx_ai_api_audit_logs_failed_id ON public.ai_api_audit_logs USING b
 --
 
 CREATE INDEX idx_ai_api_audit_logs_feature_name_id ON public.ai_api_audit_logs USING btree (feature_name, id) WHERE (feature_name IS NOT NULL);
+
+
+--
+-- Name: idx_ai_api_audit_logs_incomplete_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_incomplete_id ON public.ai_api_audit_logs USING btree (completion_state, id) WHERE (completion_state = ANY (ARRAY[2, 3]));
 
 
 --
@@ -19610,10 +20064,10 @@ CREATE INDEX idx_dwf_data_tables_on_created_by_id ON public.discourse_workflows_
 
 
 --
--- Name: idx_dwf_data_tables_on_name; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_dwf_data_tables_on_lower_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_dwf_data_tables_on_name ON public.discourse_workflows_data_tables USING btree (name);
+CREATE UNIQUE INDEX idx_dwf_data_tables_on_lower_name ON public.discourse_workflows_data_tables USING btree (lower((name)::text));
 
 
 --
@@ -19715,6 +20169,20 @@ CREATE INDEX idx_dwf_publish_history_on_workflow_created_at_id_desc ON public.di
 
 
 --
+-- Name: idx_dwf_reviewable_agents_on_agent_reviewable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_reviewable_agents_on_agent_reviewable ON public.discourse_workflows_reviewable_agents USING btree (ai_agent_id, reviewable_id);
+
+
+--
+-- Name: idx_dwf_reviewable_agents_on_reviewable_agent; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_reviewable_agents_on_reviewable_agent ON public.discourse_workflows_reviewable_agents USING btree (reviewable_id, ai_agent_id);
+
+
+--
 -- Name: idx_dwf_tags_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19729,10 +20197,17 @@ CREATE INDEX idx_dwf_variables_on_created_by_id ON public.discourse_workflows_va
 
 
 --
--- Name: idx_dwf_variables_on_key; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_dwf_variables_on_key_global; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_dwf_variables_on_key ON public.discourse_workflows_variables USING btree (key);
+CREATE UNIQUE INDEX idx_dwf_variables_on_key_global ON public.discourse_workflows_variables USING btree (key) WHERE (workflow_id IS NULL);
+
+
+--
+-- Name: idx_dwf_variables_on_workflow_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_variables_on_workflow_key ON public.discourse_workflows_variables USING btree (workflow_id, key) WHERE (workflow_id IS NOT NULL);
 
 
 --
@@ -19953,6 +20428,34 @@ CREATE UNIQUE INDEX idx_leaderboard_scores_lb_user_date ON public.gamification_l
 
 
 --
+-- Name: idx_live_co_presences_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_live_co_presences_unique ON public.live_co_presences USING btree (user_id_1, user_id_2, date);
+
+
+--
+-- Name: idx_live_invites_redeemed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_live_invites_redeemed ON public.live_invites USING btree (invited_by_id, user_id) WHERE (redeemed_at IS NOT NULL);
+
+
+--
+-- Name: idx_live_room_memberships_on_room_and_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_live_room_memberships_on_room_and_user ON public.live_room_memberships USING btree (room_id, user_id);
+
+
+--
+-- Name: idx_live_sessions_orphaned; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_live_sessions_orphaned ON public.live_sessions USING btree (left_at) WHERE (left_at IS NULL);
+
+
+--
 -- Name: idx_mcp_active_authorizations_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19978,6 +20481,13 @@ CREATE UNIQUE INDEX idx_mcp_primitives_unique ON public.mcp_primitives USING btr
 --
 
 CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USING btree (user_id, notification_type) WHERE (NOT read);
+
+
+--
+-- Name: idx_on_decision_model_id_usage_date_85aaac4721; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_decision_model_id_usage_date_85aaac4721 ON public.decision_model_credit_daily_usages USING btree (decision_model_id, usage_date);
 
 
 --
@@ -20296,34 +20806,6 @@ CREATE INDEX idx_users_moderator ON public.users USING btree (id) WHERE moderato
 
 
 --
--- Name: idx_voice_co_presences_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_voice_co_presences_unique ON public.voice_co_presences USING btree (user_id_1, user_id_2, date);
-
-
---
--- Name: idx_voice_invites_redeemed; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_voice_invites_redeemed ON public.voice_invites USING btree (invited_by_id, user_id) WHERE (redeemed_at IS NOT NULL);
-
-
---
--- Name: idx_voice_room_memberships_on_room_and_user; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_voice_room_memberships_on_room_and_user ON public.voice_room_memberships USING btree (room_id, user_id);
-
-
---
--- Name: idx_voice_sessions_orphaned; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_voice_sessions_orphaned ON public.voice_sessions USING btree (left_at) WHERE (left_at IS NULL);
-
-
---
 -- Name: idx_web_hook_event_types_hooks_on_ids; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20559,6 +21041,48 @@ CREATE INDEX index_ai_api_request_stats_on_created_at_and_user_id ON public.ai_a
 --
 
 CREATE UNIQUE INDEX index_ai_artifact_kv_unique ON public.ai_artifact_key_values USING btree (ai_artifact_id, user_id, key);
+
+
+--
+-- Name: index_ai_artifact_share_key_values_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_share_key_values_on_user_id ON public.ai_artifact_share_key_values USING btree (user_id);
+
+
+--
+-- Name: index_ai_artifact_share_kv_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_share_kv_unique ON public.ai_artifact_share_key_values USING btree (ai_artifact_share_id, user_id, key);
+
+
+--
+-- Name: index_ai_artifact_shares_on_ai_artifact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_shares_on_ai_artifact_id ON public.ai_artifact_shares USING btree (ai_artifact_id);
+
+
+--
+-- Name: index_ai_artifact_shares_on_share_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_shares_on_share_key ON public.ai_artifact_shares USING btree (share_key);
+
+
+--
+-- Name: index_ai_artifact_shares_on_user_id_and_ai_artifact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_artifact_shares_on_user_id_and_ai_artifact_id ON public.ai_artifact_shares USING btree (user_id, ai_artifact_id);
+
+
+--
+-- Name: index_ai_artifact_shares_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_artifact_shares_on_user_id_and_created_at ON public.ai_artifact_shares USING btree (user_id, created_at);
 
 
 --
@@ -21402,6 +21926,27 @@ CREATE UNIQUE INDEX index_data_explorer_query_stats_on_query_id_and_date ON publ
 
 
 --
+-- Name: index_decision_model_credit_allocations_on_decision_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_decision_model_credit_allocations_on_decision_model_id ON public.decision_model_credit_allocations USING btree (decision_model_id);
+
+
+--
+-- Name: index_decision_model_feature_credit_costs_on_model_and_feature; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_decision_model_feature_credit_costs_on_model_and_feature ON public.decision_model_feature_credit_costs USING btree (decision_model_id, feature_name);
+
+
+--
+-- Name: index_decision_models_on_ai_secret_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_decision_models_on_ai_secret_id ON public.decision_models USING btree (ai_secret_id);
+
+
+--
 -- Name: index_developers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21735,6 +22280,20 @@ CREATE UNIQUE INDEX index_draft_sequences_on_user_id_and_draft_key ON public.dra
 --
 
 CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING btree (user_id, draft_key);
+
+
+--
+-- Name: index_dsa_notices_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dsa_notices_on_post_id ON public.dsa_notices USING btree (post_id);
+
+
+--
+-- Name: index_dsa_statement_of_records_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dsa_statement_of_records_on_reviewable_id ON public.dsa_statement_of_records USING btree (reviewable_id);
 
 
 --
@@ -22351,6 +22910,125 @@ CREATE UNIQUE INDEX index_linked_topics_on_topic_id_and_original_topic_id ON pub
 --
 
 CREATE UNIQUE INDEX index_linked_topics_on_topic_id_and_sequence ON public.linked_topics USING btree (topic_id, sequence);
+
+
+--
+-- Name: index_live_co_presences_on_user_id_1_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_co_presences_on_user_id_1_and_date ON public.live_co_presences USING btree (user_id_1, date);
+
+
+--
+-- Name: index_live_co_presences_on_user_id_2_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_co_presences_on_user_id_2_and_date ON public.live_co_presences USING btree (user_id_2, date);
+
+
+--
+-- Name: index_live_invites_on_room_id_and_user_id_and_invited_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_live_invites_on_room_id_and_user_id_and_invited_by_id ON public.live_invites USING btree (room_id, user_id, invited_by_id);
+
+
+--
+-- Name: index_live_invites_on_user_id_and_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_invites_on_user_id_and_room_id ON public.live_invites USING btree (user_id, room_id);
+
+
+--
+-- Name: index_live_recordings_on_egress_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_live_recordings_on_egress_id ON public.live_recordings USING btree (egress_id);
+
+
+--
+-- Name: index_live_recordings_on_room_id_and_started_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_recordings_on_room_id_and_started_at ON public.live_recordings USING btree (room_id, started_at);
+
+
+--
+-- Name: index_live_room_memberships_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_room_memberships_on_room_id ON public.live_room_memberships USING btree (room_id);
+
+
+--
+-- Name: index_live_room_memberships_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_room_memberships_on_user_id ON public.live_room_memberships USING btree (user_id);
+
+
+--
+-- Name: index_live_rooms_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_rooms_on_chat_channel_id ON public.live_rooms USING btree (chat_channel_id);
+
+
+--
+-- Name: index_live_rooms_on_creator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_rooms_on_creator_id ON public.live_rooms USING btree (creator_id);
+
+
+--
+-- Name: index_live_rooms_on_ephemeral; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_rooms_on_ephemeral ON public.live_rooms USING btree (id) WHERE ephemeral;
+
+
+--
+-- Name: index_live_rooms_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_live_rooms_on_slug ON public.live_rooms USING btree (slug);
+
+
+--
+-- Name: index_live_sessions_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_sessions_on_room_id ON public.live_sessions USING btree (room_id);
+
+
+--
+-- Name: index_live_sessions_on_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_sessions_on_room_id_and_joined_at ON public.live_sessions USING btree (room_id, joined_at);
+
+
+--
+-- Name: index_live_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_sessions_on_user_id ON public.live_sessions USING btree (user_id);
+
+
+--
+-- Name: index_live_sessions_on_user_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_sessions_on_user_id_and_joined_at ON public.live_sessions USING btree (user_id, joined_at);
+
+
+--
+-- Name: index_live_sessions_on_user_id_and_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_sessions_on_user_id_and_room_id_and_joined_at ON public.live_sessions USING btree (user_id, room_id, joined_at);
 
 
 --
@@ -24090,6 +24768,13 @@ CREATE UNIQUE INDEX index_topic_users_on_user_id_and_topic_id ON public.topic_us
 
 
 --
+-- Name: index_topic_users_on_user_id_and_topic_id_tracked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_users_on_user_id_and_topic_id_tracked ON public.topic_users USING btree (user_id, topic_id) WHERE (notification_level >= 2);
+
+
+--
 -- Name: index_topic_view_stats_on_topic_id_and_viewed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24937,125 +25622,6 @@ CREATE UNIQUE INDEX index_users_on_username_lower ON public.users USING btree (u
 
 
 --
--- Name: index_voice_co_presences_on_user_id_1_and_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_co_presences_on_user_id_1_and_date ON public.voice_co_presences USING btree (user_id_1, date);
-
-
---
--- Name: index_voice_co_presences_on_user_id_2_and_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_co_presences_on_user_id_2_and_date ON public.voice_co_presences USING btree (user_id_2, date);
-
-
---
--- Name: index_voice_invites_on_room_id_and_user_id_and_invited_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_voice_invites_on_room_id_and_user_id_and_invited_by_id ON public.voice_invites USING btree (room_id, user_id, invited_by_id);
-
-
---
--- Name: index_voice_invites_on_user_id_and_room_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_invites_on_user_id_and_room_id ON public.voice_invites USING btree (user_id, room_id);
-
-
---
--- Name: index_voice_recordings_on_egress_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_voice_recordings_on_egress_id ON public.voice_recordings USING btree (egress_id);
-
-
---
--- Name: index_voice_recordings_on_room_id_and_started_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_recordings_on_room_id_and_started_at ON public.voice_recordings USING btree (room_id, started_at);
-
-
---
--- Name: index_voice_room_memberships_on_room_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_room_memberships_on_room_id ON public.voice_room_memberships USING btree (room_id);
-
-
---
--- Name: index_voice_room_memberships_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_room_memberships_on_user_id ON public.voice_room_memberships USING btree (user_id);
-
-
---
--- Name: index_voice_rooms_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_rooms_on_chat_channel_id ON public.voice_rooms USING btree (chat_channel_id);
-
-
---
--- Name: index_voice_rooms_on_creator_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_rooms_on_creator_id ON public.voice_rooms USING btree (creator_id);
-
-
---
--- Name: index_voice_rooms_on_ephemeral; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_rooms_on_ephemeral ON public.voice_rooms USING btree (id) WHERE ephemeral;
-
-
---
--- Name: index_voice_rooms_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_voice_rooms_on_slug ON public.voice_rooms USING btree (slug);
-
-
---
--- Name: index_voice_sessions_on_room_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_sessions_on_room_id ON public.voice_sessions USING btree (room_id);
-
-
---
--- Name: index_voice_sessions_on_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_sessions_on_room_id_and_joined_at ON public.voice_sessions USING btree (room_id, joined_at);
-
-
---
--- Name: index_voice_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_sessions_on_user_id ON public.voice_sessions USING btree (user_id);
-
-
---
--- Name: index_voice_sessions_on_user_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_sessions_on_user_id_and_joined_at ON public.voice_sessions USING btree (user_id, joined_at);
-
-
---
--- Name: index_voice_sessions_on_user_id_and_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_voice_sessions_on_user_id_and_room_id_and_joined_at ON public.voice_sessions USING btree (user_id, room_id, joined_at);
-
-
---
 -- Name: index_watched_words_on_action_and_word; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25456,11 +26022,11 @@ ALTER TABLE ONLY public.reviewable_notes
 
 
 --
--- Name: voice_room_memberships fk_rails_a55e8c404b; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: live_room_memberships fk_rails_a55e8c404b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.voice_room_memberships
-    ADD CONSTRAINT fk_rails_a55e8c404b FOREIGN KEY (room_id) REFERENCES public.voice_rooms(id);
+ALTER TABLE ONLY public.live_room_memberships
+    ADD CONSTRAINT fk_rails_a55e8c404b FOREIGN KEY (room_id) REFERENCES public.live_rooms(id);
 
 
 --
@@ -25501,6 +26067,14 @@ ALTER TABLE ONLY public.polls
 
 ALTER TABLE ONLY public.poll_votes
     ADD CONSTRAINT fk_rails_b64de9b025 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: discourse_workflows_reviewable_agents fk_rails_bf51f3a32a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_reviewable_agents
+    ADD CONSTRAINT fk_rails_bf51f3a32a FOREIGN KEY (reviewable_id) REFERENCES public.reviewables(id) ON DELETE CASCADE;
 
 
 --
@@ -25590,13 +26164,47 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261021063131'),
+('20261021063122'),
+('20261021061850'),
+('20261021060627'),
+('20261021060617'),
+('20261020161054'),
+('20261020160221'),
+('20261019232249'),
+('20261019213757'),
+('20261019213116'),
+('20261019105124'),
+('20261019104439'),
+('20261018172000'),
+('20261016063822'),
+('20261015175355'),
+('20261015175340'),
+('20261015121116'),
+('20261014231432'),
+('20261014224810'),
+('20261014145458'),
+('20261014065735'),
+('20261013222431'),
+('20261013183208'),
+('20261013160643'),
+('20261013062937'),
+('20261013010026'),
+('20261013010022'),
+('20261012021959'),
+('20261012015332'),
 ('20261009144947'),
 ('20261009130230'),
 ('20261009121104'),
+('20261009113440'),
+('20261008184751'),
+('20261008173326'),
+('20261008005940'),
 ('20261007082151'),
 ('20261006113418'),
 ('20261005091527'),
 ('20261005091447'),
+('20261002200029'),
 ('20261001073226'),
 ('20260930114733'),
 ('20260928103925'),
@@ -25606,6 +26214,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),
+('20260922233925'),
 ('20260922233816'),
 ('20260921120000'),
 ('20260921081150'),
@@ -25624,6 +26233,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914172757'),
 ('20260914140746'),
 ('20260914032737'),
+('20260913105655'),
 ('20260910110851'),
 ('20260910033302'),
 ('20260910030427'),
@@ -25634,6 +26244,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
+('20260904171256'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260904000537'),

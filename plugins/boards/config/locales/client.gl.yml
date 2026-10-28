@@ -28,7 +28,9 @@ gl:
         topic_reply_count:
           one: "%{count} resposta"
           other: "%{count} repostas"
-        created_by: "Creado por"
+        owners:
+          one: "Propietario"
+          other: "Propietarios"
       manage:
         name: "Nome"
         slug: "Localizador abreviado"

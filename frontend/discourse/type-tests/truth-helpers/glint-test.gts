@@ -1,5 +1,4 @@
 import type { TOC } from "@ember/component/template-only";
-import { and, gt, or } from "discourse/truth-helpers";
 
 interface ExpectStringSignature {
   Args: { value: string };
@@ -21,10 +20,9 @@ interface HostSignature {
   Args: { maybeString?: string; fooBar: "foo" | "bar" };
 }
 
-// Asserts the helpers keep their precise return types when invoked as template
-// helpers ({{or}}/{{and}} are class-based helpers, so they can only be exercised
-// this way). Feeding each result into a narrowly-typed arg is the assertion; a
-// wrong return type fails pnpm lint:types.
+// Asserts the built-in `or`/`and`/`gt` keywords keep their precise return types.
+// Feeding each result into a narrowly-typed arg is the assertion; a wrong return
+// type fails pnpm lint:types.
 const Glint: TOC<HostSignature> = <template>
   {{! or of a maybe-string and a literal fallback resolves to a string }}
   <ExpectString @value={{or @maybeString "fallback"}} />

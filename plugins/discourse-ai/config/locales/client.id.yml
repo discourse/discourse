@@ -97,6 +97,11 @@ id:
       ai_decoded_transcript:
         type: "Tipe"
         error: "Gangguan"
+      discourse_workflows:
+        classify:
+          name: "Nama"
+          type: "Tipe"
+          type_score: "Skor"
       ai_tool_approval:
         loading: "Diproses..."
         tool: "Aksi"
@@ -111,6 +116,7 @@ id:
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
+        classification_model: "Model:"
         edit: "Pengaturan"
         expand_list:
           other: "(%{count} lainnya)"
@@ -120,6 +126,8 @@ id:
         filters:
           all: "Semua"
           reset: "Reset"
+        sentiment:
+          enabled: "Diaktifkan"
         search:
           name: "Cari"
           ask_ai: "Tanya AI"
@@ -233,6 +241,12 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      decision_models:
+        no_preset: "Tidak ada"
+        display_name: "Nama"
+        model: "Model"
+        edit: "Ubah"
+        delete: "Hapus"
       mcp_servers:
         name: "Nama"
         description: "Deskripsi"
@@ -243,6 +257,13 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      models:
+        name: "Nama"
+        type: "Tipe"
+        edit: "Ubah"
+        select_type: "Pilih"
+        filters:
+          all: "Semua tipe"
       llms:
         display_name: "Nama"
         vision_modes:
@@ -307,6 +328,11 @@ id:
         semantic_search: "Topik (Semantik)"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"
+      ai_artifact:
+        editor:
+          default: "Asal"
+          apply: "menerapkan"
+        filter_all: "Semua"
       ai_bot:
         llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."
@@ -357,6 +383,13 @@ id:
             other: "%{count} jam terakhir"
         topic:
           title: "Ringkasan topik"
+      ai_search:
+        related_replies:
+          other: "%{count} balasan"
+        tabs:
+          ask: "Tanya AI"
+          topics: "Topik"
+          messages: "Pesan"
       discobot_discoveries:
         main_title: "Tanya AI"
         legacy:

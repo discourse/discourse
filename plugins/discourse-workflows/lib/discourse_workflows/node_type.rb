@@ -3,7 +3,9 @@
 module DiscourseWorkflows
   class NodeType
     include NodeErrorHandling
+    include EntitySerializers
     extend NodeTypeDescriptor
+    extend EntitySerializers
 
     TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
 
@@ -50,6 +52,24 @@ module DiscourseWorkflows
       },
     }.freeze
 
+    TOPIC_FILTER_PROPERTIES = {
+      topic_ids: {
+        type: :array,
+        required: false,
+        ui: {
+          control: :topic,
+          multiple: true,
+        },
+      },
+    }.freeze
+
+    # For triggers whose event can repeat inside one long-lived topic (posts, reactions, votes).
+    TOPIC_SCOPE_FILTER_PROPERTIES = {
+      **CATEGORY_FILTER_PROPERTIES,
+      **TAG_FILTER_PROPERTIES,
+      **TOPIC_FILTER_PROPERTIES,
+    }.freeze
+
     def self.actor_property(allow_anonymous: true, **options)
       property = { type: :string, required: false, default: "system", ui: { control: :actor } }
       property[:control_options] = { allow_anonymous: false } if !allow_anonymous
@@ -72,7 +92,6 @@ module DiscourseWorkflows
       capabilities: {
       },
       output_contracts: [],
-      output_schema_resolver: nil,
       palette_visible: true,
       available: true,
       previewable: false,
@@ -102,6 +121,18 @@ module DiscourseWorkflows
       else
         @description || DESCRIPTION_DEFAULTS
       end
+    end
+
+    def self.deprecated(superseded_by:, changes: {}, description_key: nil, notice_key: nil)
+      @deprecation = { superseded_by:, changes:, description_key:, notice_key: }.compact.freeze
+    end
+
+    def self.deprecation
+      @deprecation
+    end
+
+    def self.deprecated?
+      deprecation.present?
     end
 
     def self.identifier
@@ -185,10 +216,6 @@ module DiscourseWorkflows
 
         Schema.augment(resolved, active_output_extensions(index, configuration))
       end
-    end
-
-    def self.output_schema_resolver
-      description_value(:output_schema_resolver)
     end
 
     def self.output_contracts
@@ -323,7 +350,7 @@ module DiscourseWorkflows
         .filter_map { |name| name.strip.presence }
     end
 
-    def self.normalize_category_ids(value)
+    def self.normalize_ids(value)
       Array.wrap(value).filter_map { |entry| entry.to_s.strip.presence&.to_i }.uniq
     end
 
@@ -332,7 +359,7 @@ module DiscourseWorkflows
     def self.category_ids_parameter(trigger_ctx)
       value = trigger_ctx.get_node_parameter("category_ids")
       value = trigger_ctx.get_node_parameter("category_id") if value.nil?
-      normalize_category_ids(value)
+      normalize_ids(value)
     end
 
     def self.expand_subcategory_ids(category_ids)
@@ -406,12 +433,23 @@ module DiscourseWorkflows
       changes.empty? || changes.include?(change)
     end
 
+    # Filters a node doesn't declare are skipped: the editor never shows them, so a stray value
+    # would filter invisibly. Cheapest check first: topic ids are an integer compare, tags query
+    # the database.
     def matches_topic_filters?(topic, trigger_ctx)
-      matches_category_ids?(
-        topic.category_id,
-        category_ids_parameter(trigger_ctx),
-        include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-      ) && matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+      declared = self.class.properties
+
+      topic_ids = self.class.normalize_ids(trigger_ctx.get_node_parameter("topic_ids"))
+      return false if declared.key?(:topic_ids) && !matches_topic_ids?(topic.id, topic_ids)
+
+      category_ids = category_ids_parameter(trigger_ctx)
+      subcategories = trigger_ctx.get_node_parameter("include_subcategories", true)
+      category_match =
+        matches_category_ids?(topic.category_id, category_ids, include_subcategories: subcategories)
+      return false if declared.key?(:category_ids) && !category_match
+      return true if !declared.key?(:tag_names)
+
+      matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
     end
 
     def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
@@ -420,6 +458,10 @@ module DiscourseWorkflows
       category_ids = self.class.expand_subcategory_ids(category_ids) if include_subcategories !=
         false
       category_ids.include?(topic_category_id)
+    end
+
+    def matches_topic_ids?(topic_id, topic_ids)
+      topic_ids.empty? || topic_ids.include?(topic_id)
     end
 
     def matches_topic_type?(topic, topic_type)
@@ -482,62 +524,8 @@ module DiscourseWorkflows
       reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
     end
 
-    def reviewable_data(reviewable)
-      {
-        id: reviewable.id,
-        type: reviewable.type,
-        status: reviewable.status,
-        target_type: reviewable.target_type,
-        target_id: reviewable.target_id,
-        topic_id: reviewable.topic_id,
-        category_id: reviewable.category_id,
-        score: reviewable.score,
-        created_at: reviewable.created_at&.iso8601,
-      }
-    end
-
     def wrap(data, paired_item: nil)
       Item.wrap(data, paired_item:)
-    end
-
-    def serialize_record(
-      record,
-      serializer,
-      scope: Discourse.system_user.guardian,
-      root: false,
-      **opts
-    )
-      MultiJson.load(serializer.new(record, scope:, root:, **opts).to_json).deep_symbolize_keys
-    end
-
-    def serialize_post(
-      post,
-      guardian: Discourse.system_user.guardian,
-      include_raw: true,
-      include_cooked: false
-    )
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_post(
-        post,
-        guardian:,
-        include_raw:,
-        include_cooked:,
-      )
-    end
-
-    def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
-        topic,
-        guardian:,
-        custom_field_names:,
-      )
-    end
-
-    def topic_data(topic, scope: Discourse.system_user.guardian)
-      serialize_record(topic, DiscourseWorkflows::TopicListItemSerializer, scope:)
-    end
-
-    def serialize_user(user, guardian: Discourse.system_user.guardian)
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian:)
     end
 
     def with_paired_item(item, paired_item)

@@ -29,6 +29,27 @@ sl:
           title: "Varnostne kopije"
       read_post:
         unknown_post: "prispevek"
+      chat_tool_approval:
+        topic_states:
+          open: "Odpri"
+          closed: "Zaprta"
+          active: "Aktivni"
+          deleted: "Izbrisano"
+        solution_post: "Prispevek #%{number}"
+        duration_label: "Trajanje:"
+        user_duration:
+          one: "%{count} dan"
+          two: "%{count} dneva"
+          few: "%{count} dnevi"
+          other: "%{count} dni"
+        posts_label: "Prispevki"
+        category_label: "Kategorija"
+        category_fields:
+          name: "imenu"
+          description: "opis"
+          color: "barva"
+        approve_label: "Da"
+        reject_label: "Ne"
       tool_summary:
         search: "Išči"
         time: "Čas"

@@ -31,7 +31,6 @@ vi:
             failed: "Thất bại"
         emotion:
           title: "Cảm xúc (Emotion)"
-          description: "Bảng liệt kê số lượng bình luận được phân loại theo cảm xúc. Tùy thuộc vào phương pháp phân loại cảm xúc được chọn, các bình luận sẽ được phân loại bằng mô hình phân loại cảm xúc đã cấu hình ('SamLowe/roberta-base-go_emotions') hoặc đại lý (Agent) phân loại cảm xúc đã cấu hình.\n"
         reports:
           filters:
             group_by:
@@ -112,6 +111,12 @@ vi:
       discourse_workflows:
         ai_agent:
           mode: "Chế độ"
+        classify:
+          text: "Văn bản"
+          upload_ids: "Hình ảnh"
+          name: "Tên"
+          type: "Loại"
+          type_score: "Điểm số"
       ai_tool_approval:
         loading: "Đang tải..."
         load_error: "Không thể tải hành động đang chờ này."
@@ -130,6 +135,7 @@ vi:
         groups: "Nhóm:"
         no_agent: "Chưa đặt"
         no_groups: "Không có gì"
+        classification_model: "Mô hình (Model):"
         edit: "Cài đặt"
         expand_list:
           other: "(%{count} khác)"
@@ -139,6 +145,12 @@ vi:
         filters:
           all: "Tất cả"
           reset: "Cài lại"
+        sentiment:
+          emotion: "Cảm xúc (Emotion)"
+          enabled: "Đã bật"
+          agent: "Trợ lý AI (Agent)"
+          setting_groups:
+            emotion: "Cảm xúc (Emotion)"
         search:
           name: "Tìm kiếm"
           ask_ai: "Hỏi AI"
@@ -283,8 +295,6 @@ vi:
         export: "Xuất"
         import: "Nhập"
         description: "Mô tả"
-        max_turn_tokens: "Giới hạn Token mỗi lượt (Max turn tokens)"
-        max_turn_tokens_help: "Tổng số Token tối đa (đầu vào + đầu ra) tiêu tốn qua tất cả các lời gọi mô hình ngôn ngữ lớn (LLM) trong một lần Bot phản hồi. Để trống để mặc định dùng một nửa cửa sổ ngữ cảnh (Context window) của mô hình."
         compression_threshold: "Ngưỡng nén (Compression threshold)"
         user: Thành viên
         save: "Lưu lại"
@@ -339,6 +349,13 @@ vi:
         edit: "Sửa"
         delete: "Xóa"
         embedding: "Nhúng"
+      decision_models:
+        no_preset: "Không"
+        display_name: "Tên"
+        model: "Mô hình"
+        edit: "Sửa"
+        delete: "Xóa"
+        test: "Chạy thử nghiệm"
       mcp_servers:
         name: "Tên"
         description: "Mô tả"
@@ -353,6 +370,16 @@ vi:
         delete: "Xóa"
         tools_modal:
           required: "Bắt buộc"
+      models:
+        name: "Tên"
+        type: "Loại"
+        edit: "Sửa"
+        select_type: "Chọn"
+        types:
+          embedding: "Nhúng"
+        filters:
+          all: "Tất cả các loại"
+          reset: "Đặt lại bộ lọc"
       llms:
         display_name: "Tên"
         vision_modes:
@@ -432,6 +459,15 @@ vi:
           fake: "Tùy biến"
         semantic_search_tooltips:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
+      ai_artifact:
+        editor:
+          version: "Phiên bản"
+          default: "Mặc định"
+          apply: "Áp dụng"
+        share: "Chia sẻ"
+        create_link: "Tạo link"
+        copy_link: "Sao chép link"
+        filter_all: "Tất cả"
       ai_bot:
         agent: "Tác nhân:"
         llm: "Mô hình (Model):"
@@ -471,6 +507,14 @@ vi:
             compact: "Gọn gàng"
             expanded: "Mở rộng"
             expanded_description: "Với tóm tắt AI"
+      ai_search:
+        related_topics: "Các chủ đề liên quan"
+        related_replies:
+          other: "%{count} trả lời"
+        tabs:
+          ask: "Hỏi AI"
+          topics: "Các chủ đề"
+          messages: "Tin nhắn"
       discobot_discoveries:
         main_title: "Hỏi AI"
         user_setting: "Bật tính năng tìm kiếm bằng AI"

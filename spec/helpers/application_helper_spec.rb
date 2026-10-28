@@ -21,6 +21,72 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "generate_import_map" do
+    before do
+      EmberAssets.stubs(:import_map).returns(
+        { "js/chunk-stable11.digested" => "js/chunk-real1111.digested" },
+      )
+    end
+
+    def imports(plugin_assets = [])
+      JSON.parse(helper.generate_import_map(plugin_assets))["imports"]
+    end
+
+    it "maps stable chunk names to their hashed files" do
+      expect(imports).to eq(
+        { "/assets/js/chunk-stable11.digested.js" => "/assets/js/chunk-real1111.digested.js" },
+      )
+    end
+
+    it "applies the same subfolder and CDN prefix to both sides" do
+      set_cdn_url "https://awesome.com"
+      set_subfolder "/community"
+
+      expect(imports).to eq(
+        {
+          "https://awesome.com/community/assets/js/chunk-stable11.digested.js" =>
+            "https://awesome.com/community/assets/js/chunk-real1111.digested.js",
+        },
+      )
+    end
+
+    context "with s3 CDN" do
+      before do
+        global_setting :s3_bucket, "test_bucket"
+        global_setting :s3_region, "ap-australia"
+        global_setting :s3_access_key_id, "123"
+        global_setting :s3_secret_access_key, "123"
+        global_setting :s3_cdn_url, "https://s3cdn.com"
+      end
+
+      it "applies the brotli path mangling to both sides" do
+        helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
+
+        expect(imports).to eq(
+          {
+            "https://s3cdn.com/assets/br/chunk-stable11.digested.js" =>
+              "https://s3cdn.com/assets/br/chunk-real1111.digested.js",
+          },
+        )
+      end
+    end
+
+    it "keeps plugin entries alongside chunk entries" do
+      plugin = stub(directory_name: "my-plugin", name: "my-plugin")
+      plugin_assets = [
+        {
+          name: "js/plugins/my-plugin-abcdefgh.digested",
+          plugin: plugin,
+          importmap_name: "discourse/plugins/my-plugin",
+        },
+      ]
+      expect(imports(plugin_assets).keys).to contain_exactly(
+        "discourse/plugins/my-plugin",
+        "/assets/js/chunk-stable11.digested.js",
+      )
+    end
+  end
+
   describe "preload_script" do
     def script_tag(url, entrypoint, nonce)
       <<~HTML

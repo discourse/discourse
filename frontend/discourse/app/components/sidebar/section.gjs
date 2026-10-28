@@ -20,7 +20,6 @@ import {
   WEB_LINK_KINDS,
   webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -29,7 +28,7 @@ import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-dr
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import dDragDwell from "discourse/ui-kit/modifiers/d-drag-dwell";
 import { i18n } from "discourse-i18n";
-import SectionHeader from "./section-header";
+import SectionHeader from "./section-header.gjs";
 
 export default class SidebarSection extends Component {
   @service keyValueStore;

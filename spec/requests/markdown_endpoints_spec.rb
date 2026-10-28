@@ -12,8 +12,19 @@ RSpec.describe "Markdown endpoints" do
 
   after { category.clear_url_cache }
 
-  it "respects the upcoming change promotion policy and explicit opt-in" do
+  it "automatically enables Markdown endpoints when stable changes are promoted" do
     SiteSetting.promote_upcoming_changes_on_status = "stable"
+
+    get "/latest.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq("text/markdown")
+
+    get "/latest", headers: { "ACCEPT" => "text/html" }
+    expect(response.headers["Link"]).to include("/latest.md")
+  end
+
+  it "respects explicit opt-in when automatic promotion is disabled" do
+    SiteSetting.promote_upcoming_changes_on_status = "never"
 
     get "/latest.md"
     expect(response).to have_http_status(:not_found)

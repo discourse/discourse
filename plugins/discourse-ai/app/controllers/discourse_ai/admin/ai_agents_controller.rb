@@ -17,10 +17,9 @@ module DiscourseAi
             .map { |agent| LocalizedAiAgentSerializer.new(agent, root: false) }
 
         tools =
-          (
-            DiscourseAi::Agents::Agent.all_available_tools +
-              DiscourseAi::Agents::Agent.external_tools
-          ).map { |tool| AiToolSerializer.new(tool, root: false) }
+          DiscourseAi::Agents::Agent.all_available_tools.map do |tool|
+            AiToolSerializer.new(tool, root: false)
+          end
 
         AiTool
           .where(enabled: true)
@@ -640,6 +639,8 @@ module DiscourseAi
             selected_tool_names: mcp_server_tool_names[assignment.ai_mcp_server_id.to_s],
           )
         end
+
+        ai_agent.bump_cache
       end
 
       def hidden_disabled_mcp_server_ids(ai_agent, submitted_server_ids)

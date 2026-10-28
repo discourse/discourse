@@ -17,5 +17,11 @@ lt:
         chat_usage:
           author: Jūs
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} minutė"
+            few: "%{count} minutės"
+            many: "%{count} minučių"
+            other: "%{count} minučių"
         writing_analysis:
           menu_other: Kiti

@@ -18,7 +18,10 @@ export default class EmbedModeComposer extends Component {
   @service site;
   @service store;
 
+  /** @type {import("discourse/models/post").default | null} */
   @tracked replyingToPost = null;
+
+  /** @type {import("discourse/models/post").default | null} */
   @tracked editingPost = null;
   @tracked isSubmitting = false;
   @tracked footerVisible = true;

@@ -171,9 +171,6 @@ module DiscourseAi
                 "posts.user_id",
                 "posts.post_type",
                 Arel.sql("md5(posts.raw)"),
-                Arel.sql(
-                  "(SELECT md5(string_agg(ref.upload_id::text, ',' ORDER BY ref.upload_id)) FROM upload_references ref WHERE ref.target_type = 'Post' AND ref.target_id = posts.id)",
-                ),
                 Arel.sql("md5(post_custom_prompts.custom_prompt::text)"),
               )
           else
@@ -259,6 +256,7 @@ module DiscourseAi
               @source
                 .topic
                 .posts
+                .joins(:topic)
                 .where("post_number <= ?", source.post_number)
                 .where(post_type: types),
               category: @source.topic.category,

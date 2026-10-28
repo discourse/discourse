@@ -393,6 +393,7 @@ de:
         filter_placeholder: "Benutzer filtern"
         remove_invitee: "Eingeladene Person aus der Liste entfernen"
         add_invitee: "Eingeladene Person zur Liste hinzufügen"
+        this_event: "Dieser Termin"
       bulk_invite_modal:
         confirm: "bestätigen"
         text: "CSV-Datei hochladen"
@@ -453,7 +454,6 @@ de:
               one: "%{count} Benutzer eingeladen"
               other: "%{count} Benutzer eingeladen"
         event:
-          expired: "Abgelaufen"
           closed: "Geschlossen"
           full: "Voll"
           status:
@@ -466,6 +466,8 @@ de:
             private:
               title: "Privat"
               description: "An einem privaten Ereignis können nur eingeladene Benutzer teilnehmen."
+      recording_modal:
+        save: "Speichern"
       composer:
         name_placeholder: "Name des Ereignisses"
         end_date_placeholder: "Enddatum"

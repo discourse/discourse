@@ -38,6 +38,12 @@ nl:
             delete: "Verwijderen"
         multi_select:
           title: "Meervoudige selectie"
+        reorderable_list:
+          policies_pinned: "Vastgemaakt"
+          policies_required: "Vereist"
+          table_field: "Veld"
+          table_type: "Type"
+          cross_list_primary: "Primair"
         toasts:
           title: "Toasts"
         font_scale:

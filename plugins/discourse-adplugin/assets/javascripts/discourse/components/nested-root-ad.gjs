@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import AdSlot, { slotContenders } from "./ad-slot";
+import AdSlot, { slotContenders } from "./ad-slot.gjs";
 
 export default class NestedRootAd extends Component {
   static shouldRender(args, context) {

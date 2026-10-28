@@ -20,20 +20,31 @@ lt:
                 gt_24h: "> 24 valandos"
   js:
     discourse_workflows:
+      node_unavailable:
+        requires_solved: "Reikia, kad būtų įjungtas „Solved“ papildinys"
+      nodes:
+        "trigger:solution_changed": "Sprendimas pakeistas"
+      node_descriptions:
+        "trigger:solution_changed": "Suveikia, kai atsakymas priimamas kaip sprendimas arba jo priėmimas panaikinamas"
       solution_changed:
+        changes: "Pakeitimai"
+        changes_description: "Palikite tuščią, kad atitiktų bet kokius pakeitimus."
+        changes_accepted: "Priimta"
         changes_removed: "Pašalintas"
+        changes_placeholder: "Bet koks pakeitimas"
         tag_names: "Žymos"
+        tag_names_description: "Suaktyvinti tik toms temoms, kurios turi bent vieną iš šių žymų"
     notifications:
       alt:
         solved:
           accepted_notification: "patvirtinta"
-          topic_solved_notification: "išspresta"
+          topic_solved_notification: "išspręsta"
     solved:
-      title: "Išspresta"
+      title: "Išspręsta"
       accepted_answer_post_number: "įrašas %{post_number}"
       topic_status_filter:
         all: "visi"
-        solved: "išspresta"
+        solved: "išspręsta"
       move_post_cancel: "Atšaukti"
       confirm_solved_removal_confirm: "Patvirtinti"
       confirm_solved_removal_cancel: "Atšaukti"

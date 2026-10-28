@@ -43,6 +43,13 @@ bs_BA:
         type: "Tip"
         error: "Greška"
         response: "Odgovor"
+      discourse_workflows:
+        classify:
+          text: "Poruka"
+          upload_ids: "Images"
+          name: "Ime"
+          type: "Tip"
+          type_score: "bodovi"
       ai_tool_approval:
         loading: "Obrađuje..."
         tool: "Action"
@@ -67,6 +74,8 @@ bs_BA:
         filters:
           all: "Sve"
           reset: "Resetovati"
+        sentiment:
+          enabled: "Omogućen"
         search:
           name: "Pretraži"
         image_caption:
@@ -187,6 +196,11 @@ bs_BA:
         edit: "Izmijeni"
         delete: "Delete"
         embedding: "Embedding"
+      decision_models:
+        no_preset: "Ništa"
+        display_name: "Ime"
+        edit: "Izmijeni"
+        delete: "Delete"
       mcp_servers:
         name: "Ime"
         description: "Opis"
@@ -198,6 +212,14 @@ bs_BA:
         delete: "Delete"
         tools_modal:
           required: "Required"
+      models:
+        name: "Ime"
+        type: "Tip"
+        edit: "Izmijeni"
+        types:
+          embedding: "Embedding"
+        filters:
+          all: "Sve vrste"
       llms:
         display_name: "Ime"
         vision_modes:
@@ -238,6 +260,13 @@ bs_BA:
         providers:
           google: "Google"
           fake: "Custom"
+      ai_artifact:
+        editor:
+          version: "Verzija"
+          default: "Uobičajen"
+          apply: "Snimi"
+        share: "Dijeli"
+        filter_all: "Sve"
       ai_bot:
         debug_ai_modal:
           duration_label: "Trajanje:"
@@ -259,6 +288,14 @@ bs_BA:
             category: "Kategorija"
           table:
             total_count: "Suma"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Topics"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Topics"

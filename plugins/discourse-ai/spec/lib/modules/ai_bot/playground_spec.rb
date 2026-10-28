@@ -481,6 +481,36 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(thinking["message"]).to eq("Web search: OpenAI news")
     end
 
+    [nil, "setCustomRaw", "streamCustomRaw"].each do |custom_output|
+      it "returns script errors to the model #{custom_output ? "after #{custom_output}" : "without custom output"}" do
+        custom_tool.update!(script: <<~JS)
+          function invoke() {
+            #{custom_output ? "chain.#{custom_output}('Partial output');" : ""}
+            throw new Error("Category not found");
+          }
+        JS
+        source = Fabricate(:private_message_post, user: user, recipient: bot_user)
+        answer = "The category lookup failed because the category was not found."
+        reply = nil
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [tool_call, answer],
+        ) do |_, _, prompts|
+          reply = playground.reply_to(source, auto_set_title: false)
+
+          tool_result = prompts.last.messages.find { |message| message[:type] == :tool }
+          expect(tool_result).to include(id: tool_call.id, name: tool_call.name)
+          expect(JSON.parse(tool_result[:content])).to eq("error" => "Error: Category not found")
+        end
+
+        expect(reply.raw).to eq(answer)
+        tool_result = reply.post_custom_prompt.custom_prompt.find { |entry| entry[2] == "tool" }
+        expect(tool_result.take(4)).to eq(
+          ['{"error":"Error: Category not found"}', tool_call.id, "tool", tool_call.name],
+        )
+      end
+    end
+
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |p| p.name == ai_agent.name }
@@ -1310,6 +1340,30 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
+    it "preserves the conversation model for a per-turn legacy model mention" do
+      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      claude_2.update_column(:user_id, legacy_user.id)
+      agent.update!(allow_topic_mentions: true)
+      topic = Fabricate(:topic, user: admin)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = opus_model.id
+      topic.save_custom_fields
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["One-turn legacy response"],
+        llm: claude_2,
+      ) { create_post(topic:, user: admin, raw: "@#{legacy_user.username} answer this turn") }
+
+      response = topic.reload.posts.order(:post_number).last
+      expect(response.raw).to eq("One-turn legacy response")
+      expect(response.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        opus_model.id,
+      )
+    end
+
     it "normalizes a reply to a public legacy model post to the topic agent" do
       legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
       claude_2.update_column(:user_id, legacy_user.id)
@@ -1472,6 +1526,37 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
+    it "preserves a deleted conversation model when another agent is mentioned for one turn" do
+      mentioned_agent =
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          allow_topic_mentions: true,
+          default_llm: opus_model,
+        ).tap(&:ensure_user!)
+      topic = Fabricate(:topic, user: admin)
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+      topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+      topic.save_custom_fields
+      agent.update!(default_llm: opus_model)
+      claude_2.destroy!
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["One-turn replacement response"],
+        llm: opus_model,
+      ) do
+        create_post(topic:, user: admin, raw: "@#{mentioned_agent.user.username} answer this turn")
+      end
+
+      response = topic.reload.posts.order(:post_number).last
+      expect(response.raw).to eq("One-turn replacement response")
+      expect(response.user).to eq(mentioned_agent.user)
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD].to_i).to eq(agent.id)
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
     it "persists a missing model default when continuing an existing agent conversation" do
       topic = Fabricate(:private_message_topic, user: admin, recipient: agent.user)
       topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
@@ -1484,6 +1569,48 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(
         topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i,
       ).to eq(claude_2.id)
+    end
+
+    it "continues an existing conversation with the current agent model after deleting the old model" do
+      post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["ORCHID-726", "Code word"],
+        llm: claude_2,
+      ) do
+        post =
+          create_post(
+            title: "Remember a code word",
+            raw: "Remember ORCHID-726",
+            target_usernames: agent.user.username,
+            archetype: Archetype.private_message,
+            user: admin,
+            custom_fields: {
+              DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => agent.id,
+              DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => claude_2.id,
+            },
+          )
+      end
+
+      expect(post.topic.posts.order(:post_number).last.raw).to eq("ORCHID-726")
+
+      agent.update!(default_llm: opus_model)
+      claude_2.destroy!
+      toggle_enabled_bots(bots: [])
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["ORCHID-726"], llm: opus_model) do
+        create_post(topic: post.topic, user: admin, raw: "What was the code word?")
+      end
+
+      topic = post.topic.reload
+      response = topic.posts.order(:post_number).last
+      expect(response.raw).to eq("ORCHID-726")
+      expect(response.user).to eq(agent.user)
+      expect(response.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        opus_model.id,
+      )
+      expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        opus_model.id,
+      )
     end
 
     it "accepts a configured topic default sent back unchanged by the client" do
@@ -2041,6 +2168,64 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(last_post.raw).to include(expected_message)
       expect(last_post.user_id).to eq(bot_user.id)
     end
+
+    context "when whispering in a public topic" do
+      fab!(:topic_post) { Fabricate(:post, user: user) }
+
+      def last_reply
+        topic_post.topic.reload.posts.order(:post_number).last
+      end
+
+      it "whispers the credit limit error" do
+        allocation =
+          Fabricate(
+            :llm_credit_allocation,
+            llm_model: Fabricate(:seeded_model),
+            daily_credits: 1000,
+            daily_used: 1000,
+          )
+        allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(
+          LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:),
+        )
+
+        playground.reply_to(topic_post, whisper: true)
+
+        expect(last_reply.raw).to include(
+          I18n.t(
+            "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+            reset_time: allocation.formatted_reset_time,
+          ),
+        )
+        expect(last_reply).to be_whisper
+      end
+
+      it "whispers the reply when the history changes while replying" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Triage done"]) do
+          playground.reply_to(topic_post, whisper: true) do
+            topic_post.update_columns(raw: "Edited while replying")
+          end
+        end
+
+        expect(last_reply.raw).to include("Triage done", "history_changed")
+        expect(last_reply).to be_whisper
+      end
+
+      it "whispers the reply when an unexpected error interrupts it" do
+        allow_any_instance_of(DiscourseAi::Completions::HistorySnapshot).to receive(
+          :stamp!,
+        ).and_raise(StandardError, "boom")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Triage done"]) do
+          expect { playground.reply_to(topic_post, whisper: true) }.to raise_error(
+            StandardError,
+            "boom",
+          )
+        end
+
+        expect(last_reply.raw).to include("Triage done", "boom")
+        expect(last_reply).to be_whisper
+      end
+    end
   end
 
   describe "#canceling a completions" do
@@ -2546,7 +2731,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         [["Partial answer before the action", call], ""],
       ) { small_window_playground.reply_to(source, auto_set_title: false) }
       reply = source.topic.posts.order(:post_number).last
-      expect(reply.raw).to include("Partial answer before the action", "unusable_summary")
+      expect(reply.raw).to include("Partial answer before the action", "empty_summary")
       entries = reply.post_custom_prompt.custom_prompt
       expect(entries.find { |entry| entry[2] == "tool" }[1]).to eq(call.id)
       expect(entries.to_s).to include("Important tool evidence")

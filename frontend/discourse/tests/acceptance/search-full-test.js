@@ -5,6 +5,7 @@ import {
   SEARCH_TYPE_DEFAULT,
   SEARCH_TYPE_USERS,
 } from "discourse/controllers/full-page-search";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance, selectDate } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -120,6 +121,31 @@ acceptance("Search - Full Page", function (needs) {
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
   });
 
+  test("starting a new topic from no results opens a fresh draft", async function (assert) {
+    pretender.get("/search", () =>
+      response({
+        grouped_search_result: { term: "none", can_create_topic: true },
+      })
+    );
+
+    await visit("/search?q=none");
+    await click(".no-results-suggestion a");
+
+    assert
+      .dom(".composer-action-create-topic")
+      .exists("opens the composer in new topic mode");
+    const composerModel = this.owner.lookup("service:composer").model;
+    assert.true(
+      /^new_topic_\d+$/.test(composerModel.draftKey),
+      "uses a unique draft key"
+    );
+    assert.strictEqual(
+      composerModel.draftSequence,
+      0,
+      "starts a fresh draft sequence"
+    );
+  });
+
   test("unknown search types fall back to post results", async function (assert) {
     await visit("/search?q=consectetur&search_type=unavailable_type");
 
@@ -129,6 +155,25 @@ acceptance("Search - Full Page", function (needs) {
     assert
       .dom('.search-types__type[data-search-type="topics_posts"]')
       .hasClass("active", "shows that the post search type is in effect");
+  });
+
+  test("a URL change to both the term and the type searches the new term", async function (assert) {
+    await visit(`/search?q=dev&search_type=${SEARCH_TYPE_USERS}`);
+    await visit("/search?q=consectetur");
+
+    assert.dom(".search-query").hasValue("consectetur", "shows the new term");
+    assert
+      .dom(".fps-topic")
+      .exists({ count: 1 }, "shows results for the new term");
+  });
+
+  test("picking a type after the URL drops the term keeps what was typed", async function (assert) {
+    await visit("/search?q=dev");
+    await visit("/search");
+    await fillIn(".search-query", "consectetur");
+    await click(`.search-types__type[data-search-type="${SEARCH_TYPE_USERS}"]`);
+
+    assert.dom(".search-query").hasValue("consectetur");
   });
 
   test("search for personal messages", async function (assert) {

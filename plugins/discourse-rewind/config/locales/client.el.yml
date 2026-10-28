@@ -46,6 +46,10 @@ el:
           message_4: "Το μέσο μήκος των μηνυμάτων σας ήταν <strong>%{length}</strong> χαρακτήρες"
           message_5: "Τα αγαπημένα σας κανάλια:"
           dancing_baby_alt: "Μωρό που χορεύει"
+        live_usage:
+          minutes:
+            one: "%{count} λ"
+            other: "%{count} λ"
         invites:
           label_invitations_sent: "Οι προσκλήσεις στάλθηκαν:"
           label_likes_given: "\"Μου αρέσει\" που δόθηκαν:"

@@ -1,6 +1,40 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
+  describe ".dsa_community_rules=" do
+    let(:rule) { { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." } }
+
+    it "accepts a 500 character contractual ground and rejects 501 characters" do
+      rule[:ground] = "é" * 500
+
+      SiteSetting.dsa_community_rules = [rule].to_json
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules).sole.fetch("ground")).to eq(rule[:ground])
+
+      rule[:ground] << "é"
+
+      expect { SiteSetting.dsa_community_rules = [rule].to_json }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "accepts a 2000 character explanation and rejects 2001 characters" do
+      rule[:explanation] = "é" * 2000
+
+      SiteSetting.dsa_community_rules = [rule].to_json
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules).sole.fetch("explanation")).to eq(
+        rule[:explanation],
+      )
+
+      rule[:explanation] << "é"
+
+      expect { SiteSetting.dsa_community_rules = [rule].to_json }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+  end
+
   describe "topic_title_length" do
     it "returns a range of min/max topic title length" do
       expect(SiteSetting.topic_title_length).to eq(
@@ -65,6 +99,16 @@ RSpec.describe SiteSetting do
 
       SiteSetting.update_pending_users_reminder_default = true
       expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(60)
+    end
+  end
+
+  describe "whispers_allowed_groups" do
+    it "defaults to staff while the update_whispers_allowed_groups_default change is enabled" do
+      expect(SiteSetting.whispers_allowed_groups).to eq("")
+
+      SiteSetting.update_whispers_allowed_groups_default = true
+      expect(SiteSetting.whispers_allowed_groups).to eq(Group::AUTO_GROUPS[:staff].to_s)
+      expect(Fabricate(:moderator)).to be_a_whisperer
     end
   end
 

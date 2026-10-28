@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { makeArray } from "discourse/lib/helpers";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
-import { inputFieldPathsForNode } from "../../../lib/workflows/input-fields";
+import { inputFieldPathsForNode } from "../../../lib/workflows/input-fields.js";
 
 export default class FieldPathControl extends Component {
   get multiple() {
@@ -26,7 +26,6 @@ export default class FieldPathControl extends Component {
     return inputFieldPathsForNode(this.args.node, {
       nodes: this.args.nodes,
       connections: this.args.connections,
-      nodeTypes: this.args.nodeTypes,
       session: this.args.session,
     });
   }

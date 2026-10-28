@@ -50,9 +50,18 @@ if defined?(DiscourseWorkflows)
                 required: false,
                 no_data_expression: true,
               },
-              **CATEGORY_FILTER_PROPERTIES,
-              **TAG_FILTER_PROPERTIES,
+              **TOPIC_SCOPE_FILTER_PROPERTIES,
             },
+          )
+
+          deprecated(
+            superseded_by: "2.0",
+            changes: {
+              "user" => "actor",
+            },
+            notice_key: "discourse_workflows.node_deprecated.user_is_post_author",
+            description_key:
+              "discourse_workflows.node_descriptions.trigger:post_reaction_changed_v1",
           )
 
           def initialize(post, user, previous_reaction)
@@ -76,7 +85,7 @@ if defined?(DiscourseWorkflows)
               reaction:,
               previous_reaction: @previous_reaction,
               post: serialize_post(@post),
-              topic: topic_data(@post.topic),
+              topic: serialize_topic_list_item(@post.topic),
               user: serialize_user(@user),
             }
           end
@@ -84,9 +93,10 @@ if defined?(DiscourseWorkflows)
           def matches?(trigger_ctx)
             filter = trigger_ctx.get_node_parameter("reaction").to_s.delete(":").presence
 
-            matches_changes?(trigger_ctx, change) &&
-              (filter.nil? || [reaction, @previous_reaction].include?(filter)) &&
-              matches_topic_filters?(@post.topic, trigger_ctx)
+            return false if !matches_changes?(trigger_ctx, change)
+            return false if filter && [reaction, @previous_reaction].exclude?(filter)
+
+            matches_topic_filters?(@post.topic, trigger_ctx)
           end
 
           private

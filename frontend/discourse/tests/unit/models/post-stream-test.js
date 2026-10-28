@@ -126,6 +126,26 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
+  test("highlightQuoteOnRender keeps only the latest quote", function (assert) {
+    const postStream = buildStream.call(this, 1232);
+
+    postStream.highlightQuoteOnRender(3, "first quote");
+    postStream.highlightQuoteOnRender(4);
+    assert.strictEqual(
+      postStream.quoteHighlights.get(3).quote,
+      "first quote",
+      "keeps the quote when a jump has nothing to highlight"
+    );
+
+    postStream.highlightQuoteOnRender(5, "second quote");
+    assert.false(postStream.quoteHighlights.has(3), "drops the previous quote");
+    assert.strictEqual(
+      postStream.quoteHighlights.get(5).quote,
+      "second quote",
+      "stores the latest quote"
+    );
+  });
+
   test("closestPostNumberFor", function (assert) {
     const postStream = buildStream.call(this, 1231);
     const store = getOwner(this).lookup("service:store");
@@ -1405,6 +1425,34 @@ module("Unit | Model | post-stream", function (hooks) {
     await assert.rejects(
       postStream.loadIntoIdentityMap([1]),
       (error) => error.jqXHR && error.jqXHR.status === 500
+    );
+  });
+
+  test("stagePost keeps the server's shape for last_posted_at", function (assert) {
+    const postStream = buildStream.call(this, 10101, [1]);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", { id: 1, post_number: 1, topic_id: 10101 })
+    );
+    const user = store.createRecord("user", { username: "eviltrout", id: 321 });
+    const stagedPost = store.createRecord("post", {
+      raw: "hello world this is my new post",
+      topic_id: 10101,
+    });
+    postStream.topic.setProperties({ posts_count: 1, highest_post_number: 1 });
+
+    postStream.stagePost(stagedPost, user);
+
+    const lastPostedAt = postStream.topic.last_posted_at;
+    assert.strictEqual(
+      typeof lastPostedAt,
+      "string",
+      "last_posted_at is a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(lastPostedAt).toISOString(),
+      lastPostedAt,
+      "last_posted_at is an ISO 8601 timestamp"
     );
   });
 });

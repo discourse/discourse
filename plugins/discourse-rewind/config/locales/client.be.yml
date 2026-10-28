@@ -17,5 +17,11 @@ be:
         chat_usage:
           author: Вы
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} хв"
+            few: "%{count} хв"
+            many: "%{count} хв"
+            other: "%{count} хв"
         writing_analysis:
           menu_other: Іншае

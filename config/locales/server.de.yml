@@ -20,6 +20,7 @@ de:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "Kategorie nicht gefunden"
       draft_too_long: "Der Entwurf ist zu lang"
       post_not_found: "Beitrag nicht gefunden"
       topic_not_found: "Thema nicht gefunden"
@@ -871,6 +872,7 @@ de:
     post_template: "%{replace_paragraph}\n\nBenutze die folgenden Abschnitte für eine ausführlichere Beschreibung oder um Richtlinien oder Regeln für diese Kategorie festzulegen:\n\n- Warum sollten Benutzer diese Kategorie nutzen? Wofür ist sie gedacht?\n\n- Wie genau unterscheidet sie sich von den Kategorien, die es bereits gibt?\n\n- Was sollten Themen in dieser Kategorie generell beinhalten?\n\n- Brauchen wir diese Kategorie? Können wir sie mit einer anderen Kategorie oder Unter-Kategorie zusammenführen?\n"
     errors:
       not_found: "Kategorie nicht gefunden!"
+      self_lockout: "Du bist dabei, die Berechtigungen für diese Kategorie so zu ändern, dass du selbst nicht länger Zugriff darauf hast. Bist du sicher, dass du fortfahren willst?"
       uncategorized_parent: "„Nicht kategorisiert“ kann keine übergeordnete Kategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
       depth: "Unterkategorien können nicht ineinander verschachtelt werden."
@@ -2335,7 +2337,6 @@ de:
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
     reviewable_low_priority_threshold: "Der Prioritätsfilter blendet überprüfbare Elemente aus, die diesem Score nicht entsprechen, es sei denn, der Filter „(any)“ wird verwendet."
     high_trust_flaggers_auto_hide_posts: "Beiträge von neuen Benutzern werden automatisch ausgeblendet, nachdem sie von einem Benutzer mit VS3+ als Spam gemeldet wurden"
-    allow_all_users_to_flag_illegal_content: "Anonyme Benutzer sehen die Information, dass sie den Administratoren eine E-Mail schicken müssen, um illegale Inhalte zu melden. Diese Einstellung hat Vorrang vor {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "Wenn dieses Feld leer gelassen wird, wird die Standard-E-Mail-Adresse des Website-Administrators verwendet."
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
     slow_mode_prevents_editing: "Verhindert der langsame Modus die Bearbeitung nach {{setting:editing_grace_period}}?"
@@ -2678,13 +2679,11 @@ de:
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     enable_auto_grid_images: "Schließt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Editor hochgeladen werden."
     enable_new_checkbox_style: "Aktiviere den neu gestalteten Kontrollkästchen-Stil für FormKit-Kontrollkästchen."
-    enable_new_post_reactions_menu: "Aktiviere das überarbeitete Menü für „Gefällt mir“-Angaben und Reaktionen bei Beiträgen mit Endlos-Scrolling und einer nativen mobilen Benutzererfahrung."
     enable_composer_redesign: "Aktiviere den überarbeiteten Editor."
     prioritize_recently_used_tags: "Wenn beim Erstellen oder Bearbeiten eines Themas Schlagwörter hinzugefügt werden, zeige die Schlagwörter, die das Mitglied kürzlich in seinen eigenen Themen verwendet hat, ganz oben in der Liste an – noch vor den beliebtesten Tags des Forums."
     experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
-    about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
     about_page_extra_groups: "Gruppen, die auf der Seite „Über uns“ unter den Moderatoren angezeigt werden sollen."
     about_page_extra_groups_initial_members: "Anzahl der Mitglieder, die pro Gruppe auf der „Über uns“-Seite angezeigt werden, bevor eine „Mehr anzeigen“-Schaltfläche erscheint."
     about_page_extra_groups_show_description: "Ob die Gruppenbeschreibungen auf der Seite „Über uns“ angezeigt werden sollen."
@@ -4409,34 +4408,18 @@ de:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
       subject_template_improved: "Dein Konto wurde gesperrt"
-      text_body_template: |
-        Du wurdest im Forum bis zum %{suspended_till} gesperrt.
-
-        Grund – %{reason}
     account_suspended_forever:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
       subject_template_improved: "Dein Konto wurde gesperrt"
-      text_body_template: |
-        Du wurdest im Forum gesperrt.
-
-        Grund – %{reason}
     account_silenced:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
       subject_template_improved: "Dein Konto wurde stummgeschaltet"
-      text_body_template: |
-        Du wurdest im Forum bis zum %{silenced_till} stummgeschaltet.
-
-        Grund – %{reason}
     account_silenced_forever:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
       subject_template_improved: "Dein Konto wurde stummgeschaltet"
-      text_body_template: |
-        Du wurdest im Forum stummgeschaltet.
-
-        Grund – %{reason}
     account_deleted:
       title: "Konto gelöscht"
       subject_template: "[%{email_prefix}] Dein Konto wurde gelöscht"
@@ -5567,6 +5550,10 @@ de:
       truncated_file: "Diese Datei wurde abgeschnitten."
       show_original: "Original zeigen"
     github:
+      header:
+        file: "Datei"
+        success: "Erfolg"
+        pending: "In Bearbeitung"
       binary_file: "Diese Datei ist binär."
       truncated_file: "Diese Datei wurde abgeschnitten."
       show_original: "Original zeigen"
@@ -5580,21 +5567,12 @@ de:
       review_by: "Überprüfung durch"
       pr_summary: "%{commits} Commits haben %{changed_files} Dateien durch %{additions} Ergänzungen und %{deletions} Löschungen geändert"
       no_description: "Trage zur Entwicklung von %{repo} bei, indem du ein Konto bei GitHub erstellst."
-      pr_title:
-        default: "Pull Request"
-        draft: "Entwurf Pull Request"
-        open: "Offener Pull Request"
-        approved: "Genehmigter Pull Request"
-        changes_requested: "Änderungen angefordert"
-        merged: "Zusammengeführter Pull Request"
-        closed: "Geschlossener Pull Request"
-      status_date:
-        open: "offen"
-        draft: "entworfen"
-        approved: "genehmigt"
-        changes_requested: "Änderungen angefordert"
-        merged: "Zusammengeführt am"
-        closed: "geschlossen"
+      pr_status:
+        draft: "Entwurf"
+        open: "Offen"
+        approved: "Genehmigt"
+        merged: "Zusammengeführt"
+        closed: "Geschlossen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'

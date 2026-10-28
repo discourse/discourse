@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { and } from "discourse/truth-helpers";
 import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 import type { DTabsTablistSignature } from "discourse/ui-kit/d-tabs/types";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
@@ -27,9 +26,6 @@ export default class Tablist extends Component<DTabsTablistSignature> {
       as |strip|
     >
       {{! Splattributes come first so the role below stays authoritative. }}
-      {{! The role is dynamic, so the linter only sees a bare div and would
-          strip the orientation it cannot match to the tablist role. }}
-      {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
       <div
         class="d-tabs__tablist"
         ...attributes

@@ -1,7 +1,7 @@
 import { InputRule } from "prosemirror-inputrules";
 import { StepMap } from "prosemirror-transform";
 
-export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
+export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it.js";
 
 export { buildBBCodeAttrs } from "discourse/lib/text";
 
@@ -171,7 +171,7 @@ export function changedDescendants(old, cur, f, offset = 0) {
  * @param type
  *    {import("prosemirror-model").MarkType} - The type of mark to find.
  * @param attrs
- *    {Object} - Optional attributes to match against the mark.
+ *    {Record<string, unknown>} - Optional attributes to match against the mark.
  * @returns {{ from: number, to: number, mark: import("prosemirror-model").Mark } | undefined}
  */
 export function getMarkRange($pos, type, attrs = {}) {
@@ -224,7 +224,7 @@ export function getMarkRange($pos, type, attrs = {}) {
  * @param type
  *   {import("prosemirror-model").MarkType} - The type of mark to find.
  * @param attrs
- *  {Object} - Optional attributes to match against the mark.
+ *  {Record<string, unknown>} - Optional attributes to match against the mark.
  * @returns {import("prosemirror-model").Mark | undefined}
  */
 export function findMarkOfType(marks, type, attrs = {}) {

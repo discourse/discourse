@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 lt:
+  site_settings:
+    openid_connect_groups_claim: "„Userinfo“ atsakymo arba ID žymens lauko pavadinimas, kuriame vartotojo grupės pateikiamos kaip eilutės masyvas arba kableliais atskirta eilutė. Jei reikšmės yra eilutės, tušti tarpai ir įrašai ignoruojami. Naudokite masyvą, jei grupių pavadinimuose yra kablelių. Palikite lauką tuščią, jei norite išjungti grupių sinchronizavimą."
+    openid_connect_email_verified_claim_fallback: "Reikšmė, kurią reikia naudoti lauke „email_verified“, kai paslaugos teikėjas nenurodo šio teiginio."
+    openid_connect_email_claim: "Reikalavimas, kuriame nurodytas vartotojo el. pašto adresas. Numatytasis nustatymas – „el. paštas“. Pasirinkite tik tą reikalavimą, kuriame nurodytas tapatybės patvirtinimo paslaugos teikėjo patvirtintas el. pašto adresas, nes jis gali susieti vartotojus su esamomis paskyromis."

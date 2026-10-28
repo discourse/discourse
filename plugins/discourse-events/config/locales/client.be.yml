@@ -44,6 +44,8 @@ be:
               title: "грамадскага"
             private:
               title: "прыватны"
+      recording_modal:
+        save: "Захаваць"
       composer:
         url_placeholder: "Дадаць URL"
         reminder:

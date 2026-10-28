@@ -17,6 +17,7 @@ id:
       location: "Lokasi"
   mcp:
     errors:
+      category_not_found: "Kategori tidak ditemukan"
       draft_too_long: "Draf terlalu panjang"
       topic_not_found: "Tidak ada topik"
     oauth:
@@ -1563,10 +1564,14 @@ id:
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Sukses"
       closed: "tertutup"
-      status_date:
-        approved: "disetujui"
-        closed: "tertutup"
+      pr_status:
+        draft: "Konsep"
+        open: "Buka"
+        approved: "Disetujui"
+        closed: "Tertutup"
   staff_action_logs:
     unknown: "tidak diketahui"
   reviewables:

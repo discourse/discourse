@@ -9,3 +9,6 @@ sr:
     discourse_reactions:
       users_popup:
         all: "Sve"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Dodato"

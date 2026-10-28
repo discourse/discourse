@@ -97,4 +97,14 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
       .hasAttribute("role", "status");
     assert.dom(".empty-state__image").doesNotExist();
   });
+
+  test("@ctaDisabled", async function (assert) {
+    await render(
+      <template>
+        <DEmptyState @ctaDisabled={{true}} @ctaLabel="Show all" />
+      </template>
+    );
+
+    assert.dom(".empty-state__cta .btn").isDisabled();
+  });
 });

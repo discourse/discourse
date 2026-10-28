@@ -9,7 +9,9 @@ module DiscourseAi
                     :generated_output,
                     :generation_event_id,
                     :generation_settled,
-                    :root_reply_completed
+                    :root_reply_completed,
+                    :response_limit_tripped,
+                    :audit_log_id
       attr_reader :audit_logger, :structured_audit_logger, :upload_skips
 
       def initialize(
@@ -23,7 +25,6 @@ module DiscourseAi
         @audit_logger = audit_logger
         @structured_audit_logger = structured_audit_logger
         @upload_skips = []
-        @preparation_state = { mutex: Mutex.new, budget: nil }
       end
 
       def for_new_turn
@@ -32,10 +33,6 @@ module DiscourseAi
           audit_logger: audit_logger,
           structured_audit_logger: structured_audit_logger,
         )
-      end
-
-      def share_preparation_budget(budget)
-        @preparation_state[:mutex].synchronize { @preparation_state[:budget] ||= budget }
       end
 
       def settle_generation(tokens: nil, tokenizer:, complete: true)

@@ -161,6 +161,10 @@ module DiscourseAi
       # @param temperature { Float - Optional } - The temperature to use for the completion.
       # @param top_p { Float - Optional } - The top_p to use for the completion.
       # @param max_tokens { Integer - Optional } - The maximum number of tokens to generate.
+      # @param max_response_tokens { Integer - Optional } - Cap on visible response (text) tokens.
+      #   Unlike max_tokens this expresses caller intent for the reply itself: thinking tokens do
+      #   not count against it, streamed text is trimmed at the cap, and generation is aborted
+      #   once the cap is reached. Tool calls and structured output are exempt.
       # @param stop_sequences { Array<String> - Optional } - The stop sequences to use for the completion.
       # @param feature_name { String - Optional } - The feature name to use for the completion.
       # @param feature_context { Hash - Optional } - The feature context to use for the completion.
@@ -183,6 +187,7 @@ module DiscourseAi
         temperature: nil,
         top_p: nil,
         max_tokens: nil,
+        max_response_tokens: nil,
         stop_sequences: nil,
         user:,
         feature_name: nil,
@@ -198,12 +203,16 @@ module DiscourseAi
         max_tokens_is_total: false,
         &partial_read_blk
       )
+        response_limit = max_response_tokens&.to_i
+        response_limit = nil if response_limit && !response_limit.positive?
+
         self.class.record_prompt(
           prompt,
           {
             temperature: temperature,
             top_p: top_p,
             max_tokens: max_tokens,
+            max_response_tokens: response_limit,
             stop_sequences: stop_sequences,
             user: user,
             feature_name: feature_name,
@@ -259,20 +268,40 @@ module DiscourseAi
           work = execution_context.work_budget
           helper_options =
             work.generation_options(
-              { thinking_effort: thinking_effort, response_format: response_format },
-              maximum: max_tokens || llm_model.max_output_tokens.presence || 2500,
+              {
+                thinking_effort: thinking_effort,
+                response_format: response_format,
+                max_response_tokens: response_limit,
+                thinking_allowance: thinking_response_allowance(thinking_effort),
+              },
+              # Helper generations borrow against the root work budget, so
+              # their admission ceiling is whatever work remains when no
+              # explicit limit was given.
+              maximum: max_tokens || llm_model.max_output_tokens.presence || work.remaining,
             )
-          if helper_options[:max_tokens] <= 0
-            raise ContextPreparation::Error.new("turn_budget_exhausted")
+          if helper_options[:max_tokens] && helper_options[:max_tokens] <= 0
+            raise ContextPreparation::Error.new("turn_budget_exhausted", prompt: prompt)
           end
           _, _, provider_output = prompt_capacity(prompt, **helper_options)
           generation_reservation =
             work.reserve_generation_output(provider_output, max_tokens: helper_options[:max_tokens])
           if !execution_context.work_execution_state.reserve_completion
-            raise ContextPreparation::Error.new("completion_limit")
+            raise ContextPreparation::Error.new("completion_limit", prompt: prompt)
           end
-          model_params[:max_tokens] = helper_options[:max_tokens]
+          model_params[:max_tokens] = helper_options[:max_tokens] if helper_options[:max_tokens]
         end
+
+        # Express the visible-response intent in provider terms when the
+        # caller did not set a provider ceiling: reserve room for thinking
+        # on top of the response cap. An explicit or work-budget ceiling
+        # stays authoritative; enforcement below still trims the reply.
+        if response_limit && model_params[:max_tokens].blank?
+          model_params[:max_tokens] = response_limit + thinking_response_allowance(thinking_effort)
+          # The derived ceiling already includes thinking room; providers
+          # with a visible/thinking split must treat it as the total.
+          model_params[:max_tokens_is_total] = true
+        end
+
         model_params = gateway.prepare_model_params(model_params) if gateway.respond_to?(
           :prepare_model_params,
         )
@@ -285,12 +314,16 @@ module DiscourseAi
           if capacity <= 0
             raise ContextPreparation::Error.new(
                     max_prompt_tokens.to_i <= 0 ? "unknown_capacity" : "hard_overflow",
+                    prompt: prompt,
                   )
           end
-          raise ContextPreparation::Error.new("hard_overflow") if size > capacity
+          raise ContextPreparation::Error.new("hard_overflow", prompt: prompt) if size > capacity
         end
 
         call_context = execution_context&.dup
+        # A response limit needs a context to carry the limiter flag to the
+        # endpoint's audit logging even when the caller supplied none.
+        call_context ||= ExecutionContext.new if response_limit
         if call_context && feature_name != "context_compression"
           call_context.generated_output = GeneratedOutput.new
           call_context.generation_event_id = "generation:#{SecureRandom.uuid}"
@@ -298,11 +331,54 @@ module DiscourseAi
         elsif call_context
           call_context.generated_output = nil
         end
+        # Visible-response enforcement: count text partials, trim the one
+        # that crosses the cap, then abort generation through an internal
+        # cancel manager so a caller's own manager is never tripped.
+        response_limiter = nil
+        limiter_cancel_manager = nil
+        user_cancel_callback = nil
+        response_limit_tripped = false
+        effective_cancel_manager = cancel_manager
+
+        if response_limit && partial_read_blk
+          limiter_cancel_manager = CancelManager.new
+          limiter_cancel_manager.cancel! if cancel_manager&.cancelled?
+          if cancel_manager
+            user_cancel_callback = -> { limiter_cancel_manager.cancel! }
+            cancel_manager.add_callback(user_cancel_callback)
+          end
+          effective_cancel_manager = limiter_cancel_manager
+
+          # Count the accumulated text, not individual deltas: tokenisation
+          # is not additive across arbitrary stream chunk boundaries.
+          visible_text = +""
+          response_limiter =
+            lambda do |partial|
+              next partial if !partial.is_a?(String)
+              next nil if response_limit_tripped
+
+              candidate = visible_text + partial
+              if tokenizer.size(candidate) <= response_limit
+                visible_text.replace(candidate)
+                partial
+              else
+                trimmed = truncate_response_text(candidate, response_limit)
+                forwarded = trimmed[visible_text.length..] || +""
+                visible_text.replace(trimmed)
+                response_limit_tripped = true
+                call_context.response_limit_tripped = true if call_context
+                limiter_cancel_manager.cancel!
+                forwarded.empty? ? nil : forwarded
+              end
+            end
+        end
+
         read_block =
           if partial_read_blk
             proc do |partial, *args|
               call_context&.generated_output&.<<(partial)
-              partial_read_blk.call(partial, *args)
+              partial = response_limiter.call(partial) if response_limiter
+              partial_read_blk.call(partial, *args) if !partial.nil?
             end
           end
 
@@ -315,13 +391,38 @@ module DiscourseAi
             feature_context: feature_context,
             partial_tool_calls: partial_tool_calls,
             output_thinking: output_thinking,
-            cancel_manager: cancel_manager,
+            cancel_manager: effective_cancel_manager,
             execution_context: call_context,
             &read_block
           )
         Array(result).each { |part| call_context&.generated_output&.<<(part) } if !partial_read_blk
+
+        # Structured output is exempt: reclassifying its serialized form as
+        # plain text could chop JSON the caller already received intact.
+        result_truncated = false
+        if response_limit && !response_format
+          result_truncated = response_result_over_limit?(result, response_limit)
+          result = truncate_response_result(result, response_limit) if result_truncated
+        end
+
+        # The endpoint persists its audit log before non-streamed (or
+        # replayed) output reaches the limiter, so reconcile the exact log
+        # this call created (handed back through the execution context).
+        if response_limit && (response_limit_tripped || result_truncated) &&
+             call_context&.audit_log_id
+          log = AiApiAuditLog.find_by(id: call_context.audit_log_id)
+          if log
+            log.completion_state = AiApiAuditLog::CompletionState::TRUNCATED
+            log.stop_reason = "max_response_tokens"
+            log.save!
+          end
+        end
+
         result
       ensure
+        if user_cancel_callback && cancel_manager
+          cancel_manager.remove_callback(user_cancel_callback)
+        end
         call_context&.settle_generation(tokenizer: tokenizer)
         execution_context&.work_budget&.release_output(generation_reservation)
       end
@@ -406,7 +507,10 @@ module DiscourseAi
             .each do |upload|
               if upload[:kind] == :document && upload[:text].blank?
                 if dialect.is_a?(Dialects::Converse) || dialect.is_a?(Dialects::Command)
-                  raise ContextPreparation::Error.new("unsupported_document_provider")
+                  raise ContextPreparation::Error.new(
+                          "unsupported_document_provider",
+                          prompt: prompt,
+                        )
                 end
                 attachment_tokens += document_capacity_tokens(upload)
               elsif upload[:kind] == :image
@@ -490,6 +594,62 @@ module DiscourseAi
 
       private
 
+      def thinking_response_allowance(thinking_effort)
+        ThinkingConfig.response_allowance_for(llm_model: llm_model, effort: thinking_effort)
+      end
+
+      def truncate_response_text(text, tokens)
+        return +"" if tokens <= 0
+        return text if tokenizer.size(text) <= tokens
+
+        tokenizer.truncate(text, tokens, strict: SiteSetting.ai_strict_token_counting)
+      end
+
+      def response_result_over_limit?(result, limit)
+        text =
+          case result
+          when String
+            result
+          when Array
+            result.select { |part| part.is_a?(String) }.join
+          else
+            return false
+          end
+
+        tokenizer.size(text) > limit
+      end
+
+      def truncate_response_result(result, limit)
+        case result
+        when String
+          truncate_response_text(result, limit)
+        when Array
+          visible_text = +""
+          tripped = false
+          result.filter_map do |part|
+            if part.is_a?(String)
+              next nil if tripped
+
+              candidate = visible_text + part
+              if tokenizer.size(candidate) <= limit
+                visible_text.replace(candidate)
+                part
+              else
+                tripped = true
+                trimmed = truncate_response_text(candidate, limit)
+                forwarded = trimmed[visible_text.length..] || +""
+                visible_text.replace(trimmed)
+                forwarded.empty? ? nil : forwarded
+              end
+            else
+              part
+            end
+          end
+        else
+          result
+        end
+      end
+
       def document_capacity_tokens(upload)
         if upload[:mime_type] != "application/pdf"
           raise ContextPreparation::Error.new("unsupported_document_type")
@@ -549,17 +709,23 @@ module DiscourseAi
                   (attachment && %w[data base64].include?(key.to_s)) ||
                     (binary_source && key.to_s == "bytes") ||
                     (
-                      %w[url file_data].include?(key.to_s) &&
+                      %w[url image_url file_data].include?(key.to_s) &&
                         part.match?(%r{\Adata:(?:image/|application/pdf).*;base64,}) &&
                         (
-                          parent_key.to_s == "image_url" || value.key?(:filename) ||
-                            value.key?("filename")
+                          parent_key.to_s == "image_url" ||
+                            (
+                              key.to_s == "image_url" &&
+                                (value[:type] || value["type"]) == "input_image"
+                            ) || value.key?(:filename) || value.key?("filename")
                         )
                     )
                 )
             content =
               if blob
                 "[binary upload]"
+              elsif key.to_s == "images" && (value[:role] || value["role"]) == "user" &&
+                    part.is_a?(Array)
+                part.map { "[binary upload]" }
               else
                 capacity_payload(
                   part,

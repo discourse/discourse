@@ -54,6 +54,12 @@ da:
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"
+        classify:
+          text: "Tekst"
+          upload_ids: "Billeder"
+          name: "Navn"
+          type: "Type"
+          type_score: "Score"
       ai_tool_approval:
         loading: "Indlæser…"
         tool: "Handling"
@@ -69,6 +75,7 @@ da:
         groups: "Grupper:"
         no_agent: "Ikke indstillet"
         no_groups: "Ingen"
+        classification_model: "Model:"
         edit: "Indstillinger"
         expand_list:
           one: "(%{count} mere)"
@@ -79,6 +86,8 @@ da:
         filters:
           all: "Alle"
           reset: "Nulstil"
+        sentiment:
+          enabled: "Aktiveret"
         search:
           name: "Søg"
         image_caption:
@@ -223,6 +232,14 @@ da:
         edit: "Rediger"
         delete: "Slet"
         embedding: "Indlejring"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Navn"
+        model: "Model"
+        provider: "Udbyder"
+        edit: "Rediger"
+        delete: "Slet"
+        test: "Kør test"
       mcp_servers:
         name: "Navn"
         description: "Beskrivelse"
@@ -236,6 +253,16 @@ da:
         delete: "Slet"
         tools_modal:
           required: "Obligatoriske"
+      models:
+        name: "Navn"
+        type: "Type"
+        provider: "Udbyder"
+        edit: "Rediger"
+        select_type: "Vælg"
+        types:
+          embedding: "Indlejring"
+        filters:
+          all: "Alle typer"
       llms:
         display_name: "Navn"
         vision_modes:
@@ -291,6 +318,16 @@ da:
         providers:
           google: "Google"
           fake: "Tilpasset"
+      ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          apply: "Anvend"
+        share: "Del"
+        create_link: "Opret link"
+        copy_link: "Kopiér link"
+        filter_all: "Alle"
+        filter_standalone: "Enkeltstående"
       ai_bot:
         llm: "Model:"
         debug_ai_modal:
@@ -320,6 +357,13 @@ da:
       summarization:
         chat:
           summarize: "Opsummer"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Emner"
+          messages: "Beskeder"
       discobot_discoveries:
         legacy:
           regular_results: "Emner"

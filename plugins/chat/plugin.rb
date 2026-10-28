@@ -442,6 +442,51 @@ after_initialize do
     Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
 
+  homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
+
+  register_modifier(:design_wizard_homepages) do |options|
+    next options if !SiteSetting.enable_public_channels
+
+    channel = Chat::CategoryChannel.find_by(chatable_id: SiteSetting.general_category_id)
+    next options if !channel || channel.archived? || channel.read_restricted?
+
+    options +
+      [
+        {
+          id: "chat",
+          name: I18n.t("chat.design_wizard_homepage_name"),
+          description: I18n.t("chat.design_wizard_homepage_description", channel: channel.title),
+          icon: "comments",
+          illustration: "conversation",
+          path: channel.relative_url.delete_prefix(Discourse.base_path),
+          settings: {
+            chat_homepage_channel: channel.id.to_s,
+          },
+        },
+      ]
+  end
+
+  register_homepage(
+    "chat",
+    name: "chat.homepage_option",
+    path: -> { homepage_channel.call&.relative_url&.delete_prefix(Discourse.base_path) || "/chat" },
+    route: "chat/chat#respond",
+    anonymous: true,
+    enabled: -> { SiteSetting.enable_public_channels },
+    available: ->(guardian:, request:) do
+      channel = homepage_channel.call
+      next false if channel.nil? || channel.archived? || !channel.public_channel?
+      next false if CrawlerDetection.crawler_layout_request?(request)
+
+      if guardian.anonymous?
+        guardian.can_preview_anonymous_public_chat_channel?(channel)
+      else
+        guardian.can_chat? && guardian.user.user_option&.chat_enabled &&
+          guardian.can_preview_chat_channel?(channel)
+      end
+    end,
+  )
+
   register_presence_channel_prefix("chat") do |channel_name|
     next if channel_name != "/chat/online"
     PresenceChannel::Config.new.tap { |config| config.allowed_group_ids = Chat.allowed_group_ids }

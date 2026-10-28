@@ -351,7 +351,12 @@ module Email
     end
 
     def format_custom
-      custom_styles.each { |selector, value| style(selector, value) }
+      custom_styles.each do |selector, value|
+        style(selector, value)
+      rescue Nokogiri::CSS::SyntaxError, Nokogiri::XML::XPath::SyntaxError
+        # Custom selectors that cannot be inlined must not prevent email delivery.
+        next
+      end
     end
 
     # this method is reserved for styles specific to plugin

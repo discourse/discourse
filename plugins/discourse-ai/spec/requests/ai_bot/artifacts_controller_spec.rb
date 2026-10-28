@@ -27,6 +27,245 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
     SiteSetting.ai_artifact_security = "strict"
   end
 
+  describe "#embed" do
+    it "renders current and explicit versions without an authenticated bridge even for a signed-in owner" do
+      artifact.update!(metadata: { public: true })
+      public_topic = Fabricate(:topic, user: user)
+      public_post = Fabricate(:post, user: user, topic: public_topic)
+      artifact.update!(post: public_post)
+      version = artifact.create_new_version(html: "<p>Old public version</p>")
+      artifact.update!(html: "<p>Current public version</p>")
+      sign_in(user)
+
+      get AiArtifact.embed_url(artifact.id)
+      expect(response.status).to eq(200)
+      expect(parse_srcdoc(response.body)).to include(artifact.html)
+      expect(response.headers["X-Frame-Options"]).to be_nil
+      expect(response.headers["Referrer-Policy"]).to eq("no-referrer")
+      expect(response.headers["Cache-Control"]).to eq("no-store")
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+      expect(response.body).not_to include(
+        "csrf-token",
+        "discourse-artifact-kv",
+        "_discourse_user_data",
+      )
+      expect(Nokogiri.HTML5(response.body).css("body > script")).to be_empty
+
+      get AiArtifact.embed_url(artifact.id, version.version_number)
+      expect(response.status).to eq(200)
+      expect(parse_srcdoc(response.body)).to include(version.html)
+      expect(parse_srcdoc(response.body)).not_to include(artifact.html)
+      expect(AiArtifactShare.where(ai_artifact: artifact)).not_to exist
+
+      get artifact.url
+      expect(response.status).to eq(200)
+      expect(response.body).to include("_discourse_user_data", "discourse-artifact-kv")
+    end
+
+    it "rejects an owner's private source, unpublished PM, missing versions, and trashed sources" do
+      sign_in(user)
+      get AiArtifact.embed_url(artifact.id)
+      expect(response.status).to eq(404)
+
+      artifact.update!(metadata: { public: true })
+      get AiArtifact.embed_url(artifact.id)
+      expect(response.status).to eq(404)
+
+      public_topic = Fabricate(:topic, user: user)
+      public_post = Fabricate(:post, user: user, topic: public_topic)
+      artifact.update!(post: public_post)
+      get AiArtifact.embed_url(artifact.id, 999)
+      expect(response.status).to eq(404)
+      get "#{AiArtifact.embed_url(artifact.id).delete_suffix("/embed")}/1garbage/embed"
+      expect(response.status).to eq(404)
+      get AiArtifact.embed_url("9223372036854775808")
+      expect(response.status).to eq(404)
+      get AiArtifact.embed_url(artifact.id, "2147483648")
+      expect(response.status).to eq(404)
+      public_post.trash!
+      get AiArtifact.embed_url(artifact.id)
+      expect(response.status).to eq(404)
+    end
+
+    it "honors the global login wall for a public source" do
+      public_topic = Fabricate(:topic, user: user)
+      artifact.update!(post: Fabricate(:post, user: user, topic: public_topic))
+      SiteSetting.login_required = true
+
+      get AiArtifact.embed_url(artifact.id)
+      expect(response).to redirect_to("/login")
+    end
+  end
+
+  describe "#shared" do
+    it "renders only the shared artifact without the authenticated bridge" do
+      SiteSetting.ai_bot_enabled = true
+      group = Fabricate(:group)
+      group.add(user)
+      SiteSetting.ai_bot_public_sharing_allowed_groups = group.id.to_s
+      artifact.update!(name: "<script>Untrusted title</script>")
+      share = AiArtifactShare.new(ai_artifact: artifact, user: user)
+      share.assign_attributes(share.snapshot_attributes(version_number: 0))
+      share.save!
+
+      get share.url
+
+      expect(response.status).to eq(200)
+      document = Nokogiri.HTML5(response.body)
+      expect(document.css("body > *").map(&:name)).to eq(["iframe"])
+      frame = document.at_css("body > iframe")
+      expect(frame["title"]).to eq(artifact.name)
+      expect(frame["sandbox"]).to eq("allow-scripts allow-forms")
+      expect(frame["srcdoc"]).to include(artifact.html)
+      expect(document.at_css("title").text).to eq(artifact.name)
+      expect(document.css("body > script")).to be_empty
+      expect(response.body).not_to include("csrf-token", "discourse-artifact-kv")
+    end
+  end
+
+  describe "#shared_metadata" do
+    fab!(:group)
+
+    before do
+      SiteSetting.ai_bot_enabled = true
+      group.add(user)
+      SiteSetting.ai_bot_public_sharing_allowed_groups = group.id.to_s
+    end
+
+    it "returns only the pinned snapshot name without exposing the source" do
+      share = AiArtifactShare.new(ai_artifact: artifact, user: user)
+      share.assign_attributes(share.snapshot_attributes(version_number: 0))
+      share.save!
+      artifact.update!(name: "Changed private source", html: "<p>New private source</p>")
+      artifact.create_new_version(html: "<p>Private future version</p>")
+
+      get "/discourse-ai/ai-bot/artifact-shares/#{share.share_key}/metadata.json"
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq({ "name" => share.name })
+      expect(response.headers["Cache-Control"]).to eq("no-store")
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "hides missing shares and shares after group, source, or site access is lost" do
+      share = AiArtifactShare.new(ai_artifact: artifact, user: user)
+      share.assign_attributes(share.snapshot_attributes(version_number: 0))
+      share.save!
+      path = "/discourse-ai/ai-bot/artifact-shares/#{share.share_key}/metadata.json"
+
+      get "/discourse-ai/ai-bot/artifact-shares/unknown/metadata.json"
+      expect(response.status).to eq(404)
+      get path
+      expect(response.parsed_body).to eq({ "name" => share.name })
+
+      group.remove(user)
+      get path
+      expect(response.status).to eq(404)
+      group.add(user)
+      post.trash!
+      get path
+      expect(response.status).to eq(404)
+      post.recover!
+      SiteSetting.ai_bot_enabled = false
+      get path
+      expect(response.status).to eq(404)
+      SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_artifact_security = "disabled"
+      get path
+      expect(response.status).to eq(404)
+    end
+
+    it "keeps the global login wall for an anonymous metadata request" do
+      share = AiArtifactShare.new(ai_artifact: artifact, user: user)
+      share.assign_attributes(share.snapshot_attributes(version_number: 0))
+      share.save!
+      SiteSetting.login_required = true
+
+      get "/discourse-ai/ai-bot/artifact-shares/#{share.share_key}/metadata.json"
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+  end
+
+  describe "#metadata" do
+    it "returns only the source name for base and existing versions to a permitted viewer" do
+      version = artifact.create_new_version(html: "<p>Secret version</p>")
+      sign_in(user)
+      path = "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json"
+
+      get path
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/json")
+      expect(response.parsed_body).to eq({ "name" => artifact.name })
+      expect(response.headers["Cache-Control"]).to eq("no-store")
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+
+      ["0", version.version_number.to_s].each do |requested_version|
+        get path, params: { version: requested_version }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq({ "name" => artifact.name })
+      end
+    end
+
+    it "returns a public source name to guests and hides a trashed source" do
+      artifact.update!(metadata: { public: true })
+      path = "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json"
+
+      get path
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq({ "name" => artifact.name })
+
+      topic.trash!
+      get path
+      expect(response.status).to eq(404)
+    end
+
+    it "rejects inaccessible sources, invalid IDs, and invalid or missing versions" do
+      path = "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json"
+      get path
+      expect(response.status).to eq(404)
+
+      sign_in(user)
+      %w[0 1garbage 999999999999999999999999999999999999999999].each do |bad_id|
+        get "/discourse-ai/ai-bot/artifacts/#{bad_id}/metadata.json"
+        expect(response.status).to eq(404)
+      end
+      [
+        "1garbage",
+        "-1",
+        "01",
+        "",
+        "999",
+        "999999999999999999999999999999999999999999",
+      ].each do |bad_version|
+        get path, params: { version: bad_version }
+        expect(response.status).to eq(404)
+      end
+      get path, params: { version: %w[0 1] }
+      expect(response.status).to eq(404)
+
+      topic.trash!
+      get path
+      expect(response.status).to eq(404)
+    end
+
+    it "honors site security and the global login wall" do
+      artifact.update!(metadata: { public: true })
+      path = "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json"
+      SiteSetting.ai_artifact_security = "disabled"
+      get path
+      expect(response.status).to eq(404)
+
+      SiteSetting.ai_artifact_security = "strict"
+      SiteSetting.login_required = true
+      get path
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+  end
+
   describe "#show" do
     it "returns 404 when discourse_ai is disabled" do
       SiteSetting.discourse_ai_enabled = false
@@ -201,11 +440,14 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       expect(style_tag.text).to include("alert")
     end
 
-    it "removes security headers and disables crawling" do
+    it "restricts authenticated runtime framing to the forum and disables crawling" do
       sign_in(user)
       get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
-      expect(response.headers["X-Frame-Options"]).to eq(nil)
-      expect(response.headers["Content-Security-Policy"]).to include("unsafe-inline")
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+      expect(response.headers["Content-Security-Policy"]).to include(
+        "unsafe-inline",
+        "frame-ancestors 'self'",
+      )
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
     end
 

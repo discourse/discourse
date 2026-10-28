@@ -19,13 +19,12 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
-import { eq, not } from "discourse/truth-helpers";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
-import CustomReaction from "../models/discourse-reactions-custom-reaction";
-import DiscourseReactionsCounter from "./discourse-reactions-counter";
-import DiscourseReactionsPicker from "./discourse-reactions-picker";
-import DiscourseReactionsReactionButton from "./discourse-reactions-reaction-button";
+import CustomReaction from "../models/discourse-reactions-custom-reaction.js";
+import DiscourseReactionsCounter from "./discourse-reactions-counter.gjs";
+import DiscourseReactionsPicker from "./discourse-reactions-picker.gjs";
+import DiscourseReactionsReactionButton from "./discourse-reactions-reaction-button.gjs";
 
 const VIBRATE_DURATION = 5;
 

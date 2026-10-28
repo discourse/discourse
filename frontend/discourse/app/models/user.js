@@ -1632,6 +1632,8 @@ class UserStatusManager {
 
   user;
   _subscribersCount = 0;
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _clearStatusTimerId = null;
 
   constructor(user) {

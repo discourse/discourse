@@ -51,9 +51,10 @@ acceptance("Group Card", function (needs) {
   test("does not intercept modifier-click navigation", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
+    // No href: the unprevented synthetic click would navigate the test page away
     find("#main-outlet").insertAdjacentHTML(
       "beforeend",
-      '<a class="user-group trigger-group-card" data-group-card="discourse" href="/g/discourse">Discourse</a>'
+      '<a class="user-group trigger-group-card" data-group-card="discourse">Discourse</a>'
     );
 
     const link = find('a[data-group-card="discourse"]');

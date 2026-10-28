@@ -27,46 +27,6 @@ module DiscourseWorkflows
           end
         end
 
-      def self.serialize_post(
-        post,
-        guardian: Discourse.system_user.guardian,
-        include_raw: true,
-        include_cooked: false
-      )
-        MultiJson.load(
-          DiscourseWorkflows::PostSerializer.new(
-            post,
-            scope: guardian,
-            root: false,
-            include_raw: include_raw,
-            include_cooked: include_cooked,
-          ).to_json,
-        ).deep_symbolize_keys
-      end
-
-      def self.serialize_topic(
-        topic,
-        guardian: Discourse.system_user.guardian,
-        custom_field_names: []
-      )
-        MultiJson.load(
-          DiscourseWorkflows::TopicSerializer.new(
-            topic,
-            scope: guardian,
-            root: false,
-            custom_field_names: custom_field_names,
-          ).to_json,
-        ).deep_symbolize_keys
-      end
-
-      def self.serialize_user(user, guardian: Discourse.system_user.guardian)
-        return if user.blank?
-
-        MultiJson.load(
-          DiscourseWorkflows::UserSerializer.new(user, scope: guardian, root: false).to_json,
-        ).deep_symbolize_keys
-      end
-
       class RuntimeState
         MAX_ITEM_ERROR_GROUPS = 20
 
@@ -117,7 +77,13 @@ module DiscourseWorkflows
         end
       end
 
-      attr_reader :user, :vars, :execution_id, :node_id, :webhook_ctx, :workflow_call_stack
+      attr_reader :user,
+                  :vars,
+                  :execution_id,
+                  :node_id,
+                  :webhook_ctx,
+                  :workflow_call_stack,
+                  :deadline
 
       def initialize(
         input_items:,
@@ -132,6 +98,7 @@ module DiscourseWorkflows
         user: nil,
         resolver: nil,
         vars: nil,
+        workflow_vars: nil,
         workflow: nil,
         workflow_version: nil,
         execution_id: nil,
@@ -147,7 +114,8 @@ module DiscourseWorkflows
         webhook_context: nil,
         workflow_call_stack: [],
         runtime_state: RuntimeState.new,
-        static_data_state: nil
+        static_data_state: nil,
+        deadline: nil
       )
         @input_groups = normalize_input_groups(input_groups, input_items)
         @input_items = @input_groups[0] || []
@@ -166,6 +134,7 @@ module DiscourseWorkflows
         @user = user
         @resolver = resolver
         @vars = vars
+        @workflow_vars = workflow_vars
         @workflow = workflow
         @workflow_version = workflow_version
         @execution_id = execution_id
@@ -183,6 +152,7 @@ module DiscourseWorkflows
         @webhook_ctx = webhook_context
         @workflow_call_stack = Array(workflow_call_stack).map(&:to_s)
         @static_data_state = static_data_state
+        @deadline = deadline
       end
 
       # Static data access.
@@ -225,6 +195,10 @@ module DiscourseWorkflows
       def inputs
         max_index = @input_groups.keys.max || 0
         Array.new(max_index + 1) { |index| @input_groups[index] || [] }
+      end
+
+      def input_indexes
+        @input_groups.keys.sort
       end
 
       def input_context
@@ -470,19 +444,6 @@ module DiscourseWorkflows
 
         post_destroyer(user, post).recover
         post
-      end
-
-      def serialize_post(
-        post,
-        guardian: Discourse.system_user.guardian,
-        include_raw: true,
-        include_cooked: false
-      )
-        self.class.serialize_post(post, guardian:, include_raw:, include_cooked:)
-      end
-
-      def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
-        self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
       def put_execution_to_wait(
@@ -770,6 +731,7 @@ module DiscourseWorkflows
             resolver_context: @resolver_context,
             user: @user,
             vars: @vars,
+            workflow_vars: @workflow_vars,
             flow_context: @flow_context,
             runtime_state: @runtime_state,
           )

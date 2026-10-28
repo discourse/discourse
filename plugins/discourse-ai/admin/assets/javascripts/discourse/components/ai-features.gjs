@@ -9,8 +9,8 @@ import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import AiDefaultLlmSelector from "./ai-default-llm-selector";
-import AiFeaturesList from "./ai-features-list";
+import AiFeaturesList from "discourse/plugins/discourse-ai/discourse/components/ai-features-list";
+import AiDefaultLlmSelector from "./ai-default-llm-selector.gjs";
 
 const ALL = "all";
 const ENABLED = "enabled";
@@ -95,7 +95,20 @@ export default class AiFeatures extends Component {
             )
           );
 
-          return agentMatches || llmMatches || groupMatches;
+          const decisionMatches = feature.decision_model?.display_name
+            ?.toLowerCase()
+            .includes(term);
+          const classificationMatches = feature.classification_model?.model_name
+            ?.toLowerCase()
+            .includes(term);
+
+          return (
+            agentMatches ||
+            llmMatches ||
+            groupMatches ||
+            decisionMatches ||
+            classificationMatches
+          );
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error(`Error filtering features`, error);

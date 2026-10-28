@@ -18,15 +18,14 @@ import discourseLater from "discourse/lib/later";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import AiSentimentHorizontalBar from "./ai-sentiment-horizontal-bar";
-import DoughnutChart from "./doughnut-chart";
+import AiSentimentHorizontalBar from "discourse/plugins/discourse-ai/discourse/components/ai-sentiment-horizontal-bar";
+import DoughnutChart from "./doughnut-chart.gjs";
 
 export default class AdminReportSentimentAnalysis extends Component {
   @service router;

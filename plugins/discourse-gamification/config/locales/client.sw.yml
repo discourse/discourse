@@ -28,16 +28,16 @@ sw:
       close: "Funga"
       delete: "Futa"
       edit: "Hariri"
-      back: "Iliyopita"
       save: "Hifadhi"
-      apply: "Tumia"
       update_range:
         all_time: "Wakati wote"
       custom_range_from: "Kutoka"
       admin:
         name: "Jina"
+        created_by: "Imetengenezwa na"
     discourse_workflows:
       gamification_score:
         username: "Mtumiaji"
         date: "Tarehe"
         description: "Maelezo"
+        category_id: "Kikundi"

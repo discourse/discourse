@@ -279,6 +279,7 @@ el:
         filter_placeholder: "Φιλτράρισμα χρηστών"
         remove_invitee: "Αφαίρεση προσκεκλημένου από τη λίστα"
         add_invitee: "Προσθήκη προσκεκλημένου στη λίστα"
+        this_event: "Αυτή η εκδήλωση"
       bulk_invite_modal:
         confirm: "επιβεβαίωση"
         text: "Ανέβασμα αρχείου CSV"
@@ -338,7 +339,6 @@ el:
               one: "%{count} χρήστης προσκλήθηκε"
               other: "%{count} χρήστες προσκλήθηκαν"
         event:
-          expired: "Έληξε"
           closed: "Κλειστή"
           full: "Πλήρης"
           status:
@@ -351,6 +351,8 @@ el:
             private:
               title: "Ιδιωτική"
               description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
+      recording_modal:
+        save: "Αποθήκευση"
       composer:
         name_placeholder: "Όνομα εκδήλωσης"
         end_date_placeholder: "Ημερομηνία λήξης"

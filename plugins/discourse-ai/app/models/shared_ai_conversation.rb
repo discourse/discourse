@@ -98,9 +98,11 @@ class SharedAiConversation < ActiveRecord::Base
     "#{Discourse.base_uri}/discourse-ai/ai-bot/shared-ai-conversations/#{share_key}"
   end
 
-  def publicly_visible?
-    topic = target_topic
-    return false if topic.blank?
+  def publicly_visible?(topic: nil, posts_by_id: nil)
+    topic ||= target_topic
+    if topic.blank? || target_type != "Topic" || topic.id != target_id || topic.deleted_at
+      return false
+    end
 
     source_guardian = user.guardian
     return false if DiscourseAi::AiBot::EntryPoint.ai_share_error(topic, source_guardian)
@@ -108,10 +110,11 @@ class SharedAiConversation < ActiveRecord::Base
     context_post_ids = context.filter_map { |context_post| context_post["id"] }
     return false if context_post_ids.blank?
 
-    posts_by_id = Post.where(id: context_post_ids, topic_id: topic.id).index_by(&:id)
+    posts_by_id ||= Post.where(id: context_post_ids, topic_id: topic.id).index_by(&:id)
     context_post_ids.all? do |post_id|
       post = posts_by_id[post_id]
-      post.present? && source_guardian.can_see?(post)
+      post.present? && post.id == post_id && post.topic_id == topic.id && !post.deleted_at &&
+        source_guardian.can_see?(post)
     end
   end
 

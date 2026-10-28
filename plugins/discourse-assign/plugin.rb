@@ -30,7 +30,9 @@ after_initialize do
       [
         DiscourseWorkflows::Nodes::AssignTopic::V1,
         DiscourseWorkflows::Nodes::Assigned::V1,
+        DiscourseWorkflows::Nodes::Assigned::V2,
         DiscourseWorkflows::Nodes::Unassigned::V1,
+        DiscourseWorkflows::Nodes::Unassigned::V2,
         DiscourseWorkflows::Nodes::CheckAssignment::V1,
       ]
     end
@@ -105,11 +107,6 @@ after_initialize do
     self.value = value.to_i if name == frequency_field
   end
 
-  add_class_method(:group, :assign_allowed_groups) do
-    allowed_groups = SiteSetting.assign_allowed_on_groups.split("|")
-    where(id: allowed_groups)
-  end
-
   add_to_class(:user, :can_assign?) do |target = nil|
     if target
       guardian.can_assign?(target)
@@ -134,28 +131,6 @@ after_initialize do
   end
 
   add_to_class(:group, :can_show_assigned_tab?) { assignable_level > Group::ALIAS_LEVELS[:nobody] }
-
-  add_class_method(:user, :assign_allowed) do
-    allowed_groups = SiteSetting.assign_allowed_on_groups.split("|")
-
-    # The UNION against admin users is necessary because bot users like the system user are given the admin status but
-    # are not added into the admin group.
-    where(
-      "users.id IN (
-      SELECT
-        user_id
-      FROM group_users
-      WHERE group_users.group_id IN (?)
-
-      UNION
-
-      SELECT id
-      FROM users
-      WHERE users.admin
-    )",
-      allowed_groups,
-    )
-  end
 
   add_model_callback(Group, :before_update) do
     if name_changed?
@@ -970,7 +945,7 @@ after_initialize do
 
   on(:user_added_to_group) do |user, group, automatic:|
     group.assignments.active.find_each do |assignment|
-      Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
+      Jobs.enqueue(:assign_notification, assignment_id: assignment.id, user_id: user.id)
     end
   end
 

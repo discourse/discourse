@@ -41,7 +41,6 @@ zh_TW:
       admins_only: "資料瀏覽器僅供管理員使用。"
       allow_groups: "允許群組存取此查詢"
       title: "資料瀏覽器"
-      create: "建立"
       create_placeholder: "查詢名稱……"
       description_placeholder: "在此輸入描述"
       ai:
@@ -59,15 +58,12 @@ zh_TW:
         save_query: "儲存查詢"
         write_manually: "手動撰寫 SQL"
         sql_label: "SQL"
-        optional: "選填"
       import:
-        label: "匯入"
         unparseable_json: "無法解析 JSON 檔案。"
         wrong_json: "JSON 檔案格式錯誤。JSON 檔案應包含一個「query」物件，且至少應有一個「sql」屬性。"
       help:
         label: "說明"
         modal_title: "資料瀏覽器說明"
-        auto_resolution: "<h2>自動解析實體</h2> <p>當查詢傳回實體 ID 時，資料瀏覽器可能會在查詢結果中自動將其替換為實體名稱和其他實用資訊。可自動解析的欄位包括 <i><b>user_id</b></i>、<i><b>group_id</b></i>、<i><b>topic_id</b></i>、<i><b>category_id</b></i> 和 <i><b>badge_id</b></i>。若要試用，請執行以下查詢：</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>建立自訂參數</h2> <p>若要為查詢建立自訂參數，請在查詢最上方加入以下內容，並依照此格式：</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>注意：第一行 [params] 為必填，前面必須加上兩個連字號；每個要宣告的自訂參數也必須如此。</i></p>"
         default_values: "<h3>預設值</h3> <p>你可以宣告有或沒有預設值的參數。預設值會顯示在查詢編輯器下方的文字欄位中，你可以依需要進行編輯。未宣告預設值的參數仍會產生文字欄位，但欄位會是空白並以紅色標示。</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
         data_types: "<h3>資料類型</h3> <p>以下是常用的資料類型：</p> <ul> <li><b>integer</b>－帶正負號的四位元組整數</li> <li><b>text</b>－長度可變的字串</li> <li><b>boolean</b>－真／假</li> <li><b>date</b>－日曆日期（年、月、日）</li> <li><b>current_user_id</b>－執行查詢的使用者 ID（自動注入，適用於群組報表）</li> </ul> <p>如需資料類型的詳細資訊，請造訪<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>此網站</a>。</p>"
@@ -116,14 +112,13 @@ zh_TW:
         results_json: "結果（JSON）"
         results_csv: "結果（CSV）"
         query_json: "查詢定義（JSON）"
-      others_dirty: "某個查詢有未儲存的變更；若離開此頁，這些變更將會遺失。"
       run_time: "查詢已在 %{value} 毫秒內完成。"
       cached_result_notice: "顯示 %{relative_time} 的快取結果。"
       result_count:
         other: "%{count} 筆結果。"
       max_result_count:
         other: "顯示前 %{count} 筆結果。"
-      query_name: "查詢"
+      name: "名稱"
       query_groups: "群組"
       query_tags: "標簽"
       link: "連結："
@@ -134,7 +129,6 @@ zh_TW:
       column: "第 %{number} 欄"
       save_params: "設為預設值"
       reset_params: "重設"
-      search_placeholder: "搜尋……"
       no_search_results: "抱歉，找不到符合你輸入文字的結果。"
       form:
         errors:

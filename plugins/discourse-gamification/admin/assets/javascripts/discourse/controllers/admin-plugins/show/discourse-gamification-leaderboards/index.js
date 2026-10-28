@@ -12,15 +12,10 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
   @service dialog;
   @service toasts;
 
-  creatingNew = false;
-
   @action
-  resetNewLeaderboard() {
-    this.set("creatingNew", false);
-  }
+  async destroyLeaderboard(leaderboard, closeMenu) {
+    await closeMenu();
 
-  @action
-  destroyLeaderboard(leaderboard) {
     this.dialog.deleteConfirm({
       message: i18n("gamification.leaderboard.confirm_destroy"),
       didConfirm: () => {

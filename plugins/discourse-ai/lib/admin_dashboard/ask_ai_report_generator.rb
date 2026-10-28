@@ -38,21 +38,29 @@ module DiscourseAi
           DiscourseAi::Completions::Llm.proxy(
             LlmModel.find(agent.class.default_llm_id.presence || SiteSetting.ai_default_llm_model),
           )
-        if llm.tokenizer.size(prompt.messages.to_json) + 8000 > llm.max_prompt_tokens
+        input_size, input_capacity =
+          llm.prompt_capacity(prompt, thinking_effort: agent.thinking_effort)
+        if input_capacity <= 0 || input_size > input_capacity
           raise InvalidAnalysis, "Snapshot exceeds model context"
         end
         prompt.skip_trim = true
-        response =
-          llm.generate(
-            prompt,
-            user: @report.requested_by,
-            feature_name: "ask_ai_report",
-            temperature: agent.temperature,
-            top_p: agent.top_p,
-            thinking_effort: agent.thinking_effort,
-            response_format: response_format(agent),
-            max_tokens: 8000,
-          )
+        response = +""
+        llm.generate(
+          prompt,
+          user: @report.requested_by,
+          feature_name: "ask_ai_report",
+          temperature: agent.temperature,
+          top_p: agent.top_p,
+          thinking_effort: agent.thinking_effort,
+          response_format: response_format(agent),
+        ) do |partial|
+          if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
+            # The structured callback retains prefill and excludes provider reasoning.
+            response = partial
+          elsif partial.is_a?(String) && response.is_a?(String)
+            response << partial
+          end
+        end
         result = JSON.parse(DiscourseAi::Completions::Llm.text_from_response(response))
         ids = asks.map(&:first)
         validate!(result, ids)

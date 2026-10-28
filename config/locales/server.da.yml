@@ -18,6 +18,7 @@ da:
       link: "Link"
   mcp:
     errors:
+      category_not_found: "Denne kategori blev ikke fundet"
       topic_not_found: "Emne ikke fundet"
     oauth:
       deny: "Nægt"
@@ -2586,27 +2587,15 @@ da:
     account_suspended:
       title: "Konto Suspenderet"
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
-      text_body_template: |
-        Du er blevet suspenderet fra forummet indtil %{suspended_till}.
-
-        Årsag - %{reason}
     account_suspended_forever:
       title: "Konto Suspenderet"
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
-      text_body_template: |
-        Du er blevet suspenderet fra forummet.
-
-        Årsag - %{reason}
     account_silenced:
       title: "Konto gjort tavs"
       subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
     account_silenced_forever:
       title: "Konto gjort tavs"
       subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
-      text_body_template: |
-        Du er blevet bragt til tavshed fra forummet.
-
-        Årsag - %{reason}
     account_exists:
       title: "Konto findes allerede"
       subject_template: "[%{email_prefix}] Kontoen findes allerede"
@@ -3180,10 +3169,14 @@ da:
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Succes"
       closed: "lukket"
-      status_date:
-        approved: "godkendt"
-        closed: "lukket"
+      pr_status:
+        draft: "Kladde"
+        open: "Åbn"
+        approved: "Godkendt"
+        closed: "Lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'

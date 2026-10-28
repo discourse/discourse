@@ -5,7 +5,6 @@ module DiscourseLazyVideos
     attr_reader :controller, :post
 
     PROVIDER_NAMES = { "youtube" => "YouTube", "vimeo" => "Vimeo", "tiktok" => "TikTok" }.freeze
-    SCRIPT_ESCAPE_REGEX = %r{</script}i
     LAZY_VIDEO_CONTAINER = "lazy-video-container"
 
     def initialize(controller, post)
@@ -82,8 +81,7 @@ module DiscourseLazyVideos
     end
 
     def build_json_script(schema)
-      json = MultiJson.dump(schema).gsub(SCRIPT_ESCAPE_REGEX, "<\\/script")
-      "<script type=\"application/ld+json\">#{json}</script>"
+      "<script type=\"application/ld+json\">#{ERB::Util.json_escape(MultiJson.dump(schema))}</script>"
     end
 
     def get_embed_url(provider, video_id)

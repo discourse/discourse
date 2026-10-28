@@ -23,6 +23,7 @@ hy:
     access_control:
       manage:
         access_permission_editor: "Խմբագրիչ"
+        access_permission_owner: "Սեփականատեր"
         access_permission_remove: "Հեռացնել"
     number:
       format:
@@ -159,7 +160,6 @@ hy:
     date_range_picker:
       apply: "Կիրառել"
     share:
-      topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber} @%{username}-ի կողմից"
       close: "փակել"
       twitter: "Կիսվել X-ում"
@@ -205,6 +205,9 @@ hy:
     topic_admin_menu: "թեմայի ադմինի գործողություններ"
     skip_to_main_content: "Անցնել հիմնական բովանդակությանը"
     skip_user_nav: "Անցնել պրոֆիլի բովանդակությանը"
+    reorder:
+      removed: "Հեռացրել է %{label}-ին"
+      position: "%{position} %{total}-ից"
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     emails_are_disabled_non_staff: "Ելքային էլփոստն անջատվել է ոչ անձնակազմի օգտատերերի համար:"
     software_update_prompt:
@@ -300,9 +303,6 @@ hy:
     max_of_count:
       one: "առավելագույնը %{count}"
       other: "առավելագույնը %{count}"
-    character_count:
-      one: "%{count} սիմվոլ"
-      other: "%{count} սիմվոլ"
     period_chooser:
       aria_label: "Զտել ըստ ժամանակահատվածի"
     related_messages:
@@ -546,6 +546,9 @@ hy:
       title:
         search: "Որոնում անձնական Հաղորդագրություններում"
         placeholder: "Մուտքագրեք հաղորդագրությունների վերնագրերը url կամ id"
+    dsa_statements:
+      category: "Կատեգորիա"
+      saving: "Պահպանվում է…"
     review:
       show_more: "Ցույց տալ ավելին"
       show_less: "Ցույց տալ ավելի քիչ"
@@ -1613,7 +1616,6 @@ hy:
         uploaded_avatar_empty: "Ավելացնել անհատական նկար"
         upload_title: "Վերբեռնեք Ձեր նկարը"
         image_is_not_a_square: "Ուշադրություն. մենք կտրել ենք Ձեր նկարը; լայնությունն ու երկարությունը հավասար չէին:"
-        use_custom: "Կամ վերբեռնեք անհատական ավատար՝"
       change_profile_background:
         title: "Պրոֆիլի Վերնագիրը"
         instructions: "Պրոֆիլի վերնագիրը կկենտրոնանա և կունենա 1110 պքս լռելյայն լայնություն:"
@@ -2326,8 +2328,7 @@ hy:
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
       discard: "Ջնջել"
-      title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
-      title_placeholder_redesign: "Վերնագիր"
+      title_placeholder: "Վերնագիր"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
       edit_reason_placeholder: "Ո՞րն է խմբագրման պատճառը:"
       topic_featured_link_placeholder: "Մուտքագրել վերնագրի հետ ցուցադրվող հղում"
@@ -3581,9 +3582,6 @@ hy:
       admin:
         title: "Ադմին"
     badges:
-      earned_n_times:
-        one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
-        other: "Վաստակել է այս կրծքանշանը %{count} անգամ"
       granted_on: "Շնորհված է %{date}"
       others_count:
         one: "Ուրիշներին շնորհվել է %{count} անգամ"
@@ -3828,18 +3826,6 @@ hy:
         type_mismatch:
           default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
           email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Մուտք"
-      edit:
-        modal:
-          cancel: "չեղարկել"
-          create: "Պահպանել"
-          reason: "Ո՞րն է խմբագրման պատճառը:"
-      spreadsheet:
-        show: "Ցուցադրել"
-        about: "Մասին"
     filter:
       description:
         yesterday: "Երեկվա"
@@ -3929,6 +3915,7 @@ hy:
             block: "Արգելափակել"
             presets:
               custom: "Մասնավոր"
+            automatic: "Ավտոմատ"
           authorizations:
             user: "Օգտատեր"
             status: "Ստատուս"
@@ -4664,8 +4651,8 @@ hy:
             must_be_unique: "Անվավեր փոփոխականի անուն: Պետք է լինի եզակի:"
           upload: "Վերբեռնել"
           unsaved_changes_alert: "Դուք դեռևս չեք պահել Ձեր փոփոխությունները, Դուք ցանկանո՞ւմ եք չեղարկել դրանք և անցնել առաջ:"
-          unsaved_parent_themes: "Դուք դեռևս բաղադրիչ չեք հատկացրել թեմաներին, Դուք ցանկանու՞մ եք անցնել առաջ: "
           discard: "Չեղարկել"
+          leave: "Լքել"
           stay: "Մնալ"
           delete_upload_confirm: "Ջնջե՞լ այս վերբեռնումը (Թեմայի CSS-ը կարող է դադարել աշխատել!):"
           component_on_themes: "Ներառել բաղադրիչը՝ այս թեմաների մեջ"

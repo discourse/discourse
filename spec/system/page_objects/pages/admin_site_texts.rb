@@ -17,6 +17,10 @@ module PageObjects
         has_css?(".site-text-id", text: key)
       end
 
+      def has_highlighted_translation_key?(key)
+        has_css?(".site-text-id .text-highlight", text: key, exact_text: true)
+      end
+
       def has_translation_value?(value)
         has_css?(".site-text-value", text: value)
       end

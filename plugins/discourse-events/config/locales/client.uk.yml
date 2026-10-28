@@ -417,6 +417,7 @@ uk:
         filter_placeholder: "Фільтр користувачів"
         remove_invitee: "Видалити запрошення зі списку"
         add_invitee: "Додати запрошення до списку"
+        this_event: "Ця подія"
       bulk_invite_modal:
         confirm: "підтвердити"
         text: "Завантажити файл CSV"
@@ -485,7 +486,6 @@ uk:
               many: "%{count} запрошені користувачі"
               other: "%{count} запрошені користувачі"
         event:
-          expired: "Термін дії закінчився"
           closed: "Закриті"
           full: "Повний"
           status:
@@ -498,6 +498,8 @@ uk:
             private:
               title: "Приватні"
               description: "До закритої події можуть приєднатися лише запрошені користувачі."
+      recording_modal:
+        save: "Зберегти"
       composer:
         name_placeholder: "Назва події"
         end_date_placeholder: "Дата завершення"

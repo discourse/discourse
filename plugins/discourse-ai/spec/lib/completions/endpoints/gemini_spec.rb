@@ -225,6 +225,148 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
   before { enable_current_plugin }
 
+  describe "completion metadata" do
+    it "captures non-streaming no visible output metadata" do
+      payload = {
+        candidates: [{ content: { parts: [] }, finishReason: "MAX_TOKENS" }],
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 4,
+          thoughtsTokenCount: 12,
+        },
+      }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(body: payload.to_json)
+      model.to_llm.generate("Input", user: user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "MAX_TOKENS",
+        reasoning_tokens: 12,
+        response_tokens: 16,
+      )
+    end
+
+    it "captures non-streaming limited text metadata" do
+      payload = {
+        candidates: [{ content: { parts: [{ text: "Partial" }] }, finishReason: "MAX_TOKENS" }],
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 4,
+          thoughtsTokenCount: 0,
+        },
+      }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(body: payload.to_json)
+      model.to_llm.generate("Input", user: user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::TRUNCATED,
+        stop_reason: "MAX_TOKENS",
+        reasoning_tokens: 0,
+        response_tokens: 4,
+      )
+    end
+
+    it "captures non-streaming normal text metadata" do
+      payload = {
+        candidates: [{ content: { parts: [{ text: "Answer" }] }, finishReason: "STOP" }],
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 4,
+        },
+      }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(body: payload.to_json)
+      model.to_llm.generate("Input", user: user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+        stop_reason: "STOP",
+        reasoning_tokens: nil,
+        response_tokens: 4,
+      )
+    end
+
+    it "records non-streaming prompt blocking without a candidate finish reason" do
+      payload = { promptFeedback: { blockReason: "SAFETY" } }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(body: payload.to_json)
+      model.to_llm.generate("Input", user: user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "SAFETY",
+      )
+    end
+
+    it "captures streamed no visible output metadata" do
+      payload = {
+        candidates: [{ content: { parts: [] }, finishReason: "MAX_TOKENS" }],
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 4,
+          thoughtsTokenCount: 12,
+        },
+      }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(
+        body: "data: #{payload.to_json}\n\n",
+      )
+      model.to_llm.generate("Input", user: user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "MAX_TOKENS",
+        reasoning_tokens: 12,
+        response_tokens: 16,
+      )
+    end
+
+    it "captures streamed limited text metadata" do
+      payload = {
+        candidates: [{ content: { parts: [{ text: "Partial" }] }, finishReason: "MAX_TOKENS" }],
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 4,
+          thoughtsTokenCount: 0,
+        },
+      }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(
+        body: "data: #{payload.to_json}\n\n",
+      )
+      model.to_llm.generate("Input", user: user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::TRUNCATED,
+        stop_reason: "MAX_TOKENS",
+        reasoning_tokens: 0,
+        response_tokens: 4,
+      )
+    end
+
+    it "captures streamed normal text metadata" do
+      payload = {
+        candidates: [{ content: { parts: [{ text: "Answer" }] }, finishReason: "STOP" }],
+        usageMetadata: {
+          promptTokenCount: 10,
+          candidatesTokenCount: 4,
+        },
+      }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(
+        body: "data: #{payload.to_json}\n\n",
+      )
+      model.to_llm.generate("Input", user: user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+        stop_reason: "STOP",
+        reasoning_tokens: nil,
+        response_tokens: 4,
+      )
+    end
+
+    it "records streamed prompt blocking without a candidate finish reason" do
+      payload = { promptFeedback: { blockReason: "SAFETY" } }
+      stub_request(:post, /generativelanguage.googleapis.com/).to_return(
+        body: "data: #{payload.to_json}\n\n",
+      )
+      model.to_llm.generate("Input", user: user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "SAFETY",
+      )
+    end
+  end
+
   it "uses Gemini RetryInfo retryDelay from rate limit response bodies" do
     DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
     DiscourseAi::Completions::Endpoints::Gemini

@@ -18,6 +18,7 @@ hr:
       link: "Veza"
   mcp:
     errors:
+      category_not_found: "Kategorija nije pronađena"
       topic_not_found: "Tema nije pronađena"
     oauth:
       deny: "Odbiti"
@@ -2254,31 +2255,15 @@ hr:
     account_suspended:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš račun je suspendiran"
-      text_body_template: |
-        Suspendirani ste s foruma do %{suspended_till}.
-
-        Razlog - %{reason}
     account_suspended_forever:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
-      text_body_template: |
-        Suspendirani ste s foruma.
-
-        Razlog - %{reason}
     account_silenced:
       title: "Korisnički račun je utišan"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-      text_body_template: |
-        Utišani ste s foruma do %{silenced_till}.
-
-        Razlog - %{reason}
     account_silenced_forever:
       title: "Korisnički račun je utišan"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-      text_body_template: |
-        Utišani ste s foruma.
-
-        Razlog - %{reason}
     account_exists:
       title: "Korisnički račun već postoji"
       subject_template: "[%{email_prefix}] Korisnički račun već postoji"
@@ -2815,10 +2800,14 @@ hr:
     google_meet:
       meeting_code: "Šifra:"
     github:
+      header:
+        success: "Uspjeh"
       closed: "zatvoreno"
-      status_date:
-        approved: "odobrio/la"
-        closed: "zatvoreno"
+      pr_status:
+        draft: "Skica"
+        open: "Otvori"
+        approved: "Odobrio/la"
+        closed: "🔐"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'

@@ -3,23 +3,26 @@
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "noUncheckedSideEffectImports": false,
     "noEmit": true,
     "noEmitOnError": false,
     "declaration": true,
     "outDir": "declarations",
     "composite": true,
-    "typeRoots": ["./external-types"],
+    "tsBuildInfoFile": "${configDir}/tsconfig.tsbuildinfo",
+    "typeRoots": [
+      "./external-types"
+    ],
     "types": [
       "discourse-i18n",
       "ember-modifier",
       "ember-qunit",
       "ember-source",
-      "ember-truth-helpers",
       "ember__render-modifiers",
       "ember__string",
       "ember__test-helpers",
@@ -33,5 +36,14 @@
       "rsvp",
       "sinon"
     ]
-  }
+  },
+  "contentMappers": [
+    {
+      "package": "ember-content-mapper",
+      "extensions": [
+        ".gts",
+        ".gjs"
+      ]
+    }
+  ]
 }

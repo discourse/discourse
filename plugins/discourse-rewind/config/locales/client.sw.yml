@@ -17,5 +17,9 @@ sw:
         chat_usage:
           author: Wewe
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "dakika %{count}"
+            other: "dakika %{count} "
         writing_analysis:
           menu_other: Nyingine

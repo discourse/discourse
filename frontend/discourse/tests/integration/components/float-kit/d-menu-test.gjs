@@ -24,7 +24,6 @@ import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { getLockState } from "discourse/lib/body-scroll-lock";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dElement from "discourse/ui-kit/helpers/d-element";
@@ -1429,13 +1428,11 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("destroys its instance when the menu itself is torn down", async function (assert) {
-    const state = new (class {
-      @tracked rendered = true;
-    })();
+    const rendered = tracked(true);
 
     await render(
       <template>
-        {{#if state.rendered}}
+        {{#if rendered.value}}
           <DMenu @content="content" @inline={{true}} @label="label" />
         {{/if}}
       </template>
@@ -1447,7 +1444,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     const menuService = getOwner(this).lookup("service:menu");
     assert.strictEqual(menuService.registeredMenus.size, 1, "menu registered");
 
-    state.rendered = false;
+    rendered.value = false;
     await rerender();
 
     assert.dom(".fk-d-menu").doesNotExist("the float is gone");
@@ -1459,9 +1456,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("a changing triggerComponent does not kill the menu", async function (assert) {
-    const state = new (class {
-      @tracked label = "first";
-    })();
+    const label = tracked("first");
 
     const trigger = <template>
       <button ...attributes type="button">{{@componentArgs.expanded}}</button>
@@ -1475,7 +1470,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
         <DMenu
           @content="content"
           @inline={{true}}
-          @triggerComponent={{if (eq state.label "first") trigger otherTrigger}}
+          @triggerComponent={{if (eq label.value "first") trigger otherTrigger}}
         />
       </template>
     );
@@ -1484,7 +1479,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu").exists("opens with the first trigger");
 
     await click(".fk-d-menu__trigger");
-    state.label = "second";
+    label.value = "second";
     await rerender();
 
     await click(".fk-d-menu__trigger");

@@ -20,9 +20,9 @@ export default class CategoryList extends LegacyArrayLikeObject {
   /**
    * Creates category objects from API result data
    *
-   * @param {Object} store - The store instance
-   * @param {Object} result - The API result containing category data
-   * @param {Object} parentCategory - Optional parent category
+   * @param {import("discourse/services/store").default} store - The store instance
+   * @param {Record<string, unknown>} result - The API result containing category data
+   * @param {import("discourse/models/category").default | null} [parentCategory] - Optional parent category
    * @returns {CategoryList} A new CategoryList instance with the processed categories
    */
   static categoriesFrom(store, result, parentCategory = null) {
@@ -120,8 +120,8 @@ export default class CategoryList extends LegacyArrayLikeObject {
   /**
    * Fetches and creates a list of categories
    *
-   * @param {Object} store - The store instance
-   * @param {Object} parentCategory - Optional parent category to filter by
+   * @param {import("discourse/services/store").default} store - The store instance
+   * @param {import("discourse/models/category").default | null} [parentCategory] - Optional parent category to filter by
    * @returns {Promise<CategoryList>} A promise that resolves to the CategoryList
    */
   static async list(store, parentCategory = null) {
@@ -160,7 +160,7 @@ export default class CategoryList extends LegacyArrayLikeObject {
   /**
    * Creates a new CategoryList instance
    *
-   * @param {Object} attrs - The attributes to initialize with
+   * @param {Record<string, unknown>} [attrs] - The attributes to initialize with
    * @returns {CategoryList} A new CategoryList instance
    */
   static create(attrs = {}) {

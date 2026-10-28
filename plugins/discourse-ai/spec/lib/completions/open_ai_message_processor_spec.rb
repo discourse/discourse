@@ -3,6 +3,46 @@
 RSpec.describe DiscourseAi::Completions::OpenAiMessageProcessor do
   before { enable_current_plugin }
 
+  describe "completion metadata" do
+    it "captures the consumed choice's stop reason in both modes and retains it through usage-only chunks" do
+      %i[process_message process_streamed_message].each do |method|
+        processor = described_class.new
+        processor.public_send(
+          method,
+          choices: [{ finish_reason: "length" }, { finish_reason: "stop" }],
+        )
+        processor.public_send(
+          method,
+          choices: [],
+          usage: {
+            prompt_tokens: 10,
+            completion_tokens: 5,
+            completion_tokens_details: {
+              reasoning_tokens: 4,
+            },
+          },
+        )
+        expect(processor).to have_attributes(
+          stop_reason: "length",
+          output_limit_reached: true,
+          reasoning_tokens: 4,
+        )
+      end
+    end
+
+    it "distinguishes missing reasoning usage from explicit zero and other stop reasons" do
+      processor = described_class.new
+      processor.process_message(choices: [{ finish_reason: "content_filter" }])
+      expect(processor).to have_attributes(
+        stop_reason: "content_filter",
+        output_limit_reached: false,
+        reasoning_tokens: nil,
+      )
+      processor.process_message(usage: { completion_tokens_details: { reasoning_tokens: 0 } })
+      expect(processor.reasoning_tokens).to eq(0)
+    end
+  end
+
   def chunk(delta:, finish_reason: nil)
     choice = { delta: delta }
     choice[:finish_reason] = finish_reason if finish_reason

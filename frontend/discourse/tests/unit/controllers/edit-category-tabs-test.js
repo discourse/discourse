@@ -1,8 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import pretender, {
   parsePostData,
+  response,
 } from "discourse/tests/helpers/create-pretender";
 
 function fakeFormApi(siteTexts = {}) {
@@ -22,6 +24,31 @@ function fakeFormApi(siteTexts = {}) {
     },
     commitField() {},
   };
+}
+
+function setupCategoryModel(controller, permissions) {
+  const savedCategory = { category_types: {}, id: 1 };
+  const updatedCategory = {
+    id: 1,
+    setupGroupsAndPermissions() {},
+  };
+
+  controller.model = {
+    categoryTypes: {},
+    id: 1,
+    permissions,
+    save: sinon.stub().resolves({ category: savedCategory }),
+    set(name, value) {
+      this[name] = value;
+    },
+    setProperties(properties) {
+      Object.assign(this, properties);
+    },
+  };
+
+  sinon.stub(controller.site, "updateCategory").returns(updatedCategory);
+
+  return controller.model;
 }
 
 module("Unit | Controller | edit-category-tabs", function (hooks) {
@@ -107,6 +134,89 @@ module("Unit | Controller | edit-category-tabs", function (hooks) {
       "myField",
       "validator can call removeError"
     );
+  });
+
+  test("saveCategory evaluates the proposed group IDs before saving", async function (assert) {
+    const permissions = [
+      { group_id: 12, permission_type: 1 },
+      { group_id: 34, permission_type: 2 },
+    ];
+    const model = setupCategoryModel(this.controller, permissions);
+    let evaluatedGroupIds;
+
+    pretender.post("/categories/evaluate_permissions.json", (request) => {
+      evaluatedGroupIds = JSON.parse(request.requestBody).group_ids;
+      return response({ success: "OK", current_user_will_lose_access: false });
+    });
+
+    await this.controller.saveCategory({ permissions });
+
+    assert.deepEqual(
+      evaluatedGroupIds,
+      [12, 34],
+      "the evaluation receives every proposed group ID"
+    );
+    assert.true(
+      model.save.calledOnce,
+      "the category is saved after evaluation"
+    );
+  });
+
+  test("saveCategory stops when the user cancels an access-loss warning", async function (assert) {
+    const permissions = [{ group_id: 12, permission_type: 1 }];
+    const model = setupCategoryModel(this.controller, permissions);
+    const confirm = sinon
+      .stub(this.controller.dialog, "yesNoConfirm")
+      .resolves(false);
+
+    pretender.post("/categories/evaluate_permissions.json", () =>
+      response(422, {
+        errors: ["You will lose access."],
+        extras: { current_user_will_lose_access: true },
+      })
+    );
+
+    await this.controller.saveCategory({ permissions });
+
+    assert.true(confirm.calledOnce, "the access-loss warning is shown");
+    assert.false(model.save.called, "the category is not saved");
+  });
+
+  test("saveCategory proceeds when the user confirms an access-loss warning", async function (assert) {
+    const permissions = [{ group_id: 12, permission_type: 1 }];
+    const model = setupCategoryModel(this.controller, permissions);
+    sinon.stub(this.controller.dialog, "yesNoConfirm").resolves(true);
+    const transitionTo = sinon.stub(this.controller.router, "transitionTo");
+
+    pretender.post("/categories/evaluate_permissions.json", () =>
+      response(422, {
+        errors: ["You will lose access."],
+        extras: { current_user_will_lose_access: true },
+      })
+    );
+
+    await this.controller.saveCategory({ permissions });
+
+    assert.true(model.save.calledOnce, "the category is saved");
+    assert.true(
+      transitionTo.calledOnce,
+      "the user is redirected after losing access"
+    );
+  });
+
+  test("saveCategory reports an unexpected evaluation error without saving", async function (assert) {
+    const permissions = [{ group_id: 12, permission_type: 1 }];
+    const model = setupCategoryModel(this.controller, permissions);
+    const alert = sinon.stub(this.controller.dialog, "alert");
+
+    pretender.post("/categories/evaluate_permissions.json", () =>
+      response(500, { errors: ["Evaluation failed."] })
+    );
+
+    await this.controller.saveCategory({ permissions });
+
+    assert.true(alert.calledOnce, "the evaluation error is shown");
+    assert.false(model.save.called, "the category is not saved");
   });
 
   test("saving writes customizable text for every edited language at once", async function (assert) {

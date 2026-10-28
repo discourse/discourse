@@ -19,6 +19,7 @@ pt_BR:
       link: "Link"
   mcp:
     errors:
+      category_not_found: "Categoria não encontrada"
       draft_too_long: "O rascunho é muito longo"
       topic_not_found: "Tópico não encontrado"
     oauth:
@@ -834,6 +835,7 @@ pt_BR:
     post_template: "%{replace_paragraph}\n\nUse os parágrafos a seguir para uma descrição mais longa, ou para estabelecer as instruções ou regras da categoria:\n\n- Por que as pessoas devem usar esta categoria? Para que serve?\n\n- Como exatamente é diferente das outras categorias que já existem?\n\n- O que os tópicos desta categoria devem conter em geral?\n\n- Precisamos desta categoria? Podemos mesclá-la com outra categoria ou subcategoria?\n"
     errors:
       not_found: "Categoria não encontrada!"
+      self_lockout: "Você está prestes a alterar as permissões de categoria de uma forma que removerá o seu próprio acesso. Tem certeza de que deseja continuar?"
       uncategorized_parent: "Não categorizados não podem ter uma categoria pai"
       self_parent: "A subcategoria pai não pode ser ela mesma"
       depth: "Você não pode aninhar uma subcategoria sob uma outra"
@@ -2461,7 +2463,6 @@ pt_BR:
     experimental_impersonation_time_limit_minutes: "Quanto tempo leva para uma sessão de personificação ser encerrada automaticamente?"
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     show_user_menu_avatars: "Mostrar avatadores de usuário(a) no menu do(a) usuário(a)"
-    about_page_hidden_groups: "Não mostre membros de grupos específicos na página /about."
     about_page_extra_groups: "Grupos a serem exibidos na página Sobre, abaixo dos(as) moderadores(as)."
     about_page_extra_groups_initial_members: "A quantidade de membros para expandir em cada grupo, na página Sobre."
     about_page_extra_groups_show_description: "Determina se as descrições do grupo devem ser inclusas na página Sobre."
@@ -3941,31 +3942,15 @@ pt_BR:
     account_suspended:
       title: "Conta suspensa"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
-      text_body_template: |
-        Você foi suspenso(a) do fórum até %{suspended_till}.
-
-        Motivo: %{reason}
     account_suspended_forever:
       title: "Conta suspensa"
       subject_template: "%{email_prefix}, sua conta foi suspensa"
-      text_body_template: |
-        Sua conta foi suspensa do fórum.
-
-        Motivo: %{reason}
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
-      text_body_template: |
-        Você foi silenciado(a) do fórum até %{silenced_till}.
-
-        Motivo: %{reason}
     account_silenced_forever:
       title: "Conta silenciada"
       subject_template: "%{email_prefix}, sua conta foi silenciada"
-      text_body_template: |
-        Sua conta foi silenciada do fórum.
-
-        Motivo: %{reason}
     account_deleted:
       title: "Conta excluída"
       subject_template: "%{email_prefix}, sua conta foi excluída"
@@ -4805,6 +4790,9 @@ pt_BR:
       truncated_file: "Este arquivo está truncado."
       show_original: "exibir original"
     github:
+      header:
+        file: "Arquivo"
+        success: "Sucesso"
       binary_file: "Este arquivo é binário."
       truncated_file: "Este arquivo está truncado."
       show_original: "exibir original"
@@ -4818,21 +4806,12 @@ pt_BR:
       review_by: "Revisão por"
       pr_summary: "%{commits} confirma %{changed_files} arquivos alterados com %{additions} adições e %{deletions} exclusões"
       no_description: "Contribua para o desenvolvimento do %{repo} ao criar uma conta no GitHub."
-      pr_title:
-        default: "Pull request"
-        draft: "Rascunho de pull request"
-        open: "Abrir pull request"
-        approved: "Pull request aprovado"
-        changes_requested: "Alterações solicitadas"
-        merged: "Pull request mesclado (merged)"
-        closed: "Pull request fechado"
-      status_date:
-        open: "abertos"
-        draft: "rascunhos"
-        approved: "aprovada"
-        changes_requested: "alterações solicitadas"
-        merged: "mesclado"
-        closed: "fechados"
+      pr_status:
+        draft: "Rascunho (draft)"
+        open: "Aberto (open)"
+        approved: "Aprovado (approved)"
+        merged: "Mesclado (merged)"
+        closed: "Fechado (closed)"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'

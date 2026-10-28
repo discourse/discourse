@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import withChatChannel from "../chat-channel-decorator";
+import withChatChannel from "../chat-channel-decorator.js";
 
 @withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {

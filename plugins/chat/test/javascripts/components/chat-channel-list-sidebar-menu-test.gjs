@@ -675,6 +675,27 @@ module("Integration | Component | ChatChannelListSortMenu", function (hooks) {
       "the selected sort is saved"
     );
   });
+
+  test("describes priority sorting by recency for direct messages", async function (assert) {
+    await render(
+      <template><ChatChannelListSortMenu @section="dms" /></template>
+    );
+
+    assert
+      .dom(".chat-channel-list-sort-menu__priority")
+      .includesText(
+        i18n("chat.channel_list.sort.priority"),
+        "the priority option retains its title"
+      )
+      .includesText(
+        i18n("chat.channel_list.sort.priority_description_dms"),
+        "the priority option describes recency ordering"
+      )
+      .doesNotIncludeText(
+        i18n("chat.channel_list.sort.priority_description"),
+        "the channel-specific alphabetical description is hidden"
+      );
+  });
 });
 
 module(

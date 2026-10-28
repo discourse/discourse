@@ -5,6 +5,7 @@ import { test } from "qunit";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { setDefaultHomepage } from "discourse/lib/utilities";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -792,5 +793,27 @@ acceptance("Admin - Onboarding Banner - setting disabled", function (needs) {
     assert
       .dom(".admin-onboarding-banner")
       .doesNotExist("does not show onboarding banner");
+  });
+});
+
+acceptance("Admin - Onboarding Banner - registered homepage", function (needs) {
+  needs.user({ admin: true, show_site_owner_onboarding: true });
+  needs.settings({ enable_site_owner_onboarding: true });
+  needs.site({
+    homepage_options: [{ id: "custom", path: "/tags", server_side: false }],
+  });
+
+  test("shows the checklist on a registered homepage and hides it elsewhere", async function (assert) {
+    await visit("/latest");
+    setDefaultHomepage("custom");
+    await visit("/tags");
+
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists("shows onboarding outside discovery routes");
+    await visit("/categories");
+    assert
+      .dom(".admin-onboarding-banner")
+      .doesNotExist("keeps onboarding off other pages");
   });
 });

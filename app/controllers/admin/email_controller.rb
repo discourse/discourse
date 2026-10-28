@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::EmailController < Admin::AdminController
+  allow_when_archived :handle_mail
+
   def index
   end
 

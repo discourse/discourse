@@ -24,6 +24,9 @@ id:
         context_menu:
           actions:
             delete: "Hapus"
+        reorderable_list:
+          table_type: "Tipe"
+          cross_list_primary: "Utama"
         toasts:
           title: "Toast"
         font_scale:

@@ -224,6 +224,12 @@ pt_BR:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imagens"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Nota"
       ai_tool_approval:
         loading: "Carregando..."
         tool: "Ação"
@@ -233,10 +239,9 @@ pt_BR:
         approved: "Aprovado (approved)"
         rejected: "Recusados(as)"
       default_llm:
-        title: "Modelo de LLM padrão"
+        title: "Modelo de linguagem padrão"
       llm_selector:
         none: "Nenhum"
-        saved: "Modelo LLM padrão atualizado com sucesso"
       features:
         short_title: "Recursos"
         settings_save_error: "Algumas configurações não puderam ser salvas."
@@ -248,6 +253,7 @@ pt_BR:
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não configurado"
         no_groups: "Nenhum"
+        classification_model: "Modelo:"
         edit: "Configurações"
         expand_list:
           one: "(mais %{count})"
@@ -269,6 +275,13 @@ pt_BR:
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
           reset: "Redefinir"
         no_automations: "Ainda não há nenhuma automação"
+        sentiment:
+          sentiment: "Sentimento"
+          emotion: "Gesto"
+          enabled: "Ativados"
+          setting_groups:
+            sentiment: "Sentimento"
+            emotion: "Gesto"
         summarization:
           name: "Resumos"
           description: "Ativa o botão de criação de resumo para os visitantes resumirem os tópicos"
@@ -694,7 +707,6 @@ pt_BR:
           result: "Resultado do teste"
       secrets:
         short_title: "Credenciais"
-        description: "Gerenciar as credenciais de autenticação compartilhadas entre LLMs, incorporações e ferramentas."
         name: "Nome"
         secret: "Valor"
         select_secret: "Selecionar uma credencial..."
@@ -716,6 +728,15 @@ pt_BR:
         tool: "Ferramenta"
         modal:
           title: "Criar nova credencial"
+      decision_models:
+        no_preset: "Nenhum"
+        display_name: "Nome"
+        model: "Modelo"
+        provider: "Provedor"
+        api_key: "Credencial"
+        edit: "Editar"
+        delete: "Excluir"
+        test: "Executar teste"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -732,6 +753,18 @@ pt_BR:
         tools_modal:
           parameters: "Parâmetros"
           required: "Necessário(a)"
+      models:
+        new: "Novo modelo"
+        name: "Nome"
+        type: "Tipo"
+        provider: "Provedor"
+        edit: "Editar"
+        select_type: "Selecionar"
+        types:
+          embedding: "Incorporar"
+        filters:
+          all: "Todos os tipos"
+          reset: "Redefinir filtros"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"
@@ -970,9 +1003,23 @@ pt_BR:
         quick_search:
           suffix: "em todos os tópicos e postagens com IA"
       ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Padrão"
+          option_on: "Ligado"
+          option_off: "Desligado"
+          apply: "Aplicar"
         expand_view_label: "Expandir visualização"
         collapse_view_label: "Sair de tela cheia (ESC ou botão de voltar)"
         click_to_run_label: "Rodar artefato"
+        share: "Compartilhar"
+        create_link: "Criar link"
+        copied: "Copiou para área de transferência"
+        copy_link: "Copiar link"
+        copy_embed: "Copiar incorporado"
+        new_tab: "Exibir na aba nova"
+        filter_all: "Todas"
+        filter_standalone: "Independente"
       ai_bot:
         title: "Bot de IA"
         llm: "Modelo:"
@@ -1095,6 +1142,15 @@ pt_BR:
             compact: "Compactar"
             expanded: "Expandido(a)"
             expanded_description: "com resumos de IA"
+      ai_search:
+        related_topics: "Tópicos relacionados"
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          ask: "Perguntar à IA"
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
         main_title: "Perguntar à IA"
         loading_convo: "Carregando conversa"

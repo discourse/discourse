@@ -110,8 +110,7 @@ class AiAgent < ActiveRecord::Base
       else
         :value_everyone_allowed
       end
-    agents =
-      agent_cache[key] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+    agents = agent_cache[key] ||= all_agent_records(enabled_only: false).map(&:class_instance)
 
     if enabled_only
       agents.select(&:enabled)
@@ -364,11 +363,8 @@ class AiAgent < ActiveRecord::Base
             klass = DiscourseAi::Agents::Tools::Custom.class_instance(custom_tool_id)
           end
         else
-          inner_name = inner_name.gsub("Tool", "")
-          inner_name = "List#{inner_name}" if %w[Categories Tags Users].include?(inner_name)
-
           klass =
-            "DiscourseAi::Agents::Tools::#{inner_name}".safe_constantize ||
+            DiscourseAi::Agents::Agent.builtin_tool_by_name(inner_name) ||
               DiscourseAi::Agents::Agent.external_tool_by_name(inner_name)
           options[klass] = current_options if klass && current_options
         end
@@ -379,10 +375,14 @@ class AiAgent < ActiveRecord::Base
 
     reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
     reserved_names << DiscourseAi::Agents::Tools::SpawnAgent.name if subagent_ids.present?
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: {
+        ai_agent_mcp_servers: :ai_mcp_server,
+      },
+    ).call
     enabled_mcp_server_assignments =
-      ai_agent_mcp_servers
-        .includes(:ai_mcp_server)
-        .select { |assignment| assignment.ai_mcp_server&.enabled? }
+      ai_agent_mcp_servers.select { |assignment| assignment.ai_mcp_server&.enabled? }
     enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
     selected_tool_names_by_server =
       enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
@@ -450,7 +450,13 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  def self.automatic_user_provisioning_enabled?
+    SiteSetting.discourse_ai_enabled && SiteSetting.ai_bot_enabled
+  end
+
   def self.ensure_users!
+    return if !automatic_user_provisioning_enabled?
+
     where(enabled: true).find_each { |agent| agent.ensure_user! if agent.needs_user? }
   end
 
@@ -472,7 +478,7 @@ class AiAgent < ActiveRecord::Base
   end
 
   def needs_user?
-    enabled? && supports_bot_user? &&
+    self.class.automatic_user_provisioning_enabled? && enabled? && supports_bot_user? &&
       (
         force_default_llm? || allow_topic_mentions? || allow_personal_messages? ||
           allow_chat_direct_messages? || allow_chat_channel_mentions?
@@ -622,13 +628,9 @@ class AiAgent < ActiveRecord::Base
       if tool_name.to_s.start_with?("custom-")
         AiTool.find_by(id: tool_name.to_s.split("-", 2).last.to_i)&.function_call_name
       else
-        normalized_name = tool_name.to_s.gsub("Tool", "")
-        normalized_name = "List#{normalized_name}" if %w[Categories Tags Users].include?(
-          normalized_name,
-        )
         tool_class =
-          "DiscourseAi::Agents::Tools::#{normalized_name}".safe_constantize ||
-            DiscourseAi::Agents::Agent.external_tool_by_name(normalized_name)
+          DiscourseAi::Agents::Agent.builtin_tool_by_name(tool_name) ||
+            DiscourseAi::Agents::Agent.external_tool_by_name(tool_name.to_s)
         tool_class&.signature&.[](:name)
       end
     end

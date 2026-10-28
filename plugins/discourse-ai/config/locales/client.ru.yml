@@ -245,6 +245,12 @@ ru:
           agent_id: "Агент"
           mode: "Режим"
           select_agent: "Выберите агента..."
+        classify:
+          text: "Текст"
+          upload_ids: "Изображения"
+          name: "Название"
+          type: "Тип"
+          type_score: "Оценка"
       ai_tool_approval:
         loading: "Загрузка…"
         agent: "Агент"
@@ -255,14 +261,11 @@ ru:
         approved: "Одобренные"
         rejected: "Отклонено"
       default_llm:
-        title: "Модель LLM по умолчанию"
-        description: "Модель LLM по умолчанию для всех ИИ функций. Используется, если в настройке функции или персоны не указана конкретная модель LLM. При отсутствии модели по умолчанию используется последняя добавленная LLM."
+        title: "Языковая модель по умолчанию"
       llm_selector:
         none: "Нет"
-        saved: "Модель LLM по умолчанию успешно обновлена."
       features:
         short_title: "Функции"
-        description: "Это функции ИИ, доступные посетителям вашего сайта. Их можно настроить для использования определенных агентов и LLM, а также контролировать доступ к ним для отдельных групп."
         back: "Вернуться к функциям ИИ"
         settings_save_error: "Некоторые настройки не удалось сохранить."
         disabled: "(отключено)"
@@ -280,6 +283,7 @@ ru:
         no_llm: "LLM не выбрана"
         no_agent: "Не установлено"
         no_groups: "Отсутствует"
+        classification_model: "Модель:"
         edit: "Настроек"
         expand_list:
           one: "(еще %{count})"
@@ -300,10 +304,17 @@ ru:
           enabled: "Включено"
         filters:
           all: "Все"
-          text: "Поиск по функциям, агентам, ИИ или группам..."
           no_results: "Не найдено функций, соответствующих вашим фильтрам."
           reset: "Сбросить"
         no_automations: "Автоматизации пока нет."
+        sentiment:
+          sentiment: "Настроение"
+          emotion: "Эмоция"
+          enabled: "Включено"
+          agent: "Агент"
+          setting_groups:
+            sentiment: "Настроение"
+            emotion: "Эмоция"
         summarization:
           name: "Cводки"
           description: "Добавляет кнопку сводки по теме, которая позволяет посетителям получать краткое содержание темы"
@@ -752,6 +763,15 @@ ru:
         delete: "Удалить"
         embedding: "Встраивание"
         tool: "Инструмент"
+      decision_models:
+        no_preset: "Нет"
+        display_name: "Название"
+        model: "Модель"
+        provider: "Поставщик"
+        vision_enabled: "Поддерживает ввод изображений."
+        edit: "Изменить"
+        delete: "Удалить"
+        test: "Выполнить тест"
       mcp_servers:
         short_title: "Серверы MCP"
         name: "Название"
@@ -774,6 +794,18 @@ ru:
         tools_modal:
           parameters: "Параметры"
           required: "Обязательный"
+      models:
+        new: "Новая модель"
+        name: "Название"
+        type: "Тип"
+        provider: "Поставщик"
+        edit: "Изменить"
+        select_type: "Выбрать"
+        types:
+          embedding: "Встраивание"
+        filters:
+          all: "Все типы"
+          reset: "Сбросить фильтры"
       llms:
         short_title: "Большие языковые модели"
         no_llms: "Еще нет LLM"
@@ -1012,9 +1044,23 @@ ru:
         quick_search:
           suffix: "во всех темах и публикациях с AI"
       ai_artifact:
+        editor:
+          version: "Версии"
+          default: "Домашнюю страницу"
+          option_on: "Включено"
+          option_off: "Выключено"
+          apply: "Применить"
         expand_view_label: "Расширить вид"
         collapse_view_label: "Выйти из полноэкранного режима (кнопка ESC или «Назад»)"
         click_to_run_label: "Запустить артефакт"
+        share: "Поделиться"
+        create_link: "Создать ссылку"
+        copied: "Скопировано в буфер"
+        copy_link: "Копировать ссылку"
+        copy_embed: "Скопировать код для вставки"
+        new_tab: "Показать в новой вкладке"
+        filter_all: "Все"
+        filter_standalone: "Обособленное"
       ai_bot:
         title: "AI-бот"
         agent: "Агент:"
@@ -1132,6 +1178,17 @@ ru:
             compact: "Компактная"
             expanded: "Расширенная"
             expanded_description: "со сводками от AI"
+      ai_search:
+        related_topics: "Связанные темы"
+        related_replies:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответов"
+          other: "%{count} ответ"
+        tabs:
+          ask: "Спросить AI"
+          topics: "Новые темы"
+          messages: "Сообщений"
       discobot_discoveries:
         main_title: "Спросить AI"
         loading_convo: "Загрузка разговора"

@@ -47,6 +47,21 @@ RSpec.describe UserSuspender do
       }.from(0).to(1)
     end
 
+    it "preserves the scheduled expiry in the log after an early unsuspension" do
+      freeze_time(Time.zone.now.round)
+      suspend_user
+
+      history = user.user_histories.find_by!(action: UserHistory.actions[:suspend_user])
+      expect(history.expires_at).to eq_time(user.reload.suspended_till)
+
+      UserSuspender.unsuspend(user, by_user: admin)
+
+      expect(history.reload.expires_at).to eq_time(5.hours.from_now)
+      expect(
+        user.user_histories.find_by!(action: UserHistory.actions[:unsuspend_user]).expires_at,
+      ).to be_nil
+    end
+
     it "links the staff action log to the reviewable when passed via opts" do
       reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
       suspender =
@@ -111,8 +126,35 @@ RSpec.describe UserSuspender do
         )
       end
 
-      it "doesn't enqueue a critical user email job" do
-        expect do suspend_user end.not_to change { Jobs::CriticalUserEmail.jobs.size }.from(0)
+      it "delivers a suspension email with the reason when DSA reporting is enabled" do
+        SiteSetting.dsa_reporting_enabled = true
+        user.user_option.update!(timezone: "Asia/Singapore")
+
+        expect { suspend_user }.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+        job = Jobs::CriticalUserEmail.jobs.sole.fetch("args").first
+        Jobs::CriticalUserEmail.new.execute(job.with_indifferent_access)
+
+        email = ActionMailer::Base.deliveries.sole
+        expect(email.to).to eq([user.email])
+        expect(email.subject).to include("Your account has been suspended")
+        expect(email.text_part.body.decoded).to include("because", "UTC+08:00")
+      end
+
+      it "skips the notification when DSA reporting is disabled" do
+        expect { suspend_user }.not_to change { Jobs::CriticalUserEmail.jobs.size }
+      end
+
+      it "skips the notification when the optional message is whitespace" do
+        suspender =
+          UserSuspender.new(
+            user,
+            suspended_till: 5.hours.from_now,
+            reason: "because",
+            by_user: admin,
+            message: "   ",
+          )
+
+        expect { suspender.suspend }.not_to change { Jobs::CriticalUserEmail.jobs.size }
       end
     end
   end

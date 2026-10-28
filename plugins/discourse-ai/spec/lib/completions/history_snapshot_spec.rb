@@ -44,6 +44,61 @@ RSpec.describe DiscourseAi::Completions::HistorySnapshot do
     )
   end
 
+  it "preserves a snapshot when background onebox processing localizes its favicon" do
+    url = "https://app-eu1.hubspot.com/contacts/123/record/0-1/456"
+    raw = "What are the most recent emails sent to this person?\n#{url}"
+    source.update!(raw: raw)
+    snapshot = post_snapshot(source)
+
+    source.update_columns(cooked: <<~HTML)
+      <p>What are the most recent emails sent to this person?</p>
+      <aside class="onebox">
+        <header><img class="site-icon" src="https://example.com/favicon.png"></header>
+        <a href="#{url}">HubSpot</a>
+      </aside>
+    HTML
+    source.link_post_uploads
+    expect { snapshot.verify! }.not_to raise_error
+
+    upload = Fabricate(:upload)
+    source.update_columns(cooked: source.cooked.sub("https://example.com/favicon.png", upload.url))
+    source.link_post_uploads
+
+    expect(source.reload.raw).to eq(raw)
+    expect(UploadReference.where(target: source).pluck(:upload_id)).to eq([upload.id])
+    expect { snapshot.verify! }.not_to raise_error
+  end
+
+  it "captures PM history when category group moderation is enabled" do
+    SiteSetting.enable_category_group_moderation = true
+
+    snapshot = post_snapshot(source)
+
+    expect(snapshot.metadata["source_id"]).to eq(source.id)
+  end
+
+  it "excludes other users' hidden PM posts from a category moderator's history" do
+    SiteSetting.enable_category_group_moderation = true
+    group = Fabricate(:group)
+    group.add(user)
+    Fabricate(:category_moderation_group, group: group)
+    source.update!(hidden: true)
+    hidden_post = Fabricate(:post, topic: source.topic, user: other_user, hidden: true)
+    latest = Fabricate(:post, topic: source.topic, user: user)
+
+    snapshot = post_snapshot(latest)
+
+    expect(snapshot.user_turn_count).to eq(2)
+    hidden_post.update!(raw: "Changed hidden evidence")
+    expect { snapshot.verify! }.not_to raise_error
+
+    source.update!(raw: "Changed reader-owned hidden evidence")
+    expect { snapshot.verify! }.to raise_error(
+      DiscourseAi::Completions::ContextPreparation::Error,
+      /history_changed/,
+    )
+  end
+
   it "retains the first eligible bot answer after the initial PM user post is deleted" do
     reply = Fabricate(:post, topic: source.topic, user: bot_user, raw: "Retained bot evidence")
     latest = Fabricate(:post, topic: source.topic, user: user, raw: "Continue the conversation")

@@ -20,7 +20,7 @@ import DStatTiles from "discourse/ui-kit/d-stat-tiles";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import SpamTestModal from "./modal/spam-test-modal";
+import SpamTestModal from "discourse/plugins/discourse-ai/discourse/components/modal/spam-test-modal";
 
 export default class AiSpam extends Component {
   @service toasts;
@@ -277,7 +277,7 @@ export default class AiSpam extends Component {
             />
           {{else}}
             <span class="ai-spam__llm-placeholder">
-              <LinkTo @route="adminPlugins.show.discourse-ai-llms.index">
+              <LinkTo @route="adminPlugins.show.discourse-ai-models.new">
                 {{i18n "discourse_ai.spam.no_llms"}}
               </LinkTo>
             </span>

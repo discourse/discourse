@@ -19,7 +19,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostReactionChanged::V1, discourse_wor
   end
 
   describe "#matches?" do
-    it "filters changes, reactions, categories, and tags" do
+    it "filters changes, reactions, categories, tags, and topics" do
       SiteSetting.tagging_enabled = true
       topic.tags << tag
       react("hugs")
@@ -30,10 +30,12 @@ RSpec.describe DiscourseWorkflows::Nodes::PostReactionChanged::V1, discourse_wor
       expect(trigger.matches?(trigger_context(reaction: "clap"))).to eq(false)
       expect(trigger.matches?(trigger_context(category_ids: [other_category.id]))).to eq(false)
       expect(trigger.matches?(trigger_context(tag_names: ["missing"]))).to eq(false)
+      expect(trigger.matches?(trigger_context(topic_ids: [topic.id + 1]))).to eq(false)
       expect(
         trigger.matches?(
           trigger_context(
             changes: ["replaced"],
+            topic_ids: [topic.id],
             reaction: ":laughing:",
             category_ids: [category.id],
             tag_names: [tag.name],

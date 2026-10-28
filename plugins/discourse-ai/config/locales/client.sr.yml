@@ -41,6 +41,12 @@ sr:
       ai_decoded_transcript:
         type: "Tip"
         error: "Greška"
+      discourse_workflows:
+        classify:
+          upload_ids: "Slike"
+          name: "Ime foruma"
+          type: "Tip"
+          type_score: "Rezultat"
       ai_tool_approval:
         loading: "Učitavanje..."
         tool: "Akcije"
@@ -66,6 +72,8 @@ sr:
         filters:
           all: "Sve"
           reset: "Reset"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraži"
         admin_dashboard:
@@ -183,6 +191,11 @@ sr:
         edit: "Izmeni"
         delete: "Obriši"
         embedding: "Ugrađivanje"
+      decision_models:
+        no_preset: "Ništa"
+        display_name: "Ime foruma"
+        edit: "Izmeni"
+        delete: "Obriši"
       mcp_servers:
         name: "Ime foruma"
         description: "Opis"
@@ -193,6 +206,15 @@ sr:
         delete: "Obriši"
         tools_modal:
           required: "Potrebno"
+      models:
+        name: "Ime foruma"
+        type: "Tip"
+        edit: "Izmeni"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
       llms:
         display_name: "Ime foruma"
         vision_modes:
@@ -233,6 +255,14 @@ sr:
         providers:
           google: "Google"
           fake: "Posebna"
+      ai_artifact:
+        editor:
+          version: "Verzija"
+          default: "Подразумевано"
+          apply: "Primeni"
+        share: "Podeli"
+        create_link: "Napravi link"
+        filter_all: "Sve"
       ai_bot:
         debug_ai_modal:
           next_log: "Dalje"
@@ -254,6 +284,14 @@ sr:
             category: "Kategorija"
           table:
             total_count: "Ukupno"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Teme"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Teme"

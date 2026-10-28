@@ -115,6 +115,8 @@ export default class ChatChannelThreadSubscriptionManager {
     stagedMessage.edited = data.chat_message.edited;
     stagedMessage.isAction = data.chat_message.is_action;
 
+    messagesManager.sortMessages();
+
     return stagedMessage;
   }
 

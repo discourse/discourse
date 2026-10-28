@@ -9,8 +9,6 @@ const DummyTabComponent = <template>
   {{/if}}
 </template>;
 
-import { eq } from "discourse/truth-helpers";
-
 acceptance("Edit Category - Plugin Tab API", function (needs) {
   needs.user();
 

@@ -8,7 +8,6 @@ import DMenu, {
   DMenuComponentArgs,
   DMenuSignature,
 } from "discourse/float-kit/components/d-menu";
-import { or } from "discourse/truth-helpers";
 import DButton, { DButtonSignature } from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 

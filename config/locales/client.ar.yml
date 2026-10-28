@@ -6,6 +6,10 @@
 
 ar:
   js:
+    dsa_notice:
+      title: "الإبلاغ عن المحتوى غير القانوني"
+      email: "عنوان البريد الإلكتروني"
+      resend_email_code: "إعادة إرسال الرمز"
     user_api_key:
       title: 'تفويض "%{application_name}"'
       authorize: "تفويض"
@@ -55,6 +59,7 @@ ar:
       manage:
         access_permission_editor: "المحرِّر"
         access_permission_editor_description: "يمكن إنشاء وتعديل المحتوى لهذا الكيان"
+        access_permission_owner: "المالك"
         access_permission_viewer: "مشاهد"
         access_permission_viewer_description: "يمكنه عرض محتوى هذا الكيان"
         access_permission_remove: "إزالة"
@@ -424,7 +429,6 @@ ar:
       zh_CN:
         name: الصينية المبسطة
     share:
-      topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور #%{postNumber} بواسطة @%{username}"
       close: "إغلاق"
       twitter: "المشاركة على X"
@@ -479,6 +483,12 @@ ar:
     skip_to_last_reply: "الانتقال إلى الرد الأخير"
     skip_to_top: "تخطي إلى الأعلى"
     skip_user_nav: "التخطي إلى محتوى الملف الشخصي"
+    reorder:
+      remove: "إزالة %{label}"
+      removed: "تمت إزالة %{label}"
+      move_up: "التحريك لأعلى"
+      move_down: "التحريك لأسفل"
+      position: "%{position} من %{total}"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     emails_are_disabled_no_smtp: "تم إيقاف جميع رسائل البريد الإلكتروني الصادرة نظرًا لعدم وجود خادم SMTP تم تكوينه. لا يمكن إرسال أي نوع من الرسائل الإلكترونية."
     emails_are_disabled_non_staff: "تم إيقاف البريد الإلكتروني الصادر للمستخدمين من خارج فريق العمل."
@@ -633,13 +643,6 @@ ar:
       few: "%{count} كحدٍ أقصى"
       many: "%{count} كحدٍ أقصى"
       other: "%{count} كحدٍ أقصى"
-    character_count:
-      zero: "%{count} حرف"
-      one: "حرف واحد (%{count})"
-      two: "حرفان (%{count})"
-      few: "%{count} أحرف"
-      many: "%{count} حرفًا"
-      other: "%{count} حرف"
     period_chooser:
       aria_label: "التصفية حسب الفترة"
     related_messages:
@@ -1050,6 +1053,9 @@ ar:
       title:
         search: "البحث عن رسالة"
         placeholder: "اكتب عنوان الرسالة أو عنوان URL أو المُعرِّف هنا"
+    dsa_statements:
+      category: "الفئة"
+      saving: "جارٍ الحفظ…"
     review:
       show_more: "عرض المزيد"
       show_less: "عرض أقل"
@@ -2519,7 +2525,6 @@ ar:
         upload_title: "تحميل صورتك"
         image_is_not_a_square: "تحذير: لقد قصصنا صورتك؛ لأن عرضها وارتفاعها لم يكونا متساويين."
         logo_small: "شعار الموقع الصغير. يتم استخدامه بشكلٍ افتراضي."
-        use_custom: "أو حمِّل صورة رمزية مخصَّصة:"
       change_profile_background:
         title: "رأس الملف الشخصي"
         instructions: "سيتم توسيط رؤوس الملفات الشخصية وسيكون عرضها الافتراضي 1110 بكسل."
@@ -3220,7 +3225,7 @@ ar:
       hide_forever: "لا، شكرًا"
       hidden_for_session: "حسنًا، سنسألك غدًا. يمكنك دائمًا استخدام \"تسجيل الدخول\" لإنشاء حساب أيضًا."
       intro: "مرحبًا! يبدو أنك تستمتع بالمناقشة، لكنك لم تشترك للحصول على حساب حتى الآن."
-      value_prop: "هل سئمت من التمرير عبر المنشورات نفسها؟ عندما تُنشئ حسابًا، فستستأنف دائمًا من حيث توقفت. عند إنشاء حساب، ستتمكن أيضًا من تلقي إشعارات بالردود الجديدة وحفظ الإشارات المرجعية وتسجيل الإعجاب لشكر الآخرين. يمكننا جميعًا العمل معًا للارتقاء بهذا المجتمع. :heart:"
+      value_prop: "هل سئمت من التمرير عبر المنشورات نفسها؟ عندما تُنشئ حسابًا، فستستأنف دائمًا من حيث توقفت. عند إنشاء حساب، ستتمكن أيضًا من تلقي إشعارات بالردود الجديدة وحفظ الإشارات المرجعية وتسجيل الإعجاب لشكر الآخرين. يمكننا جميعًا العمل معًا للارتقاء بهذا المجتمع."
     offline_indicator:
       no_internet: "لا يتوفَّر اتصال بالإنترنت."
       refresh_page: "تحديث الصفحة"
@@ -3847,8 +3852,7 @@ ar:
       cancel_edit: "ألغِ تعديل"
       draft_saved: "حُفظت المسودة!"
       users_placeholder: "إضافة مستخدمين أو مجموعات"
-      title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
-      title_placeholder_redesign: "العنوان"
+      title_placeholder: "العنوان"
       title_or_link_placeholder: "اكتب عنوانًا أو الصق رابطًا هنا"
       edit_reason_placeholder: "ما سبب التعديل؟"
       topic_featured_link_placeholder: "أدخِل الرابط الموضَّح مع العنوان."
@@ -3866,8 +3870,6 @@ ar:
       show_preview: "إظهار المعاينة"
       hide_preview: "إخفاء المعاينة"
       resize: "تغيير حجم أداة الإنشاء"
-      switch_to_markdown: "التحويل إلى محرر Markdown القياسي باستخدام الاختصار (%{keyboardShortcut})"
-      switch_to_rich_text: "التحويل إلى المحرر الجديد للنصوص المنسقة باستخدام الاختصار (%{keyboardShortcut})"
       quote_post_title: "اقتباس المنشور بأكمله"
       bold_label: "B"
       bold_title: "غامق"
@@ -4019,6 +4021,8 @@ ar:
         visit: "افتح الرابط"
         remove_preview: "إزالة المعاينة"
         link_copied: "تم نسخ الرابط!"
+      table:
+        default_heading: "العمود %{number}"
       unsupported_token: "لا يدعم محرر النص المنسق جميع الميزات المستخدمة في هذا المنشور؛ مما يحولك إلى محرر Markdown."
     notifications:
       tooltip:
@@ -6592,13 +6596,6 @@ ar:
         search_open: "فتح مربع البحث في واجهة المسؤول"
         search_full_page: "فتح صفحة البحث الكاملة في واجهة المسؤول"
     badges:
-      earned_n_times:
-        zero: "تم منحك هذه الشارة %{count} مرة"
-        one: "تم منحك هذه الشارة مرة واحدة (%{count})"
-        two: "تم منحك هذه الشارة مرتين (%{count})"
-        few: "تم منحك هذه الشارة %{count} مرات"
-        many: "تم منحك هذه الشارة %{count} مرة"
-        other: "تم منحك هذه الشارة %{count} مرة"
       granted_on: "تم منحه بتاريخ %{date}"
       others_count:
         zero: "تم منحها للآخرين %{count} مرة"
@@ -7223,63 +7220,6 @@ ar:
           other: "يجب ان يكون الإدخال أطول من %{count}."
         pattern_mismatch: "يُرجى مطابقة التنسيق المطلوب."
         bad_input: "يُرجى إدخال قيمة صالحة."
-    table_builder:
-      title: "أداة إنشاء الجداول"
-      modal:
-        title: "أداة إنشاء الجداول"
-        create: "إنشاء جدول"
-        help:
-          title: "استخدام محرر جداول البيانات"
-          enter_key: "مفتاح Enter"
-          tab_key: "مفتاح Tab"
-          new_row: "في نهاية الصف لإدراج صف جديد."
-          new_col: "في نهاية العمود لإدراج عمود جديد."
-          options: "انقر بزر الماوس الأيمن على الخلايا للوصول إلى خيارات إضافية في قائمة منسدلة."
-        confirm_close: "هل تريد بالتأكيد إغلاق أداة إنشاء الجداول؟ سيتم فقدان أي تغييرات غير محفوظة."
-      edit:
-        btn_edit: "تعديل الجدول"
-        modal:
-          title: "تعديل الجدول"
-          cancel: "إلغاء"
-          create: "حفظ"
-          reason: "ما سبب التعديل؟"
-          trigger_reason: "أضِف سبب التعديل"
-        default_edit_reason: "تحديث الجدول باستخدام محرر الجداول"
-      default_header:
-        col_1: "العمود 1"
-        col_2: "العمود 2"
-        col_3: "العمود 3"
-        col_4: "العمود 4"
-      spreadsheet:
-        no_records_found: "لم يتم العثور على سجلات"
-        show: "إظهار"
-        entries: "إدخالات"
-        about: "نبذة"
-        prompts:
-          delete_selected_rows: "هل تريد بالتأكيد حذف الصفوف المحدَّدة؟"
-          delete_selected_cols: "هل تريد بالتأكيد حذف الأعمدة المحدَّدة؟"
-          will_destroy_merged_cells: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          will_clear_search_results: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          conflicts_with_merged_cells: "هناك تعارض مع خلية مدمجة أخرى"
-        invalid_merge_props: "خصائص الدمج غير صالحة"
-        cells_already_merged: "تم دمج الخلية بالفعل"
-        no_cells_selected: "لم يتم تحديد أي خلايا"
-        context_menu:
-          row:
-            before: "إدراج صف جديد قبله"
-            after: "إدراج صف جديد بعده"
-            delete: "حذف الصفوف المحدَّدة"
-          col:
-            before: "إدراج عمود جديد قبله"
-            after: "إدراج عمود جديد بعده"
-            delete: "حذف الأعمدة المحدَّدة"
-            rename: "إعادة تسمية هذا العمود"
-          order:
-            ascending: "ترتيب تصاعدي"
-            descending: "ترتيب تنازلي"
-          copy: "نسخ..."
-          paste: "لصق..."
-          save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
     safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>معرفة المزيد</a>."
     filter:
@@ -7532,6 +7472,7 @@ ar:
             use_preset: "إعداد"
             presets:
               custom: "مخصَّصة"
+            automatic: "تلقائية"
           authorizations:
             user: "المستخدم"
             scopes: "المجالات الممنوحة"
@@ -9422,8 +9363,8 @@ ar:
           upload: "تحميل"
           select_component: "تحديد مكوِّن…"
           unsaved_changes_alert: "لم تحفظ تغييراتك بعد، هل تريد تجاهلها والمضي قدمًا؟"
-          unsaved_parent_themes: "لم تخصِّص المكوِّن للسمات، هل تريد المضي قدمًا؟"
           discard: "تجاهل"
+          leave: "مغادرة"
           stay: "البقاء"
           css_html: "رمز مخصّص"
           edit_css_html: "تعديل الرمز"

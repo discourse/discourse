@@ -2,8 +2,8 @@ import curryComponent from "ember-curry-component";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { _setIncludeDeprecatedArgsProperty } from "discourse/lib/outlet-args";
 import { _setOutletDebugCallback } from "discourse/lib/plugin-connectors";
-import devToolsState from "../state";
-import OutletInfoComponent from "./outlet-info";
+import devToolsState from "../state.js";
+import OutletInfoComponent from "./outlet-info.gjs";
 
 const SKIP_EXISTING_FOR_OUTLETS = [
   "home-logo-wrapper", // Wrapper outlet used by chat, so very likely to be present

@@ -26,9 +26,7 @@ lv:
       close: "Aizvērt"
       delete: "Dzēst"
       edit: "Labot"
-      back: "Atpakaļ"
       save: "Saglabāt"
-      apply: "Pielietot"
       update_range:
         last_10_days: "Pēdējās 10 dienas"
         last_30_days: "Pēdējās 30 dienas"
@@ -42,3 +40,4 @@ lv:
         username: "Lietotājs"
         date: "Datums"
         description: "Apraksts"
+        category_id: "Sadaļa"

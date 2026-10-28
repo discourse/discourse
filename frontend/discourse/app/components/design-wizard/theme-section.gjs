@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -51,7 +51,11 @@ class ThemeCard extends Component {
   <template>
     <div class="design-wizard__theme-card-wrapper">
       <label
-        class="design-wizard__theme-card {{if this.selected '--selected'}}"
+        class={{dConcatClass
+          "design-wizard__theme-card"
+          (if this.selected "--selected")
+          (unless this.currentScreenshotUrl "--without-screenshot")
+        }}
         data-theme-id={{@theme.id}}
       >
         <input
@@ -74,11 +78,11 @@ class ThemeCard extends Component {
             {{i18n "design_wizard.theme.selected"}}
           </span>
         {{/if}}
-        <span
-          class="design-wizard__theme-screenshot
-            {{if this.showSkeleton '--loading'}}"
-        >
-          {{#if this.currentScreenshotUrl}}
+        {{#if this.currentScreenshotUrl}}
+          <span
+            class="design-wizard__theme-screenshot
+              {{if this.showSkeleton '--loading'}}"
+          >
             <img
               alt=""
               class="design-wizard__theme-screenshot-image"
@@ -90,8 +94,8 @@ class ThemeCard extends Component {
               {{on "load" this.screenshotSettled}}
               {{on "error" this.screenshotSettled}}
             />
-          {{/if}}
-        </span>
+          </span>
+        {{/if}}
         <span class="design-wizard__theme-name">{{@theme.name}}</span>
         <span class="design-wizard__theme-description">
           {{@theme.description}}

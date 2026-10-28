@@ -243,7 +243,7 @@ module TopicGuardian
     regular_topics = secured_regular_topic_scope(scope)
     return regular_topics if !authenticated?
 
-    regular_topics.or(private_message_topic_scope(scope.private_messages))
+    regular_topics.or(private_message_topic_scope(scope))
   end
 
   def can_see_topic?(topic, hide_deleted = true)
@@ -321,7 +321,7 @@ module TopicGuardian
 
     if topic&.first_post&.wiki &&
          @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
-      return can_create_post?(topic)
+      return can_edit_post?(topic.first_post)
     end
 
     false
@@ -354,14 +354,14 @@ module TopicGuardian
   end
 
   def private_message_topic_scope(scope)
-    pm_scope = scope.private_messages_for_user(user)
+    scope = scope.private_messages
+    allowed = scope.allowed_to_user(user)
+    return allowed if !is_moderator?
 
-    pm_scope = pm_scope.or(scope.where(<<~SQL)) if is_moderator?
-        topics.subtype = '#{TopicSubtype.moderator_warning}'
-        OR topics.id IN (#{Topic.has_flag_scope.select(:topic_id).to_sql})
-      SQL
-
-    pm_scope
+    flagged = Topic.has_flag_scope.where("reviewables.topic_id = topics.id").select(1)
+    allowed.or(scope.where(<<~SQL))
+      topics.subtype = '#{TopicSubtype.moderator_warning}' OR EXISTS (#{flagged.to_sql})
+    SQL
   end
 
   private

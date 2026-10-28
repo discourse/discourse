@@ -46,6 +46,7 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
+      homepage_option: "Kanał czatu"
       edit_category:
         tab_title: "Czat"
         channel: "Kanał"
@@ -336,6 +337,7 @@ pl_PL:
         read_only: "Kanał jest tylko do odczytu, nie możesz teraz wysyłać nowych wiadomości."
       placeholder_silenced: "W tej chwili nie możesz wysyłać wiadomości."
       remove_upload: "Usuń plik"
+      preview_upload: "Podgląd %{filename}"
       react: "Zareaguj z emoji"
       reply: "Odpowiedz"
       message_actions: "Czynności wiadomości"
@@ -616,6 +618,8 @@ pl_PL:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
         default_thread_title: "Wątek"
+        transcript_label: "Transkrypcja"
+        transcript_region: "Transkrypcja z %{channel}"
       notification_levels:
         never: "Nigdy"
         mention: "Tylko dla wzmianek"
@@ -699,7 +703,8 @@ pl_PL:
           alphabetical: "Alfabetycznie"
           recent_activity: "Ostatnia aktywność"
           priority: "Priorytet"
-          priority_description: "Wzmianki, następnie nieprzeczytane, a następnie ostatnia aktywność"
+          priority_description: "Wzmianki, następnie nieprzeczytane, następnie ostatnia aktywność, posortowane alfabetycznie"
+          priority_description_dms: "Wzmianki, następnie nieprzeczytane, a następnie ostatnia aktywność"
         empty:
           filtered: "Żaden kanał nie pasuje do tego filtra."
           show_all: "Pokaż wszystkie kanały"
@@ -795,6 +800,8 @@ pl_PL:
         notify_moderators: "Ta wiadomość wymaga uwagi personelu z innego powodu niewymienionego powyżej."
       flagging:
         action: "Oflaguj wiadomość"
+      anonymous_flagging:
+        description: "Aby zgłosić nielegalną treść, skontaktuj się z <a href='mailto:%{email}?subject=Nielegalne treści: %{channel_title}&body=Ta wiadomość na czacie %{url} zawiera nielegalne treści.'>%{email}</a>"
       emoji_picker:
         favorites: "Często używane"
         smileys_&_emotion: "Buźki i emocje"
@@ -965,15 +972,26 @@ pl_PL:
         "action:chat_approval": "Zatwierdzenie czatu"
         "trigger:chat_message_created": "Utworzona wiadomość czatu"
       node_descriptions:
-        "action:send_chat_message": "Wyślij wiadomość do kanału czatu"
+        "action:send_chat_message": "Wyślij wiadomość na kanał czatu lub wiadomość bezpośrednią do jednego lub większej liczby użytkowników"
         "action:chat_approval": "Wyślij prośbę o zatwierdzenie na kanał czatu i czekaj na odpowiedź"
         "trigger:chat_message_created": "Wyzwala się, gdy zostanie utworzona nowa wiadomość czatu"
       chat_message_created:
         channel_id: "Kanał"
         channel_id_description: "Pozostaw puste, aby włączyć czat dla wszystkich kanałów."
       send_chat_message:
+        target: "Wyślij do"
+        targets:
+          channel: "Kanał"
+          user: "Użytkownicy (każdy z osobna wiadomość)"
+          group: "Grupa (jedna wiadomość bezpośrednia do wszystkich)"
         channel_id: "Kanał"
+        thread_id: "Identyfikator wątku"
+        thread_id_description: "Odpowiedz w tym wątku, a nie na głównym kanale. Zostaw puste, aby opublikować na kanale."
+        target_usernames: "Odbiorcy"
+        target_usernames_description: "Użytkownicy do wysłania wiadomości. Użyj wyrażenia takiego jak $trigger.user.username, aby wybrać użytkowników z każdego elementu."
         message: "Wiadomość"
+        actor_username: "Nadawca"
+        actor_username_description: "Wiadomości są wysyłane w imieniu tego użytkownika i wszyscy widzą je jako napisane przez niego. Publikując na kanale, użytkownik musi być jego członkiem."
       chat_approval:
         message: "Wiadomość"
         buttons: "Przyciski"

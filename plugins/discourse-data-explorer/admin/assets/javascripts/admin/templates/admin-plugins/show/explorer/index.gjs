@@ -1,7 +1,6 @@
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -9,10 +8,11 @@ import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
-import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
+import QueryGroups from "discourse/plugins/discourse-data-explorer/discourse/components/query-groups";
 
 export default <template>
   <div class="admin-detail">
@@ -20,7 +20,7 @@ export default <template>
       <:actions as |actions|>
         <actions.Primary
           @icon="plus"
-          @label="explorer.create"
+          @label="explorer.new_query"
           @route="adminPlugins.show.explorer.new"
         />
         <actions.Wrapped>
@@ -38,7 +38,7 @@ export default <template>
 
     <DFilterControls
       @additionalFiltersActive={{@controller.hasTagFilter}}
-      @array={{@controller.model.content}}
+      @array={{@controller.queries}}
       @initialTextFilter={{@controller.textFilter}}
       @inputPlaceholder={{i18n "explorer.search_placeholder"}}
       @loading={{@controller.searchLoading}}
@@ -46,15 +46,6 @@ export default <template>
       @onResetFilters={{@controller.onResetFilters}}
       @onTextFilterChange={{@controller.onTextFilterChange}}
     >
-      <:aboveFilters>
-        {{#if @controller.othersDirty}}
-          <div class="warning">
-            {{dIcon "triangle-exclamation"}}
-            {{i18n "explorer.others_dirty"}}
-          </div>
-        {{/if}}
-      </:aboveFilters>
-
       <:additionalFilters>
         <DMultiSelect
           class="query-tag-filter"
@@ -69,71 +60,55 @@ export default <template>
       </:additionalFilters>
 
       <:content as |filteredQueries|>
-        {{#if @controller.model.content.length}}
+        {{#if @controller.queries.length}}
           <DConditionalLoadingSpinner @condition={{@controller.loading}} />
 
-          <DLoadMore @action={{@controller.loadMore}}>
+          <DLoadMore
+            @action={{@controller.loadMore}}
+            @enabled={{@controller.canLoadMore}}
+            @isLoading={{@controller.loadingMore}}
+          >
             <div class="container discourse-data-explorer-query-list">
               <table class="d-table recent-queries">
-                <thead class="d-table__header heading-container">
-                  <th class="col heading name">
-                    <div
-                      class="heading-toggle"
-                      role="button"
-                      {{on "click" (fn @controller.updateSortProperty "name")}}
-                    >
+                <thead class="d-table__header">
+                  <tr class="d-table__row">
+                    <th class="d-table__header-cell">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
-                        @automatic="true"
+                        @automatic={{true}}
                         @field="name"
-                        @labelKey="explorer.query_name"
-                        @order={{@controller.order}}
+                        @labelKey="explorer.name"
+                        @onToggle={{@controller.updateSortProperty}}
+                        @order={{@controller.sortByProperty}}
                       />
-                    </div>
-                  </th>
-                  <th class="col heading created-by">
-                    <div
-                      class="heading-toggle"
-                      role="button"
-                      {{on
-                        "click"
-                        (fn @controller.updateSortProperty "username")
-                      }}
-                    >
+                    </th>
+                    <th class="d-table__header-cell query-created-by">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
-                        @automatic="true"
+                        @automatic={{true}}
                         @field="username"
                         @labelKey="explorer.query_user"
-                        @order={{@controller.order}}
+                        @onToggle={{@controller.updateSortProperty}}
+                        @order={{@controller.sortByProperty}}
                       />
-                    </div>
-                  </th>
-                  <th class="col heading group-names">
-                    <div class="group-names-header">
+                    </th>
+                    <th class="d-table__header-cell query-group-names">
                       {{i18n "explorer.query_groups"}}
-                    </div>
-                  </th>
-                  <th class="col heading created-at">
-                    <div
-                      class="heading-toggle"
-                      role="button"
-                      {{on
-                        "click"
-                        (fn @controller.updateSortProperty "last_run_at")
-                      }}
-                    >
+                    </th>
+                    <th class="d-table__header-cell query-created-at">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
-                        @automatic="true"
+                        @automatic={{true}}
                         @field="last_run_at"
                         @labelKey="explorer.query_time"
-                        @order={{@controller.order}}
+                        @onToggle={{@controller.updateSortProperty}}
+                        @order={{@controller.sortByProperty}}
                       />
-                    </div>
-                  </th>
+                    </th>
+                    <th class="d-table__header-cell"></th>
+                  </tr>
                 </thead>
-                <tbody>
+                <tbody class="d-table__body">
                   {{#each filteredQueries as |query|}}
                     <tr class="d-table__row query-row">
                       <td class="d-table__cell --overview">
@@ -171,15 +146,18 @@ export default <template>
                         <div class="d-table__mobile-label">
                           {{i18n "explorer.query_user"}}
                         </div>
-                        {{#if query.username}}
-                          <div>
-                            <LinkTo
-                              @model={{query.username}}
-                              @route="user.summary"
-                            >
-                              {{query.username}}
-                            </LinkTo>
-                          </div>
+                        {{#if query.user}}
+                          <DUserLink
+                            class="query-created-by__link"
+                            @username={{query.user.username}}
+                          >
+                            {{dBoundAvatarTemplate
+                              query.user.avatarTemplate
+                              "tiny"
+                              (hash title=query.user.username)
+                            }}
+                            <span>{{query.user.username}}</span>
+                          </DUserLink>
                         {{/if}}
                       </td>
                       <td class="d-table__cell --detail query-group-names">
@@ -187,34 +165,22 @@ export default <template>
                           {{i18n "explorer.query_groups"}}
                         </div>
                         <div class="group-names">
-                          {{#each query.group_names as |group|}}
-                            <ShareReport @group={{group}} @query={{query}} />
-                          {{/each}}
-                          {{#unless query.group_names.length}}
-                            -
-                          {{/unless}}
+                          <QueryGroups @query={{query}} />
                         </div>
                       </td>
                       <td class="d-table__cell --detail query-created-at">
                         <div class="d-table__mobile-label">
                           {{i18n "explorer.query_time"}}
                         </div>
-                        {{#if query.last_run_at}}
+                        {{#if query.lastRunAt}}
                           <span>
-                            {{dAgeWithTooltip
-                              query.last_run_at
-                              format="medium"
-                            }}
-                          </span>
-                        {{else if query.created_at}}
-                          <span>
-                            {{dAgeWithTooltip query.created_at format="medium"}}
+                            {{dAgeWithTooltip query.lastRunAt format="medium"}}
                           </span>
                         {{else}}
                           -
                         {{/if}}
                       </td>
-                      <td class="d-table__cell-controls">
+                      <td class="d-table__cell --controls">
                         <div class="d-table__cell-actions">
                           <LinkTo
                             class="btn btn-text btn-default btn-small"
@@ -222,32 +188,22 @@ export default <template>
                             @route="adminPlugins.show.explorer.edit"
                             {{on "click" @controller.scrollTop}}
                           >
-                            {{#if query.is_default}}
+                            {{#if query.isDefault}}
                               {{i18n "explorer.view_query"}}
                             {{else}}
                               {{i18n "edit"}}
                             {{/if}}
                           </LinkTo>
                         </div>
-
                       </td>
                     </tr>
-                  {{else}}
-                    <br />
-                    <em class="no-search-results">
-                      {{i18n "explorer.no_search_results"}}
-                    </em>
                   {{/each}}
                 </tbody>
               </table>
             </div>
           </DLoadMore>
 
-          <DConditionalLoadingSpinner
-            @condition={{@controller.model.loadingMore}}
-          />
-
-          <div class="explorer-pad-bottom"></div>
+          <DConditionalLoadingSpinner @condition={{@controller.loadingMore}} />
         {{/if}}
       </:content>
     </DFilterControls>

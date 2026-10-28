@@ -7,6 +7,7 @@ class UserHistorySerializer < ApplicationSerializer
              :ip_address,
              :email,
              :created_at,
+             :expires_at,
              :subject,
              :previous_value,
              :new_value,
@@ -32,6 +33,10 @@ class UserHistorySerializer < ApplicationSerializer
 
   def context
     redact_content? ? nil : object.context
+  end
+
+  def expires_at
+    redact_content? ? nil : object.expires_at
   end
 
   def new_value

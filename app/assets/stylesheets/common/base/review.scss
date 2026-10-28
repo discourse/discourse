@@ -602,6 +602,9 @@
     }
 
     &__description {
+      &.--note {
+        white-space: pre-line;
+      }
       color: var(--primary-high);
       font-size: var(--font-down-1);
       overflow-wrap: anywhere;

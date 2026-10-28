@@ -191,6 +191,33 @@ class Post < ActiveRecord::Base
     @notices ||= Enum.new(custom: "custom", new_user: "new_user", returning_user: "returning_user")
   end
 
+  def self.recalculate_like_counts!(post_ids)
+    DB.exec(
+      <<~SQL,
+        UPDATE posts
+        SET like_count = (
+          SELECT COUNT(*)
+          FROM post_actions
+          WHERE post_actions.post_id = posts.id
+            AND post_actions.post_action_type_id = :like
+            AND post_actions.deleted_at IS NULL
+        ),
+        like_score = (
+          SELECT COALESCE(SUM(CASE WHEN users.moderator OR users.admin THEN :staff_like_weight ELSE 1 END), 0)
+          FROM post_actions
+          INNER JOIN users ON users.id = post_actions.user_id
+          WHERE post_actions.post_id = posts.id
+            AND post_actions.post_action_type_id = :like
+            AND post_actions.deleted_at IS NULL
+        )
+        WHERE posts.id IN (:post_ids)
+      SQL
+      post_ids:,
+      like: PostActionType::LIKE_POST_ACTION_ID,
+      staff_like_weight: SiteSetting.staff_like_weight,
+    )
+  end
+
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
@@ -692,6 +719,7 @@ class Post < ActiveRecord::Base
     # inform user
     if user.present?
       options = {
+        **Dsa::AppealInstructions.message_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
         flag_reason:

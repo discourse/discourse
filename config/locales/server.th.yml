@@ -588,9 +588,13 @@ th:
                 label: "ส่วนตัว"
   onebox:
     github:
+      header:
+        success: "สำเร็จ"
       closed: "ปิด"
-      status_date:
-        approved: "อนุมัติแล้ว"
+      pr_status:
+        draft: "แบบร่าง"
+        open: "เปิด"
+        approved: "อนุมัติ"
         closed: "ปิด"
   discourse_push_notifications:
     popup:

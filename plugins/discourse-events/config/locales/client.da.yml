@@ -359,7 +359,6 @@ da:
             going: "Deltager"
             interested: "Interesseret"
         event:
-          expired: "Udløbet"
           closed: "Lukket"
           status:
             standalone:
@@ -371,6 +370,8 @@ da:
             private:
               title: "Privat"
               description: "En privat begivenhed kan kun tilmeldes af inviterede brugere."
+      recording_modal:
+        save: "Gem"
       composer:
         name_placeholder: "Navn på begivenhed"
         url_placeholder: "Tilføj URL"

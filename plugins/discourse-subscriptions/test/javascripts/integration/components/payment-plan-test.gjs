@@ -42,15 +42,11 @@ module("payment-plan", function (hooks) {
       amountDollars: "3.99",
     };
 
-    class State {
-      @tracked selectedPlan;
-    }
-
-    const testState = new State();
+    const selectedPlan = tracked(undefined);
 
     await render(
       <template>
-        <PaymentPlan @plan={{plan}} @selectedPlan={{testState.selectedPlan}} />
+        <PaymentPlan @plan={{plan}} @selectedPlan={{selectedPlan.value}} />
       </template>
     );
 

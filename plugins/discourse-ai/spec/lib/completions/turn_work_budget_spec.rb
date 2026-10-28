@@ -26,15 +26,54 @@ RSpec.describe DiscourseAi::Completions::TurnWorkBudget do
       options = { thinking_effort: "high" }
 
       expect(budget.generation_options(options, maximum: 5000, final: true, root: true)).to eq(
-        max_tokens: 2048,
+        max_tokens: 4096,
         max_tokens_is_total: true,
+        max_response_tokens: 2048,
         thinking_effort: "none",
       )
       expect(
         budget.generation_options(options, maximum: 1000, final: true, root: true)[:max_tokens],
       ).to eq(1000)
+      expect(
+        budget.generation_options(options, maximum: 1000, final: true, root: true)[
+          :max_response_tokens
+        ],
+      ).to eq(1000)
       expect(budget.generation_options(options, maximum: 5000, final: true)[:max_tokens]).to eq(500)
       expect(budget.remaining).to eq(500)
+    end
+
+    it "derives the provider ceiling from visible intent plus thinking allowance" do
+      budget = described_class.new(limit: 100_000)
+
+      expect(
+        budget.generation_options(
+          { max_response_tokens: 400, thinking_effort: "high" },
+          maximum: nil,
+        )[
+          :max_tokens
+        ],
+      ).to eq(400 + 16_384)
+      expect(
+        budget.generation_options(
+          { max_response_tokens: 400, thinking_effort: "high" },
+          maximum: 1000,
+        )[
+          :max_tokens
+        ],
+      ).to eq(1000)
+    end
+
+    it "sends no ceiling when nothing is configured, except the bounded final answer" do
+      budget = described_class.new(limit: 4000)
+
+      expect(budget.generation_options({}, maximum: nil)).to eq({})
+      expect(budget.generation_options({}, maximum: nil, final: true, root: true)).to eq(
+        max_tokens: 4096,
+        max_tokens_is_total: true,
+        max_response_tokens: 2048,
+        thinking_effort: "none",
+      )
     end
   end
 

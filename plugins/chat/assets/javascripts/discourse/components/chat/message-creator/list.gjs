@@ -2,13 +2,12 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import Channel from "./channel";
-import Group from "./group";
-import ListAction from "./list-action";
-import User from "./user";
+import Channel from "./channel.gjs";
+import Group from "./group.gjs";
+import ListAction from "./list-action.gjs";
+import User from "./user.gjs";
 
 export default class List extends Component {
   cantAddMoreMembersLabel = i18n(

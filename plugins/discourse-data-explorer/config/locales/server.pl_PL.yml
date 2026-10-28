@@ -27,6 +27,24 @@ pl_PL:
         run_sql: "Uruchomiono zapytanie SQL"
         submit_query: "Wysłano wygenerowane zapytanie %{name}"
   discourse_data_explorer:
+    admin_assistant:
+      generating: "Generowanie i testowanie projektu zapytania"
+      create_summary: "Zapisać to zapytanie w Eksploratorze danych?"
+      not_allowed: "Tylko administratorzy mogą tworzyć zapytania w Eksploratorze danych."
+      invalid_request: "Zapytanie jest puste lub zbyt długie. Podaj krótszy opis."
+      invalid_draft: "Ten projekt zapytania jest nieprawidłowy, niedostępny lub wygasł. Wygeneruj nowy projekt."
+      incomplete_draft: "W wygenerowanym projekcie zapytania brakuje nazwy lub kodu SQL. Wygeneruj nowy projekt."
+      requester_not_admin: "Administrator, który zażądał tego zapytania, nie ma już dostępu administracyjnego. Poproś o nową wersję roboczą z konta administratora."
+      approval_required: "Zapisanie tego zapytania wymaga zgody człowieka."
+      draft_used: "Ten projekt zapytania został już użyty lub jest zapisywany. Wygeneruj nowy projekt."
+      generation_failed: "Nie udało się wygenerować zapytania. Spróbuj ponownie lub doprecyzuj swoje żądanie."
+      creation_failed: "Nie udało się zapisać zapytania. Nie utworzono żadnego zapytania."
+      availability:
+        available: "Tworzenie zapytań w Eksploratorze danych jest dostępne. Zapisanie wymaga wyraźnej zgody."
+        restricted: "Tworzenie zapytań w Eksploratorze danych jest niedostępne na tej stronie."
+        disabled: "Eksplorator danych lub AI Discourse jest wyłączony. Administrator musi włączyć wymagane wtyczki przed utworzeniem zapytań."
+        generation_disabled: "Generowanie zapytań AI jest wyłączone. Administrator musi je włączyć przed tworzeniem zapytań za pośrednictwem czatu."
+        unconfigured: "Model AI generujący zapytania w Eksploratorze danych nie jest skonfigurowany ani użyteczny."
     mcp:
       query_failed: "Nie udało się wykonać zapytania: %{message}"
       query_not_found: "Nie znaleziono zapytania"
@@ -35,10 +53,11 @@ pl_PL:
       error_no_sql_returned: "Sztuczna inteligencja nie zwróciła prawidłowego zapytania SQL. Spróbuj ponownie lub wpisz zapytanie ręcznie."
     errors:
       default_tag_reserved: "Domyślny znacznik jest zarezerwowany dla zapytań systemowych."
+      custom_tag_reserved: "Tag niestandardowy jest zarezerwowany dla zapytań tworzonych przez użytkowników."
       tag_contains_comma: "Tagi nie mogą zawierać przecinków."
       tag_too_long: "Tag może mieć maksymalnie %{max} znaków."
       tool_not_allowed: "Nie masz uprawnień do korzystania z tego narzędzia"
-      too_many_tags: "Zapytanie może mieć maksymalnie %{max} tagów."
+      too_many_tags: "Zapytanie może mieć maksymalnie %{max} tagów, nie licząc tagów automatycznych."
     discourse_workflows:
       sql_action:
         no_query_selected: "Nie wybrano zapytania."

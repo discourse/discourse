@@ -15,19 +15,26 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
-import UserMenuBookmarksList from "./bookmarks-list";
-import UserMenuLikesNotificationsList from "./likes-notifications-list";
-import UserMenuMessagesList from "./messages-list";
-import UserMenuNotificationsList from "./notifications-list";
-import UserMenuOtherNotificationsList from "./other-notifications-list";
-import UserMenuProfileTabContent from "./profile-tab-content";
-import UserMenuRepliesNotificationsList from "./replies-notifications-list";
-import UserMenuReviewablesList from "./reviewables-list";
+import UserMenuBookmarksList from "./bookmarks-list.js";
+import UserMenuLikesNotificationsList from "./likes-notifications-list.js";
+import UserMenuMentionsNotificationsList from "./mentions-notifications-list.js";
+import UserMenuMessagesList from "./messages-list.js";
+import UserMenuNotificationsList from "./notifications-list.js";
+import UserMenuOtherNotificationsList from "./other-notifications-list.js";
+import UserMenuProfileTabContent from "./profile-tab-content.gjs";
+import UserMenuRepliesNotificationsList from "./replies-notifications-list.js";
+import UserMenuReviewablesList from "./reviewables-list.js";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = UserMenuNotificationsList;
 
 const REVIEW_QUEUE_TAB_ID = "review-queue";
+const PROGRESSIVE_TAB_IDS = new Set([
+  "replies",
+  "mentions",
+  "likes",
+  "other-notifications",
+]);
 
 const CORE_TOP_TABS = [
   class extends UserMenuTab {
@@ -44,26 +51,42 @@ const CORE_TOP_TABS = [
     id = "replies";
     icon = "user_menu.replies";
     panelComponent = UserMenuRepliesNotificationsList;
-    notificationTypes = [
-      "mentioned",
-      "group_mentioned",
-      "posted",
-      "quoted",
-      "replied",
-    ];
+
+    get notificationTypes() {
+      const types = ["group_mentioned", "posted", "quoted", "replied"];
+      return this.siteSettings.enable_user_menu_mentions_tab
+        ? types
+        : ["mentioned", ...types];
+    }
 
     get count() {
-      return (
-        this.getUnreadCountForType("mentioned") +
-        this.getUnreadCountForType("group_mentioned") +
-        this.getUnreadCountForType("posted") +
-        this.getUnreadCountForType("quoted") +
-        this.getUnreadCountForType("replied")
+      return this.notificationTypes.reduce(
+        (sum, type) => sum + this.getUnreadCountForType(type),
+        0
       );
     }
 
     get linkWhenActive() {
       return `${this.currentUser.path}/notifications/responses`;
+    }
+  },
+
+  class extends UserMenuTab {
+    id = "mentions";
+    icon = "at";
+    panelComponent = UserMenuMentionsNotificationsList;
+    notificationTypes = ["mentioned"];
+
+    get shouldDisplay() {
+      return this.siteSettings.enable_user_menu_mentions_tab;
+    }
+
+    get count() {
+      return this.getUnreadCountForType("mentioned");
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/mentions`;
     }
   },
 
@@ -204,8 +227,15 @@ export default class UserMenu extends Component {
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
   @tracked currentNotificationTypes;
 
+  #availableNotificationTypes;
+
   constructor() {
     super(...arguments);
+    // Snapshot visibility so notifications cannot move tabs while the menu is open.
+    const availableTypes = this.currentUser.available_notification_types;
+    this.#availableNotificationTypes = availableTypes
+      ? new Set(availableTypes)
+      : null;
     this.router.on("routeDidChange", this.onRouteChange);
   }
 
@@ -228,7 +258,7 @@ export default class UserMenu extends Component {
 
     CORE_TOP_TABS.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
-      if (tab.shouldDisplay) {
+      if (tab.shouldDisplay || tab.id === this.currentTabId) {
         tabs.push(tab);
       }
     });
@@ -258,10 +288,12 @@ export default class UserMenu extends Component {
       )
     );
 
-    return tabs.map((tab, index) => {
-      tab.position = index;
-      return tab;
-    });
+    return tabs
+      .filter((tab) => this.#hasNotifications(tab))
+      .map((tab, index) => {
+        tab.position = index;
+        return tab;
+      });
   }
 
   @cached
@@ -320,6 +352,19 @@ export default class UserMenu extends Component {
     topTabsContainerElement.querySelector(".btn.active")?.focus();
   }
 
+  #hasNotifications(tab) {
+    if (
+      !PROGRESSIVE_TAB_IDS.has(tab.id) ||
+      this.#availableNotificationTypes === null
+    ) {
+      return true;
+    }
+
+    return tab.notificationTypes.some((type) =>
+      this.#availableNotificationTypes.has(this.site.notification_types[type])
+    );
+  }
+
   #notificationTypesForTheOtherTab(tabs) {
     const usedNotificationTypes = tabs
       .filter((tab) => tab.notificationTypes)
@@ -346,7 +391,7 @@ export default class UserMenu extends Component {
             role="tablist"
           >
             <div class="top-tabs tabs-list" {{didInsert this.focusFirstTab}}>
-              {{#each this.topTabs as |tab|}}
+              {{#each this.topTabs key="id" as |tab|}}
                 <MenuTab
                   @currentTabId={{this.currentTabId}}
                   @onTabClick={{fn this.handleTabClick tab}}
@@ -355,7 +400,7 @@ export default class UserMenu extends Component {
               {{/each}}
             </div>
             <div class="bottom-tabs tabs-list">
-              {{#each this.bottomTabs as |tab|}}
+              {{#each this.bottomTabs key="id" as |tab|}}
                 <MenuTab
                   @currentTabId={{this.currentTabId}}
                   @onTabClick={{fn this.handleTabClick tab}}

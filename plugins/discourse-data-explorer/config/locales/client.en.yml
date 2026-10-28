@@ -26,6 +26,8 @@ en:
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
       view_query: "View"
       queries: "Queries"
+      back_to_queries: "Back to queries"
+      query_details: "Query details"
       query_created: "Query created!"
       mode:
         label: "Query authoring mode"
@@ -36,7 +38,8 @@ en:
       hidden_relation: "You do not have access to this content."
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
-      create: "Create"
+      create: "Create query"
+      new_query: "New query"
       create_placeholder: "Query name..."
       description_placeholder: "Enter a description here"
       ai:
@@ -54,9 +57,8 @@ en:
         save_query: "Save query"
         write_manually: "Write SQL manually"
         sql_label: "SQL"
-        optional: "optional"
       import:
-        label: "Import"
+        label: "Import query"
         unparseable_json: "Unparseable JSON file."
         wrong_json: "Wrong JSON file. A JSON file should contain a 'query' object, which should at least have an 'sql' property."
       help:
@@ -65,8 +67,8 @@ en:
         auto_resolution: "<h2>Automatic entity resolution</h2>
           <p>When your query returns an entity id, Data Explorer may automatically substitute it with
           the entity name and other useful information in query results. Automatic resolution is available for
-          <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i>
-          and <i><b>badge_id</b></i>. To try this out run this query:</p>
+          <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i>,
+          <i><b>badge_id</b></i> and <i><b>reviewable_id</b></i>. To try this out run this query:</p>
           <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>Creating custom parameters</h2>
           <p>To create custom parameters for your queries, put this at the top of your query and follow the format:</p>
@@ -107,6 +109,7 @@ en:
       run: "Run"
       undo: "Discard changes"
       delete: "Delete"
+      delete_confirm: "Are you sure you want to delete this query?"
       recover: "Undelete query"
       dashboard:
         add: "Add to dashboard"
@@ -140,7 +143,6 @@ en:
         results_json: "Results (JSON)"
         results_csv: "Results (CSV)"
         query_json: "Query definition (JSON)"
-      others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in %{value} ms."
       cached_result_notice: "Showing cached results from %{relative_time}."
       result_count:
@@ -149,10 +151,10 @@ en:
       max_result_count:
         one: "Showing top %{count} result."
         other: "Showing top %{count} results."
-      query_name: "Query"
+      name: "Name"
       query_groups: "Groups"
       query_tags: "Tags"
-      default_tag_mandatory: "The default tag cannot be removed from bundled queries."
+      automatic_tag_mandatory: "This tag is added automatically and cannot be removed."
       link: "Link for"
       report_name: "Report"
       query_description: "Description"
@@ -161,7 +163,7 @@ en:
       column: "Column %{number}"
       save_params: "Set defaults"
       reset_params: "Reset"
-      search_placeholder: "Search..."
+      search_placeholder: "Search queries…"
       filter_by_tag: "Filter by tag"
       filter_by_this_tag: "Filter the list by this tag"
       no_search_results: "Sorry, we couldn't find any results matching your text."

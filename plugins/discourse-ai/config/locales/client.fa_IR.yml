@@ -70,6 +70,13 @@ fa_IR:
         type: "نوع"
         error: "خطا"
         response: "پاسخ"
+      discourse_workflows:
+        classify:
+          text: "متن"
+          upload_ids: "تصاویر"
+          name: "نام"
+          type: "نوع"
+          type_score: "امتیاز"
       ai_tool_approval:
         loading: "بارگذاری..."
         tool: "عمل"
@@ -85,6 +92,7 @@ fa_IR:
         groups: "گروه‌ها:"
         no_agent: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
+        classification_model: "مدل:"
         edit: "تنظیم"
         expand_list:
           one: "(%{count} مورد دیگر)"
@@ -95,6 +103,8 @@ fa_IR:
         filters:
           all: "همه"
           reset: "بازنشانی"
+        sentiment:
+          enabled: "فعال شده"
         search:
           name: "جستجو"
         embeddings:
@@ -242,6 +252,14 @@ fa_IR:
         delete: "حذف"
         embedding: "جاسازی"
         tool: "ابزار"
+      decision_models:
+        no_preset: "هیچ‌کدام"
+        display_name: "نام"
+        model: "مدل"
+        provider: "ارائه‌دهنده"
+        edit: "ویرایش"
+        delete: "حذف"
+        test: "اجرا کردن تست"
       mcp_servers:
         name: "نام"
         description: "توضیح"
@@ -255,6 +273,16 @@ fa_IR:
         delete: "حذف"
         tools_modal:
           required: "مورد نیاز"
+      models:
+        name: "نام"
+        type: "نوع"
+        provider: "ارائه‌دهنده"
+        edit: "ویرایش"
+        select_type: "انتخاب"
+        types:
+          embedding: "جاسازی"
+        filters:
+          all: "همه نوع‌ها"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
@@ -329,6 +357,15 @@ fa_IR:
         provider_fields:
           model_name: "نام مدل"
         semantic_search: "موضوعات (معنایی)"
+      ai_artifact:
+        editor:
+          version: "نسخه"
+          default: "پیش‌فرض"
+          apply: "اعمال کردن"
+        share: "اشتراک‌گذاری"
+        create_link: "ایجاد پیوند"
+        copy_link: "رونوشت پیوند"
+        filter_all: "همه"
       ai_bot:
         llm: "مدل:"
         cancel_streaming: "توقف پاسخ"
@@ -366,6 +403,13 @@ fa_IR:
       summarization:
         chat:
           summarize: "خلاصه کن"
+      ai_search:
+        related_replies:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
+        tabs:
+          topics: "موضوعات"
+          messages: "پیام‌ها"
       discobot_discoveries:
         create_topic: "ایجاد موضوع"
         legacy:

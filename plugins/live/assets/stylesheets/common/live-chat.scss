@@ -1,0 +1,117 @@
+@use "lib/viewport";
+
+@include viewport.until(sm) {
+  #main-outlet-wrapper {
+    .has-full-page-chat & {
+      padding: 0;
+    }
+  }
+}
+
+.live-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  background: var(--secondary);
+  height: 100%;
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+
+    .loading-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    // The chat plugin sizes .chat-thread to the viewport via its chat-height()
+    // mixin (including mobile/footer-nav variants); inside the room panel the
+    // panel itself is the bounding box. The fade eases the loading-state →
+    // thread swap so it doesn't read as a flicker.
+    .chat-thread {
+      height: 100% !important;
+      animation: live-chat-fade-in 0.15s ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    // A thread freshly created from the starter composer holds only that one
+    // message, which loads faster than the skeleton can finish appearing — so
+    // that swap suppresses it instead of flashing it.
+    &.--hide-skeleton .chat-skeleton {
+      display: none;
+    }
+
+    // The panel header's open-in-chat button is the single link out to the
+    // thread; the original message's own "See in <channel>" chip duplicates
+    // it in a cramped space.
+    .chat-message-info__original-message {
+      display: none;
+    }
+  }
+
+  .empty-state__container {
+    margin: auto;
+  }
+}
+
+// chat component overrules
+.empty-state {
+  .live-chat & {
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  .is-unavailable.live-chat & {
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+}
+
+.chat-composer {
+  .live-chat:not(:has(.chat-replying-indicator-container)) & {
+    &__wrapper {
+      margin-bottom: var(--space-4);
+    }
+
+    &__inner-container {
+      padding-inline-start: var(--space-4);
+    }
+  }
+
+  &__wrapper {
+    &.--live {
+      @include viewport.until(sm) {
+        margin-left: var(--space-4);
+      }
+    }
+  }
+}
+
+.c-navbar__title-text {
+  .live-chat & {
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+}
+
+@keyframes live-chat-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

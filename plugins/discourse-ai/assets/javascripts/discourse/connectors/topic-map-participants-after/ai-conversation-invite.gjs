@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Participant from "discourse/components/header/topic/participant";
 import AddPmParticipants from "discourse/components/modal/add-pm-participants";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class AiConversationInvite extends Component {

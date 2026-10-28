@@ -13,7 +13,14 @@ module Jobs
         Invite.where(id: pending_invite_ids).update_all(
           emailed_status: Invite.emailed_status_types[:sending],
         )
-        pending_invite_ids.each { |invite_id| ::Jobs.enqueue(:invite_email, invite_id: invite_id) }
+        topic_invite_ids = TopicInvite.where(invite_id: pending_invite_ids).pluck(:invite_id).to_set
+        pending_invite_ids.each do |invite_id|
+          ::Jobs.enqueue(
+            :invite_email,
+            invite_id: invite_id,
+            invite_to_topic: topic_invite_ids.include?(invite_id),
+          )
+        end
         ::Jobs.enqueue_in(1.minute, :process_bulk_invite_emails)
       end
     end

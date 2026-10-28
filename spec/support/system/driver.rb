@@ -2,7 +2,8 @@
 
 # Playwright/Chrome driver setup for system specs: the remote-debugging endpoint,
 # the Chrome launch args, and driver registration.
-CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
+CHROME_REMOTE_DEBUGGING_PORT =
+  ((ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_i + ENV["TEST_ENV_NUMBER"].to_i).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
 
 module SystemDrivers
@@ -132,13 +133,47 @@ module SystemDrivers
   end
 
   def self.apply_base_chrome_args(args = [], allow_network: [])
-    base_args = %w[
+    # A custom --disable-features replaces the generated list. Keep the browser
+    # safeguards relevant to Chromium in our Linux test image alongside our flags.
+    disabled_features = [
+      # Avoid Google AI Mode eligibility requests during browser startup.
+      "AimEnabled",
+      # Avoid headed about:blank navigation hangs.
+      # https://github.com/microsoft/playwright/issues/14047
+      "AvoidUnnecessaryBeforeUnloadCheckSync",
+      # Keep the profile alive when examples close and replace the last browser window.
+      "DestroyProfileOnBrowserClose",
+      # Keep HTTP test URLs on HTTP instead of attempting automatic HTTPS upgrades.
+      "HttpsUpgrades",
+      # Avoid casting device discovery and its local network traffic in the test container.
+      "MediaRouter",
+      # Avoid startup requests to Google network time servers.
+      "NetworkTimeServiceQuerying",
+      # Avoid downloading remote navigation optimization hints during startup.
+      "OptimizationHints",
+      # Avoid lost iframe clicks and file chooser events while painting is deferred.
+      # https://github.com/microsoft/playwright/issues/28023
+      "PaintHolding",
+      # Preserve browser context storage state when an origin is loaded in an iframe.
+      # https://github.com/microsoft/playwright/issues/32230
+      "ThirdPartyStoragePartitioning",
+      # Prevent browser translation prompts from interrupting tests in other locales.
+      "Translate",
+      # Avoid creating the internal address bar popup page when tests replace pages.
+      "WebUIOmniboxPopup",
+      # Avoid creating the companion AI Mode popup page when tests replace pages.
+      "WebUIOmniboxAimPopup",
+    ]
+
+    base_args = %W[
       --disable-search-engine-choice-screen
+      --disable-features=#{disabled_features.join(",")}
       --no-sandbox
       --disable-dev-shm-usage
       --mute-audio
       --remote-allow-origins=*
       --disable-smooth-scrolling
+      --js-flags=--no-enable-lazy-source-positions
     ]
 
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { modifier } from "ember-modifier";
-import { getNext, getPrevious } from "./lib/iterate-list";
+import { getNext, getPrevious } from "./lib/iterate-list.js";
 
 export default class ListHandler extends Component {
   handleKeydown = modifier((element) => {

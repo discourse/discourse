@@ -1,4 +1,53 @@
 en:
+  dsa_notice:
+    subject: "[%{reference}] Report of potentially illegal content"
+    summary: "**Report reference: %{reference}**\n\n**Email address:** %{reporter_email}\n\n**Full name or organization name:** %{reporter_name}\n\n**Exact URL of the content:** %{content_url}\n\n**Why do you believe this content is illegal?**\n\n%{explanation}"
+    verification_invalid: "The email verification code is incorrect or has expired. Check the code or request a new one."
+    invalid_parameters: "The report contains invalid values."
+    invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
+    invalid_email: "must be a valid email address"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] Your report verification code"
+    text_body_template: |
+      Use this code to verify your email for reporting illegal content on %{site_title}:
+
+      ## %{verification_code}
+
+      This code expires in %{expires_in_minutes} minutes. If you didn’t request it, you can safely ignore this email.
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] Your report of potentially illegal content %{reference}"
+    text_body_template: |
+      %{site_title} has received your report.
+
+      The reviewing team will email you the outcome. This receipt does not mean that a decision has been made or that the content has been removed.
+
+      %{summary}
+
+      **Declaration:**
+
+      I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete.
+  dsa_statements:
+    classification_note: "Classified this moderation decision for DSA reporting.\nCommunity rule: %{ground}\nCategory: %{category}"
+    errors:
+      statements_changed: "The statements for this review have changed. Reload the page to see their current classification."
+      failed: "Classification could not be saved. Please try again."
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "Animal welfare"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Consumer information infringements"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "Cyber violence"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Cyber violence against women"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Data protection and privacy violations"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Illegal or harmful speech"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Intellectual property infringements"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Negative effects on civic discourse or elections"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Type of alleged illegal content not specified by the notifier"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Other violation of terms and conditions"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Protection of minors"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Risk for public security"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Scams and fraud"
+      STATEMENT_CATEGORY_SELF_HARM: "Self harm"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Unsafe or prohibited products"
+      STATEMENT_CATEGORY_VIOLENCE: "Violence"
   markdown_endpoints:
     latest: "Latest"
     categories: "Categories"
@@ -460,9 +509,11 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
         email_alias_not_allowed: "Happens when the sender's address is an alias of an address already registered to an account, and normalized emails are required to be unique."
+        site_archived_error: "Happens when the site is in archive mode."
       unrecognized_error: "Unrecognized Error"
     secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
+    view_diagram: "View diagram"
 
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -836,6 +887,7 @@ en:
         one: "Default notification level can't be set on groups larger than %{count} user. Incorrect group: %{group_name}"
         other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
+      flair_upload_not_owned: "You can only use an image you have uploaded as the group flair."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."
@@ -1093,6 +1145,7 @@ en:
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, or to establish category guidelines or rules:\n\n- Why should people use this category? What is it for?\n\n- How exactly is this different than the other categories we already have?\n\n- What should topics in this category generally contain?\n\n- Do we need this category? Can we merge with another category, or subcategory?\n"
     errors:
       not_found: "Category not found!"
+      self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
@@ -2094,6 +2147,9 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
+    dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
+    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. Leave blank to omit appeal instructions. Requires {{setting:dsa_reporting_enabled}} to be turned on."
+    dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
@@ -2707,7 +2763,7 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
-    allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
+    allow_all_users_to_flag_illegal_content: "Let anyone report illegal content, including trust level 0 and silenced users. Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after {{setting:editing_grace_period}}?"
@@ -3105,6 +3161,7 @@ en:
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
     enable_desktop_push_notifications: "Activate push notifications for the desktop interface. This feature enables real-time alerts from the site directly to your desktop, enhancing engagement and ensuring users are always updated. However, the effectiveness of this feature relies on browser support for push notifications."
     push_notification_time_window_mins: "Wait (n) minutes before sending push notification. Helps prevent push notifications from being sent to an active online user."
+    push_notification_localization_max_wait_mins: "Longest time (in minutes) to hold a push notification for a new post while its translation into the recipient's language is produced. Set to 0 to send without waiting."
 
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
     heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
@@ -3136,6 +3193,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
+    concord_in_wizard: "Offer Concord and the General chat homepage in the design wizard."
     enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
     site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
@@ -3155,13 +3213,15 @@ en:
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_composer_redesign: "Enable the redesigned composer."
+    enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
     enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
+    enable_user_menu_mentions_tab: "Add a Mentions tab to the user menu that shows direct @username mentions separately from replies and group mentions."
     show_user_menu_avatars: "Show user avatars in the user menu"
-    about_page_hidden_groups: "Do not show members of specific groups on the /about page."
+    about_page_hidden_groups: "Do not show admins or moderators who are also members of these specific groups on the /about page."
     about_page_extra_groups: "Groups to show on the about page below the moderators."
     about_page_extra_groups_initial_members: "Number of members to expand on each group on the about page."
     about_page_extra_groups_show_description: "Whether to include the group descriptions on the about page."
@@ -3216,6 +3276,7 @@ en:
     improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
+    update_whispers_allowed_groups_default: "We are updating the default for the {{setting:whispers_allowed_groups}} setting to allow staff to post whispers by default. If you have previously changed this setting, your configuration will not change unless you reset the setting."
     sidebar_user_navigation: "Moves the navigation for user pages — profile, activity, notifications, messages, invites and preferences — out of the horizontal tab bars and into a dedicated sidebar panel, the way the admin area works. On mobile the panel is served from the hamburger menu."
     enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
     enable_markdown_endpoints: "Serve supported topics and topic lists as Markdown through .md URLs and requests with an Accept: text/markdown header. Normal visibility and profile privacy rules always apply."
@@ -3706,6 +3767,9 @@ en:
       must_end_with_alphanumeric: "must end with a letter or a number"
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
+      contains_blocked_words:
+        one: "contains the blocked word '%{words}'"
+        other: "contains blocked words: %{words}"
     email:
       blank: "can't be blank."
       invalid: "is invalid."
@@ -3962,6 +4026,7 @@ en:
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
+    moderation_appeal_instructions: "To appeal this decision, contact %{email}"
 
     post_hidden:
       title: "Post Hidden"
@@ -4562,6 +4627,15 @@ en:
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 
+    email_reject_site_archived:
+      title: "Email Reject Site Archived"
+      subject_template: "[%{email_prefix}] Email issue -- Site Archived"
+      subject_template_improved: "%{email_prefix}: Email issue -- site archived"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        This site is archived and doesn't accept new posts.
+
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
@@ -5056,40 +5130,58 @@ en:
         %{respond_instructions}
 
     account_suspended:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum until %{suspended_till}.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_suspended_forever:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended.
 
         Reason - %{reason}
 
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
+
     account_silenced:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       subject_template_improved: "Your account has been silenced"
       text_body_template: |
-        You have been silenced from the forum until %{silenced_till}.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been silenced until %{silenced_till}.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_silenced_forever:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       subject_template_improved: "Your account has been silenced"
       text_body_template: |
-        You have been silenced from the forum.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been silenced.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_deleted:
       title: "Account Deleted"
@@ -6260,6 +6352,9 @@ en:
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
   design_wizard:
+    themes:
+      concord:
+        description: "Replaces the sidebar with a single channel list made of categories, chat channels and live audio/video rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."
@@ -6320,6 +6415,23 @@ en:
       truncated_file: "This file has been truncated."
       show_original: "show original"
     github:
+      header:
+        repository: "Repository"
+        folder: "Folder"
+        file: "File"
+        binary_file: "Binary file"
+        gist: "Gist"
+        open_issue: "Open issue"
+        closed_issue: "Closed issue"
+        commit: "Commit"
+        comment: "Comment"
+        review: "Review comment"
+        pull_request: "Pull request"
+        success: "Success"
+        failure: "Failure"
+        pending: "In progress"
+        unknown: "Unknown or queued"
+        check_run: "Check run"
       binary_file: "This file is binary."
       truncated_file: "This file has been truncated."
       show_original: "show original"
@@ -6333,21 +6445,13 @@ en:
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
       no_description: "Contribute to %{repo} development by creating an account on GitHub."
-      pr_title:
-        default: "Pull Request"
-        draft: "Draft Pull Request"
-        open: "Open Pull Request"
-        approved: "Approved Pull Request"
-        changes_requested: "Changes Requested"
-        merged: "Merged Pull Request"
-        closed: "Closed Pull Request"
-      status_date:
-        open: "opened"
-        draft: "drafted"
-        approved: "approved"
-        changes_requested: "changes requested"
-        merged: "merged"
-        closed: "closed"
+      pr_status:
+        draft: "Draft"
+        open: "Open"
+        approved: "Approved"
+        changes_requested: "Changes requested"
+        merged: "Merged"
+        closed: "Closed"
 
   discourse_push_notifications:
     popup:

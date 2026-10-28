@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -24,7 +25,6 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { and, eq } from "discourse/truth-helpers";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
@@ -37,6 +37,8 @@ export default class Item extends Component {
   @service historyStore;
   @service site;
   @service siteSettings;
+
+  @tracked isFocused = false;
 
   highlightIfNeeded = modifier((element) => {
     if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
@@ -157,6 +159,16 @@ export default class Item extends Component {
     );
 
     element.classList.add("highlighted");
+  }
+
+  @action
+  onBlur() {
+    this.isFocused = false;
+  }
+
+  @action
+  onFocus() {
+    this.isFocused = true;
   }
 
   @action
@@ -286,6 +298,7 @@ export default class Item extends Component {
       aria-level={{this.ariaLevel}}
       class={{dConcatClass
         "topic-list-item"
+        (if this.isFocused "selected")
         (if @topic.category (concat "category-" @topic.category.fullSlug))
         (if (eq @topic @lastVisitedTopic) "last-visit")
         (if @topic.visited "visited")
@@ -306,6 +319,8 @@ export default class Item extends Component {
       role={{this.role}}
       style={{this.style}}
       {{this.highlightIfNeeded}}
+      {{on "focus" this.onFocus}}
+      {{on "blur" this.onBlur}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
       {{on "auxclick" this.click}}
@@ -441,7 +456,15 @@ export default class Item extends Component {
                     />{{~! no whitespace ~}}
                   {{/unless}}
                   {{~! no whitespace ~}}
-                  {{dDiscourseTags @topic mode="list"}}
+                  <PluginOutlet
+                    @name="topic-list-tags-wrapper"
+                    @outletArgs={{lazyHash
+                      topic=@topic
+                      tags=@topic.visibleListTags
+                    }}
+                  >
+                    {{~dDiscourseTags @topic mode="list"~}}
+                  </PluginOutlet>
                 </span>
 
                 <div class="num activity last">

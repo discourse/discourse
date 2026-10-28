@@ -31,7 +31,6 @@ de:
             failed: "Fehlgeschlagen"
         emotion:
           title: "Emotion"
-          description: "Die Tabelle zeigt die Anzahl der Beiträge an, die einer bestimmten Emotion zugeordnet wurden. Je nach gewählter Methode zur Emotionsklassifizierung werden die Beiträge entweder mit dem konfigurierten Emotionsklassifizierungsmodell („SamLowe/roberta-base-go_emotions“) oder mit dem konfigurierten Emotionsklassifizierungsagenten klassifiziert."
         reports:
           filters:
             group_by:
@@ -271,6 +270,12 @@ de:
           upload_ids: "Upload-IDs"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wähle einen Agenten aus …"
+        classify:
+          text: "Text"
+          upload_ids: "Bilder"
+          name: "Name"
+          type: "Typ"
+          type_score: "Score"
       bot_chats:
         tab_label: "Bot-Chats"
       ai_tool_approval:
@@ -285,14 +290,11 @@ de:
         rejected: "Abgelehnt"
         awaiting_staff: "Warte auf Genehmigung durch das Team"
       default_llm:
-        title: "Standard-LLM-Modell"
-        description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
+        title: "Standard-Sprachmodell"
       llm_selector:
         none: "Keine Auswahl"
-        saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
-        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Agenten und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück zu KI-Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
@@ -306,6 +308,7 @@ de:
         no_llm: "Kein LLM ausgewählt"
         no_agent: "Nicht festgelegt"
         no_groups: "Keine"
+        classification_model: "Modell:"
         edit: "Einstellungen"
         expand_list:
           one: "(%{count} weitere)"
@@ -325,10 +328,17 @@ de:
           not_enabled: "Nicht aktiviert"
         filters:
           all: "Gesamt"
-          text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
+        sentiment:
+          sentiment: "Stimmung"
+          emotion: "Emotion"
+          enabled: "Aktiviert"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Stimmung"
+            emotion: "Emotion"
         summarization:
           name: "Zusammenfassungen"
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
@@ -719,8 +729,6 @@ de:
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
-        max_turn_tokens: "Max. Runden-Token"
-        max_turn_tokens_help: "Maximale Gesamtanzahl an Token (Eingabe + Ausgabe), die bei allen LLM-Aufrufen während einer einzelnen Bot-Antwort verbraucht werden. Lass das Feld leer, um die Standardeinstellung zu verwenden, die der Hälfte des Kontextfensters des Modells entspricht."
         compression_threshold: "Kompressionsschwelle"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_enabled: Bild-Uploads einbeziehen
@@ -915,7 +923,6 @@ de:
           result: "Testergebnis"
       secrets:
         short_title: "Anmeldedaten"
-        description: "Verwalte Authentifizierungsdaten, die von allen LLMs, Einbettungen und Tools gemeinsam genutzt werden."
         name: "Name"
         secret: "Wert"
         select_secret: "Wähle Anmeldedaten aus …"
@@ -940,6 +947,16 @@ de:
         mcp_server_oauth_client_secret: "MCP-Server OAuth-Client-Geheimnis"
         modal:
           title: "Neue Anmeldedaten erstellen"
+      decision_models:
+        no_preset: "Keine Erfassung"
+        display_name: "Name"
+        model: "Modell"
+        provider: "Anbieter"
+        api_key: "Anmeldedaten"
+        vision_enabled: "Unterstützt Bildeingabe"
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        test: "Test ausführen"
       mcp_servers:
         short_title: "MCP-Server"
         new: "Neuer MCP-Server"
@@ -1021,6 +1038,18 @@ de:
         test_summary:
           one: "%{count} Tool entdeckt mit Protokoll %{version}."
           other: "%{count} Tools entdeckt mit Protokoll %{version}."
+      models:
+        new: "Neues Modell"
+        name: "Name"
+        type: "Typ"
+        provider: "Anbieter"
+        edit: "Bearbeiten"
+        select_type: "Auswählen"
+        types:
+          embedding: "Einbettung"
+        filters:
+          all: "Alle Arten"
+          reset: "Filter zurücksetzen"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -1303,9 +1332,23 @@ de:
         quick_search:
           suffix: "in allen Themen und Beiträgen mit KI"
       ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          option_on: "An"
+          option_off: "Aus"
+          apply: "Anwenden"
         expand_view_label: "Ansicht erweitern"
         collapse_view_label: "Vollbild verlassen (ESC- oder Zurück-Taste)"
         click_to_run_label: "Artefakt ausführen"
+        share: "Teilen"
+        create_link: "Link erstellen"
+        copied: "Wurde in Zwischenablage kopiert"
+        copy_link: "Link kopieren"
+        copy_embed: "Einbettung kopieren"
+        new_tab: "In neuer Registerkarte anzeigen"
+        filter_all: "Alle"
+        filter_standalone: "Einzeln"
       ai_bot:
         title: "KI-Bot"
         agent: "Agent:"
@@ -1443,6 +1486,15 @@ de:
             compact: "Kompakt"
             expanded: "Erweitert"
             expanded_description: "mit KI-Zusammenfassungen"
+      ai_search:
+        related_topics: "Verwandte Themen"
+        related_replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        tabs:
+          ask: "KI fragen"
+          topics: "Themen"
+          messages: "Nachrichten"
       discobot_discoveries:
         main_title: "KI fragen"
         loading_convo: "Unterhaltung wird geladen"
