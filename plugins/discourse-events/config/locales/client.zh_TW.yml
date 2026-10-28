@@ -354,6 +354,8 @@ zh_TW:
         topic_id: "主題 ID"
     discourse_post_event:
       new_event: "新增活動"
+      onebox:
+        all_day: "全天"
       notifications:
         before_event_reminder: "活動即將開始"
         after_event_reminder: "活動已結束"

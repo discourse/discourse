@@ -5540,6 +5540,7 @@ de:
     graph_title: "Anzahl Suchen"
   onebox:
     discourse:
+      event_all_day: "Ganztägig"
       user_joined_community: "Beigetreten %{date}"
     google_meet:
       title: "Google-Meet-Meeting"

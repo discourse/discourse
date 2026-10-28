@@ -4734,7 +4734,6 @@ sl:
         silenced_by: "Utišan od"
         silence_modal_title: "Utišaj uporabnika/co"
         silence_duration: "Za kako dolgo bo uporabnik utišan?"
-        silence_reason_label: "Zakaj bi rad utišal/a uporabnika/co?"
         silence_reason_placeholder: "Razlog za utišanje"
         silence_message: "E-sporočilo za uporabnika"
         silence_message_placeholder: "(pustite prazno, če hočete poslati privzeto sporočilo)"

@@ -6,6 +6,7 @@
 
 sl:
   chat:
+    design_wizard_homepage_name: "Klepet"
     deleted_chat_username: izbrisano
     crawler:
       directory_title: "Kanali klepeta"

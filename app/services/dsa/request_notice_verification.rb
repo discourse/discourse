@@ -29,18 +29,7 @@ module Dsa
     private
 
     def rate_limit_notice(params:, options:)
-      if options.ip_address.present?
-        RateLimiter.new(nil, "dsa-notice-ip-#{options.ip_address}", 5, 1.hour).performed!
-      end
-      email_key = Digest::SHA256.hexdigest(params.email)
-      email_limiter = RateLimiter.new(nil, "dsa-notice-email-#{email_key}", 3, 1.day)
-      email_limiter.performed!
-      begin
-        RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed!
-      rescue RateLimiter::LimitExceeded
-        email_limiter.rollback!
-        raise
-      end
+      Dsa::NoticeRateLimiter.perform(email: params.email, ip_address: options.ip_address)
     end
 
     def create_verification(params:)

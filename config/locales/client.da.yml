@@ -7,6 +7,7 @@
 da:
   js:
     dsa_notice:
+      choice_title: "Det er ulovligt"
       email: "E-mail adresse"
     user_api_key:
       authorize: "Autoriser"
@@ -6030,7 +6031,6 @@ da:
         silenced_by: "Mådeholdt (silenced) af"
         silence_modal_title: "Mådehold (silence) Bruger"
         silence_duration: "Hvor længe vil brugeren være mådeholdt (silenced)?"
-        silence_reason_label: "Hvorfor mådeholder (silencing) du denne bruger?"
         silence_reason_placeholder: "Årsag for mådeholdenhed (silence)"
         silence_message: "Email Besked"
         silence_message_placeholder: "(lad være tom for at sende standard besked)"

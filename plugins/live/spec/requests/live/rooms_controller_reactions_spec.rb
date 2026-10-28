@@ -74,6 +74,41 @@ RSpec.describe Live::RoomsController do
       expect(messages).to be_empty
     end
 
+    it "returns 400 for a non-string emoji when any emoji is allowed" do
+      SiteSetting.discourse_reactions_allow_any_emoji = true
+      sign_in(participant)
+
+      post "/live/rooms/#{room.id}/reaction.json",
+           params: {
+             emoji: ["rocket"],
+             participant_session_id: @session_id,
+           }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "counts rejected emoji against the rate limit" do
+      RateLimiter.enable
+      sign_in(participant)
+
+      Live::RoomsController::REACTIONS_PER_USER.times do
+        post "/live/rooms/#{room.id}/reaction.json",
+             params: {
+               emoji: "poop",
+               participant_session_id: @session_id,
+             }
+      end
+      expect(response.status).to eq(400)
+
+      post "/live/rooms/#{room.id}/reaction.json",
+           params: {
+             emoji: "poop",
+             participant_session_id: @session_id,
+           }
+
+      expect(response.status).to eq(429)
+    end
+
     it "returns 403 for a user who hasn't joined the call" do
       sign_in(outsider)
 

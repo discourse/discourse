@@ -340,6 +340,8 @@ ru:
         topic_id: "ID темы"
     discourse_post_event:
       new_event: "Новое событие"
+      onebox:
+        all_day: "Весь день"
       notifications:
         before_event_reminder: "Мероприятие скоро начнется"
         after_event_reminder: "Мероприятие закончилось"

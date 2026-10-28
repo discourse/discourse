@@ -34,14 +34,6 @@ RSpec.describe Jobs::WarmDashboardReports do
       expect(warmed_signups).to be_present
     end
 
-    it "skips warming when the new dashboard is disabled" do
-      SiteSetting.dashboard_improvements = false
-
-      described_class.new.execute({})
-
-      expect(warmed_signups).to be_nil
-    end
-
     it "skips warming when no staff member has been seen recently" do
       admin.update!(last_seen_at: 30.days.ago)
 

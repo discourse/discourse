@@ -7,6 +7,7 @@
 ug:
   js:
     dsa_notice:
+      choice_title: "قانۇنسىز"
       title: "قانۇنسىز مەزمۇننى مەلۇم قىلىدۇ"
       email: "ئېلخەت ئادرېسى"
     mcp_oauth_client_id_metadata_policy:
@@ -7903,7 +7904,7 @@ ug:
         silenced_by: "ئۈنسىزلىگۈچى"
         silence_modal_title: "ئۈنسىز ئىشلەتكۈچى"
         silence_duration: "ئىشلەتكۈچى قاچانغىچە سۈكۈت قىلىدۇ؟"
-        silence_reason_label: "نېمىشقا بۇ ئىشلەتكۈچىنى سۈكۈت قىلدۇرىسىز؟"
+        silence_reason_title: "ئۈنسىز قىلىش سەۋەبى"
         silence_reason_placeholder: "سۈكۈت قىلىش سەۋەبى"
         silence_message: "ئېلخەت ئۇچۇرى"
         silence_message_placeholder: "(كۆڭۈلدىكى ئۇچۇرنى ئەۋەتىشتە بوش قالدۇرۇلىدۇ)"

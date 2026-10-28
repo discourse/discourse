@@ -7,6 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -76,6 +77,48 @@ export default class ChatChannel extends Component {
   jumpToPinnedMessage = (messageId) => {
     this.highlightOrFetchMessage(messageId, { position: "center" });
   };
+  // the overlays only read as raised while list content runs beneath them
+  elevateOverlays = modifier((element) => {
+    const scroller = element.parentElement.querySelector(
+      ".chat-messages-scroller"
+    );
+    const content = scroller?.querySelector(".chat-messages-container");
+    if (!scroller || !content) {
+      return;
+    }
+
+    // the topmost message, so the loading skeleton and the empty state don't count
+    const update = () => {
+      const card = element.querySelector(".admin-onboarding-banner__wrap");
+      const firstMessage = content.querySelector(".chat-message-container");
+      const covered =
+        !!card &&
+        !!firstMessage &&
+        firstMessage.getBoundingClientRect().top <
+          card.getBoundingClientRect().bottom;
+      element.classList.toggle("--over-content", covered);
+    };
+
+    const resizeObserver = new ResizeObserver(update);
+    resizeObserver.observe(scroller);
+    resizeObserver.observe(content);
+    const observeChildren = () => {
+      for (const child of element.children) {
+        resizeObserver.observe(child);
+      }
+      update();
+    };
+    const mutationObserver = new MutationObserver(observeChildren);
+    mutationObserver.observe(element, { childList: true });
+    observeChildren();
+    scroller.addEventListener("scroll", update, { passive: true });
+
+    return () => {
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+      scroller.removeEventListener("scroll", update);
+    };
+  });
   // real user input flips this, so onScroll drops the pinned-bar tap override
   // only on a scroll the user drove — not the programmatic jump that set it
   #userScrolled = false;
@@ -808,7 +851,6 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
     >
       <ChatChannelStatus @channel={{@channel}} />
-      <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
       <ChatChannelFilter
         @channel={{@channel}}
@@ -823,6 +865,11 @@ export default class ChatChannel extends Component {
         @onJumpToMessage={{this.jumpToPinnedMessage}}
         @viewportBottomMessageId={{this.lastVisibleMessageId}}
       />
+
+      <div class="chat-channel__overlays" {{this.elevateOverlays}}>
+        {{yield to="aboveMessages"}}
+        <ChatNotices @channel={{@channel}} />
+      </div>
 
       <ChatMessagesScroller
         @onRegisterScroller={{this.registerScroller}}

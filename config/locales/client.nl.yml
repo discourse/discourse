@@ -7,6 +7,8 @@
 nl:
   js:
     dsa_notice:
+      choice_title: "Het is illegaal"
+      go_back: "Terug"
       title: "Illegale content melden"
       email: "E-mailadres"
     user_api_key:
@@ -8210,7 +8212,7 @@ nl:
         silenced_by: "Gedempt door"
         silence_modal_title: "Gebruiker dempen"
         silence_duration: "Hoelang wordt de gebruiker gedempt?"
-        silence_reason_label: "Waarom demp je deze gebruiker?"
+        silence_reason_title: "Reden van dempen"
         silence_reason_placeholder: "Reden van dempen"
         silence_message: "E-mailbericht"
         silence_message_placeholder: "(laat leeg om standaardbericht te sturen)"

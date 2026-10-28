@@ -6406,6 +6406,7 @@ en:
 
   onebox:
     discourse:
+      event_all_day: "All day"
       user_joined_community: "Joined %{date}"
     google_meet:
       title: "Google Meet meeting"

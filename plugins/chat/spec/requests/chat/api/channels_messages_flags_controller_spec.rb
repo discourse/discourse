@@ -14,6 +14,32 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
   end
 
   describe "#create" do
+    it "requires the DSA form for illegal reports only when DSA reporting is enabled" do
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect do
+        post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+             params: {
+               flag_type_id: ReviewableScore.types[:illegal],
+             }
+      end.not_to change(ReviewableScore, :count)
+
+      expect(response).to be_not_found
+      expect(Reviewable.exists?(target: message_1)).to eq(false)
+
+      SiteSetting.dsa_reporting_enabled = false
+
+      post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+           params: {
+             flag_type_id: ReviewableScore.types[:illegal],
+           }
+
+      expect(response).to be_successful
+      expect(
+        Reviewable.find_by!(target: message_1).reviewable_scores.pluck(:reviewable_score_type),
+      ).to eq([ReviewableScore.types[:illegal]])
+    end
+
     it "ratelimits flagging" do
       RateLimiter.enable
 

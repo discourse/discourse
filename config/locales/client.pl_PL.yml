@@ -7,6 +7,8 @@
 pl_PL:
   js:
     dsa_notice:
+      choice_title: "To nielegalne"
+      go_back: "Cofnij"
       title: "Zgłoś nielegalną treść"
       content_url: "Dokładny adres URL treści"
       explanation: "Dlaczego uważasz, że ta treść jest nielegalna?"
@@ -14,7 +16,6 @@ pl_PL:
       name: "Imię i nazwisko lub nazwa organizacji"
       email: "Adres e-mail"
       declaration_section: "Oświadczenie"
-      declaration: "Potwierdzam, że w dobrej wierze uważam, iż informacje i zarzuty zawarte w niniejszym zawiadomieniu są dokładne i kompletne."
       submit: "Prześlij zgłoszenie"
       get_email_code: "Pobierz kod przez e-mail"
       resend_email_code: "Wyślij ponownie kod"
@@ -10363,7 +10364,9 @@ pl_PL:
         silenced_by: "Wyciszony przez"
         silence_modal_title: "Wycisz użytkownika"
         silence_duration: "Jak długo użytkownik będzie wyciszany?"
-        silence_reason_label: "Dlaczego uciszasz tego użytkownika?"
+        silence_reason_label: "Dlaczego wyciszasz? Ten tekst <b>będzie widoczny dla wszystkich</b> na stronie profilu tego użytkownika. Niech będzie krótki."
+        silence_reason_hidden_label: "Dlaczego wyciszasz? Ten tekst będzie widoczny tylko dla personelu i tego użytkownika. Niech będzie krótki."
+        silence_reason_title: "Powód wyciszenia"
         silence_reason_placeholder: "Powód wyciszenia"
         silence_message: "Wiadomość Email"
         silence_message_placeholder: "(zostaw puste aby wysłać domyślną wiadomość)"

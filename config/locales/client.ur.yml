@@ -7,6 +7,7 @@
 ur:
   js:
     dsa_notice:
+      choice_title: "یہ غیر قانونی ہے"
       title: "غیر قانونی مواد کی اطلاع دیں"
       email: "ای میل"
       resend_email_code: "کوڈ دوبارہ بھیجیں"
@@ -8539,7 +8540,7 @@ ur:
         silenced_by: "جس نے خاموش کیا"
         silence_modal_title: "صارف خاموش کریں"
         silence_duration: "صارف کب تک خاموش رہے گا؟"
-        silence_reason_label: "آپ اِس صارف کو کیوں خاموش کر رہے ہیں؟"
+        silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
         silence_message: "ای میل پیغام"
         silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"

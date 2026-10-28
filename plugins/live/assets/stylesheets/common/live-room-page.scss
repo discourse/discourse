@@ -766,13 +766,22 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
 }
 
 .live-reaction-picker {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(var(--live-reaction-columns, 7), auto);
   gap: var(--space-1);
   padding: var(--space-1);
 
-  &__emoji {
+  &__emoji,
+  &__more {
     padding: var(--space-1);
+  }
 
+  &__more .d-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  &__emoji {
     .emoji {
       width: 1.75rem;
       height: 1.75rem;

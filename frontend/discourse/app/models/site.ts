@@ -511,12 +511,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    // TODO(typescript-pending): PostActionType doesn't type its server fields; remove when it does.
-    return trackedArray(
-      postActionTypes.filter(
-        (type) => (type as PostActionType & { is_flag?: boolean }).is_flag
-      )
-    );
+    return trackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
   // Sort subcategories under parents

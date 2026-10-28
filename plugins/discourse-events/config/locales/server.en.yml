@@ -63,6 +63,7 @@ en:
     map_events_title: "Overwrites 'Events' in the 'Upcoming Events' sidebar title per category."
     discourse_events_enabled: "Enable the Discourse Events plugin. This will add support for a [calendar][/calendar] tag in the first post of a topic."
     discourse_post_event_enabled: "Enables the Event features. Note: also needs {{setting:discourse_events_enabled}} to be enabled."
+    enable_event_schema_for_topics: "Add Schema.org Event data to event topic pages."
     displayed_invitees_limit: "Limits the numbers of invitees displayed on an event."
     display_post_event_date_on_topic_title: "Displays the date of the event after the topic title."
     use_local_event_date: "Use local date after topic title instead of relative time."

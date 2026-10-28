@@ -373,6 +373,8 @@ zh_CN:
         topic_id_description: "仅触发此话题中的活动。留空则匹配所有活动。"
     discourse_post_event:
       new_event: "新活动"
+      onebox:
+        all_day: "全天"
       notifications:
         before_event_reminder: "活动即将开始"
         after_event_reminder: "活动已结束"
