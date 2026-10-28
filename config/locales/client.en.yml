@@ -1,6 +1,9 @@
 en:
   js:
     dsa_notice:
+      choice_title: "It's Illegal"
+      choice_description: "Submit a detailed report explaining why this content is illegal."
+      go_back: "Go back"
       title: "Report illegal content"
       content_url: "Exact URL of the content"
       explanation: "Why do you believe this content is illegal?"
@@ -8,7 +11,7 @@ en:
       name: "Full name or organization name"
       email: "Email address"
       declaration_section: "Declaration"
-      declaration: "I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
+      declaration: "I honestly believe that the facts and claims in this report are true and complete"
       submit: "Submit report"
       get_email_code: "Get email code"
       resend_email_code: "Resend code"
