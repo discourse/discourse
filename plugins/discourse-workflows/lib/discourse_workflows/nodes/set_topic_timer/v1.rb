@@ -115,7 +115,7 @@ module DiscourseWorkflows
           type = ::TopicTimer.types[type_id].to_s
           options = { by_user: actor }
           if type == "publish_to_category"
-            options[:category_id] = publish_category_id(exec_ctx, topic, actor, item_index)
+            options[:category_id] = publish_category_id(exec_ctx, topic, actor, type_id, item_index)
           end
           time = nil
 
@@ -149,15 +149,14 @@ module DiscourseWorkflows
           node_error!("time_in_past", item_index, value: time)
         end
 
-        def publish_category_id(exec_ctx, topic, actor, item_index)
+        def publish_category_id(exec_ctx, topic, actor, type_id, item_index)
           category_id = exec_ctx.get_node_parameter("category_id", item_index).presence
           node_error!("category_required", item_index) if category_id.nil?
 
           category = ::Category.find_by(id: category_id)
           node_error!("category_not_found", item_index, category_id:) if category.nil?
 
-          actor.guardian.ensure_can_create_topic_on_category!(category)
-          actor.guardian.ensure_can_convert_topic!(topic) if topic.private_message?
+          actor.guardian.ensure_can_change_topic_timer!(topic, type_id, category)
           category.id
         end
 
