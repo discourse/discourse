@@ -10,6 +10,9 @@ module Live
     MAIN_SETTING = :discourse_reactions_reaction_for_like
     ANY_EMOJI_SETTING = :discourse_reactions_allow_any_emoji
 
+    # The characters custom emoji names are sanitized to, plus a skin tone.
+    SHORTCODE = /\A[a-z0-9_+\-]{1,100}(?::t[1-6])?\z/
+
     # Used only when the post reactions settings aren't registered at all.
     FALLBACK = %w[heart +1 laughing open_mouth clap confetti_ball hugs].freeze
 
@@ -24,9 +27,12 @@ module Live
     end
 
     def self.valid?(emoji)
-      return false if emoji.blank?
+      return false if !emoji.is_a?(String)
+      return true if emojis.include?(emoji)
 
-      emojis.include?(emoji) || (allow_any_emoji? && Emoji.exists?(emoji))
+      # Lookups key the shared emoji caches, misses included, so only
+      # shortcode-shaped names may reach them.
+      allow_any_emoji? && emoji.match?(SHORTCODE) && Emoji.exists?(emoji)
     end
 
     def self.setting(name)

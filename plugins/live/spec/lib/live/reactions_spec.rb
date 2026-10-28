@@ -45,6 +45,16 @@ RSpec.describe Live::Reactions do
       )
     end
 
+    it "rejects non-strings and names that aren't shortcode-shaped when any emoji is allowed" do
+      SiteSetting.discourse_reactions_allow_any_emoji = true
+
+      expect(
+        [["rocket"], { "a" => "b" }, "Rocket", "rocket!", "a" * 101].map do
+          described_class.valid?(_1)
+        end,
+      ).to all(eq(false))
+    end
+
     it "ignores the any emoji setting while post reactions are disabled" do
       SiteSetting.discourse_reactions_allow_any_emoji = true
       SiteSetting.discourse_reactions_enabled = false
