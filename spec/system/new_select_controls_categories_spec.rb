@@ -72,24 +72,21 @@ describe "Category pickers with the new select controls" do
     context "when categories load lazily" do
       before do
         SiteSetting.lazy_load_categories_groups = "admins"
-        20.times { |i| Fabricate(:category, name: "Lazy category #{i}") }
+        30.times { |i| Fabricate(:category, name: "Lazy category #{i}") }
       end
 
-      it "shows part of a long level and links to every category" do
+      it "reaches every category of a long level by scrolling" do
         sign_in(admin)
         visit "/latest"
 
         top_breadcrumb.open
-        expect(top_breadcrumb.option_values.size).to eq(15)
-
-        footer = ".d-select__footer"
-        more =
-          Regexp.escape(I18n.t("js.categories.plus_more_count.other", count: 999)).sub("999", '\d+')
-        expect(page).to have_css(footer, text: /#{more}/)
-        page.find("#{footer} a", text: I18n.t("js.categories.view_all")).click
-
-        expect(page).to have_current_path("/categories")
-        expect(top_breadcrumb).not_to be_expanded
+        size = page.find(top_breadcrumb.option_selector, match: :first)["aria-setsize"].to_i
+        expect(size).to be > 30
+        try_until_success do
+          top_breadcrumb.scroll_listbox_to_bottom
+          expect(page).to have_css("[role='option'][aria-posinset='#{size}']", wait: 0)
+        end
+        expect(page).to have_no_css(".d-select__footer")
       end
 
       it "searches every category from the top level" do

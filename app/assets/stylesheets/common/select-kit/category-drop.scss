@@ -105,16 +105,6 @@
   }
 }
 
-// The caller's footer content joins the select footer's own leading/trailing layout.
-.d-select__footer .category-drop-footer {
-  display: contents;
-  font-size: var(--font-down-1);
-
-  span {
-    color: var(--primary-high);
-  }
-}
-
 .d-select.category-drop.d-select__trigger {
   &[aria-expanded="true"],
   &:focus,

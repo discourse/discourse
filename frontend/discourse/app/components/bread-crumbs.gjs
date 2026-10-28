@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryVariables from "discourse/helpers/category-variables";
@@ -16,7 +14,6 @@ import CategoryDrop from "discourse/select-kit/components/category-drop";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelectCategoryFilter, {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
@@ -25,12 +22,7 @@ import DSelectTagFilter, {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
-import { i18n } from "discourse-i18n";
 import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
-
-function categorySlugPath(category) {
-  return category.path.substring("/c/".length);
-}
 
 export default class BreadCrumbs extends Component {
   @service site;
@@ -195,33 +187,7 @@ export default class BreadCrumbs extends Component {
                 @onChange={{fn this.changeCategory breadcrumb}}
                 @parentCategory={{breadcrumb.parentCategory}}
                 @value={{breadcrumb.category}}
-              >
-                <:footer as |state options moreCount parentCategory|>
-                  <div class="category-drop-footer">
-                    <span>
-                      {{i18n "categories.plus_more_count" count=moreCount}}
-                    </span>
-                    {{#if parentCategory}}
-                      <LinkTo
-                        @model={{categorySlugPath parentCategory}}
-                        @route="discovery.subcategories"
-                        {{on "click" state.close}}
-                      >
-                        {{i18n "categories.view_all"}}
-                        {{dIcon "up-right-from-square"}}
-                      </LinkTo>
-                    {{else}}
-                      <LinkTo
-                        @route="discovery.categories"
-                        {{on "click" state.close}}
-                      >
-                        {{i18n "categories.view_all"}}
-                        {{dIcon "up-right-from-square"}}
-                      </LinkTo>
-                    {{/if}}
-                  </div>
-                </:footer>
-              </DSelectCategoryFilter>
+              />
             {{else}}
               <CategoryDrop
                 class={{if

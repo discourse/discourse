@@ -435,7 +435,7 @@ module PageObjects
                 .querySelectorAll("[data-tab-oracle]")
                 .forEach((el) => el.removeAttribute("data-tab-oracle"));
 
-              const trigger = document.querySelector("#{@root}");
+              const trigger = document.querySelector(#{@root.to_json});
               if (!trigger) {
                 return null;
               }
@@ -513,7 +513,7 @@ module PageObjects
         def scroll_listbox_to_bottom
           page.execute_script(<<~JS)
             (function () {
-              const list = document.querySelector("#{in_panel(".d-virtual-list")}");
+              const list = document.querySelector(#{in_panel(".d-virtual-list").to_json});
               list.scrollTop = list.scrollHeight;
             })()
           JS
@@ -524,7 +524,7 @@ module PageObjects
         def list_scroll_top
           page.evaluate_script(<<~JS)
             (function () {
-              const list = document.querySelector("#{in_panel(".d-virtual-list")}");
+              const list = document.querySelector(#{in_panel(".d-virtual-list").to_json});
               return list ? list.scrollTop : null;
             })()
           JS

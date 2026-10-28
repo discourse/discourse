@@ -15,27 +15,25 @@ describe "Category recipe migration details" do
 
     picker = PageObjects::Components::UiKit::DSelect.at(".category-breadcrumb__category-selector")
     picker.open
-    expect(picker.option_values.size).to eq(15)
     picker.search("Tomatoes")
     expect(picker).to have_option_value(child.id)
   end
 
-  it "links a truncated child level to its parent's subcategories and closes the list" do
+  it "reaches every child of a long lazy level by scrolling" do
     SiteSetting.lazy_load_categories_groups = "admins"
-    20.times { |index| Fabricate(:category, name: "Child #{index}", parent_category: parent) }
+    children = Fabricate.times(30, :category, parent_category: parent)
     sign_in(admin)
     visit parent.url
 
     picker =
       PageObjects::Components::UiKit::DSelect.at(".category-breadcrumb__subcategory-selector")
     picker.open
-    expect(page).to have_css(
-      ".d-select__footer",
-      text: I18n.t("js.categories.plus_more_count", count: 6),
-    )
-    find(".d-select__footer a").click
-
-    expect(page).to have_current_path("#{parent.url}/subcategories")
-    expect(page).to have_no_css(".d-select__panel")
+    size = page.find(picker.option_selector, match: :first)["aria-setsize"].to_i
+    expect(size).to be >= children.size
+    try_until_success do
+      picker.scroll_listbox_to_bottom
+      expect(page).to have_css("[role='option'][aria-posinset='#{size}']", wait: 0)
+    end
+    expect(page).to have_no_css(".d-select__footer")
   end
 end

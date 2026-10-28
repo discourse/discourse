@@ -1,12 +1,10 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
-import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import DSelect from "discourse/ui-kit/select/d-select";
 import type {
   SelectItem,
@@ -22,6 +20,7 @@ import type {
   CategorySettings,
   SelectSignature,
 } from "./category-types.ts";
+import { continueWith } from "./continue-with.ts";
 
 /** Shortcut for removing the category filter. */
 export const ALL_CATEGORIES_ID = "all-categories";
@@ -41,9 +40,9 @@ interface DSelectCategoryFilterSignature {
       | null;
     /** Parent whose direct children are being browsed. */
     parentCategory?: Category;
-    /** Caller-ordered local browsing level. Search still uses the site. */
+    /** The level a preloaded site browses, in the caller's order. Searches and lazy sites use the model. */
     items?: readonly Category[];
-    /** Owns rows, order and paging; bypasses the built-in level truncation and footer. */
+    /** Owns rows, order and paging in place of the model's search. */
     load?: SelectSignature["Args"]["load"];
     /** Names an empty level as no subcategories. */
     noSubcategories?: boolean;
@@ -71,19 +70,7 @@ interface DSelectCategoryFilterSignature {
     instanceContext?: object;
   };
   Element: HTMLElement;
-  Blocks: Pick<SelectSignature["Blocks"], "item" | "selection"> & {
-    /** Rendered only when browsing omits categories from the level. */
-    footer: [
-      /** Live select state. */
-      state: NonNullable<SelectSignature["Blocks"]["footer"]>[0],
-      /** Resolved core and recipe options. */
-      options: SelectResolvedOptions,
-      /** Categories omitted from the visible level. */
-      moreCount: number,
-      /** Parent of the level, absent at the top. */
-      parentCategory: Category | undefined,
-    ];
-  };
+  Blocks: Pick<SelectSignature["Blocks"], "item" | "selection">;
 }
 
 /** Narrows a topic list by category, leaving navigation to its caller. */
@@ -91,8 +78,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   @service declare currentUser: User | null;
   @service declare site: Site;
   @service declare siteSettings: CategorySettings;
-
-  @tracked moreCount = 0;
 
   get levelName() {
     if (this.args.noSubcategories || this.args.value === NO_CATEGORIES_ID) {
@@ -133,15 +118,19 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     );
   }
 
+  /** Lazy levels list in the order a preloaded site's `categoriesList` keeps. */
+  get #treeOrder(): "topics" | "position" {
+    return this.siteSettings.fixed_category_positions ? "position" : "topics";
+  }
+
   get loadContext() {
     return {
       parentCategory: this.args.parentCategory,
       items: this.args.items,
       uncategorized: this.#uncategorized,
       descriptions: this.#descriptions,
-      categories: this.site.lazy_load_categories
-        ? undefined
-        : this.site.sortedCategories,
+      categories: Category.localSearchCategories(),
+      treeOrder: this.#treeOrder,
     };
   }
 
@@ -151,30 +140,30 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     opts: SelectLoadOptions
   ): SelectLoadResult | Promise<SelectLoadResult> {
     if (this.args.load) {
-      this.moreCount = 0;
       return this.args.load(query, opts);
     }
-    if (this.site.lazy_load_categories) {
-      return this.#loadPage(query, opts);
+    if (!query && !this.site.lazy_load_categories) {
+      return (this.args.items ?? [])
+        .filter(
+          (category) => this.#uncategorized || !category.isUncategorizedCategory
+        )
+        .map((category) => categoryItem(category, this.#descriptions));
     }
-    const uncategorized = this.#uncategorized;
-    this.moreCount = 0;
-    let categories: Category[];
-    if (query) {
-      // Every match: the list is windowed, so the model's default cap of five is not needed.
-      categories = Category.search(query, {
-        parentCategoryId: this.args.parentCategory?.id,
-        limit: Infinity,
-      }).sort(
-        (a, b) =>
-          Number(!!a.parent_category_id) - Number(!!b.parent_category_id)
-      );
-    } else {
-      categories = [...(this.args.items ?? [])];
-    }
-    return categories
-      .filter((category) => uncategorized || !category.isUncategorizedCategory)
-      .map((category) => categoryItem(category, this.#descriptions));
+    const search = Category.searchCategories(query, {
+      includeAncestors: true,
+      includeUncategorized: this.#uncategorized,
+      page: opts.page,
+      // Browsing keeps to the level; a search at the top spans the site.
+      parentCategoryId:
+        this.args.parentCategory?.id ?? (query ? undefined : -1),
+      treeOrder: query ? undefined : this.#treeOrder,
+    });
+    return continueWith(search, ({ categories, categoriesCount }) => ({
+      items: categories.map((category) =>
+        categoryItem(category, this.#descriptions)
+      ),
+      total: categoriesCount,
+    }));
   }
 
   @action
@@ -232,26 +221,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     );
   }
 
-  async #loadPage(query: string, opts: SelectLoadOptions) {
-    const { categories, categoriesCount } = await Category.asyncSearch(query, {
-      includeAncestors: true,
-      includeUncategorized: this.#uncategorized,
-      page: opts.page,
-      parentCategoryId:
-        this.args.parentCategory?.id ?? (query ? undefined : -1),
-    });
-    const items = categories.map((category: Category) =>
-      categoryItem(category, this.#descriptions)
-    );
-    if (query) {
-      this.moreCount = 0;
-      return { items, total: categoriesCount };
-    }
-    // A long level shows its first rows and names the rest in the footer, as the legacy drop did.
-    this.moreCount = categoriesCount > 18 ? categoriesCount - 15 : 0;
-    return this.moreCount ? items.slice(0, 15) : items;
-  }
-
   <template>
     <DSelect
       class={{if this.filtering "category-drop --filtering" "category-drop"}}
@@ -267,7 +236,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @loadContext={{this.loadContext}}
       @onChange={{this.onChange}}
       @specialItems={{this.specialItems}}
-      @suppressFooter={{not this.moreCount}}
       @value={{this.selection.id}}
       @valueItems={{this.selection}}
       @variant="button"
@@ -291,13 +259,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
           <CategoryBadge @item={{item}} />
         {{/if}}
       </:selection>
-      <:footer as |state options|>
-        {{#if (has-block "footer")}}
-          {{yield state options this.moreCount @parentCategory to="footer"}}
-        {{else}}
-          {{i18n "categories.plus_more_count" count=this.moreCount}}
-        {{/if}}
-      </:footer>
     </DSelect>
   </template>
 }

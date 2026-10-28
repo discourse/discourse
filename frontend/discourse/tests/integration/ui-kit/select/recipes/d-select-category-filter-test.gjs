@@ -521,7 +521,7 @@ module(
     });
 
     module("searching", function () {
-      test("at the top level a search spans the site and ranks top-level categories first", async function (assert) {
+      test("at the top level a search spans the site, prefix matches first and top-level categories before children", async function (assert) {
         Site.current().updateCategories([
           { id: 9801, name: "Alpha docs", slug: "alpha-docs", permission: 1 },
           {
@@ -546,9 +546,33 @@ module(
 
         assert.deepEqual(
           optionValues(),
-          ["9803", "9801", "9802"],
-          "top level first, then prefix before substring, and no shortcuts"
+          ["9803", "9802", "9801"],
+          "prefix before substring, then top level before children, and no shortcuts"
         );
+      });
+
+      test("a preloaded site matches every word of the name, not the slug", async function (assert) {
+        Site.current().updateCategories([
+          { id: 9821, name: "Questions", slug: "qa", permission: 1 },
+          { id: 9822, name: "Docs alpha", slug: "docs-alpha", permission: 1 },
+        ]);
+        const requests = [];
+        pretender.post("/categories/search", (request) => {
+          requests.push(request);
+          return response({ categories: [], ancestors: [] });
+        });
+        const items = topLevel();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{items}} /></template>
+        );
+        await select().open();
+        await select().search("qa");
+        assert.deepEqual(optionValues(), [], "a slug alone does not match");
+
+        await select().search("alpha docs");
+        assert.deepEqual(optionValues(), ["9822"], "words match in any order");
+        assert.strictEqual(requests.length, 0, "answered without a request");
       });
 
       test("a search is not limited to five results", async function (assert) {
@@ -626,9 +650,10 @@ module(
             permission: 1,
           }));
           const limit = Number(params.get("limit") || 25);
+          const page = Number(params.get("page") || 1);
           return response({
             categories_count: count,
-            categories: rows.slice(0, limit),
+            categories: rows.slice((page - 1) * limit, page * limit),
             ancestors: [],
           });
         });
@@ -659,43 +684,52 @@ module(
         assert.strictEqual(requests.at(-1).get("parent_category_id"), "2");
       });
 
-      test("a long level shows fifteen rows and yields how many more there are", async function (assert) {
-        stubLevel(30);
+      test("browsing lists the level in the preloaded order", async function (assert) {
+        const requests = stubLevel(3);
 
-        await render(
-          <template>
-            <DSelectCategoryFilter>
-              <:footer as |state options moreCount|>
-                <span class="more">{{moreCount}}</span>
-              </:footer>
-            </DSelectCategoryFilter>
-          </template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
         await settled();
+        assert.strictEqual(
+          requests.at(-1).get("tree_order"),
+          "topics",
+          "by topic count, as the site's list"
+        );
+        await select().close();
 
-        assert.strictEqual(optionValues().length, 15);
-        assert.dom(".more").hasText("15");
+        this.siteSettings.fixed_category_positions = true;
+        await select().open();
+        await settled();
+        assert.strictEqual(
+          requests.at(-1).get("tree_order"),
+          "position",
+          "by position when positions are fixed"
+        );
       });
 
-      test("a short level renders no footer even when the caller passes one", async function (assert) {
-        stubLevel(18);
+      test("a long level reaches every category by scrolling", async function (assert) {
+        enableVirtualization();
+        try {
+          const requests = stubLevel(30);
 
-        await render(
-          <template>
-            <DSelectCategoryFilter>
-              <:footer>
-                <span class="more">more</span>
-              </:footer>
-            </DSelectCategoryFilter>
-          </template>
-        );
-        await select().open();
-        await settled();
+          await render(<template><DSelectCategoryFilter /></template>);
+          await select().open();
+          await settled();
+          for (let scroll = 0; scroll < 3; scroll++) {
+            const list = find(".d-virtual-list");
+            list.scrollTop = list.scrollHeight;
+            await triggerEvent(list, "scroll");
+            await settledAfterFrame();
+          }
 
-        assert.strictEqual(optionValues().length, 18, "every row");
-        assert.dom(".more").doesNotExist();
-        assert.dom(".d-select__footer").doesNotExist("no empty footer");
+          assert.strictEqual(requests.at(-1).get("page"), "2");
+          assert
+            .dom("[role='option'][data-value='9929']")
+            .hasAttribute("aria-setsize", "30");
+          assert.dom(".d-select__footer").doesNotExist("no count or link");
+        } finally {
+          disableVirtualization();
+        }
       });
     });
 
@@ -730,7 +764,7 @@ module(
         );
       });
 
-      test("filter search ranks public before restricted and preserves activity for equal matches", async function (assert) {
+      test("filter search ranks restricted and public categories alike, by prefix, level, then id", async function (assert) {
         Site.current().updateCategories([
           {
             id: 9801,
@@ -759,8 +793,8 @@ module(
         await dSelect().search("orchid");
         assert.deepEqual(
           optionValues(),
-          ["9803", "9802", "9801", "9804"],
-          "level, access, then prefix"
+          ["9801", "9803", "9804", "9802"],
+          "prefix, then level, then id; access does not rank"
         );
       });
 
@@ -783,20 +817,10 @@ module(
           };
           await render(
             <template>
-              <DSelectCategoryFilter
-                @load={{load}}
-                @uncategorized={{true}}
-              ><:footer><span
-                    class="more"
-                  >More</span></:footer></DSelectCategoryFilter>
+              <DSelectCategoryFilter @load={{load}} @uncategorized={{true}} />
             </template>
           );
           await dSelect().open();
-          assert
-            .dom(".more")
-            .doesNotExist(
-              "the replacement source owns paging rather than a truncated level"
-            );
           const list = find(".d-virtual-list");
           list.scrollTop = list.scrollHeight;
           await triggerEvent(list, "scroll");

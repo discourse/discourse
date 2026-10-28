@@ -21,6 +21,7 @@ import type {
   CategoryValue,
   SelectSignature,
 } from "./category-types.ts";
+import { continueWith } from "./continue-with.ts";
 
 /** Category picker arguments and the engine's forwarded presentation contract. */
 interface DSelectCategorySignature {
@@ -87,14 +88,6 @@ interface DSelectCategorySignature {
   };
   Element: HTMLElement;
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
-}
-
-/** Continues with a value now, or with a promise's value when it settles. */
-function then<T, R>(
-  value: T | Promise<T>,
-  next: (value: T) => R | Promise<R>
-): R | Promise<R> {
-  return value instanceof Promise ? value.then(next) : next(value);
 }
 
 /**
@@ -177,9 +170,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       ),
       ...this.#disabledIds,
     ].filter((id) => id != null);
-    return then(Category.findByIdsOrLoad(ids), () =>
+    return continueWith(Category.findByIdsOrLoad(ids), () =>
       // The scope's family root may be a parent the first lookup did not cover.
-      then(
+      continueWith(
         Category.findByIdsOrLoad(
           [this.#familyId(this.args.scope)].filter((id) => id != null)
         ),
@@ -321,16 +314,19 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       treeOrder: query ? undefined : this.#treeOrder,
     });
     const descriptions = this.args.descriptions ?? !this.args.multiple;
-    return then(search, ({ categories, categoriesCount, familyKeys }) => ({
-      items: categories.map((category) => {
-        const row = categoryItem(category, descriptions);
-        if (groupFamilies && familyKeys?.[category.id!] === category.id) {
-          row.familyKey = category.id;
-        }
-        return row;
-      }),
-      total: categoriesCount,
-    }));
+    return continueWith(
+      search,
+      ({ categories, categoriesCount, familyKeys }) => ({
+        items: categories.map((category) => {
+          const row = categoryItem(category, descriptions);
+          if (groupFamilies && familyKeys?.[category.id!] === category.id) {
+            row.familyKey = category.id;
+          }
+          return row;
+        }),
+        total: categoriesCount,
+      })
+    );
   }
 
   /**

@@ -14,6 +14,7 @@ export type CategoryValue = Category | number | string;
 /** TODO(typescript-pending): Remove once the settings factory declares runtime keys. */
 export interface CategorySettings extends SiteSettingsService {
   allow_uncategorized_topics: boolean;
+  fixed_category_positions: boolean;
   fixed_category_positions_on_create: boolean;
 }
 
