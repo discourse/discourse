@@ -85,9 +85,9 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.6.5",
     "compare-versions": "^6.1.1",
-    "typescript": "7.1.0-dev.20260930.4"
+    "typescript": "7.1.0-dev.20261021.1"
   },
   "engines": {
     "node": ">= 20",
