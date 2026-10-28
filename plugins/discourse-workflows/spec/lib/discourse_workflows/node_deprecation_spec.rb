@@ -17,6 +17,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
         "DiscourseWorkflows::Nodes::PostLike::V1",
         "DiscourseWorkflows::Nodes::PostLike::V2",
         "DiscourseWorkflows::Nodes::PostLikeChanged::V1",
+        "DiscourseWorkflows::Nodes::PostReaction::V1",
         "DiscourseWorkflows::Nodes::PostReactionChanged::V1",
         "DiscourseWorkflows::Nodes::PostRecovered::V1",
         "DiscourseWorkflows::Nodes::Topic::V1",
