@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -9,15 +9,34 @@ import EmojiPicker from "discourse/components/emoji-picker";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { optionalRequire } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const SendButton = <template>
+  <div class="chat-composer-button__wrapper">
+    <button
+      aria-label={{i18n "live.chat.send"}}
+      class="chat-composer-button -send"
+      disabled={{@disabled}}
+      title={{i18n "live.chat.send"}}
+      type="button"
+      {{on "click" @onSend}}
+    >
+      {{dIcon "paper-plane"}}
+    </button>
+  </div>
+</template>;
 
 export default class LiveChatPanel extends Component {
   @service chat;
   @service chatChannelsManager;
   @service messageBus;
   @service router;
+  @service site;
 
   @tracked loading = true;
   @tracked unavailable = false;
@@ -26,6 +45,7 @@ export default class LiveChatPanel extends Component {
   @tracked draft = "";
   @tracked sending = false;
   @tracked hideSkeleton = false;
+  @tracked composerFocused = false;
 
   // Resolved at runtime rather than statically imported: cross-plugin static
   // imports aren't resolvable in the compiled plugin bundle and break the
@@ -38,6 +58,9 @@ export default class LiveChatPanel extends Component {
   // instead of a spinner flashing into a skeleton.
   chatSkeleton = optionalRequire(
     "discourse/plugins/chat/discourse/components/chat-skeleton"
+  );
+  chatNavbar = optionalRequire(
+    "discourse/plugins/chat/discourse/components/chat/navbar"
   );
 
   textareaElement = null;
@@ -117,6 +140,11 @@ export default class LiveChatPanel extends Component {
   @action
   registerTextarea(element) {
     this.textareaElement = element;
+  }
+
+  @action
+  setComposerFocused(focused) {
+    this.composerFocused = focused;
   }
 
   @action
@@ -255,36 +283,43 @@ export default class LiveChatPanel extends Component {
   <template>
     <section
       aria-label={{i18n "live.chat.title"}}
-      class="live-chat"
+      class={{dConcatClass "live-chat" (if this.unavailable "is-unavailable")}}
       {{didInsert this.loadSession}}
     >
-      <header class="live-chat__header">
-        <h2 class="live-chat__title">
-          {{i18n "live.chat.title"}}
-        </h2>
-        {{#if this.canOpenInChat}}
-          <button
-            aria-label={{i18n "live.chat.open_in_chat"}}
-            class="btn btn-transparent btn-icon no-text live-chat__open-in-chat"
-            title={{i18n "live.chat.open_in_chat"}}
-            type="button"
-            {{on "click" this.openInChat}}
-          >
-            {{dIcon "up-right-from-square"}}
-          </button>
-        {{/if}}
-        {{#if @onClose}}
-          <button
-            aria-label={{i18n "live.chat.close"}}
-            class="btn btn-icon no-text live-chat__close"
-            title={{i18n "live.chat.close"}}
-            type="button"
-            {{on "click" @onClose}}
-          >
-            {{dIcon "xmark"}}
-          </button>
-        {{/if}}
-      </header>
+      {{#if this.chatNavbar}}
+        <this.chatNavbar as |navbar|>
+          {{#if (and this.site.mobileView @onClose)}}
+            <DButton
+              class="btn-transparent no-text c-navbar__back-button"
+              @action={{@onClose}}
+              @ariaLabel="live.chat.close"
+              @icon="chevron-left"
+              @title="live.chat.close"
+            />
+          {{/if}}
+          <navbar.Title @icon="comment" @title={{i18n "live.chat.title"}} />
+          <navbar.Actions>
+            {{#if this.canOpenInChat}}
+              <DButton
+                class="btn-transparent live-chat__open-in-chat"
+                @action={{this.openInChat}}
+                @ariaLabel="live.chat.open_in_chat"
+                @icon="up-right-from-square"
+                @title="live.chat.open_in_chat"
+              />
+            {{/if}}
+            {{#if (and this.site.desktopView @onClose)}}
+              <DButton
+                class="btn-transparent live-chat__close"
+                @action={{@onClose}}
+                @ariaLabel="live.chat.close"
+                @icon="xmark"
+                @title="live.chat.close"
+              />
+            {{/if}}
+          </navbar.Actions>
+        </this.chatNavbar>
+      {{/if}}
 
       {{! eslint-disable ember/template-no-invalid-interactive }}
       <div
@@ -302,50 +337,75 @@ export default class LiveChatPanel extends Component {
             <this.chatThread @thread={{thread}} />
           {{/each}}
         {{else if this.unavailable}}
-          <div class="live-chat__empty">
-            {{dIcon "far-comment"}}
-            <p class="live-chat__empty-title">
-              {{i18n "live.chat.unavailable"}}
-            </p>
-          </div>
+          <DEmptyState
+            @svgContent={{dIcon "comment-slash"}}
+            @title={{i18n "live.chat.unavailable_title"}}
+          >
+            <:tip>
+              <div class="empty-state__tip-text">
+                {{i18n "live.chat.unavailable"}}
+              </div>
+            </:tip>
+          </DEmptyState>
         {{else}}
-          <div class="live-chat__empty">
-            {{dIcon "far-comment"}}
-            <p class="live-chat__empty-title">
-              {{i18n "live.chat.empty_title"}}
-            </p>
-            <p class="live-chat__empty-body">
-              {{i18n "live.chat.empty_body"}}
-            </p>
-          </div>
-          <footer class="live-chat__composer">
-            <div class="live-chat__composer-inner">
-              <EmojiPicker
-                @btnClass="btn-transparent live-chat__emoji"
-                @context="live-chat"
-                @didSelectEmoji={{this.insertEmoji}}
-              />
-              <textarea
-                aria-label={{i18n "live.chat.composer_placeholder"}}
-                class="live-chat__input"
-                placeholder={{i18n "live.chat.composer_placeholder"}}
-                rows="1"
-                {{didInsert this.registerTextarea}}
-                {{on "input" this.updateDraft}}
-                {{on "keydown" this.onKeydown}}
-              ></textarea>
-              <button
-                aria-label={{i18n "live.chat.send"}}
-                class="btn btn-transparent btn-icon no-text live-chat__send"
-                disabled={{this.sendDisabled}}
-                title={{i18n "live.chat.send"}}
-                type="button"
-                {{on "click" this.sendFirstMessage}}
-              >
-                {{dIcon "paper-plane"}}
-              </button>
+          <DEmptyState
+            @svgContent={{dIcon "d-chat"}}
+            @title={{i18n "live.chat.empty_title"}}
+          >
+            <:tip>
+              <div class="empty-state__tip-text">
+                {{i18n "live.chat.empty_body"}}
+              </div>
+            </:tip>
+          </DEmptyState>
+          <div class="chat-composer__wrapper --live">
+            <div
+              aria-label={{i18n "chat.aria_roles.composer"}}
+              class={{dConcatClass
+                "chat-composer is-enabled"
+                (if this.composerFocused "is-focused")
+                (if this.sending "is-sending")
+                (if this.sendDisabled "is-send-disabled" "is-send-enabled")
+              }}
+              role="region"
+            >
+              <div class="chat-composer__outer-container">
+                <div class="chat-composer__inner-container">
+                  <div class="chat-composer__input-container">
+                    <textarea
+                      aria-label={{i18n "live.chat.composer_placeholder"}}
+                      class="chat-composer__input"
+                      placeholder={{i18n "live.chat.composer_placeholder"}}
+                      rows="1"
+                      {{didInsert this.registerTextarea}}
+                      {{on "input" this.updateDraft}}
+                      {{on "keydown" this.onKeydown}}
+                      {{on "focusin" (fn this.setComposerFocused true)}}
+                      {{on "focusout" (fn this.setComposerFocused false)}}
+                    ></textarea>
+                  </div>
+                  {{#if this.site.desktopView}}
+                    <EmojiPicker
+                      @btnClass="chat-composer-button btn-transparent --emoji"
+                      @context="live-chat"
+                      @didSelectEmoji={{this.insertEmoji}}
+                    />
+                    <div class="chat-composer-separator"></div>
+                    <SendButton
+                      @disabled={{this.sendDisabled}}
+                      @onSend={{this.sendFirstMessage}}
+                    />
+                  {{/if}}
+                </div>
+                {{#if this.site.mobileView}}
+                  <SendButton
+                    @disabled={{this.sendDisabled}}
+                    @onSend={{this.sendFirstMessage}}
+                  />
+                {{/if}}
+              </div>
             </div>
-          </footer>
+          </div>
         {{/if}}
       </div>
     </section>

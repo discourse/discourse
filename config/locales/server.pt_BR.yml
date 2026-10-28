@@ -4790,6 +4790,9 @@ pt_BR:
       truncated_file: "Este arquivo está truncado."
       show_original: "exibir original"
     github:
+      header:
+        file: "Arquivo"
+        success: "Sucesso"
       binary_file: "Este arquivo é binário."
       truncated_file: "Este arquivo está truncado."
       show_original: "exibir original"
@@ -4803,21 +4806,12 @@ pt_BR:
       review_by: "Revisão por"
       pr_summary: "%{commits} confirma %{changed_files} arquivos alterados com %{additions} adições e %{deletions} exclusões"
       no_description: "Contribua para o desenvolvimento do %{repo} ao criar uma conta no GitHub."
-      pr_title:
-        default: "Pull request"
-        draft: "Rascunho de pull request"
-        open: "Abrir pull request"
-        approved: "Pull request aprovado"
-        changes_requested: "Alterações solicitadas"
-        merged: "Pull request mesclado (merged)"
-        closed: "Pull request fechado"
-      status_date:
-        open: "abertos"
-        draft: "rascunhos"
-        approved: "aprovada"
-        changes_requested: "alterações solicitadas"
-        merged: "mesclado"
-        closed: "fechados"
+      pr_status:
+        draft: "Rascunho (draft)"
+        open: "Aberto (open)"
+        approved: "Aprovado (approved)"
+        merged: "Mesclado (merged)"
+        closed: "Fechado (closed)"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'

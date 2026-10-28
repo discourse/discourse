@@ -76,6 +76,8 @@ en:
       manage:
         access_permission_editor: "Editor"
         access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_owner: "Owner"
+        access_permission_owner_description: "Owner has total control over this %{target}, and can add or remove other owners."
         access_permission_viewer: "Viewer"
         access_permission_viewer_description: "Can view content for this entity"
         access_permission_remove: "Remove"
@@ -85,6 +87,7 @@ en:
         mandatory: "Mandatory"
         disallowed: "Disallowed"
         required_permission_not_added: "At least one grantee must have %{permission} permission for this %{typeName}"
+        owner_required: "At least one user must remain an owner of this %{typeName}"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -1934,6 +1937,8 @@ en:
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
         Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
+      no_mentions_title: "You haven’t been mentioned yet"
+      no_mentions_body: "When someone mentions your @username in a post, the notification will appear here."
       no_other_notifications_title: "You don’t have any other notifications yet"
       no_other_notifications_body: >
         You will be notified in this panel about other kinds of activity that may be relevant to you - for example, when someone links to or edits one of your posts.
@@ -9792,6 +9797,9 @@ en:
             configure_category_type: "configure category type"
             unconfigure_category_type: "unconfigure category type"
             change_access_control_list_permissions: "change access control list permissions"
+            add_access_control_list_owner: "add access control list owner"
+            remove_access_control_list_owner: "remove access control list owner"
+            assume_access_control_ownership: "assume access control ownership"
             admin_onboarding_step_completed: "complete admin onboarding step"
             admin_onboarding_completed: "complete admin onboarding"
             admin_onboarding_dismissed: "dismiss admin onboarding"
@@ -10118,7 +10126,9 @@ en:
         silenced_by: "Silenced By"
         silence_modal_title: "Silence User"
         silence_duration: "How long will the user be silenced for?"
-        silence_reason_label: "Why are you silencing this user?"
+        silence_reason_label: "Why are you silencing? This text <b>will be visible to everyone</b> on this user's profile page. Keep it short."
+        silence_reason_hidden_label: "Why are you silencing? This text will only be visible to staff and this user. Keep it short."
+        silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
         silence_message: "Email Message"
         silence_message_placeholder: "(leave blank to send default message)"

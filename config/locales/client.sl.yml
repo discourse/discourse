@@ -21,6 +21,7 @@ sl:
     access_control:
       manage:
         access_permission_editor: "Urednik"
+        access_permission_owner: "Skrbnik"
         access_permission_remove: "Odstrani"
     number:
       format:

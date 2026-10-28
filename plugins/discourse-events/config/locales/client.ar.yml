@@ -471,7 +471,6 @@ ar:
               many: "%{count} مستخدمًا تمت دعوتهم"
               other: "%{count} مستخدم تمت دعوتهم"
         event:
-          expired: "انتهى"
           closed: "مغلق"
           full: "كامل"
           status:
@@ -484,6 +483,8 @@ ar:
             private:
               title: "خاص"
               description: "لا يمكن إلا للمستخدمين المدعوين الانضمام إلى حدثٍ خاص."
+      recording_modal:
+        save: "حفظ"
       composer:
         name_placeholder: "اسم الحدث"
         end_date_placeholder: "تاريخ الانتهاء"

@@ -63,6 +63,7 @@ ur:
       manage:
         access_permission_editor: "ایڈیٹر"
         access_permission_editor_description: "اس اکائی کے مواد کی تخلیق اور ترمیم ہو سکتی ہے"
+        access_permission_owner: "مالک"
         access_permission_viewer: "دیکھنے والا"
         access_permission_viewer_description: "اس اکائی کا مواد دیکھا جا سکتا ہے"
         access_permission_remove: "مٹائیں"

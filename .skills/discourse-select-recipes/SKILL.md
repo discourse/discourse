@@ -18,7 +18,7 @@ Do all of this before the first line of recipe code, and note what you found:
    `frontend/discourse/app/ui-kit/select/README.md` (under Recipes), then the argument docs in
    `d-select.gts` for anything you plan to rely on.
 2. **The domain model.** Read the model's statics and getters, not only its fields. For
-   categories that is `frontend/discourse/app/models/category.js` (`findById`, `findByIds`,
+   categories that is `frontend/discourse/app/models/category.ts` (`findById`, `findByIds`,
    `asyncFindByIds`, `findUncategorized`, `search`, `asyncSearch`, `asyncFindDescendants`,
    `listByActivity`, `sortCategories`) and its instance getters (`descendants`, `subcategories`,
    `isParent`, `canCreateTopic`, `isUncategorizedCategory`). That list is a start, not the

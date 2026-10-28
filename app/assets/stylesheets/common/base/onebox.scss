@@ -545,6 +545,136 @@ pre.onebox code ol.lines li.selected {
   }
 }
 
+aside.onebox.github-onebox {
+  --github-onebox-status-color: var(--primary-high);
+  --github-onebox-header-background: var(--primary-very-low);
+  --onebox-border-color: light-dark(#d1d9e0, #3d444d);
+  --onebox-shadow-color: transparent;
+  container: github-onebox / inline-size;
+  padding: 0;
+  overflow: hidden;
+
+  &.--github-open,
+  &.--github-approved,
+  &.--github-success {
+    --github-onebox-status-color: light-dark(#1a7f37, #3fb950);
+    --github-onebox-header-background: light-dark(#dafbe1, #183c26);
+  }
+
+  &.--github-draft,
+  &.--github-unknown {
+    --github-onebox-status-color: light-dark(#59636e, #9198a1);
+    --github-onebox-header-background: light-dark(#818b981f, #292e36);
+  }
+
+  &.githubpullrequest.--github-open {
+    --github-onebox-status-color: var(--primary-high);
+
+    .github-onebox__label svg {
+      color: light-dark(#1a7f37, #3fb950);
+    }
+  }
+
+  &.githubpullrequest.--github-open,
+  &.--github-draft {
+    --github-onebox-header-background: color-mix(
+      in srgb,
+      var(--primary) 10%,
+      var(--secondary)
+    );
+  }
+
+  &.--github-changes_requested,
+  &.--github-pending {
+    --github-onebox-status-color: light-dark(#9a6700, #d29922);
+    --github-onebox-header-background: light-dark(#fff8c5, #3d2f12);
+  }
+
+  &.--github-merged {
+    --github-onebox-status-color: light-dark(#8250df, #a371f7);
+    --github-onebox-header-background: light-dark(#fbefff, #2e1b47);
+  }
+
+  &.--github-closed,
+  &.--github-failure {
+    --github-onebox-status-color: light-dark(#d1242f, #f85149);
+    --github-onebox-header-background: light-dark(#ffebe9, #3e191c);
+  }
+
+  &[class*="--github-"] {
+    --onebox-border-color: color-mix(
+      in srgb,
+      var(--github-onebox-status-color) 35%,
+      var(--secondary)
+    );
+  }
+
+  > .source.github-onebox__header {
+    flex-wrap: wrap;
+    gap: 0.5em 1em;
+    margin: 0;
+    padding: 0.5em 1em;
+    background: var(--github-onebox-header-background);
+    font-size: var(--font-down-1);
+
+    svg {
+      flex-shrink: 0;
+      fill: currentcolor;
+    }
+  }
+
+  .github-onebox__label,
+  .github-onebox__repo {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .github-onebox__label {
+    color: var(--github-onebox-status-color);
+    font-weight: var(--token-font-weight-semibold);
+  }
+
+  .github-onebox__repo[href] {
+    max-width: min(20rem, 50%);
+    margin-inline-start: auto;
+    color: var(--primary);
+
+    > span {
+      @include ellipsis;
+    }
+  }
+
+  > .onebox-body {
+    padding: 0.8em 1em 1em;
+  }
+
+  &:is(.githubpullrequest, .githubissue, .githubcommit) > .onebox-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "title" "branches" "info" "body";
+  }
+
+  &.githubactions .github-row {
+    display: block;
+  }
+
+  @container github-onebox (width < 28rem) {
+    .github-onebox__repo {
+      gap: 0;
+
+      > span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+    }
+  }
+}
+
 // Onebox - Github - PR, Commit & Issue
 .onebox.githubpullrequest,
 .onebox.githubcommit,

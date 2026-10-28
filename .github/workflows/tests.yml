@@ -242,8 +242,8 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
           path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
+          key: rspec-runtime-${{ matrix.build_type }}/${{ matrix.target }}/${{ github.run_id }}
+          restore-keys: rspec-runtime-${{ matrix.build_type }}/${{ matrix.target }}/
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
@@ -284,6 +284,7 @@ jobs:
         run: |
           pnpm deploy --filter @discourse/playwright-runner --prod tmp/playwright
           echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
+          echo "NODE_PATH=$PWD/tmp/playwright/node_modules${NODE_PATH:+:$NODE_PATH}" >> $GITHUB_ENV
 
       # Drop node_modules to match production
       - name: Remove node_modules
@@ -360,7 +361,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
       - name: Prepare JS deprecation reports
         if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')

@@ -339,7 +339,6 @@ el:
               one: "%{count} χρήστης προσκλήθηκε"
               other: "%{count} χρήστες προσκλήθηκαν"
         event:
-          expired: "Έληξε"
           closed: "Κλειστή"
           full: "Πλήρης"
           status:
@@ -352,6 +351,8 @@ el:
             private:
               title: "Ιδιωτική"
               description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
+      recording_modal:
+        save: "Αποθήκευση"
       composer:
         name_placeholder: "Όνομα εκδήλωσης"
         end_date_placeholder: "Ημερομηνία λήξης"

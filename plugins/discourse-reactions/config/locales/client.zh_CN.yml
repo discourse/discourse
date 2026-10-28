@@ -39,7 +39,8 @@ zh_CN:
         "trigger:post_reaction_changed": "帖子回应发生了变化"
       node_descriptions:
         "action:post_reaction": "在帖子上添加或删除表情符号"
-        "trigger:post_reaction_changed": "当帖子上的点赞、回复或评论被添加、替换或删除时触发。点赞用户是点赞者，而非帖子作者。"
+        "trigger:post_reaction_changed": "当帖子上的表情符号被添加、替换或删除时触发。用户是作者；操作者是做出表情符号反应的人。"
+        "trigger:post_reaction_changed_v1": "当帖子上的点赞、回复或评论被添加、替换或删除时触发。点赞用户是点赞者，而非帖子作者。"
       post_reaction:
         operations:
           add: "添加回应"

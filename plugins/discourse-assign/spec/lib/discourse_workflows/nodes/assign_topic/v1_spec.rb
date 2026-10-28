@@ -97,6 +97,8 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
         expect(result["assignee"]["type"]).to eq("group")
         expect(result["assignee"]["group"]["id"]).to eq(group.id)
         expect(result["assignee"]["group"]["name"]).to eq(group.name)
+        expect(result["assignee"]["group"]).to include("user_count" => group.user_count)
+        expect(result["assignee"]["group"]).not_to include("incoming_email", "can_admin_group")
         expect(Assignment.exists?(target: topic, assigned_to: group)).to eq(true)
         expect(result).to match_node_output_schema(described_class)
       end

@@ -50,13 +50,14 @@ te:
         status: "స్థితి"
       models:
         event:
-          expired: "గడువు ముగిసింది"
           closed: "మూసివేయబడినవి"
           status:
             public:
               title: "బహిరంగం"
             private:
               title: "అంతరంగికం"
+      recording_modal:
+        save: "సేవ్ చేయండి"
       composer:
         url_placeholder: "URLని జోడించండి"
         reminder:

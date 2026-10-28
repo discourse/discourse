@@ -59,6 +59,7 @@ fr:
       manage:
         access_permission_editor: "Éditeur"
         access_permission_editor_description: "Peut créer et modifier du contenu pour cette entité"
+        access_permission_owner: "Propriétaire"
         access_permission_viewer: "Lecteur"
         access_permission_viewer_description: "Peut consulter le contenu de cette entité"
         access_permission_remove: "Supprimer"

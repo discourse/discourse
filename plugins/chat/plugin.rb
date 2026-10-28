@@ -444,6 +444,28 @@ after_initialize do
 
   homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
 
+  register_modifier(:design_wizard_homepages) do |options|
+    next options if !SiteSetting.enable_public_channels
+
+    channel = Chat::CategoryChannel.find_by(chatable_id: SiteSetting.general_category_id)
+    next options if !channel || channel.archived? || channel.read_restricted?
+
+    options +
+      [
+        {
+          id: "chat",
+          name: I18n.t("chat.design_wizard_homepage_name"),
+          description: I18n.t("chat.design_wizard_homepage_description", channel: channel.title),
+          icon: "comments",
+          illustration: "conversation",
+          path: channel.relative_url.delete_prefix(Discourse.base_path),
+          settings: {
+            chat_homepage_channel: channel.id.to_s,
+          },
+        },
+      ]
+  end
+
   register_homepage(
     "chat",
     name: "chat.homepage_option",

@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
+import type Site from "discourse/models/site";
 import DSelect from "discourse/ui-kit/select/d-select";
 import type {
   SelectLoadOptions,
@@ -21,9 +22,7 @@ import {
 } from "./category-renderers.gts";
 import type {
   CategoryItem,
-  CategoryRecord,
   CategorySettings,
-  CategorySite,
   CategoryValue,
   SelectSignature,
 } from "./category-types.ts";
@@ -52,8 +51,8 @@ interface DSelectCategorySignature {
     /** Receives site records by default, or stored ids with `@emit="ids"`. */
     onChange?: (
       value:
-        | CategoryRecord[]
-        | CategoryRecord
+        | Category[]
+        | Category
         | (number | string)[]
         | number
         | string
@@ -94,7 +93,7 @@ interface DSelectCategorySignature {
 
 /** Picks categories to store and leaves loading and update authority with DSelect. */
 export default class DSelectCategory extends Component<DSelectCategorySignature> {
-  @service declare site: CategorySite;
+  @service declare site: Site;
   @service declare siteSettings: CategorySettings;
 
   get legacyKind() {
@@ -162,7 +161,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     if (this.site.lazy_load_categories) {
       return this.#loadPage(query, opts);
     }
-    let categories: CategoryRecord[] = this.siteSettings
+    let categories: Category[] = this.siteSettings
       .fixed_category_positions_on_create
       ? Category.sortCategories(this.site.categories)
       : this.site.sortedCategories;
@@ -178,11 +177,11 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
           !this.args.scope ||
           !family ||
           this.#inFamily(category, family) ||
-          readOnly.has(category.id))
+          readOnly.has(category.id!))
     );
     if (!query && this.args.prioritize && family && !this.args.scope) {
-      const prioritized: CategoryRecord[] = [];
-      const rest: CategoryRecord[] = [];
+      const prioritized: Category[] = [];
+      const rest: Category[] = [];
       for (const category of categories) {
         const target = this.#inFamily(category, family) ? prioritized : rest;
         target.push(category);
@@ -194,7 +193,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
 
   @action
   async resolveValues(values: unknown[]) {
-    const records: CategoryRecord[] = await Category.asyncFindByIds(values);
+    const records = await Category.asyncFindByIds(
+      values as (number | string)[]
+    );
     return records.map((category) => categoryItem(category));
   }
 
@@ -217,10 +218,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   @action
   onChange(value: SelectValue) {
     const ids = makeArray(value) as (number | string)[];
-    const result =
-      this.args.emit === "ids"
-        ? ids
-        : (Category.findByIds(ids) as CategoryRecord[]);
+    const result = this.args.emit === "ids" ? ids : Category.findByIds(ids);
     this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
   }
 
@@ -230,22 +228,22 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const onlyPostable = this.args.permission === "create";
     const uncategorized = this.#uncategorized;
     const subcategories = this.args.subcategories !== false;
-    return (category: CategoryRecord) =>
-      readOnly.has(category.id) ||
+    return (category: Category) =>
+      readOnly.has(category.id!) ||
       ((!onlyPostable || category.canCreateTopic) &&
         (uncategorized || !category.isUncategorizedCategory) &&
         (subcategories || !category.parent_category_id) &&
-        !excluded.has(category.id));
+        !excluded.has(category.id!));
   }
 
-  #matches(category: CategoryRecord, term: string) {
-    if (normalizeCategoryName(category.name).includes(term)) {
+  #matches(category: Category, term: string) {
+    if (normalizeCategoryName(category.name ?? "").includes(term)) {
       return true;
     }
     return (
       !this.args.multiple &&
       !!category.parentCategory &&
-      normalizeCategoryName(category.parentCategory.name).includes(term)
+      normalizeCategoryName(category.parentCategory.name ?? "").includes(term)
     );
   }
 
@@ -255,26 +253,26 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
 
   /** The id of the family one level up from a category: its parent, or itself at the top. */
   #familyId(value?: CategoryValue): number | undefined {
-    const category: CategoryRecord | undefined = Category.findById(
-      this.#idOf(value)
-    );
+    const category: Category | undefined = Category.findById(this.#idOf(value));
     return category?.parent_category_id || category?.id;
   }
 
   /** Lazy rows the server pages leave out: the scope's family root while browsing, and read-only categories. */
-  #pinned(query: string): CategoryRecord[] {
+  #pinned(query: string): Category[] {
     const term = normalizeCategoryName(query);
-    const root = query ? [] : [this.#familyId(this.args.scope)];
-    const readOnly = (
-      Category.findByIds(this.#readOnly) as CategoryRecord[]
-    ).filter((category) => !query || this.#matches(category, term));
+    const root = query
+      ? []
+      : [this.#familyId(this.args.scope)].filter((id) => id != null);
+    const readOnly = Category.findByIds(this.#readOnly).filter(
+      (category) => !query || this.#matches(category, term)
+    );
     return uniqueItemsFromArray([
-      ...(Category.findByIds(root) as CategoryRecord[]),
+      ...Category.findByIds(root),
       ...readOnly,
     ]).filter(this.#categoryAllowed());
   }
 
-  #inFamily(category: CategoryRecord, id: number) {
+  #inFamily(category: Category, id: number) {
     return category.id === id || category.parent_category_id === id;
   }
 
@@ -287,7 +285,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
-  #rows(categories: CategoryRecord[], query: string): CategoryItem[] {
+  #rows(categories: Category[], query: string): CategoryItem[] {
     const descendantsEnabled = this.#offersDescendants(query);
     const byParent = descendantsEnabled
       ? this.site.categoriesByParentId
@@ -297,7 +295,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const readOnlyDescription = i18n("category_row.read_only_description");
     const items: CategoryItem[] = [];
     for (const category of categories) {
-      const isReadOnly = readOnly.has(category.id);
+      const isReadOnly = readOnly.has(category.id!);
       const row = categoryItem(category, descriptions);
       row.disabled = isReadOnly;
       row.description = isReadOnly ? readOnlyDescription : row.description;
@@ -317,13 +315,13 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         category,
         onSelect: (control) => {
           void control.update(async (scope) => {
-            const descendants: CategoryRecord[] =
+            const descendants: Category[] =
               await Category.asyncFindDescendants(category);
             const allowed = this.#categoryAllowed();
             const locked = new Set(this.#readOnly);
             scope.selectMany(
               descendants
-                .filter((child) => !locked.has(child.id) && allowed(child))
+                .filter((child) => !locked.has(child.id!) && allowed(child))
                 .map((child) => categoryItem(child))
             );
           });

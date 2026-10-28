@@ -173,15 +173,7 @@ export default class BreadCrumbs extends Component {
         }}
       />
 
-      {{#each
-        this.categoryBreadcrumbs
-        key=(if
-          this.siteSettings.enable_new_select_controls
-          "parentCategory.id"
-          "@identity"
-        )
-        as |breadcrumb|
-      }}
+      {{#each this.categoryBreadcrumbs key="parentCategory.id" as |breadcrumb|}}
         {{#if breadcrumb.hasOptions}}
           <li
             style={{if

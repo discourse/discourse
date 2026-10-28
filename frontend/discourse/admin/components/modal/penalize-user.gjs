@@ -194,6 +194,14 @@ export default class PenalizeUser extends Component {
                 {{trustHTML (i18n "admin.user.suspend_reason_label")}}
               {{/if}}
             </div>
+          {{else if (eq @model.penaltyType "silence")}}
+            <div class="penalty-reason-visibility">
+              {{#if this.siteSettings.hide_silencing_reasons}}
+                {{trustHTML (i18n "admin.user.silence_reason_hidden_label")}}
+              {{else}}
+                {{trustHTML (i18n "admin.user.silence_reason_label")}}
+              {{/if}}
+            </div>
           {{/if}}
           <AdminPenaltyReason
             @message={{this.message}}

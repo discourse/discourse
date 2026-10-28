@@ -91,6 +91,7 @@ register_svg_icon "far-file-lines"
 register_asset "stylesheets/common/live.scss"
 register_asset "stylesheets/common/live-room-page.scss"
 register_asset "stylesheets/common/live-chat.scss"
+register_asset "stylesheets/common/live-onebox.scss"
 register_asset "stylesheets/common/live-admin.scss", :admin
 
 add_admin_route "live.admin.title", "live", use_new_show_route: true
@@ -131,6 +132,14 @@ after_initialize do
   register_hashtag_type_priority_for_context("room", "topic-composer", 5)
   refresh_chat_hashtag_configurations
 
+  Oneboxer.register_local_handler("live/page") do |url, route|
+    Live::OneboxHandler.handle(url, route)
+  end
+
+  InlineOneboxer.register_local_handler("live/page") do |url, route|
+    Live::InlineOneboxHandler.handle(url, route)
+  end
+
   # Gates the user-card call button: the viewer needs the direct-call
   # permission and the target must be callable by them — live-room access,
   # not the viewer themselves or a bot, and not screened out by the target's
@@ -165,6 +174,8 @@ after_initialize do
     SiteSetting.live_video_allowed_groups.present? ||
       SiteSetting.live_screen_share_allowed_groups.present?
   end
+
+  add_to_serializer(:site, :live_reaction_emojis) { Live::Reactions.emojis }
 
   Live::DefaultRoomSeeder.ensure! if SiteSetting.live_enabled?
   Live::AgentBot.ensure! if SiteSetting.live_enabled?

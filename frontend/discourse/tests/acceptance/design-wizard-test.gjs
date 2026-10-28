@@ -56,6 +56,9 @@ const designWizardData = () => ({
 
 acceptance("Design wizard - admin launch", function (needs) {
   let savedPayloads = [];
+  let wizardData;
+  let importRequests;
+  let importFails;
 
   needs.user({
     admin: true,
@@ -65,6 +68,9 @@ acceptance("Design wizard - admin launch", function (needs) {
 
   needs.hooks.beforeEach(function () {
     savedPayloads = [];
+    wizardData = designWizardData();
+    importRequests = [];
+    importFails = false;
     this.originalSchemeLinks = captureColorSchemeLinks();
   });
 
@@ -77,8 +83,15 @@ acceptance("Design wizard - admin launch", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/admin/config/design-wizard.json", () =>
-      helper.response(200, designWizardData())
+      helper.response(200, wizardData)
     );
+
+    server.post("/admin/themes/import", (request) => {
+      importRequests.push(helper.parsePostData(request.requestBody));
+      return importFails
+        ? helper.response(422, { errors: ["Unable to install theme"] })
+        : helper.response(201, { theme: { id: 42, name: "Concord" } });
+    });
 
     server.put("/admin/config/design-wizard.json", (request) => {
       savedPayloads.push(helper.parsePostData(request.requestBody));
@@ -101,6 +114,306 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     server.get("/admin/config/site_settings.json", () =>
       helper.response(200, { site_settings: [] })
+    );
+  });
+
+  test("installs a remote theme before navigating to its preview", async function (assert) {
+    const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
+    wizardData.themes.push({
+      id: "concord",
+      name: "Concord",
+      remote_url: remoteUrl,
+      palette_pairs: [],
+    });
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="concord"] input');
+
+    assert.deepEqual(
+      importRequests,
+      [{ remote: remoteUrl }],
+      "imports the offered repository once"
+    );
+    assert.true(
+      redirect.calledWith("/?preview_theme_id=42"),
+      "previews the installed theme ID"
+    );
+    const stored = JSON.parse(
+      this.owner
+        .lookup("service:key-value-store")
+        .get("design_wizard_panel_state")
+    );
+    assert.strictEqual(
+      stored.themeId,
+      42,
+      "the installed ID survives the preview reload"
+    );
+    await click(".design-wizard__close");
+  });
+
+  test("a failed theme install restores the selection and allows retrying", async function (assert) {
+    wizardData.themes.push({
+      id: "concord",
+      name: "Concord",
+      remote_url: "https://github.com/discourse/discourse-concord-theme",
+      palette_pairs: [],
+    });
+    importFails = true;
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="concord"] input');
+
+    assert
+      .dom(".dialog-body")
+      .includesText("Unable to install theme", "shows the installation error");
+    assert
+      .dom('[data-theme-id="-1"] input')
+      .isChecked("restores the previous selection");
+    assert
+      .dom('[data-theme-id="concord"] input')
+      .isNotDisabled("allows another attempt");
+    assert.false(redirect.called, "does not navigate to a missing theme");
+
+    await click(".dialog-footer .btn-primary");
+    importFails = false;
+    await click('[data-theme-id="concord"] input');
+    assert.true(
+      redirect.calledWith("/?preview_theme_id=42"),
+      "a successful retry opens the preview"
+    );
+    await click(".design-wizard__close");
+  });
+
+  test("previews and saves an additional homepage without a destination picker", async function (assert) {
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        description:
+          "Open the General channel when members visit your homepage.",
+        icon: "comments",
+        illustration: "conversation",
+        settings: { chat_homepage_channel: "12" },
+        path: "/categories",
+      },
+    ];
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    assert
+      .dom('[data-homepage="chat"] .design-wizard__mock-message')
+      .exists({ count: 3 });
+    assert.dom('[data-homepage="chat"] .design-wizard__mock-composer').exists();
+    await click('[data-homepage="chat"]');
+
+    assert.strictEqual(
+      currentURL(),
+      "/categories",
+      "previews the path provided by the server"
+    );
+    assert
+      .dom('[data-homepage="chat"]')
+      .hasAttribute("aria-pressed", "true", "selects Chat");
+    assert
+      .dom('[data-homepage="topics"]')
+      .hasAttribute("aria-pressed", "false", "clears the topic selection");
+    assert
+      .dom(".design-wizard__detail-group")
+      .includesText("General", "explains the fixed destination");
+    assert.dom("[data-topic-page]").doesNotExist("hides topic list choices");
+    assert
+      .dom(".design-wizard__detail-group select")
+      .doesNotExist("does not offer a channel picker");
+    await click(".design-wizard__save");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage,
+      "chat",
+      "saves the registered homepage"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+      "12",
+      "uses the General channel provided by the server"
+    );
+    assert.true(redirect.called, "finishes the wizard");
+  });
+
+  test("omits unsupported welcome and search choices", async function (assert) {
+    wizardData.themes[0].supports_welcome_banner = false;
+    wizardData.themes[0].supports_search = false;
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+
+    assert.dom(".design-wizard__sections").doesNotIncludeText("Welcome banner");
+    assert.dom(".design-wizard__sections").doesNotIncludeText("Search");
+    await click(".design-wizard__save");
+    for (const key of [
+      "enable_welcome_banner",
+      "welcome_banner_location",
+      "search_experience",
+    ]) {
+      assert.false(key in savedPayloads.at(-1), `${key} is not saved`);
+    }
+  });
+
+  ["chat", "latest"].forEach((homepage) => {
+    test(`preserves and restores the chat destination from ${homepage}`, async function (assert) {
+      wizardData.homepage = homepage;
+      wizardData.homepage_settings = { chat_homepage_channel: "23" };
+      wizardData.additional_homepages = [
+        {
+          id: "chat",
+          name: "Chat",
+          path: "/categories",
+          settings: { chat_homepage_channel: "12" },
+        },
+      ];
+      sinon.stub(DiscourseURL, "redirectTo");
+
+      await visit("/admin");
+      await click(APPEARANCE_LAUNCH_BUTTON);
+      await click(".design-wizard__intro-start");
+      await click(".design-wizard__next");
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "23",
+        "Next preserves the existing channel"
+      );
+      await click(".design-wizard__next");
+      await click('[data-homepage="chat"]');
+      const wizard = this.owner.lookup("service:design-wizard");
+      await wizard.saveProgress();
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "12",
+        "explicitly selecting Chat chooses General"
+      );
+
+      await wizard.start({ resuming: true });
+      await wizard.saveProgress();
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "12",
+        "the selection survives a preview reload"
+      );
+      await click(".design-wizard__close");
+      await click(".dialog-footer .btn-danger");
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage,
+        homepage,
+        "reverts the original homepage"
+      );
+      assert.strictEqual(
+        savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+        "23",
+        "reverts the original channel after resuming"
+      );
+    });
+  });
+
+  ["topics", "categories"].forEach((choice) => {
+    [false, true].forEach((resume) => {
+      test(`switching from Chat to ${choice} preserves the original channel${resume ? " after a preview reload" : ""}`, async function (assert) {
+        wizardData.homepage_settings = { chat_homepage_channel: "23" };
+        wizardData.additional_homepages = [
+          {
+            id: "chat",
+            name: "Chat",
+            path: "/categories",
+            settings: { chat_homepage_channel: "12" },
+          },
+        ];
+        sinon.stub(DiscourseURL, "redirectTo");
+
+        await visit("/admin");
+        await click(APPEARANCE_LAUNCH_BUTTON);
+        await click(".design-wizard__intro-start");
+        await click(".design-wizard__next");
+        await click(".design-wizard__next");
+        await click('[data-homepage="chat"]');
+
+        if (resume) {
+          const wizard = this.owner.lookup("service:design-wizard");
+          await wizard.saveProgress();
+          wizardData.homepage = "chat";
+          wizardData.homepage_settings = { chat_homepage_channel: "12" };
+          await wizard.start({ resuming: true });
+          await click(".design-wizard__next");
+          await click(".design-wizard__next");
+        }
+
+        await click(`[data-homepage="${choice}"]`);
+        await click(".design-wizard__save");
+        assert.strictEqual(
+          savedPayloads.at(-1).homepage,
+          choice === "topics" ? "latest" : "categories",
+          "saves the selected forum homepage"
+        );
+        assert.strictEqual(
+          savedPayloads.at(-1).homepage_settings.chat_homepage_channel,
+          "23",
+          "restores the channel configured before the wizard started"
+        );
+      });
+    });
+  });
+
+  test("reverts the welcome banner location after switching from Concord", async function (assert) {
+    wizardData.themes[0].default = false;
+    wizardData.themes.push({
+      id: 42,
+      name: "Concord",
+      default: true,
+      supports_welcome_banner: false,
+      supports_search: false,
+      palette_pairs: [],
+    });
+    this.siteSettings.welcome_banner_location = "top_menu";
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click('[data-theme-id="-1"] input');
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.start({ resuming: true });
+    wizard.applyingTheme = false;
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    wizard.selectWelcomeBannerLocation("all");
+    await click(".design-wizard__back");
+    await click(".design-wizard__next");
+    assert.strictEqual(
+      savedPayloads.at(-1).welcome_banner_location,
+      "all",
+      "saves the changed site-wide location"
+    );
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-danger");
+    assert.strictEqual(
+      savedPayloads.at(-1).theme_id,
+      "42",
+      "reverts to Concord"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).welcome_banner_location,
+      "top_menu",
+      "restores the original site-wide location"
     );
   });
 

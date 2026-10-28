@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Category from "discourse/models/category";
+import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -18,9 +19,7 @@ import { i18n } from "discourse-i18n";
 import { CategoryBadge, categoryItem } from "./category-renderers.gts";
 import type {
   CategoryItem,
-  CategoryRecord,
   CategorySettings,
-  CategorySite,
   SelectSignature,
 } from "./category-types.ts";
 
@@ -35,15 +34,15 @@ interface DSelectCategoryFilterSignature {
   Args: {
     /** Current category, caller-owned row, shortcut, or an empty level. */
     value?:
-      | CategoryRecord
+      | Category
       | CategoryItem
       | typeof ALL_CATEGORIES_ID
       | typeof NO_CATEGORIES_ID
       | null;
     /** Parent whose direct children are being browsed. */
-    parentCategory?: CategoryRecord;
+    parentCategory?: Category;
     /** Caller-ordered local browsing level. Search still uses the site. */
-    items?: readonly CategoryRecord[];
+    items?: readonly Category[];
     /** Owns rows, order and paging; bypasses the built-in level truncation and footer. */
     load?: SelectSignature["Args"]["load"];
     /** Names an empty level as no subcategories. */
@@ -59,7 +58,7 @@ interface DSelectCategoryFilterSignature {
     /** Receives a site category, the caller's unloaded row, or a shortcut; never navigates. */
     onChange?: (
       value:
-        | CategoryRecord
+        | Category
         | CategoryItem
         | typeof ALL_CATEGORIES_ID
         | typeof NO_CATEGORIES_ID
@@ -82,7 +81,7 @@ interface DSelectCategoryFilterSignature {
       /** Categories omitted from the visible level. */
       moreCount: number,
       /** Parent of the level, absent at the top. */
-      parentCategory: CategoryRecord | undefined,
+      parentCategory: Category | undefined,
     ];
   };
 }
@@ -90,7 +89,7 @@ interface DSelectCategoryFilterSignature {
 /** Narrows a topic list by category, leaving navigation to its caller. */
 export default class DSelectCategoryFilter extends Component<DSelectCategoryFilterSignature> {
   @service declare currentUser: User | null;
-  @service declare site: CategorySite;
+  @service declare site: Site;
   @service declare siteSettings: CategorySettings;
 
   @tracked moreCount = 0;
@@ -115,11 +114,11 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (typeof value !== "object" || !value) {
       return { id: value ?? ALL_CATEGORIES_ID, name: this.levelName };
     }
-    const category: CategoryRecord | undefined = Category.findById(value.id);
+    const category: Category | undefined = Category.findById(value.id);
     if (category) {
       return categoryItem(category);
     }
-    return { id: value.id, name: value.name };
+    return { id: value.id!, name: value.name ?? "" };
   }
 
   get #uncategorized() {
@@ -160,15 +159,13 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     }
     const uncategorized = this.#uncategorized;
     this.moreCount = 0;
-    let categories: CategoryRecord[];
+    let categories: Category[];
     if (query) {
       // Every match: the list is windowed, so the model's default cap of five is not needed.
-      categories = (
-        Category.search(query, {
-          parentCategoryId: this.args.parentCategory?.id,
-          limit: Infinity,
-        }) as CategoryRecord[]
-      ).sort(
+      categories = Category.search(query, {
+        parentCategoryId: this.args.parentCategory?.id,
+        limit: Infinity,
+      }).sort(
         (a, b) =>
           Number(!!a.parent_category_id) - Number(!!b.parent_category_id)
       );
@@ -194,7 +191,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (!item || Array.isArray(item)) {
       return;
     }
-    const category: CategoryRecord | undefined = Category.findById(id);
+    const category = Category.findById(id as number | string);
     if (category) {
       this.args.onChange?.(category);
       return;
@@ -244,7 +241,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       parentCategoryId:
         this.args.parentCategory?.id ?? (query ? undefined : -1),
     });
-    const items = categories.map((category: CategoryRecord) =>
+    const items = categories.map((category: Category) =>
       categoryItem(category, this.#descriptions)
     );
     if (query) {

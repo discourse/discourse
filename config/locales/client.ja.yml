@@ -33,6 +33,7 @@ ja:
     access_control:
       manage:
         access_permission_editor: "編集者"
+        access_permission_owner: "オーナー"
         access_permission_remove: "削除"
     carousel:
       go_to_slide: "スライド %{index} に移動"

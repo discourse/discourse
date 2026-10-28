@@ -3,7 +3,7 @@ import { removeAccents } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
-import type { CategoryItem, CategoryRecord } from "./category-types.ts";
+import type { CategoryItem } from "./category-types.ts";
 
 /** Decodes entities while preserving literal markup as text. */
 export function decodeCategoryText(text: string): string {
@@ -19,9 +19,7 @@ export function normalizeCategoryName(text: string): string {
 }
 
 /** Decodes transformed descriptions without treating their text as markup. */
-export function categoryDescription(
-  category: CategoryRecord
-): string | undefined {
+export function categoryDescription(category: Category): string | undefined {
   const text = category.descriptionText;
   if (!text || text === "null") {
     return;
@@ -32,23 +30,27 @@ export function categoryDescription(
 
 /** Builds an engine row while keeping the site's model as the emitted value. */
 export function categoryItem(
-  category: CategoryRecord,
+  category: Category,
   descriptions = false
 ): CategoryItem {
+  // Rows come from the site or a search, so the category is saved and has both.
   return {
-    id: category.id,
-    name: category.name,
+    id: category.id!,
+    name: category.name!,
     category,
     description: descriptions ? categoryDescription(category) : undefined,
   };
 }
 
 /** The category a row renders as a badge; action rows render their label instead. */
-function record(item: SelectItem): CategoryRecord | undefined {
+function record(item: SelectItem): Category | undefined {
   if (item.onSelect) {
     return;
   }
-  return (item as CategoryItem).category ?? Category.findById(item.id);
+  return (
+    (item as CategoryItem).category ??
+    Category.findById(item.id as number | string)
+  );
 }
 
 /** Narrows shortcut and action labels for templates. */
@@ -58,7 +60,7 @@ function name(item: SelectItem): string {
 
 /** Topic counts are confined to options. */
 function topicCount(
-  category: CategoryRecord,
+  category: Category,
   counts?: boolean,
   countSubcategories?: boolean
 ) {

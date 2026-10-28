@@ -72,6 +72,7 @@ export default class LiveWebrtcService extends Service {
   @service messageBus;
   @service modal;
   @service siteSettings;
+  @service("live-reactions") liveReactions;
   @service("live-rooms") liveRooms;
   @service toasts;
 
@@ -1674,6 +1675,7 @@ export default class LiveWebrtcService extends Service {
     this.#signaling.clearHttpQueue(roomId);
     this.#roomMessageQueue.clear(roomId);
     this.#transcription.stopIfTranscribing(roomId);
+    this.liveReactions.clearRoom(roomId);
   }
 
   #handleRoomMessage(roomId, payload) {
@@ -1737,6 +1739,16 @@ export default class LiveWebrtcService extends Service {
       await this.#roster.handleRoleChange(roomId, payload);
     } else if (payload.type === "hand_raise") {
       this.#roster.handleHandRaise(roomId, payload);
+    } else if (payload.type === "reaction") {
+      this.liveReactions.receive(roomId, payload);
+      // Recorded from the broadcast, our own included, so the transcript holds
+      // exactly what everyone in the call saw.
+      this.#transcription.recordReaction(
+        roomId,
+        payload.user_id,
+        payload.username,
+        payload.emoji
+      );
     } else if (payload.type === "kicked") {
       this.#handleKicked(roomId);
     } else if (payload.type === "room_updated") {

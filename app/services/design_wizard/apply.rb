@@ -22,6 +22,7 @@ class DesignWizard::Apply
     attribute :base_font, :string
     attribute :heading_font, :string
     attribute :homepage, :string
+    attribute :homepage_settings, default: -> { {} }
     attribute :category_page_style, :string
     attribute :enable_welcome_banner, :boolean
     attribute :welcome_banner_location, :string
@@ -35,14 +36,14 @@ class DesignWizard::Apply
       self.search_experience = search_experience.presence
     end
 
-    validates :theme_id, presence: true, inclusion: { in: Theme::CORE_THEMES.values }
+    validates :theme_id, presence: true, inclusion: { in: ->(_) { DesignWizard::Themes.ids } }
     validates :base_font,
               :heading_font,
               inclusion: {
                 in: BaseFontSetting.values.map { |font| font[:value] },
               },
               allow_blank: true
-    validates :homepage, inclusion: { in: %w[latest new hot categories] }, allow_blank: true
+    validates :homepage, inclusion: { in: ->(_) { DesignWizard::Homepages.ids } }, allow_blank: true
     validates :category_page_style,
               inclusion: {
                 in: CategoryPageStyle.values.map { |style| style[:value] },
@@ -59,16 +60,23 @@ class DesignWizard::Apply
               },
               allow_blank: true
     validate :built_in_palettes_exist
+    validate :homepage_settings_are_available
 
     def site_settings(theme_id:)
-      {
-        default_theme_id: theme_id,
-        base_font: base_font.presence,
-        heading_font: heading_font.presence,
-        default_homepage: homepage.presence,
-        desktop_category_page_style: category_page_style.presence,
-        welcome_banner_location: welcome_banner_location.presence,
-      }.compact.map { |setting_name, value| { setting_name:, value: } }
+      DesignWizard::Homepages
+        .settings_for(homepage, overrides: homepage_settings)
+        .merge(
+          {
+            default_theme_id: theme_id,
+            base_font: base_font.presence,
+            heading_font: heading_font.presence,
+            default_homepage: homepage.presence,
+            desktop_category_page_style: category_page_style.presence,
+            welcome_banner_location: welcome_banner_location.presence,
+          },
+        )
+        .compact
+        .map { |setting_name, value| { setting_name:, value: } }
     end
 
     # the wizard re-sends every selection on each step, so skip the settings
@@ -82,6 +90,20 @@ class DesignWizard::Apply
     end
 
     private
+
+    def homepage_settings_are_available
+      if !homepage_settings.is_a?(Hash) ||
+           (homepage_settings.keys - DesignWizard::Homepages.current_settings.keys).any?
+        errors.add(:homepage_settings, :invalid)
+        return
+      end
+
+      homepage_settings.each do |name, value|
+        SiteSetting.type_supervisor.to_db_value(name, value)
+      rescue Discourse::InvalidParameters, ArgumentError
+        errors.add(:homepage_settings, :invalid)
+      end
+    end
 
     def built_in_palettes_exist
       %i[light_palette_id dark_palette_id].each do |attribute|

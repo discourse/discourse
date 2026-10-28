@@ -126,7 +126,8 @@ RSpec.describe UserSuspender do
         )
       end
 
-      it "delivers a suspension email containing the reason without an optional message" do
+      it "delivers a suspension email with the reason when DSA reporting is enabled" do
+        SiteSetting.dsa_reporting_enabled = true
         user.user_option.update!(timezone: "Asia/Singapore")
 
         expect { suspend_user }.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
@@ -139,7 +140,11 @@ RSpec.describe UserSuspender do
         expect(email.text_part.body.decoded).to include("because", "UTC+08:00")
       end
 
-      it "queues one notification when the optional message is whitespace" do
+      it "skips the notification when DSA reporting is disabled" do
+        expect { suspend_user }.not_to change { Jobs::CriticalUserEmail.jobs.size }
+      end
+
+      it "skips the notification when the optional message is whitespace" do
         suspender =
           UserSuspender.new(
             user,
@@ -149,7 +154,7 @@ RSpec.describe UserSuspender do
             message: "   ",
           )
 
-        expect { suspender.suspend }.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+        expect { suspender.suspend }.not_to change { Jobs::CriticalUserEmail.jobs.size }
       end
     end
   end
