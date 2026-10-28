@@ -6406,6 +6406,28 @@ en:
   onebox:
     discourse:
       event_all_day: "All day"
+      recurrence:
+        every_day: "Every day"
+        every_weekday: "Every weekday"
+        every_week: "Every %{weekday}"
+        every_two_weeks: "Every other %{weekday}"
+        every_four_weeks: "Every 4 weeks on %{weekday}"
+        every_month: "The %{ordinal} %{weekday} of every month"
+        until: "%{recurrence} until %{date}"
+        ordinals:
+          first: "first"
+          second: "second"
+          third: "third"
+          fourth: "fourth"
+          last: "last"
+        weekdays:
+          sunday: "Sunday"
+          monday: "Monday"
+          tuesday: "Tuesday"
+          wednesday: "Wednesday"
+          thursday: "Thursday"
+          friday: "Friday"
+          saturday: "Saturday"
       user_joined_community: "Joined %{date}"
     google_meet:
       title: "Google Meet meeting"

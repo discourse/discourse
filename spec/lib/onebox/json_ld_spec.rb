@@ -57,6 +57,43 @@ RSpec.describe Onebox::JsonLd do
     )
   end
 
+  it "normalizes an Event's recurrence schedule" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          {
+            "@type": "Event",
+            "startDate": "2026-10-22T09:00:00-04:00",
+            "eventSchedule": {
+              "@type": "Schedule",
+              "repeatFrequency": "P1M",
+              "byDay": ["https://schema.org/Thursday", "Friday"],
+              "byMonthWeek": -1,
+              "endDate": "2026-12-31",
+              "scheduleTimezone": "America/New_York"
+            }
+          }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to include(
+      event_repeat_frequency: "P1M",
+      event_repeat_by_day: "Thursday,Friday",
+      event_repeat_by_month_week: "-1",
+      event_repeat_until: "2026-12-31",
+      event_schedule_timezone: "America/New_York",
+    )
+  end
+
+  it "ignores a schedule without a repeat frequency" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          { "@type": "Event", "startDate": "2026-10-22", "eventSchedule": { "byDay": "Monday" } }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data.keys).not_to include(:event_repeat_by_day)
+  end
+
   it "reads an Event image given as an ImageObject" do
     doc = Nokogiri.HTML(<<~HTML)
         <script type="application/ld+json">

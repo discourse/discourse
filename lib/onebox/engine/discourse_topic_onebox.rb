@@ -9,6 +9,16 @@ module Onebox
 
       matches_regexp(%r{/t/.*(/\d+)?})
 
+      WEEKDAYS = %w[sunday monday tuesday wednesday thursday friday saturday]
+      WORKWEEK = %w[Monday Tuesday Wednesday Thursday Friday]
+      MONTH_WEEK_ORDINALS = {
+        "1" => "first",
+        "2" => "second",
+        "3" => "third",
+        "4" => "fourth",
+        "-1" => "last",
+      }
+
       def layout
         @layout ||= Layout.new(event? ? "discoursetopic_with_event" : self.class.onebox_name, data)
       end
@@ -29,6 +39,7 @@ module Onebox
           event_date_month: event_date&.strftime("%b"),
           event_description: event_description,
           event_ends_at: raw[:event_ends_at],
+          event_recurrence: event_recurrence,
           event_onebox_classes: event_onebox_classes,
           event_starts_at: raw[:event_starts_at],
           event_time: event_time,
@@ -120,6 +131,53 @@ module Onebox
         time = "#{time} → #{ends_at.strftime("%-I:%M %p")}" if ends_at
         "#{time} (#{event_timezone})"
       rescue ArgumentError
+        nil
+      end
+
+      # Limited to patterns simple enough to roll forward client-side, so the label never outlives the date
+      def event_recurrence
+        return unless event? && (date = event_date)
+
+        weekday = I18n.t("onebox.discourse.recurrence.weekdays.#{WEEKDAYS[date.wday]}")
+        by_day = raw[:event_repeat_by_day].to_s.split(",")
+
+        key, options =
+          case raw[:event_repeat_frequency]
+          when "P1D"
+            if by_day.empty?
+              "every_day"
+            elsif by_day.sort == WORKWEEK.sort
+              "every_weekday"
+            end
+          when "P1W"
+            ["every_week", { weekday: }]
+          when "P2W"
+            ["every_two_weeks", { weekday: }]
+          when "P4W"
+            ["every_four_weeks", { weekday: }]
+          when "P1M"
+            if (ordinal = MONTH_WEEK_ORDINALS[raw[:event_repeat_by_month_week]])
+              [
+                "every_month",
+                { weekday:, ordinal: I18n.t("onebox.discourse.recurrence.ordinals.#{ordinal}") },
+              ]
+            end
+          end
+        return if key.blank?
+
+        label = I18n.t("onebox.discourse.recurrence.#{key}", **(options || {}))
+        return label if (until_date = event_repeat_until).blank?
+
+        I18n.t(
+          "onebox.discourse.recurrence.until",
+          recurrence: label,
+          date: until_date.strftime(I18n.t("datetime_formats.formats.date_only")),
+        )
+      end
+
+      def event_repeat_until
+        Date.iso8601(raw[:event_repeat_until].to_s) if raw[:event_repeat_until].present?
+      rescue Date::Error
         nil
       end
 

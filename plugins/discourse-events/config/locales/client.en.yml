@@ -372,6 +372,7 @@ en:
       onebox:
         all_day: "All day"
         all_day_range: "All day · %{start} → %{end}"
+        recurrence_until: "%{recurrence} until %{date}"
       notifications:
         before_event_reminder: "An event is about to start"
         after_event_reminder: "An event has ended"

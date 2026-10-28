@@ -52,6 +52,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
       let(:url) { "https://example.com/t/community-hangout/123" }
       let(:event_image_json) { %("image": "https://example.com/event.png",) }
       let(:event_description_json) { %("description": "Meet the community",) }
+      let(:event_schedule_json) { "" }
       let(:html) { <<~HTML }
           <html>
             <head>
@@ -73,6 +74,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
                   "name": "Community hangout",
                   #{event_description_json}
                   #{event_image_json}
+                  #{event_schedule_json}
                   "startDate": "2026-10-22T09:00:00.000-04:00",
                   "endDate": "2026-10-22T10:00:00.000-04:00"
                 }
@@ -115,6 +117,67 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         expect(onebox.to_html).to include(
           '<a href="https://example.com/t/community-hangout/123" target="_blank" rel="noopener">Example community</a>',
         )
+      end
+
+      it "does not render a recurrence for a one-off event" do
+        expect(data[:event_recurrence]).to be_nil
+        expect(onebox.to_html).not_to include("discourse-event-onebox__recurrence")
+      end
+
+      context "with a weekly schedule" do
+        let(:event_schedule_json) { <<~JSON }
+          "eventSchedule": {
+            "@type": "Schedule",
+            "repeatFrequency": "P1W",
+            "byDay": "https://schema.org/Thursday",
+            "endDate": "2026-12-31",
+            "scheduleTimezone": "America/New_York"
+          },
+        JSON
+
+        it "labels the recurrence and exposes the schedule for client-side updates" do
+          html = onebox.to_html
+
+          expect(data[:event_recurrence]).to eq("Every Thursday until December 31, 2026")
+          expect(html).to include(
+            '<span class="discourse-event-onebox__recurrence-text">Every Thursday until December 31, 2026</span>',
+          )
+          expect(html).to include('data-event-repeat-frequency="P1W"')
+          expect(html).to include('data-event-repeat-by-day="Thursday"')
+          expect(html).to include('data-event-repeat-until="2026-12-31"')
+          expect(html).to include('data-event-schedule-timezone="America/New_York"')
+        end
+      end
+
+      context "with a monthly schedule" do
+        let(:event_schedule_json) { <<~JSON }
+          "eventSchedule": { "repeatFrequency": "P1M", "byDay": "Thursday", "byMonthWeek": -1 },
+        JSON
+
+        it "labels the week of the month" do
+          expect(data[:event_recurrence]).to eq("The last Thursday of every month")
+        end
+      end
+
+      context "with a weekday schedule" do
+        let(:event_schedule_json) { <<~JSON }
+          "eventSchedule": {
+            "repeatFrequency": "P1D",
+            "byDay": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+          },
+        JSON
+
+        it "labels the weekdays" do
+          expect(data[:event_recurrence]).to eq("Every weekday")
+        end
+      end
+
+      context "with an unsupported schedule" do
+        let(:event_schedule_json) { %("eventSchedule": { "repeatFrequency": "P3W" },) }
+
+        it "does not label the recurrence" do
+          expect(data[:event_recurrence]).to be_nil
+        end
       end
 
       context "without an event description" do
