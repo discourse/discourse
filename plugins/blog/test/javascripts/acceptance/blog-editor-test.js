@@ -1,7 +1,6 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, select, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Blog editor", function (needs) {
@@ -63,20 +62,33 @@ acceptance("Blog editor", function (needs) {
     assert
       .dom(".blog-dashboard__row")
       .exists({ count: 2 }, "both editorial states are listed");
-    await click(".blog-dashboard__filters button:nth-child(2)");
+    await select(".d-filter-controls__dropdown", "drafts");
     assert.dom('[data-topic-id="123"]').exists("private drafts are shown");
     assert
       .dom('[data-topic-id="124"]')
       .doesNotExist("published articles are filtered out");
-    await click(".blog-dashboard__filters button:nth-child(3)");
+    await select(".d-filter-controls__dropdown", "published");
     assert.dom('[data-topic-id="124"]').exists("published articles are shown");
     assert
       .dom('[data-topic-id="123"]')
       .doesNotExist("private drafts are filtered out");
-    await click(".blog-dashboard__filters button:nth-child(4)");
+    await select(".d-filter-controls__dropdown", "unpublished");
     assert
       .dom(".blog-dashboard__row")
       .doesNotExist("unpublished filtering can return an empty result");
+    assert
+      .dom(".d-filter-controls__no-results")
+      .includesText(
+        "No matching articles",
+        "filtered lists explain the result"
+      );
+    assert
+      .dom(".empty-state")
+      .doesNotExist("the no-articles state is only for an empty blog");
+    await click(".d-filter-controls__no-results .btn");
+    assert
+      .dom(".blog-dashboard__row")
+      .exists({ count: 2 }, "resetting the filters lists everything again");
   });
 
   test("separates published articles from private correction work", async function (assert) {
@@ -239,34 +251,49 @@ acceptance("Blog editor", function (needs) {
     );
   });
 
-  test("marks exactly one article filter as selected", async function (assert) {
-    await visit("/blog-editor");
-    const filters = ".blog-dashboard__filters";
+  test("keeps filters in the URL and restores them on reload", async function (assert) {
+    const requests = [];
+    pretender.get("/blog-editor.json", (request) => {
+      requests.push({ ...request.queryParams });
+      return response({ topics: [draft] });
+    });
+    await visit("/blog-editor?status=published&q=story");
+    assert.deepEqual(
+      requests[0],
+      { filter: "published", q: "story" },
+      "the first request uses the filters from the URL"
+    );
     assert
-      .dom(`${filters} button[aria-pressed="true"]`)
-      .hasText("All articles", "all articles is selected initially");
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("published", "the status filter is restored");
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("story", "the search is restored");
 
-    for (const [index, label] of [
-      "Drafts",
-      "Published",
-      "Not on the blog",
-      "All articles",
-    ].entries()) {
-      const position = index === 3 ? 1 : index + 2;
-      await click(`${filters} button:nth-child(${position})`);
-      assert
-        .dom(`${filters} button[aria-pressed="true"]`)
-        .exists({ count: 1 }, "exactly one filter is selected");
-      assert
-        .dom(`${filters} button[aria-pressed="true"]`)
-        .hasText(label, "the clicked filter stays selected");
-      assert
-        .dom(`${filters} button[aria-pressed="false"]`)
-        .exists({ count: 3 }, "the other filters are explicitly unselected");
-    }
+    await select(".d-filter-controls__dropdown", "drafts");
+    assert.strictEqual(
+      currentURL(),
+      "/blog-editor?status=drafts&q=story",
+      "changing the status updates the URL"
+    );
   });
 
-  test("searches the server and preserves filters through load more and refresh", async function (assert) {
+  test("ignores an unknown status in the URL", async function (assert) {
+    const requests = [];
+    pretender.get("/blog-editor.json", (request) => {
+      requests.push({ ...request.queryParams });
+      return response({ topics: [draft] });
+    });
+    await visit("/blog-editor?status=banana");
+    assert.strictEqual(
+      requests[0].filter,
+      "all",
+      "an unknown status falls back to all articles"
+    );
+    assert.dom(".d-filter-controls__dropdown").hasValue("all");
+  });
+
+  test("searches the server and preserves filters through load more", async function (assert) {
     const requests = [];
     pretender.get("/blog-editor.json", (request) => {
       requests.push({ ...request.queryParams });
@@ -281,9 +308,8 @@ acceptance("Blog editor", function (needs) {
       });
     });
     await visit("/blog-editor");
-    await click(".blog-dashboard__filters button:nth-child(2)");
-    await formKit(".blog-dashboard__search").field("q").fillIn("workflow");
-    await formKit(".blog-dashboard__search").submit();
+    await select(".d-filter-controls__dropdown", "drafts");
+    await fillIn(".d-filter-controls__input", "workflow");
     assert.deepEqual(
       requests.at(-1),
       { filter: "drafts", q: "workflow" },
@@ -301,14 +327,14 @@ acceptance("Blog editor", function (needs) {
     assert
       .dom("[data-blog-load-more]")
       .doesNotExist("loading stops when there are no more matches");
-    await click(".blog-dashboard__links button");
-    assert.deepEqual(
-      requests.at(-1),
-      { filter: "drafts", q: "workflow" },
-      "refresh keeps filters and returns to the first page"
-    );
+  });
+
+  test("shows an empty state when there are no articles at all", async function (assert) {
+    pretender.get("/blog-editor.json", () => response({ topics: [] }));
+    await visit("/blog-editor");
+    assert.dom(".empty-state").exists("an empty blog explains itself");
     assert
-      .dom(".blog-dashboard__row")
-      .exists({ count: 1 }, "refresh replaces previous pages");
+      .dom(".d-filter-controls__no-results")
+      .doesNotExist("there is nothing to reset");
   });
 });
