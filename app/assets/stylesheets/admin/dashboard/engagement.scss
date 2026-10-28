@@ -188,7 +188,7 @@
     }
 
     &.--returning {
-      background: var(--tertiary-medium);
+      background: var(--d-sys-color-background-accent-subtle);
     }
 
     &.--staff {
@@ -212,7 +212,7 @@
     }
 
     &.--group-4 {
-      background: var(--success-medium);
+      background: var(--d-sys-color-background-success-subtle);
     }
 
     &.--group-5 {
@@ -242,7 +242,7 @@
   &__signups {
     margin-left: auto;
     font-size: var(--font-down-3);
-    border-radius: var(--d-border-radius-pill);
+    border-radius: var(--d-sys-border-radius-full);
     padding: var(--space-half) var(--space-2);
     background: var(--primary-low);
     white-space: nowrap;

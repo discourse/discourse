@@ -9,7 +9,7 @@
   margin-bottom: var(--space-8);
   position: relative;
   z-index: z("base");
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &:has(.select-kit.is-expanded) {
     z-index: z("dropdown");
@@ -17,7 +17,7 @@
 
   @include viewport.until(sm) {
     --review-item-padding: var(--space-2);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     flex-direction: column;
   }
 
@@ -27,7 +27,7 @@
     min-width: 0;
 
     @include viewport.from(sm) {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
     }
 
     @include viewport.until(sm) {
@@ -69,7 +69,7 @@
     }
 
     .post-action-feedback-svg {
-      fill: var(--success-medium);
+      fill: var(--d-sys-color-background-success-subtle);
       right: unset;
       left: -0.5em;
       top: 0.05em;
@@ -90,19 +90,21 @@
 
     .reviewable-action,
     .reject-post summary {
-      background-color: var(--d-button-default-bg-color);
-      color: var(--d-button-default-text-color);
+      background-color: var(--d-comp-DButton-color-background-default);
+      color: var(--d-comp-DButton-color-text-default);
 
       .d-icon {
-        color: var(--d-button-default-icon-color);
+        color: var(--d-comp-DButton-color-icon-default);
       }
 
       &:hover {
-        background-color: var(--d-button-default-bg-color--hover);
-        color: var(--d-button-default-text-color--hover);
+        background-color: var(
+          --d-comp-DButton-color-background-default-hovered
+        );
+        color: var(--d-comp-DButton-color-text-default-hovered);
 
         .d-icon {
-          color: var(--d-button-default-icon-color--hover);
+          color: var(--d-comp-DButton-color-icon-default-hovered);
         }
       }
     }
@@ -116,7 +118,7 @@
       margin-bottom: var(--space-3);
 
       &:not(:last-child) {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -132,7 +134,7 @@
   }
 
   &__flag-summary {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__header {
@@ -143,8 +145,8 @@
     background-color: var(--primary);
     padding: var(--space-3) var(--review-item-padding);
     color: var(--secondary);
-    border-radius: calc(var(--d-border-radius) - 1px)
-      calc(var(--d-border-radius) - 1px) 0 0;
+    border-radius: calc(var(--d-sys-border-radius-md) - 1px)
+      calc(var(--d-sys-border-radius-md) - 1px) 0 0;
 
     @include viewport.until(sm) {
       display: grid;
@@ -193,7 +195,7 @@
     row-gap: var(--space-3);
     align-items: start;
     padding: var(--space-5) var(--space-4);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   .reviewable-penalty-icon {
@@ -266,7 +268,7 @@
       transition-delay: 0.5s;
       background: var(--primary-very-low);
       padding: var(--review-item-padding);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       img:not(.avatar, .emoji) {
         max-width: 100%;
@@ -332,7 +334,7 @@
     // The border goes on the nav, not the ul: the ul is the strip's scroller
     // and its edge fade would mask a border painted there.
     .horizontal-overflow-nav {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     .nav-pills.action-list {
@@ -460,7 +462,7 @@
     align-items: start;
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -505,7 +507,7 @@
   flex-direction: column;
   gap: var(--space-2);
   padding-top: var(--space-2);
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
 }
 
 .review-resources {
@@ -546,14 +548,14 @@
     padding-block: var(--space-4);
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     @include viewport.until(sm) {
       padding: var(--space-2) 0;
 
       &:last-child {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -631,7 +633,7 @@
       justify-content: center;
       width: 2rem;
       height: 2rem;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary-medium);
       background: transparent;
       border: none;
@@ -640,7 +642,7 @@
       margin-top: calc(var(--space-1) * -1);
 
       &:hover {
-        background: var(--danger-low);
+        background: var(--d-sys-color-background-danger-subtlest);
         color: var(--danger);
       }
 
@@ -671,7 +673,7 @@
 // Reviewable Note Form Styles
 .reviewable-note-form {
   background-color: var(--primary-very-low);
-  border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
+  border-radius: 0 0 var(--d-sys-border-radius-md) var(--d-sys-border-radius-md);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
 

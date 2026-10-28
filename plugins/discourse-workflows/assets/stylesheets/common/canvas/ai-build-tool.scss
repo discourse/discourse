@@ -42,7 +42,7 @@
     padding: var(--space-3);
     overflow-y: auto;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
     box-shadow: 0 10px 32px rgb(0, 0, 0, 0.16);
 
@@ -134,17 +134,17 @@
     text-transform: uppercase;
 
     &.is-working {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       color: var(--tertiary);
     }
 
     &.is-ready {
-      background: var(--success-low);
+      background: var(--d-sys-color-background-success-subtlest);
       color: var(--success);
     }
 
     &.is-error {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
       color: var(--danger);
     }
   }
@@ -173,7 +173,7 @@
     min-height: 11rem;
     box-sizing: border-box;
     resize: vertical;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__ai-panel-actions,
@@ -278,7 +278,7 @@
     gap: var(--space-2);
     padding: var(--space-3);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
 
     h5 {
@@ -302,7 +302,7 @@
     width: 100%;
     padding: var(--space-2);
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
     color: var(--primary);
     font: inherit;
@@ -324,11 +324,11 @@
     &:hover,
     &.is-selected {
       border-color: var(--tertiary);
-      box-shadow: 0 0 0 1px var(--tertiary-low);
+      box-shadow: 0 0 0 1px var(--d-sys-color-background-accent-subtlest);
     }
 
     &.is-selected {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
   }
 
@@ -350,7 +350,7 @@
     min-height: 4rem;
     box-sizing: border-box;
     resize: vertical;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__ai-progress {
@@ -393,7 +393,7 @@
     margin-top: 0.35rem;
     border-radius: 50%;
     background: var(--tertiary);
-    box-shadow: 0 0 0 3px var(--tertiary-low);
+    box-shadow: 0 0 0 3px var(--d-sys-color-background-accent-subtlest);
   }
 
   &__ai-response,
@@ -404,7 +404,7 @@
     padding: var(--space-3);
     overflow-wrap: anywhere;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
 
     h4,
@@ -435,8 +435,8 @@
   }
 
   &__ai-response--error {
-    border-color: var(--danger-low-mid);
-    background: var(--danger-low);
+    border-color: var(--d-sys-color-background-danger-subtle);
+    background: var(--d-sys-color-background-danger-subtlest);
     color: var(--danger);
   }
 
@@ -450,7 +450,7 @@
   &__ai-code-preview {
     overflow: hidden;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
 
     pre {
@@ -497,10 +497,10 @@
 @keyframes workflow-ai-progress-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 3px var(--tertiary-low);
+    box-shadow: 0 0 0 3px var(--d-sys-color-background-accent-subtlest);
   }
 
   50% {
-    box-shadow: 0 0 0 6px var(--tertiary-low);
+    box-shadow: 0 0 0 6px var(--d-sys-color-background-accent-subtlest);
   }
 }

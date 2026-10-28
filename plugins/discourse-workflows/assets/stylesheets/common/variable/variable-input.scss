@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 100%;
   border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   background: var(--secondary);
   box-sizing: border-box;
 
@@ -54,7 +54,7 @@
     }
 
     .cm-selectionBackground {
-      background: var(--tertiary-low) !important;
+      background: var(--d-sys-color-background-accent-subtlest) !important;
     }
 
     .cm-content {
@@ -71,10 +71,10 @@
       z-index: z("modal", "tooltip") !important;
       background: var(--secondary);
       border: 1px solid var(--primary-low-mid);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary);
       font-size: var(--font-down-2);
-      box-shadow: var(--shadow-dropdown);
+      box-shadow: var(--d-sys-shadow-overlay);
     }
 
     .cm-tooltip-autocomplete {
@@ -87,7 +87,7 @@
       }
 
       li[aria-selected] {
-        background: var(--tertiary-low);
+        background: var(--d-sys-color-background-accent-subtlest);
         color: var(--primary);
       }
     }
@@ -215,7 +215,11 @@
     }
 
     .cm-wf-warning-expression {
-      background: color-mix(in srgb, var(--highlight-medium) 40%, transparent);
+      background: color-mix(
+        in srgb,
+        var(--d-sys-color-background-highlight-subtle) 40%,
+        transparent
+      );
       border-radius: 2px;
     }
 
@@ -232,9 +236,10 @@
       padding: 1px 0.5em;
 
       // Inset shadow, not a border: a border would add to the pill's height.
-      box-shadow: inset 0 0 0 1px var(--tertiary-low-mid, var(--tertiary-low));
+      box-shadow: inset 0 0 0 1px
+        var(--tertiary-low-mid, var(--d-sys-color-background-accent-subtlest));
       border-radius: 1em;
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       color: var(--tertiary-hover);
       font-size: var(--font-down-1);
       line-height: 1.15;
@@ -340,8 +345,8 @@
   .cm-tooltip-hover {
     background: var(--secondary) !important;
     border: 1px solid var(--primary-low-mid) !important;
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-dropdown);
+    border-radius: var(--d-sys-border-radius-md);
+    box-shadow: var(--d-sys-shadow-overlay);
   }
 
   .cm-wf-hover-tooltip {
@@ -517,7 +522,7 @@
     &:hover,
     &:focus,
     &.--active {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
 
     &.--current .workflows-reference-picker__name {
@@ -572,7 +577,7 @@
 
     &:hover,
     &:focus {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       color: var(--tertiary-hover);
 
       .d-icon {

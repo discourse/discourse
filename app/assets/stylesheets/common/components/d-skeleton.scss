@@ -54,7 +54,10 @@
     // compress it.
     flex-shrink: 0;
     background: var(--d-skeleton-fill, var(--primary-very-low));
-    border-radius: var(--d-skeleton-radius, var(--d-border-radius, 0.25em));
+    border-radius: var(
+      --d-skeleton-radius,
+      var(--d-sys-border-radius-md, 0.25em)
+    );
 
     @media (prefers-reduced-motion: no-preference) {
       &.placeholder-animation {

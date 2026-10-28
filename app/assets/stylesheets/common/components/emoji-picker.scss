@@ -60,7 +60,7 @@
     &:hover,
     &:focus {
       background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       transform: scale(1.25);
     }
   }
@@ -78,7 +78,7 @@
   &__filter {
     width: 100%;
     margin: 0.5rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-sizing: border-box;
 
     input {
@@ -198,7 +198,7 @@
     display: flex;
     position: sticky;
     top: -1px; // to avoid an ugly sub 1px gap on retina
-    background: rgb(var(--secondary-rgb), 0.95);
+    background: color-mix(in srgb, var(--secondary) 95%, transparent);
     z-index: 2;
   }
 
@@ -224,7 +224,7 @@
     background: none;
     margin-right: 0.5rem;
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       visibility: hidden;

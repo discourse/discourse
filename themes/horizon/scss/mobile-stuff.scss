@@ -113,7 +113,7 @@
 
       .badge-category__wrapper {
         font-size: var(--font-down-2-rem);
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
         padding: var(--space-1) var(--space-2);
         background-color: var(--badge-category-bg);
         border: 1px solid var(--badge-category-bg);
@@ -135,7 +135,7 @@
         font-size: var(--font-down-2-rem);
         padding: var(--space-1) var(--space-2);
         gap: var(--space-1);
-        border-radius: var(--d-border-radius-large);
+        border-radius: var(--d-sys-border-radius-lg);
         border: 1px solid var(--primary-low-mid);
         background: var(--secondary);
       }
@@ -198,7 +198,7 @@
     .btn-primary.progress-back {
       border-radius: 0;
       background: var(--secondary);
-      border: 1px solid var(--tertiary-low);
+      border: 1px solid var(--d-sys-color-background-accent-subtlest);
       color: var(--accent-color);
       padding: var(--space-2) var(--space-4);
 
@@ -211,7 +211,7 @@
   .topic-admin-menu-trigger {
     border-radius: 0;
     background: var(--secondary);
-    border: 1px solid var(--tertiary-low);
+    border: 1px solid var(--d-sys-color-background-accent-subtlest);
   }
 }
 

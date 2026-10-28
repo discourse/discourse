@@ -77,7 +77,7 @@
   }
 
   &__related-item + &__related-item {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__follow-up {
@@ -167,7 +167,7 @@
 
 .ai-search-menu-answer {
   flex-shrink: 0;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 }
 
 // Results sit beside an answer that summarises them, so each one is held to a
@@ -208,8 +208,8 @@
   max-height: calc(100vh - var(--header-offset, 0px) - var(--space-8));
   overflow-y: auto;
   padding: var(--space-4);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius-large);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-lg);
 
   &__title {
     margin: 0 0 var(--space-3);
@@ -231,7 +231,7 @@
   }
 
   &__item + &__item {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__empty {
@@ -254,7 +254,7 @@
 
 @keyframes ai-search-highlight {
   from {
-    background: var(--highlight-low);
+    background: var(--d-sys-color-background-highlight-subtlest);
   }
 }
 
@@ -298,7 +298,7 @@
     min-width: 1.5em;
     height: 1.5em;
     padding: 0 0.35em;
-    border-radius: var(--d-border-radius-pill);
+    border-radius: var(--d-sys-border-radius-full);
     font-size: var(--font-down-2);
     font-weight: bold;
     line-height: 1;

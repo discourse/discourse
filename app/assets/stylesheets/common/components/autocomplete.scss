@@ -6,7 +6,7 @@
   min-width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: var(--shadow-dropdown);
+  box-shadow: var(--d-sys-shadow-overlay);
   border-radius: 8px;
 
   @include viewport.from(sm) {
@@ -40,8 +40,8 @@
         }
 
         &.selected {
-          background-color: var(--d-selected);
-          color: var(--d-selected-text-color);
+          background-color: var(--d-sys-color-background-default-selected);
+          color: var(--d-sys-color-text-default-selected);
         }
 
         .avatar {

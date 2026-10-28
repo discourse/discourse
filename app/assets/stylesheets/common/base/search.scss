@@ -126,7 +126,7 @@
       margin: 0 10%;
       padding-block-start: var(--space-4);
       font-size: var(--font-up-2);
-      font-weight: var(--token-font-weight-semibold);
+      font-weight: var(--d-sys-font-weight-semibold);
 
       @include viewport.until(lg) {
         margin: 0;
@@ -139,7 +139,7 @@
       }
 
       span.term {
-        background: var(--tertiary-low);
+        background: var(--d-sys-color-background-accent-subtlest);
       }
     }
 
@@ -150,7 +150,7 @@
       margin: 0 10%;
       padding-block: var(--space-4);
       background: var(--secondary); // needs background for bulk select sticky
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       @include viewport.until(lg) {
         padding: 1rem 0 0 0;
@@ -199,7 +199,7 @@
 
   .search-notice .fps-invalid {
     padding: 0.5em;
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     border: 1px solid var(--danger-medium);
     color: var(--danger);
   }
@@ -268,9 +268,9 @@
 
     .search-advanced-filters {
       margin-top: var(--space-4);
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: var(--space-6);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       min-width: 0;
 
       .second-search-button {

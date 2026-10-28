@@ -1,0 +1,7 @@
+{
+  "--d-sys-border-radius-sm": {
+    "value": "calc(var(--d-sys-border-radius-md) / 2)",
+    "file": "app/assets/stylesheets/common/foundation/base.scss",
+    "after": "--d-sys-border-radius-md"
+  }
+}

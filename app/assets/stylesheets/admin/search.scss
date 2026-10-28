@@ -19,7 +19,7 @@
     box-sizing: border-box;
     height: 42px;
     padding: 0 var(--space-2);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus,
     &:focus-within {
@@ -46,7 +46,7 @@
 
 // Results
 .admin-search__result {
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
   display: block;
 
   &:first-child {

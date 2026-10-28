@@ -1,0 +1,10 @@
+{
+  "--primary-rgb": "--primary",
+  "--primary-low-rgb": "--primary-low",
+  "--primary-very-low-rgb": "--primary-very-low",
+  "--secondary-rgb": "--secondary",
+  "--header_background-rgb": "--header_background",
+  "--tertiary-rgb": "--tertiary",
+  "--highlight-rgb": "--highlight",
+  "--success-rgb": "--success"
+}

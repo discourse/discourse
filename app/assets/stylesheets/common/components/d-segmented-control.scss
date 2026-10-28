@@ -6,7 +6,7 @@
   overflow: hidden;
   background: var(--primary-very-low);
   gap: var(--space-2);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   padding: var(--space-1) var(--space-2);
   height: var(--space-9);
 
@@ -29,7 +29,7 @@
     height: calc(100% - var(--space-2));
     transform: translateX(var(--slider-x, 0));
     background: var(--secondary);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-shadow: 0 1px 6px rgb(0, 0, 0, 0.1);
     pointer-events: none;
 
@@ -92,7 +92,7 @@
     font-weight: normal;
     padding: var(--space-1) var(--space-4);
     margin: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     color: var(--primary-high);
     height: var(--space-5);
     cursor: pointer;

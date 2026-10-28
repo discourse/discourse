@@ -1,9 +1,9 @@
 code {
   padding: 2px 4px;
-  background: var(--inline-code-bg);
+  background: var(--d-comp-InlineCode-color-background);
   white-space: pre-wrap;
   color: var(--primary);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: 0.875rem;
   line-height: calc((13 + 4) / 13);
 }
@@ -16,7 +16,7 @@ pre > code {
   display: block;
   padding: 12px;
   max-height: 500px;
-  background: var(--hljs-bg);
+  background: var(--d-comp-CodeBlock-color-background);
   color: var(--primary-very-high);
 
   // wrapping is the `pre`'s call; a value here would override it
@@ -40,13 +40,13 @@ h6 code {
 .hljs-doctag,
 .hljs-code,
 .hljs-meta {
-  color: var(--hljs-comment);
+  color: var(--d-comp-CodeBlock-comment-color-text);
   font-style: italic;
 }
 
 .hljs-keyword,
 .hljs-subst {
-  color: var(--hljs-keyword);
+  color: var(--d-comp-CodeBlock-keyword-color-text);
 }
 
 .hljs-number {
@@ -64,11 +64,11 @@ h6 code {
 .hljs-template-tag,
 .hljs-template-variable,
 .hljs-type {
-  color: var(--hljs-string);
+  color: var(--d-comp-CodeBlock-string-color-text);
 }
 
 .hljs-title {
-  color: var(--hljs-title);
+  color: var(--d-comp-CodeBlock-title-color-text);
 }
 
 .hljs-quote,
@@ -76,7 +76,7 @@ h6 code {
 .hljs-selector-pseudo,
 .hljs-selector-tag,
 .hljs-link {
-  color: var(--hljs-string);
+  color: var(--d-comp-CodeBlock-string-color-text);
 }
 
 .hljs-subst {
@@ -85,33 +85,33 @@ h6 code {
 
 .hljs-literal,
 .hljs-class .hljs-title {
-  color: var(--hljs-title);
+  color: var(--d-comp-CodeBlock-title-color-text);
 }
 
 .hljs-name {
-  color: var(--hljs-name);
+  color: var(--d-comp-CodeBlock-name-color-text);
 }
 
 .hljs-punctuation {
-  color: var(--hljs-punctuation);
+  color: var(--d-comp-CodeBlock-punctuation-color-text);
 }
 
 .hljs-attr {
-  color: var(--hljs-attr);
+  color: var(--d-comp-CodeBlock-attr-color-text);
 }
 
 .hljs-selector-attr,
 .hljs-selector-class,
 .hljs-selector-id {
-  color: var(--hljs-attr);
+  color: var(--d-comp-CodeBlock-attr-color-text);
 }
 
 .hljs-variable {
-  color: var(--hljs-variable);
+  color: var(--d-comp-CodeBlock-variable-color-text);
 }
 
 .hljs-attribute {
-  color: var(--hljs-attribute);
+  color: var(--d-comp-CodeBlock-attribute-color-text);
 }
 
 .hljs-regexp {
@@ -119,33 +119,33 @@ h6 code {
 }
 
 .hljs-symbol {
-  color: var(--hljs-symbol);
+  color: var(--d-comp-CodeBlock-symbol-color-text);
 }
 
 .hljs-built_in {
-  color: var(--hljs-name);
+  color: var(--d-comp-CodeBlock-name-color-text);
 }
 
 .hljs-deletion {
-  background: var(--danger-low);
-  color: var(--hljs-deletion);
+  background: var(--d-sys-color-background-danger-subtlest);
+  color: var(--d-comp-CodeBlock-deletion-color-text);
 }
 
 .hljs-addition {
-  background: var(--success-low);
-  color: var(--hljs-addition);
+  background: var(--d-sys-color-background-success-subtlest);
+  color: var(--d-comp-CodeBlock-addition-color-text);
 }
 
 .hljs-section {
-  color: var(--hljs-name);
+  color: var(--d-comp-CodeBlock-name-color-text);
 }
 
 .hljs-bullet {
-  color: var(--hljs-attribute);
+  color: var(--d-comp-CodeBlock-attribute-color-text);
 }
 
 .hljs-emphasis {
-  color: var(--hljs-comment);
+  color: var(--d-comp-CodeBlock-comment-color-text);
   font-style: italic;
 }
 

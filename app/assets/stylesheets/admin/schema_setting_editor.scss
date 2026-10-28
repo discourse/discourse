@@ -22,7 +22,7 @@
       }
 
       .schema-setting-editor__tree {
-        border: 1px solid var(--content-border-color);
+        border: 1px solid var(--d-sys-color-border-default);
         overflow: auto;
         margin: 0 0 2em 0;
 
@@ -55,7 +55,7 @@
         .schema-setting-editor__tree-node.--back-btn {
           cursor: pointer;
           width: 100%;
-          border-bottom: 1px solid var(--content-border-color);
+          border-bottom: 1px solid var(--d-sys-color-border-default);
           color: var(--primary-700);
 
           &:hover {
@@ -119,7 +119,7 @@
             }
 
             &.--add-button {
-              border-top: 1px solid var(--content-border-color);
+              border-top: 1px solid var(--d-sys-color-border-default);
             }
           }
 

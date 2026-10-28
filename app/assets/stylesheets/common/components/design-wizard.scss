@@ -26,7 +26,7 @@ $dw-button-default-border: #d3d3d3;
   --d-content-background: #{$dw-secondary};
   --tertiary: #{$dw-tertiary};
   --tertiary-hover: #{$dw-tertiary-hover};
-  --tertiary-low: #{$dw-selected};
+  --d-sys-color-background-accent-subtlest: #{$dw-selected};
   --primary-very-low: #{$dw-primary-very-low};
   --primary-low: #{$dw-primary-low};
   --primary-low-mid: #{$dw-primary-low-mid};
@@ -34,49 +34,49 @@ $dw-button-default-border: #d3d3d3;
   --primary-high: #{$dw-primary-high};
   --primary-very-high: #{$dw-primary-very-high};
   --d-hover: #{$dw-hover};
-  --d-link-color: #{$dw-tertiary};
+  --d-sys-color-text-link: #{$dw-tertiary};
   --primary-100: #{$dw-hover};
   --primary-200: #{$dw-primary-low};
   --tertiary-300: #{$dw-selected};
-  --tertiary-high: #{$dw-tertiary-high};
+  --d-sys-color-background-accent: #{$dw-tertiary-high};
 
   // Theme-defined button accents, including Horizon's button overrides.
   --accent-color: #{$dw-tertiary};
   --accent-text-color: #{$dw-secondary};
   --button-box-shadow: #{$dw-selected};
-  --content-border-color: #{$dw-primary-low};
+  --d-sys-color-border-default: #{$dw-primary-low};
 
   // Default buttons keep the modernized Foundation treatment.
-  --d-button-default-text-color: #{$dw-primary-very-high};
-  --d-button-default-text-color--hover: #{$dw-primary};
-  --d-button-default-bg-color: #{$dw-secondary};
-  --d-button-default-bg-color--hover: #{$dw-primary-low};
-  --d-button-default-icon-color: #{$dw-primary-very-high};
-  --d-button-default-icon-color--hover: #{$dw-primary};
+  --d-comp-DButton-color-text-default: #{$dw-primary-very-high};
+  --d-comp-DButton-color-text-default-hovered: #{$dw-primary};
+  --d-comp-DButton-color-background-default: #{$dw-secondary};
+  --d-comp-DButton-color-background-default-hovered: #{$dw-primary-low};
+  --d-comp-DButton-color-icon-default: #{$dw-primary-very-high};
+  --d-comp-DButton-color-icon-default-hovered: #{$dw-primary};
   --d-button-default-border: 1px solid #{$dw-button-default-border};
   --d-button-default-border--hover: 1px solid #{$dw-primary-low-mid};
-  --d-button-primary-text-color: #{$dw-secondary};
-  --d-button-primary-text-color--hover: #{$dw-secondary};
-  --d-button-primary-bg-color: #{$dw-tertiary};
-  --d-button-primary-bg-color--hover: #{$dw-tertiary-hover};
-  --d-button-primary-icon-color: #{$dw-secondary};
-  --d-button-primary-icon-color--hover: #{$dw-secondary};
-  --d-button-flat-text-color: #{$dw-tertiary};
-  --d-button-flat-text-color--hover: #{$dw-primary};
-  --d-button-flat-icon-color: #{$dw-primary-low-mid};
-  --d-button-flat-icon-color--hover: #{$dw-primary};
-  --d-button-flat-bg-color: transparent;
-  --d-button-flat-bg-color--hover: #{$dw-hover};
-  --d-button-flat-bg-color--focus: #{$dw-hover};
-  --d-button-flat-text-color--disabled: #{$dw-primary};
-  --d-button-flat-close-text-color: #{$dw-primary-high};
-  --d-button-flat-close-bg-color: transparent;
-  --d-button-flat-close-icon-color: #{$dw-primary-high};
-  --d-button-flat-close-icon-color--hover: #{$dw-primary};
-  --d-button-transparent-text-color: #{$dw-primary};
-  --d-button-transparent-text-color--hover: #{$dw-tertiary-hover};
-  --d-button-transparent-icon-color: #{$dw-primary-high};
-  --d-button-transparent-icon-color--hover: #{$dw-tertiary-hover};
+  --d-comp-DButton-color-text-primary: #{$dw-secondary};
+  --d-comp-DButton-color-text-primary-hovered: #{$dw-secondary};
+  --d-comp-DButton-color-background-primary: #{$dw-tertiary};
+  --d-comp-DButton-color-background-primary-hovered: #{$dw-tertiary-hover};
+  --d-comp-DButton-color-icon-primary: #{$dw-secondary};
+  --d-comp-DButton-color-icon-primary-hovered: #{$dw-secondary};
+  --d-comp-DButton-color-text-flat: #{$dw-tertiary};
+  --d-comp-DButton-color-text-flat-hovered: #{$dw-primary};
+  --d-comp-DButton-color-icon-flat: #{$dw-primary-low-mid};
+  --d-comp-DButton-color-icon-flat-hovered: #{$dw-primary};
+  --d-comp-DButton-color-background-flat: transparent;
+  --d-comp-DButton-color-background-flat-hovered: #{$dw-hover};
+  --d-comp-DButton-color-background-flat-focused: #{$dw-hover};
+  --d-comp-DButton-color-text-flat-disabled: #{$dw-primary};
+  --d-comp-DButton-color-text-close: #{$dw-primary-high};
+  --d-comp-DButton-color-background-close: transparent;
+  --d-comp-DButton-color-icon-close: #{$dw-primary-high};
+  --d-comp-DButton-color-icon-close-hovered: #{$dw-primary};
+  --d-comp-DButton-color-text-transparent: #{$dw-primary};
+  --d-comp-DButton-color-text-transparent-hovered: #{$dw-tertiary-hover};
+  --d-comp-DButton-color-icon-transparent: #{$dw-primary-high};
+  --d-comp-DButton-color-icon-transparent-hovered: #{$dw-tertiary-hover};
 
   // rem-based, so the previewed theme's root font size would otherwise rescale
   // the tool's spacing despite the pinned font-size below
@@ -121,10 +121,10 @@ $dw-button-default-border: #d3d3d3;
   box-sizing: border-box;
   width: min(27em, 100vw);
   background: var(--secondary);
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-inline-end: none;
-  border-start-start-radius: var(--d-border-radius-large);
-  box-shadow: var(--shadow-card);
+  border-start-start-radius: var(--d-sys-border-radius-lg);
+  box-shadow: var(--d-sys-shadow-raised);
 
   @include d-animation(design-wizard-slide-in, 0.25s, ease-out);
 
@@ -139,8 +139,8 @@ $dw-button-default-border: #d3d3d3;
     inset-inline: 0;
     width: 100%;
     max-height: 65vh;
-    border-inline-end: 1px solid var(--content-border-color);
-    border-start-end-radius: var(--d-border-radius-large);
+    border-inline-end: 1px solid var(--d-sys-color-border-default);
+    border-start-end-radius: var(--d-sys-border-radius-lg);
 
     html[dir="rtl"] & {
       --design-wizard-slide-out: translateY(100%);
@@ -211,7 +211,7 @@ $dw-button-default-border: #d3d3d3;
     font-size: var(--font-down-1);
     color: var(--primary-medium);
     background: var(--primary-100);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__sections {
@@ -253,7 +253,7 @@ $dw-button-default-border: #d3d3d3;
     font-size: var(--font-down-2);
     color: var(--primary-medium);
     background: var(--primary-100);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__theme-cards {
@@ -283,8 +283,8 @@ $dw-button-default-border: #d3d3d3;
     &.--without-screenshot {
       box-sizing: border-box;
       padding: var(--space-3);
-      border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
+      border: 1px solid var(--d-sys-color-border-default);
+      border-radius: var(--d-sys-border-radius-md);
 
       &.--selected,
       &:focus-within,
@@ -321,8 +321,8 @@ $dw-button-default-border: #d3d3d3;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     background: var(--primary-very-low);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--loading::after {
       position: absolute;
@@ -385,7 +385,7 @@ $dw-button-default-border: #d3d3d3;
     font-weight: 700;
     color: var(--secondary);
     background: var(--tertiary);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       color: currentcolor;
@@ -408,23 +408,23 @@ $dw-button-default-border: #d3d3d3;
     font-size: var(--font-down-2);
     font-weight: 600;
     background: none;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     cursor: pointer;
 
     &:first-child {
-      border-start-start-radius: var(--d-border-radius);
-      border-end-start-radius: var(--d-border-radius);
+      border-start-start-radius: var(--d-sys-border-radius-md);
+      border-end-start-radius: var(--d-sys-border-radius-md);
     }
 
     &:last-child {
-      border-start-end-radius: var(--d-border-radius);
-      border-end-end-radius: var(--d-border-radius);
+      border-start-end-radius: var(--d-sys-border-radius-md);
+      border-end-end-radius: var(--d-sys-border-radius-md);
       border-inline-start: none;
     }
 
     &.--active {
       color: var(--tertiary);
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
 
     &:disabled {
@@ -443,8 +443,8 @@ $dw-button-default-border: #d3d3d3;
   &__style-block,
   &__swatch {
     background: none;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     cursor: pointer;
 
     &.--selected {
@@ -468,7 +468,7 @@ $dw-button-default-border: #d3d3d3;
   &__swatch-preview {
     display: block;
     height: 2.5em;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
   }
 
   &__swatch-name {
@@ -495,8 +495,8 @@ $dw-button-default-border: #d3d3d3;
     gap: var(--space-3);
     align-items: center;
     padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__switch-row-title {
@@ -528,7 +528,7 @@ $dw-button-default-border: #d3d3d3;
     justify-content: space-between;
     width: 100%;
     padding-block: var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--content-background);
 
     &:hover {
@@ -564,8 +564,8 @@ $dw-button-default-border: #d3d3d3;
     padding: var(--space-1);
     overflow: hidden;
     background: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--token-radius-small);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--icon {
       align-items: center;
@@ -622,8 +622,8 @@ $dw-button-default-border: #d3d3d3;
     padding: var(--space-2);
     overflow: hidden;
     background: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--token-radius-small);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--boxes {
       display: grid;
@@ -651,8 +651,8 @@ $dw-button-default-border: #d3d3d3;
     align-items: center;
     justify-content: space-between;
     padding: var(--space-1);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--token-radius-small);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-sm);
   }
 
   &__mock-card {
@@ -662,8 +662,8 @@ $dw-button-default-border: #d3d3d3;
     padding-block: var(--space-1);
     padding-inline: var(--space-5) var(--space-1);
     background: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
 
     .design-wizard__mock-avatar {
       position: absolute;
@@ -676,8 +676,8 @@ $dw-button-default-border: #d3d3d3;
       width: 1.125em;
       height: 0.25em;
       margin-block-start: var(--space-1);
-      background: var(--tertiary-low);
-      border-radius: var(--token-radius-small);
+      background: var(--d-sys-color-background-accent-subtlest);
+      border-radius: var(--d-sys-border-radius-sm);
     }
   }
 
@@ -708,7 +708,7 @@ $dw-button-default-border: #d3d3d3;
   &__mock-line {
     display: block;
     height: 0.25em;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--title {
       width: 55%;
@@ -734,7 +734,7 @@ $dw-button-default-border: #d3d3d3;
     flex: none;
     width: 0.5em;
     height: 0.5em;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--c1 {
       background: var(--design-wizard-category-1);
@@ -779,9 +779,9 @@ $dw-button-default-border: #d3d3d3;
     padding: var(--space-1);
     margin: 1px;
     background: var(--secondary);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     border-inline-start-width: 3px;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     .design-wizard__mock-line.--title {
       width: 65%;
@@ -817,8 +817,8 @@ $dw-button-default-border: #d3d3d3;
     gap: var(--space-2);
     padding: var(--space-2);
     background: none;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     cursor: pointer;
 
     &.--selected {
@@ -865,7 +865,7 @@ $dw-button-default-border: #d3d3d3;
     justify-content: flex-end;
     gap: var(--space-2);
     padding-block-start: var(--space-4);
-    border-block-start: 1px solid var(--content-border-color);
+    border-block-start: 1px solid var(--d-sys-color-border-default);
   }
 
   &__step-dots {
@@ -937,7 +937,7 @@ $dw-button-default-border: #d3d3d3;
   align-items: center;
   padding-block: var(--space-4);
   margin-top: var(--space-4);
-  border-block: 1px solid var(--content-border-color);
+  border-block: 1px solid var(--d-sys-color-border-default);
 }
 
 .admin-config-area-themes__design-wizard-description {

@@ -17,7 +17,7 @@
 .tags-list {
   margin-top: 2em;
   padding-bottom: 1em;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 }
 
 #list-area .tags-list h3 {
@@ -76,7 +76,7 @@
   font-size: var(--d-tag-font-size);
   font-weight: var(--d-tag-font-weight);
   padding: 0 var(--d-tag-horizontal-padding);
-  border-radius: var(--d-tag-border-radius);
+  border-radius: var(--d-comp-DDiscourseTag-border-radius);
   background-color: var(--d-tag-background-color);
 
   @include ellipsis;
@@ -433,7 +433,7 @@ body.tags-intersection {
       box-sizing: border-box;
       margin: 0;
       width: 100%;
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
     }
   }
 

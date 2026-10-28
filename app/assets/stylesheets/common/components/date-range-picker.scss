@@ -63,7 +63,7 @@
     }
 
     &.is-active {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       font-weight: 700;
     }
 
@@ -165,7 +165,7 @@
     }
 
     &:hover:not(.--disabled) {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
 
     &.--disabled {
@@ -174,12 +174,15 @@
     }
 
     &.--in-range {
-      background: var(--tertiary-very-low, var(--tertiary-low));
+      background: var(
+        --d-sys-color-background-accent-subtlest,
+        var(--d-sys-color-background-accent-subtlest)
+      );
     }
 
     &.--hover-preview,
     &.--hover-end {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
 
     &.--start,

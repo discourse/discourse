@@ -6,7 +6,7 @@
   &__preview-text {
     padding: 0.5em 0.75em;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     white-space: pre-wrap;
     word-break: break-word;
     max-height: 8em;
@@ -24,14 +24,14 @@
     width: 80px;
     height: 80px;
     object-fit: cover;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     border: 1px solid var(--primary-low);
   }
 
   &__file-name {
     padding: 0.25em 0.5em;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
     word-break: break-all;
   }

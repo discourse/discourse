@@ -51,10 +51,10 @@ html:not(.keyboard-visible).mobile-device {
     flex-direction: column;
     pointer-events: auto;
     box-sizing: border-box;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     margin: 0 auto;
     background-color: var(--secondary);
-    box-shadow: var(--shadow-modal);
+    box-shadow: var(--d-sys-shadow-dialog);
     max-height: var(--modal-max-height, 80vh); // unset, optional theme utility
 
     @include viewport.until(sm) {
@@ -113,7 +113,7 @@ html:not(.keyboard-visible).mobile-device {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     &:not(.--has-primary-action) {
       padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
@@ -210,7 +210,7 @@ html:not(.keyboard-visible).mobile-device {
     flex-wrap: wrap;
     align-items: center;
     padding: 1rem 1.5rem;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     gap: 0.5rem;
 
     @include viewport.until(sm) {

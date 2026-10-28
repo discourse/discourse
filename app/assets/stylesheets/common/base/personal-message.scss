@@ -25,8 +25,8 @@
     margin-bottom: var(--space-4);
 
     @include viewport.until(sm) {
-      border-radius: var(--d-border-radius);
-      border: 1px solid var(--content-border-color);
+      border-radius: var(--d-sys-border-radius-md);
+      border: 1px solid var(--d-sys-color-border-default);
     }
 
     .topic-avatar {
@@ -46,7 +46,7 @@
     .small-action-desc {
       margin-left: calc(var(--pm-padding) * -1);
       padding-left: var(--space-8);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       width: var(--pm-content-width);
 
       @include viewport.until(sm) {
@@ -54,7 +54,7 @@
       }
 
       @include viewport.from(sm) {
-        border: 1px solid var(--content-border-color);
+        border: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -73,8 +73,8 @@
   }
 
   .regular.contents {
-    border-radius: var(--d-border-radius);
-    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-sys-border-radius-md);
+    border: 1px solid var(--d-sys-color-border-default);
     padding-left: var(--pm-padding);
     margin-left: calc(var(--pm-padding) * -1);
 
@@ -134,9 +134,9 @@
 
   .post-notice {
     box-sizing: border-box;
-    border-radius: var(--d-border-radius);
-    background-color: var(--tertiary-very-low);
-    border-color: var(--tertiary-very-low);
+    border-radius: var(--d-sys-border-radius-md);
+    background-color: var(--d-sys-color-background-accent-subtlest);
+    border-color: var(--d-sys-color-background-accent-subtlest);
     margin-bottom: var(--space-4);
     padding: var(--pm-padding) var(--space-4);
     width: 100%;
@@ -151,7 +151,7 @@
     }
 
     &.old {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
 
       @include viewport.until(sm) {
         padding-top: var(--pm-padding);
@@ -165,8 +165,8 @@
     display: grid;
     grid-template-areas: "contents additional" "pm-map pm-map";
     grid-template-columns: 1fr auto;
-    border-radius: var(--d-border-radius);
-    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-sys-border-radius-md);
+    border: 1px solid var(--d-sys-color-border-default);
     max-width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) + 1.3em
     );
@@ -214,7 +214,7 @@
         @include ellipsis;
         display: flex;
         align-items: center;
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
 
         .user-link,
         .group-link {
@@ -265,7 +265,7 @@
 
   .map:first-of-type .buttons .btn {
     border: none;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   .embedded-posts {
@@ -292,8 +292,8 @@
 
     &.top {
       .cooked {
-        border: 1px solid var(--content-border-color);
-        border-radius: var(--d-border-radius);
+        border: 1px solid var(--d-sys-color-border-default);
+        border-radius: var(--d-sys-border-radius-md);
         margin-left: calc(var(--pm-padding) * -1);
         padding-left: 2.15em;
       }
@@ -316,8 +316,8 @@
   // special post type colors
   .current-user-post {
     .regular.contents {
-      background: var(--tertiary-very-low);
-      border-color: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
+      border-color: var(--d-sys-color-background-accent-subtlest);
     }
 
     .embedded-posts {
@@ -335,8 +335,8 @@
     }
 
     .regular.contents {
-      background: var(--highlight-low);
-      border-color: var(--highlight-low);
+      background: var(--d-sys-color-background-highlight-subtlest);
+      border-color: var(--d-sys-color-background-highlight-subtlest);
 
       .cooked {
         background: transparent;
@@ -351,13 +351,13 @@
     }
 
     &.current-user-post .topic-body .regular.contents {
-      border: 2px dashed var(--tertiary-low);
+      border: 2px dashed var(--d-sys-color-background-accent-subtlest);
     }
   }
 
   .deleted {
     .topic-body .regular.contents {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
       border-color: transparent;
 
       .cooked {
@@ -367,7 +367,7 @@
 
     &.whisper {
       .topic-body .regular.contents {
-        border-color: var(--danger-low-mid);
+        border-color: var(--d-sys-color-background-danger-subtle);
       }
     }
   }

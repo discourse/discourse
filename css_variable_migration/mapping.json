@@ -1,0 +1,386 @@
+{
+  "rename": {
+    "--d-border-radius": {
+      "to": "--d-sys-border-radius-md",
+      "note": "The theme knob; sm and lg derive from it."
+    },
+    "--d-border-radius-large": {
+      "to": "--d-sys-border-radius-lg",
+      "note": "Double md."
+    },
+    "--d-border-radius-small": {
+      "to": "--d-sys-border-radius-sm",
+      "note": "Not defined in core; sm is half md (see definitions.csv)."
+    },
+    "--token-radius-full": "--d-sys-border-radius-full",
+    "--d-button-border-radius": "--d-comp-DButton-border-radius",
+    "--d-input-border-radius": {
+      "to": "--d-comp-Input-border-radius",
+      "note": "Input pattern."
+    },
+    "--d-nav-pill-border-radius": {
+      "to": "--d-comp-NavPills-border-radius",
+      "note": "NavPills pattern."
+    },
+    "--d-post-control-border-radius": {
+      "to": "--d-comp-PostMenu-button-border-radius",
+      "note": "PostMenu button part."
+    },
+    "--d-tag-border-radius": {
+      "to": "--d-comp-DDiscourseTag-border-radius",
+      "note": "Owner from ui-kit/helpers/d-discourse-tag.js."
+    },
+    "--category-badge-border-radius": {
+      "to": "--d-comp-DCategoryBadge-border-radius",
+      "note": "Owner from ui-kit/helpers/d-category-badge.js."
+    },
+    "--d-button-transition": "--d-comp-DButton-motion-transition",
+    "--d-button-default-text-color": "--d-comp-DButton-color-text-default",
+    "--d-button-default-text-color--hover": "--d-comp-DButton-color-text-default-hovered",
+    "--d-button-default-bg-color": {
+      "to": "--d-comp-DButton-color-background-default",
+      "note": "Stays a DButton token (themes change button kinds separately); its value becomes var(--d-sys-color-background-neutral)."
+    },
+    "--d-button-default-bg-color--hover": "--d-comp-DButton-color-background-default-hovered",
+    "--d-button-default-icon-color": "--d-comp-DButton-color-icon-default",
+    "--d-button-default-icon-color--hover": "--d-comp-DButton-color-icon-default-hovered",
+    "--d-button-primary-text-color": "--d-comp-DButton-color-text-primary",
+    "--d-button-primary-text-color--hover": "--d-comp-DButton-color-text-primary-hovered",
+    "--d-button-primary-bg-color": "--d-comp-DButton-color-background-primary",
+    "--d-button-primary-bg-color--hover": "--d-comp-DButton-color-background-primary-hovered",
+    "--d-button-primary-icon-color": "--d-comp-DButton-color-icon-primary",
+    "--d-button-primary-icon-color--hover": "--d-comp-DButton-color-icon-primary-hovered",
+    "--d-button-danger-text-color": "--d-comp-DButton-color-text-danger",
+    "--d-button-danger-text-color--hover": "--d-comp-DButton-color-text-danger-hovered",
+    "--d-button-danger-bg-color": "--d-comp-DButton-color-background-danger",
+    "--d-button-danger-bg-color--hover": "--d-comp-DButton-color-background-danger-hovered",
+    "--d-button-danger-icon-color": "--d-comp-DButton-color-icon-danger",
+    "--d-button-danger-icon-color--hover": "--d-comp-DButton-color-icon-danger-hovered",
+    "--d-button-success-text-color": "--d-comp-DButton-color-text-success",
+    "--d-button-success-text-color--hover": "--d-comp-DButton-color-text-success-hovered",
+    "--d-button-success-bg-color": "--d-comp-DButton-color-background-success",
+    "--d-button-success-bg-color--hover": "--d-comp-DButton-color-background-success-hovered",
+    "--d-button-success-icon-color": "--d-comp-DButton-color-icon-success",
+    "--d-button-success-icon-color--hover": "--d-comp-DButton-color-icon-success-hovered",
+    "--d-button-flat-text-color": "--d-comp-DButton-color-text-flat",
+    "--d-button-flat-text-color--hover": "--d-comp-DButton-color-text-flat-hovered",
+    "--d-button-flat-icon-color": "--d-comp-DButton-color-icon-flat",
+    "--d-button-flat-icon-color--hover": "--d-comp-DButton-color-icon-flat-hovered",
+    "--d-button-flat-bg-color": "--d-comp-DButton-color-background-flat",
+    "--d-button-flat-bg-color--hover": "--d-comp-DButton-color-background-flat-hovered",
+    "--d-button-flat-bg-color--focus": "--d-comp-DButton-color-background-flat-focused",
+    "--d-button-flat-text-color--disabled": "--d-comp-DButton-color-text-flat-disabled",
+    "--d-button-flat-close-text-color": "--d-comp-DButton-color-text-close",
+    "--d-button-flat-close-bg-color": "--d-comp-DButton-color-background-close",
+    "--d-button-flat-close-icon-color": "--d-comp-DButton-color-icon-close",
+    "--d-button-flat-close-icon-color--hover": "--d-comp-DButton-color-icon-close-hovered",
+    "--d-button-transparent-text-color": "--d-comp-DButton-color-text-transparent",
+    "--d-button-transparent-text-color--hover": "--d-comp-DButton-color-text-transparent-hovered",
+    "--d-button-transparent-icon-color": "--d-comp-DButton-color-icon-transparent",
+    "--d-button-transparent-icon-color--hover": "--d-comp-DButton-color-icon-transparent-hovered",
+    "--token-color-text-default": "--d-sys-color-text-default",
+    "--token-color-text-subtle": "--d-sys-color-text-muted",
+    "--token-color-text-subtlest": "--d-sys-color-text-faint",
+    "--token-color-text-accent": "--d-sys-color-text-accent",
+    "--token-color-text-accent-bolder": "--d-sys-color-text-accent-bold",
+    "--token-color-text-inverse": "--d-sys-color-text-inverse",
+    "--token-color-icon-default": "--d-sys-color-icon-default",
+    "--token-color-icon-subtle": "--d-sys-color-icon-muted",
+    "--token-color-icon-subtlest": "--d-sys-color-icon-faint",
+    "--token-color-icon-danger": "--d-sys-color-icon-danger",
+    "--token-color-border-input": "--d-sys-color-border-input",
+    "--token-color-border-default": {
+      "to": "--d-sys-color-border-default",
+      "note": "Same value as --content-border-color."
+    },
+    "--token-color-border-focused": {
+      "to": "--d-sys-color-border-input-focused",
+      "note": "Check the 16 uses are all inputs."
+    },
+    "--token-color-border-accent": "--d-sys-color-border-accent",
+    "--token-color-surface": "--d-sys-color-background-default",
+    "--token-color-surface-pressed": "--d-sys-color-background-default-pressed",
+    "--token-color-surface-focused": "--d-sys-color-background-default-focused",
+    "--token-color-background-input": "--d-sys-color-background-input",
+    "--token-color-surface-selected": {
+      "to": "--d-sys-color-background-default-selected",
+      "note": "Same value as --d-selected."
+    },
+    "--token-color-background-accent-subtlest": {
+      "to": "--d-sys-color-background-accent-subtlest",
+      "note": "tertiary-200, 87%."
+    },
+    "--token-color-background-accent-subtlest-hovered": {
+      "to": "--d-sys-color-background-accent-subtlest-hovered",
+      "note": "Unused."
+    },
+    "--token-color-background-accent-subtlest-pressed": {
+      "to": "--d-sys-color-background-accent-subtlest-pressed",
+      "note": "Unused."
+    },
+    "--token-color-background-accent-subtle": "--d-sys-color-background-accent-subtle",
+    "--token-color-background-accent-subtle-hovered": {
+      "to": "--d-sys-color-background-accent-subtle-hovered",
+      "note": "Unused."
+    },
+    "--token-color-background-accent-subtle-pressed": {
+      "to": "--d-sys-color-background-accent-subtle-pressed",
+      "note": "Unused."
+    },
+    "--token-color-background-accent-bolder": {
+      "to": "--d-sys-color-background-accent",
+      "note": "Value is --tertiary, the base step, not bold."
+    },
+    "--token-border-width": "--d-sys-border-width-sm",
+    "--token-font-weight-semibold": "--d-sys-font-weight-semibold",
+    "--token-font-weight-medium": "--d-sys-font-weight-medium",
+    "--token-font-weight-regular": "--d-sys-font-weight-regular",
+    "--d-selected": "--d-sys-color-background-default-selected",
+    "--d-selected-text-color": "--d-sys-color-text-default-selected",
+    "--d-selected-hover": "--d-sys-color-background-default-selected-hovered",
+    "--highlight-bg": {
+      "to": "--d-sys-color-background-highlight-subtlest",
+      "note": "70%: highlight's faintest tint, so subtlest (other intents' subtlest is 80–93%; yellow needs more strength). Warning borrows it: warning-subtlest."
+    },
+    "--highlight-low": {
+      "to": "--d-sys-color-background-highlight-subtlest",
+      "note": "Identical value to --highlight-bg in both modes."
+    },
+    "--highlight-medium": {
+      "to": "--d-sys-color-background-highlight-subtle",
+      "note": "50%: the next step after --highlight-bg."
+    },
+    "--danger-low": {
+      "to": "--d-sys-color-background-danger-subtlest",
+      "note": "90%. Also the icon color of danger buttons (DButton token)."
+    },
+    "--danger-low-mid": {
+      "to": "--d-sys-color-background-danger-subtle",
+      "note": "50% with 70% opacity."
+    },
+    "--danger-hover": "--d-sys-color-background-danger-hovered",
+    "--success-very-low": {
+      "to": "--d-sys-color-background-success-subtlest",
+      "note": "90%."
+    },
+    "--success-medium": {
+      "to": "--d-sys-color-background-success-subtle",
+      "note": "50%."
+    },
+    "--success-hover": "--d-sys-color-background-success-hovered",
+    "--love-low": "--d-sys-color-background-love-subtlest",
+    "--wiki": {
+      "to": "--d-comp-PostMetaData-wiki-color-text",
+      "note": "Part of PostMetaData: one rule styles the wiki edit indicator and the last-wiki-edit date (two child components). Value is the CSS keyword green; see core fixes."
+    },
+    "--hljs-attr": {
+      "to": "--d-comp-CodeBlock-attr-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-attribute": {
+      "to": "--d-comp-CodeBlock-attribute-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-addition": {
+      "to": "--d-comp-CodeBlock-addition-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-bg": {
+      "to": "--d-comp-CodeBlock-color-background",
+      "note": "Code block background (pattern CodeBlock)."
+    },
+    "--inline-code-bg": {
+      "to": "--d-comp-InlineCode-color-background",
+      "note": "Inline code background (pattern InlineCode)."
+    },
+    "--hljs-comment": {
+      "to": "--d-comp-CodeBlock-comment-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-deletion": {
+      "to": "--d-comp-CodeBlock-deletion-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-keyword": {
+      "to": "--d-comp-CodeBlock-keyword-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-title": {
+      "to": "--d-comp-CodeBlock-title-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-name": {
+      "to": "--d-comp-CodeBlock-name-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-punctuation": {
+      "to": "--d-comp-CodeBlock-punctuation-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-symbol": {
+      "to": "--d-comp-CodeBlock-symbol-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-variable": {
+      "to": "--d-comp-CodeBlock-variable-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--hljs-string": {
+      "to": "--d-comp-CodeBlock-string-color-text",
+      "note": "highlight.js token type as a part of CodeBlock."
+    },
+    "--d-link-color": "--d-sys-color-text-link",
+    "--title-color--read": "--d-comp-TopicListItem-color-text-read",
+    "--content-border-color": {
+      "to": "--d-sys-color-border-default",
+      "note": "320 uses."
+    },
+    "--table-border-color": "--d-comp-Table-color-border",
+    "--d-badge-card-background-color": {
+      "to": "--d-comp-DBadgeCard-color-background",
+      "note": "ui-kit/d-badge-card.gjs."
+    },
+    "--mention-background-color": {
+      "to": "--d-sys-color-background-neutral",
+      "note": "No component token: the mention mixin (mentions and hashtags) uses the system neutral fill."
+    },
+    "--title-color--header": {
+      "to": "--d-comp-Header-color-text-default",
+      "note": "Same value as --header_primary."
+    },
+    "--shadow-modal": "--d-sys-shadow-dialog",
+    "--shadow-card": "--d-sys-shadow-raised",
+    "--shadow-dropdown": {
+      "to": "--d-sys-shadow-overlay",
+      "note": "menu-panel.scss redefines it locally with another value."
+    },
+    "--shadow-menu-panel": "--d-sys-shadow-overlay",
+    "--shadow-header": {
+      "to": "--d-sys-shadow-overflow",
+      "note": "The hairline is the overflow value."
+    },
+    "--float-kit-arrow-stroke-color": {
+      "to": "--d-comp-FloatKit-color-border",
+      "note": "Pattern FloatKit: menu and tooltip boxes and their arrow read it, so they change together. Default var(--d-sys-color-border-default). User tips set it in their scope."
+    },
+    "--float-kit-arrow-fill-color": {
+      "to": "--d-comp-FloatKit-color-background",
+      "note": "Pattern FloatKit: menu and tooltip boxes and their arrow read it, so they change together. Default var(--d-sys-color-background-overlay). User tips set it in their scope."
+    },
+    "--topic-timeline-border-color": "--d-comp-TopicTimeline-color-border",
+    "--topic-timeline-handle-color": {
+      "to": "--d-comp-TopicTimelineScroller-color-background",
+      "note": "Handle lives in topic-timeline/scroller.gjs; check."
+    },
+    "--d-header-icon-color": {
+      "to": "--d-comp-HeaderIcons-color-icon-default",
+      "note": "Owner HeaderIcons (header/icons.gjs renders the icon list); defaults to Header-color-icon-default (header run, owner audit)."
+    },
+    "--d-header-icon-color--hover": {
+      "to": "--d-comp-HeaderIcons-color-icon-default-hovered",
+      "note": "Horizon sets it to -medium (header run)."
+    },
+    "--d-header-icon-color--active": {
+      "to": "--d-comp-HeaderIcons-color-icon-default-pressed",
+      "note": "Header run."
+    },
+    "--d-header-icon-background--hover": {
+      "to": "--d-comp-HeaderIcons-color-background-hovered",
+      "note": "Background of the icon buttons on hover (header run, owner audit)."
+    },
+    "--d-header-icon-background--active": {
+      "to": "--d-comp-HeaderIcons-color-background-pressed",
+      "note": "Header run."
+    },
+    "--d-header-padding-x": {
+      "to": "--d-comp-Header-space-padding-inline",
+      "note": "Moved to the Header block in header.scss (header run)."
+    }
+  },
+  "merge": {
+    "--d-border-radius-fixed": {
+      "to": "--d-sys-border-radius-md",
+      "note": "Fixed 4px becomes md and follows the theme."
+    },
+    "--token-radius-normal": {
+      "to": "--d-sys-border-radius-md",
+      "note": "Fixed 4px becomes md and follows the theme."
+    },
+    "--token-radius-large": {
+      "to": "--d-sys-border-radius-lg",
+      "note": "Fixed 8px becomes lg (double md) and follows the theme."
+    },
+    "--token-radius-small": {
+      "to": "--d-sys-border-radius-sm",
+      "note": "Fixed 2px becomes sm (half md) and follows the theme."
+    },
+    "--d-border-radius-pill": {
+      "to": "--d-sys-border-radius-full",
+      "note": "1em becomes 9999px: differs only on elements taller than 2em."
+    },
+    "--token-color-background-accent-subtler": {
+      "to": "--d-sys-color-background-accent-subtle",
+      "note": "tertiary-400, 74%: falls in the subtle band."
+    },
+    "--tertiary-very-low": {
+      "to": "--d-sys-color-background-accent-subtlest",
+      "note": "90%, subtlest band."
+    },
+    "--tertiary-low": {
+      "to": "--d-sys-color-background-accent-subtlest",
+      "note": "85%, subtlest band; info backgrounds also use it (info-subtlest)."
+    },
+    "--tertiary-medium": {
+      "to": "--d-sys-color-background-accent-subtle",
+      "note": "50%; matches the subtle token in light mode only."
+    },
+    "--tertiary-high": {
+      "to": "--d-sys-color-background-accent",
+      "note": "20%, base band."
+    },
+    "--success-low": {
+      "to": "--d-sys-color-background-success-subtlest",
+      "note": "80%, subtlest band."
+    },
+    "--input-border-color": {
+      "to": "--d-sys-color-border-input",
+      "note": "primary-400 vs --token-color-border-input primary-300."
+    },
+    "--metadata-color": {
+      "to": "--d-sys-color-text-muted",
+      "note": "Meta text is muted (settled rule); value moves from primary-medium."
+    },
+    "--title-color": {
+      "to": "--d-sys-color-text-default",
+      "note": "var(--primary), while --d-sys-color-text-default comes from --token-color-text-default (var(--primary-900)); 1 use."
+    },
+    "--excerpt-color": {
+      "to": "--d-sys-color-text-muted",
+      "note": "primary-high vs muted's primary-800."
+    },
+    "--shadow-composer": {
+      "to": "--d-sys-shadow-dialog",
+      "note": "0 -1px 40px vs modal's 0 8px 60px."
+    },
+    "--shadow-docked-composer": {
+      "to": "--d-sys-shadow-overflow",
+      "note": "Defined in core, used only by the AI plugin."
+    }
+  },
+  "rgb": {
+    "--primary-rgb": "--primary",
+    "--primary-low-rgb": "--primary-low",
+    "--primary-very-low-rgb": "--primary-very-low",
+    "--secondary-rgb": "--secondary",
+    "--header_background-rgb": "--header_background",
+    "--tertiary-rgb": "--tertiary",
+    "--highlight-rgb": {
+      "to": "--highlight",
+      "note": "No reads in core."
+    },
+    "--success-rgb": {
+      "to": "--success",
+      "note": "No reads in core."
+    }
+  }
+}

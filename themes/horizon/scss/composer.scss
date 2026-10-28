@@ -22,7 +22,7 @@
       border-radius: 0;
 
       :where(body:not(.uc-enable-composer-redesign) &) {
-        border-bottom: 1px solid var(--content-border-color) !important;
+        border-bottom: 1px solid var(--d-sys-color-border-default) !important;
       }
 
       &.in-focus {
@@ -36,7 +36,7 @@
   .btn:hover,
   .toolbar-popup-menu-options.is-expanded {
     .discourse-no-touch & {
-      background: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       color: var(--accent-color);
 
       .d-icon {
@@ -59,7 +59,7 @@
   }
 
   .toolbar-popup-menu-options.is-expanded {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 }
 
@@ -79,7 +79,7 @@
     padding: 0.25rem 0.75rem;
     background: var(--background-color);
     color: var(--accent-color);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 
   .topic-title-translator input {

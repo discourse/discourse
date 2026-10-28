@@ -12,14 +12,14 @@
 
   &__section-header {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     height: 14px;
     width: 140px;
   }
 
   &__section-wrapper {
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     padding: var(--space-4);
     display: flex;
     flex-direction: column;
@@ -36,7 +36,7 @@
     flex-wrap: nowrap;
     gap: var(--space-4);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 
   &__kpi {
@@ -53,21 +53,21 @@
 
   &__kpi-value {
     background: var(--primary-200);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 60%;
     height: 28px;
   }
 
   &__kpi-label {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 75%;
     height: 12px;
   }
 
   &__kpi-delta {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 30%;
     height: 12px;
   }
@@ -80,7 +80,7 @@
 
   &__report-card {
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     padding: var(--space-4);
     box-sizing: border-box;
     background: var(--secondary);
@@ -98,21 +98,21 @@
 
   &__report-card-title {
     background: var(--primary-200);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 40%;
     height: 14px;
   }
 
   &__report-card-label {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 64px;
     height: 14px;
   }
 
   &__report-card-chart {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     flex: 1;
   }
 
@@ -132,14 +132,14 @@
 
   &__heading-line {
     background: var(--primary-200);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 70%;
     height: 16px;
   }
 
   &__text-line {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 100%;
     height: 10px;
 
@@ -163,21 +163,21 @@
 
   &__metric-number {
     background: var(--primary-200);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 60px;
     height: 22px;
   }
 
   &__metric-label {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 90px;
     height: 10px;
   }
 
   &__chart {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     height: 240px;
     width: 100%;
   }
@@ -207,7 +207,7 @@
 
   &__row-block-title {
     background: var(--primary-200);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: 35%;
     height: 14px;
   }
@@ -228,21 +228,21 @@
 
   &__list-name {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     height: 12px;
     flex: 0 1 60%;
   }
 
   &__list-value {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     height: 12px;
     width: 50px;
   }
 
   &__pipeline {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     height: 60px;
     width: 100%;
   }

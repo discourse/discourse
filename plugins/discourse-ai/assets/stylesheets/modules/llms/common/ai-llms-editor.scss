@@ -39,7 +39,7 @@
     .form-kit__input,
     .form-kit__input-group > :not(:first-child) .form-kit__control-input,
     .form-kit__input-group > :not(:last-child) .form-kit__control-input {
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
     }
   }
 

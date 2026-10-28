@@ -74,7 +74,7 @@
     word-break: break-word;
 
     &.--deleted {
-      background-color: var(--danger-low);
+      background-color: var(--d-sys-color-background-danger-subtlest);
     }
 
     &:hover:not(.--deleted) .post-voting-comments__comment-actions {

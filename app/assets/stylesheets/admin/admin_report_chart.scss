@@ -49,7 +49,7 @@
 
       &.timeout,
       &.exception {
-        border-color: var(--danger-low);
+        border-color: var(--d-sys-color-background-danger-subtlest);
         color: var(--danger);
       }
     }

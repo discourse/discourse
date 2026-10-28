@@ -16,14 +16,14 @@
   // Badges/statuses
   // Default
   .status-label {
-    --d-border-radius: var(--space-4);
+    --d-sys-border-radius-md: var(--space-4);
     --status-icon-diameter: 8px;
     display: flex;
     flex-wrap: nowrap;
     width: fit-content;
     background-color: var(--primary-low);
     padding: var(--space-half) var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .status-label-indicator {
       display: inline-block;
@@ -44,27 +44,27 @@
 
   // Success badge
   .status-label.--success {
-    background-color: var(--success-low);
+    background-color: var(--d-sys-color-background-success-subtlest);
 
     .status-label-indicator {
       background-color: var(--success);
     }
 
     .status-label-text {
-      color: var(--success-hover);
+      color: var(--d-sys-color-background-success-hovered);
     }
   }
 
   // Critical badge
   .status-label.--critical {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
 
     .status-label-indicator {
       background-color: var(--danger);
     }
 
     .status-label-text {
-      color: var(--danger-hover);
+      color: var(--d-sys-color-background-danger-hovered);
     }
   }
 
@@ -102,11 +102,11 @@
   @include viewport.until(md) {
     display: block;
     margin-bottom: var(--space-3);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
   }
 
   &.has-update {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
     border-left: solid 3px var(--tertiary);
   }
 }
@@ -116,7 +116,7 @@
 
   @include viewport.until(md) {
     display: block;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &:first-child {
@@ -260,9 +260,9 @@
 .d-table-badge {
   display: flex;
   font-size: var(--font-down-2);
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   color: var(--primary-very-high);
-  background: var(--tertiary-very-low);
+  background: var(--d-sys-color-background-accent-subtlest);
   letter-spacing: 0.25px;
 
   &:visited,
@@ -271,7 +271,7 @@
   }
 
   &:hover {
-    color: var(--d-link-color);
+    color: var(--d-sys-color-text-link);
   }
 
   span {
@@ -286,8 +286,8 @@
 
   &__info {
     border-left: 1px solid var(--secondary);
-    border-radius: 0 var(--d-button-border-radius) var(--d-button-border-radius)
-      0;
+    border-radius: 0 var(--d-comp-DButton-border-radius)
+      var(--d-comp-DButton-border-radius) 0;
     padding: var(--space-half) var(--space-1);
   }
 

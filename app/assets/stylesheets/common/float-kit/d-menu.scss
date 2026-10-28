@@ -48,10 +48,10 @@
 
   &__inner-content {
     display: flex;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background-color: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    box-shadow: var(--shadow-dropdown);
+    border: 1px solid var(--d-sys-color-border-default);
+    box-shadow: var(--d-sys-shadow-overlay);
     overscroll-behavior: contain;
     overflow: auto;
   }

@@ -24,7 +24,7 @@
   .chat-transcript-meta {
     color: var(--primary-high);
     font-size: var(--font-down-2-rem);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
 
@@ -126,8 +126,8 @@
 
 .chat-transcript-group {
   margin: 1rem 0;
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius-large);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-lg);
   overflow: hidden;
 
   &__header {
@@ -135,7 +135,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   &__channel {
@@ -220,7 +220,7 @@
       calc(0.75rem + var(--chat-transcript-avatar-size) / 2 - 1px);
     padding: 0.375rem 0.5rem 0.375rem
       calc(var(--chat-transcript-avatar-size) / 2 + 0.75rem - 1px);
-    border-left: 2px solid var(--content-border-color);
+    border-left: 2px solid var(--d-sys-color-border-default);
   }
 
   // a thread's replies are nested in it, so its hover moves to its own message
@@ -306,8 +306,8 @@
     padding: 0.5rem 0.75rem;
     min-height: 0;
     background: none;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-lg);
 
     > .chat-transcript-group__header {
       margin: -0.5rem -0.75rem 0.5rem;
@@ -337,7 +337,7 @@
       calc(var(--chat-transcript-avatar-size) / 2 + 0.75rem - 1px);
     min-height: 0;
     background: none;
-    border-left: 2px solid var(--content-border-color);
+    border-left: 2px solid var(--d-sys-color-border-default);
   }
 
   .no-touch & .chat-transcript:hover {

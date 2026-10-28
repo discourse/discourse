@@ -34,7 +34,7 @@
 .hashtag-autocomplete {
   max-height: 13.5em;
   overflow-y: auto;
-  box-shadow: var(--shadow-dropdown);
+  box-shadow: var(--d-sys-shadow-overlay);
   border-radius: 8px;
 
   &__fadeout {
@@ -50,8 +50,8 @@
       height: 1.5em;
       background: linear-gradient(
         to bottom,
-        rgb(var(--secondary-rgb), 0),
-        rgb(var(--secondary-rgb), 100%)
+        color-mix(in srgb, var(--secondary) 0%, transparent),
+        var(--secondary)
       );
     }
   }

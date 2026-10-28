@@ -3,7 +3,7 @@
 $padding-pills-small: var(--space-half) var(--space-2);
 
 .topic-list-body:has(.--high-context) {
-  --title-color--read: var(--primary-700);
+  --d-comp-TopicListItem-color-text-read: var(--primary-700);
   --topic-title-font-weight--visited: 600;
 
   @include viewport.from(sm) {
@@ -25,17 +25,17 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   &.bulk-selected {
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
     border-color: var(--tertiary);
 
     &:hover {
-      background: var(--tertiary-medium);
+      background: var(--d-sys-color-background-accent-subtle);
     }
   }
 
   @include viewport.from(sm) {
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 
   @include viewport.until(sm) {
@@ -101,7 +101,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     flex-shrink: 0;
 
     .avatar {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       height: 32px;
       width: 32px;
     }
@@ -112,7 +112,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     white-space: nowrap;
     background: var(--secondary);
     border: 1px solid var(--primary-low-mid);
@@ -124,7 +124,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
     @include viewport.until(sm) {
       padding: var(--space-1);
-      border-radius: calc(var(--d-border-radius) / 2);
+      border-radius: calc(var(--d-sys-border-radius-md) / 2);
     }
 
     &.--solved {
@@ -146,7 +146,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
   &__category .badge-category__wrapper {
     padding: var(--space-half) var(--space-2) !important;
     font-size: var(--font-down-1-rem);
-    border-radius: var(--d-border-radius-small) !important;
+    border-radius: var(--d-sys-border-radius-sm) !important;
   }
 
   &__status-tags {
@@ -231,7 +231,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     align-items: center;
     gap: var(--space-1);
     padding: $padding-pills-small;
-    border-radius: var(--d-border-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
     background: var(--primary-very-low);
     color: var(--primary-medium);
     font-size: var(--font-down-2-rem);
@@ -249,7 +249,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
 
     .discourse-tag {
       padding: var(--space-half) var(--space-2);
-      border-radius: var(--d-border-radius-small);
+      border-radius: var(--d-sys-border-radius-sm);
       border: 1px solid var(--primary-low);
       background: var(--secondary);
       color: var(--primary-high);
@@ -337,7 +337,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
     align-items: center;
     gap: var(--space-1);
     padding: $padding-pills-small;
-    border-radius: var(--d-border-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
     background: var(--primary-very-low);
     font-size: var(--font-down-2-rem);
     color: var(--primary-medium);

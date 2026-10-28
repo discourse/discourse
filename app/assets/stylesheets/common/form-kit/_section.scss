@@ -17,7 +17,7 @@
 }
 
 .form-kit__section-header {
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   padding-bottom: 0.5em;
 }
 
@@ -28,13 +28,13 @@
 }
 
 .form-kit__section.emphasis {
-  border: 2px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border: 2px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   padding: 1em;
   box-sizing: border-box;
 
   &.emphasis-success {
-    border-color: var(--success-medium);
+    border-color: var(--d-sys-color-background-success-subtle);
   }
 
   &.emphasis-error {
@@ -46,6 +46,6 @@
   }
 
   &.emphasis-info {
-    border-color: var(--tertiary-medium);
+    border-color: var(--d-sys-color-background-accent-subtle);
   }
 }

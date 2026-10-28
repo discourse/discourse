@@ -15,7 +15,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
     padding: var(--space-2);
     color: var(--primary);
     min-width: 280px;
@@ -23,7 +23,7 @@
     margin-right: auto;
     gap: 0.25rem;
     box-sizing: border-box;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .chat-drawer-outlet & {
       border-radius: 0;
@@ -44,7 +44,7 @@
 
     &:hover,
     &:focus {
-      background: var(--tertiary-medium);
+      background: var(--d-sys-color-background-accent-subtle);
     }
   }
 }

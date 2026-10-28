@@ -1,5 +1,5 @@
 .chat-selection-management {
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;
@@ -22,7 +22,7 @@
   &__copy-success {
     animation: chat-quote-message-background-fade-highlight 2s ease-out 3s;
     animation-fill-mode: forwards;
-    background-color: var(--success-low);
+    background-color: var(--d-sys-color-background-success-subtlest);
     color: var(--primary);
     flex: 1;
     line-height: normal;

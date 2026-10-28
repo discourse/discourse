@@ -24,7 +24,8 @@
   display: flex;
   align-items: center;
   margin-right: -0.25em;
-  border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius) 0 0
+    var(--d-comp-Input-border-radius);
   align-self: stretch;
 }
 
@@ -34,7 +35,8 @@
   min-width: auto !important;
 
   .form-kit__control-color-input-prefix + & {
-    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+    border-radius: 0 var(--d-comp-Input-border-radius)
+      var(--d-comp-Input-border-radius) 0;
     border-left: none;
   }
 
@@ -76,7 +78,7 @@
   height: var(--color-button-height);
   padding: 0;
   border: var(--color-input-border-width) solid var(--primary-low-mid);
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   cursor: pointer;
 
   &::-webkit-color-swatch-wrapper {
@@ -86,14 +88,14 @@
   &::-webkit-color-swatch {
     border: none;
     border-radius: calc(
-      var(--d-button-border-radius) - var(--color-input-border-width)
+      var(--d-comp-DButton-border-radius) - var(--color-input-border-width)
     );
   }
 
   &::-moz-color-swatch {
     border: none;
     border-radius: calc(
-      var(--d-button-border-radius) - var(--color-input-border-width)
+      var(--d-comp-DButton-border-radius) - var(--color-input-border-width)
     );
   }
 
@@ -113,7 +115,8 @@
 }
 
 .form-kit__control-color-swatches-btn {
-  --d-button-default-border: 1px solid var(--d-button-default-bg-color); // match input height
+  --d-button-default-border: 1px solid
+    var(--d-comp-DButton-color-background-default); // match input height
   width: var(--color-button-width);
   height: var(--color-button-height);
 }

@@ -16,46 +16,52 @@
   --d-sidebar-row-height: 2.2em;
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
-  --d-sidebar-background: var(--token-color-surface);
+  --d-sidebar-background: var(--d-sys-color-background-default);
 
   // must be rgba for gradient
-  --d-sidebar-footer-fade: rgb(from var(--token-color-surface) r g b / 1);
-  --d-sidebar-header-color: var(--token-color-text-subtle);
-  --d-sidebar-header-icon-color: var(--token-color-text-subtle);
-  --d-sidebar-header-font-weight: var(--token-font-weight-semibold);
-  --d-sidebar-section-border-color: var(--token-color-border-default);
-  --d-sidebar-border-color: var(--token-color-border-default);
-  --d-sidebar-link-color: var(--token-color-text-subtle);
-  --d-sidebar-link-icon-color: var(--token-color-icon-subtle);
-  --d-sidebar-link-badge-color: var(--token-color-text-subtle);
+  --d-sidebar-footer-fade: rgb(
+    from var(--d-sys-color-background-default) r g b / 1
+  );
+  --d-sidebar-header-color: var(--d-sys-color-text-muted);
+  --d-sidebar-header-icon-color: var(--d-sys-color-text-muted);
+  --d-sidebar-header-font-weight: var(--d-sys-font-weight-semibold);
+  --d-sidebar-section-border-color: var(--d-sys-color-border-default);
+  --d-sidebar-border-color: var(--d-sys-color-border-default);
+  --d-sidebar-link-color: var(--d-sys-color-text-muted);
+  --d-sidebar-link-icon-color: var(--d-sys-color-icon-muted);
+  --d-sidebar-link-badge-color: var(--d-sys-color-text-muted);
 
   // example: new count
   // example: chat participant count
-  --d-sidebar-prefix-background: var(--token-color-surface-pressed);
+  --d-sidebar-prefix-background: var(--d-sys-color-background-default-pressed);
   --d-sidebar-prefix-color: var(--d-sidebar-link-color);
 
   // example: unread dot
-  --d-sidebar-suffix-color: var(--token-color-background-accent-subtle);
+  --d-sidebar-suffix-color: var(--d-sys-color-background-accent-subtle);
 
   // highlight applies to both hover and focus states
   --d-sidebar-highlight-background: var(--token-color-surface-hovered);
-  --d-sidebar-highlight-color: var(--token-color-text-default);
-  --d-sidebar-highlight-prefix-background: var(--token-color-surface-pressed);
+  --d-sidebar-highlight-color: var(--d-sys-color-text-default);
+  --d-sidebar-highlight-prefix-background: var(
+    --d-sys-color-background-default-pressed
+  );
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-link-color);
   --d-sidebar-highlight-suffix-color: var(--d-sidebar-suffix-color);
-  --d-sidebar-highlight-hover-background: var(--token-color-surface-pressed);
+  --d-sidebar-highlight-hover-background: var(
+    --d-sys-color-background-default-pressed
+  );
 
   // example: hovering a button within a highlighted section
   --d-sidebar-highlight-hover-icon: var(--d-sidebar-link-color);
 
   // example: hovering a button within a highlighted section
-  --d-sidebar-active-background: var(--token-color-surface-selected);
-  --d-sidebar-active-color: var(--token-color-text-default);
-  --d-sidebar-active-icon-color: var(--token-color-icon-default);
+  --d-sidebar-active-background: var(--d-sys-color-background-default-selected);
+  --d-sidebar-active-color: var(--d-sys-color-text-default);
+  --d-sidebar-active-icon-color: var(--d-sys-color-icon-default);
   --d-sidebar-active-prefix-background: var(--token-color-surface-hovered);
   --d-sidebar-active-suffix-color: var(--d-sidebar-suffix-color);
   --d-sidebar-active-font-weight: var(
-    --token-font-weight-semibold
+    --d-sys-font-weight-semibold
   ); // example: active section link
 
   @include viewport.until(sm) {
@@ -74,10 +80,10 @@
   gap: var(--space-2);
   margin-block: var(--space-1);
   padding: var(--space-3);
-  color: var(--token-color-text-default);
-  background: var(--token-color-surface-selected);
-  border-radius: var(--d-border-radius);
-  font-weight: var(--token-font-weight-semibold);
+  color: var(--d-sys-color-text-default);
+  background: var(--d-sys-color-background-default-selected);
+  border-radius: var(--d-sys-border-radius-md);
+  font-weight: var(--d-sys-font-weight-semibold);
   animation: sidebar-link-drop-target-reveal 0.15s ease-out;
 
   /* Native drag hit-testing honors this, so while it applies the zone cannot
@@ -207,7 +213,7 @@
       }
 
       .texts .name {
-        font-weight: var(--token-font-weight-regular);
+        font-weight: var(--d-sys-font-weight-regular);
       }
     }
   }
@@ -220,7 +226,7 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    color: var(--token-color-icon-subtlest);
+    color: var(--d-sys-color-icon-faint);
     align-self: center;
     margin-left: auto;
     margin-right: auto;
@@ -262,7 +268,7 @@
     display: flex;
     align-items: flex-start;
     margin-bottom: 5px;
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
     font-weight: var(--token-font-weight-bold);
   }
 
@@ -282,7 +288,7 @@
 
   .sidebar-section-form__source-locale-description {
     margin: 0.25em 0 1.5em;
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 
@@ -293,7 +299,7 @@
 
   .sidebar-section-form__translations-incomplete {
     margin-inline-start: 0.5em;
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 
@@ -306,7 +312,7 @@
     margin-bottom: 1.5em;
     padding: 0.75em;
     border: 1px solid var(--token-color-border);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   .sidebar-section-translations__language-header {
@@ -324,7 +330,7 @@
 
   .sidebar-section-translations__caption {
     margin-bottom: 0.25em;
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     font-weight: var(--token-font-weight-bold);
   }
@@ -343,7 +349,7 @@
 
     .sidebar-section-translations__source {
       overflow-wrap: anywhere;
-      font-weight: var(--token-font-weight-regular);
+      font-weight: var(--d-sys-font-weight-regular);
     }
 
     .sidebar-section-translations__value {
@@ -382,11 +388,11 @@
     }
 
     &.drag-above {
-      border-top: 2px solid var(--token-color-border-accent);
+      border-top: 2px solid var(--d-sys-color-border-accent);
     }
 
     &.drag-below {
-      border-bottom: 2px solid var(--token-color-border-accent);
+      border-bottom: 2px solid var(--d-sys-color-border-accent);
     }
 
     .link-icon {
@@ -461,13 +467,13 @@
 
   .delete-link {
     .d-icon {
-      color: var(--token-color-text-subtle);
+      color: var(--d-sys-color-text-muted);
     }
 
     .discourse-no-touch & {
       &:hover {
         .d-icon {
-          color: var(--token-color-icon-danger);
+          color: var(--d-sys-color-icon-danger);
         }
       }
     }
@@ -520,12 +526,12 @@
   &__input-container {
     display: flex;
     align-items: center;
-    border: var(--token-border-width) solid var(--token-color-border-input);
-    background: var(--token-color-background-input);
+    border: var(--d-sys-border-width-sm) solid var(--d-sys-color-border-input);
+    background: var(--d-sys-color-background-input);
     box-sizing: border-box;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    border-radius: var(--token-radius-normal);
+    border-radius: var(--d-sys-border-radius-md);
     overflow: hidden;
     padding-inline: var(--d-sidebar-row-horizontal-padding);
     gap: var(--d-sidebar-section-link-prefix-margin-right);
@@ -535,7 +541,7 @@
     flex-shrink: 0;
     font-size: var(--d-sidebar-section-link-icon-size);
     border: 0;
-    background: var(--token-color-background-input);
+    background: var(--d-sys-color-background-input);
     width: var(--d-sidebar-section-link-prefix-width);
     padding: 0;
 

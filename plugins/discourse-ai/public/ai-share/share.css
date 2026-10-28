@@ -1,5 +1,5 @@
 :root {
-  --shadow-header: 0 2px 30px -1px rgba(0, 0, 0, 0.05);
+  --d-sys-shadow-overflow: 0 2px 30px -1px rgba(0, 0, 0, 0.05);
   --shadow-content: 0 12px 32px -28px rgba(0, 0, 0, 0.35);
 
   --primary: #333;
@@ -79,7 +79,7 @@ body {
   padding: 0 1em;
   align-items: center;
   background-color: var(--secondary);
-  box-shadow: var(--shadow-header);
+  box-shadow: var(--d-sys-shadow-overflow);
   z-index: 2;
   @media screen and (max-width: 768px) {
     grid-template-areas: "logo site" "logo llm";
@@ -560,7 +560,7 @@ code.hljs{
 }
 
 .hljs-comment{
-  color: var(--hljs-comment);
+  color: var(--d-comp-CodeBlock-comment-color-text);
 }
 
 .hljs-punctuation,.hljs-tag{

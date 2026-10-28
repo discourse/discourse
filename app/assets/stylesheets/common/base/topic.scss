@@ -61,8 +61,8 @@
       overflow-y: auto;
       z-index: z("timeline");
       padding: var(--space-4);
-      box-shadow: var(--shadow-dropdown);
-      background: var(--tertiary-low);
+      box-shadow: var(--d-sys-shadow-overlay);
+      background: var(--d-sys-color-background-accent-subtlest);
 
       h2 {
         font-size: var(--font-0);
@@ -114,7 +114,7 @@
 
 .topic-status-info,
 .topic-timer-info {
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
   margin: 0;
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
@@ -385,7 +385,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0.5em;
-  background-color: var(--highlight-bg);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
   margin-top: 1em;
   max-width: 757px;
 }
@@ -402,7 +402,7 @@
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     li:last-of-type {
       margin-bottom: 1em;
@@ -453,7 +453,7 @@
       color: var(--tertiary);
 
       .d-icon {
-        background: var(--tertiary-low);
+        background: var(--d-sys-color-background-accent-subtlest);
       }
     }
   }
@@ -552,7 +552,7 @@ a[data-clicks]::after {
   }
 
   #topic-filter {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
     padding: 8px;
     bottom: 0;
     position: fixed;

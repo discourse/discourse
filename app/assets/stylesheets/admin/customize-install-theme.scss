@@ -31,12 +31,12 @@
 }
 
 .install-theme-item {
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-bottom: none;
   position: relative;
 
   &:last-child {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   input,
@@ -107,7 +107,7 @@
   flex-direction: column;
   align-items: center;
   max-height: 22rem;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-radius: 4px;
   padding: 0.75em;
   overflow: hidden;

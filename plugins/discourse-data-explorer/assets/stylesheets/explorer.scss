@@ -108,7 +108,7 @@ table.group-reports {
     display: flex;
     height: 400px;
     border: 1px solid var(--primary-400);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     overflow: hidden;
 
     @include viewport.until(sm) {
@@ -550,7 +550,7 @@ table.group-reports {
   background: var(--primary-very-low);
   border: 1px solid var(--primary-low);
   border-inline-start: 3px solid var(--tertiary);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &__header {
     display: flex;
@@ -568,7 +568,7 @@ table.group-reports {
     color: var(--tertiary);
     background: var(--secondary);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-pill);
+    border-radius: var(--d-sys-border-radius-full);
   }
 
   &__title {
@@ -708,7 +708,7 @@ table.group-reports {
   .query-results-modes {
     display: inline-flex;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-button-border-radius, 0.25em);
+    border-radius: var(--d-comp-DButton-border-radius, 0.25em);
     overflow: hidden;
   }
 
@@ -752,7 +752,7 @@ table.group-reports {
     color: var(--primary-medium);
     text-align: center;
     border: 1px dashed var(--primary-low);
-    border-radius: var(--d-button-border-radius, 0.25em);
+    border-radius: var(--d-comp-DButton-border-radius, 0.25em);
 
     .query-chart-empty-state__icon {
       font-size: 2em;
@@ -935,7 +935,7 @@ table.group-reports {
   .popup {
     background-color: var(--secondary);
     position: absolute;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
     padding: 12px;
     z-index: 1;
   }

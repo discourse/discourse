@@ -29,7 +29,8 @@
   width: 100%;
 
   img {
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
     max-height: none;
   }
 }
@@ -75,7 +76,7 @@ $show-interested: inherit;
 .discourse-post-event--preview .discourse-post-event-widget {
   box-shadow: 0 0 0 3px var(--primary-100);
   border: 1px solid var(--primary-300);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   margin: var(--space-1) 0;
 }
 
@@ -116,8 +117,8 @@ $show-interested: inherit;
 
       // Only affects images taller than their box, where the subject tends to sit high
       object-position: 50% 0;
-      border-top-left-radius: var(--d-border-radius);
-      border-top-right-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-sys-border-radius-md);
+      border-top-right-radius: var(--d-sys-border-radius-md);
     }
 
     &.--letterboxed {
@@ -133,7 +134,7 @@ $show-interested: inherit;
       width: 8rem;
 
       img {
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
         display: block;
         height: auto;
         max-height: 12rem;
@@ -165,7 +166,7 @@ $show-interested: inherit;
     .cooked & {
       box-shadow: 0 0 0 3px var(--primary-100);
       border: 1px solid var(--primary-300);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       margin: 5px 0;
     }
 
@@ -243,7 +244,7 @@ $show-interested: inherit;
     margin: 0;
     padding: 0;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     flex-direction: column;
 
     .month {
@@ -641,7 +642,7 @@ $show-interested: inherit;
 .discourse-post-event {
   .event__placeholder {
     display: inline-block;
-    border-radius: var(--d-border-radius, 0.25em);
+    border-radius: var(--d-sys-border-radius-md, 0.25em);
     background-color: var(--primary-low);
   }
 

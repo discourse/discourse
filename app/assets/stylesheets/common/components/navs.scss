@@ -33,7 +33,7 @@
     button {
       position: relative;
       border: 0;
-      border-radius: var(--d-nav-pill-border-radius);
+      border-radius: var(--d-comp-NavPills-border-radius);
       padding: 0.65em 0.75em;
       color: var(--d-nav-color);
       line-height: var(--line-height-small);
@@ -42,7 +42,7 @@
       display: flex;
       align-items: center;
       background-color: var(--d-nav-bg-color);
-      transition: var(--d-button-transition);
+      transition: var(--d-comp-DButton-motion-transition);
       white-space: nowrap;
 
       @include viewport.between(sm, lg) {
@@ -75,7 +75,7 @@
   padding: 0;
 
   li {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     &:last-of-type {
       border-bottom: 0;
@@ -100,8 +100,8 @@
     }
 
     &.active {
-      color: var(--d-selected-text-color);
-      background-color: var(--d-selected);
+      color: var(--d-sys-color-text-default-selected);
+      background-color: var(--d-sys-color-background-default-selected);
       font-weight: bold;
       font-weight: var(--d-sidebar-active-font-weight);
     }

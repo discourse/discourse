@@ -8,7 +8,7 @@
   &__hint {
     border: 1px solid;
     border-color: var(--tertiary);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-2);
     background-color: light-dark(var(--tertiary-100), var(--tertiary-500));
   }
@@ -45,7 +45,7 @@
   &__section {
     border: 1px solid;
     border-color: light-dark(var(--primary-100), var(--primary-200));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-2);
     background-color: light-dark(var(--secondary), var(--primary-50));
     flex: 1;
@@ -154,7 +154,7 @@
     padding: var(--space-1);
     color: var(--primary-medium);
     cursor: pointer;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &:hover:not([disabled]) {
       color: var(--primary);
@@ -239,7 +239,7 @@
   &__editor-codemirror {
     border: 1px solid;
     border-color: light-dark(var(--primary-100), var(--primary-200));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     overflow: hidden;
     font-size: var(--font-down-1);
 
@@ -258,7 +258,7 @@
     background-color: light-dark(var(--primary-very-low), var(--primary-100));
     border: 1px solid;
     border-color: light-dark(var(--primary-100), var(--primary-200));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
     font-family: monospace;
     white-space: pre-wrap;

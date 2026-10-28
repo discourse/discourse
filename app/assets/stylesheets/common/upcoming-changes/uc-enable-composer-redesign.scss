@@ -32,8 +32,8 @@
 
   .grippie {
     padding-block: var(--space-1);
-    border-top-left-radius: var(--d-border-radius-large);
-    border-top-right-radius: var(--d-border-radius-large);
+    border-top-left-radius: var(--d-sys-border-radius-lg);
+    border-top-right-radius: var(--d-sys-border-radius-lg);
   }
 
   .reply-to {
@@ -241,9 +241,10 @@
             -1
         );
         z-index: z("composer", "dropdown") + 1;
-        box-shadow: 0 -12px 12px 0 rgb(var(--primary-rgb), 0.15);
-        border-top-left-radius: var(--d-border-radius-large);
-        border-top-right-radius: var(--d-border-radius-large);
+        box-shadow: 0 -12px 12px 0
+          color-mix(in srgb, var(--primary) 15%, transparent);
+        border-top-left-radius: var(--d-sys-border-radius-lg);
+        border-top-right-radius: var(--d-sys-border-radius-lg);
         padding-top: var(--space-4);
 
         &::before {
@@ -255,7 +256,7 @@
           width: 15vw;
           height: 5px;
           background: var(--primary-medium);
-          border-radius: var(--d-border-radius-pill);
+          border-radius: var(--d-sys-border-radius-full);
         }
       }
     }

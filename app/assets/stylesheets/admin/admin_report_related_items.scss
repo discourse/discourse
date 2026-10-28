@@ -8,7 +8,7 @@
 
   &__description {
     margin-block: var(--space-1) var(--space-4);
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__limit {
@@ -53,12 +53,12 @@
   }
 
   &__username {
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
   }
 
   &__name {
     margin-inline-start: var(--space-2);
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
   }
 }
 
@@ -106,12 +106,12 @@
 
   &__message {
     margin: 0;
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__limit {
     margin: 0 0 var(--space-2);
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__list {
@@ -143,11 +143,11 @@
   }
 
   &__username {
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
   }
 
   &__name {
     margin-inline-start: var(--space-2);
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
   }
 }

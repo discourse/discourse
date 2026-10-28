@@ -5,7 +5,7 @@ html:has(body.discourse-boards-board) {
 }
 
 body.discourse-boards-board {
-  --d-border-radius-small: calc(var(--d-border-radius) / 2);
+  --d-sys-border-radius-sm: calc(var(--d-sys-border-radius-md) / 2);
   --discourse-boards-column-header-height: 25px;
   --discourse-boards-column-card-gap: var(--space-2);
   --discourse-boards-column-padding: var(--space-2);
@@ -148,7 +148,7 @@ body.discourse-boards-board {
     height: 50%;
     padding: 2em 1em;
     border: 1px dashed var(--primary-300);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-50);
     text-align: center;
 
@@ -212,7 +212,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     justify-content: center;
     width: 2.5rem;
     border: 1px dashed var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
     color: var(--primary-low-mid);
     cursor: pointer;
@@ -255,7 +255,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   display: flex;
   flex-direction: column;
   transition: border-color 0.15s ease;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   border: 1px solid
     oklch(
       from var(--discourse-boards-column-color, var(--primary-500)) l c h /
@@ -271,8 +271,8 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     align-items: center;
     height: var(--discourse-boards-column-header-height);
     justify-content: space-between;
-    border-top-right-radius: var(--d-border-radius-small);
-    border-top-left-radius: var(--d-border-radius-small);
+    border-top-right-radius: var(--d-sys-border-radius-sm);
+    border-top-left-radius: var(--d-sys-border-radius-sm);
     color: var(--primary);
     padding: var(--space-2);
   }
@@ -289,7 +289,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     font-weight: 500;
     padding: var(--space-1) var(--space-2);
     background: var(--discourse-boards-column-color, var(--primary-500));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     max-width: 25ch;
 
     @include ellipsis;
@@ -322,10 +322,12 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   }
 
   &__menu-trigger {
-    --d-button-flat-bg-color: transparent;
-    --d-button-flat-icon-color: var(--discourse-boards-column-header-tint);
-    --d-button-flat-bg-color--hover: transparent;
-    --d-button-flat-icon-color--hover: var(--primary);
+    --d-comp-DButton-color-background-flat: transparent;
+    --d-comp-DButton-color-icon-flat: var(
+      --discourse-boards-column-header-tint
+    );
+    --d-comp-DButton-color-background-flat-hovered: transparent;
+    --d-comp-DButton-color-icon-flat-hovered: var(--primary);
     opacity: 0;
     transition: opacity 0.15s ease;
     padding: 2px 4px;
@@ -356,7 +358,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   &__drop-indicator {
     flex-shrink: 0;
     border: 1px solid var(--discourse-boards-column-color, var(--primary-500));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: oklch(
       from var(--discourse-boards-column-color, var(--primary-500)) l c h/0.25
     );
@@ -402,23 +404,27 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   }
 
   &__add-btn {
-    --d-button-default-text-color: var(--discourse-boards-column-header-tint);
-    --d-button-default-icon-color: var(--discourse-boards-column-header-tint);
-    --d-button-default-bg-color: transparent;
-    --d-button-default-bg-color--hover: var(
+    --d-comp-DButton-color-text-default: var(
+      --discourse-boards-column-header-tint
+    );
+    --d-comp-DButton-color-icon-default: var(
+      --discourse-boards-column-header-tint
+    );
+    --d-comp-DButton-color-background-default: transparent;
+    --d-comp-DButton-color-background-default-hovered: var(
       --discourse-boards-column-color,
       var(--primary-500)
     );
-    --d-button-default-text-color--hover: var(
+    --d-comp-DButton-color-text-default-hovered: var(
       --discourse-boards-column-title-text-color
     );
-    --d-button-default-icon-color--hover: var(
+    --d-comp-DButton-color-icon-default-hovered: var(
       --discourse-boards-column-title-text-color
     );
     --d-button-default-border--hover: 1px solid transparent;
     width: 100%;
     justify-content: flex-start;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
   }
 
@@ -461,7 +467,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     min-height: 60px;
     resize: vertical;
     margin-bottom: var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__add-card-actions {
@@ -495,7 +501,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
       from var(--discourse-boards-column-color, var(--primary-500)) l c h/0.25
     );
   padding: var(--space-2);
-  border-radius: var(--d-border-radius-small);
+  border-radius: var(--d-sys-border-radius-sm);
   cursor: grab;
 
   &--floater {
@@ -547,7 +553,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   &--kb-selected {
     outline: 2px solid var(--tertiary);
     outline-offset: -2px;
-    background: var(--tertiary-very-low);
+    background: var(--d-sys-color-background-accent-subtlest);
   }
 
   &__row {
@@ -666,7 +672,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   }
 
   &__assign-btn:hover .avatar + .avatar {
-    outline-color: var(--d-button-flat-bg-color--hover);
+    outline-color: var(--d-comp-DButton-color-background-flat-hovered);
   }
 
   &__thumbnail-row {
@@ -688,7 +694,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     display: inline-block;
     padding: 1px 6px;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: $font-down-2;
     color: var(--primary-high);
   }
@@ -712,7 +718,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     gap: 0.3em;
     padding: 0.15em 0.5em;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-2);
     color: var(--primary-high);
 
@@ -907,7 +913,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
         position: absolute;
         top: 4rem;
         padding: 5px 10px;
-        box-shadow: var(--shadow-card);
+        box-shadow: var(--d-sys-shadow-raised);
         z-index: 5;
         background-color: var(--secondary);
         max-height: 10rem;
@@ -916,13 +922,13 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
 
         > .search-link {
           padding: 6px;
-          border-bottom: 1px solid var(--content-border-color);
+          border-bottom: 1px solid var(--d-sys-color-border-default);
           cursor: pointer;
           display: block;
 
           &:hover,
           &:focus {
-            background-color: var(--highlight-bg);
+            background-color: var(--d-sys-color-background-highlight-subtlest);
           }
 
           .search-category {

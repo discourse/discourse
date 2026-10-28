@@ -8,7 +8,7 @@
 }
 
 @mixin separator {
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
 }
 
 :root {
@@ -56,7 +56,7 @@
     align-items: center;
     background: var(--d-input-bg-color);
     border: var(--d-input-border);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     padding: var(--space-1) 0;
 
     input.search-term__input {
@@ -100,14 +100,14 @@
       right: 0;
       top: unset;
       width: unset;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
   .results {
     display: flex;
     flex-direction: column;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .heading {
       padding: var(--space-2) 0 0 var(--space-4);
@@ -220,7 +220,7 @@
       }
 
       .btn.clear-recent-searches {
-        --d-button-transparent-text-color: var(--tertiary);
+        --d-comp-DButton-color-text-transparent: var(--tertiary);
         padding-inline: var(--space-4);
         width: 100%;
         justify-content: start;
@@ -410,7 +410,7 @@
   color: var(--primary-medium);
 
   .tip-label {
-    background-color: rgb(var(--tertiary-rgb), 0.1);
+    background-color: color-mix(in srgb, var(--tertiary) 10%, transparent);
     margin-right: var(--space-1);
     padding: 2px 4px;
     display: inline-block;

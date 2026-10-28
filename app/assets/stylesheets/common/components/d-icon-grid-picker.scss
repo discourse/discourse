@@ -73,7 +73,7 @@
   &__filter {
     width: 100%;
     margin: 0.5rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-sizing: border-box;
 
     input {
@@ -153,7 +153,7 @@
     &:hover,
     &:focus {
       background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       @media (prefers-reduced-motion: no-preference) {
         transform: scale(1.25);
@@ -161,9 +161,9 @@
     }
 
     &.--selected {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       color: var(--tertiary);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     // Inner grid so the chip icon aligns with the first grid column

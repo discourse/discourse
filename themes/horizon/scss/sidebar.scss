@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 :root {
-  --d-sidebar-active-background: var(--d-selected);
+  --d-sidebar-active-background: var(--d-sys-color-background-default-selected);
 }
 
 body.has-full-page-chat .sidebar-wrapper,
@@ -30,7 +30,7 @@ body.has-full-page-chat .sidebar-wrapper,
 
   .sidebar-section-link {
     transition: none;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   .dropdown-menu__item .sidebar-section-link {
@@ -74,7 +74,7 @@ body.has-full-page-chat .sidebar-wrapper,
 }
 
 .sidebar-wrapper .sidebar-sections {
-  --scrollbarThumbBg: var(--d-selected);
+  --scrollbarThumbBg: var(--d-sys-color-background-default-selected);
 }
 
 .sidebar-section-link-wrapper .sidebar-section-link:focus,
@@ -94,7 +94,9 @@ body.has-full-page-chat .sidebar-wrapper,
 }
 
 .admin-area .sidebar-wrapper .admin-panel {
-  --d-sidebar-highlight-background: var(--d-selected);
+  --d-sidebar-highlight-background: var(
+    --d-sys-color-background-default-selected
+  );
   --d-sidebar-link-icon-color: var(--d-sidebar-link-color);
 }
 

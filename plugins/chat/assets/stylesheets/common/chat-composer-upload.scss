@@ -5,7 +5,7 @@
   border: 1px solid var(--primary-low-mid);
   margin-right: 0.5em;
   position: relative;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   box-sizing: border-box;
 
   &--with-preview {
@@ -52,11 +52,17 @@
   }
 
   &__remove-btn {
-    --d-button-flat-bg-color: rgb(var(--always-black-rgb), 0.9);
-    --d-button-flat-bg-color--hover: rgb(var(--always-black-rgb), 0.9);
-    --d-button-flat-bg-color--focus: rgb(var(--always-black-rgb), 0.9);
-    --d-button-flat-icon-color: #fff;
-    --d-button-flat-icon-color--hover: #fff;
+    --d-comp-DButton-color-background-flat: rgb(var(--always-black-rgb), 0.9);
+    --d-comp-DButton-color-background-flat-hovered: rgb(
+      var(--always-black-rgb),
+      0.9
+    );
+    --d-comp-DButton-color-background-flat-focused: rgb(
+      var(--always-black-rgb),
+      0.9
+    );
+    --d-comp-DButton-color-icon-flat: #fff;
+    --d-comp-DButton-color-icon-flat-hovered: #fff;
     position: absolute;
     top: -8px;
     right: -8px;
@@ -120,7 +126,7 @@
     .preview-video {
       object-position: center;
       object-fit: cover;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -159,7 +165,7 @@
 
     .extension-pill {
       background: var(--primary-low);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       font-size: var(--font-down-2-rem);
       padding: 0.1em 0.4em;
     }

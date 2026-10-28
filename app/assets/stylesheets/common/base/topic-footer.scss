@@ -168,7 +168,7 @@
     background-color: var(--secondary);
     color: var(--tertiary);
     padding: 0.5rem 1em;
-    border: 1px solid var(--tertiary-low);
+    border: 1px solid var(--d-sys-color-background-accent-subtlest);
 
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
@@ -199,7 +199,7 @@
       bottom: 0;
       left: 0;
       width: var(--progress-bg-width, 0);
-      background-color: var(--tertiary-low);
+      background-color: var(--d-sys-color-background-accent-subtlest);
     }
   }
 }

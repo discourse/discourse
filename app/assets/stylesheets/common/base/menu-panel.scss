@@ -43,7 +43,7 @@
   top: 100%; // directly underneath .panel
   right: 5px;
   max-height: calc(100dvh - var(--header-offset) - 1em);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .panel-body {
     // improves usability on high zoom levels
@@ -54,10 +54,10 @@
 }
 
 .menu-panel {
-  --shadow-dropdown: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+  --d-sys-shadow-overlay: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
   --list-item-padding: 0.5em 1rem;
-  border: 1px solid var(--content-border-color);
-  box-shadow: var(--shadow-dropdown);
+  border: 1px solid var(--d-sys-color-border-default);
+  box-shadow: var(--d-sys-shadow-overlay);
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
@@ -301,7 +301,7 @@
       }
 
       .d-icon {
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
         color: var(--primary-medium);
         padding: 0.5em; // 8px
       }
@@ -339,7 +339,8 @@
   }
 
   .bottom-tabs {
-    border-top: var(--user-menu-border-width) solid var(--content-border-color);
+    border-top: var(--user-menu-border-width) solid
+      var(--d-sys-color-border-default);
   }
 
   .panel-body-contents {
@@ -358,7 +359,7 @@
     justify-content: space-between;
     box-sizing: border-box;
     border-right: var(--user-menu-border-width) solid
-      var(--content-border-color);
+      var(--d-sys-color-border-default);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
@@ -431,7 +432,7 @@
 
     hr {
       border-top: var(--user-menu-border-width) solid
-        var(--content-border-color);
+        var(--d-sys-color-border-default);
       width: 100%;
     }
   }
@@ -512,7 +513,7 @@
             background: linear-gradient(
               to bottom,
               transparent,
-              rgb(var(--secondary-rgb), 1)
+              var(--secondary)
             );
           }
         }

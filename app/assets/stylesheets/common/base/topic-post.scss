@@ -181,12 +181,12 @@
   }
 
   ins {
-    background-color: var(--success-low);
+    background-color: var(--d-sys-color-background-success-subtlest);
     text-decoration: underline;
   }
 
   del {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     text-decoration: line-through;
   }
 
@@ -231,7 +231,7 @@
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   .clearfix > .topic-meta-data > .names {
@@ -239,7 +239,7 @@
       color: var(--primary-high-or-secondary-low);
 
       a {
-        background-color: var(--highlight-bg);
+        background-color: var(--d-sys-color-background-highlight-subtlest);
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -359,7 +359,7 @@
 }
 
 :root {
-  --d-post-control-border-radius: var(--d-button-border-radius);
+  --d-comp-PostMenu-button-border-radius: var(--d-comp-DButton-border-radius);
   --d-post-control-text-color: var(--primary-low-mid);
   --d-post-control-text-color--hover: var(--primary);
   --d-post-control-icon-color: var(--primary-low-mid);
@@ -421,8 +421,10 @@ nav.post-controls {
 
         .discourse-no-touch & {
           &:not(.has-like):hover {
-            --d-post-control-background--hover: var(--love-low);
-            --d-button-flat-icon-color--hover: var(--love);
+            --d-post-control-background--hover: var(
+              --d-sys-color-background-love-subtlest
+            );
+            --d-comp-DButton-color-icon-flat-hovered: var(--love);
           }
         }
       }
@@ -430,8 +432,10 @@ nav.post-controls {
       &__double-button {
         .discourse-no-touch & {
           &:not(.has-liked):hover {
-            --d-post-control-background--hover: var(--love-low);
-            --d-button-flat-icon-color--hover: var(--love);
+            --d-post-control-background--hover: var(
+              --d-sys-color-background-love-subtlest
+            );
+            --d-comp-DButton-color-icon-flat-hovered: var(--love);
           }
         }
       }
@@ -457,13 +461,13 @@ nav.post-controls {
         margin-inline: 0;
 
         &:first-child {
-          border-radius: var(--d-post-control-border-radius) 0 0
-            var(--d-post-control-border-radius);
+          border-radius: var(--d-comp-PostMenu-button-border-radius) 0 0
+            var(--d-comp-PostMenu-button-border-radius);
         }
 
         &:last-child {
-          border-radius: 0 var(--d-post-control-border-radius)
-            var(--d-post-control-border-radius) 0;
+          border-radius: 0 var(--d-comp-PostMenu-button-border-radius)
+            var(--d-comp-PostMenu-button-border-radius) 0;
         }
 
         &:nth-child(2) {
@@ -471,7 +475,7 @@ nav.post-controls {
         }
 
         &:first-child:last-child {
-          border-radius: var(--d-post-control-border-radius);
+          border-radius: var(--d-comp-PostMenu-button-border-radius);
         }
 
         &.has-like {
@@ -599,7 +603,7 @@ nav.post-controls {
     color: var(--primary-medium);
     display: flex;
     align-items: center;
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-comp-DButton-border-radius);
 
     &[aria-expanded="true"] {
       background: var(--primary-low);
@@ -685,7 +689,7 @@ nav.post-controls {
 
 .deleted {
   .regular > .cooked {
-    background-color: var(--danger-low-mid);
+    background-color: var(--d-sys-color-background-danger-subtle);
   }
 
   .topic-meta-data:not(.embedded-reply) {
@@ -716,7 +720,7 @@ nav.post-controls {
     .btn {
       &:hover {
         color: currentcolor;
-        background: var(--danger-low);
+        background: var(--d-sys-color-background-danger-subtlest);
 
         .d-icon {
           color: currentcolor;
@@ -897,7 +901,7 @@ aside.quote {
 }
 
 .cooked .highlight {
-  background-color: var(--tertiary-low);
+  background-color: var(--d-sys-color-background-accent-subtlest);
   padding: 0.15em;
   margin: -0.15em;
 }
@@ -1115,7 +1119,7 @@ aside.quote {
     float: left;
     min-width: 0; // prevents some elements, like <pre>, from blowing out the width
     position: relative;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding: var(--space-3) 0 0 0;
 
     &:first-of-type {
@@ -1149,7 +1153,7 @@ aside.quote {
   }
 
   .group-request {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding-top: 0.5em;
 
     @include viewport.from(sm) {
@@ -1188,12 +1192,12 @@ aside.quote {
 
   .wiki,
   .last-wiki-edit {
-    color: var(--wiki);
+    color: var(--d-comp-PostMetaData-wiki-color-text);
   }
 
   @include viewport.from(sm) {
     a.wiki {
-      color: var(--wiki);
+      color: var(--d-comp-PostMetaData-wiki-color-text);
     }
   }
 
@@ -1420,13 +1424,13 @@ blockquote .post__contents-cooked-quote {
   &.deleted {
     .topic-avatar,
     .small-action-desc {
-      background-color: var(--danger-low-mid);
+      background-color: var(--d-sys-color-background-danger-subtle);
     }
   }
 
   .topic-avatar,
   .small-action-desc {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .topic-avatar {
@@ -1630,7 +1634,7 @@ span.mention {
 .blocked-hotlinked-placeholder {
   display: inline-flex;
   flex-direction: column;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   align-items: center;
   justify-content: center;
 
@@ -1669,7 +1673,7 @@ a.reply-to-tab {
 .topic-post {
   @include viewport.until(sm) {
     > article {
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding: 15px 0 8px 0;
     }
   }
@@ -1706,7 +1710,7 @@ a.reply-to-tab {
         margin-left: 8px;
         background-color: var(--primary-low);
         color: var(--primary);
-        box-shadow: var(--shadow-dropdown);
+        box-shadow: var(--d-sys-shadow-overlay);
       }
     }
   }
@@ -1721,7 +1725,7 @@ a.reply-to-tab {
     width: 200px;
     position: fixed;
     z-index: z("dropdown") + 1; // 1 higher than .select-posts
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
     padding: var(--space-3);
     margin-bottom: var(--space-1);
     right: 10px;
@@ -1837,8 +1841,8 @@ a.reply-to-tab {
 
 .post-notice {
   align-items: center;
-  background-color: var(--tertiary-very-low);
-  border-top: 1px solid var(--content-border-color);
+  background-color: var(--d-sys-color-background-accent-subtlest);
+  border-top: 1px solid var(--d-sys-color-border-default);
   display: flex;
   width: 100%;
   max-width: calc(
@@ -1855,7 +1859,7 @@ a.reply-to-tab {
   }
 
   &.custom {
-    background: var(--danger-low);
+    background: var(--d-sys-color-background-danger-subtlest);
   }
 
   .emoji {
@@ -1918,7 +1922,7 @@ iframe {
 
 .posts-filtered-notice {
   position: sticky;
-  background-color: var(--tertiary-low);
+  background-color: var(--d-sys-color-background-accent-subtlest);
   bottom: 0;
   padding: 1em;
   margin-top: 0.5em;
@@ -1983,11 +1987,11 @@ iframe {
 }
 
 span.highlighted {
-  background-color: var(--highlight-bg);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
 }
 
 .quote-highlight {
-  background-color: var(--highlight-bg);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
   scroll-margin-top: 3lh;
 
   &:not(span) {
@@ -2168,7 +2172,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   // We use absolute positioning here because we want it to display in the padding
   align-self: center;
-  color: var(--tertiary-medium);
+  color: var(--d-sys-color-background-accent-subtle);
   right: 0;
   font-size: 0.571em;
 
@@ -2248,7 +2252,7 @@ span.post-count {
   }
 
   .topic-avatar {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding-top: var(--space-4);
     width: var(--topic-avatar-width);
     float: left;

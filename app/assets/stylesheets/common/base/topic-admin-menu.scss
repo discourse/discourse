@@ -17,7 +17,7 @@
       padding: 0.5em;
 
       &:not(:last-of-type) {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -38,8 +38,8 @@
 
 // Styles for select posts mini menu
 .selected-posts {
-  border: 1px solid var(--tertiary-medium);
-  background-color: var(--tertiary-low);
+  border: 1px solid var(--d-sys-color-background-accent-subtle);
+  background-color: var(--d-sys-color-background-accent-subtlest);
 
   .btn {
     border: none;
@@ -57,7 +57,7 @@
 
       &:hover {
         color: var(--secondary);
-        background: var(--tertiary-high);
+        background: var(--d-sys-color-background-accent);
       }
 
       &:active {
@@ -67,7 +67,7 @@
     }
 
     &[disabled] {
-      text-shadow: 0 1px 0 rgb(var(--primary-rgb), 0.2);
+      text-shadow: 0 1px 0 color-mix(in srgb, var(--primary) 20%, transparent);
 
       @include linear-gradient(var(--tertiary), var(--tertiary-hover));
       box-shadow: inset 0 1px 0 rgb(0, 0, 0, 0.33);

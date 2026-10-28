@@ -50,9 +50,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: var(--d-border-radius);
-      border: 1px solid var(--content-border-color);
-      box-shadow: var(--shadow-dropdown);
+      border-radius: var(--d-sys-border-radius-md);
+      border: 1px solid var(--d-sys-color-border-default);
+      box-shadow: var(--d-sys-shadow-overlay);
       background: var(--secondary);
       max-width: 600px;
       overflow: hidden;
@@ -108,7 +108,7 @@
     height: 100%;
 
     &:not(.btn) {
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       padding-left: 0.5em;
       padding-right: 0.5em;
     }
@@ -254,8 +254,8 @@
 
     &.is-selected,
     &.is-selected.is-highlighted {
-      background: var(--d-selected);
-      color: var(--d-selected-text-color);
+      background: var(--d-sys-color-background-default-selected);
+      color: var(--d-sys-color-text-default-selected);
     }
 
     .discourse-tag,
@@ -282,7 +282,7 @@
     }
 
     &:hover .select-kit-row.is-selected.is-highlighted:hover {
-      background: var(--d-selected-hover);
+      background: var(--d-sys-color-background-default-selected-hovered);
     }
 
     .validation-message {

@@ -50,34 +50,37 @@
         --edge-right: 0 0 0 0 transparent;
         --edge-bottom: 0 0 0 0 transparent;
         --edge-left: 0 0 0 0 transparent;
-        background-color: var(--token-color-background-accent-subtlest);
+        background-color: var(--d-sys-color-background-accent-subtlest);
         box-shadow:
           var(--edge-top), var(--edge-right), var(--edge-bottom),
           var(--edge-left);
 
         &.--axis-row {
-          --edge-top: inset 0 2px 0 0 var(--token-color-border-focused);
-          --edge-bottom: inset 0 -2px 0 0 var(--token-color-border-focused);
+          --edge-top: inset 0 2px 0 0 var(--d-sys-color-border-input-focused);
+          --edge-bottom: inset 0 -2px 0 0
+            var(--d-sys-color-border-input-focused);
 
           &.--edge-start {
-            --edge-left: inset 2px 0 0 0 var(--token-color-border-focused);
+            --edge-left: inset 2px 0 0 0 var(--d-sys-color-border-input-focused);
           }
 
           &.--edge-end {
-            --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
+            --edge-right: inset -2px 0 0 0
+              var(--d-sys-color-border-input-focused);
           }
         }
 
         &.--axis-column {
-          --edge-left: inset 2px 0 0 0 var(--token-color-border-focused);
-          --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
+          --edge-left: inset 2px 0 0 0 var(--d-sys-color-border-input-focused);
+          --edge-right: inset -2px 0 0 0 var(--d-sys-color-border-input-focused);
 
           &.--edge-start {
-            --edge-top: inset 0 2px 0 0 var(--token-color-border-focused);
+            --edge-top: inset 0 2px 0 0 var(--d-sys-color-border-input-focused);
           }
 
           &.--edge-end {
-            --edge-bottom: inset 0 -2px 0 0 var(--token-color-border-focused);
+            --edge-bottom: inset 0 -2px 0 0
+              var(--d-sys-color-border-input-focused);
           }
         }
       }
@@ -90,12 +93,13 @@
         &.is-structural-target.--axis-row {
           &.--edge-start {
             --edge-left: 0 0 0 0 transparent;
-            --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
+            --edge-right: inset -2px 0 0 0
+              var(--d-sys-color-border-input-focused);
           }
 
           &.--edge-end {
             --edge-right: 0 0 0 0 transparent;
-            --edge-left: inset 2px 0 0 0 var(--token-color-border-focused);
+            --edge-left: inset 2px 0 0 0 var(--d-sys-color-border-input-focused);
           }
         }
       }
@@ -106,8 +110,8 @@
       position: absolute;
       z-index: 1;
       padding: 0;
-      border: var(--token-border-width) solid transparent;
-      background-color: var(--token-color-surface-pressed);
+      border: var(--d-sys-border-width-sm) solid transparent;
+      background-color: var(--d-sys-color-background-default-pressed);
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
@@ -118,13 +122,13 @@
       &:focus-visible {
         opacity: 1;
         pointer-events: auto;
-        outline: 2px solid var(--token-color-border-focused);
+        outline: 2px solid var(--d-sys-color-border-input-focused);
         outline-offset: 2px;
       }
     }
 
     &__grip {
-      border-radius: var(--token-radius-normal);
+      border-radius: var(--d-sys-border-radius-md);
       cursor: grab;
 
       &::after {
@@ -135,7 +139,7 @@
 
       @media (hover: hover) {
         &:hover {
-          background-color: var(--token-color-icon-default);
+          background-color: var(--d-sys-color-icon-default);
         }
       }
 
@@ -173,7 +177,7 @@
       opacity: 1;
       pointer-events: auto;
       border-color: transparent;
-      background-color: var(--token-color-background-accent-bolder);
+      background-color: var(--d-sys-color-background-accent);
 
       &::before {
         content: "";
@@ -183,7 +187,7 @@
         translate: -50% -50%;
         background-image: radial-gradient(
           circle,
-          var(--token-color-text-inverse) 0.75px,
+          var(--d-sys-color-text-inverse) 0.75px,
           transparent 0.75px
         );
         background-size: 0.25rem 0.25rem;
@@ -209,7 +213,7 @@
     }
 
     &__append {
-      border-radius: var(--token-radius-normal);
+      border-radius: var(--d-sys-border-radius-md);
 
       .d-icon {
         position: absolute;
@@ -218,24 +222,24 @@
         width: 0.625rem;
         height: 0.625rem;
         translate: -50% -50%;
-        color: var(--token-color-icon-default);
+        color: var(--d-sys-color-icon-default);
         transition: color 0.12s ease;
       }
 
       &:focus-visible {
-        background-color: var(--token-color-background-accent-bolder);
+        background-color: var(--d-sys-color-background-accent);
 
         .d-icon {
-          color: var(--token-color-text-inverse);
+          color: var(--d-sys-color-text-inverse);
         }
       }
 
       @media (hover: hover) {
         &:hover {
-          background-color: var(--token-color-background-accent-bolder);
+          background-color: var(--d-sys-color-background-accent);
 
           .d-icon {
-            color: var(--token-color-text-inverse);
+            color: var(--d-sys-color-text-inverse);
           }
         }
       }
@@ -255,7 +259,7 @@
       }
 
       &.is-appending {
-        background-color: var(--token-color-background-accent-bolder);
+        background-color: var(--d-sys-color-background-accent);
       }
 
       &.is-removing {
@@ -302,14 +306,15 @@
       display: none;
       min-width: 1.25rem;
       padding: var(--space-half) var(--space-1);
-      border: var(--token-border-width) solid var(--token-color-border-default);
-      border-radius: var(--token-radius-full);
+      border: var(--d-sys-border-width-sm) solid
+        var(--d-sys-color-border-default);
+      border-radius: var(--d-sys-border-radius-full);
       translate: -50% -50%;
-      background-color: var(--token-color-surface);
-      box-shadow: 0 2px 5px rgb(var(--primary-rgb), 0.18);
-      color: var(--token-color-text-default);
+      background-color: var(--d-sys-color-background-default);
+      box-shadow: 0 2px 5px color-mix(in srgb, var(--primary) 18%, transparent);
+      color: var(--d-sys-color-text-default);
       font-size: var(--font-down-2);
-      font-weight: var(--token-font-weight-semibold);
+      font-weight: var(--d-sys-font-weight-semibold);
       line-height: 1;
       text-align: center;
       white-space: nowrap;
@@ -322,9 +327,9 @@
       position: absolute;
       z-index: 1;
       display: none;
-      border: 1px dashed var(--token-color-border-focused);
-      border-radius: var(--token-radius-normal);
-      background-color: var(--token-color-background-accent-subtlest);
+      border: 1px dashed var(--d-sys-color-border-input-focused);
+      border-radius: var(--d-sys-border-radius-md);
+      background-color: var(--d-sys-color-background-accent-subtlest);
       background-image: repeating-linear-gradient(
         var(--ghost-flow),
         transparent 0 calc(var(--ghost-step) - 1px),
@@ -345,14 +350,14 @@
       }
 
       &.--add {
-        border-color: var(--token-color-border-focused);
-        background-color: var(--token-color-background-accent-subtlest);
-        color: var(--token-color-border-focused);
+        border-color: var(--d-sys-color-border-input-focused);
+        background-color: var(--d-sys-color-background-accent-subtlest);
+        color: var(--d-sys-color-border-input-focused);
       }
 
       &.--remove {
         border-color: var(--danger);
-        background-color: var(--danger-low);
+        background-color: var(--d-sys-color-background-danger-subtlest);
         color: var(--danger);
       }
     }
@@ -362,7 +367,7 @@
       z-index: 2;
       display: none;
       border-radius: 1px;
-      background-color: var(--token-color-border-focused);
+      background-color: var(--d-sys-color-border-input-focused);
       pointer-events: none;
 
       &.--row {
@@ -390,7 +395,7 @@
         }
 
         table {
-          outline-color: var(--token-color-border-default);
+          outline-color: var(--d-sys-color-border-default);
         }
       }
     }
@@ -403,7 +408,7 @@
         }
 
         table {
-          outline-color: var(--token-color-border-default);
+          outline-color: var(--d-sys-color-border-default);
         }
       }
 
@@ -441,7 +446,7 @@
       td.is-moving {
         z-index: 1;
         opacity: 0.55;
-        background-color: var(--token-color-background-accent-subtlest);
+        background-color: var(--d-sys-color-background-accent-subtlest);
       }
     }
 
@@ -480,8 +485,8 @@
 .composer-table__drag-avatar {
   position: fixed;
   z-index: z("composer", "dropdown");
-  border-radius: var(--token-radius-normal);
-  background-color: var(--token-color-background-accent-bolder);
+  border-radius: var(--d-sys-border-radius-md);
+  background-color: var(--d-sys-color-background-accent);
   pointer-events: none;
 
   &::before {
@@ -494,7 +499,7 @@
     translate: -50% -50%;
     background-image: radial-gradient(
       circle,
-      var(--token-color-text-inverse) 0.75px,
+      var(--d-sys-color-text-inverse) 0.75px,
       transparent 0.75px
     );
     background-size: 0.25rem 0.25rem;
@@ -517,8 +522,8 @@
 
   .fk-d-menu__inner-content {
     overflow: hidden;
-    border-color: var(--token-color-border-default);
-    border-radius: var(--token-radius-large);
+    border-color: var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 }
 
@@ -529,7 +534,7 @@
 
   .dropdown-menu__divider {
     margin-block: var(--space-1);
-    border-color: var(--token-color-border-default);
+    border-color: var(--d-sys-color-border-default);
   }
 
   .btn {
@@ -538,13 +543,13 @@
     gap: var(--space-2);
     padding: var(--space-2);
     border: 0;
-    color: var(--token-color-text-default);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-1);
     line-height: var(--line-height-medium);
 
     .d-icon {
       width: 1rem;
-      color: var(--token-color-icon-subtle);
+      color: var(--d-sys-color-icon-muted);
       font-size: var(--font-down-1);
     }
 
@@ -554,20 +559,20 @@
     }
 
     &.--active {
-      background-color: var(--token-color-surface-selected);
+      background-color: var(--d-sys-color-background-default-selected);
 
       .d-icon {
-        color: var(--token-color-text-accent);
+        color: var(--d-sys-color-text-accent);
       }
     }
 
     &.--dangerous:hover,
     &.--dangerous:focus-visible {
-      background-color: var(--danger-low);
+      background-color: var(--d-sys-color-background-danger-subtlest);
       color: var(--danger);
 
       .d-icon {
-        color: var(--token-color-icon-danger);
+        color: var(--d-sys-color-icon-danger);
       }
     }
   }

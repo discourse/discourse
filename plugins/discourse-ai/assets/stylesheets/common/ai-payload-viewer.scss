@@ -9,8 +9,8 @@
     margin: 0 0 var(--space-2);
     padding: var(--space-3);
     overflow: auto;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
     color: var(--primary);
     font-family: var(--d-font-family--monospace);
@@ -41,7 +41,7 @@
 
   &__empty {
     padding: var(--space-6);
-    border: 1px dashed var(--content-border-color);
+    border: 1px dashed var(--d-sys-color-border-default);
     color: var(--primary-high);
     text-align: center;
   }

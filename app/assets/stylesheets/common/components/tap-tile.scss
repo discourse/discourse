@@ -8,11 +8,11 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     cursor: pointer;
 
     &:first-child {
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
 
     &:hover {
@@ -20,7 +20,7 @@
     }
 
     &.active {
-      background-color: var(--d-selected);
+      background-color: var(--d-sys-color-background-default-selected);
     }
 
     .d-icon {

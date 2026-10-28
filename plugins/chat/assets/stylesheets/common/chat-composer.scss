@@ -1,6 +1,10 @@
 :root {
   --d-chat-input-border-color: var(--primary-low);
-  --d-chat-input-bg-color: rgb(var(--primary-very-low-rgb), 0.5);
+  --d-chat-input-bg-color: color-mix(
+    in srgb,
+    var(--primary-very-low) 50%,
+    transparent
+  );
   --d-chat-input-focused-shadow: 0 0 1px 0 var(--tertiary);
 }
 
@@ -53,7 +57,7 @@
     width: 100%;
     flex-direction: row;
     border: 1px solid var(--d-chat-input-border-color);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     background: var(--d-chat-input-bg-color);
     min-height: 50px;
     overflow: hidden;

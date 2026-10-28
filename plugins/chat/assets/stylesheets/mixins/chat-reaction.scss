@@ -14,13 +14,13 @@
     border-color 0.2s;
 
   &.reacted {
-    border-color: var(--tertiary-medium);
-    background: var(--tertiary-very-low);
+    border-color: var(--d-sys-color-background-accent-subtle);
+    background: var(--d-sys-color-background-accent-subtlest);
     color: var(--tertiary-hover);
 
     &:focus-visible,
     &:hover {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
   }
 

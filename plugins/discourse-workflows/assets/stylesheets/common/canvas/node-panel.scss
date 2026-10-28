@@ -41,7 +41,7 @@
     margin: var(--space-3) var(--space-4);
     padding: var(--space-2) var(--space-3);
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
 
     .d-icon {
@@ -81,7 +81,7 @@
     width: 100%;
     padding: var(--space-3);
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: none;
     cursor: pointer;
     text-align: left;
@@ -126,7 +126,7 @@
     width: 100%;
     padding: var(--space-3);
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: none;
     cursor: pointer;
     text-align: left;

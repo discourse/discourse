@@ -3,16 +3,17 @@
 .popup-menu {
   background-color: var(--secondary);
   width: 14em;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   z-index: z("dropdown");
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--d-sys-shadow-raised);
 
   ul {
     margin: 0;
     list-style: none;
 
     li {
-      border-bottom: 1px solid rgb(var(--primary-low-rgb), 0.5);
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--primary-low) 50%, transparent);
 
       &:last-child {
         border: none;
@@ -57,7 +58,7 @@
 
       &:focus,
       &:hover {
-        background: var(--danger-low);
+        background: var(--d-sys-color-background-danger-subtlest);
 
         .d-icon,
         .d-button-label {

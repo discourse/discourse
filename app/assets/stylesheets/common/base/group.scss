@@ -42,7 +42,7 @@
 }
 
 .group-delete-tooltip {
-  background-color: var(--tertiary-low);
+  background-color: var(--d-sys-color-background-accent-subtlest);
   padding: 0.1em 2.5em 0.1em 1em;
   margin-bottom: 10px;
 }
@@ -317,7 +317,7 @@ table.group-category-permissions {
   background-color: var(--primary-very-low);
   padding: 1em;
   margin: 1em 0;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
 
   .groups-form {
     display: grid;

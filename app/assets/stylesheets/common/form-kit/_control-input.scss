@@ -16,11 +16,13 @@
   }
 
   &.has-prefix:not(.has-suffix) {
-    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+    border-radius: 0 var(--d-comp-Input-border-radius)
+      var(--d-comp-Input-border-radius) 0;
   }
 
   &.has-suffix:not(.has-prefix) {
-    border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius) 0 0
+      var(--d-comp-Input-border-radius);
   }
 
   &-wrapper {
@@ -44,10 +46,12 @@
 
 .form-kit__before-input {
   margin-right: -0.25em;
-  border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius) 0 0
+    var(--d-comp-Input-border-radius);
 }
 
 .form-kit__after-input {
   margin-left: -0.25em;
-  border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+  border-radius: 0 var(--d-comp-Input-border-radius)
+    var(--d-comp-Input-border-radius) 0;
 }

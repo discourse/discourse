@@ -150,11 +150,11 @@
   flex: none;
 }
 .bundle-analyzer .ba-badge.add {
-  background: var(--highlight-low);
+  background: var(--d-sys-color-background-highlight-subtlest);
   color: var(--primary);
 }
 .bundle-analyzer .ba-badge.route {
-  background: var(--success-low);
+  background: var(--d-sys-color-background-success-subtlest);
   color: var(--success);
 }
 

@@ -20,7 +20,7 @@
 }
 
 .chat-message-actions {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   display: flex;
 
   :is(button, summary):focus-visible {
@@ -88,8 +88,8 @@
       border-left-color: transparent;
       padding: 0.5em 0;
       width: 2.5em;
-      transition: var(--d-button-transition);
-      border-radius: var(--d-border-radius);
+      transition: var(--d-comp-DButton-motion-transition);
+      border-radius: var(--d-sys-border-radius-md);
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
 
@@ -127,7 +127,7 @@
     }
 
     &:first-child .select-kit-header {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     .select-kit-row {
@@ -159,12 +159,12 @@
 
     &:first-child {
       border-left-color: var(--primary-300);
-      border-top-left-radius: var(--d-border-radius);
-      border-bottom-left-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-sys-border-radius-md);
+      border-bottom-left-radius: var(--d-sys-border-radius-md);
     }
 
     &.reacted {
-      border-left-color: var(--tertiary-medium);
+      border-left-color: var(--d-sys-color-background-accent-subtle);
       z-index: 1;
     }
 

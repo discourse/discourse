@@ -115,22 +115,23 @@
   .field-warning {
     margin-top: var(--space-2);
     margin-bottom: 0;
-    background-color: var(--danger-low-mid);
+    background-color: var(--d-sys-color-background-danger-subtle);
     padding: var(--space-2);
     white-space: pre-wrap;
   }
 
   .field-warning {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   .field-info {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
     padding: 10px;
     margin: 10px 0 0;
     white-space: nowrap;
     overflow-x: auto;
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
   }
 
   .admin-container {
@@ -363,7 +364,7 @@
     align-items: center;
     font-size: var(--font-up-1);
     flex-wrap: wrap;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     padding-bottom: var(--space-2);
     gap: var(--space-2);
 
@@ -427,7 +428,8 @@
       position: relative;
       min-height: unset;
       flex: 1 1 0;
-      border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
+      border-radius: 0 0 var(--d-sys-border-radius-md)
+        var(--d-sys-border-radius-md);
     }
 
     &.maximized {
@@ -701,7 +703,7 @@
 .admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 }
 
@@ -830,7 +832,7 @@
   .user-field {
     padding-block: 0.5em;
     margin-bottom: 1em;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     .form-display {
       width: 25%;
@@ -857,7 +859,7 @@
 
 .robots-txt-edit {
   div.overridden {
-    background: var(--highlight-bg);
+    background: var(--d-sys-color-background-highlight-subtlest);
     padding: 7px;
     margin-bottom: 7px;
   }
@@ -886,7 +888,7 @@
   .email-templates-list {
     &__row {
       &.overridden {
-        border-left: 3px solid var(--highlight-medium);
+        border-left: 3px solid var(--d-sys-color-background-highlight-subtle);
       }
     }
   }
@@ -979,7 +981,7 @@
 
     .btn {
       &:not(:last-of-type) {
-        border-right: 1px solid var(--content-border-color);
+        border-right: 1px solid var(--d-sys-color-border-default);
       }
     }
   }

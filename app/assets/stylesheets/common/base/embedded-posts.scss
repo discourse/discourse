@@ -2,7 +2,7 @@
 
 // nested replies in topics
 .embedded-posts {
-  --border-color: var(--content-border-color);
+  --border-color: var(--d-sys-color-border-default);
   --border-width: 1px;
 
   @include viewport.until(sm) {

@@ -15,7 +15,7 @@
     align-items: center;
     gap: var(--space-2);
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
@@ -38,7 +38,7 @@
       }
 
       &:not(:first-child) {
-        border-inline-start: 1px solid var(--content-border-color);
+        border-inline-start: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -52,7 +52,7 @@
     }
 
     &.is-active {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-sys-color-background-accent-subtlest);
       color: var(--tertiary);
     }
 

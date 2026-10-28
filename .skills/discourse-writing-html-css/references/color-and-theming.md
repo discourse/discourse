@@ -22,12 +22,12 @@ the background, `-high` closest to the foreground), plus numeric steps `-50`…`
 | `--quaternary` | Secondary accent for themes |
 | `--danger`, `--success`, `--love`, `--highlight` (each + `-low`/`-medium`/`-hover`) | Semantic states |
 | `--header_background`, `--header_primary` | Header surface and its text |
-| `--d-hover`, `--d-selected` | Hover / selected affordances |
+| `--d-hover`, `--d-sys-color-background-default-selected` | Hover / selected affordances |
 
 Need a translucent color? Use the `-rgb` triplet variants inside `rgba()`:
 
 ```scss
-background: rgba(var(--tertiary-rgb), 0.1);
+background: color-mix(in srgb, var(--tertiary) 10%, transparent);
 ```
 
 ## Semantic design tokens (preferred for new UI)
@@ -36,18 +36,18 @@ background: rgba(var(--tertiary-rgb), 0.1);
 layers **semantic tokens** on top of the palette. Prefer these when one fits — they encode
 intent and already handle light/dark via `light-dark()`:
 
-- Text: `--token-color-text-default`, `--token-color-text-subtle`, `--token-color-text-accent`, `--token-color-text-inverse`
-- Icons: `--token-color-icon-default`, `--token-color-icon-subtle`, `--token-color-icon-danger`
-- Borders: `--token-color-border-default`, `--token-color-border-focused`, `--token-color-border-input`
-- Surfaces: `--token-color-surface`, `--token-color-surface-hovered`, `--token-color-surface-selected`
-- Sizing: `--token-radius-small|normal|large|full`, `--token-border-width`
-- Weight: `--token-font-weight-regular|medium|semibold|bold`
+- Text: `--d-sys-color-text-default`, `--d-sys-color-text-muted`, `--d-sys-color-text-accent`, `--d-sys-color-text-inverse`
+- Icons: `--d-sys-color-icon-default`, `--d-sys-color-icon-muted`, `--d-sys-color-icon-danger`
+- Borders: `--d-sys-color-border-default`, `--d-sys-color-border-input-focused`, `--d-sys-color-border-input`
+- Surfaces: `--d-sys-color-background-default`, `--token-color-surface-hovered`, `--d-sys-color-background-default-selected`
+- Sizing: `--d-sys-border-radius-sm|normal|large|full`, `--d-sys-border-width-sm`
+- Weight: `--d-sys-font-weight-regular|medium|semibold|bold`
 
 ## General-purpose `--d-*` design vars
 
-A family of app-wide design constants — `--d-border-radius` (and `--d-border-radius-large`,
-`--d-input-border-radius`), `--d-content-background`, `--d-link-color`, `--d-hover`,
-`--d-selected` — for conventions like the standard corner radius and link color. Prefer these
+A family of app-wide design constants — `--d-sys-border-radius-md` (and `--d-sys-border-radius-lg`,
+`--d-comp-Input-border-radius`), `--d-content-background`, `--d-sys-color-text-link`, `--d-hover`,
+`--d-sys-color-background-default-selected` — for conventions like the standard corner radius and link color. Prefer these
 over inventing your own constant so a component matches the rest of the UI (and a theme can
 retune them globally).
 
@@ -64,11 +64,11 @@ exhaustive lists.
 
 ### Rounded corners
 
-`--d-border-radius` is the standard corner radius used across the UI; `--d-border-radius-large`
-is the larger step. Component radii derive from it — `--d-button-border-radius`,
-`--d-input-border-radius`, `--d-nav-pill-border-radius`, `--d-tag-border-radius`. Override
-`--d-border-radius` to round everything consistently; override a component's own var to change
-just that component. (Semantic-token equivalents: `--token-radius-small|normal|large|full`.)
+`--d-sys-border-radius-md` is the standard corner radius used across the UI; `--d-sys-border-radius-lg`
+is the larger step. Component radii derive from it — `--d-comp-DButton-border-radius`,
+`--d-comp-Input-border-radius`, `--d-comp-NavPills-border-radius`, `--d-comp-DDiscourseTag-border-radius`. Override
+`--d-sys-border-radius-md` to round everything consistently; override a component's own var to change
+just that component. (Semantic-token equivalents: `--d-sys-border-radius-sm|normal|large|full`.)
 
 ### Buttons
 
@@ -78,18 +78,18 @@ just that component. (Semantic-token equivalents: `--token-radius-small|normal|l
 // pattern: --d-button-{variant}-{text-color|bg-color|icon-color|border}[--hover]
 // variants: default, primary, danger, success, flat
 :root {
-  --d-button-primary-bg-color: var(--tertiary);
-  --d-button-primary-bg-color--hover: var(--tertiary-hover);
+  --d-comp-DButton-color-background-primary: var(--tertiary);
+  --d-comp-DButton-color-background-primary-hovered: var(--tertiary-hover);
 }
 ```
 
-Plus globals `--d-button-border-radius`, `--d-button-border`, `--d-button-transition`. Override
+Plus globals `--d-comp-DButton-border-radius`, `--d-button-border`, `--d-comp-DButton-motion-transition`. Override
 these to restyle every button of a variant without touching `.btn` selectors.
 
 ### Inputs & form elements
 
 `common/base/discourse.scss` defines input hooks: `--d-input-bg-color`, `--d-input-border`,
-`--d-input-text-color`, `--d-input-focused-color`, `--d-input-border-radius` (each with a
+`--d-input-text-color`, `--d-input-focused-color`, `--d-comp-Input-border-radius` (each with a
 `--disabled` variant where relevant). For FormKit layout (gutters, input widths), see the
 `--form-kit-*` vars in `common/form-kit/_variables.scss` (`--form-kit-gutter-x/y`,
 `--form-kit-max-input`, `--form-kit-{small,medium,large}-input`).

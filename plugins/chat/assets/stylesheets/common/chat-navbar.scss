@@ -1,6 +1,6 @@
 .c-navbar-container {
   position: relative;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   background: var(--secondary);
   box-sizing: border-box;
   display: flex;
@@ -139,7 +139,7 @@
   .c-navbar__filter {
     &.active {
       .d-icon {
-        color: var(--d-button-transparent-text-color--hover);
+        color: var(--d-comp-DButton-color-text-transparent-hovered);
       }
     }
   }

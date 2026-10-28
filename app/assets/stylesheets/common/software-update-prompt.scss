@@ -4,11 +4,11 @@
   right: 0;
   left: 0;
   top: var(--header-offset, 60px);
-  background-color: var(--tertiary-low);
+  background-color: var(--d-sys-color-background-accent-subtlest);
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s;
-  box-shadow: var(--shadow-header);
+  box-shadow: var(--d-sys-shadow-overflow);
   z-index: z("header") - 10;
 
   .static-login &,

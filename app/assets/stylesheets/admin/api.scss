@@ -81,7 +81,7 @@
     font-size: var(--font-down-1);
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     user-select: all;
     word-break: break-all;
 
@@ -91,7 +91,7 @@
       gap: var(--space-2);
       padding: var(--space-3) var(--space-4);
       background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     &__detail-row {
@@ -117,7 +117,7 @@
       font-size: var(--font-down-1);
       background: var(--primary-very-low);
       border: 1px solid var(--primary-low);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     &__scope-param {

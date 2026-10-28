@@ -3,8 +3,8 @@
 .db-report {
   &__card {
     position: relative;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-lg);
     padding: var(--space-4);
     box-sizing: border-box;
     background: var(--secondary);
@@ -25,8 +25,8 @@
         right: 0;
         background: linear-gradient(
           to bottom,
-          rgb(var(--secondary-rgb), 0),
-          rgb(var(--secondary-rgb), 0.5)
+          color-mix(in srgb, var(--secondary) 0%, transparent),
+          color-mix(in srgb, var(--secondary) 50%, transparent)
         );
         height: var(--space-2);
       }
@@ -61,7 +61,7 @@
       margin: calc(var(--space-2) * -1);
       border-style: dashed;
       border-color: var(--tertiary);
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
 
       &:not(.--rows-2, .--rows-3, .--rows-4) {
         height: calc(320px + var(--space-2) * 2);
@@ -152,8 +152,8 @@
         right: 0;
         background: linear-gradient(
           to top,
-          rgb(var(--secondary-rgb), 0),
-          rgb(var(--secondary-rgb), 0.5)
+          color-mix(in srgb, var(--secondary) 0%, transparent),
+          color-mix(in srgb, var(--secondary) 50%, transparent)
         );
         height: var(--space-2);
         z-index: 1;
@@ -176,7 +176,7 @@
   }
 
   &__label {
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
     color: var(--tertiary);
     border-radius: 4px;
     font-size: var(--font-down-3);
@@ -237,15 +237,15 @@
   }
 
   &__add-report {
-    border: 1px dashed var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
+    border: 1px dashed var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-lg);
     background: var(--secondary);
     color: var(--primary-medium);
     padding: var(--space-2);
 
     &:hover,
     &:focus {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       border-color: var(--tertiary);
       color: var(--tertiary);
     }

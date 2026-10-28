@@ -1,7 +1,7 @@
 .assistant-workflow-preview {
   background: var(--secondary);
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   box-sizing: border-box;
   margin-block-start: var(--space-2);
   max-width: min(100%, 40em);
@@ -94,7 +94,7 @@
     align-items: center;
     background: var(--secondary);
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
     box-sizing: border-box;
     display: grid;
@@ -106,7 +106,7 @@
 
   &__node-icon {
     align-items: center;
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
     border-radius: 50%;
     color: var(--tertiary);
     display: inline-flex;
@@ -153,7 +153,7 @@
   }
 
   &__warning {
-    background: var(--highlight-bg);
+    background: var(--d-sys-color-background-highlight-subtlest);
     color: var(--primary);
     margin: 0;
     padding: var(--space-3) var(--space-4);

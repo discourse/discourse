@@ -86,7 +86,7 @@ body.embed-mode {
   }
 
   .topic-area .posts-wrapper:has(.post-stream .topic-post + .topic-post) {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   // Single-column grid for embed mode (no timeline sidebar)
@@ -153,7 +153,7 @@ body.embed-mode {
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--shadow-dropdown);
+      box-shadow: var(--d-sys-shadow-overlay);
 
       .d-button-label {
         display: none;

@@ -6,7 +6,7 @@
   }
 
   &__item .btn-icon-text.btn-flat:hover {
-    background-color: var(--d-selected);
+    background-color: var(--d-sys-color-background-default-selected);
     box-shadow: none;
     color: var(--primary);
   }
@@ -20,7 +20,7 @@
   }
 
   &__item-choice.active.btn-icon-text.btn-flat {
-    background-color: var(--d-selected);
+    background-color: var(--d-sys-color-background-default-selected);
   }
 }
 

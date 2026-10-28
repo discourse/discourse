@@ -98,22 +98,22 @@
 
           .search-menu-panel {
             padding: 0;
-            border: 1px solid var(--content-border-color);
-            border-radius: var(--d-border-radius);
+            border: 1px solid var(--d-sys-color-border-default);
+            border-radius: var(--d-sys-border-radius-md);
             max-height: calc(100vh - var(--header-offset));
           }
 
           .search-input {
             display: flex;
             padding: 0 0 0 2em;
-            border-radius: var(--d-input-border-radius);
+            border-radius: var(--d-comp-Input-border-radius);
 
             .search-term__input {
               height: 100%;
               width: 100%;
               margin: 0;
               padding: 0.5em;
-              border-radius: var(--d-input-border-radius);
+              border-radius: var(--d-comp-Input-border-radius);
 
               &:focus {
                 outline: none;

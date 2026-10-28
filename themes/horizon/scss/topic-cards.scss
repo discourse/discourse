@@ -1,10 +1,10 @@
 @use "lib/viewport";
 
 :root {
-  --d-border-radius-small: calc(var(--d-border-radius) * 0.5);
+  --d-sys-border-radius-sm: calc(var(--d-sys-border-radius-md) * 0.5);
   --topic-list-item-background-color: var(--d-content-background);
   --topic-list-item-background-color--visited: var(--d-content-background);
-  --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
+  --topic-card-shadow: color-mix(in srgb, var(--tertiary) 10%, transparent);
 }
 
 .badge-category__wrapper {
@@ -37,7 +37,7 @@
 .topic-list,
 .category-boxes .subcategories {
   .badge-category__wrapper {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 3px 6px;
     background-color: var(--badge-category-bg);
 
@@ -98,7 +98,7 @@
     "creator title title title status"
     ". category activity activity .";
   gap: var(--space-3);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &.--has-replies {
     grid-template-areas:
@@ -240,10 +240,10 @@
   }
 
   .badge-category__wrapper {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     @include viewport.until(sm) {
-      border-radius: var(--d-border-radius-small);
+      border-radius: var(--d-sys-border-radius-sm);
       max-width: 125px;
     }
     padding: 0.25em 0.5rem;
@@ -279,10 +279,10 @@
     .avatar {
       height: calc(var(--space-3) * 2);
       width: calc(var(--space-3) * 2);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       @include viewport.until(sm) {
-        border-radius: var(--d-border-radius-small);
+        border-radius: var(--d-sys-border-radius-sm);
       }
     }
   }
@@ -354,12 +354,12 @@
       font-size: var(--font-down-3);
     }
     font-weight: 600;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     border: 1px solid var(--status-color);
     color: var(--status-color);
 
     @include viewport.until(sm) {
-      border-radius: var(--d-border-radius-small);
+      border-radius: var(--d-sys-border-radius-sm);
       padding: 0.35em;
     }
 

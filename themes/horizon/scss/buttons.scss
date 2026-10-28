@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 :root {
-  --d-button-border-radius: 6.25rem;
+  --d-comp-DButton-border-radius: 6.25rem;
 }
 
 .discourse-no-touch .topic-body .actions .fade-out {
@@ -11,8 +11,8 @@
 .sidebar-new-topic-button__wrapper {
   &:has(.fk-d-tooltip__trigger) {
     #create-topic.btn {
-      border-radius: var(--d-button-border-radius) 0 0
-        var(--d-button-border-radius);
+      border-radius: var(--d-comp-DButton-border-radius) 0 0
+        var(--d-comp-DButton-border-radius);
     }
   }
 }
@@ -43,7 +43,7 @@
     background-image: none;
 
     .d-icon {
-      color: var(--tertiary-high);
+      color: var(--d-sys-color-background-accent);
     }
   }
 }
@@ -87,7 +87,8 @@
     &:not([disabled]):focus-visible,
     &:not([disabled]):hover {
       background-color: var(--danger);
-      box-shadow: 0 0 0 4px var(--d-button-danger-bg-color--hover);
+      box-shadow: 0 0 0 4px
+        var(--d-comp-DButton-color-background-danger-hovered);
     }
   }
 }
@@ -105,7 +106,7 @@
 }
 
 .d-combo-button:hover {
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   box-shadow: 0 0 0 4px var(--button-box-shadow);
 
   button:hover {

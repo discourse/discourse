@@ -15,7 +15,7 @@
   .combo-box .combo-box-header {
     background: var(--secondary);
     color: var(--primary);
-    border: 1px solid var(--input-border-color);
+    border: 1px solid var(--d-sys-color-border-input);
     font-size: var(--font-0);
     height: 100%;
 
@@ -140,8 +140,8 @@
         color: var(--primary);
 
         &.active {
-          background: var(--d-selected);
-          color: var(--d-selected-text-color);
+          background: var(--d-sys-color-background-default-selected);
+          color: var(--d-sys-color-text-default-selected);
           font-weight: bold;
         }
       }

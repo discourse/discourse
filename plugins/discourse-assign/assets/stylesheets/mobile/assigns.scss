@@ -44,7 +44,7 @@
 }
 
 .select-kit-row[data-value="unassign-mobile-header"] {
-  background: rgb(var(--primary-low-rgb), 0.5);
+  background: color-mix(in srgb, var(--primary-low) 50%, transparent);
   pointer-events: none;
 }
 

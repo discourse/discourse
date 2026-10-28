@@ -5,8 +5,8 @@
 
   &__thinking,
   &__section {
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
   }
 
@@ -24,7 +24,7 @@
   &__heading {
     margin: 0;
     padding: var(--space-3);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   &__text {
@@ -48,8 +48,8 @@
 
   &__item {
     padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
 
     &.--error {
@@ -92,8 +92,8 @@
     margin: 0;
     padding: var(--space-3);
     overflow: visible;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
     color: var(--primary);
     font-family: var(--d-font-family--monospace);

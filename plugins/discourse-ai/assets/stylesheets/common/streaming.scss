@@ -27,7 +27,7 @@
   animation: flashing 1.5s 3s infinite;
   display: inline-block;
   font-size: 1rem;
-  color: var(--tertiary-medium);
+  color: var(--d-sys-color-background-accent-subtle);
 }
 
 .streamable-content.streaming .cooked p:last-child::after {

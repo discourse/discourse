@@ -6,14 +6,14 @@
 @import "./common/components/hashtag";
 
 article.post {
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 
   img.avatar {
     border-radius: 50%;
   }
 
   &.deleted {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
   }
 
   .quote .title {
@@ -101,7 +101,7 @@ article.post {
   }
 
   a.staff {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   a.new-user {
@@ -226,7 +226,7 @@ div.lightbox-wrapper {
     clear: both;
 
     .main-link {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       padding: 0.5rem;
       width: 100%;
 
