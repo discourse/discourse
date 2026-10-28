@@ -526,7 +526,11 @@ module DiscourseAi
                     return { error: "Permission denied" }
                   end
 
-                  unless topic.change_category_to_id(category.id, silent: !!options["silent"])
+                  unless topic.change_category_to_id(
+                           category.id,
+                           silent: !!options["silent"],
+                           acting_user: user,
+                         )
                     return(
                       { error: "Failed to change category", details: topic.errors.full_messages }
                     )

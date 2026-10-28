@@ -27,13 +27,14 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :topic_category_changed,
-          output_contracts: [{ schema: OUTPUT_SCHEMA }],
+          output_contracts: [{ schema: Schema.merge(OUTPUT_SCHEMA, Schema::ACTOR_SCHEMA) }],
         )
 
-        def initialize(topic, old_category)
+        def initialize(topic, old_category, payload = {})
           super(parameters: {})
           @topic = topic
           @old_category = old_category
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -41,7 +42,11 @@ module DiscourseWorkflows
         end
 
         def output
-          { topic: serialize_topic_list_item(@topic), old_category_id: @old_category.id }
+          {
+            topic: serialize_topic_list_item(@topic),
+            old_category_id: @old_category.id,
+            actor: serialize_user(@actor),
+          }
         end
 
         private
