@@ -177,5 +177,29 @@ module("Unit | Lib | nested-view-preference", function (hooks) {
       });
       assert.strictEqual(this.path, "/t/example/123/8");
     });
+
+    test("a superseded transition is not reported as an error", async function (assert) {
+      const aborted = Promise.reject(
+        Object.assign(new Error("TransitionAborted"), {
+          name: "TransitionAborted",
+        })
+      );
+      aborted.catch(() => {});
+      this.router.replaceWith = (path) => {
+        this.path = path;
+        return aborted;
+      };
+      this.addPost(8, 70, 300);
+      pretender.put("/u/eviltrout.json", () => response(200, { user: {} }));
+
+      await toggleFlatRepliesPreference({
+        currentUser: logIn(this.owner),
+        keyValueStore: this.keyValueStore,
+        router: this.router,
+        topic: this.topic,
+      });
+
+      assert.strictEqual(this.path, "/t/example/123/8");
+    });
   });
 });

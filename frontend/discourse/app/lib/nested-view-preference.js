@@ -113,15 +113,18 @@ export function switchTopicView(
       Number(current.params.nearPost) === postNumber
     : current?.name === "topic.fromParams";
 
+  // Not returned: a query param change can supersede the transition, and the
+  // aborted one would surface as an error even though the switch completes.
   if (isCurrentRoute) {
-    return router.refresh();
+    router.refresh();
+    return;
   }
 
   let path = `/t/${topic.slug}/${topic.id}`;
   if (targetsPost) {
     path += `/${postNumber}`;
   }
-  return router.replaceWith(path);
+  router.replaceWith(path);
 }
 
 export async function toggleFlatRepliesPreference({
@@ -134,7 +137,7 @@ export async function toggleFlatRepliesPreference({
   const postNumber = currentPostNumber(router, topic);
 
   if (!currentUser) {
-    return switchTopicView(
+    switchTopicView(
       router,
       topic,
       () => {
@@ -148,6 +151,7 @@ export async function toggleFlatRepliesPreference({
       },
       postNumber
     );
+    return;
   }
 
   // Saved before updating the user so the view doesn't switch to stale
@@ -157,7 +161,7 @@ export async function toggleFlatRepliesPreference({
     data: { prefer_flat_replies: preferFlat },
   });
 
-  return switchTopicView(
+  switchTopicView(
     router,
     topic,
     () => currentUser.set("user_option.prefer_flat_replies", preferFlat),
