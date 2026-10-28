@@ -505,7 +505,7 @@ RSpec.describe DraftsController do
 
       it "admin can target another user with `username` param" do
         api_key = Fabricate(:api_key, user: admin).key
-        Draft.set(other_user, "xxx", 0, "hi")
+        Draft.set(other_user, "xxx", 0, { reply: "hi" }.to_json)
 
         delete "/drafts/xxx.json",
                params: {
@@ -519,6 +519,7 @@ RSpec.describe DraftsController do
 
         expect(response.status).to eq(200)
         expect(Draft.get(other_user, "xxx", 0)).to eq(nil)
+        expect(Draft.where(user_id: other_user.id)).to be_empty
       end
 
       it "admin acts on self when `username` param is absent" do
@@ -746,6 +747,7 @@ RSpec.describe DraftsController do
 
         expect(response.status).to eq(200)
         expect(Draft.get(user, "draft1", 0)).to eq(nil)
+        expect(Draft.where(user_id: user.id)).to be_empty
       end
 
       it "admin acts on self when `username` param is absent" do

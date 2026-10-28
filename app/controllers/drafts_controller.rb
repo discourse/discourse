@@ -138,6 +138,7 @@ class DraftsController < ApplicationController
   end
 
   def destroy
+    # Admins removing someone else's drafts shouldn't leave that user a restorable copy.
     user = fetch_target_user
 
     begin
@@ -145,7 +146,7 @@ class DraftsController < ApplicationController
         user,
         params[:id],
         params[:sequence].to_i,
-        permanent: params[:permanent].to_s == "true",
+        permanent: params[:permanent].to_s == "true" || user != current_user,
       )
     rescue Draft::OutOfSequence
       # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
@@ -196,7 +197,7 @@ class DraftsController < ApplicationController
 
     deleted_count =
       begin
-        Draft.discard!(user.id, draft_keys)
+        Draft.discard!(user.id, draft_keys, permanent: user != current_user)
       rescue StandardError
         return render json: failed_json, status: :internal_server_error
       end
