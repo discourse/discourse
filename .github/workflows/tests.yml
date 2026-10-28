@@ -328,7 +328,6 @@ jobs:
         continue-on-error: true
         with:
           name: rspec-core-selection
-          overwrite: true
           path: tmp/rspec-mapping
 
       - name: Prepare RSpec mapping collection
