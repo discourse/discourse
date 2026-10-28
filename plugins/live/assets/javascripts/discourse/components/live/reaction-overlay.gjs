@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import DAnimatedEmoji from "discourse/ui-kit/d-animated-emoji";
 
 function offsetStyle(reaction) {
   return trustHTML(`--live-reaction-offset: ${reaction.offset}%`);
@@ -24,7 +24,10 @@ export default class LiveReactionOverlay extends Component {
           data-emoji={{reaction.emoji}}
           style={{offsetStyle reaction}}
         >
-          <span class="live-reactions__emoji">{{dEmoji reaction.emoji}}</span>
+          <DAnimatedEmoji
+            class="live-reactions__emoji"
+            @code={{reaction.emoji}}
+          />
           <span class="live-reactions__username">{{reaction.username}}</span>
         </span>
       {{/each}}
