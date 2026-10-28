@@ -717,6 +717,28 @@ RSpec.describe ApplicationController do
         expect(response.body).to include(topic2.title)
       end
     end
+
+    describe "with invalid API credentials" do
+      fab!(:topic)
+      fab!(:category)
+
+      let(:headers) { { "Api-Key" => "invalid-api-key", "Api-Username" => "system" } }
+
+      it "returns 403 for topics#show JSON" do
+        get "/t/#{topic.id}.json", headers: headers
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_api_credentials"))
+        expect(response.parsed_body["extras"]).to be_nil
+      end
+
+      it "returns 403 for categories#find_by_slug JSON" do
+        get "/c/#{category.slug}/find_by_slug.json", headers: headers
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["extras"]).to be_nil
+      end
+    end
   end
 
   describe "#handle_theme" do

@@ -350,12 +350,23 @@ class ApplicationController < ActionController::Base
     if show_json_errors
       opts = { type: type, status: status_code }
 
+      valid_credentials =
+        begin
+          current_user
+          true
+        rescue Discourse::InvalidAccess
+          false
+        end
+
       with_resolved_locale do
         # Include error in HTML format for topics#show.
-        if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
+        if valid_credentials &&
              (
-               request.params[:controller] == "categories" &&
-                 request.params[:action] == "find_by_slug"
+               (request.params[:controller] == "topics" && request.params[:action] == "show") ||
+                 (
+                   request.params[:controller] == "categories" &&
+                     request.params[:action] == "find_by_slug"
+                 )
              )
           opts[:extras] = {
             title: I18n.t("page_not_found.page_title"),
