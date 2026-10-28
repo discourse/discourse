@@ -3,6 +3,7 @@ import Service from "@ember/service";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import LiveCallControls from "discourse/plugins/live/discourse/components/live/call-controls";
@@ -118,7 +119,12 @@ module("Integration | Component | live/local-recording", function (hooks) {
       .rejects(new DOMException("denied", "NotAllowedError"));
     const room = this.room;
 
-    await render(<template><LiveCallControls @room={{room}} /></template>);
+    await render(
+      <template>
+        <DialogHolder />
+        <LiveCallControls @room={{room}} />
+      </template>
+    );
     await click(RECORD_BUTTON);
 
     assert
