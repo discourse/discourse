@@ -8,6 +8,12 @@ en:
       description: "Where members can ask questions and mark replies as solutions."
 
   discourse_solved:
+    discourse_workflows:
+      solution_action:
+        accept_not_allowed: "'%{username}' can't accept post %{post_id} as a solution."
+        unaccept_not_allowed: "'%{username}' can't unaccept post %{post_id} as a solution."
+        post_not_found: "Post %{post_id} doesn't exist, or the actor can't see it."
+        failed: "The solution on post %{post_id} couldn't be changed."
     category_type:
       allow_accepted_answers:
         label: "Allow topic owner and staff to mark a reply as the solution"
