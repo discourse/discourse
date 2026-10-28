@@ -29,6 +29,7 @@ if defined?(DiscourseWorkflows)
               color: "green",
             },
             group: "discourse_triggers",
+            palette_visible: false,
             event: CHANGES.keys,
             available: -> { SiteSetting.solved_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_solved",
@@ -44,6 +45,26 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          CHANGE_OUTPUT_SCHEMA =
+            DiscourseWorkflows::Schema.merge(
+              DiscourseWorkflows::Schema::POST_SCHEMA,
+              DiscourseWorkflows::Schema::TOPIC_LIST_ITEM_SCHEMA,
+              DiscourseWorkflows::Schema::POST_AUTHOR_SCHEMA,
+              DiscourseWorkflows::Schema::ACTOR_SCHEMA,
+            ).freeze
+
+          def self.description_for_change(name, change)
+            description.merge(
+              name:,
+              palette_visible: true,
+              event: CHANGES.key(change),
+              fixed_changes: [change],
+              i18n_scope: "solution_changed",
+              output_contracts: [{ schema: CHANGE_OUTPUT_SCHEMA }],
+              properties: properties.except(:changes),
+            )
+          end
+
           def self.from_event(event_name, *args)
             new(event_name, *args)
           end
@@ -56,12 +77,14 @@ if defined?(DiscourseWorkflows)
           end
 
           def valid?
-            @change.present? && @post.present? && topic.present?
+            fixed_changes = self.class.description[:fixed_changes]
+            @change.present? && @post.present? && topic.present? &&
+              (fixed_changes.nil? || fixed_changes.include?(@change))
           end
 
           def output
             {
-              change: @change,
+              **(self.class.description[:fixed_changes] ? {} : { change: @change }),
               post: serialize_post(@post),
               topic: serialize_topic_list_item(topic),
               user: serialize_user(@post.user),
