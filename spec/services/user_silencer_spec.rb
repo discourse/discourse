@@ -110,6 +110,21 @@ RSpec.describe UserSilencer do
       expect(old_post.topic).to be_visible
     end
 
+    it "reports each topic it unlists as unlisted by the silencing user", :aggregate_failures do
+      admin = Fabricate(:admin)
+      already_unlisted = Fabricate(:post, user:)
+      already_unlisted.topic.update_columns(visible: false)
+
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          UserSilencer.new(user, admin, post_id: post.id).silence
+        end
+
+      expect(events.map { it[:params] }).to eq(
+        [[post.topic, "visible", false, { acting_user: admin }]],
+      )
+    end
+
     it "reports each post it newly hides as hidden by the silencing user" do
       already_hidden = Fabricate(:post, user: user)
       already_hidden.hide!(PostActionType.types[:spam])
