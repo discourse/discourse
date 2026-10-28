@@ -105,9 +105,16 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         expect(html).to include('data-event-starts-at="2026-10-22T09:00:00.000-04:00"')
         expect(html).to include('class="discourse-event-onebox__date"')
         expect(html).to include("Meet the community")
-        expect(html).to include("Reading time: 1 min 🕑")
-        expect(html).to include("Likes: 2 ❤")
+        expect(html).not_to include("Reading time")
+        expect(html).not_to include("Likes")
         expect(html).not_to include("The ordinary topic excerpt")
+      end
+
+      it "omits the post date from the header" do
+        expect(data[:article_published_time]).to be_nil
+        expect(onebox.to_html).to include(
+          '<a href="https://example.com/t/community-hangout/123" target="_blank" rel="noopener">Example community</a>',
+        )
       end
 
       context "without an event description" do

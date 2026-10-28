@@ -5523,7 +5523,7 @@ en:
     category:
       none: "(no category)"
       all: "All categories"
-      choose: "Category&hellip;"
+      choose: "Category…"
       edit: "Edit"
       edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"

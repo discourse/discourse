@@ -3,9 +3,58 @@ import { service } from "@ember/service";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { escapeExpression, postUrl } from "discourse/lib/utilities";
-import RestModel from "discourse/models/rest";
+import RestModel, { type RestModelAttrs } from "discourse/models/rest";
+import type { TopicBasicUser } from "discourse/models/topic";
+import type User from "discourse/models/user";
 import UserActionGroup from "discourse/models/user-action-group";
 import Category from "./category.ts";
+
+/** Fields shared by the activity and admin post feeds; feed-specific fields are optional. */
+export interface UserActionFields {
+  action_type: number | null;
+  created_at: string;
+  avatar_template: string;
+  topic_id: number;
+  post_id: number | null;
+  post_number: number | null;
+  title: string | null;
+  username: string | null;
+  name?: string | null;
+  slug?: string | null;
+  category_id: number | null;
+  deleted: boolean;
+  hidden: boolean | null;
+  acting_username?: string | null;
+  acting_avatar_template?: string;
+  acting_name?: string | null;
+  acting_user_id?: number;
+  target_username?: string | null;
+  target_name?: string | null;
+  target_user_id?: number;
+  user_id?: number;
+  post_type?: number | null;
+  reply_to_post_number?: number | null;
+  excerpt?: string | null;
+  truncated?: true;
+  deleted_at?: string | null;
+  deleted_by?: TopicBasicUser;
+  id?: number;
+  moderator_action?: boolean;
+  action_code?: string | null;
+  action_code_who?: string;
+  action_code_path?: string;
+  edit_reason?: string | null;
+  closed?: boolean;
+  archived?: boolean;
+  description?: string;
+  childGroups?: Record<
+    "likes" | "stars" | "edits" | "bookmarks",
+    UserActionGroup
+  >;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface UserAction extends UserActionFields {}
 
 const UserActionTypes = {
   likes_given: 1,
@@ -21,12 +70,15 @@ const UserActionTypes = {
   messages_received: 13,
   links: 17,
 };
-const InvertedActionTypes = {};
+const InvertedActionTypes: Record<string, number | undefined> = {};
 
 Object.keys(UserActionTypes).forEach(
-  (k) => (InvertedActionTypes[k] = UserActionTypes[k])
+  (k) =>
+    (InvertedActionTypes[k] =
+      UserActionTypes[k as keyof typeof UserActionTypes])
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class UserAction extends RestModel {
   static TYPES = UserActionTypes;
 
@@ -48,9 +100,9 @@ export default class UserAction extends RestModel {
     UserActionTypes.messages_received,
   ];
 
-  static collapseStream(stream) {
-    const uniq = {};
-    const collapsed = [];
+  static collapseStream(stream: UserAction[]): UserAction[] {
+    const uniq: Record<string, number | undefined> = {};
+    const collapsed: UserAction[] = [];
     let pos = 0;
 
     stream.forEach((item) => {
@@ -58,8 +110,13 @@ export default class UserAction extends RestModel {
       const found = uniq[key];
       if (found === void 0) {
         let current;
-        if (UserAction.TO_COLLAPSE.includes(item.action_type)) {
-          current = UserAction.create(item);
+        if (
+          (UserAction.TO_COLLAPSE as (number | null)[]).includes(
+            item.action_type
+          )
+        ) {
+          // TODO(typescript-pending): RestModelAttrs requires an index signature; remove when create accepts model instances.
+          current = UserAction.create(item as RestModelAttrs<UserAction>);
           item.switchToActing();
           current.addChild(item);
         } else {
@@ -69,7 +126,11 @@ export default class UserAction extends RestModel {
         collapsed[pos] = current;
         pos += 1;
       } else {
-        if (UserAction.TO_COLLAPSE.includes(item.action_type)) {
+        if (
+          (UserAction.TO_COLLAPSE as (number | null)[]).includes(
+            item.action_type
+          )
+        ) {
           item.switchToActing();
           collapsed[found].addChild(item);
         } else {
@@ -82,10 +143,10 @@ export default class UserAction extends RestModel {
     return collapsed;
   }
 
-  @service currentUser;
+  @service currentUser!: User | null;
 
   @computed("name", "username")
-  get presentName() {
+  get presentName(): string | null | undefined {
     return this.name || this.username;
   }
 
@@ -194,32 +255,33 @@ export default class UserAction extends RestModel {
   }
 
   @computed("target_username")
-  get targetUserUrl() {
+  get targetUserUrl(): string {
     return userPath(this.target_username);
   }
 
+  /** Requires a username; null usernames throw when this getter is accessed. */
   @computed("username")
   get usernameLower() {
-    return this.username.toLowerCase();
+    return this.username!.toLowerCase();
   }
 
   @computed("usernameLower")
-  get userUrl() {
+  get userUrl(): string {
     return userPath(this.usernameLower);
   }
 
   @computed()
-  get postUrl() {
+  get postUrl(): string {
     return postUrl(this.slug, this.topic_id, this.post_number);
   }
 
   @computed()
-  get replyUrl() {
+  get replyUrl(): string {
     return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   }
 
   @computed("title")
-  get titleHtml() {
+  get titleHtml(): string | null {
     return this.title && emojiUnescape(escapeExpression(this.title));
   }
 
@@ -236,16 +298,16 @@ export default class UserAction extends RestModel {
   )
   get children() {
     const g = this.childGroups;
-    let rval = [];
+    let rval: UserActionGroup[] = [];
     if (g) {
       rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function (i) {
-        return i.get("items") && i.get("items").length > 0;
+        return i.get("items") && i.get("items")!.length > 0;
       });
     }
     return rval;
   }
 
-  addChild(action) {
+  addChild(action: UserAction): void {
     let groups = this.childGroups;
     if (!groups) {
       groups = {
@@ -268,15 +330,18 @@ export default class UserAction extends RestModel {
           return "bookmarks";
       }
     })();
-    const current = groups[bucket];
+    // Unsupported action types retain the existing undefined-key lookup.
+    const current = groups[bucket as keyof typeof groups];
     if (current) {
       current.push(action);
     }
   }
 
+  /** Copies the acting identity, including undefined when the row omits it. */
   switchToActing() {
     this.setProperties({
-      username: this.acting_username,
+      // Admin post rows omit the acting user; preserve the existing undefined assignment.
+      username: this.acting_username as string | null,
       name: this.actingDisplayName,
     });
   }

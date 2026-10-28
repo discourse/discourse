@@ -707,7 +707,8 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     }
   }
 
-  &__emoji .emoji {
+  // Outranks the core img.emoji sizing.
+  &__emoji.emoji {
     width: 2.25rem;
     height: 2.25rem;
 

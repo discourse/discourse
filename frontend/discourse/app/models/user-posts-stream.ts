@@ -3,25 +3,36 @@ import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import UserAction from "discourse/models/user-action";
+import type User from "discourse/models/user";
+import UserAction, {
+  type UserActionFields,
+} from "discourse/models/user-action";
 
+export interface UserPostsStreamFields {
+  user?: User;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface UserPostsStream extends UserPostsStreamFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class UserPostsStream extends EmberObject {
   @tracked canLoadMore = true;
-  @tracked filter;
+  @tracked filter: "deleted" | "pending" | undefined;
   @tracked itemsLoaded = 0;
-  @tracked lastLoadedUrl;
+  @tracked lastLoadedUrl: string | null | undefined;
   @tracked loaded = false;
   @tracked loading = false;
-  @autoTrackedArray content = [];
+  @autoTrackedArray content: UserAction[] = [];
 
   @computed("user.username_lower", "filter", "itemsLoaded")
-  get url() {
+  get url(): string {
     return getURL(
       `/posts/${this.user?.username_lower}/${this.filter}?offset=${this.itemsLoaded}`
     );
   }
 
-  async filterBy(opts) {
+  async filterBy(opts: { filter: "deleted" | "pending" }): Promise<void> {
     if (this.loaded && this.filter === opts.filter) {
       return;
     }
@@ -36,7 +47,7 @@ export default class UserPostsStream extends EmberObject {
     return this.findItems();
   }
 
-  async findItems() {
+  async findItems(): Promise<void> {
     if (this.loading || !this.canLoadMore) {
       return;
     }
@@ -44,7 +55,11 @@ export default class UserPostsStream extends EmberObject {
     this.loading = true;
 
     try {
-      const result = await ajax(this.url);
+      // TODO(typescript-pending): ajax lacks response types; remove the cast when this endpoint can be typed by ajax.
+      const result = (await ajax(this.url)) as
+        | (UserActionFields & Record<string, unknown>)[]
+        | null
+        | undefined;
       if (result) {
         const posts = result.map((post) => UserAction.create(post));
         this.content.push(...posts);

@@ -129,6 +129,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DInterpolatedTranslation`, `DCountI18n` | Translations whose placeholders are components or counts.                     |
 | `DRelativeDate`                          | A live-updating relative timestamp.                                           |
 | `DCdnImg`, `DLightDarkImg`               | Images that follow the CDN and the colour scheme.                             |
+| `DAnimatedEmoji`                         | An emoji animated where an animation exists, static otherwise.                |
 
 ## Users, avatars, and categories
 

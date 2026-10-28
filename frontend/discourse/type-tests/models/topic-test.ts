@@ -3,7 +3,10 @@ import { expectTypeOf } from "expect-type";
 import type ActionSummary from "discourse/models/action-summary";
 import type Archetype from "discourse/models/archetype";
 import type Bookmark from "discourse/models/bookmark";
-import type Category from "discourse/models/category";
+import type {
+  CategoryFields,
+  default as Category,
+} from "discourse/models/category";
 import type Post from "discourse/models/post";
 import type PostStream from "discourse/models/post-stream";
 import type PublishedPage from "discourse/models/published-page";
@@ -134,7 +137,7 @@ interface ExpectedTopicFields {
   bumped?: boolean;
   bumped_at?: string;
   can_localize_topic?: true;
-  categories?: object[];
+  categories?: CategoryFields[];
   category_id?: number | null;
   chunk_size?: number;
   closed?: boolean;
