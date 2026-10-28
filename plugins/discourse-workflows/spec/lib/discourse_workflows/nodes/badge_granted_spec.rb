@@ -21,22 +21,24 @@ RSpec.describe DiscourseWorkflows::Nodes::BadgeGranted::V1 do
 
     it "returns enabled badges for the chooser" do
       expect(options).to include(
-        { id: badge.id, name: badge.name },
-        { id: other_badge.id, name: other_badge.name },
+        a_hash_including(id: badge.id, name: badge.name),
+        a_hash_including(id: other_badge.id, name: other_badge.name),
       )
     end
 
     it "excludes disabled badges" do
       disabled_badge = Fabricate(:badge, name: "Disabled badge", enabled: false)
 
-      expect(options).not_to include({ id: disabled_badge.id, name: disabled_badge.name })
+      expect(options).not_to include(a_hash_including(id: disabled_badge.id))
     end
 
     context "with a filter term" do
       let(:filter) { "Other badge" }
 
       it "filters badges" do
-        expect(options).to contain_exactly({ id: other_badge.id, name: other_badge.name })
+        expect(options).to contain_exactly(
+          a_hash_including(id: other_badge.id, name: other_badge.name),
+        )
       end
     end
   end
