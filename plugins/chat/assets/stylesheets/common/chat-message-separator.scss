@@ -66,7 +66,7 @@
       &.is-force-pinned {
         .chat-message-separator__text {
           border: 1px solid var(--primary-200);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
           color: var(--primary-800);
           background: var(--primary-50);
 
@@ -104,7 +104,7 @@
       .no-touch & {
         &:hover {
           border: 1px solid var(--secondary-high);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
           color: var(--primary-800);
           background: var(--primary-50);
         }
@@ -113,7 +113,7 @@
       .touch & {
         &:active {
           border: 1px solid var(--secondary-high);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
           color: var(--primary-800);
           background: var(--primary-50);
         }
@@ -129,7 +129,7 @@
       box-sizing: border-box;
 
       .chat-message-separator__line {
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
         margin: 0 0 -1px;
       }
     }

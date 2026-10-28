@@ -15,8 +15,8 @@
     &.ai-logs__filters--drawer-active
       .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
       .d-filter-controls__toggle-filters {
-      --d-button-default-icon-color: var(--tertiary);
-      --d-button-default-icon-color--hover: var(--tertiary-hover);
+      --d-comp-DButton-color-icon-default: var(--tertiary);
+      --d-comp-DButton-color-icon-default-hovered: var(--tertiary-hover);
     }
 
     // the row mixes selects with switches, so it sizes to its contents rather

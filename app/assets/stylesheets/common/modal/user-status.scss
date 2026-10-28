@@ -35,12 +35,12 @@
       width: 80%;
     }
     margin: var(--space-8) auto;
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 
   .card-content {
-    border: 1px solid var(--content-border-color);
-    box-shadow: var(--shadow-dropdown);
+    border: 1px solid var(--d-sys-color-border-default);
+    box-shadow: var(--d-sys-shadow-overlay);
   }
 
   .emoji-picker-trigger {

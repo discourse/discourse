@@ -540,7 +540,7 @@ pre.outlet-info__error-message {
   align-items: center;
   gap: 6px;
   padding: 6px 8px;
-  background: var(--danger-low);
+  background: var(--d-sys-color-background-danger-subtlest);
   border: 1px solid var(--danger-medium);
   border-radius: 4px;
   color: var(--danger);

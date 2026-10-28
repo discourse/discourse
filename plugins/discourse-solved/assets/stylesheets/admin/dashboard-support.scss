@@ -64,21 +64,21 @@ $db-bar-height: var(--space-2);
 
   &__track {
     height: $db-bar-height;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-low);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--resolved {
       background: var(--success);
     }
 
     &.--in-progress {
-      background: var(--tertiary-medium);
+      background: var(--d-sys-color-background-accent-subtle);
     }
 
     &.--unanswered {
@@ -102,7 +102,7 @@ $db-bar-height: var(--space-2);
   }
 
   .db-whos-posting__bar-fill {
-    background: var(--tertiary-medium);
+    background: var(--d-sys-color-background-accent-subtle);
 
     &.--staff {
       background: var(--primary-medium);
@@ -150,21 +150,21 @@ $db-bar-height: var(--space-2);
 
   &__track {
     height: $db-bar-height;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-low);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--bucket-lt_1h {
       background: var(--success);
     }
 
     &.--bucket-1_4h {
-      background: var(--success-medium, var(--success));
+      background: var(--d-sys-color-background-success-subtle, var(--success));
     }
 
     &.--bucket-4_24h {

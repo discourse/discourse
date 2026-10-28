@@ -2,7 +2,7 @@
 
 .bookmark-menu-content {
   .bookmark-menu__title {
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
     color: var(--tertiary);
 
     .d-icon {
@@ -18,7 +18,7 @@
     gap: var(--d-sidebar-section-link-prefix-margin-right);
     height: var(--d-sidebar-row-height);
     padding-inline: var(--d-sidebar-row-horizontal-padding);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       width: var(--d-sidebar-section-link-prefix-width);

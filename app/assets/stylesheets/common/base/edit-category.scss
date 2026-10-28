@@ -36,7 +36,7 @@ $number-input-width: var(--form-kit-small-input);
   }
 
   .warning {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
     padding: 0.5em 2.5em 0.5em 1em;
     margin-top: 0;
   }
@@ -166,7 +166,7 @@ $number-input-width: var(--form-kit-small-input);
   &__delete {
     padding: var(--space-4);
     border: 1px solid var(--danger);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -178,7 +178,7 @@ $number-input-width: var(--form-kit-small-input);
     }
 
     &.--forbidden {
-      background: var(--highlight-bg);
+      background: var(--d-sys-color-background-highlight-subtlest);
       border-color: var(--highlight-high);
     }
   }
@@ -306,7 +306,7 @@ $number-input-width: var(--form-kit-small-input);
   margin-bottom: 0;
 
   .permission-row {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     display: flex;
 
     &.row-header {
@@ -359,7 +359,7 @@ $number-input-width: var(--form-kit-small-input);
     }
 
     &:hover {
-      color: var(--danger-hover);
+      color: var(--d-sys-color-background-danger-hovered);
     }
   }
 
@@ -434,7 +434,7 @@ $number-input-width: var(--form-kit-small-input);
 }
 
 h3:has(+ #control-doc_index_topic_id) {
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   padding-bottom: 0.5em;
   font-size: var(--font-up-1);
   margin: 0;

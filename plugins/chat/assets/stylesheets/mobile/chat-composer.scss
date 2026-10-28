@@ -47,7 +47,7 @@
 
     .is-send-enabled.is-focused &,
     .is-send-enabled & {
-      background-color: var(--tertiary-high);
+      background-color: var(--d-sys-color-background-accent);
       color: var(--secondary);
 
       .d-icon {

@@ -19,10 +19,10 @@
   align-items: center;
   gap: var(--space-2) var(--space-3);
   padding: var(--space-4);
-  border: 1px solid var(--tertiary-medium);
-  background: rgb(var(--tertiary-rgb), 0.075);
-  box-shadow: var(--shadow-card);
-  border-radius: var(--d-border-radius-large);
+  border: 1px solid var(--d-sys-color-background-accent-subtle);
+  background: color-mix(in srgb, var(--tertiary) 7.5%, transparent);
+  box-shadow: var(--d-sys-shadow-raised);
+  border-radius: var(--d-sys-border-radius-lg);
   margin: var(--space-4) auto;
   margin-top: var(--space-1);
   width: max-content;

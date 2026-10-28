@@ -13,15 +13,17 @@
       darken($tertiary, 10%)
     )};
   --fc-border-color: var(--primary-low);
-  --fc-button-text-color: var(--d-button-default-text-color);
-  --fc-button-bg-color: var(--d-button-default-bg-color);
+  --fc-button-text-color: var(--d-comp-DButton-color-text-default);
+  --fc-button-bg-color: var(--d-comp-DButton-color-background-default);
   --fc-button-border-color: transparent;
-  --fc-button-hover-bg-color: var(--d-button-default-bg-color--hover);
+  --fc-button-hover-bg-color: var(
+    --d-comp-DButton-color-background-default-hovered
+  );
   --fc-button-hover-border-color: transparent;
   --fc-button-active-bg-color: var(--tertiary);
   --fc-button-active-border-color: transparent;
   --fc-event-border-color: var(--primary-low);
-  --fc-today-bg-color: var(--highlight-medium);
+  --fc-today-bg-color: var(--d-sys-color-background-highlight-subtle);
   --fc-page-bg-color: var(--secondary);
   --fc-list-event-hover-bg-color: var(--secondary);
   --fc-neutral-bg-color: var(--primary-low);

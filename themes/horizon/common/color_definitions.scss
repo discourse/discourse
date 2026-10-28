@@ -38,7 +38,7 @@ html {
   ) !important;
 
   // Other Colors
-  --d-selected: light-dark(
+  --d-sys-color-background-default-selected: light-dark(
     oklch(from #{$tertiary} 92% calc(c * 0.5) h),
     oklch(from #{$tertiary} calc(l * 0.7) calc(c * 0.25) h)
   ) !important;
@@ -72,29 +72,41 @@ html {
     oklch(from #{$tertiary} calc(l * 0.75) calc(c * 0.5) h)
   ) !important;
   --d-sidebar-highlight-hover-icon: var(--d-sidebar-link-color) !important;
-  --d-sidebar-highlight-hover-background: var(--d-selected) !important;
+  --d-sidebar-highlight-hover-background: var(
+    --d-sys-color-background-default-selected
+  ) !important;
   --d-sidebar-link-icon-color: var(--d-sidebar-link-color) !important;
   --d-sidebar-header-color: var(--d-sidebar-link-color) !important;
   --d-sidebar-header-icon-color: var(--d-sidebar-link-color) !important;
   --d-sidebar-active-suffix-color: var(--d-sidebar-suffix-color) !important;
   --d-sidebar-background: var(--background-color) !important;
   --d-sidebar-footer-fade: var(--background-color) !important;
-  --d-sidebar-prefix-background: var(--d-selected) !important;
+  --d-sidebar-prefix-background: var(
+    --d-sys-color-background-default-selected
+  ) !important;
   --d-sidebar-active-prefix-background: light-dark(
-    oklch(from var(--d-selected) calc(l * 0.85) c h),
-    oklch(from var(--d-selected) calc(l * 0.7) c h)
+    oklch(
+      from var(--d-sys-color-background-default-selected) calc(l * 0.85) c h
+    ),
+    oklch(from var(--d-sys-color-background-default-selected) calc(l * 0.7) c h)
   ) !important;
   --d-sidebar-highlight-prefix-background: light-dark(
-    oklch(from var(--d-selected) calc(l * 0.85) c h),
-    oklch(from var(--d-selected) calc(l * 0.7) c h)
+    oklch(
+      from var(--d-sys-color-background-default-selected) calc(l * 0.85) c h
+    ),
+    oklch(from var(--d-sys-color-background-default-selected) calc(l * 0.7) c h)
   ) !important;
   --d-sidebar-highlight-suffix-color: var(
     --d-sidebar-active-suffix-color
   ) !important;
   --d-sidebar-highlight-color: var(--primary) !important;
-  --d-sidebar-highlight-background: var(--d-selected) !important;
+  --d-sidebar-highlight-background: var(
+    --d-sys-color-background-default-selected
+  ) !important;
   --d-sidebar-section-link-icon-size: 1em !important;
-  --d-hover: oklch(from var(--d-selected) l c h / 0.75) !important;
+  --d-hover: oklch(
+    from var(--d-sys-color-background-default-selected) l c h / 0.75
+  ) !important;
   --d-input-bg-color: var(--d-content-background) !important;
   --discourse_id-text: var(--accent-text-color) !important;
   --discourse_id-text-hover: var(--accent-text-color) !important;
@@ -104,5 +116,7 @@ html {
 }
 
 :where(.uc-modernize-foundation-theme) {
-  --d-sidebar-active-background: var(--d-selected) !important;
+  --d-sidebar-active-background: var(
+    --d-sys-color-background-default-selected
+  ) !important;
 }

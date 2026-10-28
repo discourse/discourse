@@ -6,7 +6,7 @@
 .user-badge {
   padding: 3px 8px;
   color: var(--primary);
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   line-height: var(--line-height-large);
   display: inline-flex;
   align-items: center;
@@ -131,10 +131,10 @@
 }
 
 .badge-card {
-  background-color: var(--d-badge-card-background-color);
-  border: 1px solid var(--content-border-color);
+  background-color: var(--d-comp-DBadgeCard-color-background);
+  border: 1px solid var(--d-sys-color-border-default);
   position: relative;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .check-display {
     position: absolute;
@@ -165,8 +165,8 @@
     right: 0;
     bottom: 0;
     z-index: 1;
-    border-radius: var(--d-button-border-radius) 0 var(--d-button-border-radius)
-      0;
+    border-radius: var(--d-comp-DButton-border-radius) 0
+      var(--d-comp-DButton-border-radius) 0;
   }
 
   .badge-contents {
@@ -328,7 +328,7 @@
   .badge-set-title {
     flex: 0 1 auto;
     padding: 1.5em;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
 
     .badge-title {
       height: 100%;

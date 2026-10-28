@@ -7,7 +7,7 @@
 
   &__channel {
     padding-block: 1em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     h2 {
       margin: 0;
@@ -36,7 +36,7 @@
 
   &__message {
     padding-block: 0.75em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__message-meta {

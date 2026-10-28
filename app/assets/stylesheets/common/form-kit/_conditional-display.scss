@@ -42,7 +42,7 @@
     flex: 1 1 50%;
     padding: 0.5em var(--space-2);
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     justify-content: center;
     position: relative;
     line-height: normal;
@@ -91,7 +91,7 @@
     &:has(input:checked) {
       color: var(--tertiary);
       border-color: var(--tertiary);
-      background: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
 
       .d-icon {
         color: currentcolor;

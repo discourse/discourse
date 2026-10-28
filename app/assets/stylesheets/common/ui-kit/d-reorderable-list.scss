@@ -32,7 +32,7 @@
     min-height: 4em;
     padding: 0.5em;
     border: 1px dashed var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     color: var(--primary-medium);
     text-align: center;
   }
@@ -79,7 +79,7 @@
     &:focus-visible {
       outline: 2px solid var(--d-input-focused-color);
       outline-offset: -1px;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 

@@ -23,7 +23,7 @@
         position: absolute;
         top: 4rem;
         padding: 5px 10px;
-        box-shadow: var(--shadow-card);
+        box-shadow: var(--d-sys-shadow-raised);
         z-index: 5;
         background-color: var(--secondary);
         max-height: 10rem;
@@ -32,13 +32,13 @@
 
         > .search-link {
           padding: 6px;
-          border-bottom: 1px solid var(--content-border-color);
+          border-bottom: 1px solid var(--d-sys-color-border-default);
           cursor: pointer;
           display: block;
 
           &:hover,
           &:focus {
-            background-color: var(--highlight-bg);
+            background-color: var(--d-sys-color-background-highlight-subtlest);
           }
 
           .search-category {
@@ -410,7 +410,7 @@
     .date-time-control {
       position: relative;
       display: flex;
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
 
       &.is-filled,
       &.is-selected {
@@ -646,7 +646,7 @@
   .btn {
     display: block;
     text-align: left;
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-comp-DButton-border-radius);
 
     &.dialog-close {
       display: none;
@@ -693,8 +693,8 @@
       .badge-category__name,
       .discourse-tag,
       .discourse-tags__tag-separator {
-        --category-badge-title-color: var(--d-button-primary-text-color);
-        --tag-text-color: var(--d-button-primary-text-color);
+        --category-badge-title-color: var(--d-comp-DButton-color-text-primary);
+        --tag-text-color: var(--d-comp-DButton-color-text-primary);
       }
     }
 
@@ -702,8 +702,8 @@
       .badge-category__name,
       .discourse-tag,
       .discourse-tags__tag-separator {
-        --category-badge-title-color: var(--d-button-default-text-color);
-        --tag-text-color: var(--d-button-default-text-color);
+        --category-badge-title-color: var(--d-comp-DButton-color-text-default);
+        --tag-text-color: var(--d-comp-DButton-color-text-default);
       }
     }
 
@@ -711,8 +711,10 @@
       .badge-category__name,
       .discourse-tag,
       .discourse-tags__tag-separator {
-        --category-badge-title-color: var(--d-button-default-text-color--hover);
-        --tag-text-color: var(--d-button-default-text-color--hover);
+        --category-badge-title-color: var(
+          --d-comp-DButton-color-text-default-hovered
+        );
+        --tag-text-color: var(--d-comp-DButton-color-text-default-hovered);
       }
     }
 
@@ -778,7 +780,7 @@
 
     .incoming-email-html-part {
       border: none;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding-top: 10px;
       width: 100%;
       height: 100%;

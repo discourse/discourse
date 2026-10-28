@@ -24,7 +24,7 @@
     height: var(--toggle-switch-height);
     position: relative;
     vertical-align: middle;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     :focus-visible & {
       outline: 2px solid var(--tertiary);
@@ -43,12 +43,13 @@
       content: "";
       display: block;
       position: absolute;
-      background-color: var(--tertiary-low);
+      background-color: var(--d-sys-color-background-accent-subtlest);
       width: calc(var(--toggle-switch-height) - var(--space-half));
       height: calc(var(--toggle-switch-height) - var(--space-1));
       top: var(--space-half);
-      border-radius: var(--d-border-radius);
-      box-shadow: 0 1px 2px 1px rgb(var(--tertiary-rgb), 0.2);
+      border-radius: var(--d-sys-border-radius-md);
+      box-shadow: 0 1px 2px 1px
+        color-mix(in srgb, var(--tertiary) 20%, transparent);
 
       .--markdown & {
         transform: translateX(0.125rem);

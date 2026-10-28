@@ -15,7 +15,7 @@
 
   .table {
     margin: 0;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     table-layout: fixed;
 
     tbody {
@@ -213,7 +213,7 @@
 
   .table .admin-report-table-header {
     font-weight: 500;
-    border-right: 1px solid var(--content-border-color);
+    border-right: 1px solid var(--d-sys-color-border-default);
     padding: auto;
 
     .title {

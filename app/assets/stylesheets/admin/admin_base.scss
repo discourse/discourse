@@ -63,8 +63,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgb(var(--secondary-rgb), 1),
-        rgb(var(--secondary-rgb), 0)
+        var(--secondary),
+        color-mix(in srgb, var(--secondary) 0%, transparent)
       );
     }
 
@@ -76,8 +76,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgb(var(--secondary-rgb), 0),
-        rgb(var(--secondary-rgb), 1)
+        color-mix(in srgb, var(--secondary) 0%, transparent),
+        var(--secondary)
       );
     }
   }
@@ -284,8 +284,8 @@ $mobile-breakpoint: 700px;
       align-items: start;
       padding: var(--space-4);
       margin-top: var(--space-2);
-      border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
+      border: 1px solid var(--d-sys-color-border-default);
+      border-radius: var(--d-sys-border-radius-md);
       background: var(--primary-very-low);
     }
 
@@ -326,7 +326,7 @@ $mobile-breakpoint: 700px;
 
     &__badge {
       padding: var(--space-half) var(--space-2);
-      border-radius: var(--d-button-border-radius);
+      border-radius: var(--d-comp-DButton-border-radius);
       color: var(--primary-high);
       font-size: var(--font-down-2);
       white-space: nowrap;
@@ -347,7 +347,7 @@ $mobile-breakpoint: 700px;
   }
 
   .site-text-list {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .site-text {
@@ -356,7 +356,7 @@ $mobile-breakpoint: 700px;
     align-items: start;
     gap: var(--space-2) var(--space-5);
     padding-block: var(--space-5);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     &__details {
       grid-column: 1;
@@ -376,18 +376,18 @@ $mobile-breakpoint: 700px;
 
     &__status {
       padding: var(--space-half) var(--space-2);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary-high);
       background: var(--primary-very-low);
       font-size: var(--font-down-2);
 
       &[data-status="outdated"] {
-        background: var(--highlight-bg);
+        background: var(--d-sys-color-background-highlight-subtlest);
         color: var(--primary);
       }
 
       &[data-status="invalid_interpolation_keys"] {
-        background: var(--danger-low);
+        background: var(--d-sys-color-background-danger-subtlest);
         color: var(--danger);
       }
     }
@@ -399,8 +399,8 @@ $mobile-breakpoint: 700px;
       overflow-wrap: anywhere;
       white-space: pre-wrap;
       background: var(--primary-very-low);
-      border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
+      border: 1px solid var(--d-sys-color-border-default);
+      border-radius: var(--d-sys-border-radius-md);
       padding: var(--space-4);
       line-height: var(--line-height-large);
 
@@ -428,8 +428,8 @@ $mobile-breakpoint: 700px;
     &__default {
       max-width: 800px;
       padding: var(--space-4);
-      border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
+      border: 1px solid var(--d-sys-color-border-default);
+      border-radius: var(--d-sys-border-radius-md);
       background: var(--primary-very-low);
       margin-bottom: var(--space-5);
 
@@ -487,7 +487,7 @@ $mobile-breakpoint: 700px;
     }
 
     .outdated {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       box-sizing: border-box;
       color: var(--primary);
       margin-bottom: 1em;
@@ -517,7 +517,7 @@ $mobile-breakpoint: 700px;
     gap: 0.25em;
     padding: 0.15em 0.5em;
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
@@ -534,14 +534,14 @@ $mobile-breakpoint: 700px;
 
     &.is-used {
       color: var(--success);
-      border-color: var(--success-low);
-      background: var(--success-low);
+      border-color: var(--d-sys-color-background-success-subtlest);
+      background: var(--d-sys-color-background-success-subtlest);
     }
 
     &.is-invalid {
       color: var(--danger);
-      border-color: var(--danger-low);
-      background: var(--danger-low);
+      border-color: var(--d-sys-color-background-danger-subtlest);
+      background: var(--d-sys-color-background-danger-subtlest);
       cursor: default;
     }
   }
@@ -831,7 +831,7 @@ $mobile-breakpoint: 700px;
 .admin-controls {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 
   .admin-actions {
     margin-left: auto;
@@ -962,7 +962,7 @@ $mobile-breakpoint: 700px;
 .admin-detail {
   background-color: var(--secondary);
   margin-left: 0;
-  border-left: solid 1px var(--content-border-color);
+  border-left: solid 1px var(--d-sys-color-border-default);
   padding: 30px 0 0 30px;
   width: 82%;
   box-sizing: border-box;

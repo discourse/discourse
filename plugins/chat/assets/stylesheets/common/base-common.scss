@@ -206,7 +206,7 @@ body.has-full-page-chat {
   .alert-success,
   .alert-warning {
     margin: 0;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 }
 
@@ -257,7 +257,7 @@ body.has-full-page-chat {
   }
 
   &.--over-content .admin-onboarding-banner__wrap {
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
   }
 }
 
@@ -304,7 +304,7 @@ body.has-full-page-chat {
 .chat-channel-status {
   background: var(--secondary);
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 }
 
 html.has-full-page-chat {

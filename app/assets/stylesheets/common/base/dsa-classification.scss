@@ -37,9 +37,9 @@
   &.--pending-notice {
     inline-size: calc(100% - 2 * var(--review-item-padding));
     justify-content: flex-start;
-    background: var(--highlight-low);
+    background: var(--d-sys-color-background-highlight-subtlest);
     color: var(--primary);
-    border: 1px solid var(--highlight-medium);
+    border: 1px solid var(--d-sys-color-background-highlight-subtle);
   }
 }
 

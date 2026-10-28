@@ -14,7 +14,7 @@
   }
 
   .chat-drawer.is-collapsed & {
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
     opacity: 0.7;
   }
 }
@@ -32,7 +32,7 @@ body.has-full-page-chat {
 
 .chat-drawer-container {
   .is-expanded & {
-    box-shadow: 0 0 0 2px var(--tertiary-medium);
+    box-shadow: 0 0 0 2px var(--d-sys-color-background-accent-subtle);
   }
 
   .chat-drawer.is-expanded & {
@@ -100,7 +100,7 @@ body.has-full-page-chat {
 
 .chat-message-actions .more-buttons .btn-icon-text {
   &:hover {
-    background-color: var(--d-selected);
+    background-color: var(--d-sys-color-background-default-selected);
     box-shadow: none;
     color: var(--primary);
   }

@@ -49,7 +49,7 @@
 }
 
 .shortcut-category {
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
 
   h2 {
     font-size: var(--font-0);
@@ -93,7 +93,7 @@
   }
 
   tbody tr {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   td {

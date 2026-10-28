@@ -73,7 +73,7 @@ html.discourse-reactions-no-select {
 
   .discourse-reactions-picker-container {
     margin: 0.25em;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
     background-color: var(--secondary);
     z-index: 1;
     border-radius: 8px;
@@ -102,7 +102,7 @@ html.discourse-reactions-no-select {
     margin: 0.25em !important;
     border: 1px solid transparent !important;
     cursor: not-allowed;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .emoji,
     .d-icon {
@@ -128,8 +128,8 @@ html.discourse-reactions-no-select {
     }
 
     &.is-used {
-      border-color: var(--d-selected) !important;
-      background-color: var(--d-selected);
+      border-color: var(--d-sys-color-background-default-selected) !important;
+      background-color: var(--d-sys-color-background-default-selected);
     }
   }
 }
@@ -204,7 +204,7 @@ html.discourse-reactions-no-select {
     &:not(.my-post) {
       .discourse-no-touch & {
         .discourse-reactions-reaction-button:hover .reaction-button {
-          background: var(--love-low);
+          background: var(--d-sys-color-background-love-subtlest);
 
           .d-icon {
             color: var(--love);
@@ -245,7 +245,7 @@ html.discourse-reactions-no-select {
   align-items: center;
   text-align: center;
   cursor: pointer;
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   border: none;
   background: none;
   color: inherit;

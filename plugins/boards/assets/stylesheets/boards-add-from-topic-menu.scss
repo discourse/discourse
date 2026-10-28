@@ -31,7 +31,7 @@
     overflow: hidden;
     height: 0.75rem;
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &::after {
       content: "";

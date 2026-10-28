@@ -63,9 +63,9 @@ html.composer-open:not(.has-full-page-chat) {
     transform 0.2s,
     min-height 0.2s;
   background-color: var(--secondary);
-  box-shadow: var(--shadow-composer);
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
+  box-shadow: var(--d-sys-shadow-dialog);
+  border-top-left-radius: var(--d-sys-border-radius-lg);
+  border-top-right-radius: var(--d-sys-border-radius-lg);
 
   @media screen and (width <= 1200px) {
     min-width: 0;
@@ -121,7 +121,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.open {
     --min-height: 255px;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     box-sizing: border-box;
     height: var(--composer-height);
     min-height: var(--min-height);
@@ -201,7 +201,7 @@ html.composer-open:not(.has-full-page-chat) {
     }
 
     .composer-actions-trigger {
-      border-color: var(--input-border-color);
+      border-color: var(--d-sys-color-border-input);
     }
 
     .composer-actions-trigger .d-button-label {
@@ -221,16 +221,16 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
       font-size: var(--font-down-1);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       &.--public {
-        --d-button-default-text-color: var(--primary-high);
-        --d-button-flat-icon-color: var(--primary-high);
+        --d-comp-DButton-color-text-default: var(--primary-high);
+        --d-comp-DButton-color-icon-flat: var(--primary-high);
       }
 
       &.--whispering {
-        --d-button-default-text-color: var(--tertiary);
-        --d-button-flat-icon-color: var(--tertiary);
+        --d-comp-DButton-color-text-default: var(--tertiary);
+        --d-comp-DButton-color-icon-flat: var(--tertiary);
 
         &:hover {
           background-color: var(--tertiary-200);
@@ -239,8 +239,8 @@ html.composer-open:not(.has-full-page-chat) {
     }
 
     .composer-actions-reply-target-link {
-      --d-button-default-text-color: var(--primary-high);
-      --d-button-flat-icon-color: var(--primary-high);
+      --d-comp-DButton-color-text-default: var(--primary-high);
+      --d-comp-DButton-color-icon-flat: var(--primary-high);
       overflow: hidden;
 
       &__label {
@@ -887,8 +887,8 @@ html.composer-open:not(.has-full-page-chat) {
   right: 1rem;
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
-  box-shadow: var(--shadow-dropdown);
-  border-radius: var(--d-border-radius-large);
+  box-shadow: var(--d-sys-shadow-overlay);
+  border-radius: var(--d-sys-border-radius-lg);
   background: var(--composer-popup-background);
   display: flex;
   flex-direction: column;
@@ -920,11 +920,11 @@ html.composer-open:not(.has-full-page-chat) {
   }
 
   &.urgent {
-    --composer-popup-background: var(--danger-low);
+    --composer-popup-background: var(--d-sys-color-background-danger-subtlest);
   }
 
   &.education-message {
-    --composer-popup-background: var(--tertiary-low);
+    --composer-popup-background: var(--d-sys-color-background-accent-subtlest);
   }
 
   &.dominating-topic-message,
@@ -954,7 +954,7 @@ html.composer-open:not(.has-full-page-chat) {
     font-size: var(--font-0);
     align-self: end;
     background: var(--composer-popup-background);
-    border-radius: 0 0 0 var(--d-button-border-radius);
+    border-radius: 0 0 0 var(--d-comp-DButton-border-radius);
 
     .d-icon {
       color: currentcolor;
@@ -999,7 +999,7 @@ html.composer-open:not(.has-full-page-chat) {
 }
 
 .custom-body {
-  background-color: var(--tertiary-low);
+  background-color: var(--d-sys-color-background-accent-subtlest);
 
   p {
     max-width: 98%;
@@ -1063,7 +1063,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       .reply-to {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
         margin-bottom: 0;
         padding-bottom: 8px;
       }
@@ -1073,7 +1073,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       &.show-preview .d-editor-textarea-wrapper {
-        border-right: 1px solid var(--content-border-color);
+        border-right: 1px solid var(--d-sys-color-border-default);
       }
 
       #draft-status,

@@ -41,7 +41,7 @@
 .chat-channel-title__users-count {
   display: flex;
   border-radius: 50%;
-  background: rgb(var(--primary-rgb), 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   width: 22px;
   height: 22px;
   box-sizing: border-box;

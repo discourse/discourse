@@ -78,12 +78,12 @@ input[type="color"]:focus,
 .user-main .about .details {
   padding: 1em 1em 0;
   border-bottom: 0;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   background-color: var(--primary-50);
 }
 
 .alert.alert-info {
-  background: var(--tertiary-very-low);
+  background: var(--d-sys-color-background-accent-subtlest);
 }
 
 .discourse-reactions-list .reactions {
@@ -91,7 +91,7 @@ input[type="color"]:focus,
 }
 
 .group-details-container {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .period-chooser-header {

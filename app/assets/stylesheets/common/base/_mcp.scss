@@ -80,7 +80,7 @@
     margin-top: var(--space-4);
     padding: var(--space-4);
     border: 1px solid var(--danger);
-    background: var(--danger-low);
+    background: var(--d-sys-color-background-danger-subtlest);
 
     h2 {
       margin-top: 0;
@@ -238,9 +238,9 @@
       flex-wrap: wrap;
       padding: var(--space-3);
       border: 1px solid var(--primary-300);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       background-color: var(--secondary);
-      box-shadow: var(--shadow-card);
+      box-shadow: var(--d-sys-shadow-raised);
     }
   }
 
@@ -258,8 +258,8 @@
 
   &__primitive-groups {
     padding: var(--space-1);
-    border: 1px solid var(--token-color-border-default);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__primitive-group-list {
@@ -284,25 +284,25 @@
     min-width: 0;
     padding: var(--space-2);
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
-    color: var(--token-color-text-default);
+    color: var(--d-sys-color-text-default);
     text-align: start;
     overflow-wrap: anywhere;
     cursor: pointer;
 
     small {
-      color: var(--token-color-text-subtle);
+      color: var(--d-sys-color-text-muted);
       font-weight: normal;
     }
 
     &.is-selected {
-      background: var(--token-color-surface-selected);
-      font-weight: var(--token-font-weight-semibold);
+      background: var(--d-sys-color-background-default-selected);
+      font-weight: var(--d-sys-font-weight-semibold);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--token-color-border-focused);
+      outline: 2px solid var(--d-sys-color-border-input-focused);
       outline-offset: -2px;
     }
   }
@@ -345,8 +345,8 @@
     position: relative;
     padding: var(--space-3);
     padding-inline-end: calc(var(--space-3) + 2.5rem);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
 
     .form-kit__container-content,
     .form-kit__control-checkbox-label {
@@ -402,7 +402,7 @@
     &[data-state="approved"],
     &[data-state="active"],
     &[data-state="success"] {
-      background: var(--success-low);
+      background: var(--d-sys-color-background-success-subtlest);
       color: var(--success);
     }
 
@@ -411,8 +411,8 @@
     &[data-state="client_not_approved"],
     &[data-state="consent_required"],
     &[data-state="rate_limited"] {
-      background: var(--tertiary-low);
-      color: var(--tertiary-high);
+      background: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-background-accent);
     }
 
     &[data-state="blocked"],
@@ -421,7 +421,7 @@
     &[data-state="user_unavailable"],
     &[data-state="revoked"],
     &[data-state="error"] {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
       color: var(--danger);
     }
   }
@@ -517,8 +517,8 @@
   &__activity-metrics {
     margin-bottom: var(--space-4);
     padding: var(--space-4);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
   }
 }
@@ -567,22 +567,22 @@
     white-space: nowrap;
 
     &[data-state="active"] {
-      background: var(--success-low);
+      background: var(--d-sys-color-background-success-subtlest);
       color: var(--success);
     }
 
     &[data-state="server_disabled"],
     &[data-state="client_not_approved"],
     &[data-state="consent_required"] {
-      background: var(--tertiary-low);
-      color: var(--tertiary-high);
+      background: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-background-accent);
     }
 
     &[data-state="client_blocked"],
     &[data-state="access_removed"],
     &[data-state="user_unavailable"],
     &[data-state="revoked"] {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
       color: var(--danger);
     }
   }

@@ -16,7 +16,7 @@
   .btn[disabled]:not(.is-loading) {
     opacity: 1;
     background: var(--primary-very-low);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     width: 100%;
 
     span[aria-hidden="true"] {
@@ -30,10 +30,11 @@
 }
 
 .voting-wrapper__button {
-  border-radius: var(--d-button-border-radius) var(--d-button-border-radius) 0 0;
+  border-radius: var(--d-comp-DButton-border-radius)
+    var(--d-comp-DButton-border-radius) 0 0;
   padding: var(--space-1) var(--space-3);
   background: var(--secondary);
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
 
   &:focus-visible,
   .discourse-no-touch &:hover {
@@ -65,10 +66,11 @@
 }
 
 .voting-wrapper__count {
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-top: 0;
   background: var(--secondary);
-  border-radius: 0 0 var(--d-button-border-radius) var(--d-button-border-radius);
+  border-radius: 0 0 var(--d-comp-DButton-border-radius)
+    var(--d-comp-DButton-border-radius);
   font-size: var(--font-down-2);
   padding: var(--space-half) var(--space-2);
   text-align: center;
@@ -112,7 +114,7 @@
   --primary-high: var(--header_primary-high);
   --primary-medium: var(--header_primary-high);
   --primary-low: var(--header_primary-low);
-  --d-button-default-icon-color: var(--header_primary-high);
+  --d-comp-DButton-color-icon-default: var(--header_primary-high);
   margin-top: 0.15em; // vertical alignment tweak
   margin-right: var(--space-2);
 

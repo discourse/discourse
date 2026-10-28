@@ -7,7 +7,7 @@
     display: flex;
     align-items: center;
     padding: 0.5em;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     box-shadow: 0 0 4px rgb(0, 0, 0, 0.125);
 
     .selected-message-reply {
@@ -43,12 +43,12 @@
       }
 
       &.reacted {
-        border-color: var(--tertiary-medium);
-        background: var(--tertiary-very-low);
+        border-color: var(--d-sys-color-background-accent-subtle);
+        background: var(--d-sys-color-background-accent-subtlest);
         color: var(--tertiary-hover);
 
         &:hover {
-          background: var(--tertiary-low);
+          background: var(--d-sys-color-background-accent-subtlest);
         }
       }
     }

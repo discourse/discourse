@@ -9,17 +9,17 @@
   .text-preview,
   .inline-diff {
     ins {
-      background-color: var(--success-low);
+      background-color: var(--d-sys-color-background-success-subtlest);
       text-decoration: none;
     }
 
     del {
-      background-color: var(--danger-low);
+      background-color: var(--d-sys-color-background-danger-subtlest);
       text-decoration: line-through;
     }
 
     mark {
-      background-color: var(--highlight-low);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
       border-bottom: 2px solid var(--highlight-high);
 
       ins,
@@ -258,7 +258,9 @@
     background: var(--primary-low);
     right: var(--space-1);
     bottom: 50%;
-    border-radius: var(--d-input-border-radius); // to match surrounding input
+    border-radius: var(
+      --d-comp-Input-border-radius
+    ); // to match surrounding input
     padding: 0.4em;
     font-size: var(--font-down-1-rem);
     z-index: z("composer", "dropdown");

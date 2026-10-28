@@ -240,7 +240,7 @@ html.discourse-touch .live-call-widget {
   grid-template-columns: minmax(0, 1fr) auto;
   height: calc(100dvh - var(--main-outlet-offset, 4em));
   min-height: 0;
-  border-right: 1px solid var(--content-border-color);
+  border-right: 1px solid var(--d-sys-color-border-default);
 
   &__main {
     min-width: 0;
@@ -255,7 +255,7 @@ html.discourse-touch .live-call-widget {
     min-height: 0;
     display: flex;
     overflow: hidden;
-    border-inline-start: 1px solid var(--content-border-color);
+    border-inline-start: 1px solid var(--d-sys-color-border-default);
 
     // Animating the width (not just fading in place) makes the whole layout
     // ease — the video column and controls resize smoothly instead of
@@ -309,13 +309,13 @@ html.discourse-touch .live-call-widget {
     justify-content: center;
     overflow: hidden;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
 
     .live-video-tile {
       width: 100%;
       height: 100%;
-      border-radius: calc(var(--d-border-radius) - 1px);
+      border-radius: calc(var(--d-sys-border-radius-md) - 1px);
     }
 
     .live-video-tile.--screen .live-video-tile__video,
@@ -560,7 +560,7 @@ html.discourse-touch .live-call-widget {
     align-items: center;
     gap: var(--space-2);
     padding: 0 0.67em;
-    border-block-end: 1px solid var(--content-border-color);
+    border-block-end: 1px solid var(--d-sys-color-border-default);
     background: var(--secondary);
   }
 
@@ -641,7 +641,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     margin: 0;
     padding: 0.25em 0.75em;
     max-width: 100%;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: rgb(0 0 0 / 65%);
     color: #fff;
     text-align: center;
@@ -721,7 +721,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     max-width: 8rem;
     padding: 0 0.4em;
     overflow: hidden;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: rgb(0 0 0 / 55%);
     color: #fff;
     font-size: var(--font-down-2);
@@ -842,10 +842,10 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     align-items: center;
     gap: 0.5em;
     padding: 0.25em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--self {
-      background: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
   }
 

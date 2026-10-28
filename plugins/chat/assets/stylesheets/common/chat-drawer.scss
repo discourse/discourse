@@ -73,10 +73,10 @@ html.rtl {
 
   .chat-drawer-container {
     background: var(--secondary);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     border-bottom: 0;
-    border-top-left-radius: var(--d-border-radius-large);
-    border-top-right-radius: var(--d-border-radius-large);
+    border-top-left-radius: var(--d-sys-border-radius-lg);
+    border-top-right-radius: var(--d-sys-border-radius-lg);
     box-shadow: 0 0 4px rgb(0, 0, 0, 0.125);
     box-sizing: border-box;
     display: flex;

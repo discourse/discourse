@@ -272,7 +272,7 @@
 
   ins,
   .diff-ins {
-    background: var(--success-low);
+    background: var(--d-sys-color-background-success-subtlest);
 
     code,
     img {
@@ -291,7 +291,7 @@
 
   del,
   .diff-del {
-    background: var(--danger-low);
+    background: var(--d-sys-color-background-danger-subtlest);
 
     code,
     img {
@@ -313,7 +313,7 @@
   }
 
   span.edit-reason {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   .d-icon-ban {

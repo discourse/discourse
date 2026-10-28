@@ -9,10 +9,10 @@
       white-space: nowrap;
 
       .select-kit-body {
-        border: 1px solid var(--content-border-color);
+        border: 1px solid var(--d-sys-color-border-default);
         background-clip: padding-box;
-        box-shadow: var(--shadow-dropdown);
-        border-radius: var(--d-border-radius);
+        box-shadow: var(--d-sys-shadow-overlay);
+        border-radius: var(--d-sys-border-radius-md);
       }
 
       .select-kit-row {
@@ -85,7 +85,7 @@
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
-        border-radius: var(--d-button-border-radius);
+        border-radius: var(--d-comp-DButton-border-radius);
 
         .d-icon + .d-icon {
           margin-left: 0.25em;

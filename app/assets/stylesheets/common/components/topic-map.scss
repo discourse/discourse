@@ -2,7 +2,7 @@
 
 .topic-map.--op {
   // topic map under OP
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
   border-bottom: none;
   padding-left: calc(
     var(--topic-body-width-padding) + var(--topic-avatar-width)
@@ -21,7 +21,7 @@
 
 .topic-map {
   --chart-line-color: var(--tertiary);
-  --chart-point-color: var(--tertiary-medium);
+  --chart-point-color: var(--d-sys-color-background-accent-subtle);
   --chart-prediction-color: var(--primary-low-mid);
   display: flex;
   flex-direction: row;
@@ -29,7 +29,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   column-gap: 0.75em;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   box-sizing: border-box;
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
@@ -220,7 +220,7 @@
       padding-inline: 1rem;
       padding-bottom: 0.5em;
       font-size: var(--font-up-1);
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     .loading-container {
@@ -258,7 +258,7 @@
 
     li:not(:last-of-type) {
       a {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -309,7 +309,7 @@
       gap: 0.25em;
 
       &:not(:last-of-type) {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
 
       .discourse-no-touch & {

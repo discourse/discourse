@@ -105,8 +105,8 @@ body.has-ai-bot-docked-composer {
   display: flex;
   flex-direction: column-reverse;
   border: var(--d-input-border);
-  border-color: var(--content-border-color);
-  border-radius: var(--d-input-border-radius);
+  border-color: var(--d-sys-color-border-default);
+  border-radius: var(--d-comp-Input-border-radius);
 
   // Match the chat input's light grey, but composited over an opaque base so
   // topic content doesn't show through the input while scrolling (the docked
@@ -116,7 +116,7 @@ body.has-ai-bot-docked-composer {
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
   position: relative;
-  box-shadow: var(--shadow-docked-composer);
+  box-shadow: var(--d-sys-shadow-overflow);
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
@@ -128,7 +128,7 @@ body.has-ai-bot-docked-composer {
       inset: -1px;
       z-index: 1;
       border: 2px solid var(--d-input-focused-color);
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       pointer-events: none;
     }
   }
@@ -151,7 +151,8 @@ body.has-ai-bot-docked-composer {
   opacity: 1;
   margin: 0;
   border-top: 1px solid var(--primary-low);
-  border-radius: 0 0 var(--d-input-border-radius) var(--d-input-border-radius);
+  border-radius: 0 0 var(--d-comp-Input-border-radius)
+    var(--d-comp-Input-border-radius);
   background: var(--primary-very-low);
   transition:
     max-height 0.25s ease,
@@ -186,7 +187,7 @@ body.has-ai-bot-docked-composer {
   min-width: auto;
   min-height: auto;
   padding: 0.35em 0.5em;
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   background: transparent !important;
 
   .d-icon {
@@ -248,7 +249,7 @@ body.has-ai-bot-docked-composer {
   justify-content: center;
   padding: 0.4em 0.8em;
   background: var(--secondary);
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-radius: 2em;
   cursor: pointer;
 

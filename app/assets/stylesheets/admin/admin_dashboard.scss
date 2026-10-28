@@ -10,8 +10,8 @@ $db-bar-height: var(--space-2);
 @import "admin/dashboard/site-traffic-explorer";
 
 .db-site-advice {
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius-large);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-lg);
 
   &__header {
     display: flex;
@@ -19,9 +19,9 @@ $db-bar-height: var(--space-2);
     justify-content: space-between;
     background: var(--primary-very-low);
     padding: var(--space-2) var(--space-4);
-    border-top-left-radius: var(--d-border-radius-large);
-    border-top-right-radius: var(--d-border-radius-large);
-    border-bottom: 1px solid var(--content-border-color);
+    border-top-left-radius: var(--d-sys-border-radius-lg);
+    border-top-right-radius: var(--d-sys-border-radius-lg);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     h3 {
       margin: 0;
@@ -55,7 +55,7 @@ $db-bar-height: var(--space-2);
     padding: var(--space-4);
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     .btn {
@@ -156,7 +156,7 @@ $db-bar-height: var(--space-2);
   min-width: 2px;
 
   &.--alt {
-    background: var(--tertiary-medium);
+    background: var(--d-sys-color-background-accent-subtle);
   }
 }
 
@@ -239,7 +239,7 @@ $db-bar-height: var(--space-2);
   text-align: center;
   color: var(--primary-medium);
   background: var(--primary-very-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .db-main__error {
@@ -247,7 +247,7 @@ $db-bar-height: var(--space-2);
   text-align: center;
   color: var(--primary-medium);
   background: var(--primary-very-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .db-link-arrow {
@@ -298,7 +298,7 @@ $db-bar-height: var(--space-2);
     text-align: center;
     color: var(--primary-medium);
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1-rem);
   }
 
@@ -362,9 +362,9 @@ $db-bar-height: var(--space-2);
 
   &__callout {
     background: var(--primary-very-low);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     padding: var(--space-3) var(--space-4);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     font-size: var(--font-down-1-rem);
   }
 
@@ -389,7 +389,7 @@ $db-bar-height: var(--space-2);
 
   &__traffic-chart-shell {
     height: 100%;
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     background: linear-gradient(
       135deg,
       var(--primary-very-low),
@@ -404,7 +404,7 @@ $db-bar-height: var(--space-2);
     justify-content: center;
     gap: var(--space-2);
     padding: var(--space-4);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     background: var(--primary-very-low);
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
@@ -429,13 +429,13 @@ $db-bar-height: var(--space-2);
     box-sizing: border-box;
 
     &:not(:last-child) {
-      border-right: 1px solid var(--content-border-color);
+      border-right: 1px solid var(--d-sys-color-border-default);
     }
 
     @include viewport.until(sm) {
       &:not(:last-child) {
         border-right: 0;
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
     }
   }
@@ -474,8 +474,8 @@ $db-bar-height: var(--space-2);
   }
 
   &__wrapper {
-    border-radius: var(--d-border-radius-large);
-    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-sys-border-radius-lg);
+    border: 1px solid var(--d-sys-color-border-default);
 
     &.--no-border {
       border: none;
@@ -536,13 +536,13 @@ $db-bar-height: var(--space-2);
     gap: var(--space-2);
 
     &:first-of-type {
-      border-top-left-radius: var(--d-border-radius-large);
-      border-bottom-left-radius: var(--d-border-radius-large);
+      border-top-left-radius: var(--d-sys-border-radius-lg);
+      border-bottom-left-radius: var(--d-sys-border-radius-lg);
     }
 
     &:last-of-type {
-      border-top-right-radius: var(--d-border-radius-large);
-      border-bottom-right-radius: var(--d-border-radius-large);
+      border-top-right-radius: var(--d-sys-border-radius-lg);
+      border-bottom-right-radius: var(--d-sys-border-radius-lg);
     }
   }
 
@@ -604,9 +604,9 @@ $db-bar-height: var(--space-2);
 .--system {
   @include viewport.until(sm) {
     .db-section__row-block {
-      border-radius: var(--d-border-radius-large);
+      border-radius: var(--d-sys-border-radius-lg);
       flex-basis: calc(50% - var(--space-1));
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
     }
   }
 }

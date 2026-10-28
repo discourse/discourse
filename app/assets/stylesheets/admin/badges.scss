@@ -26,7 +26,7 @@
 
   .content-list {
     .d-filter-controls {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       border-bottom: none;
       padding: 0.5em;
     }
@@ -34,9 +34,9 @@
     .admin-badge-list {
       height: 70vh;
       overflow-y: scroll;
-      border-right: 1px solid var(--content-border-color);
-      border-left: 1px solid var(--content-border-color);
-      border-bottom: 1px solid var(--content-border-color);
+      border-right: 1px solid var(--d-sys-color-border-default);
+      border-left: 1px solid var(--d-sys-color-border-default);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       .admin-badge-list-item {
         &:first-child {
@@ -54,7 +54,7 @@
         font-weight: normal;
         padding: 0 6px;
         color: var(--secondary);
-        background-color: var(--tertiary-medium);
+        background-color: var(--d-sys-color-background-accent-subtle);
         border-radius: 3px;
       }
     }
@@ -72,7 +72,7 @@
     font-size: var(--font-up-2-rem);
 
     img {
-      border-radius: var(--d-border-radius-large);
+      border-radius: var(--d-sys-border-radius-lg);
       max-width: 36px;
     }
 
@@ -107,7 +107,7 @@
       display: flex;
       align-items: center;
       background-color: var(--primary-very-low);
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: 0 10px 0 10px;
 
       img,
@@ -129,7 +129,7 @@
   .current-badge-actions {
     margin: 10px;
     padding: 10px;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 }
 
@@ -169,7 +169,7 @@
     margin: 0;
 
     .badge-grouping-item {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -198,7 +198,7 @@
   }
 
   .count-warning {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     margin-bottom: 5px;
     padding: 10px;
 

@@ -64,7 +64,7 @@
     padding-bottom: 5rem;
 
     &__wrapper {
-      background: rgb(var(--tertiary-rgb), 0.1);
+      background: color-mix(in srgb, var(--tertiary) 10%, transparent);
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
     }
@@ -202,7 +202,7 @@
     align-items: center;
     margin-bottom: 1.25rem;
     padding: 0.5rem 1.5rem;
-    background-color: rgb(var(--primary-rgb), 0.075);
+    background-color: color-mix(in srgb, var(--primary) 7.5%, transparent);
     border-radius: 20px;
 
     &__rank {

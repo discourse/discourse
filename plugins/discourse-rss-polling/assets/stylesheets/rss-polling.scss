@@ -92,7 +92,7 @@
     overflow-y: auto;
     margin-top: var(--space-2);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__list {
@@ -263,7 +263,7 @@
     .d-table__cell.--overview {
       flex: 0 0 100%;
       padding-inline: 0;
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       .d-table__overview-link {
         padding-inline: var(--space-2);
@@ -280,7 +280,7 @@
       gap: var(--space-1);
       margin-top: var(--space-2);
       padding: var(--space-2) var(--space-2) 0;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       .d-table__mobile-label {
         min-width: 8.5em;

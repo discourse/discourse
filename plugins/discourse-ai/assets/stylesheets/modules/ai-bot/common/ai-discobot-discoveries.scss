@@ -15,7 +15,7 @@
 }
 
 .ai-search-discoveries {
-  color: var(--token-color-text-default);
+  color: var(--d-sys-color-text-default);
 
   &__header {
     padding: var(--space-4) var(--space-4) 0;
@@ -28,7 +28,7 @@
     margin: 0;
     color: var(--success);
     font-size: var(--font-down-1);
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
 
     .d-icon {
       color: currentcolor;
@@ -53,13 +53,13 @@
   }
 
   &__discovery {
-    color: var(--token-color-text-default);
+    color: var(--d-sys-color-text-default);
     line-height: var(--line-height-medium);
 
     &:focus-visible {
       outline: 2px solid var(--tertiary);
       outline-offset: var(--space-1);
-      border-radius: var(--token-radius-normal);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     .cooked > :last-child {
@@ -83,8 +83,8 @@
     flex: 1;
     box-sizing: border-box;
     margin: 0;
-    border-color: var(--token-color-border-default);
-    border-radius: var(--token-radius-normal);
+    border-color: var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
 
     &:focus {
       border-color: var(--tertiary);
@@ -110,7 +110,7 @@
   &__error,
   &__no-answer-message {
     margin: 0;
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
   }
 }
 
@@ -127,9 +127,9 @@
 
   &__title {
     margin: 0;
-    color: var(--token-color-text-default);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-1);
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
   }
 
   &__list {
@@ -151,7 +151,7 @@
     flex: none;
     gap: var(--space-1);
     font-size: var(--font-down-1);
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
   }
 }
 
@@ -162,15 +162,15 @@
   gap: var(--space-3);
   height: 100%;
   padding: var(--space-3);
-  border: 1px solid var(--token-color-border-default);
-  border-radius: var(--token-radius-normal);
-  background: var(--token-color-surface);
-  color: var(--token-color-text-default);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
+  background: var(--d-sys-color-background-default);
+  color: var(--d-sys-color-text-default);
 
   &:hover,
   &:focus-visible {
     background: var(--token-color-surface-hovered);
-    color: var(--token-color-text-default);
+    color: var(--d-sys-color-text-default);
   }
 
   &__avatar {
@@ -195,15 +195,15 @@
   &__title {
     margin: 0;
     overflow-wrap: anywhere;
-    color: var(--d-link-color);
+    color: var(--d-sys-color-text-link);
     font-size: var(--font-0);
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
     line-height: var(--line-height-medium);
   }
 
   &__excerpt {
     @include line-clamp(1);
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     line-height: var(--line-height-medium);
   }
@@ -213,7 +213,7 @@
     flex-wrap: wrap;
     gap: var(--space-2);
     margin-block-start: auto;
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
 
     &-replies {
@@ -256,14 +256,14 @@
 
   & &__option.is-active {
     border-color: var(--tertiary);
-    background: var(--d-selected);
-    color: var(--d-selected-text-color);
+    background: var(--d-sys-color-background-default-selected);
+    color: var(--d-sys-color-text-default-selected);
 
     &:hover,
     &:focus-visible {
       border-color: var(--tertiary);
-      background: var(--d-selected);
-      color: var(--d-selected-text-color);
+      background: var(--d-sys-color-background-default-selected);
+      color: var(--d-sys-color-text-default-selected);
     }
 
     &:focus-visible {
@@ -288,7 +288,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
-  border-top: 1px solid var(--token-color-border-default);
+  border-top: 1px solid var(--d-sys-color-border-default);
   font-size: var(--font-down-1);
 
   .ai-search-discoveries__dismiss-default {
@@ -306,11 +306,11 @@
 
   .ai-search-discoveries {
     overflow: hidden;
-    background: var(--token-color-surface);
+    background: var(--d-sys-color-background-default);
 
     &:not(.--empty) {
-      border: 1px solid var(--token-color-border-default);
-      border-radius: var(--token-radius-normal);
+      border: 1px solid var(--d-sys-color-border-default);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 

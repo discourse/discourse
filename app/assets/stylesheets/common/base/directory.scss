@@ -89,7 +89,7 @@
       display: flex;
       justify-content: space-between;
       padding: 12px 0;
-      border-bottom: 1px solid var(--table-border-color);
+      border-bottom: 1px solid var(--d-comp-Table-color-border);
 
       .column-name {
         display: flex;
@@ -177,7 +177,7 @@
   &__cell--empty,
   &__cell--user-field {
     display: flex;
-    border-bottom: 1px solid var(--table-border-color);
+    border-bottom: 1px solid var(--d-comp-Table-color-border);
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
@@ -327,12 +327,12 @@
     &__row {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
-      border-bottom: 1px solid var(--table-border-color);
+      border-bottom: 1px solid var(--d-comp-Table-color-border);
       padding: var(--space-3) var(--space-2) var(--space-4);
       gap: 0 10%;
 
       &:first-child {
-        border-top: 1px solid var(--table-border-color);
+        border-top: 1px solid var(--d-comp-Table-color-border);
       }
     }
 

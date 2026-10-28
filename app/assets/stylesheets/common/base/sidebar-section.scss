@@ -28,7 +28,7 @@
 
   .sidebar-section-header-wrapper {
     display: flex;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     @include viewport.from(sm) {
       padding-right: var(--d-sidebar-row-horizontal-padding);
@@ -76,7 +76,7 @@
       }
 
       &:focus {
-        background-color: var(--token-color-surface-focused);
+        background-color: var(--d-sys-color-background-default-focused);
       }
     }
   }

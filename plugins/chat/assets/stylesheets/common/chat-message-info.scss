@@ -47,7 +47,7 @@
   padding: 0.2rem 0.3rem;
   background: var(--primary-low);
   color: var(--primary-900);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-3);
   line-height: var(--line-height-medium);
   font-weight: 700;
@@ -97,7 +97,7 @@
   color: var(--primary-high);
   gap: 0.5em;
   line-height: 1.2;
-  background: var(--tertiary-very-low);
+  background: var(--d-sys-color-background-accent-subtlest);
   padding: 0.25em 0.75em;
   border-radius: 8px;
 
@@ -116,7 +116,7 @@
     }
 
     &__restricted-category-icon {
-      background: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       height: 0.355em;
       width: 0.35em;
       margin-right: 0.4em;

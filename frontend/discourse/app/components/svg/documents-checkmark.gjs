@@ -34,7 +34,7 @@ const SvgDocumentsCheckmark = <template>
             height="162.546"
             id="Rectangle 18"
             rx="1.36977"
-            stroke="var(--tertiary-high)"
+            stroke="var(--d-sys-color-background-accent)"
             stroke-width="0.913181"
             transform="rotate(-7.6929 29.9023 24.3738)"
             width="136.064"
@@ -46,7 +46,7 @@ const SvgDocumentsCheckmark = <template>
             height="162.546"
             id="Rectangle 19"
             rx="1.36977"
-            stroke="var(--tertiary-high)"
+            stroke="var(--d-sys-color-background-accent)"
             stroke-width="0.913181"
             transform="rotate(-5.70639 51.8054 34.2859)"
             width="136.064"
@@ -60,13 +60,13 @@ const SvgDocumentsCheckmark = <template>
               d="M89.1055 41.8417L204.031 50.6123C204.308 50.6335 204.572 50.7377 204.787 50.9109L204.875 50.9895L221.594 67.0239C221.851 67.2697 222 67.604 222.015 67.9549L222.012 68.1055L212.218 212.007C212.166 212.763 211.511 213.333 210.755 213.28L77.7588 203.98C77.0043 203.927 76.4358 203.273 76.4886 202.518L87.6353 43.1124L87.652 42.9726C87.763 42.3314 88.3142 41.8553 88.9647 41.8387L89.1055 41.8417Z"
               fill="var(--secondary)"
               id="Rectangle 20"
-              stroke="var(--tertiary-high)"
+              stroke="var(--d-sys-color-background-accent)"
               stroke-width="0.913181"
             />
             <path
               d="M204.263 50.848L202.894 66.34L221.613 67.742"
               id="Vector 11"
-              stroke="var(--tertiary-high)"
+              stroke="var(--d-sys-color-background-accent)"
               stroke-width="0.913181"
             />
           </g>
@@ -138,12 +138,12 @@ const SvgDocumentsCheckmark = <template>
         />
         <path
           d="M237.62 77.0838C237.62 77.0838 239.486 78.8152 240.841 79.3924C242.303 80.015 244.247 79.6388 244.247 79.6388C244.247 79.6388 242.689 80.8868 242.17 82.3881C241.688 83.7799 241.692 86.2662 241.692 86.2662C241.692 86.2662 239.852 84.5943 238.497 84.0171C237.035 83.3945 235.065 83.7113 235.065 83.7113C235.065 83.7113 236.794 82.4584 237.313 80.9571C237.795 79.5653 237.62 77.0838 237.62 77.0838Z"
-          fill="var(--tertiary-high)"
+          fill="var(--d-sys-color-background-accent)"
           id="Star 3"
         />
         <path
           d="M279.086 132.585C279.086 132.585 279.014 134.343 279.319 135.314C279.649 136.362 280.719 137.214 280.719 137.214C280.719 137.214 279.364 136.956 278.342 137.357C277.394 137.729 276.09 138.848 276.09 138.848C276.09 138.848 276.142 137.13 275.837 136.159C275.508 135.112 274.456 134.218 274.456 134.218C274.456 134.218 275.891 134.564 276.913 134.163C277.861 133.791 279.086 132.585 279.086 132.585Z"
-          fill="var(--tertiary-high)"
+          fill="var(--d-sys-color-background-accent)"
           id="Star 4"
         />
       </g>

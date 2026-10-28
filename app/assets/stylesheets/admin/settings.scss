@@ -120,7 +120,7 @@
     .input-setting-list {
       padding: 1px;
       background-color: var(--secondary);
-      border: 1px solid var(--input-border-color);
+      border: 1px solid var(--d-sys-color-border-input);
       border-radius: 3px;
       transition:
         border linear 0.2s,
@@ -192,7 +192,7 @@
 
   .setting.overridden {
     .values input {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
     }
 
     h3 {
@@ -215,7 +215,7 @@
     input[type="text"],
     input[type="password"],
     textarea {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
     }
   }
 

@@ -118,7 +118,7 @@ body.discourse-calendar-livestream-zoom-full {
 
   &__waiting-wrapper {
     border: 1px solid var(--primary-300);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     overflow: hidden;
   }
 
@@ -245,7 +245,7 @@ body.discourse-calendar-livestream-zoom-full {
   width: 100%;
   flex: 1 1 0;
   min-height: 0;
-  border-right: 1px solid var(--content-border-color);
+  border-right: 1px solid var(--d-sys-color-border-default);
 
   .chat-drawer,
   .chat-channel {

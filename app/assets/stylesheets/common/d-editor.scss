@@ -37,7 +37,7 @@
   background-color: var(--secondary);
   position: relative;
   border: var(--d-input-border);
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius);
   min-height: 0;
 
   textarea {
@@ -351,7 +351,7 @@
     margin: 0;
     background-color: transparent;
     color: var(--primary-high);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       color: currentcolor;
@@ -406,8 +406,8 @@
   }
 
   &.--active {
-    background: var(--d-selected);
-    color: var(--d-selected-text-color);
+    background: var(--d-sys-color-background-default-selected);
+    color: var(--d-sys-color-text-default-selected);
 
     &.btn:hover .d-icon {
       color: var(--primary-high);
@@ -454,10 +454,10 @@
 
   .translation-selector-dropdown {
     .select-kit-header {
-      --d-button-default-bg-color: transparent;
-      --d-button-default-bg-color--hover: var(--primary-low);
-      --d-button-default-text-color--hover: var(--primary-high);
-      --d-button-default-icon-color--hover: var(--primary-high);
+      --d-comp-DButton-color-background-default: transparent;
+      --d-comp-DButton-color-background-default-hovered: var(--primary-low);
+      --d-comp-DButton-color-text-default-hovered: var(--primary-high);
+      --d-comp-DButton-color-icon-default-hovered: var(--primary-high);
       border: 1px solid var(--primary-low-mid);
     }
 
@@ -470,7 +470,7 @@
     --translation-preview-padding: 1rem;
     box-sizing: border-box;
     border: var(--d-input-border);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     position: relative;
     overflow: auto;
 
@@ -478,9 +478,9 @@
       margin-left: 0.5rem;
       text-transform: uppercase;
       font-size: var(--font-down-2);
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       padding: 0.25rem 0.5rem;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -495,7 +495,8 @@
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--primary-low);
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
 
     &__title {
       display: inline-flex;
@@ -515,8 +516,8 @@
         font-size: var(--font-down-1-rem);
         color: var(--d-nav-color);
         background-color: var(--d-nav-bg-color);
-        transition: var(--d-button-transition);
-        border-radius: var(--d-nav-pill-border-radius);
+        transition: var(--d-comp-DButton-motion-transition);
+        border-radius: var(--d-comp-NavPills-border-radius);
 
         &:hover:not(.active) {
           color: var(--d-nav-color--hover);

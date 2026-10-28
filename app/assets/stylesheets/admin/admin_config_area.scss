@@ -1,7 +1,7 @@
 .admin-config-area-card {
   padding: var(--space-4);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   background-color: var(--secondary);
   min-width: 0;
 
@@ -18,7 +18,7 @@
 
   &__warning-banner {
     color: var(--primary-high);
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     font-size: var(--font-down-1);
     padding: 10px 10px;
   }
@@ -114,14 +114,14 @@
 }
 
 .admin-site-settings-filter-controls {
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 }
 
 .admin-config-area-empty-list,
 .admin-empty-list {
   padding: 1em;
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
 
   &__cta-button {
     display: flex;
@@ -135,9 +135,9 @@
   gap: var(--space-4);
   flex-direction: column;
   width: calc(100% - 1em);
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   padding: var(--space-4);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;
@@ -172,7 +172,7 @@
     .form-kit__container {
       padding: 1em;
       width: calc(100% - 2em) !important;
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -221,7 +221,7 @@
 
   &__frame {
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     overflow: hidden;
     max-width: 600px;
     background: var(--secondary);
@@ -260,7 +260,7 @@
       justify-content: space-between;
 
       .admin-fonts-form__button-option {
-        border: 1px solid var(--content-border-color);
+        border: 1px solid var(--d-sys-color-border-default);
         font-size: var(--font-down-1-rem);
         max-height: 4em;
         height: 50px;

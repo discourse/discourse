@@ -36,7 +36,7 @@
     font-family: inherit;
     padding: var(--space-1) var(--space-2);
     border: 1px solid transparent;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     line-height: 1.5;
     box-sizing: border-box;
     margin: 0 !important;
@@ -90,7 +90,7 @@
   }
 
   .form-kit__actions {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .form-kit {
@@ -155,8 +155,8 @@
     align-items: center;
     justify-content: center;
     padding: 3em 1em;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     text-align: center;
 
     > .d-icon {
@@ -179,8 +179,8 @@
 .discourse-boards-board-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   background: var(--secondary);
   padding: 1em;
   transition: box-shadow 0.15s ease;
@@ -192,7 +192,7 @@
   &--kb-selected {
     outline: 2px solid var(--tertiary);
     outline-offset: -2px;
-    background: var(--tertiary-very-low);
+    background: var(--d-sys-color-background-accent-subtlest);
   }
 
   &__header {
@@ -245,7 +245,7 @@
     align-items: center;
     margin-top: auto;
     padding-top: 0.5em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__owner-avatars {
@@ -280,7 +280,7 @@
   gap: 0.3em;
   padding: 0.15em 0.5em;
   background: var(--primary-very-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-2);
   color: var(--primary-high);
 
@@ -295,8 +295,8 @@
   align-items: center;
   gap: 0.25em;
   padding: 0.15em 0.5em;
-  background: var(--tertiary-very-low);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-accent-subtlest);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-2);
   line-height: var(--line-height-large);
   min-height: calc(var(--line-height-large) * 1em + 0.3em);

@@ -12,12 +12,12 @@
 
 html.discourse-no-touch {
   .btn-default {
-    --d-button-default-icon-color: var(--primary-medium);
-    --d-button-default-icon-color--hover: var(--secondary);
+    --d-comp-DButton-color-icon-default: var(--primary-medium);
+    --d-comp-DButton-color-icon-default-hovered: var(--secondary);
   }
 
   .btn-primary {
-    --d-button-primary-icon-color: var(--secondary);
+    --d-comp-DButton-color-icon-primary: var(--secondary);
   }
 
   .btn-icon.ok,
@@ -40,7 +40,7 @@ html.discourse-no-touch {
 html {
   // html parent adds some additional specificity to override core styles
   .nav-pills > li > a:not(.active):hover {
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
     color: var(--primary);
   }
 
@@ -68,7 +68,7 @@ html {
   .menu-panel li.heading a.widget-link:hover,
   .menu-panel li.heading a.widget-link:focus {
     color: var(--primary);
-    background-color: var(--highlight-medium);
+    background-color: var(--d-sys-color-background-highlight-subtle);
 
     .d-icon {
       color: var(--primary);
@@ -214,7 +214,7 @@ html {
   // User Preferences
   .user-menu.revamped .quick-access-panel li.unread,
   .user-menu.revamped .quick-access-panel li.pending {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   .user-main .deleted-posts {
@@ -239,7 +239,7 @@ html {
   }
 
   .user-stream .notification.unread {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   .user-stream .time {
@@ -280,7 +280,7 @@ html {
 
   .chat-notices__notice,
   .chat-notices .chat-retention-reminder {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   // Review
@@ -293,7 +293,7 @@ html {
   }
 
   .reviewable .status span.approved {
-    color: var(--success-hover);
+    color: var(--d-sys-color-background-success-hovered);
   }
 }
 
@@ -319,24 +319,24 @@ html {
 html.discourse-no-touch :where(.uc-modernize-foundation-theme) {
   .btn-default {
     .d-icon {
-      color: var(--d-button-default-icon-color);
+      color: var(--d-comp-DButton-color-icon-default);
     }
 
     &:hover,
     &.btn-hover,
     &:focus {
       .d-icon {
-        color: var(--d-button-default-icon-color);
+        color: var(--d-comp-DButton-color-icon-default);
       }
     }
   }
 
   // Composer button bar icons should match the modernize theme
   .d-editor-button-bar .btn-icon.btn-default .d-icon {
-    color: var(--d-button-default-icon-color);
+    color: var(--d-comp-DButton-color-icon-default);
 
     &:hover {
-      color: var(--d-button-default-icon-color);
+      color: var(--d-comp-DButton-color-icon-default);
     }
   }
 }

@@ -276,7 +276,7 @@ body.ai-bot-conversations-page {
       align-items: center;
       width: 100%;
       border: 1px solid var(--primary-low);
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       background-color: var(--d-input-bg-color);
 
       &:has(textarea[disabled]) {
@@ -422,8 +422,8 @@ body.ai-bot-conversations-page {
 
     &.--preview #ai-bot-conversations-input {
       padding-inline-start: var(--space-3);
-      border-radius: var(--d-input-border-radius) 0 0
-        var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius) 0 0
+        var(--d-comp-Input-border-radius);
     }
   }
 }
@@ -481,7 +481,7 @@ body.has-ai-conversations-sidebar {
         display: flex;
         align-items: center;
         border: 1px solid var(--primary-low);
-        border-radius: var(--d-button-border-radius);
+        border-radius: var(--d-comp-DButton-border-radius);
         padding: 0.25em 0.5em;
         font-size: var(--font-down-1);
 
@@ -527,10 +527,10 @@ body.has-ai-conversations-sidebar {
   width: calc(100% - 2 * var(--space-4));
   margin: var(--space-4) var(--space-4) 0;
   padding: var(--space-4);
-  border: 1px solid var(--tertiary-medium);
-  background: rgb(var(--tertiary-rgb), 0.075);
-  box-shadow: var(--shadow-card);
-  border-radius: var(--d-border-radius-large);
+  border: 1px solid var(--d-sys-color-background-accent-subtle);
+  background: color-mix(in srgb, var(--tertiary) 7.5%, transparent);
+  box-shadow: var(--d-sys-shadow-raised);
+  border-radius: var(--d-sys-border-radius-lg);
   font: inherit;
   text-align: start;
   cursor: pointer;
@@ -543,7 +543,7 @@ body.has-ai-conversations-sidebar {
   &:hover,
   &:focus-visible {
     border-color: var(--tertiary);
-    background: rgb(var(--tertiary-rgb), 0.15);
+    background: color-mix(in srgb, var(--tertiary) 15%, transparent);
   }
 
   .sidebar-container & {

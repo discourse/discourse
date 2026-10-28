@@ -11,7 +11,7 @@
   .sidebar-categories-form__category-row[data-category-level="0"]:not(
       :only-child
     ) {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   .sidebar-categories-form__category-row:first-of-type {
@@ -27,12 +27,12 @@
   .sidebar-categories-form__category-row[data-category-level="1"]:not(
       :nth-of-type(2)
     ) {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .sidebar-categories-form__category-row[data-category-level="2"] {
     padding-left: var(--space-8);
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .sidebar-categories-form__category-label {

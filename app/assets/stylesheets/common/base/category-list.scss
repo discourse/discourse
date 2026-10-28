@@ -245,7 +245,7 @@
     align-content: flex-start;
     box-sizing: border-box;
     border-width: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background-color: var(--d-category-box-background-color);
     border-left-width: var(--d-category-border-accent-width);
     border-style: solid;
@@ -301,8 +301,8 @@
     border-left-width: 0;
     border-style: solid;
     border-color: var(--primary-low);
-    border-top-right-radius: var(--d-border-radius);
-    border-bottom-right-radius: var(--d-border-radius);
+    border-top-right-radius: var(--d-sys-border-radius-md);
+    border-bottom-right-radius: var(--d-sys-border-radius-md);
   }
 
   &.no-logos {
@@ -420,7 +420,7 @@
     }
 
     .subcategory-box-inner {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       border-left: none;
       padding: 0.5em 0.5em 0.4em 0.5em;
     }
@@ -575,7 +575,7 @@
 .category-list.subcategories-with-subcategories {
   margin-top: 1em;
   margin-bottom: 0;
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
 
   .category-description {
     font-size: var(--font-down-1);
@@ -604,7 +604,7 @@
 }
 
 .muted-categories-link {
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   display: flex;
   justify-content: space-between;
   padding: 0.75em;
@@ -693,12 +693,12 @@
     width: calc(100% + 20px);
     margin: 1.25em 10px 0;
     border-bottom: none !important;
-    border-top: 1px solid var(--content-border-color) !important;
+    border-top: 1px solid var(--d-sys-color-border-default) !important;
 
     &:last-of-type {
       margin-top: 0;
       margin-bottom: 1.25em;
-      border-bottom: 1px solid var(--content-border-color) !important;
+      border-bottom: 1px solid var(--d-sys-color-border-default) !important;
     }
 
     td:first-of-type {
@@ -715,7 +715,7 @@
   }
 
   tr.category-topic-link {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     &:last-of-type {
       border-bottom: none;
@@ -791,7 +791,7 @@
     }
 
     > footer {
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding: 7px 10px;
 
       .category-stat {
@@ -814,8 +814,8 @@
 
   .category-list-item {
     padding: 0.5em 0 0.25em;
-    border-top: 1px solid var(--content-border-color) !important;
-    border-bottom: 1px solid var(--content-border-color) !important;
+    border-top: 1px solid var(--d-sys-color-border-default) !important;
+    border-bottom: 1px solid var(--d-sys-color-border-default) !important;
     margin: 1em 0 2em;
 
     @include viewport.until(sm) {

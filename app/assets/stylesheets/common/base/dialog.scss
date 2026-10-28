@@ -46,7 +46,7 @@
   z-index: z("modal", "content");
   position: relative;
   background-color: var(--secondary);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--d-sys-shadow-raised);
   min-width: 40vw;
   animation: fade-in 250ms both;
 
@@ -65,7 +65,7 @@
 .dialog-header {
   display: flex;
   padding: 10px 15px;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   align-items: start;
 
   h3 {
@@ -89,7 +89,7 @@
   flex-wrap: wrap;
   align-items: center;
   padding: 14px 15px 10px;
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
 
   --btn-bottom-margin: 0.3em;
 

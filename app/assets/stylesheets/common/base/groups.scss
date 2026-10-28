@@ -44,9 +44,9 @@
     display: flex;
     box-sizing: border-box;
     cursor: pointer;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     color: var(--primary);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .discourse-no-touch & {
       &:hover {
@@ -184,7 +184,7 @@
   font-size: var(--font-down-2);
   padding: 0.2em 1em;
   background-color: var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .fk-d-tooltip__trigger-container {
     align-items: center;

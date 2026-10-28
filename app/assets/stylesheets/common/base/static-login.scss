@@ -10,7 +10,7 @@ body.static-login {
   }
 
   .logo-container {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     padding-bottom: 1em;
     margin-bottom: 1em;
     display: block;
@@ -31,10 +31,10 @@ body.static-login {
 
   .login-welcome {
     background-color: var(--secondary);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     text-align: center;
     padding: 2em;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
     border-radius: 5px;
     display: flex;
     flex-direction: column;

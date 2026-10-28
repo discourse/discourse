@@ -11,7 +11,7 @@
   box-sizing: border-box;
   box-shadow: 0 0 0 3px var(--primary-100);
   border: 1px solid var(--primary-300);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   white-space: normal;
 
   input,
@@ -93,7 +93,7 @@
     margin: 0;
     padding: 0;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     flex-direction: column;
     align-self: flex-start;
 
@@ -276,7 +276,7 @@
 }
 
 .composer-event__name-input {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   margin-top: calc(-1 * var(--space-2));
   margin-left: calc(-1 * var(--space-2));
   margin-bottom: calc(-1 * var(--space-1));
@@ -412,7 +412,7 @@ input.composer-event__time-input[type="time"] {
 }
 
 .composer-event__description-textarea {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   padding: var(--space-2);
   width: 100%;
   cursor: text;
@@ -432,7 +432,7 @@ input.composer-event__time-input[type="time"] {
   display: flex;
   align-items: center;
   padding: 0.25rem;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   flex-shrink: 0;
 
   &:hover {

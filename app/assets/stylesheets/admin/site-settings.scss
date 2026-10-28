@@ -8,7 +8,7 @@
 
 .fk-d-menu-modal.admin-site-settings-category-nav-content {
   .admin-site-settings-category-nav__list a.active {
-    background: var(--d-selected);
+    background: var(--d-sys-color-background-default-selected);
   }
 }
 
@@ -31,8 +31,8 @@ body.has-admin-changes-banner #main-outlet {
   padding: var(--space-3);
   background-color: var(--secondary);
   border: 1px solid var(--primary-300);
-  border-radius: var(--d-border-radius);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--d-sys-border-radius-md);
+  box-shadow: var(--d-sys-shadow-raised);
   z-index: 1;
 
   .footer-nav-visible & {

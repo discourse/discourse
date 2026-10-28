@@ -148,6 +148,6 @@ $solved-color: var(--success);
 
 .solved-shared-issue-row .post-action-menu__solved-shared-issue {
   &.has-shared-issue {
-    --d-button-default-icon-color: var(--tertiary);
+    --d-comp-DButton-color-icon-default: var(--tertiary);
   }
 }

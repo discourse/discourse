@@ -2,10 +2,10 @@
 
 :root {
   --wizard-primary: var(--tertiary);
-  --wizard-primary-100: var(--tertiary-low);
-  --wizard-primary-300: var(--tertiary-medium);
+  --wizard-primary-100: var(--d-sys-color-background-accent-subtlest);
+  --wizard-primary-300: var(--d-sys-color-background-accent-subtle);
   --wizard-primary-400: var(--tertiary-hover);
-  --wizard-primary-800: var(--tertiary-high);
+  --wizard-primary-800: var(--d-sys-color-background-accent);
   --wizard-bg-color: light-dark(#{$discourse-bg-light}, #{$discourse-bg-dark});
   --wizard-bg-color-2: light-dark(
     #{$discourse-brand-light},
@@ -265,8 +265,8 @@ body.wizard {
 
   &__button {
     --accent-color: var(--wizard-primary);
-    --d-button-primary-bg-color: var(--wizard-primary);
-    --d-button-primary-text-color: var(--wizard-button-text-color);
+    --d-comp-DButton-color-background-primary: var(--wizard-primary);
+    --d-comp-DButton-color-text-primary: var(--wizard-button-text-color);
     width: 100%;
     padding: 0.75em 2em;
     font-weight: bold;
@@ -346,7 +346,7 @@ body.wizard {
   &__text-input,
   input[type="text"] {
     --accent-color: var(--wizard-primary);
-    --d-input-border-radius: var(--wizard-input-radius);
+    --d-comp-Input-border-radius: var(--wizard-input-radius);
     --d-input-border: 1px solid var(--primary-300);
     width: 100%;
     margin: 0;
@@ -514,7 +514,7 @@ body.wizard {
     border-radius: 2px;
     border: 0;
     padding: 0.5em;
-    transition: var(--d-button-transition);
+    transition: var(--d-comp-DButton-motion-transition);
     text-decoration: none;
     background-color: var(--secondary);
     color: var(--primary-very-high);
@@ -543,13 +543,13 @@ body.wizard {
     }
 
     &:disabled {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-sys-color-background-accent-subtlest);
     }
   }
 
   .alert-error {
     padding: 0.5em 2.5em 0.5em 1em;
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     color: var(--primary);
     position: relative;
     margin-bottom: 1em;

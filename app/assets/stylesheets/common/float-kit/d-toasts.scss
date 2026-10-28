@@ -23,11 +23,11 @@
     box-sizing: border-box;
     opacity: 1;
     transition: opacity 0.5s;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     overflow: hidden;
     background-color: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    box-shadow: var(--shadow-dropdown);
+    border: 1px solid var(--d-sys-color-border-default);
+    box-shadow: var(--d-sys-shadow-overlay);
     overflow-wrap: break-word;
     display: flex;
     animation: d-toast-opening 0.3s ease-in-out;

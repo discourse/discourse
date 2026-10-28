@@ -10,7 +10,7 @@
     align-items: center;
     gap: 1rem;
     margin-top: var(--space-4);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     .chat-integration-add-provider-trigger {
       margin-left: auto;
@@ -136,7 +136,7 @@
     overflow: auto;
     background: var(--primary-very-low);
     padding: 1rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
   }
 }
@@ -160,7 +160,7 @@
 .inline-channel-form {
   background: var(--primary-very-low);
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   padding: 1rem;
 
   .form-kit__container {

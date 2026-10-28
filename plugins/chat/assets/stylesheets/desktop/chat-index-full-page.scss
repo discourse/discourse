@@ -2,7 +2,7 @@
   .full-page-chat {
     .channels-list {
       height: calc(100vh - var(--main-outlet-offset));
-      border-right: 1px solid var(--content-border-color);
+      border-right: 1px solid var(--d-sys-color-border-default);
       background: var(--secondary);
       overflow-y: auto;
 

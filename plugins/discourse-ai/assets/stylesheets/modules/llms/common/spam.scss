@@ -80,15 +80,15 @@
     margin-bottom: 1.5em;
 
     &.is-spam {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
       color: var(--danger);
       border: 2px solid var(--danger-medium);
     }
 
     &.not-spam {
-      background: var(--success-low);
+      background: var(--d-sys-color-background-success-subtlest);
       color: var(--success);
-      border: 2px solid var(--success-medium);
+      border: 2px solid var(--d-sys-color-background-success-subtle);
     }
   }
 
@@ -100,8 +100,8 @@
     overflow: hidden;
 
     &--reason {
-      background: var(--highlight-bg);
-      border-color: var(--tertiary-low);
+      background: var(--d-sys-color-background-highlight-subtlest);
+      border-color: var(--d-sys-color-background-accent-subtlest);
     }
   }
 

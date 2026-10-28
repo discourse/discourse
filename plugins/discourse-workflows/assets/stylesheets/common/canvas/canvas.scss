@@ -62,7 +62,7 @@
 
     &:focus-visible .workflows-canvas__empty-state-tile {
       border-color: var(--tertiary);
-      box-shadow: 0 0 0 2px var(--tertiary-low);
+      box-shadow: 0 0 0 2px var(--d-sys-color-background-accent-subtlest);
     }
   }
 
@@ -117,7 +117,7 @@
     z-index: calc(var(--z-canvas-elements) + 3);
     pointer-events: none;
     border: 1px solid var(--tertiary);
-    background: rgb(var(--tertiary-rgb), 0.14);
+    background: color-mix(in srgb, var(--tertiary) 14%, transparent);
     border-radius: 2px;
   }
 
@@ -130,7 +130,7 @@
     gap: var(--space-1);
     background: var(--secondary);
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-1);
     box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
   }
@@ -211,11 +211,11 @@
 @keyframes workflow-highlight-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 2px var(--tertiary-low);
+    box-shadow: 0 0 0 2px var(--d-sys-color-background-accent-subtlest);
   }
 
   50% {
-    box-shadow: 0 0 0 6px var(--tertiary-low);
+    box-shadow: 0 0 0 6px var(--d-sys-color-background-accent-subtlest);
   }
 }
 
@@ -294,7 +294,7 @@
   @media (prefers-reduced-motion: no-preference) {
     &.is-highlighted &__icon-block {
       border-color: var(--tertiary);
-      box-shadow: 0 0 0 3px var(--tertiary-low);
+      box-shadow: 0 0 0 3px var(--d-sys-color-background-accent-subtlest);
       animation: workflow-highlight-pulse 1.25s ease-in-out 4;
     }
   }
@@ -350,9 +350,9 @@
     max-width: 100%;
     margin-top: var(--space-half);
     padding: 1px var(--space-1);
-    border: 1px solid var(--danger-low-mid);
+    border: 1px solid var(--d-sys-color-background-danger-subtle);
     border-radius: 3px;
-    background: var(--danger-low);
+    background: var(--d-sys-color-background-danger-subtlest);
     color: var(--danger);
     font-size: var(--font-down-3);
     font-weight: 600;
@@ -579,7 +579,7 @@
     }
 
     &:hover .workflow-rete-node__icon-block {
-      border-color: var(--danger-hover);
+      border-color: var(--d-sys-color-background-danger-hovered);
     }
 
     .workflow-rete-node__label {
@@ -635,12 +635,12 @@
   65%,
   100% {
     border-color: var(--primary-low-mid);
-    box-shadow: 0 0 0 0 rgb(var(--tertiary-rgb), 0);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--tertiary) 0%, transparent);
   }
 
   35% {
     border-color: var(--tertiary);
-    box-shadow: 0 0 0 5px rgb(var(--tertiary-rgb), 0.18);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--tertiary) 18%, transparent);
   }
 }
 
@@ -648,7 +648,7 @@
   .workflow-rete-node__socket.is-connectable-hint {
     animation: none;
     border-color: var(--tertiary);
-    box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.18);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--tertiary) 18%, transparent);
   }
 }
 

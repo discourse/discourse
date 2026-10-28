@@ -8,8 +8,8 @@
 }
 
 .chat-message-search-entry {
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   padding: 0;
   cursor: pointer;
 
@@ -22,7 +22,7 @@
 
   &:hover,
   &:focus {
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
   }
 
   > * {

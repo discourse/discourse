@@ -54,8 +54,8 @@
           height: 100%;
           background: linear-gradient(
             to right,
-            rgb(var(--secondary-rgb), 1) 0%,
-            rgb(var(--secondary-rgb), 0) 100%
+            var(--secondary) 0%,
+            color-mix(in srgb, var(--secondary) 0%, transparent) 100%
           );
         }
 
@@ -69,8 +69,8 @@
           height: 100%;
           background: linear-gradient(
             to right,
-            rgb(var(--secondary-rgb), 0) 0%,
-            rgb(var(--secondary-rgb), 1) 100%
+            color-mix(in srgb, var(--secondary) 0%, transparent) 0%,
+            var(--secondary) 100%
           );
         }
       }
@@ -86,7 +86,7 @@
     gap: var(--space-half);
     padding: 0 var(--space-1);
     border: 1px dashed var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
     font-family: var(--d-font-family--monospace);
 

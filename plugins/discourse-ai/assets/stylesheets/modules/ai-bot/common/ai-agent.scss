@@ -123,7 +123,7 @@
       grid-template-columns: 1fr auto;
       border: 1px solid var(--primary-low);
       padding: var(--space-2) var(--space-4) var(--space-4);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       .d-table__cell.--overview,
       .ai-agent-list__name-with-description {
@@ -284,7 +284,7 @@
 
   &__tool-options {
     padding: 1em;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     width: 480px;
   }
 
@@ -315,7 +315,7 @@
   &__tool-context-cost {
     margin-bottom: var(--space-4);
     padding: var(--space-4);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
 
     @include viewport.from(lg) {
       max-width: 480px;
@@ -453,7 +453,7 @@
   &__mcp-server-summary {
     margin-bottom: var(--space-4);
     padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     max-width: 480px;
   }
 
@@ -519,8 +519,8 @@
     padding: var(--space-3);
     background-color: var(--secondary);
     border: 1px solid var(--primary-300);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-card);
+    border-radius: var(--d-sys-border-radius-md);
+    box-shadow: var(--d-sys-shadow-raised);
   }
 }
 
@@ -566,7 +566,7 @@
   &__tool {
     padding: 0.85rem 1rem;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__tool-header {

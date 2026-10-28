@@ -98,7 +98,7 @@
     .d-editor-textarea-column {
       position: relative;
       border: var(--d-input-border);
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       background: var(--d-input-bg-color);
       transition: border-color 0.15s ease-in-out;
 
@@ -196,7 +196,7 @@
     min-width: auto;
     min-height: auto;
     padding: 0.35em 0.5em;
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-comp-DButton-border-radius);
     background: transparent !important;
 
     .d-icon {

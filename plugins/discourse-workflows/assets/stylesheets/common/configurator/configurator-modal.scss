@@ -3,7 +3,7 @@
 }
 
 .workflows-configurator-modal {
-  --input-border-color: var(--primary-low-mid);
+  --d-sys-color-border-input: var(--primary-low-mid);
 
   .d-modal__container {
     max-width: 100%;
@@ -19,7 +19,7 @@
     padding: 0;
     flex: 1;
     min-height: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__header {
@@ -37,7 +37,7 @@
     font-family: inherit;
     padding: var(--space-1) var(--space-2);
     border: 1px solid transparent;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     line-height: 1.5;
     height: 36px;
     box-sizing: border-box;
@@ -210,7 +210,7 @@
   }
 
   &__node {
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     padding: var(--space-2);
     margin-top: var(--space-4);
     border-radius: 4px;

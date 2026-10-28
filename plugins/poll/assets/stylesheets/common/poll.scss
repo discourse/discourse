@@ -9,7 +9,7 @@ div.poll-outer,
 .ProseMirror {
   div.poll {
     margin: 1em 0;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     display: grid;
     grid-template-areas: "poll" "info" "buttons";
 
@@ -120,7 +120,7 @@ div.poll-outer,
       color: var(--primary-medium);
 
       @include viewport.until(sm) {
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
         flex-direction: row-reverse;
 
         &_counts,
@@ -132,7 +132,7 @@ div.poll-outer,
       @include viewport.from(sm) {
         gap: 0 1em;
         padding: var(--space-2);
-        border-left: 1px solid var(--content-border-color);
+        border-left: 1px solid var(--d-sys-color-border-default);
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -227,7 +227,7 @@ div.poll-outer,
           padding-top: 1.25em;
 
           &:not(:empty) {
-            border-top: 1px solid var(--content-border-color);
+            border-top: 1px solid var(--d-sys-color-border-default);
           }
         }
 
@@ -237,7 +237,7 @@ div.poll-outer,
           flex: 1 1 auto;
 
           &:not(:empty) {
-            border-right: 1px solid var(--content-border-color);
+            border-right: 1px solid var(--d-sys-color-border-default);
           }
         }
 
@@ -348,7 +348,7 @@ div.poll-outer,
             margin-top: 0.15em;
             text-align: center;
             background: var(--primary-low);
-            border-radius: var(--d-border-radius);
+            border-radius: var(--d-sys-border-radius-md);
             font-size: var(--font-down-1);
             line-height: 1.6em;
           }
@@ -357,7 +357,7 @@ div.poll-outer,
     }
 
     .poll-title {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       margin-bottom: 0.5em;
       padding-bottom: 0.5em;
     }
@@ -370,7 +370,7 @@ div.poll-outer,
       gap: 0.5em;
       width: 100%;
       padding: 1em;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       button {
         white-space: nowrap;
@@ -566,7 +566,7 @@ div.poll-outer,
           margin-right: 0.75em;
           left: 0.2em;
           background: var(--primary-high);
-          border-radius: var(--d-button-border-radius);
+          border-radius: var(--d-comp-DButton-border-radius);
           border: none;
         }
 
@@ -576,7 +576,7 @@ div.poll-outer,
           height: 1.125em;
           width: 1.125em;
           background: var(--primary-low);
-          border-radius: var(--d-button-border-radius);
+          border-radius: var(--d-comp-DButton-border-radius);
         }
       }
     }

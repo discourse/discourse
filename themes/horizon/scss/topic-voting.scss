@@ -1,9 +1,9 @@
 @use "lib/viewport";
 
 .voting .voting-wrapper {
-  --d-button-border-radius: var(--d-border-radius-small);
-  --primary-100: var(--d-selected);
-  --primary-low: var(--d-selected);
+  --d-comp-DButton-border-radius: var(--d-sys-border-radius-sm);
+  --primary-100: var(--d-sys-color-background-default-selected);
+  --primary-low: var(--d-sys-color-background-default-selected);
 
   &__button {
     background: var(--secondary);
@@ -30,6 +30,6 @@
 
   @include viewport.from(lg) {
     --secondary: var(--background-color);
-    --content-border-color: var(--d-sidebar-border-color);
+    --d-sys-color-border-default: var(--d-sidebar-border-color);
   }
 }

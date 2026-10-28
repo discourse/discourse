@@ -50,11 +50,11 @@
     color: var(--d-nav-color);
     background: var(--d-nav-bg-color);
     border: 0;
-    border-radius: var(--d-nav-pill-border-radius);
+    border-radius: var(--d-comp-NavPills-border-radius);
     line-height: var(--line-height-small);
     white-space: nowrap;
     cursor: pointer;
-    transition: var(--d-button-transition);
+    transition: var(--d-comp-DButton-motion-transition);
 
     @include viewport.between(sm, lg) {
       font-size: var(--font-0);

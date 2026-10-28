@@ -44,8 +44,8 @@
     padding: 4px 6px;
     background: var(--secondary);
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-dropdown);
+    border-radius: var(--d-sys-border-radius-md);
+    box-shadow: var(--d-sys-shadow-overlay);
     z-index: calc(var(--z-canvas-chrome) + 1);
   }
 

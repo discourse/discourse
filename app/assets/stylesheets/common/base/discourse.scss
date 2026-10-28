@@ -8,7 +8,7 @@
   --d-max-width: 1110px;
   --d-input-bg-color: var(--secondary);
   --d-input-text-color: var(--primary);
-  --d-input-border: 1px solid var(--input-border-color);
+  --d-input-border: 1px solid var(--d-sys-color-border-input);
   --d-input-bg-color--disabled: var(--primary-very-low);
   --d-input-text-color--disabled: var(--primary-medium);
   --d-input-border--disabled: 1px solid var(--primary-low);
@@ -53,7 +53,7 @@
   --d-tag-horizontal-padding: 0em;
   --d-tag-font-weight: initial;
   --d-tag-font-size: var(--font-0);
-  --d-tag-border-radius: 0px;
+  --d-comp-DDiscourseTag-border-radius: 0px;
   --d-tag-background-color: transparent;
   --category-badge-title-color: currentcolor;
   --category-boxes-description-text-color: var(--primary-med-or-secondary-high);
@@ -61,7 +61,7 @@
   --category-boxes-title-font-size: var(--font-up-2);
   --d-category-boxes-margin-top: var(--space-4);
   --d-categories-list-title-margin-bottom: 0em;
-  --d-header-padding-x: 0.67em;
+  --d-comp-Header-space-padding-inline: 0.67em;
   --d-table-border-top-height: 3px;
   --d-wrap-padding-x: 0.67em;
   --d-post-aside-background: var(--blend-primary-secondary-5);
@@ -185,7 +185,7 @@
 
 @keyframes background-fade-highlight {
   0% {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   100% {
@@ -286,7 +286,7 @@ a.cancel {
   margin-left: var(--space-5);
   line-height: normal;
   color: var(--primary-high);
-  transition: var(--d-button-transition);
+  transition: var(--d-comp-DButton-motion-transition);
 
   &:hover {
     color: var(--danger);
@@ -365,7 +365,7 @@ input {
   }
 
   &.invalid {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
   }
 
   .radio &[type="radio"],
@@ -395,7 +395,7 @@ input {
     color: var(--d-input-text-color);
     background-color: var(--d-input-bg-color);
     border: var(--d-input-border);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     color-scheme: var(--scheme-type);
 
     &:focus {
@@ -405,7 +405,7 @@ input {
 
   &[type="color"] {
     border: var(--d-input-border);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     cursor: pointer;
     padding: 0;
     margin-bottom: 0;
@@ -753,10 +753,10 @@ textarea {
     margin: 0;
 
     li {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       &:first-of-type {
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
       }
 
       a {
@@ -771,8 +771,8 @@ textarea {
 
         &.active {
           font-weight: bold;
-          color: var(--d-selected-text-color);
-          background: var(--d-selected);
+          color: var(--d-sys-color-text-default-selected);
+          background: var(--d-sys-color-background-default-selected);
         }
       }
     }
@@ -1006,7 +1006,7 @@ form {
   }
 
   .row {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     padding: var(--space-1) 0;
     display: grid;
     grid-template-areas:
@@ -1262,7 +1262,7 @@ body.has-sidebar-page {
       list-style: none;
       margin: 0;
       padding: 5px;
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       box-sizing: border-box;
 
       li {

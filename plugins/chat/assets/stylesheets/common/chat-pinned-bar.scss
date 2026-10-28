@@ -10,7 +10,7 @@
   min-height: var(--chat-pinned-bar-height);
   box-sizing: border-box;
   padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   background: var(--secondary);
   flex-shrink: 0;
   z-index: 2;
@@ -87,7 +87,7 @@
     height: var(--chat-pinned-bar-seg, 6px);
 
     // translucent tint of the active colour so dim bars keep contrast in both
-    // schemes (--tertiary-low collapses into the dark-mode background)
+    // schemes (--d-sys-color-background-accent-subtlest collapses into the dark-mode background)
     background: var(--tertiary);
     opacity: 0.4;
     border-radius: 3px;

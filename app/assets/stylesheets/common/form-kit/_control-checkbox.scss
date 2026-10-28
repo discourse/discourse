@@ -75,7 +75,7 @@
 }
 
 .form-kit__control-checkbox:checked + .form-kit__control-checkbox-checkmark {
-  border-color: var(--tertiary-low);
+  border-color: var(--d-sys-color-background-accent-subtlest);
 
   &::before {
     opacity: 1;

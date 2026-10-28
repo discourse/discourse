@@ -31,7 +31,7 @@
   min-width: 0;
 
   .search-highlight {
-    background: var(--highlight-medium);
+    background: var(--d-sys-color-background-highlight-subtle);
   }
 
   .chat-message-reaction {
@@ -72,7 +72,7 @@
     .mention,
     span.mention.--wide {
       &.highlighted {
-        background: var(--tertiary-low);
+        background: var(--d-sys-color-background-accent-subtlest);
       }
 
       .user-status-message {
@@ -151,10 +151,10 @@
 .touch .chat-message-container {
   &.-active {
     background: var(--d-hover);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.-bookmarked {
-      background: var(--highlight-low);
+      background: var(--d-sys-color-background-highlight-subtlest);
     }
   }
 }
@@ -171,11 +171,11 @@
     background: var(--d-hover);
 
     &.-bookmarked {
-      background: var(--highlight-medium);
+      background: var(--d-sys-color-background-highlight-subtle);
     }
 
     &.-deleted {
-      background-color: var(--danger-low);
+      background-color: var(--d-sys-color-background-danger-subtlest);
 
       .chat-message-expand {
         color: var(--danger);
@@ -183,7 +183,7 @@
     }
 
     &.-highlighted {
-      background-color: var(--tertiary-medium);
+      background-color: var(--d-sys-color-background-accent-subtle);
     }
   }
 }
@@ -197,16 +197,16 @@
   }
 
   &.-deleted {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     padding-block: 0.25rem;
   }
 
   &.-bookmarked {
-    background: var(--highlight-bg);
+    background: var(--d-sys-color-background-highlight-subtlest);
   }
 
   &.-highlighted {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   &.has-reply {

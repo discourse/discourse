@@ -6,10 +6,10 @@
     }
 
     li {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       &:first-of-type {
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
       }
 
       a {
@@ -25,7 +25,7 @@
         &.active {
           font-weight: bold;
           color: var(--primary);
-          background: var(--d-selected);
+          background: var(--d-sys-color-background-default-selected);
         }
       }
     }

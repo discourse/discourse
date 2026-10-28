@@ -417,7 +417,7 @@
     color: var(--danger);
 
     &:hover {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
     }
   }
 
@@ -500,7 +500,7 @@
     }
 
     &:hover {
-      background: var(--success-low);
+      background: var(--d-sys-color-background-success-subtlest);
     }
   }
 
@@ -512,7 +512,7 @@
     }
 
     &:hover {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
     }
   }
 }
@@ -536,8 +536,8 @@
     padding: 1.5rem;
     background: linear-gradient(
       135deg,
-      var(--tertiary-low) 0%,
-      var(--tertiary-very-low) 100%
+      var(--d-sys-color-background-accent-subtlest) 0%,
+      var(--d-sys-color-background-accent-subtlest) 100%
     );
     border-bottom: 1px solid var(--primary-low);
   }
@@ -566,7 +566,7 @@
     font-size: var(--font-down-2);
     padding: 0.2rem;
     background: var(--tertiary);
-    border-radius: var(--token-radius-full);
+    border-radius: var(--d-sys-border-radius-full);
   }
 
   &__header-content {
@@ -639,7 +639,7 @@
     gap: 0.5rem;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--tertiary-low);
+    border-bottom: 2px solid var(--d-sys-color-background-accent-subtlest);
 
     .d-icon {
       color: var(--tertiary);
@@ -688,15 +688,15 @@
     &.--creator {
       background: linear-gradient(
         135deg,
-        var(--tertiary-very-low) 0%,
+        var(--d-sys-color-background-accent-subtlest) 0%,
         var(--primary-very-low) 100%
       );
-      border: 1px solid var(--tertiary-low);
+      border: 1px solid var(--d-sys-color-background-accent-subtlest);
 
       &:hover {
         background: linear-gradient(
           135deg,
-          var(--tertiary-low) 0%,
+          var(--d-sys-color-background-accent-subtlest) 0%,
           var(--primary-low) 100%
         );
       }
@@ -772,7 +772,7 @@
 
     &:hover {
       color: var(--danger);
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
     }
 
     .d-icon {
@@ -927,7 +927,7 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 16 / 9;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
     overflow: hidden;
 
@@ -1285,7 +1285,7 @@
 
     &:hover,
     &:focus-visible {
-      background: var(--success-hover);
+      background: var(--d-sys-color-background-success-hovered);
     }
   }
 }

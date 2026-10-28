@@ -12,8 +12,8 @@
     0 0 0 1px var(--onebox-border-color),
     0 0 0 $thickness var(--onebox-shadow-color);
 
-  // Makes the outer drop shadow radius equal to --d-border-radius
-  border-radius: calc(var(--d-border-radius) - ($thickness / 2));
+  // Makes the outer drop shadow radius equal to --d-sys-border-radius-md
+  border-radius: calc(var(--d-sys-border-radius-md) - ($thickness / 2));
 }
 
 a.loading-onebox {
@@ -396,7 +396,7 @@ aside.onebox:has(.discourse-event-onebox) {
     align-items: center;
     background: var(--secondary);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     display: flex;
     flex-direction: column;
     height: 3em;
@@ -473,7 +473,7 @@ aside.onebox:has(.discourse-event-onebox) {
     // Matches the event widget's 16:9 image. The height is derived from the width rather than
     // set with aspect-ratio, which cooked images carry inline from their dimensions.
     .discourse-event-onebox__image.thumbnail {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       grid-column: 1 / -1;
       height: calc(100cqi * 9 / 16);
     }
@@ -505,7 +505,7 @@ aside.onebox:has(.discourse-event-onebox) {
 
     // Shows a 2:3 poster whole; anything taller is cropped from the bottom
     .discourse-event-onebox__image.thumbnail {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       grid-area: image;
       height: auto;
       max-height: 12rem;
@@ -598,7 +598,7 @@ aside.onebox:has(.discourse-event-onebox) {
     color: var(--primary-medium);
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__icon .d-icon {
@@ -631,7 +631,7 @@ aside.onebox:has(.discourse-event-onebox) {
     font-family: var(--d-font-family--monospace);
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__join {
@@ -700,7 +700,7 @@ pre.onebox code ol.lines li::before {
 }
 
 pre.onebox code ol.lines li.selected::before {
-  background-color: var(--highlight-bg);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
 }
 
 .onebox.githubblob,
@@ -752,8 +752,8 @@ pre.onebox code ol.lines li {
 }
 
 pre.onebox code ol.lines li.selected {
-  background-color: var(--highlight-bg);
-  border-left-color: rgb(var(--primary-rgb), 0.2);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
+  border-left-color: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 .onebox-warning-message {
@@ -856,7 +856,7 @@ aside.onebox.github-onebox {
 
   .github-onebox__label {
     color: var(--github-onebox-status-color);
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
   }
 
   .github-onebox__repo[href] {
@@ -1161,7 +1161,7 @@ aside.onebox.twitterstatus .onebox-body {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;
@@ -1311,7 +1311,7 @@ aside.onebox.xkcd .onebox-body img {
   }
 
   &.category-onebox {
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     padding-left: calc(1em - 5px);
     margin-left: 5px;
 
@@ -1380,7 +1380,7 @@ iframe.reddit-onebox {
   margin: 0 auto;
   overflow: hidden;
   border: 0;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .onebox.githubfolder {
@@ -1500,7 +1500,7 @@ aside.onebox.mixcloud-preview {
     transform: translate(-50%, -50%);
 
     .d-icon-play {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: #fff;
       display: flex;
       filter: drop-shadow(3px 3px 2px rgb(0, 0, 0, 0.25));
@@ -1537,7 +1537,7 @@ iframe.restream-onebox {
 
 .video-container {
   .notice {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
     padding: 10px 20px;
     position: absolute;
     width: calc(100% - 40px);
@@ -1654,7 +1654,7 @@ aside.onebox.preview-error .site-icon {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;

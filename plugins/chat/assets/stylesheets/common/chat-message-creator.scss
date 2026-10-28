@@ -83,7 +83,7 @@
       display: flex;
       flex-grow: 1;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       margin-bottom: var(--space-4);
     }
 
@@ -107,7 +107,7 @@
     &-container {
       display: flex;
       flex-grow: 1;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -124,7 +124,7 @@
     gap: 0.5rem;
     border: var(--d-input-border);
     box-sizing: border-box;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus-within {
       @include default-focus;
@@ -164,7 +164,7 @@
     flex-grow: 1;
     justify-content: flex-end;
     padding-top: 1rem;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     &-container {
       display: flex;
@@ -205,7 +205,7 @@
       }
 
       &.-highlighted {
-        background: var(--tertiary-very-low);
+        background: var(--d-sys-color-background-accent-subtlest);
       }
     }
 
@@ -276,7 +276,7 @@
     box-sizing: border-box;
     height: var(--d-control-height);
     padding: 0 0.5rem;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus,
     &:focus-within {
