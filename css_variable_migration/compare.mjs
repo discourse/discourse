@@ -156,12 +156,26 @@ async function compareProfile(profile) {
     : head;
   const scheme = head.scheme;
 
+  // A random value can repeat by chance, so ignore any rule that differs between runs
+  const noisyRules = new Set();
+  for (const [run, again] of [
+    [base, baseAgain],
+    [head, headAgain],
+  ]) {
+    for (const [where, text] of run.rules) {
+      if (again.rules.get(where) !== text) {
+        noisyRules.add(where);
+      }
+    }
+  }
+
   let noisy = 0;
   const declarations = [];
   for (const key of new Set([...base.values.keys(), ...head.values.keys()])) {
     const before = base.values.get(key);
     const after = head.values.get(key);
     if (
+      noisyRules.has((before ?? after).where) ||
       before?.value !== baseAgain.values.get(key)?.value ||
       after?.value !== headAgain.values.get(key)?.value
     ) {
@@ -218,19 +232,20 @@ async function compareProfile(profile) {
 // variables are the first page's.
 function collect(side, profile) {
   const values = new Map();
+  const rules = new Map();
   const compared = new Set();
   let first;
   for (const files of Object.values(readManifest(side)[profile])) {
-    const result = collectPage(side, files, compared, values);
+    const result = collectPage(side, files, compared, values, rules);
     first ??= result;
   }
-  return { values, ...first };
+  return { values, rules, ...first };
 }
 
 // Resolves every declaration that applies in Chromium against the page's :root
 // variables. A variable that is only set in other scopes resolves to a label,
 // because its value depends on where the element sits.
-function collectPage(side, files, compared, values) {
+function collectPage(side, files, compared, values, ruleTexts) {
   const roots = new Map();
   const scoped = new Set();
   let scheme = "light";
@@ -275,6 +290,8 @@ function collectPage(side, files, compared, values) {
     compared.add(file);
     const ordinals = new Map();
     for (const { rule, context } of rules) {
+      const where = `${file} ${context.join(" > ")}`;
+      ruleTexts.set(where, (ruleTexts.get(where) ?? "") + rule.toString());
       const locals = new Map();
       rule.each((decl) => {
         if (decl.type === "decl" && decl.prop.startsWith("--")) {
@@ -289,7 +306,6 @@ function collectPage(side, files, compared, values) {
         if (decl.type !== "decl" || decl.prop.startsWith("--")) {
           return;
         }
-        const where = `${file} ${context.join(" > ")}`;
         const id = `${where} ${decl.prop}`;
         const ordinal = (ordinals.get(id) ?? 0) + 1;
         ordinals.set(id, ordinal);

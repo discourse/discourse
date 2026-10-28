@@ -93,6 +93,14 @@ Make every change in `mapping.json`, `definitions.json` or the tools, never in t
    GIT_SEQUENCE_EDITOR="sed -i '/DEV: Apply the CSS variable mapping$/d'" git rebase -i origin/main
    ```
 
+   `compare.mjs` compiles through Rails, so bring dependencies and the database up to date after the rebase:
+
+   ```sh
+   pnpm install
+   bundle install
+   bin/rake db:migrate
+   ```
+
 3. Run the codemod and commit its output:
 
    ```sh
@@ -128,7 +136,7 @@ For a quick look between steps, you can run the codemod on its own output and co
 - There is one section for each profile: Foundation and Horizon, light and dark.
 - Each line is a change in computed value, with the number of declarations and up to three examples.
 - `var old → new: before → after` is the computed value of a `:root` variable.
-- `ignored as random` counts values that differ between two compiles of the same side, such as Sass `random()`.
+- `ignored as random` counts declarations in rules that differ between two compiles of the same side, such as rules that use Sass `random()`.
 - `<set in a scope: --name>` means the variable is set only in some selector, so its value depends on where the element is. Check these by hand.
 - `<invalid>` means the declaration has no value. Usually a `merge` whose new name has no definition.
 
