@@ -34,6 +34,21 @@ describe "About page" do
     expect(about_page).to have_moderators_count(1, "1")
   end
 
+  it "shows links in customized reporting instructions" do
+    TranslationOverride.upsert!(
+      "en",
+      "js.about.report_inappropriate_content",
+      'If you come across any inappropriate or illegal content, please flag it for review by moderators via the post menu or <a href="https://meta.discourse.org/dsa/report-illegal-content">submit a report</a>.',
+    )
+
+    about_page.visit
+
+    expect(about_page).to have_reporting_link(
+      "submit a report",
+      href: "https://meta.discourse.org/dsa/report-illegal-content",
+    )
+  end
+
   it "doesn't render banner image when it's not set" do
     SiteSetting.about_banner_image = ""
 
