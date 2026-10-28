@@ -475,19 +475,19 @@
 }
 
 @mixin btn-colors($btn-type) {
-  color: var(--d-button-#{$btn-type}-bg-color);
+  color: var(--d-comp-DButton-color-background-#{$btn-type});
 
   .d-icon {
     color: currentcolor;
   }
 
   &:focus-visible {
-    color: var(--d-button-#{$btn-type}-bg-color--hover);
+    color: var(--d-comp-DButton-color-background-#{$btn-type}-hovered);
   }
 
   .discourse-no-touch & {
     &:hover {
-      color: var(--d-button-#{$btn-type}-bg-color--hover);
+      color: var(--d-comp-DButton-color-background-#{$btn-type}-hovered);
     }
   }
 }
