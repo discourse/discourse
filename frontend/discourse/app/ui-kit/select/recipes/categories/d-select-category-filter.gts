@@ -233,11 +233,10 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   }
 
   async #loadPage(query: string, opts: SelectLoadOptions) {
-    const page = typeof opts.cursor === "number" ? opts.cursor : 1;
     const { categories, categoriesCount } = await Category.asyncSearch(query, {
       includeAncestors: true,
       includeUncategorized: this.#uncategorized,
-      page,
+      page: opts.page,
       parentCategoryId:
         this.args.parentCategory?.id ?? (query ? undefined : -1),
     });
@@ -246,7 +245,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     );
     if (query) {
       this.moreCount = 0;
-      return { items, total: categoriesCount, cursor: page + 1 };
+      return { items, total: categoriesCount };
     }
     // A long level shows its first rows and names the rest in the footer, as the legacy drop did.
     this.moreCount = categoriesCount > 18 ? categoriesCount - 15 : 0;
