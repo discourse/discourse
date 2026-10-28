@@ -17,6 +17,7 @@ import {
   history,
   historyKeymap,
   indentWithTab,
+  simplifySelection,
 } from "@codemirror/commands";
 import {
   bracketMatching,
@@ -248,6 +249,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
           : {}),
         ...(this.args.invalid ? { "aria-invalid": "true" } : {}),
       })),
+      EditorState.phrases.of(editorPhrases()),
     ];
 
     if (this.args.lineNumbers) {
@@ -269,8 +271,7 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
         indentOnInput(),
         highlightSelectionMatches(),
         search(),
-        keymap.of([...foldKeymap, ...searchKeymap, indentWithTab]),
-        EditorState.phrases.of(editorPhrases())
+        keymap.of([...foldKeymap, ...searchKeymap, indentWithTab])
       );
     }
 
@@ -278,10 +279,8 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       extensions.push(EditorView.lineWrapping);
     }
 
-    // Escape closes what the editor owns before a surrounding dialog can
-    // react; a second Escape within the tab-focus window falls through to it.
-    // Propagation stops here, so the editor's own Escape handling never runs
-    // and its tab-focus window is tracked here instead.
+    // Settled ahead of any surrounding dialog. Propagation stops here, so the
+    // editor's own Escape bindings never run.
     let tabFocusArmedAt = 0;
     const handleKeydown = (view: EditorView, event: KeyboardEvent) => {
       if (event.key !== "Escape") {
@@ -293,7 +292,10 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
       if (completionStatus(view.state)) {
         closeCompletion(view);
-      } else if (!closeSearchPanel(view)) {
+      } else if (
+        !closeSearchPanel(view) &&
+        !(view.state.selection.ranges.length > 1 && simplifySelection(view))
+      ) {
         if (!codeMode) {
           view.contentDOM.blur();
           event.preventDefault();

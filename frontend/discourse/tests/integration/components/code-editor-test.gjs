@@ -217,6 +217,13 @@ module("Integration | Component | code-editor", function (hooks) {
       "x(one) xtwo one",
       "several cursors edit at once"
     );
+    view.focus();
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    assert.strictEqual(
+      view.state.selection.ranges.length,
+      1,
+      "and Escape collapses them to one"
+    );
 
     assert.dom(".cm-activeLine").exists("the active line is marked");
     assert
