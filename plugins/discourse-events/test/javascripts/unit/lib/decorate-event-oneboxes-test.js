@@ -19,9 +19,29 @@ module("Unit | Lib | decorate-event-oneboxes", function () {
     assert
       .dom(".discourse-event-onebox__time-text", element)
       .hasText(
-        "11:00 PM → Oct 23, 2026 12:00 AM (Australia/Brisbane)",
+        "11:00 PM → Oct 23, 2026 12:00 AM (AEST)",
         "the time and timezone are localized"
       );
+  });
+
+  test("labels the timezone with its daylight saving abbreviation", function (assert) {
+    const element = buildOnebox({ startsAt: "2026-10-22T13:00:00.000Z" });
+
+    decorateEventOneboxes(element, "America/New_York");
+
+    assert
+      .dom(".discourse-event-onebox__time-text", element)
+      .hasText("9:00 AM (EDT)", "the abbreviation reflects daylight saving");
+  });
+
+  test("labels the timezone with its location when it has no abbreviation", function (assert) {
+    const element = buildOnebox({ startsAt: "2026-10-22T13:00:00.000Z" });
+
+    decorateEventOneboxes(element, "America/Sao_Paulo");
+
+    assert
+      .dom(".discourse-event-onebox__time-text", element)
+      .hasText("10:00 AM (Sao Paulo)", "the location replaces a bare offset");
   });
 
   test("keeps all-day event dates timezone-independent", function (assert) {
