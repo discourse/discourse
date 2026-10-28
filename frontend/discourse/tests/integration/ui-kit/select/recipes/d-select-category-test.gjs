@@ -946,7 +946,7 @@ module(
     });
 
     module("family footers", function () {
-      test("each family's footer follows its last row, and a second level gets its own", async function (assert) {
+      test("each family's footer follows its category, and a second level gets its own", async function (assert) {
         await render(<template><Host @multiple={{true}} /></template>);
         await select().open();
         await select().search("Category");
@@ -955,13 +955,53 @@ module(
           "1001",
           "category-descendants-1001",
           "1002",
-          "1003",
           "category-descendants-1002",
+          "1003",
         ]);
         assert
           .dom(".d-select__option.--action-footer")
           .exists({ count: 2 }, "both footers are group footers");
         assert.dom(".d-select__divider").doesNotExist("no dividers");
+      });
+
+      test("a footer comes before the rest of its family, at every level", async function (assert) {
+        Site.current().updateCategories([
+          { id: 9960, name: "Grove", slug: "grove", permission: 1 },
+          {
+            id: 9961,
+            name: "Grove path",
+            slug: "grove-path",
+            parent_category_id: 9960,
+            permission: 1,
+          },
+          {
+            id: 9962,
+            name: "Grove oak",
+            slug: "grove-oak",
+            parent_category_id: 9960,
+            permission: 1,
+          },
+          {
+            id: 9963,
+            name: "Grove acorn",
+            slug: "grove-acorn",
+            parent_category_id: 9962,
+            permission: 1,
+          },
+        ]);
+
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+        await select().search("Grove");
+
+        assert.deepEqual(optionValues(), [
+          "9960",
+          "category-descendants-9960",
+          "9961",
+          "9962",
+          "category-descendants-9962",
+          "9963",
+        ]);
       });
 
       test("a footer needs its key category among the results", async function (assert) {
@@ -1090,7 +1130,6 @@ module(
           "the subcategories mark has the same gap"
         );
       });
-
       test("picking a footer adds the family and every level below it", async function (assert) {
         const onChange = sinon.spy();
 
@@ -1390,11 +1429,11 @@ module(
           assert.true(pages.includes(2), "the next page loaded");
           assert.deepEqual(optionValues().slice(-6), [
             "9800",
-            "9801",
             "category-descendants-9800",
+            "9801",
             "9802",
-            "9803",
             "category-descendants-9802",
+            "9803",
           ]);
           assert.strictEqual(setSize(), rows.length + 2, "the footer lands");
         } finally {
@@ -2024,7 +2063,7 @@ module(
         );
       });
 
-      test("local family footers follow each family and keep their count", async function (assert) {
+      test("local family footers follow each category and keep their count", async function (assert) {
         enableVirtualization();
         try {
           const categories = Array.from({ length: 61 }, (_, index) => {
@@ -2066,13 +2105,13 @@ module(
           const actionRow = find("[data-value='category-descendants-99118']");
           assert.strictEqual(
             actionRow.previousElementSibling.dataset.value,
-            "99119",
-            "the footer follows the family's last row"
+            "99118",
+            "the footer follows its category"
           );
           assert.strictEqual(
             actionRow.nextElementSibling.dataset.value,
-            "99120",
-            "the next family starts after it"
+            "99119",
+            "the rest of the family comes after it"
           );
           await click(actionRow);
           assert.deepEqual(onChange.lastCall.args[0], [99118, 99119]);

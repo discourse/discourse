@@ -732,10 +732,11 @@ The category family has two recipes:
     instead.
   - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.
   - `@selectDescendants` (the default when multiple) groups a search of two or more characters
-    by family and ends each family with a footer row that adds the category and every level
-    below it. The footer draws the category's badge with its topic count and "+ Subcategories",
-    and its label speaks the same words. A family gets a footer only when its own category is
-    among the results, is not disabled, and has a descendant the list could offer.
+    by family and follows each family's category with a footer row that adds the category and
+    every level below it, before the rest of the family. The footer draws the category's badge
+    with its topic count and "+ Subcategories", and its label speaks the same words. A family
+    gets a footer only when its own category is among the results, is not disabled, and has a
+    descendant the list could offer.
 - **`DSelectCategoryFilter`** (kind `select-category-filter`) narrows a topic list, one level at
   a time. Its value is a category, `ALL_CATEGORIES_ID` or `NO_CATEGORIES_ID` (exported by the
   module), and `@parentCategory` names the level. `@items` is the caller's list for the level, so

@@ -25,6 +25,6 @@ export interface CategoryItem extends SelectItem {
   name: string;
   /** The site's category, absent for shortcut rows. */
   category?: Category;
-  /** The search's family for this row; `null` when it belongs to none. Groups the footers. */
-  familyKey?: number | null;
+  /** Set on a family's own category only, which groups it alone so its footer follows it. */
+  familyKey?: number;
 }

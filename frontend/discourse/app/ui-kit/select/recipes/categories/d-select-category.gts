@@ -82,8 +82,8 @@ interface DSelectCategorySignature {
     /** Includes ancestor badges on held selections. */
     showAncestors?: boolean;
     /**
-     * Ends each family in a search of two or more characters with a footer that adds the
-     * category and every level below it; defaults to multiple mode.
+     * Follows each category with children, in a search of two or more characters, with a row
+     * that adds the category and every level below it; defaults to multiple mode.
      */
     selectDescendants?: boolean;
     /** Replaces the list source; its rows get no pinned rows and no family footers. */
@@ -218,8 +218,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
 
   /**
    * A family's footer selects its key category and every level below it. It is offered only
-   * when the key category is among the family's rows, so it never acts on a family the search
-   * did not show.
+   * when the key category's row is shown, so it never acts on a family the search did not show.
    */
   @action
   groupFooter(key: unknown, rows: readonly SelectItem[]): CategoryItem | null {
@@ -300,8 +299,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   }
 
   /**
-   * Each row keeps the family key the search grouped it by, so a later site update can never
-   * re-key a row that is already shown.
+   * Only a family's own category keeps its key, so it groups alone and its footer comes right
+   * after it, before the rest of the family. The key comes from the search that ordered the
+   * rows, so a later site update can never re-key a row that is already shown.
    */
   #search(query: string, opts: SelectLoadOptions) {
     const groupFamilies = this.#offersDescendants(query);
@@ -328,8 +328,8 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return then(search, ({ categories, categoriesCount, familyKeys }) => ({
       items: categories.map((category) => {
         const row = categoryItem(category, descriptions);
-        if (groupFamilies && familyKeys) {
-          row.familyKey = familyKeys[category.id!];
+        if (groupFamilies && familyKeys?.[category.id!] === category.id) {
+          row.familyKey = category.id;
         }
         return row;
       }),

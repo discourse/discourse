@@ -374,8 +374,8 @@ Open items need a decision after manual testing; the rest are intended but still
   grandchildren; the new one adds the whole tree, minus excluded categories.
 - [ ] **"+ Subcategories" follows each family.** The legacy selector offered the row only when
   one category matched or the first match had the exact name, right below it. The new picker
-  groups every search of two or more characters by family and ends each family with its own
-  footer, at every level, drawn with the category's badge and topic count.
+  groups every search of two or more characters by family and offers the row right after each
+  family's category, at every level, drawn with the category's badge and topic count.
 - [ ] **Browsing is in tree order on lazy sites too.** The legacy lazy chooser kept the server's
   order: top-level categories first, then by id. Both modes now list each category after its
   parent, with siblings by topic count, or by position when `fixed_category_positions_on_create`
