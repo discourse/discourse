@@ -1127,6 +1127,23 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     x
   end
 
+  def process_group_tag_notification_default(x)
+    if GroupTagNotificationDefault.where(group_id: x["group_id"], tag_id: x["tag_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_group_category_notification_default(x)
+    if GroupCategoryNotificationDefault.where(
+         group_id: x["group_id"],
+         category_id: x["category_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
   def process_muted_user(x)
     return nil if MutedUser.where(user_id: x["user_id"], muted_user_id: x["muted_user_id"]).exists?
     x

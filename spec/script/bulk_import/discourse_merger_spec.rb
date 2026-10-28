@@ -340,6 +340,38 @@ if merger_dependencies_available
         )
       end
 
+      it "skips group tag notification defaults the destination already has" do
+        GroupTagNotificationDefault.create!(group:, tag:, notification_level: 1)
+
+        expect_guard(
+          :process_group_tag_notification_default,
+          existing: {
+            group_id: group.id,
+            tag_id: tag.id,
+          },
+          other: {
+            group_id: group.id,
+            tag_id: other_tag.id,
+          },
+        )
+      end
+
+      it "skips group category notification defaults the destination already has" do
+        GroupCategoryNotificationDefault.create!(group:, category:, notification_level: 1)
+
+        expect_guard(
+          :process_group_category_notification_default,
+          existing: {
+            group_id: group.id,
+            category_id: category.id,
+          },
+          other: {
+            group_id: group.id,
+            category_id: other_category.id,
+          },
+        )
+      end
+
       it "skips muted users the destination already has" do
         MutedUser.create!(user:, muted_user: other_user)
 
