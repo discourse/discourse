@@ -21,10 +21,6 @@ module PageObjects
         has_css?(".about__left-side", text: content)
       end
 
-      def has_reporting_link?(text, href:)
-        has_css?(".about__right-side p a[href='#{href}']", text: text, exact_text: true)
-      end
-
       def has_banner_image?(upload)
         has_css?("img.about__banner-img[src=\"#{GlobalPath.full_cdn_url(upload.url)}\"]")
       end
