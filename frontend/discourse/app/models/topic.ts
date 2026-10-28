@@ -1080,23 +1080,19 @@ export default class Topic extends RestModel {
     );
   }
 
-  @computed("last_read_post_number", "url", "rendersNested")
+  // Uncached, since rendersNested can depend on untracked local storage.
+  @dependentKeyCompat
   get lastReadUrl() {
     if (this.rendersNested) {
-      return this.url;
+      return this.get("url");
     }
-    return this.urlForPostNumber(this.last_read_post_number);
+    return this.urlForPostNumber(this.get("last_read_post_number"));
   }
 
-  @computed(
-    "last_read_post_number",
-    "highest_post_number",
-    "url",
-    "rendersNested"
-  )
+  @dependentKeyCompat
   get lastUnreadUrl() {
     if (this.rendersNested) {
-      return this.url;
+      return this.get("url");
     }
 
     let customUrl: string | null = null;
@@ -1112,27 +1108,30 @@ export default class Topic extends RestModel {
       return customUrl;
     }
 
+    const lastRead = this.get("last_read_post_number")!;
+    const highest = this.get("highest_post_number")!;
+
     if (
-      this.last_read_post_number! >= this.highest_post_number! &&
+      lastRead >= highest &&
       this.get("category.navigate_to_first_post_after_read")
     ) {
       return this.urlForPostNumber(1);
     }
 
-    let postNumber = this.last_read_post_number! + 1;
-    if (postNumber > this.highest_post_number!) {
-      postNumber = this.highest_post_number!;
+    let postNumber = lastRead + 1;
+    if (postNumber > highest) {
+      postNumber = highest;
     }
 
     return this.urlForPostNumber(postNumber);
   }
 
-  @computed("highest_post_number", "url", "rendersNested")
+  @dependentKeyCompat
   get lastPostUrl() {
     if (this.rendersNested) {
-      return this.url;
+      return this.get("url");
     }
-    return this.urlForPostNumber(this.highest_post_number);
+    return this.urlForPostNumber(this.get("highest_post_number"));
   }
 
   @computed("url")

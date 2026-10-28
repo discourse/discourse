@@ -15,6 +15,29 @@ export function prefersFlatReplies(currentUser, keyValueStore) {
   return keyValueStore.get(ANON_KEY) === "true";
 }
 
+/**
+ * Carries a flat preference chosen while anonymous over to the account once
+ * the viewer logs in.
+ */
+export async function adoptAnonymousFlatRepliesPreference(
+  currentUser,
+  keyValueStore
+) {
+  if (!currentUser || keyValueStore.get(ANON_KEY) !== "true") {
+    return;
+  }
+
+  if (!get(currentUser, "user_option.prefer_flat_replies")) {
+    currentUser.set("user_option.prefer_flat_replies", true);
+    await ajax(userPath(`${currentUser.username_lower}.json`), {
+      type: "PUT",
+      data: { prefer_flat_replies: true },
+    });
+  }
+
+  keyValueStore.remove(ANON_KEY);
+}
+
 function currentPostNumber(router, topic) {
   if (!topic.rendersNested) {
     return topic.currentPost;

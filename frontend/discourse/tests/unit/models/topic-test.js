@@ -149,10 +149,16 @@ module("Unit | Model | topic", function (hooks) {
     });
 
     assert.true(topic.rendersNested);
+    assert.strictEqual(topic.lastPostUrl, "/t/hello/101");
 
     keyValueStore.set({ key: "prefer_flat_replies", value: "true" });
     try {
       assert.false(topic.rendersNested);
+      assert.strictEqual(
+        topic.lastPostUrl,
+        "/t/hello/101/10",
+        "links follow the new preference without a reload"
+      );
 
       logIn(this.owner);
       const userTopic = this.store.createRecord("topic", {

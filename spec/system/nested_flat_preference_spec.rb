@@ -65,6 +65,18 @@ RSpec.describe "Nested replies flat view preference" do
     expect(flat_view_set_up?).to eq(true)
   end
 
+  it "carries an anonymous flat view over to the account on login" do
+    nested_view.visit_nested(topic)
+    find(".nested-view-toggle.--to-flat").click
+    expect(nested_view).to have_no_nested_view
+
+    sign_in(user)
+    topic_page.visit_topic(other_topic)
+
+    expect(nested_view).to have_no_nested_view
+    try_until_success { expect(user.user_option.reload.prefer_flat_replies).to eq(true) }
+  end
+
   it "shows the preference in interface settings" do
     user.user_option.update!(prefer_flat_replies: true)
     sign_in(user)
