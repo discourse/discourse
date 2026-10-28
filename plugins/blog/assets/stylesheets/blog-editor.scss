@@ -4,23 +4,16 @@
   margin-inline: auto;
   padding-block: 2em;
 
-  &__toolbar,
-  &__filters,
   &__links {
     display: flex;
     align-items: center;
     gap: 0.75em;
     flex-wrap: wrap;
-  }
-
-  &__toolbar {
-    justify-content: space-between;
     margin-block: 2em 1em;
   }
 
-  &__filters .btn[aria-pressed="true"] {
-    color: var(--tertiary);
-    background: var(--tertiary-low);
+  &__table {
+    margin-top: var(--space-4);
   }
 
   &__statuses {
