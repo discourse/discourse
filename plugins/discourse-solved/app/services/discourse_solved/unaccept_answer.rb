@@ -11,21 +11,23 @@ class DiscourseSolved::UnacceptAnswer
 
   model :post
   model :topic
-  model :topic_answer, optional: true
   policy :can_unaccept_answer
 
-  only_if(:post_is_accepted_answer) do
-    lock(:topic) do
+  lock(:topic) do
+    # Looked up under the lock, so the second of two concurrent unaccepts finds nothing to remove.
+    model :topic_answer, optional: true
+
+    only_if(:post_is_accepted_answer) do
       transaction do
         step :revoke_solved_credit
         step :remove_accepted_answer_notification
         step :remove_topic_solved_notifications
         step :unmark_as_solved
       end
-    end
 
-    only_if(:unaccepted_solution_webhooks_active) { step :enqueue_web_hooks }
-    step :publish_unaccepted
+      only_if(:unaccepted_solution_webhooks_active) { step :enqueue_web_hooks }
+      step :publish_unaccepted
+    end
   end
 
   private

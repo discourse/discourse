@@ -12,9 +12,11 @@ class DiscourseSolved::AcceptAnswer
   model :post
   model :topic
   policy :can_accept_answer
-  policy :answer_is_acceptable
 
   lock(:topic) do
+    # Checked under the lock, so the second of two concurrent accepts sees the first.
+    policy :answer_is_acceptable
+
     transaction do
       only_if(:should_revoke_previous) { step :revoke_previous_accepted_answer }
       step :credit_post_author
