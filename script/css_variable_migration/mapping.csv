@@ -143,3 +143,15 @@ old_name,new_name,type,notes
 --d-header-icon-background--hover,--d-comp-HeaderIcons-color-background-hovered,rename,"Background of the icon buttons on hover (header run, owner audit)."
 --d-header-icon-background--active,--d-comp-HeaderIcons-color-background-pressed,rename,Header run.
 --d-header-padding-x,--d-comp-Header-space-padding-inline,rename,Moved to the Header block in header.scss (header run).
+--token-color-background-accent-subtler,--d-sys-color-background-accent-subtle,merge,"tertiary-400, 74%: falls in the subtle band."
+--tertiary-very-low,--d-sys-color-background-accent-subtlest,merge,"90%, subtlest band."
+--tertiary-low,--d-sys-color-background-accent-subtlest,merge,"85%, subtlest band; info backgrounds also use it (info-subtlest)."
+--tertiary-medium,--d-sys-color-background-accent-subtle,merge,50%; matches the subtle token in light mode only.
+--tertiary-high,--d-sys-color-background-accent,merge,"20%, base band."
+--success-low,--d-sys-color-background-success-subtlest,merge,"80%, subtlest band."
+--input-border-color,--d-sys-color-border-input,merge,primary-400 vs --token-color-border-input primary-300.
+--metadata-color,--d-sys-color-text-muted,merge,Meta text is muted (settled rule); value moves from primary-medium.
+--title-color,--d-sys-color-text-default,merge,"var(--primary), while --d-sys-color-text-default comes from --token-color-text-default (var(--primary-900)); 1 use."
+--excerpt-color,--d-sys-color-text-muted,merge,primary-high vs muted's primary-800.
+--shadow-composer,--d-sys-shadow-dialog,merge,0 -1px 40px vs modal's 0 8px 60px.
+--shadow-docked-composer,--d-sys-shadow-overflow,merge,"Defined in core, used only by the AI plugin."
