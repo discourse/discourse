@@ -62,6 +62,10 @@ en:
     discourse_workflows:
       assign_topic:
         error: "Failed to assign: %{reason}"
+      assignment_action:
+        not_allowed: "'%{username}' can't assign or unassign this topic or post."
+      node_upgrades:
+        assign_topic_actor: "The node now acts as the user in Performed by user (system by default) instead of the user running the workflow, and must be allowed to assign. Its output gains actor and changed."
       check_assignment:
         unknown_target_type: "Unknown assignment target type: %{target_type}"
   assign_mailer:

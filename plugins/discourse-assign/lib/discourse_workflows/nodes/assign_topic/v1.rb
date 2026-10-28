@@ -82,6 +82,31 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          deprecated(
+            superseded_by: "2.0",
+            replaced_by: %w[action:unassign_topic],
+            description_key: "discourse_workflows.node_descriptions.action:assign_topic_v1",
+          ) do |parameters|
+            notes = ["discourse_assign.discourse_workflows.node_upgrades.assign_topic_actor"]
+
+            # An operation set by an expression can't be upgraded automatically.
+            case parameters.fetch("operation", "assign")
+            when "assign"
+              {
+                type: "action:assign_topic",
+                version: "2.0",
+                parameters: parameters.except("operation"),
+                notes:,
+              }
+            when "unassign"
+              {
+                type: "action:unassign_topic",
+                parameters: parameters.slice("resource", "topic_id", "post_id"),
+                notes:,
+              }
+            end
+          end
+
           def execute(exec_ctx)
             actor = exec_ctx.user || Discourse.system_user
             items =

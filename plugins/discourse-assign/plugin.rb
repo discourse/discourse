@@ -29,6 +29,8 @@ after_initialize do
     register_discourse_workflows_node do
       [
         DiscourseWorkflows::Nodes::AssignTopic::V1,
+        DiscourseWorkflows::Nodes::AssignTopic::V2,
+        DiscourseWorkflows::Nodes::UnassignTopic::V1,
         DiscourseWorkflows::Nodes::Assigned::V1,
         DiscourseWorkflows::Nodes::Assigned::V2,
         DiscourseWorkflows::Nodes::Unassigned::V1,
