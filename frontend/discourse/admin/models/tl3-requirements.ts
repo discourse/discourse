@@ -1,5 +1,43 @@
 import EmberObject, { computed } from "@ember/object";
 
+/** Embedded TL3 serializer data; unlike the top-level user counts, these include total. */
+export interface Tl3RequirementsFields {
+  time_period: number;
+  requirements_met: boolean;
+  requirements_lost: boolean;
+  trust_level_locked: boolean;
+  on_grace_period: boolean;
+  days_visited: number;
+  min_days_visited: number;
+  num_topics_replied_to: number;
+  min_topics_replied_to: number;
+  topics_viewed: number;
+  min_topics_viewed: number;
+  posts_read: number;
+  min_posts_read: number;
+  topics_viewed_all_time: number;
+  min_topics_viewed_all_time: number;
+  posts_read_all_time: number;
+  min_posts_read_all_time: number;
+  num_flagged_posts: number;
+  max_flagged_posts: number;
+  num_flagged_by_users: number;
+  max_flagged_by_users: number;
+  num_likes_given: number;
+  min_likes_given: number;
+  num_likes_received: number;
+  min_likes_received: number;
+  num_likes_received_days: number;
+  min_likes_received_days: number;
+  num_likes_received_users: number;
+  min_likes_received_users: number;
+  penalty_counts: { silenced: number; suspended: number; total: number };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface Tl3Requirements extends Tl3RequirementsFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class Tl3Requirements extends EmberObject {
   @computed("days_visited", "time_period")
   get days_visited_percent() {
@@ -69,5 +107,15 @@ export default class Tl3Requirements extends EmberObject {
       silenced: this.get("penalty_counts.silenced") === 0,
       suspended: this.get("penalty_counts.suspended") === 0,
     };
+  }
+}
+
+declare module "discourse/services/store" {
+  interface ModelRegistry {
+    "tl3-requirements": Tl3Requirements;
+  }
+
+  interface ModelCreateAttrsRegistry {
+    "tl3-requirements": Partial<Tl3RequirementsFields>;
   }
 }

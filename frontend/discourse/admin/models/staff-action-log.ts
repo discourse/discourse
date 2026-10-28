@@ -1,13 +1,71 @@
 import { computed } from "@ember/object";
-import AdminUser from "discourse/admin/models/admin-user";
+import AdminUser, {
+  type BasicAdminUser,
+} from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { duration, longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
-import RestModel from "discourse/models/rest";
+import RestModel, {
+  type RestModelClass,
+  type RestModelStoreAttrs,
+  type RestPayload,
+} from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
-function format(label, value, escape = true) {
+/** Parsed theme/tag-group JSON or the text used by other history actions. */
+export type StaffActionValue =
+  | string
+  | number
+  | boolean
+  | null
+  | StaffActionValue[]
+  | { [key: string]: StaffActionValue };
+
+/** Viewer-redacted history rows; reviewable_id is conditionally serialized. */
+export interface StaffActionLogFields {
+  id?: number;
+  action_name: string;
+  action: number;
+  details: string | null;
+  context?: string | null;
+  ip_address?: string | null;
+  email?: string | null;
+  created_at?: string;
+  expires_at: string | null;
+  subject?: string | null;
+  previous_value?: StaffActionValue;
+  new_value?: StaffActionValue;
+  topic_id?: number | null;
+  post_id?: number | null;
+  category_id?: number | null;
+  reviewable_id?: number;
+  custom_type: string | null;
+  acting_user: AdminUser | null;
+  target_user: AdminUser | null;
+}
+
+/** munge hydrates actors on the store and inherited create paths. */
+export type StaffActionLogCreateAttrs<M = StaffActionLog> = Partial<
+  Omit<M, "acting_user" | "target_user">
+> &
+  RestModelStoreAttrs &
+  RestPayload & {
+    acting_user?: BasicAdminUser | AdminUser | null;
+    target_user?: BasicAdminUser | AdminUser | null;
+  };
+
+/** The unused findAll reads this at the top level, although the controller sends it under extras. */
+export interface StaffActionLogListResponse {
+  staff_action_logs: StaffActionLog[];
+  user_history_actions: { id: string; action_id: number }[] | undefined;
+}
+
+function format(
+  label: string,
+  value: StaffActionValue | undefined,
+  escape = true
+) {
   const labelBr = value && value.toString().includes("\n") ? "<br/>" : " ";
   value = value ? value.toString() : "";
   return value
@@ -15,8 +73,19 @@ function format(label, value, escape = true) {
     : "";
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface StaffActionLog extends StaffActionLogFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class StaffActionLog extends RestModel {
-  static munge(json) {
+  declare static create: <C extends RestModelClass>(
+    this: C,
+    attrs?: StaffActionLogCreateAttrs<InstanceType<C>>
+  ) => InstanceType<C>;
+
+  static munge(json: StaffActionLogCreateAttrs): RestPayload;
+  static munge(json: RestPayload): RestPayload;
+  static munge(json: StaffActionLogCreateAttrs) {
     if (json.acting_user) {
       json.acting_user = AdminUser.create(json.acting_user);
     }
@@ -26,9 +95,14 @@ export default class StaffActionLog extends RestModel {
     return json;
   }
 
-  static findAll(data) {
+  static findAll(
+    data?: Record<string, string | number | boolean>
+  ): Promise<StaffActionLogListResponse> {
     return ajax("/admin/logs/staff_action_logs.json", { data }).then(
-      (result) => {
+      (result: {
+        staff_action_logs: StaffActionLogCreateAttrs[];
+        user_history_actions?: StaffActionLogListResponse["user_history_actions"];
+      }) => {
         return {
           staff_action_logs: result.staff_action_logs.map((s) =>
             StaffActionLog.create(s)
@@ -42,7 +116,7 @@ export default class StaffActionLog extends RestModel {
   showFullDetails = false;
 
   @computed("action_name")
-  get actionName() {
+  get actionName(): string {
     return i18n(`admin.logs.staff_actions.actions.${this.action_name}`);
   }
 
@@ -144,3 +218,15 @@ export default class StaffActionLog extends RestModel {
     ].includes(this.action_name);
   }
 }
+
+declare module "discourse/services/store" {
+  interface ModelRegistry {
+    "staff-action-log": StaffActionLog;
+  }
+  interface ModelCreateAttrsRegistry {
+    "staff-action-log": StaffActionLogCreateAttrs;
+  }
+}
+
+/** Legacy application global; declaring it preserves the module evaluation order. */
+declare const moment: typeof import("moment");
