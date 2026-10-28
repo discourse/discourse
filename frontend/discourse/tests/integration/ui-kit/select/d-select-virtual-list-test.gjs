@@ -302,6 +302,63 @@ module(
   }
 );
 
+module("Integration | ui-kit | select | DSelect pressed row", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    enableVirtualization();
+  });
+
+  hooks.afterEach(function () {
+    disableVirtualization();
+  });
+
+  test("pressing an option after scrolling away from the cursor keeps what it draws", async function (assert) {
+    const items = Array.from({ length: 60 }, (_, index) => ({
+      id: index,
+      name: `Item ${index}`,
+    }));
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+        </style>
+        <DSelect @items={{items}} @multiple={{true}} />
+      </template>
+    );
+    await openSelect();
+    const viewport = find(".d-virtual-list");
+    viewport.scrollTop = 1000;
+    await triggerEvent(viewport, "scroll");
+    await settledAfterFrame();
+
+    assert
+      .dom(`${OPTION_SELECTOR}[data-index='0']`)
+      .exists("the cursor's row stays mounted out of view");
+    const pressed = findAll(OPTION_SELECTOR).find(
+      (option) => Number(option.dataset.index) > 20
+    );
+    const icon = pressed.querySelector(".d-select__option-selected-icon");
+
+    // The press moves the cursor, so its old row leaves before the click lands.
+    await triggerEvent(icon, "mousedown");
+    await settledAfterFrame();
+
+    assert
+      .dom(`${OPTION_SELECTOR}[data-index='0']`)
+      .doesNotExist("the cursor's old row has left the list");
+    assert.true(
+      icon.isConnected,
+      "the pressed element survives, so the click that follows reaches it"
+    );
+  });
+});
+
 // Oracle for U-D change B1: DSelect committed-window keyboard reconcile under real
 // windowing. A `static` DSelect (a select-only combobox: the non-editable trigger
 // controls the listbox, so Home/End/Page navigate options) over 500 items in a bounded

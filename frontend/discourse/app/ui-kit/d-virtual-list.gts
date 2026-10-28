@@ -511,6 +511,14 @@ export default class DVirtualList<T> extends Component<
       element.style.transform = `translateY(${start}px)`;
     }
   );
+
+  /**
+   * The last published context of each mounted row. A row whose context is unchanged gets the
+   * same object back, so a publish caused by other rows never re-renders it: a block's markup
+   * stays the same nodes, and a click pressed on one still lands.
+   */
+  #rowContexts = new Map<VirtualKey, RowContext<T>>();
+
   @tracked _api: DVirtualListApi | null = null;
 
   @tracked _virtualItems: readonly VirtualItem[] = [];
@@ -525,31 +533,15 @@ export default class DVirtualList<T> extends Component<
   }
 
   get rows(): Array<RowContext<T>> {
-    if (!this.virtualizationActive) {
-      // Test / fallback path: render every item in normal flow, no windowing.
-      // `keyFor` is the SAME helper the modifier's `getItemKey` uses, so a row keys
-      // identically here and in the windowed path.
-      return this.args.items.map((item, index) => {
-        const key = keyFor(item, this.args.key);
-        return this.#rowContext(item, index, key, 0, 0);
-      });
+    const rows = this.#buildRows();
+    // Forget rows that left, so the cache stays the size of the mounted set.
+    const mounted = new Set(rows.map((row) => row.key));
+    for (const key of this.#rowContexts.keys()) {
+      if (!mounted.has(key)) {
+        this.#rowContexts.delete(key);
+      }
     }
-
-    // The window is published from the modifier's after-render flush, so during
-    // the render in which `@items` shrank it still describes the PREVIOUS list.
-    // Dropping the rows that no longer exist keeps `items[index]` from handing a
-    // consumer `undefined` for the one pass before the next flush lands.
-    return this._virtualItems
-      .filter((vi) => vi.index < this.args.items.length)
-      .map((vi) =>
-        this.#rowContext(
-          this.args.items[vi.index],
-          vi.index,
-          vi.key,
-          vi.start,
-          vi.size
-        )
-      );
+    return rows;
   }
 
   /** Whether `@itemRole` is one of the roles that defines position attributes. */
@@ -635,6 +627,35 @@ export default class DVirtualList<T> extends Component<
     this.args.onRegisterApi?.(api);
   }
 
+  #buildRows(): Array<RowContext<T>> {
+    if (!this.virtualizationActive) {
+      // Test / fallback path: render every item in normal flow, no windowing.
+      // `keyFor` is the SAME helper the modifier's `getItemKey` uses, so a row keys
+      // identically here and in the windowed path.
+      return this.args.items.map((item, index) => {
+        const key = keyFor(item, this.args.key);
+        return this.#rowContext(item, index, key, 0, 0);
+      });
+    }
+
+    // The window is published from the modifier's after-render flush, so during
+    // the render in which `@items` shrank it still describes the PREVIOUS list.
+    // Dropping the rows that no longer exist keeps `items[index]` from handing a
+    // consumer `undefined` for the one pass before the next flush lands.
+    return this._virtualItems
+      .filter((vi) => vi.index < this.args.items.length)
+      .map((vi) =>
+        this.#rowContext(
+          this.args.items[vi.index],
+          vi.index,
+          vi.key,
+          vi.start,
+          vi.size
+        )
+      );
+  }
+
+  /** Returns the row's previous context when nothing in it changed, so the row is not re-rendered. */
   #rowContext(
     item: T,
     index: number,
@@ -642,7 +663,7 @@ export default class DVirtualList<T> extends Component<
     start: number,
     size: number
   ): RowContext<T> {
-    return {
+    const context: RowContext<T> = {
       item,
       index,
       key,
@@ -654,6 +675,17 @@ export default class DVirtualList<T> extends Component<
       place: this.placeRow,
       measure: this.measureRow,
     };
+    const last = this.#rowContexts.get(key);
+    if (
+      last &&
+      (Object.keys(context) as Array<keyof RowContext<T>>).every((field) =>
+        Object.is(last[field], context[field])
+      )
+    ) {
+      return last;
+    }
+    this.#rowContexts.set(key, context);
+    return context;
   }
 
   <template>
