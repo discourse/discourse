@@ -254,10 +254,7 @@ en:
         read: Read the article
         expand: Expand article here
         collapse: Collapse article
-      editor_pagination_hint: Search and status filters apply to all articles. Load more adds up to 30 results.
-      editor_search: Search articles
       editor_search_hint: Search by title or article path
-      search_articles: Search
       editor_no_results: No matching articles
       editor_no_results_hint: Try another search or status filter, or start a new draft.
       editor_title: Blog editor
@@ -280,7 +277,6 @@ en:
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
-      refresh: Refresh articles
       drafts_hint:
         Published titles open the public discussion. Open a draft to publish, schedule, or correct it from its topic. Editorial working copies remain private after publication; public discussions stay in the Blog category.
       private_draft: Draft
