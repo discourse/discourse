@@ -6,6 +6,76 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
   fab!(:group)
   fab!(:group_2) { Fabricate(:group, name: "another_group") }
 
+  describe ".upgrade" do
+    let(:membership_parameters) do
+      { "username" => "={{ $json.user.username }}", "group_id" => 12, "actor_username" => "system" }
+    end
+
+    it "moves adding to Add user to group, keeping the primary group setting" do
+      parameters = membership_parameters.merge("operation" => "add", "set_primary_group" => true)
+
+      expect(described_class.upgrade(parameters)).to eq(
+        type: "action:add_user_to_group",
+        parameters: membership_parameters.merge("set_primary_group" => true),
+      )
+    end
+
+    it "treats a node without an operation as adding" do
+      expect(described_class.upgrade(membership_parameters)).to eq(
+        type: "action:add_user_to_group",
+        parameters: membership_parameters,
+      )
+    end
+
+    it "moves removing to Remove user from group" do
+      parameters =
+        membership_parameters.merge("operation" => "remove", "set_primary_group" => false)
+
+      expect(described_class.upgrade(parameters)).to eq(
+        type: "action:remove_user_from_group",
+        parameters: membership_parameters,
+      )
+    end
+
+    it "moves reads to version 2.0 without the primary group setting", :aggregate_failures do
+      %w[get check_membership].each do |operation|
+        parameters = membership_parameters.merge("operation" => operation)
+
+        expect(described_class.upgrade(parameters.merge("set_primary_group" => false))).to eq(
+          type: "action:group",
+          version: "2.0",
+          parameters:,
+        )
+      end
+    end
+
+    it "leaves a node whose operation is an expression to be replaced by hand" do
+      expect(described_class.upgrade("operation" => "={{ $json.operation }}")).to be_nil
+    end
+
+    it "upgrades a saved add node to Add user to group, keeping the node" do
+      node = {
+        "id" => "node-1",
+        "type" => "action:group",
+        "typeVersion" => "1.0",
+        "name" => "Add helper",
+        "position" => [100, 200],
+        "parameters" => membership_parameters.merge("operation" => "add"),
+      }
+
+      result = DiscourseWorkflows::NodeUpgrader.call([node])
+
+      expect(result.nodes.sole).to include(
+        "id" => "node-1",
+        "name" => "Add helper",
+        "position" => [100, 200],
+        "type" => "action:add_user_to_group",
+        "typeVersion" => "1.0",
+        "parameters" => membership_parameters,
+      )
+    end
+  end
+
   describe ".load_options_context" do
     subject(:options) do
       context =
@@ -507,5 +577,51 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         )
       end
     end
+  end
+end
+
+RSpec.describe DiscourseWorkflows::Nodes::Group::V2 do
+  fab!(:user)
+  fab!(:group)
+
+  let(:item) { { "json" => { "source" => "post" } } }
+
+  it "checks membership when no operation is set", :aggregate_failures do
+    group.add(user)
+    config = { "username" => user.username, "group_id" => group.id.to_s }
+
+    result = execute_node(configuration: config, item:)
+
+    expect(result).to include(
+      "source" => "post",
+      "group_membership" => include("group_id" => group.id, "in_group" => true),
+    )
+    expect(GroupUser.where(group:).count).to eq(1)
+  end
+
+  it "reads a group" do
+    config = { "operation" => "get", "group_id" => group.id.to_s }
+
+    result = execute_node(configuration: config, item:)
+
+    expect(result).to match_node_output_schema(described_class, configuration: config)
+  end
+
+  it "refuses an operation that moved to its own node", :aggregate_failures do
+    config = { "operation" => "add", "username" => user.username, "group_id" => group.id.to_s }
+
+    expect { execute_node(configuration: config, item:) }.to raise_error(
+      DiscourseWorkflows::NodeError,
+      "#{I18n.t("discourse_workflows.errors.unknown_operation", operation: "add")} [item 0]",
+    )
+    expect(group.users).to be_empty
+  end
+
+  it "only offers reads, without the primary group setting", :aggregate_failures do
+    expect(described_class.properties.dig(:operation, :options)).to eq(%w[get check_membership])
+    expect(described_class.properties).not_to have_key(:set_primary_group)
+    expect(described_class.output_schemas({ "operation" => "get" })).to eq(
+      [DiscourseWorkflows::Schema::GROUP_SCHEMA],
+    )
   end
 end

@@ -218,7 +218,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         client_id: "group-membership",
         node: {
           type: "action:group",
-          typeVersion: "1.0",
+          typeVersion: "2.0",
           name: "Check friend group membership",
           position: {
             x: 280,

@@ -439,6 +439,16 @@ module DiscourseWorkflows
       reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
     end
 
+    def self.load_group_options(context, groups = ::Group.all)
+      return if context.method_name != "groups"
+
+      groups
+        .order(:name)
+        .pluck(:id, :name)
+        .select { |_, name| context.matches_filter?(name) }
+        .map { |id, name| { id:, name: } }
+    end
+
     def self.trust_level_options
       TrustLevel.levels.map do |name, level|
         { value: level.to_s, label_key: "trust_levels.names.#{name}" }

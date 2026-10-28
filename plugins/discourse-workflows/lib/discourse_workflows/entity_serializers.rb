@@ -62,6 +62,10 @@ module DiscourseWorkflows
         )
     end
 
+    def serialize_group(group, guardian: Discourse.system_user.guardian)
+      serialize_record(group, WebHookGroupSerializer, scope: guardian)
+    end
+
     def serialize_basic_group(group)
       { id: group.id, name: group.name, full_name: group.full_name, automatic: group.automatic? }
     end
