@@ -842,6 +842,17 @@ RSpec.describe UserBadgesController do
 
       expect(events).to include(:user_badge_removed)
     end
+
+    it "says who revoked the badge in :user_badge_revoked" do
+      sign_in(admin)
+
+      event =
+        DiscourseEvent.track(:user_badge_revoked, args: [{ user_badge:, acting_user: admin }]) do
+          delete "/user_badges/#{user_badge.id}.json"
+        end
+
+      expect(event).to be_present
+    end
   end
 
   describe "#favorite" do
