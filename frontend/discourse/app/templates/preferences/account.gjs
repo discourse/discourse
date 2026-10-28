@@ -18,6 +18,10 @@ import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+function updatePrimaryGroup(controller, value) {
+  controller.set("newPrimaryGroupInput", value);
+}
+
 export default <template>
   <div class="control-group pref-username" data-setting-name="user-username">
     <label class="control-label">{{i18n "user.username.title"}}</label>
@@ -359,6 +363,7 @@ export default <template>
       <div class="controls">
         <ComboBox
           @content={{@controller.model.filteredGroups}}
+          @onChange={{fn updatePrimaryGroup @controller}}
           @options={{hash none="user.primary_group.none"}}
           @value={{@controller.newPrimaryGroupInput}}
         />

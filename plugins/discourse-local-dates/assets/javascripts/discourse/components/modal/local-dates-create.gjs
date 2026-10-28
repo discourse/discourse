@@ -356,6 +356,11 @@ export default class LocalDatesCreate extends Component {
   }
 
   @action
+  updateTimezones(timezones) {
+    this.set("timezones", timezones);
+  }
+
+  @action
   changeSelectedDate(date) {
     if (this.fromSelected) {
       this.set("date", date);
@@ -573,6 +578,7 @@ export default class LocalDatesCreate extends Component {
                     class="timezones-input"
                     @content={{this.allTimezones}}
                     @nameProperty={{null}}
+                    @onChange={{this.updateTimezones}}
                     @options={{hash allowAny=false maximum=5}}
                     @value={{this.timezones}}
                     @valueProperty={{null}}
