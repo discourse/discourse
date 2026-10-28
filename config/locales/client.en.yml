@@ -1805,6 +1805,7 @@ en:
 
     user:
       said: "%{username}:"
+      bot_account: "Automated account"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
       mute: "Mute"
@@ -9606,6 +9607,7 @@ en:
             permanently_delete_post_revisions: "permanently delete post revisions"
             mcp_client_updated: "update MCP OAuth client"
             delete_user: "delete user"
+            create_bot: "Create bot"
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
@@ -10001,6 +10003,7 @@ en:
           suspended: "Suspended"
           silenced: "Silenced"
           staged: "Staged"
+          bots: "Bots"
         activation_filter:
           label: "Activation status"
           all: "All users"
@@ -10011,6 +10014,18 @@ en:
           bot: "Bot accounts"
           all: "All accounts"
         approved: "Approved?"
+        source: "Source"
+        bots:
+          new: "New bot"
+          back: "Back to bots"
+          help: "Creates an account, not an integration. No password or API key is created."
+          name: "Name"
+          username: "Username"
+          trust_level: "Trust level"
+          create: "Create bot"
+          created: "Bot @%{username} created."
+          created_by: "Created by @%{username}"
+          admins_only: "Only admins can create bot accounts."
         titles:
           active: "Active users"
           new: "New users"
@@ -10026,6 +10041,7 @@ en:
           silenced: "Silenced users"
           suspended: "Suspended users"
           staged: "Staged users"
+          bots: "Bots"
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"

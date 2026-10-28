@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Admin::UsersController < Admin::StaffController
+  skip_before_action :check_xhr, only: :new_bot
+
+  before_action :ensure_admin, only: %i[new_bot create_bot]
+  before_action :rate_limit_bot_creation, only: :create_bot
+
   before_action :fetch_user,
                 only: %i[
                   suspend
@@ -41,12 +46,67 @@ class Admin::UsersController < Admin::StaffController
       silence_reasons: query.penalty_reasons(users.select(&:silenced?), :silence_user),
       suspend_reasons: query.penalty_reasons(users.select(&:suspended?), :suspend_user),
     }
+    if params[:query] == "bots"
+      opts[:user_ids] = users.map(&:id)
+      opts[:bot_creators] = query.bot_creators(opts[:user_ids]) if guardian.is_admin?
+    end
+
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
     end
 
     render_serialized(users, AdminUserListSerializer, opts)
+  end
+
+  def new_bot
+    if request.format.json?
+      render json: {
+               default_trust_level: SiteSetting.default_trust_level,
+               name_required: SiteSetting.full_name_requirement == "required_at_signup",
+             }
+    else
+      render "default/empty"
+    end
+  end
+
+  def create_bot
+    bot = params.require(:bot)
+    raise Discourse::InvalidParameters.new(:bot) unless bot.is_a?(ActionController::Parameters)
+
+    allowed_attributes = %w[name username trust_level]
+    unexpected_attributes = bot.keys - allowed_attributes
+    if unexpected_attributes.present?
+      raise Discourse::InvalidParameters.new(unexpected_attributes.first)
+    end
+
+    permitted = bot.permit(*allowed_attributes)
+    invalid_attributes = bot.keys - permitted.keys
+    raise Discourse::InvalidParameters.new(invalid_attributes.first) if invalid_attributes.present?
+
+    User::CreateBot.call(service_params.deep_merge(params: permitted.to_h)) do
+      on_success do |user:|
+        render json: {
+                 user: AdminUserSerializer.new(user, scope: guardian, root: false).as_json,
+               },
+               status: :created,
+               location: admin_user_show_path(id: user.id, username: user.username)
+      end
+      on_failed_policy(:can_create_bot) { raise Discourse::InvalidAccess }
+      on_failed_policy(:site_not_archived) { raise Discourse::SiteArchived }
+      on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
+      on_model_errors(:user) { |user| render_json_error(user) }
+      on_model_not_found(:user) do |result|
+        raise result.exception if result.exception
+        raise Discourse::NotFound
+      end
+    end
+  rescue ActiveRecord::RecordNotUnique => exception
+    raise unless exception.cause.is_a?(PG::UniqueViolation)
+    constraint = exception.cause.result.error_field(PG::Result::PG_DIAG_CONSTRAINT_NAME)
+    raise if %w[index_users_on_username index_users_on_username_lower].exclude?(constraint)
+
+    render_json_error(I18n.t("user.username.unique"))
   end
 
   def show
@@ -599,6 +659,10 @@ class Admin::UsersController < Admin::StaffController
   end
 
   private
+
+  def rate_limit_bot_creation
+    RateLimiter.new(current_user, "create-bot", 10, 1.minute, apply_limit_to_staff: true).performed!
+  end
 
   def fetch_user
     @user = User.find_by(id: params[:user_id])

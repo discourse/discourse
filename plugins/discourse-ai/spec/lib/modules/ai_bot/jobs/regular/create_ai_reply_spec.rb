@@ -75,9 +75,11 @@ RSpec.describe Jobs::CreateAiReply do
       expect(topic.posts.last.user).to eq(agent.user)
     end
 
-    it "fails visibly through the captured speaker when the queued agent is disabled" do
+    it "fails visibly through an active shared speaker when the queued agent is disabled" do
       speaker = agent.user
+      Fabricate(:ai_agent, user: speaker, enabled: true)
       agent.update!(enabled: false)
+      expect(speaker.reload).to be_active
 
       expect do
         job.execute(
@@ -91,6 +93,27 @@ RSpec.describe Jobs::CreateAiReply do
 
       expect(topic.posts.last.user).to eq(speaker)
       expect(topic.posts.last.raw).to include(I18n.t("discourse_ai.ai_bot.errors.invalid_agent_id"))
+    end
+
+    it "fails visibly through the system user when disabling the last agent deactivates its speaker" do
+      speaker = agent.user
+      agent.update!(enabled: false)
+      expect(speaker.reload).not_to be_active
+
+      expect do
+        job.execute(
+          post_id: topic.first_post.id,
+          bot_user_id: speaker.id,
+          agent_id: agent.id,
+          llm_model_id: gpt_35_bot.id,
+          authorization_user_id: topic.first_post.user_id,
+        )
+      end.to change { topic.posts.count }.by(1)
+
+      error_post = topic.posts.last
+      expect(error_post.user).to eq(Discourse.system_user)
+      expect(error_post.raw).to include(I18n.t("discourse_ai.ai_bot.errors.invalid_agent_id"))
+      expect(error_post.custom_fields).not_to have_key(DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD)
     end
 
     it "fails visibly through the system user when the queued agent is deleted" do

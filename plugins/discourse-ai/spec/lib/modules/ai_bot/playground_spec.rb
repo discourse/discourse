@@ -1060,7 +1060,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
             message: "Hello",
           )
         speaker = agent.user
+        Fabricate(:ai_agent, user: speaker, enabled: true)
         agent.update!(enabled: false)
+        expect(speaker.reload).to be_active
 
         expect {
           Jobs::CreateAiChatReply.new.execute(
@@ -1078,6 +1080,53 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expect(error_message.message).to include(
           I18n.t("discourse_ai.ai_bot.errors.invalid_agent_id"),
         )
+      end
+
+      it "creates no queued chat message when disabling the last agent deactivates its speaker" do
+        message =
+          Fabricate(
+            :chat_message_without_service,
+            user:,
+            chat_channel: dm_channel,
+            message: "Hello",
+          )
+        speaker = agent.user
+        agent.update!(enabled: false)
+        expect(speaker.reload).not_to be_active
+
+        expect {
+          Jobs::CreateAiChatReply.new.execute(
+            channel_id: dm_channel.id,
+            message_id: message.id,
+            bot_user_id: speaker.id,
+            agent_id: agent.id,
+            llm_model_id: opus_model.id,
+            authorization_user_id: user.id,
+          )
+        }.not_to change { Chat::Message.where(chat_channel_id: dm_channel.id).count }
+      end
+
+      it "creates no queued chat message through an explicitly inactive speaker" do
+        message =
+          Fabricate(
+            :chat_message_without_service,
+            user:,
+            chat_channel: dm_channel,
+            message: "Hello",
+          )
+        speaker = agent.user
+        speaker.update!(active: false)
+
+        expect {
+          Jobs::CreateAiChatReply.new.execute(
+            channel_id: dm_channel.id,
+            message_id: message.id,
+            bot_user_id: speaker.id,
+            agent_id: agent.id,
+            llm_model_id: opus_model.id,
+            authorization_user_id: user.id,
+          )
+        }.not_to change { Chat::Message.where(chat_channel_id: dm_channel.id).count }
       end
 
       it "can run tools" do

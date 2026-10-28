@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
@@ -12,8 +12,67 @@ acceptance("Admin - Users List", function (needs) {
   needs.user();
 
   let lastActivationFilter;
+  let lastBotShowEmails;
 
   needs.pretender((server, helper) => {
+    server.get("/admin/users/list/bots.json", (request) => {
+      lastBotShowEmails = request.queryParams.show_emails;
+      return helper.response([
+        {
+          id: -100,
+          username: "helper_bot",
+          bot_creator: { username: "sam", url: "/admin/users/2/sam" },
+          sources: [
+            { label: "<strong>Helper</strong>", url: "/admin/bots/helper" },
+            { label: "Support", url: "/forum/admin/bots/support" },
+          ],
+        },
+        {
+          id: -101,
+          username: "historical_bot",
+          sources: [{ label: "<em>Historical integration</em>" }],
+        },
+        { id: -102, username: "unknown_bot" },
+        { id: -103, username: "unattributed_bot", sources: [] },
+        {
+          id: -105,
+          username: "manual_bot",
+          bot_creator: { username: "sam", url: "/admin/users/2/sam" },
+        },
+        {
+          id: -106,
+          username: "escaped_creator_bot",
+          sources: [],
+          bot_creator: {
+            username: "<em>sam</em>",
+            url: "/forum/admin/users/2/sam",
+          },
+        },
+        {
+          id: -104,
+          username: "long_name_bot",
+          sources: [
+            {
+              label: "An agent with a very very very long name dot com",
+              url: "/admin/bots/long-name",
+            },
+          ],
+        },
+      ]);
+    });
+
+    for (const tab of ["staff", "staged"]) {
+      server.get(`/admin/users/list/${tab}.json`, () =>
+        helper.response([
+          {
+            id: 5,
+            username: "sam",
+            sources: [{ label: "Integration", url: "/admin/bots/helper" }],
+          },
+        ])
+      );
+    }
+
     server.get("/admin/users/list/silenced.json", () =>
       helper.response([
         {
@@ -52,6 +111,269 @@ acceptance("Admin - Users List", function (needs) {
 
       return helper.response(users);
     });
+  });
+
+  test("Bots replaces Groups in the users tabs", async function (assert) {
+    await visit("/admin/users/list/active");
+
+    assert
+      .dom(".admin-users-tabs__groups")
+      .doesNotExist("removes the Groups tab");
+    assert
+      .dom(".admin-users-tabs__bots a")
+      .hasText(i18n("admin.users.nav.bots"), "labels the tab Bots");
+
+    await click(".admin-users-tabs__bots a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/list/bots",
+      "opens the bots list"
+    );
+    assert
+      .dom(".admin-users-tabs__bots a")
+      .hasClass("active", "selects the Bots tab");
+    assert
+      .dom(".users-list .user .username")
+      .includesText("helper_bot", "lists bot accounts");
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .doesNotExist("does not offer a human account filter");
+  });
+
+  test("shows linked bot sources with escaped labels", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom(".admin-users-list__source-header")
+      .hasText(i18n("admin.users.source"), "labels the Source column");
+    assert
+      .dom(
+        '[data-user-id="-100"] .admin-users-list__source .directory-table__label'
+      )
+      .hasText(i18n("admin.users.source"), "labels the source on mobile");
+    assert
+      .dom('[data-user-id="-100"] .admin-users-list__source a')
+      .exists({ count: 2 }, "renders links for each source");
+    assert
+      .dom(
+        '[data-user-id="-100"] .admin-users-list__source a[href="/admin/bots/helper"]'
+      )
+      .hasText("<strong>Helper</strong>", "escapes the source label")
+      .hasAttribute(
+        "href",
+        "/admin/bots/helper",
+        "uses the internal source URL"
+      );
+    assert
+      .dom('[data-user-id="-100"] .admin-users-list__source strong')
+      .doesNotExist("does not trust source HTML");
+    assert
+      .dom(
+        '[data-user-id="-100"] .admin-users-list__source a[href="/forum/admin/bots/support"]'
+      )
+      .hasText("Support", "preserves a source URL that includes the base path");
+  });
+
+  test("shows creator attribution when a bot has no configured source", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    const label = i18n("admin.users.bots.created_by", { username: "sam" });
+    assert
+      .dom('[data-user-id="-105"] .admin-users-list__source a')
+      .hasText("@sam", "identifies the creator without a visible prefix")
+      .hasAttribute(
+        "aria-label",
+        label,
+        "explains the creator relationship accessibly"
+      )
+      .hasAttribute(
+        "href",
+        "/admin/users/2/sam",
+        "links to the creator's admin page"
+      );
+    assert
+      .dom('[data-user-id="-105"] .admin-users-list__source-item')
+      .hasAttribute("title", label, "preserves the full attribution on hover");
+    assert
+      .dom(
+        '[data-user-id="-100"] .admin-users-list__source a[href="/admin/users/2/sam"]'
+      )
+      .doesNotExist("a configured source takes precedence over the creator");
+  });
+
+  test("escapes creator names and preserves subfolder links", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom('[data-user-id="-106"] .admin-users-list__source a')
+      .hasText("@<em>sam</em>", "escapes the creator name")
+      .hasAttribute(
+        "href",
+        "/forum/admin/users/2/sam",
+        "preserves the supplied base path"
+      );
+    assert
+      .dom('[data-user-id="-106"] .admin-users-list__source em')
+      .doesNotExist("does not interpret creator names as HTML");
+  });
+
+  test("preserves the full source name when visually truncated", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    const label = "An agent with a very very very long name dot com";
+    assert
+      .dom('[data-user-id="-104"] .admin-users-list__source-item')
+      .hasAttribute("title", label, "reveals the full name on hover");
+    assert
+      .dom('[data-user-id="-104"] .admin-users-list__source-item a')
+      .hasText(label, "retains the full accessible link text")
+      .hasAttribute(
+        "href",
+        "/admin/bots/long-name",
+        "preserves the destination"
+      );
+  });
+
+  test("shows historical bot sources without links", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom(
+        '[data-user-id="-101"] .admin-users-list__source .directory-table__value'
+      )
+      .hasText(
+        "<em>Historical integration</em>",
+        "escapes a text-only source label"
+      );
+    assert
+      .dom(
+        '[data-user-id="-101"] .admin-users-list__source a, [data-user-id="-101"] .admin-users-list__source em'
+      )
+      .doesNotExist(
+        "does not add a link or trust HTML for a historical source"
+      );
+  });
+
+  test("shows a fallback for missing or empty bot sources", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    for (const id of [-102, -103]) {
+      assert
+        .dom(
+          `[data-user-id="${id}"] .admin-users-list__source .directory-table__value`
+        )
+        .hasText("—", "uses an em dash when no sources are available");
+      assert
+        .dom(`[data-user-id="${id}"] .admin-users-list__source a`)
+        .doesNotExist("does not link an unknown source");
+    }
+  });
+
+  test("only shows the Source column on the Bots tab", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom(".admin-users-list__source-header")
+      .exists("shows the header on the Bots tab");
+
+    for (const tab of [
+      "active",
+      "new",
+      "staff",
+      "suspended",
+      "silenced",
+      "staged",
+    ]) {
+      await visit(`/admin/users/list/${tab}`);
+
+      assert
+        .dom(".admin-users-list__source-header, .admin-users-list__source")
+        .doesNotExist(`omits the Source column on the ${tab} tab`);
+    }
+  });
+
+  test("hides human activity columns on Bots and keeps the grid aligned", async function (assert) {
+    this.siteSettings.must_approve_users = false;
+
+    await visit("/admin/users/list/active");
+    await click(".admin-users__subheader-show-emails");
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom(".admin-users-list__source-header")
+      .exists("admins retain the Source header");
+    assert
+      .dom(".admin-users-list__source")
+      .exists({ count: 7 }, "admins retain a Source cell for every bot");
+    assert
+      .dom(".users-list")
+      .hasAttribute(
+        "style",
+        /repeat\(6,/,
+        "accounts for Source and the two hidden columns"
+      );
+
+    assert
+      .dom("#table-header-toggle-last_emailed, .users-list .last-emailed")
+      .doesNotExist("omits the Last Emailed header and cells on Bots");
+
+    assert
+      .dom("#table-header-toggle-read_time, .users-list .time-read")
+      .doesNotExist("omits the Read Time header and cells on Bots");
+
+    assert
+      .dom(
+        ".admin-users__subheader-show-emails, .admin-users__subheader-hide-emails"
+      )
+      .doesNotExist(
+        "omits email actions on Bots even after revealing emails elsewhere"
+      );
+    assert
+      .dom("#table-header-toggle-email")
+      .isNotVisible("keeps the email header hidden on Bots");
+    assert
+      .dom(".users-list .email:not(.hidden)")
+      .doesNotExist("keeps all email cells hidden on Bots");
+    assert.strictEqual(
+      lastBotShowEmails,
+      "false",
+      "does not request bot email addresses"
+    );
+
+    this.siteSettings.must_approve_users = true;
+    await settled();
+
+    assert
+      .dom(".users-list")
+      .hasAttribute("style", /repeat\(7,/, "adds the approval grid column");
+
+    await visit("/admin/users/list/active");
+
+    assert
+      .dom(".admin-users__subheader-hide-emails")
+      .exists("preserves email visibility on human user lists");
+    assert
+      .dom("#table-header-toggle-last_emailed")
+      .exists("keeps the Last Emailed header on other tabs");
+    assert
+      .dom(".users-list .last-emailed")
+      .exists("keeps the Last Emailed cells on other tabs");
+
+    assert
+      .dom("#table-header-toggle-read_time")
+      .exists("keeps the Read Time header on other tabs");
+    assert
+      .dom(".users-list .time-read")
+      .exists("keeps the Read Time cells on other tabs");
+
+    assert
+      .dom(".users-list")
+      .hasAttribute(
+        "style",
+        /repeat\(9,/,
+        "restores the standard columns on other tabs"
+      );
   });
 
   test("lists users", async function (assert) {
@@ -286,6 +608,50 @@ acceptance("Admin - Users List - pagination", function (needs) {
     } finally {
       disableLoadMoreObserver();
     }
+  });
+});
+
+acceptance("Admin - Users List - moderator bots", function (needs) {
+  needs.user({ admin: false, moderator: true });
+
+  needs.pretender((server, helper) => {
+    server.get("/admin/users/list/bots.json", () =>
+      helper.response([{ id: -100, username: "helper_bot" }])
+    );
+  });
+
+  test("omits the admin-only Source column and keeps the grid aligned", async function (assert) {
+    this.siteSettings.must_approve_users = false;
+
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom('.users-list [data-user-id="-100"] .username')
+      .includesText("helper_bot", "moderators can still list bot accounts");
+    assert
+      .dom(".admin-users-list__source-header, .admin-users-list__source")
+      .doesNotExist("moderators have no Source header or cells");
+    assert
+      .dom(".users-list")
+      .hasAttribute(
+        "style",
+        /repeat\(5,/,
+        "does not reserve a Source grid column"
+      );
+
+    this.siteSettings.must_approve_users = true;
+    await settled();
+
+    assert
+      .dom(".users-list")
+      .hasAttribute(
+        "style",
+        /repeat\(6,/,
+        "adds only the approval grid column"
+      );
+    assert
+      .dom(".admin-users-list__source-header, .admin-users-list__source")
+      .doesNotExist("approval does not expose the admin-only Source column");
   });
 });
 

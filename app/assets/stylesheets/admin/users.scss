@@ -125,6 +125,21 @@
 }
 
 .admin-users-list {
+  &__source,
+  &__source-header {
+    justify-content: start;
+    text-align: start;
+  }
+
+  &__source-values {
+    min-width: 0;
+    max-width: 28ch;
+  }
+
+  &__source-item {
+    @include ellipsis;
+  }
+
   .directory-table__cell {
     padding: 0.5em 0.25em;
 

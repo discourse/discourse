@@ -47,6 +47,37 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "#log_bot_creation" do
+    fab!(:bot) { Fabricate(:user, id: -1234, trust_level: 2) }
+
+    it "records the actor, bot target, username, and trust level" do
+      expect { logger.log_bot_creation(bot) }.to change(UserHistory, :count).by(1)
+
+      expect(UserHistory.last).to have_attributes(
+        action: UserHistory.actions[:custom_staff],
+        custom_type: "create_bot",
+        acting_user_id: admin.id,
+        target_user_id: bot.id,
+        subject: bot.username,
+        details: "trust_level: #{bot.trust_level}",
+      )
+    end
+
+    it "rejects a missing bot" do
+      expect { logger.log_bot_creation(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "rejects an unpersisted bot" do
+      bot = Fabricate.build(:user, id: -1235)
+
+      expect { logger.log_bot_creation(bot) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "rejects a human user" do
+      expect { logger.log_bot_creation(admin) }.to raise_error(Discourse::InvalidParameters)
+    end
+  end
+
   describe "log_user_deletion" do
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 

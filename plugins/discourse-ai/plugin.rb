@@ -92,6 +92,34 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  reloadable_patch do
+    # Account references reserve IDs even while the feature is disabled.
+    ::BotUser.define_singleton_method(:claimed_id) do
+      DB.query_single(<<~SQL, ::BotUser::FIRST_ID).first
+        SELECT LEAST(
+          (SELECT min(id) FROM users),
+          (SELECT min(user_id) FROM ai_agents),
+          (SELECT min(user_id) FROM llm_models),
+          ?
+        )
+      SQL
+    end
+    ::BotUser.private_class_method(:claimed_id)
+  end
+
+  add_to_serializer(
+    :admin_user_list,
+    :sources,
+    include_condition: -> { scope.is_admin? && object.bot? && @options[:user_ids].present? },
+  ) do
+    # Collection serializers share options, keeping these lookups bounded to one batch per page.
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, [])
+  end
+
   register_admin_dashboard_section(
     id: "ask_ai",
     enabled: -> { SiteSetting.ai_ask_ai_enabled },

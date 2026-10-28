@@ -54,6 +54,13 @@ const ACCOUNT_TYPE_FILTER_OPTIONS = [
 export default <template>
   <DPageSubheader @titleLabel={{@controller.title}}>
     <:actions as |actions|>
+      {{#if (and (eq @controller.query "bots") @controller.currentUser.admin)}}
+        <actions.Primary
+          class="admin-users__subheader-new-bot"
+          @label="admin.users.bots.new"
+          @route="adminBotsNew"
+        />
+      {{/if}}
       {{#if @controller.canCheckEmails}}
         {{#if @controller.showEmails}}
           <actions.Default
@@ -208,6 +215,13 @@ export default <template>
                 @order={{@controller.order}}
               />
             </div>
+            {{#if @controller.showSource}}
+              <div
+                class="directory-table__column-header admin-users-list__source-header"
+              >
+                {{i18n "admin.users.source"}}
+              </div>
+            {{/if}}
             <DTableHeaderToggle
               class={{if
                 @controller.showEmails
@@ -221,14 +235,16 @@ export default <template>
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
             />
-            <DTableHeaderToggle
-              @asc={{@controller.asc}}
-              @automatic={{true}}
-              @field="last_emailed"
-              @labelKey="admin.users.last_emailed"
-              @onToggle={{@controller.updateOrder}}
-              @order={{@controller.order}}
-            />
+            {{#if @controller.showLastEmailed}}
+              <DTableHeaderToggle
+                @asc={{@controller.asc}}
+                @automatic={{true}}
+                @field="last_emailed"
+                @labelKey="admin.users.last_emailed"
+                @onToggle={{@controller.updateOrder}}
+                @order={{@controller.order}}
+              />
+            {{/if}}
             <DTableHeaderToggle
               @asc={{@controller.asc}}
               @automatic={{true}}
@@ -257,14 +273,16 @@ export default <template>
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
             />
-            <DTableHeaderToggle
-              @asc={{@controller.asc}}
-              @automatic={{true}}
-              @field="read_time"
-              @labelKey="admin.user.time_read"
-              @onToggle={{@controller.updateOrder}}
-              @order={{@controller.order}}
-            />
+            {{#if @controller.showReadTime}}
+              <DTableHeaderToggle
+                @asc={{@controller.asc}}
+                @automatic={{true}}
+                @field="read_time"
+                @labelKey="admin.user.time_read"
+                @onToggle={{@controller.updateOrder}}
+                @order={{@controller.order}}
+              />
+            {{/if}}
             <DTableHeaderToggle
               @asc={{@controller.asc}}
               @automatic={{true}}
@@ -368,6 +386,49 @@ export default <template>
                     {{dIcon "far-envelope" title="user.staged"}}
                   {{/if}}
                 </div>
+                {{#if @controller.showSource}}
+                  <div class="directory-table__cell admin-users-list__source">
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.users.source"}}</span>
+                    </span>
+                    <div
+                      class="directory-table__value admin-users-list__source-values"
+                    >
+                      {{#each user.sources as |source|}}
+                        <div
+                          class="admin-users-list__source-item"
+                          title={{source.label}}
+                        >
+                          {{#if source.url}}
+                            <a href={{source.url}}>{{source.label}}</a>
+                          {{else}}
+                            {{source.label}}
+                          {{/if}}
+                        </div>
+                      {{else}}
+                        {{#if user.bot_creator}}
+                          <div
+                            class="admin-users-list__source-item"
+                            title={{i18n
+                              "admin.users.bots.created_by"
+                              username=user.bot_creator.username
+                            }}
+                          >
+                            <a
+                              aria-label={{i18n
+                                "admin.users.bots.created_by"
+                                username=user.bot_creator.username
+                              }}
+                              href={{user.bot_creator.url}}
+                            >@{{user.bot_creator.username}}</a>
+                          </div>
+                        {{else}}
+                          &mdash;
+                        {{/if}}
+                      {{/each}}
+                    </div>
+                  </div>
+                {{/if}}
                 <div
                   class="directory-table__cell email
                     {{if @controller.showEmails '' 'hidden'}}"
@@ -377,27 +438,29 @@ export default <template>
                   </span>
                 </div>
 
-                {{#if user.last_emailed_at}}
-                  <div
-                    class="directory-table__cell last-emailed"
-                    title={{rawDate user.last_emailed_at}}
-                  >
-                    <span class="directory-table__label">
-                      <span>{{i18n "admin.users.last_emailed"}}</span>
-                    </span>
-                    <span class="directory-table__value">
-                      {{dFormatDuration user.last_emailed_age}}
-                    </span>
-                  </div>
-                {{else}}
-                  <div class="directory-table__cell last-emailed">
-                    <span class="directory-table__label">
-                      <span>{{i18n "admin.users.last_emailed"}}</span>
-                    </span>
-                    <span class="directory-table__value">
-                      {{dFormatDuration user.last_emailed_age}}
-                    </span>
-                  </div>
+                {{#if @controller.showLastEmailed}}
+                  {{#if user.last_emailed_at}}
+                    <div
+                      class="directory-table__cell last-emailed"
+                      title={{rawDate user.last_emailed_at}}
+                    >
+                      <span class="directory-table__label">
+                        <span>{{i18n "admin.users.last_emailed"}}</span>
+                      </span>
+                      <span class="directory-table__value">
+                        {{dFormatDuration user.last_emailed_age}}
+                      </span>
+                    </div>
+                  {{else}}
+                    <div class="directory-table__cell last-emailed">
+                      <span class="directory-table__label">
+                        <span>{{i18n "admin.users.last_emailed"}}</span>
+                      </span>
+                      <span class="directory-table__value">
+                        {{dFormatDuration user.last_emailed_age}}
+                      </span>
+                    </div>
+                  {{/if}}
                 {{/if}}
 
                 <div
@@ -434,14 +497,16 @@ export default <template>
                     {{dNumber user.posts_read_count}}
                   </span>
                 </div>
-                <div class="directory-table__cell time-read">
-                  <span class="directory-table__label">
-                    <span>{{i18n "admin.user.time_read"}}</span>
-                  </span>
-                  <span class="directory-table__value">
-                    {{dFormatDuration user.time_read}}
-                  </span>
-                </div>
+                {{#if @controller.showReadTime}}
+                  <div class="directory-table__cell time-read">
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.user.time_read"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{dFormatDuration user.time_read}}
+                    </span>
+                  </div>
+                {{/if}}
                 <div
                   class="directory-table__cell created"
                   title={{rawDate user.created_at}}
