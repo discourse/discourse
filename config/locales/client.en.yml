@@ -10032,7 +10032,6 @@ en:
           create: "Create bot"
           created: "Bot @%{username} created."
           created_by: "Created by @%{username}"
-          admins_only: "Only admins can create bot accounts."
         titles:
           active: "Active users"
           new: "New users"
@@ -10061,6 +10060,8 @@ en:
           text: "Delete associated accounts"
 
       user:
+        account_type: "Account type"
+        bot: "Bot"
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
         suspend_duration: "Suspend user until:"

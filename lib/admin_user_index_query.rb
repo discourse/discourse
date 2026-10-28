@@ -251,11 +251,7 @@ class AdminUserIndexQuery
     return {} if user_ids.empty? || !guardian&.is_admin?
 
     UserHistory
-      .where(
-        action: UserHistory.actions[:custom_staff],
-        custom_type: "create_bot",
-        target_user_id: user_ids,
-      )
+      .where(action: UserHistory.actions[:create_bot], target_user_id: user_ids)
       .joins("LEFT JOIN users AS creators ON creators.id = user_histories.acting_user_id")
       .order(:target_user_id, :id)
       .select(

@@ -1,7 +1,9 @@
 import {
   click,
   currentURL,
+  resetOnerror,
   settled,
+  setupOnerror,
   triggerEvent,
   visit,
   waitFor,
@@ -486,7 +488,7 @@ acceptance("Admin - New bot", function (needs) {
       "an error does not navigate away"
     );
     assert
-      .dom(`${FORM} .alert-error`)
+      .dom(`${FORM} .form-kit__errors-summary`)
       .includesText(
         "Username has already been taken",
         "server errors are displayed in the form"
@@ -663,7 +665,7 @@ acceptance("Admin - New bot - moderator", function (needs) {
     metadataRequests = 0;
     server.get("/admin/users/bots/new.json", () => {
       metadataRequests++;
-      return helper.response({ default_trust_level: 2, name_required: false });
+      return helper.response(403, { errors: [i18n("errors.desc.forbidden")] });
     });
     server.get("/admin/users/list/bots.json", () => helper.response([]));
   });
@@ -679,7 +681,12 @@ acceptance("Admin - New bot - moderator", function (needs) {
   });
 
   test("moderators cannot load the form by navigating directly", async function (assert) {
-    await visit("/admin/users/bots/new");
+    setupOnerror(() => {});
+    try {
+      await visit("/admin/users/bots/new");
+    } catch {}
+    await settled();
+    resetOnerror();
     assert.dom(FORM).doesNotExist("the creation form is not rendered");
     assert
       .dom(".error-page .reason")
@@ -687,13 +694,13 @@ acceptance("Admin - New bot - moderator", function (needs) {
     assert
       .dom(".error-page .desc")
       .hasText(
-        i18n("admin.users.bots.admins_only"),
+        i18n("errors.desc.forbidden"),
         "the admin requirement is explained"
       );
     assert.strictEqual(
       metadataRequests,
-      0,
-      "the permission guard runs before loading admin metadata"
+      1,
+      "the server rejects access to admin metadata"
     );
   });
 });

@@ -261,39 +261,67 @@ RSpec.describe Admin::UsersController do
         post "/admin/users/bots.json", params: { bot: bot_params }
 
         expect(response.status).to eq(201)
-        expect(UserHistory.find_by!(custom_type: "create_bot")).to have_attributes(
-          action: UserHistory.actions[:custom_staff],
+        expect(UserHistory.find_by!(action: UserHistory.actions[:create_bot])).to have_attributes(
+          action: UserHistory.actions[:create_bot],
           acting_user_id: admin.id,
           target_user_id: response.parsed_body.dig("user", "id"),
         )
       end
 
-      it "rejects unknown and prohibited nested attributes without creating accounts" do
-        {
-          admin: true,
-          moderator: true,
-          id: -9999,
-          active: false,
-          approved: false,
-          approved_by_id: admin.id,
-          email: "forged@example.com",
-          password: "a-secret-password",
-          api_key: "a-secret-api-key",
-          custom_fields: {
-            privileged: true,
-          },
-          user_fields: {
-            "1" => "forged",
-          },
-          unexpected: "value",
-        }.each do |attribute, value|
-          expect do
-            post "/admin/users/bots.json", params: { bot: bot_params.merge(attribute => value) }
-          end.not_to change(User, :count)
+      it "ignores prohibited bot attributes while creating an unprivileged account" do
+        post "/admin/users/bots.json",
+             params: {
+               bot:
+                 bot_params.merge(
+                   admin: true,
+                   moderator: true,
+                   id: -9999,
+                   active: false,
+                   approved: false,
+                   approved_by_id: user.id,
+                   email: "forged@example.com",
+                   password: "a-secret-password",
+                   api_key: "a-secret-api-key",
+                   custom_fields: {
+                     privileged: true,
+                   },
+                   user_fields: {
+                     "1" => "forged",
+                   },
+                 ),
+             },
+             as: :json
 
-          expect(response.status).to eq(400), "Expected #{attribute} to be rejected"
-          expect(response.parsed_body["errors"]).to be_present
-        end
+        expect(response.status).to eq(201)
+        bot = User.find(response.parsed_body.dig("user", "id"))
+        expect(bot).to have_attributes(
+          username: bot_params[:username],
+          admin: false,
+          moderator: false,
+          active: true,
+          approved: true,
+          approved_by_id: admin.id,
+          password_hash: nil,
+        )
+        expect(bot.id).not_to eq(-9999)
+        expect(bot.email).to match(/\A[0-9a-f]+@does-not-exist\.invalid\z/)
+        expect(bot.api_keys).to be_empty
+        expect(bot.custom_fields).to be_empty
+        expect(bot.user_fields).to be_blank
+      end
+
+      it "requires a username inside the bot envelope" do
+        expect do
+          post "/admin/users/bots.json",
+               params: {
+                 bot: bot_params.except(:username),
+                 username: "outside_bot",
+               },
+               as: :json
+        end.to not_change(User, :count).and(not_change(UserHistory, :count))
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to be_present
       end
 
       it "ignores properties outside the bot envelope" do
@@ -362,19 +390,6 @@ RSpec.describe Admin::UsersController do
         expect(bot.api_keys).to be_empty
       end
 
-      it "rejects arrays and objects in every bot field without creating accounts" do
-        %i[name username trust_level].each do |attribute|
-          [["1"], { value: "1" }].each do |value|
-            expect do
-              post "/admin/users/bots.json", params: { bot: bot_params.merge(attribute => value) }
-            end.not_to change(User, :count)
-
-            expect(response.status).to eq(400),
-            "Expected #{attribute}=#{value.inspect} to be rejected"
-          end
-        end
-      end
-
       it "requires an object-shaped bot envelope" do
         [nil, "release_helper", [bot_params]].each do |value|
           expect do
@@ -385,8 +400,8 @@ RSpec.describe Admin::UsersController do
         end
       end
 
-      it "rejects malformed scalar trust levels without creating accounts" do
-        [-1, 5, 1.0, 1.5, true, false, "01", "1.0", "1e0", " 1", "+1", "invalid"].each do |value|
+      it "rejects missing and out-of-range trust levels without creating accounts" do
+        [nil, -1, 5, ""].each do |value|
           expect do
             post "/admin/users/bots.json",
                  params: {

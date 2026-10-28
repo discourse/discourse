@@ -75,26 +75,13 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def create_bot
-    bot = params.require(:bot)
-    raise Discourse::InvalidParameters.new(:bot) unless bot.is_a?(ActionController::Parameters)
-
-    allowed_attributes = %w[name username trust_level]
-    unexpected_attributes = bot.keys - allowed_attributes
-    if unexpected_attributes.present?
-      raise Discourse::InvalidParameters.new(unexpected_attributes.first)
-    end
-
-    permitted = bot.permit(*allowed_attributes)
-    invalid_attributes = bot.keys - permitted.keys
-    raise Discourse::InvalidParameters.new(invalid_attributes.first) if invalid_attributes.present?
+    bot = params.expect(bot: %i[name username trust_level])
 
     # Request uses `key`, as `api_key` would be read as an authentication credential.
     key = params[:key]
     raise Discourse::InvalidParameters.new(:key) if key && !key.is_a?(ActionController::Parameters)
 
-    User::CreateBot.call(
-      service_params.deep_merge(params: { **permitted.to_h, api_key: key&.to_unsafe_h }),
-    ) do
+    User::CreateBot.call(service_params.merge(params: bot.to_h.merge(api_key: key&.to_unsafe_h))) do
       on_success do |user:, api_key: nil|
         render json: {
                  user: AdminUserSerializer.new(user, scope: guardian, root: false).as_json,
@@ -118,12 +105,6 @@ class Admin::UsersController < Admin::StaffController
         raise Discourse::NotFound
       end
     end
-  rescue ActiveRecord::RecordNotUnique => exception
-    raise unless exception.cause.is_a?(PG::UniqueViolation)
-    constraint = exception.cause.result.error_field(PG::Result::PG_DIAG_CONSTRAINT_NAME)
-    raise if %w[index_users_on_username index_users_on_username_lower].exclude?(constraint)
-
-    render_json_error(I18n.t("user.username.unique"))
   end
 
   def show

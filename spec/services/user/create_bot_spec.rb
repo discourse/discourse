@@ -5,30 +5,7 @@ RSpec.describe User::CreateBot do
     it { is_expected.to validate_presence_of(:username) }
     it { is_expected.to allow_values(*(0..4), *%w[0 1 2 3 4]).for(:trust_level) }
 
-    it do
-      is_expected.not_to allow_values(
-        nil,
-        -1,
-        5,
-        1.0,
-        1.5,
-        true,
-        false,
-        [],
-        [1],
-        {},
-        { value: 1 },
-        "",
-        "01",
-        "1.0",
-        "1e0",
-        "+1",
-        " 1",
-        "1 ",
-        "1\n",
-        "invalid",
-      ).for(:trust_level)
-    end
+    it { is_expected.not_to allow_values(nil, -1, 5, "").for(:trust_level) }
 
     it "requires a name when full names are required at signup" do
       SiteSetting.full_name_requirement = "required_at_signup"
@@ -51,9 +28,6 @@ RSpec.describe User::CreateBot do
         expect(contract).to be_valid
       end
     end
-
-    it { is_expected.not_to allow_values([], {}, true, 123).for(:name) }
-    it { is_expected.not_to allow_values([], {}, true, 123).for(:username) }
 
     it "defaults to the site's current trust level" do
       SiteSetting.default_trust_level = 2
@@ -178,17 +152,13 @@ RSpec.describe User::CreateBot do
         User.skip_callback(:create, :after, :ensure_in_trust_level_group)
       end
 
-      it "logs the actor and target as a custom staff action" do
+      it "logs the actor and target as a bot creation staff action" do
         expect { result }.to change {
-          UserHistory.where(
-            action: UserHistory.actions[:custom_staff],
-            custom_type: "create_bot",
-          ).count
+          UserHistory.where(action: UserHistory.actions[:create_bot]).count
         }.by(1)
 
         expect(UserHistory.last).to have_attributes(
-          action: UserHistory.actions[:custom_staff],
-          custom_type: "create_bot",
+          action: UserHistory.actions[:create_bot],
           acting_user_id: actor.id,
           target_user_id: result.user.id,
           subject: result.user.username,
@@ -334,12 +304,12 @@ RSpec.describe User::CreateBot do
       end
     end
 
-    it "rejects a case-insensitive duplicate username without creating a user" do
+    it "rejects a case-insensitive duplicate username without creating a user or audit entry" do
       Fabricate(:user, username: params[:username].upcase)
 
-      expect { result }.not_to change(User, :count)
+      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
       expect(result).to fail_with_an_invalid_model(:user)
-      expect(result.user.errors[:username]).to be_present
+      expect(result.user.errors[:username]).to include(I18n.t("user.username.unique"))
     end
 
     it "rejects usernames already used by a group" do

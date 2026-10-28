@@ -20,13 +20,11 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBotForm extends Component {
-  @service a11y;
   @service router;
   @service site;
   @service siteSettings;
   @service toasts;
 
-  @tracked errorMessage;
   @tracked generatedApiKey;
   @tracked createdKeyData;
 
@@ -70,6 +68,8 @@ export default class AdminBotForm extends Component {
 
   @action
   validate(data, helpers) {
+    helpers.removeError("base");
+
     if (data.generate_api_key) {
       validateGranularScopes(data, helpers);
     } else {
@@ -79,8 +79,6 @@ export default class AdminBotForm extends Component {
 
   @action
   async createBot(data) {
-    this.errorMessage = null;
-
     const payload = {
       bot: {
         name: data.name,
@@ -110,8 +108,10 @@ export default class AdminBotForm extends Component {
         data: JSON.stringify(payload),
       });
     } catch (error) {
-      this.errorMessage = extractError(error);
-      this.a11y.announce(this.errorMessage, "assertive");
+      this.#formApi.addError("base", {
+        title: i18n("admin.users.bots.create"),
+        message: extractError(error),
+      });
       return;
     }
 
@@ -204,10 +204,6 @@ export default class AdminBotForm extends Component {
         @validate={{this.validate}}
         as |form transientData|
       >
-        {{#if this.errorMessage}}
-          <form.Alert @type="error">{{this.errorMessage}}</form.Alert>
-        {{/if}}
-
         <form.Field
           @format="large"
           @name="name"

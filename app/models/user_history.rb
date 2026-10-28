@@ -187,6 +187,7 @@ class UserHistory < ActiveRecord::Base
         create_group: 132,
         add_access_control_list_owner: 133,
         remove_access_control_list_owner: 134,
+        create_bot: 135,
       )
   end
 
@@ -194,6 +195,7 @@ class UserHistory < ActiveRecord::Base
   def self.staff_actions
     @staff_actions ||= %i[
       delete_user
+      create_bot
       change_trust_level
       change_site_setting
       change_theme

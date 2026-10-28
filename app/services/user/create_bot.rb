@@ -24,23 +24,6 @@ class User::CreateBot
               if: -> { SiteSetting.full_name_requirement == "required_at_signup" }
     validates :username, presence: true
     validates :trust_level, inclusion: { in: TrustLevel.valid_range }
-    validate :trust_level_is_integer
-    validate :text_attributes_are_strings
-
-    def text_attributes_are_strings
-      %w[name username].each do |attribute|
-        value = raw_attributes[attribute]
-        errors.add(attribute, :invalid) unless value.nil? || value.is_a?(String)
-      end
-    end
-
-    def trust_level_is_integer
-      value = raw_attributes["trust_level"]
-      return if value.is_a?(Integer)
-      return if value.is_a?(String) && value.match?(/\A[0-4]\z/)
-
-      errors.add(:trust_level, :not_an_integer)
-    end
   end
 
   transaction do

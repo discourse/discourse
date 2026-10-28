@@ -54,27 +54,12 @@ RSpec.describe StaffActionLogger do
       expect { logger.log_bot_creation(bot) }.to change(UserHistory, :count).by(1)
 
       expect(UserHistory.last).to have_attributes(
-        action: UserHistory.actions[:custom_staff],
-        custom_type: "create_bot",
+        action: UserHistory.actions[:create_bot],
         acting_user_id: admin.id,
         target_user_id: bot.id,
         subject: bot.username,
         details: "trust_level: #{bot.trust_level}",
       )
-    end
-
-    it "rejects a missing bot" do
-      expect { logger.log_bot_creation(nil) }.to raise_error(Discourse::InvalidParameters)
-    end
-
-    it "rejects an unpersisted bot" do
-      bot = Fabricate.build(:user, id: -1235)
-
-      expect { logger.log_bot_creation(bot) }.to raise_error(Discourse::InvalidParameters)
-    end
-
-    it "rejects a human user" do
-      expect { logger.log_bot_creation(admin) }.to raise_error(Discourse::InvalidParameters)
     end
   end
 

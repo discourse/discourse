@@ -40,14 +40,9 @@ class StaffActionLogger
   end
 
   def log_bot_creation(user)
-    unless user.is_a?(User) && user.persisted? && user.bot?
-      raise Discourse::InvalidParameters.new(:user)
-    end
-
     UserHistory.create!(
       params.merge(
-        action: UserHistory.actions[:custom_staff],
-        custom_type: "create_bot",
+        action: UserHistory.actions[:create_bot],
         target_user_id: user.id,
         subject: user.username,
         details: "trust_level: #{user.trust_level}",
