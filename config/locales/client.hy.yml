@@ -23,6 +23,7 @@ hy:
     access_control:
       manage:
         access_permission_editor: "Խմբագրիչ"
+        access_permission_owner: "Սեփականատեր"
         access_permission_remove: "Հեռացնել"
     number:
       format:

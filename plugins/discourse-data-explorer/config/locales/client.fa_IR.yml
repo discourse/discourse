@@ -13,7 +13,6 @@ fa_IR:
       or: "یا"
       ai:
         generate: "تولید کردن"
-        optional: "اختیاری"
       help:
         label: "کمک"
       schema:
@@ -34,6 +33,7 @@ fa_IR:
       max_result_count:
         one: "نمایش %{count} نتیجه برتر."
         other: "نمایش %{count} نتیجه برتر."
+      name: "نام"
       query_groups: "گروه‌ها"
       query_tags: "برچسب‌ها"
       link: "پیوند برای"

@@ -26,6 +26,9 @@ sq:
         topic_reply_count:
           one: "%{count} përgjigje"
           other: "%{count} përgjigje"
+        owners:
+          one: "Pronar"
+          other: "Pronarët"
       manage:
         name: "Emri"
         constraint_categories: "Categories"

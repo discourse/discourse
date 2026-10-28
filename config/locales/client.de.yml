@@ -59,6 +59,7 @@ de:
       manage:
         access_permission_editor: "Bearbeiter"
         access_permission_editor_description: "Kann Inhalte für diese Entität erstellen und bearbeiten"
+        access_permission_owner: "Eigentümer"
         access_permission_viewer: "Lesezugriff"
         access_permission_viewer_description: "Kann Inhalte zu dieser Entität anzeigen"
         access_permission_remove: "Entfernen"

@@ -28,6 +28,7 @@ fi:
     access_control:
       manage:
         access_permission_editor: "Muokkaaja"
+        access_permission_owner: "Isäntä"
         access_permission_remove: "Poista"
     number:
       format:

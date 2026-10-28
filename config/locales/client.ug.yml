@@ -44,6 +44,7 @@ ug:
     access_control:
       manage:
         access_permission_editor: "تەھرىر"
+        access_permission_owner: "ئىگىسى"
         access_permission_remove: "چىقىرىۋەت"
         required_permission_not_added: "بۇ %{typeName} كەم دېگەندە بىر ئىجازەت بېرىلگەن نىشان %{permission} ئىجازەتكە ئىگە بولۇشى كېرەك"
     carousel:

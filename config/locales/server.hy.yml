@@ -2814,10 +2814,14 @@ hy:
     google_meet:
       meeting_code: "Կոդ:"
     github:
+      header:
+        success: "Հաջողություն"
       closed: "փակված"
-      status_date:
-        approved: "հաստատված է"
-        closed: "փակված է"
+      pr_status:
+        draft: "Սևագրել"
+        open: "Բացել"
+        approved: "Հաստատված է"
+        closed: "Փակված է"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} -ը նշել է Ձեզ այստեղ՝ "%{topic}" - %{site_title}'

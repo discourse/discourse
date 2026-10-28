@@ -24,7 +24,6 @@ pt:
       create_placeholder: "Nome da consulta..."
       ai:
         generate: "Gerar"
-        optional: "opcional"
       help:
         label: "Ajuda"
       schema:
@@ -45,6 +44,7 @@ pt:
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
+      name: "Nome"
       query_groups: "Grupos"
       query_tags: "Etiquetas"
       query_description: "Descrição"

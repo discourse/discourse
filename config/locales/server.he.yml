@@ -4854,6 +4854,8 @@ he:
       truncated_file: "הקובץ הזה נקטע."
       show_original: "הצגת המקורי"
     github:
+      header:
+        success: "הצלחה"
       binary_file: "זה קובץ בינרי."
       truncated_file: "הקובץ הזה נקטע."
       show_original: "הצגת המקורי"
@@ -4867,17 +4869,10 @@ he:
       review_by: "סקירה של"
       pr_summary: "%{commits} הגשות שינו %{changed_files} קבצים עם %{additions} תוספים ו־%{deletions} מחיקות"
       no_description: "אפשר לתרום לפיתוח של %{repo} דרך יצירת חשבון ב־GitHub."
-      pr_title:
-        default: "בקשת משיכה"
-        draft: "טיוטת בקשת משיכה"
-        open: "בקשת משיכה פתוחה"
-        approved: "בקשת משיכה שאושרה"
-        changes_requested: "התבקשו שינויים"
-        merged: "בקשת משיכה ממוזגת"
-        closed: "בקשת משיכה סגורה"
-      status_date:
-        open: "נפתח"
-        approved: "מאושר"
+      pr_status:
+        draft: "טיוטה"
+        open: "פתוח"
+        approved: "אושר"
         closed: "סגור"
   discourse_push_notifications:
     popup:

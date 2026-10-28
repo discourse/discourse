@@ -4722,6 +4722,9 @@ hu:
       truncated_file: "Ez a fájl csonkolva lett."
       show_original: "eredeti megjelenítése"
     github:
+      header:
+        file: "Fájl"
+        success: "Sikeres"
       binary_file: "Ez a fájl bináris."
       truncated_file: "Ez a fájl csonkolva lett."
       show_original: "eredeti megjelenítése"
@@ -4735,21 +4738,12 @@ hu:
       review_by: "Jóváhagyta:"
       pr_summary: "%{commits} véglegesíti a megváltozott %{changed_files} fájlokat %{additions} kiegészítéssel és %{deletions} törléssel"
       no_description: "Hozzájáruljon a %{repo} fejlesztéséhez a GitHubon való fiók létrehozásával."
-      pr_title:
-        default: "Lekérési kérelem"
-        draft: "Vázlat lekérési kérelem"
-        open: "Nyitott lekérési kérelem"
-        approved: "Jóváhagyott lekérési kérelem"
-        changes_requested: "Módosításokat kértek"
-        merged: "Összefésült lekérési kérelem"
-        closed: "Lezárt lekérési kérelem"
-      status_date:
-        open: "nyitott"
-        draft: "vázlat"
-        approved: "jóváhagyott"
-        changes_requested: "módosításokat kértek"
-        merged: "összefésült"
-        closed: "lezárva"
+      pr_status:
+        draft: "Vázlat"
+        open: "Nyitott"
+        approved: "Jóváhagyott"
+        merged: "Összefésült"
+        closed: "Lezárva"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'

@@ -41,7 +41,11 @@ ru:
         unassign_from_topic: "Снять ответственного @%{username} с темы"
         unassign_from_post: "Снять ответственного @%{username} с публикации #%{post_number}"
         edit_assignments: "Изменить назначения..."
-        created_by: "Создано"
+        owners:
+          one: "Владелец"
+          few: "Владельцы"
+          many: "Владельцы"
+          other: "Владельцы"
       manage:
         name: "Название"
         slug: "Slug (текстовый идентификатор)"

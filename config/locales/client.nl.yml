@@ -43,6 +43,7 @@ nl:
     access_control:
       manage:
         access_permission_editor: "Bewerker"
+        access_permission_owner: "Eigenaar"
         access_permission_remove: "Verwijderen"
     carousel:
       go_to_slide: "Ga naar dia %{index}"

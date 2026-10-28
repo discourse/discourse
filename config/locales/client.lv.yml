@@ -19,6 +19,7 @@ lv:
         failed: "neizdevies"
     access_control:
       manage:
+        access_permission_owner: "Īpašnieks"
         access_permission_remove: "Atcelt"
     number:
       format:

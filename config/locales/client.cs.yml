@@ -33,6 +33,7 @@ cs:
     access_control:
       manage:
         access_permission_editor: "Uživatel"
+        access_permission_owner: "Vlastník"
         access_permission_remove: "Smazat"
     carousel:
       go_to_slide: "Přejít na snímek č. %{index}"

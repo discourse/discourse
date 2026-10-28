@@ -31,7 +31,6 @@ vi:
             failed: "Thất bại"
         emotion:
           title: "Cảm xúc (Emotion)"
-          description: "Bảng liệt kê số lượng bình luận được phân loại theo cảm xúc. Tùy thuộc vào phương pháp phân loại cảm xúc được chọn, các bình luận sẽ được phân loại bằng mô hình phân loại cảm xúc đã cấu hình ('SamLowe/roberta-base-go_emotions') hoặc đại lý (Agent) phân loại cảm xúc đã cấu hình.\n"
         reports:
           filters:
             group_by:
@@ -136,6 +135,7 @@ vi:
         groups: "Nhóm:"
         no_agent: "Chưa đặt"
         no_groups: "Không có gì"
+        classification_model: "Mô hình (Model):"
         edit: "Cài đặt"
         expand_list:
           other: "(%{count} khác)"
@@ -145,6 +145,12 @@ vi:
         filters:
           all: "Tất cả"
           reset: "Cài lại"
+        sentiment:
+          emotion: "Cảm xúc (Emotion)"
+          enabled: "Đã bật"
+          agent: "Trợ lý AI (Agent)"
+          setting_groups:
+            emotion: "Cảm xúc (Emotion)"
         search:
           name: "Tìm kiếm"
           ask_ai: "Hỏi AI"

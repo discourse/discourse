@@ -59,6 +59,7 @@ ar:
       manage:
         access_permission_editor: "المحرِّر"
         access_permission_editor_description: "يمكن إنشاء وتعديل المحتوى لهذا الكيان"
+        access_permission_owner: "المالك"
         access_permission_viewer: "مشاهد"
         access_permission_viewer_description: "يمكنه عرض محتوى هذا الكيان"
         access_permission_remove: "إزالة"

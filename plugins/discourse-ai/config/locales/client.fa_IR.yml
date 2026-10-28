@@ -92,6 +92,7 @@ fa_IR:
         groups: "گروه‌ها:"
         no_agent: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
+        classification_model: "مدل:"
         edit: "تنظیم"
         expand_list:
           one: "(%{count} مورد دیگر)"
@@ -102,6 +103,8 @@ fa_IR:
         filters:
           all: "همه"
           reset: "بازنشانی"
+        sentiment:
+          enabled: "فعال شده"
         search:
           name: "جستجو"
         embeddings:

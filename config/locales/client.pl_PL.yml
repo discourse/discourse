@@ -79,6 +79,8 @@ pl_PL:
       manage:
         access_permission_editor: "Edytor"
         access_permission_editor_description: "Może tworzyć i edytować treść dla tego podmiotu"
+        access_permission_owner: "Właściciel"
+        access_permission_owner_description: "Właściciel ma pełną kontrolę nad tym %{target}i może dodawać i usuwać innych właścicieli."
         access_permission_viewer: "Przeglądający"
         access_permission_viewer_description: "Może przeglądać treści związane z tym podmiotem"
         access_permission_remove: "Usuń"
@@ -88,6 +90,7 @@ pl_PL:
         mandatory: "Obowiązkowe"
         disallowed: "Niedozwolone"
         required_permission_not_added: "Co najmniej jeden beneficjent musi mieć %{permission} uprawnień do tego %{typeName}"
+        owner_required: "Przynajmniej jeden użytkownik musi pozostać właścicielem tego %{typeName}"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -2009,6 +2012,8 @@ pl_PL:
       no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_body: >
         W tym panelu zostaniesz powiadomiony o aktywności bezpośrednio związanej z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> lub zacytuje Cię i odpowie na obserwowane przez Ciebie tematy. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie jesteś zalogowany przez jakiś czas. <br><br> Poszukaj %{icon} aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz otrzymywać powiadomienia. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
+      no_mentions_title: "Jeszcze nie wspomniano o tobie"
+      no_mentions_body: "Gdy ktoś wspomni Twoją @nazwę_użytkownika we wpisie, tutaj pojawi się powiadomienie."
       no_other_notifications_title: "Nie masz jeszcze żadnych innych powiadomień"
       no_other_notifications_body: >
         W tym panelu będziesz powiadamiany o innych rodzajach aktywności, które mogą Cię zainteresować — na przykład, gdy ktoś udostępni link do Twojego wpisu lub go edytuje.
@@ -10020,6 +10025,9 @@ pl_PL:
             configure_category_type: "skonfiguruj typ kategorii"
             unconfigure_category_type: "usuń konfigurację typu kategorii"
             change_access_control_list_permissions: "zmień uprawnienia listy kontroli dostępu"
+            add_access_control_list_owner: "dodaj właściciela listy kontroli dostępu"
+            remove_access_control_list_owner: "usuń właściciela listy kontroli dostępu"
+            assume_access_control_ownership: "przejęcie uprawnienia do kontroli dostępu"
             admin_onboarding_step_completed: "ukończony etap wdrażania administratora"
             admin_onboarding_completed: "pełne wdrożenie administratora"
             admin_onboarding_dismissed: "odwołaj wdrożenie administratora"

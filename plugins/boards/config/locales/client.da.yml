@@ -32,7 +32,9 @@ da:
           other: "%{count} svar"
         assign: "Tildel"
         unassign: "Fjern tildeling"
-        created_by: "Oprettet af"
+        owners:
+          one: "Ejer"
+          other: "Ejere"
       manage:
         name: "Navn"
         slug: "Alias (Slug)"

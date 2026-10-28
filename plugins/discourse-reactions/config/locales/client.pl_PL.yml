@@ -45,7 +45,8 @@ pl_PL:
         "trigger:post_reaction_changed": "Zmieniono reakcję na wpis"
       node_descriptions:
         "action:post_reaction": "Dodaj lub usuń reakcję na wpis"
-        "trigger:post_reaction_changed": "Aktywuje się, gdy reakcja na wpis zostanie dodana, zastąpiona lub usunięta. Użytkownikiem jest osoba, która zareagowała, a nie autor."
+        "trigger:post_reaction_changed": "Aktywuje się, gdy reakcja na wpis zostanie dodana, zastąpiona lub usunięta. Użytkownik jest autorem, a aktorem jest osoba, która zareagowała."
+        "trigger:post_reaction_changed_v1": "Aktywuje się, gdy reakcja na wpis zostanie dodana, zastąpiona lub usunięta. Użytkownikiem jest osoba, która zareagowała, a nie autor."
       post_reaction:
         operations:
           add: "Dodaj reakcję"

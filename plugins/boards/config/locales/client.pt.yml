@@ -32,6 +32,9 @@ pt:
           other: "%{count} respostas"
         assign: "Atribuir"
         unassign: "Cancelar atribuição"
+        owners:
+          one: "Dono(a)"
+          other: "Proprietários"
       manage:
         name: "Nome"
         slug: "Slug"

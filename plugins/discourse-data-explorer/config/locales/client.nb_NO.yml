@@ -21,7 +21,6 @@ nb_NO:
       create_placeholder: "Spørringsnavn…"
       ai:
         generate: "Generer API-nøkkel"
-        optional: "valgfritt"
       help:
         label: "Hjelp"
       schema:
@@ -38,6 +37,7 @@ nb_NO:
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
+      name: "Navn"
       query_groups: "Grupper"
       query_tags: "Stikkord"
       query_description: "Beskrivelse"
