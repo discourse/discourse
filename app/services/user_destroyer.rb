@@ -28,7 +28,9 @@ class UserDestroyer
     optional_transaction(open_transaction: opts[:transaction]) do
       UserSecurityKey.where(user_id: user.id).delete_all
       Bookmark.where(user_id: user.id).delete_all
-      Draft.where(user_id: user.id).delete_all
+      # one statement per state so each uses its partial index
+      Draft.live.where(user_id: user.id).delete_all
+      Draft.discarded.where(user_id: user.id).delete_all
       reviewable_ids = Reviewable.where(created_by_id: user.id).select(:id)
       ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
       Reviewable.where(created_by_id: user.id).delete_all

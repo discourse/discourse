@@ -304,10 +304,13 @@ class UserMerger
     update_user_id(:developers)
 
     update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
-    update_user_id(
-      :drafts,
-      conditions: "x.draft_key = y.draft_key AND x.deleted_at IS NULL AND y.deleted_at IS NULL",
-    )
+    # one statement per state so each uses its partial index
+    Draft
+      .live
+      .where(user_id: @source_user.id)
+      .where.not(draft_key: Draft.live.where(user_id: @target_user.id).select(:draft_key))
+      .update_all(user_id: @target_user.id)
+    Draft.discarded.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
 

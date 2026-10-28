@@ -467,6 +467,6 @@ end
 # Indexes
 #
 #  idx_drafts_on_deleted_at                  (deleted_at) WHERE (deleted_at IS NOT NULL)
-#  idx_drafts_on_user_id                     (user_id)
 #  idx_drafts_on_user_id_and_draft_key_live  (user_id,draft_key) UNIQUE WHERE (deleted_at IS NULL)
+#  idx_drafts_on_user_id_discarded           (user_id) WHERE (deleted_at IS NOT NULL)
 #

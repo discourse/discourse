@@ -20002,17 +20002,17 @@ CREATE INDEX idx_drafts_on_deleted_at ON public.drafts USING btree (deleted_at) 
 
 
 --
--- Name: idx_drafts_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_drafts_on_user_id ON public.drafts USING btree (user_id);
-
-
---
 -- Name: idx_drafts_on_user_id_and_draft_key_live; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX idx_drafts_on_user_id_and_draft_key_live ON public.drafts USING btree (user_id, draft_key) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: idx_drafts_on_user_id_discarded; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_drafts_on_user_id_discarded ON public.drafts USING btree (user_id) WHERE (deleted_at IS NOT NULL);
 
 
 --
@@ -26179,7 +26179,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20261025130523'),
+('20261028031123'),
 ('20261025130518'),
 ('20261024142334'),
 ('20261024142328'),
