@@ -119,7 +119,7 @@ GEM
     ast (2.4.3)
     auth-sanitizer (0.2.3)
       version_gem (~> 1.1, >= 1.1.14)
-    aws-eventstream (1.4.0)
+    aws-eventstream (1.4.1)
     aws-partitions (1.1296.0)
     aws-sdk-bedrockruntime (1.85.0)
       aws-sdk-core (~> 3, >= 3.256.0)
@@ -1008,7 +1008,7 @@ CHECKSUMS
   anonymous_loader (0.1.3) sha256=084a18e2439144d955447dc11dfc982f41fcd1583ad32d4d55151325dc44cb55
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   auth-sanitizer (0.2.3) sha256=db10aac92cfbe4c64ab637eebcbe1d67395d1694798041362173370f59933e3c
-  aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
+  aws-eventstream (1.4.1) sha256=ceb6a99c61df4bb00344e54aed0351574beca24f87a0d1487d1d2ed80929ce96
   aws-partitions (1.1296.0) sha256=70cc7a44fa4824a9df5652b853dc96aaaf09ec20642cd9d42ed7335a36cc3567
   aws-sdk-bedrockruntime (1.85.0) sha256=ff6c6565da8a491fd825f34f4c184106a10ee165f8d5a67e83a09b720672a1b2
   aws-sdk-core (3.259.0) sha256=1c2bcb73d4c1146a2f52a2a05258ae11e349fb8ea6e42159c699d6dae9fb9441
