@@ -254,6 +254,16 @@ RSpec.describe UserSilencer do
   end
 
   describe "unsilence" do
+    it "only lifts an expired silence when asked to", :aggregate_failures do
+      user.update!(silenced_till: 1.day.from_now)
+
+      expect(UserSilencer.unsilence(user, admin, expired_only: true)).to eq(false)
+      expect(user.reload).to be_silenced
+
+      user.update!(silenced_till: 1.minute.ago)
+      expect(UserSilencer.unsilence(user, admin, expired_only: true)).to eq(true)
+    end
+
     it "unsilences the user correctly" do
       user.update!(silenced_till: 1.year.from_now)
 

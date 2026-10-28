@@ -131,6 +131,8 @@ class UserSilencer
     unsilenced =
       @account.with_lock do
         next false if @account.silenced_till.blank?
+        # The expiry job's batch can be stale: staff may have silenced the user again since.
+        next false if @opts[:expired_only] && @account.silenced_till > Time.zone.now
         @account.update(silenced_till: nil)
       end
     return false if !unsilenced
