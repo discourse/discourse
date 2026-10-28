@@ -259,9 +259,7 @@ en:
       editor_no_results: No matching articles
       editor_no_results_hint: Try another search or status filter, or start a new draft.
       editor_title: Blog editor
-      editor_description:
-        Draft in private. Publish with intention. Keep the conversation
-        going.
+      editor_description: Drafts stay private until you publish them. Edit an article to publish, schedule, or correct it.
       editor_table:
         article: Article
         edit: Edit
@@ -278,8 +276,6 @@ en:
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
-      drafts_hint:
-        Published titles open the public discussion. Open a draft to publish, schedule, or correct it from its topic. Editorial working copies remain private after publication; public discussions stay in the Blog category.
       private_draft: Draft
       draft_correction: Draft correction
       public_discussion: Public discussion
