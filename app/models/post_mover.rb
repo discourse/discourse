@@ -855,7 +855,7 @@ class PostMover
           context: I18n.t("topic_statuses.auto_deleted_by_merge"),
         ).destroy
 
-        @original_topic.trash!(Discourse.system_user)
+        @original_topic.trash!(@user)
       end
     elsif days_to_deleting > 0
       @original_topic.set_or_create_timer(
