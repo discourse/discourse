@@ -404,9 +404,11 @@ export default class History extends Component {
       for (const request of VISIBILITY_TRANSITIONS[this.visibility][target]) {
         await request(postId, postVersion);
       }
-      await this.refresh(postId, postVersion);
     } catch (error) {
       popupAjaxError(error);
+    } finally {
+      // A multi-step change can fail after its first step has landed.
+      await this.refresh(postId, postVersion);
     }
   }
 

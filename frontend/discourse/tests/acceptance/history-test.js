@@ -138,12 +138,13 @@ acceptance("History Modal - not found", function (needs) {
 });
 
 acceptance("History Modal - revision visibility as staff", function (needs) {
-  let hidden, unlisted, requests;
+  let hidden, unlisted, unlistFails, requests;
 
   needs.user();
   needs.hooks.beforeEach(() => {
     hidden = false;
     unlisted = false;
+    unlistFails = false;
     requests = [];
   });
   needs.pretender((server, helper) => {
@@ -165,9 +166,10 @@ acceptance("History Modal - revision visibility as staff", function (needs) {
     server.get("/posts/419/revisions/2.json", () =>
       helper.response(revision())
     );
-    server.put(
-      "/posts/419/revisions/2/unlist",
-      change("unlist", () => (unlisted = true))
+    server.put("/posts/419/revisions/2/unlist", (request) =>
+      unlistFails
+        ? helper.response(422, { errors: ["Can't unlist this revision"] })
+        : change("unlist", () => (unlisted = true))(request)
     );
     server.put(
       "/posts/419/revisions/2/relist",
@@ -257,6 +259,23 @@ acceptance("History Modal - revision visibility as staff", function (needs) {
       ["show", "unlist"],
       "shows the revision before unlisting it"
     );
+  });
+
+  test("unlisting a hidden revision fails after showing it", async function (assert) {
+    hidden = true;
+    unlistFails = true;
+
+    await visit("/t/internationalization-localization/280");
+    await click("article[data-post-id='419'] .edits button");
+    await chooseVisibility("unlisted");
+
+    assert.dom(".dialog-body").exists("reports the failure");
+    assert
+      .dom(".history-modal .revision-visibility__trigger")
+      .hasText(
+        i18n("post.revisions.visibility.listed.title"),
+        "reflects the revision now being listed"
+      );
   });
 });
 
