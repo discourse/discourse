@@ -1,7 +1,19 @@
-import { click, currentURL, fillIn, select, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  select,
+  visit,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 
 acceptance("Blog editor", function (needs) {
   needs.user({ admin: true, moderator: false });
@@ -307,26 +319,46 @@ acceptance("Blog editor", function (needs) {
           request.queryParams.page !== "1",
       });
     });
-    await visit("/blog/editor");
-    await select(".d-filter-controls__dropdown", "drafts");
-    await fillIn(".d-filter-controls__input", "workflow");
-    assert.deepEqual(
-      requests.at(-1),
-      { filter: "drafts", q: "workflow" },
-      "search is combined with the server-side status filter"
-    );
-    await click("[data-blog-load-more]");
-    assert.deepEqual(
-      requests.at(-1),
-      { filter: "drafts", q: "workflow", page: "1" },
-      "load more preserves the entire query"
-    );
-    assert
-      .dom(".blog-dashboard__row")
-      .exists({ count: 2 }, "additional matching entries are appended");
-    assert
-      .dom("[data-blog-load-more]")
-      .doesNotExist("loading stops when there are no more matches");
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
+    const scrollToEnd = () =>
+      observations
+        .findLast(({ element }) =>
+          element.closest(".blog-dashboard__load-more")
+        )
+        .trigger();
+
+    try {
+      await visit("/blog/editor");
+      await select(".d-filter-controls__dropdown", "drafts");
+      await fillIn(".d-filter-controls__input", "workflow");
+      assert.deepEqual(
+        requests.at(-1),
+        { filter: "drafts", q: "workflow" },
+        "search is combined with the server-side status filter"
+      );
+
+      await scrollToEnd();
+      await waitUntil(() => requests.some((request) => request.page === "1"));
+      assert.deepEqual(
+        requests.at(-1),
+        { filter: "drafts", q: "workflow", page: "1" },
+        "scrolling to the end loads the next page with the entire query"
+      );
+      assert
+        .dom(".blog-dashboard__row")
+        .exists({ count: 2 }, "additional matching entries are appended");
+
+      const requestCount = requests.length;
+      await scrollToEnd();
+      assert.strictEqual(
+        requests.length,
+        requestCount,
+        "loading stops when there are no more matches"
+      );
+    } finally {
+      disableLoadMoreObserver();
+    }
   });
 
   test("shows an empty state when there are no articles at all", async function (assert) {
