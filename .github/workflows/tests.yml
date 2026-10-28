@@ -1,6 +1,11 @@
 name: Tests
 
 on:
+  workflow_call:
+    inputs:
+      collect_rspec_mapping:
+        type: boolean
+        default: false
   pull_request:
     paths-ignore:
       - ".github/workflows/migration-tests.yml"
@@ -20,6 +25,7 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   build:
@@ -76,28 +82,8 @@ jobs:
     strategy:
       fail-fast: false
 
-      matrix:
-        include:
-          - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
-            build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
-          - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
-            build_type: system
+      matrix: >-
+        ${{ fromJSON(inputs.collect_rspec_mapping && '{"include":[{"target":"core","build_type":"backend"}]}' || '{"include":[{"target":"core","build_type":"backend"},{"target":"core","build_type":"frontend"},{"target":"core","build_type":"system"},{"target":"plugins","build_type":"backend"},{"target":"plugins","build_type":"frontend"},{"target":"core-plugins","build_type":"system"},{"target":"chat","build_type":"system"},{"target":"official-plugins","build_type":"system"},{"target":"themes","build_type":"frontend"},{"target":"themes","build_type":"system"}]}') }}
 
     steps:
       - name: Set working directory owner
@@ -291,9 +277,54 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         run: find . -name node_modules -type d -prune -not -path './tmp/*' -print0 | xargs -0 rm -rf
 
+      - name: Test RSpec selection artifact handling
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: node --test .github/scripts/rspec-mapping.test.cjs
+
+      - name: Restore RSpec dependency mapping
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        id: rspec-mapping
+        uses: actions/github-script@v8
+        env:
+          COLLECT_RSPEC_MAPPING: ${{ inputs.collect_rspec_mapping && '1' || '0' }}
+        with:
+          script: |
+            const restore = require('./.github/scripts/rspec-mapping.cjs');
+            await restore({ github, context, core });
+
+      - name: Observe RSpec selection
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: ruby script/ci/rspec_selection.rb plan
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
+        env:
+          OBSERVE_RSPEC_SELECTION: "1"
+          COLLECT_RSPEC_MAPPING: ${{ steps.rspec-mapping.outputs.collect }}
         run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
+
+      - name: Report RSpec selection
+        if: always() && matrix.build_type == 'backend' && matrix.target == 'core'
+        env:
+          COLLECT_RSPEC_MAPPING: ${{ steps.rspec-mapping.outputs.collect }}
+        run: ruby script/ci/rspec_selection.rb report
+
+      - name: Publish RSpec dependency mapping
+        if: success() && matrix.build_type == 'backend' && matrix.target == 'core' && steps.rspec-mapping.outputs.collect == '1'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.rspec-mapping.outputs.artifact-name }}
+          path: tmp/rspec-mapping/mapping.json
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Publish RSpec selection observation
+        if: always() && matrix.build_type == 'backend' && matrix.target == 'core'
+        uses: actions/upload-artifact@v7
+        with:
+          name: rspec-selection-observation
+          path: tmp/rspec-mapping/report.json
+          retention-days: 7
 
       - name: Prepare Chrome environment for QUnit
         if: matrix.build_type == 'frontend'
