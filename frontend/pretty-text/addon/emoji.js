@@ -1,6 +1,5 @@
 import {
   aliases,
-  animatedEmojis,
   emojiReplacementRegex,
   emojis,
   replacements,
@@ -156,12 +155,11 @@ export function buildEmojiUrl(code, opts) {
   return url;
 }
 
-// Only some standard emojis are animated; those that are, are in every tone.
+// Only some standard emojis are animated, so this URL may not exist.
 export function buildAnimatedEmojiUrl(code, opts) {
   code = String(code).toLowerCase();
-  const name = code.match(/^([^:]+)(?::t\d)?$/)?.[1];
 
-  if (!animatedEmojis.has(name) || isCustomEmoji(code, opts)) {
+  if (isCustomEmoji(code, opts)) {
     return;
   }
 

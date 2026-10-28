@@ -125,15 +125,9 @@ task "javascript:update_constants" => :environment do
 
   require "emoji/regex_generator"
 
-  animated_emojis =
-    Dir
-      .glob("*.avif", base: File.join(DiscourseEmojis.path_for_emojis, "noto_animated"))
-      .map { File.basename(_1, ".avif") }
-
   write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
     export const emojis = new Set(#{Emoji.standard.map(&:name).flatten.inspect});
     export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
-    export const animatedEmojis = new Set(#{animated_emojis.sort.inspect});
     export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
     export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
     export const replacements = #{Emoji.unicode_replacements_json};

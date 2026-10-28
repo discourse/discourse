@@ -1,5 +1,8 @@
 import Component from "@glimmer/component";
+import type Owner from "@ember/owner";
+import { service } from "@ember/service";
 import { animatedEmojiUrlFor, emojiUrlFor } from "discourse/lib/text";
+import type EmojiStoreService from "discourse/services/emoji-store";
 
 interface DAnimatedEmojiSignature {
   Args: {
@@ -18,6 +21,17 @@ interface DAnimatedEmojiSignature {
  * unknown.
  */
 export default class DAnimatedEmoji extends Component<DAnimatedEmojiSignature> {
+  @service declare emojiStore: EmojiStoreService;
+
+  constructor(owner: Owner, args: DAnimatedEmojiSignature["Args"]) {
+    super(owner, args);
+    // Which emojis are animated comes with the emoji list; until it loads,
+    // and if it fails to, the static image stands in.
+    if (animatedEmojiUrlFor(this.code)) {
+      this.emojiStore.loadList().catch(() => {});
+    }
+  }
+
   get code() {
     return this.args.code.toLowerCase();
   }
@@ -27,7 +41,9 @@ export default class DAnimatedEmoji extends Component<DAnimatedEmojiSignature> {
   }
 
   get animatedUrl(): string | undefined {
-    return animatedEmojiUrlFor(this.code);
+    if (this.emojiStore.isAnimated(this.code)) {
+      return animatedEmojiUrlFor(this.code);
+    }
   }
 
   get title() {
