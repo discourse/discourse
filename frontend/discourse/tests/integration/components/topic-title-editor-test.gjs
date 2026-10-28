@@ -7,6 +7,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | TopicTitleEditor", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.siteSettings.available_locales = [{ value: "ja", name: "Japanese" }];
+  });
+
   for (const isEditingLocalization of [false, true]) {
     test(`preserves the paste caret with localization=${isEditingLocalization}`, async function (assert) {
       const buffered = EmberObject.create({ title: "Before  after" });
