@@ -26,6 +26,8 @@ module DiscourseWorkflows
             "post",
             Schema::POST_PROPERTIES.except(
               "action_code",
+              "hidden",
+              "locked",
               "category_name",
               "excerpt",
               "like_count",

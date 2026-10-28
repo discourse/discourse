@@ -316,12 +316,12 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
 
     expect(result).to include(status: "success", valid: true, errors: [])
     expect(fields_by_name.dig("Keep friend group posts", :input_fields, 0)).to include(
-      "$json.post.username" => "string",
+      "$json.post.username" => "string|null",
       "$json.post.post_url" => "string",
       "$json.group_membership.in_group" => "boolean",
     )
     expect(fields_by_name.dig("DM admin", :input_fields, 0)).to include(
-      "$json.post.username" => "string",
+      "$json.post.username" => "string|null",
       "$json.post.post_url" => "string",
     )
     expect(fields_by_name.dig("DM admin", :output_fields, 0)).to include(
@@ -759,14 +759,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     )
     expect(fields_by_name.dig("Get closed topic", :output_fields, 0)).to include(
       "$json.post.post_url" => "string",
-      "$json.post.user_id" => "integer",
+      "$json.post.user_id" => "integer|null",
     )
     expect(fields_by_name.dig("Get closed topic", :output_fields, 0)).not_to include(
       "$json.post.trust_level",
     )
     expect(fields_by_name.dig("Keep known topic authors", :input_fields, 0)).to include(
       "$json.post.post_url" => "string",
-      "$json.post.user_id" => "integer",
+      "$json.post.user_id" => "integer|null",
     )
   end
 

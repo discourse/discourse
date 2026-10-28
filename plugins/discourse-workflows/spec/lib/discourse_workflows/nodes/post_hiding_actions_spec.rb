@@ -26,7 +26,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HidePost::V1 do
     events = DiscourseEvent.track_events(:post_hidden) { result = hide }
 
     expect(result).to include(
-      "post" => include("id" => post.id),
+      "post" => include("id" => post.id, "hidden" => true),
       "actor" => include("id" => moderator.id),
       "changed" => true,
     )
@@ -152,7 +152,7 @@ RSpec.describe DiscourseWorkflows::Nodes::UnhidePost::V1 do
     events = DiscourseEvent.track_events(:post_unhidden) { result = unhide }
 
     expect(result).to include(
-      "post" => include("id" => post.id),
+      "post" => include("id" => post.id, "hidden" => false),
       "actor" => include("id" => moderator.id),
       "changed" => true,
     )
