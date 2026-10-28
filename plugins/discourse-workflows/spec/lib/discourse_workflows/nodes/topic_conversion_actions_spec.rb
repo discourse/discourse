@@ -51,15 +51,16 @@ RSpec.describe DiscourseWorkflows::Nodes::ConvertToPersonalMessage::V1 do
     expect(topic.reload.archetype).to eq(Archetype.default)
   end
 
-  it "refuses to convert the banner" do
+  it "removes the banner before converting it", :aggregate_failures do
     topic.make_banner!(admin)
 
-    expect { convert }.to raise_error(
-      DiscourseWorkflows::NodeError,
-      /#{Regexp.escape(node_error_message("banner", scope: "topic_conversion", topic_id: topic.id))}/,
-    )
+    events =
+      DiscourseEvent.track_events(:topic_unbannered) do
+        expect(convert(actor_username: admin.username)).to include("changed" => true)
+      end
 
-    expect(topic.reload.archetype).to eq(Archetype.banner)
+    expect(topic.reload).to be_private_message
+    expect(events.sole[:params]).to eq([topic, { acting_user: admin }])
   end
 end
 
@@ -118,12 +119,12 @@ RSpec.describe DiscourseWorkflows::Nodes::ConvertToPublicTopic::V1 do
     expect(pm.reload.archetype).to eq(Archetype.private_message)
   end
 
-  it "fails with a fallback message when the revision fails silently" do
+  it "fails with the converter's message when the revision fails silently" do
     SiteSetting.allow_uncategorized_topics = false
 
     expect { convert(category_id: SiteSetting.uncategorized_category_id) }.to raise_error(
       DiscourseWorkflows::NodeError,
-      /#{Regexp.escape(node_error_message("to_public_topic_failed", scope: "topic_conversion", topic_id: pm.id))}/,
+      /#{Regexp.escape(I18n.t("topic_converter.failed"))}/,
     )
 
     expect(pm.reload.archetype).to eq(Archetype.private_message)

@@ -32,8 +32,7 @@ module DiscourseWorkflows
         end
 
         convert(exec_ctx, topic, actor, item_index)
-        # Failed revisions report on the first post, which reloading drops.
-        errors = topic.errors.full_messages + topic.first_post&.errors&.full_messages.to_a
+        errors = topic.errors.full_messages
         topic.reload
 
         if topic.private_message? != target

@@ -701,6 +701,10 @@ en:
   invalid_access: "You are not permitted to view the requested resource."
   topic_converter:
     too_many_recipients: "Cannot convert: this topic has more participants than the max allowed (%{max})."
+    already_public_topic: "Cannot convert: this topic is already public."
+    already_personal_message: "Cannot convert: this topic is already a personal message."
+    no_public_category: "Cannot convert: there is no public category to move this topic to."
+    failed: "The topic couldn't be converted."
   topic_og_image:
     preview_not_eligible: "Cannot generate an OG image for personal messages or topics in private categories."
     preview_generation_failed: "Failed to generate preview image."

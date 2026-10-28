@@ -245,8 +245,9 @@ RSpec.describe TopicConverter do
         expect(events).to be_empty
       end
 
-      it "doesn't trigger for a topic that was already public" do
+      it "refuses a topic that is already public, without changing it", :aggregate_failures do
         public_topic = Fabricate(:post).topic
+        category_id = public_topic.category_id
 
         events =
           DiscourseEvent.track_events(:topic_converted_to_public_topic) do
@@ -254,6 +255,50 @@ RSpec.describe TopicConverter do
           end
 
         expect(events).to be_empty
+        expect(public_topic.errors.full_messages).to eq(
+          [I18n.t("topic_converter.already_public_topic")],
+        )
+        expect(public_topic.reload.category_id).to eq(category_id)
+      end
+
+      it "reports why the revision failed on the topic" do
+        required_tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag)])
+        category.category_required_tag_groups.create!(tag_group: required_tag_group, min_count: 1)
+
+        topic =
+          TopicConverter.new(first_post.topic, Fabricate(:moderator)).convert_to_public_topic(
+            category.id,
+          )
+
+        expect(topic.errors.full_messages).to be_present
+      end
+
+      it "fails with an error when there is no public category to move it to" do
+        SiteSetting.allow_uncategorized_topics = false
+        Category
+          .where.not(id: SiteSetting.uncategorized_category_id)
+          .update_all(read_restricted: true)
+
+        topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic
+
+        expect(topic.errors.full_messages).to include(I18n.t("topic_converter.no_public_category"))
+        expect(topic.reload.archetype).to eq(Archetype.private_message)
+      end
+
+      it "only rolls itself back inside an enclosing transaction", :aggregate_failures do
+        required_tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag)])
+        category.category_required_tag_groups.create!(tag_group: required_tag_group, min_count: 1)
+        other_topic = Fabricate(:topic)
+
+        ActiveRecord::Base.transaction do
+          other_topic.update!(title: "Written by the enclosing transaction")
+          TopicConverter.new(first_post.topic, Fabricate(:moderator)).convert_to_public_topic(
+            category.id,
+          )
+        end
+
+        expect(other_topic.reload.title).to eq("Written by the enclosing transaction")
+        expect(first_post.topic.reload.archetype).to eq(Archetype.private_message)
       end
 
       it "doesn't trigger when an enclosing transaction rolls back" do
@@ -486,6 +531,27 @@ RSpec.describe TopicConverter do
 
         expect(events).to be_empty
       end
+    end
+
+    it "refuses a topic that is already a personal message" do
+      private_message = Fabricate(:private_message_topic)
+
+      TopicConverter.new(private_message, admin).convert_to_private_message
+
+      expect(private_message.errors.full_messages).to eq(
+        [I18n.t("topic_converter.already_personal_message")],
+      )
+    end
+
+    it "removes the banner like the admin button before converting it", :aggregate_failures do
+      topic.make_banner!(admin)
+
+      events =
+        DiscourseEvent.track_events(:topic_unbannered) { topic.convert_to_private_message(admin) }
+
+      expect(topic.reload).to be_private_message
+      expect(topic.bannered_until).to be_nil
+      expect(events.sole[:params]).to eq([topic, { acting_user: admin }])
     end
   end
 end

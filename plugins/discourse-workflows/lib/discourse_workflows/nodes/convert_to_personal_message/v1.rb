@@ -14,12 +14,7 @@ module DiscourseWorkflows
 
         private
 
-        def convert(_exec_ctx, topic, actor, item_index)
-          # Converting drops the banner without removing it, so its events and live update never happen.
-          if topic.archetype == ::Archetype.banner
-            raise_node_error!(conversion_error("banner", topic), item_index:)
-          end
-
+        def convert(_exec_ctx, topic, actor, _item_index)
           topic.convert_to_private_message(actor)
         end
       end
