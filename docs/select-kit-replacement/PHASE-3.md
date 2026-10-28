@@ -48,6 +48,14 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     - ☐ Emoji-style category badges read the emoji's short name ("card_file_box Uncategorized"),
       as select-kit rows did.
     - ☐ The mobile panel's search field has no side gutter, for every DSelect.
+  - ☐ **Follow-ups from the category cycle (2026-10-28):**
+    - ☐ `SelectTagBase`'s `value` getter shadows `@value`, as `DSelectCategory`'s did before it
+      became `selectedIds`.
+    - ☐ The breadcrumb drop still has a preloaded branch and a lazy branch. Its preloaded search
+      ranks through `Category.search` (slug matches too), which the shared search does not do.
+    - ☐ `dCategoryBadge` with `ancestors` and `hasSubcategories` draws "+ Subcategories" after
+      every ancestor (`ui-kit/helpers/d-category-link.js`), as select-kit's `category-row` did.
+      The family footer draws without ancestors, so it is not affected.
 - ☐ **Tag recipe rework**, the follow-up to the category rework: `cleanTagName` and
   `sortTagRows` in `lib/tag-source.ts` copy select-kit's `tag-utils` service
   (`createContentFromInput`, `sortSearchResults`); the tag filter draws its own caret from the

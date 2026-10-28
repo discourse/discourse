@@ -69,7 +69,7 @@ interface DSelectCategorySignature {
     subcategories?: boolean;
     /** Browses this category's parent's family, or its own family at the top level. */
     scope?: CategoryValue;
-    /** Puts the same one-level-up family first while browsing. */
+    /** Lists the same one-level-up family's tree first while browsing. */
     prioritize?: CategoryValue;
     /** Category ids offered only as disabled rows, described as read-only. */
     disabledCategories?: number | string | readonly (number | string)[];
@@ -81,9 +81,12 @@ interface DSelectCategorySignature {
     descriptions?: boolean;
     /** Includes ancestor badges on held selections. */
     showAncestors?: boolean;
-    /** Offers bulk descendant selection after two search characters; defaults to multiple mode. */
+    /**
+     * Ends each family in a search of two or more characters with a footer that adds the
+     * category and every level below it; defaults to multiple mode.
+     */
     selectDescendants?: boolean;
-    /** Replaces the list source without changing the selection contract. */
+    /** Replaces the list source; its rows get no pinned rows and no family footers. */
     load?: SelectSignature["Args"]["load"];
   };
   Element: HTMLElement;
@@ -98,7 +101,10 @@ function then<T, R>(
   return value instanceof Promise ? value.then(next) : next(value);
 }
 
-/** Picks categories to store and leaves loading and update authority with DSelect. */
+/**
+ * Picks categories to store through one search, `Category.searchCategories`, which answers
+ * synchronously when the site has every category and from the server otherwise.
+ */
 export default class DSelectCategory extends Component<DSelectCategorySignature> {
   @service declare siteSettings: CategorySettings;
 
@@ -142,6 +148,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
+  /** Every input of the search; `categories` reloads an open list when the site gains one. */
   get loadContext() {
     return {
       permission: this.args.permission,
@@ -292,6 +299,10 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
+  /**
+   * Each row keeps the family key the search grouped it by, so a later site update can never
+   * re-key a row that is already shown.
+   */
   #search(query: string, opts: SelectLoadOptions) {
     const groupFamilies = this.#offersDescendants(query);
     const search = Category.searchCategories(query, {
