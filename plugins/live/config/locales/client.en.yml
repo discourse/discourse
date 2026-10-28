@@ -201,6 +201,18 @@ en:
       subtitles:
         loading: "Preparing subtitles…"
         downloading: "Downloading subtitles model… %{percent}%"
+      local_recording:
+        start: "Record to this device"
+        stop: "Stop recording and save"
+        audio_only_confirm: "The call video couldn't be captured. Record audio only instead?"
+        start_failed: "The recording couldn't be started."
+        saved: "Recording saved to your downloads."
+        save_failed: "The recording couldn't be saved."
+        started_toast: "%{username} started recording this call."
+        indicator_title_self: "You're recording this call to your device"
+        indicator_title:
+          one: "%{usernames} is recording this call to their device"
+          other: "%{usernames} are recording this call to their devices"
       transcript:
         start: "Record transcript"
         stop: "Stop transcript recording"

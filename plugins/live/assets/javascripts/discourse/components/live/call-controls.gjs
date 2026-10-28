@@ -17,6 +17,10 @@ import {
   NOISE_SUPPRESSION_MODES,
 } from "../../lib/live/audio-processing.js";
 import {
+  localRecordingSupported,
+  requestTabCapture,
+} from "../../lib/live/local-recorder.js";
+import {
   enumerateAudioDevices,
   enumerateVideoDevices,
   outputSelectionSupported,
@@ -197,6 +201,30 @@ export default class LiveCallControls extends Component {
       : i18n("live.room.recording_start");
   }
 
+  // One record button per user: where the server can record the call, that
+  // takes the slot.
+  get canRecordLocally() {
+    return (
+      this.currentUser?.live_can_record_locally &&
+      localRecordingSupported() &&
+      !this.canRecord
+    );
+  }
+
+  get localRecordingActive() {
+    return this.liveWebrtc.isRecordingLocally(this.room?.id);
+  }
+
+  get localRecordingDisabled() {
+    return !this.localRecordingActive && this.liveWebrtc.localRecordingBusy;
+  }
+
+  get localRecordTitle() {
+    return this.localRecordingActive
+      ? i18n("live.local_recording.stop")
+      : i18n("live.local_recording.start");
+  }
+
   get currentInputDeviceName() {
     return this.audioInputDevices.find(
       (device) => device.id === this.liveWebrtc.inputDeviceId
@@ -274,6 +302,27 @@ export default class LiveCallControls extends Component {
         }
       },
     });
+  }
+
+  @action
+  toggleLocalRecording() {
+    const roomId = this.room.id;
+
+    if (this.localRecordingActive) {
+      this.liveWebrtc.stopLocalRecording();
+      return;
+    }
+
+    if (!this.liveWebrtc.screenShareSupported) {
+      this.liveWebrtc.startLocalRecording(roomId);
+      return;
+    }
+
+    requestTabCapture().then(
+      (displayStream) =>
+        this.liveWebrtc.startLocalRecording(roomId, displayStream),
+      () => this.#offerAudioOnlyRecording(roomId)
+    );
   }
 
   @action
@@ -362,6 +411,19 @@ export default class LiveCallControls extends Component {
       ),
       (id) => this.liveWebrtc.setVideoInputDevice(id)
     );
+  }
+
+  // Declining the picker is as likely as a failure, so this asks instead of
+  // silently falling back.
+  #offerAudioOnlyRecording(roomId) {
+    if (this.isDestroying || !this.liveWebrtc.isActiveRoom(roomId)) {
+      return;
+    }
+
+    this.dialog.yesNoConfirm({
+      message: i18n("live.local_recording.audio_only_confirm"),
+      didConfirm: () => this.liveWebrtc.startLocalRecording(roomId),
+    });
   }
 
   #systemDefaultDevice() {
@@ -597,6 +659,22 @@ export default class LiveCallControls extends Component {
         @icon="record-vinyl"
         @translatedTitle={{this.recordTitle}}
       />
+    {{/if}}
+    {{#if this.canRecordLocally}}
+      <button
+        aria-label={{this.localRecordTitle}}
+        class={{dConcatClass
+          "btn btn-icon no-text btn-default live-call-controls__record"
+          (if this.localRecordingActive "--recording")
+        }}
+        disabled={{this.localRecordingDisabled}}
+        title={{this.localRecordTitle}}
+        type="button"
+        {{on "click" this.toggleLocalRecording}}
+      >
+        {{dIcon "record-vinyl"}}
+        <span aria-hidden="true">&#8203;</span>
+      </button>
     {{/if}}
     {{#if this.showScreenShare}}
       <button
