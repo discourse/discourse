@@ -100,6 +100,12 @@ module PluginGem
     dependencies = dependencies.values.flatten
     dependencies.each do |dependency|
       version = locked[dependency.name]
+      # Bundler would report a conflict here as a gem it can't find in the
+      # application's version, without the plugin's requirement.
+      if version && pins.key?(dependency.name) && !dependency.requirement.satisfied_by?(version)
+        raise Bundler::GemfileError,
+              "Plugin #{dependency.gemfile.dirname.basename}'s Gemfile needs #{dependency.name} #{dependency.requirement}, but Discourse has #{version}"
+      end
       dependency.requirement.concat(["= #{version}"]) if version
     end
     # Locked gems that no plugin Gemfile names directly (dependencies of

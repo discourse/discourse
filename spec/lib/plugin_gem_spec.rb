@@ -263,7 +263,7 @@ RSpec.describe PluginGem do
     add_plugin("one", %(gem "rack", "> #{rack}"), lock: { "rack" => "99.0.0" })
 
     expect { boot }.to raise_error(
-      %r{Resolving plugin gems failed for .*/one/Gemfile:.*rack.*#{rack}}m,
+      %r{Resolving plugin gems failed for .*/one/Gemfile: Plugin one's Gemfile needs rack > #{rack}, but Discourse has #{rack}\z},
     )
     expect(installed).to be_empty
   end
