@@ -10,7 +10,6 @@ en:
       explanation_help: "Describe the facts and why the content may be illegal. You do not need to cite a specific law."
       name: "Full name or organization name"
       email: "Email address"
-      invalid_email: "Enter a valid email address, such as name@example.com."
       declaration_section: "Declaration"
       declaration: "I honestly believe that the facts and claims in this report are true and complete"
       submit: "Submit report"

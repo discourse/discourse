@@ -93,7 +93,7 @@ export default class DsaNoticeForm extends Component {
     if (!email || !emailValid(email)) {
       this.#form.addError("email", {
         title: i18n("dsa_notice.email"),
-        message: i18n("dsa_notice.invalid_email"),
+        message: i18n("user.email.invalid"),
       });
       return;
     }
@@ -169,7 +169,7 @@ export default class DsaNoticeForm extends Component {
     if (value && !emailValid(value.trim())) {
       addError(name, {
         title: i18n("dsa_notice.email"),
-        message: i18n("dsa_notice.invalid_email"),
+        message: i18n("user.email.invalid"),
       });
     }
   }
