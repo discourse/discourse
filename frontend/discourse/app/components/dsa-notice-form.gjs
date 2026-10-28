@@ -93,7 +93,7 @@ export default class DsaNoticeForm extends Component {
     if (!email || !emailValid(email)) {
       this.#form.addError("email", {
         title: i18n("dsa_notice.email"),
-        message: i18n("user.email.invalid"),
+        message: i18n("dsa_notice.errors.email"),
       });
       return;
     }
@@ -166,10 +166,10 @@ export default class DsaNoticeForm extends Component {
 
   @action
   validateEmail(name, value, { addError }) {
-    if (value && !emailValid(value.trim())) {
+    if (value?.trim() && !emailValid(value.trim())) {
       addError(name, {
         title: i18n("dsa_notice.email"),
-        message: i18n("user.email.invalid"),
+        message: i18n("dsa_notice.errors.email"),
       });
     }
   }
@@ -229,6 +229,9 @@ export default class DsaNoticeForm extends Component {
                   @type="input-email"
                   @validate={{this.validateEmail}}
                   @validation="required"
+                  @validationMessages={{hash
+                    required=(i18n "dsa_notice.errors.email")
+                  }}
                   as |field|
                 >
                   <form.Actions>
@@ -257,6 +260,9 @@ export default class DsaNoticeForm extends Component {
                     @title={{i18n "dsa_notice.verification_code"}}
                     @type="custom"
                     @validation="required"
+                    @validationMessages={{hash
+                      required=(i18n "dsa_notice.errors.verification_code")
+                    }}
                     as |field|
                   >
                     <form.Actions>
@@ -294,6 +300,10 @@ export default class DsaNoticeForm extends Component {
               @title={{i18n "dsa_notice.name"}}
               @type="input"
               @validation="required:trim|length:1,200"
+              @validationMessages={{hash
+                required=(i18n "dsa_notice.errors.name_required")
+                length=(i18n "dsa_notice.errors.name_length" count=200)
+              }}
               as |field|
             >
               <field.Control autocomplete="name" />
@@ -305,6 +315,10 @@ export default class DsaNoticeForm extends Component {
               @title={{i18n "dsa_notice.content_url"}}
               @type="input-url"
               @validation="required|url"
+              @validationMessages={{hash
+                required=(i18n "dsa_notice.errors.content_url")
+                url=(i18n "dsa_notice.errors.content_url")
+              }}
               as |field|
             >
               <field.Control />
@@ -317,6 +331,10 @@ export default class DsaNoticeForm extends Component {
               @title={{i18n "dsa_notice.explanation"}}
               @type="textarea"
               @validation="required:trim|length:50,20000"
+              @validationMessages={{hash
+                required=(i18n "dsa_notice.errors.explanation_required")
+                length=(i18n "dsa_notice.errors.explanation_length")
+              }}
               as |field|
             >
               <field.Control rows="6" />
@@ -328,6 +346,9 @@ export default class DsaNoticeForm extends Component {
               @title={{i18n "dsa_notice.declaration_section"}}
               @type="checkbox"
               @validation="accepted"
+              @validationMessages={{hash
+                accepted=(i18n "dsa_notice.errors.declaration")
+              }}
               as |field|
             >
               <field.Control @title={{i18n "dsa_notice.declaration"}} />

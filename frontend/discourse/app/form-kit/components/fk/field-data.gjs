@@ -337,7 +337,9 @@ export default class FKFieldData extends Component {
     });
 
     const validator = new Validator(value, this.rules);
-    const validationErrors = await validator.validate(this.type);
+    const validationErrors = await validator.validate(this.type, {
+      messages: this.args.validationMessages,
+    });
     validationErrors.forEach((message) => {
       let title = this.title;
       if (this.args.collectionIndex !== undefined) {

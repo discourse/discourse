@@ -6,6 +6,37 @@ import { i18n } from "discourse-i18n";
 module("Unit | Lib | FormKit | Validator", function (hooks) {
   setupTest(hooks);
 
+  test("custom messages preserve validation and default messages", async function (assert) {
+    const messages = { required: "Enter the content URL." };
+    const rules = { required: {}, url: {} };
+
+    assert.deepEqual(
+      await new Validator("", rules).validate("input-url", { messages }),
+      [messages.required, i18n("form_kit.errors.invalid_url")],
+      "only the configured rule uses custom wording"
+    );
+
+    assert.deepEqual(
+      await new Validator("https://example.com", rules).validate("input-url", {
+        messages,
+      }),
+      [],
+      "custom wording does not invalidate a valid value"
+    );
+  });
+
+  test("identical custom messages are shown once", async function (assert) {
+    const message = "Enter a complete content URL.";
+
+    assert.deepEqual(
+      await new Validator("", { required: {}, url: {} }).validate("input-url", {
+        messages: { required: message, url: message },
+      }),
+      [message],
+      "a missing URL has one actionable message"
+    );
+  });
+
   test("unknown validator", async function (assert) {
     const validator = await new Validator(1, { foo: {} });
 

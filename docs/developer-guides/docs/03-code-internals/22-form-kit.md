@@ -439,6 +439,25 @@ Read the dedicated validation section.
 
 Read the dedicated custom validation section.
 
+## @validationMessages
+
+Override built in validation messages for a field with a map keyed by rule name.
+The existing rules still decide whether the value is valid. Rules without an
+override keep their default messages. Identical messages are shown once.
+
+```hbs
+<form.Field
+  @name="declaration"
+  @title={{i18n "dsa_notice.declaration_section"}}
+  @type="checkbox"
+  @validation="accepted"
+  @validationMessages={{hash accepted=(i18n "dsa_notice.errors.declaration")}}
+  as |field|
+>
+  <field.Control />
+</form.Field>
+```
+
 ## @onSet
 
 By default, when changing the value of a field, this value will be set on the form's internal data object. However, you can choose to have full control over this process for a field.

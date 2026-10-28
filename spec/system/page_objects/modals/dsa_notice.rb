@@ -40,6 +40,34 @@ module PageObjects
         form.submit
       end
 
+      def enter_content_url(url)
+        form.field("content_url").fill_in(url)
+      end
+
+      def focus_error(field_name)
+        find(
+          "#{full_modal_selector} .form-kit__errors-summary a[href='#control-#{field_name}']",
+        ).click
+      end
+
+      def has_focused_field?(field_name)
+        has_css?(
+          "#{full_modal_selector} .form-kit__field[data-name='#{field_name}'] input:focus",
+          visible: :all,
+        )
+      end
+
+      def has_validation_errors?(errors)
+        errors.all? do |field_name, message|
+          form.field(field_name).has_errors?(message) &&
+            has_css?("#{full_modal_selector} .form-kit__errors-summary li", text: message)
+        end
+      end
+
+      def has_no_validation_errors?
+        has_no_css?("#{full_modal_selector} .form-kit__errors-summary")
+      end
+
       def has_post_url?(post)
         within(full_modal_selector) do
           has_field?(

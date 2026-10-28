@@ -8,7 +8,7 @@ export default class Validator {
     this.rules = rules;
   }
 
-  async validate(type) {
+  async validate(type, { messages = {} } = {}) {
     const errors = [];
     for (const rule in this.rules) {
       if (this[rule + "Validator"]) {
@@ -19,14 +19,14 @@ export default class Validator {
         );
 
         if (error) {
-          errors.push(error);
+          errors.push(messages[rule] ?? error);
         }
       } else {
         throw new Error(`Unknown validator: ${rule}`);
       }
     }
 
-    return errors;
+    return [...new Set(errors)];
   }
 
   dateBeforeOrEqualValidator(value, rule) {
