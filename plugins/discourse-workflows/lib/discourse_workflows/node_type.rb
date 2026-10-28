@@ -439,6 +439,17 @@ module DiscourseWorkflows
       reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
     end
 
+    def self.load_badge_options(context)
+      return if context.method_name != "badges"
+
+      ::Badge
+        .where(enabled: true)
+        .order(:name)
+        .pluck(:id, :name)
+        .select { |_, name| context.matches_filter?(name) }
+        .map { |id, name| { id:, name: } }
+    end
+
     def self.load_group_options(context, groups = ::Group.all)
       return if context.method_name != "groups"
 

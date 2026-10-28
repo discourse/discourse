@@ -62,6 +62,20 @@ module DiscourseWorkflows
         )
     end
 
+    def serialize_badge(badge)
+      {
+        id: badge.id,
+        name: badge.name,
+        description: badge.description.presence,
+        badge_type_id: badge.badge_type_id,
+        icon: badge.icon,
+        image_url: badge.image_url,
+        grant_count: badge.grant_count,
+        system: badge.system?,
+        multiple_grant: badge.multiple_grant?,
+      }
+    end
+
     def serialize_group(group, guardian: Discourse.system_user.guardian)
       serialize_record(group, WebHookGroupSerializer, scope: guardian)
     end

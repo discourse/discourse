@@ -106,6 +106,17 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:grant_badge" => [
+            {
+              name: "Grant the author of the trigger post a badge for that post",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                badge_id: 123,
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
           "action:user" => [
             {
               name: "Look up a post author",
