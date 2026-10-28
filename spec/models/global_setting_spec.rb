@@ -9,6 +9,112 @@ class GlobalSetting
 end
 
 RSpec.describe GlobalSetting do
+  describe ".smtp_settings" do
+    it "preserves unset values and false options in the default profile" do
+      global_setting :smtp_address, nil
+      expect(GlobalSetting.smtp_settings).to be_nil
+
+      global_setting :smtp_address, "default.example.com"
+      global_setting :smtp_port, 2525
+      global_setting :smtp_domain, nil
+      global_setting :smtp_user_name, nil
+      global_setting :smtp_password, nil
+      global_setting :smtp_enable_start_tls, false
+      global_setting :smtp_force_tls, false
+      global_setting :smtp_openssl_verify_mode, nil
+      global_setting :smtp_open_timeout, "1.5"
+      global_setting :smtp_read_timeout, "12.5"
+
+      expect(GlobalSetting.smtp_settings).to eq(
+        address: "default.example.com",
+        port: 2525,
+        domain: nil,
+        user_name: nil,
+        password: nil,
+        enable_starttls_auto: false,
+        open_timeout: 1.5,
+        read_timeout: 12.5,
+      )
+    end
+  end
+
+  describe ".critical_smtp_settings" do
+    it "disables the route for an unset or blank address" do
+      [nil, "", " "].each do |address|
+        global_setting :critical_smtp_address, address
+        expect(GlobalSetting.critical_smtp_settings).to be_nil
+      end
+    end
+
+    it "uses independent defaults for a hostname-only unauthenticated relay" do
+      global_setting :smtp_address, "default.example.com"
+      global_setting :smtp_port, 465
+      global_setting :smtp_domain, "default.example.com"
+      global_setting :smtp_user_name, "default-user"
+      global_setting :smtp_password, "default-password"
+      global_setting :smtp_authentication, "login"
+      global_setting :smtp_enable_start_tls, false
+      global_setting :smtp_force_tls, true
+      global_setting :smtp_openssl_verify_mode, "none"
+      global_setting :smtp_open_timeout, 99
+      global_setting :smtp_read_timeout, 100
+      global_setting :critical_smtp_address, "critical.example.com"
+
+      expect(GlobalSetting.critical_smtp_settings).to eq(
+        address: "critical.example.com",
+        port: 25,
+        domain: nil,
+        user_name: nil,
+        password: nil,
+        enable_starttls_auto: true,
+        open_timeout: 5.0,
+        read_timeout: 30.0,
+      )
+    end
+
+    it "normalizes both profiles identically, including implicit TLS and fractional timeouts" do
+      %i[smtp critical_smtp].each do |prefix|
+        {
+          address: "relay.example.com",
+          port: 465,
+          domain: "helo.example.com",
+          user_name: "relay-user",
+          password: "relay-password",
+          authentication: "login",
+          enable_start_tls: true,
+          force_tls: true,
+          openssl_verify_mode: "peer",
+          open_timeout: "2.5",
+          read_timeout: "15.5",
+        }.each { |name, value| global_setting :"#{prefix}_#{name}", value }
+      end
+
+      expected = {
+        address: "relay.example.com",
+        port: 465,
+        domain: "helo.example.com",
+        user_name: "relay-user",
+        password: "relay-password",
+        authentication: "login",
+        enable_starttls_auto: false,
+        tls: true,
+        openssl_verify_mode: "peer",
+        open_timeout: 2.5,
+        read_timeout: 15.5,
+      }
+      expect(GlobalSetting.smtp_settings).to eq(expected)
+      expect(GlobalSetting.critical_smtp_settings).to eq(expected)
+
+      global_setting :critical_smtp_force_tls, false
+      expect(GlobalSetting.critical_smtp_settings).to eq(
+        expected.except(:tls).merge(enable_starttls_auto: true),
+      )
+
+      global_setting :critical_smtp_enable_start_tls, false
+      expect(GlobalSetting.critical_smtp_settings[:enable_starttls_auto]).to eq(false)
+    end
+  end
+
   describe ".use_s3_assets?" do
     it "returns false by default" do
       expect(GlobalSetting.use_s3?).to eq(false)

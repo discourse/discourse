@@ -263,31 +263,40 @@ class GlobalSetting
   end
 
   def self.smtp_settings
-    if GlobalSetting.smtp_address
-      settings = {
-        address: GlobalSetting.smtp_address,
-        port: GlobalSetting.smtp_port,
-        domain: GlobalSetting.smtp_domain,
-        user_name: GlobalSetting.smtp_user_name,
-        password: GlobalSetting.smtp_password,
-        enable_starttls_auto: !GlobalSetting.smtp_force_tls && GlobalSetting.smtp_enable_start_tls,
-        open_timeout: GlobalSetting.smtp_open_timeout.to_f,
-        read_timeout: GlobalSetting.smtp_read_timeout.to_f,
-      }
-
-      if settings[:password] || settings[:user_name]
-        settings[:authentication] = GlobalSetting.smtp_authentication
-      end
-
-      settings[
-        :openssl_verify_mode
-      ] = GlobalSetting.smtp_openssl_verify_mode if GlobalSetting.smtp_openssl_verify_mode
-
-      settings[:tls] = true if GlobalSetting.smtp_force_tls
-      settings.compact
-      settings
-    end
+    smtp_settings_for(:smtp) if smtp_address
   end
+
+  def self.critical_smtp_settings
+    smtp_settings_for(:critical_smtp) if critical_smtp_address.present?
+  end
+
+  def self.smtp_settings_for(prefix)
+    setting = ->(name) { public_send(:"#{prefix}_#{name}") }
+    force_tls = setting[:force_tls]
+
+    settings = {
+      address: setting[:address],
+      port: setting[:port],
+      domain: setting[:domain],
+      user_name: setting[:user_name],
+      password: setting[:password],
+      enable_starttls_auto: !force_tls && setting[:enable_start_tls],
+      open_timeout: setting[:open_timeout].to_f,
+      read_timeout: setting[:read_timeout].to_f,
+    }
+
+    if settings[:password] || settings[:user_name]
+      settings[:authentication] = setting[:authentication]
+    end
+
+    if openssl_verify_mode = setting[:openssl_verify_mode]
+      settings[:openssl_verify_mode] = openssl_verify_mode
+    end
+
+    settings[:tls] = true if force_tls
+    settings
+  end
+  private_class_method :smtp_settings_for
 
   def self.sendmail_settings
     { arguments: %w[-i] }
