@@ -1477,7 +1477,7 @@ class User < ActiveRecord::Base
   end
 
   def silenced_record
-    user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
+    current_penalty_record(:silence_user, :unsilence_user)
   end
 
   def full_silence_reason
@@ -1497,7 +1497,7 @@ class User < ActiveRecord::Base
   end
 
   def suspend_record
-    user_histories.where(action: UserHistory.actions[:suspend_user]).order("id DESC").first
+    current_penalty_record(:suspend_user, :unsuspend_user)
   end
 
   def full_suspend_reason
@@ -2493,6 +2493,20 @@ class User < ActiveRecord::Base
       user_api_keys: user_api_keys,
       mcp_authorizations: mcp_authorizations.size,
     }
+  end
+
+  # The latest penalty log, unless the penalty was lifted (or expired) since: a new penalty that wasn't logged
+  # mustn't be explained by an older one.
+  def current_penalty_record(action, lift_action)
+    record = user_histories.where(action: UserHistory.actions[action]).order(id: :desc).first
+    return if record.nil?
+
+    lifted =
+      user_histories
+        .where(action: UserHistory.actions[lift_action])
+        .where("id > ?", record.id)
+        .exists?
+    record if !lifted
   end
 
   def deactivate_anonymous_shadow_users!
