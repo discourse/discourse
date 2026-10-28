@@ -26,7 +26,7 @@ RSpec.describe "Blog editor filtering", type: :request do
 
   it "filters the entire collection before applying the page limit" do
     published_topic.update_column(:updated_at, 3.days.ago)
-    Fabricate.times(31, :topic, category: drafts)
+    Fabricate.times(Blog::EditorController::PAGE_SIZE + 1, :topic, category: drafts)
 
     get "/blog/editor.json", params: { filter: "published" }
 
@@ -37,7 +37,9 @@ RSpec.describe "Blog editor filtering", type: :request do
 
   it "paginates search results in a stable order within the selected status" do
     matching =
-      31.times.map { |index| Fabricate(:topic, category: drafts, title: "Needle article #{index}") }
+      (Blog::EditorController::PAGE_SIZE + 1).times.map do |index|
+        Fabricate(:topic, category: drafts, title: "Needle article #{index}")
+      end
     Topic.where(id: matching.map(&:id)).update_all(updated_at: 1.day.ago)
     Fabricate(:topic, category: drafts, title: "Unrelated newer draft")
     Fabricate(:topic, title: "Needle outside editorial categories")
@@ -45,7 +47,7 @@ RSpec.describe "Blog editor filtering", type: :request do
     get "/blog/editor.json", params: { filter: "drafts", q: "NEEDLE" }
     expect(response.status).to eq(200)
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to eq(
-      matching.reverse.first(30).map(&:id),
+      matching.reverse.first(Blog::EditorController::PAGE_SIZE).map(&:id),
     )
     expect(response.parsed_body["more"]).to eq(true)
 

@@ -2,6 +2,8 @@
 
 module ::Blog
   class EditorController < ::ApplicationController
+    PAGE_SIZE = 3
+
     helper Blog::BlogHelper
     requires_plugin PLUGIN_NAME
     requires_login except: [:index]
@@ -22,7 +24,12 @@ module ::Blog
               query: params[:q] || "",
             )
           @page = [params[:page].to_i, 0].max
-          selected = topics.offset(@page * 30).limit(31).includes(:first_post, :category).to_a
+          selected =
+            topics
+              .offset(@page * PAGE_SIZE)
+              .limit(PAGE_SIZE + 1)
+              .includes(:first_post, :category)
+              .to_a
           publications =
             Publication
               .where(topic_id: selected.map(&:id))
@@ -40,10 +47,10 @@ module ::Blog
           render json: {
                    error: Configuration.error,
                    blog_url: Configuration.origin,
-                   more: selected.size > 30,
+                   more: selected.size > PAGE_SIZE,
                    topics:
                      selected
-                       .first(30)
+                       .first(PAGE_SIZE)
                        .map { |topic|
                          entry(
                            topic,
