@@ -27,13 +27,14 @@ module PageObjects
         revision_numbers.find("strong:nth-child(3)")
       end
 
-      def hide_revision
-        footer.find("button.hide-revision").click
+      def open_visibility_menu
+        footer.find(".revision-visibility__trigger").click
         self
       end
 
-      def unlist_revision
-        footer.find("button.unlist-revision").click
+      def choose_visibility(visibility)
+        open_visibility_menu
+        find("#{MODAL_SELECTOR} [data-revision-visibility='#{visibility}']").click
         self
       end
 
@@ -56,11 +57,11 @@ module PageObjects
       end
 
       def destroy_revisions
-        footer.find("button.destroy-revision").click
+        find("#{MODAL_SELECTOR} .destroy-revision").click
       end
 
       def has_destroy_revisions_button?
-        footer.has_css?("button.destroy-revision")
+        has_css?("#{MODAL_SELECTOR} .destroy-revision")
       end
 
       def has_tag_changes?

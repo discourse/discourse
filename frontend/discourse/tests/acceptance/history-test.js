@@ -137,17 +137,27 @@ acceptance("History Modal - not found", function (needs) {
   });
 });
 
-acceptance("History Modal - unlisting as staff", function (needs) {
-  let unlisted;
+acceptance("History Modal - revision visibility as staff", function (needs) {
+  let hidden, unlisted, requests;
 
   needs.user();
-  needs.hooks.beforeEach(() => (unlisted = false));
+  needs.hooks.beforeEach(() => {
+    hidden = false;
+    unlisted = false;
+    requests = [];
+  });
   needs.pretender((server, helper) => {
     const revision = () => ({
       ...revisionResponse,
+      previous_hidden: hidden,
       unlisted,
       unlisted_revision_count: unlisted ? 1 : 0,
     });
+    const change = (action, apply) => () => {
+      requests.push(action);
+      apply();
+      return helper.response({});
+    };
 
     server.get("/posts/419/revisions/latest.json", () =>
       helper.response(revision())
@@ -155,68 +165,118 @@ acceptance("History Modal - unlisting as staff", function (needs) {
     server.get("/posts/419/revisions/2.json", () =>
       helper.response(revision())
     );
-    server.put("/posts/419/revisions/2/unlist", () => {
-      unlisted = true;
-      return helper.response({});
-    });
-    server.put("/posts/419/revisions/2/relist", () => {
-      unlisted = false;
-      return helper.response({});
-    });
+    server.put(
+      "/posts/419/revisions/2/unlist",
+      change("unlist", () => (unlisted = true))
+    );
+    server.put(
+      "/posts/419/revisions/2/relist",
+      change("relist", () => (unlisted = false))
+    );
+    server.put(
+      "/posts/419/revisions/2/hide",
+      change("hide", () => {
+        hidden = true;
+        unlisted = false;
+      })
+    );
+    server.put(
+      "/posts/419/revisions/2/show",
+      change("show", () => (hidden = false))
+    );
   });
+
+  async function chooseVisibility(visibility) {
+    await click(".history-modal .revision-visibility__trigger");
+    await click(`.history-modal [data-revision-visibility='${visibility}']`);
+  }
 
   test("unlisting and relisting a revision", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("article[data-post-id='419'] .edits button");
 
     assert
+      .dom(".history-modal .revision-visibility__trigger")
+      .hasText(i18n("post.revisions.visibility.listed.title"));
+    assert
       .dom(".history-modal .revision-details__unlisted")
       .doesNotExist("doesn't mark a listed revision");
 
-    await click(".history-modal .unlist-revision");
+    await chooseVisibility("unlisted");
 
+    assert
+      .dom(".history-modal .revision-visibility__trigger")
+      .hasText(i18n("post.revisions.visibility.unlisted.title"));
     assert
       .dom(".history-modal .revision-details__unlisted")
       .hasText(i18n("post.revisions.unlisted.label"), "marks it as unlisted");
     assert
-      .dom(".history-modal .hide-revision")
-      .exists("still offers to hide an unlisted revision");
-    assert
       .dom(".history-modal .show-unlisted-revisions")
       .doesNotExist("doesn't offer staff the unlisted toggle");
 
-    await click(".history-modal .relist-revision");
+    await chooseVisibility("listed");
 
     assert
       .dom(".history-modal .revision-details__unlisted")
       .doesNotExist("removes the marker once relisted");
+    assert.deepEqual(requests, ["unlist", "relist"]);
+  });
+
+  test("only offers the other visibilities", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("article[data-post-id='419'] .edits button");
+    await click(".history-modal .revision-visibility__trigger");
+
     assert
-      .dom(".history-modal .unlist-revision")
-      .exists("offers to unlist it again");
-  });
-});
-
-acceptance("History Modal - unlisting a hidden revision", function (needs) {
-  needs.user();
-  needs.pretender((server, helper) => {
-    server.get("/posts/419/revisions/latest.json", () =>
-      helper.response({ ...revisionResponse, previous_hidden: true })
-    );
+      .dom(".history-modal [data-revision-visibility='listed']")
+      .doesNotExist("doesn't offer the current visibility");
+    assert.dom(".history-modal [data-revision-visibility='unlisted']").exists();
+    assert.dom(".history-modal [data-revision-visibility='hidden']").exists();
+    assert
+      .dom(".history-modal .destroy-revision")
+      .doesNotExist("doesn't offer to delete revisions by default");
   });
 
-  test("doesn't offer to unlist a hidden revision", async function (assert) {
+  test("unlisting a hidden revision", async function (assert) {
+    hidden = true;
+
     await visit("/t/internationalization-localization/280");
     await click("article[data-post-id='419'] .edits button");
 
     assert
-      .dom(".history-modal .show-revision")
-      .exists("offers to show the hidden revision");
+      .dom(".history-modal .revision-visibility__trigger")
+      .hasText(i18n("post.revisions.visibility.hidden.title"));
+
+    await chooseVisibility("unlisted");
+
     assert
-      .dom(".history-modal .unlist-revision")
-      .doesNotExist("doesn't offer to unlist it");
+      .dom(".history-modal .revision-visibility__trigger")
+      .hasText(i18n("post.revisions.visibility.unlisted.title"));
+    assert.deepEqual(
+      requests,
+      ["show", "unlist"],
+      "shows the revision before unlisting it"
+    );
+  });
+});
+
+acceptance("History Modal - deleting revisions", function (needs) {
+  needs.user();
+  needs.settings({ can_permanently_delete: true });
+  needs.pretender((server, helper) => {
+    server.get("/posts/419/revisions/latest.json", () =>
+      helper.response(revisionResponse)
+    );
+  });
+
+  test("offers to delete all revisions from a listed revision", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("article[data-post-id='419'] .edits button");
+    await click(".history-modal .revision-visibility__trigger");
+
     assert
-      .dom(".history-modal .relist-revision")
-      .doesNotExist("doesn't offer to relist it");
+      .dom(".history-modal .destroy-revision")
+      .hasText(i18n("post.revisions.controls.destroy"));
   });
 });
 
@@ -259,7 +319,7 @@ acceptance("History Modal - unlisted revisions as a user", function (needs) {
     await click("article[data-post-id='419'] .edits button");
 
     assert
-      .dom(".history-modal .unlist-revision")
+      .dom(".history-modal .revision-visibility__trigger")
       .doesNotExist("doesn't offer staff actions");
     assert
       .dom(".history-modal .next-revision")

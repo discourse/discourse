@@ -28,6 +28,22 @@ function customTagArray(val) {
   return val;
 }
 
+const VISIBILITY_TRANSITIONS = {
+  listed: {
+    unlisted: [Post.unlistRevision],
+    hidden: [Post.hideRevision],
+  },
+  unlisted: {
+    listed: [Post.relistRevision],
+    hidden: [Post.hideRevision],
+  },
+  // The server refuses to unlist a hidden revision, so it is shown first.
+  hidden: {
+    listed: [Post.showRevision],
+    unlisted: [Post.showRevision, Post.unlistRevision],
+  },
+};
+
 export default class History extends Component {
   @service dialog;
   @service modal;
@@ -233,6 +249,13 @@ export default class History extends Component {
     }
   }
 
+  get visibility() {
+    if (this.postRevision?.previous_hidden) {
+      return "hidden";
+    }
+    return this.postRevision?.unlisted ? "unlisted" : "listed";
+  }
+
   @action
   async calculateBodyDiff(_, [bodyDiff]) {
     let html = bodyDiff;
@@ -272,18 +295,6 @@ export default class History extends Component {
       this.loading = false;
       this.initialLoad = false;
     }
-  }
-
-  hide(postId, postVersion) {
-    Post.hideRevision(postId, postVersion).then(() =>
-      this.refresh(postId, postVersion)
-    );
-  }
-
-  show(postId, postVersion) {
-    Post.showRevision(postId, postVersion).then(() =>
-      this.refresh(postId, postVersion)
-    );
   }
 
   async revert(post, postVersion) {
@@ -369,11 +380,6 @@ export default class History extends Component {
   }
 
   @action
-  hideVersion() {
-    this.hide(this.postRevision?.post_id, this.postRevision?.current_revision);
-  }
-
-  @action
   permanentlyDeleteVersions() {
     const postId = this.postRevision?.post_id;
     this.args.closeModal();
@@ -390,30 +396,14 @@ export default class History extends Component {
   }
 
   @action
-  showVersion() {
-    this.show(this.postRevision?.post_id, this.postRevision?.current_revision);
-  }
-
-  @action
-  async unlistVersion() {
+  async changeVisibility(target) {
     const postId = this.postRevision?.post_id;
     const postVersion = this.postRevision?.current_revision;
 
     try {
-      await Post.unlistRevision(postId, postVersion);
-      await this.refresh(postId, postVersion);
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @action
-  async relistVersion() {
-    const postId = this.postRevision?.post_id;
-    const postVersion = this.postRevision?.current_revision;
-
-    try {
-      await Post.relistRevision(postId, postVersion);
+      for (const request of VISIBILITY_TRANSITIONS[this.visibility][target]) {
+        await request(postId, postVersion);
+      }
       await this.refresh(postId, postVersion);
     } catch (error) {
       popupAjaxError(error);
@@ -486,11 +476,11 @@ export default class History extends Component {
           {{#if this.postRevision}}
             <TopicFooter
               @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
+              @changeVisibility={{this.changeVisibility}}
               @displayEdit={{this.displayEdit}}
               @displayRevisions={{this.displayRevisions}}
               @editButtonLabel={{this.editButtonLabel}}
               @editPost={{this.editPost}}
-              @hideVersion={{this.hideVersion}}
               @includeUnlisted={{this.includeUnlisted}}
               @isStaff={{this.currentUser.staff}}
               @loadFirstDisabled={{this.loadFirstDisabled}}
@@ -504,14 +494,12 @@ export default class History extends Component {
               @loadPreviousVersion={{this.loadPreviousVersion}}
               @model={{this.postRevision}}
               @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
-              @relistVersion={{this.relistVersion}}
               @revertToRevisionText={{this.revertToRevisionText}}
               @revertToVersion={{this.revertToVersion}}
               @revisionsText={{this.revisionsText}}
               @showUnlistedToggle={{this.showUnlistedToggle}}
-              @showVersion={{this.showVersion}}
               @toggleIncludeUnlisted={{this.toggleIncludeUnlisted}}
-              @unlistVersion={{this.unlistVersion}}
+              @visibility={{this.visibility}}
             />
           {{/if}}
         {{/if}}

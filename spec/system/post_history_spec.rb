@@ -133,7 +133,7 @@ describe "Post history with an unlisted revision" do
     expect(post_history_modal).to have_body_diff("Noisy intermediate version")
     expect(post_history_modal).to have_no_unlisted_marker
 
-    post_history_modal.unlist_revision
+    post_history_modal.choose_visibility("unlisted")
 
     expect(post_history_modal).to have_unlisted_marker
   end

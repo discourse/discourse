@@ -3,6 +3,7 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import VisibilityMenu from "./visibility-menu.gjs";
 
 const TopicFooter = <template>
   <div id="revision-controls">
@@ -76,51 +77,13 @@ const TopicFooter = <template>
         />
       {{/if}}
 
-      {{#if @model.previous_hidden}}
-        <DButton
-          class="btn-default show-revision"
-          @action={{@showVersion}}
-          @disabled={{@loading}}
-          @icon="far-eye"
-          @label="post.revisions.controls.show"
-        />
-      {{else}}
-        {{#if @model.unlisted}}
-          <DButton
-            class="btn-default relist-revision"
-            @action={{@relistVersion}}
-            @disabled={{@loading}}
-            @icon="list"
-            @label="post.revisions.controls.relist"
-          />
-        {{else}}
-          <DButton
-            class="btn-default unlist-revision"
-            @action={{@unlistVersion}}
-            @disabled={{@loading}}
-            @icon="list"
-            @label="post.revisions.controls.unlist"
-          />
-        {{/if}}
-
-        <DButton
-          class="btn-danger hide-revision"
-          @action={{@hideVersion}}
-          @disabled={{@loading}}
-          @icon="far-eye-slash"
-          @label="post.revisions.controls.hide"
-        />
-      {{/if}}
-
-      {{#if (and @canPermanentlyDelete @model.previous_hidden)}}
-        <DButton
-          class="btn-danger destroy-revision"
-          @action={{@permanentlyDeleteVersions}}
-          @disabled={{@loading}}
-          @icon="trash-can"
-          @label="post.revisions.controls.destroy"
-        />
-      {{/if}}
+      <VisibilityMenu
+        @canPermanentlyDelete={{@canPermanentlyDelete}}
+        @disabled={{@loading}}
+        @onChange={{@changeVisibility}}
+        @onPermanentlyDelete={{@permanentlyDeleteVersions}}
+        @visibility={{@visibility}}
+      />
     {{/if}}
   </div>
 </template>;

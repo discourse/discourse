@@ -5427,6 +5427,16 @@ en:
           label: "Unlisted"
           description: "This edit is skipped when browsing the edit history, but its content is still public."
         show_all_edits: "Show all edits"
+        visibility:
+          listed:
+            title: "Listed"
+            description: "Shown when browsing the edit history."
+          unlisted:
+            title: "Unlisted"
+            description: "Skipped when browsing the edit history."
+          hidden:
+            title: "Hidden"
+            description: "Removed from the public edit history, along with the diffs next to it."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -5437,11 +5447,7 @@ en:
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
-          hide: "Hide revision"
-          show: "Show revision"
-          unlist: "Unlist revision"
-          relist: "Relist revision"
-          destroy: "Delete revisions"
+          destroy: "Delete all revisions"
           destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
