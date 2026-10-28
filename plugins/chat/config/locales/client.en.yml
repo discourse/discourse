@@ -40,6 +40,12 @@ en:
 
     chat:
       homepage_option: "Chat channel"
+      admin_onboarding:
+        start_posting:
+          title: "Start chatting"
+          description: "Send your first message in #%{channel}."
+          action: "Write a message"
+          completed: "Keep chatting"
       edit_category:
         tab_title: "Chat"
         channel: "Channel"

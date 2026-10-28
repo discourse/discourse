@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedArray, trackedSet } from "@ember/reactive/collections";
@@ -19,6 +19,8 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
+
+const DEFAULT_LOCATION = "above_main_container";
 
 const STEPS = [
   class SelectTheme extends OnboardingStep {
@@ -150,9 +152,11 @@ export default class AdminOnboardingBanner extends Component {
   @tracked minimized = false;
   // the key value store isn't reactive, but the progress count must be
   completedStepNames = trackedSet(
-    STEPS.filter(
-      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
-    ).map((Step) => Step.name)
+    this.steps
+      .filter(
+        (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
+      )
+      .map((Step) => Step.name)
   );
 
   #heightContainer;
@@ -175,12 +179,33 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
+  // Where the banner renders. A customization can return a location of its
+  // own and render the banner there, as long as it passes a matching @location
+  get location() {
+    return applyValueTransformer(
+      "admin-onboarding-banner-location",
+      DEFAULT_LOCATION,
+      { homepage: defaultHomepage() }
+    );
+  }
+
+  // A bare <AdminOnboardingBanner> without @location renders regardless of the chosen location
+  get matchesLocation() {
+    return (
+      this.args.location === undefined || this.args.location === this.location
+    );
+  }
+
   get shouldDisplay() {
     if (this.dismissed) {
       return false;
     }
 
     if (!this.currentUser?.show_site_owner_onboarding) {
+      return false;
+    }
+
+    if (!this.matchesLocation) {
       return false;
     }
 
@@ -191,6 +216,16 @@ export default class AdminOnboardingBanner extends Component {
       path === "/" ||
       path === homepagePath()
     );
+  }
+
+  /**
+   * @returns {(typeof OnboardingStep)[]}
+   */
+  @cached
+  get steps() {
+    return applyValueTransformer("admin-onboarding-steps", [...STEPS], {
+      homepage: defaultHomepage(),
+    });
   }
 
   get completedSteps() {
@@ -204,7 +239,7 @@ export default class AdminOnboardingBanner extends Component {
 
   @action
   async checkIfOnboardingIsComplete() {
-    const allStepsAreDone = STEPS.every(
+    const allStepsAreDone = this.steps.every(
       (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
     );
 
@@ -241,7 +276,7 @@ export default class AdminOnboardingBanner extends Component {
     await SiteSetting.update("enable_site_owner_onboarding", false);
     await logOnboardingEvent(skipped ? "dismissed" : "completed");
     this.dismissed = true;
-    STEPS.forEach((Step) => {
+    this.steps.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);
     });
     this.completedStepNames.clear();
@@ -275,7 +310,7 @@ export default class AdminOnboardingBanner extends Component {
                     "admin_onboarding_banner.launch_in_easy_steps_subtitle"
                     (hash
                       completed_steps=this.completedSteps
-                      step_count=STEPS.length
+                      step_count=this.steps.length
                     )
                   }}
                 </span>
@@ -303,7 +338,7 @@ export default class AdminOnboardingBanner extends Component {
           {{#unless this.minimized}}
             <div class="admin-onboarding-banner__content">
               <div class="admin-onboarding-banner__steps">
-                {{#each STEPS as |Step|}}
+                {{#each this.steps as |Step|}}
                   <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
                 {{/each}}
               </div>
