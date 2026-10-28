@@ -1001,6 +1001,21 @@ RSpec.describe Group do
       expect(removed.map { |event| event[:params][1].name }).to contain_exactly("admins", "staff")
     end
 
+    it "doesn't report a removal a concurrent refresh already made" do
+      user = Fabricate(:user)
+      user.update_columns(admin: true)
+      described_class.refresh_automatic_groups_for_user!(user)
+      user.update_columns(admin: false)
+      GroupUser.any_instance.stubs(:lock!).raises(ActiveRecord::RecordNotFound)
+
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          described_class.refresh_automatic_groups_for_user!(user)
+        end
+
+      expect(events).to be_empty
+    end
+
     it "adds automatic memberships to staged users" do
       user = Fabricate(:staged)
       user.update_columns(admin: true, moderator: true, trust_level: TrustLevel[4])
@@ -1018,6 +1033,25 @@ RSpec.describe Group do
           :trust_level_4,
         ),
       )
+    end
+  end
+
+  describe ".user_trust_level_change!" do
+    it "reports the trust level groups a demotion removes, as the system user",
+       :aggregate_failures do
+      user = Fabricate(:user, trust_level: TrustLevel[3])
+      described_class.user_trust_level_change!(user.id, TrustLevel[3])
+
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          described_class.user_trust_level_change!(user.id, TrustLevel[1])
+        end
+
+      expect(events.map { it[:params][1].name }).to contain_exactly(
+        "trust_level_2",
+        "trust_level_3",
+      )
+      expect(events.map { it[:params].last }).to all(eq(acting_user: Discourse.system_user))
     end
   end
 
