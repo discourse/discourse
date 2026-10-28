@@ -61,7 +61,7 @@ acceptance("Blog editor", function (needs) {
   test("filters private drafts and published articles", async function (assert) {
     await visit("/blog/editor");
     assert
-      .dom(".blog-dashboard__entry")
+      .dom(".blog-dashboard__row")
       .exists({ count: 2 }, "both editorial states are listed");
     await click(".blog-dashboard__filters button:nth-child(2)");
     assert.dom('[data-topic-id="123"]').exists("private drafts are shown");
@@ -75,7 +75,7 @@ acceptance("Blog editor", function (needs) {
       .doesNotExist("private drafts are filtered out");
     await click(".blog-dashboard__filters button:nth-child(4)");
     assert
-      .dom(".blog-dashboard__entry")
+      .dom(".blog-dashboard__row")
       .doesNotExist("unpublished filtering can return an empty result");
   });
 
@@ -93,17 +93,17 @@ acceptance("Blog editor", function (needs) {
     };
     await visit("/blog/editor");
     assert
-      .dom('[data-topic-id="124"] h2 a')
+      .dom('[data-topic-id="124"] .d-table__overview-link')
       .hasText(
         "The live article title",
         "published entries use the live title rather than the working copy"
       );
     assert
-      .dom('[data-topic-id="124"] h2 a')
+      .dom('[data-topic-id="124"] .d-table__overview-link')
       .hasAttribute(
         "href",
-        published.url,
-        "the main link opens the actual blog article"
+        "/t/live-article/200",
+        "the main link opens the public discussion"
       );
     assert
       .dom('[data-topic-id="124"] .blog-dashboard__edit-private')
@@ -113,11 +113,25 @@ acceptance("Blog editor", function (needs) {
         "the working copy is where publishing happens"
       );
     assert
-      .dom('[data-topic-id="124"] a[href="/t/live-article/200"]')
+      .dom('[data-topic-id="124"] .blog-dashboard__edit-private')
+      .hasText("Edit", "live articles are edited through their working copy");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__edit-private')
+      .hasText("Edit", "drafts use the same edit action");
+    await click('[data-topic-id="124"] .blog-dashboard__more-actions');
+    assert
+      .dom(".blog-dashboard__discussion")
+      .doesNotExist("the title already opens the public discussion");
+    assert
+      .dom(".blog-dashboard__view-live")
+      .hasAttribute("href", published.url, "live articles link to the blog");
+    assert
+      .dom(".blog-dashboard__preview")
       .hasText(
-        "Public discussion",
-        "the public forum topic is separately accessible"
+        "Preview changes",
+        "live articles with a correction preview the working copy"
       );
+    await click('[data-topic-id="124"] .blog-dashboard__more-actions');
     assert
       .dom('[data-topic-id="124"] .blog-dashboard__status')
       .hasText(
@@ -131,8 +145,76 @@ acceptance("Blog editor", function (needs) {
       .dom('[data-topic-id="123"] .blog-dashboard__status')
       .hasText("Draft", "never-published articles are drafts");
     assert
+      .dom('[data-topic-id="124"] .blog-dashboard__status')
+      .hasClass("--success", "live articles use the success status style");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__status')
+      .doesNotHaveClass("--success", "drafts use the neutral status style");
+    assert
       .dom('[data-topic-id="123"] .blog-dashboard__correction')
       .doesNotExist("new drafts are not corrections");
+  });
+
+  test("lists status, publication date, replies, and row actions", async function (assert) {
+    published = {
+      ...published,
+      discussion_url: "/t/live-article/200",
+      scheduled_at: "2026-10-01T10:00:00.000Z",
+    };
+    await visit("/blog/editor");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__scheduled')
+      .hasText("Scheduled", "scheduled releases are identified");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__published .relative-date')
+      .exists("published articles show when they went live");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__published .relative-date')
+      .doesNotExist("drafts have no publication date");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__replies')
+      .includesText("2", "published articles show their reply count");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__published')
+      .includesText("—", "drafts show a placeholder for the publication date");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__replies')
+      .includesText("—", "drafts without a discussion show a placeholder");
+
+    await click('[data-topic-id="123"] .blog-dashboard__more-actions');
+    assert
+      .dom(".blog-dashboard__preview")
+      .hasAttribute("href", draft.preview_url, "drafts can be previewed");
+    assert
+      .dom(".blog-dashboard__view-live")
+      .doesNotExist("drafts have no live article to open");
+
+    await click('[data-topic-id="123"] .blog-dashboard__more-actions');
+    await click('[data-topic-id="124"] .blog-dashboard__more-actions');
+    assert
+      .dom(".blog-dashboard__preview")
+      .doesNotExist("live articles without changes have nothing to preview");
+    assert
+      .dom(".blog-dashboard__view-live")
+      .exists("live articles can be opened on the blog");
+  });
+
+  test("keeps the discussion reachable for unpublished articles", async function (assert) {
+    draft = {
+      ...draft,
+      draft: false,
+      published: false,
+      discussion_url: "/t/withdrawn-story/300",
+    };
+    await visit("/blog/editor");
+    await click('[data-topic-id="123"] .blog-dashboard__more-actions');
+    assert
+      .dom(".blog-dashboard__discussion")
+      .hasAttribute(
+        "href",
+        "/t/withdrawn-story/300",
+        "withdrawn articles still link to their public discussion"
+      );
   });
 
   test("creates a private working copy for articles without one", async function (assert) {
@@ -145,6 +227,9 @@ acceptance("Blog editor", function (needs) {
       });
     });
     await visit("/blog/editor");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__edit-private')
+      .hasText("Edit", "creating a working copy uses the same edit action");
     await click('[data-topic-id="124"] .blog-dashboard__edit-private');
     assert.verifySteps(["prepare"], "a working copy is created on demand");
     assert.strictEqual(
@@ -211,7 +296,7 @@ acceptance("Blog editor", function (needs) {
       "load more preserves the entire query"
     );
     assert
-      .dom(".blog-dashboard__entry")
+      .dom(".blog-dashboard__row")
       .exists({ count: 2 }, "additional matching entries are appended");
     assert
       .dom("[data-blog-load-more]")
@@ -223,7 +308,7 @@ acceptance("Blog editor", function (needs) {
       "refresh keeps filters and returns to the first page"
     );
     assert
-      .dom(".blog-dashboard__entry")
+      .dom(".blog-dashboard__row")
       .exists({ count: 1 }, "refresh replaces previous pages");
   });
 });
