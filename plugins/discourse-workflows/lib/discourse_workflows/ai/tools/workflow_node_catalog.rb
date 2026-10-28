@@ -96,6 +96,16 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:add_user_to_group" => [
+            {
+              name: "Add the author of the trigger post to a group",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                group_id: 123,
+                actor_username: "system",
+              },
+            },
+          ],
           "action:user" => [
             {
               name: "Look up a post author",

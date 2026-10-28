@@ -24,9 +24,9 @@ function baseNotice(deprecation, nodeTypes) {
   const changes = Object.entries(deprecation.changes || {})
     .map(([from, to]) => `${from} → ${to}`)
     .join(", ");
-  const notice = i18n("discourse_workflows.node_deprecated.notice", {
-    changes,
-  });
+  const notice = changes
+    ? i18n("discourse_workflows.node_deprecated.notice", { changes })
+    : i18n("discourse_workflows.node_deprecated.newer_version_notice");
 
   if (!replaced) {
     return notice;

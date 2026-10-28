@@ -134,6 +134,26 @@ RSpec.describe DiscourseWorkflows::NodeType do
     )
   end
 
+  it "unions only the read variants of Group 2.0 when the operation is an expression" do
+    expect(
+      DiscourseWorkflows::Nodes::Group::V2.output_schemas(
+        { "operation" => "={{ $json.op }}" },
+        input_schemas: [input_schema],
+      ),
+    ).to eq(
+      [
+        DiscourseWorkflows::Schema.union(
+          DiscourseWorkflows::Schema::GROUP_SCHEMA,
+          DiscourseWorkflows::Schema.resolve(
+            DiscourseWorkflows::Schema::GROUP_MEMBERSHIP_SCHEMA,
+            mode: :merge,
+            input_schema: input_schema,
+          ),
+        ),
+      ],
+    )
+  end
+
   it "keeps the fallbacks that declare something and drops the ones that do not",
      :aggregate_failures do
     expect(
