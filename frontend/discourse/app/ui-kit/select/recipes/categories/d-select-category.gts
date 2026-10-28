@@ -14,11 +14,7 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
-import {
-  CategoryBadge,
-  categoryItem,
-  decodeCategoryText,
-} from "./category-renderers.gts";
+import { CategoryBadge, categoryItem } from "./category-renderers.gts";
 import type {
   CategoryItem,
   CategorySettings,
@@ -144,7 +140,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return (
       (!this.#disabledIds.length && this.#uncategorized
         ? Category.findUncategorized()?.name
-        : undefined) || decodeCategoryText(i18n("category.choose"))
+        : undefined) || i18n("category.choose")
     );
   }
 

@@ -8,7 +8,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const CONTROL = ".form-kit__control-category-chooser";
 
@@ -24,6 +24,16 @@ function combobox() {
   return (
     document.querySelector(`${CONTROL} [role='combobox']`) ??
     document.querySelector(`${CONTROL}[role='combobox']`)
+  );
+}
+
+/** The text the empty control offers, whichever variant renders it. */
+function placeholderText() {
+  return (
+    dSelect(CONTROL)
+      .element()
+      .querySelector(".d-select__placeholder")
+      ?.textContent.trim() ?? combobox().getAttribute("placeholder")
   );
 }
 
@@ -294,13 +304,28 @@ module(
         </template>
       );
 
-      const expected = i18n("category.choose").replace("&hellip;", "…");
-      const shown =
-        dSelect(CONTROL)
-          .element()
-          .querySelector(".d-select__placeholder")
-          ?.textContent.trim() ?? combobox().getAttribute("placeholder");
-      assert.strictEqual(shown, expected);
+      assert.strictEqual(placeholderText(), i18n("category.choose"));
+    });
+
+    test("the placeholder shows its translation as written", async function (assert) {
+      I18n.translations[I18n.locale].js.test = { prompt: "R&amp;D &lt;b&gt;" };
+
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @name="foo"
+              @title="Foo"
+              @type="category-chooser"
+              as |field|
+            >
+              <field.Control @placeholder="test.prompt" />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.strictEqual(placeholderText(), "R&amp;D &lt;b&gt;");
     });
 
     test("disabled fields lock the control", async function (assert) {

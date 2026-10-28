@@ -7,7 +7,6 @@ import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import { decodeCategoryText } from "discourse/ui-kit/select/recipes/categories/category-renderers";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 
@@ -30,9 +29,7 @@ export default class FKControlCategoryChooser extends FKBaseControl {
   }
 
   get placeholder() {
-    return this.args.placeholder
-      ? decodeCategoryText(i18n(this.args.placeholder))
-      : undefined;
+    return this.args.placeholder ? i18n(this.args.placeholder) : undefined;
   }
 
   @action

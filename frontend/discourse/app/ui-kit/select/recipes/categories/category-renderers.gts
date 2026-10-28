@@ -5,14 +5,6 @@ import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
 import type { CategoryItem } from "./category-types.ts";
 
-/** Decodes entities while preserving literal markup as text. */
-export function decodeCategoryText(text: string): string {
-  return (
-    new DOMParser().parseFromString(text.replaceAll("<", "&lt;"), "text/html")
-      .body.textContent ?? ""
-  );
-}
-
 /** Case and accent insensitive category matching. */
 export function normalizeCategoryName(text: string): string {
   return removeAccents(text.toLowerCase());

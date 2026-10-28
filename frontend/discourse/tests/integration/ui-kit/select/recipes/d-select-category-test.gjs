@@ -652,10 +652,22 @@ module(
           </template>
         );
 
-        assert.strictEqual(
-          placeholderText(),
-          i18n("category.choose").replace("&hellip;", "…")
-        );
+        assert.strictEqual(placeholderText(), i18n("category.choose"));
+      });
+
+      test("the prompt shows its translation as written", async function (assert) {
+        this.siteSettings.allow_uncategorized_topics = false;
+        this.siteSettings.default_composer_category = -1;
+        const original = I18n.translations[I18n.locale].js.category.choose;
+        I18n.translations[I18n.locale].js.category.choose = "R&amp;D &lt;b&gt;";
+
+        try {
+          await render(<template><Host @multiple={{false}} /></template>);
+
+          assert.strictEqual(placeholderText(), "R&amp;D &lt;b&gt;");
+        } finally {
+          I18n.translations[I18n.locale].js.category.choose = original;
+        }
       });
 
       test("allowed uncategorized shows its name", async function (assert) {
@@ -674,7 +686,7 @@ module(
 
         assert.strictEqual(
           placeholderText(),
-          i18n("category.choose").replace("&hellip;", "…"),
+          i18n("category.choose"),
           "the trigger is never left blank"
         );
       });
@@ -685,10 +697,7 @@ module(
 
         await render(<template><Host @multiple={{false}} /></template>);
 
-        assert.strictEqual(
-          placeholderText(),
-          i18n("category.choose").replace("&hellip;", "…")
-        );
+        assert.strictEqual(placeholderText(), i18n("category.choose"));
       });
 
       test("a translated none label is the call site's placeholder", async function (assert) {
