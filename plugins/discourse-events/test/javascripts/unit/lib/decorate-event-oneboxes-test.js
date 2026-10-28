@@ -70,7 +70,6 @@ module("Unit | Lib | decorate-event-oneboxes", function () {
     const element = buildOnebox({
       startsAt: "2026-10-22T09:00:00.000-04:00",
       endsAt: "2026-10-22T10:00:00.000-04:00",
-      schedule: { frequency: "P1W", byDay: "Thursday", until: "2026-12-31" },
     });
 
     decorateEventOneboxes(element, "America/New_York", {
@@ -96,18 +95,11 @@ module("Unit | Lib | decorate-event-oneboxes", function () {
     assert
       .dom(".discourse-event-onebox__time-text", element)
       .hasText("9:00 AM → 10:00 AM (EST)", "the time is localized");
-    assert
-      .dom(".discourse-event-onebox__recurrence-text", element)
-      .hasText(
-        "Every Thursday until December 31, 2026",
-        "the recurrence and the end of the series are labelled"
-      );
   });
 
   test("keeps the cooked occurrence without server data", function (assert) {
     const element = buildOnebox({
       startsAt: "2026-10-22T09:00:00.000-04:00",
-      schedule: { frequency: "P1W", byDay: "Thursday" },
     });
 
     decorateEventOneboxes(element, "America/New_York");
@@ -116,45 +108,8 @@ module("Unit | Lib | decorate-event-oneboxes", function () {
       .dom(".discourse-event-onebox__day", element)
       .hasText("22", "the cooked occurrence is shown");
     assert
-      .dom(".discourse-event-onebox__recurrence-text", element)
-      .hasText("Every Thursday", "the recurrence is still labelled");
-  });
-
-  test("labels monthly and weekday recurrences", function (assert) {
-    const monthly = buildOnebox({
-      startsAt: "2026-10-29T09:00:00.000-04:00",
-      schedule: { frequency: "P1M", byDay: "Thursday", byMonthWeek: "-1" },
-    });
-    const weekdays = buildOnebox({
-      startsAt: "2026-10-26T09:00:00.000-04:00",
-      schedule: {
-        frequency: "P1D",
-        byDay: "Monday,Tuesday,Wednesday,Thursday,Friday",
-      },
-    });
-
-    decorateEventOneboxes(monthly, "America/New_York");
-    decorateEventOneboxes(weekdays, "America/New_York");
-
-    assert
-      .dom(".discourse-event-onebox__recurrence-text", monthly)
-      .hasText("The last Thursday of every month");
-    assert
-      .dom(".discourse-event-onebox__recurrence-text", weekdays)
-      .hasText("Every weekday");
-  });
-
-  test("labels the weekday as the viewer sees it", function (assert) {
-    const element = buildOnebox({
-      startsAt: "2026-10-22T21:00:00.000-04:00",
-      schedule: { frequency: "P1W", byDay: "Thursday" },
-    });
-
-    decorateEventOneboxes(element, "Australia/Brisbane");
-
-    assert
-      .dom(".discourse-event-onebox__recurrence-text", element)
-      .hasText("Every Friday", "Thursday evening in New York is Friday");
+      .dom(".discourse-event-onebox__date", element)
+      .hasAttribute("datetime", "2026-10-22T09:00:00.000-04:00");
   });
 
   test("exposes the image's dominant color for the letterbox", function (assert) {
@@ -220,7 +175,6 @@ function buildOnebox({
   dominantColor,
   imageHeight,
   imageWidth,
-  schedule,
   startsAt,
   endsAt,
 }) {
@@ -232,11 +186,6 @@ function buildOnebox({
       data-event-all-day="${allDay}"
       data-event-starts-at="${startsAt}"
       data-event-ends-at="${endsAt ?? ""}"
-      data-event-repeat-frequency="${schedule?.frequency ?? ""}"
-      data-event-repeat-by-day="${schedule?.byDay ?? ""}"
-      data-event-repeat-by-month-week="${schedule?.byMonthWeek ?? ""}"
-      data-event-repeat-until="${schedule?.until ?? ""}"
-      data-event-schedule-timezone="${schedule ? "America/New_York" : ""}"
     >
       ${
         dominantColor
@@ -248,7 +197,6 @@ function buildOnebox({
         <span class="discourse-event-onebox__day"></span>
       </time>
       <span class="discourse-event-onebox__time-text"></span>
-      <span class="discourse-event-onebox__recurrence-text"></span>
     </div>
     </aside>
   `;

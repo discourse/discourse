@@ -135,16 +135,16 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
           },
         JSON
 
-        it "labels the recurrence and exposes the schedule for client-side updates" do
+        it "labels the recurrence and exposes it as a rule for finding later occurrences" do
           html = onebox.to_html
 
           expect(data[:event_recurrence]).to eq("Every Thursday until December 31, 2026")
           expect(html).to include(
             '<span class="discourse-event-onebox__recurrence-text">Every Thursday until December 31, 2026</span>',
           )
-          expect(html).to include('data-event-repeat-frequency="P1W"')
-          expect(html).to include('data-event-repeat-by-day="Thursday"')
-          expect(html).to include('data-event-repeat-until="2026-12-31"')
+          expect(html).to include(
+            'data-event-rrule="FREQ=WEEKLY;INTERVAL=1;BYDAY=TH;UNTIL=20261231T235959"',
+          )
           expect(html).to include('data-event-schedule-timezone="America/New_York"')
         end
       end
@@ -156,6 +156,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
 
         it "labels the week of the month" do
           expect(data[:event_recurrence]).to eq("The last Thursday of every month")
+          expect(data[:event_rrule]).to eq("FREQ=MONTHLY;BYDAY=-1TH")
         end
       end
 
@@ -169,6 +170,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
 
         it "labels the weekdays" do
           expect(data[:event_recurrence]).to eq("Every weekday")
+          expect(data[:event_rrule]).to eq("FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR")
         end
       end
 
@@ -177,6 +179,7 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
 
         it "does not label the recurrence" do
           expect(data[:event_recurrence]).to be_nil
+          expect(data[:event_rrule]).to be_nil
         end
       end
 

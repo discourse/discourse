@@ -2,15 +2,6 @@ import moment from "moment";
 import { i18n } from "discourse-i18n";
 
 const HEX_COLOR = /^[0-9a-f]{6}$/i;
-const REPEAT_FREQUENCY = /^P(\d+)([DWM])$/;
-const WORKWEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-const MONTH_WEEK_ORDINALS = {
-  1: "first",
-  2: "second",
-  3: "third",
-  4: "fourth",
-  "-1": "last",
-};
 
 /**
  * @param {Element} element
@@ -39,7 +30,6 @@ export default function decorateEventOneboxes(
     }
 
     let endsAt = parseDate(occurrence.ends_at, allDay);
-    const schedule = parseSchedule(onebox.dataset);
 
     onebox
       .querySelector(".discourse-event-onebox__date")
@@ -58,84 +48,6 @@ export default function decorateEventOneboxes(
       allDay
         ? formatAllDay(startsAt, endsAt)
         : formatTimed(startsAt, endsAt, timezone);
-
-    const recurrence = onebox.querySelector(
-      ".discourse-event-onebox__recurrence-text"
-    );
-    if (recurrence && schedule) {
-      recurrence.textContent = recurrenceLabel(schedule, startsAt);
-    }
-  });
-}
-
-function parseSchedule(dataset) {
-  const match = REPEAT_FREQUENCY.exec(dataset.eventRepeatFrequency ?? "");
-  if (!match) {
-    return null;
-  }
-
-  const byDay = dataset.eventRepeatByDay?.split(",").filter(Boolean) ?? [];
-  const schedule = {
-    interval: parseInt(match[1], 10),
-    unit: { D: "days", W: "weeks", M: "months" }[match[2]],
-    byDay,
-    ordinal: MONTH_WEEK_ORDINALS[dataset.eventRepeatByMonthWeek],
-    until: dataset.eventRepeatUntil || null,
-  };
-  schedule.key = recurrenceKey(schedule);
-
-  return schedule.key ? schedule : null;
-}
-
-// Mirrors the patterns the event builder can create, so the builder's labels apply
-function recurrenceKey({ interval, unit, byDay, ordinal }) {
-  if (unit === "days" && interval === 1) {
-    if (byDay.length === 0) {
-      return "every_day";
-    }
-
-    const isWorkweek =
-      byDay.length === WORKWEEK.length &&
-      WORKWEEK.every((day) => byDay.includes(day));
-    return isWorkweek ? "every_weekday" : null;
-  }
-
-  if (unit === "weeks") {
-    return (
-      { 1: "every_week", 2: "every_two_weeks", 4: "every_four_weeks" }[
-        interval
-      ] ?? null
-    );
-  }
-
-  if (unit === "months" && interval === 1 && ordinal) {
-    return "every_month";
-  }
-
-  return null;
-}
-
-function recurrenceLabel(schedule, startsAt) {
-  const recurrence = i18n(
-    `discourse_post_event.builder_modal.recurrence.${schedule.key}`,
-    {
-      weekday: startsAt.format("dddd"),
-      ordinal: schedule.ordinal
-        ? i18n(
-            `discourse_post_event.builder_modal.recurrence.ordinals.${schedule.ordinal}`
-          )
-        : undefined,
-    }
-  );
-
-  const until = schedule.until && moment(schedule.until, "YYYY-MM-DD", true);
-  if (!until?.isValid()) {
-    return recurrence;
-  }
-
-  return i18n("discourse_post_event.onebox.recurrence_until", {
-    recurrence,
-    date: until.format("LL"),
   });
 }
 

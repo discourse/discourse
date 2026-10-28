@@ -5,13 +5,9 @@ require "rrule"
 module DiscourseEvents
   module Events
     # Cooked event oneboxes keep whichever occurrence was next when they were fetched.
-    # This finds the occurrence that's current now from the Schema.org schedule they
-    # carry, so posts and emails don't show a date that has already passed.
+    # This finds the occurrence that's current now from the recurrence rule they carry,
+    # so posts and emails don't show a date that has already passed.
     class OneboxOccurrence
-      WORKWEEK = %w[Monday Tuesday Wednesday Thursday Friday]
-      WEEKLY_INTERVALS = { "P1W" => 1, "P2W" => 2, "P4W" => 4 }
-      MONTH_WEEKS = %w[1 2 3 4 -1]
-
       # The longest gap between occurrences, for monthly events, is five weeks
       MAX_GAP = 5.weeks
 
@@ -70,56 +66,21 @@ module DiscourseEvents
       private
 
       def rrule
-        pattern = rrule_pattern
+        pattern = @node["data-event-rrule"]
         return if pattern.blank?
-
-        if (until_date = repeat_until)
-          finishes = timezone.parse(until_date.iso8601).end_of_day
-          pattern += ";UNTIL=#{finishes.strftime("%Y%m%dT%H%M%S")}"
-        end
 
         ::RRule::Rule.new(pattern, dtstart: starts_at, tzid: timezone.tzinfo.name)
       end
 
-      def rrule_pattern
-        weekday = rrule_day(by_day.first) || starts_at.strftime("%a").upcase[0, 2]
-
-        case @node["data-event-repeat-frequency"]
-        when "P1D"
-          if by_day.empty?
-            "FREQ=DAILY"
-          elsif by_day.sort == WORKWEEK.sort
-            "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
-          end
-        when *WEEKLY_INTERVALS.keys
-          interval = WEEKLY_INTERVALS[@node["data-event-repeat-frequency"]]
-          "FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{weekday}"
-        when "P1M"
-          month_week = @node["data-event-repeat-by-month-week"]
-          "FREQ=MONTHLY;BYDAY=#{month_week}#{weekday}" if MONTH_WEEKS.include?(month_week)
-        end
-      end
-
       def final_occurrence(rule)
-        return if (until_date = repeat_until).nil?
+        return if (finishes = repeat_until).nil?
 
-        finishes = timezone.parse(until_date.iso8601).end_of_day
         rule.between(finishes - MAX_GAP, finishes).last
       end
 
-      def by_day
-        @by_day ||= @node["data-event-repeat-by-day"].to_s.split(",")
-      end
-
-      def rrule_day(name)
-        name.upcase[0, 2] if Date::DAYNAMES.include?(name)
-      end
-
       def repeat_until
-        value = @node["data-event-repeat-until"]
-        Date.iso8601(value) if value.present?
-      rescue Date::Error
-        nil
+        value = @node["data-event-rrule"].to_s[/UNTIL=(\d{8}T\d{6})/, 1]
+        timezone.strptime(value, "%Y%m%dT%H%M%S") if value
       end
 
       def all_day?

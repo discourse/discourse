@@ -11,6 +11,11 @@ module Onebox
 
       WEEKDAYS = %w[sunday monday tuesday wednesday thursday friday saturday]
       WORKWEEK = %w[Monday Tuesday Wednesday Thursday Friday]
+      WEEKLY_SCHEDULES = {
+        "P1W" => ["every_week", 1],
+        "P2W" => ["every_two_weeks", 2],
+        "P4W" => ["every_four_weeks", 4],
+      }
       MONTH_WEEK_ORDINALS = {
         "1" => "first",
         "2" => "second",
@@ -50,6 +55,7 @@ module Onebox
           event_description: event_description,
           event_ends_at: raw[:event_ends_at],
           event_recurrence: event_recurrence,
+          event_rrule: event_rrule,
           event_onebox_classes: event_onebox_classes,
           event_starts_at: raw[:event_starts_at],
           event_time: event_time,
@@ -142,38 +148,10 @@ module Onebox
         nil
       end
 
-      # Limited to patterns simple enough to roll forward client-side, so the label never outlives the date
       def event_recurrence
-        return unless event? && (date = event_date)
+        return if (schedule = event_schedule).nil?
 
-        weekday = I18n.t("onebox.discourse.recurrence.weekdays.#{WEEKDAYS[date.wday]}")
-        by_day = raw[:event_repeat_by_day].to_s.split(",")
-
-        key, options =
-          case raw[:event_repeat_frequency]
-          when "P1D"
-            if by_day.empty?
-              "every_day"
-            elsif by_day.sort == WORKWEEK.sort
-              "every_weekday"
-            end
-          when "P1W"
-            ["every_week", { weekday: }]
-          when "P2W"
-            ["every_two_weeks", { weekday: }]
-          when "P4W"
-            ["every_four_weeks", { weekday: }]
-          when "P1M"
-            if (ordinal = MONTH_WEEK_ORDINALS[raw[:event_repeat_by_month_week]])
-              [
-                "every_month",
-                { weekday:, ordinal: I18n.t("onebox.discourse.recurrence.ordinals.#{ordinal}") },
-              ]
-            end
-          end
-        return if key.blank?
-
-        label = I18n.t("onebox.discourse.recurrence.#{key}", **(options || {}))
+        label = I18n.t("onebox.discourse.recurrence.#{schedule[:key]}", **schedule[:options])
         return label if (until_date = event_repeat_until).blank?
 
         I18n.t(
@@ -181,6 +159,50 @@ module Onebox
           recurrence: label,
           date: until_date.strftime(I18n.t("datetime_formats.formats.date_only")),
         )
+      end
+
+      # Expressed as a recurrence rule so later occurrences can be found from the cooked onebox
+      def event_rrule
+        return if (schedule = event_schedule).nil?
+        return schedule[:rule] if (until_date = event_repeat_until).blank?
+
+        "#{schedule[:rule]};UNTIL=#{until_date.strftime("%Y%m%d")}T235959"
+      end
+
+      # Only the schedules that have a label are recognised, so the rule and label always agree
+      def event_schedule
+        return @event_schedule if defined?(@event_schedule)
+        return @event_schedule = nil if !event? || (date = event_date).nil?
+
+        weekday = I18n.t("onebox.discourse.recurrence.weekdays.#{WEEKDAYS[date.wday]}")
+        day = WEEKDAYS[date.wday][0, 2].upcase
+        by_day = raw[:event_repeat_by_day].to_s.split(",")
+        frequency = raw[:event_repeat_frequency]
+
+        @event_schedule =
+          case frequency
+          when "P1D"
+            if by_day.empty?
+              { key: "every_day", options: {}, rule: "FREQ=DAILY" }
+            elsif by_day.sort == WORKWEEK.sort
+              { key: "every_weekday", options: {}, rule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+            end
+          when *WEEKLY_SCHEDULES.keys
+            key, interval = WEEKLY_SCHEDULES[frequency]
+            { key:, options: { weekday: }, rule: "FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{day}" }
+          when "P1M"
+            month_week = raw[:event_repeat_by_month_week]
+            if (ordinal = MONTH_WEEK_ORDINALS[month_week])
+              {
+                key: "every_month",
+                options: {
+                  weekday:,
+                  ordinal: I18n.t("onebox.discourse.recurrence.ordinals.#{ordinal}"),
+                },
+                rule: "FREQ=MONTHLY;BYDAY=#{month_week}#{day}",
+              }
+            end
+          end
       end
 
       def event_repeat_until

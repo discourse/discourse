@@ -6,7 +6,8 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
     ends_at: nil,
     all_day: false,
     src: "https://other.example.com/t/1",
-    **schedule
+    rrule: nil,
+    timezone: "America/New_York"
   )
     <<~HTML
       <aside class="onebox discoursetopic_with_event" data-onebox-src="#{src}">
@@ -14,11 +15,8 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
              data-event-all-day="#{all_day}"
              data-event-starts-at="#{starts_at}"
              data-event-ends-at="#{ends_at}"
-             data-event-repeat-frequency="#{schedule[:frequency]}"
-             data-event-repeat-by-day="#{schedule[:by_day]}"
-             data-event-repeat-by-month-week="#{schedule[:by_month_week]}"
-             data-event-repeat-until="#{schedule[:until]}"
-             data-event-schedule-timezone="#{schedule.fetch(:timezone, "America/New_York")}">
+             data-event-rrule="#{rrule}"
+             data-event-schedule-timezone="#{timezone}">
           <time class="discourse-event-onebox__date" datetime="#{starts_at}">
             <span class="discourse-event-onebox__month">Oct</span>
             <span class="discourse-event-onebox__day">22</span>
@@ -38,8 +36,7 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
     {
       starts_at: "2026-10-22T09:00:00.000-04:00",
       ends_at: "2026-10-22T10:00:00.000-04:00",
-      frequency: "P1W",
-      by_day: "Thursday",
+      rrule: "FREQ=WEEKLY;INTERVAL=1;BYDAY=TH",
     }
   end
 
@@ -62,21 +59,16 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
     it "stops at the final occurrence of the series" do
       freeze_time Time.utc(2026, 11, 10, 12)
 
-      expect(current(**weekly, until: "2026-11-01")).to include(
-        starts_at: "2026-10-29T09:00:00.000-04:00",
-      )
+      expect(
+        current(**weekly, rrule: "FREQ=WEEKLY;INTERVAL=1;BYDAY=TH;UNTIL=20261101T235959"),
+      ).to include(starts_at: "2026-10-29T09:00:00.000-04:00")
     end
 
     it "keeps the week of the month for a monthly event" do
       freeze_time Time.utc(2026, 11, 10, 12)
 
       expect(
-        current(
-          starts_at: "2026-10-29T09:00:00.000-04:00",
-          frequency: "P1M",
-          by_day: "Thursday",
-          by_month_week: "-1",
-        ),
+        current(starts_at: "2026-10-29T09:00:00.000-04:00", rrule: "FREQ=MONTHLY;BYDAY=-1TH"),
       ).to include(starts_at: "2026-11-26T09:00:00.000-05:00")
     end
 
@@ -86,8 +78,7 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
       expect(
         current(
           starts_at: "2026-10-23T09:00:00.000-04:00",
-          frequency: "P1D",
-          by_day: "Monday,Tuesday,Wednesday,Thursday,Friday",
+          rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
         ),
       ).to include(starts_at: "2026-10-26T09:00:00.000-04:00")
     end
@@ -95,7 +86,7 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
     it "keeps alternate weeks for a fortnightly event" do
       freeze_time Time.utc(2027, 6, 1, 12)
 
-      expect(current(**weekly, frequency: "P2W")).to include(
+      expect(current(**weekly, rrule: "FREQ=WEEKLY;INTERVAL=2;BYDAY=TH")).to include(
         starts_at: "2027-06-03T09:00:00.000-04:00",
       )
     end
@@ -103,7 +94,7 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
     it "catches up on a daily event fetched years ago" do
       freeze_time Time.utc(2026, 11, 10, 12)
 
-      expect(current(starts_at: "2020-01-01T09:00:00.000-05:00", frequency: "P1D")).to include(
+      expect(current(starts_at: "2020-01-01T09:00:00.000-05:00", rrule: "FREQ=DAILY")).to include(
         starts_at: "2026-11-10T09:00:00.000-05:00",
       )
     end
@@ -116,23 +107,22 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
           all_day: true,
           starts_at: "2026-10-22",
           ends_at: "2026-10-22",
-          frequency: "P1W",
-          by_day: "Thursday",
+          rrule: "FREQ=WEEKLY;INTERVAL=1;BYDAY=TH",
           timezone: "",
         ),
       ).to eq(starts_at: "2026-10-29", ends_at: "2026-10-29")
     end
 
-    it "ignores schedules it can't label" do
+    it "ignores a malformed rule" do
       freeze_time Time.utc(2026, 11, 10, 12)
 
-      expect(current(**weekly, frequency: "P3W")).to be_nil
+      expect(current(**weekly, rrule: "FREQ=SOMETIMES")).to be_nil
     end
 
     it "ignores one-off events" do
       freeze_time Time.utc(2026, 11, 10, 12)
 
-      expect(current(**weekly, frequency: "")).to be_nil
+      expect(current(**weekly, rrule: "")).to be_nil
     end
   end
 
@@ -140,8 +130,7 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
     it "keys the occurrences that have moved on by onebox source" do
       freeze_time Time.utc(2026, 11, 10, 12)
       cooked =
-        onebox_html(**weekly) +
-          onebox_html(**weekly, frequency: "", src: "https://one-off.example.com")
+        onebox_html(**weekly) + onebox_html(**weekly, rrule: "", src: "https://one-off.example.com")
 
       expect(described_class.for_cooked(cooked)).to eq(
         "https://other.example.com/t/1" => {
