@@ -4,14 +4,18 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import DPageHeader from "discourse/ui-kit/d-page-header";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class BlogDashboard extends Component {
@@ -230,67 +234,180 @@ export default class BlogDashboard extends Component {
       </Form>
       <p class="blog-dashboard__hint">{{i18n "blog.editor_pagination_hint"}}</p>
       <p class="blog-dashboard__hint">{{i18n "blog.drafts_hint"}}</p>
-      {{#each this.topics as |topic|}}
-        <article class="blog-dashboard__entry" data-topic-id={{topic.id}}>
-          <div class="blog-dashboard__entry-content">
-            <div class="blog-dashboard__statuses">
-              <span class="blog-dashboard__status">{{#if topic.draft}}{{i18n
-                    "blog.private_draft"
-                  }}{{else if topic.live}}{{i18n
-                    "blog.published"
-                  }}{{else}}{{i18n "blog.not_published"}}{{/if}}</span>
-              {{#if topic.draft_correction}}<span
-                  class="blog-dashboard__correction"
-                >{{i18n "blog.draft_correction"}}</span>{{/if}}
-            </div>
-            {{#if topic.live}}
-              <h2><a href={{topic.url}}>{{or
-                    topic.public_title
-                    topic.title
-                  }}</a></h2>
-              {{#if topic.public_excerpt}}<p>{{topic.public_excerpt}}</p>{{/if}}
-              <span class="blog-dashboard__path">{{or
-                  topic.public_path
-                  topic.path
-                }}</span>
-            {{else}}
-              <h2><a href={{topic.topic_url}}>{{topic.title}}</a></h2>
-              {{#if topic.excerpt}}<p>{{topic.excerpt}}</p>{{/if}}
-              <span class="blog-dashboard__path">{{topic.path}}</span>
-            {{/if}}
-          </div>
-          <div class="blog-dashboard__entry-actions">
-            {{#if topic.live}}
-              <a href={{topic.discussion_url}}>{{i18n
-                  "blog.public_discussion"
-                }}</a>
-            {{else}}
-              <a
-                href={{topic.preview_url}}
-                rel="noopener noreferrer"
-                target="_blank"
-              >{{i18n "blog.preview"}}</a>
-            {{/if}}
-            {{#if topic.source_url}}
-              <a
-                class="btn btn-default blog-dashboard__edit-private"
-                href={{topic.source_url}}
-              >{{i18n "blog.open_draft"}}</a>
-            {{else}}
-              <DButton
-                class="blog-dashboard__edit-private btn-default"
-                @action={{fn this.editPrivately topic}}
-                @label="blog.edit_privately"
-              />
-            {{/if}}
-          </div>
-        </article>
+      {{#if this.topics.length}}
+        <table class="d-table blog-dashboard__table">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th class="d-table__header-cell">{{i18n
+                  "blog.editor_table.article"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "blog.editor_table.status"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "blog.editor_table.published"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "blog.editor_table.replies"
+                }}</th>
+              <th class="d-table__header-cell"></th>
+            </tr>
+          </thead>
+          <tbody class="d-table__body">
+            {{#each this.topics as |topic|}}
+              <tr
+                class="d-table__row blog-dashboard__row"
+                data-topic-id={{topic.id}}
+              >
+                <td class="d-table__cell --overview">
+                  {{#if topic.live}}
+                    <a
+                      class="d-table__overview-link"
+                      href={{or topic.discussion_url topic.url}}
+                    >
+                      <div class="d-table__overview-name">{{or
+                          topic.public_title
+                          topic.title
+                        }}</div>
+                    </a>
+                    {{#if topic.public_excerpt}}
+                      <p
+                        class="blog-dashboard__excerpt"
+                      >{{topic.public_excerpt}}</p>
+                    {{/if}}
+                  {{else}}
+                    <a class="d-table__overview-link" href={{topic.topic_url}}>
+                      <div class="d-table__overview-name">{{topic.title}}</div>
+                    </a>
+                    {{#if topic.excerpt}}
+                      <p class="blog-dashboard__excerpt">{{topic.excerpt}}</p>
+                    {{/if}}
+                  {{/if}}
+                </td>
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">{{i18n
+                      "blog.editor_table.status"
+                    }}</div>
+                  <div class="blog-dashboard__statuses">
+                    <div
+                      class={{dConcatClass
+                        "status-label"
+                        "blog-dashboard__status"
+                        (if topic.live "--success")
+                        (unless (or topic.live topic.draft) "--inactive")
+                      }}
+                    >
+                      <div class="status-label-indicator"></div>
+                      <div class="status-label-text">{{#if topic.draft}}{{i18n
+                            "blog.private_draft"
+                          }}{{else if topic.live}}{{i18n
+                            "blog.published"
+                          }}{{else}}{{i18n "blog.not_published"}}{{/if}}</div>
+                    </div>
+                    {{#if topic.scheduled_at}}
+                      <span class="blog-dashboard__scheduled">{{i18n
+                          "blog.editor_table.scheduled"
+                        }}</span>
+                    {{/if}}
+                    {{#if topic.draft_correction}}
+                      <span class="blog-dashboard__correction">{{i18n
+                          "blog.draft_correction"
+                        }}</span>
+                    {{/if}}
+                  </div>
+                </td>
+                <td class="d-table__cell --detail blog-dashboard__published">
+                  <div class="d-table__mobile-label">{{i18n
+                      "blog.editor_table.published"
+                    }}</div>
+                  {{#if topic.published}}
+                    {{dAgeWithTooltip topic.published_at format="medium"}}
+                  {{else}}
+                    —
+                  {{/if}}
+                </td>
+                <td class="d-table__cell --detail blog-dashboard__replies">
+                  <div class="d-table__mobile-label">{{i18n
+                      "blog.editor_table.replies"
+                    }}</div>
+                  {{#if topic.discussion_url}}{{topic.replies}}{{else}}—{{/if}}
+                </td>
+                <td class="d-table__cell --controls">
+                  <div class="d-table__cell-actions">
+                    {{#if topic.source_url}}
+                      <DButton
+                        class="btn-default btn-small blog-dashboard__edit-private"
+                        @href={{topic.source_url}}
+                        @label="blog.editor_table.edit"
+                      />
+                    {{else}}
+                      <DButton
+                        class="btn-default btn-small blog-dashboard__edit-private"
+                        @action={{fn this.editPrivately topic}}
+                        @label="blog.editor_table.edit"
+                      />
+                    {{/if}}
+                    <DMenu
+                      @icon="ellipsis-vertical"
+                      @identifier="blog-dashboard-actions"
+                      @title={{i18n "blog.editor_table.more_actions"}}
+                      @triggerClass="btn-default btn-small blog-dashboard__more-actions"
+                    >
+                      <:content>
+                        <DDropdownMenu as |dropdown|>
+                          {{#if (or topic.draft_correction (not topic.live))}}
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent blog-dashboard__preview"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                @href={{topic.preview_url}}
+                                @icon="far-eye"
+                                @label={{if
+                                  topic.live
+                                  "blog.editor_table.preview_changes"
+                                  "blog.preview"
+                                }}
+                              />
+                            </dropdown.item>
+                          {{/if}}
+                          {{#if topic.live}}
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent blog-dashboard__view-live"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                @href={{topic.url}}
+                                @icon="up-right-from-square"
+                                @label="blog.editor_table.view_on_blog"
+                              />
+                            </dropdown.item>
+                          {{/if}}
+                          {{#if (and topic.discussion_url (not topic.live))}}
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent blog-dashboard__discussion"
+                                @href={{topic.discussion_url}}
+                                @icon="comments"
+                                @label="blog.public_discussion"
+                              />
+                            </dropdown.item>
+                          {{/if}}
+                        </DDropdownMenu>
+                      </:content>
+                    </DMenu>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
       {{else}}
         <DEmptyState
           @body={{i18n "blog.editor_no_results_hint"}}
           @title={{i18n "blog.editor_no_results"}}
         />
-      {{/each}}
+      {{/if}}
       {{#if this.data.more}}<DButton
           class="btn-default"
           data-blog-load-more

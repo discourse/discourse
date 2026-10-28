@@ -265,6 +265,16 @@ en:
       editor_description:
         Draft in private. Publish with intention. Keep the conversation
         going.
+      editor_table:
+        article: Article
+        edit: Edit
+        status: Status
+        published: Published
+        replies: Replies
+        scheduled: Scheduled
+        more_actions: More actions
+        preview_changes: Preview changes
+        view_on_blog: View on blog
       new_draft: New draft
       settings: Configure blog settings
       all: All articles
@@ -273,11 +283,9 @@ en:
       visit_blog: Visit blog
       refresh: Refresh articles
       drafts_hint:
-        Published titles open the live blog article. Open a draft to publish, schedule, or correct it from its topic. Editorial working copies remain private after publication; public discussions stay in the Blog category.
+        Published titles open the public discussion. Open a draft to publish, schedule, or correct it from its topic. Editorial working copies remain private after publication; public discussions stay in the Blog category.
       private_draft: Draft
       draft_correction: Draft correction
-      edit_privately: Edit privately
-      open_draft: Open draft
       public_discussion: Public discussion
       not_published: Not on the blog
       preview: Preview

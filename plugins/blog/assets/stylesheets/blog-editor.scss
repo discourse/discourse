@@ -6,9 +6,7 @@
 
   &__toolbar,
   &__filters,
-  &__links,
-  &__entry-actions,
-  &__statuses {
+  &__links {
     display: flex;
     align-items: center;
     gap: 0.75em;
@@ -25,36 +23,25 @@
     background: var(--tertiary-low);
   }
 
+  &__statuses {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25em 0.75em;
+  }
+
   &__correction,
+  &__excerpt,
   &__hint,
-  &__path {
+  &__published,
+  &__replies,
+  &__scheduled {
     color: var(--primary-high);
     font-size: var(--font-down-1);
   }
 
-  &__entry {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5em;
-    flex-wrap: wrap;
-    padding-block: 1.5em;
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__entry-content {
-    min-width: 0;
-    flex: 1 1 300px;
-
-    h2 {
-      margin-block: 0.5em;
-      font-size: var(--font-up-2);
-    }
-  }
-
-  &__status {
-    color: var(--tertiary);
-    font-size: var(--font-down-1);
-    font-weight: 600;
+  &__excerpt {
+    @include line-clamp(2);
+    margin-block: 0.25em 0;
   }
 }
