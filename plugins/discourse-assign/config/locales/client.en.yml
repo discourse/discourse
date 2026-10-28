@@ -209,11 +209,16 @@ en:
         requires_assign: "Requires the Assign plugin to be enabled"
       nodes:
         "action:assign_topic": "Assign topic or post"
+        "action:unassign_topic": "Unassign topic or post"
         "action:check_assignment": "Check assignment"
         "trigger:assigned": "Assigned"
         "trigger:unassigned": "Unassigned"
+      node_search_terms:
+        "action:unassign_topic": "remove assignment, release, clear assignee"
       node_descriptions:
-        "action:assign_topic": "Assign or unassign a topic or post"
+        "action:assign_topic": "Assign a topic or post to a user or group, like the assign button"
+        "action:assign_topic_v1": "Assign or unassign a topic or post"
+        "action:unassign_topic": "Remove the assignment of a topic or post, like the unassign button"
         "action:check_assignment": "Check whether a user or group is assigned to a topic or post"
         "trigger:assigned": "Fires when a topic or post is assigned"
         "trigger:unassigned": "Fires when a topic or post is unassigned"
@@ -230,6 +235,15 @@ en:
         post_id: "Post ID"
         assignee: "Assignee"
         replace_existing: "Replace existing assignment"
+        actor_username: "Performed by user"
+      unassign_topic:
+        resource: "Resource"
+        resources:
+          topic: "Topic"
+          post: "Post"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
+        actor_username: "Performed by user"
       check_assignment:
         target_type: "Target type"
         target_types:
