@@ -126,16 +126,20 @@ type CategorySearchResult = {
   categoriesCount: number;
 };
 
-/** Server payload fields and values assigned by core; plugins can augment this interface. */
+/**
+ * Server payload fields and values assigned by core; plugins can augment this interface.
+ * The required fields are missing only on a new category before its first `save()`.
+ */
 export interface CategoryFields {
-  id?: number;
-  name?: string;
-  slug?: string | null;
-  color?: string;
-  text_color?: string;
-  style_type?: CategoryStyle;
-  icon?: string | null;
-  emoji?: string | null;
+  id: number;
+  name: string;
+  /** Null after the edit form clears it; empty when the generated slug was taken. */
+  slug: string | null;
+  color: string;
+  text_color: string;
+  style_type: CategoryStyle;
+  icon: string | null;
+  emoji: string | null;
   description?: string | null;
   description_text?: string | null;
   description_excerpt?: string | null;
@@ -143,7 +147,7 @@ export interface CategoryFields {
   topic_count?: number;
   post_count?: number;
   position?: number | null;
-  read_restricted?: boolean;
+  read_restricted: boolean;
   permission?: number | null;
   parent_category_id?: number | null;
   notification_level?: number | null;
@@ -765,9 +769,9 @@ export default class Category extends RestModel {
 
   @service declare currentUser: User | null;
 
-  @tracked color?: string;
-  @tracked emoji?: string | null;
-  @tracked icon?: string | null;
+  @tracked color!: string;
+  @tracked emoji!: string | null;
+  @tracked icon!: string | null;
   @tracked
   localizations: CategoryEditableLocalization[] | undefined =
     this.category_localizations;
