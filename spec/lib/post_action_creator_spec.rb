@@ -193,6 +193,28 @@ RSpec.describe PostActionCreator do
       expect(events).to be_empty
     end
 
+    it "doesn't report a trashed like a concurrent request revived first", :aggregate_failures do
+      PostActionCreator.like(user, post)
+      PostActionDestroyer.destroy(user, post, :like)
+      creator = PostActionCreator.new(user, post, like_type_id)
+      # The concurrent request revives it between this one finding it and reviving it.
+      ActiveRecord::Relation.any_instance.stubs(:update_all).returns(0)
+
+      result = nil
+      events = DiscourseEvent.track_events(:like_created) { result = creator.perform }
+
+      expect(result).to have_attributes(success: true, already_existed: true)
+      expect(events).to be_empty
+    end
+
+    it "says the action already existed when a concurrent request created it first" do
+      PostAction.stubs(:create).raises(ActiveRecord::RecordNotUnique)
+
+      result = PostActionCreator.new(user, post, like_type_id).perform
+
+      expect(result).to have_attributes(success: true, already_existed: true)
+    end
+
     it "sends the right event arguments" do
       events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :like) }
       event = events.find { |e| e[:event_name] == :like_created }

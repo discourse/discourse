@@ -2,7 +2,8 @@
 
 class PostActionCreator
   class CreateResult < PostActionResult
-    attr_accessor :post_action, :reviewable, :reviewable_score
+    # `already_existed`: a concurrent request performed the same action first, so this one created nothing.
+    attr_accessor :post_action, :reviewable, :reviewable_score, :already_existed
   end
 
   # Shortcut methods for easier invocation
@@ -162,6 +163,7 @@ class PostActionCreator
       # If the user already performed this action, it's probably due to a different browser tab
       # or non-debounced clicking. We can ignore.
       result.success = true
+      result.already_existed = true
       result.post_action =
         PostAction.find_by(
           user: @created_by,
@@ -314,7 +316,17 @@ class PostActionCreator
         .first
 
     if post_action
-      post_action.recover!
+      # Only the request that revives it reports it: a concurrent revival finds it already live.
+      revived =
+        PostAction
+          .with_deleted
+          .where(id: post_action.id)
+          .where.not(deleted_at: nil)
+          .update_all(deleted_at: nil, deleted_by_id: nil) == 1
+      raise ActiveRecord::RecordNotUnique.new("post action already revived") if !revived
+
+      post_action.assign_attributes(deleted_at: nil, deleted_by_id: nil)
+      post_action.clear_attribute_changes(%i[deleted_at deleted_by_id])
       action_attrs.each { |attr, val| post_action.public_send("#{attr}=", val) }
       post_action.save
     else
@@ -336,9 +348,6 @@ class PostActionCreator
     end
 
     post_action
-  rescue ActiveRecord::RecordNotUnique
-    # can happen despite being .create
-    PostAction.where(where_attrs).first
   end
 
   def create_message_creator
