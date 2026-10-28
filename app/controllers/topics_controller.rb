@@ -647,18 +647,13 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_set_topic_timer!(topic)
 
-    guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
-
     creating_timer = params[:time].present? || params[:duration_minutes].present?
 
     if status_type == TopicTimer.types[:publish_to_category] && creating_timer
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
-      raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
-      if topic.private_message? && !guardian.can_convert_topic?(topic)
-        raise Discourse::InvalidAccess
-      end
     end
+    guardian.ensure_can_change_topic_timer!(topic, status_type, category)
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }
 
@@ -666,7 +661,6 @@ class TopicsController < ApplicationController
     if params[:duration_minutes].present?
       options.merge!(duration_minutes: params[:duration_minutes].to_i)
     end
-    options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
     begin
       topic_timer = topic.set_or_create_timer(status_type, params[:time], **options)
