@@ -80,43 +80,6 @@ RSpec.describe "Illegal content notices" do
     expect(notice_page).to have_confirmation
   end
 
-  it "guides a reporter through correcting their report before submitting" do
-    reporter.activate
-    sign_in(reporter)
-    topic_page.visit_topic(topic)
-    topic_page.click_post_action_button(reported_post, :flag)
-    reporting_modal.report_illegal_content
-    expect(notice_modal).to be_open
-
-    notice_modal.submit_report
-    expect(notice_modal).to have_validation_errors(
-      name: I18n.t("js.dsa_notice.errors.name_required"),
-      explanation: I18n.t("js.dsa_notice.errors.explanation_required"),
-      declaration: I18n.t("js.dsa_notice.errors.declaration"),
-    )
-
-    notice_modal.focus_error("name")
-    expect(notice_modal).to have_focused_field("name")
-    notice_modal.enter_report(name: "Alex Morgan", explanation: "Too short")
-    notice_modal.enter_content_url("example")
-    notice_modal.submit_report
-    expect(notice_modal).to have_validation_errors(
-      content_url: I18n.t("js.dsa_notice.errors.content_url"),
-      explanation: I18n.t("js.dsa_notice.errors.explanation_length"),
-      declaration: I18n.t("js.dsa_notice.errors.declaration"),
-    )
-
-    notice_modal.enter_report(name: "Alex Morgan", explanation:)
-    notice_modal.enter_content_url(URI.join(page.current_url, reported_post.url).to_s)
-    notice_modal.focus_error("declaration")
-    expect(notice_modal).to have_focused_field("declaration")
-    notice_modal.accept_declaration
-    expect(notice_modal).to have_no_validation_errors
-
-    notice_modal.submit_report
-    expect(notice_modal).to have_confirmation
-  end
-
   it "lets a reporter verify their email and submit an illegal content report" do
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)

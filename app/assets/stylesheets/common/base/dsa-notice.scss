@@ -40,27 +40,18 @@
 
   .dsa-notice__fields,
   .dsa-notice__confirmation {
+    overflow-y: auto;
     padding: var(--space-6);
     min-height: 0;
   }
 
-  .dsa-notice__confirmation {
-    overflow-y: auto;
-  }
-
-  .dsa-notice__form {
-    overflow-y: auto;
-
-    > .form-kit__errors-summary {
-      align-self: stretch;
-      flex-shrink: 0;
-      width: auto;
-      margin: var(--space-6) var(--space-6) 0;
-    }
-  }
-
-  .dsa-notice__fields {
+  .dsa-notice__form > .form-kit__errors-summary {
+    align-self: stretch;
     flex-shrink: 0;
+    width: auto;
+    max-block-size: 50%;
+    overflow-y: auto;
+    margin: var(--space-6) var(--space-6) 0;
   }
 
   .dsa-notice__actions {
@@ -68,9 +59,6 @@
     margin-top: auto;
     padding: var(--space-4) var(--space-6);
     border-top: 1px solid var(--primary-low);
-    position: sticky;
-    bottom: 0;
-    background: var(--secondary);
   }
 
   @include viewport.until(sm) {
