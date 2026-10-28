@@ -71,8 +71,8 @@ interface DSelectCategorySignature {
     scope?: CategoryValue;
     /** Puts the same one-level-up family first while browsing. */
     prioritize?: CategoryValue;
-    /** Category ids always offered as disabled rows while browsing. */
-    readOnly?: number | string | readonly (number | string)[];
+    /** Category ids offered only as disabled rows, described as read-only. */
+    disabledCategories?: number | string | readonly (number | string)[];
     /** Categories never offered; a held one stays selected. */
     exclude?: readonly (number | string)[];
     /** Translated text used when empty. */
@@ -110,16 +110,16 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   }
 
   @cached
-  get value() {
+  get selectedIds() {
     const ids = makeArray(
       this.args.value as CategoryValue | CategoryValue[] | null | undefined
     ).map((entry) => (typeof entry === "object" ? entry.id : Number(entry)));
     return this.args.multiple ? ids : (ids[0] ?? null);
   }
 
-  get #readOnly(): number[] {
+  get #disabledIds(): number[] {
     return makeArray(
-      this.args.readOnly as number | string | (number | string)[]
+      this.args.disabledCategories as number | string | (number | string)[]
     ).map(Number);
   }
 
@@ -136,7 +136,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       return this.args.placeholder;
     }
     return (
-      (!this.#readOnly.length && this.#uncategorized
+      (!this.#disabledIds.length && this.#uncategorized
         ? Category.findUncategorized()?.name
         : undefined) || decodeCategoryText(i18n("category.choose"))
     );
@@ -148,7 +148,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       scope: this.args.scope,
       prioritize: this.args.prioritize,
       exclude: this.args.exclude,
-      readOnly: this.args.readOnly,
+      disabledCategories: this.args.disabledCategories,
       uncategorized: this.#uncategorized,
       subcategories: this.args.subcategories,
       descriptions: this.args.descriptions,
@@ -172,7 +172,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       ...[this.args.scope, this.args.prioritize].map((value) =>
         this.#idOf(value)
       ),
-      ...this.#readOnly,
+      ...this.#disabledIds,
     ].filter((id) => id != null);
     return then(Category.findByIdsOrLoad(ids), () =>
       // The scope's family root may be a parent the first lookup did not cover.
@@ -260,22 +260,22 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
 
   /**
    * Rows the search leaves out. A scope lists its family's children, so its root is pinned
-   * while browsing. Read-only categories are excluded from the search, so they are always
-   * offered as disabled rows whenever they match, and are never grouped or given a footer.
+   * while browsing. Disabled categories are excluded from the search, so they are always
+   * offered as pinned rows whenever they match, and are never grouped or given a footer.
    */
   #pinned(query: string): CategoryItem[] {
     const root = query ? undefined : this.#familyId(this.args.scope);
     const roots = Category.findByIds(root == null ? [] : [root]).filter(
       this.#categoryAllowed()
     );
-    const readOnly = Category.findByIds(this.#readOnly).filter((category) =>
+    const disabled = Category.findByIds(this.#disabledIds).filter((category) =>
       Category.matchesSearch(category, query)
     );
     const descriptions = this.args.descriptions ?? !this.args.multiple;
     const readOnlyDescription = i18n("category_row.read_only_description");
-    return [...new Set([...roots, ...readOnly])].map((category) => {
+    return [...new Set([...roots, ...disabled])].map((category) => {
       const row = categoryItem(category, descriptions);
-      if (readOnly.includes(category)) {
+      if (disabled.includes(category)) {
         row.disabled = true;
         row.description = readOnlyDescription;
       }
@@ -308,7 +308,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       rejectCategoryIds: [
         ...new Set([
           ...(this.args.exclude ?? []).map(Number),
-          ...this.#readOnly,
+          ...this.#disabledIds,
         ]),
       ],
       treeOrder: query ? undefined : this.#treeOrder,
@@ -347,7 +347,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       const descendants: Category[] =
         await Category.asyncFindDescendants(category);
       const allowed = this.#categoryAllowed();
-      const locked = new Set(this.#readOnly);
+      const locked = new Set(this.#disabledIds);
       scope.selectMany(
         descendants
           .filter((child) => !locked.has(child.id!) && allowed(child))
@@ -390,7 +390,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @resolveValues={{this.resolveValues}}
       @specialItems={{this.specialItems}}
       @suppressFooter={{not (has-block "footer")}}
-      @value={{this.value}}
+      @value={{this.selectedIds}}
       @variant={{@variant}}
     >
       <:item as |item options|>

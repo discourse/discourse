@@ -723,10 +723,11 @@ The category family has two recipes:
   - `@subcategories={{false}}` offers top-level categories only.
   - `@exclude` lists categories that are never offered; a held one stays selected. A screen
     with several lists passes each list only the categories the other lists hold.
-  - `@scope`, `@prioritize` and `@readOnly` are the composer's rules. While browsing, scope and
-    prioritize act one level up: the category's parent and that parent's children.
-    `@readOnly` categories show as disabled rows at the top, described as read-only, and stay
-    listed while a search matches them.
+  - `@scope` and `@prioritize` are the composer's rules. While browsing, they act one level up:
+    the category's parent and that parent's children.
+  - `@disabledCategories` are shown only as disabled rows at the top, described as read-only,
+    and stay listed while a search matches them. The composer passes the category a new topic
+    started from but cannot be posted in.
   - `@placeholder` is the trigger text with no value. `@noneLabel` adds a selectable "none" row
     instead.
   - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.

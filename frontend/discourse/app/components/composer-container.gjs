@@ -461,6 +461,7 @@ export default class ComposerContainer extends Component {
                             <DSelectCategory
                               class="category-chooser"
                               @disabled={{this.composer.disableCategoryChooser}}
+                              @disabledCategories={{this.composer.readOnlyCategoryId}}
                               @emit="ids"
                               @identifier="composer-category"
                               @instanceContext={{hash
@@ -469,7 +470,6 @@ export default class ComposerContainer extends Component {
                               @onChange={{this.composer.updateCategory}}
                               @permission="create"
                               @prioritize={{this.composer.prioritizedCategoryId}}
-                              @readOnly={{this.composer.readOnlyCategoryId}}
                               @scope={{this.composer.scopedCategoryId}}
                               @value={{this.composer.model.categoryId}}
                             />

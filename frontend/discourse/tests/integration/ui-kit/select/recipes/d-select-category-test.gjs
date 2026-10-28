@@ -171,6 +171,7 @@ class Host extends Component {
   <template>
     <DSelectCategory
       @descriptions={{@descriptions}}
+      @disabledCategories={{@disabledCategories}}
       @emit={{@emit}}
       @exclude={{@exclude}}
       @legacyKind={{@legacyKind}}
@@ -180,7 +181,6 @@ class Host extends Component {
       @permission={{@permission}}
       @placeholder={{@placeholder}}
       @prioritize={{@prioritize}}
-      @readOnly={{@readOnly}}
       @scope={{@scope}}
       @selectDescendants={{@selectDescendants}}
       @showAncestors={{@showAncestors}}
@@ -475,9 +475,9 @@ module(
         await render(
           <template>
             <DSelectCategory
+              @disabledCategories={{null}}
               @permission="create"
               @prioritize={{null}}
-              @readOnly={{null}}
               @scope={{null}}
             />
           </template>
@@ -523,10 +523,10 @@ module(
         await render(
           <template>
             <Host
+              @disabledCategories={{9600}}
               @multiple={{false}}
               @onChange={{onChange}}
               @permission="create"
-              @readOnly={{9600}}
               @scope={{2}}
             />
           </template>
@@ -647,7 +647,9 @@ module(
         this.siteSettings.allow_uncategorized_topics = true;
 
         await render(
-          <template><Host @multiple={{false}} @readOnly={{2}} /></template>
+          <template>
+            <Host @disabledCategories={{2}} @multiple={{false}} />
+          </template>
         );
 
         assert.strictEqual(
@@ -1027,7 +1029,9 @@ module(
 
       test("a disabled category gets no footer", async function (assert) {
         await render(
-          <template><Host @multiple={{true}} @readOnly={{1001}} /></template>
+          <template>
+            <Host @disabledCategories={{1001}} @multiple={{true}} />
+          </template>
         );
         await select().open();
         await select().search("Parent Category");
@@ -1231,9 +1235,9 @@ module(
         await render(
           <template>
             <Host
+              @disabledCategories={{3}}
               @multiple={{false}}
               @permission="create"
-              @readOnly={{3}}
               @scope={{2}}
             />
           </template>
@@ -1799,7 +1803,7 @@ module(
         });
         await render(
           <template>
-            <DSelectCategory @multiple={{true}} @readOnly={{9900}} />
+            <DSelectCategory @disabledCategories={{9900}} @multiple={{true}} />
           </template>
         );
         await dSelect().open();
@@ -1873,9 +1877,9 @@ module(
         await render(
           <template>
             <DSelectCategory
+              @disabledCategories={{9900}}
               @multiple={{true}}
               @permission="create"
-              @readOnly={{9900}}
               @scope={{2}}
             />
           </template>
