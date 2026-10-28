@@ -27,11 +27,15 @@ class User::Suspend
 
   options { attribute :raise_on_failure, :boolean, default: false }
 
-  model :user
-  policy :not_suspended_already, class_name: User::Policy::NotAlreadySuspended
-  model :users
-  policy :can_suspend_all_users
-  step :suspend
+  # Two concurrent suspensions of the same user would both pass the check, so the second one waits and
+  # sees the first.
+  lock(:user_id) do
+    model :user
+    policy :not_suspended_already, class_name: User::Policy::NotAlreadySuspended
+    model :users
+    policy :can_suspend_all_users
+    step :suspend
+  end
   model :post, optional: true
   step :perform_post_action
 
