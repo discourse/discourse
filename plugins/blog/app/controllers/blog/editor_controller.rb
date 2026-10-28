@@ -2,7 +2,7 @@
 
 module ::Blog
   class EditorController < ::ApplicationController
-    PAGE_SIZE = 3
+    PAGE_SIZE = 20
 
     helper Blog::BlogHelper
     requires_plugin PLUGIN_NAME

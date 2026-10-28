@@ -4,16 +4,19 @@
   margin-inline: auto;
   padding-block: 2em;
 
-  &__links {
-    display: flex;
-    align-items: center;
-    gap: 0.75em;
-    flex-wrap: wrap;
-    margin-block: 2em 1em;
+  // An icon-only trigger is shorter than a labelled button, so size the
+  // header actions to their tallest button and stretch the rest to match.
+  .d-page-header__actions {
+    align-self: center;
+    align-items: stretch;
   }
 
-  &__table {
-    margin-top: var(--space-4);
+  .d-page-action-wrapped-button {
+    display: flex;
+  }
+
+  .d-filter-controls {
+    margin-block: var(--space-4);
   }
 
   &__statuses {
@@ -25,7 +28,6 @@
 
   &__correction,
   &__excerpt,
-  &__hint,
   &__published,
   &__replies,
   &__scheduled {
