@@ -1,5 +1,19 @@
+import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+
+const ANON_KEY = "prefer_flat_replies";
+
+/**
+ * Whether the viewer prefers flat replies in nested topics. Anonymous viewers
+ * keep the choice in local storage.
+ */
+export function prefersFlatReplies(currentUser, keyValueStore) {
+  if (currentUser) {
+    return !!get(currentUser, "user_option.prefer_flat_replies");
+  }
+  return keyValueStore.get(ANON_KEY) === "true";
+}
 
 function currentPostNumber(router, topic) {
   if (!topic.rendersNested) {
@@ -41,10 +55,23 @@ export function switchTopicView(router, topic, applyChange) {
 
 export async function toggleFlatRepliesPreference({
   currentUser,
+  keyValueStore,
   router,
   topic,
 }) {
   const preferFlat = topic.rendersNested;
+
+  if (!currentUser) {
+    return switchTopicView(router, topic, () => {
+      if (preferFlat) {
+        keyValueStore.set({ key: ANON_KEY, value: "true" });
+      } else {
+        keyValueStore.remove(ANON_KEY);
+      }
+      // Local storage isn't tracked.
+      topic.notifyPropertyChange("rendersNested");
+    });
+  }
 
   // Saved before updating the user so the view doesn't switch to stale
   // content while the request is in flight.

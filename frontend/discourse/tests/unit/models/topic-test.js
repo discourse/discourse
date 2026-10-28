@@ -139,6 +139,35 @@ module("Unit | Model | topic", function (hooks) {
     assert.strictEqual(topic.lastPostUrl, "/t/hello/101/10");
   });
 
+  test("anonymous viewers keep their flat replies preference locally", function (assert) {
+    const keyValueStore = this.owner.lookup("service:key-value-store");
+    const topic = this.store.createRecord("topic", {
+      id: 101,
+      highest_post_number: 10,
+      slug: "hello",
+      is_nested_view: true,
+    });
+
+    assert.true(topic.rendersNested);
+
+    keyValueStore.set({ key: "prefer_flat_replies", value: "true" });
+    try {
+      assert.false(topic.rendersNested);
+
+      logIn(this.owner);
+      const userTopic = this.store.createRecord("topic", {
+        id: 102,
+        is_nested_view: true,
+      });
+      assert.true(
+        userTopic.rendersNested,
+        "logged-in users ignore the local preference"
+      );
+    } finally {
+      keyValueStore.remove("prefer_flat_replies");
+    }
+  });
+
   test("has details", function (assert) {
     const topic = this.store.createRecord("topic", { id: 1234 });
     const topicDetails = topic.details;

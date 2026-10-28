@@ -74,10 +74,22 @@ RSpec.describe "Nested replies flat view preference" do
     expect(page).to have_css(".pref-prefer-flat-replies input[type='checkbox']:checked")
   end
 
-  it "keeps anonymous users on the nested view" do
+  it "remembers an anonymous user's flat view in the browser" do
+    SiteSetting.show_topic_map_in_topics_without_replies = false
     nested_view.visit_nested(topic)
+    expect(nested_view).to have_nested_view
+
+    find(".nested-view-toggle.--to-flat").click
+
+    expect(nested_view).to have_no_nested_view
+    expect(topic_page).to have_post_number(2)
+
+    topic_page.visit_topic(other_topic)
+    page.refresh
+    expect(nested_view).to have_no_nested_view
+
+    find("#topic-footer-buttons .toggle-nested-view").click
 
     expect(nested_view).to have_nested_view
-    expect(page).to have_no_css(".nested-view-toggle")
   end
 end

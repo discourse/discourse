@@ -18,6 +18,7 @@ import {
   stampModelClass,
 } from "discourse/lib/model-extensions";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
+import { prefersFlatReplies } from "discourse/lib/nested-view-preference";
 import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { serializeTags } from "discourse/lib/serialize-tags";
@@ -44,6 +45,7 @@ import Site from "discourse/models/site";
 import TopicDetails from "discourse/models/topic-details";
 import type User from "discourse/models/user";
 import type AppEventsService from "discourse/services/app-events";
+import type KeyValueStoreService from "discourse/services/key-value-store";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
 import Category from "./category.ts";
@@ -680,6 +682,7 @@ export default class Topic extends RestModel {
   }
 
   @service declare currentUser: User | null;
+  @service declare keyValueStore: KeyValueStoreService;
   @service declare siteSettings: RestModel["siteSettings"];
 
   @tracked chunk_size?: TopicFields["chunk_size"];
@@ -1066,18 +1069,14 @@ export default class Topic extends RestModel {
   }
 
   /**
-   * Whether the topic renders as nested replies for the current user, who may
-   * prefer the flat view even when the topic itself is nested.
+   * Whether the topic renders as nested replies for the current viewer, who
+   * may prefer the flat view even when the topic itself is nested.
    */
-  @computed("is_nested_view", "currentUser.user_option.prefer_flat_replies")
+  @dependentKeyCompat
   get rendersNested(): boolean {
     return (
-      !!this.is_nested_view &&
-      !(
-        this.currentUser as
-          | (User & { user_option?: { prefer_flat_replies?: boolean } })
-          | null
-      )?.user_option?.prefer_flat_replies
+      !!this.get("is_nested_view") &&
+      !prefersFlatReplies(this.currentUser, this.keyValueStore)
     );
   }
 

@@ -7,17 +7,15 @@ import DButton from "discourse/ui-kit/d-button";
 
 export default class NestedViewToggle extends Component {
   @service currentUser;
+  @service keyValueStore;
   @service router;
-
-  get showToggle() {
-    return this.currentUser && this.args.topic.is_nested_view;
-  }
 
   @action
   async toggle() {
     try {
       await toggleFlatRepliesPreference({
         currentUser: this.currentUser,
+        keyValueStore: this.keyValueStore,
         router: this.router,
         topic: this.args.topic,
       });
@@ -27,7 +25,7 @@ export default class NestedViewToggle extends Component {
   }
 
   <template>
-    {{#if this.showToggle}}
+    {{#if @topic.is_nested_view}}
       {{#if @topic.rendersNested}}
         <DButton
           class="btn-flat nested-view-toggle --to-flat"

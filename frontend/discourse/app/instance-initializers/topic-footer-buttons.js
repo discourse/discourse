@@ -120,6 +120,7 @@ export default {
         try {
           await toggleFlatRepliesPreference({
             currentUser: this.currentUser,
+            keyValueStore: owner.lookup("service:key-value-store"),
             router: owner.lookup("service:router"),
             topic: this.topic,
           });
@@ -132,12 +133,11 @@ export default {
       dropdown() {
         return this.site.mobileView;
       },
+      anonymousOnly() {
+        return !this.currentUser;
+      },
       displayed() {
-        return (
-          this.currentUser &&
-          this.topic.is_nested_view &&
-          !this.topic.rendersNested
-        );
+        return this.topic.is_nested_view && !this.topic.rendersNested;
       },
     });
 
