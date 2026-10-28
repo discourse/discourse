@@ -414,6 +414,24 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_change_topic_timer?" do
+    it "needs the timer permission, deleting rights for destructive timers and publishing rights",
+       :aggregate_failures do
+      close = TopicTimer.types[:close]
+      delete = TopicTimer.types[:delete]
+      publish = TopicTimer.types[:publish_to_category]
+
+      expect(tl4_user.guardian.can_change_topic_timer?(topic, close)).to eq(true)
+      expect(tl3_user.guardian.can_change_topic_timer?(topic, close)).to eq(false)
+      expect(tl4_user.guardian.can_change_topic_timer?(topic, delete)).to eq(false)
+      expect(moderator.guardian.can_change_topic_timer?(topic, delete)).to eq(true)
+      expect(moderator.guardian.can_change_topic_timer?(topic, publish, category)).to eq(true)
+      expect(tl4_user.guardian.can_change_topic_timer?(topic, publish, private_category)).to eq(
+        false,
+      )
+    end
+  end
+
   describe "#can_see_unlisted_topics?" do
     it "is allowed for staff users" do
       expect(Guardian.new(moderator).can_see_unlisted_topics?).to eq(true)

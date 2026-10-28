@@ -7025,6 +7025,17 @@ RSpec.describe TopicsController do
         expect(json["closed"]).to eq(topic.reload.closed)
       end
 
+      it "ignores a duration parameter the timer doesn't take" do
+        post "/t/#{topic.id}/timer.json",
+             params: {
+               time: 24,
+               duration: 5,
+               status_type: TopicTimer.types[1],
+             }
+
+        expect(response.status).to eq(200)
+      end
+
       it "deletes a topic status update" do
         Fabricate(:topic_timer, topic: topic)
 
