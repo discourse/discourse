@@ -13,15 +13,18 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :user_created,
-          output_contracts: [{ schema: Schema::USER_EVENT_SCHEMA }],
+          output_contracts: [
+            { schema: Schema.merge(Schema::USER_EVENT_SCHEMA, Schema::ACTOR_SCHEMA) },
+          ],
           capabilities: {
             provides_current_user: true,
           },
         )
 
-        def initialize(user, *)
+        def initialize(user, payload = {})
           super(parameters: {})
           @user = user
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -39,6 +42,7 @@ module DiscourseWorkflows
                 staged: @user.staged?,
                 created_at: @user.created_at&.iso8601,
               ),
+            actor: serialize_user(@actor),
           }
         end
       end

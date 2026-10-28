@@ -76,6 +76,9 @@ class Tag < ActiveRecord::Base
   after_save :index_search
   after_save :update_synonym_associations
 
+  # Who created the tag, for `:tag_created` (not stored).
+  attr_accessor :created_by
+
   after_commit :trigger_tag_created_event, on: :create
   after_commit :trigger_tag_updated_event, on: :update
   after_commit :trigger_tag_destroyed_event, on: :destroy
@@ -315,7 +318,12 @@ class Tag < ActiveRecord::Base
     categories
   end
 
-  %i[tag_created tag_updated tag_destroyed].each do |event|
+  def trigger_tag_created_event
+    DiscourseEvent.trigger(:tag_created, self, acting_user: created_by)
+    true
+  end
+
+  %i[tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true

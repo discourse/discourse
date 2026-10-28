@@ -45,6 +45,7 @@ class UserMerger
       new_username: @target_user.username,
       avatar_template: @target_user.avatar_template,
       asynchronous: false,
+      acting_user_id: @acting_user&.id,
     )
   end
 

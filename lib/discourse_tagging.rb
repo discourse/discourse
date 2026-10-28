@@ -120,7 +120,9 @@ module DiscourseTagging
                  (category.tags.count == 0 && category.tag_groups.count == 0)
              )
           tag_names.each do |name|
-            tags << Tag.create(name: name) unless Tag.where_name(name).exists?
+            unless Tag.where_name(name).exists?
+              tags << Tag.create(name: name, created_by: guardian.user)
+            end
           end
         end
 
@@ -944,7 +946,7 @@ module DiscourseTagging
 
     existing_tag_names = Tag.where_name(tag_names).pluck(:name)
     new_tag_names = tag_names - existing_tag_names
-    new_tag_names.each { |name| Tag.create!(name: name) }
+    new_tag_names.each { |name| Tag.create!(name: name, created_by: guardian.user) }
     Tag.where_name(tag_names).all
   end
 
@@ -960,7 +962,9 @@ module DiscourseTagging
         .where(target_tag_id: taggable.tags.map(&:id))
         .where.not(id: taggable.tags.map(&:id))
         .all
-      new_tag_names.each { |name| taggable.tags << Tag.create(name: name) }
+      new_tag_names.each do |name|
+        taggable.tags << Tag.create(name: name, created_by: Discourse.system_user)
+      end
     end
   end
 

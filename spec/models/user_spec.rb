@@ -904,6 +904,15 @@ RSpec.describe User do
       expect(event[:params].first).to eq(user)
     end
 
+    it "says who created the account, nil when the code didn't" do
+      admin = Fabricate(:admin)
+      user.created_by = admin
+
+      event = DiscourseEvent.track(:user_created) { user.save! }
+
+      expect(event[:params].last).to eq(acting_user: admin)
+    end
+
     context "with after_save" do
       before { user.save! }
 
@@ -2058,7 +2067,7 @@ RSpec.describe User do
           .track_events(:user_updated) { user.update!(uploaded_avatar_id: avatar.id) }
           .first
 
-      expect(event[:params]).to eq([user, %w[uploaded_avatar_id]])
+      expect(event[:params]).to eq([user, %w[uploaded_avatar_id], { acting_user: nil }])
     end
   end
 
