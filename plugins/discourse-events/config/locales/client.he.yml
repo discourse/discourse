@@ -27,6 +27,11 @@ he:
               label: מזהה נושא
     discourse_events:
       title: "אירועים"
+      preferences:
+        reminders:
+          preferences:
+            notification: "התראה"
+            none: "ללא"
       on_holiday: "בחג"
       disable_holiday: "השבתה"
       enable_holiday: "הפעלה"
@@ -322,6 +327,9 @@ he:
     group_timezones:
       search: "חיפוש…"
       group_availability: "זמינות %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "מזהה נושא"
     discourse_post_event:
       notifications:
         before_event_reminder: "אירוע עומד להתחיל"
@@ -421,7 +429,6 @@ he:
               two: "%{count} משתמשים/ות הוזמנו"
               other: "%{count} משתמשים/ות הוזמנו"
         event:
-          expired: "לא בתוקף"
           closed: "סגור"
           full: "מלא"
           status:
@@ -434,6 +441,8 @@ he:
             private:
               title: "פרטי"
               description: "לאירוע פרטי יכולים להצטרף רק משתמשים שהוזמנו."
+      recording_modal:
+        save: "שמירה"
       composer:
         name_placeholder: "שם האירוע"
         url_placeholder: "הוספת כתובת URL"
@@ -521,6 +530,8 @@ he:
           placeholder: "רשות, ברירת המחדל היא כותרת הנושא"
         invitees:
           label: "קבוצות שהוזמנו"
+        hosts:
+          label: "מארחים"
         event_type:
           public:
             title: "ציבורי"

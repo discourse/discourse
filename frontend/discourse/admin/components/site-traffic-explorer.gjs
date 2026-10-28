@@ -161,6 +161,7 @@ export default class SiteTrafficExplorer extends Component {
   get visitorsTabs() {
     return [
       this.#tab({ dimension: "browsers", filter: "browser" }),
+      this.#tab({ dimension: "languages", filter: "language" }),
       this.#tab({ dimension: "ip_addresses", filter: "ip" }),
     ];
   }
@@ -241,41 +242,41 @@ export default class SiteTrafficExplorer extends Component {
       {{didUpdate this.announceResults @traffic @loading @hasPageviews}}
     >
       <DPageHeader
-        @titleLabel={{i18n "admin.site_traffic_explorer.title"}}
-        @hideTabs={{true}}
         @collapseActionsOnMobile={{false}}
+        @hideTabs={{true}}
+        @titleLabel={{i18n "admin.site_traffic_explorer.title"}}
       >
         <:breadcrumbs>
-          <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+          <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
           <DBreadcrumbsItem
-            @path="/admin"
             @label={{i18n "admin.dashboard.title"}}
+            @path="/admin"
           />
           <DBreadcrumbsItem
-            @path="/admin/dashboard/site-traffic-explorer"
             @label={{i18n "admin.site_traffic_explorer.title"}}
+            @path="/admin/dashboard/site-traffic-explorer"
           />
         </:breadcrumbs>
         <:actions>
           <DashboardDateRange
-            @period={{@period}}
-            @startDate={{@startDate}}
             @endDate={{@endDate}}
-            @setPeriod={{@setPeriod}}
+            @period={{@period}}
             @setCustomDateRange={{@setCustomDateRange}}
+            @setPeriod={{@setPeriod}}
+            @startDate={{@startDate}}
           />
         </:actions>
       </DPageHeader>
 
       <div class="admin-container site-traffic-explorer">
         <SiteTrafficExplorerFilterPills
+          @applyFilters={{@applyFilters}}
+          @clearAllFilters={{@clearAllFilters}}
+          @clearFilter={{@clearFilter}}
           @filters={{@activeFilters}}
           @hasPendingFilters={{@hasPendingFilters}}
           @pendingFilterCount={{@pendingFilterCount}}
           @removeFilterValue={{@removeFilterValue}}
-          @clearFilter={{@clearFilter}}
-          @clearAllFilters={{@clearAllFilters}}
-          @applyFilters={{@applyFilters}}
         />
 
         {{#if @fetchError}}
@@ -289,10 +290,10 @@ export default class SiteTrafficExplorer extends Component {
         {{else}}
           {{#if @loading}}
             <div
-              class="db-skeleton --animation site-traffic-explorer__skeleton"
-              role="status"
               aria-label={{i18n "admin.site_traffic_explorer.loading"}}
+              class="db-skeleton --animation site-traffic-explorer__skeleton"
               data-test-site-traffic-skeleton
+              role="status"
             >
               <div class="db-skeleton__section-wrapper">
                 <div class="db-skeleton__subheader">
@@ -329,8 +330,8 @@ export default class SiteTrafficExplorer extends Component {
           {{else if this.partialWarning}}
             <p
               class="alert alert-warning site-traffic-explorer__partial-warning"
-              data-test-site-traffic-partial-warning
               data-test-partial-reason
+              data-test-site-traffic-partial-warning
             >
               {{this.partialWarning}}
             </p>
@@ -348,8 +349,8 @@ export default class SiteTrafficExplorer extends Component {
                   <div class="db-section__metrics">
                     {{#each this.metrics as |metric|}}
                       <SiteTrafficExplorerMetric
-                        @name={{metric.name}}
                         @label={{metric.label}}
+                        @name={{metric.name}}
                         @tooltip={{metric.tooltip}}
                         @value={{metric.value}}
                       />
@@ -359,9 +360,9 @@ export default class SiteTrafficExplorer extends Component {
 
                 <div class="db-section__traffic-chart">
                   <AdminReportStackedChart
+                    class="db-section__traffic-chart-canvas"
                     @model={{this.chartModel}}
                     @options={{this.chartOptions}}
-                    class="db-section__traffic-chart-canvas"
                   />
                   <div class="sr-only">
                     {{#each this.series as |series|}}
@@ -374,33 +375,33 @@ export default class SiteTrafficExplorer extends Component {
 
                 <div class="db-section__row">
                   <SiteTrafficExplorerBreakdownCard
+                    @applyModalFilters={{@applyModalFilters}}
+                    @dimensions={{@traffic.dimensions}}
+                    @isFilterSelected={{@isFilterSelected}}
                     @name="acquisition"
+                    @tabs={{this.acquisitionTabs}}
                     @title={{i18n
                       "admin.site_traffic_explorer.cards.acquisition"
                     }}
-                    @tabs={{this.acquisitionTabs}}
-                    @dimensions={{@traffic.dimensions}}
-                    @isFilterSelected={{@isFilterSelected}}
                     @toggleFilter={{@toggleFilter}}
-                    @applyModalFilters={{@applyModalFilters}}
                   />
                   <SiteTrafficExplorerBreakdownCard
+                    @applyModalFilters={{@applyModalFilters}}
+                    @dimensions={{@traffic.dimensions}}
+                    @isFilterSelected={{@isFilterSelected}}
                     @name="pages"
-                    @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
                     @tabs={{this.pagesTabs}}
-                    @dimensions={{@traffic.dimensions}}
-                    @isFilterSelected={{@isFilterSelected}}
+                    @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
                     @toggleFilter={{@toggleFilter}}
-                    @applyModalFilters={{@applyModalFilters}}
                   />
                   <SiteTrafficExplorerBreakdownCard
-                    @name="visitors"
-                    @title={{i18n "admin.site_traffic_explorer.cards.visitors"}}
-                    @tabs={{this.visitorsTabs}}
+                    @applyModalFilters={{@applyModalFilters}}
                     @dimensions={{@traffic.dimensions}}
                     @isFilterSelected={{@isFilterSelected}}
+                    @name="visitors"
+                    @tabs={{this.visitorsTabs}}
+                    @title={{i18n "admin.site_traffic_explorer.cards.visitors"}}
                     @toggleFilter={{@toggleFilter}}
-                    @applyModalFilters={{@applyModalFilters}}
                   />
                 </div>
               </div>

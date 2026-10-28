@@ -5,7 +5,6 @@ import { getOwner } from "@ember/owner";
 import type { WithBoundArgs } from "@glint/template";
 import curryComponent from "ember-curry-component";
 import DMenu, { DMenuSignature } from "discourse/float-kit/components/d-menu";
-import { or } from "discourse/truth-helpers";
 import DButton, { DButtonSignature } from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
@@ -24,7 +23,7 @@ interface GroupArgs {
 }
 
 interface ButtonSignature {
-  Element: HTMLButtonElement;
+  Element: HTMLButtonElement | HTMLAnchorElement;
   Args: DButtonSignature["Args"] & GroupArgs;
   Blocks: { default: [] };
 }
@@ -72,10 +71,10 @@ class Menu extends Component<MenuSignature> {
             arguments beat curried ones, which would otherwise make them
             overrides. }}
         <CurriedComponent
-          @icon={{or @icon "chevron-down"}}
-          @placement={{or @placement "bottom-end"}}
           class={{dConcatClass "d-combo-button-menu" @btnTypeClass}}
           ...attributes
+          @icon={{or @icon "chevron-down"}}
+          @placement={{or @placement "bottom-end"}}
         >
           <:content>
             {{yield}}

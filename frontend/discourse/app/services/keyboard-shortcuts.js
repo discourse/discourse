@@ -16,6 +16,17 @@ import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
 
+/**
+ * @typedef {{
+ *   anonymous?: boolean,
+ *   global?: boolean,
+ *   handler?: string | ((event: KeyboardEvent) => void),
+ *   postAction?: string,
+ *   click?: string,
+ *   path?: string,
+ * }} ShortcutBinding
+ */
+
 let disabledBindings = [];
 
 export function disableDefaultKeyboardShortcuts(bindings) {
@@ -213,6 +224,11 @@ export default class KeyboardShortcutLib extends Service {
     this.keyTrapper = null;
   }
 
+  get isPostTextSelected() {
+    const topicController = getOwner(this).lookup("controller:topic");
+    return !!topicController.quoteState.postId;
+  }
+
   bindEvents() {
     Object.keys(DEFAULT_BINDINGS).forEach((key) => {
       this.bindKey(key);
@@ -223,6 +239,7 @@ export default class KeyboardShortcutLib extends Service {
     return this.keyTrapper == null;
   }
 
+  /** @param {ShortcutBinding | null} [binding] */
   bindKey(key, binding = null) {
     if (this.isTornDown()) {
       return;
@@ -388,14 +405,6 @@ export default class KeyboardShortcutLib extends Service {
     this._bookmarkCurrentTopic(event);
   }
 
-  _bookmarkCurrentTopic(event) {
-    const topic = this.currentTopic();
-    if (topic && document.querySelectorAll(".posts-wrapper").length) {
-      preventKeyboardEvent(event);
-      getOwner(this).lookup("controller:topic").send("toggleBookmark");
-    }
-  }
-
   logout() {
     getOwner(this).lookup("route:application").send("logout");
   }
@@ -475,12 +484,6 @@ export default class KeyboardShortcutLib extends Service {
     this._jumpTo("jumpUnread");
   }
 
-  _jumpTo(direction) {
-    if (document.querySelector(".container.posts")) {
-      getOwner(this).lookup("controller:topic").send(direction);
-    }
-  }
-
   replyToTopic() {
     this._replyToPost();
 
@@ -501,6 +504,266 @@ export default class KeyboardShortcutLib extends Service {
       return;
     }
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
+  }
+
+  bulkSelectItem() {
+    const elem = document.querySelector(
+      ".selected input.bulk-select, .selected .select-post"
+    );
+    elem?.click();
+  }
+
+  goBack() {
+    history.back();
+  }
+
+  nextSection() {
+    this._changeSection(1);
+  }
+
+  prevSection() {
+    this._changeSection(-1);
+  }
+
+  printTopic(event) {
+    run(() => {
+      if (document.querySelector(".container.posts")) {
+        event.preventDefault(); // We need to stop printing the current page in Firefox
+        getOwner(this).lookup("controller:topic").print();
+      }
+    });
+  }
+
+  createTopic(event) {
+    if (!(this.currentUser && this.currentUser.can_create_topic)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    // create new message: if at PM topic route
+    if (this.router.currentRouteName.includes("topic")) {
+      const topicController = getOwner(this).lookup("controller:topic");
+      if (topicController.model.archetype === "private_message") {
+        this.composer.open({
+          action: Composer.PRIVATE_MESSAGE,
+          archetypeId: "private_message",
+          draftKey: this.composer.privateMessageDraftKey,
+          draftSequence: 0,
+        });
+        return;
+      }
+    }
+
+    // create new message: if at messages list route
+    if (
+      this.router.currentRouteName.includes("userPrivateMessages") ||
+      this.router.currentRouteName.includes("group.messages")
+    ) {
+      const newPMButton = document.querySelector("#new-private-message-btn");
+      if (newPMButton) {
+        newPMButton.click();
+        return;
+      }
+    }
+
+    // create new topic: context-aware (preserves category, etc.)
+    const createTopicButton = document.querySelector("#create-topic");
+    if (createTopicButton) {
+      createTopicButton.click();
+      return;
+    }
+
+    // create new topic: default action
+    this.composer.openNewTopic();
+  }
+
+  focusComposer(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.composer.focusComposer(event);
+  }
+
+  fullscreenComposer() {
+    if (this.composer.get("model")) {
+      this.composer.toggleFullscreen();
+    }
+  }
+
+  pinUnpinTopic() {
+    getOwner(this).lookup("controller:topic").togglePinnedState();
+  }
+
+  goToPost(event) {
+    preventKeyboardEvent(event);
+    this.appEvents.trigger("topic:keyboard-trigger", { type: "jump" });
+  }
+
+  toggleSearch(event) {
+    this.appEvents.trigger("header:keyboard-trigger", {
+      type: "search",
+      event,
+    });
+
+    return false;
+  }
+
+  toggleHamburgerMenu(event) {
+    this.appEvents.trigger("header:keyboard-trigger", {
+      type: "hamburger",
+      event,
+    });
+  }
+
+  showCurrentUser(event) {
+    this.appEvents.trigger("header:keyboard-trigger", { type: "user", event });
+  }
+
+  showHelpModal(event) {
+    event.preventDefault();
+    this.modal.show(KeyboardShortcutsHelp);
+  }
+
+  setTrackingToMuted() {
+    throttle(this, "_setTracking", 0, INPUT_DELAY, true);
+  }
+
+  setTrackingToRegular() {
+    throttle(this, "_setTracking", 1, INPUT_DELAY, true);
+  }
+
+  setTrackingToTracking() {
+    throttle(this, "_setTracking", 2, INPUT_DELAY, true);
+  }
+
+  setTrackingToWatching() {
+    throttle(this, "_setTracking", 3, INPUT_DELAY, true);
+  }
+
+  sendToTopicListItemView(action, elem) {
+    elem = elem || document.querySelector("tr.selected.topic-list-item");
+    if (elem) {
+      const registry = getOwner(this).lookup("-view-registry:main");
+      if (registry) {
+        const view = registry[elem.id];
+        view.send(action);
+      }
+    }
+  }
+
+  currentTopic() {
+    const topicController = getOwner(this).lookup("controller:topic");
+    if (topicController) {
+      const topic = topicController.get("model");
+      if (topic) {
+        return topic;
+      }
+    }
+  }
+
+  sendToSelectedPost(action, elem) {
+    // TODO: We should keep track of the post without a CSS class
+    const selectedPost = elem || document.querySelector(SELECTED_POST_SELECTOR);
+
+    let selectedPostId;
+    let selectedPostNumber;
+    if (selectedPost) {
+      selectedPostId = parseInt(selectedPost.dataset.postId, 10);
+      selectedPostNumber = parseInt(selectedPost.dataset.postNumber, 10);
+    }
+
+    if (selectedPostId || selectedPostNumber) {
+      const topicController = getOwner(this).lookup("controller:topic");
+      const post = topicController.get("model.postStream.posts").find((p) => {
+        if (selectedPostId) {
+          return p.id === selectedPostId;
+        }
+
+        return p.post_number === selectedPostNumber;
+      });
+      if (post) {
+        // TODO: Use ember closure actions
+
+        let actionMethod = topicController.actions[action];
+        if (!actionMethod) {
+          const topicRoute = getOwner(this).lookup("route:topic");
+          actionMethod = topicRoute.actions[action];
+        }
+
+        actionMethod.call(topicController, post);
+      }
+    }
+
+    return false;
+  }
+
+  /** @returns {NodeListOf<Element> | Element[]} */
+  categoriesTopicsList() {
+    switch (this.siteSettings.desktop_category_page_style) {
+      case "categories_with_featured_topics":
+        return document.querySelectorAll(".latest .featured-topic");
+      case "categories_and_latest_topics":
+      case "categories_and_latest_topics_created_date":
+        return document.querySelectorAll(
+          ".latest-topic-list .latest-topic-list-item"
+        );
+      case "categories_and_top_topics":
+        return document.querySelectorAll(
+          ".top-topic-list .latest-topic-list-item"
+        );
+      default:
+        return [];
+    }
+  }
+
+  deferTopic() {
+    getOwner(this).lookup("controller:topic").send("deferTopic");
+  }
+
+  toggleAdminActions() {
+    document.querySelector(".toggle-admin-menu")?.click();
+  }
+
+  toggleBulkSelect() {
+    const bulkSelect = document.querySelector("button.bulk-select");
+
+    if (bulkSelect) {
+      bulkSelect.click();
+    } else {
+      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
+    }
+  }
+
+  toggleArchivePM() {
+    getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
+  }
+
+  webviewKeyboardBack() {
+    if (capabilities.isAppWebview) {
+      window.history.back();
+    }
+  }
+
+  webviewKeyboardForward() {
+    if (capabilities.isAppWebview) {
+      window.history.forward();
+    }
+  }
+
+  _bookmarkCurrentTopic(event) {
+    const topic = this.currentTopic();
+    if (topic && document.querySelectorAll(".posts-wrapper").length) {
+      preventKeyboardEvent(event);
+      getOwner(this).lookup("controller:topic").send("toggleBookmark");
+    }
+  }
+
+  _jumpTo(direction) {
+    if (document.querySelector(".container.posts")) {
+      getOwner(this).lookup("controller:topic").send(direction);
+    }
   }
 
   _moveAmongNestedPosts(direction) {
@@ -610,145 +873,6 @@ export default class KeyboardShortcutLib extends Service {
     this._scrollTo(contentTopPosition);
   }
 
-  bulkSelectItem() {
-    const elem = document.querySelector(
-      ".selected input.bulk-select, .selected .select-post"
-    );
-    elem?.click();
-  }
-
-  goBack() {
-    history.back();
-  }
-
-  nextSection() {
-    this._changeSection(1);
-  }
-
-  prevSection() {
-    this._changeSection(-1);
-  }
-
-  printTopic(event) {
-    run(() => {
-      if (document.querySelector(".container.posts")) {
-        event.preventDefault(); // We need to stop printing the current page in Firefox
-        getOwner(this).lookup("controller:topic").print();
-      }
-    });
-  }
-
-  createTopic(event) {
-    if (!(this.currentUser && this.currentUser.can_create_topic)) {
-      return;
-    }
-
-    event.preventDefault();
-
-    // create new message: if at PM topic route
-    if (this.router.currentRouteName.includes("topic")) {
-      const topicController = getOwner(this).lookup("controller:topic");
-      if (topicController.model.archetype === "private_message") {
-        this.composer.open({
-          action: Composer.PRIVATE_MESSAGE,
-          archetypeId: "private_message",
-          draftKey: this.composer.privateMessageDraftKey,
-          draftSequence: 0,
-        });
-        return;
-      }
-    }
-
-    // create new message: if at messages list route
-    if (
-      this.router.currentRouteName.includes("userPrivateMessages") ||
-      this.router.currentRouteName.includes("group.messages")
-    ) {
-      const newPMButton = document.querySelector("#new-private-message-btn");
-      if (newPMButton) {
-        newPMButton.click();
-        return;
-      }
-    }
-
-    // create new topic: context-aware (preserves category, etc.)
-    const createTopicButton = document.querySelector("#create-topic");
-    if (createTopicButton) {
-      createTopicButton.click();
-      return;
-    }
-
-    // create new topic: default action
-    this.composer.open({
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-    });
-  }
-
-  focusComposer(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    this.composer.focusComposer(event);
-  }
-
-  fullscreenComposer() {
-    if (this.composer.get("model")) {
-      this.composer.toggleFullscreen();
-    }
-  }
-
-  pinUnpinTopic() {
-    getOwner(this).lookup("controller:topic").togglePinnedState();
-  }
-
-  goToPost(event) {
-    preventKeyboardEvent(event);
-    this.appEvents.trigger("topic:keyboard-trigger", { type: "jump" });
-  }
-
-  toggleSearch(event) {
-    this.appEvents.trigger("header:keyboard-trigger", {
-      type: "search",
-      event,
-    });
-
-    return false;
-  }
-
-  toggleHamburgerMenu(event) {
-    this.appEvents.trigger("header:keyboard-trigger", {
-      type: "hamburger",
-      event,
-    });
-  }
-
-  showCurrentUser(event) {
-    this.appEvents.trigger("header:keyboard-trigger", { type: "user", event });
-  }
-
-  showHelpModal(event) {
-    event.preventDefault();
-    this.modal.show(KeyboardShortcutsHelp);
-  }
-
-  setTrackingToMuted() {
-    throttle(this, "_setTracking", 0, INPUT_DELAY, true);
-  }
-
-  setTrackingToRegular() {
-    throttle(this, "_setTracking", 1, INPUT_DELAY, true);
-  }
-
-  setTrackingToTracking() {
-    throttle(this, "_setTracking", 2, INPUT_DELAY, true);
-  }
-
-  setTrackingToWatching() {
-    throttle(this, "_setTracking", 3, INPUT_DELAY, true);
-  }
-
   _setTracking(levelId) {
     const topic = this.currentTopic();
 
@@ -757,68 +881,6 @@ export default class KeyboardShortcutLib extends Service {
     }
 
     topic.details.updateNotifications(levelId);
-  }
-
-  sendToTopicListItemView(action, elem) {
-    elem = elem || document.querySelector("tr.selected.topic-list-item");
-    if (elem) {
-      const registry = getOwner(this).lookup("-view-registry:main");
-      if (registry) {
-        const view = registry[elem.id];
-        view.send(action);
-      }
-    }
-  }
-
-  currentTopic() {
-    const topicController = getOwner(this).lookup("controller:topic");
-    if (topicController) {
-      const topic = topicController.get("model");
-      if (topic) {
-        return topic;
-      }
-    }
-  }
-
-  get isPostTextSelected() {
-    const topicController = getOwner(this).lookup("controller:topic");
-    return !!topicController.quoteState.postId;
-  }
-
-  sendToSelectedPost(action, elem) {
-    // TODO: We should keep track of the post without a CSS class
-    const selectedPost = elem || document.querySelector(SELECTED_POST_SELECTOR);
-
-    let selectedPostId;
-    let selectedPostNumber;
-    if (selectedPost) {
-      selectedPostId = parseInt(selectedPost.dataset.postId, 10);
-      selectedPostNumber = parseInt(selectedPost.dataset.postNumber, 10);
-    }
-
-    if (selectedPostId || selectedPostNumber) {
-      const topicController = getOwner(this).lookup("controller:topic");
-      const post = topicController.get("model.postStream.posts").find((p) => {
-        if (selectedPostId) {
-          return p.id === selectedPostId;
-        }
-
-        return p.post_number === selectedPostNumber;
-      });
-      if (post) {
-        // TODO: Use ember closure actions
-
-        let actionMethod = topicController.actions[action];
-        if (!actionMethod) {
-          const topicRoute = getOwner(this).lookup("route:topic");
-          actionMethod = topicRoute.actions[action];
-        }
-
-        actionMethod.call(topicController, post);
-      }
-    }
-
-    return false;
   }
 
   _bindToSelectedPost(action, binding) {
@@ -1027,24 +1089,6 @@ export default class KeyboardShortcutLib extends Service {
     });
   }
 
-  categoriesTopicsList() {
-    switch (this.siteSettings.desktop_category_page_style) {
-      case "categories_with_featured_topics":
-        return document.querySelectorAll(".latest .featured-topic");
-      case "categories_and_latest_topics":
-      case "categories_and_latest_topics_created_date":
-        return document.querySelectorAll(
-          ".latest-topic-list .latest-topic-list-item"
-        );
-      case "categories_and_top_topics":
-        return document.querySelectorAll(
-          ".top-topic-list .latest-topic-list-item"
-        );
-      default:
-        return [];
-    }
-  }
-
   _findArticles() {
     let categoriesTopicsList;
     if (document.querySelector(".posts-wrapper")) {
@@ -1106,39 +1150,5 @@ export default class KeyboardShortcutLib extends Service {
 
   _getSelectedTopicListItem() {
     return document.querySelector("tr.selected.topic-list-item");
-  }
-
-  deferTopic() {
-    getOwner(this).lookup("controller:topic").send("deferTopic");
-  }
-
-  toggleAdminActions() {
-    document.querySelector(".toggle-admin-menu")?.click();
-  }
-
-  toggleBulkSelect() {
-    const bulkSelect = document.querySelector("button.bulk-select");
-
-    if (bulkSelect) {
-      bulkSelect.click();
-    } else {
-      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
-    }
-  }
-
-  toggleArchivePM() {
-    getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
-  }
-
-  webviewKeyboardBack() {
-    if (capabilities.isAppWebview) {
-      window.history.back();
-    }
-  }
-
-  webviewKeyboardForward() {
-    if (capabilities.isAppWebview) {
-      window.history.forward();
-    }
   }
 }

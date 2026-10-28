@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    discourse_captcha:
+      configuration_test:
+        tab_title: "سىنا"

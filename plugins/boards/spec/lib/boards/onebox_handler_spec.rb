@@ -50,6 +50,18 @@ RSpec.describe Boards::OneboxHandler do
   end
 
   describe "card onebox" do
+    it "marks archived boards beside the board name" do
+      expect(
+        Boards::OneboxHandler.handle(floater_card.url, { id: board.id, card_id: floater_card.id }),
+      ).not_to have_tag(".discourse-boards-board-pill .d-icon-box-archive")
+
+      board.update!(archived: true)
+
+      expect(
+        Boards::OneboxHandler.handle(floater_card.url, { id: board.id, card_id: floater_card.id }),
+      ).to have_tag(".discourse-boards-board-pill .d-icon-box-archive")
+    end
+
     it "returns empty string if the card does not exist" do
       floater_card.destroy!
       expect(
@@ -210,6 +222,18 @@ RSpec.describe Boards::OneboxHandler do
   end
 
   describe "board onebox" do
+    it "marks archived boards beside the board name" do
+      expect(Boards::OneboxHandler.handle(board.url, { id: board.id })).not_to have_tag(
+        ".discourse-boards-board-card__name .d-icon-box-archive",
+      )
+
+      board.update!(archived: true)
+
+      expect(Boards::OneboxHandler.handle(board.url, { id: board.id })).to have_tag(
+        ".discourse-boards-board-card__name .d-icon-box-archive",
+      )
+    end
+
     it "returns empty string if the board does not exist" do
       board.destroy!
       expect(Boards::OneboxHandler.handle(board.url, { id: board.id })).to eq("")

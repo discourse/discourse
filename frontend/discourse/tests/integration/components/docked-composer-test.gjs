@@ -22,9 +22,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
           @composerEvents={{false}}
           @draftKey="test-submit-enter"
+          @onSubmit={{handleSubmit}}
         />
       </template>
     );
@@ -48,9 +48,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
           @composerEvents={{false}}
           @draftKey="test-send-shortcut-option"
+          @onSubmit={{handleSubmit}}
         />
       </template>
     );
@@ -81,9 +81,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
           @composerEvents={{false}}
           @draftKey="test-send-shortcut-ctrl"
+          @onSubmit={{handleSubmit}}
         />
       </template>
     );
@@ -109,10 +109,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{true}}
           @composerEvents={{false}}
           @draftKey="test-send-shortcut-override"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{true}}
         />
       </template>
     );
@@ -136,10 +136,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{false}}
           @composerEvents={{false}}
           @draftKey="test-no-submit-enter"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{false}}
         />
       </template>
     );
@@ -163,10 +163,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{false}}
           @composerEvents={{false}}
           @draftKey="test-ctrl-enter"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{false}}
         />
       </template>
     );
@@ -189,10 +189,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{false}}
           @composerEvents={{false}}
           @draftKey="test-meta-enter"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{false}}
         />
       </template>
     );
@@ -210,10 +210,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
       <template>
         <DockedComposer
           @autoResize={{true}}
-          @resizable={{true}}
-          @maxResizeOffset={{200}}
           @composerEvents={{false}}
           @draftKey="test-auto-resize"
+          @maxResizeOffset={{200}}
+          @resizable={{true}}
         />
       </template>
     );
@@ -232,10 +232,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
-          @maxResizeOffset={{200}}
           @composerEvents={{false}}
           @draftKey="test-resize-max"
+          @maxResizeOffset={{200}}
+          @resizable={{true}}
         />
       </template>
     );
@@ -255,9 +255,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
           @composerEvents={{false}}
           @draftKey="test-resize-default"
+          @resizable={{true}}
         />
       </template>
     );
@@ -277,9 +277,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
           @composerEvents={{false}}
           @draftKey="test-resize-arrows"
+          @resizable={{true}}
         />
       </template>
     );
@@ -316,9 +316,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
           @composerEvents={{false}}
           @draftKey="test-resize-home"
+          @resizable={{true}}
         />
       </template>
     );

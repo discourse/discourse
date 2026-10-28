@@ -1,39 +1,31 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import ComposerActions from "discourse/components/composer-actions";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import { EDIT } from "discourse/models/composer";
 import DButton from "discourse/ui-kit/d-button";
 
-@tagName("")
 export default class ComposerActionTitle extends Component {
   @service composer;
 
-  @computed("model.replyOptions")
   get options() {
-    return this.model?.replyOptions;
+    return this.args.model?.replyOptions;
   }
 
-  @computed("model.action", "model.post.can_edit", "model.topic")
   get canEditReplyTo() {
+    const model = this.args.model;
+    if (!model) {
+      return false;
+    }
+
     return (
-      this.model?.action === EDIT &&
-      !!this.model?.post?.can_edit &&
-      !!this.model?.topic
+      get(model, "action") === EDIT && !!model.post?.can_edit && !!model.topic
     );
   }
 
-  @action
-  openChangeReplyToModal() {
-    this.composer.openChangeReplyToModal();
-  }
-
-  @computed("options.originalUser")
   get replyTargetSegment() {
     const originalUser = this.options?.originalUser;
     if (!originalUser) {
@@ -46,24 +38,29 @@ export default class ComposerActionTitle extends Component {
     );
   }
 
+  @action
+  openChangeReplyToModal() {
+    this.composer.openChangeReplyToModal();
+  }
+
   <template>
     <div class="composer-action-title" ...attributes>
-      <span class="action-title" role="heading" aria-level="1">
+      <span aria-level="1" class="action-title" role="heading">
         <ComposerActions
-          @composerModel={{this.model}}
-          @replyOptions={{this.model.replyOptions}}
-          @action={{this.model.action}}
-          @topic={{this.model.topic}}
-          @post={{this.model.post}}
+          @action={{@model.action}}
+          @composerModel={{@model}}
+          @post={{@model.post}}
+          @replyOptions={{@model.replyOptions}}
+          @topic={{@model.topic}}
         />
 
         {{#if this.replyTargetSegment}}
           {{#if this.canEditReplyTo}}
             <DButton
+              class="composer-edit-reply-to btn-default"
               @action={{this.openChangeReplyToModal}}
               @title="composer.change_reply_to.open"
               @translatedLabel={{this.replyTargetSegment}}
-              class="composer-edit-reply-to btn-default"
             />
           {{else}}
             {{this.replyTargetSegment}}

@@ -21,8 +21,8 @@ module Onebox
 
       @md5 = Digest::MD5.new
       @view = View.new(name, @record)
-      @template_name = "_layout"
-      @template_path = load_paths.last
+      self.template_name = "_layout"
+      self.template_path = load_paths.last
     end
 
     def to_html
@@ -33,6 +33,13 @@ module Onebox
 
     def uri
       @uri ||= URI(::Onebox::Helpers.normalize_url_for_output(record[:link]))
+    end
+
+    def header
+      name = "#{view.template_name}_header"
+      return unless Onebox.options.load_paths.any? { |path| template?(path, name) }
+
+      View.new(name, record).to_html
     end
 
     def details
@@ -48,6 +55,8 @@ module Onebox
         metadata_2_label: record[:metadata_2_label],
         metadata_2_value: record[:metadata_2_value],
         subname: view.template_name,
+        header: header,
+        layout_class: record[:layout_class],
         view: view.to_html,
       }
     end

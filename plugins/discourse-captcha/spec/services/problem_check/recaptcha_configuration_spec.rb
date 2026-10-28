@@ -18,30 +18,31 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
   context "when discourse_captcha_provider siteSetting is ReCaptcha" do
     before do
       SiteSetting.discourse_captcha_enabled = true
-      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
     end
 
-    describe "`recaptcha_site_key` is not set" do
-      before { SiteSetting.recaptcha_secret_key = "just a string" }
+    describe "`recaptcha_v2_site_key` is not set" do
+      before { SiteSetting.recaptcha_v2_secret_key = "just a string" }
 
       include_examples "fails_problem_check"
     end
 
-    describe "`recaptcha_secret_key` is not set" do
-      before { SiteSetting.recaptcha_site_key = "just a string" }
+    describe "`recaptcha_v2_secret_key` is not set" do
+      before { SiteSetting.recaptcha_v2_site_key = "just a string" }
 
       include_examples "fails_problem_check"
     end
 
-    describe "`recaptcha_secret_key` and `recaptcha_site_key` are not set" do
+    describe "`recaptcha_v2_secret_key` and `recaptcha_v2_site_key` are not set" do
       include_examples "fails_problem_check"
     end
 
-    describe "`recaptcha_secret_key` and `recaptcha_site_key` are set" do
+    describe "`recaptcha_v2_secret_key` and `recaptcha_v2_site_key` are set" do
       before do
-        SiteSetting.recaptcha_secret_key = "just a string"
-        SiteSetting.recaptcha_site_key = "just a string"
+        SiteSetting.recaptcha_v2_secret_key = "just a string"
+        SiteSetting.recaptcha_v2_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end
@@ -49,27 +50,28 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
   context "when discourse_captcha_provider siteSetting is none" do
     before { SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::NONE }
 
-    describe "`recaptcha_site_key` is not set" do
-      before { SiteSetting.recaptcha_secret_key = "just a string" }
+    describe "`recaptcha_v2_site_key` is not set" do
+      before { SiteSetting.recaptcha_v2_secret_key = "just a string" }
 
       include_examples "passes_problem_check"
     end
 
-    describe "`recaptcha_secret_key` is not set" do
-      before { SiteSetting.recaptcha_site_key = "just a string" }
+    describe "`recaptcha_v2_secret_key` is not set" do
+      before { SiteSetting.recaptcha_v2_site_key = "just a string" }
 
       include_examples "passes_problem_check"
     end
 
-    describe "`recaptcha_secret_key` and `recaptcha_site_key` are not set" do
+    describe "`recaptcha_v2_secret_key` and `recaptcha_v2_site_key` are not set" do
       include_examples "passes_problem_check"
     end
 
-    describe "`recaptcha_secret_key` and `recaptcha_site_key` are set" do
+    describe "`recaptcha_v2_secret_key` and `recaptcha_v2_site_key` are set" do
       before do
-        SiteSetting.recaptcha_secret_key = "just a string"
-        SiteSetting.recaptcha_site_key = "just a string"
+        SiteSetting.recaptcha_v2_secret_key = "just a string"
+        SiteSetting.recaptcha_v2_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end

@@ -199,6 +199,26 @@ RSpec.describe Admin::GroupsController do
           expect(group.membership_request_template).to eq("Testing")
           expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
         end
+
+        it "does not allow setting the flair to an upload the moderator does not own" do
+          secret_upload = Fabricate(:secure_upload, user: admin)
+
+          expect do
+            post "/admin/groups.json",
+                 params: {
+                   group: {
+                     name: "flair-group",
+                     flair_upload_id: secret_upload.id,
+                   },
+                 }
+          end.to_not change { Group.count }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("groups.errors.flair_upload_not_owned"),
+          )
+          expect(UploadReference.exists?(upload: secret_upload)).to eq(false)
+        end
       end
 
       context "with moderators_manage_groups disabled" do
@@ -231,10 +251,40 @@ RSpec.describe Admin::GroupsController do
     let(:user2) { Fabricate(:user) }
     let(:user3) { Fabricate(:user) }
 
+    it "rejects an unknown username without changing ownership" do
+      sign_in(admin)
+      group.add_owner(user)
+
+      delete "/admin/groups/#{group.id}/owners.json",
+             params: {
+               group: {
+                 usernames: "unknown_owner",
+               },
+             }
+
+      expect(response.status).to eq(400)
+      expect(group.group_users.find_by(user:)).to be_owner
+    end
+
+    it "matches owner usernames regardless of case" do
+      sign_in(admin)
+      group.add_owner(user)
+
+      delete "/admin/groups/#{group.id}/owners.json",
+             params: {
+               group: {
+                 usernames: user.username.upcase,
+               },
+             }
+
+      expect(response.status).to eq(200)
+      expect(group.group_users.find_by(user:)).not_to be_owner
+    end
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should work" do
+      it "adds the user to the group" do
         group.add_owner(user)
 
         delete "/admin/groups/#{group.id}/owners.json", params: { user_id: user.id }
@@ -243,7 +293,7 @@ RSpec.describe Admin::GroupsController do
         expect(group.group_users.where(owner: true)).to eq([])
       end
 
-      it "should work with multiple users" do
+      it "adds multiple users to the group" do
         group.add_owner(user)
         group.add_owner(user3)
 
@@ -429,7 +479,7 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response for an invalid group_id" do
+      it "returns an error for an invalid group ID" do
         max_id = Group.maximum(:id).to_i
         delete "/admin/groups/#{max_id + 1}.json"
         expect(response.status).to eq(404)

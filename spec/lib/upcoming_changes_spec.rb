@@ -529,6 +529,60 @@ RSpec.describe UpcomingChanges do
       UpcomingChanges.clear_caches!
     end
 
+    context "when the change has setting dependencies" do
+      let(:setting_name) { :enable_local_logins_via_code }
+
+      before do
+        mock_upcoming_change_metadata(enable_local_logins_via_code: { status: :beta })
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+      end
+
+      it "disables auto-promoted code login for anonymous and registered users when email login is disabled" do
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(described_class.change_dependencies_met?(setting_name)).to eq(false)
+        expect(described_class.enabled?(setting_name)).to eq(false)
+        expect(SiteSetting.enable_local_logins_via_code).to eq(false)
+        expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+        expect(described_class.enabled_for_user?(setting_name, Fabricate(:user))).to eq(false)
+      end
+
+      it "disables auto-promoted code login when local login is disabled" do
+        SiteSetting.enable_local_logins = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+      end
+
+      it "resumes automatic promotion when dependencies are restored" do
+        SiteSetting.enable_local_logins_via_email = false
+        expect(described_class.enabled?(setting_name)).to eq(false)
+
+        SiteSetting.enable_local_logins_via_email = true
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+        expect(described_class.enabled_for_user?(setting_name, nil)).to eq(true)
+      end
+
+      it "preserves a manual opt-in while dependencies are disabled" do
+        SiteSetting.promote_upcoming_changes_on_status = :never
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+
+        SiteSetting.enable_local_logins_via_email = true
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+
+      it "keeps permanent changes disabled when dependencies are unmet" do
+        mock_upcoming_change_metadata(enable_local_logins_via_code: { status: :permanent })
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+      end
+    end
+
     context "when the owning plugin is not configurable" do
       let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
 
@@ -885,6 +939,25 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".group_ids_for" do
+    it "ignores stored groups only while the change is permanent" do
+      group = Fabricate(:group)
+      Fabricate(:site_setting_group, name: setting_name, group_ids: group.id.to_s)
+
+      expect(described_class.group_ids_for(setting_name)).to eq([group.id])
+      expect(described_class.has_groups?(setting_name)).to eq(true)
+
+      mock_upcoming_change_metadata(setting_name => { status: :permanent })
+
+      expect(described_class.group_ids_for(setting_name.to_s)).to eq([])
+      expect(described_class.has_groups?(setting_name)).to eq(false)
+
+      mock_upcoming_change_metadata(setting_name => { status: :stable })
+
+      expect(described_class.group_ids_for(setting_name)).to eq([group.id])
+    end
+  end
+
   describe ".enabled_for_with_groups" do
     let(:setting_name) { :enable_upload_debug_mode }
     let(:groups_hash) { { Group::AUTO_GROUPS[:staff] => "staff" } }
@@ -997,8 +1070,27 @@ RSpec.describe UpcomingChanges do
       result = described_class.current_statuses
 
       expect(result["timeline_status_setting"]).to eq(
-        { status: "stable", changed_at: latest_event.created_at },
+        { status: "stable", changed_at: latest_event.created_at, was_conditionally_displayed: nil },
       )
+    end
+
+    it "includes the display state recorded on the latest status_changed event" do
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_status_setting",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+          "was_conditionally_displayed" => false,
+        },
+      )
+
+      expect(
+        described_class.current_statuses.dig(
+          "timeline_status_setting",
+          :was_conditionally_displayed,
+        ),
+      ).to eq(false)
     end
 
     it "caches the result so the SQL runs only once until the cache key is deleted" do
@@ -1069,6 +1161,70 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".enabled_for_user?" do
+    context "when a group-restricted change becomes permanent" do
+      fab!(:user)
+      fab!(:member, :user)
+      fab!(:group) { Fabricate(:group, users: [member]) }
+
+      before do
+        SiteSetting.enable_upload_debug_mode = true
+        Fabricate(:site_setting_group, name: setting_name, group_ids: group.id.to_s)
+      end
+
+      it "enables members, nonmembers, and anonymous users while preserving stored groups" do
+        mock_upcoming_change_metadata(setting_name => { status: :stable })
+        SiteSetting.promote_upcoming_changes_on_status = :stable
+
+        expect(described_class.enabled_for_user?(setting_name, member)).to eq(true)
+        expect(described_class.enabled_for_user?(setting_name, user)).to eq(false)
+        expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+
+        mock_upcoming_change_metadata(setting_name => { status: :permanent })
+        SiteSetting.enable_upload_debug_mode = false
+        described_class.clear_caches!
+
+        expect(described_class.enabled_for_user?(setting_name, member)).to eq(true)
+        expect(described_class.enabled_for_user?(setting_name, user)).to eq(true)
+        expect(described_class.enabled_for_user?(setting_name, nil)).to eq(true)
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq(group.id.to_s)
+      end
+
+      it "reports permanent changes as enabled for everyone in user stats" do
+        mock_upcoming_change_metadata(setting_name => { status: :permanent })
+
+        stats = described_class.stats_for_user(user:, acting_guardian: user.guardian)
+        change = stats.find { |stat| stat[:name] == setting_name }
+
+        expect(change).to include(
+          enabled: true,
+          specific_groups: [],
+          reason: described_class.user_enabled_reasons[:enabled_for_everyone],
+        )
+      end
+
+      it "keeps permanent changes disabled when dependencies are unmet" do
+        dependent_setting = :enable_local_logins_via_code
+        mock_upcoming_change_metadata(dependent_setting => { status: :permanent })
+        Fabricate(:site_setting_group, name: dependent_setting, group_ids: group.id.to_s)
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(described_class.enabled_for_user?(dependent_setting, member)).to eq(false)
+        expect(described_class.enabled_for_user?(dependent_setting, user)).to eq(false)
+        expect(described_class.enabled_for_user?(dependent_setting, nil)).to eq(false)
+      end
+
+      it "keeps permanent changes disabled when their owning plugin is disabled" do
+        plugin_setting = :enable_experimental_sample_plugin_feature
+        mock_plugin_change(status: :permanent)
+        Fabricate(:site_setting_group, name: plugin_setting, group_ids: group.id.to_s)
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false)
+
+        expect(described_class.enabled_for_user?(plugin_setting, member)).to eq(false)
+        expect(described_class.enabled_for_user?(plugin_setting, user)).to eq(false)
+        expect(described_class.enabled_for_user?(plugin_setting, nil)).to eq(false)
+      end
+    end
+
     context "for logged-in user" do
       fab!(:user)
 
@@ -1335,6 +1491,10 @@ RSpec.describe UpcomingChanges do
     end
 
     describe ".should_display_enable_local_logins_via_code?" do
+      # Pin the promotion threshold above the change's status so these specs
+      # exercise the prerequisite branch rather than the auto-promoted one.
+      before { SiteSetting.promote_upcoming_changes_on_status = :never }
+
       it "returns true when local logins via email are possible" do
         expect(
           UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),

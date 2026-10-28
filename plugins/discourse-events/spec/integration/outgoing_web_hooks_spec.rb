@@ -64,6 +64,7 @@ RSpec.describe "Outgoing calendar event webhooks" do
 
   describe "calendar_event_destroyed" do
     let(:event_post) { create_post_with_event(user) }
+
     it "fires when event markup is removed from a post" do
       event_post
 

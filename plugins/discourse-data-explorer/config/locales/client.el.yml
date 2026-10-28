@@ -13,20 +13,16 @@ el:
         title: "Δημιουργία ερωτήματος στο Data Explorer"
         description: "Γράψτε ένα προσαρμοσμένο ερώτημα SQL για να εμφανίσετε οτιδήποτε συγκεκριμένο για την κοινότητά σας."
     explorer:
-      default_query: "Προεπιλογή"
+      view_query: "Προβολή"
       mode:
         label: "Λειτουργία σύνταξης ερωτήματος"
         manual: "Γράψτε SQL"
         ai: "Δημιουργήστε με AI"
       or: "ή"
-      create: "Δημιουργία"
       description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       ai:
         regenerate_placeholder: "π.χ. Ενημέρωσε το ερώτημα ώστε να περιορίζεται στα 50 αποτελέσματα"
         generate: "Δημιουργία"
-        optional: "προαιρετικό"
-      import:
-        label: "Εισαγωγή"
       help:
         label: "Βοήθεια"
       schema:
@@ -60,12 +56,13 @@ el:
       result_count:
         one: "%{count} αποτέλεσμα."
         other: "%{count} αποτελέσματα."
+      name: "Όνομα"
       query_groups: "Ομάδες"
+      query_tags: "Ετικέτες"
       query_description: "Περιγραφή"
       query_time: "Τελευταία εκτέλεση"
       query_user: "Δημιουργήθηκε από"
       reset_params: "Επαναφορά"
-      search_placeholder: "Αναζήτηση..."
     group:
       reports: "Αναφορές"
     discourse_workflows:

@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import devToolsState from "../state";
+import devToolsState from "../state.js";
 
 /**
  * Toggle button for the plugin outlet debug mode in the dev-tools toolbar.
@@ -18,11 +18,11 @@ export default class PluginOutletDebugButton extends Component {
 
   <template>
     <button
-      title={{i18n "dev_tools.toggle_plugin_outlet_debug"}}
       class={{dConcatClass
         "toggle-plugin-outlets"
         (if devToolsState.pluginOutletDebug "--active")
       }}
+      title={{i18n "dev_tools.toggle_plugin_outlet_debug"}}
       {{on "click" this.togglePluginOutlets}}
     >
       {{dIcon "plug"}}

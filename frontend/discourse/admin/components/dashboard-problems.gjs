@@ -6,7 +6,6 @@ import AdminNotice from "discourse/admin/components/admin-notice";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -14,6 +13,12 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DashboardProblems extends Component {
+  get problems() {
+    return this.args.problems.toSorted((a, b) =>
+      compare(a?.priority, b?.priority)
+    );
+  }
+
   @action
   async dismissProblem(problem) {
     try {
@@ -22,12 +27,6 @@ export default class DashboardProblems extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
-  }
-
-  get problems() {
-    return this.args.problems.toSorted((a, b) =>
-      compare(a?.priority, b?.priority)
-    );
   }
 
   <template>
@@ -52,12 +51,12 @@ export default class DashboardProblems extends Component {
                     }}
                   >
                     <AdminNotice
+                      @dismissCallback={{this.dismissProblem}}
                       @icon={{if
                         (eq problem.priority "high")
                         "triangle-exclamation"
                       }}
                       @problem={{problem}}
-                      @dismissCallback={{this.dismissProblem}}
                     />
                   </li>
                 {{/each}}
@@ -66,10 +65,10 @@ export default class DashboardProblems extends Component {
 
             <p class="actions">
               <DButton
+                class="btn-default"
                 @action={{@refreshProblems}}
                 @icon="arrows-rotate"
                 @label="admin.dashboard.refresh_problems"
-                class="btn-default"
               />
             </p>
           </DConditionalLoadingSection>

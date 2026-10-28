@@ -72,8 +72,8 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       <template>
         <DDateTimeInput
           @date={{this.date}}
-          @timezone={{this.timezone}}
           @onChange={{this.onChange}}
+          @timezone={{this.timezone}}
         />
       </template>
     );
@@ -84,5 +84,20 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
 
     await triggerEvent(".date-picker", "change");
     assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+10:00");
+  });
+
+  test("exposes its inputs to subclasses by name", async function (assert) {
+    class Subclass extends DDateTimeInput {
+      <template>
+        <span class="probe">{{if this.date "dated"}}
+          {{this.showTime}}
+          {{this.clearable}}</span>
+      </template>
+    }
+    this.setProperties({ date: DEFAULT_DATE_TIME });
+
+    await render(<template><Subclass @date={{this.date}} /></template>);
+
+    assert.dom(".probe").hasText("dated true false");
   });
 });

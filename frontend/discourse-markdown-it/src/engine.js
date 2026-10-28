@@ -2,7 +2,7 @@ import markdownit from "markdown-it";
 import AllowLister from "pretty-text/allow-lister";
 import guid from "pretty-text/guid";
 import { sanitize } from "pretty-text/sanitizer";
-import { TextPostProcessRuler } from "./features/text-post-process";
+import { TextPostProcessRuler } from "./features/text-post-process.js";
 
 // note, this will mutate options due to the way the API is designed
 // may need a refactor
@@ -22,6 +22,7 @@ export default function makeEngine(
 
   const tlds = options.discourse.limitedSiteSettings.markdownLinkifyTlds || "";
   engine.linkify.tlds(tlds.split("|"));
+  engine.linkify.set({ fuzzyLink: true });
 
   setupUrlDecoding(engine);
   setupHoister(engine);
@@ -57,6 +58,7 @@ export default function makeEngine(
       allowLister.allowListFeature(feature, info);
     });
 
+    options.allowLister = allowLister;
     options.sanitizer = options.discourse.sanitizer = options.discourse.sanitize
       ? (a) => sanitize(a, allowLister)
       : (a) => a;

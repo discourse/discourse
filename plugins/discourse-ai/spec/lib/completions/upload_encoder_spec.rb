@@ -81,6 +81,16 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     XML
   end
 
+  describe ".normalize_upload_ids" do
+    it "accepts arrays, JSON and comma separated decimal ids" do
+      expect(
+        [[3, "3", [4]], "[5, 5]", "6, 7", "010", "0x1a", nil].map do |ids|
+          described_class.normalize_upload_ids(ids)
+        end,
+      ).to eq([[3, 4], [5], [6, 7], [10], [], []])
+    end
+  end
+
   it "automatically converts gifs to pngs" do
     upload = UploadCreator.new(gif, "1x1.gif").create_for(Discourse.system_user.id)
     encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
@@ -207,6 +217,25 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
     expect(skips.first[:filename]).to eq("avatar.jxl")
     expect(skips.first[:message]).to include("unsupported image format")
+  end
+
+  it "records documents whose attachment type the caller does not accept" do
+    SiteSetting.authorized_extensions += "|pdf"
+    upload = Fabricate(:upload, original_filename: "report.pdf", extension: "pdf")
+    skips = []
+
+    described_class.encode(
+      upload_ids: [upload.id],
+      max_pixels: MAX_PIXELS,
+      allowed_kinds: %i[image document],
+      allowed_attachment_types: ["docx"],
+      skips: skips,
+    )
+
+    expect(skips.first).to include(
+      upload_id: upload.id,
+      message: "pdf attachments are not accepted by this model",
+    )
   end
 
   it "reaches the collector a prompt was handed" do

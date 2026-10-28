@@ -55,11 +55,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
     end
 
     it "advertises a concrete schema for each operation", :aggregate_failures do
-      group_with_user =
-        DiscourseWorkflows::Schema.merge(
-          DiscourseWorkflows::Schema::GROUP_SCHEMA,
-          DiscourseWorkflows::Schema::BASIC_USER_SCHEMA,
-        )
+      group_with_user = described_class::GROUP_ACTION_SCHEMA
 
       expect(
         described_class.output_schemas({ "operation" => "add" }, input_schemas: [input_schema]),
@@ -97,8 +93,21 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         expect(result["group"]["name"]).to eq(group.name)
         expect(result["user"]["id"]).to eq(user.id)
         expect(result["user"]["username"]).to eq(user.username)
+        expect(result["user"]["trust_level"]).to eq(user.trust_level)
+        expect(result["group"]["user_count"]).to eq(group.reload.user_count)
+        expect(result["changed"]).to be(true)
         expect(GroupUser.exists?(user: user, group: group)).to be(true)
         expect(result).to match_node_output_schema(described_class, configuration: config)
+      end
+
+      it "returns the trust level granted by the group" do
+        user.update!(trust_level: TrustLevel[0])
+        group.update!(grant_trust_level: TrustLevel[2])
+        config = { "operation" => "add", "username" => user.username, "group_id" => group.id.to_s }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["user"]["trust_level"]).to eq(TrustLevel[2])
       end
 
       it "is idempotent when user is already a member" do
@@ -106,9 +115,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
 
         config = { "operation" => "add", "username" => user.username, "group_id" => group.id.to_s }
 
-        expect { execute_node(configuration: config, item: item) }.not_to change {
+        result = nil
+        expect { result = execute_node(configuration: config, item: item) }.not_to change {
           GroupUser.where(user: user, group: group).count
         }
+        expect(result["changed"]).to be(false)
       end
 
       it "logs the action in group history" do
@@ -135,6 +146,83 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
           Discourse::InvalidAccess,
         )
       end
+
+      it "does not change the primary group by default" do
+        user.update!(primary_group: group_2)
+        group_2.add(user)
+
+        config = { "operation" => "add", "username" => user.username, "group_id" => group.id.to_s }
+
+        execute_node(configuration: config, item: item)
+
+        expect(user.reload.primary_group_id).to eq(group_2.id)
+      end
+
+      context "with set_primary_group" do
+        let(:config) do
+          {
+            "operation" => "add",
+            "username" => user.username,
+            "group_id" => group.id.to_s,
+            "set_primary_group" => true,
+          }
+        end
+
+        it "sets the group as the user's primary group", :aggregate_failures do
+          result = execute_node(configuration: config, item: item)
+
+          expect(user.reload.primary_group_id).to eq(group.id)
+          expect(GroupUser.exists?(user: user, group: group)).to be(true)
+          expect(result["user"]["id"]).to eq(user.id)
+          expect(result).to match_node_output_schema(described_class, configuration: config)
+        end
+
+        it "replaces an existing primary group and its title and flair", :aggregate_failures do
+          group_2.update!(title: "Old title")
+          group_2.add(user)
+          user.update!(primary_group: group_2, flair_group: group_2, title: "Old title")
+          group.update!(title: "New title")
+
+          execute_node(configuration: config, item: item)
+
+          user.reload
+          expect(user.primary_group_id).to eq(group.id)
+          expect(user.flair_group_id).to eq(group.id)
+          expect(user.title).to eq("New title")
+        end
+
+        it "agrees with a group that automatically becomes the primary group",
+           :aggregate_failures do
+          group_2.update!(title: "Old title")
+          group_2.add(user)
+          user.update!(primary_group: group_2, flair_group: group_2, title: "Old title")
+          group.update!(primary_group: true, title: "New title")
+
+          execute_node(configuration: config, item: item)
+
+          user.reload
+          expect(user.primary_group_id).to eq(group.id)
+          expect(user.flair_group_id).to eq(group.id)
+          expect(user.title).to eq("New title")
+        end
+
+        it "sets the primary group when the user is already a member" do
+          group.add(user)
+
+          result = execute_node(configuration: config, item: item)
+
+          expect(user.reload.primary_group_id).to eq(group.id)
+          expect(result["changed"]).to be(true)
+        end
+
+        it "resolves the value from an expression" do
+          config["set_primary_group"] = "={{ $json.make_primary }}"
+
+          execute_node(configuration: config, item: { "json" => { "make_primary" => true } })
+
+          expect(user.reload.primary_group_id).to eq(group.id)
+        end
+      end
     end
 
     context "with remove operation" do
@@ -153,6 +241,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         expect(result["group"]["name"]).to eq(group.name)
         expect(result["user"]["id"]).to eq(user.id)
         expect(result["user"]["username"]).to eq(user.username)
+        expect(result["group"]["user_count"]).to eq(group.reload.user_count)
+        expect(result["changed"]).to be(true)
         expect(GroupUser.exists?(user: user, group: group)).to be(false)
         expect(result).to match_node_output_schema(described_class, configuration: config)
       end
@@ -198,7 +288,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nonexistent_user' not found",
+        node_error_message(:not_found, scope: :actor, username: "nonexistent_user"),
       )
     end
 
@@ -397,7 +487,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
               "group_id" => group.id,
             },
           )
-        end.to raise_error(DiscourseWorkflows::NodeError, "User 'missing_user' not found")
+        end.to raise_error(
+          DiscourseWorkflows::NodeError,
+          node_error_message(:not_found, scope: :actor, username: "missing_user"),
+        )
       end
 
       it "raises when actor_username cannot see the group" do

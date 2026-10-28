@@ -45,7 +45,21 @@ zh_CN:
           rsvp_to_event: "回复参加活动以开始聊天"
           rsvp_to_event_with_link: "回复参加<a href='%{url}'>活动</a>以开始聊天"
           rsvp_body: "在活动开始前、进行中和结束后与其他与会者建立联系。"
+      calendar_prompt:
+        title: "想把这个活动添加到您的日历吗？"
+        subscribed: '此活动将添加到您的 <a href="%{calendarUrl}">订阅日历</a> 中。'
+        dismiss: "关闭日历提示"
+        subscribe: "订阅您的活动"
+        subscribe_with_preferences: "订阅活动或更改通知首选项"
       preferences:
+        reminders:
+          title: "活动提醒"
+          description: "对于您即将参加或感兴趣的活动，组织者会选择何时发送提醒。"
+          preference: "通过以下方式发送活动提醒"
+          preferences:
+            personal_message: "发送私人消息"
+            notification: "通知"
+            none: "无"
         all_events: "Discourse 活动 - 所有活动"
         all_events_description: "所有论坛活动"
         my_events: "Discourse 活动 - 我的活动"
@@ -345,6 +359,18 @@ zh_CN:
     group_timezones:
       search: "搜索…"
       group_availability: "%{group} 可用性"
+    discourse_workflows:
+      node_unavailable:
+        requires_post_event: "需要启用事件。"
+      nodes:
+        "trigger:event_ended": "活动已结束"
+        "trigger:event_participation_changed": "活动参与情况发生变化"
+      node_descriptions:
+        "trigger:event_ended": "当事件发生到结束时间时触发"
+        "trigger:event_participation_changed": "当用户添加、更改或撤回其 RSVP 时触发"
+      post_event:
+        topic_id: "话题 ID"
+        topic_id_description: "仅触发此话题中的活动。留空则匹配所有活动。"
     discourse_post_event:
       new_event: "新活动"
       notifications:
@@ -375,6 +401,13 @@ zh_CN:
       edit_event: "编辑活动"
       export_event: "导出活动"
       created_by: "创建者"
+      created_and_hosted_by: "创建和托管人"
+      hosted_by: "托管人"
+      co_hosted_by: "共同主办方"
+      other_hosts:
+        other: "和其他 %{count} 人"
+      all_hosts:
+        other: "%{count} 主机"
       bulk_invite: "批量邀请"
       close_event: "关闭活动"
       open_event: "开放活动"
@@ -385,6 +418,8 @@ zh_CN:
         filter_placeholder: "筛选用户"
         remove_invitee: "从列表中移除受邀者"
         add_invitee: "将受邀者添加到列表"
+        this_event: "本次活动"
+        first_event_only: "仅限首次活动"
       bulk_invite_modal:
         confirm: "确认"
         text: "上传 CSV 文件"
@@ -396,9 +431,11 @@ zh_CN:
         description_private: "不公开活动的批量邀请仅接受群组名。"
         download_sample_csv: "下载示例 CSV 文件"
         send_bulk_invites: "发送邀请"
+        add_attendee: "添加与会者"
         group_selector_placeholder: "选择群组…"
         user_selector_placeholder: "选择用户…"
         attendance_label: "出席"
+        recurring: "将出席状态应用于本次及后续所有活动"
         inline_title: "内嵌批量邀请"
         csv_title: "CSV 批量邀请"
       upcoming_events:
@@ -441,7 +478,7 @@ zh_CN:
             invited_count:
               other: "%{count} 位受邀用户"
         event:
-          expired: "已过期"
+          expired: "结束"
           closed: "已关闭"
           full: "已满"
           status:
@@ -454,12 +491,24 @@ zh_CN:
             private:
               title: "不公开"
               description: "只有受邀用户可以加入不公开活动。"
+      recording:
+        watch: "观看录像"
+        add: "添加录制链接"
+      recording_modal:
+        add_title: "添加录制"
+        edit_title: "编辑录制"
+        label: "录制链接"
+        save: "保存"
+        remove: "移除录制"
+        edit_reason: "录制链接已更新"
+        no_event: "在帖子中找不到该活动。"
       composer:
         name_placeholder: "活动名称"
         end_date_placeholder: "结束日期"
         location_or_url_placeholder: "添加位置或网址"
         location_placeholder: "添加位置"
         url_placeholder: "添加 URL"
+        recording_placeholder: "添加录制链接"
         max_attendees_placeholder: "参与人数不限"
         max_attendees_display:
           other: "最多 %{count} 位与会者"
@@ -565,6 +614,9 @@ zh_CN:
         livestream:
           label: "直播"
           checkbox_label: "将 URL 嵌入为视频，并开启直播聊天功能供与会者使用"
+        recording:
+          label: "录制中"
+          placeholder: "添加录制链接"
         location:
           label: "位置"
           label_or_url: "位置或 URL"
@@ -581,6 +633,9 @@ zh_CN:
           placeholder: "可选，默认为话题标题"
         invitees:
           label: "受邀群组"
+        hosts:
+          label: "主机"
+          description: "主持人会和活动创建者一起显示在活动页面上。"
         event_type:
           label: "出席类型"
           public:

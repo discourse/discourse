@@ -54,7 +54,6 @@ ur:
         scoring_configuration: "سکورنگ کی ترتیب"
         scoring_configuration_description: "اس لیڈر بورڈ کے لیے عالمی اسکورنگ کے اصولوں میں مداخلت کریں۔ عالمی ڈیفالٹس استعمال کرنے کے لیے فیلڈز کو خالی چھوڑ دیں۔"
         scorable_categories: "اسکورنگ کے زمرہ جات"
-        scorable_categories_help: "اسکورنگ میں شامل کرنے کے لیے زمرہ جات۔ عالمی ترتیب کو استعمال کرنے کے لیے خالی چھوڑ دیں۔"
         score_overrides: "اسکورنگ کی حیثیت"
         score_overrides_help: "ہر ایکشن کے لیے پوائنٹ ویلیوز میں مداخلت کریں۔ عالمی ڈیفالٹ استعمال کرنے کے لیے خالی چھوڑ دیں۔ غیر فعال کرنے کے لیے 0 پر سیٹ کریں۔"
         weight:
@@ -76,9 +75,7 @@ ur:
       close: "بند کریں"
       delete: "مٹائیں"
       edit: "ترمیم کریں"
-      back: "واپس"
       save: "محفوظ کریں"
-      apply: "لاگو کریں"
       update_scores_help: "سے تمام لیڈر بورڈز کے لئے تمام اسکور اپ ڈیٹ کریں"
       update_range:
         last_10_days: "پچھلے 10 دن"
@@ -90,9 +87,11 @@ ur:
       admin:
         title: "کھیل اور کھلاڑی"
         name: "نام"
+        created_by: "نے بنایا"
         period: "مدت"
     discourse_workflows:
       gamification_score:
         username: "رکن"
         date: "تاریخ"
         description: "تفصیل"
+        category_id: "زُمرَہ"

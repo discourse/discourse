@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import resolvePermalink from "discourse/lib/permalink-check";
 import PreloadStore from "discourse/lib/preload-store";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import Category from "discourse/models/category";
@@ -29,14 +30,29 @@ class AbstractCategoryRoute extends DiscourseRoute {
   templateName = "discovery/list";
 
   async model(params, transition) {
-    const category = this.site.lazy_load_categories
-      ? await Category.asyncFindBySlugPathWithID(
-          params.category_slug_path_with_id
-        )
-      : Category.findBySlugPathWithID(params.category_slug_path_with_id);
+    let category;
+
+    try {
+      category = this.site.lazy_load_categories
+        ? await Category.asyncFindBySlugPathWithID(
+            params.category_slug_path_with_id
+          )
+        : Category.findBySlugPathWithID(params.category_slug_path_with_id);
+    } catch (error) {
+      if (error?.jqXHR?.status !== 404) {
+        throw error;
+      }
+    }
 
     if (!category) {
-      this.router.replaceWith("/404");
+      const result = await resolvePermalink(
+        `/c/${params.category_slug_path_with_id}`,
+        transition,
+        this.router
+      ).catch(() => null);
+      if (result?.type !== "redirect") {
+        this.router.replaceWith("/404");
+      }
       return;
     }
 
@@ -89,34 +105,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
     return allowed.includes(category.default_view)
       ? category.default_view
       : "latest";
-  }
-
-  async _createSubcategoryList(category) {
-    if (category.isParent && category.show_subcategory_list) {
-      return CategoryList.list(this.store, category);
-    }
-  }
-
-  async _retrieveTopicList(category, transition, modelParams) {
-    const findOpts = filterQueryParams(modelParams, this.routeConfig);
-    const extras = { cached: this.historyStore.isPoppedState };
-
-    let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
-    if (findOpts.no_subcategories) {
-      listFilter += "/none";
-    }
-    listFilter += `/l/${this.filter(category)}`;
-
-    const topicList = await findTopicList(
-      this.store,
-      this.topicTrackingState,
-      listFilter,
-      findOpts,
-      extras
-    );
-    TopicList.hideUniformCategory(topicList, category);
-
-    return topicList;
   }
 
   titleToken() {
@@ -176,6 +164,34 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
+  }
+
+  async _createSubcategoryList(category) {
+    if (category.isParent && category.show_subcategory_list) {
+      return CategoryList.list(this.store, category);
+    }
+  }
+
+  async _retrieveTopicList(category, transition, modelParams) {
+    const findOpts = filterQueryParams(modelParams, this.routeConfig);
+    const extras = { cached: this.historyStore.isPoppedState };
+
+    let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
+    if (findOpts.no_subcategories) {
+      listFilter += "/none";
+    }
+    listFilter += `/l/${this.filter(category)}`;
+
+    const topicList = await findTopicList(
+      this.store,
+      this.topicTrackingState,
+      listFilter,
+      findOpts,
+      extras
+    );
+    TopicList.hideUniformCategory(topicList, category);
+
+    return topicList;
   }
 }
 

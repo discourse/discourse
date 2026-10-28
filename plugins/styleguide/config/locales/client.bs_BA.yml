@@ -11,6 +11,13 @@ bs_BA:
         kind:
           component: "Komponenta"
       sections:
+        context_menu:
+          actions:
+            delete: "Delete"
+        reorderable_list:
+          policies_pinned: "Zakačena"
+          policies_required: "Required"
+          table_type: "Tip"
         colors:
           title: "Colors"
         categories:

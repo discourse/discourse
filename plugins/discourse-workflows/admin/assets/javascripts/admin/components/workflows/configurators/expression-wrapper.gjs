@@ -10,12 +10,13 @@ import {
   caretOffsetFromPoint,
   resolveVariableId,
   WORKFLOW_VARIABLE_MIME,
-} from "../../../lib/workflows/expression-context";
+} from "../../../lib/workflows/expression-context.js";
 import {
   fieldType,
   isExpression,
-} from "../../../lib/workflows/property-engine";
-import ExpressionInput from "./expression-input";
+  wholeExpressionBody,
+} from "../../../lib/workflows/property-engine.js";
+import ExpressionInput from "./expression-input.gjs";
 
 const MODE_ITEMS = [
   {
@@ -48,13 +49,6 @@ function plainTextValue(value) {
 
 function schemaType(schema) {
   return fieldType(schema);
-}
-
-function wholeExpressionBody(value) {
-  const expressionBody = value.slice(1).trim();
-  const match = expressionBody.match(/^\{\{\s*([\s\S]*?)\s*\}\}$/);
-
-  return match?.[1]?.trim() || null;
 }
 
 function parseJsonLiteral(value) {
@@ -270,10 +264,12 @@ export default class ExpressionWrapper extends Component {
     >
       {{#if this.expressionMode}}
         <ExpressionInput
+          @autofocus={{true}}
           @field={{@field}}
+          @inputId={{@inputId}}
+          @inputLabel={{@inputLabel}}
           @placeholder={{@placeholder}}
           @session={{@session}}
-          @autofocus={{true}}
         />
         {{#if @dynamicValueHint}}
           <p class="workflows-property-engine__dynamic-hint">
@@ -286,11 +282,11 @@ export default class ExpressionWrapper extends Component {
 
       {{#if @supportsExpression}}
         <DSegmentedControl
+          class="workflows-property-engine__mode-control"
           @items={{MODE_ITEMS}}
-          @value={{if this.expressionMode "dynamic" "plain"}}
           @onSelect={{this.toggleMode}}
           @size="small"
-          class="workflows-property-engine__mode-control"
+          @value={{if this.expressionMode "dynamic" "plain"}}
         />
       {{/if}}
     </div>

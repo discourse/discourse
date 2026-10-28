@@ -27,6 +27,11 @@ fa_IR:
               label: شناسه موضوع
     discourse_events:
       title: "رویدادها"
+      preferences:
+        reminders:
+          preferences:
+            notification: "آگاه‌سازی"
+            none: "هیچ‌کدام"
       on_holiday: "در تعطیلات"
       disable_holiday: "غیرفعال کردن"
       enable_holiday: "فعال کردن"
@@ -315,6 +320,9 @@ fa_IR:
       invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
     group_timezones:
       search: "جستجو..."
+    discourse_workflows:
+      post_event:
+        topic_id: "شناسه موضوع"
     discourse_post_event:
       notifications:
         before_event_reminder: "یک رویداد در حال شروع است"
@@ -384,7 +392,6 @@ fa_IR:
           no_users: "هیچ کاربری یافت نشد"
           leave_event: "ترک رویداد"
         event:
-          expired: "منقضی شده"
           closed: "بسته شده"
           status:
             public:
@@ -393,6 +400,8 @@ fa_IR:
             private:
               title: "خصوصی"
               description: "فقط کاربران دعوت شده می‌توانند به رویداد خصوصی بپیوندند"
+      recording_modal:
+        save: "ذخیره"
       composer:
         name_placeholder: "نام رویداد"
         url_placeholder: "اضافه کردن URL"
@@ -466,6 +475,8 @@ fa_IR:
           placeholder: "اختیاری، پیش‌فرض عنوان موضوع است"
         invitees:
           label: "گروه‌های دعوت شده"
+        hosts:
+          label: "میزبانان"
         event_type:
           public:
             title: "عمومی"

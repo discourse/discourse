@@ -103,6 +103,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
         describe "with multiple solutions enabled" do
           before { SiteSetting.solved_allow_multiple_solutions = true }
+
           it "keeps both solutions" do
             expect { result }.to change { DiscourseSolved::TopicAnswer.count }.by(1)
           end
@@ -434,7 +435,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       it "triggers the :accepted_solution event" do
-        expect(events).to include(a_hash_including(params: [post]))
+        expect(events).to include(a_hash_including(params: [post, { acting_user: }]))
       end
 
       it "broadcasts the accepted solution" do

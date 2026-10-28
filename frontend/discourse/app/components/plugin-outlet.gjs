@@ -17,7 +17,6 @@ import {
   connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
-import { or } from "discourse/truth-helpers";
 
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
@@ -31,8 +30,8 @@ const VALID_POSITIONS = ["before", "after"];
  * Normalizes an alias entry to a consistent object form.
  * Accepts either a plain string or an object with a `name` property.
  *
- * @param {string|Object} alias - The alias entry to normalize.
- * @returns {{ name: string, deprecated?: boolean, position?: string, since?: string, message?: string, id?: string, url?: string, raiseError?: boolean }}
+ * @param {string | PluginOutletAlias} alias - The alias entry to normalize.
+ * @returns {PluginOutletAlias}
  */
 export function normalizeAlias(alias) {
   if (typeof alias === "string") {
@@ -372,7 +371,7 @@ export default class PluginOutlet extends Component {
    * Normalized alias entries from @aliases arg.
    * Each entry is an object with at least a `name` property.
    *
-   * @returns {Array<{ name: string, deprecated?: boolean, since?: string, message?: string, id?: string, url?: string, raiseError?: boolean }>}
+   * @returns {PluginOutletAlias[]}
    */
   @cached
   get normalizedAliases() {
@@ -388,7 +387,7 @@ export default class PluginOutlet extends Component {
    * standalone outlets into a wrapper's before slot), plus `__before` variants
    * of all aliases without a position (for inheriting wrapper sub-outlet connectors).
    *
-   * @returns {Array<Object>}
+   * @returns {PluginOutletAlias[]}
    */
   @cached
   get aliasesForBefore() {
@@ -413,7 +412,7 @@ export default class PluginOutlet extends Component {
    * standalone outlets into a wrapper's after slot), plus `__after` variants
    * of all aliases without a position (for inheriting wrapper sub-outlet connectors).
    *
-   * @returns {Array<Object>}
+   * @returns {PluginOutletAlias[]}
    */
   @cached
   get aliasesForAfter() {
@@ -462,6 +461,26 @@ export default class PluginOutlet extends Component {
       }
     }
     return undefined;
+  }
+
+  // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved
+  // in recent versions of ember so we need to migrate to outletArgs
+  @cached
+  get outletArgs() {
+    return this.args.outletArgs || this.args.args || {};
+  }
+
+  @cached
+  get outletArgsWithDeprecations() {
+    if (!this.args.deprecatedArgs) {
+      return this.outletArgs;
+    }
+
+    return buildArgsWithDeprecations(
+      this.outletArgs,
+      this.args.deprecatedArgs || {},
+      { outletName: this.args.name }
+    );
   }
 
   @bind
@@ -543,26 +562,6 @@ export default class PluginOutlet extends Component {
     return false;
   }
 
-  // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved
-  // in recent versions of ember so we need to migrate to outletArgs
-  @cached
-  get outletArgs() {
-    return this.args.outletArgs || this.args.args || {};
-  }
-
-  @cached
-  get outletArgsWithDeprecations() {
-    if (!this.args.deprecatedArgs) {
-      return this.outletArgs;
-    }
-
-    return buildArgsWithDeprecations(
-      this.outletArgs,
-      this.args.deprecatedArgs || {},
-      { outletName: this.args.name }
-    );
-  }
-
   @bind
   safeCurryComponent(component, args) {
     if (component.prototype instanceof ClassicComponent) {
@@ -631,9 +630,9 @@ export default class PluginOutlet extends Component {
     {{~#if (this.connectorsExist hasBlock=(has-block))~}}
       {{~#if (has-block)~}}
         <PluginOutlet
-          @name={{concat @name "__before"}}
           @aliases={{this.aliasesForBefore}}
           @connectorTagName={{this.connectorTagNameForBefore}}
+          @name={{concat @name "__before"}}
           @outletArgs={{this.outletArgsWithDeprecations}}
         />
       {{~/if~}}
@@ -656,13 +655,13 @@ export default class PluginOutlet extends Component {
           >{{yield}}</c.templateOnly>
         {{~else~}}
           <PluginConnector
-            @connector={{c}}
+            class={{c.classicClassNames}}
             @args={{this.outletArgs}}
+            @connector={{c}}
             @deprecatedArgs={{@deprecatedArgs}}
+            @layout={{c.template}}
             @outletArgs={{this.outletArgsWithDeprecations}}
             @tagName={{or @connectorTagName ""}}
-            @layout={{c.template}}
-            class={{c.classicClassNames}}
           >{{yield}}</PluginConnector>
         {{~/if~}}
       {{~else~}}
@@ -671,9 +670,9 @@ export default class PluginOutlet extends Component {
 
       {{~#if (has-block)~}}
         <PluginOutlet
-          @name={{concat @name "__after"}}
           @aliases={{this.aliasesForAfter}}
           @connectorTagName={{this.connectorTagNameForAfter}}
+          @name={{concat @name "__after"}}
           @outletArgs={{this.outletArgsWithDeprecations}}
         />
       {{~/if~}}

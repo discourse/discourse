@@ -7,15 +7,14 @@ import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { and, not } from "discourse/truth-helpers";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import { i18n } from "discourse-i18n";
-import CategoryViewComponent from "./results/type/category";
-import GroupViewComponent from "./results/type/group";
-import PostViewComponent from "./results/type/post";
-import TagViewComponent from "./results/type/tag";
-import TopicViewComponent from "./results/type/topic";
-import UserViewComponent from "./results/type/user";
+import CategoryViewComponent from "./results/type/category.gjs";
+import GroupViewComponent from "./results/type/group.gjs";
+import PostViewComponent from "./results/type/post.gjs";
+import TagViewComponent from "./results/type/tag.gjs";
+import TopicViewComponent from "./results/type/topic.gjs";
+import UserViewComponent from "./results/type/user.gjs";
 
 const SEARCH_RESULTS_COMPONENT_TYPE = {
   "search-result-category": CategoryViewComponent,
@@ -91,12 +90,12 @@ export default class Results extends Component {
           }}
         />
         {{#unless this.inTopicContext}}
-          {{#if @suggestionKeyword}}
+          {{#if (and @suggestionKeyword this.showIndexedResults)}}
             <Assistant
-              @suggestionKeyword={{@suggestionKeyword}}
-              @results={{@suggestionResults}}
               @closeSearchMenu={{@closeSearchMenu}}
+              @results={{@suggestionResults}}
               @searchTermChanged={{@searchTermChanged}}
+              @suggestionKeyword={{@suggestionKeyword}}
             />
           {{else if this.termTooShort}}
             <div class="no-results">{{i18n "search.too_short"}}</div>
@@ -104,9 +103,9 @@ export default class Results extends Component {
             <div class="no-results">{{i18n "search.no_results"}}</div>
           {{else if this.renderInitialOptions}}
             <InitialOptions
+              @closeSearchMenu={{@closeSearchMenu}}
               @location={{@location}}
               @searchInputId={{@searchInputId}}
-              @closeSearchMenu={{@closeSearchMenu}}
               @searchTermChanged={{@searchTermChanged}}
             />
           {{else}}
@@ -119,9 +118,9 @@ export default class Results extends Component {
             }}
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
+                @closeSearchMenu={{@closeSearchMenu}}
                 @location={{@location}}
                 @searchInputId={{@searchInputId}}
-                @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
@@ -135,18 +134,18 @@ export default class Results extends Component {
             }}
               {{! render results after a search has been performed }}
               <Types
-                @resultTypes={{this.resultTypesWithComponent}}
-                @topicResultsOnly={{true}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchLogId={{this.searchLogId}}
                 @isPMOnly={{@isPMOnly}}
+                @resultTypes={{this.resultTypesWithComponent}}
+                @searchLogId={{this.searchLogId}}
+                @topicResultsOnly={{true}}
               />
               <MoreLink
-                @updateTypeFilter={{@updateTypeFilter}}
-                @triggerSearch={{@triggerSearch}}
-                @resultTypes={{this.resultTypesWithComponent}}
                 @closeSearchMenu={{@closeSearchMenu}}
+                @resultTypes={{this.resultTypesWithComponent}}
                 @searchTermChanged={{@searchTermChanged}}
+                @triggerSearch={{@triggerSearch}}
+                @updateTypeFilter={{@updateTypeFilter}}
               />
             {{else if
               (and
@@ -157,12 +156,12 @@ export default class Results extends Component {
               )
             }}
               <Types
-                @resultTypes={{this.resultTypesWithComponent}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchTermChanged={{@searchTermChanged}}
                 @displayNameWithUser={{true}}
-                @searchLogId={{this.searchLogId}}
                 @isPMOnly={{@isPMOnly}}
+                @resultTypes={{this.resultTypesWithComponent}}
+                @searchLogId={{this.searchLogId}}
+                @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
             <PluginOutlet

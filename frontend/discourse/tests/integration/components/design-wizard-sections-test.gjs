@@ -51,9 +51,9 @@ module(
       await render(
         <template>
           <ThemeSection
-            @themes={{themes}}
-            @selectedThemeId={{-1}}
             @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
           />
         </template>
       );
@@ -77,9 +77,14 @@ module(
         .dom(
           ".design-wizard__theme-card[data-theme-id='-2'] .design-wizard__theme-screenshot"
         )
-        .doesNotHaveClass(
-          "--loading",
-          "does not leave a skeleton running for a theme with no screenshot"
+        .doesNotExist(
+          "does not render an empty screenshot for a theme without one"
+        );
+      assert
+        .dom(".design-wizard__theme-card[data-theme-id='-2']")
+        .hasClass(
+          "--without-screenshot",
+          "uses a compact card without a screenshot"
         );
     });
 
@@ -92,10 +97,10 @@ module(
       await render(
         <template>
           <ThemeSection
-            @themes={{themes}}
-            @selectedThemeId={{-1}}
             @applying={{true}}
             @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
           />
         </template>
       );
@@ -124,15 +129,15 @@ module(
       await render(
         <template>
           <ColorsSection
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
             @colorMode="light"
             @darkOnly={{false}}
-            @userSelectable={{false}}
             @onSelectMode={{noop}}
             @onSelectPair={{noop}}
             @onToggleUserSelectable={{noop}}
+            @pairs={{PAIRS}}
+            @selectedPairKey="default"
+            @selectedPairName="Default"
+            @userSelectable={{false}}
           />
         </template>
       );
@@ -162,23 +167,21 @@ module(
     });
 
     test("the user selectable switch reflects and toggles its state", async function (assert) {
-      const state = new (class {
-        @tracked userSelectable = false;
-      })();
-      const toggle = () => (state.userSelectable = !state.userSelectable);
+      const userSelectable = tracked(false);
+      const toggle = () => (userSelectable.value = !userSelectable.value);
 
       await render(
         <template>
           <ColorsSection
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
             @colorMode="light"
             @darkOnly={{false}}
-            @userSelectable={{state.userSelectable}}
             @onSelectMode={{noop}}
             @onSelectPair={{noop}}
             @onToggleUserSelectable={{toggle}}
+            @pairs={{PAIRS}}
+            @selectedPairKey="default"
+            @selectedPairName="Default"
+            @userSelectable={{userSelectable.value}}
           />
         </template>
       );
@@ -188,13 +191,13 @@ module(
 
       await click(SWITCH);
       assert.true(
-        state.userSelectable,
+        userSelectable.value,
         "clicking the switch notifies the caller"
       );
       assert.dom(SWITCH).hasAria("checked", "true", "renders the new state");
 
       await click(SWITCH);
-      assert.false(state.userSelectable, "clicking again toggles back off");
+      assert.false(userSelectable.value, "clicking again toggles back off");
       assert
         .dom(SWITCH)
         .hasAria("checked", "false", "renders the reverted state");
@@ -208,18 +211,16 @@ module(
     setupRenderingTest(hooks);
 
     test("homepage controls expose their selected state", async function (assert) {
-      const state = new (class {
-        @tracked homepage = "latest";
-      })();
+      const homepage = tracked("latest");
 
       await render(
         <template>
           <HomepageSection
-            @themeId={{-1}}
-            @homepage={{state.homepage}}
             @categoryPageStyle="categories_boxes"
-            @onSelectHomepage={{noop}}
+            @homepage={{homepage.value}}
             @onSelectCategoryPageStyle={{noop}}
+            @onSelectHomepage={{noop}}
+            @themeId={{-1}}
           />
         </template>
       );
@@ -234,7 +235,7 @@ module(
         .dom(".design-wizard__option-row[data-topic-page='new']")
         .hasAria("pressed", "false", "exposes an unselected topic page");
 
-      state.homepage = "categories";
+      homepage.value = "categories";
       await settled();
 
       assert
@@ -256,18 +257,16 @@ module(
     setupRenderingTest(hooks);
 
     test("the location choices only appear once the banner is enabled", async function (assert) {
-      const state = new (class {
-        @tracked enabled = false;
-      })();
-      const toggle = () => (state.enabled = !state.enabled);
+      const enabled = tracked(false);
+      const toggle = () => (enabled.value = !enabled.value);
 
       await render(
         <template>
           <WelcomeBannerSection
-            @enabled={{state.enabled}}
+            @enabled={{enabled.value}}
             @location="above_topic_content"
-            @onToggle={{toggle}}
             @onSelectLocation={{noop}}
+            @onToggle={{toggle}}
           />
         </template>
       );
@@ -280,7 +279,7 @@ module(
 
       await click(SWITCH);
 
-      assert.true(state.enabled, "clicking the switch notifies the caller");
+      assert.true(enabled.value, "clicking the switch notifies the caller");
       assert
         .dom(
           ".design-wizard__option-row[data-welcome-banner-location='above_topic_content']"
@@ -306,7 +305,7 @@ module(
 
       await render(
         <template>
-          <SearchSection @searchExperience="search_icon" @onSelect={{select}} />
+          <SearchSection @onSelect={{select}} @searchExperience="search_icon" />
         </template>
       );
 

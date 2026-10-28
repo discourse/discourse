@@ -3,12 +3,12 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 
 export default <template>
   <GroupList
-    @groups={{@model.groups}}
-    @type={{@controller.type}}
     @filter={{@controller.filter}}
-    @onTypeChanged={{@controller.onTypeChanged}}
+    @groups={{@model.groups}}
     @onFilterChanged={{@controller.onFilterChanged}}
+    @onTypeChanged={{@controller.onTypeChanged}}
+    @type={{@controller.type}}
   />
 
-  <PluginOutlet @name="after-groups-index-container" @connectorTagName="div" />
+  <PluginOutlet @connectorTagName="div" @name="after-groups-index-container" />
 </template>

@@ -27,6 +27,11 @@ sk:
               label: ID témy
     discourse_events:
       title: "Udalosti"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifikácia"
+            none: "Žiadny"
       on_holiday: "Na dovolenke"
       disable_holiday: "Zakázať"
       enable_holiday: "Povoliť"
@@ -320,6 +325,9 @@ sk:
     group_timezones:
       search: "Hľadať"
       group_availability: "%{group} dostupnosť"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID témy"
     discourse_post_event:
       notifications:
         before_event_reminder: "Udalosť sa čoskoro začne"
@@ -351,6 +359,11 @@ sk:
       edit_event: "Upraviť udalosť"
       export_event: "Exportovať udalosť"
       created_by: "Vytvoril"
+      other_hosts:
+        one: "a %{count} iné"
+        few: "a %{count} ďalšie"
+        many: "a %{count} ďalších"
+        other: "a %{count} ďalších"
       bulk_invite: "Hromadné pozvanie"
       close_event: "Zatvoriť udalosť"
       open_event: "Otvorená udalosť"
@@ -423,7 +436,6 @@ sk:
               many: "%{count} pozvaní používatelia"
               other: "%{count} pozvaných používateľov"
         event:
-          expired: "Vypršala platnosť"
           closed: "Hlasovanie ukončené"
           status:
             standalone:
@@ -435,6 +447,8 @@ sk:
             private:
               title: "Súkromné"
               description: "K súkromnej udalosti sa môžu pripojiť len pozvaní používatelia."
+      recording_modal:
+        save: "Uložiť"
       composer:
         name_placeholder: "Názov udalosti"
         url_placeholder: "Pridaj URL"
@@ -522,6 +536,8 @@ sk:
           placeholder: "Voliteľné, predvolene je názov témy"
         invitees:
           label: "Pozvané skupiny"
+        hosts:
+          label: "Hostitelia"
         event_type:
           public:
             title: "Verejné"

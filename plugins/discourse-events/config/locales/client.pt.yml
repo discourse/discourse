@@ -14,6 +14,11 @@ pt:
             topic_id:
               label: ID do Tópico
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificação"
+            none: "Nenhuma"
       disable_holiday: "Desativar"
       enable_holiday: "Ativar"
       holidays:
@@ -29,6 +34,9 @@ pt:
         year: "Ano"
     group_timezones:
       search: "Pesquisar..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Id. do Tópico"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username}%{description}"
@@ -48,13 +56,14 @@ pt:
         status: "Estado"
       models:
         event:
-          expired: "Expirado"
           closed: "Fechado"
           status:
             public:
               title: "Público"
             private:
               title: "Privado"
+      recording_modal:
+        save: "Guardar"
       composer:
         url_placeholder: "Adicionar URL"
         reminder:

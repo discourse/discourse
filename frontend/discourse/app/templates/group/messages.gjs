@@ -6,14 +6,14 @@ export default <template>
   <section class="user-secondary-navigation">
     <DHorizontalOverflowNav class="messages-nav">
       <li>
-        <LinkTo @route="group.messages.inbox" @model={{@controller.model.name}}>
+        <LinkTo @model={{@controller.model.name}} @route="group.messages.inbox">
           {{i18n "user.messages.inbox"}}
         </LinkTo>
       </li>
       <li>
         <LinkTo
-          @route="group.messages.archive"
           @model={{@controller.model.name}}
+          @route="group.messages.archive"
         >
           {{i18n "user.messages.archive"}}
         </LinkTo>

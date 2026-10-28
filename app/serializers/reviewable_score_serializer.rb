@@ -56,6 +56,9 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
   def include_reviewable_conversation?
     return false if object.meta_topic.blank?
+    if object.meta_topic.private_message? && @options[:include_private_conversations] == false
+      return false
+    end
     scope&.can_see?(object.meta_topic) || object.notify_moderators_flag_message?
   end
 

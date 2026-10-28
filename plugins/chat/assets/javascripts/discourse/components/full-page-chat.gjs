@@ -1,13 +1,13 @@
 import { array } from "@ember/helper";
-import ChatChannel from "./chat-channel";
+import ChatChannel from "./chat-channel.gjs";
 
 const FullPageChat = <template>
   {{#each (array @channel) as |channel|}}
     <ChatChannel
       @channel={{channel}}
-      @targetMessageId={{@targetMessageId}}
       @isFiltering={{@isFiltering}}
       @onToggleFilter={{@onToggleFilter}}
+      @targetMessageId={{@targetMessageId}}
     />
   {{/each}}
 </template>;

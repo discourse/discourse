@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import DButton from "discourse/ui-kit/d-button";
-import CustomDateRangeModal from "../components/modal/custom-date-range";
+import CustomDateRangeModal from "../components/modal/custom-date-range.gjs";
 
 export default class DashboardPeriodSelector extends Component {
   @service modal;
@@ -24,18 +24,18 @@ export default class DashboardPeriodSelector extends Component {
   <template>
     <div>
       <PeriodChooser
-        @period={{@period}}
         @action={{@setPeriod}}
         @content={{this.availablePeriods}}
-        @fullDay={{false}}
-        @startDate={{@startDate}}
         @endDate={{@endDate}}
+        @fullDay={{false}}
+        @period={{@period}}
+        @startDate={{@startDate}}
       />
       <DButton
-        @icon="gear"
-        @action={{this.openCustomDateRangeModal}}
-        @title="admin.dashboard.custom_date_range"
         class="btn-default custom-date-range-button"
+        @action={{this.openCustomDateRangeModal}}
+        @icon="gear"
+        @title="admin.dashboard.custom_date_range"
       />
     </div>
   </template>

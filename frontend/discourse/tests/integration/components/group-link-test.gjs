@@ -9,7 +9,7 @@ module("Integration | Component | GroupLink", function (hooks) {
   test("renders the group card contract with a supplied href", async function (assert) {
     await render(
       <template>
-        <GroupLink @name="team" @href="/custom/team">Team</GroupLink>
+        <GroupLink @href="/custom/team" @name="team">Team</GroupLink>
       </template>
     );
 

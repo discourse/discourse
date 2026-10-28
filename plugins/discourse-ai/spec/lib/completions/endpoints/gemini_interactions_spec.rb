@@ -20,6 +20,137 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
 
   before { enable_current_plugin }
 
+  it "persists non-streaming absent thought usage" do
+    usage = { total_input_tokens: 10, total_output_tokens: 4 }
+    stub_request(:post, url).to_return(body: interaction_response(steps: [], usage: usage).to_json)
+    llm.generate("Input", user: user)
+    expect(AiApiAuditLog.last).to have_attributes(
+      reasoning_tokens: nil,
+      response_tokens: 4,
+      stop_reason: nil,
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+    )
+  end
+
+  it "persists non-streaming zero thought usage" do
+    usage = { total_input_tokens: 10, total_output_tokens: 4, total_thought_tokens: 0 }
+    stub_request(:post, url).to_return(body: interaction_response(steps: [], usage: usage).to_json)
+    llm.generate("Input", user: user)
+    expect(AiApiAuditLog.last).to have_attributes(
+      reasoning_tokens: 0,
+      response_tokens: 4,
+      stop_reason: nil,
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+    )
+  end
+
+  it "persists non-streaming positive thought usage" do
+    usage = { total_input_tokens: 10, total_output_tokens: 4, total_thought_tokens: 12 }
+    stub_request(:post, url).to_return(body: interaction_response(steps: [], usage: usage).to_json)
+    llm.generate("Input", user: user)
+    expect(AiApiAuditLog.last).to have_attributes(
+      reasoning_tokens: 12,
+      response_tokens: 16,
+      stop_reason: nil,
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+    )
+  end
+
+  it "persists streamed absent thought usage" do
+    usage = { total_input_tokens: 10, total_output_tokens: 4 }
+    stub_request(:post, url).to_return(
+      body: sse_event("interaction.completed", interaction: { status: "completed", usage: usage }),
+    )
+    llm.generate("Input", user: user) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      reasoning_tokens: nil,
+      response_tokens: 4,
+      stop_reason: nil,
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+    )
+  end
+
+  it "persists streamed zero thought usage" do
+    usage = { total_input_tokens: 10, total_output_tokens: 4, total_thought_tokens: 0 }
+    stub_request(:post, url).to_return(
+      body: sse_event("interaction.completed", interaction: { status: "completed", usage: usage }),
+    )
+    llm.generate("Input", user: user) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      reasoning_tokens: 0,
+      response_tokens: 4,
+      stop_reason: nil,
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+    )
+  end
+
+  it "persists streamed positive thought usage" do
+    usage = { total_input_tokens: 10, total_output_tokens: 4, total_thought_tokens: 12 }
+    stub_request(:post, url).to_return(
+      body: sse_event("interaction.completed", interaction: { status: "completed", usage: usage }),
+    )
+    llm.generate("Input", user: user) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      reasoning_tokens: 12,
+      response_tokens: 16,
+      stop_reason: nil,
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+    )
+  end
+
+  it "resets its usage and unfinished streaming decoder before a retried request" do
+    response = instance_double(Net::HTTPResponse, code: "200")
+    reads = 0
+    allow(response).to receive(:read_body) do |&block|
+      reads += 1
+      if reads == 1
+        block.call(
+          sse_event(
+            "interaction.completed",
+            interaction: {
+              status: "completed",
+              usage: {
+                total_input_tokens: 10,
+                total_output_tokens: 0,
+                total_thought_tokens: 0,
+              },
+            },
+          ) + 'data: {"event_type":',
+        )
+        raise EOFError, "Unexpected EOF"
+      end
+      block.call(
+        sse_event("step.start", step: { type: "model_output" }) +
+          sse_event("step.delta", delta: { type: "text", text: "Recovered answer" }) +
+          sse_event(
+            "interaction.completed",
+            interaction: {
+              status: "completed",
+              usage: {
+                total_input_tokens: 10,
+                total_output_tokens: 4,
+              },
+            },
+          ),
+      )
+    end
+    http = instance_double(Net::HTTP)
+    allow(http).to receive(:request).and_yield(response)
+    allow(FinalDestination::HTTP).to receive(:start).and_yield(http)
+    endpoint.stubs(:sleep_before_retry)
+    prompt = DiscourseAi::Completions::Prompt.new("Input")
+    dialect = DiscourseAi::Completions::Dialects::GeminiInteractions.new(prompt, model)
+    emitted = []
+    endpoint.perform_completion!(dialect, user) { |partial| emitted << partial }
+    expect(emitted).to eq(["Recovered answer"])
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+      stop_reason: nil,
+      reasoning_tokens: nil,
+      response_tokens: 4,
+    )
+  end
+
   def interaction_response(steps:, usage: nil, status: "completed")
     {
       object: "interaction",
@@ -96,6 +227,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
           end,
       ).to_return(status: 200, body: response.to_json)
 
+    execution =
+      DiscourseAi::Completions::ExecutionContext.new(
+        work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+      )
     result =
       llm.generate(
         DiscourseAi::Completions::Prompt.new(
@@ -107,6 +242,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
         top_p: 0.8,
         max_tokens: 100,
         stop_sequences: ["STOP"],
+        execution_context: execution,
       )
 
     expect(result).to eq(
@@ -143,6 +279,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     expect(log.request_tokens).to eq(100)
     expect(log.cache_read_tokens).to eq(20)
     expect(log.response_tokens).to eq(12)
+    expect(execution.work_budget.used).to eq(12)
   end
 
   it "maps Gemini 2.5 thinking efforts to supported Interactions API levels" do
@@ -168,6 +305,63 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     expect(request_bodies.map { |body| body.dig(:generation_config, :thinking_level) }).to eq(
       %w[low low medium high],
     )
+  end
+
+  it "maps Gemini 3.8 agent and LLM minimal thinking settings to low" do
+    model.update!(name: "gemini-3.8-flash", provider_params: { thinking_level: "minimal" })
+    request_bodies = []
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_bodies << JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(llm.generate("Think", user:)).to eq("Done")
+    expect(llm.generate("Think", user:, thinking_effort: "minimal")).to eq("Done")
+    expect(request_bodies.map { |body| body.dig(:generation_config, :thinking_level) }).to eq(
+      %w[low low],
+    )
+  end
+
+  it "strips deprecated agent sampling settings and unsupported extra parameters for Gemini 3.8" do
+    SiteSetting.ai_llm_temperature_top_p_enabled = true
+    model.update!(name: "gemini-3.8-flash")
+    request_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(
+      llm.generate(
+        "Think",
+        user:,
+        temperature: 0.4,
+        top_p: 0.8,
+        extra_model_params: {
+          top_k: 40,
+          thinking_budget: 1_000,
+        },
+      ),
+    ).to eq("Done")
+    expect(request_body).not_to have_key(:generation_config)
   end
 
   it "omits the unsupported disabled thinking override for Gemini 2.5" do

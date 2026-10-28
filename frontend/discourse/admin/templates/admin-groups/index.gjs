@@ -2,10 +2,10 @@ import GroupList from "discourse/components/group-list";
 
 export default <template>
   <GroupList
-    @groups={{@model.groups}}
-    @type={{@controller.type}}
     @filter={{@controller.filter}}
-    @onTypeChanged={{@controller.onTypeChanged}}
+    @groups={{@model.groups}}
     @onFilterChanged={{@controller.onFilterChanged}}
+    @onTypeChanged={{@controller.onTypeChanged}}
+    @type={{@controller.type}}
   />
 </template>

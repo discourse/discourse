@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
@@ -64,11 +63,11 @@ export default class PostMenuFlagButton extends Component {
         }}
         ...attributes
         @action={{@buttonActions.showFlags}}
+        @ariaLabel={{this.title}}
+        @disabled={{this.isFlagButtonDisabled}}
         @icon="flag"
         @label={{if @showLabel "post.controls.flag_action"}}
         @title={{this.title}}
-        @ariaLabel={{this.title}}
-        @disabled={{this.isFlagButtonDisabled}}
       />
     </div>
   </template>

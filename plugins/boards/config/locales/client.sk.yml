@@ -6,7 +6,23 @@
 
 sk:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Názov"
+        icon: "Ikona"
+        color: "Farba"
+        tag_name: "Značka"
+        default_sort_priority: "Priorita"
+      create_board:
+        name: "Meno"
+        slug: "Slug"
+        tag_names: "Značky"
+        category_ids: "Kategórie"
     boards:
+      status:
+        all: "Všetky"
+        open: "Zahájiť"
+        archived: "Archivované"
       board:
         remove_card: "Odstrániť"
         new_topic: "Nová téma..."
@@ -23,7 +39,11 @@ sk:
         unassign_from_topic: "Zrušenie priradenia @%{username} z témy"
         unassign_from_post: "Zrušenie priradenia @%{username} z #%{post_number}"
         edit_assignments: "Úprava priradenia..."
-        created_by: "Vytvoril"
+        owners:
+          one: "Vlastník"
+          few: "Vlastníci"
+          many: "Vlastníci"
+          other: "Vlastníci"
       manage:
         name: "Meno"
         slug: "Slug"

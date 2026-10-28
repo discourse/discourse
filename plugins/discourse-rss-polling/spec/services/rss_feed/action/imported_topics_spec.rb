@@ -20,6 +20,19 @@ RSpec.describe DiscourseRssPolling::RssFeed::Action::ImportedTopics do
       expect(imported.keys).to contain_exactly(imported_item)
       expect(imported[imported_item]).to be_present
     end
+
+    context "when the item url differs by scheme, case or trailing slash" do
+      let(:imported_item) do
+        instance_double(
+          DiscourseRssPolling::FeedItem,
+          url: "http://Blog.Discourse.org/2017/09/poll-feed-spec-fixture",
+        )
+      end
+
+      it "returns the topic url for the imported item" do
+        expect(imported.keys).to contain_exactly(imported_item)
+      end
+    end
   end
 
   context "when no item has been imported" do

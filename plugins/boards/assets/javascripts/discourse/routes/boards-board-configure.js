@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import Board from "../models/board";
+import Board from "../models/board.js";
 
 export default class BoardsBoardConfigureRoute extends DiscourseRoute {
   @service router;
@@ -19,7 +19,7 @@ export default class BoardsBoardConfigureRoute extends DiscourseRoute {
   afterModel(model, transition) {
     const board = model.board;
 
-    if (board && !board.can_manage) {
+    if (board && !board.canManage) {
       this.router.replaceWith("boardsBoard", board.slug, board.id);
       return;
     }

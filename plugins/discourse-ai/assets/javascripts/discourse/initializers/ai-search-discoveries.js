@@ -1,11 +1,13 @@
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
 import { i18n } from "discourse-i18n";
-import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types";
-import { isScopedSearch } from "../lib/search-discoveries-context";
-import shortcutLabel from "../lib/shortcut-label";
+import { contextPlace } from "../lib/ai-search-scope.js";
+import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types.js";
+import { isScopedSearch } from "../lib/search-discoveries-context.js";
+import shortcutLabel from "../lib/shortcut-label.js";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
@@ -38,16 +40,54 @@ export default apiInitializer((api) => {
   const asksByDefault = () =>
     Boolean(get(currentUser, "user_option.ai_ask_ai_default"));
 
-  api.addQuickSearchRandomTip({
-    label: shortcutLabel("shift", "enter"),
-    get description() {
-      return i18n(
-        asksByDefault()
-          ? "discourse_ai.discobot_discoveries.tip_search"
-          : "discourse_ai.discobot_discoveries.tip_ask"
-      );
-    },
-  });
+  // enter fetches every kind of result at once and opens on the likeliest,
+  // so nothing in the menu has to be picked before searching
+  const combinedSearch = settings.enable_ai_combined_search;
+  const aiSearchSession = api.container.lookup("service:ai-search-session");
+
+  const startCombined = (query, { trigger }) => {
+    // the session runs the keyword searches, so the menu is switched to
+    // showing topics
+    aiSearchSession.showTopicsInMenu?.();
+    aiSearchSession.start(query, aiSearchSession.contextScope, {
+      trigger,
+    });
+  };
+
+  if (combinedSearch) {
+    aiSearchSession.subscribe();
+
+    const contextKey = () => contextPlace(search.searchContext)?.key ?? null;
+    let lastContextKey = contextKey();
+
+    api.onPageChange(() => {
+      aiSearchSession.forgetSearches();
+
+      // A search belongs to where it was made. Somewhere else it would run
+      // again in the new scope the moment the menu opened, so it is cleared.
+      const key = contextKey();
+      if (key !== lastContextKey) {
+        lastContextKey = key;
+        aiSearchSession.reset();
+        search.activeGlobalSearchTerm = "";
+        search.noResults = false;
+        search.results = {};
+      }
+    });
+  }
+
+  if (!combinedSearch) {
+    api.addQuickSearchRandomTip({
+      label: shortcutLabel("shift", "enter"),
+      get description() {
+        return i18n(
+          asksByDefault()
+            ? "discourse_ai.discobot_discoveries.tip_search"
+            : "discourse_ai.discobot_discoveries.tip_ask"
+        );
+      },
+    });
+  }
 
   // Asking is offered on /search the way users and categories are: a type of
   // its own, which owns the results area while it is selected.
@@ -96,7 +136,7 @@ export default apiInitializer((api) => {
       }
 
       const query = search.activeGlobalSearchTerm?.trim();
-      if (query && discobotDiscoveries.lastQuery === query) {
+      if (!combinedSearch && query && discobotDiscoveries.lastQuery === query) {
         value.set("search_type", SEARCH_TYPE_ASK_AI);
       }
 
@@ -148,7 +188,7 @@ export default apiInitializer((api) => {
   api.registerValueTransformer(
     "search-advanced-icon-enabled",
     ({ value, context }) =>
-      offersDiscoveries(context?.location) ? false : value
+      !combinedSearch && offersDiscoveries(context?.location) ? false : value
   );
 
   // Once a term has been asked, the indexed results stay behind their option,
@@ -162,6 +202,17 @@ export default apiInitializer((api) => {
       }
 
       const query = search.activeGlobalSearchTerm?.trim();
+
+      // Once a search runs, the list is the keyword tab on screen, so the
+      // answer tab has the menu to itself. Before then it is the menu's own
+      // suggestions for what is being typed.
+      if (combinedSearch) {
+        if (aiSearchSession.isActiveFor(query)) {
+          return ["topics", "context"].includes(aiSearchSession.selectedTab);
+        }
+        return value;
+      }
+
       return !query || discobotDiscoveries.lastQuery !== query;
     }
   );
@@ -188,6 +239,18 @@ export default apiInitializer((api) => {
     }
   );
 
+  // clearing the search is a fresh start, so the search's results go with it
+  api.registerBehaviorTransformer(
+    "search-menu-clear-search",
+    ({ context, next }) => {
+      if (combinedSearch && offersDiscoveries(context?.location)) {
+        aiSearchSession.reset();
+      }
+
+      return next();
+    }
+  );
+
   // clearing the history clears both lists, since they read as one
   api.registerBehaviorTransformer(
     "search-menu-clear-recent-searches",
@@ -202,6 +265,19 @@ export default apiInitializer((api) => {
 
   // each remembered item repeats as the kind of search its icon shows
   api.addSearchMenuAssistantSelectCallback((args) => {
+    // A remembered search is set rather than typed, so it starts the combined
+    // search itself. The term is set without the menu's own search, which would
+    // race it, and the scope stays as the reader left it.
+    if (
+      combinedSearch &&
+      ["recent-search", "recent-ask"].includes(args.usage) &&
+      args.updatedTerm
+    ) {
+      search.activeGlobalSearchTerm = args.updatedTerm;
+      startCombined(args.updatedTerm, { trigger: "recent" });
+      return false;
+    }
+
     if (args.usage === "recent-search") {
       discobotDiscoveries.dismissDiscovery();
       return true;
@@ -216,9 +292,6 @@ export default apiInitializer((api) => {
     return false;
   });
 
-  // Enter always runs the indexed search, so nothing has to be remembered
-  // between submissions. Shift+Enter is the one that asks: Ctrl/Cmd+Enter is
-  // already advanced search, and a second Enter already means the same.
   api.addSearchMenuOnKeyDownCallback((searchTerm, event) => {
     if (!offersDiscoveries(searchTerm?.args?.location)) {
       return true;
@@ -227,9 +300,41 @@ export default apiInitializer((api) => {
     if (event.key === "Enter") {
       const query = search.activeGlobalSearchTerm?.trim();
 
-      // The preference decides which key asks; the other one does the opposite,
-      // so both remain reachable whichever way round it is.
-      if (event.shiftKey !== asksByDefault() && query) {
+      if (combinedSearch) {
+        if (!event.shiftKey && query) {
+          // A search already on screen for this term is not run again, unless
+          // its answer broke down. Enter on it opens the full page instead, as
+          // a second enter does in the menu, whose own handling is skipped
+          // because the menu never saw the first.
+          if (
+            aiSearchSession.isActiveFor(query) &&
+            !aiSearchSession.answerErrored
+          ) {
+            searchTerm.args.fullSearch();
+            searchTerm.args.closeSearchMenu();
+          } else {
+            startCombined(query, { trigger: "enter" });
+          }
+          return false;
+        }
+        aiSearchSession.reset();
+        return true;
+      }
+
+      const enterAsks = !search.inTopicContext && asksByDefault();
+      if (
+        enterAsks &&
+        !event.shiftKey &&
+        query &&
+        (searchTerm.args.typeFilter !== DEFAULT_TYPE_FILTER ||
+          discobotDiscoveries.lastQuery === query)
+      ) {
+        searchTerm.args.fullSearch();
+        searchTerm.args.closeSearchMenu();
+        return false;
+      }
+
+      if (event.shiftKey !== enterAsks && query) {
         // asking honours no scope, so picking it leaves any behind
         searchTerm.args.clearTopicContext();
         searchTerm.args.clearPMInboxContext();
@@ -241,18 +346,12 @@ export default apiInitializer((api) => {
       return true;
     }
 
-    // A different term has to be resubmitted anyway, so the option that answered
-    // the last one stops applying: the scope is released and the row goes back
-    // to offering all three.
-    if (search.inTopicContext) {
-      searchTerm.args.clearTopicContext();
-    }
-
     // An answer belongs to the submission that asked for it, not to the text.
     // Dropping it the moment the box stops matching is what stops it coming
     // back when the same term is typed a second time, since by then the answer
     // it would be matched against is already gone.
     if (
+      !combinedSearch &&
       discobotDiscoveries.lastQuery &&
       discobotDiscoveries.lastQuery !== search.activeGlobalSearchTerm?.trim()
     ) {
@@ -268,22 +367,22 @@ export default apiInitializer((api) => {
       offersDiscoveries(context?.location) ? [...value, "--with-ask-ai"] : value
   );
 
-  // scope is one of the options in the menu, and that row stays put while
-  // scoped, so the input never carries a chip for it
+  // the options row always shows which scope is selected
+  api.registerValueTransformer(
+    "search-menu-search-context-enabled",
+    ({ value, context }) =>
+      !combinedSearch && offersDiscoveries(context?.location) ? false : value
+  );
+
   // advanced search is offered in the options row instead
   api.registerValueTransformer(
     "search-menu-advanced-button-enabled",
     ({ value, context }) =>
-      offersDiscoveries(context?.location) ? false : value
+      !combinedSearch && offersDiscoveries(context?.location) ? false : value
   );
 
-  api.registerValueTransformer(
-    "search-menu-search-context-enabled",
-    ({ value, context }) =>
-      offersDiscoveries(context?.location) ? false : value
-  );
-
-  // the menu offers every way to resolve the term as options of its own
+  // the menu offers every way to resolve the term as options of its own, or
+  // with combined search, enter resolves it every way at once
   api.registerValueTransformer(
     "search-menu-search-shortcuts-enabled",
     ({ value, context }) =>

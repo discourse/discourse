@@ -1,6 +1,126 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::OpenAiResponsesMessageProcessor do
+  describe "completion metadata" do
+    it "captures non-streaming incomplete response metadata" do
+      processor = described_class.new
+      response = {
+        status: "incomplete",
+        incomplete_details: {
+          reason: "max_output_tokens",
+        },
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+          output_tokens_details: {
+            reasoning_tokens: 5,
+          },
+        },
+      }
+      processor.process_message(response)
+      expect(processor).to have_attributes(
+        stop_reason: "max_output_tokens",
+        output_limit_reached: true,
+        reasoning_tokens: 5,
+      )
+    end
+
+    it "captures streamed incomplete response metadata" do
+      processor = described_class.new
+      response = {
+        status: "incomplete",
+        incomplete_details: {
+          reason: "max_output_tokens",
+        },
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+          output_tokens_details: {
+            reasoning_tokens: 5,
+          },
+        },
+      }
+      processor.process_streamed_message(type: "response.incomplete", response: response)
+      expect(processor).to have_attributes(
+        stop_reason: "max_output_tokens",
+        output_limit_reached: true,
+        reasoning_tokens: 5,
+      )
+    end
+
+    it "captures incomplete metadata without replaying terminal native output items" do
+      processor = described_class.new(output_thinking: true)
+      processor.process_streamed_message(
+        type: "response.incomplete",
+        response: {
+          status: "incomplete",
+          incomplete_details: {
+            reason: "max_output_tokens",
+          },
+          output: [
+            { type: "web_search_call", id: "ws_1", action: { type: "search", query: "Query" } },
+          ],
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+            output_tokens_details: {
+              reasoning_tokens: 5,
+            },
+          },
+        },
+      )
+      expect(processor.finish).to eq([])
+      expect(processor).to have_attributes(
+        stop_reason: "max_output_tokens",
+        output_limit_reached: true,
+        reasoning_tokens: 5,
+      )
+    end
+
+    it "updates usage on completion and distinguishes zero from missing reasoning usage" do
+      processor = described_class.new
+      processor.process_streamed_message(
+        type: "response.created",
+        response: {
+          usage: {
+            input_tokens: 10,
+            output_tokens: 0,
+          },
+        },
+      )
+      expect(processor.reasoning_tokens).to be_nil
+      processor.process_streamed_message(
+        type: "response.completed",
+        response: {
+          status: "completed",
+          usage: {
+            input_tokens: 12,
+            output_tokens: 8,
+            output_tokens_details: {
+              reasoning_tokens: 0,
+            },
+          },
+        },
+      )
+      expect(processor).to have_attributes(
+        stop_reason: "completed",
+        output_limit_reached: false,
+        completion_tokens: 8,
+        reasoning_tokens: 0,
+      )
+      processor.process_message(
+        status: "incomplete",
+        incomplete_details: {
+          reason: "content_filter",
+        },
+      )
+      expect(processor).to have_attributes(
+        stop_reason: "content_filter",
+        output_limit_reached: false,
+      )
+    end
+  end
+
   describe "native web tool activity" do
     it "emits a thinking item for streamed web search calls" do
       processor = described_class.new(output_thinking: true)

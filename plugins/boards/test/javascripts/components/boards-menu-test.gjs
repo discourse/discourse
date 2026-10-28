@@ -56,7 +56,7 @@ module("Integration | Component | BoardsMenu", function (hooks) {
 
     await render(
       <template>
-        <BoardsMenu @data={{this.data}} @close={{this.close}} />
+        <BoardsMenu @close={{this.close}} @data={{this.data}} />
       </template>
     );
 
@@ -95,7 +95,7 @@ module("Integration | Component | BoardsMenu", function (hooks) {
 
     await render(
       <template>
-        <BoardsMenu @data={{this.data}} @close={{this.close}} />
+        <BoardsMenu @close={{this.close}} @data={{this.data}} />
       </template>
     );
 
@@ -122,7 +122,7 @@ module("Integration | Component | BoardsMenu", function (hooks) {
 
     await render(
       <template>
-        <BoardsMenu @data={{this.data}} @close={{this.close}} />
+        <BoardsMenu @close={{this.close}} @data={{this.data}} />
       </template>
     );
 
@@ -146,7 +146,7 @@ module("Integration | Component | BoardsMenu", function (hooks) {
 
     await render(
       <template>
-        <BoardsMenu @data={{this.data}} @close={{this.close}} />
+        <BoardsMenu @close={{this.close}} @data={{this.data}} />
       </template>
     );
 

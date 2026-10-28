@@ -4,7 +4,6 @@ import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
-import { eq, or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FKControlCheckbox extends FKBaseControl {
@@ -18,14 +17,14 @@ export default class FKControlCheckbox extends FKBaseControl {
   <template>
     <FKLabel class="form-kit__control-checkbox-label">
       <input
-        type="checkbox"
+        aria-describedby={{@field.describedBy}}
+        aria-invalid={{if @field.error "true"}}
         checked={{or (eq @field.value true) (eq @field.value "true")}}
         class="form-kit__control-checkbox"
         disabled={{@field.disabled}}
         id={{@field.id}}
         name={{@field.name}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{@field.describedBy}}
+        type="checkbox"
         ...attributes
         {{on "change" this.handleInput}}
       />

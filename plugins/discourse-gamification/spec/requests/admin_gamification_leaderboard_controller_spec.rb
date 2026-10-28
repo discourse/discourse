@@ -8,6 +8,31 @@ RSpec.describe DiscourseGamification::AdminGamificationLeaderboardController do
     sign_in(admin)
   end
 
+  describe "#index" do
+    it "includes the creator of each leaderboard" do
+      leaderboard = Fabricate(:gamification_leaderboard, created_by_id: admin.id)
+
+      get "/admin/plugins/discourse-gamification/leaderboards.json"
+
+      expect(response.status).to eq(200)
+      serialized =
+        response.parsed_body["gamification_leaderboards"].find { _1["id"] == leaderboard.id }
+      expect(serialized["created_by"]).to include("id" => admin.id, "username" => admin.username)
+    end
+
+    it "omits the creator when the user no longer exists" do
+      leaderboard = Fabricate(:gamification_leaderboard, created_by_id: admin.id)
+      leaderboard.update_columns(created_by_id: -999_999)
+
+      get "/admin/plugins/discourse-gamification/leaderboards.json"
+
+      expect(response.status).to eq(200)
+      serialized =
+        response.parsed_body["gamification_leaderboards"].find { _1["id"] == leaderboard.id }
+      expect(serialized["created_by"]).to be_nil
+    end
+  end
+
   describe "#create" do
     it "creates leaderboard and enqueues score recalculation" do
       expect(Jobs::RecalculateLeaderboardScores.jobs.size).to eq(0)

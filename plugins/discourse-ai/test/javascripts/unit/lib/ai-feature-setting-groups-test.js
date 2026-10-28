@@ -66,6 +66,10 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     const groups = getSettingGroupsForFeature("summarization");
 
     assert.strictEqual(groups.length, 3, "summarization should have 3 groups");
+    assert.true(
+      groups[0].settings.includes("ai_summaries_for_crawlers"),
+      "basic settings should include summary publication"
+    );
   });
 
   test("returns correct groups for search", function (assert) {
@@ -73,7 +77,7 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
 
     assert.deepEqual(
       groups.map((group) => group.key),
-      ["settings", "agents", "access_control"]
+      ["settings", "agents", "access_control", "ask_ai_reports"]
     );
     assert.deepEqual(groups[0].settings, [
       "ai_discover_enabled",
@@ -85,9 +89,16 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
       "ai_discover_agent",
       "ai_ask_ai_agent",
       "ai_ask_ai_query_rewriter_agent",
+      "ai_ask_ai_report_agent",
       "ai_ask_ai_follow_up_agent",
     ]);
     assert.deepEqual(groups[2].settings, ["ai_ask_ai_allowed_groups"]);
+    assert.deepEqual(groups[3].settings, [
+      "ai_ask_ai_report_weekly_enabled",
+      "ai_ask_ai_report_exclude_groups",
+      "ai_ask_ai_report_max_asks",
+      "ai_ask_ai_report_recipient_groups",
+    ]);
   });
 
   test("returns correct groups for translation", function (assert) {
@@ -119,6 +130,38 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
       groups.length,
       0,
       "unknown feature should return empty array"
+    );
+  });
+  test("sentiment groups include backend selectors and background processing", function (assert) {
+    const groups = getSettingGroupsForFeature("sentiment");
+    assert.deepEqual(
+      groups.map((group) => group.key),
+      ["sentiment", "emotion", "background_processing"],
+      "groups both independent capabilities and background controls"
+    );
+    assert.deepEqual(
+      groups.flatMap((group) => group.settings),
+      [
+        "ai_sentiment_enabled",
+        "ai_sentiment_sentiment_classification_strategy",
+        "ai_sentiment_sentiment_agent",
+        "ai_sentiment_sentiment_decision_model",
+        "ai_sentiment_emotion_enabled",
+        "ai_sentiment_emotion_classification_strategy",
+        "ai_sentiment_emotion_agent",
+        "ai_sentiment_emotion_decision_model",
+        "ai_sentiment_backfill_maximum_posts_per_hour",
+        "ai_sentiment_backfill_post_max_age_days",
+      ],
+      "exposes background controls without secret endpoint JSON"
+    );
+    assert.deepEqual(
+      groups[2].settings,
+      [
+        "ai_sentiment_backfill_maximum_posts_per_hour",
+        "ai_sentiment_backfill_post_max_age_days",
+      ],
+      "places both controls in the background processing section"
     );
   });
 });

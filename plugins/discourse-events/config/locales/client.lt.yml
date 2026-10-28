@@ -14,6 +14,11 @@ lt:
             topic_id:
               label: Temos ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Perspėjimai"
+            none: "Nieko"
       disable_holiday: "Išjungti"
       enable_holiday: "Įgalinti"
       date: "Data"
@@ -27,6 +32,9 @@ lt:
         year: "Metai"
     group_timezones:
       search: "Paieška..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Temos ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -47,13 +55,14 @@ lt:
         status: "Statusas"
       models:
         event:
-          expired: "Baigėsi galiojimo laikas"
           closed: "Uždaryta"
           status:
             public:
               title: "Vieša"
             private:
               title: "Privatu"
+      recording_modal:
+        save: "Saugoti"
       composer:
         location_or_url_placeholder: "Pridėti vietą arba URL"
         url_placeholder: "Pridėti URL"

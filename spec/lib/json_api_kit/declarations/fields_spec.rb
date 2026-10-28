@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Declarations::Fields do
-  subject(:fields) { described_class.for(names, guardian:, attributes:, relationships:, schema:) }
+  subject(:fields) do
+    described_class.for(names, guardian:, attributes:, relationships:, schema:, type: "topics")
+  end
 
   let(:guardian) { Guardian.new }
 
@@ -26,7 +28,7 @@ RSpec.describe JsonApiKit::Declarations::Fields do
         [JsonApiKit::Declarations::Relationship::ToOne.new(:title, resource: users_resource)]
       end
 
-      it "refuses the declaration" do
+      it "raises a collision" do
         expect { fields }.to raise_error(described_class::Collision, /title/)
       end
     end
@@ -39,7 +41,7 @@ RSpec.describe JsonApiKit::Declarations::Fields do
         ]
       end
 
-      it "refuses the declaration" do
+      it "raises a collision" do
         expect { fields }.to raise_error(described_class::Collision, /title/)
       end
     end
@@ -52,24 +54,24 @@ RSpec.describe JsonApiKit::Declarations::Fields do
         ]
       end
 
-      it "refuses the declaration" do
+      it "raises a collision" do
         expect { fields }.to raise_error(described_class::Collision, /id, type/)
       end
     end
   end
 
   describe "#attributes" do
-    subject(:attribute_values) { fields.attributes.values_for(topic) }
+    subject(:attribute_names) { fields.attributes.values_for(topic).keys.map(&:value) }
 
     it "holds every field the resource declares" do
-      expect(attribute_values.keys).to eq(%w[title closed])
+      expect(attribute_names).to eq(%w[title closed])
     end
 
     context "when the fieldset holds one field" do
       let(:names) { %w[title] }
 
       it "holds only those" do
-        expect(attribute_values.keys).to eq(%w[title])
+        expect(attribute_names).to eq(%w[title])
       end
     end
 
@@ -77,7 +79,7 @@ RSpec.describe JsonApiKit::Declarations::Fields do
       let(:names) { %w[closed title] }
 
       it "holds them in the order the resource declares" do
-        expect(attribute_values.keys).to eq(%w[title closed])
+        expect(attribute_names).to eq(%w[title closed])
       end
     end
 
@@ -85,7 +87,7 @@ RSpec.describe JsonApiKit::Declarations::Fields do
       let(:names) { %w[title secrets] }
 
       it "leaves that name out" do
-        expect(attribute_values.keys).to eq(%w[title])
+        expect(attribute_names).to eq(%w[title])
       end
     end
 
@@ -93,7 +95,7 @@ RSpec.describe JsonApiKit::Declarations::Fields do
       let(:names) { [] }
 
       it "holds no field" do
-        expect(attribute_values).to be_empty
+        expect(attribute_names).to be_empty
       end
     end
   end

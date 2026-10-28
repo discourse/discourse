@@ -24,9 +24,9 @@ module("Integration | Component | A11y | SkipLinks", function (hooks) {
       await render(
         <template>
           <a
+            class="skip-link"
             href="#main-outlet"
             id="skip-link"
-            class="skip-link"
           >{{skipLinkText}}</a>
         </template>
       );
@@ -59,9 +59,9 @@ module("Integration | Component | A11y | SkipLinks", function (hooks) {
     await render(
       <template>
         <a
+          class="skip-link"
           href="#main-outlet"
           id="skip-link"
-          class="skip-link"
         >{{skipLinkText}}</a>
       </template>
     );

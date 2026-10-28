@@ -8,9 +8,7 @@ class ReviewablesController < ApplicationController
   before_action :version_required, only: %i[update perform]
   before_action :ensure_can_see, except: [:destroy]
 
-  around_action :with_deleted_content,
-                only: %i[index show],
-                if: ->(controller) { controller.guardian.is_staff? }
+  around_action :with_deleted_content, only: %i[index show]
 
   def index
     offset = params[:offset].to_i
@@ -56,6 +54,7 @@ class ReviewablesController < ApplicationController
       Reviewable.list_for(current_user, **filters.merge(limit: PER_PAGE, offset: offset)).to_a
 
     claimed_topics = ReviewableClaimedTopic.claimed_hash(reviewables.map { |r| r.topic_id }.uniq)
+    Reviewable.preload_author_penalties(reviewables)
 
     # This is a bit awkward, but ActiveModel serializers doesn't seem to serialize STI. Note `hash`
     # is mutated by the serializer and contains the side loaded records which must be merged in the end.
@@ -96,7 +95,14 @@ class ReviewablesController < ApplicationController
     end
     json.merge!(hash)
 
-    render_json_dump(json, rest_serializer: true)
+    render_json_dump(
+      json,
+      rest_serializer: true,
+      extras: {
+        dsa_classification:
+          DsaClassificationSerializer.new({}, scope: guardian, root: false).as_json,
+      },
+    )
   end
 
   def user_menu_list
@@ -173,6 +179,10 @@ class ReviewablesController < ApplicationController
       rest_serializer: true,
       claimed_topics: ReviewableClaimedTopic.claimed_hash([reviewable.topic_id]),
       root: "reviewable",
+      extras: {
+        dsa_classification:
+          DsaClassificationSerializer.new({}, scope: guardian, root: false).as_json,
+      },
       meta: {
         types: meta_types,
       },
@@ -258,7 +268,7 @@ class ReviewablesController < ApplicationController
 
     result = nil
     begin
-      reviewable = find_reviewable
+      reviewable = with_deleted_content { find_reviewable }
 
       if error = claim_error?(reviewable)
         return render_json_error(error)
@@ -361,6 +371,6 @@ class ReviewablesController < ApplicationController
   end
 
   def with_deleted_content
-    Post.unscoped { Topic.unscoped { PostAction.unscoped { yield } } }
+    Reviewable.with_deleted_content { yield }
   end
 end

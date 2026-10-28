@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ChatRoutesChannelInfoNav extends Component {
@@ -18,20 +17,20 @@ export default class ChatRoutesChannelInfoNav extends Component {
           <ul class="nav nav-pills">
             <li>
               <LinkTo
-                @route="chat.channel.info.settings"
-                @models={{@channel.routeModels}}
                 class={{if (eq @tab "settings") "active"}}
+                @models={{@channel.routeModels}}
                 @replace={{true}}
+                @route="chat.channel.info.settings"
               >
                 {{i18n "chat.channel_info.tabs.settings"}}
               </LinkTo>
             </li>
             <li>
               <LinkTo
-                @route="chat.channel.info.members"
-                @models={{@channel.routeModels}}
                 class={{if (eq @tab "members") "active"}}
+                @models={{@channel.routeModels}}
                 @replace={{true}}
+                @route="chat.channel.info.members"
               >
                 {{i18n "chat.channel_info.tabs.members"}}
                 {{#if @channel.isCategoryChannel}}

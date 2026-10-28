@@ -1,207 +1,63 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::AmazonOnebox do
-  describe "regular amazon page" do
-    before do
-      @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
-      @uri = "https://www.amazon.com/dp/193609620X"
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X",
-      ).to_return(status: 200, body: onebox_response("amazon"))
-    end
-
-    include_context "with engines"
-    it_behaves_like "an engine"
-
-    describe "works with international domains" do
-      def check_link(tdl, link)
-        onebox_cls = Onebox::Matcher.new(link).oneboxed
-        expect(onebox_cls).to_not be(nil)
-        expect(onebox_cls.new(link).url).to include("https://www.amazon.#{tdl}")
-      end
-
-      it "matches canadian domains" do
-        check_link(
-          "ca",
-          "https://www.amazon.ca/Too-Much-Happiness-Alice-Munro-ebook/dp/B0031TZ98K/",
-        )
-      end
-
-      it "matches german domains" do
-        check_link(
-          "de",
-          "https://www.amazon.de/Buddenbrooks-Verfall-einer-Familie-Roman/dp/3596294312/",
-        )
-      end
-
-      it "matches uk domains" do
-        check_link("co.uk", "https://www.amazon.co.uk/Pygmalion-George-Bernard-Shaw/dp/1420925237/")
-      end
-
-      it "matches japanese domains" do
-        check_link(
-          "co.jp",
-          "https://www.amazon.co.jp/%E9%9B%AA%E5%9B%BD-%E6%96%B0%E6%BD%AE%E6%96%87%E5%BA%AB-%E3%81%8B-1-1-%E5%B7%9D%E7%AB%AF-%E5%BA%B7%E6%88%90/dp/4101001014/",
-        )
-      end
-
-      it "matches chinese domains" do
-        check_link(
-          "cn",
-          "https://www.amazon.cn/%E5%AD%99%E5%AD%90%E5%85%B5%E6%B3%95-%E5%AD%99%E8%86%91%E5%85%B5%E6%B3%95-%E5%AD%99%E6%AD%A6/dp/B0011C40FC/",
-        )
-      end
-
-      it "matches french domains" do
-        check_link(
-          "fr",
-          "https://www.amazon.fr/Les-Mots-autres-%C3%A9crits-autobiographiques/dp/2070114147/",
-        )
-      end
-
-      it "matches italian domains" do
-        check_link("it", "https://www.amazon.it/Tutte-poesie-Salvatore-Quasimodo/dp/8804520477/")
-      end
-
-      it "matches spanish domains" do
-        check_link(
-          "es",
-          "https://www.amazon.es/familia-Pascual-Duarte-Camilo-Jos%C3%A9-ebook/dp/B00EJRTKTW/",
-        )
-      end
-
-      it "matches brazilian domains" do
-        check_link(
-          "com.br",
-          "https://www.amazon.com.br/A-p%C3%A1tria-chuteiras-Nelson-Rodrigues-ebook/dp/B00J2B414Y/",
-        )
-      end
-
-      it "matches indian domains" do
-        check_link("in", "https://www.amazon.in/Fireflies-Rabindranath-Tagore/dp/9381523169/")
-      end
-
-      it "matches mexican domains" do
-        check_link(
-          "com.mx",
-          "https://www.amazon.com.mx/Legend-Zelda-Links-Awakening-Nintendo/dp/B07SG15148/",
-        )
-      end
-    end
-
-    describe "#url" do
-      let(:long_url) do
-        "https://www.amazon.ca/gp/product/B087Z3N428?pf_rd_r=SXABADD0ZZ3NF9Q5F8TW&pf_rd_p=05378fd5-c43e-4948-99b1-a65b129fdd73&pd_rd_r=0237fb28-7f47-49f4-986a-be0c78e52863&pd_rd_w=FfIoI&pd_rd_wg=Hw4qq&ref_=pd_gw_unk"
-      end
-
-      it "maintains the same http/https scheme as the requested URL" do
-        expect(described_class.new("https://www.amazon.fr/gp/product/B01BYD0TZM").url).to eq(
-          "https://www.amazon.fr/dp/B01BYD0TZM",
-        )
-
-        expect(described_class.new("http://www.amazon.fr/gp/product/B01BYD0TZM").url).to eq(
-          "https://www.amazon.fr/dp/B01BYD0TZM",
-        )
-      end
-
-      it "removes parameters from the URL" do
-        expect(described_class.new(long_url).url).not_to include("?pf_rd_r")
-      end
-    end
-
-    describe "#to_html" do
-      it "includes image" do
-        expect(html).to include(
-          "https://images-na.ssl-images-amazon.com/images/I/51opYcR6kVL._SY400_.jpg",
-        )
-      end
-
-      it "includes description" do
-        expect(html).to include(
-          "You should learn a programming language every year, as recommended by The Pragmatic Programmer.",
-        )
-      end
-
-      it "includes price" do
-        expect(html).to include("$21.11")
-      end
-
-      it "includes title" do
-        expect(html).to include(
-          "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)",
-        )
-      end
-    end
-  end
-
-  describe "amazon with opengraph" do
-    let(:link) { "https://www.amazon.com/dp/B01MFXN4Y2" }
-    let(:html) { described_class.new(link).to_html }
-
-    before do
-      stub_request(:get, "https://www.amazon.com/dp/B01MFXN4Y2").to_return(
-        status: 200,
-        body: onebox_response("amazon-og"),
-      )
-
-      stub_request(:get, "https://www.amazon.com/Christine-Rebecca-Hall/dp/B01MFXN4Y2").to_return(
-        status: 200,
-        body: onebox_response("amazon-og"),
-      )
-    end
-
-    describe "#to_html" do
-      it "includes image" do
-        expect(html).to include(
-          "https://images-na.ssl-images-amazon.com/images/I/51nOF2iBa6L._SX940_.jpg",
-        )
-      end
-
-      it "includes description" do
-        expect(html).to include(
-          "CHRISTINE is the story of an aspiring newswoman caught in the midst of a personal and professional life crisis. Between unrequited love, frustration at work, a tumultuous home, and self-doubt; she begins to spiral down a dark path.",
-        )
-      end
-
-      it "includes title" do
-        expect(html).to include("Watch Christine online & foobar - Amazon Video")
+  describe "#url" do
+    it "normalizes product URLs" do
+      {
+        "https://www.amazon.ca/Too-Much-Happiness-Alice-Munro-ebook/dp/B0031TZ98K/" =>
+          "https://www.amazon.ca/dp/B0031TZ98K",
+        "https://www.amazon.de/Buddenbrooks-Verfall-einer-Familie-Roman/dp/3596294312/" =>
+          "https://www.amazon.de/dp/3596294312",
+        "https://www.amazon.co.uk/Pygmalion-George-Bernard-Shaw/dp/1420925237/" =>
+          "https://www.amazon.co.uk/dp/1420925237",
+        "https://www.amazon.co.jp/%E9%9B%AA%E5%9B%BD-%E6%96%B0%E6%BD%AE%E6%96%87%E5%BA%AB-%E3%81%8B-1-1-%E5%B7%9D%E7%AB%AF-%E5%BA%B7%E6%88%90/dp/4101001014/" =>
+          "https://www.amazon.co.jp/dp/4101001014",
+        "https://www.amazon.cn/%E5%AD%99%E5%AD%90%E5%85%B5%E6%B3%95-%E5%AD%99%E8%86%91%E5%85%B5%E6%B3%95-%E5%AD%99%E6%AD%A6/dp/B0011C40FC/" =>
+          "https://www.amazon.cn/dp/B0011C40FC",
+        "https://www.amazon.fr/Les-Mots-autres-%C3%A9crits-autobiographiques/dp/2070114147/" =>
+          "https://www.amazon.fr/dp/2070114147",
+        "https://www.amazon.it/Tutte-poesie-Salvatore-Quasimodo/dp/8804520477/" =>
+          "https://www.amazon.it/dp/8804520477",
+        "https://www.amazon.es/familia-Pascual-Duarte-Camilo-Jos%C3%A9-ebook/dp/B00EJRTKTW/" =>
+          "https://www.amazon.es/dp/B00EJRTKTW",
+        "https://www.amazon.com.br/A-p%C3%A1tria-chuteiras-Nelson-Rodrigues-ebook/dp/B00J2B414Y/" =>
+          "https://www.amazon.com.br/dp/B00J2B414Y",
+        "https://www.amazon.in/Fireflies-Rabindranath-Tagore/dp/9381523169/" =>
+          "https://www.amazon.in/dp/9381523169",
+        "https://www.amazon.com.mx/Legend-Zelda-Links-Awakening-Nintendo/dp/B07SG15148/" =>
+          "https://www.amazon.com.mx/dp/B07SG15148",
+        "http://www.amazon.fr/gp/product/B01BYD0TZM" => "https://www.amazon.fr/dp/B01BYD0TZM",
+        "https://www.amazon.ca/gp/product/B087Z3N428?pf_rd_r=SXABADD0ZZ3NF9Q5F8TW&ref_=pd_gw_unk" =>
+          "https://www.amazon.ca/dp/B087Z3N428",
+        "https://www.amazon.com/Anker-USB-C-HDP/dp/B0CK8TKV5Z" =>
+          "https://www.amazon.com/dp/B0CK8TKV5Z",
+      }.each do |link, url|
+        expect(Onebox::Matcher.new(link).oneboxed).to eq(described_class)
+        expect(described_class.new(link).url).to eq(url)
       end
     end
   end
 
   describe "amazon book page" do
-    let(:link) { "https://www.amazon.com/dp/B00AYQNR46" }
-    let(:html) { described_class.new(link).to_html }
-
     before do
-      stub_request(:get, "https://www.amazon.com/dp/B00AYQNR46").to_return(
-        status: 200,
-        body: onebox_response("amazon"),
-      )
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X",
-      ).to_return(status: 200, body: onebox_response("amazon"))
+      @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
+      @uri = "https://www.amazon.com/dp/193609620X"
     end
 
-    describe "#to_html" do
-      it "includes title and author" do
-        expect(html).to include(
-          "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)",
-        )
-        expect(html).to include("Bruce Tate")
-      end
+    include_context "with engines"
+    it_behaves_like "an engine"
 
-      it "includes ISBN" do
-        expect(html).to include("978-1934356593")
-      end
-
-      it "includes publisher" do
-        expect(html).to include("Pragmatic Bookshelf")
-      end
+    it "renders the book details" do
+      expect(html).to include(
+        %(href="https://www.amazon.com/dp/193609620X"),
+        "https://images-na.ssl-images-amazon.com/images/I/51opYcR6kVL._SY400_.jpg",
+        "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)",
+        "Bruce Tate",
+        "You should learn a programming language every year, as recommended by The Pragmatic Programmer.",
+        "978-1934356593",
+        "Pragmatic Bookshelf",
+        "$21.11",
+      )
     end
   end
 
@@ -210,69 +66,33 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      stub_request(:get, "https://www.amazon.com/dp/193435659X").to_return(
-        status: 200,
-        body: onebox_response("amazon-ebook"),
-      )
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers-ebook/dp/B00AYQNR46",
-      ).to_return(status: 200, body: onebox_response("amazon-ebook"))
+      stub_request(:get, link).to_return(status: 200, body: onebox_response("amazon-ebook"))
     end
 
-    describe "#to_html" do
-      it "includes title and author" do
-        expect(html).to include(
-          "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)",
-        )
-        expect(html).to include("Bruce Tate")
-      end
-
-      it "includes image" do
-        expect(html).to include(
-          "https://images-na.ssl-images-amazon.com/images/I/51LZT%2BtSrTL._SX133_.jpg",
-        )
-      end
-
-      it "includes ASIN" do
-        expect(html).to include("B00AYQNR46")
-      end
-
-      it "includes rating" do
-        expect(html).to include("4.2 out of 5 stars")
-      end
-
-      it "includes publisher" do
-        expect(html).to include("Pragmatic Bookshelf")
-      end
+    it "renders the ebook details" do
+      expect(html).to include(
+        "https://images-na.ssl-images-amazon.com/images/I/51LZT%2BtSrTL._SX133_.jpg",
+        "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)",
+        "Bruce Tate",
+        "4.2 out of 5 stars",
+        "B00AYQNR46",
+        "Pragmatic Bookshelf",
+      )
     end
   end
 
-  describe "non-standard response from Amazon" do
-    let(:link) { "https://www.amazon.com/dp/B0123ABCD3210" }
-    let(:onebox) { described_class.new(link) }
+  describe "amazon with opengraph" do
+    let(:link) { "https://www.amazon.com/dp/B01MFXN4Y2" }
+    let(:html) { described_class.new(link).to_html }
 
-    before do
-      stub_request(:get, "https://www.amazon.com/dp/B0123ABCD3210").to_return(
-        status: 200,
-        body: onebox_response("amazon-error"),
+    before { stub_request(:get, link).to_return(status: 200, body: onebox_response("amazon-og")) }
+
+    it "renders the product details" do
+      expect(html).to include(
+        "https://images-na.ssl-images-amazon.com/images/I/51nOF2iBa6L._SX940_.jpg",
+        "Watch Christine online & foobar - Amazon Video",
+        "CHRISTINE is the story of an aspiring newswoman caught in the midst of a personal and professional life crisis. Between unrequited love, frustration at work, a tumultuous home, and self-doubt; she begins to spiral down a dark path.",
       )
-    end
-
-    it "returns a blank result" do
-      expect(onebox.to_html).to eq("")
-    end
-
-    it "produces a placeholder" do
-      expect(onebox.placeholder_html).to include(
-        '<aside class="onebox amazon" data-onebox-src="https://www.amazon.com/dp/B0123ABCD3210">',
-      )
-    end
-
-    it "returns errors" do
-      onebox.to_html
-      expect(onebox.errors).to eq({ title: ["is blank"], description: ["is blank"] })
     end
   end
 
@@ -281,35 +101,62 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      stub_request(:get, "https://www.amazon.com/dp/B07FQ7M16H").to_return(
-        status: 200,
-        body: onebox_response("amazon-alternate"),
-      )
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Lnchett-Nibbler-Quality-Attachment-Straight/dp/B07FQ7M16H",
-      ).to_return(status: 200, body: onebox_response("amazon-alternate"))
+      stub_request(:get, link).to_return(status: 200, body: onebox_response("amazon-alternate"))
     end
 
-    describe "#to_html" do
-      it "includes image" do
-        expect(html).to include("https://m.media-amazon.com/images/I/71y4BRqNP7L._AC_SL1500_.jpg")
-      end
+    it "renders the product details" do
+      expect(html).to include(
+        %(href="https://www.amazon.com/Lnchett-Nibbler-Quality-Attachment-Straight/dp/B07FQ7M16H"),
+        "https://m.media-amazon.com/images/I/71y4BRqNP7L._AC_SL1500_.jpg",
+        "Quality Nibbler Drill Attachment...",
+        "Drill Attachment for Straight Curve and Circle Cutting, Maximum 14 Gauge Steel",
+        "$37.99",
+      )
+    end
+  end
 
-      it "includes description" do
-        expect(html).to include(
-          "Drill Attachment for Straight Curve and Circle Cutting, Maximum 14 Gauge Steel",
-        )
-      end
+  describe "product page with a canonical link to another page" do
+    let(:link) { "https://www.amazon.com/dp/B082SBHKN2" }
+    let(:image) { "https://m.media-amazon.com/images/I/71-EGU00XgL.jpg" }
+    let(:html) { described_class.new(link).to_html }
 
-      it "includes price" do
-        expect(html).to include("$37.99")
-      end
+    before do
+      stub_request(:get, link).to_return(
+        status: 200,
+        body:
+          "<html><head><title>SwiftJet Car Wash Foam Gun</title><meta name='description' content='Foam gun'><link rel='canonical' href='https://www.amazon.com/clp/B082SBHKN2'></head><body><img id='landingImage' data-old-hires='' src='#{image}'><div id='corePrice_feature_div'><span class='a-price'><span class='a-offscreen'>$0.99</span></span></div></body></html>",
+      )
 
-      it "includes title" do
-        expect(html).to include("Quality Nibbler Drill Attachment...")
-      end
+      stub_request(:get, "https://www.amazon.com/clp/B082SBHKN2").to_return(
+        status: 200,
+        body: "<html><body><svg><title>open prime modal</title></svg></body></html>",
+      )
+    end
+
+    it "renders the product page" do
+      expect(html).to include(
+        "SwiftJet Car Wash Foam Gun",
+        %(href="#{link}"),
+        %(src="#{image}"),
+        "$0.99",
+      )
+    end
+  end
+
+  describe "non-standard response from Amazon" do
+    let(:link) { "https://www.amazon.com/dp/B0123ABCD3210" }
+    let(:onebox) { described_class.new(link) }
+
+    before do
+      stub_request(:get, link).to_return(status: 200, body: onebox_response("amazon-error"))
+    end
+
+    it "returns a blank result with errors and a placeholder" do
+      expect(onebox.to_html).to eq("")
+      expect(onebox.errors).to eq({ title: ["is blank"], description: ["is blank"] })
+      expect(onebox.placeholder_html).to include(
+        %(<aside class="onebox amazon" data-onebox-src="#{link}">),
+      )
     end
   end
 end

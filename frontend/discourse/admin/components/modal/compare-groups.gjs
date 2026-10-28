@@ -22,6 +22,8 @@ export function groupToken(groupId) {
   return `group:${groupId}`;
 }
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `compare-groups-reorderable.gjs` replaces it.
 export default class CompareGroups extends Component {
   @service site;
 
@@ -41,25 +43,6 @@ export default class CompareGroups extends Component {
     this.list.enabledOrder = currentTokens.filter((key) =>
       this.rowsByKey.has(key)
     );
-  }
-
-  buildRows() {
-    SYNTHETIC_KEYS.forEach((key) => {
-      this.rowsByKey.set(key, {
-        key,
-        title: i18n(`admin.dashboard.sections.engagement.whos_posting.${key}`),
-        description: i18n(
-          `admin.dashboard.sections.engagement.whos_posting.modal.descriptions.${key}`
-        ),
-      });
-    });
-
-    (this.site.groups ?? [])
-      .filter((group) => !EXCLUDED_AUTO_GROUP_IDS.includes(group.id))
-      .forEach((group) => {
-        const key = groupToken(group.id);
-        this.rowsByKey.set(key, { key, title: group.full_name || group.name });
-      });
   }
 
   get enabledRows() {
@@ -92,6 +75,25 @@ export default class CompareGroups extends Component {
 
   get lastEnabledIndex() {
     return this.enabledRows.length - 1;
+  }
+
+  buildRows() {
+    SYNTHETIC_KEYS.forEach((key) => {
+      this.rowsByKey.set(key, {
+        key,
+        title: i18n(`admin.dashboard.sections.engagement.whos_posting.${key}`),
+        description: i18n(
+          `admin.dashboard.sections.engagement.whos_posting.modal.descriptions.${key}`
+        ),
+      });
+    });
+
+    (this.site.groups ?? [])
+      .filter((group) => !EXCLUDED_AUTO_GROUP_IDS.includes(group.id))
+      .forEach((group) => {
+        const key = groupToken(group.id);
+        this.rowsByKey.set(key, { key, title: group.full_name || group.name });
+      });
   }
 
   @action
@@ -138,12 +140,12 @@ export default class CompareGroups extends Component {
 
   <template>
     <DModal
+      class="compare-groups has-search manageable-row-list"
+      @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @title={{i18n
         "admin.dashboard.sections.engagement.whos_posting.modal.title"
       }}
-      @closeModal={{@closeModal}}
-      @inline={{@inline}}
-      class="compare-groups has-search manageable-row-list"
     >
 
       <:belowModalTitle>
@@ -159,12 +161,12 @@ export default class CompareGroups extends Component {
       <:belowHeader>
         <div class="manageable-row-list__search-wrapper">
           <DFilterInput
-            @icons={{hash left="magnifying-glass"}}
-            @value={{this.search}}
-            @filterAction={{this.updateSearch}}
             placeholder={{i18n
               "admin.dashboard.sections.engagement.whos_posting.modal.search_placeholder"
             }}
+            @filterAction={{this.updateSearch}}
+            @icons={{hash left="magnifying-glass"}}
+            @value={{this.search}}
           />
         </div>
       </:belowHeader>
@@ -180,17 +182,17 @@ export default class CompareGroups extends Component {
           {{#each this.visibleRows key="key" as |row index|}}
             <ManageableRowListItem
               @ariaLabelPrefix={{ARIA_LABEL_PREFIX}}
-              @row={{row}}
               @index={{index}}
               @lastEnabledIndex={{this.lastEnabledIndex}}
-              @reorderable={{this.list.reorderable}}
-              @toggleDisabled={{this.toggleDisabled row}}
-              @onToggle={{this.toggle}}
-              @onMoveUp={{this.moveUp}}
-              @onMoveDown={{this.moveDown}}
+              @onDragEnd={{this.onDragEnd}}
               @onDragStart={{this.onDragStart}}
               @onDrop={{this.onDrop}}
-              @onDragEnd={{this.onDragEnd}}
+              @onMoveDown={{this.moveDown}}
+              @onMoveUp={{this.moveUp}}
+              @onToggle={{this.toggle}}
+              @reorderable={{this.list.reorderable}}
+              @row={{row}}
+              @toggleDisabled={{this.toggleDisabled row}}
             />
           {{/each}}
         </ul>
@@ -202,16 +204,16 @@ export default class CompareGroups extends Component {
         {{/if}}
         <div class="compare-groups__footer-actions">
           <DButton
-            @label="js.cancel_value"
-            @action={{@closeModal}}
             class="btn-transparent compare-groups__cancel"
+            @action={{@closeModal}}
+            @label="js.cancel_value"
           />
           <DButton
-            @label="admin.dashboard.sections.engagement.whos_posting.modal.apply"
+            class="btn-primary compare-groups__apply"
             @action={{this.apply}}
             @disabled={{this.applying}}
             @isLoading={{this.applying}}
-            class="btn-primary compare-groups__apply"
+            @label="admin.dashboard.sections.engagement.whos_posting.modal.apply"
           />
         </div>
       </:footer>

@@ -16,6 +16,106 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  describe "#allowed_group_ids" do
+    it "aliases Everyone while granular permissions are enabled without changing stored groups" do
+      group = Fabricate(:group)
+      ids = [group.id, Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]]
+      agent = Fabricate(:ai_agent, allowed_group_ids: ids)
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(agent.allowed_group_ids).to eq(ids)
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      expect(agent.allowed_group_ids).to eq([group.id, Group::AUTO_GROUPS[:logged_in_users]])
+      agent.update!(description: "Updated description")
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(agent.reload.allowed_group_ids).to eq(ids)
+    end
+  end
+
+  it "refreshes cached agent permissions when granular permissions are toggled" do
+    user = Fabricate(:user)
+    agent =
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+        user: Fabricate(:user),
+      )
+
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    cached_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+    expect(cached_agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:everyone]])
+    expect(AiAgent.agent_users(user: user).map { |candidate| candidate[:id] }).to include(agent.id)
+
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+    cached_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+    expect(cached_agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:logged_in_users]])
+    expect(AiAgent.agent_users(user: user).map { |candidate| candidate[:id] }).to include(agent.id)
+
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    cached_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+    expect(cached_agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:everyone]])
+    expect(AiAgent.agent_users(user: user).map { |candidate| candidate[:id] }).to include(agent.id)
+  end
+
+  describe "#update!" do
+    fab!(:spam_agent, :ai_agent)
+    fab!(:spam_settings) do
+      AiModerationSetting.create!(
+        setting_type: :spam,
+        ai_agent: spam_agent,
+        llm_model: seeded_llm_model,
+      )
+    end
+
+    it "updates the spam model when the configured agent's default model changes" do
+      spam_agent.update!(default_llm_id: llm_model.id)
+
+      expect(spam_settings.reload.llm_model_id).to eq(llm_model.id)
+    end
+
+    it "preserves the spam model when another agent's default model changes" do
+      other_agent = Fabricate(:ai_agent, default_llm_id: seeded_llm_model.id)
+
+      other_agent.update!(default_llm_id: llm_model.id)
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "preserves an explicit spam model when saving unrelated agent changes" do
+      spam_agent.update!(default_llm_id: llm_model.id)
+      spam_settings.update!(llm_model_id: seeded_llm_model.id)
+
+      spam_agent.update!(description: "Updated spam detector")
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "preserves an explicit spam model when clearing the agent's default" do
+      spam_agent.update!(default_llm_id: llm_model.id)
+      spam_settings.update!(llm_model_id: seeded_llm_model.id)
+
+      spam_agent.update!(default_llm_id: nil)
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "preserves the spam model when the agent update fails validation" do
+      expect(spam_agent.update(default_llm_id: llm_model.id, description: nil)).to eq(false)
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "does not configure spam detection when updating an agent without spam settings" do
+      spam_settings.destroy!
+
+      spam_agent.update!(default_llm_id: llm_model.id)
+
+      expect(AiModerationSetting.spam).to be_nil
+    end
+  end
+
   it "defaults subagent_ids to an empty array and exposes them on class instances" do
     agent = Fabricate(:ai_agent)
 
@@ -262,6 +362,85 @@ RSpec.describe AiAgent do
     end
   end
 
+  describe ".ensure_users!" do
+    [false, true].product([false, true])
+      .each do |ai_enabled, bot_enabled|
+        it "only provisions automatically with both settings enabled (AI: #{ai_enabled}, bot: #{bot_enabled})" do
+          SiteSetting.discourse_ai_enabled = ai_enabled
+          SiteSetting.ai_bot_enabled = bot_enabled
+          agent = Fabricate(:ai_agent)
+          provisioning_enabled = ai_enabled && bot_enabled
+
+          expect(agent.needs_user?).to eq(provisioning_enabled)
+          expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
+            provisioning_enabled ? 1 : 0,
+          )
+          expect(agent.reload.user.present?).to eq(provisioning_enabled)
+        end
+      end
+
+    it "preserves existing users when automatic provisioning is disabled" do
+      agent = Fabricate(:ai_agent)
+      user = agent.create_user!
+      SiteSetting.ai_bot_enabled = false
+
+      expect { AiAgent.ensure_users! }.not_to change(User, :count)
+      expect(agent.reload.user).to eq(user)
+      expect(user.reload).to be_active
+    end
+
+    it "skips disabled, nonconversational, and unsupported system agents" do
+      SiteSetting.ai_bot_enabled = true
+      disabled_agent = Fabricate(:ai_agent, enabled: false)
+      nonconversational_agent = Fabricate(:ai_agent, allow_personal_messages: false)
+      unsupported_agent =
+        AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::LocaleDetector])
+      unsupported_agent.update!(enabled: true, allow_personal_messages: true)
+      expect(unsupported_agent.needs_user?).to eq(false)
+
+      expect { AiAgent.ensure_users! }.not_to change(User, :count)
+      expect(
+        [disabled_agent, nonconversational_agent, unsupported_agent].map do |agent|
+          agent.reload.user_id
+        end,
+      ).to eq([nil, nil, nil])
+    end
+  end
+
+  describe "#needs_user?" do
+    it "requires a conversational entry point or a forced default model" do
+      SiteSetting.ai_bot_enabled = true
+      basic_agent.allow_personal_messages = false
+
+      expect(basic_agent.needs_user?).to eq(false)
+
+      %i[
+        force_default_llm
+        allow_topic_mentions
+        allow_personal_messages
+        allow_chat_direct_messages
+        allow_chat_channel_mentions
+      ].each do |field|
+        basic_agent.public_send("#{field}=", true)
+        expect(basic_agent.needs_user?).to eq(true), "expected #{field} to require a user"
+        basic_agent.public_send("#{field}=", false)
+      end
+
+      basic_agent.allow_personal_messages = true
+      basic_agent.enabled = false
+      expect(basic_agent.needs_user?).to eq(false)
+    end
+  end
+
+  it "provisions a conversational agent idempotently even when both features are disabled" do
+    SiteSetting.discourse_ai_enabled = false
+    SiteSetting.ai_bot_enabled = false
+    agent = Fabricate(:ai_agent, allow_personal_messages: true, default_llm: llm_model)
+
+    expect { 2.times { agent.ensure_user! } }.to change { User.count }.by(1)
+    expect(agent.reload.user).to be_present
+  end
+
   it "allows creation of user" do
     user = basic_agent.create_user!
     expect(user.username).to eq("test_bot")
@@ -283,7 +462,7 @@ RSpec.describe AiAgent do
   end
 
   it "does not recycle an id an llm model still points at" do
-    llm_model.update!(user_id: -5000)
+    llm_model.update_columns(user_id: -5000)
     PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
 
     user = basic_agent.create_user!
@@ -542,11 +721,12 @@ RSpec.describe AiAgent do
       allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
     )
 
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
     AiAgent.all_agents
 
-    expect(AiAgent.agent_cache[:value].length).to be > 0
+    expect(AiAgent.agent_cache[:value_everyone_allowed].length).to be > 0
     RailsMultisite::ConnectionManagement.stubs(:current_db) { "abc" }
-    expect(AiAgent.agent_cache[:value]).to eq(nil)
+    expect(AiAgent.agent_cache[:value_everyone_allowed]).to eq(nil)
   end
 
   describe ".find_by_id_from_cache" do

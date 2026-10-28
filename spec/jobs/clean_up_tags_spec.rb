@@ -31,6 +31,7 @@ describe Jobs::CleanUpTags do
       ),
     ]
   end
+
   fab!(:unused_tag) do
     Fabricate(
       :tag,

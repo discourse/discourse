@@ -13,6 +13,10 @@ be:
             topic_id:
               label: Номер тэмы
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            none: "Няма"
       disable_holiday: "Адключыць"
       enable_holiday: "Уключыць"
       region:
@@ -23,6 +27,9 @@ be:
         week: "Тыдзень"
         day: "дзень"
         year: "Год"
+    discourse_workflows:
+      post_event:
+        topic_id: "Ідэнтыфікатар тэмы"
     discourse_post_event:
       event_description:
         show_more: "Паказаць больш"
@@ -37,6 +44,8 @@ be:
               title: "грамадскага"
             private:
               title: "прыватны"
+      recording_modal:
+        save: "Захаваць"
       composer:
         url_placeholder: "Дадаць URL"
         reminder:

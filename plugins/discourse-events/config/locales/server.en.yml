@@ -38,6 +38,25 @@ en:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Event reminder"
+      subject_template: ":date: %{subject}"
+      text_body_template: |
+        **%{date_range} (%{timezone})**
+
+        %{description}
+
+        %{location_section}
+
+        #### Guests
+
+        %{guests}
+
+        %{additional_guests}
+
+        %{join_event}
+
+        [Go to event topic](%{event_url})
 
   site_settings:
     map_events_to_color: "Assign a color to each tag or category."
@@ -72,7 +91,9 @@ en:
     event_participation_buttons: "List of event participation buttons users can use."
     sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
     calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
+    calendar_upcoming_events_default_category: "Category for new events created from the upcoming events calendar. If empty or the member cannot create topics in this category, uses {{setting:default_composer_category}}."
     enable_events_category_type_setup: "Enables the Events category type option during category creation setup."
+    enable_improved_event_reminders: "Lets members choose whether event reminders are sent as personal messages, notifications, or not at all."
     livestream_allowed_hosts: "Hosts that can be used as an event livestream."
     livestream_allowed_hosts_invalid: "These entries are not hosts: %{hosts}. Enter the host on its own (for example zoom.us), which allows every URL on it and its subdomains."
     livestream_zoom_enabled: "Enable Zoom video embedding for livestream topics."
@@ -82,6 +103,24 @@ en:
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} is about to start"
+        ongoing: "%{title} is ongoing"
+        after: "%{title} has ended"
+      location: |-
+        #### Location
+
+        %{location}
+      guest: "- %{name}"
+      guest_with_role: "- %{name} (*%{role}*)"
+      roles:
+        organizer: "Organizer"
+        host: "Host"
+      additional_guests:
+        one: "  and %{count} other"
+        other: "  and %{count} others"
+      join_event: "[Join event](%{url})"
     category_type:
       default_calendar_view:
         label: "Default calendar view"
@@ -110,6 +149,12 @@ en:
     livestream:
       chat:
         topic_reference_message: "This channel is for the event [%{title}](%{url}) — visit the topic for details and to RSVP."
+        transcript_heading: "Chat transcript"
+        transcript_heading_dated: "Chat transcript for %{date}"
+        transcript_edit_reason: "Added the livestream chat transcript"
+        transcript_earlier_messages:
+          one: "%{count} earlier message is in the [chat channel](%{url})."
+          other: "%{count} earlier messages are in the [chat channel](%{url})."
       zoom:
         frame_title: "Zoom webinar"
         frame_join: "Join webinar"
@@ -129,6 +174,21 @@ en:
       date_with_timezone: "%{date} (%{timezone})"
       date_format: "%B %-d, %Y"
       datetime_format: "%B %-d, %Y %-I:%M %p"
+    filter:
+      description:
+        event: "Show topics with an event"
+        event_any_of: "Show topics with an event in any of the specified states (comma-separated)"
+        exclude_event: "Exclude topics with an event in the specified state"
+        event_any: "Show topics with an event"
+        event_upcoming: "Show topics with an event that hasn't started yet"
+        event_ongoing: "Show topics with an event that is happening now"
+        event_past: "Show topics with an event that has ended"
+        event_after: "Show topics with an event starting on or after a date (YYYY-MM-DD)"
+        event_before: "Show topics with an event starting before a date (YYYY-MM-DD)"
+        event_attending: "Show topics with an event a user is going to"
+        event_attending_me: "Events you're going to"
+        order_event_start: "Sort by event start date (latest first)"
+        order_event_start_asc: "Sort by event start date (soonest first)"
     notifications:
       before_event_reminder: "%{title} is about to start."
       after_event_reminder: "%{title} has ended."
@@ -144,20 +204,36 @@ en:
           raw_invitees_length: "An event is limited to %{count} users/groups."
           raw_invitees:
             only_group: "An event accepts only group names."
-          ends_at_before_starts_at: "An event can't end before it starts."
+          ends_at_before_starts_at: "An event must end after it starts."
           max_attendees_reached: "This event is full."
           start_must_be_present_and_a_valid_date: "An event requires a valid start date."
           end_must_be_a_valid_date: "End date must be a valid date."
-          invalid_recurrence: "Recurrence must be one of: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          recurrence_until_must_be_a_valid_date: "Recurrence end date must be a valid date."
+          invalid_max_attendees: "Max attendees must be a number between 1 and %{maximum}."
+          invalid_reminders: "Invalid reminders: %{reminders}."
+          invalid_recurrence: "Recurrence must be one of: %{recurrences}."
           invalid_timezone: "Timezone not recognized."
           invalid_url: "URL must be a valid web address."
+          invalid_recording_url: "Recording must be a valid web address."
           acting_user_not_allowed_to_create_event: "Current user is not allowed to create events."
           acting_user_not_allowed_to_act_on_this_event: "Current user is not allowed to act on this event."
           invalid_allowed_groups: "Invalid allowed groups."
+          invalid_hosts: "One or more hosts can't be added to this event."
+          too_many_hosts:
+            one: "An event is limited to %{count} host."
+            other: "An event is limited to %{count} hosts."
           acting_user_not_allowed_to_invite_these_groups: "Current user is not allowed to invite these groups."
           custom_field_is_invalid: "The custom field `%{field}` is not allowed."
           name:
             length: "Event name length must be between %{minimum} and %{maximum} characters."
+          description:
+            length: "Event description is limited to %{maximum} characters."
+          url:
+            length: "Event URL is limited to %{maximum} characters."
+          location:
+            length: "Event location is limited to %{maximum} characters."
+          recording:
+            length: "Event recording link is limited to %{maximum} characters."
   discourse_push_notifications:
     popup:
       event_reminder: "Event Reminder"

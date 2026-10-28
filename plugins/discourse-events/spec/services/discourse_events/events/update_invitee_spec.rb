@@ -4,6 +4,7 @@ RSpec.describe(DiscourseEvents::Events::UpdateInvitee) do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:event_id) }
     it { is_expected.to validate_presence_of(:invitee_id) }
+
     it do
       is_expected.to validate_inclusion_of(:status).in_array(
         DiscourseEvents::Events::Invitee.statuses.keys.map(&:to_s),
@@ -162,6 +163,15 @@ RSpec.describe(DiscourseEvents::Events::UpdateInvitee) do
       end
 
       it { is_expected.to run_successfully }
+
+      it "publishes the event creator as the acting user" do
+        event =
+          DiscourseEvent
+            .track_events(:discourse_calendar_post_event_invitee_status_changed) { result }
+            .first
+
+        expect(event[:params].last).to eq(acting_user: event_creator)
+      end
 
       it "updates the invitee status" do
         expect { result }.to change { creator_event_invitee.reload.status }.from(

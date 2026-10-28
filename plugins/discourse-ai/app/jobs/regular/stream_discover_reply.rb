@@ -11,6 +11,11 @@ module Jobs
     def execute(args)
       return execute_legacy(args) if args[:request_id].blank?
 
+      ask_log = AskAiLog.find_by(id: args[:ask_ai_log_id], user_id: args[:user_id]) if args[
+        :ask_ai_log_id
+      ]
+      return if ask_log&.ask_outcome.present?
+
       return if (user = User.find_by(id: args[:user_id])).nil?
       return if (query = args[:query]).blank?
       return if !DiscourseAi::Discoveries.enabled_for_user?(user)
@@ -26,6 +31,7 @@ module Jobs
       base = { query:, request_id: args[:request_id] }
       queued_at = Float(args[:queued_at], exception: false)
       if queued_at && Time.now.to_f - queued_at > MAX_QUEUE_DELAY
+        ask_log.ask_outcome = :failed if ask_log
         publish_unavailable(user, base)
         return
       end
@@ -33,6 +39,7 @@ module Jobs
       admitted =
         DiscourseAi::Discoveries.admit_request(user_id: user.id, request_id: args[:request_id])
       if !admitted
+        ask_log.ask_outcome = :failed if ask_log
         publish_unavailable(user, base)
         return
       end
@@ -45,39 +52,87 @@ module Jobs
       end
       publish_update(user, base.merge(done: false, phase: "searching"))
 
+      stage = :rewrite
       rewritten_queries = rewrite_queries(user:, query:, cancel_manager:)
+      if ask_log
+        ask_log.assign_attributes(
+          keyword_query: rewritten_queries.keyword_query,
+          semantic_query: rewritten_queries.semantic_query,
+          query_locale: rewritten_queries.original_query_locale,
+        )
+        ask_log.failure_stage = :rewrite if rewritten_queries.failed
+      end
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
         return
       end
       return if !active_request?(user, args[:request_id])
 
-      retrieval = DiscourseAi::Discoveries::Retrieval.new(user:)
-      retrieval_result =
-        retrieval.call(
-          query,
-          keyword_query: rewritten_queries.keyword_query,
-          semantic_query: rewritten_queries.semantic_query,
+      if !rewritten_queries.failed &&
+           (rewritten_queries.keyword_query != query || rewritten_queries.semantic_query != query)
+        publish_update(
+          user,
+          base.merge(
+            done: false,
+            phase: "rewritten",
+            keyword_query: rewritten_queries.keyword_query,
+            semantic_query: rewritten_queries.semantic_query,
+          ),
         )
+      end
+
+      stage = :retrieval
+      retrieval = DiscourseAi::Discoveries::Retrieval.new(user:)
+      retrieval_options = {
+        keyword_query: rewritten_queries.keyword_query,
+        semantic_query: rewritten_queries.semantic_query,
+        locale: rewritten_queries.original_query_locale,
+      }
+      scope_filter = DiscourseAi::Discoveries.scope_filter(args[:scope])
+      retrieval_options[:scope_filter] = scope_filter if scope_filter
+      retrieval_result = retrieval.call(query, **retrieval_options)
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
         return
       end
       return if !active_request?(user, args[:request_id])
+      # passages include the answers added to a candidate, not only its matched post
+      if ask_log
+        ask_log.candidate_post_ids =
+          retrieval_result
+            .synthesis_candidates
+            .flat_map do |candidate|
+              [candidate["post_id"], *Array(candidate["passages"]).pluck("post_id")]
+            end
+            .compact
+            .uniq
+      end
+      base = base.merge(scope_fallback: true) if retrieval_result.scope_fallback
       if retrieval_result.synthesis_candidates.empty?
+        ask_log.ask_outcome = :no_answer if ask_log
         publish_no_answer(user, base)
         return
       end
-      candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").uniq
+      candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").compact.uniq
 
-      result_settings = request_result_settings(args)
+      stage = :synthesis
+      result_settings = request_result_settings(args, user)
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
       selected_sources = nil
-      selected_refs = nil
-      source_selection_invalid = false
+      rejected = false
       discovery_title = ""
       last_published_answer = ""
       last_streamed_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      reject =
+        lambda do
+          rejected = true
+          ask_log.ask_outcome = :no_answer if ask_log
+          publish_no_answer(user, base)
+          cancel_manager.cancel!
+        end
 
+      # Models emit the response keys in any order, so the answer streams as
+      # soon as it is meaningful. Once the reply abstains or none of its sources
+      # resolve, anything streamed is retracted and generation stops.
       result =
         synthesis.call(
           query:,
@@ -87,36 +142,33 @@ module Jobs
           summary_detail: result_settings[:summary_detail],
           related_count: result_settings[:related_count],
         ) do |update|
-          next if cancel_manager.cancelled? || !active_request?(user, args[:request_id])
+          # the cancel monitor already stops this once the request is superseded
+          next if rejected || cancel_manager.cancelled?
+          next reject.call if update[:answerable] == false
 
           discovery_title = update[:title].to_s.strip if update[:title].present?
 
-          if update[:answerable] == true && update[:source_refs].present? &&
-               DiscourseAi::Discoveries::Synthesis.meaningful_answer?(update[:answer])
-            streamed_refs = Array(update[:source_refs]).first(result_settings[:related_count])
-            if selected_refs.present? && selected_refs != streamed_refs
-              source_selection_invalid = true
-            elsif selected_refs.nil?
-              selected_refs = streamed_refs
-              selected_sources = retrieval.validated_sources(retrieval_result, selected_refs)
-              source_selection_invalid = true if selected_sources.empty?
+          if selected_sources.nil? && update[:source_refs].present?
+            selected_sources =
+              retrieval.sources_for(
+                retrieval_result,
+                update[:source_refs],
+                limit: result_settings[:related_count],
+              )
+            next reject.call if selected_sources.empty?
 
-              if !source_selection_invalid
-                publish_update(
-                  user,
-                  base.merge(
-                    done: false,
-                    phase: "sources",
-                    ai_discover_title: discovery_title,
-                    sources: serialize_sources(selected_sources),
-                    candidate_topic_ids:,
-                  ),
-                )
-              end
-            end
+            publish_update(
+              user,
+              base.merge(
+                done: false,
+                phase: "sources",
+                ai_discover_title: discovery_title,
+                sources: serialize_sources(selected_sources),
+                candidate_topic_ids:,
+              ),
+            )
           end
 
-          next if source_selection_invalid || selected_sources.blank?
           next if !DiscourseAi::Discoveries::Synthesis.meaningful_answer?(update[:answer])
           next if update[:answer] == last_published_answer
 
@@ -137,29 +189,44 @@ module Jobs
               ai_discover_reply: last_published_answer,
             ),
           )
+          if ask_log && ask_log.time_to_first_answer_ms.nil?
+            ask_log.time_to_first_answer_ms = [
+              (Time.current - ask_log.asked_at) * 1000,
+              0,
+            ].max.round
+          end
         end
 
+      return if rejected
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline ||
            !active_request?(user, args[:request_id])
         return
       end
 
-      final_refs = Array(result.source_refs).first(result_settings[:related_count])
       final_sources =
-        retrieval.validated_sources(retrieval_result, final_refs) if final_refs.present?
+        retrieval.sources_for(
+          retrieval_result,
+          result.source_refs,
+          limit: result_settings[:related_count],
+        )
       answerable =
-        result.answerable && !source_selection_invalid && final_sources.present? &&
-          selected_sources.present? && final_refs == selected_refs &&
+        result.answerable && final_sources.present? &&
           DiscourseAi::Discoveries::Synthesis.meaningful_answer?(result.answer)
 
       if answerable
-        selected_sources = final_sources
+        ask_log&.assign_attributes(
+          ask_outcome: :answered,
+          answer_title: result.title,
+          answer: result.answer,
+          suggested_follow_up: result.follow_up,
+          source_post_ids: final_sources.pluck("post_id").compact,
+        )
         DiscourseAi::Discoveries.store_result(
           user_id: user.id,
           request_id: args[:request_id],
           query:,
           answer: result.answer,
-          sources: selected_sources,
+          sources: final_sources,
           agent_id: ai_agent.id,
           follow_up: result.follow_up,
         )
@@ -172,22 +239,35 @@ module Jobs
             ai_discover_title: result.title,
             ai_discover_reply: result.answer,
             ai_discover_follow_up: result.follow_up,
-            sources: serialize_sources(selected_sources),
+            sources: serialize_sources(final_sources),
             candidate_topic_ids:,
           ),
         )
       else
+        ask_log.ask_outcome = :no_answer if ask_log
         publish_no_answer(user, base)
       end
     rescue LlmCreditAllocation::CreditLimitExceeded => e
+      ask_log&.assign_attributes(ask_outcome: :failed, failure_stage: stage)
       publish_error_update(user, e, base) if request_still_owned?(user, args[:request_id])
     rescue StandardError => e
+      ask_log&.assign_attributes(ask_outcome: :failed, failure_stage: stage)
       Rails.logger.error("Discourse AI Discoveries request #{args[:request_id]} failed: #{e.class}")
       publish_processing_error(user, base) if request_still_owned?(user, args[:request_id]) && base
     ensure
       cancel_manager&.stop_monitor
       if admitted
         DiscourseAi::Discoveries.release_request(user_id: user.id, request_id: args[:request_id])
+      end
+      if ask_log
+        if ask_log.ask_outcome.nil?
+          if deadline && Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+            ask_log.assign_attributes(ask_outcome: :failed, failure_stage: stage)
+          else
+            ask_log.ask_outcome = :cancelled
+          end
+        end
+        ask_log.save! if ask_log.changed?
       end
     end
 
@@ -283,8 +363,8 @@ module Jobs
       )
     end
 
-    def request_result_settings(args)
-      configured_settings = DiscourseAi::Discoveries.result_settings
+    def request_result_settings(args, user)
+      configured_settings = DiscourseAi::Discoveries.result_settings(user)
       summary_detail = args[:summary_detail].to_s.to_sym
       if !DiscourseAi::Discoveries::SUMMARY_DETAILS.include?(summary_detail)
         summary_detail = configured_settings[:summary_detail]
@@ -316,7 +396,7 @@ module Jobs
       return fallback if DiscourseAi::Discoveries::Retrieval.explicit_filters?(query)
 
       agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_query_rewriter_agent)
-      return fallback if agent.nil? || !agent.enabled?
+      return fallback if agent.nil?
       return fallback if !user.in_any_groups?(agent.allowed_group_ids.to_a)
 
       llm_model_id = agent.default_llm_id.presence || SiteSetting.ai_default_llm_model
@@ -383,6 +463,10 @@ module Jobs
 
     def serialize_sources(sources)
       sources.map do |source|
+        if DiscourseAi::Discoveries::ExternalSource.candidate?(source)
+          next serialize_external_source(source)
+        end
+
         {
           title: source["title"],
           url: source["url"],
@@ -390,11 +474,23 @@ module Jobs
           category: source["category"].presence,
           category_id: source["category_id"],
           topic_replies: source["topic_replies"].to_i,
+          bumped_at: source["topic_bumped_at"],
           username: source["username"],
-          name: source["name"],
+          name: SiteSetting.enable_names? ? source["name"] : nil,
           avatar_template: source["avatar_template"],
         }
       end
+    end
+
+    def serialize_external_source(source)
+      {
+        kind: source["kind"],
+        title: source["title"],
+        url: source["url"],
+        excerpt: source["blurb"],
+        source_name: source["source_name"],
+        published_at: source["published_at"],
+      }
     end
   end
 end

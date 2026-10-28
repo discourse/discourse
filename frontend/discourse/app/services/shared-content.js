@@ -12,7 +12,12 @@ import {
 export default class SharedContent extends Service {
   @service appEvents;
 
+  /** @type {{ body: string, files: File[] } | null} */
   @tracked pending = null;
+
+  get hasPending() {
+    return !!this.pending;
+  }
 
   // Reads the payload the service worker stashed before redirecting to the
   // `share-target` route. Wrapped here so it can be stubbed in tests.
@@ -22,10 +27,6 @@ export default class SharedContent extends Service {
 
   clearShared() {
     return clearSharedContent();
-  }
-
-  get hasPending() {
-    return !!this.pending;
   }
 
   storeForReply({ body, files }) {

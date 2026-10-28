@@ -6,8 +6,8 @@ import User from "discourse/models/user";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
   discourseImport: "optional",
 };
-import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
-import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
+import DiscoursePostEventEventStats from "./discourse-post-event-event-stats.js";
+import DiscoursePostEventInvitee from "./discourse-post-event-invitee.js";
 
 const DEFAULT_REMINDER = {
   type: "notification",
@@ -93,6 +93,8 @@ export default class DiscoursePostEventEvent {
   @tracked livestreamUrl;
   @tracked livestreamChatChannelId;
   @tracked isZoomLivestream;
+  @tracked recordingUrl;
+  @tracked recordingOnebox;
   @tracked canUpdateAttendance;
   @tracked canActOnDiscoursePostEvent;
   @tracked shouldDisplayInvitees;
@@ -106,11 +108,13 @@ export default class DiscoursePostEventEvent {
   @tracked customFields;
   @tracked channel;
   @tracked imageUpload;
+  @tracked isFutureOccurrence = false;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
   @tracked _stats;
   @tracked _creator;
+  @tracked _hosts;
   @tracked _reminders;
 
   constructor(args = {}) {
@@ -134,6 +138,7 @@ export default class DiscoursePostEventEvent {
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
     this.creator = args.creator;
+    this.hosts = args.hosts || [];
     this.post = args.post;
     this.isClosed = args.is_closed;
     this.isExpired = args.is_expired;
@@ -145,6 +150,8 @@ export default class DiscoursePostEventEvent {
     this.livestreamUrl = args.livestream_url;
     this.livestreamChatChannelId = args.livestream_chat_channel_id;
     this.isZoomLivestream = args.is_zoom_livestream;
+    this.recordingUrl = args.recording_url;
+    this.recordingOnebox = args.recording_onebox;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
@@ -206,6 +213,16 @@ export default class DiscoursePostEventEvent {
     this._creator = this.#initUserModel(user);
   }
 
+  get hosts() {
+    return this._hosts;
+  }
+
+  set hosts(users = []) {
+    this._hosts = trackedArray(
+      (users ?? []).map((user) => this.#initUserModel(user))
+    );
+  }
+
   get isPublic() {
     return this.status === "public";
   }
@@ -220,6 +237,27 @@ export default class DiscoursePostEventEvent {
 
   get pastEventTimeframe() {
     return isPastEventTimeframe(this.allDay, this.startsAt, this.endsAt);
+  }
+
+  filterForFutureOccurrence() {
+    this.isFutureOccurrence = true;
+    this.sampleInvitees = this.sampleInvitees.filter(
+      (invitee) => invitee.status !== "going" || invitee.recurring
+    );
+
+    const recurringCount = this.stats?.goingRecurring ?? 0;
+    if (this.stats) {
+      this.stats.going = recurringCount;
+    }
+    this.atCapacity =
+      this.maxAttendees != null && recurringCount >= this.maxAttendees;
+
+    if (
+      this.watchingInvitee?.status === "going" &&
+      !this.watchingInvitee?.recurring
+    ) {
+      this.watchingInvitee = null;
+    }
   }
 
   updateFromEvent(event) {
@@ -238,6 +276,7 @@ export default class DiscoursePostEventEvent {
     this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
+    this.hosts = event.hosts || [];
     this.isClosed = event.isClosed;
     this.isExpired = event.isExpired;
     this.isStandalone = event.isStandalone;
@@ -248,6 +287,8 @@ export default class DiscoursePostEventEvent {
     this.livestreamUrl = this.location || this.url;
     this.livestreamChatChannelId = event.livestreamChatChannelId;
     this.isZoomLivestream = event.isZoomLivestream;
+    this.recordingUrl = event.recordingUrl;
+    this.recordingOnebox = event.recordingOnebox;
     this.rrule = event.rrule;
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;

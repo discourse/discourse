@@ -10,8 +10,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import SelectKitRow from "./select-kit/select-kit-row";
-import TagChooserRow from "./tag-chooser-row";
+import SelectKitRow from "./select-kit/select-kit-row.gjs";
+import TagChooserRow from "./tag-chooser-row.gjs";
 
 @classNames("tag-chooser")
 @attributeBindings("categoryId")
@@ -31,6 +31,7 @@ export default class TagChooser extends MultiSelectComponent {
   valueProperty = "id";
   nameProperty = "name";
 
+  /** @type {(string | { id: number | string, name: string })[] | null | undefined} */
   blockedTags = null;
   excludeSynonyms = false;
   excludeHasSynonyms = false;
@@ -43,14 +44,6 @@ export default class TagChooser extends MultiSelectComponent {
       termMatchesForbidden: false,
       termMatchErrorMessage: null,
     });
-  }
-
-  modifyComponentForRow(collection, item) {
-    if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return SelectKitRow;
-    }
-
-    return TagChooserRow;
   }
 
   @computed("site.can_create_tag", "allowCreate")
@@ -104,13 +97,16 @@ export default class TagChooser extends MultiSelectComponent {
     );
   }
 
-  @action
-  _onChange(value, items) {
-    if (this.onChange) {
-      this.onChange(items);
-    } else {
-      this.set("tags", items);
+  get _normalizedBlockedTags() {
+    return makeArray(this.blockedTags).filter(Boolean);
+  }
+
+  modifyComponentForRow(collection, item) {
+    if (this.getValue(item) === this.selectKit.filter && !item.count) {
+      return SelectKitRow;
     }
+
+    return TagChooserRow;
   }
 
   validateCreate(filter, content) {
@@ -132,10 +128,6 @@ export default class TagChooser extends MultiSelectComponent {
 
   createContentFromInput(input) {
     return this.tagUtils.createContentFromInput(input);
-  }
-
-  get _normalizedBlockedTags() {
-    return makeArray(this.blockedTags).filter(Boolean);
   }
 
   search(query) {
@@ -191,9 +183,18 @@ export default class TagChooser extends MultiSelectComponent {
     );
   }
 
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      this.onChange(items);
+    } else {
+      this.set("tags", items);
+    }
+  }
+
   @bind
   _transformJson(json, { skipSort = false } = {}) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return [];
     }
 

@@ -111,20 +111,20 @@ export default class DiscourseTemplatesButton extends Component {
   <template>
     <div class="template-topic-controls">
       <DButton
-        @icon={{if this.copyConfirm "check" "copy"}}
-        @action={{this.copy}}
-        @label="templates.copy"
         class={{dConcatClass
           "btn-default"
           "template-copy"
           (if this.copyConfirm "ok")
         }}
+        @action={{this.copy}}
+        @icon={{if this.copyConfirm "check" "copy"}}
+        @label="templates.copy"
       />
       <DButton
-        @action={{this.createNewTopic}}
-        @label="templates.new_topic"
-        @icon="plus"
         class="btn-default template-new-topic"
+        @action={{this.createNewTopic}}
+        @icon="plus"
+        @label="templates.new_topic"
       />
     </div>
   </template>

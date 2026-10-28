@@ -2,7 +2,12 @@
 
 module DiscourseWorkflows
   class ExpressionResolver
-    WHOLE_EXPRESSION_REGEX = /\A\{\{\s*([^{}]*?)\s*\}\}\z/
+    EMPTY_EXPRESSION = /\A=\s*(\{\{\s*\}\})?\s*\z/
+
+    # Mirrored by isEmptyExpression in property-engine.js.
+    def self.empty_expression?(value)
+      value.is_a?(String) && EMPTY_EXPRESSION.match?(value)
+    end
 
     def self.find_matching_close(template, start)
       depth = 1
@@ -32,15 +37,17 @@ module DiscourseWorkflows
       with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_hash(hash) }
     end
 
-    def self.resolve_segments(template, context: {}, user: nil)
-      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_segments(template) }
+    def self.resolve_segments(template, context: {}, user: nil, workflow_vars: nil)
+      with_owned_sandbox(context, user: user, workflow_vars: workflow_vars) do |resolver|
+        resolver.resolve_segments(template)
+      end
     rescue MiniRacer::Error, JsSandbox::BudgetExceededError, JsSandbox::SandboxError => e
       Rails.logger.warn("Expression evaluation failed: #{e.message}")
       []
     end
 
-    def self.with_owned_sandbox(context, user: nil)
-      sandbox = JsSandbox.new(context, user: user)
+    def self.with_owned_sandbox(context, user: nil, workflow_vars: nil)
+      sandbox = JsSandbox.new(context, user: user, workflow_vars: workflow_vars)
       resolver = new(context, user: user, sandbox: sandbox)
       yield resolver
     ensure
@@ -58,7 +65,7 @@ module DiscourseWorkflows
       return value unless resolvable_string?(value)
 
       expression_body = value[1..].strip
-      whole_expression = expression_body.match(WHOLE_EXPRESSION_REGEX)&.captures&.first
+      whole_expression = whole_expression_body(expression_body)
 
       whole_expression ? js_evaluator.evaluate(whole_expression) : render_template(expression_body)
     end
@@ -74,6 +81,10 @@ module DiscourseWorkflows
 
     def expression_errors
       @js_evaluator&.expression_errors || []
+    end
+
+    def discard_expression_errors(from:)
+      @js_evaluator&.expression_errors&.slice!(from..) || []
     end
 
     def evaluate_expression(expression)
@@ -172,6 +183,13 @@ module DiscourseWorkflows
       else
         resolve(value)
       end
+    end
+
+    def whole_expression_body(template)
+      return if !template.start_with?("{{")
+
+      close = self.class.find_matching_close(template, 2)
+      template[2...close].strip if close == template.length - 2
     end
 
     def resolvable_string?(value)

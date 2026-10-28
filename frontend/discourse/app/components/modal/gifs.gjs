@@ -9,7 +9,6 @@ import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
@@ -92,7 +91,7 @@ export default class GifsModal extends Component {
     try {
       const response = await fetch(getURL(GIFS_CATEGORIES_URL));
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -102,7 +101,7 @@ export default class GifsModal extends Component {
 
       const data = await response.json();
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -169,7 +168,7 @@ export default class GifsModal extends Component {
     try {
       const response = await fetch(this.getEndpoint(this.query, this.offset));
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -178,7 +177,7 @@ export default class GifsModal extends Component {
       }
 
       const data = await response.json();
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -264,20 +263,20 @@ export default class GifsModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "gifs.modal_title"}}
-      @closeModal={{@closeModal}}
-      id="gifs-modal"
       class="gifs-modal"
+      id="gifs-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "gifs.modal_title"}}
     >
       <:body>
         <div class="gifs-modal__input">
           <Input
-            {{on "input" this.refresh}}
-            @type="text"
-            @value={{this.query}}
+            autofocus
             name="query"
             placeholder={{i18n "gifs.placeholder"}}
-            autofocus
+            @type="text"
+            @value={{this.query}}
+            {{on "input" this.refresh}}
           />
 
           {{#if this.loading}}
@@ -291,11 +290,11 @@ export default class GifsModal extends Component {
           <div class="gifs-modal__content">
             <div class="gifs-modal__box">
               <GifsResultList
+                @canLoadMore={{this.hasMore}}
                 @content={{this.currentGifs}}
-                @pick={{this.pick}}
                 @loading={{this.loading}}
                 @loadMore={{this.loadMore}}
-                @canLoadMore={{this.hasMore}}
+                @pick={{this.pick}}
               />
             </div>
           </div>
@@ -307,8 +306,8 @@ export default class GifsModal extends Component {
             <div class="gifs-modal__box">
               <GifsResultList
                 @content={{this.categories}}
-                @pick={{this.selectCategory}}
                 @loading={{false}}
+                @pick={{this.selectCategory}}
               />
             </div>
           </div>
@@ -324,13 +323,13 @@ export default class GifsModal extends Component {
       <:footer>
         <picture>
           <source
-            srcset={{getURL "/images/klipy-logo-dark.png"}}
             media={{this.darkMediaQuery}}
+            srcset={{getURL "/images/klipy-logo-dark.png"}}
           />
           <img
+            alt={{i18n "gifs.powered_by"}}
             class="gifs-modal__branding"
             src={{getURL "/images/klipy-logo.png"}}
-            alt={{i18n "gifs.powered_by"}}
           />
         </picture>
       </:footer>

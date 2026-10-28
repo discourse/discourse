@@ -24,6 +24,11 @@ sv:
             topic_id:
               label: Ämnes-ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifikation"
+            none: "Ingen"
       on_holiday: "På semester"
       disable_holiday: "Inaktivera"
       enable_holiday: "Aktivera"
@@ -307,6 +312,9 @@ sv:
     group_timezones:
       search: "Sök..."
       group_availability: "%{group}-tillgänglighet"
+    discourse_workflows:
+      post_event:
+        topic_id: "Ämnes-ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -364,7 +372,6 @@ sv:
             going: "Kommer"
             interested: "Intresserad"
         event:
-          expired: "Utgången"
           closed: "Stängd"
           status:
             standalone:
@@ -376,6 +383,8 @@ sv:
             private:
               title: "Privat"
               description: "Endast inbjudna användare kan besöka ett privat evenemang."
+      recording_modal:
+        save: "Spara"
       composer:
         name_placeholder: "Evenemangsnamn"
         url_placeholder: "Lägg till URL"

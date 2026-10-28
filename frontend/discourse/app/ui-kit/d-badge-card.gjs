@@ -4,7 +4,6 @@ import { isEmpty } from "@ember/utils";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
-import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
@@ -21,13 +20,16 @@ export default class DBadgeCard extends Component {
     return filterUser ? `${badge.url}?username=${username}` : badge.url;
   }
 
-  get displayCount() {
-    const { count, badge } = this.args;
+  get grantedLabel() {
+    const { badge, count } = this.args;
+
     if (count == null) {
-      return badge.grant_count;
-    }
-    if (count > 1) {
-      return count;
+      const total = badge.grant_count;
+      if (total) {
+        return i18n("badges.awarded", { count: total, number: dNumber(total) });
+      }
+    } else if (count > 1) {
+      return i18n("badges.granted_times", { count, number: dNumber(count) });
     }
   }
 
@@ -40,20 +42,15 @@ export default class DBadgeCard extends Component {
     return sanitize(badge.description);
   }
 
-  get showFavorite() {
-    const { badge } = this.args;
-    return ![1, 2, 3, 4].includes(badge.id);
-  }
-
   get ariaDescribedBy() {
     const { badge } = this.args;
     const ids = [`badge-summary-${badge.slug}`];
 
-    if (this.displayCount) {
+    if (this.grantedLabel) {
       ids.push(`badge-granted-${badge.slug}`);
     }
 
-    if (badge.has_badge) {
+    if (this.args.granted) {
       ids.push(`badge-awarded-${badge.slug}`);
     }
 
@@ -74,8 +71,8 @@ export default class DBadgeCard extends Component {
           @outletArgs={{lazyHash badge=@badge url=this.url}}
         />
         <span
-          class="badge-icon {{@badge.badgeTypeClassName}}"
           aria-hidden="true"
+          class="badge-icon {{@badge.badgeTypeClassName}}"
         >
           {{dIconOrImage @badge}}
         </span>
@@ -86,62 +83,51 @@ export default class DBadgeCard extends Component {
                 {{@badge.name}}
               {{else}}
                 <a
-                  href={{this.url}}
-                  class="badge-link"
                   aria-describedby={{this.ariaDescribedBy}}
+                  class="badge-link"
+                  href={{this.url}}
                 >
                   {{@badge.name}}
                 </a>
               {{/if}}
             </h3>
-            <div id="badge-summary-{{@badge.slug}}" class="badge-summary">
+            <div class="badge-summary" id="badge-summary-{{@badge.slug}}">
               {{trustHTML this.summary}}
             </div>
-            {{#if this.displayCount}}
-              <div id="badge-granted-{{@badge.slug}}" class="badge-granted">
-                {{trustHTML
-                  (i18n
-                    "badges.awarded"
-                    count=this.displayCount
-                    number=(dNumber this.displayCount)
-                  )
-                }}
+            {{#if this.grantedLabel}}
+              <div class="badge-granted" id="badge-granted-{{@badge.slug}}">
+                {{trustHTML this.grantedLabel}}
               </div>
             {{/if}}
           </div>
         </div>
       </div>
 
-      {{#if @badge.has_badge}}
+      {{#if @granted}}
         <div
-          id="badge-awarded-{{@badge.slug}}"
-          class="check-display status-checked"
           aria-label={{i18n "notifications.titles.granted_badge"}}
+          class="check-display status-checked"
+          id="badge-awarded-{{@badge.slug}}"
         >
           {{dIcon "check"}}
         </div>
       {{/if}}
 
       {{#if @canFavorite}}
-        {{#if @isFavorite}}
-          <DButton
-            @icon="star"
-            @action={{@onFavoriteClick}}
-            class="btn-default favorite-btn btn-small"
-          />
-        {{else}}
-          <DButton
-            @icon="far-star"
-            @action={{@onFavoriteClick}}
-            @title={{if
+        <DButton
+          class="btn-default favorite-btn btn-small"
+          @action={{@onFavoriteClick}}
+          @disabled={{and (not @isFavorite) (not @canFavoriteMoreBadges)}}
+          @icon={{if @isFavorite "star" "far-star"}}
+          @title={{unless
+            @isFavorite
+            (if
               @canFavoriteMoreBadges
               "badges.favorite_max_not_reached"
               "badges.favorite_max_reached"
-            }}
-            @disabled={{not @canFavoriteMoreBadges}}
-            class="btn-default favorite-btn btn-small"
-          />
-        {{/if}}
+            )
+          }}
+        />
       {{/if}}
     </div>
   </template>

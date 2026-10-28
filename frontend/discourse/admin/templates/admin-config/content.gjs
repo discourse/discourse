@@ -5,32 +5,32 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.content.title"}}
     @descriptionLabel={{i18n "admin.config.content.header_description"}}
+    @titleLabel={{i18n "admin.config.content.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/content"
         @label={{i18n "admin.config.content.title"}}
+        @path="/admin/config/content"
       />
     </:breadcrumbs>
     <:tabs>
       <DNavItem
-        @route="adminConfig.content.categoriesAndTags"
         @label="admin.config.content.sub_pages.categories_and_tags.title"
+        @route="adminConfig.content.categoriesAndTags"
       />
       <DNavItem
-        @route="adminConfig.content.sharing"
         @label="admin.config.content.sub_pages.sharing.title"
+        @route="adminConfig.content.sharing"
       />
       <DNavItem
-        @route="adminConfig.content.postsAndTopics"
         @label="admin.config.content.sub_pages.posts_and_topics.title"
+        @route="adminConfig.content.postsAndTopics"
       />
       <DNavItem
-        @route="adminConfig.content.statsAndThresholds"
         @label="admin.config.content.sub_pages.stats_and_thresholds.title"
+        @route="adminConfig.content.statsAndThresholds"
       />
     </:tabs>
   </DPageHeader>

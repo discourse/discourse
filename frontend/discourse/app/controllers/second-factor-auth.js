@@ -15,10 +15,16 @@ export default class SecondFactorAuthController extends Controller {
   SECURITY_KEY = SECURITY_KEY;
   PASSKEY = PASSKEY;
   queryParams = ["nonce"];
+
+  /** @type {string | null} */
   message = null;
   loadError = false;
   messageIsError = false;
+
+  /** @type {string | null} */
   secondFactorToken = null;
+
+  /** @type {number | null} */
   userSelectedMethod = null;
   isLoading = false;
 
@@ -215,6 +221,11 @@ export default class SecondFactorAuthController extends Controller {
     }
   }
 
+  @computed("secondFactorToken")
+  get isSecondFactorTokenValid() {
+    return this.secondFactorToken?.length > 0;
+  }
+
   resetState() {
     this.set("message", null);
     this.set("messageIsError", false);
@@ -311,11 +322,6 @@ export default class SecondFactorAuthController extends Controller {
       },
       { userVerification: "required" }
     );
-  }
-
-  @computed("secondFactorToken")
-  get isSecondFactorTokenValid() {
-    return this.secondFactorToken?.length > 0;
   }
 
   @action

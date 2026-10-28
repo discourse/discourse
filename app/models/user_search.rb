@@ -20,8 +20,11 @@ class UserSearch
     @last_seen_users = !!opts[:last_seen_users] && !@include_staged_users
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
+    # Callers are responsible for authorizing the users this exposes.
+    @user_ids = opts[:user_ids]
     @can_review = opts[:can_review] || false
     @search_custom_fields = opts[:search_custom_fields] || false
+    @search_context = opts[:search_context]
 
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
@@ -36,6 +39,7 @@ class UserSearch
     users = users.where(approved: true) if SiteSetting.must_approve_users?
     users = users.where(staged: false) unless @include_staged_users
     users = users.not_suspended unless @guardian.is_staff?
+    users = users.where(id: @user_ids) if @user_ids
 
     if @groups
       users = users.joins(:group_users).where("group_users.group_id IN (?)", @groups.map(&:id))
@@ -63,7 +67,11 @@ class UserSearch
           .where("users.admin OR categories.id = ?", @topic.category_id)
     end
 
-    users
+    DiscoursePluginRegistry.apply_modifier(
+      :user_search_scoped_users,
+      users,
+      { search_context: @search_context, category: @category, topic: @topic, guardian: @guardian },
+    )
   end
 
   def filtered_by_term_users

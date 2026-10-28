@@ -18,6 +18,8 @@ export default class AuthTokenComponent extends Component {
   @service currentUser;
 
   @tracked expanded = false;
+
+  /** @type {{ cooked: string, excerpt: string } | null} */
   @tracked latestPost = null;
 
   constructor() {
@@ -43,8 +45,8 @@ export default class AuthTokenComponent extends Component {
 
   <template>
     <DModal
-      @title={{i18n "user.auth_tokens.was_this_you"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "user.auth_tokens.was_this_you"}}
     >
       <:body>
         <div>

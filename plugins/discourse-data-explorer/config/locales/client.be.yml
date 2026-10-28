@@ -7,9 +7,7 @@
 be:
   js:
     explorer:
-      default_query: "Прадвызначаная"
       or: "або"
-      create: "стварыць"
       ai:
         generate: "згенераваць"
       types:
@@ -17,7 +15,9 @@ be:
           yes: "Так"
           no: "Не"
       delete: "Выдаліць"
+      name: "Імя"
       query_groups: "групы"
+      query_tags: "Цэтлікі"
       query_description: "Апісанне"
       reset_params: "скінуць"
     group:

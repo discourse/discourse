@@ -13,6 +13,11 @@ gl:
             topic_id:
               label: ID do tema
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificación"
+            none: "Ningunha"
       disable_holiday: "Desactivar"
       enable_holiday: "Activar"
       date: "Data"
@@ -26,6 +31,9 @@ gl:
         year: "Ano"
     group_timezones:
       search: "Buscar..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID do tema"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -42,13 +50,14 @@ gl:
         status: "Estado"
       models:
         event:
-          expired: "Caducou"
           closed: "Pechado"
           status:
             public:
               title: "Pública"
             private:
               title: "Privada"
+      recording_modal:
+        save: "Gardar"
       composer:
         url_placeholder: "Engadir URL"
         reminder:

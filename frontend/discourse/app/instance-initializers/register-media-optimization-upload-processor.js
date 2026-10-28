@@ -28,13 +28,20 @@ export default {
         ({ isMobileDevice }) => {
           return {
             optimizeFn: (data, opts) => {
-              if (owner.isDestroyed || owner.isDestroying) {
+              if (owner.isDestroying) {
                 return Promise.resolve();
               }
 
               return owner
                 .lookup("service:media-optimization-worker")
                 .optimizeImage(data, opts);
+            },
+            cancelFn: (fileId) => {
+              if (!owner.isDestroying) {
+                owner
+                  .lookup("service:media-optimization-worker")
+                  .cancel(fileId);
+              }
             },
             runParallel: !isMobileDevice,
           };

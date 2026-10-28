@@ -18,6 +18,7 @@ module PageObjects
         "country" => "Country",
         "network" => "Network",
         "browser" => "Browser",
+        "language" => "Language",
         "ip" => "IP address",
       }.freeze
 

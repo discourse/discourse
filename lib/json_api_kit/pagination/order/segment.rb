@@ -35,8 +35,9 @@ module JsonApiKit
 
         def reverse = self.class.new(id:, keyset: keyset.reverse, digest:, condition:)
 
-        def narrowed_by(other) =
+        def narrowed_by(other)
           self.class.new(id:, keyset:, digest:, condition: condition_after(other))
+        end
 
         private
 

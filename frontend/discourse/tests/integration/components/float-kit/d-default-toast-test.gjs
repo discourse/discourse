@@ -35,8 +35,8 @@ module("Integration | Component | FloatKit | DDefaultToast", function (hooks) {
       <template>
         <DDefaultToast
           @data={{this.toast.options.data}}
-          @showProgressBar={{true}}
           @onRegisterProgressBar={{(noop)}}
+          @showProgressBar={{true}}
         />
       </template>
     );

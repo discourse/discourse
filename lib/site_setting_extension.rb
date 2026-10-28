@@ -1217,9 +1217,7 @@ module SiteSettingExtension
     # a getter with _groups_map on the end, e.g. allow_unlimited_uploads_groups_map,
     # to avoid having to manually split and convert to integer for these settings.
     if UpcomingChanges.exists?(name) && type_supervisor.get_type(name) == :bool
-      define_singleton_method("#{clean_name}_groups_map") do
-        site_setting_group_ids[name].presence || []
-      end
+      define_singleton_method("#{clean_name}_groups_map") { UpcomingChanges.group_ids_for(name) }
     end
 
     # Same logic as above for other list type settings, with the caveat that normal
@@ -1279,17 +1277,15 @@ module SiteSettingExtension
   #   }
   def fetch_setting_hash_from_provider
     Hash[
-      *(
-        provider
-          .all
-          .map do |setting|
-            [
-              setting.name.to_sym,
-              type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
-            ]
-          end
-          .flatten
-      )
+      *provider
+        .all
+        .map do |setting|
+          [
+            setting.name.to_sym,
+            type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
+          ]
+        end
+        .flatten
     ]
   end
 

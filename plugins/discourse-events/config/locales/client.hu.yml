@@ -27,6 +27,11 @@ hu:
               label: Témaazonosító
     discourse_events:
       title: "Események"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Értesítés"
+            none: "Egyik sem"
       on_holiday: "Szabadságon"
       disable_holiday: "Letiltás"
       enable_holiday: "Engedélyezés"
@@ -322,6 +327,9 @@ hu:
     group_timezones:
       search: "Keresés…"
       group_availability: "%{group} elérhetősége"
+    discourse_workflows:
+      post_event:
+        topic_id: "Témaazonosító"
     discourse_post_event:
       notifications:
         before_event_reminder: "Egy esemény hamarosan elkezdődik: "
@@ -352,6 +360,9 @@ hu:
       edit_event: "Esemény szerkesztése"
       export_event: "Esemény exportálása"
       created_by: "Létrehozta:"
+      other_hosts:
+        one: "és még %{count} felhasználó"
+        other: "és még %{count} felhasználó"
       bulk_invite: "Csoportos meghívás"
       close_event: "Esemény lezárása"
       open_event: "Nyílt esemény"
@@ -417,7 +428,6 @@ hu:
               one: "%{count} meghívott felhasználó"
               other: "%{count} meghívott felhasználó"
         event:
-          expired: "Lejárt"
           closed: "Lezárt"
           full: "Tele"
           status:
@@ -430,6 +440,8 @@ hu:
             private:
               title: "Privát"
               description: "Privát eseményhez csak a meghívott felhasználók csatlakozhatnak."
+      recording_modal:
+        save: "Mentés"
       composer:
         name_placeholder: "Esemény neve"
         location_or_url_placeholder: "Helyszín vagy URL hozzáadása"
@@ -515,6 +527,8 @@ hu:
           placeholder: "Nem kötelező, alapértelmezés szerint a téma címe"
         invitees:
           label: "Meghívott csoportok"
+        hosts:
+          label: "Gazdagépek"
         event_type:
           public:
             title: "Nyilvános"

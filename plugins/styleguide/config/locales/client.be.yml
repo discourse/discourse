@@ -10,6 +10,13 @@ be:
       sections:
         typography:
           example: "Сардэчна запрашаем у дыскурсе"
+        context_menu:
+          actions:
+            delete: "Выдаліць"
+        reorderable_list:
+          policies_pinned: "Замацаваныя"
+          policies_required: "Абавязкова"
+          table_type: "Тып"
         colors:
           title: "<......"
         icons:

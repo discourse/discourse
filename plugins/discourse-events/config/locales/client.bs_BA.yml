@@ -13,6 +13,11 @@ bs_BA:
             topic_id:
               label: ID teme
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Obavijest"
+            none: "Ništa"
       disable_holiday: "Onemogući"
       enable_holiday: "Omogući"
       date: "Datum"
@@ -26,6 +31,9 @@ bs_BA:
         year: "Godina"
     group_timezones:
       search: "Pretraga..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID teme"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -44,6 +52,8 @@ bs_BA:
               title: "Javno"
             private:
               title: "Privatno"
+      recording_modal:
+        save: "Sačuvaj"
       composer:
         url_placeholder: "Add URL"
         reminder:

@@ -119,6 +119,11 @@ te:
         sort:
           relevance: "ఔచిత్యం"
           latest: "తాజా"
+      channel_list:
+        options:
+          filter: "ఫిల్టర్ చేయండి"
+        filter:
+          mentions: "ప్రస్తావనలు"
       incoming_webhooks:
         back: "వెనుకకు"
         description: "వివరణ"

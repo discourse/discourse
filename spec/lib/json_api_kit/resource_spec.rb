@@ -25,6 +25,8 @@ module SpecBlog
   end
 end
 
+RSpec::Matchers.alias_matcher :accept_anchor, :be_anchor_accepts
+
 RSpec.describe JsonApiKit::Resource do
   subject(:resource) { SpecBlog::PostResource }
 
@@ -126,7 +128,7 @@ RSpec.describe JsonApiKit::Resource do
     context "when that name matches no model" do
       subject(:resource) { Class.new(described_class) { model :nowhere_to_be_found } }
 
-      it "refuses the model name" do
+      it "raises a missing declaration with that name" do
         expect { model }.to raise_error(described_class::MissingDeclaration, /NowhereToBeFound/)
       end
     end
@@ -280,18 +282,79 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".default_sort" do
-    it "reads a listing in the order the resource declares" do
-      expect(topic_resource.order.leading.name).to eq(:last_posted_at)
+    it "retains the declared ordering" do
+      expect(topic_resource.default_ordering).to eq("ran_at" => :desc)
     end
 
     context "when the resource declares no such sort" do
-      it "refuses the declaration" do
+      it "raises an undeclared default" do
         expect {
           Class.new(described_class) do
             model Topic
             default_sort creatd_at: :asc
           end
         }.to raise_error(JsonApiKit::Resource::Sorting::UndeclaredDefault, /creatd_at/)
+      end
+    end
+
+    context "when the direction is invalid" do
+      it "rejects the declaration" do
+        expect {
+          Class.new(described_class) do
+            model Topic
+            sort :created_at
+            default_sort created_at: :sideways
+          end
+        }.to raise_error(ArgumentError, /unknown direction: sideways/)
+      end
+    end
+  end
+
+  describe ".default_ordering" do
+    subject(:ordering) { topic_resource.default_ordering(historical_ordering) }
+
+    let(:historical_ordering) { { created_at: :asc } }
+
+    it "returns the supplied ordering with string names" do
+      expect(ordering).to eq("created_at" => :asc)
+    end
+
+    it "returns an immutable ordering" do
+      expect(ordering).to be_frozen
+    end
+
+    context "when a historical ordering has been requested" do
+      before { ordering }
+
+      it "preserves the resource's current default" do
+        expect(topic_resource.default_ordering).to eq("ran_at" => :desc)
+      end
+    end
+
+    context "when the ordering is empty" do
+      let(:historical_ordering) { {} }
+
+      it "preserves the empty ordering" do
+        expect(ordering).to be_empty
+      end
+    end
+
+    context "when the sort is undeclared" do
+      let(:historical_ordering) { { unknown: :asc } }
+
+      it "rejects the ordering" do
+        expect { ordering }.to raise_error(
+          JsonApiKit::Resource::Sorting::UndeclaredDefault,
+          /unknown/,
+        )
+      end
+    end
+
+    context "when the direction is invalid" do
+      let(:historical_ordering) { { created_at: :sideways } }
+
+      it "rejects the ordering" do
+        expect { ordering }.to raise_error(ArgumentError, /unknown direction: sideways/)
       end
     end
   end
@@ -302,39 +365,36 @@ RSpec.describe JsonApiKit::Resource do
     end
   end
 
-  describe ".filter" do
-    subject(:kept_ids) do
-      topic_resource.apply_filters(Topic.all, "title" => kept_topic.title).map(&:id)
-    end
-
-    fab!(:kept_topic) { Fabricate(:topic, title: "The rows a filter keeps") }
-    fab!(:dropped_topic) { Fabricate(:topic, title: "The rows it leaves behind") }
-
-    it "lets a request narrow the listing by the name it declares" do
-      expect(kept_ids).to contain_exactly(kept_topic.id)
-    end
-
-    context "when the resource declares one more after a reading" do
-      subject(:kept_ids) { topic_resource.apply_filters(Topic.all, "closed" => false).map(&:id) }
-
-      before do
-        topic_resource.apply_filters(Topic.all)
-        topic_resource.filter(:closed)
-      end
-
-      it "narrows by the new filter too" do
-        expect(kept_ids).to include(kept_topic.id)
-      end
-    end
-  end
-
   describe ".attribute" do
     subject(:attribute_values) { topic_resource.fields(guardian:).attributes.values_for(topic) }
 
     fab!(:topic) { Fabricate(:topic, title: "A field a resource renders") }
 
     it "renders the field the resource declares" do
-      expect(attribute_values).to eq("title" => topic.title)
+      expect(attribute_values).to eq(
+        JsonApiKit::Name::Field.new(value: "title", type: topic_resource.type) => topic.title,
+      )
+    end
+
+    context "when the attribute declares a type" do
+      before { topic_resource.attribute(:views, :string, writable: true) }
+
+      it "preserves the record's value" do
+        expect(attribute_values).to include(
+          JsonApiKit::Name::Field.new(value: "views", type: topic_resource.type) => topic.views,
+        )
+      end
+    end
+
+    context "when a typed attribute declares a reader" do
+      before { topic_resource.attribute(:view_count, :integer, writable: true) { it.views.to_s } }
+
+      it "preserves the reader's value" do
+        expect(attribute_values).to include(
+          JsonApiKit::Name::Field.new(value: "view_count", type: topic_resource.type) =>
+            topic.views.to_s,
+        )
+      end
     end
 
     context "when the resource declares one more after a reading" do
@@ -344,7 +404,67 @@ RSpec.describe JsonApiKit::Resource do
       end
 
       it "renders the new field too" do
-        expect(attribute_values).to include("closed")
+        expect(attribute_values).to include(
+          JsonApiKit::Name::Field.new(value: "closed", type: topic_resource.type),
+        )
+      end
+    end
+  end
+
+  describe ".writable_attributes" do
+    subject(:writable_attributes) { resource.writable_attributes }
+
+    let(:resource) do
+      Class.new(described_class) do
+        attribute :title, :string, writable: true
+        attribute :tags, :array, writable: true
+        attribute :created_at, :datetime
+        attribute :views, :integer, writable: false
+        attribute :closed
+      end
+    end
+
+    it "returns the names and types of writable declarations" do
+      expect(writable_attributes.map { [it.name, it.type] }).to contain_exactly(
+        ["title", an_instance_of(ActiveModel::Type::String)],
+        ["tags", an_instance_of(ActiveSupportTypeExtensions::Array)],
+      )
+    end
+
+    context "when an attribute is unreadable" do
+      before { resource.attribute(:password, :string, writable: true, readable: ->(_) { false }) }
+
+      it "includes the writable declaration" do
+        expect(writable_attributes.map(&:name)).to include("password")
+      end
+    end
+
+    context "when a declaration follows an earlier lookup" do
+      before do
+        resource.writable_attributes
+        resource.attribute(:excerpt, :string, writable: true)
+      end
+
+      it "includes the new declaration" do
+        expect(writable_attributes.map(&:name)).to include("excerpt")
+      end
+    end
+
+    context "when a subclass adds a writable attribute" do
+      let(:child_resource) { Class.new(resource) }
+
+      before { child_resource.attribute(:excerpt, :string, writable: true) }
+
+      it "includes inherited declarations in the subclass" do
+        expect(child_resource.writable_attributes.map(&:name)).to contain_exactly(
+          "title",
+          "tags",
+          "excerpt",
+        )
+      end
+
+      it "preserves the parent's declarations" do
+        expect(writable_attributes.map(&:name)).to contain_exactly("title", "tags")
       end
     end
   end
@@ -430,14 +550,14 @@ RSpec.describe JsonApiKit::Resource do
   describe ".includes" do
     subject(:allowed_paths) { topic_resource.allow(JsonApiKit::Paths.new(%w[user.groups])) }
 
-    it "lets a request read a path through a relationship" do
+    it "allows a path through a relationship" do
       expect(allowed_paths.map(&:to_s)).to eq(%w[user.groups])
     end
 
-    context "when the path reads a relationship no resource declares" do
+    context "when the path holds a relationship no resource declares" do
       before { topic_resource.includes("user.badges") }
 
-      it "refuses to read the resource" do
+      it "raises an unresolved path" do
         expect { allowed_paths }.to raise_error(
           JsonApiKit::Declarations::IncludePaths::Unresolved,
           /user\.badges/,
@@ -450,7 +570,7 @@ RSpec.describe JsonApiKit::Resource do
 
       before { child.includes("posts.groups") }
 
-      it "reads the paths declared above it" do
+      it "allows the paths declared above it" do
         expect(child.allow(JsonApiKit::Paths.new(%w[user.groups])).map(&:to_s)).to eq(
           %w[user.groups],
         )
@@ -490,7 +610,7 @@ RSpec.describe JsonApiKit::Resource do
     end
 
     context "when the default is larger than the maximum" do
-      it "refuses the declaration" do
+      it "raises an out-of-range limit" do
         expect {
           Class.new(described_class) do
             model Topic
@@ -503,7 +623,7 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".page_size" do
-    it "returns the size a page reads at" do
+    it "returns the size of a page" do
       expect(topic_resource.page_size).to eq(2)
     end
   end
@@ -515,15 +635,29 @@ RSpec.describe JsonApiKit::Resource do
 
     it { is_expected.to be_anchored_by(anchor_name: :created_at, ordering:) }
 
-    context "when the order does not read by that anchor" do
+    context "when the order does not hold that anchor" do
       let(:ordering) { { "ran_at" => :desc } }
 
       it { is_expected.not_to be_anchored_by(anchor_name: :created_at, ordering:) }
     end
 
     context "when the resource declares no anchor by that name" do
-      it { is_expected.to be_anchored_by(anchor_name: :first_unread) }
+      it { is_expected.to be_anchored_by(anchor_name: :first_unread, ordering:) }
     end
+  end
+
+  describe ".anchor_accepts?" do
+    subject(:resource) do
+      Class.new(topic_resource) do
+        anchor :created_at
+        anchor(:mine) { |topics, _guardian| topics }
+      end
+    end
+
+    it { is_expected.to accept_anchor(JsonApiKit::Anchoring.for(created_at: "2026-08-01")) }
+    it { is_expected.not_to accept_anchor(JsonApiKit::Anchoring.for(created_at: nil)) }
+    it { is_expected.to accept_anchor(JsonApiKit::Anchoring.for(:mine)) }
+    it { is_expected.not_to accept_anchor(JsonApiKit::Anchoring.for(:secrets)) }
   end
 
   describe ".scope_for" do
@@ -552,20 +686,48 @@ RSpec.describe JsonApiKit::Resource do
   describe ".all" do
     before { allow(JsonApiKit::Query::Collection).to receive(:new) }
 
-    it "reads a listing for the request a caller sends" do
+    it "builds a listing for the request a caller sends" do
       topic_resource.all({ sort: { created_at: :asc } }, guardian:)
 
       expect(JsonApiKit::Query::Collection).to have_received(:new).with(
-        topic_resource,
+        an_instance_of(topic_resource),
         an_object_having_attributes(ordering: { "created_at" => :asc }, guardian:),
         scoped_to: nil,
+      )
+    end
+
+    context "when the resource's default sort changes between queries" do
+      fab!(:first_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 1)) }
+      fab!(:second_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 2)) }
+
+      before do
+        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        topic_resource.default_sort created_at: :asc
+      end
+
+      it "uses the updated default for the next query" do
+        expect { topic_resource.default_sort created_at: :desc }.to change {
+          topic_resource.all(guardian:).records.map(&:record)
+        }.from([first_topic, second_topic]).to([second_topic, first_topic])
+      end
+    end
+  end
+
+  describe ".find" do
+    before { allow(JsonApiKit::Query::Individual).to receive(:new) }
+
+    it "resolves the default ordering before constructing the request" do
+      topic_resource.find(12, guardian:)
+
+      expect(JsonApiKit::Query::Individual).to have_received(:new).with(
+        an_instance_of(topic_resource),
+        an_object_having_attributes(ordering: { "ran_at" => :desc }, guardian:),
       )
     end
   end
 
   describe ".paged_from?" do
     fab!(:topic) { Fabricate(:topic, title: "A page read from a cursor") }
-
     let(:ordering) { { "created_at" => :asc } }
     let(:cursor) { topic_resource.order(ordering).first.position_of(topic).to_cursor }
 
@@ -580,9 +742,15 @@ RSpec.describe JsonApiKit::Resource do
     end
 
     context "when no column of the order allows null" do
-      it "reads the listing in one segment" do
+      it "orders the listing in one segment" do
         expect(topic_resource.order("created_at" => :desc).segments.size).to eq(1)
       end
     end
+  end
+
+  describe "#writable_attributes" do
+    subject(:resource) { topic_resource.new(guardian:) }
+
+    it { is_expected.to delegate_method(:writable_attributes).to(:class) }
   end
 end

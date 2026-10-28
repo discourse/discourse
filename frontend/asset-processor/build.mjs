@@ -21,7 +21,7 @@ const bundle = await rolldown({
       url: local("./url-polyfill.js"),
       // Absolute path so postcss's `browser` field (`source-map-js: false`) can't stub it out and disable CSS sourcemaps.
       "source-map-js": local("source-map-js"),
-      assert: local("./noop.js"),
+      assert: local("./assert-shim.js"),
       fs: local("./noop.js"),
       os: local("./os-shim.js"),
       workerpool: local("./workerpool-shim.js"),

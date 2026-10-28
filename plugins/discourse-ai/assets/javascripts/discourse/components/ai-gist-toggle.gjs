@@ -3,12 +3,11 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { TABLE_AI_LAYOUT, TABLE_LAYOUT } from "../services/gists";
+import { TABLE_AI_LAYOUT, TABLE_LAYOUT } from "../services/gists.js";
 
 export default class AiGistToggle extends Component {
   @service gists;
@@ -55,9 +54,9 @@ export default class AiGistToggle extends Component {
   <template>
     {{#if this.gists.showToggle}}
       <DMenu
-        @modalForMobile={{true}}
         @autofocus={{true}}
         @identifier="topic-list-layout"
+        @modalForMobile={{true}}
         @onRegisterApi={{this.onRegisterApi}}
         @triggerClass="btn-default btn-icon"
       >
@@ -71,11 +70,11 @@ export default class AiGistToggle extends Component {
                 class={{if (eq this.currentButton.id button.id) "--selected"}}
               >
                 <DButton
-                  @label={{button.label}}
-                  @icon={{button.icon}}
                   class="btn-transparent
                     {{if button.description '--with-description'}}"
                   @action={{fn this.onSelect button.id}}
+                  @icon={{button.icon}}
+                  @label={{button.label}}
                 >
                   {{#if button.description}}
                     <div class="btn__description">

@@ -442,7 +442,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:topic) { Fabricate(:topic, category: category) }
         fab!(:other_topic, :topic)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           get "/admin/reports/topics.json", params: { category_id: category.id }
 
           expect(response.status).to eq(200)
@@ -459,7 +459,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:other_user, :user)
         fab!(:group)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           group.add(user)
 
           get "/admin/reports/signups.json", params: { group_id: group.id }
@@ -616,27 +616,24 @@ RSpec.describe Admin::ReportsController do
     end
 
     context "with browser pageview reports" do
-      it "lets an admin run them only when persist_browser_pageview_events is enabled" do
+      let(:browser_pageview_reports) do
+        %w[top_countries_by_browser_pageviews top_entry_urls top_referrers_by_browser_pageviews]
+      end
+
+      it "lets an admin run them" do
         sign_in(admin)
+        SiteSetting.use_legacy_pageviews = false
 
-        SiteSetting.persist_browser_pageview_events = false
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-          get "/admin/reports/#{report_type}.json"
-          expect(response.status).to eq(404)
-        end
-
-        SiteSetting.persist_browser_pageview_events = true
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+        browser_pageview_reports.each do |report_type|
           get "/admin/reports/#{report_type}.json"
           expect(response.status).to eq(200)
         end
       end
 
-      it "denies a moderator even when persist_browser_pageview_events is enabled" do
-        SiteSetting.persist_browser_pageview_events = true
+      it "denies a moderator" do
         sign_in(moderator)
 
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+        browser_pageview_reports.each do |report_type|
           get "/admin/reports/#{report_type}.json"
           expect(response.status).to eq(404)
         end

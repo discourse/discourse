@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -13,7 +14,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SVG_NAMESPACE } from "discourse/lib/icon-library";
 import { addExtraSpriteSymbols } from "discourse/lib/svg-sprite-loader";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -53,8 +53,6 @@ class IconButton extends Component {
 
   <template>
     <button
-      type="button"
-      role="option"
       aria-label={{@icon.id}}
       aria-selected={{if @selected "true" "false"}}
       class={{dConcatClass
@@ -62,6 +60,8 @@ class IconButton extends Component {
         (if @selected "--selected")
       }}
       data-icon-id={{@icon.id}}
+      role="option"
+      type="button"
       {{on "click" (fn @onSelect @icon)}}
     >
       {{this.symbol}}
@@ -94,6 +94,8 @@ export default class DIconGridPickerContent extends Component {
 
   @tracked hasMore = false;
   @tracked loadingMore = false;
+
+  /** @type {HTMLElement | null} */
   @tracked gridWrapper = null;
 
   registerGridWrapper = modifier((/** @type {HTMLElement} */ element) => {
@@ -207,6 +209,19 @@ export default class DIconGridPickerContent extends Component {
    */
   get hasFavorites() {
     return this.displayFavorites.length > 0 && !this.filter;
+  }
+
+  get resultAnnouncement() {
+    if (!this.icons) {
+      return "";
+    }
+
+    return i18n(
+      this.hasMore
+        ? "d_icon_grid_picker.results_loaded"
+        : "d_icon_grid_picker.results_count",
+      { count: this.icons.length }
+    );
   }
 
   /**
@@ -350,56 +365,11 @@ export default class DIconGridPickerContent extends Component {
     )?.focus();
   }
 
-  get resultAnnouncement() {
-    if (!this.icons) {
-      return "";
-    }
-
-    return i18n(
-      this.hasMore
-        ? "d_icon_grid_picker.results_loaded"
-        : "d_icon_grid_picker.results_count",
-      { count: this.icons.length }
-    );
-  }
-
-  /**
-   * @param {number} page
-   * @param {AbortSignal} [signal]
-   * @returns {Promise<{icons: Array<{id: string, symbol?: string}>, has_more: boolean}>}
-   */
-  async #fetchPage(page, signal) {
-    const request = /** @type {Promise<any> & {abort: () => void}} */ (
-      ajax("/svg-sprite/picker-search", {
-        data: {
-          filter: this.filter.trim(),
-          only_available: this.args.onlyAvailable ?? true,
-          page,
-        },
-      })
-    );
-
-    signal?.addEventListener("abort", () => request.abort(), { once: true });
-
-    return await request;
-  }
-
-  /**
-   * Whether an async continuation still belongs to the live component and to
-   * the search that started it.
-   *
-   * @param {number} search
-   * @returns {boolean}
-   */
-  #isCurrent(search) {
-    return this.#search === search && !this.isDestroying && !this.isDestroyed;
-  }
-
   /**
    * Loads the first page of icons. Used as the `@asyncData` callback for the
    * `AsyncContent` loader, which debounces it and aborts superseded searches.
    *
-   * @param {string} _filter - Tracked by `@context`; read from `this.filter`.
+   * @param {unknown} _filter - Tracked by `@context`; read from `this.filter`.
    * @param {{signal: AbortSignal}} options
    * @returns {Promise<Array<{id: string, symbol?: string}>>} The first page.
    */
@@ -435,7 +405,10 @@ export default class DIconGridPickerContent extends Component {
         return;
       }
 
-      this.icons = [...this.icons, ...icons];
+      // `hasMore` is only set together with the first page, so it is loaded here.
+      const loaded = this.icons;
+      assert("More icons load only after the first page", loaded);
+      this.icons = [...loaded, ...icons];
       this.hasMore = hasMore;
       this.#page++;
     } catch (error) {
@@ -455,13 +428,17 @@ export default class DIconGridPickerContent extends Component {
    * scroll into, and moves focus onto the first icon that arrives.
    */
   async loadMoreAndFocus() {
-    const next = this.icons.length;
+    const loadedIcons = this.icons;
+    assert("The keyboard pages a grid that has loaded", loadedIcons);
+    const next = loadedIcons.length;
     await this.loadMore();
 
     schedule("afterRender", () => {
+      const icons = this.icons;
+      assert("The keyboard pages a grid that has loaded", icons);
       /** @type {HTMLElement | undefined} */ (
         this.gridWrapper?.querySelector(
-          `.d-icon-grid-picker__grid [data-icon-id="${this.icons[next]?.id}"]`
+          `.d-icon-grid-picker__grid [data-icon-id="${icons[next]?.id}"]`
         )
       )?.focus();
     });
@@ -479,6 +456,38 @@ export default class DIconGridPickerContent extends Component {
     this.args.onSelect(icon.id);
   }
 
+  /**
+   * @param {number} page
+   * @param {AbortSignal} [signal]
+   * @returns {Promise<{icons: Array<{id: string, symbol?: string}>, has_more: boolean}>}
+   */
+  async #fetchPage(page, signal) {
+    const request = /** @type {Promise<any> & {abort: () => void}} */ (
+      ajax("/svg-sprite/picker-search", {
+        data: {
+          filter: this.filter.trim(),
+          only_available: this.args.onlyAvailable ?? true,
+          page,
+        },
+      })
+    );
+
+    signal?.addEventListener("abort", () => request.abort(), { once: true });
+
+    return await request;
+  }
+
+  /**
+   * Whether an async continuation still belongs to the live component and to
+   * the search that started it.
+   *
+   * @param {number} search
+   * @returns {boolean}
+   */
+  #isCurrent(search) {
+    return this.#search === search && !this.isDestroying;
+  }
+
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
@@ -488,37 +497,35 @@ export default class DIconGridPickerContent extends Component {
     >
       <div class="d-icon-grid-picker__filter-container">
         <DFilterInput
-          aria-label={{i18n "d_icon_grid_picker.search_label"}}
           aria-controls="d-icon-grid-picker-listbox"
+          aria-label={{i18n "d_icon_grid_picker.search_label"}}
           placeholder={{i18n "d_icon_grid_picker.search_placeholder"}}
-          @value={{this.filter}}
-          @filterAction={{withEventValue this.setFilter}}
-          @onClearInput={{fn this.setFilter ""}}
-          @icons={{hash left="magnifying-glass"}}
           @containerClass="d-icon-grid-picker__filter"
+          @filterAction={{withEventValue this.setFilter}}
+          @icons={{hash left="magnifying-glass"}}
+          @onClearInput={{fn this.setFilter ""}}
+          @value={{this.filter}}
         />
       </div>
 
       <div
+        aria-label={{i18n "d_icon_grid_picker.select_icon"}}
         class="d-icon-grid-picker__grid-wrapper"
         id="d-icon-grid-picker-listbox"
+        role="listbox"
         {{this.registerGridWrapper}}
         {{this.iconTooltips}}
-        role="listbox"
-        aria-label={{i18n "d_icon_grid_picker.select_icon"}}
       >
         {{#if this.hasFavorites}}
           <div
+            aria-label={{i18n "d_icon_grid_picker.favorites"}}
             class="d-icon-grid-picker__favorites"
             role="group"
-            aria-label={{i18n "d_icon_grid_picker.favorites"}}
           >
             {{#each this.displayFavorites as |favIcon|}}
               {{! eslint-disable ember/template-require-context-role }}
               {{#if (eq favIcon @value)}}
                 <button
-                  type="button"
-                  role="option"
                   aria-label={{favIcon}}
                   aria-selected="true"
                   class={{dConcatClass
@@ -526,6 +533,8 @@ export default class DIconGridPickerContent extends Component {
                     (if @showSelectedName "d-icon-grid-picker__selected-chip")
                   }}
                   data-icon-id={{favIcon}}
+                  role="option"
+                  type="button"
                   {{this.snapToGrid}}
                   {{on "click" (fn this.selectIcon (hash id=favIcon))}}
                 >
@@ -561,8 +570,8 @@ export default class DIconGridPickerContent extends Component {
               {{#each this.icons as |item|}}
                 <IconButton
                   @icon={{item}}
-                  @selected={{eq item.id @value}}
                   @onSelect={{this.selectIcon}}
+                  @selected={{eq item.id @value}}
                 />
               {{/each}}
             </:content>
@@ -582,15 +591,15 @@ export default class DIconGridPickerContent extends Component {
 
         {{#if this.hasMore}}
           <DLoadMore
+            class="d-icon-grid-picker__sentinel"
             @action={{this.loadMore}}
             @isLoading={{this.loadingMore}}
             @root={{this.gridWrapper}}
-            class="d-icon-grid-picker__sentinel"
           />
         {{/if}}
       </div>
 
-      <div class="sr-only" aria-live="polite" role="status">
+      <div aria-live="polite" class="sr-only" role="status">
         {{this.resultAnnouncement}}
       </div>
     </div>

@@ -9,12 +9,24 @@ import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import BoardsConstraintFix from "./modal/boards-constraint-fix";
+import BoardsConstraintFix from "./modal/boards-constraint-fix.gjs";
 
 export default class BoardsAddFromTopicColumnSubmenu extends Component {
   @service messageBus;
   @service modal;
   @service toasts;
+
+  get availableColumns() {
+    return this.args.data.board.columns.filter(
+      (column) => !column.topic_is_member
+    );
+  }
+
+  get alreadyAddedColumns() {
+    return this.args.data.board.columns.filter(
+      (column) => column.topic_is_member
+    );
+  }
 
   @action
   async addToColumn(column) {
@@ -55,6 +67,16 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  columnStyle(column) {
+    if (!isValidHex(column.color)) {
+      return null;
+    }
+
+    return trustHTML(
+      `--discourse-boards-column-icon-color: #${normalizeHex(column.color)};`
+    );
   }
 
   async #checkConstraints(column) {
@@ -131,28 +153,6 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
     }
   }
 
-  get availableColumns() {
-    return this.args.data.board.columns.filter(
-      (column) => !column.topic_is_member
-    );
-  }
-
-  get alreadyAddedColumns() {
-    return this.args.data.board.columns.filter(
-      (column) => column.topic_is_member
-    );
-  }
-
-  columnStyle(column) {
-    if (!isValidHex(column.color)) {
-      return null;
-    }
-
-    return trustHTML(
-      `--discourse-boards-column-icon-color: #${normalizeHex(column.color)};`
-    );
-  }
-
   <template>
     <DDropdownMenu
       class="discourse-boards-add-from-topic-column-menu"
@@ -165,11 +165,11 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
         {{#each this.availableColumns as |column|}}
           <dropdown.item>
             <DButton
+              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
+              style={{this.columnStyle column}}
               @action={{fn this.addToColumn column}}
               @icon={{column.icon}}
               @translatedLabel={{column.fancyTitle}}
-              style={{this.columnStyle column}}
-              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
             />
           </dropdown.item>
         {{/each}}
@@ -181,12 +181,12 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
         {{#each this.alreadyAddedColumns as |column|}}
           <dropdown.item>
             <DButton
+              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
+              style={{this.columnStyle column}}
               @action={{fn this.removeFromColumn column}}
               @icon={{column.icon}}
-              @translatedLabel={{column.fancyTitle}}
               @suffixIcon="xmark"
-              style={{this.columnStyle column}}
-              class="btn-transparent discourse-boards-add-from-topic-column-menu__column"
+              @translatedLabel={{column.fancyTitle}}
             />
           </dropdown.item>
         {{/each}}

@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import openLinksInNewTab from "discourse/plugins/discourse-events/discourse/modifiers/open-links-in-new-tab";
@@ -70,8 +69,8 @@ export default class DiscoursePostEventDescription extends Component {
           </div>
           {{#if this.showToggle}}
             <a
-              href
               class="event-description__toggle"
+              href
               {{on "click" this.toggle}}
             >{{this.toggleLabel}}</a>
           {{/if}}

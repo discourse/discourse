@@ -31,9 +31,9 @@ export default class UserColorPaletteMenuItem extends Component {
           this.activeClass
         }}
         style={{trustHTML this.siteStyle}}
+        @action={{this.paletteSelected}}
         @icon="circle"
         @translatedLabel={{@colorPalette.name}}
-        @action={{this.paletteSelected}}
       />
     </div>
   </template>

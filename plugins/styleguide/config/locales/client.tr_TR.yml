@@ -32,8 +32,18 @@ tr_TR:
           title: "Tarih/Saat girdileri"
         menus:
           title: "Menüler"
+        context_menu:
+          actions:
+            duplicate: "Eş Kopya"
+            delete: "Sil"
         multi_select:
           title: "Çoklu seçim"
+        reorderable_list:
+          policies_pinned: "Sabitlendi"
+          policies_required: "Gerekli"
+          table_field: "Alan"
+          table_type: "Tür"
+          cross_list_primary: "Birincil"
         toasts:
           title: "Beliren pencereler"
         font_scale:

@@ -13,6 +13,11 @@ hy:
             topic_id:
               label: Թեմայի ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Ծանուցում"
+            none: "Ոչ մի"
       disable_holiday: "Անջատել"
       enable_holiday: "Միացնել"
       date: "Ամսաթիվ"
@@ -26,6 +31,9 @@ hy:
         year: "Տարի"
     group_timezones:
       search: "Որոնում..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Թեմայի ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -44,13 +52,14 @@ hy:
         status: "Ստատուս"
       models:
         event:
-          expired: "Ժամկետանց"
           closed: "Փակված է"
           status:
             public:
               title: "Հանրային"
             private:
               title: "Մասնավոր"
+      recording_modal:
+        save: "Պահպանել"
       composer:
         url_placeholder: "Ավելացնել URL"
         reminder:

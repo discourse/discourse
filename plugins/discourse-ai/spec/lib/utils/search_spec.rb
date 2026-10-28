@@ -161,6 +161,7 @@ RSpec.describe DiscourseAi::Utils::Search do
 
     context "when using semantic search" do
       let(:query) { "this is an expanded search" }
+
       after do
         if defined?(DiscourseAi::Embeddings::SemanticSearch)
           DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query)

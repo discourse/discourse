@@ -24,8 +24,8 @@ class MyModalClass extends Component {
       Modal content is
       {{@model.text}}
       <button
-        type="button"
         class="custom-data"
+        type="button"
         {{on "click" this.closeWithCustomData}}
       ></button>
     </DModal>
@@ -154,19 +154,15 @@ acceptance("Modal service: component-based API", function () {
   });
 
   test("alongside declarative modals", async function (assert) {
-    class State {
-      @tracked showDeclarativeModal;
-    }
-
-    const testState = new State();
-    const closeModal = () => (testState.showDeclarativeModal = false);
+    const showDeclarativeModal = tracked(undefined);
+    const closeModal = () => (showDeclarativeModal.value = false);
 
     const MyConnector = <template>
-      {{#if testState.showDeclarativeModal}}
+      {{#if showDeclarativeModal.value}}
         <DModal
           class="declarative-modal"
-          @title="Declarative modal"
           @closeModal={{closeModal}}
+          @title="Declarative modal"
         >
           <span class="declarative-modal-content">Declarative modal content</span>
         </DModal>
@@ -186,7 +182,7 @@ acceptance("Modal service: component-based API", function () {
     await settled();
     assert.dom(".d-modal.service-modal").exists("modal should appear");
 
-    testState.showDeclarativeModal = true;
+    showDeclarativeModal.value = true;
     await settled();
     assert
       .dom(".d-modal.declarative-modal")

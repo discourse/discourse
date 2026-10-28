@@ -50,4 +50,30 @@ RSpec.describe JsonApiKit::Anchoring do
       end
     end
   end
+
+  describe "#single_value?" do
+    it { is_expected.to be_a_single_value }
+
+    context "when the value is an array" do
+      let(:anchor) { { id: [12] } }
+
+      it { is_expected.not_to be_a_single_value }
+    end
+
+    context "when the anchor is a name alone" do
+      let(:anchor) { :first_unread }
+
+      it { is_expected.not_to be_a_single_value }
+    end
+  end
+
+  describe "#without_value?" do
+    it { is_expected.not_to be_without_value }
+
+    context "when the anchor is a name alone" do
+      let(:anchor) { :first_unread }
+
+      it { is_expected.to be_without_value }
+    end
+  end
 end

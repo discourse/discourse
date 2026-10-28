@@ -46,6 +46,10 @@ zh_TW:
           rsvp_to_event_with_link: "回覆<a href='%{url}'>活動</a>邀請以開始聊天"
           rsvp_body: "在活動前、活動期間及活動後與其他參加者交流。"
       preferences:
+        reminders:
+          preferences:
+            notification: "通知"
+            none: "無"
         all_events: "Discourse 活動－所有活動"
         all_events_description: "所有論壇活動"
         my_events: "Discourse 活動－我的活動"
@@ -345,6 +349,9 @@ zh_TW:
     group_timezones:
       search: "搜尋……"
       group_availability: "%{group} 可用時段"
+    discourse_workflows:
+      post_event:
+        topic_id: "主題 ID"
     discourse_post_event:
       new_event: "新增活動"
       notifications:
@@ -375,6 +382,8 @@ zh_TW:
       edit_event: "編輯活動"
       export_event: "匯出活動"
       created_by: "建立者"
+      other_hosts:
+        other: "與其他 %{count} 人"
       bulk_invite: "大量邀請"
       close_event: "關閉活動"
       open_event: "開啟活動"
@@ -385,6 +394,7 @@ zh_TW:
         filter_placeholder: "篩選使用者"
         remove_invitee: "從名單移除受邀者"
         add_invitee: "將受邀者加入名單"
+        this_event: "此活動"
       bulk_invite_modal:
         confirm: "確認"
         text: "上傳 CSV 檔案"
@@ -441,7 +451,6 @@ zh_TW:
             invited_count:
               other: "已邀請 %{count} 位使用者"
         event:
-          expired: "已過期"
           closed: "已關閉"
           full: "名額已滿"
           status:
@@ -454,6 +463,8 @@ zh_TW:
             private:
               title: "私人"
               description: "僅受邀使用者可以加入私人活動。"
+      recording_modal:
+        save: "儲存"
       composer:
         name_placeholder: "活動名稱"
         end_date_placeholder: "結束日期"
@@ -581,6 +592,8 @@ zh_TW:
           placeholder: "選填，預設為主題標題"
         invitees:
           label: "受邀群組"
+        hosts:
+          label: "主機"
         event_type:
           label: "出席類型"
           public:

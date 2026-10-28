@@ -118,7 +118,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   end
 
   describe "#list_private_messages_group" do
-    it "should return the right list for a group user" do
+    it "returns the group's messages for a group member" do
       group.add(user_2)
 
       topics =
@@ -127,7 +127,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to contain_exactly(group_message)
     end
 
-    it "should return the right list for an admin not part of the group" do
+    it "returns the group's messages for an admin outside the group" do
       group.update!(name: group.name.capitalize)
 
       topics =
@@ -139,7 +139,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to contain_exactly(group_message)
     end
 
-    it "should not allow a moderator not part of the group to view the group's messages" do
+    it "prevents moderators outside the group from viewing its messages" do
       topics =
         TopicQuery
           .new(nil, group_name: group.name)
@@ -149,7 +149,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to eq([])
     end
 
-    it "should not allow a user not part of the group to view the group's messages" do
+    it "prevents users outside the group from viewing its messages" do
       topics =
         TopicQuery
           .new(nil, group_name: group.name)
@@ -375,22 +375,20 @@ RSpec.describe TopicQuery::PrivateMessageLists do
     end
   end
 
-  describe "#list_private_messages_direct_and_groups" do
-    it "returns a list of all personal and group private messages for a given user" do
-      expect(
-        TopicQuery.new(user_2).list_private_messages_direct_and_groups(user_2).topics,
-      ).to contain_exactly(private_message, group_message)
+  describe "#private_messages_direct_and_groups" do
+    it "returns all personal and group private messages for a given user with their user data" do
+      topics = TopicQuery.new(user_2).private_messages_direct_and_groups(user_2)
+
+      expect(topics).to contain_exactly(private_message, group_message)
+      expect(topics.find { |t| t.id == group_message.id }.user_data).to be_present
     end
 
     it "returns a list of personal private messages and user watching group private messages for a given user when the `groups_notification_level` option is set" do
       expect(
-        TopicQuery
-          .new(user_2)
-          .list_private_messages_direct_and_groups(
-            user_2,
-            groups_messages_notification_level: :watching,
-          )
-          .topics,
+        TopicQuery.new(user_2).private_messages_direct_and_groups(
+          user_2,
+          groups_messages_notification_level: :watching,
+        ),
       ).to contain_exactly(private_message, group_message)
 
       TopicUser.find_by(user: user_2, topic: group_message).update!(
@@ -398,13 +396,10 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       )
 
       expect(
-        TopicQuery
-          .new(user_2)
-          .list_private_messages_direct_and_groups(
-            user_2,
-            groups_messages_notification_level: :watching,
-          )
-          .topics,
+        TopicQuery.new(user_2).private_messages_direct_and_groups(
+          user_2,
+          groups_messages_notification_level: :watching,
+        ),
       ).to contain_exactly(private_message)
     end
   end

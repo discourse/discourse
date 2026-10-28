@@ -23,13 +23,20 @@ module DiscourseEvents
         :"max-attendees",
         :"all-day",
         :image,
+        :hosts,
+        :recording,
       ]
 
       LEGACY_ESCAPED_ATTRS = %w[data-location]
       SCHEME_PREFIX = /\A[a-z][a-z0-9+.\-]*:/i
 
+      EVENT_MARKER = /\[event|discourse-post-event/i
+
       def self.extract_events(post)
-        cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)
+        raw = post.raw.to_s
+        return [] if !raw.match?(EVENT_MARKER)
+
+        cooked = PrettyText.cook(raw, topic_id: post.topic_id, user_id: post.user_id)
         valid_options = valid_option_attributes
 
         valid_custom_fields =
@@ -53,11 +60,13 @@ module DiscourseEvents
                 event ||= {}
                 value = CGI.unescapeHTML(value) if LEGACY_ESCAPED_ATTRS.include?(name)
                 event[name.sub("data-", "").to_sym] = case name
-                when "data-name", "data-url", "data-image", "data-location"
+                when "data-name", "data-url", "data-image", "data-location", "data-recording"
                   value
                 else
                   CGI.escapeHTML(value)
                 end
+                # A custom field sharing the name would overwrite the parsed value.
+                next
               end
 
               valid_custom_fields.each do |valid_custom_field|
@@ -150,6 +159,15 @@ module DiscourseEvents
         uri.scheme == "mailto" ? uri.opaque.present? : uri.host.present?
       rescue URI::Error, Addressable::URI::InvalidURIError
         false
+      end
+
+      # Stricter than `valid_url?`: a recording is only ever opened in a
+      # browser tab, so mailto and custom schemes have no business here.
+      def self.valid_web_url?(value)
+        value = value.to_s.strip
+        return true if value.blank?
+        return false if !valid_url?(value)
+        !value.match?(SCHEME_PREFIX) || value.match?(%r{\Ahttps?://}i)
       end
 
       def self.normalize_link(value)

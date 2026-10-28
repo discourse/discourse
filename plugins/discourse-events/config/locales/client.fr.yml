@@ -45,6 +45,10 @@ fr:
           rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"
           rsvp_body: "Échangez avec les autres participants avant, pendant et après l'événement."
       preferences:
+        reminders:
+          preferences:
+            notification: "Notification"
+            none: "Jamais"
         all_events_description: "Tous les événements du forum"
         my_events_description: "Événements auxquels vous participez ou qui vous intéressent"
       on_holiday: "En vacances"
@@ -342,6 +346,9 @@ fr:
     group_timezones:
       search: "Recherche…"
       group_availability: "disponibilité de %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID du sujet"
     discourse_post_event:
       new_event: "Nouvel événement"
       notifications:
@@ -373,6 +380,9 @@ fr:
       edit_event: "Modifier l'événement"
       export_event: "Exporter l'événement"
       created_by: "Créé par "
+      other_hosts:
+        one: "et %{count} autre utilisateur"
+        other: "et %{count} autres utilisateurs"
       bulk_invite: "Invitation groupée"
       close_event: "Fermer l'événement"
       open_event: "Ouvrir l'événement"
@@ -383,6 +393,7 @@ fr:
         filter_placeholder: "Filtrer les utilisateurs"
         remove_invitee: "Supprimer l'invité de la liste"
         add_invitee: "Ajouter l'invité à la liste"
+        this_event: "Cet événement"
       bulk_invite_modal:
         confirm: "confirmer"
         text: "Téléverser un fichier CSV"
@@ -443,7 +454,6 @@ fr:
               one: "%{count} utilisateur est invité"
               other: "%{count} utilisateurs sont invités"
         event:
-          expired: "Expiré"
           closed: "Fermé"
           full: "Complet"
           status:
@@ -456,6 +466,8 @@ fr:
             private:
               title: "Privé"
               description: "Un événement privé ne peut être rejoint que par les utilisateurs invités."
+      recording_modal:
+        save: "Enregistrer"
       composer:
         name_placeholder: "Nom de l'événement"
         end_date_placeholder: "Date de fin"
@@ -587,6 +599,8 @@ fr:
           placeholder: "Facultatif, par défaut le titre du sujet"
         invitees:
           label: "Groupes invités"
+        hosts:
+          label: "Hôtes"
         event_type:
           label: "Type de participation"
           public:

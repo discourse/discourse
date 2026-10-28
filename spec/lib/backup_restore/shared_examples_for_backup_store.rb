@@ -172,9 +172,22 @@ RSpec.shared_examples "backup store" do
 
       it "runs if SiteSetting.backup_frequency is configured" do
         base_backup_s3_url = "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com"
+        # An empty listing from S3 is a valid ListBucketResult with no
+        # <Contents>, not an empty body. Returning an empty body makes the SDK
+        # raise "Empty or incomplete response body", which used to be hidden by
+        # a bare `rescue StandardError` in S3BackupStore#unsorted_files.
         stub_request(:get, "#{base_backup_s3_url}/?list-type=2&prefix=default/").to_return(
           status: 200,
-          body: "",
+          body: <<~XML,
+            <?xml version="1.0" encoding="UTF-8"?>
+            <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+              <Name>s3-backup-bucket</Name>
+              <Prefix>default/</Prefix>
+              <KeyCount>0</KeyCount>
+              <MaxKeys>1000</MaxKeys>
+              <IsTruncated>false</IsTruncated>
+            </ListBucketResult>
+          XML
           headers: {
           },
         )
@@ -188,9 +201,22 @@ RSpec.shared_examples "backup store" do
 
       it "doesn't run if SiteSetting.backup_frequency is set to 0" do
         base_backup_s3_url = "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com"
+        # An empty listing from S3 is a valid ListBucketResult with no
+        # <Contents>, not an empty body. Returning an empty body makes the SDK
+        # raise "Empty or incomplete response body", which used to be hidden by
+        # a bare `rescue StandardError` in S3BackupStore#unsorted_files.
         stub_request(:get, "#{base_backup_s3_url}/?list-type=2&prefix=default/").to_return(
           status: 200,
-          body: "",
+          body: <<~XML,
+            <?xml version="1.0" encoding="UTF-8"?>
+            <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+              <Name>s3-backup-bucket</Name>
+              <Prefix>default/</Prefix>
+              <KeyCount>0</KeyCount>
+              <MaxKeys>1000</MaxKeys>
+              <IsTruncated>false</IsTruncated>
+            </ListBucketResult>
+          XML
           headers: {
           },
         )
@@ -331,30 +357,6 @@ RSpec.shared_examples "remote backup store" do
           expect {
             store.upload_file(backup1.filename, file.path, "application/gzip")
           }.to raise_exception(BackupRestore::BackupStore::BackupFileExists)
-        end
-      end
-    end
-
-    describe "#generate_upload_url" do
-      it "generates upload URL" do
-        filename = "foo.tar.gz"
-        url = store.generate_upload_url(filename)
-
-        expect(url).to match(upload_url_regex("default", filename, multisite: false))
-      end
-
-      it "raises an exception when a file with same filename exists" do
-        expect { store.generate_upload_url(backup1.filename) }.to raise_exception(
-          BackupRestore::BackupStore::BackupFileExists,
-        )
-      end
-
-      it "works with multisite", type: :multisite do
-        test_multisite_connection("second") do
-          filename = "foo.tar.gz"
-          url = store.generate_upload_url(filename)
-
-          expect(url).to match(upload_url_regex("second", filename, multisite: true))
         end
       end
     end

@@ -7,3 +7,7 @@
 uk:
   site_settings:
     checklist_enabled: "Увімкнути плагін відображення списків checklist?"
+  checklist:
+    checkboxes_changed: "Цей допис змінився з моменту завантаження. Оновіть сторінку та спробуйте ще раз."
+    checkbox_locked: "Цей пункт контрольного списку не можна змінити."
+    revision_failed: "Не вдалося оновити прапорець."

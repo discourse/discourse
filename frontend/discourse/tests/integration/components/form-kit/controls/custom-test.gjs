@@ -13,10 +13,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="custom"
+              @description="Bar"
               @name="foo"
               @title="Foo"
-              @description="Bar"
+              @type="custom"
               as |field|
             >
               <field.Control>

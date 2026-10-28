@@ -1,6 +1,7 @@
 import { computed } from "@ember/object";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
+import { duration, longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
@@ -55,6 +56,8 @@ export default class StaffActionLog extends RestModel {
     "new_value",
     "previous_value",
     "details",
+    "created_at",
+    "expires_at",
     "useCustomModalForDetails",
     "useModalForDetails"
   )
@@ -89,6 +92,34 @@ export default class StaffActionLog extends RestModel {
 
     if (!this.useModalForDetails && this.details) {
       lines = [...lines, ...escapeExpression(this.details).split("\n")];
+    }
+
+    if (this.created_at && this.expires_at) {
+      const created = moment(this.created_at);
+      const expires = moment(this.expires_at);
+      if (
+        created.isValid() &&
+        expires.isValid() &&
+        expires.isSameOrAfter(created)
+      ) {
+        const indefinite = expires.diff(created, "years") > 100;
+        lines.push(
+          format(
+            "admin.logs.staff_actions.scheduled_duration",
+            indefinite
+              ? i18n("admin.logs.staff_actions.indefinite")
+              : duration(expires.diff(created, "seconds"), { format: "medium" })
+          )
+        );
+        if (!indefinite) {
+          lines.push(
+            format(
+              "admin.logs.staff_actions.scheduled_expiry",
+              longDate(expires)
+            )
+          );
+        }
+      }
     }
 
     const formatted = lines.filter((l) => l.length > 0).join("<br/>");

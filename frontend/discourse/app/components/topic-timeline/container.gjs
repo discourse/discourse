@@ -17,7 +17,6 @@ import { bind, debounce } from "discourse/lib/decorators";
 import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
@@ -25,8 +24,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import BackButton from "./back-button";
-import Scroller from "./scroller";
+import BackButton from "./back-button.gjs";
+import Scroller from "./scroller.gjs";
 
 export const SCROLLER_HEIGHT = 50;
 const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
@@ -69,6 +68,8 @@ export default class TopicTimelineScrollArea extends Component {
   );
   @tracked total;
   @tracked date;
+
+  /** @type {number | null} */
   @tracked lastReadPercentage = null;
   @tracked lastRead;
   @tracked lastReadTop;
@@ -78,9 +79,16 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked dragging = false;
   @tracked excerpt = "";
 
+  /** @type {IntersectionObserver | null} */
   intersectionObserver = null;
+
+  /** @type {HTMLElement | null} */
   scrollareaElement = null;
+
+  /** @type {HTMLElement | null} */
   scrollerElement = null;
+
+  /** @type {number | null} */
   dragOffset = null;
 
   constructor() {
@@ -486,6 +494,16 @@ export default class TopicTimelineScrollArea extends Component {
     return this.scrollareaHeight - SCROLLER_HEIGHT;
   }
 
+  @action
+  registerScrollarea(element) {
+    this.scrollareaElement = element;
+  }
+
+  @action
+  registerScroller(element) {
+    this.scrollerElement = element;
+  }
+
   _percentFor(topic, postIndex) {
     const total = topic.postStream.filteredPostsCount;
     switch (postIndex) {
@@ -501,24 +519,14 @@ export default class TopicTimelineScrollArea extends Component {
     }
   }
 
-  @action
-  registerScrollarea(element) {
-    this.scrollareaElement = element;
-  }
-
-  @action
-  registerScroller(element) {
-    this.scrollerElement = element;
-  }
-
   <template>
     {{#if @fullscreen}}
       <div class="title">
         <h2>
           <a
-            {{on "click" @jumpTop}}
-            href={{@model.firstPostUrl}}
             class="fancy-title"
+            href={{@model.firstPostUrl}}
+            {{on "click" @jumpTop}}
           >{{this.topicTitle}}</a>
         </h2>
 
@@ -526,7 +534,15 @@ export default class TopicTimelineScrollArea extends Component {
           <div class="topic-header-extra">
             {{#if this.showTags}}
               <div class="list-tags">
-                {{dDiscourseTags @model mode="list" tags=@model.tags}}
+                <PluginOutlet
+                  @name="timeline-tags-wrapper"
+                  @outletArgs={{lazyHash
+                    topic=@model
+                    tags=@model.visibleListTags
+                  }}
+                >
+                  {{dDiscourseTags @model mode="list" tags=@model.tags}}
+                </PluginOutlet>
               </div>
             {{/if}}
             {{#if this.siteSettings.topic_featured_link_enabled}}
@@ -558,20 +574,20 @@ export default class TopicTimelineScrollArea extends Component {
         />
 
         <TopicAdminMenu
-          @topic={{@model}}
-          @toggleMultiSelect={{@toggleMultiSelect}}
-          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+          @convertToPrivateMessage={{@convertToPrivateMessage}}
+          @convertToPublicTopic={{@convertToPublicTopic}}
           @deleteTopic={{@deleteTopic}}
           @recoverTopic={{@recoverTopic}}
-          @toggleClosed={{@toggleClosed}}
-          @toggleArchived={{@toggleArchived}}
-          @toggleVisibility={{@toggleVisibility}}
-          @showTopicTimerModal={{@showTopicTimerModal}}
-          @showFeatureTopic={{@showFeatureTopic}}
-          @showChangeTimestamp={{@showChangeTimestamp}}
           @resetBumpDate={{@resetBumpDate}}
-          @convertToPublicTopic={{@convertToPublicTopic}}
-          @convertToPrivateMessage={{@convertToPrivateMessage}}
+          @showChangeTimestamp={{@showChangeTimestamp}}
+          @showFeatureTopic={{@showFeatureTopic}}
+          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+          @showTopicTimerModal={{@showTopicTimerModal}}
+          @toggleArchived={{@toggleArchived}}
+          @toggleClosed={{@toggleClosed}}
+          @toggleMultiSelect={{@toggleMultiSelect}}
+          @toggleVisibility={{@toggleVisibility}}
+          @topic={{@model}}
         />
 
         {{#if @model.has_localized_content}}
@@ -582,22 +598,22 @@ export default class TopicTimelineScrollArea extends Component {
 
     {{#if this.displayTimeLineScrollArea}}
       <UserTip
-        @id="topic_timeline"
-        @titleText={{i18n "user_tips.topic_timeline.title"}}
         @contentText={{i18n "user_tips.topic_timeline.content"}}
+        @id="topic_timeline"
         @placement="left"
         @portalOutletSelector=".timeline-scrollarea-wrapper"
-        @triggerSelector=".timeline-scrollarea"
         @priority={{900}}
+        @titleText={{i18n "user_tips.topic_timeline.title"}}
+        @triggerSelector=".timeline-scrollarea"
       />
 
       <div class="timeline-scrollarea-wrapper">
         <div class="timeline-date-wrapper">
           <a
-            {{on "click" this.updatePercentage}}
+            class="start-date"
             href={{@model.firstPostUrl}}
             title={{i18n "topic_entrance.jump_top_button_title"}}
-            class="start-date"
+            {{on "click" this.updatePercentage}}
           >
             <span>
               {{this.startDate}}
@@ -615,29 +631,29 @@ export default class TopicTimelineScrollArea extends Component {
         >
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{on "click" this.updatePercentage}}
-            style={{this.beforePadding}}
             class="timeline-padding"
+            style={{this.beforePadding}}
+            {{on "click" this.updatePercentage}}
           ></div>
 
           <Scroller
             @current={{this.current}}
-            @total={{this.total}}
-            @onGoBack={{this.onGoBack}}
-            @fullscreen={{@fullscreen}}
-            @showDockedButton={{this.showDockedButton}}
             @date={{this.date}}
+            @didEndDrag={{this.didEndDrag}}
             @didStartDrag={{this.didStartDrag}}
             @dragMove={{this.dragMove}}
-            @didEndDrag={{this.didEndDrag}}
+            @fullscreen={{@fullscreen}}
+            @onGoBack={{this.onGoBack}}
+            @showDockedButton={{this.showDockedButton}}
+            @total={{this.total}}
             {{didInsert this.registerScroller}}
           />
 
           {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{on "click" this.updatePercentage}}
-            style={{this.afterPadding}}
             class="timeline-padding"
+            style={{this.afterPadding}}
+            {{on "click" this.updatePercentage}}
           ></div>
 
           {{#if (and this.hasBackPosition this.showButton)}}
@@ -650,9 +666,9 @@ export default class TopicTimelineScrollArea extends Component {
 
         <div class="timeline-date-wrapper">
           <a
-            {{on "click" this.updatePercentage}}
-            href={{@model.lastPostUrl}}
             class="now-date"
+            href={{@model.lastPostUrl}}
+            {{on "click" this.updatePercentage}}
           >
             <span>
               {{dAgeWithTooltip this.nowDate this.nowDateOptions}}
@@ -664,39 +680,39 @@ export default class TopicTimelineScrollArea extends Component {
       <div class="timeline-footer-controls">
         {{#if this.displaySummary}}
           <DButton
+            class="show-summary btn-default btn-small"
+            title={{i18n "summary.short_title"}}
             @action={{@showTopReplies}}
             @icon="layer-group"
             @label="summary.short_label"
-            title={{i18n "summary.short_title"}}
-            class="show-summary btn-default btn-small"
           />
         {{/if}}
 
         {{#if (and this.currentUser (not @fullscreen))}}
           {{#if this.canCreatePost}}
             <DButton
+              class="btn-default create reply-to-post"
+              title={{i18n "topic.reply.help"}}
               @action={{fn @replyToPost null}}
               @icon="reply"
-              title={{i18n "topic.reply.help"}}
-              class="btn-default create reply-to-post"
             />
           {{/if}}
         {{/if}}
 
         {{#if @fullscreen}}
           <DButton
+            class="timeline-open-jump-to-post-prompt-btn jump-to-post"
+            title={{i18n "topic.progress.jump_prompt_long"}}
             @action={{@jumpToPostPrompt}}
             @label="topic.progress.jump_prompt"
-            title={{i18n "topic.progress.jump_prompt_long"}}
-            class="timeline-open-jump-to-post-prompt-btn jump-to-post"
           />
         {{/if}}
 
         {{#if (and this.currentUser this.site.desktopView)}}
           <TopicNotificationsButton
             @contentClass="topic-timeline-notifications-tracking-content"
-            @topic={{@model}}
             @expanded={{false}}
+            @topic={{@model}}
           />
         {{/if}}
 

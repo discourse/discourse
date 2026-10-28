@@ -89,9 +89,30 @@ RSpec.describe(DiscourseEvents::Events::BulkInvite) do
           args: {
             event_id: event.id,
             invitees: invitees,
+            recurring: false,
             current_user_id: admin.id,
           },
         ) { result }
+      end
+
+      context "with more invitees than the maximum" do
+        let(:invitees) do
+          Array.new(3) { |i| { "identifier" => "user#{i}", "attendance" => "going" } }
+        end
+
+        before { SiteSetting.discourse_post_event_max_bulk_invitees = 2 }
+
+        it "enqueues no more invitees than the job will process" do
+          expect_enqueued_with(
+            job: :discourse_post_event_bulk_invite,
+            args: {
+              event_id: event.id,
+              invitees: invitees.first(2),
+              recurring: false,
+              current_user_id: admin.id,
+            },
+          ) { result }
+        end
       end
     end
   end

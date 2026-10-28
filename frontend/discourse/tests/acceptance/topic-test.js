@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  find,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -9,6 +10,10 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   chromeTest,
@@ -485,6 +490,47 @@ acceptance(`Topic pinning/unpinning as an admin`, function (needs) {
       .exists("should show the 'Pin Topic' button");
 
     assert.dom(".make-banner").exists("should show the 'Banner Topic' button");
+
+    const futureDateInput = selectKit(".pin-until .future-date-input-selector");
+    await futureDateInput.expand();
+    await futureDateInput.selectRowByValue("tomorrow");
+    await visit("/");
+
+    assert.strictEqual(currentURL(), "/", "navigates without confirmation");
+  });
+
+  test("Pinning a topic until a custom date and time", async function (assert) {
+    let pinnedUntil;
+    pretender.put(
+      "/t/a-topic-with-group-category-moderators/2480/status",
+      (request) => {
+        pinnedUntil = parsePostData(request.requestBody).until;
+        return response({ success: "OK" });
+      }
+    );
+
+    await visit("/t/topic-for-group-moderators/2480");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-pin .btn");
+
+    const futureDateInput = selectKit(".pin-until .future-date-input-selector");
+    await futureDateInput.expand();
+    await futureDateInput.selectRowByValue("custom");
+
+    await fillIn(".pin-until .date-picker", "2100-11-24");
+
+    const timeInput = find(".pin-until .time-input");
+    await fillIn(timeInput, "01:00");
+    await fillIn(timeInput, "13:45");
+
+    await click(".feature-topic .btn-primary");
+
+    assert.strictEqual(
+      pinnedUntil.slice(0, 16),
+      "2100-11-24 13:45",
+      "pins until the typed date and time"
+    );
   });
 
   test("Pinning a topic should consider user's timezone when selecting the later today date shortcut", async function (assert) {
@@ -825,5 +871,16 @@ acceptance(`Topic stats update automatically`, function () {
       expectedLikesCount,
       "updates the likes count on the topic stats"
     );
+  });
+});
+
+acceptance(`Topic - Anonymous search disabled`, function (needs) {
+  needs.site({ can_search: false });
+
+  test("shows the likes count without opening search-backed details", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    assert.dom("#post_1 .topic-map .topic-map__likes").exists();
+    assert.dom("#post_1 .topic-map .topic-map__likes-trigger").doesNotExist();
   });
 });

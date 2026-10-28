@@ -47,7 +47,7 @@ export default class TopicNavigationPopup extends Component {
   <template>
     {{#unless this.hidden}}
       <div class="topic-navigation-popup">
-        <DButton @action={{this.close}} @icon="xmark" class="close btn-flat" />
+        <DButton class="close btn-flat" @action={{this.close}} @icon="xmark" />
         {{yield}}
       </div>
     {{/unless}}

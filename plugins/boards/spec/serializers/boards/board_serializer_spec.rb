@@ -86,19 +86,43 @@ RSpec.describe Boards::BoardSerializer do
     writer_payload =
       described_class.new(writable_board, root: false, scope: Guardian.new(writer)).as_json
 
-    expect(manager_payload).to include(can_manage: true)
+    expect(manager_payload).to include(can_manage: true, can_manage_acl_owner: false)
     expect(writer_payload).to include(can_write: true, can_manage: false)
   end
 
-  it "serializes the creator username and avatar template" do
+  it "allows owners and admins to manage owners" do
+    board = Fabricate(:boards_board, created_by: writer)
+
+    owner_payload = described_class.new(board, root: false, scope: writer.guardian).as_json
+    admin_payload = described_class.new(board, root: false, scope: admin.guardian).as_json
+
+    expect(owner_payload).to include(can_manage_acl_owner: true)
+    expect(admin_payload).to include(can_manage_acl_owner: true)
+  end
+
+  it "serializes the board owners" do
+    co_owner = Fabricate(:user)
     board = Fabricate(:boards_board, created_by: admin)
+    AccessControlList.find_by!(target: board, permission: Acl::Permissions::OWNER).update!(
+      allowed_user_ids: [admin.id, co_owner.id],
+    )
 
     payload =
       described_class.new(board, root: false, scope: Guardian.new(admin), tag_name_map: {}).as_json
 
-    expect(payload[:created_by]).to eq(
-      username: admin.username,
-      avatar_template: admin.avatar_template,
+    expect(payload[:owners]).to contain_exactly(
+      {
+        id: admin.id,
+        username: admin.username,
+        name: admin.display_name,
+        avatar_template: admin.avatar_template,
+      },
+      {
+        id: co_owner.id,
+        username: co_owner.username,
+        name: co_owner.display_name,
+        avatar_template: co_owner.avatar_template,
+      },
     )
   end
 
@@ -135,5 +159,49 @@ RSpec.describe Boards::BoardSerializer do
 
     expect(default_payload).to include(acl: nil)
     expect(acl_payload[:acl]).to eq(AccessControlList.where(target: board).flattened_list)
+  end
+
+  it "gives archived board managers only the unarchive capability and reports slug reuse" do
+    board =
+      Fabricate(
+        :boards_board,
+        slug: "archived-board",
+        archived: true,
+        original_slug: "roadmap",
+        additional_manage_groups: [manage_group],
+      )
+    Fabricate(:boards_board, slug: "roadmap")
+
+    payload = described_class.new(board, root: false, scope: manager.guardian).as_json
+
+    expect(payload).to include(
+      archived: true,
+      old_slug_used: true,
+      can_write: false,
+      can_manage: false,
+      can_archive: false,
+      can_unarchive: true,
+    )
+  end
+
+  it "does not offer unarchiving to a board editor" do
+    board =
+      Fabricate(:boards_board, slug: "archived-board", archived: true, original_slug: "unused")
+    Fabricate(
+      :access_control_list_with_groups,
+      target: board,
+      permission: "edit",
+      groups: [write_group],
+    )
+
+    payload = described_class.new(board, root: false, scope: writer.guardian).as_json
+
+    expect(payload).to include(
+      archived: true,
+      old_slug_used: false,
+      can_write: false,
+      can_manage: false,
+      can_unarchive: false,
+    )
   end
 end

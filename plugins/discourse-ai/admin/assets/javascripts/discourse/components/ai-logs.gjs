@@ -17,7 +17,6 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import DiscourseURL from "discourse/lib/url";
 import userSearch, { validateSearchResult } from "discourse/lib/user-search";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
@@ -30,10 +29,10 @@ import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log-row";
-import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval";
-import AiLogFeatureFilter from "./ai-log-feature-filter";
-import AiLogDetailModal from "./modal/ai-log-detail-modal";
-import AiLogRetentionModal from "./modal/ai-log-retention-modal";
+import { newLogsPollIntervalMs } from "../lib/ai-logs-poll-interval.js";
+import AiLogFeatureFilter from "./ai-log-feature-filter.js";
+import AiLogDetailModal from "./modal/ai-log-detail-modal.gjs";
+import AiLogRetentionModal from "./modal/ai-log-retention-modal.gjs";
 
 const ALL_FILTER_VALUE = "__all__";
 const CUSTOM_DEFAULT_DAYS = 30;
@@ -109,44 +108,6 @@ export default class AiLogs extends Component {
     }
   }
 
-  @action
-  syncDetailsFromLocation() {
-    const logId = new URL(window.location.href).searchParams.get("details");
-    if (logId && String(logId) !== String(this._openLogId)) {
-      this.openDetails(logId, { updateUrl: false });
-    } else if (!logId && this._openLogId) {
-      this._openLogId = undefined;
-      this.modal.close();
-    }
-  }
-
-  mergedFeatures(features = [], logs = []) {
-    return [
-      ...new Set([
-        ...features,
-        ...logs.map((log) => log.feature_name).filter(Boolean),
-      ]),
-    ].sort();
-  }
-
-  initializeFilters(params = {}) {
-    this.selectedPeriod = params.period || undefined;
-    this.selectedOutcome = params.outcome || undefined;
-    this.hasRetries =
-      params.has_retries === "true" || params.has_retries === true;
-    this.selectedModel = params.model ? String(params.model) : undefined;
-    this.selectedFeature = params.feature || undefined;
-    this.searchText = params.search || "";
-    this.unattributed =
-      params.unattributed === "true" || params.unattributed === true;
-    this.startDate = params.start_date
-      ? moment(params.start_date).toDate()
-      : moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate();
-    this.endDate = params.end_date
-      ? moment(params.end_date).toDate()
-      : new Date();
-  }
-
   get periodOptions() {
     return [
       { id: "hour", name: i18n("discourse_ai.logs.periods.hour") },
@@ -167,6 +128,8 @@ export default class AiLogs extends Component {
         label: i18n("discourse_ai.logs.successful"),
       },
       { value: "failed", label: i18n("discourse_ai.logs.failed") },
+      { value: "empty", label: i18n("discourse_ai.logs.empty") },
+      { value: "truncated", label: i18n("discourse_ai.logs.truncated") },
     ];
   }
 
@@ -237,14 +200,6 @@ export default class AiLogs extends Component {
 
   get rememberedDrawerExpanded() {
     return this.keyValueStore.get("filter_drawer") !== "collapsed";
-  }
-
-  @action
-  persistDrawerState(expanded) {
-    this.keyValueStore.set({
-      key: "filter_drawer",
-      value: expanded ? "expanded" : "collapsed",
-    });
   }
 
   get additionalFiltersActive() {
@@ -320,6 +275,60 @@ export default class AiLogs extends Component {
     };
   }
 
+  get hasNewLogs() {
+    return this.newLogsCount > 0;
+  }
+
+  get pollIntervalMs() {
+    return newLogsPollIntervalMs(this._emptyPolls);
+  }
+
+  @action
+  syncDetailsFromLocation() {
+    const logId = new URL(window.location.href).searchParams.get("details");
+    if (logId && String(logId) !== String(this._openLogId)) {
+      this.openDetails(logId, { updateUrl: false });
+    } else if (!logId && this._openLogId) {
+      this._openLogId = undefined;
+      this.modal.close();
+    }
+  }
+
+  mergedFeatures(features = [], logs = []) {
+    return [
+      ...new Set([
+        ...features,
+        ...logs.map((log) => log.feature_name).filter(Boolean),
+      ]),
+    ].sort();
+  }
+
+  initializeFilters(params = {}) {
+    this.selectedPeriod = params.period || undefined;
+    this.selectedOutcome = params.outcome || undefined;
+    this.hasRetries =
+      params.has_retries === "true" || params.has_retries === true;
+    this.selectedModel = params.model ? String(params.model) : undefined;
+    this.selectedFeature = params.feature || undefined;
+    this.searchText = params.search || "";
+    this.unattributed =
+      params.unattributed === "true" || params.unattributed === true;
+    this.startDate = params.start_date
+      ? moment(params.start_date).toDate()
+      : moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate();
+    this.endDate = params.end_date
+      ? moment(params.end_date).toDate()
+      : new Date();
+  }
+
+  @action
+  persistDrawerState(expanded) {
+    this.keyValueStore.set({
+      key: "filter_drawer",
+      value: expanded ? "expanded" : "collapsed",
+    });
+  }
+
   updateUrl(extra = {}) {
     return this.router.transitionTo(this.router.currentRouteName, {
       queryParams: { ...this.queryParams, ...extra },
@@ -349,11 +358,7 @@ export default class AiLogs extends Component {
       const result = await ajax("/admin/plugins/discourse-ai/ai-logs.json", {
         data: this.requestParams,
       });
-      if (
-        requestId !== this._requestId ||
-        this.isDestroying ||
-        this.isDestroyed
-      ) {
+      if (requestId !== this._requestId || this.isDestroying) {
         return;
       }
 
@@ -382,19 +387,11 @@ export default class AiLogs extends Component {
         }
       }
     } catch (error) {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         popupAjaxError(error);
       }
     } finally {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         if (!quiet) {
           this.loading = false;
         }
@@ -418,8 +415,7 @@ export default class AiLogs extends Component {
       if (
         requestId !== this._requestId ||
         cursor !== this.meta.next_cursor ||
-        this.isDestroying ||
-        this.isDestroyed
+        this.isDestroying
       ) {
         return;
       }
@@ -428,26 +424,14 @@ export default class AiLogs extends Component {
       this.features = this.mergedFeatures(this.features, result.logs);
       this.meta = { ...this.meta, ...result.meta };
     } catch (error) {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         popupAjaxError(error);
       }
     } finally {
-      if (
-        requestId === this._requestId &&
-        !this.isDestroying &&
-        !this.isDestroyed
-      ) {
+      if (requestId === this._requestId && !this.isDestroying) {
         this.loadingMore = false;
       }
     }
-  }
-
-  get hasNewLogs() {
-    return this.newLogsCount > 0;
   }
 
   // an empty filtered list has no newest row to poll against, so fall back to
@@ -456,13 +440,9 @@ export default class AiLogs extends Component {
     this._sinceId = this.logs[0]?.id || this.meta.max_id || 0;
   }
 
-  get pollIntervalMs() {
-    return newLogsPollIntervalMs(this._emptyPolls);
-  }
-
   schedulePoll() {
     clearTimeout(this._pollTimer);
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -483,7 +463,7 @@ export default class AiLogs extends Component {
   @action
   async pollForNewLogs() {
     clearTimeout(this._pollTimer);
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -507,7 +487,7 @@ export default class AiLogs extends Component {
           data: { ...this.requestParams, since_id: this._sinceId },
         }
       );
-      if (this.isDestroying || this.isDestroyed || epoch !== this._pollEpoch) {
+      if (this.isDestroying || epoch !== this._pollEpoch) {
         return;
       }
       if (result.new_logs_count !== undefined) {
@@ -716,8 +696,8 @@ export default class AiLogs extends Component {
       {{willDestroy this.teardownUserAutocomplete}}
     >
       <DPageSubheader
-        @titleLabel={{i18n "discourse_ai.logs.short_title"}}
         @descriptionLabel={{i18n "discourse_ai.logs.description"}}
+        @titleLabel={{i18n "discourse_ai.logs.short_title"}}
       >
         <:actions as |actions|>
           <actions.Primary
@@ -738,20 +718,20 @@ export default class AiLogs extends Component {
           {{if this.hasActiveDrawerFilters 'ai-logs__filters--drawer-active'}}"
       >
         <DFilterControls
+          @additionalFiltersActive={{this.additionalFiltersActive}}
           @array={{this.logs}}
+          @defaultDropdownValue={{this.defaultDropdownValues}}
           @dropdownOptions={{this.dropdownOptions}}
           @dropdownValue={{this.dropdownValues}}
-          @defaultDropdownValue={{this.defaultDropdownValues}}
-          @additionalFiltersActive={{this.additionalFiltersActive}}
           @filterDropdownsExpanded={{this.rememberedDrawerExpanded}}
-          @onFilterDropdownsToggle={{this.persistDrawerState}}
-          @inputPlaceholder={{i18n "discourse_ai.logs.search_placeholder"}}
           @initialTextFilter={{this.searchText}}
-          @showNoResults={{false}}
+          @inputPlaceholder={{i18n "discourse_ai.logs.search_placeholder"}}
           @loading={{this.loading}}
           @onDropdownFilterChange={{this.changeDropdown}}
-          @onTextFilterChange={{this.onTextFilterChange}}
+          @onFilterDropdownsToggle={{this.persistDrawerState}}
           @onResetFilters={{this.clearFilters}}
+          @onTextFilterChange={{this.onTextFilterChange}}
+          @showNoResults={{false}}
         >
           <:aboveFilters>
             <div class="ai-logs__periods">
@@ -771,10 +751,10 @@ export default class AiLogs extends Component {
                 <div class="ai-logs__date-range">
                   <DDateTimeInputRange
                     @from={{this.startDate}}
-                    @to={{this.endDate}}
+                    @onChange={{this.changeDateRange}}
                     @showFromTime={{false}}
                     @showToTime={{false}}
-                    @onChange={{this.changeDateRange}}
+                    @to={{this.endDate}}
                   />
                   <DButton
                     class="btn-default"
@@ -789,10 +769,8 @@ export default class AiLogs extends Component {
           <:additionalFilters>
             <AiLogFeatureFilter
               class="ai-logs__feature-filter"
-              @valueProperty={{null}}
-              @nameProperty={{null}}
-              @value={{this.selectedFeature}}
               @content={{this.featureOptions}}
+              @nameProperty={{null}}
               @onChange={{this.changeFeature}}
               @options={{hash
                 translatedNone=(i18n "discourse_ai.logs.all_features")
@@ -801,6 +779,8 @@ export default class AiLogs extends Component {
                 )
                 headerAriaLabel=(i18n "discourse_ai.logs.feature")
               }}
+              @value={{this.selectedFeature}}
+              @valueProperty={{null}}
             />
 
             <div class="ai-logs__toggles">
@@ -825,15 +805,15 @@ export default class AiLogs extends Component {
           {{#if this.hasNewLogs}}
             <div class="show-more has-topics">
               <a
-                tabindex="0"
-                href
                 class="alert alert-info clickable
                   {{if this.loadingNewLogs 'loading'}}"
+                href
+                tabindex="0"
                 {{on "click" this.showIncomingLogs}}
               >
                 <DCountI18n
-                  @key="discourse_ai.logs.new_logs_count"
                   @count={{this.newLogsCount}}
+                  @key="discourse_ai.logs.new_logs_count"
                 />
                 {{#if this.loadingNewLogs}}
                   {{dLoadingSpinner size="small"}}

@@ -216,12 +216,17 @@ module Email
             optional_re: "",
             optional_pm: "",
             optional_cat: format_category,
-            optional_tags: format_tags,
+            optional_tags: ->(_) { format_tag_hashtags },
           )
 
         body = I18n.t("#{@opts[:template]}.text_body_template", augmented_template_args).dup
       else
         body = @opts[:body].dup
+      end
+
+      if key = @template_args[:body_suffix_key]
+        paragraph = I18n.t(key, @template_args)
+        body = "#{body.rstrip}\n\n#{paragraph}"
       end
 
       if @template_args[:unsubscribe_instructions].present?
@@ -403,6 +408,15 @@ module Email
       else
         ""
       end
+    end
+
+    def format_tag_hashtags
+      return "" if @opts[:tag_names].blank?
+      return format_tags if HashtagAutocompleteService.data_source_types.exclude?("tag")
+
+      guardian = @opts[:recipient_user]&.guardian || Guardian.new
+      hashtags = HashtagAutocompleteService.new(guardian).hashtags_for("tag", @opts[:tag_names])
+      "#{hashtags.join(" ")} "
     end
   end
 end

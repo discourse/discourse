@@ -8,11 +8,14 @@ module DiscourseAi
 
       attr_reader :execution_context, :root_token_budget
 
-      def initialize(execution_context:, root_token_budget:)
+      def initialize(execution_context:, root_token_budget:, completion_count: 0)
         @execution_context = execution_context
         @root_token_budget = root_token_budget
         @spawn_count = 0
-        @completion_count = 0
+        @completion_count = completion_count
+        execution_context.work_budget ||=
+          DiscourseAi::Completions::TurnWorkBudget.new(limit: root_token_budget)
+        execution_context.work_execution_state = self
         @mutex = Mutex.new
       end
 
@@ -29,6 +32,10 @@ module DiscourseAi
         end
       end
 
+      def completion_count
+        @mutex.synchronize { @completion_count }
+      end
+
       def completion_available?
         @mutex.synchronize { @completion_count < MAX_COMPLETIONS - 1 }
       end
@@ -42,7 +49,7 @@ module DiscourseAi
       end
 
       def remaining_tokens
-        [root_token_budget - execution_context.token_usage_tracker.total, 0].max
+        execution_context.work_budget.remaining
       end
 
       private

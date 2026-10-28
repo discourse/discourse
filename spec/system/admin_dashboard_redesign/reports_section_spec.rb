@@ -52,6 +52,89 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(modal).to have_disabled_move_down("core_report:topics")
   end
 
+  # TODO (ui-kit-reorderable-list-cleanup) fold these over the examples above
+  # once the change ships and the arrow buttons are gone.
+  context "when enable_new_reordering_controls is enabled" do
+    before { SiteSetting.enable_new_reordering_controls = true }
+
+    it "marks the unavailable destinations at the ends of the enabled list on mobile",
+       mobile: true do
+      AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+      AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
+
+      page.visit("/admin")
+      dashboard.open_manage_reports_via_cog
+      expect(modal).to have_open
+
+      expect(modal).to have_no_move_up("core_report:signups")
+      expect(modal).to have_move_down("core_report:signups")
+      expect(modal).to have_move_up("core_report:topics")
+      expect(modal).to have_no_move_down("core_report:topics")
+    end
+
+    it "lets the admin select a report's text" do
+      # A row is a drag source, and a draggable element turns a press-drag into a
+      # drag rather than a selection. The grip is what should be draggable, so the
+      # title and description stay selectable like any other text.
+      #
+      # drag_with_pointer, not drag_and_drop: the latter goes through CDP drag
+      # interception, which suppresses the ordinary mouse moves a selection is
+      # made of. And a real pointer is the only thing that can select at all, as
+      # a synthetic drag never touches the browser's selection.
+      AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+      AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
+
+      page.visit("/admin")
+      dashboard.open_manage_reports_via_cog
+      expect(modal).to have_open
+
+      drag_with_pointer(
+        from: ".manageable-row-list__row.--enabled .manageable-row-list__title",
+        by: {
+          x: 60,
+        },
+      )
+
+      expect(page.evaluate_script("window.getSelection().toString()")).to be_present
+    end
+
+    it "reorders reports with a real browser drag" do
+      AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+      AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
+
+      page.visit("/admin")
+      dashboard.open_manage_reports_via_cog
+      expect(modal).to have_open
+
+      modal.drag_report("core_report:topics", "core_report:signups")
+
+      try_until_success do
+        expect(modal.enabled_identifiers).to eq(%w[core_report:topics core_report:signups])
+      end
+    end
+
+    it "keeps report sizes when admins add and reorder reports" do
+      Fabricate(:tall_admin_dashboard_report, position: 0)
+      Fabricate(:admin_dashboard_report, identifier: "topics", position: 1, cols: 2)
+
+      page.visit("/admin")
+      dashboard.open_manage_reports_via_cog
+      expect(modal).to have_open
+      modal.toggle("core_report:admin_logins")
+      modal.reorderable("core_report:topics").move(:top)
+      modal.apply
+      expect(modal).to have_closed
+
+      page.refresh
+      expect(dashboard).to have_cards_in_order(
+        %w[core_report:topics core_report:signups core_report:admin_logins],
+      )
+      expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+      expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 2)
+      expect(dashboard).to have_card_size("core_report:admin_logins", rows: 1, cols: 1)
+    end
+  end
+
   it "lets admins customize the reports section via the manage-reports modal" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
@@ -98,6 +181,41 @@ describe "Admin Dashboard Redesign | Reports section" do
       "core_report:topics",
       "core_report:admin_logins",
     )
+  end
+
+  it "keeps existing report sizes when admins add another report" do
+    Fabricate(:tall_admin_dashboard_report, position: 0)
+    Fabricate(:admin_dashboard_report, identifier: "topics", position: 1, cols: 2)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+    modal.toggle("core_report:admin_logins")
+    modal.apply
+    expect(modal).to have_closed
+
+    page.refresh
+    expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+    expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 2)
+    expect(dashboard).to have_card_size("core_report:admin_logins", rows: 1, cols: 1)
+  end
+
+  it "keeps report sizes when admins reorder reports on mobile", mobile: true do
+    Fabricate(:tall_admin_dashboard_report, position: 0)
+    Fabricate(:admin_dashboard_report, identifier: "topics", position: 1)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+    modal.move_up("core_report:topics")
+    expect(modal).to have_enabled_rows_in_order(%w[core_report:topics core_report:signups])
+    modal.apply
+    expect(modal).to have_closed
+
+    page.refresh
+    expect(dashboard).to have_cards_in_order(%w[core_report:topics core_report:signups])
+    expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
+    expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 1)
   end
 
   it "hides the Add Report tile when the cap is reached" do

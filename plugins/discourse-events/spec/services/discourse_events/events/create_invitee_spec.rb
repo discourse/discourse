@@ -3,6 +3,7 @@
 RSpec.describe(DiscourseEvents::Events::CreateInvitee) do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:event_id) }
+
     it do
       is_expected.to validate_inclusion_of(:status).in_array(
         DiscourseEvents::Events::Invitee.statuses.keys.map(&:to_s),
@@ -116,6 +117,15 @@ RSpec.describe(DiscourseEvents::Events::CreateInvitee) do
       let(:params) { { event_id: event.id, status: "interested", user_id: other_user.id } }
 
       it { is_expected.to run_successfully }
+
+      it "publishes the staff member as the acting user" do
+        event =
+          DiscourseEvent
+            .track_events(:discourse_calendar_post_event_invitee_status_changed) { result }
+            .first
+
+        expect(event[:params].last).to eq(acting_user: admin)
+      end
 
       it "creates the invitee for the other user" do
         expect { result }.to change { DiscourseEvents::Events::Invitee.count }.by(1)

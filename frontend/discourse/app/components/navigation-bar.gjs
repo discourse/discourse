@@ -48,13 +48,13 @@ export default class NavigationBarComponent extends Component {
   }
 
   <template>
-    <ul id="navigation-bar" class="nav nav-pills">
+    <ul class="nav nav-pills" id="navigation-bar">
       {{#if this.showDropdown}}
         <li>
           <DMenu
-            @modalForMobile={{true}}
             @autofocus={{true}}
             @identifier="list-control-toggle-link"
+            @modalForMobile={{true}}
             @onRegisterApi={{this.onRegisterApi}}
           >
             <:trigger>
@@ -68,17 +68,17 @@ export default class NavigationBarComponent extends Component {
               <DDropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
                 {{#each @navItems as |navItem|}}
                   <NavigationItem
+                    class={{concat "nav-item_" navItem.name}}
+                    @category={{@category}}
                     @content={{navItem}}
                     @filterMode={{@filterMode}}
-                    @category={{@category}}
-                    class={{concat "nav-item_" navItem.name}}
                   />
 
                 {{/each}}
                 <dropdown.item>
                   <PluginOutlet
-                    @name="extra-nav-item"
                     @connectorTagName="span"
+                    @name="extra-nav-item"
                     @outletArgs={{lazyHash
                       category=@category
                       tag=@tag
@@ -92,23 +92,23 @@ export default class NavigationBarComponent extends Component {
         </li>
         <li>
           <PluginOutlet
-            @name="inline-extra-nav-item"
             @connectorTagName="span"
+            @name="inline-extra-nav-item"
             @outletArgs={{lazyHash category=@category filterMode=@filterMode}}
           />
         </li>
       {{else}}
         {{#each @navItems as |navItem|}}
           <NavigationItem
+            class={{concat "nav-item_" navItem.name}}
+            @category={{@category}}
             @content={{navItem}}
             @filterMode={{@filterMode}}
-            @category={{@category}}
-            class={{concat "nav-item_" navItem.name}}
           />
         {{/each}}
         <PluginOutlet
-          @name="extra-nav-item"
           @connectorTagName="li"
+          @name="extra-nav-item"
           @outletArgs={{lazyHash
             category=@category
             tag=@tag

@@ -27,10 +27,10 @@ export default class ChatNavbarThreadSettingsButton extends Component {
   <template>
     {{#if this.canChangeThreadSettings}}
       <DButton
+        class="btn-transparent c-navbar__thread-settings-button"
         @action={{this.openThreadSettings}}
         @icon="gear"
         @title="chat.thread.settings"
-        class="btn-transparent c-navbar__thread-settings-button"
       />
     {{/if}}
   </template>

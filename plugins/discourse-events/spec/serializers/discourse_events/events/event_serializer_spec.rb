@@ -31,6 +31,52 @@ describe DiscourseEvents::Events::EventSerializer do
     end
   end
 
+  context "with a recording" do
+    fab!(:event) { Fabricate(:event, post:, recording_url: "https://youtu.be/abc") }
+
+    it "serializes recording_url" do
+      json = described_class.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event][:recording_url]).to eq("https://youtu.be/abc")
+    end
+
+    it "serializes the cached recording onebox" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key("https://youtu.be/abc"),
+        { onebox: "<aside>recording</aside>" },
+      )
+      json = described_class.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event][:recording_onebox]).to eq("<aside>recording</aside>")
+    end
+
+    it "omits recording_url without a recording" do
+      event.update_columns(recording_url: nil)
+      json = described_class.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event]).not_to have_key(:recording_url)
+      expect(json[:event]).not_to have_key(:recording_onebox)
+    end
+  end
+
+  context "with reminders" do
+    def serialized_reminders(reminders)
+      event = Fabricate(:event, post: post, reminders: reminders)
+      DiscourseEvents::Events::EventSerializer.new(event, scope: Guardian.new).as_json[:event][
+        :reminders
+      ]
+    end
+
+    it "serializes value, unit, period and type" do
+      expect(serialized_reminders("notification.15.minutes,bumpTopic.-3.days")).to eq(
+        [
+          { value: 15, unit: "minutes", period: "before", type: "notification" },
+          { value: 3, unit: "days", period: "after", type: "bumpTopic" },
+        ],
+      )
+    end
+  end
+
   context "with a private event" do
     fab!(:private_event) do
       Fabricate(:event, post: post, status: DiscourseEvents::Events::Event.statuses[:private])
@@ -308,7 +354,7 @@ describe DiscourseEvents::Events::EventSerializer do
         )
       end
 
-      before { recurring_event.set_next_date }
+      before { recurring_event.set_next_recurrent_event_date }
 
       it "serializes starts_at using the next occurrence" do
         json =
@@ -316,7 +362,7 @@ describe DiscourseEvents::Events::EventSerializer do
             recurring_event.reload,
             scope: Guardian.new,
           ).as_json
-        starts_at = Time.parse(json[:event][:starts_at])
+        starts_at = Time.find_zone("UTC").parse(json[:event][:starts_at])
         expect(starts_at).to be > Time.current
       end
 
@@ -326,7 +372,7 @@ describe DiscourseEvents::Events::EventSerializer do
             recurring_event.reload,
             scope: Guardian.new,
           ).as_json
-        ends_at = Time.parse(json[:event][:ends_at])
+        ends_at = Time.find_zone("UTC").parse(json[:event][:ends_at])
         expect(ends_at).to be > Time.current
       end
     end

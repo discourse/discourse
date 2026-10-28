@@ -5,6 +5,24 @@
 # https://translate.discourse.org/
 
 hr:
+  markdown_endpoints:
+    latest: "Posljednje"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Prethodna stranica"
+    next_page: "Slijedeća stranica"
+    replies: "Odgovori"
+    last_updated: "Posljednje ažuriranje"
+    event:
+      location: "Lokacija"
+      link: "Veza"
+  mcp:
+    errors:
+      category_not_found: "Kategorija nije pronađena"
+      topic_not_found: "Tema nije pronađena"
+    oauth:
+      deny: "Odbiti"
+      approve: "Odobriti"
   llms_txt:
     sections:
       optional: "Neobvezno"
@@ -738,6 +756,7 @@ hr:
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
   admin_site_traffic_explorer:
+    unknown: "Nepoznato"
     traffic_types:
       anonymous: "Anonimno"
   change_email:
@@ -834,7 +853,7 @@ hr:
     topic_description: "Za ponovno pretplatu na %{link}, upotrijebite kontrolu obavijesti pri dnu ili desno od teme."
     private_topic_description: "Da biste se ponovno pretplatili, koristite kontrolu obavijesti pri dnu ili desno od teme."
   unsubscribe:
-    title: "Odjava"
+    unsubscribe: "Odjava"
     stop_watching_topic: "Prestanite pratiti ovu temu, %{link}"
     mute_topic: "Prigušite sve obavijesti za ovu temu, %{link}"
     unwatch_category: "Prestani pratiti sve teme u %{category}"
@@ -1317,6 +1336,7 @@ hr:
     cors_origins: "Dopušteni izvori za zahtjeve s različitim izvorima (CORS). Svako podrijetlo mora sadržavati http:// ili https://. Varijabla env DISCOURSE_ENABLE_CORS mora biti postavljena na true da bi se omogućio CORS."
     blocked_ip_blocks: "Popis privatnih IP blokova koje Discourse nikada ne bi trebao indeksirati"
     allowed_internal_hosts: "Popis internih hostova koje diskurs može sigurno indeksirati za oneboxing i druge svrhe"
+    site_contact_group_name: "Grupa koja je pozvana na sve automatski poslane osobne poruke."
     version_checks: "Pingaj Discourse Hub za dostupna ažuriranja i prikaži obavijesti o novim verzijama na <a href='%{base_path}/admin' target='_blank'>/admin</a> nadzornoj ploči"
     min_username_length: "Minimalna duljina korisničkog imena u znakovima. UPOZORENJE: ako bilo koji postojeći korisnik ili grupa ima imena kraća od ovoga, vaša stranica će se pokvariti!"
     max_username_length: "Maksimalna duljina korisničkog imena u znakovima. UPOZORENJE: ako postojeći korisnici ili grupe imaju imena duža od ovog, vaša će stranica pokvariti!"
@@ -1525,7 +1545,6 @@ hr:
       invalid_email: "Nevažeća adresa e-pošte."
       invalid_username: "Ne postoji korisnik s tim korisničkim imenom."
       valid_username: "Postoji korisnik s tim korisničkim imenom."
-      invalid_group: "Ne postoji grupa s tim nazivom."
       invalid_integer_min_max: "Vrijednost mora biti između %{min} i %{max}."
       invalid_integer_min: "Vrijednost mora biti %{min} ili veća."
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
@@ -1673,6 +1692,7 @@ hr:
     errors: "%{errors}"
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
     omniauth_confirm_button: "Nastavi"
+    missing_username: "Unesite korisničko ime"
     second_factor_title: "Dvofaktorska autentifikacija"
     second_factor_backup_description: "Unesite jedan od vaših rezervnih kodova:"
     second_factor_toggle:
@@ -2235,31 +2255,15 @@ hr:
     account_suspended:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš račun je suspendiran"
-      text_body_template: |
-        Suspendirani ste s foruma do %{suspended_till}.
-
-        Razlog - %{reason}
     account_suspended_forever:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
-      text_body_template: |
-        Suspendirani ste s foruma.
-
-        Razlog - %{reason}
     account_silenced:
       title: "Korisnički račun je utišan"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-      text_body_template: |
-        Utišani ste s foruma do %{silenced_till}.
-
-        Razlog - %{reason}
     account_silenced_forever:
       title: "Korisnički račun je utišan"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-      text_body_template: |
-        Utišani ste s foruma.
-
-        Razlog - %{reason}
     account_exists:
       title: "Korisnički račun već postoji"
       subject_template: "[%{email_prefix}] Korisnički račun već postoji"
@@ -2411,7 +2415,7 @@ hr:
         Član osoblja odobrio je vaš korisnički račun na %{site_name}.
 
         Sada možete pristupiti svom novom korisničkom računu tako da se prijavite na:
-        %{base_url}
+        %{login_url}
 
         Ako gornju poveznicu ne možete kliknuti, pokušajte je kopirati i zalijepiti u adresnu traku vaš web preglednik.
 
@@ -2759,6 +2763,11 @@ hr:
       long_description: |
         Ova značka se dodjeljuje za posjet 100 uzastopnih dana. To je više od tri mjeseca!
     badge_title_metadata: "%{display_name} značka na %{site_title}"
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosom."
+      few: "Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosa."
+      other: "Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosa."
   tags:
     title: "Oznake"
   finish_installation:
@@ -2791,10 +2800,14 @@ hr:
     google_meet:
       meeting_code: "Šifra:"
     github:
+      header:
+        success: "Uspjeh"
       closed: "zatvoreno"
-      status_date:
-        approved: "odobrio/la"
-        closed: "zatvoreno"
+      pr_status:
+        draft: "Skica"
+        open: "Otvori"
+        approved: "Odobrio/la"
+        closed: "🔐"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'
@@ -2880,9 +2893,6 @@ hr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        title: "Izbrišite objavu"
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

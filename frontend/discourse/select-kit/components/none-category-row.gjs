@@ -21,12 +21,12 @@ export default class NoneCategoryRow extends CategoryRowComponent {
 
   <template>
     {{#if this.category}}
-      <div class="category-status" aria-hidden="true">
+      <div aria-hidden="true" class="category-status">
         {{this.badgeForCategory}}
       </div>
 
       {{#if this.shouldDisplayDescription}}
-        <div class="category-desc" aria-hidden="true">{{dDirSpan
+        <div aria-hidden="true" class="category-desc">{{dDirSpan
             this.descriptionText
             htmlSafe="true"
           }}</div>

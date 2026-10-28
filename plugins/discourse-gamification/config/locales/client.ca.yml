@@ -28,9 +28,7 @@ ca:
       close: "Tanca"
       delete: "Suprimeix"
       edit: "Edita"
-      back: "Enrere"
       save: "Desa"
-      apply: "Aplica"
       update_range:
         last_10_days: "Els darrers 10 dies"
         last_30_days: "Els darrers 30 dies"
@@ -39,8 +37,10 @@ ca:
       custom_range_from: "De"
       admin:
         name: "Nom"
+        created_by: "Creat per"
     discourse_workflows:
       gamification_score:
         username: "Usuari"
         date: "Data"
         description: "Descripció"
+        category_id: "Categoria"

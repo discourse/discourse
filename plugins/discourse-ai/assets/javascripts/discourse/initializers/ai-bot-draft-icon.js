@@ -1,16 +1,16 @@
 import { apiInitializer } from "discourse/lib/api";
-import { isAiBotRecipient } from "../lib/ai-bot-helper";
+import { isAiBotRecipient } from "../lib/ai-bot-helper.js";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
 
-  if (!currentUser?.ai_enabled_chat_bots?.length) {
+  if (!currentUser?.ai_enabled_agents?.length) {
     return;
   }
 
   api.registerValueTransformer("draft-icon", ({ value, context }) => {
     return isAiBotRecipient(context.draft?.data?.recipients, currentUser)
-      ? "robot"
+      ? "discobot"
       : value;
   });
 });

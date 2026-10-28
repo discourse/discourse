@@ -4,6 +4,7 @@ RSpec.describe Boards::Publisher do
   fab!(:admin)
   fab!(:write_group, :group)
   fab!(:read_group, :group)
+  fab!(:direct_user, :user)
 
   before { enable_current_plugin }
 
@@ -11,10 +12,11 @@ RSpec.describe Boards::Publisher do
     board =
       Boards::Board.create!(name: "Test Board", slug: "test-publisher", created_by_id: admin.id)
     Fabricate(
-      :access_control_list_with_groups,
+      :access_control_list_with_users_and_groups,
       target: board,
       permission: "edit",
       groups: [write_group],
+      users: [direct_user],
     )
     Fabricate(
       :access_control_list_with_groups,
@@ -22,9 +24,11 @@ RSpec.describe Boards::Publisher do
       permission: "view",
       groups: [read_group],
     )
+    Fabricate(:access_control_list_with_users, target: board, permission: "owner", users: [admin])
     board
   end
   fab!(:column) { board.columns.create!(title: "To Do", position: 0) }
+  fab!(:old_column) { board.columns.create!(title: "Backlog", position: 1) }
   fab!(:card) do
     board.cards.create!(
       card_type: :floater,
@@ -40,7 +44,7 @@ RSpec.describe Boards::Publisher do
   let(:test_client_id) { "abc123" }
 
   describe ".publish_card_created!" do
-    it "publishes a card_created message with group_ids and client_id" do
+    it "publishes a card_created message to group, direct user, and owner audiences" do
       messages =
         MessageBus.track_publish(channel) do
           described_class.publish_card_created!(board, card_data, client_id: test_client_id)
@@ -52,6 +56,33 @@ RSpec.describe Boards::Publisher do
       expect(msg.data[:client_id]).to eq(test_client_id)
       expect(msg.data[:card]).to eq(card_data)
       expect(msg.group_ids).to contain_exactly(write_group.id, read_group.id)
+      expect(msg.user_ids).to contain_exactly(direct_user.id, admin.id)
+    end
+  end
+
+  describe "topic card events" do
+    let(:topic_card_data) { card_data.merge(card_type: "topic", topic_id: 1) }
+
+    it "publishes metadata-free board updates" do
+      messages =
+        MessageBus.track_publish(channel) do
+          described_class.publish_card_created!(board, topic_card_data, client_id: test_client_id)
+          described_class.publish_card_updated!(board, topic_card_data, client_id: test_client_id)
+          described_class.publish_card_moved!(
+            board,
+            topic_card_data,
+            acting_user: admin,
+            client_id: test_client_id,
+          )
+        end
+
+      expect(messages.map(&:data)).to eq(
+        [
+          { type: "board_updated", client_id: test_client_id },
+          { type: "board_updated", client_id: test_client_id },
+          { type: "board_updated", client_id: test_client_id },
+        ],
+      )
     end
   end
 
@@ -117,15 +148,50 @@ RSpec.describe Boards::Publisher do
   end
 
   describe ".publish_card_moved!" do
-    it "publishes a card_moved message" do
+    it "publishes a card_moved message and workflow event with the acting user" do
+      events = nil
       messages =
         MessageBus.track_publish(channel) do
-          described_class.publish_card_moved!(board, card_data, client_id: test_client_id)
+          events =
+            DiscourseEvent.track_events(:boards_card_moved) do
+              described_class.publish_card_moved!(
+                board,
+                card_data,
+                old_column.id,
+                acting_user: admin,
+                client_id: test_client_id,
+              )
+            end
         end
 
       expect(messages.size).to eq(1)
       expect(messages.first.data[:type]).to eq("card_moved")
       expect(messages.first.data[:card]).to eq(card_data)
+      expect(events).to contain_exactly(
+        event_name: :boards_card_moved,
+        params: [board, card_data.merge(old_column_id: old_column.id), admin],
+      )
+    end
+
+    it "keeps the card_moved message but skips the workflow event when reordering" do
+      events = nil
+      messages =
+        MessageBus.track_publish(channel) do
+          events =
+            DiscourseEvent.track_events(:boards_card_moved) do
+              described_class.publish_card_moved!(
+                board,
+                card_data,
+                acting_user: admin,
+                client_id: test_client_id,
+              )
+            end
+        end
+
+      expect(messages).to contain_exactly(
+        have_attributes(data: include(type: "card_moved", card: card_data)),
+      )
+      expect(events).to be_empty
     end
   end
 
@@ -133,7 +199,12 @@ RSpec.describe Boards::Publisher do
     it "publishes a card_deleted message with card_id" do
       messages =
         MessageBus.track_publish(channel) do
-          described_class.publish_card_deleted!(board, card.id, client_id: test_client_id)
+          described_class.publish_card_deleted!(
+            board,
+            card.id,
+            topic: false,
+            client_id: test_client_id,
+          )
         end
 
       expect(messages.size).to eq(1)
@@ -141,6 +212,20 @@ RSpec.describe Boards::Publisher do
       expect(msg.data[:type]).to eq("card_deleted")
       expect(msg.data[:client_id]).to eq(test_client_id)
       expect(msg.data[:card_id]).to eq(card.id)
+    end
+
+    it "publishes a board update for a topic card" do
+      messages =
+        MessageBus.track_publish(channel) do
+          described_class.publish_card_deleted!(
+            board,
+            card.id,
+            topic: true,
+            client_id: test_client_id,
+          )
+        end
+
+      expect(messages.first.data).to eq(type: "board_updated", client_id: test_client_id)
     end
   end
 
@@ -160,14 +245,23 @@ RSpec.describe Boards::Publisher do
 
   context "with a public board" do
     fab!(:public_board) do
-      Boards::Board.create!(
-        name: "Public Board",
-        slug: "test-publisher-public",
-        created_by_id: admin.id,
+      board =
+        Boards::Board.create!(
+          name: "Public Board",
+          slug: "test-publisher-public",
+          created_by_id: admin.id,
+        )
+      Fabricate(
+        :access_control_list_with_groups,
+        target: board,
+        permission: "view",
+        groups: [Group.find(Group::AUTO_GROUPS[:anonymous_users])],
       )
+      Fabricate(:access_control_list_with_users, target: board, permission: "owner", users: [admin])
+      board
     end
 
-    it "publishes without group_ids restriction" do
+    it "publishes without audience restrictions when anonymous users can read" do
       messages =
         MessageBus.track_publish("/boards/#{public_board.id}") do
           described_class.publish_board_updated!(public_board, client_id: test_client_id)
@@ -175,6 +269,32 @@ RSpec.describe Boards::Publisher do
 
       expect(messages.size).to eq(1)
       expect(messages.first.group_ids).to be_nil
+      expect(messages.first.user_ids).to be_nil
+    end
+  end
+
+  describe "publishing to an archived board" do
+    subject(:result) do
+      described_class.publish_card_created!(board, card_data, client_id: test_client_id)
+      described_class.publish_card_updated!(board, card_data, client_id: test_client_id)
+      described_class.publish_card_moved!(
+        board,
+        card_data,
+        acting_user: admin,
+        client_id: test_client_id,
+      )
+      described_class.publish_card_deleted!(board, card.id, topic: false, client_id: test_client_id)
+      described_class.publish_column_cleared!(board, column.id, client_id: test_client_id)
+      described_class.publish_columns_reordered!(board, [column.id], client_id: test_client_id)
+      described_class.publish_board_updated!(board, client_id: test_client_id)
+    end
+
+    let(:messages) { MessageBus.track_publish(channel) { result } }
+
+    it "suppresses every board event even when the caller has a stale board instance" do
+      Boards::Board.find(board.id).update!(archived: true)
+
+      expect(messages).to be_empty
     end
   end
 end

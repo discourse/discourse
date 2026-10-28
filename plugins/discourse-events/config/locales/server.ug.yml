@@ -14,6 +14,11 @@ ug:
       labels:
         username: ئىشلەتكۈچى ئاتى
   discourse_events:
+    reminder:
+      guest: "- %{name}"
+      additional_guests:
+        one: "  ۋە باشقا %{count}"
+        other: "  ۋە باشقا %{count}"
     category_type:
       default_calendar_view:
         day: "كۈن"

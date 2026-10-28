@@ -12,6 +12,16 @@ class UserHistory < ActiveRecord::Base
   belongs_to :category
   belongs_to :reviewable, optional: true
 
+  # Subjects logged alongside the :admin_onboarding_step_completed action, one
+  # per step of the admin onboarding panel.
+  ADMIN_ONBOARDING_STEPS = %w[select_theme start_posting invite_collaborators].freeze
+  ADMIN_ONBOARDING_TOPIC_OPTIONS = %w[
+    plan_categories
+    plan_invites
+    introduce_yourself
+    write_your_own
+  ].freeze
+
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000
 
@@ -174,6 +184,10 @@ class UserHistory < ActiveRecord::Base
         admin_onboarding_completed: 129,
         admin_onboarding_dismissed: 130,
         removed_avatar: 131,
+        create_group: 132,
+        add_access_control_list_owner: 133,
+        remove_access_control_list_owner: 134,
+        assume_access_control_ownership: 135,
       )
   end
 
@@ -309,6 +323,10 @@ class UserHistory < ActiveRecord::Base
       admin_onboarding_completed
       admin_onboarding_dismissed
       removed_avatar
+      create_group
+      add_access_control_list_owner
+      remove_access_control_list_owner
+      assume_access_control_ownership
     ]
   end
 
@@ -490,6 +508,7 @@ end
 #  custom_type    :string
 #  details        :text
 #  email          :string
+#  expires_at     :datetime
 #  ip_address     :string
 #  new_value      :text
 #  previous_value :text

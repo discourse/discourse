@@ -20,6 +20,11 @@ da:
               label: Emne ID
     discourse_events:
       title: "Hændelser"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifikation"
+            none: "Ingen"
       on_holiday: "På Ferie"
       disable_holiday: "Deaktiver"
       enable_holiday: "Aktiver"
@@ -294,6 +299,9 @@ da:
     group_timezones:
       search: "Søg..."
       group_availability: "%{group} tilgængelighed"
+    discourse_workflows:
+      post_event:
+        topic_id: "Emne ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -351,7 +359,6 @@ da:
             going: "Deltager"
             interested: "Interesseret"
         event:
-          expired: "Udløbet"
           closed: "Lukket"
           status:
             standalone:
@@ -363,6 +370,8 @@ da:
             private:
               title: "Privat"
               description: "En privat begivenhed kan kun tilmeldes af inviterede brugere."
+      recording_modal:
+        save: "Gem"
       composer:
         name_placeholder: "Navn på begivenhed"
         url_placeholder: "Tilføj URL"

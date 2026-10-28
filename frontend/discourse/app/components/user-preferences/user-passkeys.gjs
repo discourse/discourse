@@ -237,10 +237,10 @@ export default class UserPasskeys extends Component {
       {{#if this.showActions}}
         <div class="controls pref-passkeys__add">
           <DButton
+            class="btn-default"
             @action={{this.addPasskey}}
             @icon="plus"
             @label="user.passkeys.add_passkey"
-            class="btn-default"
           />
         </div>
       {{/if}}

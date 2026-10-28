@@ -32,6 +32,12 @@ export default class Card {
     Object.assign(this, args);
   }
 
+  get fancyTitle() {
+    const titleSource =
+      this.card_type === "topic" && this.topic ? this.topic : this;
+    return titleSource.unicode_title || titleSource.title;
+  }
+
   copy(overrides = {}) {
     return new Card({
       assigned_to: this.assigned_to,
@@ -55,11 +61,5 @@ export default class Card {
       updated_at: this.updated_at,
       ...overrides,
     });
-  }
-
-  get fancyTitle() {
-    const titleSource =
-      this.card_type === "topic" && this.topic ? this.topic : this;
-    return titleSource.unicode_title || titleSource.title;
   }
 }

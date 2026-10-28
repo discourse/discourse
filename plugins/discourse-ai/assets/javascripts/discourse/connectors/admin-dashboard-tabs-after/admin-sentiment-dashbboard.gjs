@@ -4,12 +4,15 @@ import { i18n } from "discourse-i18n";
 
 export default class AISentimentDashboard extends Component {
   static shouldRender(args, context) {
-    return context.siteSettings.ai_sentiment_enabled;
+    return (
+      context.siteSettings.ai_sentiment_enabled ||
+      context.siteSettings.ai_sentiment_emotion_enabled
+    );
   }
 
   <template>
     <li class="navigation-item sentiment">
-      <LinkTo @route="admin.dashboardSentiment" class="navigation-link">
+      <LinkTo class="navigation-link" @route="admin.dashboardSentiment">
         {{i18n "discourse_ai.sentiments.dashboard.title"}}
       </LinkTo>
     </li>

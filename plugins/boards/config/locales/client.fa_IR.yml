@@ -6,7 +6,21 @@
 
 fa_IR:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "عنوان"
+        icon: "آیکن"
+        color: "رنگ"
+        tag_name: "برچسب"
+      create_board:
+        name: "نام"
+        slug: "نشانک (slug)"
+        tag_names: "برچسب‌ها"
+        category_ids: "دسته‌بندی‌ها"
     boards:
+      status:
+        all: "همه"
+        open: "باز"
       board:
         remove_card: "پاک کردن"
         title: "عنوان"
@@ -14,7 +28,9 @@ fa_IR:
         topic_reply_count:
           one: "%{count} پاسخ"
           other: "%{count} پاسخ"
-        created_by: "ایجاد شده توسط"
+        owners:
+          one: "مالک"
+          other: "مالکین"
       manage:
         name: "نام"
         slug: "نشانک (slug)"

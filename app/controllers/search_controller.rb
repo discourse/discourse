@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  before_action :ensure_can_search, only: %i[show query]
   before_action :block_crawler, only: :show
   before_action :cancel_overloaded_search, only: [:query]
   skip_before_action :check_xhr, only: :show
@@ -166,6 +167,16 @@ class SearchController < ApplicationController
 
   protected
 
+  def ensure_can_search
+    return if guardian.can_search?
+
+    if request.format.html?
+      redirect_to_login
+    else
+      ensure_logged_in
+    end
+  end
+
   def pageview_session_id
     request.headers["HTTP_DISCOURSE_PAGEVIEW_SESSION_ID"]
   end
@@ -249,6 +260,10 @@ class SearchController < ApplicationController
     return if params[:skip_context] == "true"
 
     search_context = params[:search_context]
+    if search_context && !search_context.is_a?(ActionController::Parameters)
+      raise Discourse::InvalidParameters.new(:search_context)
+    end
+
     unless search_context
       if (context = params[:context]) && (id = params[:context_id])
         search_context = { type: context, id: id, name: id }

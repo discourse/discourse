@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { slotContenders } from "discourse/plugins/discourse-adplugin/discourse/components/ad-slot";
-import AdSlot from "../../components/ad-slot";
+import AdSlot from "../../components/ad-slot.gjs";
 
 export default class DiscourseAdplugin extends Component {
   static shouldRender(args, context) {
@@ -18,11 +18,11 @@ export default class DiscourseAdplugin extends Component {
   <template>
     <tr class="after-topic-list-item-outlet discourse-adplugin">
       <AdSlot
-        @placement="topic-list-between"
         @category={{@outletArgs.category.slug}}
-        @indexNumber={{@outletArgs.index}}
         @childTagName="td"
         @colspan="5"
+        @indexNumber={{@outletArgs.index}}
+        @placement="topic-list-between"
       />
     </tr>
   </template>

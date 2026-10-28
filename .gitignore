@@ -77,14 +77,15 @@
 !/plugins/discourse-cakeday
 !/plugins/discourse-rewind
 !/plugins/discourse-workflows
-!/plugins/voice
-/plugins/voice/gems
-/plugins/voice/public/javascripts
+!/plugins/live
+/plugins/live/gems
+/plugins/live/public/javascripts
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
 /vendor/bundle
+/vendor/runtime_node_modules
 /vendor/data/GeoLite2-City.mmdb
 /vendor/data/GeoLite2-ASN.mmdb
 

@@ -13,6 +13,11 @@ ca:
             topic_id:
               label: ID de tema
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificació"
+            none: "Cap"
       disable_holiday: "Desactiva"
       enable_holiday: "Activa"
       date: "Data"
@@ -26,6 +31,9 @@ ca:
         year: "Any"
     group_timezones:
       search: "Cerca..."
+    discourse_workflows:
+      post_event:
+        topic_id: "ID de tema"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -45,6 +53,8 @@ ca:
               title: "Públic"
             private:
               title: "Privat"
+      recording_modal:
+        save: "Desa"
       composer:
         url_placeholder: "Afegeix URL"
         reminder:

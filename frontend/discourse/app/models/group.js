@@ -46,11 +46,129 @@ export default class Group extends RestModel {
   @autoTrackedArray requesters = [];
 
   user_count = 0;
+
+  /** @type {number | null} */
   limit = null;
+
+  /** @type {number | null} */
   offset = null;
   request_count = 0;
+
+  /** @type {number | null} */
   requestersLimit = null;
+
+  /** @type {number | null} */
   requestersOffset = null;
+
+  @dependentKeyCompat
+  get watchingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watching_category_ids &&
+      !Category.hasAsyncFoundAll(this.watching_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_category_ids).then(() =>
+        this.notifyPropertyChange("watching_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watching_category_ids"));
+  }
+
+  set watchingCategories(categories) {
+    this.set(
+      "watching_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get trackingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.tracking_category_ids &&
+      !Category.hasAsyncFoundAll(this.tracking_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracking_category_ids).then(() =>
+        this.notifyPropertyChange("tracking_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("tracking_category_ids"));
+  }
+
+  set trackingCategories(categories) {
+    this.set(
+      "tracking_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get watchingFirstPostCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watching_first_post_category_ids &&
+      !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watching_first_post_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watching_first_post_category_ids"));
+  }
+
+  set watchingFirstPostCategories(categories) {
+    this.set(
+      "watching_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get regularCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.regular_category_ids &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("regular_category_ids"));
+  }
+
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get mutedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.muted_category_ids &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("muted_category_ids"));
+  }
+
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
 
   @computed("mentionable_level")
   get canEveryoneMention() {
@@ -72,6 +190,30 @@ export default class Group extends RestModel {
   @computed("automatic")
   get type() {
     return this.automatic ? "automatic" : "custom";
+  }
+
+  @computed("display_name", "name")
+  get displayName() {
+    return this.display_name || this.name;
+  }
+
+  @computed("flair_bg_color")
+  get flairBackgroundHexColor() {
+    return this.flair_bg_color
+      ? this.flair_bg_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+      : null;
+  }
+
+  @computed("flair_color")
+  get flairHexColor() {
+    return this.flair_color
+      ? this.flair_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+      : null;
+  }
+
+  @computed("visibility_level")
+  get isPrivate() {
+    return this.visibility_level > 1;
   }
 
   async reloadMembers(params, refresh) {
@@ -189,151 +331,6 @@ export default class Group extends RestModel {
     }
   }
 
-  _filterMembers(usernames) {
-    return this.reloadMembers({ filter: usernames.join(",") });
-  }
-
-  @computed("display_name", "name")
-  get displayName() {
-    return this.display_name || this.name;
-  }
-
-  @computed("flair_bg_color")
-  get flairBackgroundHexColor() {
-    return this.flair_bg_color
-      ? this.flair_bg_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
-      : null;
-  }
-
-  @computed("flair_color")
-  get flairHexColor() {
-    return this.flair_color
-      ? this.flair_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
-      : null;
-  }
-
-  @computed("visibility_level")
-  get isPrivate() {
-    return this.visibility_level > 1;
-  }
-
-  @observes("isPrivate", "canEveryoneMention")
-  _updateAllowMembershipRequests() {
-    if (this.isPrivate || !this.canEveryoneMention) {
-      this.set("allow_membership_requests", false);
-    }
-  }
-
-  @dependentKeyCompat
-  get watchingCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.watching_category_ids &&
-      !Category.hasAsyncFoundAll(this.watching_category_ids)
-    ) {
-      Category.asyncFindByIds(this.watching_category_ids).then(() =>
-        this.notifyPropertyChange("watching_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("watching_category_ids"));
-  }
-
-  set watchingCategories(categories) {
-    this.set(
-      "watching_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get trackingCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.tracking_category_ids &&
-      !Category.hasAsyncFoundAll(this.tracking_category_ids)
-    ) {
-      Category.asyncFindByIds(this.tracking_category_ids).then(() =>
-        this.notifyPropertyChange("tracking_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("tracking_category_ids"));
-  }
-
-  set trackingCategories(categories) {
-    this.set(
-      "tracking_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get watchingFirstPostCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.watching_first_post_category_ids &&
-      !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
-    ) {
-      Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
-        this.notifyPropertyChange("watching_first_post_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("watching_first_post_category_ids"));
-  }
-
-  set watchingFirstPostCategories(categories) {
-    this.set(
-      "watching_first_post_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get regularCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.regular_category_ids &&
-      !Category.hasAsyncFoundAll(this.regular_category_ids)
-    ) {
-      Category.asyncFindByIds(this.regular_category_ids).then(() =>
-        this.notifyPropertyChange("regular_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("regular_category_ids"));
-  }
-
-  set regularCategories(categories) {
-    this.set(
-      "regular_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get mutedCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.muted_category_ids &&
-      !Category.hasAsyncFoundAll(this.muted_category_ids)
-    ) {
-      Category.asyncFindByIds(this.muted_category_ids).then(() =>
-        this.notifyPropertyChange("muted_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("muted_category_ids"));
-  }
-
-  set mutedCategories(categories) {
-    this.set(
-      "muted_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
   asJSON() {
     const attrs = {
       name: this.name,
@@ -353,8 +350,8 @@ export default class Group extends RestModel {
       email_username: this.email_username,
       email_from_alias: this.email_from_alias,
       email_password: this.email_password,
-      flair_icon: null,
-      flair_upload_id: null,
+      flair_icon: /** @type {string | null} */ (null),
+      flair_upload_id: /** @type {number | null} */ (null),
       flair_bg_color: this.flairBackgroundHexColor,
       flair_color: this.flairHexColor,
       bio_raw: this.bio_raw,
@@ -413,6 +410,11 @@ export default class Group extends RestModel {
     return { ...attrs, ...extraSavePropertiesFor("group", this) };
   }
 
+  /**
+   * Creates the group on the server.
+   *
+   * @returns {Promise<object>} The created group, as the server serializes it.
+   */
   async create() {
     await applyModelCallbacks("group", "beforeCreate", this);
 
@@ -429,6 +431,7 @@ export default class Group extends RestModel {
 
     await this.reloadMembers();
     await applyModelCallbacks("group", "afterCreate", this, response);
+    return response.basic_group;
   }
 
   async save(opts = {}) {
@@ -509,5 +512,16 @@ export default class Group extends RestModel {
       type: "POST",
       data: { reason },
     });
+  }
+
+  _filterMembers(usernames) {
+    return this.reloadMembers({ filter: usernames.join(",") });
+  }
+
+  @observes("isPrivate", "canEveryoneMention")
+  _updateAllowMembershipRequests() {
+    if (this.isPrivate || !this.canEveryoneMention) {
+      this.set("allow_membership_requests", false);
+    }
   }
 }

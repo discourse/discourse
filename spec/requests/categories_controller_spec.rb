@@ -3,6 +3,7 @@
 RSpec.describe CategoriesController do
   let!(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
+
   fab!(:user)
 
   describe "#index" do
@@ -537,6 +538,92 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#evaluate_permissions" do
+    fab!(:permitted_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:owners]) }
+
+    it "requires the user to be logged in" do
+      post "/categories/evaluate_permissions.json",
+           params: {
+             group_ids: [permitted_group.id],
+           },
+           as: :json
+
+      expect(response.status).to eq(403)
+    end
+
+    context "when a moderator evaluates public permissions" do
+      fab!(:moderator)
+
+      [false, true].each do |granular_permissions|
+        it "retains access with granular pseudogroup behavior #{granular_permissions}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
+          sign_in(moderator)
+          category.set_permissions(everyone: :readonly)
+          category.save!
+
+          expect(moderator.guardian.can_see_category?(category)).to eq(true)
+
+          post "/categories/evaluate_permissions.json",
+               params: {
+                 group_ids: [Group::AUTO_GROUPS[:everyone]],
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "success" => "OK",
+            "current_user_will_lose_access" => false,
+          )
+        end
+      end
+    end
+
+    context "when logged in" do
+      before { sign_in(user) }
+
+      it "reports that the user retains access through a hidden group membership" do
+        permitted_group.add(user)
+
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [permitted_group.id],
+             },
+             as: :json
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "success" => "OK",
+          "current_user_will_lose_access" => false,
+        )
+      end
+
+      it "warns when the user would lose access" do
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [permitted_group.id],
+             },
+             as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body).to eq(
+          {
+            "errors" => [I18n.t("category.errors.self_lockout")],
+            "extras" => {
+              "current_user_will_lose_access" => true,
+            },
+          },
+        )
+      end
+
+      it "rejects non-integer group IDs" do
+        post "/categories/evaluate_permissions.json", params: { group_ids: ["invalid"] }, as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly("Group ids is invalid")
+      end
+    end
+  end
+
   describe "#create" do
     it "requires the user to be logged in" do
       post "/categories.json"
@@ -619,7 +706,7 @@ RSpec.describe CategoriesController do
       end
 
       describe "success" do
-        it "works" do
+        it "creates the category with group permissions" do
           SiteSetting.enable_category_group_moderation = true
 
           readonly = CategoryGroup.permission_types[:readonly]
@@ -740,7 +827,7 @@ RSpec.describe CategoriesController do
             expect(SiteSetting.max_category_nesting).to eq(3)
           end
 
-          it "will set the schema value for site settings when overrides are not provided" do
+          it "uses the schema value when no site-setting override is provided" do
             SiteSetting.max_category_nesting = 3
             Categories::Types::Discussion.stubs(:configuration_schema).returns(
               { site_settings: { max_category_nesting: 2 } },
@@ -828,10 +915,7 @@ RSpec.describe CategoriesController do
     it "preloads user fields for restricted categories" do
       category.set_permissions(admins: :full)
       category.save!
-      Fabricate(:category, parent_category: category).tap do |subcategory|
-        subcategory.set_permissions(admins: :full)
-        subcategory.save!
-      end
+      Fabricate(:category, parent_category: category, permissions: { admins: :full })
       sign_in(admin)
 
       get "/c/#{category.slug}/find_by_slug.json"
@@ -971,6 +1055,37 @@ RSpec.describe CategoriesController do
         expect(response).to be_forbidden
       end
 
+      it "returns 422 when changing the permissions of a special category" do
+        category.set_permissions(staff: :full)
+        category.save!
+        SiteSetting.staff_category_id = category.id
+
+        put "/categories/#{category.id}.json", params: { permissions: { "everyone" => 1 } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("category.errors.special_category_permissions"),
+        )
+        expect(category.reload.read_restricted).to eq(true)
+      end
+
+      it "updates a special category when its current permissions are resubmitted" do
+        category.set_permissions(staff: :full)
+        category.save!
+        SiteSetting.staff_category_id = category.id
+
+        put "/categories/#{category.id}.json",
+            params: {
+              name: "Renamed staff",
+              permissions: {
+                "staff" => 1,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(category.reload.name).to eq("Renamed staff")
+      end
+
       it "returns errors on a duplicate category name" do
         other_category = Fabricate(:category, name: "Other", user: admin)
         put "/categories/#{category.id}.json",
@@ -1063,6 +1178,76 @@ RSpec.describe CategoriesController do
           expect(category.category_required_tag_groups.first.min_count).to eq(2)
           expect(category.form_template_ids).to eq([form_template_1.id, form_template_2.id])
           expect(category.topic_title_placeholder).to eq("test topic title placeholder")
+        end
+
+        it "revokes anonymous access to existing uploads when a public category becomes private" do
+          setup_s3
+          SiteSetting.secure_uploads = true
+          topic = Fabricate(:topic, category: category)
+          post = Fabricate(:post, topic: topic)
+          upload = Fabricate(:upload_s3, access_control_post: post)
+          UploadReference.create!(upload: upload, target: post)
+          stub_upload(upload)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to redirect_to(upload.url)
+
+          sign_in(admin)
+          put "/categories/#{category.id}.json",
+              params: {
+                permissions: {
+                  "admins" => CategoryGroup.permission_types[:full],
+                },
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["category"]["read_restricted"]).to eq(true)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to have_http_status(:forbidden)
+          expect(response.body).to include(I18n.t("page_forbidden.title"))
+        end
+
+        it "revokes anonymous access to uploads retained in a deleted topic" do
+          setup_s3
+          SiteSetting.secure_uploads = true
+          topic = Fabricate(:topic, category: category)
+          post = Fabricate(:post, topic: topic)
+          upload = Fabricate(:upload_s3, access_control_post: post)
+          UploadReference.create!(upload: upload, target: post)
+          stub_upload(upload)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to redirect_to(upload.url)
+
+          sign_in(admin)
+          delete "/t/#{topic.id}.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(Topic.with_deleted.find(topic.id)).to be_trashed
+          expect(Post.with_deleted.find(post.id)).to be_trashed
+
+          put "/categories/#{category.id}.json",
+              params: {
+                permissions: {
+                  "admins" => CategoryGroup.permission_types[:full],
+                },
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["category"]["read_restricted"]).to eq(true)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to have_http_status(:forbidden)
+          expect(response.body).to include(I18n.t("page_forbidden.title"))
         end
 
         it "updates description and revises category topic OP to stay in sync" do
@@ -2390,7 +2575,7 @@ RSpec.describe CategoriesController do
     context "when in readonly mode" do
       before { Discourse.enable_readonly_mode }
 
-      it "works" do
+      it "returns category search results in read-only mode" do
         post "/categories/search.json", params: { term: "" }
 
         expect(response.status).to eq(200)

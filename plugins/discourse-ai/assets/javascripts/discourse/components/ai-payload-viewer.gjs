@@ -42,11 +42,11 @@ export default class AiPayloadViewer extends Component {
         ><code>{{this.content}}</code></pre>
         {{#if @copyLabel}}
           <DCopyButton
-            @value={{@payload}}
+            @copied={{@onCopy}}
             @copyClass="btn-default ai-payload-viewer__copy"
             @translatedLabel={{@copyLabel}}
             @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
-            @copied={{@onCopy}}
+            @value={{@payload}}
           />
         {{/if}}
       {{else}}

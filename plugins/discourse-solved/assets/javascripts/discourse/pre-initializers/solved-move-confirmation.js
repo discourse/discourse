@@ -1,6 +1,6 @@
 import MoveToTopic from "discourse/components/modal/move-to-topic";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import MoveSolutionConfirmationModal from "../components/modal/move-solution-confirmation";
+import MoveSolutionConfirmationModal from "../components/modal/move-solution-confirmation.gjs";
 
 const STORAGE_KEY = "discourse-solved-hide-move-confirmation";
 

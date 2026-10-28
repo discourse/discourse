@@ -8,36 +8,6 @@ export default class RestrictedRouting extends Service {
     return this._needsRequiredFields || this._needs2fa;
   }
 
-  isAllowedRoute(path) {
-    const alwaysAllowed = ["faq", "about", "tos", "privacy", "safe-mode"];
-
-    if (alwaysAllowed.includes(path)) {
-      return true;
-    }
-
-    if (this._needs2fa) {
-      if (path === "preferences.second-factor") {
-        return true;
-      }
-
-      return false;
-    }
-
-    if (this._needsRequiredFields) {
-      if (path.startsWith("admin")) {
-        return true;
-      }
-
-      if (path === "preferences.profile") {
-        return true;
-      }
-
-      return false;
-    }
-
-    return true;
-  }
-
   get redirectRoute() {
     if (this._needs2fa) {
       return "preferences.second-factor";
@@ -68,5 +38,35 @@ export default class RestrictedRouting extends Service {
 
   get _needsRequiredFields() {
     return this.currentUser?.needs_required_fields_check;
+  }
+
+  isAllowedRoute(path) {
+    const alwaysAllowed = ["faq", "about", "tos", "privacy", "safe-mode"];
+
+    if (alwaysAllowed.includes(path)) {
+      return true;
+    }
+
+    if (this._needs2fa) {
+      if (path === "preferences.second-factor") {
+        return true;
+      }
+
+      return false;
+    }
+
+    if (this._needsRequiredFields) {
+      if (path.startsWith("admin")) {
+        return true;
+      }
+
+      if (path === "preferences.profile") {
+        return true;
+      }
+
+      return false;
+    }
+
+    return true;
   }
 }

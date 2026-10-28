@@ -41,15 +41,15 @@ export default class SupportTopicOutcomes extends Component {
           <DTooltip @content={{row.tooltip}}>
             <:trigger>
               <LinkTo
-                @route="discovery.filter"
-                @query={{row.query}}
                 class="db-support-outcomes__label"
+                @query={{row.query}}
+                @route="discovery.filter"
               >
                 {{row.label}}
               </LinkTo>
             </:trigger>
           </DTooltip>
-          <span class="db-support-outcomes__track" aria-hidden="true">
+          <span aria-hidden="true" class="db-support-outcomes__track">
             <span
               class={{concat "db-support-outcomes__fill " row.fillClass}}
               style={{row.fillStyle}}

@@ -91,6 +91,19 @@ export interface TooltipOptions {
   /** Whether to animate the float as it opens and closes. */
   animated: boolean;
 
+  /**
+   * An accessible name for the float's content, already translated. Needed whenever the float
+   * cannot borrow a name from its trigger: a float opened through the service anchors to an
+   * element that carries no `id`, and one anchored to a virtual reference has no trigger element
+   * at all, so in both cases the trigger-derived `aria-labelledby` is dropped and the float would
+   * otherwise be announced unnamed.
+   *
+   * Setting it takes precedence over the trigger-derived name. Like every option it is read once
+   * when the instance is built, so a name that changes while the float is open belongs on the
+   * trigger rather than here.
+   */
+  ariaLabel: string | null;
+
   /** Whether to render a directional arrow pointing at the trigger. */
   arrow: boolean;
 
@@ -139,10 +152,9 @@ export interface TooltipOptions {
   hoverGracePeriod: number;
 
   /**
-   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
-   * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
-   * silently wins over the matched width and a trigger wider than the cap gets a narrower
-   * overlay.
+   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Ignored
+   * when `matchTriggerWidth` is set, since the trigger then decides the width; only the viewport
+   * bounds it.
    *
    * A number is additionally capped to the width the viewport leaves the float, so it can never
    * overflow the document; a string is applied verbatim and gets no such cap.
@@ -222,6 +234,15 @@ export interface MenuOptions extends TooltipOptions {
    * control and the items its `aria-activedescendant` points at.
    */
   contentRole: FloatContentRole;
+
+  /**
+   * Where focus returns when the menu closes, resolved **at close time** rather than when the
+   * menu opens. A menu anchored to a virtual reference has no trigger element to fall back on
+   * (`triggerElement` is `null` for one). An element captured at open time is also frequently
+   * stale by the time the menu closes, because an item that mutates the DOM often destroys it.
+   * Returning `null` leaves focus alone. Falls back to the trigger element when unset.
+   */
+  focusTarget: (() => HTMLElement | null) | null;
 
   /** Whether to focus the content when the menu opens. */
   autofocus: boolean;
@@ -311,20 +332,34 @@ export interface ToastData {
   [key: string]: unknown;
 }
 
+/**
+ * The progress-bar arguments a toast component receives. The registration
+ * callback is guaranteed whenever a progress bar is shown.
+ */
+type ToastProgressBarArgs =
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar?: false;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar?: (element: HTMLElement) => void;
+    }
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar: true;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar: (element: HTMLElement) => void;
+    };
+
 /** The arguments a toast component receives (the default is `DDefaultToast`). */
-export interface ToastComponentArgs {
+export type ToastComponentArgs = ToastProgressBarArgs & {
   /** The data to render in the toast. */
   data?: ToastData;
 
   /** Closes the toast. */
   close?: FloatCallback;
-
-  /** Whether to show a progress bar counting down to auto-close. */
-  showProgressBar?: boolean;
-
-  /** Registers the progress-bar element so the auto-close modifier can animate it. */
-  onRegisterProgressBar?: (element: HTMLElement) => void;
-}
+};
 
 /** The signature of a toast component (the default is `DDefaultToast`). */
 export type ToastComponent = ComponentLike<{
@@ -357,11 +392,15 @@ export interface ToastOptions {
 
   /** A class added to the toast element. */
   class?: string;
+
+  /** Replaces any showing toast with the same key, so only the newest is kept. */
+  key?: string;
 }
 
 export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
   options: {
     animated: true,
+    ariaLabel: null,
     arrow: true,
     beforeTrigger: null,
     closeOnClickOutside: true,
@@ -397,8 +436,10 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
 export const MENU: { options: MenuOptions; portalOutletId: string } = {
   options: {
     animated: true,
+    ariaLabel: null,
     arrow: false,
     autofocus: false,
+    focusTarget: null,
     beforeTrigger: null,
     closeOnEscape: true,
     closeOnClickOutside: true,

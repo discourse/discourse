@@ -6,14 +6,14 @@ import DNavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <DHorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
-    <DNavItem @route="review.index" @label="review.view_all" />
-    <DNavItem @route="review.topics" @label="review.grouped_by_topic" />
+  <DHorizontalOverflowNav class="reviewable-title" @ariaLabel="Review">
+    <DNavItem @label="review.view_all" @route="review.index" />
+    <DNavItem @label="review.grouped_by_topic" @route="review.topics" />
     {{#if @controller.currentUser.admin}}
       <DNavItem
-        @route="review.settings"
-        @label="review.settings.title"
         @icon="wrench"
+        @label="review.settings.title"
+        @route="review.settings"
       />
     {{/if}}
   </DHorizontalOverflowNav>
@@ -26,9 +26,9 @@ export default <template>
         <div class="title">{{rst.title}}</div>
         <div class="field">
           <ComboBox
-            @value={{rst.reviewable_priority}}
             @content={{@controller.settings.reviewable_priorities}}
             @onChange={{fn (mut rst.reviewable_priority)}}
+            @value={{rst.reviewable_priority}}
           />
         </div>
       </div>
@@ -38,11 +38,11 @@ export default <template>
       <div class="title"></div>
       <div class="field">
         <DButton
-          @icon="check"
-          @label="review.settings.save_changes"
+          class="btn-primary save-settings"
           @action={{@controller.save}}
           @disabled={{@controller.saving}}
-          class="btn-primary save-settings"
+          @icon="check"
+          @label="review.settings.save_changes"
         />
 
         {{#if @controller.saved}}

@@ -7,11 +7,7 @@
 id:
   js:
     explorer:
-      default_query: "Asal"
       or: "atau"
-      create: "Buat"
-      ai:
-        optional: "opsional"
       help:
         label: "Bantuan"
       schema:
@@ -24,10 +20,11 @@ id:
       chart:
         form:
           bar: "Batang"
+      name: "Nama"
       query_groups: "Grup"
+      query_tags: "Label"
       query_description: "Deskripsi"
       reset_params: "Reset"
-      search_placeholder: "Cari..."
     discourse_workflows:
       sql:
         output:

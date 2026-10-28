@@ -11,20 +11,20 @@ import {
   normalizeTargetInput,
   normalizeTargetInputIndex,
   portIndexFromKey,
-} from "../../../lib/workflows/graph-constants";
+} from "../../../lib/workflows/graph-constants.js";
 import {
   nodeTypeInputAcceptsMultipleConnections,
   nodeTypeInputs,
   nodeTypeInputUsesConnectionIndexes,
   nodeTypeOutputKeys,
-} from "../../../lib/workflows/node-types";
+} from "../../../lib/workflows/node-types.js";
 import {
   NODE_WIDTH,
   nodeHeight,
   nodeLabel,
   nodeWidth,
-} from "../../../lib/workflows/node-utils";
-import { createCustomRenderer } from "./custom-renderer";
+} from "../../../lib/workflows/node-utils.js";
+import { createCustomRenderer } from "./custom-renderer.js";
 
 export const DRAG_LENIENCE_PX = 4;
 
@@ -272,6 +272,19 @@ export class ReteEditorBridge {
     this.lastPickedId = null;
     this.lastPickedTime = 0;
     this.nodeDragOrigin = null;
+  }
+
+  get areaContentElement() {
+    return this.area.area.content.holder;
+  }
+
+  get transform() {
+    const { x, y, k } = this.area.area.transform;
+    return { x, y, k };
+  }
+
+  get nodeCount() {
+    return this.editor.getNodes().length;
   }
 
   setupPipes() {
@@ -880,6 +893,7 @@ export class ReteEditorBridge {
           reteNode.label !== newLabel ||
           reteNode.width !== newWidth ||
           reteNode.height !== newHeight ||
+          reteNode.workflowData.typeVersion !== nodeData.typeVersion ||
           JSON.stringify(reteNode.workflowData.configuration) !==
             JSON.stringify(nodeData.configuration);
 
@@ -1192,19 +1206,6 @@ export class ReteEditorBridge {
     }
 
     return constraints;
-  }
-
-  get areaContentElement() {
-    return this.area.area.content.holder;
-  }
-
-  get transform() {
-    const { x, y, k } = this.area.area.transform;
-    return { x, y, k };
-  }
-
-  get nodeCount() {
-    return this.editor.getNodes().length;
   }
 
   containerToCanvas(localX, localY) {

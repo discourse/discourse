@@ -117,7 +117,7 @@ RSpec.describe PostSerializer do
       expect(notify_user_action).to be_blank
     end
 
-    it "should not allow user to flag post and notify non human user" do
+    it "prevents flagging a post to notify a non-human user" do
       post.update!(user: Discourse.system_user)
 
       serializer = PostSerializer.new(post, scope: Guardian.new(actor), root: false)
@@ -304,12 +304,12 @@ RSpec.describe PostSerializer do
         revisor.revise!(post.user, raw: "Hello, everyone!")
       end
 
-      it "will not leak version to users" do
+      it "hides the real version from regular users" do
         json = PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
         expect(json[:version]).to eq(1)
       end
 
-      it "will show real version to staff" do
+      it "shows the real version to staff" do
         json = PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
         expect(json[:version]).to eq(2)
       end
@@ -474,6 +474,20 @@ RSpec.describe PostSerializer do
           expect(serialized.as_json[:bookmark_reminder_at]).to eq(bookmark.reminder_at.iso8601)
         end
       end
+    end
+  end
+
+  context "without a bookmark or reviewable" do
+    fab!(:moderator)
+
+    it "queries bookmarks and reviewables only once" do
+      queries =
+        track_sql_queries do
+          PostSerializer.new(post, scope: moderator.guardian, root: false).as_json
+        end
+
+      expect(queries.count { |q| q.include?('FROM "bookmarks"') }).to eq(1)
+      expect(queries.count { |q| q.include?('FROM "reviewables"') }).to eq(1)
     end
   end
 

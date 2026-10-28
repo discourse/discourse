@@ -18,6 +18,7 @@ RSpec.describe ThemeJavascriptsController do
   let(:javascript_cache) do
     JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
   end
+
   before { clear_disk_cache }
   after { clear_disk_cache }
 

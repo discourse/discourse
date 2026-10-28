@@ -6,11 +6,15 @@ module Jobs
       every 1.minute
 
       def execute(args)
-        DiscourseEvents::Events::EventDate.pending.find_each do |event_date|
-          send_reminder(event_date)
-          trigger_events(event_date)
-          finish(event_date)
-        end
+        DiscourseEvents::Events::EventDate
+          .pending
+          .includes(:event)
+          .find_each do |event_date|
+            send_reminder(event_date)
+            trigger_events(event_date)
+            open_livestream_chat(event_date)
+            finish(event_date)
+          end
       end
 
       def send_reminder(event_date)
@@ -18,9 +22,10 @@ module Jobs
           ::Jobs.enqueue(
             :discourse_post_event_send_reminder,
             event_id: event_date.event.id,
+            event_date_id: event_date.id,
             reminder: reminder[:description],
           )
-          event_date.update!(reminder_counter: event_date.reminder_counter + 1)
+          event_date.update!(reminder_counter: event_date.reminder_counter.to_i + 1)
         end
       end
 
@@ -37,49 +42,70 @@ module Jobs
         end
       end
 
+      # A recurring livestream's chat only docks around each occurrence, so open
+      # pages are told to reload once the next one opens; `finish` does the
+      # same when it ends.
+      def open_livestream_chat(event_date)
+        event = event_date.event
+        return if !event.livestream? || !event.recurring?
+        return if event_date.opens_at > Time.current
+        if !Discourse.redis.set("livestream_chat_opened:#{event_date.id}", 1, nx: true, ex: 2.days)
+          return
+        end
+
+        topic = event.post.topic
+        MessageBus.publish(
+          "/topic/#{topic.id}",
+          { reload_topic: true },
+          topic.secure_audience_publish_messages,
+        )
+      end
+
       def finish(event_date)
         return if !event_date.ended?
-        event_date.update!(finished_at: Time.current)
 
-        # The occurrence goes along with the event: `set_next_date` below moves
-        # the event on to the next one, so it can no longer name the one that ended.
-        DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
-        MessageBus.publish(
-          "/topic/#{event_date.event.post.topic_id}",
-          reload_topic: true,
-          refresh_stream: true,
-        )
+        # Roll back completion and successor creation together if advancement fails.
+        event_date.event.with_lock do
+          event_date.reload
+          next if event_date.finished_at || !event_date.ended?
+          event_date.update!(finished_at: Time.current)
 
-        return if event_date.event.recurrence.blank?
-        event_date.event.set_next_date
-        event_date.event.set_topic_bump
+          recurring = event_date.event.recurring?
+          event_date.event.set_next_recurrent_event_date if recurring
+
+          DB.after_commit do
+            # The event now points to its successor, so pass the finished occurrence explicitly.
+            DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
+            MessageBus.publish(
+              "/topic/#{event_date.event.post.topic_id}",
+              { reload_topic: true, refresh_stream: true },
+              event_date.event.post.topic.secure_audience_publish_messages,
+            )
+
+            if recurring
+              TopicTrackingState.publish_latest(event_date.event.post.topic)
+              event_date.event.set_topic_bump
+            end
+          end
+        end
       end
 
       def due_reminders(event_date)
-        return [] if event_date.event.reminders.blank?
         event_date
           .event
-          .reminders
-          .split(",")
-          .map do |reminder|
-            unit, value, type = reminder.split(".").reverse
-
-            next if type === "bumpTopic" || !validate_reminder_unit(unit)
-            reminder = "notification.#{value}.#{unit}" if type.blank?
-
-            date = event_date.starts_at - value.to_i.public_send(unit)
-            { description: reminder, date: date }
+          .parsed_reminders
+          .reject do |reminder|
+            reminder[:type] == DiscourseEvents::Events::Event::BUMP_TOPIC_REMINDER
           end
-          .compact
+          .map do |reminder|
+            {
+              description: "#{reminder[:type]}.#{reminder[:value]}.#{reminder[:unit]}",
+              date: event_date.starts_at - DiscourseEvents::Events::Event.reminder_offset(reminder),
+            }
+          end
           .select { |reminder| reminder[:date] <= Time.current }
           .sort_by { |reminder| reminder[:date] }
-          .drop(event_date.reminder_counter)
-      end
-
-      private
-
-      def validate_reminder_unit(input)
-        ActiveSupport::Duration::PARTS.any? { |part| part.to_s == input }
+          .drop(event_date.reminder_counter.to_i)
       end
     end
   end

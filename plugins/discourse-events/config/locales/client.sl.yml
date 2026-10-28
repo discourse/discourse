@@ -18,6 +18,11 @@ sl:
             topic_id:
               label: ID teme
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Obvestila"
+            none: "Brez"
       on_holiday: "Na počitnicah"
       disable_holiday: "Onemogoči"
       enable_holiday: "Omogoči"
@@ -291,6 +296,9 @@ sl:
     group_timezones:
       search: "Išči..."
       group_availability: "Razpoložljivost %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID teme"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -350,7 +358,6 @@ sl:
             going: "Pridem"
             interested: "Mogoče pridem"
         event:
-          expired: "Poteklo"
           closed: "Zaprta"
           status:
             standalone:
@@ -362,6 +369,8 @@ sl:
             private:
               title: "Zasebni"
               description: "Na zasebni dogodek se lahko prijavijo samo povabljenci."
+      recording_modal:
+        save: "Shrani"
       composer:
         name_placeholder: "Ime dogodka"
         event_title_placeholder: "Ime dogodka"

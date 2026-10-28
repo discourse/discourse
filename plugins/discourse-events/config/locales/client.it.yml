@@ -27,6 +27,11 @@ it:
               label: ID dell'argomento
     discourse_events:
       title: "Eventi"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifica"
+            none: "Nessuna"
       on_holiday: "In vacanza"
       disable_holiday: "Disabilita"
       enable_holiday: "Abilita"
@@ -320,6 +325,9 @@ it:
     group_timezones:
       search: "Ricerca..."
       group_availability: "Disponibilità di %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID dell'argomento"
     discourse_post_event:
       notifications:
         before_event_reminder: "Un evento sta per iniziare"
@@ -350,6 +358,9 @@ it:
       edit_event: "Modifica evento"
       export_event: "Esporta evento"
       created_by: "Creato da"
+      other_hosts:
+        one: "e %{count} altro"
+        other: "e %{count} altri"
       bulk_invite: "Invito collettivo"
       close_event: "Chiudi evento"
       open_event: "Apri evento"
@@ -414,7 +425,6 @@ it:
               one: "%{count} utente invitato"
               other: "%{count} utenti invitati"
         event:
-          expired: "Scaduto"
           closed: "Chiuso"
           status:
             standalone:
@@ -426,6 +436,8 @@ it:
             private:
               title: "Privato"
               description: "Solo gli utenti invitati possono partecipare a un evento privato."
+      recording_modal:
+        save: "Salva"
       composer:
         name_placeholder: "Nome dell'evento"
         url_placeholder: "Aggiungi URL"
@@ -507,6 +519,8 @@ it:
           placeholder: "Facoltativo, valore predefinito titolo dell'argomento"
         invitees:
           label: "Gruppi invitati"
+        hosts:
+          label: "Host"
         event_type:
           public:
             title: "Pubblico"

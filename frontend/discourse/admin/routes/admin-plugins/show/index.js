@@ -10,11 +10,9 @@ export default class AdminPluginsShowIndexRoute extends Route {
   }
 
   afterModel(model) {
-    if (this.adminPluginNavManager.currentPluginDefaultRoute) {
-      this.router.replaceWith(
-        this.adminPluginNavManager.currentPluginDefaultRoute,
-        model.id
-      );
-    }
+    this.router.replaceWith(
+      this.adminPluginNavManager.defaultRouteFor(model),
+      model.id
+    );
   }
 }

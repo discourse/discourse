@@ -2,13 +2,13 @@
 
 class Admin::Config::DesignWizardController < Admin::AdminController
   def index
-    core_themes =
-      Theme
-        .where(id: Theme::CORE_THEMES.values)
-        .includes(:locale_fields, theme_fields: :upload)
+    themes =
+      DesignWizard::Themes
+        .selectable
+        .includes(:remote_theme, :locale_fields, theme_fields: :upload)
         .order(:id)
 
-    render_serialized(Theme.find_default, DesignWizardSerializer, root: false, themes: core_themes)
+    render_serialized(Theme.find_default, DesignWizardSerializer, root: false, themes:)
   end
 
   def update

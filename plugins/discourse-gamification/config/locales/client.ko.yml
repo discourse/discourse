@@ -28,9 +28,7 @@ ko:
       close: "닫기"
       delete: "삭제"
       edit: "편집"
-      back: "뒤로"
       save: "저장"
-      apply: "적용"
       update_range:
         last_10_days: "지난 10일"
         last_30_days: "지난 30일"
@@ -39,8 +37,10 @@ ko:
       custom_range_from: "보내는사람"
       admin:
         name: "그룹명"
+        created_by: "작성자"
     discourse_workflows:
       gamification_score:
         username: "사용자"
         date: "날짜"
         description: "내용"
+        category_id: "카테고리"

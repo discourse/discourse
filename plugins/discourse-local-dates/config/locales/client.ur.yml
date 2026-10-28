@@ -14,7 +14,8 @@ ur:
         countdown:
           passed: تاریخ گزر چکی ہے
       title: تاریخ / وقت شامل کریں
-      edit_date: '%{date}میں ترمیم'
+      edit: تاریخ / وقت میں ترمیم کریں
+      edit_date: '%{date} میں ترمیم'
       create:
         form:
           insert: شامل

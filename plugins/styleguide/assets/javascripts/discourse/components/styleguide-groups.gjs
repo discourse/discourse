@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { scrollTop } from "discourse/lib/scroll-top";
-import StyleguideGroup from "./styleguide-group";
-import StyleguideSubnav from "./styleguide-subnav";
+import StyleguideGroup from "./styleguide-group.gjs";
+import StyleguideSubnav from "./styleguide-subnav.gjs";
 
 /**
  * Splits a long styleguide section into navigable groups, one rendered at a time.
@@ -62,10 +62,10 @@ export default class StyleguideGroups extends Component {
 
   <template>
     <StyleguideSubnav
-      @groups={{@groups}}
-      @section={{@section}}
       @activeId={{this.activeId}}
       @ariaLabel={{@ariaLabel}}
+      @groups={{@groups}}
+      @section={{@section}}
     />
 
     <div

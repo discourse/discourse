@@ -6,6 +6,9 @@
 
 vi:
   js:
+    dsa_notice:
+      title: "Báo cáo nội dung bất hợp pháp"
+      email: "Địa chỉ email"
     user_api_key:
       deny: "Hủy"
       copied: "Đã sao chép!"
@@ -21,6 +24,7 @@ vi:
     access_control:
       manage:
         access_permission_editor: "Lần Đầu Sửa Tút"
+        access_permission_owner: "Chủ nhóm"
         access_permission_remove: "Bỏ"
         access_permission_remove_description: "Gỡ bỏ quyền của đối tượng này"
         add_group: "Thêm người dùng hoặc nhóm"
@@ -244,7 +248,6 @@ vi:
       zh_CN:
         name: Tiếng Trung giản thể
     share:
-      topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "tút #%{postNumber} bởi @%{username}"
       close: "Đóng"
       twitter: "Chia sẻ trên X"
@@ -298,12 +301,19 @@ vi:
     skip_to_last_reply: "Chuyển đến câu trả lời cuối cùng"
     skip_to_top: "Chuyển đến đầu"
     skip_user_nav: "Chuyển đến nội dung hồ sơ"
+    reorder:
+      remove: "Xóa %{label}"
+      removed: "Đã xóa %{label}"
+      move_up: "Chuyển lên"
+      move_down: "Chuyển xuống"
+      position: "%{position} trên %{total}"
     emails_are_disabled: "Ban quản trị đã tắt mọi thư gửi đi. Sẽ không có bất kỳ thư thông báo nào được gửi."
     emails_are_disabled_non_staff: "Email gửi đi đã bị vô hiệu hóa đối với người dùng không phải là nhân viên."
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang này, <span>vui lòng tải lại trang</span> để cho mọi thứ hoạt động ổn định."
       dismiss: "Hủy bỏ"
     back_button: "Quay lại"
+    confirm_button: "Xác nhận"
     welcome_banner:
       header:
         new_members: "Chào mừng, %{preferred_display_name}!"
@@ -401,8 +411,6 @@ vi:
     every_six_months: "mỗi sáu tháng"
     max_of_count:
       other: "tối đa trong %{count}"
-    character_count:
-      other: "%{count} ký tự"
     period_chooser:
       aria_label: "Lọc theo khoảng thời gian"
     related_messages:
@@ -644,6 +652,9 @@ vi:
       title:
         search: "Tìm kiếm một tin nhắn"
         placeholder: "nhập tiêu đề tin nhắn, url hoặc id ở đây"
+    dsa_statements:
+      category: "Danh mục"
+      saving: "Đang lưu…"
     review:
       show_more: "Mở rộng"
       show_less: "Thu gọn"
@@ -885,6 +896,9 @@ vi:
         note_added: "Ghi chú của người kiểm duyệt"
         note_added_by: "Ghi chú kiểm duyệt của %{username} · %{relativeDate}"
         no_events: "Không có sự kiện nào trên dòng thời gian để hiển thị"
+      author_penalty:
+        toast:
+          undo: "Hoàn tác"
       notes:
         add_note_description: "Thêm ghi chú để cung cấp ngữ cảnh cho các kiểm duyệt viên khác."
         add_note_button: "Thêm ghi chú"
@@ -1510,7 +1524,6 @@ vi:
       admin: "%{user} là người điều hành"
       moderator_tooltip: "Thành viên này là Mod"
       admin_tooltip: "Thành viên này là Admin"
-      silenced_tooltip: "Thành viên này đã bị hạn chế"
       suspended_notice: "Thành viên này bị đình chỉ đến %{date}."
       suspended_permanently: "Thành viên này đã bị đình chỉ."
       suspended_reason: "Lý do: "
@@ -1569,6 +1582,16 @@ vi:
       tracked_topics_link: "Xem"
       automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang"
       apps: "Ứng dụng"
+      mcp_authorizations:
+        endpoint: "Nguồn"
+        scopes: "Phạm vi"
+        details: "Chi tiết"
+        last_used: "Lần cuối sử dụng"
+        never: "Không bao giờ"
+        status: "Trạng thái"
+        statuses:
+          active: "Hoạt động"
+          revoked: "Đã thu hồi"
       revoke_access: "Lấy lại quyền"
       undo_revoke_access: "Cấp lại quyền"
       api_approved: "Chấp thuận:"
@@ -1827,7 +1850,6 @@ vi:
         upload_title: "Upload hình ảnh của bạn"
         image_is_not_a_square: "Cảnh báo: chúng tôi đã cắt hình ảnh của bạn; chiều rộng và chiều cao không bằng nhau."
         logo_small: "Logo nhỏ của trang web. Được sử dụng theo mặc định."
-        use_custom: "Hoặc tải lên hình đại diện tùy chỉnh:"
       change_profile_background:
         title: "Ảnh bìa"
         instructions: "Căn giữa, chiều rộng mặc định là 1110px."
@@ -2393,7 +2415,7 @@ vi:
       hide_forever: "không, cảm ơn"
       hidden_for_session: "OK, chúng tôi sẽ hỏi bạn vào ngày mai. Bạn luôn có thể sử dụng 'Đăng nhập' để tạo tài khoản."
       intro: "Xin chào! Có vẻ như bạn đang quan tâm chủ đề này, nhưng bạn chưa đăng ký tài khoản."
-      value_prop: "Mệt mỏi khi cuộn phải cùng một tút? Khi tạo tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các trả lời mới, đánh dấu chủ đề và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể cùng nhau làm cho cộng đồng này trở nên tuyệt vời. :heart:"
+      value_prop: "Mệt mỏi khi cuộn phải cùng một tút? Khi tạo tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các trả lời mới, đánh dấu chủ đề và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể cùng nhau làm cho cộng đồng này trở nên tuyệt vời."
     offline_indicator:
       no_internet: "Không có kết nối internet."
       refresh_page: "Tải lại trang"
@@ -2820,8 +2842,7 @@ vi:
       discard: "Hủy bỏ"
       draft_saved: "Đã lưu bản nháp!"
       users_placeholder: "Thêm người dùng hoặc nhóm"
-      title_placeholder: "Tóm tắt chủ đề này trong một câu ngắn gọn"
-      title_placeholder_redesign: "Tiêu đề"
+      title_placeholder: "Tiêu đề"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán link vào đây"
       edit_reason_placeholder: "Lý do bạn sửa"
       topic_featured_link_placeholder: "Nhập liên kết hiển thị với tiêu đề."
@@ -2838,8 +2859,6 @@ vi:
       uploading: "Đang tải lên…"
       show_preview: "Xem trước"
       hide_preview: "Hủy xem trước"
-      switch_to_markdown: "Dùng trình soạn thảo Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Dùng trình soạn thảo thường (%{keyboardShortcut})"
       quote_post_title: "Trích dẫn toàn bộ tút"
       bold_label: "B"
       bold_title: "In đậm"
@@ -2975,6 +2994,8 @@ vi:
       onebox_toolbar:
         copy: "Sao chép link"
         link_copied: "Đã sao chép link!"
+      table:
+        default_heading: "Cột %{number}"
       unsupported_token: "Trình soạn thảo rich text không hỗ trợ tất cả các tính năng được sử dụng trong tút này; chuyển sang trình soạn thảo Markdown."
     notifications:
       tooltip:
@@ -4199,6 +4220,7 @@ vi:
       list: "Danh sách chuyên mục"
       no_description: "Hãy thêm mô tả cho chuyên mục này"
       change_in_category_topic: "Sửa mô tả"
+      latest_topics: "Chủ đề mới nhất"
       description_expand: "Hiện thêm"
       description_collapse: "Thu gọn"
       already_used: "Màu này đã được dùng bởi chuyên mục khác"
@@ -4470,6 +4492,7 @@ vi:
       with_category: "%{filter} %{category} chủ đề"
       filter:
         title: "Kết quả đã lọc cho %{filter}"
+        reset: "trạng thái đầu"
         button:
           label: "Lọc"
       latest:
@@ -4636,8 +4659,6 @@ vi:
       admin:
         title: "Quản trị"
     badges:
-      earned_n_times:
-        other: "Đã giành được huy hiệu này %{count} lần"
       granted_on: "Đã trao %{date}"
       others_count:
         other: "Đã trao cho những người khác %{count} lần"
@@ -4668,11 +4689,11 @@ vi:
       favorite_max_not_reached: "Đánh dấu huy hiệu này là yêu thích"
       favorite_count: "%{count}/%{max} huy hiệu được đánh dấu yêu thích"
     download_calendar:
-      title: "Tải xuống lịch"
+      title: "Thêm vào lịch"
+      calendar: "Lịch"
       save_ics: "Tải xuống tệp .ics"
       save_google: "Thêm vào lịch Google"
       remember: "Đừng hỏi tôi nữa"
-      remember_explanation: "(bạn có thể thay đổi tùy chọn này trong prefs người dùng của mình)"
       download: "Tải xuống"
       default_calendar: "Lịch mặc định"
       default_calendar_instruction: "Xác định lịch nào sẽ được sử dụng khi ngày tháng được lưu"
@@ -5089,63 +5110,6 @@ vi:
           other: "Đầu vào phải lớn hơn %{count}."
         pattern_mismatch: "Vui lòng tuân thủ định dạng được yêu cầu."
         bad_input: "Vui lòng nhập một giá trị hợp lệ."
-    table_builder:
-      title: "Trình tạo bảng"
-      modal:
-        title: "Trình tạo bảng"
-        create: "Tạo bảng"
-        help:
-          title: "Sử dụng Trình chỉnh sửa bảng tính"
-          enter_key: "Nhập"
-          tab_key: "Tab"
-          new_row: "ở cuối hàng để chèn một hàng mới."
-          new_col: "ở cuối cột để chèn một cột mới."
-          options: "Nhấn chuột phải vào các ô để truy cập thêm tùy chọn trong menu thả xuống."
-        confirm_close: "Bạn có chắc muốn đóng trình tạo bảng? Bất kỳ thay đổi nào chưa được lưu sẽ bị mất."
-      edit:
-        btn_edit: "Sửa bảng"
-        modal:
-          title: "Sửa bảng"
-          cancel: "hủy"
-          create: "Lưu lại"
-          reason: "Lý do bạn sửa"
-          trigger_reason: "Thêm lý do chỉnh sửa"
-        default_edit_reason: "Cập nhật bảng bằng Trình chỉnh sửa bảng"
-      default_header:
-        col_1: "Cột 1"
-        col_2: "Cột 2"
-        col_3: "Cột 3"
-        col_4: "Cột 4"
-      spreadsheet:
-        no_records_found: "Không tìm thấy giá trị"
-        show: "Hiển thị"
-        entries: "các mục"
-        about: "Giới thiệu"
-        prompts:
-          delete_selected_rows: "Bạn có chắc muốn xóa các hàng đã chọn?"
-          delete_selected_cols: "Bạn có chắc muốn xóa các cột đã chọn?"
-          will_destroy_merged_cells: "Thao tác này sẽ xóa bỏ mọi ô đã được hợp nhất hiện có. Bạn chắc chứ?"
-          will_clear_search_results: "Hành động này sẽ xóa bỏ tất cả các ô đã gộp hiện có. Bạn chắc chứ?"
-          conflicts_with_merged_cells: "Có xung đột với một ô đã được gộp khác"
-        invalid_merge_props: "Các thuộc tính gộp không hợp lệ"
-        cells_already_merged: "Ô đã được hợp nhất"
-        no_cells_selected: "Không có ô nào được chọn."
-        context_menu:
-          row:
-            before: "Chèn một hàng mới trước"
-            after: "Chèn một hàng mới sau"
-            delete: "Xóa các hàng đã chọn"
-          col:
-            before: "Chèn một cột trước"
-            after: "Chèn một cột sau"
-            delete: "Xóa các cột đã chọn"
-            rename: "Đổi tên cột này"
-          order:
-            ascending: "Sắp xếp thứ tự tăng dần"
-            descending: "Sắp xếp thứ tự giảm dần"
-          copy: "Sao chép..."
-          paste: "Dán..."
-          save: "Lưu dưới dạng..."
     powered_by_discourse: "Vận hành nhờ Discourse"
     safari_15_warning: "Trình duyệt của bạn sắp không còn tương thích với cộng đồng này. Để tiếp tục tham gia, vui lòng cập nhật trình duyệt của bạn hoặc <a href='%{url}'>tìm hiểu thêm</a>."
     filter:
@@ -5342,6 +5306,68 @@ vi:
           header_description: "Hãy cung cấp thông tin ở đây về trang web này và nhóm của bạn để mọi người có thể hiểu cộng đồng của bạn là gì, ai đứng sau nó và cách liên hệ với bạn trong trường hợp có vấn đề. Thông tin này sẽ được hiển thị trên trang <a href='%{basePath}/about'>Giới thiệu</a>của trang web của bạn."
         developer:
           title: "Nhà phát triển"
+        mcp:
+          tabs:
+            access: "Truy cập"
+            activity: "Hoạt động"
+          overview:
+            status: "Trạng thái"
+          access:
+            title: "Truy cập"
+            group: "Nhóm"
+            groups: "Nhóm"
+            actions: "Hành động"
+            edit: "Sửa"
+            delete: "Xóa"
+          primitives:
+            group_by: "Nhóm theo"
+            group_by_options:
+              scope: "Phạm vi"
+              kind: "Loại"
+            kind: "Loại"
+            scope: "Phạm vi"
+            scopes: "Phạm vi"
+          clients:
+            actions: "Hành động"
+            block: "Khóa"
+            presets:
+              custom: "Tùy biến"
+            automatic: "Tự động"
+          authorizations:
+            user: "Người dùng"
+            last_used: "Lần cuối sử dụng"
+            status: "Trạng thái"
+            actions: "Hành động"
+          activity:
+            outcome: "Kết quả"
+            time: "Thời gian"
+            user: "Người dùng"
+            duration: "Thời hạn"
+          values:
+            server_status:
+              disabled: "Vô hiệu hóa"
+            client_trust:
+              approved: "Đã phê duyệt"
+            authorization_status:
+              active: "Hoạt động"
+              revoked: "Đã thu hồi"
+            activity_outcome:
+              success: "Thành công"
+              error: "Lỗi"
+            primitive_state:
+              enabled: "Đã bật"
+              disabled: "Vô hiệu hóa"
+            primitive_kind:
+              all: "Tất cả các loại"
+              resource: "Nguồn"
+            primitive_risk:
+              read: "Chỉ đọc"
+              moderation: "Người kiểm duyệt"
+            filter:
+              all: "Tất cả"
+          never: "Không bao giờ"
+          actions:
+            revoke: "Hủy chấp thuận"
         experimental:
           title: "Thí nghiệm"
           header_description: "Bật hoặc tắt các tính năng thử nghiệm cho trang web của bạn, hầu hết các tính năng này có thể được kiểm soát theo nhóm."
@@ -5789,6 +5815,7 @@ vi:
           pages: "Trang"
           visitors: "Khách ghé thăm"
         filters:
+          language: "Ngôn ngữ"
           ip: "Địa chỉ IP"
         metrics:
           bounce_rate:
@@ -5915,6 +5942,7 @@ vi:
           series:
             anonymous: "Ẩn danh"
             crawlers: "Trình thu thập thông tin"
+          crawler_learn_more: "Tìm hiểu thêm"
         period:
           last_7_days: "7 ngày qua"
           last_30_days: "30 ngày qua"
@@ -6839,8 +6867,8 @@ vi:
           upload: "Tải lên"
           select_component: "Chọn một thành phần…"
           unsaved_changes_alert: "Bạn chưa lưu các thay đổi của mình, bạn có muốn loại bỏ chúng và tiếp tục không?"
-          unsaved_parent_themes: "Bạn chưa gán thành phần cho các chủ đề, bạn có muốn tiếp tục không?"
           discard: "Hủy bỏ"
+          leave: "Rời nhóm"
           stay: "Ở lại"
           css_html: "Mã tùy chỉnh"
           edit_css_html: "Chỉnh sửa mã"
@@ -7936,13 +7964,12 @@ vi:
           multiselect: "Chọn nhiều"
       site_text:
         description: "Bạn có thể tùy chỉnh bất kỳ văn bản nào trên diễn đàn của mình."
-        search: "Tìm kiếm nội dung bạn muốn sửa"
+        search_label: "Tìm"
+        theme_disabled: "Vô hiệu hóa"
+        filters: "Bộ lọc"
         title: "Văn bản trang web"
         edit: "Sửa"
-        revert: "Hoàn nguyên thay đổi"
         revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
-        go_back: "Quay lại tìm kiếm"
-        recommended: "Bạn nên tùy biến các nội dung sau đây cho phù hợp với nhu cầu:"
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         show_outdated: "Chỉ hiển thị các thông tin đã lỗi thời/không hợp lệ."
         show_untranslated: "Chỉ hiển thị các phần chưa được dịch"

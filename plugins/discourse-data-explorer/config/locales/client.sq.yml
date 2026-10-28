@@ -7,14 +7,9 @@
 sq:
   js:
     explorer:
-      default_query: "Paracaktuar"
       or: "ose"
-      create: "Krijo"
       ai:
         generate: "Gjenero"
-        optional: "opsionale"
-      import:
-        label: "Importo"
       help:
         label: "Ndihmë"
       types:
@@ -25,7 +20,9 @@ sq:
       result_count:
         one: "%{count} rezultat."
         other: "%{count} rezultate."
+      name: "Emri"
       query_groups: "Grupet"
+      query_tags: "Etiketat"
       query_description: "Përshkrimi"
       reset_params: "Rivendosni"
     discourse_workflows:

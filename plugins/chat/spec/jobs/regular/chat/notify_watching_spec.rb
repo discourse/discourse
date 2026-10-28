@@ -185,6 +185,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
           args
         end
       end
+
       it "Allows for changes to the translation args" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:chat_notification_translation_args, &modifier_block)
@@ -202,7 +203,9 @@ RSpec.describe Jobs::Chat::NotifyWatching do
     end
 
     context "with push_notification_filter registered to block push notifications" do
-      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+      let!(:original_filters) { DiscoursePluginRegistry._raw_push_notification_filters.dup }
+
+      after { DiscoursePluginRegistry._raw_push_notification_filters.replace(original_filters) }
 
       it "doesn't send notification alert via MessageBus" do
         Plugin::Instance.new.register_push_notification_filter { |user, payload| false }

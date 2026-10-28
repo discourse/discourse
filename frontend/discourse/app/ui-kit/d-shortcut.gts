@@ -10,7 +10,6 @@ import {
   type ShortcutKey,
 } from "discourse/lib/shortcut-format";
 import { capabilities } from "discourse/services/capabilities";
-import { notEq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 interface KbdSignature {
@@ -31,9 +30,9 @@ interface KbdSignature {
 const Kbd: TOC<KbdSignature> = <template>
   {{#if @keys.length}}
     <kbd
+      aria-hidden={{if @hidden "true"}}
       class="d-shortcut"
       dir="ltr"
-      aria-hidden={{if @hidden "true"}}
       ...attributes
     >
       {{#each @keys key="key" as |key|}}
@@ -43,7 +42,7 @@ const Kbd: TOC<KbdSignature> = <template>
             (if key.glyph "d-shortcut__key--glyph")
           }}
         >
-          {{#if (notEq key.name key.label)}}
+          {{#if (neq key.name key.label)}}
             <span aria-hidden="true">{{key.label}}</span>
             <span class="sr-only">{{key.name}}</span>
           {{else}}
@@ -156,7 +155,7 @@ export default class DShortcut extends Component<DShortcutSignature> {
     {{#if (has-block)}}
       {{yield this.parts}}
     {{else}}
-      <Kbd @keys={{this.formatted.keys}} ...attributes />
+      <Kbd ...attributes @keys={{this.formatted.keys}} />
     {{/if}}
   </template>
 }

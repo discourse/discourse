@@ -10,13 +10,41 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
+import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 import I18n, { i18n } from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
+
+function renderEngine(context) {
+  return render(
+    <template>
+      <Form
+        @data={{context.configuration}}
+        @onRegisterApi={{context.registerApi}}
+        as |form transientData|
+      >
+        <PropertyEngineConfigurator
+          @configuration={{transientData}}
+          @connections={{context.connections}}
+          @form={{form}}
+          @formApi={{context.formApi}}
+          @node={{context.node}}
+          @nodes={{context.nodes}}
+          @nodeType={{context.nodeType}}
+          @nodeTypes={{context.nodeTypes}}
+          @onChange={{context.onChange}}
+          @schema={{context.schema}}
+          @session={{context.session}}
+        />
+      </Form>
+    </template>
+  );
+}
 
 module("Integration | Component | workflows property engine", function (hooks) {
   setupRenderingTest(hooks);
@@ -58,24 +86,41 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await fillIn("input", "Hello");
 
     assert.dom("input").hasValue("Hello");
     assert.dom("input").isFocused();
+  });
+
+  test("picks emojis for emoji fields", async function (assert) {
+    pretender.get("/emojis.json", () =>
+      response(emojisFixtures["/emojis.json"])
+    );
+    pretender.get("/emojis/search-aliases.json", () => response([]));
+
+    this.setProperties({
+      configuration: { reaction: null },
+      formApi: null,
+      nodeType: "action:topic",
+      schema: {
+        reaction: {
+          type: "emoji",
+          no_data_expression: true,
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await renderEngine(this);
+
+    await click(".btn-emoji");
+    await emojiPicker(".emoji-picker").select("grinning");
+
+    assert.strictEqual(this.formApi.get("reaction"), "grinning");
   });
 
   test("validates optional integer fields that do not support expressions", async function (assert) {
@@ -96,24 +141,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await this.formApi.submit();
     assert
@@ -155,24 +183,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-variable-input").includesText("post_number");
 
@@ -201,20 +212,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".form-kit__container-description")
@@ -247,20 +245,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".fk-d-tooltip__trigger").doesNotExist();
     assert
@@ -301,24 +286,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom("input[type='checkbox']").isChecked();
 
@@ -356,19 +324,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".category-selector").exists();
     assert.dom("input[type='checkbox']").doesNotExist();
@@ -453,25 +409,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await waitFor("input[name='trigger_on_first_seen']:checked");
 
@@ -545,24 +483,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const categoryChooser = selectKit(".category-chooser");
     const header = categoryChooser.header();
@@ -598,24 +519,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const categoryChooser = selectKit(".category-chooser");
     const header = categoryChooser.header();
@@ -666,25 +570,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const groupSelector = selectKit(".combo-box");
     const header = groupSelector.header();
@@ -745,26 +631,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const groupSelector = selectKit(".combo-box");
 
@@ -805,19 +672,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     let [keyInput] = findAll(
       ".workflows-property-engine__collection-row input"
@@ -857,24 +712,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-property-engine__collection-row").doesNotExist();
     assert
@@ -922,24 +760,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await click(".workflows-property-engine__add-attrs-btn");
     await waitFor(".dropdown-menu__item .btn-transparent");
@@ -1000,24 +821,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-property-engine__collection-row").doesNotExist();
 
@@ -1087,24 +891,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const row = ".workflows-property-engine__collection-row";
     const styleField = '[data-name="buttons.values.0.style"]';
@@ -1202,25 +989,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-            @onChange={{this.onChange}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const moveItemSelector = (direction, position) =>
       `[aria-label="${i18n(
@@ -1304,19 +1073,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-property-engine__collection-order-controls")
@@ -1352,19 +1109,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-property-engine__collection-delete")
@@ -1401,19 +1146,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-property-engine__collection-delete").hasAria(
       "label",
@@ -1460,19 +1193,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const addButtons = findAll(".form-kit__section .btn-default");
 
@@ -1588,28 +1309,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       ],
     };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @connections={{this.connections}}
-            @node={{this.node}}
-            @nodes={{this.nodes}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await click(".workflows-empty-state .btn-primary");
 
@@ -1644,6 +1344,23 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("condition builder supports declared integer and array fields", async function (assert) {
+    this.session.outputSchemas = {
+      trigger: [
+        {
+          type: "object",
+          properties: {
+            post: {
+              type: "object",
+              properties: {
+                id: { type: "integer" },
+                mixed: { type: ["integer", "string"] },
+                tags: { type: "array", items: { type: "string" } },
+              },
+            },
+          },
+        },
+      ],
+    };
     this.setProperties({
       configuration: { conditions: [] },
       formApi: null,
@@ -1671,35 +1388,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
           targetClientId: "branch",
         },
       ],
-      nodeTypes: [
-        {
-          name: "trigger:sample",
-          versions: {
-            "1.0": {
-              output_contracts: [
-                {
-                  schema: {
-                    type: "object",
-                    properties: {
-                      post: {
-                        type: "object",
-                        properties: {
-                          id: { type: "integer" },
-                          mixed: { type: ["integer", "string"] },
-                          tags: {
-                            type: "array",
-                            items: { type: "string" },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        },
-      ],
       nodeType: "condition:if",
       schema: {
         conditions: {
@@ -1712,28 +1400,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @connections={{this.connections}}
-            @node={{this.node}}
-            @nodes={{this.nodes}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await click(".workflows-empty-state .btn-primary");
 
@@ -1780,23 +1447,74 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-url-preview code")
       .includesText("/workflows/webhooks/my-hook");
+  });
+
+  test("summarize placeholders use server output keys and add/remove notify changes", async function (assert) {
+    this.session.outputSchemas = {
+      "summarize-1": [
+        {
+          type: "object",
+          properties: { region: {}, sum_a_total: {}, sum_b_total: {} },
+        },
+      ],
+    };
+    this.setProperties({
+      configuration: {
+        fields_to_summarize: {
+          values: [
+            { aggregation: "sum", field: "a.total", output_field_name: "" },
+            { aggregation: "sum", field: "b.total", output_field_name: "" },
+          ],
+        },
+      },
+      node: { clientId: "summarize-1", type: "action:summarize" },
+      nodeType: "action:summarize",
+      onChange: sinon.spy(),
+      schema: {
+        fields_to_summarize: {
+          type: "fixed_collection",
+          ui: { control: "summarize_aggregations" },
+          type_options: { multiple_values: true },
+          options: [
+            {
+              name: "values",
+              values: {
+                aggregation: {
+                  type: "options",
+                  options: ["sum"],
+                  no_data_expression: true,
+                },
+                field: { type: "string", no_data_expression: true },
+                output_field_name: {
+                  type: "string",
+                  no_data_expression: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    await renderEngine(this);
+
+    assert.deepEqual(
+      findAll(".workflows-summarize-row__control--derived input").map(
+        (input) => input.placeholder
+      ),
+      ["sum_a_total", "sum_b_total"]
+    );
+
+    await click(".workflows-property-engine__collection-delete");
+    assert.true(this.onChange.calledOnce);
+
+    await click("button.btn-default:has(.d-icon-plus)");
+    assert.true(this.onChange.calledTwice);
   });
 
   test("renders form trigger test and production URL controls", async function (assert) {
@@ -1833,20 +1551,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-url-preview-mode__button").exists({ count: 2 });
     assert
@@ -1900,20 +1605,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-url-preview-mode__button").exists({ count: 2 });
     assert
@@ -1950,24 +1642,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".form-kit__control-icon").exists();
     assert.dom(".form-kit__control-icon").hasAttribute("data-value", "gear");
@@ -2004,24 +1679,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-property-engine__dynamic-hint").doesNotExist();
 
@@ -2048,19 +1706,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom("select").hasValue("or");
   });
@@ -2116,25 +1762,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const selector = selectKit(".combo-box");
     assert.strictEqual(selector.header().value(), "2");
@@ -2189,20 +1817,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-property-engine__select-with-action > .btn")
@@ -2214,7 +1829,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert
       .dom(".workflows-property-engine__select-with-action > .btn")
-      .hasText("Open workflow");
+      .hasAttribute("title", "Open workflow")
+      .hasAria("label", "Open workflow");
 
     await click(".workflows-property-engine__select-with-action > .btn");
 
@@ -2308,26 +1924,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const selector = selectKit(".combo-box");
     await selector.expand();
@@ -2384,20 +1981,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const selector = selectKit(".combo-box");
 
@@ -2462,26 +2046,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const selector = selectKit(".multi-select");
     await selector.expand();
@@ -2519,24 +2084,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const selector = selectKit(".multi-select");
 
@@ -2592,24 +2140,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const row = ".workflows-property-engine__collection-row";
 
@@ -2660,19 +2191,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".form-kit__control-toggle").doesNotExist();
     assert.dom(".workflows-variable-input").includesText("enabled");
@@ -2699,24 +2218,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await select(
       ".workflows-property-engine__collection-row select",
@@ -2753,24 +2255,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const typeSelect = ".workflows-property-engine__collection-row select";
 
@@ -2813,24 +2298,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       },
     });
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await click(findAll(".workflows-property-engine__collection-delete")[0]);
 

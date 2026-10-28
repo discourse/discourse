@@ -20,6 +20,7 @@ describe "Discourse Livestream - Livestream with Zoom webinar" do
 
   context "when user is signed in" do
     before { sign_in(current_user) }
+
     it "shows a Join Zoom button for livestream events which have a Zoom location" do
       topic_livestream.create_livestream_event_topic(
         composer,

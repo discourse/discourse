@@ -6,7 +6,6 @@ import TopicStatus from "discourse/components/topic-status";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
@@ -65,17 +64,17 @@ export default class PostListItemDetails extends Component {
   <template>
     <div class="post-list-item__details">
       <div class="stream-topic-title">
-        <TopicStatus @topic={{@post}} @disableActions={{true}} />
+        <TopicStatus @disableActions={{true}} @topic={{@post}} />
         <span class="title">
           {{#if this.url}}
             <a
-              href={{getURL this.url}}
               aria-label={{this.titleAriaLabel}}
+              href={{getURL this.url}}
             >{{this.topicTitle}}</a>
           {{else if @isDraft}}
             <DButton
-              @action={{fn @resumeDraft @post}}
               class="btn-transparent draft-title"
+              @action={{fn @resumeDraft @post}}
             >
               {{or this.draftTitle (i18n "drafts.dropdown.untitled")}}
             </DButton>

@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 114
+  # Bump only when theme JS output changes; it rebakes every theme on every site. Plugin builds
+  # also key on the processor's digest, so JS changes there rebuild them without a bump.
+  BASE_COMPILER_VERSION = 121
 
   BUNDLE =
     PrecompiledBundle.new(
       dir: "tmp/asset-processor",
       filename_prefix: "asset-processor",
       dependency_globs: %w[
-        node_modules/.pnpm/lock.yaml
+        pnpm-lock.yaml
         frontend/asset-processor/**/*.{js,mjs}
         app/assets/stylesheets/variable-renames.json
         frontend/discourse/lib/babel-transform-module-renames.js
@@ -41,6 +43,7 @@ class AssetProcessor
         "The file '#{file_path}' uses the deprecated `.js.es6` extension. Use `.js` instead.",
         {
           id: "discourse.es6-extension",
+          reportAtCallSite: true,
           url: "https://meta.discourse.org/t/398894",
         }
       );
@@ -154,6 +157,12 @@ class AssetProcessor
 
   def self.ember_version
     v8_call("emberVersion")
+  end
+
+  # Identifies the processor source loaded into the V8 context
+  def self.digest
+    v8
+    BUNDLE.loaded_digest
   end
 
   def initialize(skip_module: false)

@@ -143,6 +143,11 @@ sq:
         sort:
           relevance: "Rëndësia"
           latest: "Më të fundit"
+      channel_list:
+        options:
+          filter: "Filtro"
+        filter:
+          mentions: "Përmendje"
       incoming_webhooks:
         back: "Kthehu mbrapa"
         description: "Përshkrimi"

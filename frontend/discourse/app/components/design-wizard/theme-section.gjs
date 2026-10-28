@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -51,16 +51,20 @@ class ThemeCard extends Component {
   <template>
     <div class="design-wizard__theme-card-wrapper">
       <label
-        class="design-wizard__theme-card {{if this.selected '--selected'}}"
+        class={{dConcatClass
+          "design-wizard__theme-card"
+          (if this.selected "--selected")
+          (unless this.currentScreenshotUrl "--without-screenshot")
+        }}
         data-theme-id={{@theme.id}}
       >
         <input
-          type="radio"
-          name="design-wizard-theme"
-          value={{@theme.id}}
           checked={{this.selected}}
-          disabled={{@applying}}
           class="sr-only"
+          disabled={{@applying}}
+          name="design-wizard-theme"
+          type="radio"
+          value={{@theme.id}}
           {{on "change" (fn @onSelect @theme.id)}}
         />
         {{#if (and this.selected @applying)}}
@@ -74,24 +78,24 @@ class ThemeCard extends Component {
             {{i18n "design_wizard.theme.selected"}}
           </span>
         {{/if}}
-        <span
-          class="design-wizard__theme-screenshot
-            {{if this.showSkeleton '--loading'}}"
-        >
-          {{#if this.currentScreenshotUrl}}
+        {{#if this.currentScreenshotUrl}}
+          <span
+            class="design-wizard__theme-screenshot
+              {{if this.showSkeleton '--loading'}}"
+          >
             <img
+              alt=""
               class="design-wizard__theme-screenshot-image"
-              src={{this.currentScreenshotUrl}}
-              width={{SCREENSHOT_WIDTH}}
-              height={{SCREENSHOT_HEIGHT}}
               decoding="async"
               fetchpriority="high"
-              alt=""
+              height={{SCREENSHOT_HEIGHT}}
+              src={{this.currentScreenshotUrl}}
+              width={{SCREENSHOT_WIDTH}}
               {{on "load" this.screenshotSettled}}
               {{on "error" this.screenshotSettled}}
             />
-          {{/if}}
-        </span>
+          </span>
+        {{/if}}
         <span class="design-wizard__theme-name">{{@theme.name}}</span>
         <span class="design-wizard__theme-description">
           {{@theme.description}}
@@ -108,18 +112,18 @@ const DesignWizardThemeSection = <template>
     </p>
   {{/if}}
   <fieldset
-    class="design-wizard__theme-cards"
     aria-busy={{if @applying "true"}}
+    class="design-wizard__theme-cards"
   >
     <legend class="sr-only">
       {{i18n "design_wizard.sections.theme"}}
     </legend>
     {{#each @themes as |theme|}}
       <ThemeCard
-        @theme={{theme}}
-        @selectedThemeId={{@selectedThemeId}}
         @applying={{@applying}}
         @onSelect={{@onSelect}}
+        @selectedThemeId={{@selectedThemeId}}
+        @theme={{theme}}
       />
     {{/each}}
   </fieldset>

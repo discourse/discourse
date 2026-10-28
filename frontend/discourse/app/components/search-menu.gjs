@@ -26,14 +26,17 @@ import {
   searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
+import { i18n } from "discourse-i18n";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -46,6 +49,7 @@ export default class SearchMenu extends Component {
   @service currentUser;
   @service siteSettings;
   @service appEvents;
+  @service a11y;
 
   @tracked loading = false;
   @tracked isPMInboxCleared = false;
@@ -57,7 +61,11 @@ export default class SearchMenu extends Component {
 
   searchInputId = this.args.searchInputId ?? "search-term";
   closeWhenHidden = modifier((_element, [hidden]) => hidden && this.close());
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _debouncer = null;
+
+  /** @type {(Promise<unknown> & { abort: () => void }) | null} */
   _activeSearch = null;
 
   willDestroy() {
@@ -74,27 +82,6 @@ export default class SearchMenu extends Component {
       this.args.searchInputPlaceholder || "search.title",
       { location: this.args.location }
     );
-  }
-
-  @bind
-  setupEventListeners() {
-    // We only need to register click events when the search menu is rendered outside of the header.
-    // The header handles clicking outside.
-    if (!this.args.inlineResults) {
-      document.addEventListener("mousedown", this.onDocumentPress);
-      document.addEventListener("touchend", this.onDocumentPress);
-    }
-  }
-
-  @bind
-  onDocumentPress(event) {
-    if (!this.menuPanelOpen) {
-      return;
-    }
-
-    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
-      this.close();
-    }
   }
 
   get searchInputWrapperClasses() {
@@ -164,6 +151,35 @@ export default class SearchMenu extends Component {
       this.inPMInboxContext ||
       searchTermScopesToPMs(this.search.activeGlobalSearchTerm)
     );
+  }
+
+  get displayMenuPanelResults() {
+    if (this.args.inlineResults || this.args.hideResults) {
+      return false;
+    }
+
+    return this.menuPanelOpen;
+  }
+
+  @bind
+  setupEventListeners() {
+    // We only need to register click events when the search menu is rendered outside of the header.
+    // The header handles clicking outside.
+    if (!this.args.inlineResults) {
+      document.addEventListener("mousedown", this.onDocumentPress);
+      document.addEventListener("touchend", this.onDocumentPress);
+    }
+  }
+
+  @bind
+  onDocumentPress(event) {
+    if (!this.menuPanelOpen) {
+      return;
+    }
+
+    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
+      this.close();
+    }
   }
 
   @action
@@ -238,21 +254,19 @@ export default class SearchMenu extends Component {
     this.close();
   }
 
-  get displayMenuPanelResults() {
-    if (this.args.inlineResults || this.args.hideResults) {
-      return false;
-    }
-
-    return this.menuPanelOpen;
-  }
-
   @bind
   clearSearch(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.search.activeGlobalSearchTerm = "";
-    this.search.focusSearchInput();
-    this.triggerSearch();
+    applyBehaviorTransformer(
+      "search-menu-clear-search",
+      () => {
+        this.search.activeGlobalSearchTerm = "";
+        this.search.focusSearchInput();
+        this.triggerSearch();
+      },
+      { location: this.args.location }
+    );
   }
 
   @action
@@ -354,6 +368,7 @@ export default class SearchMenu extends Component {
     }
 
     this.suggestionKeyword = false;
+    const announceOutcome = this.typeFilter !== DEFAULT_TYPE_FILTER;
 
     if (!this.search.activeGlobalSearchTerm) {
       this.search.noResults = false;
@@ -367,23 +382,34 @@ export default class SearchMenu extends Component {
       this.search.results = {};
       this.loading = false;
       this.invalidTerm = true;
+
+      if (announceOutcome) {
+        this.a11y.announce(i18n("search.too_short"), "polite");
+      }
     } else {
       this.loading = true;
       this.invalidTerm = false;
 
+      const searchContext = this.searchContext;
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
         typeFilter: this.typeFilter,
         fullSearchUrl: this.fullSearchUrl,
-        searchContext: this.searchContext,
+        searchContext,
       });
 
       this._activeSearch
         .then((results) => {
-          // we ensure the current search term is the one used
-          // when starting the query
-          if (results) {
+          if (
+            results &&
+            searchContext?.type === this.searchContext?.type &&
+            searchContext?.id === this.searchContext?.id
+          ) {
             this.search.noResults = results.resultTypes.length === 0;
             this.search.results = results;
+
+            if (announceOutcome) {
+              this.#announceResults(results);
+            }
           }
         })
         .catch(popupAjaxError)
@@ -447,6 +473,20 @@ export default class SearchMenu extends Component {
     }
   }
 
+  #announceResults(results) {
+    const count = results.resultTypes.reduce(
+      (total, type) => total + type.results.length,
+      0
+    );
+
+    this.a11y.announce(
+      count
+        ? i18n("search.results_announcement", { count })
+        : i18n("search.no_results"),
+      "polite"
+    );
+  }
+
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
@@ -464,19 +504,19 @@ export default class SearchMenu extends Component {
         >
           {{#if (and this.search.inTopicContext this.showSearchContext)}}
             <DButton
+              class="btn-default btn-small search-context"
+              @action={{this.clearTopicContext}}
               @icon="xmark"
               @label="search.in_this_topic"
               @title="search.in_this_topic_tooltip"
-              @action={{this.clearTopicContext}}
-              class="btn-default btn-small search-context"
             />
           {{else if (and this.inPMInboxContext this.showSearchContext)}}
             <DButton
+              class="btn-default btn-small search-context"
+              @action={{this.clearPMInboxContext}}
               @icon="xmark"
               @label="search.in_messages"
               @title="search.in_messages_tooltip"
-              @action={{this.clearPMInboxContext}}
-              class="btn-default btn-small search-context"
             />
           {{/if}}
 
@@ -486,19 +526,19 @@ export default class SearchMenu extends Component {
           />
 
           <SearchTerm
-            @location={{@location}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @typeFilter={{this.typeFilter}}
-            @updateTypeFilter={{this.updateTypeFilter}}
-            @triggerSearch={{this.triggerSearch}}
-            @fullSearch={{this.fullSearch}}
+            @autofocus={{@autofocusInput}}
             @clearPMInboxContext={{this.clearPMInboxContext}}
             @clearTopicContext={{this.clearTopicContext}}
             @closeSearchMenu={{this.close}}
-            @openSearchMenu={{this.open}}
-            @autofocus={{@autofocusInput}}
+            @fullSearch={{this.fullSearch}}
             @inputId={{this.searchInputId}}
             @inputPlaceholder={{this.searchInputPlaceholder}}
+            @location={{@location}}
+            @openSearchMenu={{this.open}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @triggerSearch={{this.triggerSearch}}
+            @typeFilter={{this.typeFilter}}
+            @updateTypeFilter={{this.updateTypeFilter}}
           />
 
           {{#if this.loading}}
@@ -523,44 +563,44 @@ export default class SearchMenu extends Component {
 
       {{#if @inlineResults}}
         <Results
-          @location={{@location}}
-          @searchInputId={{this.searchInputId}}
-          @loading={{this.loading}}
+          @clearPMInboxContext={{this.clearPMInboxContext}}
+          @clearSearch={{this.clearSearch}}
+          @clearTopicContext={{this.clearTopicContext}}
+          @closeSearchMenu={{this.close}}
+          @inPMInboxContext={{this.inPMInboxContext}}
           @invalidTerm={{this.invalidTerm}}
+          @isPMOnly={{this.isPMOnly}}
+          @loading={{this.loading}}
+          @location={{@location}}
+          @openAdvancedSearch={{this.openAdvancedSearch}}
+          @searchInputId={{this.searchInputId}}
+          @searchTermChanged={{this.searchTermChanged}}
+          @searchTopics={{this.includesTopics}}
           @suggestionKeyword={{this.suggestionKeyword}}
           @suggestionResults={{this.suggestionResults}}
-          @searchTopics={{this.includesTopics}}
-          @inPMInboxContext={{this.inPMInboxContext}}
-          @clearPMInboxContext={{this.clearPMInboxContext}}
-          @isPMOnly={{this.isPMOnly}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
-          @closeSearchMenu={{this.close}}
-          @searchTermChanged={{this.searchTermChanged}}
-          @clearTopicContext={{this.clearTopicContext}}
-          @openAdvancedSearch={{this.openAdvancedSearch}}
-          @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
         <MenuPanel class="search-menu-panel">
           <Results
-            @location={{@location}}
-            @searchInputId={{this.searchInputId}}
-            @loading={{this.loading}}
+            @clearPMInboxContext={{this.clearPMInboxContext}}
+            @clearSearch={{this.clearSearch}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @closeSearchMenu={{this.close}}
+            @inPMInboxContext={{this.inPMInboxContext}}
             @invalidTerm={{this.invalidTerm}}
+            @isPMOnly={{this.isPMOnly}}
+            @loading={{this.loading}}
+            @location={{@location}}
+            @openAdvancedSearch={{this.openAdvancedSearch}}
+            @searchInputId={{this.searchInputId}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @searchTopics={{this.includesTopics}}
             @suggestionKeyword={{this.suggestionKeyword}}
             @suggestionResults={{this.suggestionResults}}
-            @searchTopics={{this.includesTopics}}
-            @inPMInboxContext={{this.inPMInboxContext}}
-            @clearPMInboxContext={{this.clearPMInboxContext}}
-            @isPMOnly={{this.isPMOnly}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @closeSearchMenu={{this.close}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
-            @openAdvancedSearch={{this.openAdvancedSearch}}
-            @clearSearch={{this.clearSearch}}
           />
         </MenuPanel>
       {{/if}}

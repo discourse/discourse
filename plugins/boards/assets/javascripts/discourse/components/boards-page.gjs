@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import Category from "discourse/models/category";
-import { eq, or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -15,18 +14,31 @@ import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import BoardsBoardSettings from "./modal/boards-board-settings";
-
-function boardCategories(board) {
-  return (board.category_ids || [])
-    .map((id) => Category.findById(id))
-    .filter(Boolean);
-}
+import { loadCategories } from "../lib/boards-categories.js";
+import BoardsBoardSettings from "./modal/boards-board-settings.gjs";
 
 export default class BoardsPage extends Component {
   @service modal;
   @service router;
   @service toasts;
+
+  get statusOptions() {
+    return {
+      status: [
+        { value: "all", label: i18n("boards.status.all") },
+        {
+          value: "open",
+          label: i18n("boards.status.open"),
+          filterFn: (board) => !board.archived,
+        },
+        {
+          value: "archived",
+          label: i18n("boards.status.archived"),
+          filterFn: (board) => board.archived,
+        },
+      ],
+    };
+  }
 
   @action
   openNewBoardModal() {
@@ -67,30 +79,35 @@ export default class BoardsPage extends Component {
   <template>
     <div class="discourse-boards-manage">
       <DPageHeader
-        @titleLabel={{i18n "boards.manage.title"}}
         @descriptionLabel={{i18n "boards.manage.description"}}
         @hideTabs={{true}}
+        @titleLabel={{i18n "boards.manage.title"}}
       >
         <:actions as |actions|>
           {{#if @canManageBoards}}
             <actions.Primary
+              class="btn-primary discourse-boards-manage__new-board"
               @action={{this.openNewBoardModal}}
               @icon="plus"
               @label="boards.manage.new"
-              class="btn-primary discourse-boards-manage__new-board"
             />
           {{/if}}
         </:actions>
       </DPageHeader>
 
       <DFilterControls
+        @additionalFiltersActive={{true}}
         @array={{@boards}}
-        @searchableProps={{array "name"}}
-        @textFilterQueryParam="filter"
+        @defaultDropdownValue={{hash status="open"}}
+        @dropdownFilterQueryParams={{hash status="status"}}
+        @dropdownOptions={{this.statusOptions}}
         @inputPlaceholder={{i18n "boards.filter_boards"}}
-        @noResultsMessage={{i18n "boards.filter_boards_no_results"}}
-        @showCustomEmptyState={{true}}
         @minItemsForFilter={{1}}
+        @noResultsMessage={{i18n "boards.filter_boards_no_results"}}
+        @searchableProps={{array "name"}}
+        @showCustomEmptyState={{true}}
+        @showResetButton={{false}}
+        @textFilterQueryParam="filter"
       >
         <:content as |filteredBoards|>
           <div class="discourse-boards-boards-grid">
@@ -98,9 +115,9 @@ export default class BoardsPage extends Component {
               <div class="discourse-boards-board-card">
                 <div class="discourse-boards-board-card__header">
                   <LinkTo
-                    @route="boardsBoard"
-                    @models={{array board.slug board.id}}
                     class="discourse-boards-board-card__name"
+                    @models={{array board.slug board.id}}
+                    @route="boardsBoard"
                   >
                     {{board.fancyTitle}}
                   </LinkTo>
@@ -108,9 +125,16 @@ export default class BoardsPage extends Component {
 
                 {{#if (or board.category_ids.length board.tag_names.length)}}
                   <div class="discourse-boards-board-card__constraints">
-                    {{#each (boardCategories board) as |category|}}
-                      {{dBoundCategoryLink category link=false}}
-                    {{/each}}
+                    <DAsyncContent
+                      @asyncData={{loadCategories}}
+                      @context={{board.category_ids}}
+                    >
+                      <:content as |categories|>
+                        {{#each categories as |category|}}
+                          {{dBoundCategoryLink category link=false}}
+                        {{/each}}
+                      </:content>
+                    </DAsyncContent>
                     {{#if board.tag_names.length}}
                       <div class="list-tags">
                         {{dDiscourseTags null tags=board.tag_names}}
@@ -137,13 +161,23 @@ export default class BoardsPage extends Component {
                 </div>
 
                 <div class="discourse-boards-board-card__footer">
-                  <DUserLink
-                    class="discourse-boards-board-card__creator discourse-boards-badge"
-                    @user={{board.created_by}}
+                  <div
+                    class="discourse-boards-board-card__owners discourse-boards-badge"
                   >
-                    {{i18n "boards.board.created_by"}}
-                    {{dAvatar board.created_by imageSize="micro"}}
-                  </DUserLink>
+                    <span>
+                      {{i18n "boards.board.owners" count=board.owners.length}}
+                    </span>
+                    <span class="discourse-boards-board-card__owner-avatars">
+                      {{#each board.owners as |owner|}}
+                        <DUserLink
+                          class="discourse-boards-board-card__owner"
+                          @user={{owner}}
+                        >
+                          {{dAvatar owner imageSize="micro"}}
+                        </DUserLink>
+                      {{/each}}
+                    </span>
+                  </div>
 
                   <span class="discourse-boards-badge">
                     {{i18n
@@ -176,10 +210,10 @@ export default class BoardsPage extends Component {
             {{#if @canManageBoards}}
               <p>{{i18n "boards.manage.get_started"}}</p>
               <DButton
+                class="btn-primary"
                 @action={{this.openNewBoardModal}}
                 @icon="plus"
                 @label="boards.manage.new"
-                class="btn-primary"
               />
             {{/if}}
           </div>

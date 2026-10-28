@@ -2,8 +2,8 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
+import BufferedProxy from "discourse/lib/buffered-proxy";
 import { deepEqual } from "discourse/lib/object";
 
 export default class AdminCustomizeRobotsTxtController extends Controller {

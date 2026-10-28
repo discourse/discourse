@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Card from "./card";
+import Card from "./card.js";
 
 export default class Column {
   static create(args = {}) {
@@ -28,6 +28,10 @@ export default class Column {
     this.cards = (args.cards || []).map((card) => Card.create(card));
   }
 
+  get fancyTitle() {
+    return this.unicode_title || this.title;
+  }
+
   copy(overrides = {}) {
     return new Column({
       cards: this.cards,
@@ -45,9 +49,5 @@ export default class Column {
       unicode_title: this.unicode_title,
       ...overrides,
     });
-  }
-
-  get fancyTitle() {
-    return this.unicode_title || this.title;
   }
 }

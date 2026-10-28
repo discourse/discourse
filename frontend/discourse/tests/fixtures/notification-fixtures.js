@@ -1,5 +1,10 @@
-import { NOTIFICATION_TYPES } from "./concerns/notification-types";
+import { NOTIFICATION_TYPES } from "./concerns/notification-types.js";
 
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const notificationFixtures = {
   "/notifications": {
     notifications: [

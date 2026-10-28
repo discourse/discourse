@@ -7,9 +7,9 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ChannelDetails from "../../../../components/channel-details";
-import InlineChannelForm from "../../../../components/inline-channel-form";
-import { PROVIDER_LEARN_MORE_URLS } from "../../../../lib/utilities";
+import ChannelDetails from "../../../../components/channel-details.gjs";
+import InlineChannelForm from "../../../../components/inline-channel-form.gjs";
+import { PROVIDER_LEARN_MORE_URLS } from "../../../../lib/utilities.js";
 
 export default class extends Component {
   @service router;
@@ -35,8 +35,8 @@ export default class extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/discourse-chat-integration/providers/{{@controller.model.provider.name}}"
       @label={{this.providerTitle @controller.model.provider}}
+      @path="/admin/plugins/discourse-chat-integration/providers/{{@controller.model.provider.name}}"
     />
 
     {{#if @controller.anyErrors}}
@@ -50,28 +50,28 @@ export default class extends Component {
 
     <div class="admin-detail">
       <DPageSubheader
-        @titleLabel={{i18n "chat_integration.channels_title"}}
         @descriptionLabel={{i18n
           "chat_integration.channels_description"
           provider=this.providerTitle
         }}
         @learnMoreUrl={{this.providerLearnMoreUrl}}
+        @titleLabel={{i18n "chat_integration.channels_title"}}
       >
         <:actions as |actions|>
           <actions.Default
-            @label="chat_integration.view_provider_settings"
-            @title="chat_integration.view_provider_settings"
+            id="view-provider-settings"
             @action={{fn this.configureProvider @controller.model.provider}}
             @icon="gear"
-            id="view-provider-settings"
+            @label="chat_integration.view_provider_settings"
+            @title="chat_integration.view_provider_settings"
           />
           {{#unless @controller.showNewChannelForm}}
             <actions.Primary
-              @label="chat_integration.add_channel"
-              @title="chat_integration.add_channel"
+              id="create-channel"
               @action={{@controller.createChannel}}
               @icon="plus"
-              id="create-channel"
+              @label="chat_integration.add_channel"
+              @title="chat_integration.add_channel"
             />
           {{/unless}}
         </:actions>
@@ -80,9 +80,9 @@ export default class extends Component {
       {{#if @controller.showNewChannelForm}}
         <InlineChannelForm
           @channel={{@controller.newChannel}}
-          @provider={{@controller.model.provider}}
-          @onSave={{@controller.onChannelSaved}}
           @onCancel={{@controller.cancelNewChannel}}
+          @onSave={{@controller.onChannelSaved}}
+          @provider={{@controller.model.provider}}
         />
       {{/if}}
 
@@ -91,12 +91,12 @@ export default class extends Component {
           {{#each @controller.model.channels.content as |channel|}}
             <ChannelDetails
               @channel={{channel}}
-              @provider={{@controller.model.provider}}
-              @refresh={{@controller.refresh}}
-              @test={{@controller.testChannel}}
               @createRule={{@controller.createRule}}
               @editRuleWithChannel={{@controller.editRuleWithChannel}}
+              @provider={{@controller.model.provider}}
+              @refresh={{@controller.refresh}}
               @showError={{@controller.showError}}
+              @test={{@controller.testChannel}}
             />
           {{/each}}
         </div>

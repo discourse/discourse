@@ -95,20 +95,20 @@ export default class RecentSearches extends Component {
       <div class="search-menu-recent">
         {{#each this.entries as |entry|}}
           <AssistantItem
+            @closeSearchMenu={{@closeSearchMenu}}
+            @concatSlug={{true}}
             @icon={{entry.icon}}
             @label={{entry.term}}
-            @slug={{entry.term}}
-            @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
+            @slug={{entry.term}}
             @usage={{if entry.usage entry.usage "recent-search"}}
-            @concatSlug={{true}}
           />
         {{/each}}
 
         <DButton
-          @label="search.clear_recent"
-          @action={{this.clearRecent}}
           class="btn-transparent btn-small clear-recent-searches"
+          @action={{this.clearRecent}}
+          @label="search.clear_recent"
         />
       </div>
     {{/if}}

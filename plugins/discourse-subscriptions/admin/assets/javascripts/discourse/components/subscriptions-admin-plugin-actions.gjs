@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class SubscriptionsAdminPluginActions extends Component {
@@ -77,16 +76,16 @@ export default class SubscriptionsAdminPluginActions extends Component {
     {{#if this.stripeConfigured}}
       {{#if this.campaignEnabled}}
         <@actions.Default
-          @label="discourse_subscriptions.campaign.refresh_campaign"
-          @icon="rotate"
           @action={{this.triggerManualRefresh}}
+          @icon="rotate"
+          @label="discourse_subscriptions.campaign.refresh_campaign"
         />
       {{else if (not this.campaignProductSet)}}
         <@actions.Default
-          @label="discourse_subscriptions.campaign.one_click_campaign"
-          @icon="square-plus"
           @action={{this.createOneClickCampaign}}
+          @icon="square-plus"
           @isLoading={{this.loading}}
+          @label="discourse_subscriptions.campaign.one_click_campaign"
         />
       {{/if}}
     {{/if}}

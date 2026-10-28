@@ -23,23 +23,23 @@ export default class GifsResult extends Component {
 
   <template>
     <div
-      {{on "click" (fn @pick @gif)}}
-      {{on "keydown" this.keyDown}}
-      role="button"
-      tabindex="0"
       class={{dConcatClass
         "gifs-result"
         (if @gif.isCategory "gifs-result--category")
       }}
+      role="button"
+      tabindex="0"
+      {{on "click" (fn @pick @gif)}}
+      {{on "keydown" this.keyDown}}
     >
       <img
-        class="gifs-result__img"
         alt={{@gif.title}}
-        title={{@gif.title}}
+        class="gifs-result__img"
+        height={{@gif.height}}
         src={{@gif.preview}}
         style={{this.style}}
+        title={{@gif.title}}
         width={{@gif.width}}
-        height={{@gif.height}}
       />
       {{#if @gif.isCategory}}
         <span class="gifs-result__category-label">{{@gif.title}}</span>

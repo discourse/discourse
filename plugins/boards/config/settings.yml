@@ -4,7 +4,7 @@ boards:
     client: true
     hidden: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       allow_enabled_for:
         - "everyone"
@@ -18,3 +18,5 @@ boards:
     allow_any: false
     client: true
     mandatory_values: "1" # auto group admins
+    depends_on:
+      - boards_enabled

@@ -27,6 +27,11 @@ fi:
               label: Ketjun tunnus
     discourse_events:
       title: "Tapahtumat"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Ilmoitus"
+            none: "Ei valittu"
       on_holiday: "Lomalla"
       disable_holiday: "Poista käytöstä"
       enable_holiday: "Ota käyttöön"
@@ -320,6 +325,9 @@ fi:
     group_timezones:
       search: "Hae..."
       group_availability: "%{group} – saatavuus"
+    discourse_workflows:
+      post_event:
+        topic_id: "Ketjun tunnus"
     discourse_post_event:
       notifications:
         before_event_reminder: "Tapahtuma on alkamassa"
@@ -350,6 +358,9 @@ fi:
       edit_event: "Muokkaa tapahtumaa"
       export_event: "Vie tapahtuma"
       created_by: "Luonut"
+      other_hosts:
+        one: "ja %{count} muu"
+        other: "ja %{count} muuta"
       bulk_invite: "Joukkokutsu"
       close_event: "Sulje tapahtuma"
       open_event: "Avaa tapahtuma"
@@ -414,7 +425,6 @@ fi:
               one: "%{count} käyttäjä kutsuttu"
               other: "%{count} käyttäjää kutsuttu"
         event:
-          expired: "Vanhentunut"
           closed: "Suljettu"
           status:
             standalone:
@@ -426,6 +436,8 @@ fi:
             private:
               title: "Yksityinen"
               description: "Yksityiseen tapahtumaan voivat liittyä vain kutsutut käyttäjät."
+      recording_modal:
+        save: "Tallenna"
       composer:
         name_placeholder: "Tapahtuman nimi"
         url_placeholder: "Lisää URL"
@@ -507,6 +519,8 @@ fi:
           placeholder: "Valinnainen, oletuksena ketjun otsikko"
         invitees:
           label: "Kutsutut ryhmät"
+        hosts:
+          label: "Isännät"
         event_type:
           public:
             title: "Julkinen"

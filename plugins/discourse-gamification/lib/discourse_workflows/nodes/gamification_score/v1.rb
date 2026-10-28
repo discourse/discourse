@@ -27,6 +27,9 @@ if defined?(DiscourseWorkflows)
               "description" => {
                 "type" => %w[string null],
               },
+              "category_id" => {
+                "type" => %w[integer null],
+              },
             },
           }.freeze
 
@@ -73,6 +76,13 @@ if defined?(DiscourseWorkflows)
                   expression: true,
                 },
               },
+              category_id: {
+                type: :integer,
+                required: false,
+                ui: {
+                  control: :category,
+                },
+              },
             },
           )
 
@@ -84,6 +94,7 @@ if defined?(DiscourseWorkflows)
                   "points" => exec_ctx.get_node_parameter("points", item_index),
                   "date" => exec_ctx.get_node_parameter("date", item_index),
                   "description" => exec_ctx.get_node_parameter("description", item_index),
+                  "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
                 }
 
                 wrap(process(exec_ctx, config, item_index))
@@ -98,6 +109,7 @@ if defined?(DiscourseWorkflows)
             user = exec_ctx.find_user(username: config["username"])
             points = parse_points(config["points"], item_index)
             date = parse_date(config["date"], item_index)
+            category_id = parse_category_id(config["category_id"], item_index)
 
             event =
               ::DiscourseGamification::GamificationScoreEvent.create!(
@@ -105,6 +117,7 @@ if defined?(DiscourseWorkflows)
                 date:,
                 points:,
                 description: config["description"].presence,
+                category_id:,
               )
 
             {
@@ -114,6 +127,7 @@ if defined?(DiscourseWorkflows)
               points: event.points,
               date: event.date.to_s,
               description: event.description,
+              category_id: event.category_id,
             }
           end
 
@@ -129,6 +143,21 @@ if defined?(DiscourseWorkflows)
               )
             end
             points
+          end
+
+          def parse_category_id(value, item_index)
+            return if value.blank?
+
+            category_id = Integer(value.to_s, exception: false)
+            return category_id if category_id && ::Category.exists?(id: category_id)
+
+            raise_node_error!(
+              I18n.t(
+                "discourse_gamification.discourse_workflows.gamification_score.invalid_category",
+                category_id: value,
+              ),
+              item_index:,
+            )
           end
 
           def parse_date(value, item_index)

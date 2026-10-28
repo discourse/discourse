@@ -9,6 +9,7 @@ DiscourseDataExplorer::Engine.routes.draw do
   scope "/", defaults: { format: :json } do
     get "schema" => "query#schema"
     get "groups" => "query#groups"
+    get "queries/tags" => "query#tags"
     post "queries/generate" => "query#generate_with_ai"
     post "queries/preview" => "query#preview"
     post "queries" => "query#create"
@@ -21,6 +22,16 @@ end
 Discourse::Application.routes.draw do
   get "/api/data-explorer/queries" => "discourse_data_explorer/queries#index"
   get "/api/data-explorer/queries/:id" => "discourse_data_explorer/queries#show"
+  get "/api/data-explorer/queries/:id/relationships/groups" =>
+        "discourse_data_explorer/query_relationships#show",
+      :defaults => {
+        relationship: "groups",
+      }
+  get "/api/data-explorer/queries/:id/groups" =>
+        "discourse_data_explorer/query_related_resources#index",
+      :defaults => {
+        relationship: "groups",
+      }
 
   get "/g/:group_name/reports" => "discourse_data_explorer/query#group_reports_index"
   get "/g/:group_name/reports/:id" => "discourse_data_explorer/query#group_reports_show"
@@ -44,6 +55,7 @@ Discourse::Application.routes.draw do
   scope "/", defaults: { format: :json } do
     get "/admin/plugins/explorer/schema" => "discourse_data_explorer/query#schema"
     get "/admin/plugins/explorer/groups" => "discourse_data_explorer/query#groups"
+    get "/admin/plugins/explorer/queries/tags" => "discourse_data_explorer/query#tags"
     post "/admin/plugins/explorer/queries/generate" =>
            "discourse_data_explorer/query#generate_with_ai"
     post "/admin/plugins/explorer/queries/preview" => "discourse_data_explorer/query#preview"

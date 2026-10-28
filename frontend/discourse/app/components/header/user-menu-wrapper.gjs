@@ -6,7 +6,7 @@ import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
-import UserMenu from "../user-menu/menu";
+import UserMenu from "../user-menu/menu.gjs";
 
 export default class UserMenuWrapper extends Component {
   @action
@@ -44,6 +44,7 @@ export default class UserMenuWrapper extends Component {
   <template>
     <div
       class="user-menu-dropdown-wrapper"
+      ...attributes
       {{dCloseOnClickOutside
         this.clickOutside
         (hash
@@ -51,7 +52,6 @@ export default class UserMenuWrapper extends Component {
           secondaryTargetSelector=".user-menu-panel"
         )
       }}
-      ...attributes
     >
       <UserMenu @closeUserMenu={{fn @toggleUserMenu false}} />
     </div>

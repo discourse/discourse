@@ -11,26 +11,26 @@ export default class DismissRead extends Component {
 
   <template>
     <DModal
+      class="dismiss-read-modal"
       @closeModal={{@closeModal}}
       @title={{i18n @model.title count=@model.count}}
-      class="dismiss-read-modal"
     >
       <:body>
         <p>
           <PreferenceCheckbox
-            @labelKey="topics.bulk.also_dismiss_topics"
-            @checked={{this.dismissTopics}}
             class="dismiss-read-modal__stop-tracking"
+            @checked={{this.dismissTopics}}
+            @labelKey="topics.bulk.also_dismiss_topics"
           />
         </p>
       </:body>
       <:footer>
         <DButton
-          @action={{fn @model.dismissRead this.dismissTopics}}
-          @label="topics.bulk.dismiss"
-          @icon="check"
-          id="dismiss-read-confirm"
           class="btn-primary"
+          id="dismiss-read-confirm"
+          @action={{fn @model.dismissRead this.dismissTopics}}
+          @icon="check"
+          @label="topics.bulk.dismiss"
         />
       </:footer>
     </DModal>

@@ -322,10 +322,24 @@ class StaffActionLogger
   def log_admin_onboarding_step_completed(step, opts = {})
     raise Discourse::InvalidParameters.new(:step) if step.blank?
 
+    topic_option = opts[:topic_option]
+    details = opts[:details]
+    if topic_option.present?
+      details =
+        I18n.t(
+          "staff_action_logs.admin_onboarding_topic_option",
+          option:
+            I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{topic_option}.title"),
+          option_id: topic_option,
+        )
+    end
+
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:admin_onboarding_step_completed],
         subject: step,
+        new_value: topic_option,
+        details: details,
       ),
     )
   end
@@ -397,6 +411,26 @@ class StaffActionLogger
         subject: "#{target.class.polymorphic_name} (#{target.id})",
         previous_value: previous_permissions_details,
         new_value: new_permissions_details,
+      ),
+    )
+  end
+
+  def log_add_access_control_list_owner(target, user, opts = {})
+    log_access_control_list_owner_change(:add_access_control_list_owner, target, user, opts)
+  end
+
+  def log_remove_access_control_list_owner(target, user, opts = {})
+    log_access_control_list_owner_change(:remove_access_control_list_owner, target, user, opts)
+  end
+
+  def log_assume_access_control_ownership(owner_acl, user_id:, username:, deleted_at:)
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:assume_access_control_ownership],
+        subject: "#{owner_acl.target_type} (#{owner_acl.target_id})",
+        target_user_id: @admin.id,
+        context:
+          "deleted_user_id: #{user_id}\ndeleted_username: #{username}\ndeleted_at: #{deleted_at.iso8601}",
       ),
     )
   end
@@ -542,6 +576,7 @@ class StaffActionLogger
         action: UserHistory.actions[:suspend_user],
         target_user_id: user.id,
         details: details,
+        expires_at: user.suspended_till,
       )
     args[:post_id] = opts[:post_id] if opts[:post_id]
     UserHistory.create!(args)
@@ -734,7 +769,7 @@ class StaffActionLogger
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
-    if !old_permissions.empty? && (old_permissions != category_params[:permissions].to_h)
+    if old_permissions.present? && (old_permissions != category_params[:permissions].to_h)
       changed_attributes.merge!(
         permissions: [old_permissions.to_json, category_params[:permissions].to_json],
       )
@@ -807,6 +842,7 @@ class StaffActionLogger
         action: UserHistory.actions[:silence_user],
         target_user_id: user.id,
         details: opts[:details],
+        expires_at: user.silenced_till,
       )
     create_args[:post_id] = opts[:post_id] if opts[:post_id]
 
@@ -1169,6 +1205,18 @@ class StaffActionLogger
     )
   end
 
+  def log_group_creation(group)
+    raise Discourse::InvalidParameters.new(:group) if group.nil?
+
+    details = ["name: #{group.name}", "full_name: #{group.full_name}", "id: #{group.id}"]
+
+    UserHistory.create!(
+      acting_user_id: @admin.id,
+      action: UserHistory.actions[:create_group],
+      details: details.join(", "),
+    )
+  end
+
   def log_permanently_delete_post_revisions(post)
     raise Discourse::InvalidParameters.new(:post) if post.nil?
 
@@ -1266,6 +1314,18 @@ class StaffActionLogger
   end
 
   private
+
+  def log_access_control_list_owner_change(action, target, user, opts)
+    raise Discourse::InvalidParameters.new(:user) if !user.is_a?(User)
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[action],
+        subject: "#{target.class.polymorphic_name} (#{target.id})",
+        target_user_id: user.id,
+      ),
+    )
+  end
 
   def json_params(previous_value, new_value)
     if (previous_value && previous_value.length > UserHistory::MAX_JSON_LENGTH) ||

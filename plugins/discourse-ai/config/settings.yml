@@ -21,6 +21,11 @@ discourse_ai:
   ai_sentiment_enabled:
     default: false
     client: true
+    area: "ai-features/sentiment"
+  ai_sentiment_emotion_enabled:
+    default: false
+    client: true
+    area: "ai-features/sentiment"
   ai_sentiment_model_configs:
     default: ""
     secret: true
@@ -31,28 +36,79 @@ discourse_ai:
     choices:
       - classification_model
       - agent
+      - decision_model
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+    depends_behavior: "hidden"
   ai_sentiment_sentiment_agent:
     default: "-36"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+      - ai_sentiment_sentiment_classification_strategy
+    depends_on_values:
+      ai_sentiment_sentiment_classification_strategy:
+        - agent
+    depends_behavior: "hidden"
+  ai_sentiment_sentiment_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+      - ai_sentiment_sentiment_classification_strategy
+    depends_on_values:
+      ai_sentiment_sentiment_classification_strategy:
+        - decision_model
+    depends_behavior: "hidden"
   ai_sentiment_emotion_classification_strategy:
     default: "classification_model"
     type: enum
     choices:
       - classification_model
       - agent
+      - decision_model
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+    depends_behavior: "hidden"
   ai_sentiment_emotion_agent:
     default: "-37"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+      - ai_sentiment_emotion_classification_strategy
+    depends_on_values:
+      ai_sentiment_emotion_classification_strategy:
+        - agent
+    depends_behavior: "hidden"
+  ai_sentiment_emotion_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+      - ai_sentiment_emotion_classification_strategy
+    depends_on_values:
+      ai_sentiment_emotion_classification_strategy:
+        - decision_model
+    depends_behavior: "hidden"
   ai_sentiment_backfill_maximum_posts_per_hour:
     default: 2500
     min: 0
     max: 10000
-    hidden: true
+    area: "ai-features/sentiment"
   ai_sentiment_backfill_post_max_age_days:
     default: 60
-    hidden: true
+    min: 0
+    area: "ai-features/sentiment"
 
   ai_openai_embeddings_url:
     hidden: true
@@ -347,6 +403,10 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/summarization"
+  ai_summaries_for_crawlers:
+    default: false
+    validator: "DiscourseAi::Configuration::SummariesForCrawlersValidator"
+    area: "ai-features/summarization"
   ai_pm_summarization_allowed_groups:
     type: group_list
     list_type: compact
@@ -456,6 +516,33 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/search"
+  ai_ask_ai_report_weekly_enabled:
+    default: false
+    area: "ai-features/search"
+  ai_ask_ai_report_agent:
+    default: "-42"
+    type: enum
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/search"
+  ai_ask_ai_report_exclude_groups:
+    type: group_list
+    list_type: compact
+    default: "3"
+    disallowed_groups: "0"
+    allow_any: false
+    area: "ai-features/search"
+  ai_ask_ai_report_max_asks:
+    default: 200
+    min: 1
+    max: 1000
+    area: "ai-features/search"
+  ai_ask_ai_report_recipient_groups:
+    type: group_list
+    list_type: compact
+    default: "1"
+    disallowed_groups: "0"
+    allow_any: false
+    area: "ai-features/search"
   ai_ask_ai_summary_detail:
     default: "balanced"
     type: enum
@@ -467,6 +554,20 @@ discourse_ai:
     min: 2
     max: 6
     client: true
+    area: "ai-features/search"
+  enable_ai_combined_search:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415171"
+  ai_ask_ai_search_intent_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
     area: "ai-features/search"
   ai_ask_ai_agent:
     default: "-41"
@@ -485,6 +586,38 @@ discourse_ai:
     client: true
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     validator: "DiscourseAi::Configuration::AskAiFollowUpAgentValidator"
+    area: "ai-features/search"
+  ai_ask_ai_keyword_search_enabled:
+    default: true
+    area: "ai-features/search"
+  ai_ask_ai_semantic_search_enabled:
+    default: true
+    area: "ai-features/search"
+  ai_ask_ai_search_categories:
+    type: category_list
+    default: ""
+    area: "ai-features/search"
+  ai_ask_ai_search_max_age_days:
+    default: 0
+    min: 0
+    area: "ai-features/search"
+  ai_ask_ai_endorsed_reply_groups:
+    type: group_list
+    list_type: compact
+    default: "3" # 3: @staff
+    allow_any: false
+    area: "ai-features/search"
+  ai_ask_ai_external_sources:
+    type: list
+    list_type: compact
+    default: ""
+    allow_any: false
+    enum: "DiscourseAi::Configuration::AiToolEnumerator"
+    area: "ai-features/search"
+  ai_ask_ai_external_sources_timeout:
+    default: 8
+    min: 1
+    max: 12
     area: "ai-features/search"
   ai_ask_ai_allowed_groups:
     type: group_list

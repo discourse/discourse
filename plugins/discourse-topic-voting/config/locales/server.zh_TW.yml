@@ -12,7 +12,6 @@ zh_TW:
       description: "成員可在此提交點子，並為最想要的點子投票。"
   site_settings:
     enable_ideas_category_type_setup: "在分類建立設定中啟用「點子」分類類型選項。"
-    enable_topic_voting_badges: "啟用主題投票徽章，當其他人為成員的點子投票時授予。"
     topic_voting_enabled: '允許使用者對話題投票？'
     topic_voting_enable_vote_limits: '依信任等級限制每位使用者的投票數'
     topic_voting_tl0_vote_limit: '允許TL0 使用者有多少票可用？'

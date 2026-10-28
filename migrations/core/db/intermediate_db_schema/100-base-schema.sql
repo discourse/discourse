@@ -117,6 +117,17 @@ CREATE TABLE category_users
 );
 
 
+CREATE TABLE custom_emojis
+(
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    "group"     TEXT,
+    name        TEXT     NOT NULL,
+    upload_id   TEXT     NOT NULL,
+    user_id     NUMERIC
+);
+
+
 CREATE TABLE embed_emojis
 (
     name        TEXT         NOT NULL,
@@ -139,18 +150,21 @@ CREATE INDEX idx_embed_events_owner_type_owner_id ON embed_events (owner_type, o
 
 CREATE TABLE embed_hashtags
 (
-    hashtag_type ENUM_INTEGER,
-    name         TEXT         NOT NULL,
-    owner_id     NUMERIC      NOT NULL,
-    owner_type   ENUM_INTEGER NOT NULL,
-    placeholder  TEXT         NOT NULL,
-    target_id    NUMERIC
+    hashtag_type      ENUM_INTEGER,
+    name              TEXT         NOT NULL,
+    original_markdown TEXT,
+    owner_id          NUMERIC      NOT NULL,
+    owner_type        ENUM_INTEGER NOT NULL,
+    placeholder       TEXT         NOT NULL,
+    target_id         NUMERIC
 );
 
 CREATE INDEX idx_embed_hashtags_owner_type_owner_id ON embed_hashtags (owner_type, owner_id);
 
 CREATE TABLE embed_links
 (
+    label_url_offset   INTEGER,
+    original_markdown  TEXT,
     owner_id           NUMERIC      NOT NULL,
     owner_type         ENUM_INTEGER NOT NULL,
     placeholder        TEXT         NOT NULL,
@@ -158,22 +172,25 @@ CREATE TABLE embed_links
     target_name        TEXT,
     target_post_number INTEGER,
     target_suffix      TEXT,
+    target_tag_path    TEXT,
     target_topic_id    NUMERIC,
     target_type        ENUM_INTEGER,
     text               TEXT,
-    url                TEXT
+    url                TEXT,
+    url_offset         INTEGER
 );
 
 CREATE INDEX idx_embed_links_owner_type_owner_id ON embed_links (owner_type, owner_id);
 
 CREATE TABLE embed_mentions
 (
-    mention_type ENUM_INTEGER,
-    name         TEXT,
-    owner_id     NUMERIC      NOT NULL,
-    owner_type   ENUM_INTEGER NOT NULL,
-    placeholder  TEXT         NOT NULL,
-    target_id    NUMERIC
+    mention_type      ENUM_INTEGER,
+    name              TEXT,
+    original_markdown TEXT,
+    owner_id          NUMERIC      NOT NULL,
+    owner_type        ENUM_INTEGER NOT NULL,
+    placeholder       TEXT         NOT NULL,
+    target_id         NUMERIC
 );
 
 CREATE INDEX idx_embed_mentions_owner_type_owner_id ON embed_mentions (owner_type, owner_id);
@@ -190,6 +207,7 @@ CREATE INDEX idx_embed_polls_owner_type_owner_id ON embed_polls (owner_type, own
 
 CREATE TABLE embed_quotes
 (
+    original_markdown  TEXT,
     owner_id           NUMERIC      NOT NULL,
     owner_type         ENUM_INTEGER NOT NULL,
     placeholder        TEXT         NOT NULL,
@@ -205,6 +223,7 @@ CREATE INDEX idx_embed_quotes_owner_type_owner_id ON embed_quotes (owner_type, o
 
 CREATE TABLE embed_uploads
 (
+    external_host     TEXT,
     original_markdown TEXT,
     owner_id          NUMERIC      NOT NULL,
     owner_type        ENUM_INTEGER NOT NULL,
@@ -213,6 +232,7 @@ CREATE TABLE embed_uploads
 );
 
 CREATE INDEX idx_embed_uploads_owner_type_owner_id ON embed_uploads (owner_type, owner_id);
+CREATE INDEX idx_embed_uploads_upload_id ON embed_uploads (upload_id) WHERE upload_id IS NOT NULL;
 
 CREATE TABLE group_users
 (
@@ -280,6 +300,35 @@ CREATE TABLE permalink_normalizations
     normalization TEXT NOT NULL PRIMARY KEY
 );
 
+
+CREATE TABLE posts
+(
+    original_id      NUMERIC      NOT NULL PRIMARY KEY,
+    action_code      TEXT,
+    created_at       DATETIME,
+    deleted_at       DATETIME,
+    deleted_by_id    NUMERIC,
+    hidden           BOOLEAN,
+    hidden_at        DATETIME,
+    hidden_reason_id ENUM_INTEGER,
+    last_editor_id   NUMERIC,
+    like_count       INTEGER,
+    locale           TEXT,
+    locked_by_id     NUMERIC,
+    original_raw     TEXT,
+    post_number      INTEGER,
+    post_type        ENUM_INTEGER,
+    raw              TEXT         NOT NULL,
+    reply_to_post_id INTEGER,
+    reply_to_user_id NUMERIC,
+    sort_order       INTEGER,
+    topic_id         NUMERIC      NOT NULL,
+    user_deleted     BOOLEAN,
+    user_id          NUMERIC,
+    wiki             BOOLEAN
+);
+
+CREATE INDEX idx_posts_topic_id_post_number ON posts (topic_id, post_number);
 
 CREATE TABLE site_settings
 (
@@ -410,6 +459,7 @@ CREATE TABLE topics
     pinned_globally      BOOLEAN,
     pinned_until         DATETIME,
     slow_mode_seconds    INTEGER,
+    slug                 TEXT,
     subtype              TEXT,
     title                TEXT     NOT NULL,
     user_id              NUMERIC,
@@ -419,8 +469,9 @@ CREATE TABLE topics
 );
 
 CREATE INDEX idx_topics_archetype ON topics (archetype);
+CREATE INDEX idx_topics_slug ON topics (slug);
 
-CREATE TABLE uploads
+CREATE TABLE upload_sources
 (
     id          TEXT         NOT NULL PRIMARY KEY,
     data        BLOB,
@@ -533,6 +584,7 @@ CREATE TABLE user_options
     enable_smart_lists                             BOOLEAN,
     enable_upcoming_change_available_notifications BOOLEAN,
     external_links_in_new_tab                      BOOLEAN,
+    hidden_composer_toolbar_buttons                TEXT,
     hide_presence                                  BOOLEAN,
     hide_profile                                   BOOLEAN,
     hide_profile_and_presence                      BOOLEAN,
@@ -608,4 +660,5 @@ CREATE TABLE users
     views                     INTEGER
 );
 
+CREATE INDEX idx_users_uploaded_avatar_id ON users (uploaded_avatar_id) WHERE uploaded_avatar_id IS NOT NULL;
 

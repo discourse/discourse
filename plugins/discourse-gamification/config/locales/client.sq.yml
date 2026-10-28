@@ -26,9 +26,7 @@ sq:
       close: "Mbyll"
       delete: "Fshij"
       edit: "Redaktoni"
-      back: "Kthehu mbrapa"
       save: "Ruani"
-      apply: "Apliko"
       update_range:
         all_time: "Gjithë Kohës"
       custom_range_from: "Nga"
@@ -38,3 +36,4 @@ sq:
       gamification_score:
         username: "User"
         description: "Përshkrimi"
+        category_id: "Kategori"

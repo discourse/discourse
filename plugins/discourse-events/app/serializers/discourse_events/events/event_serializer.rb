@@ -6,6 +6,7 @@ module DiscourseEvents
       attributes :can_act_on_discourse_post_event
       attributes :can_update_attendance
       attributes :creator
+      attributes :hosts
       attributes :is_closed
       attributes :is_expired
       attributes :is_ongoing
@@ -38,6 +39,8 @@ module DiscourseEvents
       # comes from chat_enabled on the event, we dont need 2 channels per event
       attributes :livestream_chat_channel_id
       attributes :is_zoom_livestream
+      attributes :recording_url
+      attributes :recording_onebox
       attributes :channel
       attributes :rrule
       attributes :max_attendees
@@ -100,20 +103,14 @@ module DiscourseEvents
       end
 
       def reminders
-        (object.reminders || "")
-          .split(",")
-          .map do |reminder|
-            unit, value, type = reminder.split(".").reverse
-            type ||= "notification"
-
-            value = value.to_i
-            {
-              value: value.to_i.abs,
-              unit: unit,
-              period: value > 0 ? "before" : "after",
-              type: type,
-            }
-          end
+        object.parsed_reminders.map do |reminder|
+          {
+            value: reminder[:value].abs,
+            unit: reminder[:unit],
+            period: reminder[:value] > 0 ? "before" : "after",
+            type: reminder[:type],
+          }
+        end
       end
 
       def is_expired
@@ -150,6 +147,15 @@ module DiscourseEvents
 
       def creator
         BasicUserSerializer.new(object.post.user, embed: :objects, root: false)
+      end
+
+      def hosts
+        ActiveModel::ArraySerializer.new(
+          object.event_hosts.map(&:user),
+          each_serializer: EventHostSerializer,
+          scope:,
+          root: false,
+        )
       end
 
       def stats
@@ -193,12 +199,25 @@ module DiscourseEvents
       end
 
       def should_display_invitees
-        (object.public? && object.invitees.count > 0) ||
-          (object.private? && can_display_invitee_details? && Array(object.raw_invitees).count > 0)
+        (object.public? && object.invitees.exists?) ||
+          (object.private? && can_display_invitee_details? && Array(object.raw_invitees).any?)
       end
 
       def include_url?
         object.url.present?
+      end
+
+      def include_recording_url?
+        object.recording_url.present?
+      end
+
+      def include_recording_onebox?
+        include_recording_url?
+      end
+
+      # Cache only, as with `livestream_onebox`; `warm_recording_onebox` fills it.
+      def recording_onebox
+        Oneboxer.cached_onebox(object.recording_link).presence
       end
 
       def include_description_html?

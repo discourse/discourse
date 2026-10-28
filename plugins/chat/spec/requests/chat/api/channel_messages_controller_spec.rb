@@ -16,7 +16,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
       fab!(:message_2, :chat_message)
 
-      it "works" do
+      it "returns messages from the requested channel" do
         get "/chat/api/channels/#{channel.id}/messages"
 
         expect(response.status).to eq(200)
@@ -81,7 +81,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       before { Discourse.enable_readonly_mode }
       after { Discourse.disable_readonly_mode }
 
-      it "works" do
+      it "returns messages in read-only mode" do
         get "/chat/api/channels/#{channel.id}/messages"
 
         expect(response.status).to eq(200)
@@ -456,7 +456,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
   describe "#update" do
     context "when message is updated" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
-      it "works" do
+      it "updates the message" do
         put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
             params: {
               message: "abcdefg",
@@ -614,6 +614,36 @@ RSpec.describe Chat::Api::ChannelMessagesController do
   end
 
   describe "#restore" do
+    context "when current user is silenced" do
+      fab!(:recipient, :user)
+      fab!(:channel) { Fabricate(:direct_message_channel, users: [current_user, recipient]) }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
+
+      before do
+        message.trash!(current_user)
+        UserSilencer.new(current_user).silence
+      end
+
+      it "does not restore or publish their self-deleted direct message" do
+        publications = nil
+        events =
+          DiscourseEvent.track_events do
+            publications =
+              MessageBus.track_publish do
+                put "/chat/api/channels/#{channel.id}/messages/#{message.id}/restore"
+              end
+          end
+
+        aggregate_failures do
+          expect(response).to have_http_status(:forbidden)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          expect(message.reload).to be_trashed
+          expect(events).not_to include(include(event_name: :chat_message_restored))
+          expect(publications).to be_empty
+        end
+      end
+    end
+
     context "when the user no longer has access to a private category channel" do
       fab!(:group)
       fab!(:private_category) { Fabricate(:private_category, group:) }

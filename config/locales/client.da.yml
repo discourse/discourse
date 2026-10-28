@@ -6,6 +6,8 @@
 
 da:
   js:
+    dsa_notice:
+      email: "E-mail adresse"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"
@@ -25,6 +27,7 @@ da:
     access_control:
       manage:
         access_permission_editor: "Redaktør"
+        access_permission_owner: "Ejer"
         access_permission_remove: "Fjern"
     number:
       format:
@@ -263,7 +266,6 @@ da:
       zh_CN:
         name: Forenklet kinesisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber} af @%{username}"
       close: "luk"
       twitter: "Del på X"
@@ -311,12 +313,18 @@ da:
     topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Spring til hovedindhold"
     skip_user_nav: "Spring til profilindhold"
+    reorder:
+      removed: "Fjernede %{label}"
+      move_up: "Flyt op"
+      move_down: "Flyt ned"
+      position: "%{position} af %{total}"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     emails_are_disabled_non_staff: "Udgående post er slået fra alle andre end personalet."
     software_update_prompt:
       message: "Vi har opdateret dette websted. <span>Genopfrisk siden</span> for at undgå problemer."
       dismiss: "Afvis alle"
     back_button: "Tilbage"
+    confirm_button: "Bekræft"
     welcome_banner:
       header:
         logged_in_members: "Velkommen tilbage, %{preferred_display_name}!"
@@ -412,9 +420,6 @@ da:
     max_of_count:
       one: "maks af %{count}"
       other: "maks af %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer efter periode"
     related_messages:
@@ -507,6 +512,9 @@ da:
           other: "Oprettet %{count} år siden"
     bookmarked:
       title: "Bogmærke"
+      edit_bookmark:
+        one: "Rediger bogmærke"
+        other: "Rediger bogmærker"
       help:
         bookmark: "Klik for at bogmærke dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
@@ -631,6 +639,9 @@ da:
       title:
         search: "Søg efter en besked"
         placeholder: "indtast beskeds titel, url eller id her"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Gemmer…"
     review:
       show_more: "Vis mere"
       show_less: "Vis mindre"
@@ -837,6 +848,9 @@ da:
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
         note_added: "Moderator note"
+      author_penalty:
+        toast:
+          undo: "Fortryd"
       notes:
         add_note_button: "Tilføj note"
         placeholder: "Skriv din note her..."
@@ -1422,7 +1436,6 @@ da:
       admin: "%{user} er en admin"
       moderator_tooltip: "Denne bruger er en moderator"
       admin_tooltip: "Denne bruger er en administrator"
-      silenced_tooltip: "Denne bruger er mådeholdt (silenced)"
       suspended_notice: "Denne bruger er suspenderet indtil %{date}."
       suspended_permanently: "Denne bruger er suspenderet."
       suspended_reason: "Begrundelse: "
@@ -1478,6 +1491,15 @@ da:
       tracked_topics_link: "Vis"
       automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Ressource"
+        scopes: "Anvendelsesområder"
+        details: "Detaljer"
+        never: "Aldrig"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
+          revoked: "Tilbagekaldt"
       revoke_access: "Tilbagekald adgang"
       undo_revoke_access: "Fortryd Tilbagekald adgang"
       api_approved: "Godkendt:"
@@ -1646,7 +1668,6 @@ da:
         upload_title: "Overfør dit profil billede"
         image_is_not_a_square: "Advarsel: vi har beskåret billedet; bredde og højde var ikke ens."
         logo_small: "Webstedets lille logo. Anvendes som standard."
-        use_custom: "Eller overfør en brugerdefineret avatar:"
       change_profile_background:
         title: "Profiloverskrift"
         instructions: "Profiloverskrifter vil blive centreret og har en standardbredde på 1110px."
@@ -2463,8 +2484,7 @@ da:
       discard: "Kassér"
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
-      title_placeholder: "Hvad handler diskussionen om i korte træk?"
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -3589,6 +3609,7 @@ da:
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "Rediger beskrivelse"
+      latest_topics: "Seneste emner"
       description_expand: "Vis mere"
       description_collapse: "Vis mindre"
       already_used: "Denne farve er blevet brugt af en anden kategori"
@@ -3798,6 +3819,7 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "nulstil"
         button:
           label: "Filter"
       latest:
@@ -3948,9 +3970,6 @@ da:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Blev tildelt dette emblem %{count} gang"
-        other: "Blev tildelt dette emblem %{count} gange"
       granted_on: "Tildelt %{date}"
       others_count:
         one: "Givet til andre %{count} gang"
@@ -3982,7 +4001,7 @@ da:
       favorite_max_not_reached: "Markér dette emblem som favorit"
       favorite_count: "%{count}/%{max} emblemer markeret som favoritter"
     download_calendar:
-      title: "Hent kalender"
+      title: "Føj til kalender"
       save_ics: "Hent .ics fil"
       save_google: "Tilføj til Google kalender"
       remember: "Spørg mig ikke igen"
@@ -4317,45 +4336,6 @@ da:
           number: "Indtast venligst et tal."
           text: "Indtast venligst en tekstværdi."
           url: "Indtast venligst en gyldig URL."
-    table_builder:
-      title: "Tabel Bygger"
-      modal:
-        title: "Tabel Bygger"
-        create: "Byg Tabel"
-        help:
-          enter_key: "Enter"
-          tab_key: "Fane"
-      edit:
-        btn_edit: "Rediger tabel"
-        modal:
-          title: "Rediger tabel"
-          cancel: "annuller"
-          create: "Gem"
-          reason: "Hvorfor redigerer du?"
-          trigger_reason: "Tilføj årsag til redigering"
-      default_header:
-        col_1: "Kolonne 1"
-        col_2: "Kolonne 2"
-        col_3: "Kolonne 3"
-        col_4: "Kolonne 4"
-      spreadsheet:
-        show: "Vis"
-        about: "Om"
-        cells_already_merged: "Celle allerede flettet"
-        no_cells_selected: "Ingen celler valgt"
-        context_menu:
-          row:
-            before: "Indsæt en ny række før"
-            after: "Indsæt en ny række efter"
-            delete: "Slet valgte rækker"
-          col:
-            before: "Indsæt en ny kolonne før"
-            after: "Indsæt en ny kolonne efter"
-            delete: "Slet valgte kolonner"
-            rename: "Omdøb denne kolonne"
-          copy: "Kopiér..."
-          paste: "Indsæt..."
-          save: "Gem som..."
     powered_by_discourse: "Drevet af Discourse"
     filter:
       description:
@@ -4443,6 +4423,65 @@ da:
           title: "Om dit websted"
         developer:
           title: "Udvikler"
+        mcp:
+          tabs:
+            access: "Adgang"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Adgang"
+            group: "Gruppe"
+            groups: "Grupper"
+            actions: "Handlinger"
+            edit: "Rediger"
+            delete: "Slet"
+          primitives:
+            group_by_options:
+              provider: "Udbyder"
+              kind: "Type"
+            provider: "Udbyder"
+            kind: "Type"
+            scopes: "Anvendelsesområder"
+          clients:
+            actions: "Handlinger"
+            block: "Blokér"
+            presets:
+              custom: "Tilpasset"
+            automatic: "Automatisk"
+          authorizations:
+            user: "Bruger"
+            status: "Status"
+            actions: "Handlinger"
+          activity:
+            time: "Tidspunkt"
+            user: "Bruger"
+            duration: "Varighed"
+          values:
+            server_status:
+              disabled: "Deaktiveret"
+            client_trust:
+              approved: "Godkendt"
+            authorization_status:
+              active: "Aktiv"
+              revoked: "Tilbagekaldt"
+            activity_outcome:
+              success: "Succes"
+              error: "Fejl"
+            primitive_state:
+              enabled: "Aktiveret"
+              disabled: "Deaktiveret"
+            primitive_kind:
+              all: "Alle typer"
+              resource: "Ressource"
+            primitive_risk:
+              read: "Læs kun"
+              moderation: "Moderation"
+            filter:
+              all: "Alle"
+          never: "Aldrig"
+          actions:
+            revoke: "Tilbagekald"
         experimental:
           title: "Eksperimentel"
         emojis:
@@ -4651,6 +4690,7 @@ da:
           visitors: "Besøgende"
         filters:
           browser: "Browser"
+          language: "Sprog"
           ip: "IP-adresse"
         series:
           anonymous_human: "Anonym"
@@ -4753,6 +4793,7 @@ da:
           series:
             anonymous: "Anonym"
             crawlers: "Crawlere"
+          crawler_learn_more: "Lær mere"
         period:
           last_7_days: "Seneste 7 dage"
           last_30_days: "Seneste 30 dage"
@@ -5419,8 +5460,8 @@ da:
           upload: "Overfør"
           select_component: "Vælg en komponent…"
           unsaved_changes_alert: "Du har ikke gemt dine ændringer endnu, vil du kassere dem og gå videre?"
-          unsaved_parent_themes: "Du har ikke tildelt komponenten til temaer, vil du fortsætte?"
           discard: "Kassér"
+          leave: "Forlad"
           stay: "Bliv"
           delete_upload_confirm: "Slet denne overførsel? (Tema CSS kan muligvis stoppe med at virke!)"
           component_on_themes: "Inkluder komponent i disse temaer"
@@ -6231,12 +6272,10 @@ da:
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
       site_text:
-        search: "Søg efter teksten du gerne vil rette"
+        search_label: "Søg"
+        theme_disabled: "Deaktiveret"
         edit: "Rediger"
-        revert: "Rul ændringer tilbage"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
-        go_back: "Tilbage til søgning"
-        recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."

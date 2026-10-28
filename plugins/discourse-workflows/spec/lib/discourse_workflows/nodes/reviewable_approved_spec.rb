@@ -40,69 +40,15 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableApproved::V1 do
     end
   end
 
-  describe "#valid?" do
-    it "returns true when a reviewable is approved" do
-      trigger = described_class.new(:approved, reviewable)
-
-      expect(trigger).to be_valid
-    end
-
-    it "returns false for other reviewable transitions" do
-      trigger = described_class.new(:rejected, reviewable)
-
-      expect(trigger).not_to be_valid
-    end
-
-    it "returns false when the reviewable is missing" do
-      trigger = described_class.new(:approved, nil)
-
-      expect(trigger).not_to be_valid
-    end
-  end
-
   describe "#output" do
     it "returns reviewable data", :aggregate_failures do
+      moderator = Fabricate(:moderator)
       reviewable.update!(status: :approved)
-      trigger = described_class.new(:approved, reviewable)
-      output = trigger.output
+      output = described_class.new(:approved, reviewable, acting_user: moderator).output
 
-      expect(output).to eq(
-        reviewable: {
-          id: reviewable.id,
-          type: "ReviewableFlaggedPost",
-          status: "approved",
-          target_type: "Post",
-          target_id: reviewable.target_id,
-          topic_id: reviewable.topic_id,
-          category_id: reviewable.category_id,
-          score: reviewable.score,
-          created_at: reviewable.created_at.iso8601,
-        },
-      )
+      expect(output[:reviewable]).to include(status: "approved")
+      expect(output[:actor]).to include(id: moderator.id, username: moderator.username)
       expect(output).to match_node_output_schema(described_class)
     end
-  end
-
-  describe "#matches?" do
-    it "returns true when reviewable types are blank" do
-      trigger = described_class.new(:approved, reviewable)
-
-      expect(trigger.matches?(trigger_context({}))).to eq(true)
-    end
-
-    it "matches configured reviewable types by STI name" do
-      trigger = described_class.new(:approved, reviewable)
-
-      expect(
-        trigger.matches?(trigger_context("reviewable_types" => ["ReviewableFlaggedPost"])),
-      ).to eq(true)
-      expect(trigger.matches?(trigger_context("reviewable_types" => ["ReviewableUser"]))).to eq(
-        false,
-      )
-    end
-  end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

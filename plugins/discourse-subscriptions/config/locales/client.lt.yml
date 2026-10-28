@@ -29,7 +29,7 @@ lt:
           created_at: Sukurta
           cancel: atšaukti
       billing:
-        email: Epaštas
+        email: El. paštas
       admin:
         dashboard:
           title: Apžvalga

@@ -6,7 +6,22 @@
 
 he:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "כותרת"
+        icon: "סמל"
+        color: "צבע"
+        tag_name: "תגית"
+        default_sort_priority: "עדיפות"
+      create_board:
+        name: "שם"
+        slug: "מזהה ייצוגי"
+        tag_names: "תגיות"
+        category_ids: "קטגוריות"
     boards:
+      status:
+        all: "הכול"
+        open: "פתוח"
       board:
         remove_card: "הסרה"
         new_topic: "נושא חדש..."
@@ -23,7 +38,10 @@ he:
         unassign_from_topic: "ביטול הקצאת ‎@%{username} מנושא"
         unassign_from_post: "ביטול הקצאת ‎@%{username} ממס׳ %{post_number}"
         edit_assignments: "עריכת הקצאות…"
-        created_by: "נוצר על ידי"
+        owners:
+          one: "בעלות"
+          two: "מנהלים"
+          other: "מנהלים"
       manage:
         name: "שם"
         slug: "מזהה ייצוגי"

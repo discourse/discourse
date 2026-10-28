@@ -6,7 +6,23 @@
 
 ru:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Название"
+        icon: "Значок"
+        color: "Цвет"
+        tag_name: "Теги"
+        default_sort_priority: "Приоритет"
+      create_board:
+        name: "Название"
+        slug: "Slug (текстовый идентификатор)"
+        tag_names: "Теги"
+        category_ids: "Категории"
     boards:
+      status:
+        all: "Все"
+        open: "Открытые"
+        archived: "Архивные"
       board:
         remove_card: "Отозвать"
         new_topic: "Новая тема..."
@@ -25,7 +41,11 @@ ru:
         unassign_from_topic: "Снять ответственного @%{username} с темы"
         unassign_from_post: "Снять ответственного @%{username} с публикации #%{post_number}"
         edit_assignments: "Изменить назначения..."
-        created_by: "Создано"
+        owners:
+          one: "Владелец"
+          few: "Владельцы"
+          many: "Владельцы"
+          other: "Владельцы"
       manage:
         name: "Название"
         slug: "Slug (текстовый идентификатор)"

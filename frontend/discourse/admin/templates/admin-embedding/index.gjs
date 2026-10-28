@@ -13,8 +13,8 @@ export default <template>
   {{#if @controller.embedding.embeddable_hosts}}
     <div class="admin-embedding-index__full-app-toggle">
       <DToggleSwitch
-        @state={{@controller.fullAppMode}}
         aria-label={{i18n "admin.embedding.full_app_mode"}}
+        @state={{@controller.fullAppMode}}
         {{on "click" @controller.toggleFullAppMode}}
       />
       <div class="admin-embedding-index__full-app-toggle-text">
@@ -29,10 +29,10 @@ export default <template>
 
     {{#if @controller.showEmbeddingCode}}
       <AdminConfigAreaCard
-        @heading="admin.embedding.configuration_snippet"
+        class="admin-embedding-index__code"
         @collapsable={{true}}
         @collapsed={{true}}
-        class="admin-embedding-index__code"
+        @heading="admin.embedding.configuration_snippet"
       >
         <:content>
           {{trustHTML (i18n "admin.embedding.sample")}}
@@ -65,17 +65,17 @@ export default <template>
       <tbody class="d-table__body">
         {{#each @controller.embedding.embeddable_hosts as |host|}}
           <EmbeddableHost
-            @host={{host}}
             @deleteHost={{@controller.deleteHost}}
+            @host={{host}}
           />
         {{/each}}
       </tbody>
     </table>
   {{else}}
     <AdminConfigAreaEmptyList
+      @ctaClass="admin-embedding__add-host"
       @ctaLabel="admin.embedding.add_host"
       @ctaRoute="adminEmbedding.new"
-      @ctaClass="admin-embedding__add-host"
       @emptyLabel="admin.embedding.get_started"
     />
   {{/if}}

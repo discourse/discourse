@@ -63,10 +63,12 @@ acceptance("New Query", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
-      return helper.response({
-        queries: [],
-      });
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "staff"])
+    );
+
+    server.get("/api/data-explorer/queries", () => {
+      return helper.response({ data: [] });
     });
 
     server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
@@ -81,6 +83,7 @@ acceptance("New Query", function (needs) {
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [41],
+          tags: ["monthly"],
           last_run_at: "2021-02-08T15:37:49.188Z",
           hidden: false,
           user_id: -1,
@@ -134,7 +137,31 @@ acceptance("New Query", function (needs) {
       ".query-new__manual-form [data-name='description'] textarea",
       "a test query"
     );
+    const tags = selectKit(
+      ".query-new__manual-form [data-name='tags'] .query-tag-chooser"
+    );
+    await tags.expand();
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered"
+    );
+    await tags.fillInFilter("Default");
+    assert.deepEqual(
+      tags.displayedContent(),
+      [],
+      "the default tag cannot be created manually"
+    );
+    await tags.emptyFilter();
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
     await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["Monthly"],
+      "the newly created tag is sent with the query"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -219,10 +246,13 @@ acceptance("New Query - AI", function (needs) {
   });
 
   const GENERATION_ID = "test-generation";
+  const PROMPT_INPUT = ".query-new__ai-section [data-name='prompt'] textarea";
   let createParams;
+  let generateParams;
 
   needs.hooks.beforeEach(() => {
     createParams = null;
+    generateParams = null;
   });
 
   needs.pretender((server, helper) => {
@@ -253,14 +283,19 @@ acceptance("New Query - AI", function (needs) {
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () =>
       helper.response({ topics: [] })
     );
-    server.get("/admin/plugins/discourse-data-explorer/queries", () =>
-      helper.response({ queries: [] })
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "staff"])
     );
 
     server.post(
       "/admin/plugins/discourse-data-explorer/queries/generate.json",
-      () =>
-        helper.response({ generation_id: GENERATION_ID, status: "generating" })
+      (request) => {
+        generateParams = new URLSearchParams(request.requestBody);
+        return helper.response({
+          generation_id: GENERATION_ID,
+          status: "generating",
+        });
+      }
     );
 
     server.post(
@@ -288,6 +323,7 @@ acceptance("New Query - AI", function (needs) {
           description: "",
           param_info: [],
           group_ids: [],
+          tags: ["staff"],
           hidden: false,
           user_id: -1,
         },
@@ -325,7 +361,7 @@ acceptance("New Query - AI", function (needs) {
 
   async function generate(prompt) {
     await visit("/admin/plugins/discourse-data-explorer/queries/new");
-    await fillIn(".query-new__ai-textarea", prompt);
+    await fillIn(PROMPT_INPUT, prompt);
     await click(".query-new__generate-btn");
     await publishToMessageBus(
       `/discourse-data-explorer/queries/ai-generation/${GENERATION_ID}`,
@@ -354,6 +390,48 @@ acceptance("New Query - AI", function (needs) {
     assert
       .dom(".query-new__ai-section")
       .doesNotExist("the AI generation form is hidden");
+  });
+
+  test("titles the card after the selected mode", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".admin-config-area-card__title")
+      .hasText("Generate with AI", "AI mode titles the card");
+
+    await click(".query-mode-switch input[value='manual']");
+
+    assert
+      .dom(".admin-config-area-card__title")
+      .hasText("New query", "manual mode titles the card");
+  });
+
+  test("requires a prompt before generating", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+    await click(".query-new__generate-btn");
+
+    assert
+      .dom(".query-new__ai-section [data-name='prompt'] .form-kit__errors")
+      .exists("an empty prompt shows a validation error");
+    assert.strictEqual(generateParams, null, "nothing is generated");
+  });
+
+  test("regenerating sends the updated prompt", async function (assert) {
+    await generate("show me a value");
+
+    await fillIn(PROMPT_INPUT, "limit it to 5 rows");
+    await click(".query-new__regenerate-btn");
+
+    assert.strictEqual(
+      generateParams.get("ai_description"),
+      "limit it to 5 rows",
+      "the edited prompt is sent"
+    );
+    assert.strictEqual(
+      generateParams.get("existing_sql"),
+      "SELECT 23 AS my_value",
+      "the generated SQL is sent to be refined"
+    );
   });
 
   test("save query is the primary action and the result is shown first", async function (assert) {
@@ -398,12 +476,25 @@ acceptance("New Query - AI", function (needs) {
     );
 
     await groups.selectRowByValue(41);
+    const tags = selectKit(".query-new__fields .query-tag-chooser");
+    await tags.expand();
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered in the AI form"
+    );
+    await tags.selectRowByValue("staff");
     await click(".query-new__save-btn");
 
     assert.deepEqual(
       createParams.getAll("query[group_ids][]"),
       ["41"],
       "the selected groups are sent with the new query"
+    );
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["staff"],
+      "the selected tag is sent with the new query"
     );
   });
 
@@ -422,5 +513,20 @@ acceptance("New Query - AI", function (needs) {
       currentURL().includes("run="),
       "does not run the saved query before parameters can be adjusted"
     );
+  });
+
+  test("keeps edits to a generated query across a mode switch", async function (assert) {
+    await generate("show me a value");
+
+    await fillIn(".query-new__fields [data-name='name'] input", "Edited name");
+    await click(".query-mode-switch input[value='manual']");
+    await click(".query-mode-switch input[value='ai']");
+
+    assert
+      .dom(".query-new__fields [data-name='name'] input")
+      .hasValue("Edited name", "the edited name survives the mode switch");
+    assert
+      .dom(PROMPT_INPUT)
+      .hasValue("show me a value", "the prompt survives the mode switch");
   });
 });

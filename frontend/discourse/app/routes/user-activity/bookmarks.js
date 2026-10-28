@@ -38,7 +38,10 @@ export default class UserActivityBookmarks extends DiscourseRoute {
     return this._loadBookmarks(params)
       .then(async (response) => {
         if (!response.user_bookmark_list) {
-          return { bookmarks: [] };
+          return {
+            bookmarks:
+              /** @type {import("discourse/models/bookmark").default[]} */ ([]),
+          };
         }
 
         response.user_bookmark_list.categories?.forEach((category) =>

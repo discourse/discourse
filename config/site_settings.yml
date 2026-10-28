@@ -108,7 +108,7 @@
 #                                 are allowed based on authorized_extensions setting.
 #                               - max_file_size_kb: maximum file size in KB. If not specified,
 #                                 uses max_image_size_kb or max_attachment_size_kb.
-# type: group                 - A single group ID.
+# type: group                 - A single group ID. A name is converted to its ID on write.
 # type: group_list            - A list of group IDs.
 # type: tag_list              - A list of tag names.
 # type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
@@ -487,6 +487,9 @@ basic:
       # 0 is the retired everyone pseudogroup, which has no name in this schema.
       disallowed: [0, anonymous_users, logged_in_users]
     area: "group_permissions"
+    upcoming_change_default_override:
+      upcoming_change: "update_whispers_allowed_groups_default"
+      new_default: "3"
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
@@ -513,6 +516,10 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_localization_max_wait_mins:
+    default: 3
+    min: 0
+    hidden: true
   short_title:
     default: ""
     max: 12
@@ -574,7 +581,8 @@ basic:
     default: ""
     type: group_list
     constraints:
-      disallowed: [anonymous_users]
+      # 0 is the retired everyone pseudogroup, which has no name in this schema.
+      disallowed: [0, anonymous_users, logged_in_users]
     area: "group_permissions"
   about_page_extra_groups:
     client: true
@@ -632,14 +640,8 @@ basic:
     default: false
     hidden: true
     client: true
-  trigger_browser_pageview_events:
-    default: false
-    hidden: true
-  persist_browser_pageview_events:
-    default: true
-    hidden: true
   clean_up_browser_pageview_events:
-    default: false
+    default: true
     hidden: true
   browser_pageview_referrer_backfill_batch_size:
     default: 5000
@@ -719,7 +721,7 @@ login:
       - enable_local_logins
       - enable_local_logins_via_email
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
       permanent_warning: false
@@ -727,7 +729,7 @@ login:
         - everyone
   enable_random_usernames:
     client: true
-    default: true
+    default: false
     area: "login"
     depends_on:
       - enable_local_logins_via_code
@@ -782,6 +784,7 @@ login:
     hidden: true
   enable_google_oauth2_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   google_oauth2_client_id:
     default: ""
@@ -819,6 +822,7 @@ login:
     area: "authenticators"
   enable_twitter_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   twitter_consumer_key:
     default: ""
@@ -831,6 +835,7 @@ login:
     area: "authenticators"
   enable_facebook_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   facebook_app_id:
     client: true
@@ -844,6 +849,7 @@ login:
     area: "authenticators"
   enable_github_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   github_client_id:
     default: ""
@@ -856,6 +862,7 @@ login:
     area: "authenticators"
   enable_discord_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   discord_client_id:
     default: ""
@@ -871,7 +878,7 @@ login:
     area: "authenticators"
   enable_linkedin_oidc_logins:
     default: false
-    validator: "LinkedinOidcCredentialsValidator"
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   linkedin_oidc_client_id:
     default: ""
@@ -1452,13 +1459,14 @@ posting:
     client: true
     default: false
     refresh: true
+    validator: "AllowUncategorizedTopicsValidator"
     area: "posts_and_topics"
   remove_and_replace_uncategorized:
     default: false
     client: true
     hidden: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
@@ -3211,7 +3219,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother|yeti"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother|yeti|perplexity-user|claude-user"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -3782,6 +3790,9 @@ legal:
     area: "legal"
 
 backups:
+  site_archived:
+    default: false
+    client: true
   enable_backups:
     default: true
     client: true
@@ -3859,6 +3870,9 @@ search:
       zh_TW: 1
       ko: 1
       ja: 1
+  allow_anonymous_search:
+    default: true
+    refresh: true
   search_tokenize_chinese:
     default: false
     validator: "SearchTokenizeChineseValidator"
@@ -4107,6 +4121,7 @@ uncategorized:
   staff_category_id:
     default: -1
     hidden: true
+    client: true
     area: "categories"
   uncategorized_category_id:
     default: -1
@@ -4338,6 +4353,9 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
+  concord_in_wizard:
+    default: false
+    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4527,6 +4545,73 @@ user_preferences:
     client: true
     default: false
     area: "categories_and_tags|user_defaults"
+
+mcp:
+  mcp_server_enabled:
+    default: false
+    client: true
+    area: "mcp"
+    requires_confirmation: simple_on_enable
+  mcp_server_instructions:
+    default: ""
+    textarea: true
+    area: "mcp"
+  mcp_cache_ttl_ms:
+    default: 300000
+    min: 0
+    max: 86400000
+    area: "mcp"
+  mcp_oauth_client_id_metadata_policy:
+    type: enum
+    default: "any_domain"
+    enum: "McpOauthClientIdMetadataPolicy"
+    area: "mcp"
+  mcp_oauth_client_id_metadata_domains:
+    type: host_list
+    default: ""
+    area: "mcp"
+    depends_on:
+      - mcp_oauth_client_id_metadata_policy
+    depends_on_values:
+      mcp_oauth_client_id_metadata_policy:
+        - approved_domains
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
+  mcp_access_token_lifetime_minutes:
+    default: 60
+    min: 5
+    max: 1440
+    area: "mcp"
+  mcp_refresh_token_lifetime_days:
+    default: 30
+    min: 1
+    max: 365
+    area: "mcp"
+  mcp_authorization_code_lifetime_seconds:
+    default: 300
+    min: 60
+    max: 600
+    area: "mcp"
+  mcp_global_rate_limit_per_minute:
+    default: 120
+    min: 10
+    max: 10000
+    area: "mcp"
+  mcp_audit_log_retention_days:
+    default: 90
+    min: 1
+    max: 3650
+    area: "mcp"
+  mcp_max_request_bytes:
+    default: 1048576
+    min: 16384
+    max: 5242880
+    hidden: true
+  mcp_max_response_bytes:
+    default: 5242880
+    min: 16384
+    max: 10485760
+    hidden: true
 
 api:
   retain_web_hook_events_period_days:
@@ -4767,6 +4852,25 @@ dashboard:
     client: true
 
 experimental:
+  enable_user_menu_mentions_tab:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415579"
+  enable_markdown_endpoints:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "stable"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413006"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
   enable_generated_llms_txt:
     default: false
     hidden: true
@@ -4800,16 +4904,26 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
-  enable_new_post_reactions_menu:
+  enable_new_reordering_controls:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "permanent"
+      status: "alpha"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/389820"
+      learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,all_members"
+      body_class: true
+      learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_main_outlet_grid_layout_change:
     default: false
     client: true
     hidden: true
@@ -4818,7 +4932,25 @@ experimental:
       status: "alpha"
       impact: "other,all_members"
       body_class: true
-      learn_more_url: "https://meta.discourse.org/t/-/407849"
+      learn_more_url: "https://meta.discourse.org/t/-/414357"
+  enable_composer_toolbar_customization:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412749"
+  enable_category_hashtag_cards:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412529"
   prioritize_recently_used_tags:
     default: false
     client: true
@@ -4839,6 +4971,37 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    hidden: true
+    area: "experimental"
+  dsa_reporting_enabled:
+    client: true
+    default: false
+    hidden: true
+    area: "experimental"
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    hidden: true
+  dsa_community_rules:
+    type: objects
+    default: []
+    area: "experimental"
+    schema:
+      name: community_rule
+      properties:
+        ground:
+          type: string
+          required: true
+          validations:
+            max_length: 500
+        explanation:
+          type: string
+          required: true
+          validations:
+            max_length: 2000
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -4956,7 +5119,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/407727"
   update_pending_users_reminder_default:
@@ -4970,3 +5133,22 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  update_whispers_allowed_groups_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/414354"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
+  sidebar_user_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413150"

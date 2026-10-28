@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "capybara/rails"
+
 RSpec.describe "Nginx sample proxy" do
   before do
     skip "nginx not found on PATH" unless NginxTestProxy.available?

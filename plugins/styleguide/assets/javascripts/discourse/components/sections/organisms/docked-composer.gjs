@@ -42,14 +42,14 @@ export default class DockedComposerSection extends Component {
       <StyleguideComponent>
         <div class="docked-composer-styleguide">
           <DockedComposer
-            @resizable={{this.resizable}}
             @disabled={{this.disabled}}
-            @placeholder={{this.placeholder}}
-            @submitTitle={{this.submitTitle}}
-            @uploadTitle="composer.upload_title"
             @draftKey="styleguide-docked-composer"
-            @uploaderId="styleguide-docked-composer-uploader"
             @onSubmit={{this.handleSubmit}}
+            @placeholder={{this.placeholder}}
+            @resizable={{this.resizable}}
+            @submitTitle={{this.submitTitle}}
+            @uploaderId="styleguide-docked-composer-uploader"
+            @uploadTitle="composer.upload_title"
           />
         </div>
       </StyleguideComponent>
@@ -69,9 +69,9 @@ export default class DockedComposerSection extends Component {
         </Row>
         <Row @name="@placeholder">
           <input
-            {{on "input" (withEventValue (fn (mut this.placeholder)))}}
             type="text"
             value={{this.placeholder}}
+            {{on "input" (withEventValue (fn (mut this.placeholder)))}}
           />
         </Row>
       </Controls>

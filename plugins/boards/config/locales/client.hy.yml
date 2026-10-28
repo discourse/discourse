@@ -6,7 +6,19 @@
 
 hy:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Վերնագիր"
+        icon: "Պատկերակ"
+        color: "Գույն"
+      create_board:
+        name: "Անուն"
+        tag_names: "Պիտակներ"
+        category_ids: "Կատեգորիաներ"
     boards:
+      status:
+        all: "Բոլոր"
+        open: "Բացել"
       board:
         remove_card: "Հեռացնել"
         title: "Վերնագիր"
@@ -17,7 +29,9 @@ hy:
           other: "%{count} պատասխան"
         assign: "Վերագրել"
         unassign: "Ետ կանչել վերագրումը"
-        created_by: "Ստեղծել է՝"
+        owners:
+          one: "Սեփականատեր"
+          other: "Սեփականատերեր"
       manage:
         name: "Անուն"
         constraint_categories: "Կատեգորիաներ"

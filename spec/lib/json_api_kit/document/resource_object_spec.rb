@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::ResourceObject do
-  subject(:resource_object) { described_class.new(record, urls:, meta:) }
+  subject(:resource_object) { described_class.new(record, client:, fieldsets:, meta:) }
 
   fab!(:topic) { Fabricate(:topic, title: "A row a document renders") }
-
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
+  let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:guardian) { Guardian.new }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
@@ -55,6 +57,22 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       end
     end
 
+    context "when a fieldset holds some of the attributes" do
+      let(:resource) do
+        Class.new(JsonApiKit::Resource) do
+          model Topic
+          type :topics
+          attribute :title
+          attribute :closed
+        end
+      end
+      let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse("topics" => "closed") }
+
+      it "renders those attributes only" do
+        expect(resource_object.to_h[:attributes]).to eq("closed" => false)
+      end
+    end
+
     context "when the record holds no attribute" do
       let(:fields) { resource.fields(["secrets"], guardian:) }
 
@@ -84,6 +102,29 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
 
       before { allow(JsonApiKit::Document::RelationshipObject).to receive(:new).and_call_original }
 
+      context "when the relationship has a historical name" do
+        let(:edition) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE) }
+        let(:version_change) do
+          Class
+            .new(JsonApiKit::VersionChange) do
+              resource :topics do
+                renamed_relationship from: :author, to: :user
+              end
+            end
+            .new(__FILE__)
+        end
+
+        before do
+          allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+        end
+
+        it "uses the current name in the relationship's URL" do
+          expect(resource_object.to_h.dig(:relationships, "author", :links, :related)).to eq(
+            "https://example.com/api/topics/#{topic.id}/user",
+          )
+        end
+      end
+
       it "renders the relationship under its own name" do
         expect(resource_object.to_h[:relationships].keys).to eq(["user"])
       end
@@ -93,7 +134,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
 
         expect(JsonApiKit::Document::RelationshipObject).to have_received(:new).with(
           linkage,
-          urls:,
+          client:,
           owner: record,
           name: "user",
         )
@@ -102,7 +143,6 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
 
     context "when the record holds a relationship to many records" do
       fab!(:post)
-
       let(:posts_resource) do
         Class.new(JsonApiKit::Resource) do
           model Post

@@ -54,6 +54,18 @@ describe DiscourseEvents::Calendar::Extractor do
     expect(calendar_event.username).to eq(post.user.username)
   end
 
+  it "removes the calendar event when its post is deleted" do
+    event_post =
+      create_post(topic: calendar_post.topic, raw: 'Rome [date="2018-06-05" time="12:34:56"]')
+
+    expect(DiscourseEvents::Calendar::Event.where(post_id: event_post.id)).to exist
+
+    PostDestroyer.new(Fabricate(:admin), event_post).destroy
+
+    expect(event_post.reload).to be_trashed
+    expect(DiscourseEvents::Calendar::Event.where(post_id: event_post.id)).not_to exist
+  end
+
   it "raises an error when there are more than 2 dates" do
     expect {
       create_post(

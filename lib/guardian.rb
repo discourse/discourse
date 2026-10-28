@@ -192,6 +192,14 @@ class Guardian
     @user.permission_acl.has_any_target_permission?(target, permissions)
   end
 
+  def is_acl_owner?(target)
+    has_acl_permission?(target, Acl::Permissions::OWNER)
+  end
+
+  def can_manage_acl_owner?(target)
+    authenticated? && (is_admin? || is_acl_owner?(target))
+  end
+
   def target_ids_with_acl_permission(target_klass, permission)
     @user.permission_acl.target_ids_with_permission(target_klass, permission)
   end
@@ -202,6 +210,10 @@ class Guardian
 
   def in_any_groups?(group_ids)
     @user.in_any_groups?(group_ids)
+  end
+
+  def can_search?
+    authenticated? || SiteSetting.allow_anonymous_search
   end
 
   # Can the user see the object?

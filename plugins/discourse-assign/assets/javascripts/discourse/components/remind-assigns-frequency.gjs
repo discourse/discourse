@@ -1,36 +1,37 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { fn } from "@ember/helper";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { action, get, set } from "@ember/object";
+import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class RemindAssignsFrequency extends Component {
-  @computed(
-    "user.custom_fields.remind_assigns_frequency",
-    "siteSettings.remind_assigns_frequency"
-  )
+  @service siteSettings;
+
   get selectedFrequency() {
+    const user = this.args.user;
+    const frequency =
+      user && get(user, "custom_fields.remind_assigns_frequency");
+
     if (
-      this.availableFrequencies
-        .map((freq) => freq.value)
-        .includes(this.user?.custom_fields?.remind_assigns_frequency)
+      this.availableFrequencies.map((freq) => freq.value).includes(frequency)
     ) {
-      return this.user?.custom_fields?.remind_assigns_frequency;
+      return frequency;
     }
 
-    return this.siteSettings?.remind_assigns_frequency;
+    return this.siteSettings.remind_assigns_frequency;
   }
 
-  @computed("user.reminders_frequency")
   get availableFrequencies() {
-    return this.user?.reminders_frequency?.map((freq) => ({
+    return this.args.user?.reminders_frequency?.map((freq) => ({
       name: i18n(freq.name),
       value: freq.value,
       selected: false,
     }));
+  }
+
+  @action
+  onChange(frequency) {
+    set(this.args.user, "custom_fields.remind_assigns_frequency", frequency);
   }
 
   <template>
@@ -41,13 +42,11 @@ export default class RemindAssignsFrequency extends Component {
               "discourse_assign.reminders_frequency.description"
             }}</label>
           <ComboBox
-            @id="remind-assigns-frequency"
-            @valueProperty="value"
             @content={{this.availableFrequencies}}
+            @id="remind-assigns-frequency"
+            @onChange={{this.onChange}}
             @value={{this.selectedFrequency}}
-            @onChange={{fn
-              (mut this.user.custom_fields.remind_assigns_frequency)
-            }}
+            @valueProperty="value"
           />
         </div>
       {{/if}}

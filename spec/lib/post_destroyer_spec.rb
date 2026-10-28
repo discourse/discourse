@@ -241,7 +241,7 @@ RSpec.describe PostDestroyer do
           PostDestroyer.new(@user, @reply.reload).recover
         end
 
-        it "won't recover a non user-deleted post" do
+        it "does not recover a post that was not deleted by its author" do
           PostRevisor.new(@reply).revise!(
             admin,
             { raw: "this is a change to the post" },
@@ -251,7 +251,7 @@ RSpec.describe PostDestroyer do
           expect(@reply.reload.raw).to eq("this is a change to the post")
         end
 
-        it "should increment the user's post count" do
+        it "increments the user's post count" do
           PostDestroyer.new(@user, @reply).destroy
           expect(@user.user_stat.topic_count).to eq(1)
           expect(@user.user_stat.post_count).to eq(1)
@@ -283,7 +283,7 @@ RSpec.describe PostDestroyer do
       end
 
       context "when recovered by admin" do
-        it "should set user_deleted to false" do
+        it "sets user_deleted to false" do
           PostDestroyer.new(@user, @reply).destroy
           expect(@reply.reload.user_deleted).to eq(true)
 
@@ -291,7 +291,7 @@ RSpec.describe PostDestroyer do
           expect(@reply.reload.user_deleted).to eq(false)
         end
 
-        it "should increment the user's post count" do
+        it "increments the user's post count" do
           PostDestroyer.new(moderator, @reply).destroy
           expect(@user.reload.user_stat.topic_count).to eq(1)
           expect(@user.user_stat.post_count).to eq(0)
@@ -353,6 +353,7 @@ RSpec.describe PostDestroyer do
 
             context "when the topic is deleted" do
               before { @reply.topic.trash! }
+
               it "changes deleted_at to nil" do
                 changes_deleted_at_to_nil
               end
@@ -488,15 +489,54 @@ RSpec.describe PostDestroyer do
       DiscourseEvent.off(:topic_recovered, &topic_recovered)
     end
 
+    it "blanks and restores the post when the author deletes and undeletes it in a slow mode topic" do
+      reply = create_post(topic: post.topic)
+      original_raw = reply.raw
+      reply.topic.update!(slow_mode_seconds: 1.hour.to_i)
+      freeze_time 1.hour.from_now
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.raw).to eq(I18n.t("js.post.deleted_by_author_simple"))
+
+      freeze_time 1.hour.from_now
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.raw).to eq(original_raw)
+    end
+
+    it "keeps a moderator's edit when the author undeletes a post without a deletion revision" do
+      reply = create_post(topic: post.topic)
+      reply.revise(moderator, { raw: "This post was cleaned up by a moderator" })
+      reply.update_column(:user_deleted, true)
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.raw).to eq("This post was cleaned up by a moderator")
+    end
+
     it "maintains history when a user destroys a hidden post" do
       post.hide!(PostActionType.types[:inappropriate])
       PostDestroyer.new(post.user, post).destroy
       expect(post.revisions[0].modifications["raw"]).to be_present
     end
 
+    it "keeps a post hidden by flags hidden and flagged when the author deletes and undeletes it" do
+      flag = PostActionCreator.spam(coding_horror, post).post_action
+      post.hide!(PostActionType.types[:spam])
+
+      PostDestroyer.new(post.user, post).destroy
+      PostDestroyer.new(post.user, post).recover
+
+      expect(post.reload).to be_hidden
+      expect(post.flags).to contain_exactly(flag)
+      expect(post.topic).not_to be_visible
+    end
+
     it "resolves reviewable when author deletes their flagged post and undeletes" do
       reply = create_post(topic: post.topic)
       result = PostActionCreator.spam(coding_horror, reply)
+      PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), reply)
       reviewable = result.reviewable
 
       expect(reviewable).to be_pending
@@ -515,10 +555,12 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(reply.user, reply).recover
       expect(reply.reload.user_deleted).to eq(false)
       expect(reviewable.reload).to be_pending
-
-      recovery_note = reviewable.reviewable_notes.last
-      expect(recovery_note.user).to eq(Discourse.system_user)
-      expect(recovery_note.content).to eq(I18n.t("reviewables.post_restored_by_author"))
+      expect(reviewable.reviewable_scores).to all(
+        have_attributes(status: "pending", reviewed_by_id: nil, reviewed_at: nil),
+      )
+      expect(reviewable.reviewable_notes.pluck(:user_id, :content)).to eq(
+        [[Discourse.system_user.id, I18n.t("reviewables.post_restored_by_author")]],
+      )
 
       history = reviewable.reviewable_histories.last
       expect(history.reviewable_history_type).to eq("transitioned")
@@ -565,6 +607,43 @@ RSpec.describe PostDestroyer do
       expect(reviewable.reload).to be_ignored
     end
 
+    it "restores the flags when a moderator edits the post after the author deletes it" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      PostDestroyer.new(reply.user, reply).destroy
+      freeze_time 1.hour.from_now
+      reply.revise(moderator, { raw: "This post was cleaned up by a moderator" })
+
+      PostDestroyer.new(reply.user, reply.reload).recover
+
+      expect(reviewable.reload).to be_pending
+      expect(reply.raw).to eq("This post was cleaned up by a moderator")
+    end
+
+    it "keeps a reviewable the system ignored before the deletion ignored when the author undeletes" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
+
+      freeze_time 1.hour.from_now
+      PostDestroyer.new(reply.user, reply).destroy
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reviewable.reload).to be_ignored
+    end
+
+    it "restores a reviewable when the author undeletes a post without revisions" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      PostDestroyer.new(reply.user, reply).destroy
+      reply.revisions.destroy_all
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores).to all(be_pending)
+    end
+
     it "resolves reviewable when author deletes their post via perform_delete (delete_removed_posts_after = 0)" do
       SiteSetting.delete_removed_posts_after = 0
 
@@ -582,6 +661,43 @@ RSpec.describe PostDestroyer do
 
       expect(reply.reload.deleted_at).to be_present
       expect(reviewable.reload).to be_ignored
+    end
+
+    it "ignores all pending reviewables when the author immediately deletes an unpenalized post" do
+      SiteSetting.delete_removed_posts_after = 0
+      reply = create_post(topic: post.topic)
+      flagged_reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      post_reviewable = ReviewablePost.queue_for_review(reply)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload).to be_trashed
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        expect(reviewable.reload).to be_ignored
+        expect(reviewable.reviewable_scores).to all(
+          have_attributes(status: "ignored", reviewed_by_id: Discourse.system_user.id),
+        )
+      end
+    end
+
+    it "keeps all pending reviewables when a silenced author immediately deletes the post" do
+      SiteSetting.delete_removed_posts_after = 0
+      reply = create_post(topic: post.topic)
+      flagged_reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      post_reviewable = ReviewablePost.queue_for_review(reply)
+      UserSilencer.silence(reply.user, moderator, post_id: reply.id)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload).to be_trashed
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.reviewable_scores).to all(be_pending)
+        expect(reviewable.reviewable_notes.last).to have_attributes(
+          user: Discourse.system_user,
+          content: I18n.t("reviewables.post_deleted_by_author_after_penalty"),
+        )
+      end
     end
 
     it "does not auto-ignore reviewable when author was silenced for the post" do
@@ -739,6 +855,20 @@ RSpec.describe PostDestroyer do
       expect(post.topic.closed).to eq(true)
     end
 
+    it "reopens only the topic closed by the author deletion when the author undeletes it" do
+      PostDestroyer.new(post.user, post).destroy
+      PostDestroyer.new(post.user, post.reload).recover
+
+      expect(post.topic.reload).to be_open
+
+      post.topic.update_status("closed", true, moderator)
+
+      PostDestroyer.new(post.user, post.reload).destroy
+      PostDestroyer.new(post.user, post.reload).recover
+
+      expect(post.topic.reload).to be_closed
+    end
+
     context "as a moderator" do
       it "deletes the post" do
         author = post.user
@@ -882,7 +1012,7 @@ RSpec.describe PostDestroyer do
       expect(events[1][:params].first).to eq(first_post.topic)
     end
 
-    it "should not log a personal message view" do
+    it "does not log a personal message view" do
       SiteSetting.log_personal_messages_views = true
       Fabricate(:topic_web_hook)
       StaffActionLogger.any_instance.expects(:log_check_personal_message).never
@@ -893,7 +1023,7 @@ RSpec.describe PostDestroyer do
   describe "deleting a post directly after a whisper" do
     before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
 
-    it "should not set Topic#last_post_user_id to a whisperer" do
+    it "does not set Topic#last_post_user_id to a whisper's author" do
       post_1 = create_post(topic: post.topic, user: moderator)
       create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
       whisper_2 =
@@ -1041,7 +1171,7 @@ RSpec.describe PostDestroyer do
     fab!(:coding_horror) { coding_horror }
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
-    it "should feature the users again (in case they've changed)" do
+    it "enqueues an update of featured topic users" do
       expect_enqueued_with(job: :feature_topic_users, args: { topic_id: post.topic_id }) do
         PostDestroyer.new(moderator, post).destroy
       end
@@ -1066,7 +1196,7 @@ RSpec.describe PostDestroyer do
         ).by(-1)
       end
 
-      it "should increase the post_number when there are deletion gaps" do
+      it "increases the post number across deletion gaps" do
         PostDestroyer.new(moderator, reply).destroy
         p = Fabricate(:post, user: post.user, topic: post.topic)
         expect(p.post_number).to eq(3)
@@ -1093,7 +1223,22 @@ RSpec.describe PostDestroyer do
 
     before { Jobs::SendSystemMessage.clear }
 
-    it "should delete public post actions and agree with flags" do
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the deletion notice" do
+        PostDestroyer.new(moderator, second_post).destroy
+        args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
+        Jobs::SendSystemMessage.new.execute(args)
+
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
+
+    it "deletes public post actions and agrees with flags" do
       url = second_post.url
       PostDestroyer.new(moderator, second_post).destroy
 
@@ -1126,14 +1271,14 @@ RSpec.describe PostDestroyer do
       )
     end
 
-    it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
+    it "does not send the flags_agreed_and_post_deleted message for system deletions" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
       PostDestroyer.new(Discourse.system_user, second_post, context: "Automated testing").destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
 
-    it "should not send the flags_agreed_and_post_deleted message if it was deleted by author" do
+    it "does not send the flags_agreed_and_post_deleted message for author deletions" do
       SiteSetting.delete_removed_posts_after = 0
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
       PostDestroyer.new(second_post.user, second_post).destroy
@@ -1141,7 +1286,7 @@ RSpec.describe PostDestroyer do
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
 
-    it "should not send the flags_agreed_and_post_deleted message if flags were ignored" do
+    it "does not send the flags_agreed_and_post_deleted message when flags were ignored" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
       flag_result.reviewable.perform(moderator, :ignore_and_do_nothing)
       second_post.reload
@@ -1151,7 +1296,7 @@ RSpec.describe PostDestroyer do
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
     end
 
-    it "should not send the flags_agreed_and_post_deleted message if defer_flags is true" do
+    it "does not send the flags_agreed_and_post_deleted message when flags are deferred" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
       PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
@@ -1186,7 +1331,7 @@ RSpec.describe PostDestroyer do
       fab!(:custom_flag) { Fabricate(:flag, name: "custom flag", notify_type: true) }
       let(:third_post) { Fabricate(:post, topic_id: post.topic_id) }
 
-      it "should send message to user with correct translation" do
+      it "sends the user a translated message" do
         PostActionCreator.new(
           moderator,
           third_post,
@@ -1220,7 +1365,7 @@ RSpec.describe PostDestroyer do
       )
     end
 
-    it "should delete the user actions" do
+    it "deletes the user actions" do
       like = create_user_action(UserAction::LIKE)
 
       PostDestroyer.new(moderator, second_post).destroy
@@ -1236,12 +1381,12 @@ RSpec.describe PostDestroyer do
 
     before { TopicLink.extract_from(second_post) }
 
-    it "should destroy the topic links when moderator destroys the post" do
+    it "destroys topic links when a moderator destroys the post" do
       PostDestroyer.new(moderator, second_post.reload).destroy
       expect(topic.topic_links.count).to eq(0)
     end
 
-    it "should destroy the topic links when the user destroys the post" do
+    it "destroys topic links when the user destroys the post" do
       PostDestroyer.new(second_post.user, second_post.reload).destroy
       expect(topic.topic_links.count).to eq(0)
     end
@@ -1259,7 +1404,7 @@ RSpec.describe PostDestroyer do
       "http://#{base_url.host}/t/#{other_topic.slug}/#{other_topic.id}/#{other_post.post_number}"
     end
 
-    it "should destroy internal links when user deletes own post" do
+    it "destroys internal links when the author deletes the post" do
       new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
       TopicLink.extract_from(new_post)
 
@@ -1272,7 +1417,7 @@ RSpec.describe PostDestroyer do
       expect(updated_link_counts.count).to eq(0)
     end
 
-    it "should destroy internal links when moderator deletes post" do
+    it "destroys internal links when a moderator deletes the post" do
       new_post = create_post(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
       TopicLink.extract_from(new_post)
       link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
@@ -1521,7 +1666,7 @@ RSpec.describe PostDestroyer do
     context "when deleting by the creator" do
       before { PostDestroyer.new(user, last_reply).destroy }
 
-      it "will reset the topic's bumped_at" do
+      it "resets the topic's bumped_at" do
         topic.reload
 
         expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
@@ -1540,7 +1685,7 @@ RSpec.describe PostDestroyer do
     context "when deleting by a staff user" do
       before { PostDestroyer.new(moderator, last_reply).destroy }
 
-      it "will reset the topic's bumped_at" do
+      it "resets the topic's bumped_at" do
         topic.reload
 
         expect(topic.bumped_at).to eq_time(second_last_reply.created_at)

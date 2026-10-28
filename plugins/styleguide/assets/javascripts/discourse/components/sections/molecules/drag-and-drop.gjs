@@ -1,52 +1,52 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
-import AxisExample from "../../examples/molecules/drag-and-drop/basics/axis";
+import AxisExample from "../../examples/molecules/drag-and-drop/basics/axis.gjs";
 import axisSource from "../../examples/molecules/drag-and-drop/basics/axis?source=file";
-import FixedPositionExample from "../../examples/molecules/drag-and-drop/basics/fixed-position";
+import FixedPositionExample from "../../examples/molecules/drag-and-drop/basics/fixed-position.gjs";
 import fixedpositionSource from "../../examples/molecules/drag-and-drop/basics/fixed-position?source=file";
-import PositionsExample from "../../examples/molecules/drag-and-drop/basics/positions";
+import PositionsExample from "../../examples/molecules/drag-and-drop/basics/positions.gjs";
 import positionsSource from "../../examples/molecules/drag-and-drop/basics/positions?source=file";
-import TypesExample from "../../examples/molecules/drag-and-drop/basics/types";
+import TypesExample from "../../examples/molecules/drag-and-drop/basics/types.gjs";
 import typesSource from "../../examples/molecules/drag-and-drop/basics/types?source=file";
-import PointerDragExample from "../../examples/molecules/drag-and-drop/gestures/pointer-drag";
+import PointerDragExample from "../../examples/molecules/drag-and-drop/gestures/pointer-drag.gjs";
 import pointerdragSource from "../../examples/molecules/drag-and-drop/gestures/pointer-drag?source=file";
-import SwipeExample from "../../examples/molecules/drag-and-drop/gestures/swipe";
+import SwipeExample from "../../examples/molecules/drag-and-drop/gestures/swipe.gjs";
 import swipeSource from "../../examples/molecules/drag-and-drop/gestures/swipe?source=file";
-import AdoptionExample from "../../examples/molecules/drag-and-drop/outside/adoption";
+import AdoptionExample from "../../examples/molecules/drag-and-drop/outside/adoption.gjs";
 import adoptionSource from "../../examples/molecules/drag-and-drop/outside/adoption?source=file";
-import ExternalExample from "../../examples/molecules/drag-and-drop/outside/external";
+import ExternalExample from "../../examples/molecules/drag-and-drop/outside/external.gjs";
 import externalSource from "../../examples/molecules/drag-and-drop/outside/external?source=file";
-import ExternalAxisExample from "../../examples/molecules/drag-and-drop/outside/external-axis";
+import ExternalAxisExample from "../../examples/molecules/drag-and-drop/outside/external-axis.gjs";
 import externalaxisSource from "../../examples/molecules/drag-and-drop/outside/external-axis?source=file";
-import AutoScrollExample from "../../examples/molecules/drag-and-drop/reacting/auto-scroll";
+import AutoScrollExample from "../../examples/molecules/drag-and-drop/reacting/auto-scroll.gjs";
 import autoscrollSource from "../../examples/molecules/drag-and-drop/reacting/auto-scroll?source=file";
-import DwellExample from "../../examples/molecules/drag-and-drop/reacting/dwell";
+import DwellExample from "../../examples/molecules/drag-and-drop/reacting/dwell.gjs";
 import dwellSource from "../../examples/molecules/drag-and-drop/reacting/dwell?source=file";
-import MonitorExample from "../../examples/molecules/drag-and-drop/reacting/monitor";
+import MonitorExample from "../../examples/molecules/drag-and-drop/reacting/monitor.gjs";
 import monitorSource from "../../examples/molecules/drag-and-drop/reacting/monitor?source=file";
-import ServiceExample from "../../examples/molecules/drag-and-drop/reacting/service";
+import ServiceExample from "../../examples/molecules/drag-and-drop/reacting/service.gjs";
 import serviceSource from "../../examples/molecules/drag-and-drop/reacting/service?source=file";
-import EdgeExample from "../../examples/molecules/drag-and-drop/resize/edge";
+import EdgeExample from "../../examples/molecules/drag-and-drop/resize/edge.gjs";
 import edgeSource from "../../examples/molecules/drag-and-drop/resize/edge?source=file";
-import HandlesExample from "../../examples/molecules/drag-and-drop/resize/handles";
+import HandlesExample from "../../examples/molecules/drag-and-drop/resize/handles.gjs";
 import handlesSource from "../../examples/molecules/drag-and-drop/resize/handles?source=file";
-import SeparatorExample from "../../examples/molecules/drag-and-drop/resize/separator";
+import SeparatorExample from "../../examples/molecules/drag-and-drop/resize/separator.gjs";
 import separatorSource from "../../examples/molecules/drag-and-drop/resize/separator?source=file";
-import DisabledExample from "../../examples/molecules/drag-and-drop/sources/disabled";
+import DisabledExample from "../../examples/molecules/drag-and-drop/sources/disabled.gjs";
 import disabledSource from "../../examples/molecules/drag-and-drop/sources/disabled?source=file";
-import EffectExample from "../../examples/molecules/drag-and-drop/sources/effect";
+import EffectExample from "../../examples/molecules/drag-and-drop/sources/effect.gjs";
 import effectSource from "../../examples/molecules/drag-and-drop/sources/effect?source=file";
-import HandleExample from "../../examples/molecules/drag-and-drop/sources/handle";
+import HandleExample from "../../examples/molecules/drag-and-drop/sources/handle.gjs";
 import handleSource from "../../examples/molecules/drag-and-drop/sources/handle?source=file";
-import PreviewExample from "../../examples/molecules/drag-and-drop/sources/preview";
+import PreviewExample from "../../examples/molecules/drag-and-drop/sources/preview.gjs";
 import previewSource from "../../examples/molecules/drag-and-drop/sources/preview?source=file";
-import AcceptsSelfExample from "../../examples/molecules/drag-and-drop/targets/accepts-self";
+import AcceptsSelfExample from "../../examples/molecules/drag-and-drop/targets/accepts-self.gjs";
 import acceptsselfSource from "../../examples/molecules/drag-and-drop/targets/accepts-self?source=file";
-import CanDropExample from "../../examples/molecules/drag-and-drop/targets/can-drop";
+import CanDropExample from "../../examples/molecules/drag-and-drop/targets/can-drop.gjs";
 import candropSource from "../../examples/molecules/drag-and-drop/targets/can-drop?source=file";
-import NestingExample from "../../examples/molecules/drag-and-drop/targets/nesting";
+import NestingExample from "../../examples/molecules/drag-and-drop/targets/nesting.gjs";
 import nestingSource from "../../examples/molecules/drag-and-drop/targets/nesting?source=file";
-import StyleguideGroups from "../../styleguide-groups";
+import StyleguideGroups from "../../styleguide-groups.gjs";
 
 const GROUPS = [
   "basics",
@@ -75,59 +75,59 @@ export default class DragAndDrop extends Component {
     </p>
 
     <StyleguideGroups
-      @groups={{this.groups}}
-      @section={{@section}}
       @active={{@group}}
       @ariaLabel={{i18n "styleguide.sections.drag_and_drop.groups.aria_label"}}
+      @groups={{this.groups}}
+      @section={{@section}}
       as |Group|
     >
       <Group @id="basics" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.types_title"}}
-          @kind="modifier"
+          @code={{typesSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.types_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.types_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.types_note"}}
-          @code={{typesSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.types_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.types_try_this"}}
         >
           <TypesExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.positions_title"}}
-          @kind="modifier"
+          @code={{positionsSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.positions_description"
           }}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.positions_note"}}
-          @code={{positionsSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.positions_title"}}
         >
           <PositionsExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.axis_title"}}
-          @kind="modifier"
+          @code={{axisSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.axis_description"
           }}
+          @kind="modifier"
+          @title={{i18n "styleguide.sections.drag_and_drop.axis_title"}}
           @tryThis={{i18n "styleguide.sections.drag_and_drop.axis_try_this"}}
-          @code={{axisSource}}
         >
           <AxisExample />
         </Example>
         <Example
-          @title={{i18n
-            "styleguide.sections.drag_and_drop.fixed_position_title"
-          }}
-          @kind="modifier"
+          @code={{fixedpositionSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.fixed_position_description"
+          }}
+          @kind="modifier"
+          @title={{i18n
+            "styleguide.sections.drag_and_drop.fixed_position_title"
           }}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.fixed_position_try_this"
           }}
-          @code={{fixedpositionSource}}
         >
           <FixedPositionExample />
         </Example>
@@ -135,50 +135,50 @@ export default class DragAndDrop extends Component {
 
       <Group @id="sources" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.handle_title"}}
-          @kind="modifier"
+          @code={{handleSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.handle_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.handle_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.handle_note"}}
-          @code={{handleSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.handle_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.handle_try_this"}}
         >
           <HandleExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.preview_title"}}
-          @kind="modifier"
+          @code={{previewSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.preview_description"
           }}
+          @kind="modifier"
+          @title={{i18n "styleguide.sections.drag_and_drop.preview_title"}}
           @tryThis={{i18n "styleguide.sections.drag_and_drop.preview_try_this"}}
-          @code={{previewSource}}
         >
           <PreviewExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.disabled_title"}}
-          @kind="modifier"
+          @code={{disabledSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.disabled_description"
           }}
+          @kind="modifier"
+          @title={{i18n "styleguide.sections.drag_and_drop.disabled_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.disabled_try_this"
           }}
-          @code={{disabledSource}}
         >
           <DisabledExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.effect_title"}}
-          @kind="modifier"
+          @code={{effectSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.effect_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.effect_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.effect_note"}}
-          @code={{effectSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.effect_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.effect_try_this"}}
         >
           <EffectExample />
         </Example>
@@ -186,41 +186,41 @@ export default class DragAndDrop extends Component {
 
       <Group @id="targets" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.nesting_title"}}
-          @kind="modifier"
+          @code={{nestingSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.nesting_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.nesting_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.nesting_note"}}
-          @code={{nestingSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.nesting_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.nesting_try_this"}}
         >
           <NestingExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.accepts_self_title"}}
-          @kind="modifier"
+          @code={{acceptsselfSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.accepts_self_description"
           }}
+          @kind="modifier"
+          @note={{i18n "styleguide.sections.drag_and_drop.accepts_self_note"}}
+          @title={{i18n "styleguide.sections.drag_and_drop.accepts_self_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.accepts_self_try_this"
           }}
-          @note={{i18n "styleguide.sections.drag_and_drop.accepts_self_note"}}
-          @code={{acceptsselfSource}}
         >
           <AcceptsSelfExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.can_drop_title"}}
-          @kind="modifier"
+          @code={{candropSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.can_drop_description"
           }}
+          @kind="modifier"
+          @title={{i18n "styleguide.sections.drag_and_drop.can_drop_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.can_drop_try_this"
           }}
-          @code={{candropSource}}
         >
           <CanDropExample />
         </Example>
@@ -228,46 +228,46 @@ export default class DragAndDrop extends Component {
 
       <Group @id="outside" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.adoption_title"}}
-          @kind="modifier"
+          @code={{adoptionSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.adoption_description"
           }}
+          @kind="modifier"
+          @note={{i18n "styleguide.sections.drag_and_drop.adoption_note"}}
+          @title={{i18n "styleguide.sections.drag_and_drop.adoption_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.adoption_try_this"
           }}
-          @note={{i18n "styleguide.sections.drag_and_drop.adoption_note"}}
-          @code={{adoptionSource}}
         >
           <AdoptionExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.external_title"}}
-          @kind="modifier"
+          @code={{externalSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.external_description"
           }}
+          @kind="modifier"
+          @note={{i18n "styleguide.sections.drag_and_drop.external_note"}}
+          @title={{i18n "styleguide.sections.drag_and_drop.external_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.external_try_this"
           }}
-          @note={{i18n "styleguide.sections.drag_and_drop.external_note"}}
-          @code={{externalSource}}
         >
           <ExternalExample />
         </Example>
         <Example
-          @title={{i18n
-            "styleguide.sections.drag_and_drop.external_axis_title"
-          }}
-          @kind="modifier"
+          @code={{externalaxisSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.external_axis_description"
+          }}
+          @kind="modifier"
+          @note={{i18n "styleguide.sections.drag_and_drop.external_axis_note"}}
+          @title={{i18n
+            "styleguide.sections.drag_and_drop.external_axis_title"
           }}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.external_axis_try_this"
           }}
-          @note={{i18n "styleguide.sections.drag_and_drop.external_axis_note"}}
-          @code={{externalaxisSource}}
         >
           <ExternalAxisExample />
         </Example>
@@ -275,52 +275,52 @@ export default class DragAndDrop extends Component {
 
       <Group @id="reacting" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.monitor_title"}}
-          @kind="modifier"
+          @code={{monitorSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.monitor_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.monitor_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.monitor_note"}}
-          @code={{monitorSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.monitor_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.monitor_try_this"}}
         >
           <MonitorExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.service_title"}}
-          @kind="service"
+          @code={{serviceSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.service_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.service_try_this"}}
+          @kind="service"
           @note={{i18n "styleguide.sections.drag_and_drop.service_note"}}
-          @code={{serviceSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.service_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.service_try_this"}}
         >
           <ServiceExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.auto_scroll_title"}}
-          @kind="modifier"
+          @code={{autoscrollSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.auto_scroll_description"
           }}
+          @kind="modifier"
+          @title={{i18n "styleguide.sections.drag_and_drop.auto_scroll_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.auto_scroll_try_this"
           }}
-          @code={{autoscrollSource}}
         >
           <AutoScrollExample />
         </Example>
 
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.dwell_title"}}
-          @kind="modifier"
+          @code={{dwellSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.dwell_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.dwell_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.dwell_note"}}
-          @code={{dwellSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.dwell_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.dwell_try_this"}}
         >
           <DwellExample />
         </Example>
@@ -328,40 +328,40 @@ export default class DragAndDrop extends Component {
 
       <Group @id="resize" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.separator_title"}}
-          @kind="component"
+          @code={{separatorSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.separator_description"
           }}
+          @kind="component"
+          @note={{i18n "styleguide.sections.drag_and_drop.separator_note"}}
+          @title={{i18n "styleguide.sections.drag_and_drop.separator_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.separator_try_this"
           }}
-          @note={{i18n "styleguide.sections.drag_and_drop.separator_note"}}
-          @code={{separatorSource}}
         >
           <SeparatorExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.edge_title"}}
-          @kind="modifier"
+          @code={{edgeSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.edge_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.edge_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.edge_note"}}
-          @code={{edgeSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.edge_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.edge_try_this"}}
         >
           <EdgeExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.handles_title"}}
-          @kind="component"
+          @code={{handlesSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.handles_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.handles_try_this"}}
+          @kind="component"
           @note={{i18n "styleguide.sections.drag_and_drop.handles_note"}}
-          @code={{handlesSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.handles_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.handles_try_this"}}
         >
           <HandlesExample />
         </Example>
@@ -369,28 +369,28 @@ export default class DragAndDrop extends Component {
 
       <Group @id="gestures" as |Example|>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.pointer_drag_title"}}
-          @kind="modifier"
+          @code={{pointerdragSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.pointer_drag_description"
           }}
+          @kind="modifier"
+          @note={{i18n "styleguide.sections.drag_and_drop.pointer_drag_note"}}
+          @title={{i18n "styleguide.sections.drag_and_drop.pointer_drag_title"}}
           @tryThis={{i18n
             "styleguide.sections.drag_and_drop.pointer_drag_try_this"
           }}
-          @note={{i18n "styleguide.sections.drag_and_drop.pointer_drag_note"}}
-          @code={{pointerdragSource}}
         >
           <PointerDragExample />
         </Example>
         <Example
-          @title={{i18n "styleguide.sections.drag_and_drop.swipe_title"}}
-          @kind="modifier"
+          @code={{swipeSource}}
           @description={{i18n
             "styleguide.sections.drag_and_drop.swipe_description"
           }}
-          @tryThis={{i18n "styleguide.sections.drag_and_drop.swipe_try_this"}}
+          @kind="modifier"
           @note={{i18n "styleguide.sections.drag_and_drop.swipe_note"}}
-          @code={{swipeSource}}
+          @title={{i18n "styleguide.sections.drag_and_drop.swipe_title"}}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.swipe_try_this"}}
         >
           <SwipeExample />
         </Example>

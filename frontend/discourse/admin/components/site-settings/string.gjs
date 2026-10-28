@@ -9,23 +9,23 @@ export default class String extends Component {
     <div ...attributes>
       {{#if this.setting.textarea}}
         <Textarea
-          @value={{this.value}}
           class="input-setting-textarea"
           @disabled={{@disabled}}
+          @value={{this.value}}
         />
       {{else if this.isSecret}}
         <Input
+          autocomplete="new-password"
+          class="input-setting-string"
+          @disabled={{@disabled}}
           @type="password"
           @value={{this.value}}
-          class="input-setting-string"
-          autocomplete="new-password"
-          @disabled={{@disabled}}
         />
       {{else}}
         <DTextField
-          @value={{this.value}}
           @classNames="input-setting-string"
           @disabled={{@disabled}}
+          @value={{this.value}}
         />
       {{/if}}
     </div>

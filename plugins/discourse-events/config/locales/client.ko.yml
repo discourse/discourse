@@ -24,6 +24,11 @@ ko:
             topic_id:
               label: 글 ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "알림"
+            none: "없음"
       on_holiday: "휴일"
       disable_holiday: "비활성화"
       enable_holiday: "활성화"
@@ -88,6 +93,9 @@ ko:
       invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
     group_timezones:
       search: "검색..."
+    discourse_workflows:
+      post_event:
+        topic_id: "글 ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -119,13 +127,14 @@ ko:
           status:
             interested: "관심"
         event:
-          expired: "만료됨"
           closed: "닫힘"
           status:
             public:
               title: "공개"
             private:
               title: "비공개"
+      recording_modal:
+        save: "저장"
       composer:
         name_placeholder: "이벤트 이름"
         url_placeholder: "URL 추가"

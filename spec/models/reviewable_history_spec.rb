@@ -31,10 +31,10 @@ RSpec.describe ReviewableHistory, type: :model do
 
     expect(history[2]).to be_transitioned
     expect(history[2]).to be_pending
-    expect(history[2].created_by).to eq(admin)
+    expect(history[2].created_by).to eq(Discourse.system_user)
   end
 
-  it "won't log a transition to the same state" do
+  it "does not log a transition to the current state" do
     p0 = Fabricate(:post)
     reviewable = PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), p0).reviewable
     expect(reviewable.reviewable_histories.size).to eq(1)

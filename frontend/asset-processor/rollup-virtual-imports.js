@@ -9,79 +9,299 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-export default {
-  "virtual:entrypoint": (moduleFilenames, { themeId, pluginName }) => {
-    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
-    const imports = [];
-    const entries = [];
-    const warnings = [];
+// Scanned by name at runtime, at any depth, so these have to stay registered with `define()`.
+const EAGER_DIRECTORIES = [
+  "connectors",
+  "services",
+  "models",
+  "adapters",
+  "discourse-markdown",
+  "markdown-it",
+  "pre-initializers",
+  "initializers",
+  "api-initializers",
+  "instance-initializers",
+];
 
-    const exportedModules = new Set();
+const EAGER_DIRECTORY_REGEX = new RegExp(
+  `(^|/)(${EAGER_DIRECTORIES.join("|")})/`
+);
 
-    let i = 1;
-    for (const moduleFilename of moduleFilenames) {
-      // Type-only declaration files have no runtime module to export.
-      if (moduleFilename.endsWith(".d.ts")) {
-        continue;
-      }
+function isEagerModule(compatModuleName) {
+  return (
+    EAGER_DIRECTORY_REGEX.test(compatModuleName) ||
+    // `mapRoutes` matches on the suffix alone.
+    /route-map$/.test(compatModuleName)
+  );
+}
 
-      if (
-        !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
-      ) {
-        // Unsupported file type. Log a warning and skip
-        warnings.push(
-          `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
-        );
-        continue;
-      }
+export function stripExtension(filename) {
+  return filename.replace(/\.[^\.]+(\.es6)?$/, "");
+}
 
-      const filenameWithoutExtension = moduleFilename.replace(
-        /\.[^\.]+(\.es6)?$/,
-        ""
-      );
+function normalizeModules(moduleFilenames, label) {
+  const records = [];
+  const warnings = [];
+  const seen = new Set();
 
-      let compatModuleName = filenameWithoutExtension;
-
-      if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
-        const isTemplate = moduleFilename.endsWith(".hbs");
-        const isInTemplatesDirectory =
-          moduleFilename.match(/(^|\/)templates\//);
-
-        if (isTemplate && !isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            IS_CONNECTOR_REGEX,
-            "$1templates/connectors/"
-          );
-        } else if (!isTemplate && isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            /(^|\/)templates\//,
-            "$1"
-          );
-        }
-      }
-
-      const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
-        ? moduleFilename
-        : filenameWithoutExtension;
-
-      if (exportedModules.has(importPath)) {
-        continue;
-      }
-      exportedModules.add(importPath);
-
-      imports.push(`import * as Mod${i} from "./${importPath}";`);
-      entries.push(`  "${compatModuleName}": Mod${i},`);
-
-      i += 1;
+  for (const moduleFilename of moduleFilenames) {
+    if (moduleFilename.endsWith(".d.ts")) {
+      continue;
     }
 
+    if (
+      !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
+    ) {
+      warnings.push(
+        `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
+      );
+      continue;
+    }
+
+    const filenameWithoutExtension = stripExtension(moduleFilename);
+
+    let compatModuleName = filenameWithoutExtension;
+
+    if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
+      const isTemplate = moduleFilename.endsWith(".hbs");
+      const isInTemplatesDirectory = moduleFilename.match(/(^|\/)templates\//);
+
+      if (isTemplate && !isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(
+          IS_CONNECTOR_REGEX,
+          "$1templates/connectors/"
+        );
+      } else if (!isTemplate && isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(/(^|\/)templates\//, "$1");
+      }
+    }
+
+    const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
+      ? moduleFilename
+      : filenameWithoutExtension;
+
+    if (seen.has(importPath)) {
+      continue;
+    }
+    seen.add(importPath);
+
+    records.push({ importPath, compatModuleName });
+  }
+
+  return { records, warnings };
+}
+
+// Anchored to the top-level segment: a component under `components/chat/routes/` is not a route.
+const ROUTE_FILE_REGEX = /^[^/]+\/(routes|controllers|templates)\/(.+)$/;
+
+function routeNameFor(compatModuleName) {
+  const match = compatModuleName.match(ROUTE_FILE_REGEX);
+
+  if (!match) {
+    return null;
+  }
+
+  const [, type, path] = match;
+
+  // Discourse nests connectors and classic component templates under `templates/` too.
+  if (
+    type === "templates" &&
+    (path.startsWith("connectors/") || path.startsWith("components/"))
+  ) {
+    return null;
+  }
+
+  return path.split("/").join(".");
+}
+
+// Ember creates these without a `this.route` call, so no route map names them.
+const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
+
+function bundleNameFor(routeName, bundleByRoute) {
+  let name = routeName;
+
+  while (name) {
+    if (bundleByRoute[name]) {
+      return bundleByRoute[name];
+    }
+
+    const dot = name.lastIndexOf(".");
+
+    if (!IMPLICIT_ROUTE_SUFFIXES.includes(name.slice(dot + 1))) {
+      return null;
+    }
+
+    name = dot === -1 ? "" : name.slice(0, dot);
+  }
+
+  return null;
+}
+
+export function routeBundlesFor(records, bundleByRoute) {
+  if (!bundleByRoute) {
+    return [];
+  }
+
+  const bundles = new Map();
+
+  for (const record of records) {
+    const routeName = routeNameFor(record.compatModuleName);
+    const bundleName = routeName && bundleNameFor(routeName, bundleByRoute);
+
+    if (!bundleName) {
+      continue;
+    }
+
+    let bundle = bundles.get(bundleName);
+
+    if (!bundle) {
+      bundle = { bundleName, names: new Set(), records: [] };
+      bundles.set(bundleName, bundle);
+    }
+
+    bundle.names.add(routeName);
+    bundle.records.push(record);
+  }
+
+  return [...bundles.values()].map((bundle) => ({
+    ...bundle,
+    names: [...bundle.names].sort(),
+  }));
+}
+
+export function routeNamesFor(moduleFilenames, bundleByRoute) {
+  const { records } = normalizeModules(moduleFilenames);
+
+  return new Set(
+    routeBundlesFor(records, bundleByRoute).flatMap((bundle) => bundle.names)
+  );
+}
+
+export function labelFor({ pluginName, themeId }) {
+  return pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
+}
+
+function renderImports(records) {
+  const identifiers = new Map(
+    records.map((record, i) => [record, `Mod${i + 1}`])
+  );
+
+  const lines = records.map(
+    (record) =>
+      `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+  );
+
+  return { lines, identifiers };
+}
+
+function renderMap(name, records, identifiers) {
+  return [
+    `const ${name} = {`,
+    ...records.map(
+      (record) => `  "${record.compatModuleName}": ${identifiers.get(record)},`
+    ),
+    "};",
+  ];
+}
+
+export default {
+  "virtual:entrypoint": (moduleFilenames, opts, entrypointName) => {
+    const { frontendConfig } = opts;
+
+    const { records, warnings } = normalizeModules(
+      moduleFilenames,
+      labelFor(opts)
+    );
+
+    // QUnit only finds a test by running the module that registers it, so tests stay eager.
+    if (entrypointName === "test" || !frontendConfig?.staticModules) {
+      const { lines, identifiers } = renderImports(records);
+
+      return [
+        ...lines,
+        ...warnings,
+        ...renderMap("compatModules", records, identifiers),
+        "export { compatModules };",
+        "export default compatModules;",
+        "",
+      ].join("\n");
+    }
+
+    // `exports` maps the name other bundles import by to the module behind it. That module can be
+    // named with or without the `/index` a colocated component adds.
+    const publicNamesByPath = new Map();
+
+    for (const [publicName, internalName] of Object.entries(
+      frontendConfig.exports ?? {}
+    )) {
+      const path = stripExtension(internalName);
+
+      for (const candidate of [path, `${path}/index`]) {
+        if (!publicNamesByPath.has(candidate)) {
+          publicNamesByPath.set(candidate, []);
+        }
+        publicNamesByPath.get(candidate).push(publicName);
+      }
+    }
+
+    const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
+
+    const eager = records.filter((record) =>
+      isEagerModule(record.compatModuleName)
+    );
+
+    // One module can be exported under several names.
+    const exported = records.flatMap((record) =>
+      (publicNamesByPath.get(stripExtension(record.importPath)) ?? []).map(
+        (publicName) => ({ publicName, record })
+      )
+    );
+
+    const imported = [
+      ...new Set([...eager, ...exported.map(({ record }) => record)]),
+    ];
+    const { lines, identifiers } = renderImports(imported);
+
     return [
-      ...imports,
+      ...lines,
       ...warnings,
-      "const compatModules = {",
-      ...entries,
+      ...renderMap("compatModules", eager, identifiers),
+      "const pluginExports = {",
+      ...exported.map(
+        ({ publicName, record }) =>
+          `  "${publicName}": ${identifiers.get(record)},`
+      ),
       "};",
-      "export default compatModules;",
+      "export const routes = [",
+      ...bundles.map(
+        (bundle) =>
+          `  { names: ${JSON.stringify(bundle.names)},` +
+          ` load: () => import("virtual:route:${entrypointName}:${bundle.bundleName}") },`
+      ),
+      "];",
+      "export { compatModules };",
+      "export default pluginExports;",
+      "",
+    ].join("\n");
+  },
+  // The default export goes to `Resolver#addModules`, so it must be a plain module map.
+  "virtual:route": (moduleFilenames, opts, bundleName) => {
+    const { records } = normalizeModules(moduleFilenames, labelFor(opts));
+    const bundle = routeBundlesFor(
+      records,
+      opts.routeTables?.bundleByRoute
+    ).find((candidate) => candidate.bundleName === bundleName);
+
+    if (!bundle) {
+      return null;
+    }
+
+    const { lines, identifiers } = renderImports(bundle.records);
+
+    return [
+      ...lines,
+      ...renderMap("routeCompatModules", bundle.records, identifiers),
+      "export default routeCompatModules;",
       "",
     ].join("\n");
   },

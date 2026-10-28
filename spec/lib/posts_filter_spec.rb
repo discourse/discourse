@@ -93,6 +93,7 @@ RSpec.describe PostsFilter do
     expect(options.find { |option| option[:name] == "topic:" }).to include(
       prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_topic") }],
     )
+    expect(options.find { |option| option[:name] == "max_results:" }).to include(min: 1)
     expect(options.find { |option| option[:name] == "order:" }).not_to include(
       :type,
       :extra_entries,
@@ -100,6 +101,13 @@ RSpec.describe PostsFilter do
   end
 
   it "filters posts by tags and categories" do
+    Fabricate(:tag, name: "feature-request", target_tag: feature_tag)
+
+    expect(filtered_post_ids("tag:feature-request")).to contain_exactly(
+      feature_post.id,
+      feature_bug_post.id,
+    )
+
     expect(filtered_post_ids("tag:feature")).to contain_exactly(
       feature_post.id,
       feature_bug_post.id,
@@ -110,6 +118,19 @@ RSpec.describe PostsFilter do
       bug_post.id,
     )
     expect(filtered_post_ids("categories:Feedback tag:feature")).to contain_exactly(
+      feature_bug_post.id,
+    )
+  end
+
+  it "excludes hidden tag targets reached through visible synonyms" do
+    synonym = Fabricate(:tag, target_tag: feature_tag)
+    announcement_category.update!(allowed_tags: [synonym.name])
+    private_category = Fabricate(:private_category, group: Group[:staff])
+    private_category.update!(allowed_tags: [feature_tag.name])
+
+    expect(filtered_post_ids("tag:#{synonym.name}", guardian: user.guardian)).to be_empty
+    expect(filtered_post_ids("tag:#{synonym.name}", guardian: admin.guardian)).to contain_exactly(
+      feature_post.id,
       feature_bug_post.id,
     )
   end
@@ -214,7 +235,7 @@ RSpec.describe PostsFilter do
     )
     expect(filtered_post_ids("post_type:reply")).to contain_exactly(reply_post.id)
     expect(filtered_post_ids("status:closed")).to contain_exactly(bug_post.id)
-    expect(filtered_post_ids("after:#{2.days.ago.to_date}")).to include(feature_bug_post.id)
+    expect(filtered_post_ids("after:#{2.days.ago.to_date}")).not_to include(feature_post.id)
     expect(filtered_post_ids("topic_before:#{3.days.ago.to_date}")).to contain_exactly(
       feature_post.id,
       reply_post.id,
@@ -423,9 +444,13 @@ RSpec.describe PostsFilter do
   end
 
   it "tracks invalid filter fragments" do
-    filter = described_class.new("invalidfilter tag:feature order:missing")
+    filter = described_class.new("invalidfilter tag:feature order:missing max_results:0")
 
-    expect(filter.invalid_filters).to contain_exactly("invalidfilter", "order:missing")
+    expect(filter.invalid_filters).to contain_exactly(
+      "invalidfilter",
+      "order:missing",
+      "max_results:0",
+    )
   end
 
   it "omits secure categories without a guardian and always omits PMs" do

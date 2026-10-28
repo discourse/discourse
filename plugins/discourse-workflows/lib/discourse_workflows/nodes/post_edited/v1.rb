@@ -6,6 +6,44 @@ module DiscourseWorkflows
       class V1 < NodeType
         POST_SCOPE_OPTIONS = %w[first_post replies all_posts].freeze
 
+        EDITOR_SCHEMA =
+          Schema.document(
+            "editor" => Schema.nullable_user("User who performed the edit, when available"),
+          )
+
+        BASE_OUTPUT_SCHEMA =
+          Schema.merge(
+            Schema::POST_SCHEMA,
+            Schema::TOPIC_LIST_ITEM_SCHEMA,
+            Schema::USER_SCHEMA,
+            Schema.document(
+              "revision" => {
+                "type" => %w[object null],
+                "description" =>
+                  "Revision created by the edit, null for edits within the grace period",
+                "properties" => {
+                  "number" => {
+                    "type" => "integer",
+                  },
+                  "edit_reason" => {
+                    "type" => %w[string null],
+                  },
+                  "changes" => {
+                    "type" => "array",
+                    "description" => "Names of the modified fields",
+                    "items" => {
+                      "type" => "string",
+                    },
+                  },
+                  "previous_raw" => {
+                    "type" => %w[string null],
+                    "description" => "Raw before the edit, null when the raw did not change",
+                  },
+                },
+              },
+            ),
+          )
+
         description(
           name: "trigger:post_edited",
           version: "1.0",
@@ -15,16 +53,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :post_edited,
-          output_contracts: [
-            {
-              schema:
-                Schema.merge(
-                  Schema::POST_SCHEMA,
-                  Schema::TOPIC_LIST_ITEM_SCHEMA,
-                  Schema::USER_SCHEMA,
-                ),
-            },
-          ],
+          output_contracts: [{ schema: Schema.merge(BASE_OUTPUT_SCHEMA, EDITOR_SCHEMA) }],
           properties: {
             post_scope: {
               type: :options,
@@ -32,34 +61,7 @@ module DiscourseWorkflows
               default: "first_post",
               options: POST_SCOPE_OPTIONS,
             },
-            category_ids: {
-              type: :array,
-              required: false,
-              ui: {
-                control: :category,
-                multiple: true,
-              },
-            },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_ids: [{ condition: { exists: true } }],
-                },
-              },
-            },
-            tag_names: {
-              type: :string,
-              required: false,
-              ui: {
-                control: :tags,
-              },
-            },
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
             trust_levels: {
               type: :multi_options,
               required: false,
@@ -68,10 +70,11 @@ module DiscourseWorkflows
           },
         )
 
-        def initialize(post, topic_changed_or_cooked = nil, revisor = nil, *)
+        deprecated(superseded_by: "2.0", changes: { "editor" => "actor" })
+
+        def initialize(post, _topic_changed = nil, revisor = nil, *)
           super(parameters: {})
           @post = post
-          @cooked = topic_changed_or_cooked.is_a?(String) ? topic_changed_or_cooked : post&.cooked
           @revisor = revisor
         end
 
@@ -82,26 +85,37 @@ module DiscourseWorkflows
 
         def output
           {
-            post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
-            topic: topic_data(@post.topic),
-            user: user_data(@post.user),
+            post: serialize_post(@post, include_cooked: true),
+            topic: serialize_topic_list_item(@post.topic),
+            user: serialize_user(@post.user),
+            **serialize_editor,
+            revision: serialize_revision,
           }
         end
 
         def matches?(trigger_ctx)
-          matches_post_scope?(trigger_ctx.get_node_parameter("post_scope", "first_post")) &&
-            matches_category_ids?(
-              @post.topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names"))) &&
-            matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
+          return false if !matches_post_scope?(trigger_ctx.get_node_parameter("post_scope"))
+          return false if !matches_topic_filters?(@post.topic, trigger_ctx)
+
+          matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
         end
 
         private
 
-        def user_data(user)
-          serialize_user(user)
+        def serialize_editor
+          { editor: serialize_user(@revisor&.editor) }
+        end
+
+        def serialize_revision
+          revision = @revisor&.post_revision
+          return if revision.blank?
+
+          {
+            number: revision.number,
+            edit_reason: @post.edit_reason,
+            changes: revision.modifications.keys,
+            previous_raw: revision.modifications.dig("raw", 0),
+          }
         end
 
         def matches_post_scope?(post_scope)
@@ -115,18 +129,10 @@ module DiscourseWorkflows
           end
         end
 
-        def matches_tags?(tag_names)
-          tag_names.empty? || (topic_tag_names & tag_names).any?
-        end
-
-        def topic_tag_names
-          @topic_tag_names ||= @post.topic.tags.pluck(:name)
-        end
-
         def matches_trust_level?(trust_levels)
           trust_levels =
             Array.wrap(trust_levels).filter_map { |trust_level| trust_level.presence&.to_i }
-          trust_levels.empty? || trust_levels.include?(@post.user.trust_level)
+          trust_levels.empty? || trust_levels.include?(@post.user&.trust_level)
         end
       end
     end

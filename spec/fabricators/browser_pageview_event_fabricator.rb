@@ -12,6 +12,7 @@ Fabricator(:browser_pageview_event) do
       BrowserPageviewEvent::BROWSER_UNKNOWN,
     )
   end
+  normalized_language { |attrs| BrowserPageviewEventLanguageNormalizer.normalize(attrs[:language]) }
   session_id { SecureRandom.hex(16) }
 end
 

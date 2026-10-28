@@ -19,11 +19,11 @@ export default class SettingFieldTagList extends Component {
   <template>
     <@field.Control>
       <TagChooser
-        @tags={{this.selectedTags}}
-        @onChange={{this.onChange}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
+        @onChange={{this.onChange}}
         @options={{hash allowAny=false disabled=@field.disabled}}
+        @tags={{this.selectedTags}}
+        @unlimitedTagCount={{true}}
       />
     </@field.Control>
   </template>

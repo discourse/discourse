@@ -13,6 +13,11 @@ sw:
             topic_id:
               label: Utambulisho wa Mada
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Taarifa"
+            none: "Hakuna"
       disable_holiday: "Sitisha"
       enable_holiday: "Wezesha"
       date: "Tarehe"
@@ -26,6 +31,9 @@ sw:
         year: "Mwaka"
     group_timezones:
       search: "Tafuta"
+    discourse_workflows:
+      post_event:
+        topic_id: "Utambulisho wa Mada"
     discourse_post_event:
       created_by: "Imetengenezwa na"
       bulk_invite_modal:
@@ -40,6 +48,8 @@ sw:
               title: "Umma"
             private:
               title: "Binafsi"
+      recording_modal:
+        save: "Hifadhi"
       composer:
         url_placeholder: "Ongeza anwani ya mtandao"
         reminder:

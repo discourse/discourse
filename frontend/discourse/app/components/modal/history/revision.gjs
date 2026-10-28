@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and, eq, not } from "discourse/truth-helpers";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -21,9 +20,9 @@ export default class Revision extends Component {
       <div id="revision-details">
         {{dIcon "pencil"}}
         <LinkTo
-          @route="user"
-          @model={{@model.username}}
           class="revision-details__user"
+          @model={{@model.username}}
+          @route="user"
         >
           {{dBoundAvatarTemplate @model.avatar_template "small"}}
           {{#if this.siteSettings.prioritize_full_name_in_ux}}
@@ -157,14 +156,14 @@ export default class Revision extends Component {
           <ul class="nav nav-pills">
             <li>
               <a
-                href
+                aria-label={{i18n "post.revisions.displays.inline.title"}}
                 class={{dConcatClass
                   "inline-mode"
                   (if (eq @viewMode "inline") "active")
                 }}
-                {{on "click" @displayInline}}
+                href
                 title={{i18n "post.revisions.displays.inline.title"}}
-                aria-label={{i18n "post.revisions.displays.inline.title"}}
+                {{on "click" @displayInline}}
               >
                 {{dIcon "far-square"}}
                 {{i18n "post.revisions.displays.inline.button"}}
@@ -172,14 +171,14 @@ export default class Revision extends Component {
             </li>
             <li>
               <a
-                href
+                aria-label={{i18n "post.revisions.displays.side_by_side.title"}}
                 class={{dConcatClass
                   "side-by-side-mode"
                   (if (eq @viewMode "side_by_side") "active")
                 }}
-                {{on "click" @displaySideBySide}}
+                href
                 title={{i18n "post.revisions.displays.side_by_side.title"}}
-                aria-label={{i18n "post.revisions.displays.side_by_side.title"}}
+                {{on "click" @displaySideBySide}}
               >
                 {{dIcon "table-columns"}}
                 {{i18n "post.revisions.displays.side_by_side.button"}}
@@ -187,18 +186,18 @@ export default class Revision extends Component {
             </li>
             <li>
               <a
-                href
+                aria-label={{i18n
+                  "post.revisions.displays.side_by_side_markdown.title"
+                }}
                 class={{dConcatClass
                   "side-by-side-markdown-mode"
                   (if (eq @viewMode "side_by_side_markdown") "active")
                 }}
-                {{on "click" @displaySideBySideMarkdown}}
+                href
                 title={{i18n
                   "post.revisions.displays.side_by_side_markdown.title"
                 }}
-                aria-label={{i18n
-                  "post.revisions.displays.side_by_side_markdown.title"
-                }}
+                {{on "click" @displaySideBySideMarkdown}}
               >
                 {{dIcon "table-columns"}}
                 {{i18n "post.revisions.displays.side_by_side_markdown.button"}}

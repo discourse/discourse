@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 sw:
+  markdown_endpoints:
+    latest: "Hivi Karibuni"
+    categories: "Kategoria"
+    tags: "Lebo"
+    previous_page: "Ukurasa uliopita"
+    next_page: "Ukurasa ujao"
+    replies: "Majibu"
+    event:
+      location: "Sehemu"
+  mcp:
+    errors:
+      category_not_found: "Kategoria haijapatikana"
+      topic_not_found: "Mada haijapatikana"
+    oauth:
+      approve: "Idhini"
   llms_txt:
     sections:
       optional: "Sio Muhimu"
@@ -414,6 +429,7 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   admin_site_traffic_explorer:
+    unknown: "Haijulikani"
     traffic_types:
       anonymous: "Asiyejulikana"
   change_email:
@@ -501,7 +517,7 @@ sw:
     topic_description: "Kuendelea kupata taarifa za %{link}, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
     private_topic_description: "Kuendelea kupata taarifa, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
   unsubscribe:
-    title: "Jiengua"
+    unsubscribe: "Jitoe"
     stop_watching_topic: "Acha kuangalia mada hii, %{link}"
     mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
     unwatch_category: "Acha kuangalia mada zote kwenye %{category}"
@@ -1741,7 +1757,7 @@ sw:
         Msaidizi amethibitisha akaunti yako kwenye %{site_name}.
 
         Unaweza kuingia kwenye akaunti yako kupitia:
-        %{base_url}
+        %{login_url}
 
         Kama kiungo hakiwezi kubonyezwa, jaribu kunakili na kubandika kwenye sehemu ya kuandika anwani ya mtandao ndani ya kivinjari.
 
@@ -2023,10 +2039,14 @@ sw:
     google_meet:
       meeting_code: "Kodi:"
     github:
+      header:
+        success: "Mafanikio"
       closed: "imefungwa"
-      status_date:
-        approved: "wamekubaliwa"
-        closed: "imefungwa"
+      pr_status:
+        draft: "Rasimu"
+        open: "Fungua"
+        approved: "Wamekubaliwa"
+        closed: "Imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'

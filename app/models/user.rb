@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
   has_many :category_users, dependent: :destroy
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
+  has_many :mcp_oauth_authorizations, dependent: :destroy
+  has_many :mcp_oauth_access_tokens, dependent: :destroy
   has_many :topic_allowed_users, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
@@ -194,7 +196,19 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  after_destroy :reassign_acl_ownership, unless: :new_record?
   after_destroy :clear_acls
+
+  def reassign_acl_ownership
+    AccessControlList::ReassignDeletedUserOwnership.call!(
+      guardian: Discourse.system_user.guardian,
+      params: {
+        user_id: id,
+        username: username,
+        deleted_at: Time.current,
+      },
+    )
+  end
 
   def clear_acls
     Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
@@ -251,6 +265,10 @@ class User < ActiveRecord::Base
 
   # Skip validating email, for example from a particular auth provider plugin
   attr_accessor :skip_email_validation
+  attr_accessor :enforce_username_restrictions
+
+  # DiscourseConnect is authoritative for usernames, so watched words must not block SSO users.
+  attr_accessor :skip_username_watched_words_validation
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
@@ -281,6 +299,8 @@ class User < ActiveRecord::Base
             email,
           )
         end
+
+  scope :bot_users, -> { where("users.id <= 0") }
 
   scope :human_users,
         ->(allowed_bot_user_ids: nil) do
@@ -729,6 +749,10 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
+  def available_notification_types
+    notifications.visible.distinct.pluck(:notification_type)
+  end
+
   MAX_UNREAD_BACKLOG = 400
   def grouped_unread_notifications
     results = DB.query(<<~SQL, user_id: id, limit: MAX_UNREAD_BACKLOG)
@@ -926,6 +950,7 @@ class User < ActiveRecord::Base
 
     payload[:all_unread_notifications_count] = all_unread_notifications_count
     payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:available_notification_types] = available_notification_types
     payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
@@ -1304,13 +1329,20 @@ class User < ActiveRecord::Base
     end
   end
 
-  def remove_avatar!(actor)
-    return if uploaded_avatar_id.blank?
+  def custom_avatar_template
+    user_avatar&.custom_avatar_template
+  end
 
-    self.class.transaction do
-      update!(uploaded_avatar_id: nil)
-      user_avatar&.update!(custom_upload_id: nil, gravatar_upload_id: nil)
-    end
+  def find_avatar_upload(upload_id)
+    UserAvatar.find_upload_for_user(self, upload_id)
+  end
+
+  def pick_avatar!(upload_id, type: :current)
+    UserAvatar.pick_for_user!(self, upload_id, type: type)
+  end
+
+  def remove_avatar!(actor)
+    return unless UserAvatar.remove_for_user!(self)
 
     StaffActionLogger.new(actor).log_removed_avatar(self)
   end
@@ -1503,7 +1535,11 @@ class User < ActiveRecord::Base
   end
 
   def username_format_validator
-    UsernameValidator.perform_validation(self, "username")
+    UsernameValidator.perform_validation(
+      self,
+      "username",
+      skip_watched_words: skip_username_watched_words_validation,
+    )
   end
 
   def email_confirmed?
@@ -1523,6 +1559,10 @@ class User < ActiveRecord::Base
     if reviewable = ReviewableUser.pending.find_by(target: self)
       reviewable.perform(performed_by, :delete_user)
     end
+  end
+
+  def revoke_approval!
+    update!(approved: false, approved_by: nil, approved_at: nil)
   end
 
   def change_trust_level!(level, opts = nil)
@@ -1647,17 +1687,7 @@ class User < ActiveRecord::Base
   def refresh_avatar
     return if @import_mode
 
-    avatar = user_avatar || create_user_avatar
-
-    if primary_email.present? && SiteSetting.automatically_download_gravatars? &&
-         !avatar.last_gravatar_download_attempt
-      Jobs.cancel_scheduled_job(:update_gravatar, user_id: id, avatar_id: avatar.id)
-      Jobs.enqueue_in(1.second, :update_gravatar, user_id: id, avatar_id: avatar.id)
-    end
-
-    # mark all the user's quoted posts as "needing a rebake"
-    # use background job to avoid blocking on large datasets
-    Jobs.enqueue(:rebake_quoted_posts_for_user, user_id: id) if saved_change_to_uploaded_avatar_id?
+    UserAvatar.refresh_for_user(self)
   end
 
   def first_post_created_at
@@ -1772,13 +1802,7 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_random_on_signup &&
-         SiteSetting.selectable_avatars_mode != "disabled"
-      if upload = SiteSetting.selectable_avatars.sample
-        update_column(:uploaded_avatar_id, upload.id)
-        UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
-      end
-    end
+    UserAvatar.assign_random_to_user(self)
   end
 
   def anonymous?
@@ -2000,7 +2024,7 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    if SiteSetting.prioritize_username_in_ux?
+    if !SiteSetting.enable_names? || SiteSetting.prioritize_username_in_ux?
       username
     else
       name.presence || username
@@ -2150,6 +2174,14 @@ class User < ActiveRecord::Base
     username_format_validator ||
       begin
         if will_save_change_to_username?
+          if enforce_username_restrictions &&
+               (
+                 User.reserved_username?(username) ||
+                   UsernameValidator.clashing_with_existing_route?(username)
+               )
+            errors.add(:username, I18n.t("login.reserved_username"))
+          end
+
           existing =
             DB.query(USERNAME_EXISTS_SQL, username: self.class.normalize_username(username))
 

@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DiscoursePostEvent from "../../discourse/components/discourse-post-event";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function buildEvent(overrides = {}) {
   return DiscoursePostEventEvent.create({
@@ -38,6 +38,76 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
     );
   }
 
+  test("read-only mode keeps the card but drops its controls", async function (assert) {
+    const attrs = {
+      can_update_attendance: true,
+      stats: { going: 1, interested: 0, invited: 0, not_going: 0 },
+      should_display_invitees: true,
+    };
+
+    const event = buildEvent(attrs);
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+
+    assert.dom(".going-button").exists("the interactive card offers an RSVP");
+    assert.dom(".event-invitees").exists();
+    assert
+      .dom(
+        '.event-header__controls [data-identifier="discourse-post-event-more-menu"]'
+      )
+      .exists();
+
+    const readOnlyEvent = buildEvent(attrs);
+    await render(
+      <template>
+        <DiscoursePostEvent @event={{readOnlyEvent}} @readOnly={{true}} />
+      </template>
+    );
+
+    assert.dom(".event-date .day").exists("the date box is still shown");
+    assert.dom(".event-dates").exists("the dates are still listed");
+    assert.dom(".going-button").doesNotExist();
+    assert.dom(".event-invitees").doesNotExist();
+    assert
+      .dom(
+        '.event-header__controls [data-identifier="discourse-post-event-more-menu"]'
+      )
+      .doesNotExist();
+  });
+
+  test("read-only mode neither fetches details nor subscribes to updates", async function (assert) {
+    let fetched = 0;
+    getOwner(this).unregister("service:discourse-post-event-api");
+    getOwner(this).register(
+      "service:discourse-post-event-api",
+      {
+        async event() {
+          fetched++;
+          return buildEvent();
+        },
+      },
+      { instantiate: false }
+    );
+    const messageBus = getOwner(this).lookup("service:message-bus");
+    const subscribed = [];
+    const originalSubscribe = messageBus.subscribe;
+    messageBus.subscribe = (path) => subscribed.push(path);
+
+    try {
+      const event = buildEvent({ creator: null });
+      await render(
+        <template>
+          <DiscoursePostEvent @event={{event}} @readOnly={{true}} />
+        </template>
+      );
+
+      assert.dom(".event-date .day").exists("the card still renders");
+      assert.strictEqual(fetched, 0, "a creator-less event is not refetched");
+      assert.deepEqual(subscribed, [], "no message-bus subscription is made");
+    } finally {
+      messageBus.subscribe = originalSubscribe;
+    }
+  });
+
   test("interpolates the weekday into the recurrence label", async function (assert) {
     stubApi.call(this, buildEvent({ recurrence: "every_week" }));
 
@@ -51,6 +121,42 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
         "Every Thursday",
         "renders the weekday instead of a missing placeholder"
       );
+  });
+
+  test("lists additional event hosts in a menu", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        hosts: [
+          { id: 6, username: "alex" },
+          { id: 7, username: "blake" },
+          { id: 8, username: "casey" },
+          { id: 9, username: "drew" },
+        ],
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-hosts");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 2 }, "shows the first two hosts initially");
+    assert.dom(".event-hosts__toggle").hasText("and 2 others");
+
+    await click(".event-hosts__toggle");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 2 }, "keeps the row compact while the menu is open");
+    assert.dom(".event-hosts-menu__title").hasText("4 hosts");
+    assert
+      .dom(".event-hosts-menu__host")
+      .exists({ count: 4 }, "lists every host in the menu");
+    assert
+      .dom(".event-hosts-menu__host[data-user-card='drew']")
+      .hasText("drew");
   });
 
   test("interpolates the ordinal and weekday into the monthly recurrence label", async function (assert) {
@@ -183,6 +289,29 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
         "https://ti.to/discourse/meetup",
         "a venue plus a registration page is a legitimate pairing"
       );
+  });
+
+  test("shows a chat icon for events with a channel", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        channel: {
+          id: 2,
+          title: "Product team chat",
+          slug: "product-team-chat",
+          chatable_type: "Category",
+          chatable: { color: "0088cc", read_restricted: false },
+        },
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-chat-channel");
+
+    assert
+      .dom(".event-chat-channel > .d-icon-comment")
+      .exists("shows the chat icon beside the channel link");
   });
 
   test("hides the url row when it carries the zoom livestream", async function (assert) {

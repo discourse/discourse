@@ -17,6 +17,9 @@ RSpec.describe DiscourseWorkflows::EventListener do
     DiscourseWorkflows::WorkflowDependency.clear_cache!
   end
 
+  # The in-memory trigger cache outlives the DB rollback and would fire in later specs.
+  after { DiscourseWorkflows::WorkflowDependency.clear_cache! }
+
   it "enqueues a job when a matching event fires" do
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
@@ -201,6 +204,32 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).to include("post-edited-trigger")
   end
 
+  it "skips trust level filtered post edited workflows when the author is deleted" do
+    post = create_post(user: Fabricate(:user, trust_level: TrustLevel[1]), category: category)
+    post.update_columns(user_id: nil)
+    create_published_workflow(
+      "post-edited-trigger",
+      "trigger:post_edited",
+      configuration: {
+        "trust_levels" => ["1"],
+      },
+    )
+
+    expect {
+      PostRevisor.new(post.reload).revise!(admin, raw: "Edited by admin")
+    }.not_to raise_error
+    expect(enqueued_trigger_node_ids).not_to include("post-edited-trigger")
+  end
+
+  it "logs instead of raising when a trigger fails to build" do
+    create_published_workflow("post-edited-trigger", "trigger:post_edited")
+    DiscourseWorkflows::Nodes::PostEdited::V1.stubs(:from_event).raises(StandardError, "boom")
+
+    expect do
+      described_class.handle(DiscourseWorkflows::Nodes::PostEdited::V1, Fabricate(:post))
+    end.not_to raise_error
+  end
+
   it "does not enqueue post edited workflows when the revision skips workflows" do
     post = create_post(user: Fabricate(:user, trust_level: TrustLevel[1]), category: category)
     create_published_workflow("post-edited-trigger", "trigger:post_edited")
@@ -208,6 +237,27 @@ RSpec.describe DiscourseWorkflows::EventListener do
     PostRevisor.new(post).revise!(admin, { raw: "Edited by workflow" }, skip_workflows: true)
 
     expect(enqueued_trigger_node_ids).not_to include("post-edited-trigger")
+  end
+
+  it "enqueues post destroyed workflows only when the deletion does not skip them" do
+    post = create_post(category: category)
+    skipped = create_post(category: category)
+    create_published_workflow("post-destroyed-trigger", "trigger:post_destroyed")
+
+    PostDestroyer.new(admin, skipped, skip_workflows: true).destroy
+    PostDestroyer.new(admin, post).destroy
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("post-destroyed-trigger")
+  end
+
+  it "enqueues post recovered workflows from the post recovered event" do
+    post = create_post(category: category)
+    PostDestroyer.new(admin, post).destroy
+    create_published_workflow("post-recovered-trigger", "trigger:post_recovered")
+
+    PostDestroyer.new(admin, post.reload).recover
+
+    expect(enqueued_trigger_node_ids).to include("post-recovered-trigger")
   end
 
   it "only enqueues reviewable approved workflows matching the reviewable type" do
@@ -589,10 +639,75 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).to contain_exactly("user-search-trigger")
   end
 
-  def create_published_workflow(trigger_node_id, trigger_type, configuration: {})
+  describe "versioned triggers" do
+    let(:event_name) { :event_listener_versioned_trigger_test }
+    let(:plugin) { Plugin::Instance.new }
+
+    let(:v1) do
+      Class.new(DiscourseWorkflows::NodeType) do
+        description(
+          name: "trigger:event_listener_versioned_test",
+          version: "1.0",
+          event: :event_listener_versioned_trigger_test,
+        )
+
+        def initialize(payload, *)
+          super(parameters: {})
+          @payload = payload
+        end
+
+        def output
+          { "editor" => @payload }
+        end
+      end
+    end
+
+    let(:v2) do
+      Class.new(v1) do
+        description(superclass.description.merge(version: "2.0"))
+
+        def output
+          { "actor" => @payload }
+        end
+      end
+    end
+
+    before do
+      DiscourseWorkflows.node_registration_ready = true
+      plugin.register_discourse_workflows_node(v1)
+      plugin.register_discourse_workflows_node(v2)
+    end
+
+    after do
+      DiscourseEvent.all_off(event_name)
+      unregister_workflow_nodes(v1, v2)
+    end
+
+    it "dispatches each saved trigger with the output of its own version" do
+      create_published_workflow("v1-trigger", "trigger:event_listener_versioned_test")
+      create_published_workflow(
+        "v2-trigger",
+        "trigger:event_listener_versioned_test",
+        type_version: "2.0",
+      )
+
+      DiscourseEvent.trigger(event_name, "alice")
+
+      expect(enqueued_trigger_node_ids).to contain_exactly("v1-trigger", "v2-trigger")
+      expect(trigger_data_for("v1-trigger")).to eq("editor" => "alice")
+      expect(trigger_data_for("v2-trigger")).to eq("actor" => "alice")
+    end
+  end
+
+  def create_published_workflow(
+    trigger_node_id,
+    trigger_type,
+    configuration: {},
+    type_version: "1.0"
+  )
     graph =
       build_workflow_graph do |g|
-        g.node trigger_node_id, trigger_type, configuration: configuration
+        g.node trigger_node_id, trigger_type, configuration:, type_version:
       end
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
     DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)

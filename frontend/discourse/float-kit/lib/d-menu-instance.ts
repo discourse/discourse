@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -50,7 +51,7 @@ export default class DMenuInstance extends FloatKitInstance {
   @tracked options: MenuOptions;
   @tracked portalOutletOverrideElement?: HTMLElement | null;
 
-  @tracked _trigger: FloatKitTrigger;
+  @tracked _trigger?: FloatKitTrigger;
 
   constructor(owner: Owner, options: Partial<MenuOptions> = {}) {
     super();
@@ -70,15 +71,14 @@ export default class DMenuInstance extends FloatKitInstance {
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
-  get portalOutletElement() {
-    return (
-      this.portalOutletOverrideElement ||
-      document.getElementById("d-menu-portals")
-    );
-  }
-
-  get trigger() {
-    return this._trigger;
+  /**
+   * Set when the trigger registers, which comes before the float can show or
+   * hand out its API. A read before then is a bug, so it asserts.
+   */
+  get trigger(): FloatKitTrigger {
+    const trigger = this._trigger;
+    assert("DMenuInstance: the trigger is read before it registered", trigger);
+    return trigger;
   }
 
   set trigger(element: FloatKitTrigger) {
@@ -86,6 +86,13 @@ export default class DMenuInstance extends FloatKitInstance {
     this.id =
       (element instanceof HTMLElement && element.id) || guidFor(element);
     this.setupListeners();
+  }
+
+  get portalOutletElement() {
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-menu-portals")
+    );
   }
 
   get shouldTrapPointerDown() {
@@ -99,6 +106,27 @@ export default class DMenuInstance extends FloatKitInstance {
    */
   get #ownsFocus(): boolean {
     return !!this.content?.contains(document.activeElement);
+  }
+
+  /**
+   * Where focus goes once the menu has closed. `focusTarget` is resolved here rather than when
+   * the menu opened, so an action that replaces or removes the element it named still returns
+   * focus to whatever now stands in its place. The trigger element is the fallback, and is
+   * `null` for a menu anchored to a virtual reference — which is exactly the case `focusTarget`
+   * exists to serve.
+   */
+  get #focusReturnTarget(): HTMLElement | null {
+    const { focusTarget } = this.options;
+
+    // An absent thunk means "no opinion", so the trigger is the fallback. A thunk that returns
+    // `null` is an opinion — the caller looked and decided nothing should take focus — so it is
+    // honoured rather than falling through to the trigger.
+    return focusTarget ? focusTarget() : this.triggerElement;
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
   }
 
   @action
@@ -124,15 +152,10 @@ export default class DMenuInstance extends FloatKitInstance {
       (options.focusTrigger ?? true) ||
       (ownedFocus && this.#focusIsUnowned)
     ) {
-      this.triggerElement?.focus();
+      this.#focusReturnTarget?.focus();
     }
 
     await super.close(options);
-  }
-
-  get #focusIsUnowned(): boolean {
-    const { activeElement } = document;
-    return !activeElement || activeElement === document.body;
   }
 
   @action

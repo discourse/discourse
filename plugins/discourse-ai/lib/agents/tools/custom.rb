@@ -104,7 +104,15 @@ module DiscourseAi
                 blk.call(raw, true)
               end
             end
-          result = runner.invoke(progress_callback: callback)
+          result =
+            begin
+              runner.invoke(progress_callback: callback)
+            rescue MiniRacer::RuntimeError => error
+              @chain_next_response = true
+              self.custom_raw = nil
+              runner.custom_raw = nil
+              return { error: error.message }
+            end
 
           # IMPORTANT: Get custom_raw ONCE - calling it multiple times clears it!
           custom_raw_value = runner.custom_raw

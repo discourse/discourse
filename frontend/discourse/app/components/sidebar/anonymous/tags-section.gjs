@@ -3,11 +3,10 @@ import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
-import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AllTagsSectionLink from "../common/all-tags-section-link";
-import Section from "../section";
-import SectionLink from "../section-link";
+import AllTagsSectionLink from "../common/all-tags-section-link.gjs";
+import Section from "../section.gjs";
+import SectionLink from "../section-link.gjs";
 
 export default class SidebarAnonymousTagsSection extends Component {
   @service router;
@@ -42,28 +41,28 @@ export default class SidebarAnonymousTagsSection extends Component {
   <template>
     {{#if this.displaySection}}
       <Section
-        @sectionName="tags"
-        @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
-        @collapsable={{@collapsable}}
         @activeLink={{this.activeLink}}
+        @collapsable={{@collapsable}}
         @expandWhenActive={{@expandActiveSection}}
+        @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
+        @sectionName="tags"
       >
 
         {{#each this.sectionLinks as |sectionLink|}}
           <SectionLink
+            data-tag-name={{sectionLink.tagName}}
+            @content={{sectionLink.text}}
+            @currentWhen={{sectionLink.currentWhen}}
+            @models={{sectionLink.models}}
+            @prefixColor={{sectionLink.prefixColor}}
+            @prefixType={{sectionLink.prefixType}}
+            @prefixValue={{sectionLink.prefixValue}}
+            @route={{sectionLink.route}}
             @scrollIntoView={{and
               @scrollActiveLinkIntoView
               (eq sectionLink.name this.activeLink.name)
             }}
-            @route={{sectionLink.route}}
-            @content={{sectionLink.text}}
             @title={{sectionLink.title}}
-            @currentWhen={{sectionLink.currentWhen}}
-            @prefixType={{sectionLink.prefixType}}
-            @prefixValue={{sectionLink.prefixValue}}
-            @prefixColor={{sectionLink.prefixColor}}
-            @models={{sectionLink.models}}
-            data-tag-name={{sectionLink.tagName}}
           />
         {{/each}}
 

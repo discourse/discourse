@@ -221,8 +221,8 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
             @options={{hash categoryId=1}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -326,8 +326,8 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -340,7 +340,12 @@ module(
       assert.dom(".select-kit-header button[data-name='potato']").exists();
 
       const filterInput = ".select-kit-header .filter-input";
-      await click(filterInput);
+      await triggerKeyEvent(".select-kit-header", "keydown", 77);
+
+      assert.dom(filterInput).isFocused();
+      assert.dom(filterInput).hasValue("m");
+
+      await this.subject.emptyFilter();
 
       await triggerKeyEvent(filterInput, "keydown", "ArrowDown");
       await triggerKeyEvent(filterInput, "keydown", "Enter");
@@ -369,8 +374,8 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{this.value}}
           />
         </template>
       );

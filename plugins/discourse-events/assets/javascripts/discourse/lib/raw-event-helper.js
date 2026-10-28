@@ -1,3 +1,4 @@
+import { camelize } from "@ember/string";
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 
 let lastSetting;
@@ -71,6 +72,64 @@ export function livestreamSource(location, url) {
   return location?.trim() ? location : url;
 }
 
+// Mirrors `Event#expired?` on the server.
+export function hasEventEnded({
+  startsAt,
+  endsAt,
+  recurrence,
+  recurrenceUntil,
+}) {
+  if (recurrence) {
+    return !!recurrenceUntil && moment().isAfter(moment(recurrenceUntil));
+  }
+
+  const end = endsAt || (startsAt && moment(startsAt).endOf("day"));
+  return !!end && moment().isAfter(end);
+}
+
+// The recording only becomes relevant once there is something to record, but
+// an existing link stays editable even if the dates move forward.
+export function showRecordingField({ recording, livestream, ...dates }) {
+  return !!recording || (!!livestream && hasEventEnded(dates));
+}
+
+export function eventDateInTimezone(value, timezone) {
+  if (!value) {
+    return null;
+  }
+
+  const eventTimezone = timezone || "UTC";
+  return moment.isMoment(value)
+    ? value.clone().tz(eventTimezone)
+    : moment.tz(value, eventTimezone);
+}
+
+export function allDayTransition({ startsAt, endsAt, timezone, allDay }) {
+  if (allDay) {
+    const startDate = (startsAt ?? moment.tz(timezone)).format("YYYY-MM-DD");
+    const start = moment.tz(startDate, timezone);
+    const sameDay = endsAt?.format("YYYY-MM-DD") === startDate;
+    const end =
+      !endsAt || sameDay
+        ? null
+        : moment.tz(endsAt.format("YYYY-MM-DD"), timezone);
+    return { startsAt: start, endsAt: end };
+  }
+
+  if (!startsAt) {
+    return { startsAt, endsAt };
+  }
+
+  const now = moment.tz(timezone);
+  const start = startsAt
+    .clone()
+    .hour(now.hour())
+    .minute(now.minute())
+    .second(0)
+    .millisecond(0);
+  return { startsAt: start, endsAt: start.clone().add(1, "hour") };
+}
+
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
   const start = startsAt ? moment(startsAt) : null;
   const end = endsAt ? moment(endsAt) : null;
@@ -84,8 +143,7 @@ export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
 }
 
 export function reminderToBBCode(reminder) {
-  const raw = parseInt(reminder.value, 10);
-  const magnitude = Math.abs(Number.isFinite(raw) ? raw : 0);
+  const magnitude = Math.abs(parseInt(reminder.value, 10));
   const value = reminder.period === "after" ? -magnitude : magnitude;
   return `${reminder.type}.${value}.${reminder.unit}`;
 }
@@ -107,6 +165,7 @@ export function attendanceTransition({
   reminders,
   previousRsvpStatus,
   previousMaxAttendees,
+  value,
 }) {
   let nextStatus = status;
   let nextMax = maxAttendees;
@@ -139,7 +198,10 @@ export function attendanceTransition({
       }
       nextMax = null;
     } else if (mode === "upTo") {
-      nextMax = previousMaxAttendees || null;
+      nextMax = value ?? previousMaxAttendees ?? null;
+      if (value != null) {
+        nextPrevMax = value;
+      }
     }
   }
 
@@ -182,7 +244,7 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   params.start = event.allDay
     ? moment(startsAt).format("YYYY-MM-DD")
-    : moment(startsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+    : eventDateInTimezone(startsAt, eventTz).format("YYYY-MM-DD HH:mm");
 
   if (event.isClosed) {
     params.closed = "true";
@@ -206,6 +268,10 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   if (event.url && event.url.trim()) {
     params.url = event.url;
+  }
+
+  if (event.recordingUrl && event.recordingUrl.trim()) {
+    params.recording = event.recordingUrl.trim();
   }
 
   if (event.timezone) {
@@ -249,30 +315,22 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
   if (endsAt) {
     params.end = event.allDay
       ? moment(endsAt).format("YYYY-MM-DD")
-      : moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+      : eventDateInTimezone(endsAt, eventTz).format("YYYY-MM-DD HH:mm");
   }
 
   if (event.status === "private") {
     params.allowedGroups = (event.rawInvitees || []).join(",");
   }
 
+  const hosts = (event.hosts || [])
+    .map((host) => (typeof host === "string" ? host : host?.username))
+    .filter(Boolean);
+  if (hosts.length) {
+    params.hosts = hosts.join(",");
+  }
+
   if (event.reminders && event.reminders.length) {
-    params.reminders = event.reminders
-      .map((r) => {
-        // we create a new intermediate object to avoid changes in the UI while
-        // we prepare the values for request
-        const reminder = Object.assign({}, r);
-
-        if (reminder.period === "after") {
-          reminder.value = `-${Math.abs(parseInt(reminder.value, 10))}`;
-        }
-        if (reminder.period === "before") {
-          reminder.value = Math.abs(parseInt(`${reminder.value}`, 10));
-        }
-
-        return `${reminder.type}.${reminder.value}.${reminder.unit}`;
-      })
-      .join(",");
+    params.reminders = event.reminders.map(reminderToBBCode).join(",");
   }
 
   if (event.imageUpload?.short_url) {
@@ -296,10 +354,6 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
 const EVENT_CLOSE_TAG = "[/event]";
 
-function dashedToCamel(key) {
-  return key.replace(/-([a-zA-Z0-9])/g, (_, c) => c.toUpperCase());
-}
-
 export function parseEventBlock(raw) {
   if (!raw) {
     return null;
@@ -319,7 +373,7 @@ export function parseEventBlock(raw) {
       const attrs = {};
       for (const [key, value] of Object.entries(parsed.attrs || {})) {
         if (key !== "_default") {
-          attrs[dashedToCamel(key)] = value;
+          attrs[camelize(key)] = value;
         }
       }
 
@@ -352,6 +406,26 @@ export function buildEventBlock(params, description) {
   return `[event ${buildBBCodeAttrs(attrs)}]\n${desc}[/event]`;
 }
 
+// Changes a single attribute of the event block, leaving everything else in
+// the raw as written. A blank value removes the attribute.
+export function setEventAttribute(raw, name, value) {
+  const parsed = parseEventBlock(raw);
+  if (!parsed) {
+    return false;
+  }
+
+  const attrs = { ...parsed.attrs };
+  if (value?.trim()) {
+    attrs[name] = value.trim();
+  } else {
+    delete attrs[name];
+  }
+
+  return raw.replace(parsed.full, () =>
+    buildEventBlock(attrs, parsed.description)
+  );
+}
+
 export function getCustomFieldNames(siteSettings) {
   return siteSettings.discourse_post_event_allowed_custom_fields
     .split("|")
@@ -382,10 +456,12 @@ export function defaultEventState() {
     livestream: false,
     minimal: false,
     url: null,
+    recording: null,
     image: null,
     allowedGroups: null,
     closed: false,
     customFields: {},
+    hosts: null,
   };
 }
 
@@ -420,10 +496,12 @@ export function parseEventAttrs(
     livestream: attrs.livestream === "true",
     minimal: attrs.minimal === "true",
     url: attrs.url || null,
+    recording: attrs.recording || null,
     image: attrs.image || null,
     allowedGroups: attrs.allowedGroups || null,
     closed: attrs.closed === "true",
     customFields,
+    hosts: attrs.hosts || null,
   };
 }
 
@@ -436,6 +514,7 @@ export function stateToEventInput(state) {
     name: state.name,
     location: state.location,
     url: state.url,
+    recordingUrl: state.recording,
     recurrence: state.recurrence,
     recurrenceUntil: state.recurrenceUntil,
     showLocalTime: state.showLocalTime,
@@ -447,6 +526,7 @@ export function stateToEventInput(state) {
     reminders: state.reminders,
     imageUpload: state.image ? { url: state.image } : null,
     customFields: state.customFields,
+    hosts: state.hosts ? state.hosts.split(",") : [],
   };
 }
 
@@ -457,16 +537,19 @@ export function parseReminders(reminders) {
   if (Array.isArray(reminders)) {
     return reminders;
   }
-  return reminders.split(",").map((reminderStr) => {
-    const [type, value, unit] = reminderStr.split(".");
-    const numericValue = Math.abs(parseInt(value, 10));
-    return {
-      type: type || "notification",
-      value: numericValue,
-      unit: unit || "hours",
-      period: parseInt(value, 10) < 0 ? "after" : "before",
-    };
-  });
+  return reminders
+    .split(",")
+    .map((reminderStr) => {
+      const [unit, value, type] = reminderStr.trim().split(".").reverse();
+      const numericValue = parseInt(value, 10);
+      return {
+        type: type || "notification",
+        value: Math.abs(numericValue),
+        unit,
+        period: numericValue < 0 ? "after" : "before",
+      };
+    })
+    .filter((reminder) => reminder.unit && Number.isFinite(reminder.value));
 }
 
 export function replaceRaw(params, raw) {

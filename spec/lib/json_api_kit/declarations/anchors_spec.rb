@@ -4,8 +4,8 @@ RSpec.describe JsonApiKit::Declarations::Anchors do
   subject(:anchors) { described_class.new(declarations, guardian:) }
 
   let(:anchor_class) { JsonApiKit::Declarations::Anchor }
-  let(:created_at_anchor) { anchor_class.new(:created_at) }
-  let(:declarations) { [anchor_class.new(:id), created_at_anchor] }
+  let(:created_at_anchor) { anchor_class.for(:created_at) }
+  let(:declarations) { [anchor_class.for(:id), created_at_anchor] }
   let(:guardian) { Guardian.new }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
@@ -27,7 +27,7 @@ RSpec.describe JsonApiKit::Declarations::Anchors do
     context "when the resource declares no anchor by that name" do
       subject(:anchor_declaration) { anchors.fetch("secrets") }
 
-      it "refuses the request" do
+      it "raises a key error" do
         expect { anchor_declaration }.to raise_error(KeyError)
       end
     end
@@ -45,12 +45,7 @@ RSpec.describe JsonApiKit::Declarations::Anchors do
     it "asks the matching anchor to locate the row" do
       located_row
 
-      expect(created_at_anchor).to have_received(:locate).with(
-        scope,
-        value: Time.utc(2026, 8, 3),
-        order:,
-        guardian:,
-      )
+      expect(created_at_anchor).to have_received(:locate).with(anchoring, scope:, order:, guardian:)
     end
 
     it "returns the row that anchor locates" do
