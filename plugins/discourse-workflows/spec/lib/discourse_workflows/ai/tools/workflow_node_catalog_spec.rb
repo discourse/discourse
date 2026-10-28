@@ -96,8 +96,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
 
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
     expect(output_fields_by_type.fetch("trigger:topic_created")).to include(
-      "post.user_id" => "integer",
-      "post.username" => "string",
+      "post.user_id" => "integer|null",
+      "post.username" => "string|null",
       "post.post_number" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",
@@ -108,8 +108,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "user.trust_level" => "integer",
     )
     expect(output_fields_by_type.fetch("trigger:post_created")).to include(
-      "post.user_id" => "integer",
-      "post.username" => "string",
+      "post.user_id" => "integer|null",
+      "post.username" => "string|null",
       "post.post_number" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",

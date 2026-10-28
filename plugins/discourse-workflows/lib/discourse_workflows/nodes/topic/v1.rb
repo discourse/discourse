@@ -25,6 +25,8 @@ module DiscourseWorkflows
           Schema.entity(
             "post",
             Schema::POST_PROPERTIES.except(
+              "hidden",
+              "locked",
               "category_name",
               "excerpt",
               "like_count",

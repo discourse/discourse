@@ -17,6 +17,8 @@ module DiscourseWorkflows
                :user_id,
                :created_at,
                :updated_at,
+               :hidden,
+               :locked,
                :excerpt,
                :like_count,
                :reply_count,
@@ -76,6 +78,10 @@ module DiscourseWorkflows
 
     def updated_at
       object.updated_at&.utc&.iso8601
+    end
+
+    def locked
+      object.locked?
     end
 
     def excerpt

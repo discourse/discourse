@@ -53,6 +53,16 @@ RSpec.describe DiscourseWorkflows::Schema do
     )
   end
 
+  it "declares the post's author nullable, for posts whose author was deleted",
+     :aggregate_failures do
+    post.update_columns(user_id: nil)
+    serialized = DiscourseWorkflows::EntitySerializers.serialize_post(post.reload)
+
+    expect(serialized).to include(user_id: nil, username: nil)
+    expect(described_class::POST_PROPERTIES.dig("user_id", "type")).to include("null")
+    expect(described_class::POST_PROPERTIES.dig("username", "type")).to include("null")
+  end
+
   it "matches DiscourseWorkflows::PostSerializer" do
     expect_ledger(
       described_class::POST_PROPERTIES,

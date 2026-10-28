@@ -27,7 +27,7 @@ RSpec.describe DiscourseWorkflows::Nodes::LockPost::V1 do
     events = DiscourseEvent.track_events(:post_locked) { result = run_node }
 
     expect(result).to include(
-      "post" => include("id" => post.id),
+      "post" => include("id" => post.id, "locked" => true),
       "actor" => include("id" => moderator.id),
       "changed" => true,
     )
