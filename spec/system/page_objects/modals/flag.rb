@@ -6,6 +6,10 @@ module PageObjects
       BODY_SELECTOR = ".flag-modal-body"
       MODAL_SELECTOR = ".flag-modal"
 
+      def has_staff_heading?
+        body.has_css?("h3", text: I18n.t("js.flagging.notify_staff"), exact_text: true, count: 1)
+      end
+
       def choose_type(type)
         body.find("#radio_#{type}").click
       end

@@ -140,10 +140,6 @@ export default class FlagActionType extends Component {
             </div>
           </label>
         </div>
-        {{#if @staffFlagsAvailable}}
-          <hr />
-          <h3>{{i18n "flagging.notify_staff"}}</h3>
-        {{/if}}
       {{else}}
         <div class="controls {{@flag.name_key}}">
           <label class="radio checkbox-label">

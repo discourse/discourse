@@ -26,7 +26,13 @@ function reportingChoices(flags, includeIllegalReport) {
     );
     choices.splice(index < 0 ? choices.length : index, 0, { kind: "dsa" });
   }
-  return choices;
+  const firstStaffChoice = choices.find(
+    ({ flag }) => flag?.name_key !== "notify_user"
+  );
+  return choices.map((choice) => ({
+    ...choice,
+    showStaffHeading: choice === firstStaffChoice,
+  }));
 }
 
 export default class Flag extends Component {
@@ -126,10 +132,6 @@ export default class Flag extends Component {
     return this.args.model.flagTarget
       .flagsAvailable(this)
       .filter((flag) => flag.enabled);
-  }
-
-  get staffFlagsAvailable() {
-    return this.flagsAvailable.length > 1 || this.canReportIllegalContent;
   }
 
   get submitEnabled() {
@@ -299,8 +301,14 @@ export default class Flag extends Component {
         <form>
           {{#each
             (reportingChoices this.flagsAvailable this.canReportIllegalContent)
-            as |choice|
+            as |choice index|
           }}
+            {{#if choice.showStaffHeading}}
+              {{#if index}}
+                <hr />
+              {{/if}}
+              <h3>{{i18n "flagging.notify_staff"}}</h3>
+            {{/if}}
             {{#if (eq choice.kind "flag")}}
               <FlagActionType
                 @changePostActionType={{this.changePostActionType}}
@@ -310,7 +318,6 @@ export default class Flag extends Component {
                 @onChangeConfirmed={{fn (mut this.isConfirmed)}}
                 @onChangeMessage={{fn (mut this.message)}}
                 @selectedFlag={{this.selected}}
-                @staffFlagsAvailable={{this.staffFlagsAvailable}}
                 @username={{@model.flagModel.username}}
               />
             {{else}}

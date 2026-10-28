@@ -29,6 +29,7 @@ RSpec.describe "Illegal content notices" do
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)
     expect(reporting_modal).to be_open
+    expect(reporting_modal).to have_staff_heading
     reporting_modal.report_illegal_content
     expect(notice_modal).to be_open
     expect(notice_modal).to have_post_url(reported_post)
@@ -62,6 +63,7 @@ RSpec.describe "Illegal content notices" do
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)
     expect(reporting_modal).to be_open
+    expect(reporting_modal).to have_staff_heading
     reporting_modal.report_illegal_content
     expect(notice_modal).to be_open
     expect(notice_modal).to have_post_url(reported_post)
