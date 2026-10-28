@@ -7,6 +7,8 @@
 el:
   js:
     dsa_notice:
+      choice_title: "Είναι παράνομο"
+      go_back: "Μετάβαση πίσω"
       title: "Αναφορά παράνομου περιεχομένου"
       email: "Διεύθυνση email"
     user_api_key:
@@ -47,6 +49,7 @@ el:
     access_control:
       manage:
         access_permission_editor: "Επεξεργαστής"
+        access_permission_owner: "Ιδιοκτήτης"
         access_permission_remove: "Αφαίρεση"
     carousel:
       go_to_slide: "Μετάβαση στη διαφάνεια %{index}"
@@ -8034,7 +8037,6 @@ el:
         silenced_by: "Σίγαση Από"
         silence_modal_title: "Σίγαση Χρήστη"
         silence_duration: "Για πόσο χρονικό διάστημα ο χρήστης θα σιωπηθεί;"
-        silence_reason_label: "Γιατί εσείς σιωπάτε αυτό τον χρήστη;"
         silence_reason_placeholder: "Αιτία σιώπησης"
         silence_message: "Μήνυμα email"
         silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"

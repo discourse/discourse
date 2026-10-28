@@ -6019,6 +6019,7 @@ ar:
     graph_title: "عدد مرات البحث"
   onebox:
     discourse:
+      event_all_day: "طوال اليوم"
       user_joined_community: "تاريخ الانضمام: %{date}"
     google_meet:
       title: "اجتماع Google Meet"
@@ -6029,6 +6030,10 @@ ar:
       truncated_file: "تم اقتطاع هذا الملف‎."
       show_original: "إظهار الأصل"
     github:
+      header:
+        file: "ملف"
+        success: "تم بنجاح"
+        pending: "قيد التقدُّم"
       binary_file: "هذا الملف ثنائي‎."
       truncated_file: "تم اقتطاع هذا الملف‎."
       show_original: "إظهار الأصل"
@@ -6042,21 +6047,12 @@ ar:
       review_by: "روجع من قِبل"
       pr_summary: "أدت %{commits} من عمليات التضمين إلى ‎تغيير ‎ %{changed_files}‎ من الملفات بإجراء %{additions} من الإضافات و%{deletions} من الحذوفات"
       no_description: "المساهمة في تطوير‎ %{repo} ‎من خلال إنشاء حساب على‎ GitHub."
-      pr_title:
-        default: "طلب سحب"
-        draft: "طلب سحب مسودة"
-        open: "طلب سحب مفتوح"
-        approved: "طلب سحب مُوافق عليه"
-        changes_requested: "التغييرات مطلوبة"
-        merged: "طلب سحب مُدمج"
-        closed: "طلب سحب مغلق"
-      status_date:
-        open: "مفتوحة"
-        draft: "تم إنشاؤه كمسودة"
-        approved: "تمت الموافقة عليها"
-        changes_requested: "التغييرات مطلوبة"
+      pr_status:
+        draft: "مسودة"
+        open: "فتح"
+        approved: "تمت الموافقة"
         merged: "تم دمجه"
-        closed: "مغلقة"
+        closed: "مغلق"
   discourse_push_notifications:
     popup:
       mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'

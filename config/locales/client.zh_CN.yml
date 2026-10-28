@@ -7,6 +7,8 @@
 zh_CN:
   js:
     dsa_notice:
+      choice_title: "非法"
+      go_back: "返回"
       title: "举报非法内容"
       content_url: "内容的确切 URL"
       explanation: "你为什么认为这些内容是非法的？"
@@ -14,7 +16,6 @@ zh_CN:
       name: "全名或组织名称"
       email: "电子邮件地址"
       declaration_section: "声明"
-      declaration: "我确认我真诚地相信本通知中的信息和指控是准确完整的。"
       submit: "提交报告"
       get_email_code: "获取电子邮件验证码"
       resend_email_code: "重新发送验证码"
@@ -79,6 +80,8 @@ zh_CN:
       manage:
         access_permission_editor: "编辑者"
         access_permission_editor_description: "可以创建和编辑此实体的内容"
+        access_permission_owner: "所有者"
+        access_permission_owner_description: "所有者对 %{target}拥有完全控制权，可以添加或删除其他所有者。"
         access_permission_viewer: "查看者"
         access_permission_viewer_description: "可以查看此实体的内容"
         access_permission_remove: "移除"
@@ -88,6 +91,7 @@ zh_CN:
         mandatory: "必要"
         disallowed: "不允许"
         required_permission_not_added: "此 %{typeName} 至少需要一名授权对象拥有 %{permission} 权限"
+        owner_required: "至少必须有一位用户保留此 %{typeName} 的所有权。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -1746,6 +1750,8 @@ zh_CN:
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
         您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
+      no_mentions_title: "你还没被提到呢。"
+      no_mentions_body: "当有人在帖子中提及你的 @用户名 时，通知将显示在此处。"
       no_other_notifications_title: "您还没有任何其他通知"
       no_other_notifications_body: >
         您将在此面板中收到可能与您相关的其他类型活动的通知 – 例如，当有人链接到或编辑您的帖子时。
@@ -8909,6 +8915,9 @@ zh_CN:
             configure_category_type: "配置类别类型"
             unconfigure_category_type: "取消配置类别类型"
             change_access_control_list_permissions: "更改访问控制列表权限"
+            add_access_control_list_owner: "添加访问控制列表所有者"
+            remove_access_control_list_owner: "移除访问控制列表所有者"
+            assume_access_control_ownership: "接管访问控制所有权"
             admin_onboarding_step_completed: "完成管理员入门步骤"
             admin_onboarding_completed: "完成管理员入门"
             admin_onboarding_dismissed: "忽略管理员入门"
@@ -9223,7 +9232,7 @@ zh_CN:
         silenced_by: "禁言操作者："
         silence_modal_title: "禁言用户"
         silence_duration: "该用户将被禁言多久？"
-        silence_reason_label: "您为什么禁言此用户？"
+        silence_reason_title: "禁言原因"
         silence_reason_placeholder: "禁言原因"
         silence_message: "电子邮件消息"
         silence_message_placeholder: "（留空以发送默认消息）"

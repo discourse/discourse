@@ -2,7 +2,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
+import OnboardingStep from "discourse/components/admin-onboarding/step";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setDefaultHomepage } from "discourse/lib/utilities";
@@ -484,6 +486,65 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .isDisabled("card is disabled after step completion");
   });
 
+  test("a registered step can stand in for `start_posting`", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("admin-onboarding-steps", ({ value }) =>
+        value.map((Step) =>
+          Step.name === "start_posting"
+            ? class StartChatting extends OnboardingStep {
+                static name = "start_posting";
+
+                i18nKey = "admin_onboarding_banner.custom.";
+
+                get description() {
+                  return "Say hello in #general.";
+                }
+
+                @action
+                performAction() {
+                  this.markAsCompleted();
+                }
+              }
+            : Step
+        )
+      );
+    });
+
+    const step = withStep("start_posting", assert);
+    await visit("/");
+
+    assert.deepEqual(
+      [...document.querySelectorAll(".onboarding-step")].map((el) => el.id),
+      ["select_theme", "start_posting", "invite_collaborators"],
+      "keeps the stand-in step in the posting step's place"
+    );
+    assert
+      .dom("#start_posting .onboarding-step__title")
+      .includesText(
+        "custom.start_posting.title",
+        "reads the title from the step's own locale keys"
+      );
+    assert
+      .dom("#start_posting .onboarding-step__description")
+      .hasText("Say hello in #general.", "renders the step's own description");
+    assert
+      .dom("#start_posting .onboarding-step__action .btn")
+      .includesText(
+        "custom.start_posting.action",
+        "reads the action label from the step's own locale keys"
+      );
+    step.isNotChecked();
+
+    await step.clickAction();
+
+    step.isChecked();
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "step_completed", step: "start_posting" }],
+      "logs the completion under the posting step"
+    );
+  });
+
   test("it can complete `invite_collaborators` step", async function (assert) {
     const step = withStep("invite_collaborators", assert);
     await visit("/");
@@ -793,6 +854,40 @@ acceptance("Admin - Onboarding Banner - setting disabled", function (needs) {
     assert
       .dom(".admin-onboarding-banner")
       .doesNotExist("does not show onboarding banner");
+  });
+});
+
+acceptance("Admin - Onboarding Banner - relocated banner", function (needs) {
+  needs.user({ admin: true, show_site_owner_onboarding: true });
+  needs.settings({ enable_site_owner_onboarding: true });
+
+  test("renders only at the render point matching the transformed location", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "admin-onboarding-banner-location",
+        () => "custom_spot"
+      );
+      api.renderInOutlet(
+        "below-site-header",
+        <template>
+          <div class="custom-spot">
+            <AdminOnboardingBanner @location="custom_spot" />
+          </div>
+        </template>
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists({ count: 1 }, "renders the banner once");
+    assert
+      .dom(".custom-spot .admin-onboarding-banner")
+      .exists("renders at the render point that claimed the location");
+    assert
+      .dom("#main-outlet .admin-onboarding-banner")
+      .doesNotExist("leaves the default render point empty");
   });
 });
 

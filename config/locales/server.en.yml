@@ -6354,7 +6354,7 @@ en:
   design_wizard:
     themes:
       concord:
-        description: "A channel-based layout for categories, chat channels, and voice/video rooms."
+        description: "Replaces the sidebar with a single channel list made of categories, chat channels and live audio/video rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."
@@ -6405,6 +6405,7 @@ en:
 
   onebox:
     discourse:
+      event_all_day: "All day"
       user_joined_community: "Joined %{date}"
     google_meet:
       title: "Google Meet meeting"

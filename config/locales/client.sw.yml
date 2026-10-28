@@ -20,6 +20,7 @@ sw:
     access_control:
       manage:
         access_permission_editor: "Mhariri"
+        access_permission_owner: "Mmiliki"
         access_permission_remove: "Ondoa"
     number:
       format:
@@ -3419,7 +3420,6 @@ sw:
         silenced_by: "Amenyamazishwa na"
         silence_modal_title: "Nyamazisha Mtumiaji"
         silence_duration: "Mtumiaji atanyamazishwa kwa mda gani?"
-        silence_reason_label: "Kwa nini unamnyamazisha mtumiaji?"
         silence_reason_placeholder: "Nyamazisha Sababu"
         silence_message: "Tuma ujumbe kwa Barua Pepe"
         silence_message_placeholder: "(acha wazi kutuma ujumbe halisi au msingi)"

@@ -4823,6 +4823,8 @@ sk:
       truncated_file: "Tento súbor bol skrátený."
       show_original: "zobraziť originál"
     github:
+      header:
+        success: "Úspech"
       binary_file: "Tento súbor je binárny."
       truncated_file: "Tento súbor bol skrátený."
       show_original: "zobraziť originál"
@@ -4836,10 +4838,11 @@ sk:
       review_by: "Recenzia od"
       pr_summary: "%{commits} revízie zmenili súbory %{changed_files} s pridaním %{additions} a odstránením %{deletions}"
       no_description: "Prispejte k vývoju %{repo} vytvorením účtu na GitHub."
-      status_date:
-        open: "otvorené"
-        approved: "schválený"
-        closed: "hlasovanie ukončené"
+      pr_status:
+        draft: "Návrh"
+        open: "Zahájiť"
+        approved: "Schválený"
+        closed: "Hlasovanie ukončené"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'

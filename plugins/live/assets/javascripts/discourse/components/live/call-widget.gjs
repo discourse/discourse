@@ -22,6 +22,7 @@ import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveCallControls from "./call-controls.gjs";
+import LiveReactionOverlay from "./reaction-overlay.gjs";
 import LiveRecordingBadge from "./recording-badge.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
 import LiveTranscriptBadge from "./transcript-badge.gjs";
@@ -757,6 +758,8 @@ export default class LiveCallWidget extends Component {
               </button>
             {{/if}}
           </div>
+
+          <LiveReactionOverlay @room={{this.room}} />
         {{/unless}}
 
         <footer class="live-call-widget__controls">
@@ -764,7 +767,7 @@ export default class LiveCallWidget extends Component {
             <DButton
               class="live-call-widget__expand"
               @action={{this.expandWidget}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.expandWidgetTitle}}
             />
           {{else}}
@@ -772,7 +775,7 @@ export default class LiveCallWidget extends Component {
             <DButton
               class="btn-default"
               @action={{this.openRoom}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.openRoomTitle}}
             />
             <DMenu

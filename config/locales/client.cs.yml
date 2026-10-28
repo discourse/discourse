@@ -7,6 +7,7 @@
 cs:
   js:
     dsa_notice:
+      choice_title: "Je to nezákonné"
       title: "Nahlásit protizákonný obsah"
       email: "E-mailová adresa"
     user_api_key:
@@ -33,6 +34,7 @@ cs:
     access_control:
       manage:
         access_permission_editor: "Uživatel"
+        access_permission_owner: "Vlastník"
         access_permission_remove: "Smazat"
     carousel:
       go_to_slide: "Přejít na snímek č. %{index}"
@@ -8458,7 +8460,7 @@ cs:
         silenced_by: "Ztišený uživatelem"
         silence_modal_title: "Ztišení uživatele"
         silence_duration: "Na jak dlouhou dobu bude uživatel ztišený?"
-        silence_reason_label: "Proč ztišujete tohoto uživatele?"
+        silence_reason_title: "Důvod ztišení"
         silence_reason_placeholder: "Důvod ztišení "
         silence_message: "e-mailová zpráva"
         silence_message_placeholder: "()"

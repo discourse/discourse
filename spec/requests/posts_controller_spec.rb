@@ -124,6 +124,27 @@ RSpec.describe PostsController do
       expect(parsed["cooked"]).to eq(new_post.cooked)
     end
 
+    it "localizes posts from Accept-Language for clients classified as crawlers" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_param = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+      SiteSetting.content_localization_supported_locales = "ja"
+      localized_post = Fabricate(:post, raw: "Original post body", locale: "en")
+      Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+
+      get "/posts/#{localized_post.id}",
+          headers: {
+            "HTTP_USER_AGENT" => "curl/8.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_LANGUAGE" => "ja",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["cooked"]).to eq("<p>翻訳された本文</p>")
+    end
+
     context "with version parameter" do
       let(:post_with_revisions) { Fabricate(:post, user: user, version: 2) }
       let(:post_revision) { Fabricate(:post_revision, post: post_with_revisions) }

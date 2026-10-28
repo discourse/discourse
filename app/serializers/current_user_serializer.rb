@@ -89,7 +89,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :impersonation_expires_at,
              :can_change_post_owner,
              :show_site_owner_onboarding,
-             :can_run_design_wizard
+             :can_run_design_wizard,
+             :can_use_dsa_account_email
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -103,6 +104,14 @@ class CurrentUserSerializer < BasicUserSerializer
   def initialize(object, options = {})
     super
     options[:include_status] = true
+  end
+
+  def can_use_dsa_account_email
+    Dsa::Notice.verified_account_email(object).present?
+  end
+
+  def include_can_use_dsa_account_email?
+    SiteSetting.dsa_reporting_enabled
   end
 
   def login_method

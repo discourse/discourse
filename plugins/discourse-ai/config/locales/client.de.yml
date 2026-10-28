@@ -31,7 +31,6 @@ de:
             failed: "Fehlgeschlagen"
         emotion:
           title: "Emotion"
-          description: "Die Tabelle zeigt die Anzahl der Beiträge an, die einer bestimmten Emotion zugeordnet wurden. Je nach gewählter Methode zur Emotionsklassifizierung werden die Beiträge entweder mit dem konfigurierten Emotionsklassifizierungsmodell („SamLowe/roberta-base-go_emotions“) oder mit dem konfigurierten Emotionsklassifizierungsagenten klassifiziert."
         reports:
           filters:
             group_by:
@@ -296,7 +295,6 @@ de:
         none: "Keine Auswahl"
       features:
         short_title: "Funktionen"
-        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Agenten und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück zu KI-Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
@@ -310,6 +308,7 @@ de:
         no_llm: "Kein LLM ausgewählt"
         no_agent: "Nicht festgelegt"
         no_groups: "Keine"
+        classification_model: "Modell:"
         edit: "Einstellungen"
         expand_list:
           one: "(%{count} weitere)"
@@ -329,10 +328,17 @@ de:
           not_enabled: "Nicht aktiviert"
         filters:
           all: "Gesamt"
-          text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
+        sentiment:
+          sentiment: "Stimmung"
+          emotion: "Emotion"
+          enabled: "Aktiviert"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Stimmung"
+            emotion: "Emotion"
         summarization:
           name: "Zusammenfassungen"
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"

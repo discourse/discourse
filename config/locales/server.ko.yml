@@ -3576,10 +3576,13 @@ ko:
     google_meet:
       meeting_code: "코드:"
     github:
+      header:
+        success: "성공"
       opened: "열림"
       closed: "닫힘"
-      status_date:
-        open: "열림"
+      pr_status:
+        draft: "임시저장"
+        open: "열기"
         approved: "승인"
         closed: "닫힘"
   discourse_push_notifications:

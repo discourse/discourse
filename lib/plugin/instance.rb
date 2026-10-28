@@ -355,6 +355,46 @@ class Plugin::Instance
     TopicList.on_preload_user_ids(enabled: method(:enabled?), &block)
   end
 
+  # Preloads a user custom field for the users serialized by `/user-cards.json`,
+  # so it can be read while serializing them without N+1 queries. It is not
+  # added to the response.
+  #
+  # The field is preloaded under its string name, so read it with a string key
+  # (`user.custom_fields["field_name"]`). A symbol key raises a NotPreloadedError.
+  #
+  # @param field [String, Symbol] The name of the user custom field.
+  #
+  # @example
+  #   register_user_cards_preloaded_custom_field(:card_theme)
+  #
+  # @return [void]
+  def register_user_cards_preloaded_custom_field(field)
+    DiscoursePluginRegistry.register_user_cards_preloaded_custom_field(field.to_s, self)
+  end
+
+  # Allows plugins to load data for all the users serialized by `/user-cards.json`
+  # at once, instead of querying per user in their serializer attributes. The
+  # block runs after core has preloaded the users' associations and custom fields.
+  #
+  # @yieldparam users [Array<User>] The users that will be serialized.
+  # @yieldparam guardian [Guardian] The guardian of the requesting user.
+  #
+  # @example
+  #   add_to_class(:user, :muted_by_current_user=) { |muted| @muted_by_current_user = muted }
+  #   add_to_class(:user, :muted_by_current_user) { @muted_by_current_user }
+  #
+  #   register_user_cards_preloader do |users, guardian|
+  #     next if guardian.anonymous?
+  #
+  #     muted_ids = guardian.user.muted_users.where(id: users.map(&:id)).pluck(:id)
+  #     users.each { |user| user.muted_by_current_user = muted_ids.include?(user.id) }
+  #   end
+  #
+  # @return [void]
+  def register_user_cards_preloader(&block)
+    DiscoursePluginRegistry.register_user_cards_preloader(block, self)
+  end
+
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
   # Example usage:
   #   register_search_topic_eager_load do |opts|

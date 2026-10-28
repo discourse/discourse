@@ -26,7 +26,6 @@ sk:
       description_placeholder: "Sem zadajte popis"
       ai:
         generate: "Generovať"
-        optional: "voliteľné"
       import:
         unparseable_json: "Súbor JSON, ktorý sa nedá rozdeliť."
         wrong_json: "Nesprávny súbor JSON. Súbor JSON by mal obsahovať objekt \"query\", ktorý by mal mať aspoň vlastnosť \"sql\"."
@@ -61,7 +60,7 @@ sk:
         few: "Zobrazuje sa prvých %{count} výsledkov."
         many: "Zobrazuje sa prvých %{count} výsledkov."
         other: "Zobrazujú sa prvé %{count} výsledky."
-      query_name: "Dopyt"
+      name: "Meno"
       query_groups: "Skupiny"
       query_tags: "Značky"
       link: "Odkaz na"

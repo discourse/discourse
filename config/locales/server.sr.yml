@@ -722,8 +722,9 @@ sr:
                 label: "Privatna"
   onebox:
     github:
-      status_date:
-        approved: "potvrđenji"
+      pr_status:
+        open: "Otvori"
+        approved: "Potvrđenji"
   staff_action_logs:
     unknown: "nepoznato"
   reviewables:

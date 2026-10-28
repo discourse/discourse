@@ -7,6 +7,8 @@
 tr_TR:
   js:
     dsa_notice:
+      choice_title: "Bu Yasa Dışı"
+      go_back: "Geri dön"
       title: "Yasa dışı içeriği bildirin"
       email: "E-posta adresi"
     user_api_key:
@@ -43,6 +45,7 @@ tr_TR:
     access_control:
       manage:
         access_permission_editor: "Düzenleyici"
+        access_permission_owner: "Sahip"
         access_permission_remove: "Kaldır"
     carousel:
       go_to_slide: "%{index} numaralı slayta git"
@@ -8235,7 +8238,7 @@ tr_TR:
         silenced_by: "Susturan:"
         silence_modal_title: "Kullanıcıyı Sustur"
         silence_duration: "Kullanıcı ne kadar süreyle susturulacak?"
-        silence_reason_label: "Neden bu kullanıcıyı susturuyorsunuz?"
+        silence_reason_title: "Susturulma sebebi"
         silence_reason_placeholder: "Susturulma Nedeni"
         silence_message: "E-posta Mesajı"
         silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"

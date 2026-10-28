@@ -75,6 +75,8 @@ nb_NO:
         filters:
           all: "Alle"
           reset: "Tilbakestill"
+        sentiment:
+          enabled: "Aktivert"
         search:
           name: "Søk"
         image_caption:

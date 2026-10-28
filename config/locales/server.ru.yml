@@ -5174,6 +5174,7 @@ ru:
     graph_title: "Количество поисковых запросов"
   onebox:
     discourse:
+      event_all_day: "Весь день"
       user_joined_community: "Регистрация: %{date}"
     google_meet:
       meeting_code: "Код:"
@@ -5181,6 +5182,8 @@ ru:
       truncated_file: "Файл был обрезан."
       show_original: "показать оригинал"
     github:
+      header:
+        success: "Успех"
       binary_file: "Двоичный файл."
       truncated_file: "Файл был обрезан."
       show_original: "показать оригинал"
@@ -5194,11 +5197,12 @@ ru:
       review_by: "Кем проверено"
       pr_summary: "Фиксаций: %{commits}. В них изменено файлов: %{changed_files}. Добавлений: %{additions}. Удалений: %{deletions}."
       no_description: "Внесите свой вклад в развитие %{repo}, создав аккаунт на GitHub."
-      status_date:
-        open: "открытые"
-        draft: "черновик"
-        approved: "подтверждено"
-        closed: "закрытые"
+      pr_status:
+        draft: "Черновик"
+        open: "Открытые"
+        approved: "Одобренные"
+        merged: "Объединено"
+        closed: "Закрытое"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} упомянул(а) вас в теме «%{topic}» —%{site_title}'

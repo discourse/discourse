@@ -3646,11 +3646,18 @@ ur:
   search_logs:
     graph_title: "سرچ شمار"
   onebox:
+    discourse:
+      event_all_day: "سارا دن"
     google_meet:
       meeting_code: "کَوڈ:"
     github:
+      header:
+        success: "کامیابی"
+        pending: "جاری ہے"
       closed: "بند"
-      status_date:
+      pr_status:
+        draft: "مسودہ"
+        open: "کھولیں"
         approved: "منظورشدہ"
         closed: "بند کیا"
   discourse_push_notifications:

@@ -7,6 +7,8 @@
 pt_BR:
   js:
     dsa_notice:
+      choice_title: "É ilegal"
+      go_back: "Voltar"
       title: "Denunciar conteúdo ilegal"
       email: "Endereço de e-mail"
       resend_email_code: "Reenviar código"
@@ -49,6 +51,7 @@ pt_BR:
     access_control:
       manage:
         access_permission_editor: "Editor(a)"
+        access_permission_owner: "Proprietário(a)"
         access_permission_remove: "Remover"
     carousel:
       go_to_slide: "Ir para o slide %{index}"
@@ -8101,7 +8104,7 @@ pt_BR:
         silenced_by: "Silenciado(a) por"
         silence_modal_title: "Silenciar usuário(a)"
         silence_duration: "Por quanto tempo o(a) usuário(a) será silenciado(a)?"
-        silence_reason_label: "Por que você está silenciando este(a) usuário(a)?"
+        silence_reason_title: "Motivo do silêncio"
         silence_reason_placeholder: "Motivo do silêncio"
         silence_message: "Mensagem do e-mail"
         silence_message_placeholder: "(deixe em branco para enviar a mensagem padrão)"

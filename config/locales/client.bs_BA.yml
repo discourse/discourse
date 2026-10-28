@@ -20,6 +20,7 @@ bs_BA:
     access_control:
       manage:
         access_permission_editor: "Urednik"
+        access_permission_owner: "Vlasnik"
         access_permission_remove: "Ukloni"
     number:
       format:
@@ -4366,7 +4367,6 @@ bs_BA:
         silenced_by: "Stišao je"
         silence_modal_title: "Stišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti ućutkan?"
-        silence_reason_label: "Zašto isključujete ovog korisnika?"
         silence_reason_placeholder: "Razlog za utišanje"
         silence_message: "Email Poruka"
         silence_message_placeholder: "(ostavite prazno za slanje zadane poruke)"

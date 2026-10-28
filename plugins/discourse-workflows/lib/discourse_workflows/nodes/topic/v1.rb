@@ -33,6 +33,7 @@ module DiscourseWorkflows
               "reply_to_post_id",
               "reply_to_username",
               "url",
+              "locale",
             ),
             "WebHookPostSerializer payload",
           )

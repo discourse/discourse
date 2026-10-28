@@ -7,6 +7,7 @@
 vi:
   js:
     dsa_notice:
+      choice_title: "Vi phạm pháp luật"
       title: "Báo cáo nội dung bất hợp pháp"
       email: "Địa chỉ email"
     user_api_key:
@@ -24,6 +25,7 @@ vi:
     access_control:
       manage:
         access_permission_editor: "Lần Đầu Sửa Tút"
+        access_permission_owner: "Chủ nhóm"
         access_permission_remove: "Bỏ"
         access_permission_remove_description: "Gỡ bỏ quyền của đối tượng này"
         add_group: "Thêm người dùng hoặc nhóm"
@@ -7647,7 +7649,7 @@ vi:
         silenced_by: "Đã hạn chế bởi"
         silence_modal_title: "Hạn chế thành viên"
         silence_duration: "Thành viên sẽ bị hạn chế trong bao lâu?"
-        silence_reason_label: "Tại sao bạn lại hạn chế thành viên này?"
+        silence_reason_title: "Lý do hạn chế"
         silence_reason_placeholder: "Lý do hạn chế"
         silence_message: "Tin nhắn Email"
         silence_message_placeholder: "(để trống để gửi tin nhắn mặc định)"

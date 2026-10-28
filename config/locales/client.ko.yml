@@ -24,6 +24,7 @@ ko:
     access_control:
       manage:
         access_permission_editor: "에디터"
+        access_permission_owner: "소유자"
         access_permission_remove: "제거"
     number:
       format:
@@ -5240,7 +5241,6 @@ ko:
         silenced_by: "차단자:"
         silence_modal_title: "사용자 차단"
         silence_duration: "이 사용자를 언제까지 차단할까요?"
-        silence_reason_label: "이 사용자를 차단하는 이유가 무엇인가요?"
         silence_reason_placeholder: "차단 이유"
         silence_message: "메시지 이메일 전송"
         silence_message_placeholder: "(디폴트 메시지를 보내려면 비워 두세요)"

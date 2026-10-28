@@ -88,7 +88,7 @@ pl_PL:
           fetch_error: "Nie udało się załadować metryk Zapytaj AI."
         emotion:
           title: "Emocje"
-          description: "Tabela zawiera liczbę wpisów sklasyfikowanych według określonej emocji. W zależności od wybranej metody klasyfikacji emocji wpisy są klasyfikowane albo za pomocą skonfigurowanego modelu klasyfikacji emocji („SamLowe/roberta-base-go_emotions”), albo skonfigurowanego agenta klasyfikacji emocji."
+          description: "Tabela zlicza posty sklasyfikowane według danej emocji, korzystając z wybranego zaplecza klasyfikacji emocji."
         reports:
           filters:
             group_by:
@@ -389,7 +389,7 @@ pl_PL:
         saved: "Zapisano domyślny model języka"
       features:
         short_title: "Cechy"
-        description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych agentów i LLM, a dostęp do nich może być kontrolowany przez grupy."
+        description: "Skonfiguruj funkcje AI dla swojej witryny, w tym ich agentów, modeli i uprawnień dostępu, jeśli są obsługiwane."
         back: "Powrót do funkcji AI"
         settings_save_error: "Niektórych ustawień nie udało się zapisać."
         disabled: "(wyłączone)"
@@ -407,6 +407,14 @@ pl_PL:
         no_llm: "Nie wybrano LLM"
         no_agent: "Nie ustawiony"
         no_groups: "Brak"
+        backend: "Zaplecze:"
+        backends:
+          agent: "Agent LLM"
+          decision_model: "Model decyzyjny"
+          classification_model: "Dedykowany punkt końcowy klasyfikacji"
+        decision_model: "Model decyzyjny:"
+        classification_model: "Model:"
+        not_configured: "Nie skonfigurowano"
         edit: "Ustawień"
         expand_list:
           one: "(%{count} więcej)"
@@ -428,10 +436,32 @@ pl_PL:
           not_enabled: "Nie włączono"
         filters:
           all: "Wszystkie"
-          text: "Wyszukaj funkcje, agentów, LLM-y lub grupy..."
+          text: "Szukaj funkcji, agentów, modeli lub grup..."
           no_results: "Nie znaleziono funkcji spełniających kryteria filtrów."
           reset: "Przywróć"
         no_automations: "Nie ma jeszcze żadnych automatyzacji"
+        sentiment:
+          name: "Sentyment i emocje"
+          description: "W tle klasyfikuje nastrój i emocje zawarte we wpisach"
+          sentiment: "Sentiment"
+          emotion: "Emocje"
+          backend: "Zaplecze"
+          enabled: "Włączone"
+          agent: "Agent"
+          decision_model: "Model decyzyjny"
+          posts_per_hour: "Wpisy na godzinę"
+          post_age_limit: "Limit wieku dla wpisów (dni)"
+          posts_per_hour_description: "Przybliżona częstotliwość. 0 zatrzymuje skanowanie, wliczając nowe wpisy. Edytowane wpisy są sprawdzane osobno."
+          background_description: "Sprawdza niesklasyfikowane wpisy co 5 minut, w ramach tych wspólnych limitów. Każdy włączony klasyfikator może generować żądanie na wpis. Odmowy mogą być ponawiane."
+          emotion_scores: "Wyniki rozdzielane są na 28 emocji."
+          model_change_warning: "Zmiana wybranego modelu nie powoduje reklasyfikacji istniejących wyników."
+          dedicated_description: "Dedykowane punkty końcowe klasyfikacji są konfigurowane w ustawieniach witryny."
+          configure_dedicated: "Skonfiguruj dedykowane punkty końcowe klasyfikacji"
+          manage_decision_models: "Zarządzaj modelami decyzyjnymi"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emocje"
+            background_processing: "Przetwarzanie w tle"
         summarization:
           name: "Podsumowania"
           description: "Udostępnia przycisk podsumowania, który umożliwia odwiedzającym podsumowanie tematów"
@@ -1243,7 +1273,7 @@ pl_PL:
           remove: "Usuń nagłówek"
         edit: "Edytuj"
         delete: "Delete"
-        confirm_delete: "Czy na pewno chcesz usunąć ten model decyzyjny? Przepływy pracy, które go używają, przestaną działać."
+        confirm_delete: "Czy na pewno chcesz usunąć ten model decyzyjny? Funkcje i przepływy pracy, które go używają, przestaną działać."
         saved: "Model decyzyjny zapisany"
         test: "Przeprowadź test"
         test_success: "Model decyzyjny odpowiedział na pytanie testowe (tak: %{percentage}%)."
@@ -1362,7 +1392,7 @@ pl_PL:
         type_descriptions:
           llm: "Generuje tekst dla funkcji, takich jak bot AI, podsumowania i pomocnik AI"
           embedding: "Zamienia treść w wektory do wyszukiwania semantycznego i powiązanych tematów"
-          decision: "Odpowiada na pytania dotyczące treści (tak/nie, wybór, wynik) z prawdopodobieństwem, do wykorzystania w przepływach pracy"
+          decision: "Odpowiedzi na pytania dotyczące treści (tak/nie, wybór, ocena) wraz z prawdopodobieństwami, do wykorzystania w funkcjach AI i procesach roboczych"
         type_filters:
           llm: "Duże modele językowe"
           embedding: "Modele osadzania"
