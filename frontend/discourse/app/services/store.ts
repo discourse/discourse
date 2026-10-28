@@ -9,6 +9,8 @@ import { getRegister } from "discourse/lib/get-owner";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import WeakValueMap from "discourse/lib/weak-value-map";
 import type Category from "discourse/models/category";
+import type PendingPost from "discourse/models/pending-post";
+import type PublishedPage from "discourse/models/published-page";
 import RestModel, {
   type RestModelAttrs,
   type RestModelClass,
@@ -27,6 +29,8 @@ import type UserDraft from "discourse/models/user-draft";
 /** Model instances by store type name. Plugins add theirs through module augmentation. */
 export interface ModelRegistry {
   category: Category;
+  "pending-post": PendingPost;
+  "published-page": PublishedPage;
   site: Site;
   topic: Topic;
   "user-draft": UserDraft;

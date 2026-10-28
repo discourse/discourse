@@ -29,7 +29,9 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import ActionSummary from "discourse/models/action-summary";
+import ActionSummary, {
+  type ActionSummaryFields,
+} from "discourse/models/action-summary";
 import type Archetype from "discourse/models/archetype";
 import Bookmark from "discourse/models/bookmark";
 import type Post from "discourse/models/post";
@@ -351,24 +353,17 @@ export default class Topic extends RestModel {
   static createActionSummary(result: Topic): void {
     if (result.actions_summary) {
       const lookup = EmberObject.create();
-      // TODO(typescript-pending): ActionSummary omits create-assigned fields; remove when ActionSummary is typed.
-      result.actions_summary = (
-        result.actions_summary as (TopicActionSummaryData & {
-          post: Topic;
-          actionType: NonNullable<ReturnType<Site["postActionTypeById"]>> & {
-            name_key: string;
-          };
-        })[]
-      ).map((a) => {
-        a.post = result;
-        // TODO(typescript-pending): PostActionType omits name_key; remove when PostActionType is typed.
-        a.actionType = Site.current().postActionTypeById(
-          a.id
-        ) as typeof a.actionType;
-        const actionSummary = ActionSummary.create(a as typeof a & RestPayload);
-        lookup.set(a.actionType.get("name_key"), actionSummary);
-        return actionSummary;
-      });
+      result.actions_summary = result.actions_summary.map(
+        (a: ActionSummaryFields) => {
+          a.post = result;
+          a.actionType = Site.current().postActionTypeById(a.id)!;
+          const actionSummary = ActionSummary.create(
+            a as typeof a & RestPayload
+          );
+          lookup.set(a.actionType.get("name_key"), actionSummary);
+          return actionSummary;
+        }
+      );
       result.set("actionByName", lookup);
     }
   }
@@ -1413,13 +1408,12 @@ export default class Topic extends RestModel {
           removeValuesFromArray(keys, ["details", "post_stream"]);
 
           if (json.published_page) {
-            // TODO(typescript-pending): store has no published-page registry entry; remove when PublishedPage is typed.
             this.set(
               "publishedPage",
               this.store.createRecord(
                 "published-page",
                 json.published_page as TopicPublishedPage & RestPayload
-              ) as PublishedPage
+              )
             );
           }
         }
