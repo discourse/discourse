@@ -7,6 +7,8 @@
 fr:
   js:
     dsa_notice:
+      choice_title: "C'est illégal"
+      go_back: "Retour"
       title: "Signaler un contenu illégal"
       email: "Adresse e-mail"
       resend_email_code: "Renvoyer le code"
@@ -8891,7 +8893,7 @@ fr:
         silenced_by: "Mis en sourdine par"
         silence_modal_title: "Mettre l'utilisateur en sourdine"
         silence_duration: "Combien de temps l'utilisateur sera-t-il mis en sourdine ?"
-        silence_reason_label: "Pourquoi mettez-vous cet utilisateur en sourdine ?"
+        silence_reason_title: "Raison de la mise en sourdine"
         silence_reason_placeholder: "Raison de la mise en sourdine"
         silence_message: "E-mail"
         silence_message_placeholder: "(laissez vide pour envoyer un message par défaut)"

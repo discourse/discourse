@@ -373,6 +373,8 @@ pl_PL:
         topic_id_description: "Wyzwalacz dotyczy tylko wydarzeń tego tematu. Pozostaw puste, aby uwzględnić wszystkie wydarzenia."
     discourse_post_event:
       new_event: "Nowe wydarzenie"
+      onebox:
+        all_day: "Cały dzień"
       notifications:
         before_event_reminder: "Wydarzenie wkrótce się rozpocznie"
         after_event_reminder: "Wydarzenie zakończyło się"

@@ -351,6 +351,8 @@ fr:
         topic_id: "ID du sujet"
     discourse_post_event:
       new_event: "Nouvel événement"
+      onebox:
+        all_day: "Toute la journée"
       notifications:
         before_event_reminder: "Un événement est sur le point de commencer"
         after_event_reminder: "Un événement est terminé"

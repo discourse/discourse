@@ -6,6 +6,8 @@
 
 nb_NO:
   js:
+    dsa_notice:
+      choice_title: "Det er ulovlig"
     user_api_key:
       authorize: "Autoriser"
       deny: "Avbryt"
@@ -5544,7 +5546,6 @@ nb_NO:
         silenced_by: "Dempet av"
         silence_modal_title: "Demp bruker"
         silence_duration: "Hvor lenge skal brukeren dempes?"
-        silence_reason_label: "Hvorfor forstummer du denne brukeren?"
         silence_reason_placeholder: "Årsak til demping"
         silence_message: "E-postmelding"
         silence_message_placeholder: "(la stå tom for forvalgt melding)"

@@ -60,6 +60,7 @@ zh_TW:
 
         請前往 %{channel_url} 的頻道重試。
   chat:
+    design_wizard_homepage_name: "聊天"
     deleted_chat_username: 已刪除
     crawler:
       directory_title: "聊天頻道"

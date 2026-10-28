@@ -5217,6 +5217,7 @@ zh_TW:
     graph_title: "搜尋計數"
   onebox:
     discourse:
+      event_all_day: "全天"
       user_joined_community: "%{date}加入"
     google_meet:
       title: "Google Meet 會議"

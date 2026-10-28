@@ -5174,6 +5174,7 @@ ru:
     graph_title: "Количество поисковых запросов"
   onebox:
     discourse:
+      event_all_day: "Весь день"
       user_joined_community: "Регистрация: %{date}"
     google_meet:
       meeting_code: "Код:"

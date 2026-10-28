@@ -351,6 +351,8 @@ ar:
         topic_id: "معرِّف الموضوع"
     discourse_post_event:
       new_event: "حدث جديد"
+      onebox:
+        all_day: "طوال اليوم"
       notifications:
         before_event_reminder: "هناك حدث على وشك البدء"
         after_event_reminder: "هناك حدث انتهى"
