@@ -4,7 +4,12 @@ $max_video_height: 250px;
 .chat-message {
   // append selectors to set images to a
   // max height of $max_image_height
-  .onebox img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
+  .onebox
+    img:not(
+      .ytp-thumbnail-image,
+      .onebox-avatar-inline,
+      .discourse-event-onebox__image
+    ),
   img.onebox,
   .chat-uploads img,
   p img,
@@ -41,6 +46,16 @@ $max_video_height: 250px;
     }
   }
 
+  // Event images are sized by the onebox width, so match the width used in posts
+  aside.onebox:has(.discourse-event-onebox) {
+    max-width: var(--topic-body-width);
+  }
+
+  // Keeps event banner images compact in chat; cropped images lose more and letterboxed ones get wider bars
+  .discourse-event-onebox.--banner-image .discourse-event-onebox__image {
+    max-height: 12rem;
+  }
+
   .onebox:not(.githubpullrequest, .githubcommit, .githubissue) {
     @container (width < 400px) {
       .onebox-body {
@@ -53,7 +68,7 @@ $max_video_height: 250px;
           margin-right: 0.5rem;
         }
 
-        .thumbnail {
+        .thumbnail:not(.discourse-event-onebox__image) {
           max-width: 100% !important;
           margin: 0;
         }
