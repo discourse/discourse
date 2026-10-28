@@ -291,7 +291,12 @@ class PostRevisionSerializer < ApplicationSerializer
     return @all_revisions if @all_revisions
 
     post_revisions =
-      PostRevision.where(post_id: object.post_id).order(number: :desc).limit(99).to_a.reverse
+      PostRevision
+        .where(post_id: object.post_id)
+        .order(number: :desc)
+        .limit(PostRevision::HISTORY_WINDOW)
+        .to_a
+        .reverse
 
     latest_modifications = {
       "raw" => [post.raw],

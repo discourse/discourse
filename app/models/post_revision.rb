@@ -4,6 +4,9 @@ class PostRevision < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
 
+  # The history modal only loads this many of a post's newest revisions.
+  HISTORY_WINDOW = 99
+
   attr_accessor :silent
 
   serialize :modifications, type: Hash, coder: YAML
@@ -30,13 +33,16 @@ class PostRevision < ActiveRecord::Base
     SQL
   end
 
-  # Unlisted revisions are public, so one is still opened when no listed one is left.
+  # Unlisted revisions are public, so one is still opened when no listed one is left among the
+  # revisions the history loads.
   def self.latest_for(post, guardian, include_unlisted: false)
     revisions = where(post_id: post.id).order(:number)
     revisions = revisions.where(hidden: false) if !guardian.can_view_hidden_post_revisions?
     return revisions.last if include_unlisted || guardian.can_navigate_unlisted_post_revisions?
 
-    revisions.where(unlisted: false).last || revisions.last
+    loaded_numbers =
+      where(post_id: post.id).order(number: :desc).limit(HISTORY_WINDOW).select(:number)
+    revisions.where(unlisted: false, number: loaded_numbers).last || revisions.last
   end
 
   def categories

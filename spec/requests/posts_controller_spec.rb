@@ -3930,6 +3930,17 @@ RSpec.describe PostsController do
         "unlisted" => true,
       )
     end
+
+    it "opens a loaded revision when the latest listed one is older than the loaded history" do
+      (4..102).each do |number|
+        Fabricate(:post_revision, post: revised_post, user: post_owner, number:, unlisted: true)
+      end
+
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_revision" => 102, "unlisted" => true)
+    end
   end
 
   describe "#hide_revision" do
