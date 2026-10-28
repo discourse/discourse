@@ -18,7 +18,7 @@ module DiscourseWorkflows
                  },
                  status: :created
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
           render(
@@ -30,7 +30,7 @@ module DiscourseWorkflows
         on_model_errors(:variable) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
       end
@@ -49,10 +49,10 @@ module DiscourseWorkflows
                      DiscourseWorkflows::WorkflowSerializer.new(workflow, root: false).as_json,
                  }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:existing_value_compatible_with_new_type) do |policy|
-          render(json: failed_json.merge(errors: [policy.reason]), status: :unprocessable_entity)
+          render(json: failed_json.merge(errors: [policy.reason]), status: :unprocessable_content)
         end
         on_failed_contract do |contract|
           render(
@@ -65,7 +65,7 @@ module DiscourseWorkflows
         on_model_errors(:variable) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
       end
@@ -79,7 +79,7 @@ module DiscourseWorkflows
                      DiscourseWorkflows::WorkflowSerializer.new(workflow, root: false).as_json,
                  }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
           render(
@@ -108,13 +108,13 @@ module DiscourseWorkflows
         on_failed_step(:activate_triggers) do |step_result|
           render(
             json: failed_json.merge(errors: Array(step_result.error)),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:value_is_valid) do |policy|
-          render(json: failed_json.merge(errors: [policy.reason]), status: :unprocessable_entity)
+          render(json: failed_json.merge(errors: [policy.reason]), status: :unprocessable_content)
         end
         on_failed_contract do |contract|
           render(
@@ -127,7 +127,7 @@ module DiscourseWorkflows
         on_model_errors(:variable) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
           )
         end
       end
@@ -143,7 +143,7 @@ module DiscourseWorkflows
                    skipped_keys: imported_variables[:skipped],
                  }
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
           render(

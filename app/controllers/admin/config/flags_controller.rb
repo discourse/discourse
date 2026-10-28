@@ -7,7 +7,7 @@ class Admin::Config::FlagsController < Admin::AdminController
         Discourse.request_refresh!
         render(json: success_json)
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_contract do |contract|
@@ -31,7 +31,7 @@ class Admin::Config::FlagsController < Admin::AdminController
         Discourse.request_refresh!
         render json: flag, serializer: FlagSerializer
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_policy(:unique_name) { render_json_error(I18n.t("flags.errors.unique_name")) }
       on_failed_contract do |contract|
@@ -46,7 +46,7 @@ class Admin::Config::FlagsController < Admin::AdminController
         Discourse.request_refresh!
         render json: flag, serializer: FlagSerializer
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_policy(:not_system) { render_json_error(I18n.t("flags.errors.system")) }
       on_failed_policy(:not_used) { render_json_error(I18n.t("flags.errors.used")) }
@@ -64,7 +64,7 @@ class Admin::Config::FlagsController < Admin::AdminController
         Discourse.request_refresh!
         render(json: success_json)
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_policy(:invalid_move) { render_json_error(I18n.t("flags.errors.wrong_move")) }
@@ -80,7 +80,7 @@ class Admin::Config::FlagsController < Admin::AdminController
         Discourse.request_refresh!
         head :no_content
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:flag) { raise Discourse::NotFound }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_policy(:invalid_move) { render_json_error(I18n.t("flags.errors.wrong_move")) }
@@ -96,7 +96,7 @@ class Admin::Config::FlagsController < Admin::AdminController
         Discourse.request_refresh!
         render(json: success_json)
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:not_system) { render_json_error(I18n.t("flags.errors.system")) }
       on_failed_policy(:not_used) { render_json_error(I18n.t("flags.errors.used")) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }

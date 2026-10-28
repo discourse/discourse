@@ -41,7 +41,7 @@ module DiscourseAi
             Rails.logger.error("Discourse AI ask failed\n#{result.inspect_steps}")
             render_json_error(
               I18n.t("discourse_ai.ai_bot.discoveries.errors.processing_failed"),
-              status: :unprocessable_entity,
+              status: :unprocessable_content,
             )
           end
         end
@@ -100,7 +100,7 @@ module DiscourseAi
         Rails.logger.error("Discourse AI Discoveries follow-up failed: #{e.class}")
         render_json_error(
           I18n.t("discourse_ai.ai_bot.discoveries.errors.follow_up_failed"),
-          status: :unprocessable_entity,
+          status: :unprocessable_content,
         )
       end
 
@@ -151,7 +151,7 @@ module DiscourseAi
 
         render json: success_json.merge(topic_id: post.topic_id)
       rescue StandardError => e
-        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
+        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_content
       end
 
       def ai_discover_agent

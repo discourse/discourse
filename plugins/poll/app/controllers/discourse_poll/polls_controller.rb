@@ -76,7 +76,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
       render json: {
                error: I18n.t("poll.ranked_choice.no_group_results_support"),
              },
-             status: :unprocessable_entity
+             status: :unprocessable_content
     else
       begin
         render json: {

@@ -10,7 +10,7 @@ module Middleware
       if overloaded?(env) && !authenticated_request?(env)
         return [
           503,
-          { "Content-Type" => "text/plain" },
+          { "content-type" => "text/plain" },
           ["Server is currently experiencing high load. Please try again later."]
         ]
       end

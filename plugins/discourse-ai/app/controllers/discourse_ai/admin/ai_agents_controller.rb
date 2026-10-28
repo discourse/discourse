@@ -94,7 +94,7 @@ module DiscourseAi
           render_json_error ai_agent
         end
       rescue InvalidSubagentIds => e
-        render_json_error e.message, status: :unprocessable_entity
+        render_json_error e.message, status: :unprocessable_content
       end
 
       def create_user
@@ -125,7 +125,7 @@ module DiscourseAi
           render_json_error @ai_agent
         end
       rescue InvalidSubagentIds => e
-        render_json_error e.message, status: :unprocessable_entity
+        render_json_error e.message, status: :unprocessable_content
       end
 
       def destroy
@@ -180,10 +180,10 @@ module DiscourseAi
                    errors: [e.message],
                    conflicts: e.conflicts,
                  },
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
         rescue StandardError => e
           Rails.logger.error("AI Agent import failed: #{e.message}")
-          render_json_error "Import failed: #{e.message}", status: :unprocessable_entity
+          render_json_error "Import failed: #{e.message}", status: :unprocessable_content
         end
       end
 

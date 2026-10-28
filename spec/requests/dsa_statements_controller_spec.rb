@@ -62,7 +62,7 @@ RSpec.describe DsaStatementsController do
 
       put("/review/#{reviewable.id}/dsa-classification.json", params:)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"]).to include(I18n.t("dsa_statements.errors.failed"))
     end
 
@@ -72,7 +72,7 @@ RSpec.describe DsaStatementsController do
 
       put("/review/#{reviewable.id}/dsa-classification.json", params:)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"]).to include(a_string_matching(/Category/))
     end
 

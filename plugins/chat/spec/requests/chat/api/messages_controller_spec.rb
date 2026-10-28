@@ -377,7 +377,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
                      message: message,
                      thread_id: thread.id,
                    }
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
               expect(response.parsed_body["errors"]).to include(
                 /thread is not part of the provided channel/i,
               )
@@ -394,7 +394,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
                      in_reply_to_id: message_1.id,
                      thread_id: another_thread.id,
                    }
-              expect(response).to have_http_status :unprocessable_entity
+              expect(response).to have_http_status :unprocessable_content
               expect(response.parsed_body["errors"]).to include(/does not match parent message/)
             end
           end

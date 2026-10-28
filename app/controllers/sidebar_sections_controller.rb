@@ -107,7 +107,7 @@ class SidebarSectionsController < ApplicationController
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 
@@ -140,13 +140,13 @@ class SidebarSectionsController < ApplicationController
             limit: SiteSetting.max_sidebar_section_links,
             count: target_section.sidebar_section_links.count + 1,
           ),
-          status: :unprocessable_entity,
+          status: :unprocessable_content,
         )
       end
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 

@@ -32,7 +32,7 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
   def create
     Chat::AddUsersToChannel.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_failed_policy(:can_add_users_to_channel) do
         render_json_error(I18n.t("chat.errors.users_cant_be_added_to_channel"))
       end
@@ -52,7 +52,7 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
   def destroy
     Chat::RemoveUserFromChannel.call(service_params) do
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: :unprocessable_content) }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_model_not_found(:target_user) { raise Discourse::NotFound }
       on_failed_policy(:can_remove_users_from_channel) do

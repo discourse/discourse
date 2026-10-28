@@ -276,7 +276,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           post "/chat/#{channel.id}.json", params: params.merge(message: "excluded message")
         }.not_to change { channel.chat_messages.count }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["errors"]).to contain_exactly(
           I18n.t("chat.errors.not_accepting_dms", username: recipient.username),
         )

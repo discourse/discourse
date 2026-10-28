@@ -14,7 +14,7 @@ module DiscourseWorkflows
         on_success { |output_schemas:| render json: { output_schemas: } }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_exceptions(Schema::GraphResolver::NotConverged) do
-          render(json: failed_json, status: :unprocessable_entity)
+          render(json: failed_json, status: :unprocessable_content)
         end
         on_failed_contract do |contract|
           render(

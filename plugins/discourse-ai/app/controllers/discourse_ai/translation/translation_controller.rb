@@ -53,7 +53,7 @@ module DiscourseAi
           return(
             render_json_error(
               I18n.t("discourse_ai.translation.errors.all_posts_translated"),
-              status: :unprocessable_entity,
+              status: :unprocessable_content,
             )
           )
         end

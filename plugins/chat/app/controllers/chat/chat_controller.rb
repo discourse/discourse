@@ -58,7 +58,7 @@ module Chat
     def rebake
       Chat::RebakeMessage.call(service_params) do
         on_success { render(json: success_json) }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failure { render(json: failed_json, status: :unprocessable_content) }
         on_model_not_found(:channel) { raise Discourse::NotFound }
         on_failed_policy(:can_access_channel) { raise Discourse::InvalidAccess }
         on_model_not_found(:message) { raise Discourse::NotFound }

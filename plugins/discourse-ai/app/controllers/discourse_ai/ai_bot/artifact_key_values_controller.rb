@@ -58,7 +58,7 @@ module DiscourseAi
         elsif key_value.destroy
           head :ok
         else
-          render json: { errors: key_value.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: key_value.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -74,7 +74,7 @@ module DiscourseAi
         if key_value.save
           render json: AiArtifactKeyValueSerializer.new(key_value).as_json
         else
-          render json: { errors: key_value.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: key_value.errors.full_messages }, status: :unprocessable_content
         end
       end
 

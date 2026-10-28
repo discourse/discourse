@@ -615,7 +615,7 @@ RSpec.describe InvitesController do
 
         it "returns validation errors for a blocked email domain" do
           create_invite
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to have_http_status :unprocessable_content
           expect(response.parsed_body["errors"]).to be_present
         end
       end
@@ -625,7 +625,7 @@ RSpec.describe InvitesController do
 
         it "returns a validation error for an excessively long email address" do
           create_invite
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to have_http_status :unprocessable_content
           expect(response.parsed_body["errors"]).to be_present
           error_message = response.parsed_body["errors"].first
           expect(error_message).to eq("#{email} isn't a valid email address.")
@@ -642,7 +642,7 @@ RSpec.describe InvitesController do
 
           it "returns an error" do
             create_invite
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
             expect(body).to match(/no need to invite/)
           end
         end
@@ -652,7 +652,7 @@ RSpec.describe InvitesController do
 
           it "doesn’t inform the user" do
             create_invite
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
             expect(body).to match(/There was a problem with your request./)
           end
         end
@@ -672,7 +672,7 @@ RSpec.describe InvitesController do
 
         post "/invites.json", params: { domain: "example" }
 
-        expect(response).to have_http_status :unprocessable_entity
+        expect(response).to have_http_status :unprocessable_content
 
         error_message = response.parsed_body["errors"].first
         expect(error_message).to eq(I18n.t("invite.domain_not_allowed_admin"))
@@ -682,7 +682,7 @@ RSpec.describe InvitesController do
         sign_in(admin)
 
         post "/invites.json", params: { domain: "a" * 500 + ".ca" }
-        expect(response).to have_http_status :unprocessable_entity
+        expect(response).to have_http_status :unprocessable_content
 
         error_message = response.parsed_body["errors"].first
         expect(error_message).to eq("Domain is too long (maximum is 500 characters)")
@@ -692,7 +692,7 @@ RSpec.describe InvitesController do
         sign_in(admin)
 
         post "/invites.json", params: { custom_message: "b" * 1001, domain: "example.com" }
-        expect(response).to have_http_status :unprocessable_entity
+        expect(response).to have_http_status :unprocessable_content
 
         error_message = response.parsed_body["errors"].first
         expect(error_message).to eq("Custom message is too long (maximum is 1000 characters)")
@@ -1272,7 +1272,7 @@ RSpec.describe InvitesController do
 
           it "returns an error" do
             update_invite
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
             expect(body).to match(/no need to invite/)
           end
         end
@@ -1282,7 +1282,7 @@ RSpec.describe InvitesController do
 
           it "doesn't inform the user" do
             update_invite
-            expect(response).to have_http_status :unprocessable_entity
+            expect(response).to have_http_status :unprocessable_content
             expect(body).to match(/There was a problem with your request./)
           end
         end

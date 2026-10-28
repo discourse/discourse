@@ -122,7 +122,7 @@ class Admin::ThemesController < Admin::AdminController
       end
     else
       render_json_error I18n.t("themes.import_error.unknown_file_type"),
-                        status: :unprocessable_entity
+                        status: :unprocessable_content
     end
   rescue Theme::SettingsMigrationError => err
     render_json_error err.message
@@ -167,7 +167,7 @@ class Admin::ThemesController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
-      on_model_errors { |theme:| render json: theme.errors, status: :unprocessable_entity }
+      on_model_errors { |theme:| render json: theme.errors, status: :unprocessable_content }
       on_model_not_found(:theme) do |result|
         raise Discourse::NotFound if !result.exception
         render json: failed_json.merge(errors: result.exception.message), status: :bad_request
@@ -239,7 +239,7 @@ class Admin::ThemesController < Admin::AdminController
           error = I18n.t("themes.bad_color_scheme") if @theme.errors[:color_scheme].present?
           error ||= I18n.t("themes.other_error")
 
-          render json: { errors: [error] }, status: :unprocessable_entity
+          render json: { errors: [error] }, status: :unprocessable_content
         end
       end
     end

@@ -17,7 +17,7 @@ class ReviewableNotesController < ApplicationController
                  .as_json
                  .merge(unnotified_usernames: note.unnotified_usernames)
     else
-      render json: { errors: note.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: note.errors.full_messages }, status: :unprocessable_content
     end
   end
 

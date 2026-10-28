@@ -647,7 +647,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
           post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
         }.not_to change(Topic, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "continues from selected discussions when summary prose is hidden" do

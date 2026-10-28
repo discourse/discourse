@@ -176,7 +176,7 @@ module DiscourseEvents
     def render_bulk_invite_error
       render json:
                failed_json.merge(errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")]),
-             status: :unprocessable_entity
+             status: :unprocessable_content
     end
 
     def ics_request?

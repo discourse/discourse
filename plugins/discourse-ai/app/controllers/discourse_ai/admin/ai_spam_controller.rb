@@ -117,7 +117,7 @@ module DiscourseAi
           rescue ActiveRecord::RecordInvalid
             render_json_error(
               I18n.t("discourse_ai.spam_detection.bot_user_update_failed"),
-              status: :unprocessable_entity,
+              status: :unprocessable_content,
             )
           rescue StandardError
             render_json_error(

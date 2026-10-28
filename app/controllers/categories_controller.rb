@@ -236,7 +236,7 @@ class CategoriesController < ApplicationController
     end
 
     if configure_error
-      return render json: { errors: [configure_error] }, status: :unprocessable_entity
+      return render json: { errors: [configure_error] }, status: :unprocessable_content
     end
 
     if @category.persisted?
@@ -324,7 +324,7 @@ class CategoriesController < ApplicationController
       on_failed_policy(:nested_replies_enabled) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_category) { raise Discourse::InvalidAccess }
       on_failed_policy(:category_nested_replies_enabled) { raise Discourse::InvalidAccess }
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 
@@ -450,7 +450,7 @@ class CategoriesController < ApplicationController
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 
@@ -650,7 +650,7 @@ class CategoriesController < ApplicationController
           render json: {
                    errors: [category_type_unavailable_error(category_type)],
                  },
-                 status: :unprocessable_entity
+                 status: :unprocessable_content
           return false
         end
       end

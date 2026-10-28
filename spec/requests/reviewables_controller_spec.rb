@@ -1054,7 +1054,7 @@ RSpec.describe ReviewablesController do
               version: flagged.version,
             }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["errors"]).to be_present
         expect(flagged.reload).to be_pending
         expect(flagged.target_created_by.reload).not_to be_silenced

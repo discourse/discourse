@@ -23,23 +23,23 @@ class Admin::Config::DesignWizardController < Admin::AdminController
       on_failed_policy(:palettes_available_to_theme) do
         render json:
                  failed_json.merge(errors: [I18n.t("design_wizard.errors.palette_unavailable")]),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_failed_step(:update_site_settings) do
         render json:
                  failed_json.merge(
                    errors: [I18n.t("design_wizard.errors.site_settings_update_failed")],
                  ),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
       on_failed_step(:update_themeable_site_settings) do
         render json:
                  failed_json.merge(
                    errors: [I18n.t("design_wizard.errors.site_settings_update_failed")],
                  ),
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
-      on_failure { render json: failed_json, status: :unprocessable_entity }
+      on_failure { render json: failed_json, status: :unprocessable_content }
     end
   end
 end

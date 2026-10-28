@@ -822,7 +822,7 @@ class TopicsController < ApplicationController
     if topic.remove_allowed_user(current_user, user)
       render json: success_json
     else
-      render json: failed_json, status: :unprocessable_entity
+      render json: failed_json, status: :unprocessable_content
     end
   end
 
@@ -834,7 +834,7 @@ class TopicsController < ApplicationController
     if topic.remove_allowed_group(current_user, params[:name])
       render json: success_json
     else
-      render json: failed_json, status: :unprocessable_entity
+      render json: failed_json, status: :unprocessable_content
     end
   end
 
@@ -867,7 +867,7 @@ class TopicsController < ApplicationController
       topic.invite_group(current_user, group, should_notify: should_notify)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: "group")
     else
-      render json: failed_json, status: :unprocessable_entity
+      render json: failed_json, status: :unprocessable_content
     end
   end
 
@@ -892,7 +892,7 @@ class TopicsController < ApplicationController
 
     username_or_email = params[:user] ? fetch_username : fetch_email
     unless String === username_or_email
-      return render(json: failed_json, status: :unprocessable_entity)
+      return render(json: failed_json, status: :unprocessable_content)
     end
 
     group_ids =
@@ -902,7 +902,7 @@ class TopicsController < ApplicationController
 
     if Email.is_valid?(username_or_email)
       if !guardian.can_invite_via_email?(topic)
-        return render(json: failed_json, status: :unprocessable_entity)
+        return render(json: failed_json, status: :unprocessable_content)
       end
 
       return render(json: success_json) if User.find_by_email(username_or_email)
@@ -932,10 +932,10 @@ class TopicsController < ApplicationController
           end
         end
 
-        render json: json, status: :unprocessable_entity
+        render json: json, status: :unprocessable_content
       end
     rescue Topic::UserExists, Topic::NotAllowed => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
+      render json: { errors: [e.message] }, status: :unprocessable_content
     end
   end
 
@@ -1040,7 +1040,7 @@ class TopicsController < ApplicationController
       ).change_owner!
       render json: success_json
     rescue ArgumentError
-      render json: failed_json, status: :unprocessable_entity
+      render json: failed_json, status: :unprocessable_content
     end
   end
 
@@ -1064,7 +1064,7 @@ class TopicsController < ApplicationController
 
       render json: success_json
     rescue ActiveRecord::RecordInvalid, TopicTimestampChanger::InvalidTimestampError
-      render json: failed_json, status: :unprocessable_entity
+      render json: failed_json, status: :unprocessable_content
     end
   end
 
@@ -1509,7 +1509,7 @@ class TopicsController < ApplicationController
         current_user: current_user,
         topic_id: @topic_view.topic.id,
         post_number: @topic_view.current_post_number,
-        username: request["u"],
+        username: request.params["u"],
         ip_address: request.remote_ip,
       }
       # defer this way so we do not capture the whole controller

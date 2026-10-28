@@ -450,7 +450,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
     context "with invalid params" do
       it "renders a JSON response with errors for the new ai_agent" do
         post "/admin/plugins/discourse-ai/ai-agents.json", params: { ai_agent: { foo: "" } } # invalid attribute
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.content_type).to include("application/json")
       end
     end
@@ -898,7 +898,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
             },
           }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     context "with valid params" do
@@ -969,7 +969,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
             },
           }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(ai_agent.reload.name).to eq(original_name)
     end
 
@@ -982,7 +982,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
               },
             }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["errors"].join).not_to be_blank
         expect(response.parsed_body["errors"].join).not_to include("en.discourse")
       end
@@ -995,7 +995,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
               },
             }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["errors"].join).not_to be_blank
         expect(response.parsed_body["errors"].join).not_to include("en.discourse")
       end
@@ -1009,7 +1009,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
               },
             }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["errors"].join).not_to be_blank
         expect(response.parsed_body["errors"].join).not_to include("en.discourse")
       end
@@ -1055,7 +1055,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
                 name: "",
               },
             } # invalid attribute
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.content_type).to include("application/json")
       end
     end
@@ -1290,7 +1290,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       post "/admin/plugins/discourse-ai/ai-agents/import.json", params: import_data, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["conflicts"]["subagents"]).to eq(["Missing fact checker"])
     end
 
@@ -1299,7 +1299,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       post "/admin/plugins/discourse-ai/ai-agents/import.json", params: valid_import_data, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"].join).to include("ImportedAgent")
     end
 
@@ -1377,7 +1377,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       post "/admin/plugins/discourse-ai/ai-agents/import.json", params: invalid_data, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"]).to be_present
     end
 
@@ -1386,7 +1386,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       post "/admin/plugins/discourse-ai/ai-agents/import.json", params: invalid_data, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     context "with legacy persona format" do
@@ -1430,7 +1430,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              params: legacy_import_data,
              as: :json
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["errors"].join).to include("LegacyPersona")
       end
 
@@ -1511,7 +1511,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
     it "is not allowed to delete system agents" do
       expect {
         delete "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}.json"
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["errors"].join).not_to be_blank
         # let's make sure this is translated
         expect(response.parsed_body["errors"].join).not_to include("en.discourse")
@@ -1529,7 +1529,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
     it "ensures agent exists" do
       post "/admin/plugins/discourse-ai/ai-agents/stream-reply.json"
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       # this ensures localization key is actually in the yaml
       expect(response.body).to include("agent_name")
     end
@@ -1542,7 +1542,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              agent_id: ai_agent.id,
              user_unique_id: "site:test.com:user_id:1",
            }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include("query")
     end
 
@@ -1556,7 +1556,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              user_unique_id: "site:test.com:user_id:1",
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include("associated")
     end
 
@@ -1820,7 +1820,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              resume_token: resume_token,
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"].join).to include("tool_results")
     end
 
@@ -1960,7 +1960,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              custom_tools: tools,
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"].join).to include("custom_tools")
     end
 
@@ -1974,7 +1974,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              tool_results: [{ tool_call_id: "tool_2", content: "plural" }],
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"].join).to include("either tool_results or tool_result")
     end
 
@@ -1985,7 +1985,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              tool_results: [{ tool_call_id: "tool_1", content: "a" * 103_000 }],
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"].join).to include("at most")
     end
 
@@ -1995,7 +1995,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
              tool_results: [{ tool_call_id: "tool_1", content: nil }],
            }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"].join).to include("tool_results")
     end
 
