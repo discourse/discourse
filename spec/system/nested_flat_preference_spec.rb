@@ -77,6 +77,18 @@ RSpec.describe "Nested replies flat view preference" do
     end
   end
 
+  it "keeps the linked post when switching from a single thread" do
+    sign_in(user)
+    nested_view.visit_nested_context(topic, post_number: 3)
+    expect(nested_view).to have_context_view
+
+    find(".nested-view-toggle.--to-flat").click
+
+    expect(nested_view).to have_no_nested_view
+    expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}/3", ignore_query: true)
+    expect(topic_page).to have_post_number(3)
+  end
+
   it "carries an anonymous flat view over to the account on login" do
     nested_view.visit_nested(topic)
     find(".nested-view-toggle.--to-flat").click

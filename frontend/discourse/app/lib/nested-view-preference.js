@@ -51,8 +51,9 @@ function currentPostNumber(router, topic) {
     }
   }
 
+  // A single thread shows the first post only as context above the thread.
   const selector = topic.rendersNested
-    ? ".nested-view [data-post-number]"
+    ? ".nested-view:not(.nested-context-view) [data-post-number], .nested-context-view [data-post-number]:not(.nested-view__op-article)"
     : ".topic-post[data-post-number]";
   let visiblePost;
   let closestTop = Infinity;
@@ -133,15 +134,20 @@ export async function toggleFlatRepliesPreference({
   const postNumber = currentPostNumber(router, topic);
 
   if (!currentUser) {
-    return switchTopicView(router, topic, () => {
-      if (preferFlat) {
-        keyValueStore.set({ key: ANON_KEY, value: "true" });
-      } else {
-        keyValueStore.remove(ANON_KEY);
-      }
-      // Local storage isn't tracked.
-      topic.notifyPropertyChange("rendersNested");
-    });
+    return switchTopicView(
+      router,
+      topic,
+      () => {
+        if (preferFlat) {
+          keyValueStore.set({ key: ANON_KEY, value: "true" });
+        } else {
+          keyValueStore.remove(ANON_KEY);
+        }
+        // Local storage isn't tracked.
+        topic.notifyPropertyChange("rendersNested");
+      },
+      postNumber
+    );
   }
 
   // Saved before updating the user so the view doesn't switch to stale
