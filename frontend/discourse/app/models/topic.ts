@@ -1065,9 +1065,25 @@ export default class Topic extends RestModel {
     return this.unread_posts || this.new_posts;
   }
 
-  @computed("last_read_post_number", "url", "is_nested_view")
+  /**
+   * Whether the topic renders as nested replies for the current user, who may
+   * prefer the flat view even when the topic itself is nested.
+   */
+  @computed("is_nested_view", "currentUser.user_option.prefer_flat_replies")
+  get rendersNested(): boolean {
+    return (
+      !!this.is_nested_view &&
+      !(
+        this.currentUser as
+          | (User & { user_option?: { prefer_flat_replies?: boolean } })
+          | null
+      )?.user_option?.prefer_flat_replies
+    );
+  }
+
+  @computed("last_read_post_number", "url", "rendersNested")
   get lastReadUrl() {
-    if (this.is_nested_view) {
+    if (this.rendersNested) {
       return this.url;
     }
     return this.urlForPostNumber(this.last_read_post_number);
@@ -1077,10 +1093,10 @@ export default class Topic extends RestModel {
     "last_read_post_number",
     "highest_post_number",
     "url",
-    "is_nested_view"
+    "rendersNested"
   )
   get lastUnreadUrl() {
-    if (this.is_nested_view) {
+    if (this.rendersNested) {
       return this.url;
     }
 
@@ -1112,9 +1128,9 @@ export default class Topic extends RestModel {
     return this.urlForPostNumber(postNumber);
   }
 
-  @computed("highest_post_number", "url", "is_nested_view")
+  @computed("highest_post_number", "url", "rendersNested")
   get lastPostUrl() {
-    if (this.is_nested_view) {
+    if (this.rendersNested) {
       return this.url;
     }
     return this.urlForPostNumber(this.highest_post_number);

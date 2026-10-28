@@ -13,6 +13,7 @@ class UserOptionSerializer < ApplicationSerializer
              :dynamic_favicon,
              :enable_quoting,
              :enable_smart_lists,
+             :prefer_flat_replies,
              :enable_markdown_monospace_font,
              :digest_after_minutes,
              :automatically_unpin_topics,

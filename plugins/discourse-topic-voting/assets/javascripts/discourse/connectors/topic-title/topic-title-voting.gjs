@@ -6,7 +6,7 @@ export default <template>
       (and
         topic.can_vote
         (or
-          topic.is_nested_view
+          topic.rendersNested
           (and topic.postStream.loaded topic.postStream.firstPostPresent)
         )
       )

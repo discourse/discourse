@@ -261,6 +261,14 @@ export default <template>
       @checked={{@controller.model.user_option.enable_smart_lists}}
       @labelKey="user.enable_smart_lists"
     />
+    {{#if @controller.siteSettings.nested_replies_enabled}}
+      <PreferenceCheckbox
+        class="pref-prefer-flat-replies"
+        data-setting-name="user-prefer-flat-replies"
+        @checked={{@controller.model.user_option.prefer_flat_replies}}
+        @labelKey="user.prefer_flat_replies"
+      />
+    {{/if}}
     {{#if @controller.siteSettings.automatically_unpin_topics}}
       <PreferenceCheckbox
         class="pref-auto-unpin"

@@ -28,6 +28,7 @@ class UserUpdater
     external_links_in_new_tab
     enable_quoting
     enable_smart_lists
+    prefer_flat_replies
     enable_markdown_monospace_font
     color_scheme_id
     dark_scheme_id

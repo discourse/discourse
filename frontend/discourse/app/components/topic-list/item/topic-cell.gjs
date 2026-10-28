@@ -75,7 +75,7 @@ export default class TopicCell extends Component {
           />
           {{~! no whitespace ~}}
           <UnreadIndicator @topic={{@topic}} />
-          {{~#if @topic.is_nested_view~}}
+          {{~#if @topic.rendersNested~}}
             {{~#if @topic.has_new_replies~}}
               <NewRepliesDot @topic={{@topic}} />
             {{~/if~}}

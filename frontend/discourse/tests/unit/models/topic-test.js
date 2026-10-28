@@ -8,6 +8,7 @@ import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import TopicDetails from "discourse/models/topic-details";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Model | topic", function (hooks) {
   setupTest(hooks);
@@ -120,6 +121,22 @@ module("Unit | Model | topic", function (hooks) {
     assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101");
     assert.strictEqual(topic.lastReadUrl, "/t/hello/101");
     assert.strictEqual(topic.lastPostUrl, "/t/hello/101");
+  });
+
+  test("nested view URLs keep post numbers when the user prefers flat replies", function (assert) {
+    logIn(this.owner).set("user_option.prefer_flat_replies", true);
+    const topic = this.store.createRecord("topic", {
+      id: 101,
+      highest_post_number: 10,
+      last_read_post_number: 5,
+      slug: "hello",
+      is_nested_view: true,
+    });
+
+    assert.false(topic.rendersNested);
+    assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101/6");
+    assert.strictEqual(topic.lastReadUrl, "/t/hello/101/5");
+    assert.strictEqual(topic.lastPostUrl, "/t/hello/101/10");
   });
 
   test("has details", function (assert) {

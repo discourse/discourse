@@ -72,7 +72,7 @@ export default class TopicFromParams extends DiscourseRoute {
     const topic = this.modelFor("topic");
 
     const queryParams = transition?.to?.queryParams || {};
-    if (topic.is_nested_view) {
+    if (topic.rendersNested) {
       return this.#loadNestedModel(topic, params, queryParams).catch((e) => {
         if (!isTesting()) {
           // eslint-disable-next-line no-console
@@ -94,7 +94,7 @@ export default class TopicFromParams extends DiscourseRoute {
     return postStream
       .refresh(params)
       .then(() => {
-        if (topic.is_nested_view) {
+        if (topic.rendersNested) {
           return this.#loadNestedModel(topic, params, queryParams);
         }
         return params;

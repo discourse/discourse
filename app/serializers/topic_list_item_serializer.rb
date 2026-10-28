@@ -167,6 +167,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   def include_has_new_replies?
     return false unless scope.user
     return false unless object.nested_view?
+    return false if scope.user.user_option&.prefer_flat_replies
 
     last_visited = object.user_data&.last_visited_at
     return false if last_visited.blank?

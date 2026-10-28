@@ -78,6 +78,7 @@ export default class InterfaceController extends Controller {
       "dynamic_favicon",
       "enable_quoting",
       "enable_smart_lists",
+      "prefer_flat_replies",
       "automatically_unpin_topics",
       "allow_private_messages",
       "enable_allowed_pm_users",

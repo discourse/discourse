@@ -225,9 +225,9 @@ export default class TopicController extends Controller {
     return getProperties(this, TOPIC_PAGE_QUERY_PARAM_PROPERTIES);
   }
 
-  @computed("model.is_nested_view")
+  @computed("model.rendersNested")
   get shouldRenderNestedView() {
-    return this.model?.is_nested_view;
+    return this.model?.rendersNested;
   }
 
   @computed("model.isPrivateMessage")

@@ -341,6 +341,14 @@ RSpec.describe TopicListItemSerializer do
       expect(json.key?(:has_new_replies)).to eq(false)
     end
 
+    it "is omitted when the user prefers flat replies" do
+      user.user_option.update!(prefer_flat_replies: true)
+      nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
+      json = serialize_with_user_data(last_visited_at: 5.minutes.ago)
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
     it "is omitted when the user has never visited the topic" do
       nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
       json = serialize_with_user_data(last_visited_at: nil)

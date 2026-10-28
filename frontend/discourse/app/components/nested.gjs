@@ -27,6 +27,7 @@ import NestedOp from "./nested/op.gjs";
 import NestedPost from "./nested/post.gjs";
 import NestedSortSelector from "./nested/sort-selector.gjs";
 import NestedTopicActions from "./nested/topic-actions.gjs";
+import NestedViewToggle from "./nested/view-toggle.gjs";
 
 const postExcerpt = helper(([post]) => {
   const element = document.createElement("div");
@@ -1004,6 +1005,7 @@ export default class Nested extends Component {
         <div class="nested-view__controls">
           <div class="nested-view__controls-left">
             <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
+            <NestedViewToggle @topic={{@topic}} />
           </div>
 
           <div class="nested-view__controls-right">
