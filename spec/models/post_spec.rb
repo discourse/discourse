@@ -1925,7 +1925,9 @@ RSpec.describe Post do
       end
 
       it "resets the topic's bumped_at when unhiding the last visible reply" do
-        last_reply.unhide!
+        # Loaded fresh like a request would: the reply's cached topic still has the bumped_at it was created
+        # with, so resetting it to that value wouldn't be saved over the one set above.
+        last_reply.reload.unhide!
 
         expect(topic.reload.bumped_at).to eq_time(last_reply.created_at)
       end
