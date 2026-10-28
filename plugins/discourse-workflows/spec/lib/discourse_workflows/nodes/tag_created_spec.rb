@@ -30,5 +30,14 @@ RSpec.describe DiscourseWorkflows::Nodes::TagCreated::V1 do
       )
       expect(output).to match_node_output_schema(described_class)
     end
+
+    it "outputs whoever created the tag as actor, null when the code didn't say" do
+      admin = Fabricate(:admin)
+
+      event = DiscourseEvent.track(:tag_created) { Fabricate(:tag, created_by: admin) }
+
+      expect(described_class.new(*event[:params]).output[:actor]).to include(id: admin.id)
+      expect(described_class.new(tag).output[:actor]).to be_nil
+    end
   end
 end

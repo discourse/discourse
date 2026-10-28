@@ -9,6 +9,17 @@ RSpec.describe UsernameChanger do
     context "when everything goes well" do
       let!(:old_username) { user.username }
 
+      it "says who changed the username in :user_updated" do
+        admin = Fabricate(:admin)
+
+        event =
+          DiscourseEvent.track(:user_updated) do
+            UsernameChanger.change(user, "#{user.username}1234", admin)
+          end
+
+        expect(event[:params]).to eq([user, %w[username], { acting_user: admin }])
+      end
+
       it "changes the username" do
         new_username = "#{user.username}1234"
 

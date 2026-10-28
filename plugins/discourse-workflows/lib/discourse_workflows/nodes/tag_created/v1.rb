@@ -13,12 +13,13 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :tag_created,
-          output_contracts: [{ schema: Schema::TAG_SCHEMA }],
+          output_contracts: [{ schema: Schema.merge(Schema::TAG_SCHEMA, Schema::ACTOR_SCHEMA) }],
         )
 
-        def initialize(tag, *)
+        def initialize(tag, payload = {})
           super(parameters: {})
           @tag = tag
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -26,7 +27,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { tag: serialize_record(@tag, TagSerializer) }
+          { tag: serialize_record(@tag, TagSerializer), actor: serialize_user(@actor) }
         end
       end
     end

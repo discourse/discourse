@@ -115,6 +115,7 @@ class InviteRedeemer
     user = User.where(staged: true).with_email(email.strip.downcase).first
     user.unstage! if user
     user ||= User.new
+    user.created_by = user
 
     user.attributes = {
       email: email,
