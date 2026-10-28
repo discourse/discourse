@@ -13,7 +13,8 @@ declared graph.
 
 ```text
 Previous full PR and main runs -> per spec outcomes and changed paths
-PR preparation -> restore bounded recent history -> fit model -> candidate specs
+Small Ubuntu job -> restore bounded recent history -> fit model -> plan artifact
+Existing test matrix waits for that job -> backend reads the plan artifact
 Existing full core RSpec -> compare selection with actual failures -> artifact
 Other nine test matrix entries, lint and migration workflows stay full
 ```
@@ -30,7 +31,10 @@ Only completed runs from this repository and the test workflow supply history.
 The downloader considers up to 100 artifacts, uses at most 50 records and stops
 starting requests after 20 seconds. Individual network calls may extend that
 budget. Records are data, never executable model artifacts. No pickle is loaded.
-The classifier trains locally with one CPU thread. Dependency installation,
+The classifier trains on a separate Ubuntu runner with one CPU thread. Its
+startup and scoring delay the test matrix. Failure to produce or download its
+plan leaves full execution enabled. Backend reporting uses the CI image's
+existing Python and needs no model dependencies. Dependency installation,
 artifact retrieval, training and scoring are selection costs, not free work.
 
 ## Safety and measurement

@@ -23,8 +23,51 @@ permissions:
   contents: read
 
 jobs:
+  predict:
+    name: RSpec failure prediction
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    continue-on-error: true
+    env:
+      RSPEC_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: script/ci/rspec_prediction_requirements.txt
+
+      - name: Install prediction dependencies
+        run: python -m pip install -r script/ci/rspec_prediction_requirements.txt
+
+      - name: Restore RSpec prediction history
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const restore = require('./.github/scripts/rspec-history.cjs');
+            await restore({ github, context, core });
+
+      - name: Observe RSpec failure prediction
+        run: |
+          python script/ci/rspec_prediction_test.py
+          python script/ci/rspec_prediction.py plan
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rspec-prediction-plan
+          path: tmp/rspec-mapping/selection.json
+          retention-days: 7
+
   build:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    needs: predict
+    if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror') }}
     name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
@@ -292,36 +335,17 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         run: find . -name node_modules -type d -prune -not -path './tmp/*' -print0 | xargs -0 rm -rf
 
-      - name: Set up prediction runtime
+      - name: Read RSpec failure prediction
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        uses: actions/setup-python@v6
+        continue-on-error: true
+        uses: actions/download-artifact@v8
         with:
-          python-version: "3.13"
-          cache: pip
-          cache-dependency-path: script/ci/rspec_prediction_requirements.txt
+          name: rspec-prediction-plan
+          path: tmp/rspec-mapping
 
-      - name: Install prediction dependencies
+      - name: Ensure an RSpec selection exists
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: python -m pip install -r script/ci/rspec_prediction_requirements.txt
-
-      - name: Restore RSpec prediction history
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const restore = require('./.github/scripts/rspec-history.cjs');
-            await restore({ github, context, core });
-
-      - name: Observe RSpec failure prediction
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
-        env:
-          RSPEC_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          OMP_NUM_THREADS: "1"
-          OPENBLAS_NUM_THREADS: "1"
-          MKL_NUM_THREADS: "1"
-        run: |
-          python script/ci/rspec_prediction_test.py
-          python script/ci/rspec_prediction.py plan
+        run: test -f tmp/rspec-mapping/selection.json || python3 script/ci/rspec_prediction.py plan
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
@@ -333,7 +357,7 @@ jobs:
         if: always() && matrix.build_type == 'backend' && matrix.target == 'core'
         env:
           RSPEC_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: python script/ci/rspec_prediction.py report
+        run: python3 script/ci/rspec_prediction.py report
 
       - name: Publish RSpec prediction observation
         if: always() && matrix.build_type == 'backend' && matrix.target == 'core'
