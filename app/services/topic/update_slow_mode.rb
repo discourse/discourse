@@ -55,8 +55,9 @@ class Topic::UpdateSlowMode
       nil
     end
 
+    # The end is a topic timer, so it has the timers' limit too (and stays within what Postgres stores).
     def ends_in_the_future
-      if ends_at.nil?
+      if ends_at.nil? || ends_at > ::BaseTimer::MAX_DURATION_MINUTES.minutes.from_now
         errors.add(:enabled_until, :invalid)
       elsif ends_at <= Time.zone.now
         errors.add(

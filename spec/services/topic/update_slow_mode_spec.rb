@@ -16,9 +16,14 @@ RSpec.describe Topic::UpdateSlowMode do
     it { is_expected.to allow_values("2026-01-02 12:00", "24").for(:enabled_until) }
 
     it do
-      is_expected.not_to allow_values("2025-12-31 12:00", "-1", "garbage", "2030-13-45 09:00").for(
-        :enabled_until,
-      )
+      is_expected.not_to allow_values(
+        "2025-12-31 12:00",
+        "-1",
+        "garbage",
+        "2030-13-45 09:00",
+        "1e10",
+        "2100-01-01 00:00",
+      ).for(:enabled_until)
     end
 
     it "reads a number of hours from now" do
