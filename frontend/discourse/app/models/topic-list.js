@@ -12,7 +12,7 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import Topic from "./topic.js";
+import Topic from "./topic.ts";
 
 function extractByKey(collection, klass) {
   const retval = {};

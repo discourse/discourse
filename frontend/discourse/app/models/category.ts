@@ -27,7 +27,7 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import type StoreService from "discourse/services/store";
-import Topic from "./topic.js";
+import Topic from "./topic.ts";
 
 /** Category badge styles. */
 export type CategoryStyle = "square" | "icon" | "emoji";
@@ -849,15 +849,14 @@ export default class Category extends RestModel {
     // TODO(typescript-pending): serialized subcategories include topic payloads; remove when typed at the source.
     return (
       this.subcategory_list as
-        | (CategoryFields & { topics?: Record<string, unknown>[] })[]
+        | (Omit<CategoryFields, "topics"> & {
+            topics?: Record<string, unknown>[];
+          })[]
         | undefined
     )?.map((c) => {
       const subcategory = Category.create({
         ...c,
-        // TODO(typescript-pending): Topic.create forwards attrs but its JS signature omits them.
-        topics: c.topics?.map((t) =>
-          (Topic as typeof Topic & { create(attrs: object): Topic }).create(t)
-        ),
+        topics: c.topics?.map((t) => Topic.create(t)),
       });
       return subcategory;
     });
