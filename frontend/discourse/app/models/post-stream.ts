@@ -942,7 +942,7 @@ export default class PostStream extends RestModel {
 
         const ignoredUsers = this.currentUser?.ignored_users;
         posts.forEach((p) => {
-          if (ignoredUsers?.includes(p.username)) {
+          if (ignoredUsers?.includes(p.username!)) {
             removeValueFromArray(this.stream, p.id);
             return;
           }
@@ -1599,10 +1599,8 @@ export default class PostStream extends RestModel {
 
   _initUserModels(post: Post) {
     if (post.mentioned_users) {
-      post.mentioned_users = post.mentioned_users.map(
-        (u) =>
-          // TODO(typescript-pending): User is not registered in the store; remove when its model and creation attributes are typed.
-          this.store.createRecord("user", u as unknown as RestPayload) as User
+      post.mentioned_users = post.mentioned_users.map((u) =>
+        this.store.createRecord("user", u)
       );
     }
   }

@@ -26,6 +26,7 @@ import type {
   default as Topic,
   TopicCreateAttrs,
 } from "discourse/models/topic";
+import type { default as User, UserCreateAttrs } from "discourse/models/user";
 import type UserDraft from "discourse/models/user-draft";
 
 /** Model instances by store type name. Plugins add theirs through module augmentation. */
@@ -37,6 +38,7 @@ export interface ModelRegistry {
   "published-page": PublishedPage;
   site: Site;
   topic: Topic;
+  user: User;
   "user-draft": UserDraft;
 }
 
@@ -47,6 +49,7 @@ export interface ModelRegistry {
 export interface ModelCreateAttrsRegistry {
   post: PostCreateAttrs<Post>;
   topic: TopicCreateAttrs<Topic>;
+  user: UserCreateAttrs<User>;
 }
 
 type ModelNameLowercaseLetter =

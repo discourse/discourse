@@ -12,18 +12,13 @@ import UserAction, {
   type UserActionFields,
 } from "discourse/models/user-action";
 
-/** TODO(typescript-pending): User.username_lower is inferred as any; remove when User is typed. */
-export type UserStreamUser = Omit<User, "username_lower"> & {
-  username_lower: string;
-};
-
 export interface UserStreamFilter {
   filter?: number | null;
   actingUsername?: string | null;
 }
 
 export interface UserStreamFields {
-  user?: UserStreamUser;
+  user?: User;
   filter?: number | null;
 }
 
