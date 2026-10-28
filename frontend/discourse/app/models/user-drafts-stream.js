@@ -41,11 +41,7 @@ export default class UserDraftsStream extends RestModel {
   remove(draft) {
     this.set(
       "content",
-      this.content.filter((item) =>
-        this.discarded
-          ? item.id !== draft.id
-          : item.draft_key !== draft.draft_key
-      )
+      this.content.filter((item) => item.id !== draft.id)
     );
   }
 

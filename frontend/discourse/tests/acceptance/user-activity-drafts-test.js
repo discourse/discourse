@@ -107,6 +107,10 @@ acceptance("User Activity / Drafts - discarded", function (needs) {
     await visit("/u/eviltrout/activity/drafts/discarded");
 
     assert.dom(".user-drafts-header__description").exists();
+    assert
+      .dom(".user-nav__activity-drafts")
+      .hasAttribute("aria-current", "location", "keeps Drafts current");
+    assert.dom(".user-nav__activity-drafts a").hasClass("active");
     assert.dom(".user-stream-item").exists({ count: 1 });
     assert.dom(".user-stream-item .resume-draft").doesNotExist();
 

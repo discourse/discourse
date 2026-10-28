@@ -138,26 +138,19 @@ export default class UserStreamComponent extends Component {
 
   @action
   removeDraft(draft) {
-    if (draft.discarded) {
-      this.dialog.deleteConfirm({
-        title: i18n("drafts.delete_permanently_confirmation"),
-        didConfirm: async () => {
-          try {
-            await Draft.destroyDiscarded(draft.id);
-            this.args.stream.remove(draft);
-          } catch (error) {
-            popupAjaxError(error);
-          }
-        },
-      });
-      return;
-    }
-
     this.dialog.deleteConfirm({
-      title: i18n("drafts.remove_confirmation"),
+      title: i18n(
+        draft.discarded
+          ? "drafts.delete_permanently_confirmation"
+          : "drafts.remove_confirmation"
+      ),
       didConfirm: async () => {
         try {
-          await Draft.clear(draft.draft_key, draft.sequence);
+          if (draft.discarded) {
+            await Draft.destroyDiscarded(draft.id);
+          } else {
+            await Draft.clear(draft.draft_key, draft.sequence);
+          }
           this.args.stream.remove(draft);
         } catch (error) {
           popupAjaxError(error);

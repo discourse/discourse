@@ -37,7 +37,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get currentWhen() {
     if (this._hasDraft) {
-      return "userActivity.index userActivity.drafts";
+      return "userActivity.index userActivity.drafts userActivity.discardedDrafts";
     }
   }
 

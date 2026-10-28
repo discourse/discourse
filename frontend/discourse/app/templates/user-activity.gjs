@@ -53,6 +53,7 @@ export default <template>
           <DNavigationItem
             class="user-nav__activity-drafts"
             @ariaCurrentContext="subNav"
+            @currentWhen="userActivity.discardedDrafts"
             @route="userActivity.drafts"
           >
             {{dIcon "pencil"}}

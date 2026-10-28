@@ -31,6 +31,16 @@ RSpec.describe DiscardedDraftsController do
         own.id,
       )
     end
+
+    it "treats a negative offset as the first page" do
+      own = discarded_draft(user)
+      sign_in(user)
+
+      get "/discarded_drafts.json", params: { offset: -1 }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["discarded_drafts"].map { |d| d["id"] }).to eq([own.id])
+    end
   end
 
   describe "#restore" do

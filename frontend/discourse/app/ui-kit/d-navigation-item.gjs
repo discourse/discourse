@@ -18,7 +18,7 @@ export default class DNavigationItem extends Component {
       return "page";
     }
 
-    if (this.router.currentRouteName !== this.args.route) {
+    if (!this.isCurrent) {
       return null;
     }
 
@@ -27,6 +27,21 @@ export default class DNavigationItem extends Component {
     } else {
       return "page";
     }
+  }
+
+  // A string `@current-when` on `<LinkTo>` ignores `@models`, so resolve the extra routes here.
+  get currentWhen() {
+    if (!this.args.currentWhen) {
+      return undefined;
+    }
+
+    return [this.args.route, ...this.args.currentWhen.split(" ")].some(
+      (route) => this.router.isActive(route, ...this.models)
+    );
+  }
+
+  get isCurrent() {
+    return this.currentWhen ?? this.router.currentRouteName === this.args.route;
   }
 
   get models() {
@@ -41,11 +56,15 @@ export default class DNavigationItem extends Component {
       ...attributes
     >
       {{#if this.models}}
-        <LinkTo @models={{this.models}} @route={{@route}}>
+        <LinkTo
+          @current-when={{this.currentWhen}}
+          @models={{this.models}}
+          @route={{@route}}
+        >
           {{yield}}
         </LinkTo>
       {{else}}
-        <LinkTo @route={{@route}}>
+        <LinkTo @current-when={{this.currentWhen}} @route={{@route}}>
           {{yield}}
         </LinkTo>
       {{/if}}

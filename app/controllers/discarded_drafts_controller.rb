@@ -9,7 +9,7 @@ class DiscardedDraftsController < ApplicationController
         .discarded
         .where(user_id: current_user.id)
         .order(deleted_at: :desc, id: :desc)
-        .offset(params[:offset].to_i)
+        .offset([params[:offset].to_i, 0].max)
         .limit(
           fetch_limit_from_params(
             default: DraftsController::INDEX_LIMIT,
