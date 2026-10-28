@@ -4,20 +4,43 @@ import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import type { CategoryFields } from "discourse/models/category";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import UserAction from "discourse/models/user-action";
+import type User from "discourse/models/user";
+import UserAction, {
+  type UserActionFields,
+} from "discourse/models/user-action";
 
+/** TODO(typescript-pending): User.username_lower is inferred as any; remove when User is typed. */
+export type UserStreamUser = Omit<User, "username_lower"> & {
+  username_lower: string;
+};
+
+export interface UserStreamFilter {
+  filter?: number | null;
+  actingUsername?: string | null;
+}
+
+export interface UserStreamFields {
+  user?: UserStreamUser;
+  filter?: number | null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface UserStream extends UserStreamFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class UserStream extends RestModel {
-  @tracked actingUsername;
-  @tracked lastLoadedUrl;
+  @tracked actingUsername: string | null | undefined;
+  @tracked lastLoadedUrl: string | null | undefined;
   @tracked loaded = false;
   @tracked loading = false;
   @tracked itemsLoaded = 0;
-  @autoTrackedArray content = [];
+  @autoTrackedArray content: UserAction[] = [];
 
   @computed("itemsLoaded", "user.username_lower")
-  get baseUrl() {
+  get baseUrl(): string {
     return getURL(
       `/user_actions.json?offset=${this.itemsLoaded}&username=${this.user?.username_lower}`
     );
@@ -37,7 +60,7 @@ export default class UserStream extends RestModel {
   }
 
   @computed("baseUrl", "filterParam", "actingUsername")
-  get nextFindUrl() {
+  get nextFindUrl(): string {
     let findUrl = this.baseUrl;
     if (this.filterParam) {
       findUrl += `&filter=${this.filterParam}`;
@@ -60,7 +83,7 @@ export default class UserStream extends RestModel {
     return this.nextFindUrl !== this.lastLoadedUrl;
   }
 
-  async filterBy(opts) {
+  async filterBy(opts: UserStreamFilter): Promise<void> {
     this.setProperties({
       itemsLoaded: 0,
       content: [],
@@ -71,11 +94,13 @@ export default class UserStream extends RestModel {
     return this.findItems();
   }
 
-  remove(userAction) {
+  remove(userAction: UserAction): void {
     // 1) remove the user action from the child groups
     this.content.forEach((ua) => {
       ["likes", "stars", "edits", "bookmarks"].forEach((group) => {
-        const items = ua.get(`childGroups.${group}.items`);
+        const items = ua.get(`childGroups.${group}.items`) as
+          | UserAction[]
+          | undefined;
         if (items) {
           removeValueFromArray(items, userAction);
         }
@@ -85,14 +110,15 @@ export default class UserStream extends RestModel {
     // 2) remove the parents that have no children
     const content = this.content.filter((ua) => {
       return ["likes", "stars", "edits", "bookmarks"].some((group) => {
-        return ua.get(`childGroups.${group}.items.length`) > 0;
+        // Missing child groups compare as undefined > 0, which excludes them.
+        return (ua.get(`childGroups.${group}.items.length`) as number) > 0;
       });
     });
 
     this.setProperties({ content, itemsLoaded: content.length });
   }
 
-  async findItems() {
+  async findItems(): Promise<void> {
     if (this.loading || !this.canLoadMore) {
       // Don't load the same stream twice. We're probably at the end.
       return;
@@ -102,9 +128,16 @@ export default class UserStream extends RestModel {
 
     this.loading = true;
     try {
-      const result = await ajax(findUrl);
+      // TODO(typescript-pending): ajax lacks response types; remove the cast when this endpoint can be typed by ajax.
+      const result = (await ajax(findUrl)) as
+        | {
+            user_actions?: (UserActionFields & Record<string, unknown>)[];
+            categories?: CategoryFields[];
+          }
+        | null
+        | undefined;
       if (result && result.user_actions) {
-        const copy = [];
+        const copy: UserAction[] = [];
 
         result.categories?.forEach((category) => {
           Site.current().updateCategory(category);

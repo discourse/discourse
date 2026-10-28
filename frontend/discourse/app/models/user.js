@@ -529,6 +529,7 @@ export default class User extends RestModel.extend(Evented) {
     return Bookmark.create({ user: this });
   }
 
+  /** @returns {UserPostsStream} */
   @computed()
   get postsStream() {
     return UserPostsStream.create({ user: this });

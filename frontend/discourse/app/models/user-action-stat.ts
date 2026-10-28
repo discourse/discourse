@@ -3,9 +3,19 @@ import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import { i18n } from "discourse-i18n";
 
+/** Counts supplied by the client when grouping user activity. */
+export interface UserActionStatFields {
+  count: number;
+  action_type: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface UserActionStat extends UserActionStatFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class UserActionStat extends RestModel {
   @computed("action_type")
-  get description() {
+  get description(): string {
     return i18n(`user_action_groups.${this.action_type}`);
   }
 
