@@ -753,7 +753,9 @@ class Post < ActiveRecord::Base
 
   # `acting_user` defaults to the one a caller set on the post, never to the author. Validations run as it.
   def unhide!(acting_user: @acting_user)
-    was_hidden = hidden?
+    # Relisting the topic, bumping it and counting the post again only make sense for a hidden post.
+    return if !hidden?
+
     self.acting_user = acting_user if acting_user
 
     Post.transaction do
@@ -786,7 +788,7 @@ class Post < ActiveRecord::Base
       save(validate: false)
     end
 
-    DB.after_commit { DiscourseEvent.trigger(:post_unhidden, self, acting_user:) } if was_hidden
+    DB.after_commit { DiscourseEvent.trigger(:post_unhidden, self, acting_user:) }
 
     publish_change_to_clients!(:acted)
   end

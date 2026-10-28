@@ -1904,16 +1904,18 @@ RSpec.describe Post do
     context "in a topic with multiple replies" do
       let!(:second_last_reply) do
         freeze_time 1.day.from_now
-        create_post(topic:, user: coding_horror, hidden: true)
+        create_post(topic:, user: coding_horror).tap { it.update_columns(hidden: true) }
       end
       fab!(:user)
       let!(:last_reply) do
         freeze_time 2.days.from_now
-        create_post(topic:, user:, hidden: true)
+        create_post(topic:, user:).tap { it.update_columns(hidden: true) }
       end
       let!(:whisper_post) do
         freeze_time 3.days.from_now
-        create_post(topic:, user: user, post_type: Post.types[:whisper], hidden: true)
+        create_post(topic:, user: user, post_type: Post.types[:whisper]).tap do
+          it.update_columns(hidden: true)
+        end
       end
 
       before { topic.update_columns(bumped_at: 1.day.from_now) }
