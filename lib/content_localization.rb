@@ -128,6 +128,19 @@ class ContentLocalization
       SiteSetting.set_locale_from_param
   end
 
+  PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV = "discourse.plain_url_serves_default_locale"
+
+  # Whether an anonymous client gets the default locale at the plain URL, so that URL can stand in
+  # for the default locale's locale param URL. A locale cookie written from the locale param can
+  # change what the plain URL serves between requests, so it is never guaranteed then.
+  # @param request [Rack::Request]
+  # @return [Boolean]
+  def self.plain_url_serves_default_locale?(request)
+    return false if SiteSetting.set_locale_from_cookie
+
+    Discourse.anonymous_locale(request, include_param: false) == SiteSetting.default_locale
+  end
+
   # These are the same conditions the header renders the switcher on. Keeping the two set-equal
   # means a locale cookie is only ever honoured while there is UI to change it back.
   # @return [Boolean]

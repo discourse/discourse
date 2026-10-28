@@ -237,6 +237,8 @@ el:
         topic_id: "ID Θέματος"
     discourse_post_event:
       new_event: "Νέα εκδήλωση"
+      onebox:
+        all_day: "Όλη μέρα"
       notifications:
         before_event_reminder: "Μια εκδήλωση πρόκειται να ξεκινήσει"
         after_event_reminder: "Μια εκδήλωση έχει λήξει"
@@ -339,7 +341,6 @@ el:
               one: "%{count} χρήστης προσκλήθηκε"
               other: "%{count} χρήστες προσκλήθηκαν"
         event:
-          expired: "Έληξε"
           closed: "Κλειστή"
           full: "Πλήρης"
           status:
@@ -352,6 +353,8 @@ el:
             private:
               title: "Ιδιωτική"
               description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
+      recording_modal:
+        save: "Αποθήκευση"
       composer:
         name_placeholder: "Όνομα εκδήλωσης"
         end_date_placeholder: "Ημερομηνία λήξης"

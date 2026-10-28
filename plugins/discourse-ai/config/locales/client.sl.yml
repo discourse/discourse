@@ -76,6 +76,8 @@ sl:
         filters:
           all: "Vsi"
           reset: "Ponastavi"
+        sentiment:
+          enabled: "Vključeno"
         search:
           name: "Išči"
         image_caption:

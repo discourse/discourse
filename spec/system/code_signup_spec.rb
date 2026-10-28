@@ -72,6 +72,23 @@ describe "Sign up via email code" do
     expect(user.user_password).to be_nil
   end
 
+  it "rolls a new random username on a login-required site" do
+    SiteSetting.enable_random_usernames = true
+    SiteSetting.login_required = true
+
+    open_code_signup
+    submit_email("new.person@example.com")
+    fill_code(latest_emailed_code("new.person@example.com"))
+
+    expect(page).to have_css(".code-login-form__signup-details-step")
+    generated = find("#code-login-username").value
+
+    find(".code-login-form__username-regen").click
+
+    expect(page).to have_no_field("code-login-username", with: generated)
+    expect(page).to have_no_css(".dialog-container")
+  end
+
   it "shows a single heading that is replaced as the flow advances" do
     open_code_signup
 
@@ -147,6 +164,23 @@ describe "Sign up via email code" do
 
     expect(page).to have_css(".header-dropdown-toggle.current-user")
     expect(User.find_by_email("no.random@example.com").username).to eq("no-random")
+  end
+
+  it "shows username instructions when enabled" do
+    SiteSetting.show_signup_form_username_instructions = true
+
+    open_code_signup
+    submit_email("instructions@example.com")
+    fill_code(latest_emailed_code("instructions@example.com"))
+
+    expect(page).to have_css(
+      "#code-login-username-instructions",
+      text: I18n.t("js.user.username.instructions"),
+    )
+
+    fill_in("code-login-username", with: "a b")
+    expect(page).to have_css("#code-login-username-error", text: /\S/)
+    expect(page).to have_no_css("#code-login-username-instructions")
   end
 
   it "lets the user choose their initial username when later changes are disabled" do

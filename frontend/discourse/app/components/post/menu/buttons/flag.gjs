@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
@@ -11,9 +10,10 @@ export default class PostMenuFlagButton extends Component {
     const { post } = args;
     const { reviewable_id, canFlag, hidden } = post;
 
-    let show =
+    const show =
       reviewable_id ||
       (canFlag && !hidden) ||
+      helper.siteSettings.dsa_reporting_enabled ||
       (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
         !helper.currentUser);
 

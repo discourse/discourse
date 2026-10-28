@@ -271,7 +271,6 @@ tr_TR:
         none: "Hiçbiri"
       features:
         short_title: "Özellikler"
-        description: "Bunlar, sitenizdeki ziyaretçilerin kullanabileceği yapay zeka özellikleridir. Bu özellikler, belirli ajanlar ve büyü LLM'ler kullanacak şekilde yapılandırılabilir ve gruplara göre erişim kontrolü uygulanabilir."
         back: "AI özelliklerine geri dön"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
         disabled: "(devre Dışı)"
@@ -285,6 +284,7 @@ tr_TR:
         no_llm: "LLM seçilmedi"
         no_agent: "Ayarlanmamış"
         no_groups: "Hiçbiri"
+        classification_model: "Model:"
         edit: "Ayarlar"
         expand_list:
           one: "(%{count} tane Daha)"
@@ -303,10 +303,17 @@ tr_TR:
           enabled: "Etkin mi"
         filters:
           all: "Tümü"
-          text: "Arama özellikleri, ajanlar, büyük dil modelleri veya gruplar..."
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"
+        sentiment:
+          sentiment: "Duyarlılık"
+          emotion: "Duygu"
+          enabled: "Etkin mi"
+          agent: "Ajan"
+          setting_groups:
+            sentiment: "Duyarlılık"
+            emotion: "Duygu"
         summarization:
           name: "Özetler"
           description: "Ziyaretçilerin konuları özetlemesine olanak tanıyan bir özetleme düğmesi sunar"

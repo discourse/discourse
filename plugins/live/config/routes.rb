@@ -19,6 +19,7 @@ Live::Engine.routes.draw do
       delete :recording, action: :stop_recording, as: :stop_recording
       delete :kick
       post :flag
+      post :reaction
       post :request_to_speak
       delete :request_to_speak, action: :withdraw_request_to_speak, as: :withdraw_request_to_speak
     end

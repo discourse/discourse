@@ -1,8 +1,10 @@
+import moment from "moment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import ComposerEventEditor from "discourse/plugins/discourse-events/discourse/components/composer-event-editor";
 import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
 import DiscoursePostEventOneboxPreview from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/onebox-preview";
+import decorateEventOneboxes from "discourse/plugins/discourse-events/discourse/lib/decorate-event-oneboxes";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 const ComposerEventEditorTemplate = <template>
@@ -52,11 +54,9 @@ function _decorateEventOneboxes(cooked, helper) {
     });
 }
 
-function _decorateEventPreviewOneboxes(cooked, helper) {
-  // In the composer preview there's no post model / preloaded data, so we fetch
-  // the event by topic id and render a read-only card. The original quote is
-  // passed as a fallback so non-event links (and the loading state) keep showing
-  // the normal onebox.
+function _decorateInternalEventOneboxes(cooked, helper, readOnly) {
+  // Composer previews and chat only have cooked onebox markup, so resolve events
+  // by topic id and retain the original onebox as the loading and non-event fallback.
   cooked
     .querySelectorAll(
       "aside.quote[data-topic][data-post='1']:not([data-username])"
@@ -69,7 +69,6 @@ function _decorateEventPreviewOneboxes(cooked, helper) {
 
       const fallbackHtml = aside.outerHTML;
       const wrapper = document.createElement("div");
-      wrapper.className = "discourse-post-event-onebox";
       aside.replaceWith(wrapper);
 
       helper.renderGlimmer(
@@ -77,6 +76,7 @@ function _decorateEventPreviewOneboxes(cooked, helper) {
         <template>
           <DiscoursePostEventOneboxPreview
             @fallbackHtml={{fallbackHtml}}
+            @readOnly={{readOnly}}
             @topicId={{topicId}}
           />
         </template>
@@ -99,14 +99,19 @@ function _decorateEventPreview(api, cooked, helper) {
 }
 
 function initializeDiscoursePostEventDecorator(api) {
+  const currentUser = api.container.lookup("service:current-user");
+  const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
+
   api.addTrackedPostProperties("event_oneboxes");
 
   api.decorateCookedElement(
     (cooked, helper) => {
+      decorateEventOneboxes(cooked, timezone);
+
       if (cooked.classList.contains("d-editor-preview")) {
         _decorateEventPreview(api, cooked, helper);
         if (helper) {
-          _decorateEventPreviewOneboxes(cooked, helper);
+          _decorateInternalEventOneboxes(cooked, helper, true);
         }
         return;
       }
@@ -156,6 +161,16 @@ function initializeDiscoursePostEventDecorator(api) {
       id: "discourse-post-event-decorator",
     }
   );
+
+  if (api.decorateChatMessage) {
+    api.decorateChatMessage(
+      (cooked, helper) => {
+        decorateEventOneboxes(cooked, timezone);
+        _decorateInternalEventOneboxes(cooked, helper, false);
+      },
+      { id: "discourse-post-event-onebox" }
+    );
+  }
 
   api.replaceIcon(
     "notification.discourse_post_event.notifications.invite_user_notification",

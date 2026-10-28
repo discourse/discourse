@@ -187,12 +187,13 @@ CREATE TABLE public.access_control_lists (
     id bigint NOT NULL,
     target_type character varying(255) NOT NULL,
     target_id bigint NOT NULL,
-    owner character varying(100) NOT NULL,
+    owner character varying(100),
     permission character varying(100) NOT NULL,
     allowed_user_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
     allowed_group_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    source character varying(100) NOT NULL
 );
 
 
@@ -4963,7 +4964,8 @@ CREATE TABLE public.discourse_post_event_events (
     max_attendees integer,
     all_day boolean DEFAULT false NOT NULL,
     image_upload_id bigint,
-    livestream boolean DEFAULT false NOT NULL
+    livestream boolean DEFAULT false NOT NULL,
+    recording_url character varying(1000)
 );
 
 
@@ -7828,7 +7830,9 @@ CREATE TABLE public.livestream_topic_chat_channels (
     chat_channel_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    reference_message_id bigint
+    reference_message_id bigint,
+    last_transcribed_message_id bigint,
+    closed_on_event_end boolean DEFAULT false NOT NULL
 );
 
 
@@ -26164,6 +26168,11 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261021180718'),
 ('20261021180714'),
+('20261021063131'),
+('20261021063122'),
+('20261021061850'),
+('20261021060627'),
+('20261021060617'),
 ('20261020161054'),
 ('20261020160221'),
 ('20261019232249'),
@@ -26176,6 +26185,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261015175355'),
 ('20261015175340'),
 ('20261015121116'),
+('20261014231432'),
 ('20261014224810'),
 ('20261014145458'),
 ('20261014065735'),
@@ -26191,6 +26201,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261009130230'),
 ('20261009121104'),
 ('20261009113440'),
+('20261008184751'),
+('20261008173326'),
 ('20261008005940'),
 ('20261007082151'),
 ('20261006113418'),

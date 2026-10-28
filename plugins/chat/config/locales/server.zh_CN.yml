@@ -10,6 +10,8 @@ zh_CN:
     chat_enabled: "启用聊天。"
     chat_pinned_messages: "在聊天频道中启用置顶消息。"
     enable_public_channels: "基于类别启用公开频道。"
+    chat_allowed_groups: "这些群组中的用户可以聊天，但匿名用户除外，他们只有在被添加到此设置后才能查看聊天记录。添加匿名用户还可以让搜索引擎索引公共频道。请注意，管理员和版主始终可以访问聊天记录。"
+    chat_channel_retention_days: "普通频道中的聊天记录将保留指定天数。设置为“0”则永久保留消息。当匿名用户可以查看聊天记录时，已删除的消息也会随着时间推移从搜索引擎结果中消失，因此较短的保留期限会限制可通过搜索找到的聊天记录数量。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限值时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
     chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
@@ -61,12 +63,20 @@ zh_CN:
 
         访问 %{channel_url} 下的频道以重试。
   chat:
+    design_wizard_homepage_name: "聊天"
     deleted_chat_username: 已删除
     crawler:
       directory_title: "聊天频道"
       nav_title: "聊天"
+      last_activity: "最近活动"
+      retention_notice:
+        other: "超过 %{count} 天的消息将被删除，置顶消息除外。"
+      messages_count:
+        other: "%{count} 消息"
       members_count:
         other: "%{count} 个成员"
+      thread_title: "%{channel} 中的话题"
+      channel_day_title: "%{channel} – %{date}"
       thread_replies:
         other: "%{count} 条回复"
     errors:
@@ -255,11 +265,13 @@ zh_CN:
         recipient_inactive: "用户“%{username}”尚未激活其帐户。"
         recipient_chat_disabled: "'%{username}' 已在其偏好设置中禁用聊天功能。"
         recipient_cannot_chat: "用户“%{username}”无法使用聊天功能，因为他们不在“允许聊天的群组”设置允许的群组中。"
-        sender_anonymous: "私信无法匿名发送。请选择一位用户作为发件人。"
+        sender_anonymous: "聊天信息无法匿名发送。请选择一个用户作为发送者。"
         sender_chat_disabled: "发件人“%{sender}”已在其偏好设置中禁用聊天功能。"
         sender_cannot_chat: "发件人“%{sender}”无法使用聊天功能，因为他们不在“允许聊天的群组”设置允许的群组中。"
         sender_cannot_create_dm: "发件人“%{sender}”无权发送私信（请参阅“启用私信的群组”设置）。"
         sender_dms_disabled: "发件人“%{sender}”已在其偏好设置中禁用私人消息。"
+        sender_cannot_post: "发件人 '%{sender}' 无权在频道 '%{channel_id}' 中发帖。"
+        sender_not_member: "发件人'%{sender}' 不是频道 '%{channel_id}' 的成员。请先以该用户身份加入频道。"
         user_blocked: "用户“%{sender}”无法向用户“%{username}”发送私信： %{reason}"
         group_blocked: "用户“%{sender}”无法向用户“ %{usernames}”发送群组私信： %{reason}"
       chat_approval:
@@ -283,7 +295,7 @@ zh_CN:
         preferences_bypassed: "'%{username}' 不接受来自 '%{sender}' 的直接消息，但消息已送达，因为发件人是工作人员。"
     logs:
       send_chat_message:
-        sent_to_channel: "项目 %{item_index}：已向频道 %{channel_id} 发送消息 %{message_id}。"
+        sent_to_channel: "项目 %{item_index}：'%{sender}' 向频道 %{channel_id} 发送消息 %{message_id}。"
         sent_to_user: "项目 %{item_index}：'%{sender}' 向 '%{username}' 发送消息 %{message_id}。"
         sent_to_group: "项目 %{item_index}：'%{sender}' 向群组私信发送消息 %{message_id} ，该群组私信包含 %{usernames}。"
   reviewable_score_types:

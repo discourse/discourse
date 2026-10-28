@@ -109,7 +109,7 @@ No arguments passed to this event.
 | -        | objectArg2.target   | string   | -           |
 | -        | objectArg2.targetId | property | -           |
 
-##### /frontend/discourse/app/models/topic.js#715 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/topic.js#L715)
+##### /frontend/discourse/app/models/topic.ts#1289 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/topic.ts#L1289)
 
 | Position | Argument            | Type            | Description |
 | -------- | ------------------- | --------------- | ----------- |

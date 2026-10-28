@@ -7,6 +7,7 @@
 ur:
   js:
     dsa_notice:
+      choice_title: "یہ غیر قانونی ہے"
       title: "غیر قانونی مواد کی اطلاع دیں"
       email: "ای میل"
       resend_email_code: "کوڈ دوبارہ بھیجیں"
@@ -63,6 +64,7 @@ ur:
       manage:
         access_permission_editor: "ایڈیٹر"
         access_permission_editor_description: "اس اکائی کے مواد کی تخلیق اور ترمیم ہو سکتی ہے"
+        access_permission_owner: "مالک"
         access_permission_viewer: "دیکھنے والا"
         access_permission_viewer_description: "اس اکائی کا مواد دیکھا جا سکتا ہے"
         access_permission_remove: "مٹائیں"
@@ -8538,7 +8540,7 @@ ur:
         silenced_by: "جس نے خاموش کیا"
         silence_modal_title: "صارف خاموش کریں"
         silence_duration: "صارف کب تک خاموش رہے گا؟"
-        silence_reason_label: "آپ اِس صارف کو کیوں خاموش کر رہے ہیں؟"
+        silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
         silence_message: "ای میل پیغام"
         silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"

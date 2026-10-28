@@ -136,6 +136,31 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
+  sentiment: [
+    ...["sentiment", "emotion"].map((type) => ({
+      key: type,
+      titleKey: `discourse_ai.features.sentiment.setting_groups.${type}`,
+      settings: [
+        type === "sentiment"
+          ? "ai_sentiment_enabled"
+          : "ai_sentiment_emotion_enabled",
+        `ai_sentiment_${type}_classification_strategy`,
+        `ai_sentiment_${type}_agent`,
+        `ai_sentiment_${type}_decision_model`,
+      ],
+    })),
+    {
+      key: "background_processing",
+      titleKey:
+        "discourse_ai.features.sentiment.setting_groups.background_processing",
+      descriptionKey: "discourse_ai.features.sentiment.background_description",
+      settings: [
+        "ai_sentiment_backfill_maximum_posts_per_hour",
+        "ai_sentiment_backfill_post_max_age_days",
+      ],
+    },
+  ],
+
   summarization: [
     {
       key: "settings",

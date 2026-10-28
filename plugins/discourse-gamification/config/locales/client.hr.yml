@@ -40,9 +40,7 @@ hr:
       close: "Zatvori"
       delete: "Izbriši"
       edit: "Uredi"
-      back: "Natrag"
       save: "Spremi"
-      apply: "Primijeni"
       update_range:
         last_10_days: "Zadnjih 10 dana"
         last_30_days: "Zadnjih 30 dana"

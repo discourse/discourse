@@ -63,6 +63,22 @@ module Live
       end
     end
 
+    # Deleting discards the room for everyone, so it stays with its owner and
+    # staff rather than extending to room moderators. Ephemeral rooms are torn
+    # down by their own lifecycle.
+    def can_delete_live_room?(room)
+      return false unless can_access_live?
+      return false if !room || room.ephemeral?
+
+      is_staff? || room.creator_id == user.id
+    end
+
+    def ensure_can_delete_live_room!(room)
+      unless can_delete_live_room?(room)
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))
+      end
+    end
+
     def ensure_can_create_live_room!
       unless can_create_live_room?
         raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))

@@ -25,6 +25,7 @@ module PostGuardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
+    return false if action_key == :illegal && SiteSetting.dsa_reporting_enabled
     return false if !(can_see_post.nil? && can_see_post?(post)) && !can_see_post
 
     # no warnings except for staff
@@ -180,6 +181,7 @@ module PostGuardian
     end
 
     if post.wiki && @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
+      return false if post.hidden? && is_my_own?(post) && !can_edit_hidden_post?(post)
       return can_create_post?(post.topic)
     end
 

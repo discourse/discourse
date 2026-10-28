@@ -46,14 +46,19 @@ if defined?(DiscourseWorkflows)
                     "message" => {
                       "type" => "string",
                     },
+                    "thread_id" => {
+                      "type" => %w[integer null],
+                    },
                     "username" => {
                       "type" => "string",
+                      "x-optional" => true,
                     },
                     "usernames" => {
                       "type" => "array",
                       "items" => {
                         "type" => "string",
                       },
+                      "x-optional" => true,
                     },
                   },
                 },
@@ -96,6 +101,15 @@ if defined?(DiscourseWorkflows)
                   hidden: true,
                 },
               },
+              thread_id: {
+                type: :integer,
+                required: false,
+                display_options: {
+                  show: {
+                    target: ["channel"],
+                  },
+                },
+              },
               target_usernames: {
                 type: :array,
                 required: true,
@@ -117,14 +131,7 @@ if defined?(DiscourseWorkflows)
                   control: :textarea,
                 },
               },
-              **actor_property(
-                allow_anonymous: false,
-                display_options: {
-                  show: {
-                    target: DM_TARGETS,
-                  },
-                },
-              ),
+              **actor_property(allow_anonymous: false),
             },
           )
 
@@ -146,10 +153,11 @@ if defined?(DiscourseWorkflows)
                     message: exec_ctx.get_node_parameter("message", item_index),
                   )
                 target = run.parameter("target", default: "channel")
+                sender = resolve_sender!(run)
                 if DM_TARGETS.include?(target)
-                  send_direct_messages(run, group: target == "group")
+                  send_direct_messages(run, sender, group: target == "group")
                 else
-                  send_to_channel(run)
+                  send_to_channel(run, sender)
                 end
               end
             [items]
@@ -157,28 +165,34 @@ if defined?(DiscourseWorkflows)
 
           private
 
-          def send_to_channel(run)
+          def resolve_sender!(run)
+            sender = run.exec_ctx.actor_from_parameter("actor_username", run.item_index)
+            # `allow_anonymous: false` only hides the option in the UI.
+            node_error!(run, :sender_anonymous) if sender.is_a?(DiscourseWorkflows::AnonymousActor)
+            sender
+          end
+
+          def send_to_channel(run, sender)
             channel_id = run.parameter("channel_id")
             channel = selectable_chat_channel(channel_id)
 
             node_error!(run, :channel_not_found, channel_id:) if channel.blank?
+            ensure_sender_can_chat!(run, sender)
 
             wrap(
               create_message(
                 run,
                 :channel,
-                Discourse.system_user.guardian,
+                sender.guardian,
                 channel,
+                sender: sender.username,
+                thread_id: run.parameter("thread_id").presence,
                 channel_id: channel.id,
               ),
             )
           end
 
-          def send_direct_messages(run, group:)
-            sender = run.exec_ctx.actor_from_parameter("actor_username", run.item_index)
-            # `allow_anonymous: false` only hides the option in the UI.
-            node_error!(run, :sender_anonymous) if sender.is_a?(DiscourseWorkflows::AnonymousActor)
-
+          def send_direct_messages(run, sender, group:)
             # Account states are checked for every recipient before anything is sent.
             recipients = resolve_recipients!(run)
             ensure_sender_can_chat!(run, sender)
@@ -336,11 +350,12 @@ if defined?(DiscourseWorkflows)
             end
           end
 
-          def create_message(run, target, guardian, channel, **labels)
+          def create_message(run, target, guardian, channel, thread_id: nil, **labels)
             Chat::CreateMessage.call(
               guardian:,
               params: {
                 chat_channel_id: channel.id,
+                thread_id:,
                 message: run.message,
               },
             ) do |result|
@@ -357,9 +372,27 @@ if defined?(DiscourseWorkflows)
                   "channel_id" => channel.id,
                   "message_id" => message_instance.id,
                   "message" => run.message,
+                  "thread_id" => message_instance.thread_id,
                 }
               end
               on_failed_contract { |contract| invalid_params!(run, contract) }
+              on_failed_policy(:can_post_in_channel) do
+                node_error!(
+                  run,
+                  :sender_cannot_post,
+                  sender: guardian.user.username,
+                  channel_id: channel.id,
+                )
+              end
+              # Bots are added to the channel by the service, people have to join it themselves.
+              on_model_not_found(:membership) do
+                node_error!(
+                  run,
+                  :sender_not_member,
+                  sender: guardian.user.username,
+                  channel_id: channel.id,
+                )
+              end
               on_model_errors(:message_instance) do |message_instance|
                 invalid_params!(run, message_instance)
               end

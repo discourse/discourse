@@ -719,6 +719,7 @@ class Post < ActiveRecord::Base
     # inform user
     if user.present?
       options = {
+        **Dsa::AppealInstructions.message_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
         flag_reason:

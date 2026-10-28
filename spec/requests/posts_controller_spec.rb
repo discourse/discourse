@@ -124,6 +124,27 @@ RSpec.describe PostsController do
       expect(parsed["cooked"]).to eq(new_post.cooked)
     end
 
+    it "localizes posts from Accept-Language for clients classified as crawlers" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_param = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+      SiteSetting.content_localization_supported_locales = "ja"
+      localized_post = Fabricate(:post, raw: "Original post body", locale: "en")
+      Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+
+      get "/posts/#{localized_post.id}",
+          headers: {
+            "HTTP_USER_AGENT" => "curl/8.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_LANGUAGE" => "ja",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["cooked"]).to eq("<p>翻訳された本文</p>")
+    end
+
     context "with version parameter" do
       let(:post_with_revisions) { Fabricate(:post, user: user, version: 2) }
       let(:post_revision) { Fabricate(:post_revision, post: post_with_revisions) }
@@ -1925,6 +1946,49 @@ RSpec.describe PostsController do
       fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
       before { sign_in(user) }
+
+      it "rejects scalar tags before queuing a post" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.approve_post_count = 1
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: "macos",
+               }
+        end.not_to change(ReviewableQueuedPost, :count)
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_params", message: "tags"))
+      end
+
+      it "queues and approves a topic with blank tags" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.approve_post_count = 1
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is the test title for the topic",
+               tags: "",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["action"]).to eq("enqueued")
+        queued_post = ReviewableQueuedPost.find_by!(target_created_by: user)
+
+        sign_in(admin)
+        put "/review/#{queued_post.id}/perform/approve_post.json",
+            params: {
+              version: queued_post.version,
+            }
+
+        expect(response.status).to eq(200)
+        expect(queued_post.reload).to be_approved
+        expect(queued_post.target.topic.tags).to be_empty
+      end
 
       context "when fast typing" do
         before do
@@ -4452,6 +4516,38 @@ RSpec.describe PostsController do
       get "/raw/#{topic.id}"
       expect(response.status).to eq(200)
       expect(response.body).to include("123456789", "abcdefghij")
+    end
+
+    context "with a hidden post revision" do
+      before do
+        SiteSetting.edit_history_visible_to_public = true
+        SiteSetting.editing_grace_period = 0
+      end
+
+      it "prevents anonymous access while allowing staff to fetch a visible raw revision after a hidden revision" do
+        post = Fabricate(:post, raw: "Initial public version")
+        hidden_raw = "moderator-redacted secret"
+        visible_raw = "Visible version"
+        post.revise(post.user, raw: hidden_raw)
+        hidden_revision = post.revisions.find_by(number: 2)
+        hidden_revision.hide!
+        post.revise(post.user, raw: visible_raw)
+
+        get "/raw/#{post.topic_id}/#{post.post_number}", params: { revision: 3 }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).not_to include(hidden_raw)
+        end
+
+        sign_in(moderator)
+        get "/raw/#{post.topic_id}/#{post.post_number}", params: { revision: 3 }
+
+        aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to eq(visible_raw)
+        end
+      end
     end
 
     context "with a hidden post" do

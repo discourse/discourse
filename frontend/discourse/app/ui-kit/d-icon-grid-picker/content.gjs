@@ -14,7 +14,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SVG_NAMESPACE } from "discourse/lib/icon-library";
 import { addExtraSpriteSymbols } from "discourse/lib/svg-sprite-loader";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";

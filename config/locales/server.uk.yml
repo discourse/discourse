@@ -5868,6 +5868,7 @@ uk:
     graph_title: "Кількість пошуків"
   onebox:
     discourse:
+      event_all_day: "Цілий день"
       user_joined_community: "Приєднався %{date}"
     google_meet:
       title: "Зустріч у Google Meet"
@@ -5878,6 +5879,10 @@ uk:
       truncated_file: "Цей файл було обрізано."
       show_original: "показати оригінал"
     github:
+      header:
+        file: "Файл"
+        success: "Успіх"
+        pending: "У процесі"
       binary_file: "Цей файл є бінарним."
       truncated_file: "Цей файл було обрізано."
       show_original: "показати оригінал"
@@ -5891,21 +5896,12 @@ uk:
       review_by: "Відгук від"
       pr_summary: "%{commits} фіксує змінені файли %{changed_files} з додаванням %{additions} та вилученням %{deletions}"
       no_description: "Зробіть свій внесок у розвиток %{repo} , створивши обліковий запис на GitHub."
-      pr_title:
-        default: "Запити до злиття"
-        draft: "Чернетка запиту на злиття"
-        open: "Відкрити запит на злиття"
-        approved: "Схвалений запит на злиття"
-        changes_requested: "Запитані зміни"
-        merged: "Об'єднаний запит на злиття"
-        closed: "Закритий запит на злиття"
-      status_date:
-        open: "відкрито"
-        draft: "чернетки"
-        approved: "схвалено"
-        changes_requested: "запитувані зміни"
-        merged: "об'єднано"
-        closed: "закриті"
+      pr_status:
+        draft: "Чернетка"
+        open: "Відкрити"
+        approved: "Схвалено"
+        merged: "Об'єднано"
+        closed: "Закриті"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} згадав вас у "%{topic}" - %{site_title}'

@@ -74,6 +74,8 @@ bg:
         filters:
           all: "Всички"
           reset: "Нулиране"
+        sentiment:
+          enabled: "Да е включен"
         search:
           name: "Търсене"
         image_caption:

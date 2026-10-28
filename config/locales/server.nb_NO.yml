@@ -1392,10 +1392,14 @@ nb_NO:
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Suksess"
       closed: "lukket"
-      status_date:
-        approved: "godkjent"
-        closed: "lukket"
+      pr_status:
+        draft: "Utkast"
+        open: "Åpne"
+        approved: "Godkjent"
+        closed: "Lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'

@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedArray, trackedSet } from "@ember/reactive/collections";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
@@ -10,12 +11,16 @@ import StartPostingOptions from "discourse/components/admin-onboarding/modal/sta
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
+import { homepagePath } from "discourse/lib/homepage-router-overrides";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
+
+const DEFAULT_LOCATION = "above_main_container";
 
 const STEPS = [
   class SelectTheme extends OnboardingStep {
@@ -147,10 +152,14 @@ export default class AdminOnboardingBanner extends Component {
   @tracked minimized = false;
   // the key value store isn't reactive, but the progress count must be
   completedStepNames = trackedSet(
-    STEPS.filter(
-      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
-    ).map((Step) => Step.name)
+    this.steps
+      .filter(
+        (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
+      )
+      .map((Step) => Step.name)
   );
+
+  #heightContainer;
 
   constructor() {
     super(...arguments);
@@ -170,6 +179,23 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
+  // Where the banner renders. A customization can return a location of its
+  // own and render the banner there, as long as it passes a matching @location
+  get location() {
+    return applyValueTransformer(
+      "admin-onboarding-banner-location",
+      DEFAULT_LOCATION,
+      { homepage: defaultHomepage() }
+    );
+  }
+
+  // A bare <AdminOnboardingBanner> without @location renders regardless of the chosen location
+  get matchesLocation() {
+    return (
+      this.args.location === undefined || this.args.location === this.location
+    );
+  }
+
   get shouldDisplay() {
     if (this.dismissed) {
       return false;
@@ -179,8 +205,27 @@ export default class AdminOnboardingBanner extends Component {
       return false;
     }
 
-    const { currentRouteName } = this.router;
-    return currentRouteName === `discovery.${defaultHomepage()}`;
+    if (!this.matchesLocation) {
+      return false;
+    }
+
+    const { currentRouteName, currentURL } = this.router;
+    const path = currentURL?.split(/[?#]/)[0];
+    return (
+      currentRouteName === `discovery.${defaultHomepage()}` ||
+      path === "/" ||
+      path === homepagePath()
+    );
+  }
+
+  /**
+   * @returns {(typeof OnboardingStep)[]}
+   */
+  @cached
+  get steps() {
+    return applyValueTransformer("admin-onboarding-steps", [...STEPS], {
+      homepage: defaultHomepage(),
+    });
   }
 
   get completedSteps() {
@@ -194,7 +239,7 @@ export default class AdminOnboardingBanner extends Component {
 
   @action
   async checkIfOnboardingIsComplete() {
-    const allStepsAreDone = STEPS.every(
+    const allStepsAreDone = this.steps.every(
       (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
     );
 
@@ -209,11 +254,29 @@ export default class AdminOnboardingBanner extends Component {
   }
 
   @action
+  updateHeight(entries) {
+    const element = entries[0].target;
+    this.#heightContainer = element.parentElement;
+    this.#heightContainer.style.setProperty(
+      "--admin-onboarding-banner-height",
+      `${element.getBoundingClientRect().height}px`
+    );
+  }
+
+  @action
+  clearHeight() {
+    this.#heightContainer?.style.removeProperty(
+      "--admin-onboarding-banner-height"
+    );
+    this.#heightContainer = undefined;
+  }
+
+  @action
   async endOnboarding({ skipped = true } = {}) {
     await SiteSetting.update("enable_site_owner_onboarding", false);
     await logOnboardingEvent(skipped ? "dismissed" : "completed");
     this.dismissed = true;
-    STEPS.forEach((Step) => {
+    this.steps.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);
     });
     this.completedStepNames.clear();
@@ -229,7 +292,11 @@ export default class AdminOnboardingBanner extends Component {
 
   <template>
     {{#if this.shouldDisplay}}
-      <div class="admin-onboarding-banner">
+      <div
+        class="admin-onboarding-banner"
+        {{dOnResize this.updateHeight}}
+        {{willDestroy this.clearHeight}}
+      >
         <div class="admin-onboarding-banner__wrap">
           <div class="admin-onboarding-banner__header">
             <div class="admin-onboarding-banner__header-text">
@@ -243,7 +310,7 @@ export default class AdminOnboardingBanner extends Component {
                     "admin_onboarding_banner.launch_in_easy_steps_subtitle"
                     (hash
                       completed_steps=this.completedSteps
-                      step_count=STEPS.length
+                      step_count=this.steps.length
                     )
                   }}
                 </span>
@@ -271,7 +338,7 @@ export default class AdminOnboardingBanner extends Component {
           {{#unless this.minimized}}
             <div class="admin-onboarding-banner__content">
               <div class="admin-onboarding-banner__steps">
-                {{#each STEPS as |Step|}}
+                {{#each this.steps as |Step|}}
                   <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
                 {{/each}}
               </div>

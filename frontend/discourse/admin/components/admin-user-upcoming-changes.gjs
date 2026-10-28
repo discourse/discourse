@@ -5,7 +5,6 @@ import { UPCOMING_CHANGES_USER_ENABLED_REASONS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
-import { and, eq } from "discourse/truth-helpers";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DModal from "discourse/ui-kit/d-modal";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";

@@ -7,6 +7,8 @@
 fi:
   js:
     dsa_notice:
+      choice_title: "Se on laiton"
+      go_back: "Palaa takaisin"
       title: "Ilmoita laittomasta sisällöstä"
       email: "Sähköpostiosoite"
     user_api_key:
@@ -28,6 +30,7 @@ fi:
     access_control:
       manage:
         access_permission_editor: "Muokkaaja"
+        access_permission_owner: "Isäntä"
         access_permission_remove: "Poista"
     number:
       format:
@@ -7465,7 +7468,7 @@ fi:
         silenced_by: "Hiljentäjä"
         silence_modal_title: "Hiljennä käyttäjä"
         silence_duration: "Kuinka pitkäksi aikaa käyttäjä hiljennetään?"
-        silence_reason_label: "Miksi hiljennät käyttäjän?"
+        silence_reason_title: "Hiljennyksen syy"
         silence_reason_placeholder: "Hiljennyksen syy"
         silence_message: "Sähköpostiviesti"
         silence_message_placeholder: "(jätä tyhjäksi, jos haluat lähettää oletusviestin)"

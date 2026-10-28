@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
@@ -186,9 +185,10 @@ export default class AiSearchAnswer extends Component {
                 <li class="ai-search-answer__related-item">
                   <AiSearchTopicRow
                     class="ai-search-answer__related-link"
-                    @bumpedAt={{topic.bumped_at}}
+                    @bumpedAt={{or topic.bumped_at topic.published_at}}
                     @category={{topic.categoryModel}}
                     @replyCount={{topic.topic_replies}}
+                    @sourceName={{topic.source_name}}
                     @title={{topic.title}}
                     @url={{topic.url}}
                   />

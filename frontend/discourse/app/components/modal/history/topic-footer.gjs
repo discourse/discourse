@@ -1,6 +1,5 @@
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";

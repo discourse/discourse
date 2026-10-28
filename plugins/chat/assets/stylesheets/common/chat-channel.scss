@@ -16,7 +16,7 @@
     @include viewport.from(xl) {
       height: calc(
         var(--composer-vh, 1vh) * 100 - var(--main-outlet-offset, 0px) -
-          1px - var(--chat-header-offset, 0)
+          1px - var(--chat-header-offset, 0) - var(--chat-content-offset, 0px)
       );
     }
   }

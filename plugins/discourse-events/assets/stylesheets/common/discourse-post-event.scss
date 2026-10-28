@@ -1,3 +1,39 @@
+@use "lib/viewport";
+
+// Fits the frame to the image: 16:9 at most, but never taller than the image itself, so small or
+// very wide images don't sit in large bars
+@mixin letterboxed-image {
+  aspect-ratio: auto;
+  container-type: inline-size;
+
+  img {
+    background: var(--event-image-color, var(--primary-very-low));
+    display: block;
+    height: min(
+      calc(100cqi * 9 / 16),
+      calc(100cqi * var(--event-image-ratio, 1)),
+      var(--event-image-height, 100cqi)
+    );
+
+    // Shrinks images that don't fit, but never enlarges small ones
+    object-fit: scale-down;
+    object-position: center;
+  }
+}
+
+@mixin stacked-side-image {
+  @include letterboxed-image;
+  float: none;
+  margin: 0;
+  padding: 1px;
+  width: 100%;
+
+  img {
+    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    max-height: none;
+  }
+}
+
 $interested: #fb985d;
 $show-interested: inherit;
 
@@ -5,9 +41,34 @@ $show-interested: inherit;
   display: none;
 }
 
+// Only where the width comes from the page; elsewhere, like popovers, containment would collapse it
+.cooked .discourse-post-event,
+.chat-message-text .discourse-post-event {
+  container: post-event / inline-size;
+}
+
 .discourse-post-event-onebox {
   display: block;
   margin: var(--space-4) 0;
+}
+
+.chat-message-text .discourse-post-event-onebox {
+  max-width: var(--topic-body-width);
+
+  // Matches the chat cap on event onebox images; the image carries the ratio so it can be capped
+  .event-image:not(.--side) {
+    aspect-ratio: auto;
+
+    img {
+      display: block;
+      max-height: 12rem;
+    }
+
+    &:not(.--letterboxed) img {
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+  }
 }
 
 .discourse-post-event-onebox .discourse-post-event-widget,
@@ -52,8 +113,43 @@ $show-interested: inherit;
       width: 100%;
       height: 100%;
       object-fit: cover;
+
+      // Only affects images taller than their box, where the subject tends to sit high
+      object-position: 50% 0;
       border-top-left-radius: var(--d-border-radius);
       border-top-right-radius: var(--d-border-radius);
+    }
+
+    &.--letterboxed {
+      @include letterboxed-image;
+    }
+
+    // Floated so the header and details wrap beside it, then take the full width once past it
+    &.--side {
+      aspect-ratio: auto;
+      float: left;
+      margin: 0.75em 0 0.75em 0.75em;
+      padding: 0;
+      width: 8rem;
+
+      img {
+        border-radius: var(--d-border-radius);
+        display: block;
+        height: auto;
+        max-height: 12rem;
+      }
+
+      // Two columns leave too little room for long titles in narrow spaces like phones or the chat
+      // drawer, so the image goes above, letterboxed into the usual 16:9 banner. The viewport check
+      // covers places that size the widget to its content, like the calendar popover, which can't
+      // be containers.
+      @include viewport.until(sm) {
+        @include stacked-side-image;
+      }
+
+      @container post-event (width < 30rem) {
+        @include stacked-side-image;
+      }
     }
   }
 
@@ -76,6 +172,44 @@ $show-interested: inherit;
     section:last-child {
       padding-bottom: 0.75em;
     }
+
+    // Floats don't apply to flex items
+    &:has(> .event-image.--side) {
+      display: flow-root;
+
+      // Keeps the RSVP buttons from being squeezed beside the image
+      .event-actions {
+        clear: both;
+      }
+    }
+
+    &.is-ended {
+      background: var(--primary-very-low);
+
+      .event-image img {
+        filter: grayscale(1);
+        opacity: 0.6;
+      }
+
+      .event-date {
+        border-color: var(--primary-low-mid);
+
+        .month,
+        .day {
+          color: var(--primary-medium);
+        }
+      }
+
+      .event-info .name,
+      .event-info .name a {
+        color: var(--primary-high);
+      }
+
+      .avatar-flair,
+      .event-invitees-icon .going {
+        background: var(--primary-very-low);
+      }
+    }
   }
 
   .event-header {
@@ -92,6 +226,10 @@ $show-interested: inherit;
       display: flex;
       gap: var(--space-2);
       margin-left: auto;
+
+      &:not(:has(*)) {
+        display: none;
+      }
     }
   }
 
@@ -129,10 +267,12 @@ $show-interested: inherit;
     flex-direction: column;
     min-width: 0;
     margin-right: 0.5rem;
+    margin-top: calc(-1 * var(--space-1));
 
     .name {
       font-size: var(--font-up-2);
       font-weight: 400;
+      line-height: var(--line-height-medium);
     }
 
     .status-and-creators {
@@ -411,6 +551,25 @@ $show-interested: inherit;
     }
   }
 
+  .event-location.--superseded,
+  .event-url.--superseded {
+    &,
+    a,
+    .url,
+    > .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  .event-recording {
+    padding-top: 0;
+  }
+
+  .event-invitees + .event-recording {
+    padding-top: var(--space-2);
+    padding-left: var(--space-6);
+  }
+
   .cooked-date,
   .participants,
   .event-url .url {
@@ -425,6 +584,12 @@ $show-interested: inherit;
     grid-template-columns: 3em 1fr;
     column-gap: 1em;
     align-items: center;
+
+    > .d-icon {
+      color: var(--primary-high);
+      margin: 0 auto;
+      padding: 0;
+    }
   }
 
   p.no-rsvp-description {

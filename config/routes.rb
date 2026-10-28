@@ -2059,6 +2059,8 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
+    get "/bundle-analysis.json" => "bundle_analysis#index"
+
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
@@ -2110,6 +2112,10 @@ Discourse::Application.routes.draw do
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
       get "/test_net_http_headers" => "test_requests#test_net_http_headers"
       get "/test_postgres_readonly" => "test_requests#test_postgres_readonly"
+    end
+
+    namespace :api do
+      resources :groups, only: :show
     end
 
     # This catch-all route should always be last

@@ -1,1 +1,1 @@
-export { default } from "ember-truth-helpers/helpers/eq";
+export { eq as default } from "@ember/helper";

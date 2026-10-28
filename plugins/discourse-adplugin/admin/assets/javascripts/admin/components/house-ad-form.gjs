@@ -6,9 +6,9 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import HouseAdsCategorySelector from "./house-ads-category-selector.gjs";
 import HouseAdsRouteSelector from "./house-ads-route-selector.gjs";
 import Preview from "./modal/preview.gjs";
 
@@ -218,10 +218,9 @@ export default class HouseAdForm extends Component {
         as |field|
       >
         <field.Control>
-          <HouseAdsCategorySelector
-            @categories={{this.site.categories}}
+          <CategorySelector
+            @categories={{field.value}}
             @onChange={{field.set}}
-            @selectedCategories={{field.value}}
           />
         </field.Control>
       </form.Field>

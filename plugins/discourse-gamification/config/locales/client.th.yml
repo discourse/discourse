@@ -28,9 +28,7 @@ th:
       close: "ปิด"
       delete: "ลบ"
       edit: "แก้ไข"
-      back: "กลับ"
       save: "บันทึก"
-      apply: "นำไปใช้"
       update_range:
         last_10_days: "10 วันที่ผ่านมา"
         last_30_days: "30 วันที่ผ่านมา"

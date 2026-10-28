@@ -1,7 +1,6 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 interface DConditionalLoadingSpinnerSignature {

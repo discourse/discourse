@@ -83,7 +83,7 @@ export default class BreadCrumbs extends Component {
         }}
       />
 
-      {{#each this.categoryBreadcrumbs as |breadcrumb|}}
+      {{#each this.categoryBreadcrumbs key="parentCategory.id" as |breadcrumb|}}
         {{#if breadcrumb.hasOptions}}
           <li
             style={{if

@@ -7,6 +7,8 @@
 zh_TW:
   js:
     dsa_notice:
+      choice_title: "違法"
+      go_back: "返回"
       title: "檢舉非法內容"
       email: "電子郵件地址"
       resend_email_code: "重新傳送代碼"
@@ -61,6 +63,7 @@ zh_TW:
       manage:
         access_permission_editor: "編輯"
         access_permission_editor_description: "可為此實體建立及編輯內容"
+        access_permission_owner: "擁有者"
         access_permission_viewer: "觀看者"
         access_permission_viewer_description: "可檢視此實體的內容"
         access_permission_remove: "移除"
@@ -8945,7 +8948,7 @@ zh_TW:
         silenced_by: "已靜音，由"
         silence_modal_title: "將使用者靜音"
         silence_duration: "這位使用者將會被靜音多久？"
-        silence_reason_label: "您為何要將這位使用者靜音？"
+        silence_reason_title: "禁言原因"
         silence_reason_placeholder: "靜音原因"
         silence_message: "Email 訊息"
         silence_message_placeholder: "(留白以傳送預設訊息)"

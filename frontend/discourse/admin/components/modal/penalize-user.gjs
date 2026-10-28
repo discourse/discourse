@@ -10,7 +10,6 @@ import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-pos
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
 import { extractError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
@@ -193,6 +192,14 @@ export default class PenalizeUser extends Component {
                 {{trustHTML (i18n "admin.user.suspend_reason_hidden_label")}}
               {{else}}
                 {{trustHTML (i18n "admin.user.suspend_reason_label")}}
+              {{/if}}
+            </div>
+          {{else if (eq @model.penaltyType "silence")}}
+            <div class="penalty-reason-visibility">
+              {{#if this.siteSettings.hide_silencing_reasons}}
+                {{trustHTML (i18n "admin.user.silence_reason_hidden_label")}}
+              {{else}}
+                {{trustHTML (i18n "admin.user.silence_reason_label")}}
               {{/if}}
             </div>
           {{/if}}

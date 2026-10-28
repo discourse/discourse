@@ -10,7 +10,6 @@ import { trustHTML } from "@ember/template";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -48,6 +47,10 @@ export default class LiveVideoTile extends Component {
 
   get tileStyle() {
     return trustHTML(`aspect-ratio: ${this.aspect ?? DEFAULT_TILE_ASPECT};`);
+  }
+
+  get isPortrait() {
+    return this.aspect !== null && this.aspect < 1;
   }
 
   // The menu only offers audio controls for a call the user is in, so
@@ -164,11 +167,13 @@ export default class LiveVideoTile extends Component {
         "live-video-tile"
         (if this.showVideo "--video" "--avatar")
         (if (eq this.publishingKind "screen") "--screen")
+        (if this.isPortrait "--portrait")
         (if @isSelf "--self")
         (if this.isSpeaking "--speaking")
       }}
       data-user-id={{this.participant.id}}
       style={{this.tileStyle}}
+      ...attributes
       {{this.trackFullscreen this.setFullscreen}}
       {{on "contextmenu" this.openContextMenu}}
     >
@@ -224,7 +229,9 @@ export default class LiveVideoTile extends Component {
           type="button"
           {{on "click" this.toggleFullscreen}}
         >
-          {{dIcon (if this.isFullscreen "compress" "expand")}}
+          {{dIcon
+            (if this.isFullscreen "discourse-compress" "discourse-expand")
+          }}
         </button>
       {{/if}}
     </div>

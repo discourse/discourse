@@ -41,7 +41,6 @@ import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
-import { and, eq, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";

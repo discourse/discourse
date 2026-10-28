@@ -8,7 +8,6 @@ import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq, gt, lt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -493,7 +492,7 @@ export default class DataTableViewer extends Component {
                 </tr>
               </thead>
               <tbody>
-                {{#each this.rows as |row|}}
+                {{#each this.rows key="id" as |row|}}
                   <tr class="workflows-data-table-viewer__row">
                     <td class="workflows-data-table-viewer__cell --id">
                       <input

@@ -1110,10 +1110,14 @@ bs_BA:
     google_meet:
       meeting_code: "Šifra:"
     github:
+      header:
+        success: "Uspjeh"
       closed: "zatvoreno"
-      status_date:
-        approved: "approved"
-        closed: "zatvoreno"
+      pr_status:
+        draft: "Nacrt"
+        open: "Otvori"
+        approved: "Dozvojeno"
+        closed: "Zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'

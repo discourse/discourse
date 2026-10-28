@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
@@ -13,7 +14,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { serializedAction, splitWhere } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import { gt, has } from "discourse/truth-helpers";
+import { has } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -273,7 +274,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
             (if this.filtered "--filtered")
           }}
         >
-          {{#each this.fetchedCategoriesGroupings as |categories|}}
+          {{#each this.fetchedCategoriesGroupings key="0.id" as |categories|}}
             <div
               class="sidebar-categories-form__row"
               style={{borderColor (get categories "0.color") "left"}}
@@ -284,6 +285,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                   data-category-id={{category.id}}
                   data-category-level={{category.level}}
                   {{didInsert this.didInsert}}
+                  {{didUpdate this.didInsert this.fetchedCategoriesGroupings}}
                 >
                   <label
                     class="sidebar-categories-form__category-label"

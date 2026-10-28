@@ -22,7 +22,7 @@ describe "Admin leaderboards" do
     expect(admin_leaderboard_page.full_form.field("name").value).to eq("My leaderboard")
 
     expect(page).to have_current_path(
-      "/admin/plugins/discourse-gamification/leaderboards/#{DiscourseGamification::GamificationLeaderboard.last.id}",
+      "/admin/plugins/discourse-gamification/leaderboards/#{DiscourseGamification::GamificationLeaderboard.last.id}/edit",
     )
 
     admin_leaderboard_page.full_form.field("from_date").fill_in(12.months.ago.end_of_month)
@@ -56,6 +56,52 @@ describe "Admin leaderboards" do
       expect(page).to have_content(I18n.t("js.gamification.leaderboard.save_success"))
 
       expect(leaderboard.reload.name).to eq("Coolest dudettes")
+    end
+
+    it "opens the edit page from the leaderboard name" do
+      visit("/admin/plugins/discourse-gamification")
+
+      admin_leaderboard_page.click_leaderboard_name(leaderboard)
+
+      expect(page).to have_current_path(
+        "/admin/plugins/discourse-gamification/leaderboards/#{leaderboard.id}/edit",
+      )
+      expect(admin_leaderboard_page.full_form.field("name").value).to eq("Coolest duders")
+    end
+
+    it "opens the public leaderboard from the row menu" do
+      visit("/admin/plugins/discourse-gamification")
+
+      admin_leaderboard_page.view_leaderboard(leaderboard)
+
+      expect(page).to have_current_path("/leaderboard/#{leaderboard.id}")
+    end
+
+    it "loads the new and edit pages directly" do
+      visit("/admin/plugins/discourse-gamification/leaderboards/new")
+      expect(admin_leaderboard_page.new_form.field("name")).to be_present
+
+      visit("/admin/plugins/discourse-gamification/leaderboards/#{leaderboard.id}/edit")
+      expect(admin_leaderboard_page.full_form.field("name").value).to eq("Coolest duders")
+    end
+
+    it "redirects the old edit URL" do
+      visit("/admin/plugins/discourse-gamification/leaderboards/#{leaderboard.id}")
+
+      expect(page).to have_current_path(
+        "/admin/plugins/discourse-gamification/leaderboards/#{leaderboard.id}/edit",
+      )
+    end
+
+    it "keeps score overrides when saving with the scoring section collapsed" do
+      leaderboard.update!(score_overrides: { "like_given" => 5 })
+
+      visit("/admin/plugins/discourse-gamification/leaderboards/#{leaderboard.id}/edit")
+      admin_leaderboard_page.full_form.field("name").fill_in("Coolest dudettes")
+      admin_leaderboard_page.full_form.submit
+
+      expect(page).to have_content(I18n.t("js.gamification.leaderboard.save_success"))
+      expect(leaderboard.reload.score_overrides).to eq({ "like_given" => 5 })
     end
 
     it "shows the creator and opens their user card" do

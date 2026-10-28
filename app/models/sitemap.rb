@@ -10,14 +10,10 @@ class Sitemap < ActiveRecord::Base
 
       names_used.each { |name| touch(name) }
 
-      count = Category.where(read_restricted: false).sum(:topic_count)
-      max_page_size = SiteSetting.sitemap_page_size
-      size, mod = count.divmod(max_page_size)
-      size += 1 if mod > 0
-
-      size.times do |index|
-        page_name = (index + 1).to_s
-        touch(page_name)
+      numbered_pages_last_posted_at.each do |page_name, last_posted_at|
+        sitemap = find_or_initialize_by(name: page_name)
+        sitemap.update!(last_posted_at: last_posted_at, enabled: true)
+        Rails.cache.delete(sitemap.page_cache_key) if sitemap.saved_change_to_last_posted_at?
         names_used << page_name
       end
 
@@ -28,6 +24,27 @@ class Sitemap < ActiveRecord::Base
       find_or_initialize_by(name: name).tap do |sitemap|
         sitemap.update!(last_posted_at: sitemap.last_posted_topic || 3.days.ago, enabled: true)
       end
+    end
+
+    def indexable_topics
+      Topic.where(visible: true).joins(:category).where(categories: { read_restricted: false })
+    end
+
+    private
+
+    # One pass over the listed topics gives every page's newest topic, so the cost
+    # grows with the number of topics rather than with topics times pages.
+    def numbered_pages_last_posted_at
+      page_number =
+        "(ROW_NUMBER() OVER (ORDER BY topics.id) - 1) / #{SiteSetting.sitemap_page_size.to_i} + 1"
+      pages = indexable_topics.select(:updated_at, "#{page_number} AS page")
+
+      Topic
+        .unscoped
+        .from(pages, :pages)
+        .group("pages.page")
+        .pluck(Arel.sql("pages.page"), Arel.sql("MAX(pages.updated_at)"))
+        .map { |page, last_posted_at| [page.to_s, last_posted_at] }
     end
   end
 
@@ -49,11 +66,14 @@ class Sitemap < ActiveRecord::Base
     SiteSetting.sitemap_page_size
   end
 
+  def page_cache_key
+    "sitemap/#{name}/#{max_page_size}"
+  end
+
   private
 
   def sitemap_topics
-    indexable_topics =
-      Topic.where(visible: true).joins(:category).where(categories: { read_restricted: false })
+    indexable_topics = self.class.indexable_topics
 
     if name == RECENT_SITEMAP_NAME
       indexable_topics.where("bumped_at > ?", 3.days.ago).order(bumped_at: :desc)

@@ -50,3 +50,18 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLikeChanged::V1 do
     end
   end
 end
+
+RSpec.describe DiscourseWorkflows::Nodes::PostLikeChanged::V2 do
+  fab!(:author, :user)
+  fab!(:post) { Fabricate(:post, user: author) }
+  fab!(:liker, :user)
+
+  it "returns the post author as user and the liker as actor", :aggregate_failures do
+    trigger = described_class.from_event(:like_created, PostAction.new(post:, user: liker))
+    output = trigger.output
+
+    expect(output[:user]).to include(id: author.id)
+    expect(output[:actor]).to include(id: liker.id)
+    expect(output).to match_node_output_schema(described_class)
+  end
+end

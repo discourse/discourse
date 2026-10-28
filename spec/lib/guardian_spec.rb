@@ -78,6 +78,7 @@ RSpec.describe Guardian do
     fab!(:acl_group) { Fabricate(:group).tap { |group| group.add(acl_user) } }
     fab!(:member_category, :category)
     fab!(:anon_category, :category)
+    fab!(:owned_category, :category)
     fab!(:member_acl) do
       Fabricate(
         :access_control_list_with_groups,
@@ -92,6 +93,14 @@ RSpec.describe Guardian do
         target: anon_category,
         permission: "view",
         allowed_group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+      )
+    end
+    fab!(:owner_acl) do
+      Fabricate(
+        :access_control_list_with_users,
+        target: owned_category,
+        permission: "owner",
+        users: [acl_user],
       )
     end
 
@@ -141,6 +150,25 @@ RSpec.describe Guardian do
 
       it "is false for anonymous users without a matching group" do
         expect(Guardian.new.has_any_acl_permission?(member_category, %w[edit view])).to eq(false)
+      end
+    end
+
+    describe "#is_acl_owner?" do
+      it "is true only for a directly owned target" do
+        expect(acl_user.guardian.is_acl_owner?(owned_category)).to eq(true)
+        expect(acl_user.guardian.is_acl_owner?(member_category)).to eq(false)
+      end
+    end
+
+    describe "#can_manage_acl_owner?" do
+      it "allows target owners and admins to manage ownership" do
+        expect(acl_user.guardian.can_manage_acl_owner?(owned_category)).to eq(true)
+        expect(Fabricate(:admin).guardian.can_manage_acl_owner?(member_category)).to eq(true)
+      end
+
+      it "rejects other users and anonymous guardians" do
+        expect(acl_user.guardian.can_manage_acl_owner?(member_category)).to eq(false)
+        expect(Guardian.new.can_manage_acl_owner?(owned_category)).to eq(false)
       end
     end
   end

@@ -10,6 +10,23 @@ module PageObjects
         body.find("#radio_#{type}").click
       end
 
+      def report_illegal_content
+        body.choose("radio_dsa_report")
+        footer.click_button("Continue")
+      end
+
+      def has_no_selected_illegal_report?
+        body.has_unchecked_field?("radio_dsa_report")
+      end
+
+      def has_no_message_input?
+        body.has_no_css?(".flag-message")
+      end
+
+      def has_no_confirmation?
+        body.has_no_css?(".flag-confirmation")
+      end
+
       def confirm_flag
         click_primary_button
       end

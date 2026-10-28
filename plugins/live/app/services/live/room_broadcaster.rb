@@ -22,6 +22,10 @@ module Live
       new(room).publish_hand_raise(user_id, raised: raised, raised_at: raised_at, reason: reason)
     end
 
+    def self.publish_reaction(room, user, emoji)
+      new(room).publish_reaction(user, emoji)
+    end
+
     # Someone in the room started ringing `user` — lets open room pages show
     # a pending tile for them without refetching the room.
     def self.publish_ringing(room, user, notified_at:)
@@ -127,6 +131,25 @@ module Live
           raised: raised,
           raised_at: raised_at,
           reason: reason,
+        },
+        user_ids: participant_ids,
+      )
+    end
+
+    # Fire-and-forget: nothing is stored, so a client that misses one simply
+    # never sees it float by.
+    def publish_reaction(user, emoji)
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return if participant_ids.empty?
+
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        {
+          type: "reaction",
+          room_id: room.id,
+          user_id: user.id,
+          username: user.username,
+          emoji: emoji,
         },
         user_ids: participant_ids,
       )

@@ -25,7 +25,8 @@ th:
         tags: "ป้าย"
         topic_reply_count:
           other: "%{count} ตอบ"
-        created_by: "สร้างโดย"
+        owners:
+          other: "เจ้าของ"
       manage:
         name: "ชื่อ"
         constraint_categories: "หมวดหมู่"

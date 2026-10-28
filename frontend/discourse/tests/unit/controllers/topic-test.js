@@ -857,4 +857,38 @@ module("Unit | Controller | topic", function (hooks) {
       "regular user's post is fetched into the stream"
     );
   });
+
+  test("pinning keeps the server's shape for pinned_at", async function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = this.store.createRecord("topic", { id: 1 });
+    sinon.stub(model, "saveStatus").resolves();
+    controller.setProperties({ model });
+
+    await controller.togglePinned();
+    assert.strictEqual(
+      typeof model.pinned_at,
+      "string",
+      "pinning in the category stores a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(model.pinned_at).toISOString(),
+      model.pinned_at,
+      "pinning in the category stores an ISO 8601 timestamp"
+    );
+
+    await controller.togglePinned();
+    assert.strictEqual(model.pinned_at, null, "unpinning clears it");
+
+    await controller.pinGlobally();
+    assert.strictEqual(
+      typeof model.pinned_at,
+      "string",
+      "pinning globally stores a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(model.pinned_at).toISOString(),
+      model.pinned_at,
+      "pinning globally stores an ISO 8601 timestamp"
+    );
+  });
 });

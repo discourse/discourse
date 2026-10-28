@@ -7,6 +7,7 @@
 hr:
   js:
     dsa_notice:
+      choice_title: "Nezakonito je."
       title: "Prijavite ilegalni sadržaj"
       email: "E-mail adresa"
     user_api_key:
@@ -28,6 +29,7 @@ hr:
     access_control:
       manage:
         access_permission_editor: "Urednik"
+        access_permission_owner: "Vlasnik"
         access_permission_remove: "Ukloni"
     number:
       format:
@@ -7201,7 +7203,6 @@ hr:
         silenced_by: "Utišao/la"
         silence_modal_title: "Utišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti utišan?"
-        silence_reason_label: "Zašto utišavate ovog korisnika?"
         silence_reason_placeholder: "Razlog utišavanja"
         silence_message: "Pošaljite poruku e-mailom"
         silence_message_placeholder: "(ostavite praznim za slanje standardne poruke)"

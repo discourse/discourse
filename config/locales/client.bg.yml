@@ -21,6 +21,7 @@ bg:
     access_control:
       manage:
         access_permission_editor: "Редактор"
+        access_permission_owner: "Собественик"
         access_permission_remove: "Премахване"
     number:
       format:

@@ -159,6 +159,12 @@ export default class Composer extends RestModel {
   static EDIT_TOPIC_KEY = EDIT_TOPIC_KEY;
 
   // TODO: Replace with injection
+  /**
+   * @template {import("discourse/models/rest").RestModelClass} C
+   * @this {C}
+   * @param {import("discourse/models/rest").RestModelAttrs<InstanceType<C>>} [args]
+   * @returns {InstanceType<C>}
+   */
   static create(args) {
     args = args || {};
     args.user = args.user || User.current();

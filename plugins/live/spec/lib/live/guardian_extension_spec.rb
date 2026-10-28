@@ -165,6 +165,40 @@ RSpec.describe Live::GuardianExtension do
     end
   end
 
+  describe "#can_delete_live_room?" do
+    it "is true for the room creator" do
+      expect(creator.guardian.can_delete_live_room?(private_room)).to eq(true)
+    end
+
+    it "is true for site staff" do
+      expect(staff.guardian.can_delete_live_room?(private_room)).to eq(true)
+    end
+
+    it "is false for a room moderator" do
+      expect(room_moderator.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false for a plain participant member" do
+      expect(member.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false for ephemeral rooms" do
+      private_room.update!(ephemeral: true)
+
+      expect(creator.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false when the plugin is disabled" do
+      SiteSetting.live_enabled = false
+
+      expect(creator.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false for a nil room" do
+      expect(creator.guardian.can_delete_live_room?(nil)).to eq(false)
+    end
+  end
+
   describe "#can_join_live_room?" do
     it "lets any allowed user join public rooms" do
       expect(low_trust_user.guardian.can_join_live_room?(public_room)).to eq(true)

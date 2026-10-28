@@ -6,7 +6,6 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and, eq, not } from "discourse/truth-helpers";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

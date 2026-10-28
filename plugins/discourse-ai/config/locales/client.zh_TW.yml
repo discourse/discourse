@@ -32,7 +32,6 @@ zh_TW:
             failed: "失敗"
         emotion:
           title: "情緒"
-          description: "該表格列出了按特定情緒分類的貼文數量。根據所選情緒分類方法，貼文將使用配置的情緒分類模型（“SamLowe/roberta-base-go_emotions”）或配置的情緒分類智能體進行分類。"
         reports:
           filters:
             group_by:
@@ -306,7 +305,6 @@ zh_TW:
         none: "無"
       features:
         short_title: "功能"
-        description: "這些是您網站的訪客可以使用的 AI 功能。可以將這些功能配置為使用特定的智能體和 LLM，并按群組控制訪問權限。"
         back: "返回 AI 功能"
         settings_save_error: "某些設置無法保存。"
         disabled: "（已禁用）"
@@ -318,6 +316,7 @@ zh_TW:
         no_llm: "未選擇 LLM"
         no_agent: "未設置"
         no_groups: "無"
+        classification_model: "模型："
         edit: "設置"
         expand_list:
           other: "（另外 %{count} 個）"
@@ -336,10 +335,17 @@ zh_TW:
           not_enabled: "未啟用"
         filters:
           all: "所有"
-          text: "搜尋功能、智能體、LLM 或群組…"
           no_results: "找不到符合您的篩選條件的功能。"
           reset: "重置"
         no_automations: "尚無自動化"
+        sentiment:
+          sentiment: "情緒"
+          emotion: "情緒"
+          enabled: "已啟用"
+          agent: "智能體"
+          setting_groups:
+            sentiment: "情緒"
+            emotion: "情緒"
         summarization:
           name: "總結"
           description: "提供總結按鈕，允許訪客總結主題"

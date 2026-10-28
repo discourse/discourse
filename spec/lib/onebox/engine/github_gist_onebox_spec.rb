@@ -25,6 +25,14 @@ RSpec.describe Onebox::Engine::GithubGistOnebox do
   end
 
   describe "#to_html" do
+    it "shows the preview type and repository in the header" do
+      header = Nokogiri::HTML5.fragment(html).at_css("aside > header")
+
+      expect(header.at_css(".github-onebox__label").text.strip).to eq("Gist")
+      expect(header.at_css("a").text.strip).to eq("gist.github.com/karreiro")
+      expect(header.at_css("a")["href"]).to eq(link)
+    end
+
     describe "when Gist API responds correctly" do
       it "includes the link to original page" do
         expect(html).to include("https://gist.github.com/karreiro/208fdd59fc4b4c39283b")

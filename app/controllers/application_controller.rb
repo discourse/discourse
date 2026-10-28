@@ -84,6 +84,16 @@ class ApplicationController < ActionController::Base
   end
   helper_method :use_crawler_layout?
 
+  # Kept in the env so that Middleware::CrawlerHooks rewrites links to match the page's tags.
+  def plain_url_serves_default_locale?
+    key = ContentLocalization::PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV
+    return request.env[key] if request.env.key?(key)
+
+    request.env[key] = current_user.nil? &&
+      ContentLocalization.plain_url_serves_default_locale?(request)
+  end
+  helper_method :plain_url_serves_default_locale?
+
   def include_splash_screen?
     !Rails.env.test?
   end

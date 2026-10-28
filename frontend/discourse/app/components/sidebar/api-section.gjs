@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import curryComponent from "ember-curry-component";
-import { and, eq, not } from "discourse/truth-helpers";
 import MoreSectionLink from "./more-section-link.gjs";
 import MoreSectionLinks from "./more-section-links.gjs";
 import Section from "./section.gjs";

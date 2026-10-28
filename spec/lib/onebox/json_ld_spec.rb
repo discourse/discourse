@@ -27,13 +27,87 @@ RSpec.describe Onebox::JsonLd do
     expect(json_ld.data).to eq({})
   end
 
-  it "returns an empty hash if the type of JSON-LD data is not Movie" do
+  it "returns an empty hash if the JSON-LD type is unsupported" do
     doc =
       Nokogiri.HTML(
         "<script type=\"application/ld+json\">{\"@type\":\"Something Else\",\"aggregateRating\":{\"@type\":\"AggregateRating\",\"ratingCount\":806928,\"bestRating\":10,\"worstRating\":1}}</script>",
       )
     json_ld = described_class.new(doc)
     expect(json_ld.data).to eq({})
+  end
+
+  it "normalizes Event data" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "description": "Meet the community",
+            "startDate": "2026-10-22T09:00:00-04:00",
+            "endDate": "2026-10-22T10:00:00-04:00"
+          }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to eq(
+      event_starts_at: "2026-10-22T09:00:00-04:00",
+      event_ends_at: "2026-10-22T10:00:00-04:00",
+      event_all_day: "false",
+      event_description: "Meet the community",
+    )
+  end
+
+  it "reads an Event image given as an ImageObject" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          {
+            "@type": "Event",
+            "startDate": "2026-10-22",
+            "image": { "@type": "ImageObject", "url": "https://example.com/event.png", "width": 800, "height": 600 }
+          }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to include(
+      event_image: "https://example.com/event.png",
+      event_image_width: "800",
+      event_image_height: "600",
+    )
+  end
+
+  it "reads the first of several Event images given as URLs" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          {
+            "@type": "Event",
+            "startDate": "2026-10-22",
+            "image": ["https://example.com/first.png", "https://example.com/second.png"]
+          }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to include(event_image: "https://example.com/first.png")
+    expect(described_class.new(doc).data).not_to have_key(:event_image_width)
+  end
+
+  it "recognizes date-only Events as all-day" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          { "@context": "https://schema.org", "@type": "Event", "startDate": "2026-10-22" }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to include(event_all_day: "true")
+  end
+
+  it "does not treat invalid Event dates as all-day" do
+    doc = Nokogiri.HTML(<<~HTML)
+        <script type="application/ld+json">
+          { "@context": "https://schema.org", "@type": "Event", "startDate": "not-a-date" }
+        </script>
+      HTML
+
+    expect(described_class.new(doc).data).to include(event_all_day: "false")
   end
 
   it "correctly normalizes the properties" do

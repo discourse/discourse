@@ -63,10 +63,6 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(option_ids).to include("site_description")
       expect(option_ids).not_to include(SiteSetting.secret_settings.first.to_s)
       expect(option_ids).not_to include(SiteSetting.hidden_settings.first.to_s)
-      expect(node.dig("output_contracts", 0, "schema", "properties")).to include(
-        "name" => include("type" => "string"),
-        "changed" => include("type" => "boolean"),
-      )
     end
   end
 end

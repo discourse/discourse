@@ -2149,6 +2149,7 @@ en:
 
   site_settings:
     dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
+    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. Leave blank to omit appeal instructions. Requires {{setting:dsa_reporting_enabled}} to be turned on."
     dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
@@ -3193,6 +3194,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
+    concord_in_wizard: "Offer Concord and the General chat homepage in the design wizard."
     enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
     site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
@@ -3218,6 +3220,7 @@ en:
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
+    enable_user_menu_mentions_tab: "Add a Mentions tab to the user menu that shows direct @username mentions separately from replies and group mentions."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show admins or moderators who are also members of these specific groups on the /about page."
     about_page_extra_groups: "Groups to show on the about page below the moderators."
@@ -4024,6 +4027,7 @@ en:
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
+    moderation_appeal_instructions: "To appeal this decision, contact %{email}"
 
     post_hidden:
       title: "Post Hidden"
@@ -6349,6 +6353,9 @@ en:
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
   design_wizard:
+    themes:
+      concord:
+        description: "Replaces the sidebar with a single channel list made of categories, chat channels and live audio/video rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."
@@ -6399,6 +6406,7 @@ en:
 
   onebox:
     discourse:
+      event_all_day: "All day"
       user_joined_community: "Joined %{date}"
     google_meet:
       title: "Google Meet meeting"
@@ -6409,6 +6417,23 @@ en:
       truncated_file: "This file has been truncated."
       show_original: "show original"
     github:
+      header:
+        repository: "Repository"
+        folder: "Folder"
+        file: "File"
+        binary_file: "Binary file"
+        gist: "Gist"
+        open_issue: "Open issue"
+        closed_issue: "Closed issue"
+        commit: "Commit"
+        comment: "Comment"
+        review: "Review comment"
+        pull_request: "Pull request"
+        success: "Success"
+        failure: "Failure"
+        pending: "In progress"
+        unknown: "Unknown or queued"
+        check_run: "Check run"
       binary_file: "This file is binary."
       truncated_file: "This file has been truncated."
       show_original: "show original"
@@ -6422,21 +6447,13 @@ en:
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
       no_description: "Contribute to %{repo} development by creating an account on GitHub."
-      pr_title:
-        default: "Pull Request"
-        draft: "Draft Pull Request"
-        open: "Open Pull Request"
-        approved: "Approved Pull Request"
-        changes_requested: "Changes Requested"
-        merged: "Merged Pull Request"
-        closed: "Closed Pull Request"
-      status_date:
-        open: "opened"
-        draft: "drafted"
-        approved: "approved"
-        changes_requested: "changes requested"
-        merged: "merged"
-        closed: "closed"
+      pr_status:
+        draft: "Draft"
+        open: "Open"
+        approved: "Approved"
+        changes_requested: "Changes requested"
+        merged: "Merged"
+        closed: "Closed"
 
   discourse_push_notifications:
     popup:

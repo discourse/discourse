@@ -130,6 +130,16 @@
     line-height: var(--line-height-medium);
   }
 
+  &__source {
+    grid-area: category;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
   // the category badge sets its own size, which these match
   &__date,
   &__replies {

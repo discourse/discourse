@@ -376,6 +376,27 @@ RSpec.describe JsonApiKit::Resource do
       )
     end
 
+    context "when the attribute declares a type" do
+      before { topic_resource.attribute(:views, :string, writable: true) }
+
+      it "preserves the record's value" do
+        expect(attribute_values).to include(
+          JsonApiKit::Name::Field.new(value: "views", type: topic_resource.type) => topic.views,
+        )
+      end
+    end
+
+    context "when a typed attribute declares a reader" do
+      before { topic_resource.attribute(:view_count, :integer, writable: true) { it.views.to_s } }
+
+      it "preserves the reader's value" do
+        expect(attribute_values).to include(
+          JsonApiKit::Name::Field.new(value: "view_count", type: topic_resource.type) =>
+            topic.views.to_s,
+        )
+      end
+    end
+
     context "when the resource declares one more after a reading" do
       before do
         topic_resource.fields(guardian:).attributes
@@ -386,6 +407,64 @@ RSpec.describe JsonApiKit::Resource do
         expect(attribute_values).to include(
           JsonApiKit::Name::Field.new(value: "closed", type: topic_resource.type),
         )
+      end
+    end
+  end
+
+  describe ".writable_attributes" do
+    subject(:writable_attributes) { resource.writable_attributes }
+
+    let(:resource) do
+      Class.new(described_class) do
+        attribute :title, :string, writable: true
+        attribute :tags, :array, writable: true
+        attribute :created_at, :datetime
+        attribute :views, :integer, writable: false
+        attribute :closed
+      end
+    end
+
+    it "returns the names and types of writable declarations" do
+      expect(writable_attributes.map { [it.name, it.type] }).to contain_exactly(
+        ["title", an_instance_of(ActiveModel::Type::String)],
+        ["tags", an_instance_of(ActiveSupportTypeExtensions::Array)],
+      )
+    end
+
+    context "when an attribute is unreadable" do
+      before { resource.attribute(:password, :string, writable: true, readable: ->(_) { false }) }
+
+      it "includes the writable declaration" do
+        expect(writable_attributes.map(&:name)).to include("password")
+      end
+    end
+
+    context "when a declaration follows an earlier lookup" do
+      before do
+        resource.writable_attributes
+        resource.attribute(:excerpt, :string, writable: true)
+      end
+
+      it "includes the new declaration" do
+        expect(writable_attributes.map(&:name)).to include("excerpt")
+      end
+    end
+
+    context "when a subclass adds a writable attribute" do
+      let(:child_resource) { Class.new(resource) }
+
+      before { child_resource.attribute(:excerpt, :string, writable: true) }
+
+      it "includes inherited declarations in the subclass" do
+        expect(child_resource.writable_attributes.map(&:name)).to contain_exactly(
+          "title",
+          "tags",
+          "excerpt",
+        )
+      end
+
+      it "preserves the parent's declarations" do
+        expect(writable_attributes.map(&:name)).to contain_exactly("title", "tags")
       end
     end
   end
@@ -667,5 +746,11 @@ RSpec.describe JsonApiKit::Resource do
         expect(topic_resource.order("created_at" => :desc).segments.size).to eq(1)
       end
     end
+  end
+
+  describe "#writable_attributes" do
+    subject(:resource) { topic_resource.new(guardian:) }
+
+    it { is_expected.to delegate_method(:writable_attributes).to(:class) }
   end
 end

@@ -30,6 +30,10 @@ module DiscourseDataExplorer
              class_name: "DiscourseDataExplorer::QueryTag",
              through: :query_tag_mappings,
              source: :query_tag
+    has_one :dashboard_report,
+            -> { where(source: AdminDashboardReportProvider.source_name) },
+            class_name: "::AdminDashboardReport",
+            foreign_key: :identifier
     belongs_to :user
     validates :name, presence: true
 
@@ -130,7 +134,7 @@ module DiscourseDataExplorer
 
     def self.unpersisted_defaults(search: nil, tags: nil, tag: nil)
       selected_tags = QueryTag.normalize_all(tags || tag)
-      persisted_ids = where(hidden: false).where("id < 0").pluck(:id).to_set
+      persisted_ids = where("id < 0").pluck(:id).to_set
       query_text = search&.downcase
 
       Queries.default.filter_map do |_, attributes|
