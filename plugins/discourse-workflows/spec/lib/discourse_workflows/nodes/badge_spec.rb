@@ -4,6 +4,63 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
   fab!(:user)
   fab!(:badge)
 
+  describe ".upgrade" do
+    let(:badge_parameters) do
+      { "username" => "={{ $json.user.username }}", "badge_id" => 12, "actor_username" => "system" }
+    end
+
+    it "moves granting to Grant badge, warning about the output" do
+      expect(described_class.upgrade(badge_parameters.merge("operation" => "grant"))).to eq(
+        type: "action:grant_badge",
+        parameters: badge_parameters,
+        notes: ["discourse_workflows.node_upgrades.badge_output"],
+      )
+    end
+
+    it "treats a node without an operation as granting" do
+      expect(described_class.upgrade(badge_parameters)).to include(type: "action:grant_badge")
+    end
+
+    it "moves revoking to Revoke badge, warning that every grant is revoked" do
+      expect(described_class.upgrade(badge_parameters.merge("operation" => "revoke"))).to eq(
+        type: "action:revoke_badge",
+        parameters: badge_parameters,
+        notes: %w[
+          discourse_workflows.node_upgrades.badge_output
+          discourse_workflows.node_upgrades.badge_revoke_all_grants
+        ],
+      )
+    end
+
+    it "leaves a node whose operation is an expression to be replaced by hand" do
+      expect(described_class.upgrade("operation" => "={{ $json.operation }}")).to be_nil
+    end
+
+    it "upgrades a saved revoke node with translated notes" do
+      node = {
+        "id" => "node-1",
+        "type" => "action:badge",
+        "typeVersion" => "1.0",
+        "name" => "Revoke",
+        "parameters" => badge_parameters.merge("operation" => "revoke"),
+      }
+
+      result = DiscourseWorkflows::NodeUpgrader.call([node])
+
+      expect(result.nodes.sole).to include(
+        "type" => "action:revoke_badge",
+        "typeVersion" => "1.0",
+        "parameters" => badge_parameters,
+      )
+      expect(result.upgrades.sole.notes).to eq(
+        [
+          I18n.t("discourse_workflows.node_upgrades.badge_output"),
+          I18n.t("discourse_workflows.node_upgrades.badge_revoke_all_grants"),
+        ],
+      )
+    end
+  end
+
   describe ".load_options_context" do
     fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
 

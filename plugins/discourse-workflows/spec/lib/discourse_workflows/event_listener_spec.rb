@@ -531,6 +531,36 @@ RSpec.describe DiscourseWorkflows::EventListener do
     )
   end
 
+  it "enqueues badge revoked workflows matching the badge, once per revoked grant",
+     :aggregate_failures do
+    badge.update!(multiple_grant: true)
+    first_grant = BadgeGranter.grant(badge, user, post_id: Fabricate(:post, user:).id)
+    second_grant = BadgeGranter.grant(badge, user, post_id: Fabricate(:post, user:).id)
+    create_published_workflow(
+      "matching-badge-trigger",
+      "trigger:badge_revoked",
+      configuration: {
+        "badge_id" => badge.id.to_s,
+      },
+    )
+    create_published_workflow(
+      "badge-mismatch-trigger",
+      "trigger:badge_revoked",
+      configuration: {
+        "badge_id" => other_badge.id.to_s,
+      },
+    )
+
+    [first_grant, second_grant].each { BadgeGranter.revoke(it, revoked_by: admin) }
+
+    expect(enqueued_trigger_node_ids.tally).to eq("matching-badge-trigger" => 2)
+    expect(trigger_data_for("matching-badge-trigger")).to include(
+      "user" => include("id" => user.id),
+      "badge" => include("id" => badge.id),
+      "actor" => include("id" => admin.id),
+    )
+  end
+
   it "only enqueues user seen workflows matching the trigger setting" do
     seen_at = Time.zone.now
     user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)

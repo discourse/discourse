@@ -289,10 +289,6 @@ module PageObjects
         }.freeze
 
         NODE_TYPE_OPERATION_LABELS = {
-          "action:badge" => {
-            "grant" => "Grant badge",
-            "revoke" => "Revoke badge",
-          },
           "action:group" => {
             "get" => "Get group",
             "check_membership" => "Check membership",

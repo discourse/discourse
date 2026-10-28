@@ -333,6 +333,7 @@ en:
         "trigger:reviewable_deleted": "Review item deleted"
         "trigger:reviewable_pending": "Review item returned to pending"
         "trigger:badge_granted": "Badge granted"
+        "trigger:badge_revoked": "Badge revoked"
         "trigger:user_search": "User search"
         "trigger:user_seen": "User seen"
         "trigger:webhook": "Webhook"
@@ -361,6 +362,8 @@ en:
         "action:unsilence_user": "Unsilence user"
         "action:add_user_to_group": "Add user to group"
         "action:remove_user_from_group": "Remove user from group"
+        "action:grant_badge": "Grant badge"
+        "action:revoke_badge": "Revoke badge"
         "action:send_personal_message": "Send personal message"
         "action:set_fields": "Set fields"
         "trigger:stale_topic": "Stale topic"
@@ -460,6 +463,9 @@ en:
         "action:unsilence_user": "unmute, ungag, unrestrict, lift"
         "action:add_user_to_group": "join, member, membership, enroll"
         "action:remove_user_from_group": "kick, leave, member, membership, expel"
+        "action:grant_badge": "award, give, reward, achievement"
+        "action:revoke_badge": "remove, take away, withdraw, achievement"
+        "trigger:badge_revoked": "removed, taken away, withdrawn, achievement"
         "trigger:user_suspended": "banned, blocked, penalty"
         "trigger:user_unsuspended": "unbanned, reinstated, expired, ended"
         "trigger:user_silenced": "muted, restricted, penalty"
@@ -516,6 +522,7 @@ en:
         "trigger:reviewable_deleted": "Fires when a review item is marked deleted"
         "trigger:reviewable_pending": "Fires when an existing review item returns to pending"
         "trigger:badge_granted": "Fires when a user is granted a badge"
+        "trigger:badge_revoked": "Fires once per grant revoked from a user, from the admin badge page, the API, Revoke badge or plugins. The actor is whoever revoked it, or empty when the code that revoked it didn't say. Automatic revocations and deleted users or badges don't fire it."
         "trigger:user_search": "Fires when a user searches the site"
         "trigger:user_seen": "Fires when a user is seen"
         "trigger:webhook": "Fires when an external service sends a webhook request"
@@ -544,6 +551,8 @@ en:
         "action:unsilence_user": "Let a silenced user post again"
         "action:add_user_to_group": "Add a user to a group, like adding a member from the group's page, optionally making it their primary group and sending them a message"
         "action:remove_user_from_group": "Remove a user from a group, like removing a member from the group's page"
+        "action:grant_badge": "Grant a badge to a user, optionally for a post, notifying them like the admin badge page does"
+        "action:revoke_badge": "Revoke a badge from a user, every grant of it or only the one for a post, like the admin badge page"
         "action:send_personal_message": "Send a personal message to users or groups"
         "action:set_fields": "Set or modify data fields in the workflow context"
         "trigger:stale_topic": "Fires when a topic has had no activity for a period"
@@ -974,6 +983,13 @@ en:
       post_lock_action:
         post_id: "Post ID"
         actor_username: "Performed by user"
+      badge_action:
+        username: "User"
+        badge_id: "Badge"
+        badge_id_placeholder: "Select a badge"
+        post_id: "Post ID"
+        post_id_description: "The post the badge is (or was) granted for. On Revoke badge, leave blank to revoke every grant of the badge."
+        actor_username: "Performed by user"
       group_membership_action:
         username: "User"
         group_id: "Group"
@@ -1386,6 +1402,10 @@ en:
       badge_granted:
         badge_id: "Badge"
         badge_id_description: "Only trigger when this badge is granted. Leave blank for any badge."
+        badge_id_placeholder: "Any badge"
+      badge_revoked:
+        badge_id: "Badge"
+        badge_id_description: "Only trigger when this badge is revoked. Leave blank for any badge."
         badge_id_placeholder: "Any badge"
       user_seen:
         trigger_on_first_seen: "First seen"
