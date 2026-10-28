@@ -4273,6 +4273,18 @@ RSpec.describe User do
   describe "#silence_reason" do
     before { user.update!(silenced_till: 1.day.from_now) }
 
+    it "ignores the log of a silence that was lifted since" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "old reason",
+      )
+      Fabricate(:user_history, action: UserHistory.actions[:unsilence_user], target_user: user)
+
+      expect(user.silence_reason).to be_nil
+    end
+
     it "returns only the first line when details contain a message body" do
       Fabricate(
         :user_history,
@@ -4342,6 +4354,18 @@ RSpec.describe User do
 
   describe "#suspend_reason" do
     before { user.update!(suspended_till: 1.day.from_now) }
+
+    it "ignores the log of a suspension that was lifted since" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        target_user: user,
+        details: "old reason",
+      )
+      Fabricate(:user_history, action: UserHistory.actions[:unsuspend_user], target_user: user)
+
+      expect(user.suspend_reason).to be_nil
+    end
 
     it "returns sanitized suspend reason" do
       Fabricate(
