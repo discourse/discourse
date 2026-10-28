@@ -46,7 +46,7 @@ import type User from "discourse/models/user";
 import type AppEventsService from "discourse/services/app-events";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
-import Category from "./category.ts";
+import Category, { type CategoryFields } from "./category.ts";
 
 /** A tag attached to a topic. */
 export interface TopicTag {
@@ -133,7 +133,7 @@ export interface TopicFields {
   bumped?: boolean;
   bumped_at?: string;
   can_localize_topic?: true;
-  categories?: object[];
+  categories?: CategoryFields[];
   category_id?: number | null;
   chunk_size?: number;
   closed?: boolean;
