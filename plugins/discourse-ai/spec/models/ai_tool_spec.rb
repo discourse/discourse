@@ -107,6 +107,75 @@ RSpec.describe AiTool do
     expect(result).to eq([{ "slept" => 1 }, { "slept" => 1 }, { "slept" => 1 }])
   end
 
+  it "runs the fxmacrodata preset" do
+    preset = AiTool.presets.find { |p| p[:preset_id] == "fxmacrodata" }
+    tool = create_tool(parameters: preset[:parameters], script: preset[:script])
+    base_url = "https://api.fxmacrodata.com/v1"
+
+    stub_request(:get, "#{base_url}/announcements/usd/inflation?limit=2").to_return(
+      status: 200,
+      body: {
+        currency: "USD",
+        indicator: "inflation",
+        name: "Inflation (CPI)",
+        source: "BLS",
+        value_metadata: {
+          source_unit: "%YoY",
+        },
+        freemium_delay: {
+          applied: true,
+          withheld_count: 0,
+          message: "Free access is delayed by 15 minutes.",
+        },
+        data: [
+          {
+            date: "2026-08-31",
+            val: 3.4,
+            announcement_datetime_local: "2026-09-11T08:30:00-04:00",
+          },
+        ],
+      }.to_json,
+    )
+
+    stub_request(:get, "#{base_url}/calendar/usd?indicator=inflation").to_return(
+      status: 200,
+      body: {
+        data: [
+          {
+            announcement_datetime_utc: "2026-10-14T12:30:00+00:00",
+            reference_period: "September 2026",
+          },
+        ],
+      }.to_json,
+    )
+
+    runner = tool.runner({ "indicator" => "inflation", "limit" => 2 }, llm: nil, bot_user: nil)
+    result = runner.invoke
+
+    expect(result["unit"]).to eq("%YoY")
+    expect(result["observations"]).to eq(
+      [{ "date" => "2026-08-31", "value" => 3.4, "released_at" => "2026-09-11T08:30:00-04:00" }],
+    )
+    expect(result["freemium_delay"]["withheld_count"]).to eq(0)
+    expect(result["next_release"]["scheduled_at"]).to eq("2026-10-14T12:30:00+00:00")
+  end
+
+  it "returns an error when the fxmacrodata preset gets an error body with a 200" do
+    preset = AiTool.presets.find { |p| p[:preset_id] == "fxmacrodata" }
+    tool = create_tool(parameters: preset[:parameters], script: preset[:script])
+    base_url = "https://api.fxmacrodata.com/v1"
+
+    stub_request(:get, "#{base_url}/announcements/usd/inflation?limit=5").to_return(
+      status: 200,
+      body: { detail: "Unknown indicator" }.to_json,
+    )
+
+    runner = tool.runner({ "indicator" => "inflation" }, llm: nil, bot_user: nil)
+    result = runner.invoke
+
+    expect(result["error"]).to eq("Unknown indicator")
+  end
+
   describe "#set_image_generation_tool_flag" do
     it "sets flag to true when tool has all required characteristics" do
       tool =
