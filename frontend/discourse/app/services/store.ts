@@ -13,6 +13,7 @@ import type Category from "discourse/models/category";
 import type Composer from "discourse/models/composer";
 import type Group from "discourse/models/group";
 import type NavItem from "discourse/models/nav-item";
+import type Notification from "discourse/models/notification";
 import type PendingPost from "discourse/models/pending-post";
 import type { default as Post, PostCreateAttrs } from "discourse/models/post";
 import type PostStream from "discourse/models/post-stream";
@@ -25,6 +26,7 @@ import RestModel, {
   type RestPayload,
 } from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
+import type Reviewable from "discourse/models/reviewable";
 import type Site from "discourse/models/site";
 import type {
   default as Topic,
@@ -42,10 +44,12 @@ export interface ModelRegistry {
   composer: Composer;
   group: Group;
   "nav-item": NavItem;
+  notification: Notification;
   "pending-post": PendingPost;
   post: Post;
   "post-stream": PostStream;
   "published-page": PublishedPage;
+  reviewable: Reviewable;
   site: Site;
   topic: Topic;
   "topic-list": TopicList;
