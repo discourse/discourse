@@ -11,6 +11,7 @@ import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import GroupManageCategories from "discourse/templates/group/manage/categories";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { DSelect as SelectDriver } from "discourse/tests/helpers/d-select-helper";
 import {
   ALL_CATEGORIES_ID,
@@ -235,6 +236,58 @@ module(
           optionValues().includes("2"),
           "the tracked category is not offered"
         );
+      });
+
+      test("picking a searched category on a lazy site fetches nothing again", async function (assert) {
+        Site.current().set("lazy_load_categories", true);
+        pretender.post("/categories/search", () =>
+          response({
+            categories_count: 1,
+            categories: [{ id: 9960, name: "Searched pick", slug: "pick9960" }],
+            ancestors: [],
+          })
+        );
+        let finds = 0;
+        pretender.get("/categories/find", () => {
+          finds++;
+          return response({ categories: [] });
+        });
+        const warn = sinon.stub(console, "warn");
+        const user = this.owner.lookup("service:store").createRecord("user", {
+          watched_category_ids: [],
+          tracked_category_ids: [],
+          watched_first_post_category_ids: [],
+          regular_category_ids: [],
+          muted_category_ids: [],
+        });
+        const selected = [];
+
+        try {
+          await render(
+            <template>
+              <UserPreferencesCategories
+                @model={{user}}
+                @selectedCategories={{selected}}
+                @siteSettings={{this.siteSettings}}
+              />
+            </template>
+          );
+          const picker = new SelectDriver(
+            ".tracking-controls__watched-categories .d-select"
+          );
+          await picker.open();
+          await picker.search("Searched");
+          await click("[role='option'][data-value='9960']");
+
+          assert.deepEqual(user.watched_category_ids, [9960]);
+          assert.strictEqual(finds, 0, "the picked category is not fetched");
+          assert.false(
+            warn.calledWithMatch(/Multiple calls to Category.asyncFindByIds/),
+            "no repeated lookups"
+          );
+        } finally {
+          warn.restore();
+        }
       });
 
       test("a group list offers its own held categories but not another list's", async function (assert) {

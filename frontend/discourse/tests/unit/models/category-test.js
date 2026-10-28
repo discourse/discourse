@@ -932,6 +932,33 @@ module(
       assert.strictEqual(requests, 2, "the cleared search is fetched again");
     });
 
+    test("a category returned by asyncSearch counts as loaded", async function (assert) {
+      const site = Site.current();
+      site.set("lazy_load_categories", true);
+      pretender.post("/categories/search", () =>
+        response({
+          categories_count: 1,
+          categories: [{ id: 9950, name: "Searched", slug: "searched9950" }],
+          ancestors: [{ id: 9951, name: "Ancestor", slug: "ancestor9951" }],
+        })
+      );
+      let finds = 0;
+      pretender.get("/categories/find", () => {
+        finds++;
+        return response({ categories: [] });
+      });
+
+      await Category.asyncSearch("searched", { includeAncestors: true });
+      const found = await Category.asyncFindByIds([9950, 9951]);
+
+      assert.deepEqual(
+        found.map((category) => category.id),
+        [9950, 9951],
+        "the records come from the site"
+      );
+      assert.strictEqual(finds, 0, "nothing is fetched again");
+    });
+
     test("asyncFindDescendants returns the preloaded tree without asking the server", async function (assert) {
       const site = Site.current();
       site.set("lazy_load_categories", false);

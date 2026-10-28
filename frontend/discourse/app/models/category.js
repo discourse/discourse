@@ -508,19 +508,26 @@ export default class Category extends RestModel {
 
     if (opts.includeAncestors) {
       return {
-        ancestors: result["ancestors"].map((category) =>
-          Site.current().updateCategory(category)
-        ),
-        categories: result["categories"].map((category) =>
-          Site.current().updateCategory(category)
-        ),
+        ancestors: this.#registerLoaded(result["ancestors"]),
+        categories: this.#registerLoaded(result["categories"]),
         categoriesCount: result["categories_count"],
       };
     } else {
-      return result["categories"].map((category) =>
-        Site.current().updateCategory(category)
-      );
+      return this.#registerLoaded(result["categories"]);
     }
+  }
+
+  /**
+   * Adds server records to the site and marks them loaded. Search and find serialize the same
+   * fields, so a searched record needs no later `asyncFindByIds` round trip.
+   */
+  static #registerLoaded(pojos) {
+    const site = Site.current();
+    const records = pojos.map((category) => site.updateCategory(category));
+    const loadedCategoryIds = site.loadedCategoryIds || new Set();
+    records.forEach((category) => loadedCategoryIds.add(category.id));
+    site.set("loadedCategoryIds", loadedCategoryIds);
+    return records;
   }
 
   @service currentUser;
