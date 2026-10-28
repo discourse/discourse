@@ -194,6 +194,25 @@ RSpec.describe PostDestroyer do
       expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: moderator }]])
     end
 
+    it "fires topic_recovered once the topic's statistics are up to date" do
+      first_post = create_post
+      topic = first_post.topic
+      create_post(topic:)
+      PostDestroyer.new(moderator, first_post).destroy
+      topic.update_columns(highest_post_number: 0)
+
+      highest_post_number = nil
+      on_recovered = ->(recovered_topic, **) do
+        highest_post_number = recovered_topic.highest_post_number
+      end
+      DiscourseEvent.on(:topic_recovered, &on_recovered)
+      PostDestroyer.new(moderator, first_post.reload).recover
+
+      expect(highest_post_number).to eq(2)
+    ensure
+      DiscourseEvent.off(:topic_recovered, &on_recovered)
+    end
+
     it "fires topic_recovered with the author when they cancel their own topic deletion" do
       first_post = create_post
       author = first_post.user

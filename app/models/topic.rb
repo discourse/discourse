@@ -165,7 +165,8 @@ class Topic < ActiveRecord::Base
     topic_embed.trash! if has_topic_embed?
   end
 
-  def recover!(recovered_by = nil)
+  # `announce: false` leaves `:topic_recovered` to callers that still have to update the topic.
+  def recover!(recovered_by = nil, announce: true)
     trigger_event = false
 
     unless deleted_at.nil?
@@ -177,7 +178,9 @@ class Topic < ActiveRecord::Base
     # Note parens are required because superclass doesn't take `recovered_by`
     super()
 
-    DiscourseEvent.trigger(:topic_recovered, self, acting_user: recovered_by) if trigger_event
+    if trigger_event && announce
+      DiscourseEvent.trigger(:topic_recovered, self, acting_user: recovered_by)
+    end
 
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
       topic_embed.recover!

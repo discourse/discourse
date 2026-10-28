@@ -1049,6 +1049,7 @@ RSpec.describe PostMover do
             }.to change { Category.find(topic.category_id).topic_count }.by(-1)
 
             expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: user }]])
+            expect(Topic.with_deleted.find(topic.id).deleted_by).to eq(user)
           end
 
           it "ignores moderator posts and closes the topic if all regular posts were moved" do
