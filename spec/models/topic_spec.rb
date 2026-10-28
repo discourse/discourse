@@ -2140,6 +2140,19 @@ RSpec.describe Topic do
           expect(events.length).to eq(1)
           expect(events.first[:params][0]).to eq(topic)
           expect(events.first[:params][1]).to eq(category)
+          expect(events.first[:params][2]).to eq(acting_user: nil)
+        end
+
+        it "says who moved the topic, but never assumes its owner did" do
+          moderator = Fabricate(:moderator)
+          topic.acting_user = moderator
+
+          events =
+            DiscourseEvent.track_events(:topic_category_changed) do
+              topic.change_category_to_id(new_category.id)
+            end
+
+          expect(events.sole[:params].last).to eq(acting_user: moderator)
         end
 
         describe "user that is watching the new category" do

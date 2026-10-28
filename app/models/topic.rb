@@ -1167,7 +1167,8 @@ class Topic < ActiveRecord::Base
 
   cattr_accessor :update_featured_topics
 
-  def changed_to_category(new_category, silent: nil)
+  # `acting_user` defaults to the one set explicitly: `#acting_user` falls back to the topic's owner.
+  def changed_to_category(new_category, silent: nil, acting_user: @acting_user)
     return true if new_category.blank? || Category.exists?(topic_id: id)
 
     if new_category.id == SiteSetting.uncategorized_category_id &&
@@ -1224,7 +1225,7 @@ class Topic < ActiveRecord::Base
           DB.after_commit { TopicTrackingState.publish_category_change(self, old_category) }
         end
 
-        DiscourseEvent.trigger(:topic_category_changed, self, old_category)
+        DiscourseEvent.trigger(:topic_category_changed, self, old_category, acting_user:)
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
@@ -1287,7 +1288,7 @@ class Topic < ActiveRecord::Base
     new_post
   end
 
-  def change_category_to_id(category_id, silent: nil)
+  def change_category_to_id(category_id, silent: nil, acting_user: @acting_user)
     return false if private_message?
 
     new_category_id = category_id.to_i
@@ -1301,7 +1302,7 @@ class Topic < ActiveRecord::Base
 
     reviewables.update_all(category_id: new_category_id)
 
-    changed_to_category(cat, silent: silent)
+    changed_to_category(cat, silent: silent, acting_user:)
   end
 
   def remove_allowed_group(removed_by, name)
