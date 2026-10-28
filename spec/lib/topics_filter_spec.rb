@@ -361,6 +361,14 @@ RSpec.describe TopicsFilter do
             expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id), query
           end
         end
+
+        it "counts whisper participation for whisperers" do
+          %w[users:alice group:group1].each do |query|
+            ids = filtered(query, Guardian.new(whisperer_user))
+
+            expect(ids).to include(topic_with_whisper_only.id), query
+          end
+        end
       end
     end
 
