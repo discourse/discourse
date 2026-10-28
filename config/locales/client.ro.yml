@@ -7,6 +7,7 @@
 ro:
   js:
     dsa_notice:
+      choice_title: "Este ilegal"
       email: "Adresă email"
     user_api_key:
       title: 'Autorizează „%{application_name}”'

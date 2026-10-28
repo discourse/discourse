@@ -6,6 +6,8 @@
 
 hy:
   js:
+    dsa_notice:
+      choice_title: "Անօրինական է"
     user_api_key:
       authorize: "Նույնականացնել"
       deny: "Չեղարկել"
@@ -5086,7 +5088,6 @@ hy:
         silenced_by: "Լռեցնող՝ "
         silence_modal_title: "Լռեցնել Օգտատիրոջը"
         silence_duration: "Որքա՞ն ժամանակ պետք է լռեցվի օգտատերը:"
-        silence_reason_label: "Ինչո՞ւ եք լռեցնում այս օգտատիրոջը:"
         silence_reason_placeholder: "Լռեցման Պատճառը"
         silence_message: "Էլ. Նամակ"
         silence_message_placeholder: "(թողեք դատարկ՝ լռելյայն հաղորդագրությունն ուղարկելու համար)"

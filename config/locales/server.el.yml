@@ -3044,6 +3044,8 @@ el:
   search_logs:
     graph_title: "Πλήθος αναζητήσεων"
   onebox:
+    discourse:
+      event_all_day: "Όλη μέρα"
     google_meet:
       meeting_code: "Κωδικός:"
     gitlab:

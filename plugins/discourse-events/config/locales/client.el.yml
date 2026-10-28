@@ -237,6 +237,8 @@ el:
         topic_id: "ID Θέματος"
     discourse_post_event:
       new_event: "Νέα εκδήλωση"
+      onebox:
+        all_day: "Όλη μέρα"
       notifications:
         before_event_reminder: "Μια εκδήλωση πρόκειται να ξεκινήσει"
         after_event_reminder: "Μια εκδήλωση έχει λήξει"

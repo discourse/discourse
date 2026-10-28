@@ -5868,6 +5868,7 @@ uk:
     graph_title: "Кількість пошуків"
   onebox:
     discourse:
+      event_all_day: "Цілий день"
       user_joined_community: "Приєднався %{date}"
     google_meet:
       title: "Зустріч у Google Meet"

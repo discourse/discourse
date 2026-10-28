@@ -363,6 +363,8 @@ uk:
         topic_id_description: "Тригерувати лише для подій у цій темі. Залиште поле порожнім, щоб відповідати всім подіям."
     discourse_post_event:
       new_event: "Нова подія"
+      onebox:
+        all_day: "Цілий день"
       notifications:
         before_event_reminder: "Подія ось-ось розпочнеться"
         after_event_reminder: "Подія завершилася"

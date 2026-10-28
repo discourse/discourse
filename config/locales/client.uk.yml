@@ -7,6 +7,8 @@
 uk:
   js:
     dsa_notice:
+      choice_title: "Це незаконно."
+      go_back: "Повернутися назад"
       title: "Повідомити про незаконний вміст"
       email: "Адреса електронної пошти"
       resend_email_code: "Надіслати код повторно"
@@ -10239,7 +10241,7 @@ uk:
         silenced_by: "Відключено користувачем"
         silence_modal_title: "Відключений користувач"
         silence_duration: "Як довго користувач буде відключений?"
-        silence_reason_label: "Чому ви збираєтеся відключити користувача?"
+        silence_reason_title: "Причина заморожування"
         silence_reason_placeholder: "Причина відключення"
         silence_message: "Повідомлення пошти"
         silence_message_placeholder: "(Залиште незаповненим, щоб відправити дефолтне повідомлення)"

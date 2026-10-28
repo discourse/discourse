@@ -60,6 +60,7 @@ uk:
 
         Відвідайте канал за адресою %{channel_url} , щоб повторити спробу.
   chat:
+    design_wizard_homepage_name: "Чат"
     deleted_chat_username: видалено
     crawler:
       directory_title: "Чат-канали"

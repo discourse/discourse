@@ -6,6 +6,8 @@
 
 pt:
   js:
+    dsa_notice:
+      go_back: "Anterior"
     user_api_key:
       authorize: "Autorizar"
       deny: "Cancelar"

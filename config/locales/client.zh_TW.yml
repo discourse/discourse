@@ -7,6 +7,8 @@
 zh_TW:
   js:
     dsa_notice:
+      choice_title: "違法"
+      go_back: "返回"
       title: "檢舉非法內容"
       email: "電子郵件地址"
       resend_email_code: "重新傳送代碼"
@@ -8946,7 +8948,7 @@ zh_TW:
         silenced_by: "已靜音，由"
         silence_modal_title: "將使用者靜音"
         silence_duration: "這位使用者將會被靜音多久？"
-        silence_reason_label: "您為何要將這位使用者靜音？"
+        silence_reason_title: "禁言原因"
         silence_reason_placeholder: "靜音原因"
         silence_message: "Email 訊息"
         silence_message_placeholder: "(留白以傳送預設訊息)"

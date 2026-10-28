@@ -5375,6 +5375,7 @@ fr:
     graph_title: "Nombre de recherches"
   onebox:
     discourse:
+      event_all_day: "Toute la journée"
       user_joined_community: "S'est inscrit(e) le %{date}"
     google_meet:
       title: "Réunion Google Meet"

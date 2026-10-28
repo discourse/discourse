@@ -7,6 +7,7 @@
 sk:
   js:
     dsa_notice:
+      choice_title: "Je to nezákonné"
       title: "Nahlásiť nezákonný obsah"
       email: "E-mailová adresa"
     user_api_key:
@@ -7897,7 +7898,7 @@ sk:
         silenced_by: "Umlčané"
         silence_modal_title: "Tichý užívateľ"
         silence_duration: "Na ako dlho bude používateľ umlčaný?"
-        silence_reason_label: "Prečo umlčujete tohto používateľa?"
+        silence_reason_title: "Dôvod ticha"
         silence_reason_placeholder: "Dôvod ticha"
         silence_message: "E-mailová správa"
         silence_message_placeholder: "(pre odoslanie predvolenej správy nechajte prázdne)"

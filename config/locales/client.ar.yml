@@ -7,6 +7,8 @@
 ar:
   js:
     dsa_notice:
+      choice_title: "إنه غير قانوني"
+      go_back: "العودة"
       title: "الإبلاغ عن المحتوى غير القانوني"
       email: "عنوان البريد الإلكتروني"
       resend_email_code: "إعادة إرسال الرمز"
@@ -10247,7 +10249,7 @@ ar:
         silenced_by: "كتمه"
         silence_modal_title: "كتم المستخدم"
         silence_duration: "إلى متى سيتم كتم المستخدم؟"
-        silence_reason_label: "لماذا تكتم هذا المستخدم؟"
+        silence_reason_title: "سبب الكتم"
         silence_reason_placeholder: "سبب الكتم"
         silence_message: "رسالة إلكترونية"
         silence_message_placeholder: "(اتركه فارغا لإرسال الرسالة الافتراضية)"
