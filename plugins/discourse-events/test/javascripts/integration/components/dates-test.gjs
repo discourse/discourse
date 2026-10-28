@@ -1,5 +1,7 @@
-import { render, settled, waitFor } from "@ember/test-helpers";
+import { find, render, settled, waitFor } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
+import { bbcodeAttributeDecode } from "discourse/lib/bbcode-attributes";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import Dates from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/dates";
@@ -64,6 +66,30 @@ module("Integration | Component | Dates", function (hooks) {
   async function waitForDates() {
     await waitFor(".discourse-local-date");
     await settled();
+  }
+
+  for (const description of [null, "Bring your laptop"]) {
+    test(`embedded ICS includes the topic URL ${description ? "with" : "without"} a description`, async function (assert) {
+      const event = {
+        ...events.currentYear.today,
+        description,
+        post: { url: "/t/workshop/123" },
+      };
+
+      await render(<template><Dates @event={{event}} /></template>);
+      await waitForDates();
+
+      const ics = bbcodeAttributeDecode(
+        find(".discourse-local-date").dataset.ics
+      ).replace(/\r\n[ \t]/g, "");
+      const postUrl = getAbsoluteURL(event.post.url);
+      assert.true(
+        ics.includes(
+          `DESCRIPTION:${description ? `${description}\\n` : ""}${postUrl}\r\n`
+        ),
+        "the date popover's ICS preserves the description and links to the topic"
+      );
+    });
   }
 
   module("dates without time", function () {
