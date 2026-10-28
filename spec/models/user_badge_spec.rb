@@ -40,7 +40,23 @@ RSpec.describe UserBadge do
           granted_by: Discourse.system_user,
         )
 
-      event = DiscourseEvent.track(:user_badge_revoked) { user_badge.destroy! }
+      event =
+        DiscourseEvent.track(:user_badge_revoked, args: [{ user_badge:, acting_user: nil }]) do
+          user_badge.destroy!
+        end
+
+      expect(event).to be_present
+    end
+
+    it "passes who revoked the badge as the acting user" do
+      admin = Fabricate(:admin)
+      user_badge = BadgeGranter.grant(badge, user)
+      user_badge.revoked_by = admin
+
+      event =
+        DiscourseEvent.track(:user_badge_revoked, args: [{ user_badge:, acting_user: admin }]) do
+          user_badge.destroy!
+        end
 
       expect(event).to be_present
     end
