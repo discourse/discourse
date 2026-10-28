@@ -443,13 +443,18 @@ class DiscourseConnect < DiscourseConnectBase
     groups.each do |group|
       GroupUser.create!(user_id: user.id, group_id: group.id)
       GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
+      group.trigger_user_added_event(user, false, acting_user: Discourse.system_user)
     end
   end
 
   def remove_user_from_groups(user, groups)
-    GroupUser.where(user_id: user.id, group_id: groups.map(&:id)).destroy_all
+    removed_group_ids =
+      GroupUser.where(user_id: user.id, group_id: groups.map(&:id)).destroy_all.map(&:group_id)
     groups.each do |group|
       GroupActionLogger.new(Discourse.system_user, group).log_remove_user_from_group(user)
+      if removed_group_ids.include?(group.id)
+        group.trigger_user_removed_event(user, acting_user: Discourse.system_user)
+      end
     end
   end
 end
