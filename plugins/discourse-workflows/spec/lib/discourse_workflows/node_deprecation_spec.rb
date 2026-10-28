@@ -9,6 +9,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
       expect(deprecated.map(&:name)).to contain_exactly(
         "DiscourseWorkflows::Nodes::Assigned::V1",
         "DiscourseWorkflows::Nodes::CardMoved::V1",
+        "DiscourseWorkflows::Nodes::Group::V1",
         "DiscourseWorkflows::Nodes::PostDestroyed::V1",
         "DiscourseWorkflows::Nodes::PostEdited::V1",
         "DiscourseWorkflows::Nodes::PostLike::V1",
