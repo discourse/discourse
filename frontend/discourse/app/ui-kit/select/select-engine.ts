@@ -587,20 +587,27 @@ export interface SelectEngineOptions {
 
   /**
    * Groups the filtered options by a field name or `(item, options) => key`. A group without a
-   * header of either kind gets an unlabeled splitter, except at the head of the list. A client
-   * source merges every row of a key into one group; a source that pages groups consecutive
-   * rows, so a later page only extends the last group or adds new ones, and a key that comes
-   * back starts another group.
+   * header of either kind gets an unlabeled divider, except at the head of the list or when
+   * `groupDividers` is false. A client source merges every row of a key into one group; a
+   * source that pages groups consecutive rows, so a later page only extends the last group or
+   * adds new ones, and a key that comes back starts another group.
    */
   groupBy?:
     | string
     | ((item: SelectItem, options: SelectResolvedOptions) => SelectItemId);
 
   /**
+   * Whether a group without a header gets a divider before it. Defaults to true; false groups
+   * rows only to place their headers and footers, with no boundary drawn between groups. Read
+   * once, like `groupBy`.
+   */
+  groupDividers?: boolean;
+
+  /**
    * `(key, rows, options) => text | actionRow | null` builds a group's header. Text renders a
    * presentational header; an item with `onSelect` renders a navigable action row. A group
-   * with no header of either kind gets an unlabeled splitter instead, except at the head of
-   * the list. `rows` are the group's surviving rows, frozen; for the last group of a source
+   * with no header of either kind gets an unlabeled divider instead (see `groupDividers`).
+   * `rows` are the group's surviving rows, frozen; for the last group of a source
    * that pages, the rows loaded so far. Runs during render, so it must be pure, and it must
    * return nullish for an `undefined` key.
    */

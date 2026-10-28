@@ -721,6 +721,52 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
+    test("groupDividers false groups without dividers and keeps every position", function (assert) {
+      const produce = [
+        { id: 1, name: "Carrot", group: "Vegetables" },
+        { id: 2, name: "Apple", group: "Fruits" },
+        { id: 3, name: "Pea", group: "Vegetables" },
+        { id: 4, name: "Rice", group: "Grains" },
+      ];
+      const footer = (key) => `All ${key}`;
+      const withDividers = descriptors(
+        new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupFooter: footer,
+        })
+      );
+      const rows = descriptors(
+        new SelectEngine({
+          items: produce,
+          groupBy: "group",
+          groupDividers: false,
+          groupFooter: footer,
+        })
+      );
+
+      assert.deepEqual(
+        kinds(rows),
+        [1, 3, "F:All Vegetables", 2, "F:All Fruits", 4, "F:All Grains"],
+        "groups stay together with their footers, and no divider is drawn"
+      );
+      assert.deepEqual(
+        options(rows).map((option) => [
+          option.value,
+          option.groupOrdinal,
+          option.posInSet,
+          option.setSize,
+        ]),
+        options(withDividers).map((option) => [
+          option.value,
+          option.groupOrdinal,
+          option.posInSet,
+          option.setSize,
+        ]),
+        "ordinals, positions and set sizes match the divided list"
+      );
+    });
+
     test("a nullish groupHeader turns that boundary into a splitter", function (assert) {
       const engine = new SelectEngine({
         items: [

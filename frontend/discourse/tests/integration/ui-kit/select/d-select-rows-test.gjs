@@ -560,6 +560,23 @@ module(
       { id: 3, name: "Beet", section: "vegetable" },
     ];
 
+    test("@groupDividers false draws no splitter between groups", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @groupBy="section"
+            @groupDividers={{false}}
+            @identifier="test-select"
+            @items={{SECTIONED}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom(".d-select__divider").doesNotExist();
+      assert.dom("[role='option']").exists({ count: 3 });
+    });
+
     test("an unlabeled group boundary draws a splitter that is never an option", async function (assert) {
       await render(
         <template>

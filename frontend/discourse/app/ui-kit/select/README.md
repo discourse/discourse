@@ -636,8 +636,9 @@ Sources (`-internals/engine/select-sources.ts`):
 Grouping (`-internals/engine/list-composer.ts`):
 
 - `@groupBy` groups the rows. A client source merges every row of a key; a `@load` source groups
-  consecutive rows, so pages only append. A loader that leaves the key unset turns grouping off
-  for those rows.
+  consecutive rows, so pages only append. Rows with no key form their own `undefined` group, and
+  the builders return nothing for it. `@groupDividers={{false}}` drops the splitters between
+  groups.
 - `@groupHeader` and `@groupFooter` build each group's boundaries from its key and rows: text, an
   action row, or nothing. The engine keys, positions and describes them, and holds a paged
   source's last footer back until no more rows can load.
@@ -892,7 +893,9 @@ by mechanism.
   a navigable option and copied without `sticky`), or nothing; anything else is a development
   assertion. Builders run during render, so they must be pure, and they return nothing for an
   `undefined` key. A group with no header of either kind gets an unlabeled splitter instead, a
-  purely visual rule that is suppressed at the head of the list.
+  purely visual rule that is suppressed at the head of the list. `@groupDividers={{false}}` turns
+  splitters off, for groups whose footers already mark where each one ends; positions, set sizes
+  and footers are unchanged. Like `@groupBy`, it is read once when the select is built.
 
   For a `@load` source, the last group's footer waits until no more rows can load (the source is
   exhausted, either brake stopped paging, or `@maxLoaded` was reached), so a page that continues

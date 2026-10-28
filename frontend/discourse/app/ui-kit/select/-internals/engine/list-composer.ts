@@ -615,7 +615,7 @@ export default class ListComposer {
       const members = [header, ...group.items, footer].filter(
         (row): row is SelectItem => !!row
       );
-      if (!header && out.length > 0) {
+      if (!header && out.length > 0 && this.#options.groupDividers) {
         out.push({
           __divider: true,
           groupKey: group.key,

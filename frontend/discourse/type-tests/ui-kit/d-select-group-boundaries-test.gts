@@ -37,6 +37,16 @@ const Test = <template>
     @items={{items}}
   />
 
+  <DSelect
+    @groupBy="group"
+    @groupDividers={{false}}
+    @groupFooter={{actionFooter}}
+    @items={{items}}
+  />
+
+  {{! @glint-expect-error - groupDividers is a boolean }}
+  <DSelect @groupBy="group" @groupDividers="no" @items={{items}} />
+
   {{! @glint-expect-error - a builder returns text, an action row or nothing }}
   <DSelect @groupBy="group" @groupFooter={{count}} @items={{items}} />
 </template>;

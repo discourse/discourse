@@ -107,10 +107,13 @@ interface DSelectSignature {
     specialItems?: SelectEngineOptions["specialItems"];
     /**
      * Groups the options: a field name or `(item, options) => key`. A group with no header of
-     * either kind gets an unlabeled splitter. A `@load` source groups consecutive rows, so pages
-     * only append. Recomputed after filtering, so an empty group draws nothing.
+     * either kind gets an unlabeled divider, unless `@groupDividers` is false. A `@load` source
+     * groups consecutive rows, so pages only append. Recomputed after filtering, so an empty
+     * group draws nothing.
      */
     groupBy?: SelectEngineOptions["groupBy"];
+    /** False groups rows without drawing dividers between groups. Read once, like `@groupBy`. */
+    groupDividers?: SelectEngineOptions["groupDividers"];
     /**
      * `(key, rows, options) => text | actionRow | null` builds a group's header: text renders
      * a presentational header, an item with `onSelect` a navigable action row. The

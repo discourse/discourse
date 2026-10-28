@@ -61,6 +61,7 @@ export interface SelectHostArgs
       | "createUnresolvedItem"
       | "specialItems"
       | "groupBy"
+      | "groupDividers"
       | "groupHeader"
       | "groupFooter"
       | "onChange"
@@ -226,6 +227,7 @@ export default class SelectHost {
       createUnresolvedItem: this.#options.getArgs().createUnresolvedItem,
       specialItems: this.#options.getArgs().specialItems,
       groupBy: this.#options.getArgs().groupBy,
+      groupDividers: this.#options.getArgs().groupDividers,
       groupHeader: this.#options.getArgs().groupHeader,
       groupFooter: this.#options.getArgs().groupFooter,
       onChange: this.handleChange,

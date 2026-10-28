@@ -77,6 +77,7 @@ export default class SelectOptionsView {
   #createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
   #specialItems?: SelectEngineOptions["specialItems"];
   #groupBy?: SelectEngineOptions["groupBy"];
+  #groupDividers: boolean;
   #groupHeader?: SelectEngineOptions["groupHeader"];
   #groupFooter?: SelectEngineOptions["groupFooter"];
   #readCloseOnSelect: boolean | undefined;
@@ -137,6 +138,7 @@ export default class SelectOptionsView {
     this.#createUnresolvedItem = opts.createUnresolvedItem;
     this.#specialItems = opts.specialItems;
     this.#groupBy = opts.groupBy;
+    this.#groupDividers = opts.groupDividers ?? true;
     this.#groupHeader = opts.groupHeader;
     this.#groupFooter = opts.groupFooter;
     // Kept raw (not defaulted here): `closeOnSelect` re-derives `!multiple` live, so a
@@ -311,6 +313,10 @@ export default class SelectOptionsView {
 
   get groupBy(): SelectEngineOptions["groupBy"] {
     return this.#groupBy;
+  }
+
+  get groupDividers(): boolean {
+    return this.#groupDividers;
   }
 
   get groupHeader(): SelectEngineOptions["groupHeader"] {
