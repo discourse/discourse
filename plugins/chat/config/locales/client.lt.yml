@@ -48,9 +48,13 @@ lt:
     chat:
       edit_category:
         tab_title: "Pokalbis"
+        channel: "Kanalas"
         description: "Aprašymas"
         actions: "Veiksmai"
         settings: "Nustatymai"
+        no_channels: "Su šia kategorija nesusieti jokie pokalbių kanalai."
+        no_channels_body: "Kiekvienoje kategorijoje gali būti keli kanalai, prieinami tiems patiems nariams, atsižvelgiant į kategorijos saugumo nustatymus. <a href='%{chatBrowseUrl}'>Sukurkite pokalbių kanalą</a>."
+        include_subcategories: "Įtraukti subkategorijų kanalus"
       text_copied: Tekstas nukopijuotas į iškarpinę
       link_copied: Nuoroda nukopijuota į iškarpinę
       back_to_forum: "Forumas"
@@ -65,8 +69,23 @@ lt:
       cancel: "Atšaukti"
       cancel_reply: "Atšaukti atsakymą"
       chat_channels: "Kanalai"
+      starred: "Pažymėta žvaigždute"
+      starred_channels: "Pažymėti kanalai"
+      starred_channels_empty: "Dar nepažymėjote jokių kanalų žvaigždute. Pažymėkite kanalus, kad matytumėte juos čia ir galėtumėte greitai pasiekti."
+      pinned_messages:
+        title: "Prisegtos žinutės"
+        close: "Užverti prisegtas žinutes"
+        dismiss: "Paslėpti man prisegtą reklamjuostę"
+        show: "Rodyti prisegtą reklamjuostę"
+        pinned_by_you: "Jūsų prisegta"
+        pinned_by_user: "Prisegė %{username}"
+        message_unpinned: "Pranešimas atsegtas"
       pinned_bar:
         title: "Prisegta"
+        jump_to_pinned: "Pereiti prie prisegtos žinutės"
+      no_pinned_messages: "Šiame kanale nėra prisegtų pranešimų."
+      pin_message: "Prisegti žinutę"
+      unpin_message: "Atsegti pranešimą"
       pinned: "Prisegta"
       browse_all_channels: "Naršyti visus kanalus"
       see_in: "Žiūrėti"
@@ -82,15 +101,19 @@ lt:
       delete_messages:
         confirm:
           one: "Ar tikrai norite ištrinti šį pranešimą?"
-          few: "Ar tikrai norite ištrinti šį pranešimą?"
-          many: "Ar tikrai norite ištrinti šį pranešimą?"
-          other: "Ar tikrai norite ištrinti šias %{count} žinutes?"
+          few: "Ar tikrai norite ištrinti šiuos %{count} pranešimus?"
+          many: "Ar tikrai norite ištrinti šiuos %{count} pranešimų?"
+          other: "Ar tikrai norite ištrinti šiuos %{count} pranešimus?"
       channel_settings:
         title: "Kanalo nustatymai"
         edit: "Redaguoti"
         add: "Pridėti"
+        star_channel: "Pažymėti kanalą"
+        unstar_channel: "Pašalinti žvaigždutę nuo kanalo"
         close_channel: "Uždaryti kanalą"
         open_channel: "Atidaryti kanalą"
+        open_channel_disabled_archived: "Archyvuotų kanalų negalima vėl atidaryti."
+        open_channel_disabled_read_only: "Tik skaityti skirtų kanalų negalima vėl atidaryti."
         archive_channel: "Archyvuoti kanalą"
         delete_channel: "Ištrinti kanalą"
         join_channel: "Prisijungti prie kanalo"
@@ -120,58 +143,304 @@ lt:
         instructions: "<p>Ištrina <strong>%{name}</strong> kanalą ir pokalbių istoriją. Visos žinutės ir susiję duomenys, pvz., reakcijos ir įkėlimai, bus visam laikui ištrinti. Jei norite išsaugoti kanalo istoriją ir ją pašalinti, galite archyvuoti kanalą.</p> <p>Ar tikrai norite <strong>visam laikui ištrinti</strong> kanalą? Norėdami patvirtinti, įveskite kanalo pavadinimą žemiau esančiame laukelyje.</p>"
         confirm: "Suprantu pasekmes, ištrinkite kanalą"
         confirm_channel_name: "Įveskite kanalo pavadinimą"
+        process_started: "Kanalo šalinimo procesas pradėtas. Šis langas netrukus užsidarys, o pašalinto kanalo niekur nebematysite."
       channels_list_popup:
         browse: "Naršyti kanalus"
+        create: "Naujas kanalas..."
       close: "Uždaryti"
       remove: "Pašalinti"
+      collapse: "Sutraukti pokalbių skydelį"
+      expand: "Išskleisti pokalbių skydelį"
+      confirm_flag: "Ar tikrai norite pažymėti %{username} žinutę?"
+      deleted:
+        one: "Pranešimas buvo ištrintas. [peržiūrėti]"
+        few: "%{count} pranešimai buvo ištrinti. [žiūrėti visus]"
+        many: "%{count} pranešimų buvo ištrinti. [žiūrėti visus]"
+        other: "%{count} pranešimų buvo ištrinti. [žiūrėti visus]"
+      hidden: "Žinutė buvo paslėpta. [peržiūrėti]"
       delete: "Pašalinti"
       edited: "taisytas"
-      muted: "nutyldita"
+      muted: "nutildyta"
       joined: "prisijungė"
+      empty_state:
+        direct_message_cta: "Pradėkite tiesioginę žinutę arba grupinį pokalbį"
+        direct_message: "Taip pat galite pradėti tiesioginį susirašinėjimą arba grupinį pokalbį su vienu ar keliais naudotojais."
+        title: "Kanalų nerasta"
+        my_threads: "Dar neturite jokių temų. Čia bus rodomos temos, kuriose dalyvaujate."
       email_frequency:
+        description: "El. laišką jums atsiųsime tik tuo atveju, jei per pastarąsias 15 minučių jūsų nematėme."
         never: "Niekada"
+        title: "Praneškite man el. paštu, kai gausiu tiesioginę žinutę arba žinutę grupės pokalbyje."
+        when_away: "Tik kai nepasiekiama"
       header_indicator_preference:
+        title: "Rodyti veiklos indikatorių antraštėje"
+        all_new: "Visos naujos žinutės"
+        dm_and_mentions: "Tiesioginės žinutės, paminėjimai ir stebimos temos"
+        only_mentions: "Tik paminėjimai"
         never: "Niekada"
+      separate_sidebar_mode:
+        title: "Rodyti atskirus šoninės juostos režimus forumui ir pokalbiams"
+      enable: "Įjungti pokalbį"
       flag: "Pranešti"
+      emoji: "Įterpti jaustuką"
+      flagged: "Ši žinutė pažymėta peržiūrai."
+      invalid_access: "Neturite prieigos peržiūrėti šį pokalbių kanalą."
+      invitation_notification: "<span>%{username}</span> <span>pakvietė jus prisijungti prie pokalbių kanalo</span>"
+      in_reply_to: "Atsakant į"
       heading: "Pokalbis"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
+      mention_warning:
+        invitations_sent:
+          one: "Kvietimas išsiųstas"
+          few: "Kvietimai išsiųsti"
+          many: "Kvietimai išsiųsti"
+          other: "Kvietimai išsiųsti"
+        invite: "Pakviesti į kanalą"
+        channel_wide_mentions_disallowed: "Šiame kanale paminėjimai „@here“ ir „@all“ yra išjungti."
+        groups:
+          header:
+            some: "Kai kurie vartotojai nebus informuoti"
+            all: "Niekas nebus informuotas"
+          unreachable_1: "@%{group} neleidžia paminėti vartotojų."
+          unreachable_2: "@%{group1} ir @%{group2} neleidžia paminėti vartotojų."
+          unreachable_multiple:
+            one: "@%{group} ir %{count} kita grupė neleidžia paminėti vartotojų."
+            few: "@%{group} ir %{count} kitos grupės neleidžia paminėti vartotojų."
+            many: "@%{group} ir %{count} kitų grupių neleidžia paminėti vartotojų."
+            other: "@%{group} ir %{count} kitų grupių neleidžia paminėti vartotojų."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                              other {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the notification limit of # user.}
+                              other {Mentioning @{group1} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the notification limit of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the notification limit of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "Šis pranešimas viršija pranešimų limitą – %{count} paminėjimas."
+          few: "Šis pranešimas viršija pranešimų limitą – %{count} paminėjimai."
+          many: "Šis pranešimas viršija pranešimų limitą – %{count} paminėjimų."
+          other: "Šis pranešimas viršija pranešimų limitą – %{count} paminėjimų."
+        too_many_mentions_admin:
+          one: 'Šis pranešimas viršija <a href="%{siteSettingUrl}" target="_blank">pranešimų limitą</a> - %{count} paminėjimas.'
+          few: 'Šis pranešimas viršija <a href="%{siteSettingUrl}" target="_blank">pranešimų limitą</a> - %{count} paminėjimai.'
+          many: 'Šis pranešimas viršija <a href="%{siteSettingUrl}" target="_blank">pranešimų limitą</a> - %{count} paminėjimų.'
+          other: 'Šis pranešimas viršija <a href="%{siteSettingUrl}" target="_blank">pranešimų limitą</a> - %{count} paminėjimų.'
+      aria_roles:
+        header: "Pokalbio antraštė"
+        composer: "Pokalbių redaktorius"
+        channels_list: "Pokalbių kanalų sąrašas"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          one: "%{count} nauja žinutė"
+          few: "%{count} naujos žinutės"
+          many: "%{count} naujų žinučių"
+          other: "%{count} naujų žinučių"
+        new_image:
+          one: "%{username} išsiuntė paveikslėlį"
+          few: "%{username} išsiuntė %{count} paveikslėlius"
+          many: "%{username} išsiuntė %{count} paveikslėlių"
+          other: "%{username} išsiuntė %{count} paveikslėlių"
+        new_attachment:
+          one: "%{username} išsiuntė priedą"
+          few: "%{username} išsiųsti %{count} priedus"
+          many: "%{username} išsiųsti %{count} priedų"
+          other: "%{username} išsiųsti %{count} priedų"
+        new_message_with_image:
+          one: "%{username}: %{message} (su paveikslėliu)"
+          few: "%{username}: %{message} (su %{count} paveikslėliais)"
+          many: "%{username}: %{message} (su %{count} paveikslėlių)"
+          other: "%{username}: %{message} (su %{count} paveikslėlių)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (su priedu)"
+          few: "%{username}: %{message} (su %{count} priedais)"
+          many: "%{username}: %{message} (su %{count} priedų)"
+          other: "%{username}: %{message} (su %{count} priedų)"
+      no_direct_message_channels: "Dar neprisijungėte prie jokių tiesioginių žinučių!"
+      no_direct_message_channels_cta: "Pradėti pokalbį"
+      no_public_channels: "Dar neprisijungėte prie jokių kanalų!"
       no_public_channels_cta: "Naršyti kanalus"
+      kicked_from_channel: "Jūs nebegalite pasiekti šio kanalo."
+      chat_notifications_title: "Pokalbių pranešimai"
+      personalization_title: "Personalizavimas"
+      accessibility_title: "Prieinamumas"
+      ignore_channel_wide_mention:
+        title: "Ignoruoti paminėjimus visame kanale"
+      announce_new_messages:
+        title: "Pranešti apie naujus pranešimus ekrano skaitytuvams"
+      new_message_sound:
+        title: "Kai pokalbis atidarytas pirmame plane, paleisti garso signalus apie naujus pranešimus"
       show_thread_title_prompts:
         title: "Rodyti temos pavadinimo raginimus"
         description: "Rodyti raginimus nustatyti naujų gijų pavadinimą"
       open: "Atviras juodraštis"
       open_full_page: "Atidaryti pokalbį viso ekrano režimu"
+      close_full_page: "Uždaryti pokalbį visame ekrane"
+      open_message: "Atidaryti pranešimą pokalbyje"
+      placeholder_self: "Užsirašykite ką nors"
+      placeholder_channel: "Pokalbis %{channelName}"
+      placeholder_thread: "Pokalbis temoje"
+      placeholder_users: "Pokalbis su %{commaSeparatedNames}"
+      placeholder_group: "Pokalbis grupėje"
+      placeholder_new_message_disallowed:
+        archived: "Kanalas yra archyvuotas, šiuo metu negalite siųsti naujų pranešimų."
+        closed: "Kanalas uždarytas, šiuo metu negalite siųsti naujų pranešimų."
+        read_only: "Kanalas skirtas tik skaitymui, šiuo metu negalite siųsti naujų pranešimų."
+      placeholder_silenced: "Šiuo metu negalite siųsti pranešimų."
+      remove_upload: "Pašalinti failą"
+      react: "Reaguokite jaustuku"
       reply: "Atsakyti"
+      message_actions: "Veiksmai su pranešimu"
+      more_message_actions: "Daugiau pranešimo veiksmų"
       edit: "Redaguoti"
+      copy_link: "Kopijuoti nuorodą"
+      copy_text: "Kopijuoti tekstą"
       rebake_message: "Perkurti HTML"
+      message_too_long: "Pranešimas per ilgas – pranešimai negali būti ilgesni nei %{count} simbolių."
+      retry_staged_message:
+        title: "Tinklo klaida"
+        rate_limited_title: "Per daug pranešimų"
+        rate_limited_waiting: "Per daug pranešimų, palaukite"
+        action: "Siųsti dar kartą?"
       bookmark_message: "Žymės"
       bookmark_message_edit: "Redaguoti žymę"
+      restore: "Atkurti ištrintą pranešimą"
       save: "Išsaugoti"
+      select: "Pasirinkti"
+      return_to_list: "Grįžti į kanalų sąrašą"
+      return_to_channel: "Grįžti į kanalą"
+      return_to_threads_list: "Grįžti į temų sąrašą"
+      unread_threads_count:
+        one: "Jūs turite %{count} neskaitytą diskusiją"
+        few: "Jūs turite %{count} neskaitytas diskusijas"
+        many: "Jūs turite %{count} neskaitytų diskusijų"
+        other: "Jūs turite %{count} neskaitytų diskusijų"
+      scroll_to_bottom: "Slinkti į apačią"
+      scroll_to_new_messages: "Žr. naujus pranešimus"
+      new_messages:
+        one: "%{count} nauja žinutė"
+        few: "%{count} naujos žinutės"
+        many: "%{count} naujų žinučių"
+        other: "%{count} naujų žinučių"
+      sound:
+        title: "Darbalaukio pokalbio pranešimo garsas"
+        preview: "Leisti pasirinkto garso peržiūrą"
       sounds:
         none: "Nieko"
+        classic: "Klasikinis ir švarus"
+        soft: "Lengva marimba"
+        retro: "Retro 8-bit"
+        bubble: "Žaismingi burbulai"
+        ethereal: "Varpeliai"
       title: "pokalbis"
       title_capitalized: "Pokalbis"
+      disabled:
+        title: "Išjungėte pokalbių langą"
+        body: "Įjunkite jį vėl, kad galėtumėte peržiūrėti kanalus ir pranešimus."
+        cta: "Mano pokalbių nuostatos"
+      upload: "Pridėti failą"
+      upload_to_channel: "Įkelti į %{title}"
+      upload_to_thread: "Įkelti į temą"
+      uploaded_files:
+        one: "%{count} failas"
+        few: "%{count} failai"
+        many: "%{count} failų"
+        other: "%{count} failai"
+      youtube: "YouTube"
+      you_flagged: "Pažymėjote šį pranešimą"
+      exit: "išeiti iš pokalbio"
       channel_status:
+        read_only_header: "Kanalas skirtas tik skaitymui"
+        read_only: "Tik skaityti"
+        archived_header: "Kanalas yra suarchyvuotas"
+        archived: "Archyvuota"
+        archive_failed: "Nepavyko archyvuoti kanalo. Pranešimai %{completed}/%{total} buvo archyvuoti. <a target=\"_blank\" href=\"%{topic_url}\">Paskirties tema</a> buvo sukurta. Spauskite „bandyti dar kartą“, kad pabandytumėte užbaigti archyvavimą."
+        archive_failed_no_topic: "Nepavyko archyvuoti kanalo. „ %{completed}“ / „%{total} “ pranešimai buvo archyvuoti, tačiau paskirties tema nebuvo sukurta. Spauskite „bandyti dar kartą“, kad pabandytumėte užbaigti archyvavimą."
+        archive_completed: "Žr. <a target=\"_blank\" href=\"%{topic_url}\">archyvo temą</a>"
+        closed_header: "Kanalas uždarytas"
         closed: "Uždaryta"
+        open_header: "Kanalas atidarytas"
         open: "Atidaryti"
       browse:
         back: "Atgal"
+        title: Kanalai
         filter_all: Visos
         filter_open: Atidaryti
         filter_closed: Uždaryta
+        filter_archived: Archyvuota
+        filter_input_placeholder: Ieškoti kanalo pagal pavadinimą
         filter_joined_all: "Visi"
         filter_joined_joined: "Prisijungė"
+        filter_joined_not_joined: "Neprisijungta"
       chat_message_separator:
         today: Šiandien
         yesterday: Vakar
       search_view:
         filter_placeholder: Ieškoti žinučių
+        message_result_label: "Pokalbio žinutė iš %{username}: %{preview} %{threadInfo}"
+        in_thread: "temoje %{title}"
+        sr_instructions: "Norėdami atidaryti pranešimą, paspauskite „Enter“ arba „Space“. Norėdami naršyti tarp rezultatų, naudokite „Tab“."
+        results_list_label: "Pokalbių pranešimų paieškos rezultatai"
+      members_view:
+        filter_placeholder: Rasti narius
+        add_member: Pridėti narį
+        back_to_settings: "Atgal į nustatymus"
       about_view:
+        associated_topic: Susijusi tema
+        associated_category: Susijusi kategorija
         title: Antraštė
         name: Vardas
         description: Aprašymas
       channel_info:
+        back_to_all_channels: "Visi kanalai"
         back_to_channel: "Atgal"
         tabs:
           members: Nariai
@@ -179,32 +448,214 @@ lt:
           search: Paieška
         remove_member: "Pašalinti"
       new_message_modal:
+        title: Siųsti žinutę
+        add_user_long: <kbd>shift + spustelėti</kbd> arba <kbd>shift + enter</kbd><span>Pridėti @%{username}</span>
+        add_user_short: <span>Pridėti vartotoją</span>
+        open_channel: <span>Atidaryti kanalą</span>
+        default_search_placeholder: "#a-channel, @somebody arba bet kas"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@somebody"
+        user_search_placeholder: "...pridėti daugiau narių"
+        disabled_user: "išjungė pokalbių langą"
         no_items: "Nėra elementų"
+        create_group_placeholder: "Grupinio pokalbio pavadinimas (nebūtina)"
+        participants_counter: "%{selection_count}/%{max} dalyviai"
+        new_group_chat: "Naujas grupės pokalbis"
         filter: "Filtruoti"
+        cant_add_more_members: "Pasiektas maksimalus narių skaičius"
+        create_new_group_chat: "Sukurti grupės pokalbį"
+        group_with_too_many_members: "turi per daug narių (%{membersCount})"
+      channel_edit_name_slug_modal:
+        title: Redaguoti kanalą
+        input_placeholder: Pridėti pavadinimą
+        slug_description: URL adrese vietoj kanalo pavadinimo naudojamas kanalo kodas
+        name: Kanalo pavadinimas
+        slug: Kanalo kodas
+        emoji: Kanalo jaustukas
+        reset_emoji: Iš naujo nustatyti jaustuką
+      channel_edit_description_modal:
+        title: Redaguoti aprašymą
+        input_placeholder: Pridėti aprašymą
+        description: Papasakokite žmonėms, apie ką yra šis kanalas
       direct_message_creator:
+        add_to_channel: "Pridėti prie kanalo"
         title: Nauja žinutė
         prefix: "Kam:"
+        no_results: Nėra rezultatų
+        selected_user_title: "Atšaukti žymėjimą %{username}"
+        group_name: "Grupinio pokalbio pavadinimas (nebūtina)"
+        members_counter:
+          one: "%{count}/%{max} narys"
+          few: "%{count}/%{max} nariai"
+          many: "%{count}/%{max} narių"
+          other: "%{count}/%{max} narių"
       channel:
+        no_memberships: Šis kanalas neturi narių
+        no_memberships_found: Nerasta jokių narių
+        memberships_count:
+          one: "%{count} narys"
+          few: "%{count} nariai"
+          many: "%{count} narių"
+          other: "%{count} narių"
+        empty_state:
+          title: "Tai yra %{channelName} pradžia"
+          joined_title: "Tu esi pirmas kanale %{channelName}"
+          direct_message_title: "Pradėkite pokalbį naudodami %{name}"
+          guest_tip: "Šiuo metu skaitote kaip svečias. Pokalbis prasideda, kai nariai paskelbia įrašus – prisijunkite ir tapkite vienu iš jų."
+          joined_tip: "Būkite pirmas, kuris paskelbs ir pradės pokalbį."
+          members_here:
+            one: "<strong>%{count} narys</strong> čia"
+            few: "<strong>%{count} nariai</strong> čia"
+            many: "<strong>%{count} narių</strong> čia"
+            other: "<strong>%{count} narių</strong> čia"
+          no_other_members: "Kol kas nėra kitų narių"
         preview_card:
+          guest_title: "Prisijunkite prie %{channelName} , kad pradėtumėte bendrauti"
+          guest_body: "Skaitymas yra nemokamas visiems. Užsiregistruokite, kad galėtumėte rašyti, reaguoti ir atsakyti – tai trunka apie 30 sekundžių."
+          join_body: "Galėsite skelbti įrašus ir atsakyti, o įrašai bus rodomi jūsų kanalų sąraše."
+          no_access_title: "Jūs negalite prisijungti %{channelName}"
+          no_access_body: "Šis kanalas šiuo metu nėra atviras naujiems nariams."
           log_in: "Prisijungti"
+          sign_up: "Registruotis"
       create_channel:
+        threading:
+          label: "Įjungti temų kūrimą"
+        auto_join_users:
+          public_category_warning: "%{category} yra vieša kategorija. Ar automatiškai pridėti visus neseniai aktyvius naudotojus prie šio kanalo?"
+          warning_1_group:
+            one: "Automatiškai pridėti %{count} naudotoją iš %{group}?"
+            few: "Automatiškai pridėti %{count} naudotojus iš %{group}?"
+            many: "Automatiškai pridėti %{count} naudotojų iš %{group}?"
+            other: "Automatiškai pridėti %{count} naudotojų iš %{group}?"
+          warning_2_groups:
+            one: "Automatiškai pridėti %{count} naudotoją iš %{group1} ir %{group2}?"
+            few: "Automatiškai pridėti %{count} naudotojus iš %{group1} ir %{group2}?"
+            many: "Automatiškai pridėti %{count} naudotojų iš %{group1} ir %{group2}?"
+            other: "Automatiškai pridėti %{count} naudotojų iš %{group1} ir %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Automatiškai pridėti {userCount} vartotoją iš {groupName} ir {groupCount} kitos grupės?}
+                few {Automatiškai pridėti {userCount} vartotojus iš {groupName} ir {groupCount} kitos grupės?}
+                many {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitos grupės?}
+                        other {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitos grupės?}
+                      }
+                    }
+                few {
+                      { userCount, plural,
+                          one {Automatiškai pridėti {userCount} vartotoją iš {groupName} ir {groupCount} kitų grupių?}
+                few {Automatiškai pridėti {userCount} vartotojus iš {groupName} ir {groupCount} kitų grupių?}
+                many {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitų grupių?}
+                        other {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitų grupių?}
+                      }
+                    }
+                many {
+                      { userCount, plural,
+                          one {Automatiškai pridėti {userCount} vartotoją iš {groupName} ir {groupCount} kitų grupių?}
+                few {Automatiškai pridėti {userCount} vartotojus iš {groupName} ir {groupCount} kitų grupių?}
+                many {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitų grupių?}
+                        other {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitų grupių?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Automatiškai pridėti {userCount} vartotoją iš {groupName} ir {groupCount} kitų grupių?}
+                few {Automatiškai pridėti {userCount} vartotojus iš {groupName} ir {groupCount} kitų grupių?}
+                many {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitų grupių?}
+                        other {Automatiškai pridėti {userCount} vartotojų iš {groupName} ir {groupCount} kitų grupių?}
+                      }
+                    }
+            }
+        choose_category:
+          label: "Pasirinkite kategoriją"
+          none: "pasirinkite vieną..."
+          default_hint: Prieigą galite valdyti apsilankę <a href=%{link} target="_blank">%{category} saugos nustatymuose</a>
+          hint_1_group: 'Naudotojai, esantys %{group} , turės prieigą prie šio kanalo pagal <a href="%{settingLink}" target="_blank">saugos nustatymus</a>'
+          hint_2_groups: 'Vartotojai, esantys %{group1} ir %{group2} , turės prieigą prie šio kanalo pagal <a href="%{settingLink}" target="_blank">saugos nustatymus</a>'
+          hint_multiple_groups:
+            one: 'Naudotojai iš %{group} ir %{count} kitos grupės turės prieigą prie šio kanalo pagal <a href="%{settingLink}" target="_blank">saugos nustatymus</a>'
+            few: 'Naudotojai iš %{group} ir %{count} kitų grupių turės prieigą prie šio kanalo pagal <a href="%{settingLink}" target="_blank">saugos nustatymus</a>'
+            many: 'Naudotojai iš %{group} ir %{count} kitų grupių turės prieigą prie šio kanalo pagal <a href="%{settingLink}" target="_blank">saugos nustatymus</a>'
+            other: 'Naudotojai iš %{group} ir %{count} kitų grupių turės prieigą prie šio kanalo pagal <a href="%{settingLink}" target="_blank">saugos nustatymus</a>'
+        create: "Sukurti kanalą"
         description: "Aprašymas"
+        name: "Kanalo pavadinimas"
+        slug: "Kanalo kodas"
+        title: "Naujas kanalas"
         type: "Tipas"
         types:
           category: "Kategorija"
           topic: "Tema"
+        emoji:
+          label: "Kanalo jaustukas"
+          reset: "Atstatyti jaustukus"
+      reviewable:
+        type: "Pokalbio pranešimas"
+        message_in_channel: "Kanalas"
+      reactions:
+        add: "Reaguokite su %{emoji}"
+        remove: "Pašalinkite savo %{emoji} reakciją"
+        counted:
+          one: "%{emoji} reakcija, %{count} asmuo"
+          few: "%{emoji} reakcija, %{count} asmenys"
+          many: "%{emoji} reakcija, %{count} asmenų"
+          other: "%{emoji} reakcija, %{count} asmenys"
+        only_you: "<span>Jūs reagavote su </span>:%{emoji}:"
+        you_and_single_user: "<span>Jūs ir %{username} reagavote naudodami </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Jūs, %{commaSeparatedUsernames} ir %{username} reagavote su </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Jūs, %{commaSeparatedUsernames} ir %{count} kitas reagavote su </span>:%{emoji}:"
+          few: "<span>Jūs, %{commaSeparatedUsernames} ir %{count} kiti reagavote su </span>:%{emoji}:"
+          many: "<span>Jūs, %{commaSeparatedUsernames} ir %{count} kitų reagavote su </span>:%{emoji}:"
+          other: "<span>Jūs, %{commaSeparatedUsernames} ir %{count} kiti reagavote su </span>:%{emoji}:"
+        single_user: "<span>%{username} sureagavo su </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} ir %{username} sureagavo su </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reakcija"
+            few: "%{count} reakcijos"
+            many: "%{count} reakcijų"
+            other: "%{count} reakcijos"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} ir %{count} kitas sureagavo su </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} ir %{count} kiti sureagavo su </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} ir %{count} kitų sureagavo su </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} ir %{count} kiti sureagavo su </span>:%{emoji}:"
       composer:
+        toggle_toolbar: "Perjungti įrankių juostą"
         italic_text: "pasviras tekstas"
         bold_text: "paryškintas tekstas"
+        code_text: "kodo tekstas"
         send: "Siųsti"
+      quote:
+        original_channel: 'Iš pradžių išsiųsta <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Pokalbio citata nukopijuota į iškarpinę"
+        default_thread_title: "Tema"
+        transcript_label: "Nuorašas"
+        transcript_region: "Nuorašas iš %{channel}"
       notification_levels:
         never: "Niekada"
+        mention: "Tik paminėjimui"
+        always: "Visai veiklai"
       settings:
+        channel_wide_mentions_label: "Leisti @all ir @here paminėjimus"
+        channel_wide_mentions_description: "Leisti vartotojams išsiųsti pranešimus visiems #%{channel} nariams su @all arba tik tiems, kurie šiuo metu aktyvūs su @here"
+        channel_threading_label: "Temos"
+        channel_threading_description: "Kai įjungtos temos, atsakymai į pokalbio pranešimą sukurs atskirą pokalbį, kuris bus rodomas šalia pagrindinio kanalo."
+        auto_join_users_label: "Automatiškai pridėti naudotojus"
+        auto_join_users_info: "Kas valandą tikrinkite, kurie vartotojai buvo aktyvūs per pastaruosius 3 mėnesius. Pridėkite juos prie šio kanalo, jei jie turi prieigą prie %{category} kategorijos."
+        auto_join_users_info_no_category: "Kas valandą tikrinkite, kurie vartotojai buvo aktyvūs per pastaruosius 3 mėnesius. Pridėkite juos prie šio kanalo, jei jie turi prieigą prie pasirinktos kategorijos."
+        auto_join_users_warning: "Prisijungs kiekvienas vartotojas, kuris nėra šio kanalo narys, bet turi prieigą prie kategorijos „ %{category} “. Ar tikrai norite tai padaryti?"
+        notification_level: "Siųsti tiesioginius pranešimus"
         follow: "Prisijungti"
         followed: "Prisijungė"
+        mute: "Nutildyti kanalą"
         unmute: "Įjungti kanalo garsą"
         threading_enabled: "Galimas"
         threading_disabled: "Uždrausta"
+        muted_on: "Įjungta"
+        muted_off: "Išjungta"
         notifications: "Pranešimai"
         preview: "Peržiūrėti"
         save: "Išsaugoti"
@@ -212,107 +663,377 @@ lt:
         unfollow: "Palikti"
         admin_title: "Administratorius"
         settings_title: "Nustatymai"
+        info_title: "Kanalo informacija"
         category_label: "Kategorija"
         history_label: "Istorija"
         members_label: "Nariai"
       admin:
         title: "Pokalbis"
+        export_messages:
+          title: "Eksportuoti pokalbių pranešimus"
+          description: "Tai eksportuoja visus pranešimus iš visų kanalų."
+          create_export: "Sukurti eksportą"
+          confirm_export: "Tai eksportuoja visus pranešimus iš visų kanalų ir išsiunčia rezultatą jums tiesiogine žinute. Ar tikrai norite eksportuoti?"
+          export_has_started: "Eksportavimas pradėtas. Kai bus paruošta, gausite tiesioginę žinutę."
       search:
         short_title: Paieška
+        title: Ieškoti pokalbyje
+        aria_label: "Perjungti į pokalbių paiešką"
         no_results: "Nerasta jokių rezultatų"
         sort:
           relevance: "Tinkamumas"
           latest: "Naujausia"
+      my_threads:
+        title: Mano temos
+        aria_label: "Perėjimas į mano temų sąrašą"
       direct_messages:
+        title: "Tiesioginės žinutės"
+        aria_label: "Perjungti į tiesioginius pranešimus"
+        new: "Nauja tiesioginė žinutė"
+        new_group: "Naujas grupės pokalbis"
+        create: "Eiti"
         leave: "Išeiti iš kanalo"
         close: "Uždaryti kanalą"
+        cannot_create: "Atsiprašome, negalite siųsti tiesioginių žinučių."
       channel_list:
+        apply_filters: "Taikyti filtrus kanalams"
+        title: "Kanalai"
+        aria_label: "Perjungti į kanalų sąrašą"
         options:
+          title: "Kanalų sąrašo parinktys"
           filter: "Filtruoti"
+          sort: "Rūšiuoti"
+          current_filter: "Filtras: %{filter}"
+          current_sort: "Rūšiuoti: %{sort}"
         filter:
+          title: "Filtruoti kanalus pagal:"
+          all: "Visi kanalai"
+          active: "Tik aktyvūs"
+          active_description: "Nauja veikla per pastarąsias %{days} dienas"
+          unread: "Neskaitytų"
           mentions: "Paminėjimai"
+        sort:
+          title: "Rūšiuoti kanalus pagal:"
+          alphabetical: "Abėcėlės tvarka"
+          recent_activity: "Naujausia veikla"
+          priority: "Prioritetas"
+          priority_description_dms: "Paminėjimai, tada neskaityti, tada naujausia veikla"
+        empty:
+          filtered: "Nėra kanalų, atitinkančių šį filtrą."
+          show_all: "Rodyti visus kanalus"
       incoming_webhooks:
         back: "Atgal"
+        channel_placeholder: "Pasirinkite kanalą"
+        channel: "Kanalas"
+        confirm_destroy: "Ar tikrai norite ištrinti šį gaunamą „webhook“? Šio veiksmo negalima atšaukti."
+        current_emoji: "Dabartinis jaustukas"
         description: "Aprašymas"
         delete: "Pašalinti"
         emoji: "Emoji"
+        emoji_instructions: "Jei jaustukas bus paliktas tuščias, bus naudojamas sistemos avataras."
         name: "Vardas"
+        name_placeholder: "pavadinimas..."
+        new: "Naujas gaunamas „webhook“"
+        none: "Nėra sukurta jokių esamų įeinančių „webhookų“."
+        no_emoji: "Nepasirinkta jokių jaustukų"
+        post_to: "Publikuoti į"
+        reset_emoji: "Atstatyti jaustukus"
         save: "Išsaugoti"
         edit: "Redaguoti"
+        select_emoji: "Pasirinkite jaustuką"
         system: "sistema"
+        title: "Gaunami „webhook“"
+        header_description: "Išorės sistemos gali naudoti gaunamus „webhook“ skelbti pranešimus į nurodytą kanalą, kaip boto vartotojas"
         url: "Nuoroda"
+        url_instructions: "Šiame URL yra slapta reikšmė – saugokite ją."
         username: "Vartotojo vardas"
+        username_instructions: "Boto, kuris skelbia įrašus kanale, vartotojo vardas. Palikus tuščią, numatytoji reikšmė yra „sistema“."
+        instructions: "Gaunami „webhook“ gali būti naudojami išorinių sistemų skelbti pranešimus į nurodytus kanalus kaip boto vartotojas per <code>/hooks/:key</code> galinį tašką (endpoint). Apkrova susideda iš vieno <code>teksto</code> parametro, kurio ilgis negali viršyti 2000 simbolių.<br><br>Taip pat palaikome ribotą skaičių „Slack“ formatuotų <code>teksto</code> parametrų, iš kurių išskiriame nuorodas ir paminėjimus pagal <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> nurodytą formatą, tačiau tam būtina naudoti <code>/hooks/:key/slack</code> galinį tašką (endpoint)."
+        saved: "Webhook pakeitimai išsaugoti"
+        created: "Sukurtas „Webhook“"
       selection:
         cancel: "Atšaukti"
+        quote_selection: "Cituoti temoje"
         copy: "Kopijuoti"
+        delete: "Ištrinti (%{selectionCount}/%{totalCount})"
+        move_selection_to_channel: "Perkelti į kanalą"
+        error: "Perkeliant pokalbių pranešimus įvyko klaida"
+        title: "Perkelti pokalbį į temą"
         new_topic:
           title: "Perkelti į naują temą"
+          instructions:
+            one: "Ketinate sukurti naują temą ir užpildyti ją pasirinktu pokalbio pranešimu."
+            few: "Ketinate sukurti naują temą ir užpildyti ją pasirinktomis <b>%{count}</b> pokalbių žinutėmis."
+            many: "Ketinate sukurti naują temą ir užpildyti ją pasirinktomis <b>%{count}</b> pokalbių žinučių."
+            other: "Ketinate sukurti naują temą ir užpildyti ją pasirinktomis <b>%{count}</b> pokalbių žinutėmis."
+          instructions_channel_archive: "Ketinate sukurti naują temą ir archyvuoti kanalo pranešimus."
         existing_topic:
           title: "Perkelti į esamą temą"
+          instructions:
+            one: "Pasirinkite temą, į kurią norite perkelti tą pokalbio pranešimą."
+            few: "Prašome pasirinkti temą, į kurią norėtumėte perkelti šiuos <b>%{count}</b> pokalbių pranešimus."
+            many: "Prašome pasirinkti temą, į kurią norėtumėte perkelti šiuos <b>%{count}</b> pokalbių pranešimų."
+            other: "Prašome pasirinkti temą, į kurią norėtumėte perkelti šiuos <b>%{count}</b> pokalbių pranešimus."
+          instructions_channel_archive: "Pasirinkite temą, kurios kanalo pranešimus norite archyvuoti."
         new_message:
           title: "Pereiti prie naujos žinutės"
+          instructions:
+            one: "Ketinate sukurti naują žinutę ir užpildyti ją pasirinkta pokalbio žinute."
+            few: "Ketinate sukurti naują žinutę ir užpildyti ją pasirinktomis <b>%{count}</b> pokalbių žinutėmis."
+            many: "Ketinate sukurti naują žinutę ir užpildyti ją pasirinktomis <b>%{count}</b> pokalbių žinutėmis."
+            other: "Ketinate sukurti naują žinutę ir užpildyti ją pasirinktomis <b>%{count}</b> pokalbių žinutėmis."
+      replying_indicator:
+        single_user: "%{username} rašo"
+        multiple_users: "%{commaSeparatedUsernames} ir %{lastUsername} rašo"
+        many_users:
+          one: "%{commaSeparatedUsernames} ir %{count} kitas rašo"
+          few: "%{commaSeparatedUsernames} ir %{count} kiti rašo"
+          many: "%{commaSeparatedUsernames} ir %{count} kitų rašo"
+          other: "%{commaSeparatedUsernames} ir %{count} kiti rašo"
       retention_reminders:
+        chat_settings: "Pokalbio nustatymai"
+        indefinitely_short: "neribotą laiką"
+        indefinitely_long: "%{chatSettingsLink} nustatyti taip, kad kanalo pranešimai būtų saugomi neribotą laiką."
         short:
           one: "%{count} diena"
           few: "%{count} dienos"
           many: "%{count} dienų"
           other: "%{count} dienų"
+        long:
+          one: "%{chatSettingsLink} nustatyti taip, kad kanalo pranešimai būtų saugomi %{count} dieną."
+          few: "%{chatSettingsLink} nustatyti taip, kad kanalo pranešimai būtų saugomi %{count} dienas."
+          many: "%{chatSettingsLink} nustatyti taip, kad kanalo pranešimai būtų saugomi %{count} dienų."
+          other: "%{chatSettingsLink} nustatyti taip, kad kanalo pranešimai būtų saugomi %{count} dienų."
+      flags:
+        off_topic: "Šis pranešimas nesusijęs su dabartine diskusija, kaip apibrėžta kanalo pavadinime, ir tikriausiai turėtų būti perkeltas kitur."
+        inappropriate: "Šiame pranešime yra turinio, kurį mąstantis žmogus laikytų įžeidžiančiu, piktnaudžiavimu ar pažeidžiančiu <a href=\"%{basePath}/guidelines\">mūsų bendruomenės gaires</a>."
+        illegal: "Šis įrašas reikalauja personalo dėmesio, nes manau, kad jame yra turinio, kuris yra neteisėtas."
+        spam: "Ši žinutė yra reklama arba vandalizmas. Ji nėra naudinga ar aktuali dabartiniam kanalui."
+        notify_user: "Noriu su šiuo žmogumi tiesiogiai ir asmeniškai pasikalbėti apie jo žinutę."
+        notify_moderators: "Šis pranešimas reikalauja personalo dėmesio dėl kitos priežasties, nenurodytos aukščiau."
+      flagging:
+        action: "Pažymėti pranešimą"
+      anonymous_flagging:
+        description: "Norėdami pranešti apie neteisėtą turinį, susisiekite su <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
       emoji_picker:
+        favorites: "Dažnai naudojamas"
+        smileys_&_emotion: "Šypsenėlės ir emocijos"
         objects: "Objektai"
+        people_&_body: "Žmonės ir kūno dalys"
+        travel_&_places: "Kelionės ir vietos"
+        animals_&_nature: "Gyvūnai ir gamta"
+        food_&_drink: "Maistas ir gėrimai"
         activities: "Veikla"
         flags: "Pažymėk!"
         symbols: "Simboliai"
+        search_placeholder: "Ieškoti pagal jaustuko pavadinimą ir slapyvardį..."
+        no_results: "Nėra rezultatų"
       thread:
         title: "Antraštė"
+        view_thread: Peržiūrėti temą
         replies:
           one: "%{count} atsakymas"
           few: "%{count} atsakymai"
           many: "%{count} atsakymai"
           other: "%{count} atsakymai"
+        label: Tema
+        close: "Uždaryti temą"
+        original_message:
+          started_by: "Pradėjo"
         settings: "Nustatymai"
         last_reply: "Paskutinis atsakymas"
         notifications:
           regular:
             title: "Įprastas"
+            description: "Gaukite pranešimą, kai kas nors jus paminės šioje temoje."
           tracking:
             title: "Seku"
+            description: "Gaukite pranešimą, kai kas nors jus paminės šioje temoje, ir matykite naujų atsakymų skaičių temų sąraše."
           watching:
             title: "Stebiu"
+            description: "Gaukite pranešimus apie visus atsakymus šioje temoje ir matykite naujų atsakymų skaičių temų sąraše."
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Nustatykite temos pavadinimą"
+        message: "Padėkite kitiems atrasti šį pokalbį."
+        dismiss_action: "Daugiau nerodyti"
+        primary_action: "Nustatyti pavadinimą"
+      thread_title_modal:
+        title: "Nustatyti temos pavadinimą"
+        input_placeholder: "Papasakokite kitiems, apie ką šis pokalbis..."
+        discourse_ai:
+          title: "Automatiškai generuoti temų pavadinimus"
+          description: "Norėdami sužinoti daugiau apie tai ir kitus „Discourse“ funkcionalumų patobulinimus, apsilankykite %{url}."
+      threads:
+        open: "Atidaryti temą"
+        list: "Temos"
+        none: "Jūs nedalyvaujate jokiose šio kanalo temose."
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"
+      quick_reaction_type:
+        title: "Reakcijos pokalbiams vienu spustelėjimu"
+        options:
+          frequent: "Dažniausiai naudojamos pokalbių reakcijos"
+          custom: "Individualios reakcijos"
     notifications:
+      chat_invitation: "pakvietė jus prisijungti prie pokalbių kanalo"
+      chat_invitation_html: "<span>%{username}</span> <span>pakvietė jus prisijungti prie pokalbių kanalo</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} ir %{username2}"
+        few: "%{username} ir %{count} kiti"
+        many: "%{username} ir %{count} kitų"
+        other: "%{username} ir %{count} kiti"
+      popup:
+        chat_mention:
+          direct: 'paminėjo jus „%{channel}“'
+          direct_html: '<span>%{username}</span> <span>paminėjo jus „%{channel}“</span>'
+          other_plain: '„%{channel} “ paminėjo „ %{identifier}“'
+          other_html: '<span>%{username}</span> <span>„%{channel}“ paminėjo „ %{identifier} “</span>'
+        direct_message_chat_mention:
+          direct: "paminėjo jus tiesioginėje žinutėje"
+          direct_html: "<span>%{username}</span> <span>paminėjo jus tiesioginėje žinutėje</span>"
+          other_plain: "tiesioginėje žinutėje paminėjo „ %{identifier}“"
+          other_html: "<span>%{username}</span> <span>paminėjo %{identifier} tiesioginėje žinutėje</span>"
+        chat_message: "Naujas pokalbio pranešimas"
+        chat_quoted: "%{username} paminėjo jūsų pokalbio žinutę"
+      titles:
+        chat_mention: "Paminėta pokalbyje"
+        chat_invitation: "Pakviesta į pokalbių kanalą"
+        chat_quoted: "Paminėtas pokalbio pranešimas"
+        chat_watched_thread: "Peržiūrėta pokalbių tema"
+    action_codes:
+      chat:
+        enabled: '%{who} įjungė <button class="btn-link open-chat">pokalbį</button> %{when}'
+        disabled: "%{who} uždarė pokalbį %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:
+          title: Siųsti pokalbio pranešimą
           fields:
+            chat_channel_id:
+              label: Pokalbių kanalo ID
             message:
               label: Žinutės
+            sender:
+              label: Siuntėjas
+              description: Numatytoji sistemos reikšmė
+    review:
+      transcript:
+        view: "Peržiūrėti ankstesnių pranešimų nuorašą"
+      types:
+        chat_reviewable_message:
+          title: "Pažymėtas pokalbio pranešimas"
+        reviewable_chat_message:
+          title: "Pažymėtas pokalbio pranešimas"
+          noun: "pokalbio pranešimas"
     keyboard_shortcuts_help:
       chat:
         title: "Pokalbis"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Perjungti kanalą"
+          switch__unread_channel_arrows: "%{shortcut} Perjungti į neskaitytą kanalą"
+          open_quick_channel_selector: "%{shortcut} Atidaryti greitąjį kanalų pasirinkimą"
+          open_insert_link_modal: "%{shortcut} Įterpti nuorodą (tik kūrėjui)"
+          composer_bold: "%{shortcut} Paryškintas (tik kūrėjui)"
+          composer_italic: "%{shortcut} Kursyvas (tik kūrėjui)"
+          composer_code: "%{shortcut} Kodas (tik kūrėjui)"
+          drawer_toggle: "%{shortcut} Perjungti pokalbių langą"
+          drawer_close: "%{shortcut} Uždaryti pokalbių langą"
+          mark_all_channels_read: "%{shortcut} Pažymėti visus kanalus kaip perskaitytus"
+    topic_statuses:
+      chat:
+        help: "Šioje temoje įjungta pokalbių funkcija"
+    user:
+      allow_private_messages: "Leisti kitiems vartotojams siųsti man asmenines žinutes ir tiesiogines pokalbių žinutes."
+      muted_users_instructions: "Užblokuoti visus pranešimus, asmenines žinutes ir tiesioginius pokalbių pranešimus iš šių naudotojų."
+      allowed_pm_users_instructions: "Leisti tik asmenines žinutes arba tiesioginius pokalbių pranešimus iš šių naudotojų."
+      allow_private_messages_from_specific_users: "Leisti tik konkretiems vartotojams siųsti man asmenines žinutes arba tiesioginius pokalbių pranešimus"
+      ignored_users_instructions: "Užblokuoti visus šių naudotojų įrašus, žinutes, pranešimus, asmenines žinutes ir tiesioginius pokalbių pranešimus."
+    user_menu:
+      no_chat_notifications_title: "Dar neturite jokių pokalbių pranešimų"
+      no_chat_notifications_body: >
+        Šiame skydelyje gausite pranešimą, kai kas nors jums atsiųs privačią žinutę arba <b> paminės</b> jus pokalbyje <b> naudodamas @žymę</b>. Pranešimai taip pat bus siunčiami į jūsų el. paštą, jei kurį laiką nebūsite prisijungę. <br><br> Spustelėkite bet kurio pokalbių kanalo viršuje esantį pavadinimą, kad nustatytumėte, kokius pranešimus norite gauti tame kanale. Daugiau informacijos rasite <a href='%{preferencesUrl}'>pranešimų nustatymuose</a>.
+      tabs:
+        chat_notifications: "Pokalbių pranešimai"
+        chat_notifications_with_unread:
+          one: "Pokalbių pranešimai – %{count} neskaitytas pranešimas"
+          few: "Pokalbių pranešimai – %{count} neskaityti pranešimai"
+          many: "Pokalbių pranešimai – %{count} neskaitytų pranešimų"
+          other: "Pokalbių pranešimai – %{count} neskaityti pranešimai"
     styleguide:
       sections:
         chat:
           title: Pokalbis
     sidebar:
+      start_new_dm:
+        text: Pradėti asmeninį pokalbį arba grupinį pokalbį
+        title: Nauja asmeninė žinutė arba grupinis pokalbis
       panels:
         chat:
           label: "Pokalbis"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "Reikalingas įjungtas pokalbių įskiepis"
+      nodes:
+        "action:send_chat_message": "Siųsti pokalbio pranešimą"
+        "action:chat_approval": "Pokalbių patvirtinimas"
+        "trigger:chat_message_created": "Pokalbio pranešimas sukurtas"
+      node_descriptions:
+        "action:send_chat_message": "Išsiųskite žinutę į pokalbių kanalą arba tiesioginę žinutę vienam ar keliems naudotojams."
+        "action:chat_approval": "Siųsti patvirtinimo užklausą pokalbių kanalui ir laukti atsakymo"
+        "trigger:chat_message_created": "Suveikia, kai sukuriamas naujas pokalbio pranešimas"
+      chat_message_created:
+        channel_id: "Kanalas"
+        channel_id_description: "Palikite tuščią, kad suaktyvintumėte visus pokalbių kanalus."
       send_chat_message:
+        target: "Siųsti į"
+        targets:
+          channel: "Kanalas"
+          user: "Vartotojai (po vieną tiesioginę žinutę)"
+          group: "Grupė (viena tiesioginė žinutė visiems)"
+        channel_id: "Kanalas"
+        target_usernames: "Gavėjai"
+        target_usernames_description: "Naudotojai, kuriems siųsti pranešimą. Norėdami juos pasirinkti iš kiekvieno elemento, naudokite tokią išraišką kaip `$trigger.user.username`."
         message: "Žinutės"
+        actor_username: "Siuntėjas"
       chat_approval:
         message: "Žinutės"
         buttons: "Mygtukai"
+        buttons_description: "Pridėkite nuo vieno iki dešimties atsakymo mygtukų."
+        add_button: "Pridėti mygtuką"
+        label: "Pavadinimas"
+        label_description: "Tekstas, rodomas ant mygtuko."
+        label_placeholder: "Mygtuko pavadinimas"
         value: "Reikšmė"
+        value_description: "Reikšmė, kuri yra grąžinama eigoje, kai spustelėjamas šis mygtukas."
+        value_placeholder: "Grąžinta reikšmė"
+        style: "Stilius"
+        style_description: "Pasirinkite mygtuko stilių arba palikite tuščią, kad išsaugotumėte standartinę pokalbių mygtuko išvaizdą."
+        style_none: "Be stiliaus"
         style_default: "Numatytasis"
         style_primary: "Pagrindinė"
+        style_danger: "Pavojus"
         style_success: "Sėkmingai"
+        style_flat: "Be kraštų"
+        style_transparent: "Permatomas"
         icon: "Ikona"
+        icon_description: "Pasirinkite ikoną, kuri bus rodoma prieš mygtuko pavadinimą."
+        approve_label: "„Patvirtinti“ mygtuko pavadinimas"
+        approve_label_description: "Jei paliekamas tuščias, numatytoji reikšmė yra „Patvirtinti“."
+        deny_label: "„Atmesti“ mygtuko pavadinimas"
+        deny_label_description: "Jei paliekamas tuščias, numatytoji reikšmė yra „Atmesti“."
+        channel_id: "Kanalas"
+        channel_id_description: "Pokalbių kanalas, į kurį reikia siųsti patvirtinimo pranešimą."
+        timeout_minutes: "Laiko limitas (minutėmis)"
+        timeout_minutes_description: "Jei nenorite nustatyti laiko ribos, palikite laukelį tuščią."
+        timeout_action: "Pasibaigus laiko limitui"
+        timeout_action_description: "Kas nutinka, kai baigiasi patvirtinimo laikas."
+        timeout_action_continue: "Tęsti darbo eigą"
+        timeout_action_deny: "Tęsti kaip atmestą"
+        timeout_action_fail: "Nesėkmingas darbo eigos įvykdymas"

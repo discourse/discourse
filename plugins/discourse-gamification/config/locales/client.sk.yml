@@ -64,9 +64,7 @@ sk:
       close: "Zatvoriť"
       delete: "Odstrániť"
       edit: "Upraviť"
-      back: "Späť"
       save: "Uložiť"
-      apply: "Použi"
       recalculate: "Prepočítať skóre"
       recalculating: "Prepočítanie skóre..."
       completed: "Hotovo! Skóre bolo úspešne prepočítané."
@@ -87,9 +85,11 @@ sk:
       admin:
         title: "Gamifikácia"
         name: "Meno"
+        created_by: "Vytvoril"
         period: "Obdobie"
     discourse_workflows:
       gamification_score:
         username: "Používateľ"
         date: "Dátum"
         description: "Popis"
+        category_id: "Kategória"

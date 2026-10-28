@@ -19,6 +19,7 @@ el:
       link: "Σύνδεσμος"
   mcp:
     errors:
+      category_not_found: "Η κατηγορία δεν βρέθηκε"
       draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο"
       topic_not_found: "Το θέμα δε βρέθηκε"
     oauth:
@@ -3048,13 +3049,16 @@ el:
     gitlab:
       show_original: "εμφάνιση πρωτότυπου"
     github:
+      header:
+        success: "Επιτυχία"
       show_original: "εμφάνιση πρωτότυπου"
       closed: "κλειστό"
       review_by: "Έλεγχος από"
-      status_date:
-        draft: "προσχέδιο"
-        approved: "εγκεκριμένο"
-        closed: "κλειστή"
+      pr_status:
+        draft: "Προσχέδιο"
+        open: "Άνοιγμα"
+        approved: "Εγκρίθηκε "
+        closed: "Κλειστή"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} σε ανέφερε στο "%{topic}" - %{site_title}'

@@ -67,7 +67,6 @@ ar:
   site_settings:
     discourse_ai_enabled: "تفعيل المكوِّن الإضافي Discourse AI."
     enable_ai_bot_starred_conversations: "السماح للمستخدمين بتمييز محادثات روبوت الذكاء الاصطناعي بنجمة وعرضها في قسم \"مميَّزة بنجمة\" في الشريط الجانبي"
-    ai_default_llm_model: "نموذج اللغة الكبير الافتراضي المستخدم لجميع ميزات الذكاء الاصطناعي"
     ai_artifact_security: "ينشئ نظام أدوات الذكاء الاصطناعي إطارات IFRAME تحتوي على رموز برمجية قابلة للتشغيل. يُجبر الوضع الصارم على نقرة إضافية لتشغيل الرمز البرمجي. بينما يُشغّل الوضع المرن الرمز البرمجي فورًا. يُتيح الوضع المُختلط للمستخدم بإضافة السمة data-ai-artifact-autorun ليظهر الناتج فورًا. يُعطّل الوضع المُعطّل نظام نواتج الذكاء الاصطناعي بالكامل."
     ai_toxicity_enabled: "تفعيل وحدة الكشف عن المحتوى المسيء."
     ai_toxicity_inference_service_api_endpoint: "عنوان URL الذي تعمل عليه واجهة API لوحدة الكشف عن المحتوى المسيء"
@@ -82,15 +81,12 @@ ar:
     ai_toxicity_flag_threshold_threat: "تهديد"
     ai_toxicity_flag_threshold_sexual_explicit: "محتوى جنسي صريح"
     ai_toxicity_groups_bypass: "لن تُصنَّف منشورات المستخدمين في هذه المجموعات بواسطة وحدة الكشف عن المحتوى المسيء."
-    ai_sentiment_enabled: "تفعيل وحدة المشاعر."
     ai_sentiment_inference_service_api_endpoint: "عنوان URL حيث تعمل واجهة API لوحدة المشاعر"
     ai_sentiment_inference_service_api_key: "مفتاح API لواجهة API الخاصة بنموذج المشاعر"
     ai_sentiment_model_configs: "نقاط نهاية نموذج التصنيف المُستخدَمة للاستدلال. يصنِّف نموذج المشاعر المنشورات على أنها إيجابية أو محايدة أو سلبية، بينما يصنِّف نموذج العاطفة المنشورات وفقًا لتسميات العواطف المدعومة."
     ai_sentiment_models: "نقاط نهاية نموذج التصنيف المُستخدَمة للاستدلال. يصنِّف نموذج المشاعر المنشورات على أنها إيجابية أو محايدة أو سلبية، بينما يصنِّف نموذج العاطفة المنشورات وفقًا لتسميات العواطف المدعومة."
     ai_sentiment_sentiment_classification_strategy: "محرك تصنيف المشاعر"
-    ai_sentiment_sentiment_agent: "الوكيل المُستخدَم لتصنيف المشاعر عندما يكون محرك تصنيف المشاعر هو الوكيل"
     ai_sentiment_emotion_classification_strategy: "محرك تصنيف العاطفة"
-    ai_sentiment_emotion_agent: "الوكيل المُستخدَم لتصنيف العاطفة عندما يكون محرك تصنيف العاطفة هو الوكيل"
     ai_nsfw_detection_enabled: "تفعيل وحدة NSFW (غير آمن لبيئة العمل)."
     ai_nsfw_inference_service_api_endpoint: "عنوان URL حيث تعمل واجهة API لوحدة NSFW (غير آمن لبيئة العمل)"
     ai_nsfw_inference_service_api_key: "مفتاح API لواجهة API الخاصة بنموذج NSFW (غير آمن لبيئة العمل)"
@@ -138,7 +134,6 @@ ar:
     ai_pm_summarization_allowed_groups: "المجموعات المسموح لها بإنشاء الملخصات وعرضها في الرسائل الخاصة"
     ai_summary_gists_enabled: "إنشاء ملخصات قصيرة لأحدث الردود في الموضوعات تلقائيًا"
     ai_summary_gists_agent: "الوكيل المُستخدَم لإنشاء ملخصات موجزة للموضوعات. يستخدم إنشاء الملخصات الموجزة دائمًا أداة إنشاء الملخص النهائي المضمَّنة؛ ويتم تجاهل الأدوات الأخرى وتنسيقات الاستجابة المنظَّمة المهيَّأة للوكيل."
-    ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المراد ملؤها رجعيًا في الساعة. يُحتسَب كل ملخص موجز تم توطينه ضمن هذا الحد."
     ai_bot_enabled: "تفعيل وحدة روبوت الذكاء الاصطناعي"
     ai_bot_enabled_llms: "نماذج اللغات الكبيرة المتوفرة للاختيار لإدارة محادثات روبوتات الذكاء الاصطناعي"
     ai_bot_enable_chat_warning: "عرض تحذير عند بدء الدردشة في رسالة خاصة. يمكن تجاوزه عن طريق تعديل سلسلة الترجمة: discourse_ai.ai_bot.pm_warning"
@@ -177,93 +172,64 @@ ar:
       description: "يوفر هذا التقرير تحليلًا لمشاعر المنشورات، مجمعة حسب الفئة، مع درجات إيجابية وسلبية ومحايدة لكل منشور ولكل فئة."
     overall_sentiment:
       title: "المشاعر العامة"
-      description: "يقارن المخطط بين عدد المنشورات المصنَّفة على أنها إيجابية أو سلبية. ويُحتسَب المنشور عندما تتجاوز نقاط الإيجابية أو السلبية الحد الأدنى المحدَّد، ما يعني عدم عرض المنشورات المحايدة. ويتم أيضًا استبعاد الرسائل الشخصية (PM). وبناءً على طريقة تصنيف المشاعر المحدَّدة، تُصنَّف المنشورات باستخدام نموذج تصنيف المشاعر المهيَّأ ('cardiffnlp/twitter-roberta-base-sentiment-latest') أو وكيل تصنيف المشاعر المهيَّأ."
       xaxis: "إيجابية (%)"
       yaxis: "التاريخ"
     emotion_admiration:
       title: "🤩 الإعجاب"
-      description: "المنشورات المصنَّفة برمز الإعجاب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_amusement:
       title: "😄 التسلية"
-      description: "المنشورات المصنَّفة برمز التسلية عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_anger:
       title: "😠 الغضب"
-      description: "المنشورات المصنَّفة برمز الغضب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_annoyance:
       title: "😒 الإزعاج"
-      description: "المنشورات المصنَّفة برمز الإزعاج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_approval:
       title: "👍 الموافقة"
-      description: "المنشورات المصنَّفة برمز الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_caring:
       title: "🤗 الاهتمام"
-      description: "المنشورات المصنَّفة برمز الاهتمام عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_confusion:
       title: "😕 الارتباك"
-      description: "المنشورات المصنَّفة برمز الارتباك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_curiosity:
       title: "🤔 الفضول"
-      description: "المنشورات المصنَّفة برمز الفضول عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_desire:
       title: "😍 الرغبة"
-      description: "المنشورات المصنَّفة برمز الرغبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disappointment:
       title: "😞 خيبة الأمل"
-      description: "المنشورات المصنَّفة برمز خيبة الأمل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disapproval:
       title: "👎 عدم الموافقة"
-      description: "المنشورات المصنَّفة برمز عدم الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disgust:
       title: "🤢 الاشمئزاز"
-      description: "المنشورات المصنَّفة برمز الاشمئزاز عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_embarrassment:
       title: "😳 الإحراج"
-      description: "المنشورات المصنَّفة برمز الإحراج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_excitement:
       title: "🤪 الإثارة"
-      description: "المنشورات المصنَّفة برمز الإثارة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_fear:
       title: "😨 الخوف"
-      description: "المنشورات المصنَّفة برمز الخوف عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_gratitude:
       title: "🙏 الامتنان"
-      description: "المنشورات المصنَّفة برمز الامتنان عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_grief:
       title: "😢 الكآبة"
-      description: "المنشورات المصنَّفة برمز الكآبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_joy:
       title: "😊 المرح"
-      description: "المنشورات المصنَّفة برمز الفرح عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_love:
       title: '❤️ الحب'
-      description: "المنشورات المصنَّفة برمز الحب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_nervousness:
       title: "😰 التوتر"
-      description: "المنشورات المصنَّفة برمز التوتر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_neutral:
       title: "😐 محايدة"
-      description: "المنشورات المصنَّفة برمز الحياد عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_optimism:
       title: "🌟 التفاؤل"
-      description: "المنشورات المصنَّفة برمز التفاؤل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_pride:
       title: "🦁 الفخر"
-      description: "المنشورات المصنَّفة برمز الفخر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_realization:
       title: "💡 الإدراك"
-      description: "المنشورات المصنَّفة برمز الإدراك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_relief:
       title: "😌 الراحة"
-      description: "المنشورات المصنَّفة برمز الراحة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_remorse:
       title: "😔 الندم"
-      description: "المنشورات المصنَّفة برمز الندم عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_sadness:
       title: "😭 الحزن"
-      description: "المنشورات المصنَّفة برمز الحزن عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_surprise:
       title: "😲 المفاجأة"
-      description: "المنشورات المصنَّفة برمز المفاجأة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
   discourse_ai:
     ai_artifact:
       errors:
@@ -438,6 +404,32 @@ ar:
       read_post:
         unknown_post: "منشور"
       chat_tool_approval:
+        topic_states:
+          open: "فتح"
+          closed: "مغلق"
+          active: "نشط"
+          deleted: "تم الحذف"
+        solution_post: "المنشور #%{number}"
+        duration_label: "المدة:"
+        user_duration:
+          zero: "%{count} من الأيام"
+          one: "يوم واحد (%{count})"
+          two: "يومان (%{count})"
+          few: "%{count} أيام"
+          many: "%{count} يومًا"
+          other: "%{count} من الأيام"
+        post_states:
+          locked: "مغلق"
+        posts_label: "المنشورات"
+        category_label: "الفئة"
+        category_fields:
+          name: "الاسم"
+          description: "الوصف"
+          color: "اللون"
+          text_color: "لون النص"
+        approve_label: "نعم"
+        reject_label: "لا"
+        empty_value: "فارغ"
         approved: "تمت الموافقة عليه من قِبل @%{username}."
         rejected: "تم رفضه من قِبل @%{username}."
         failed: "تعذَّر إكمال الإجراء: %{error}"
@@ -1095,8 +1087,8 @@ ar:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
         model_test_failed: "لقد فشلنا في إنشاء اختبار تضمين باستخدام هذا النموذج. تأكَّد من صحة إعداداته."
-    secrets:
-      delete_failed_in_use: "بيانات الاعتماد هذه قيد الاستخدام حاليًا بواسطة واحد أو أكثر من النماذج اللغوية الكبيرة، أو عمليات التضمين، أو الأدوات، ولا يمكن حذفها."
+    decision_models:
+      secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة"
     llm_models:
       missing_provider_param: "لا يمكن ترك %{param} فارغة"
       invalid_provider_param: "تنسيق %{param} غير صالح"

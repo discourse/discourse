@@ -1610,7 +1610,9 @@ RSpec.describe Topic do
           2.times { topic.update_status("closed", true, user) }
         end
 
-      expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, "closed", true, { acting_user: user }]],
+      )
     end
 
     it "emits pin status events only when pin attributes change" do
@@ -1624,7 +1626,10 @@ RSpec.describe Topic do
         end
 
       expect(events.map { |event| event[:params] }).to eq(
-        [[topic, "pinned", true], [topic, "pinned", false]],
+        [
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned", false, { acting_user: user }],
+        ],
       )
     end
 
@@ -1642,9 +1647,9 @@ RSpec.describe Topic do
 
       expect(events.map { |event| event[:params] }).to eq(
         [
-          [topic, "pinned", true],
-          [topic, "pinned_globally", true],
-          [topic, "pinned_globally", true],
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
         ],
       )
     end
@@ -2368,6 +2373,20 @@ RSpec.describe Topic do
   end
 
   describe "scopes" do
+    describe "private message access" do
+      it "keeps participant access consistent across scopes" do
+        direct_pm = Fabricate(:private_message_topic, recipient: user)
+        group = Fabricate(:group, users: [user])
+        group_pm = Fabricate(:group_private_message_topic, recipient_group: group)
+        Fabricate(:private_message_topic)
+
+        expected_ids = [direct_pm.id, group_pm.id]
+
+        expect(Topic.private_messages_for_user(user).pluck(:id)).to match_array(expected_ids)
+        expect(Topic.private_messages.allowed_to_user(user).pluck(:id)).to match_array(expected_ids)
+      end
+    end
+
     describe "#by_most_recently_created" do
       it "returns topics ordered by created_at desc, id desc" do
         now = Time.now
@@ -4017,6 +4036,20 @@ RSpec.describe Topic do
       end
 
       expect(topic.auto_close_threshold_reached?).to eq(true)
+    end
+  end
+
+  describe ".recalculate_like_counts!" do
+    it "sums the like counts of each topic's live non-whisper posts" do
+      topic_1 = Fabricate(:post, like_count: 2).topic
+      Fabricate(:post, topic: topic_1, like_count: 3, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic_1, like_count: 4, deleted_at: Time.zone.now)
+      topic_2 = Fabricate(:post, like_count: 5).topic
+
+      Topic.recalculate_like_counts!([topic_1.id, topic_2.id])
+
+      expect(topic_1.reload.like_count).to eq(2)
+      expect(topic_2.reload.like_count).to eq(5)
     end
   end
 

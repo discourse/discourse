@@ -1,5 +1,5 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import TopicNotificationsButtonExample from "../../examples/molecules/topic-notifications-button";
+import TopicNotificationsButtonExample from "../../examples/molecules/topic-notifications-button.gjs";
 import topicNotificationsButtonSource from "../../examples/molecules/topic-notifications-button?source=file";
 
 export default <template>

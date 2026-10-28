@@ -147,6 +147,13 @@ lt:
         type: "Tipas"
         error: "Klaida"
         response: "Atsakymas"
+      discourse_workflows:
+        classify:
+          text: "Tekstas"
+          upload_ids: "Paveiksliukai"
+          name: "Vardas"
+          type: "Tipas"
+          type_score: "Rezultatas"
       ai_tool_approval:
         loading: "Kraunasi..."
         tool: "Veiksmai"
@@ -162,6 +169,7 @@ lt:
         disabled: "(uždrausta)"
         groups: "Grupės:"
         no_groups: "Nieko"
+        classification_model: "Modelis:"
         edit: "Nustatymai"
         expand_list:
           one: "(%{count} daugiau)"
@@ -180,10 +188,15 @@ lt:
         filters:
           all: "Visi"
           reset: "Atstatyti"
+        sentiment:
+          emotion: "Emocija"
+          enabled: "Įgalinti"
+          setting_groups:
+            emotion: "Emocija"
         summarization:
           setting_groups:
             settings: "Pagrindiniai nustatymai"
-            gists: "Gistai"
+            gists: "Trumpieji kodų fragmentai"
             backfill: "Užpildymas"
         search:
           name: "Paieška"
@@ -289,6 +302,9 @@ lt:
         theme_translations:
           translate:
             label: "Versti"
+            confirm: "Išversti iš %{language} į:"
+            override_existing: "Taip pat perrašyti esamus vertimus"
+            no_targets: "Kitos tikslinės kalbos nesukonfigūruotos. Įtraukite kalbas į turinio lokalizacijos palaikomų lokalių nustatymą."
       spam:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"
@@ -336,6 +352,11 @@ lt:
         model: "Modelis"
         request: "Užklausa"
         user: "Narys"
+        reasoning_tokens: "Samprotavimo žetonai"
+        stop_reason: "Sustabdyti samprotavimą"
+        empty: "Išvalyti atsakymą"
+        truncated: "Sutrumpinta"
+        truncated_description: "Sutrumpinta pasiekus išvesties ribą"
         context: "Kontekstas"
         topic: "Tema"
         post: "Įrašai"
@@ -361,6 +382,8 @@ lt:
         export: "Eksportuoti"
         import: "Importuoti"
         description: "Aprašymas"
+        max_turn_tokens: "Įjungti generavimo išteklių limitą"
+        max_turn_tokens_help: "Apriboja naujų išvesčių ir įrankių rezultatus vienam atsakymui, bendrinamus su antriniais agentais. Ankstesnis pokalbis neskaičiuojamas. Tai nėra išlaidų riba. Palikite tuščią, jei norite naudoti 500 000 žetonų."
         user: Narys
         save: "Saugoti"
         enabled: "Galimas?"
@@ -403,6 +426,12 @@ lt:
         delete: "Pašalinti"
         embedding: "Įterpimai"
         tool: "Įrankis"
+      decision_models:
+        no_preset: "Nieko"
+        display_name: "Vardas"
+        model: "Modelis"
+        edit: "Redaguoti"
+        delete: "Pašalinti"
       mcp_servers:
         name: "Vardas"
         description: "Aprašymas"
@@ -416,6 +445,15 @@ lt:
         delete: "Pašalinti"
         tools_modal:
           required: "Privalomi"
+      models:
+        name: "Vardas"
+        type: "Tipas"
+        edit: "Redaguoti"
+        select_type: "Pasirinkti"
+        types:
+          embedding: "Įterpimai"
+        filters:
+          all: "Visų rūšių"
       llms:
         display_name: "Vardas"
         vision_modes:
@@ -475,6 +513,72 @@ lt:
         providers:
           google: "Google"
           fake: "Išskirtinės"
+      ai_artifact:
+        editor:
+          title: "AI artefaktas"
+          edit_options: "Redagavimo parinktys"
+          reference: "Nuoroda"
+          share_reference_description: "Bendrinti raktą arba bendrinamą artefakto nuorodą iš šios svetainės."
+          source_reference_description: "Šaltinio artefakto ID."
+          version: "Versija"
+          version_description: "Bazinio artefakto laukelį palikite tuščią."
+          autorun: "Vykdyti automatiškai"
+          autorun_default_description: "Taikoma tik tada, kai artefaktų apsauga nustatyta hibridiniu režimu."
+          autorun_strict: "Šiai svetainei paleisti reikia spustelėti."
+          autorun_lax: "Ši svetainė automatiškai paleidžia artefaktus."
+          height: "Aukštis (px)"
+          height_description: "1–2000 pikselių. Jei norite numatytojo aukščio, palikite lauką tuščią."
+          seamless: "Vientisas ekranas"
+          seamless_description: "Slėpti poraštę, kai paleidžiamas artefaktas."
+          summary_autorun: "Paleisti automatiškai: %{value}"
+          summary_height: "Aukštis: %{value}"
+          summary_height_value: "%{height} px"
+          summary_seamless: "Vientisas: %{value}"
+          default: "Numatytasis"
+          option_on: "Įjungta"
+          option_off: "Išjungta"
+          apply: "Kandidatuoti"
+          invalid_share: "Įveskite galiojantį bendrinimo raktą arba nuorodą į bendrinamą artefaktą šioje svetainėje."
+          invalid_source: "Įveskite teigiamą šaltinio artefakto ID (iki 19 skaitmenų)."
+          invalid_version: "Įveskite teigiamą versijos numerį (iki 19 skaitmenų) arba palikite lauką tuščią."
+          invalid_height: "Įveskite aukštį nuo 1 iki 2000 pikselių arba palikite lauką tuščią."
+        share: "Dalintis"
+        privacy_notice: "Šią versiją gali peržiūrėti visi, turintys nuorodą. Jūsų pokalbis lieka privatus."
+        privacy_notice_login_required: "Prisijungę vartotojai, turintys nuorodą, gali peržiūrėti šią versiją. Jūsų pokalbis lieka privatus."
+        create_link: "Sukurti nuorodą"
+        version_label: "Versija %{version}"
+        copied: "Nukopijuota į iškarpinę"
+        copy_link: "Kopijuoti nuorodą"
+        copy_embed: "Kopijuoti įterptąjį kodą"
+        embed_post: "Įterpti į įrašą"
+        embed_post_title: "Nukopijuokite kodą, kad įterptumėte šį artefaktą į įrašą"
+        embed_website: "Įterpti į svetainę"
+        embed_website_title: "Nukopijuokite HTML kodą, kad įterptumėte šį artefaktą į svetainę"
+        new_tab: "Rodyti naujame skirtuke"
+        update_pin: "Atnaujinti prisegtą versiją"
+        pin_updated: "Bendrinama versija atnaujinta"
+        revoke: "Atšaukti nuorodą"
+        revoke_conversation: "Atšaukti pokalbio bendrinimą"
+        confirm_revoke_standalone_title: "Atšaukti nuorodą?"
+        confirm_revoke_standalone_message: "Ši nuoroda ir jos įterpimai nebeveiks. Šio veiksmo negalima atšaukti."
+        confirm_revoke_conversation_title: "Atšaukti pokalbio bendrinimą?"
+        confirm_revoke_conversation_message: "Tai visam laikui sustabdo bendrinamą pokalbį ir jo artefaktų įterpimus. Atskiros nuorodos neatšaukiamos."
+        shared_artifacts: "Bendrai naudojami AI artefaktai"
+        filter_shares: "Filtruoti bendrinimus"
+        filter_all: "Visi"
+        filter_standalone: "Atskiras"
+        filter_conversation: "Pokalbis"
+        standalone: "Atskiras bendrinimas"
+        conversation: "Bendrinama su pokalbiu"
+        empty_shares: "Kol kas nėra bendrinamų AI artefaktų."
+        unavailable: "Ši nuoroda nebepasiekiama. Vis dar galite ją atšaukti."
+        retry_loading: "Bandyti įkelti dar kartą"
+        newest_first: "Naujausi pirmiausia"
+        oldest_first: "Seniausi pirmiausia"
+      shared_ai_conversations:
+        title: "Bendrinami AI pokalbiai"
+        empty: "Kol kas nėra bendrinamų AI pokalbių."
+        unavailable: "Šios pokalbio nuoroda nebėra pasiekiama. Vis dar galite ją atšaukti."
       ai_bot:
         llm: "Modelis:"
         debug_ai_modal:
@@ -491,7 +595,7 @@ lt:
         bot_names:
           claude-2: "Claude 2"
         conversations:
-          today: "Šandien"
+          today: "Šiandien"
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"
           editing_post: "Redaguojamas įrašas"
@@ -508,6 +612,16 @@ lt:
       summarization:
         chat:
           summarize: "Apibendrinti"
+      ai_search:
+        related_replies:
+          one: "%{count} atsakymas"
+          few: "%{count} atsakymai"
+          many: "%{count} atsakymai"
+          other: "%{count} atsakymai"
+        tabs:
+          ask: "Paklauskite AI"
+          topics: "Temos"
+          messages: "Žinutės"
       discobot_discoveries:
         main_title: "Paklauskite AI"
         legacy:

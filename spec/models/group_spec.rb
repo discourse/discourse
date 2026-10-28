@@ -145,6 +145,17 @@ RSpec.describe Group do
   describe "validation" do
     let(:group) { build(:group) }
 
+    it "allows creating and renaming groups whose names match watched words" do
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+      group.name = "badgers"
+
+      group.save!
+      group.update!(name: "badger_team")
+
+      expect(group.reload.name).to eq("badger_team")
+      expect(Group.can_use_name?("badgers", group)).to eq(true)
+    end
+
     it "is invalid for blank" do
       group.name = ""
       expect(group.valid?).to eq false
@@ -213,6 +224,50 @@ RSpec.describe Group do
     it "is valid for proper incoming email" do
       group.incoming_email = "foo@bar.org"
       expect(group.valid?).to eq(true)
+    end
+
+    context "when an automatic group has an incoming email" do
+      let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+      it "accepts valid incoming addresses" do
+        group.incoming_email = "moderators@example.com|staff@example.com"
+
+        expect(group).to be_valid
+      end
+
+      it "rejects an invalid incoming address" do
+        group.incoming_email = "invalid"
+
+        expect(group).not_to be_valid
+      end
+
+      it "rejects an incoming address used by another group" do
+        Fabricate(:group, incoming_email: "support@example.com")
+        group.incoming_email = "support@example.com"
+
+        expect(group).not_to be_valid
+        expect(group.errors[:base]).to include(
+          I18n.t(
+            "groups.errors.email_already_used_in_group",
+            email: "support@example.com",
+            group_name: Group.find_by_email("support@example.com").name,
+          ),
+        )
+      end
+
+      it "rejects an incoming address used by a category" do
+        category = Fabricate(:category, email_in: "support@example.com")
+        group.incoming_email = "support@example.com"
+
+        expect(group).not_to be_valid
+        expect(group.errors[:base]).to include(
+          I18n.t(
+            "groups.errors.email_already_used_in_category",
+            email: "support@example.com",
+            category_name: category.name,
+          ),
+        )
+      end
     end
 
     context "when a group has no owners" do
@@ -1985,6 +2040,16 @@ RSpec.describe Group do
       group.save!
       expect(GroupTagNotificationDefault.lookup(group, :watching)).to be_empty
       expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag1.id])
+    end
+
+    it "moves a tag between levels without clearing the previous level" do
+      group.update!(tracking_tags: [tag1.name])
+
+      group.reload.update!(watching_tags: [tag1.name])
+
+      expect(
+        group.reload.group_tag_notification_defaults.pluck(:tag_id, :notification_level),
+      ).to eq([[tag1.id, NotificationLevels.all[:watching]]])
     end
 
     it "can apply default notifications for admins group" do

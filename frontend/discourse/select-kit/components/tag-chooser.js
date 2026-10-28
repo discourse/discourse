@@ -10,8 +10,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import SelectKitRow from "./select-kit/select-kit-row";
-import TagChooserRow from "./tag-chooser-row";
+import SelectKitRow from "./select-kit/select-kit-row.gjs";
+import TagChooserRow from "./tag-chooser-row.gjs";
 
 @classNames("tag-chooser")
 @attributeBindings("categoryId")
@@ -31,6 +31,7 @@ export default class TagChooser extends MultiSelectComponent {
   valueProperty = "id";
   nameProperty = "name";
 
+  /** @type {(string | { id: number | string, name: string })[] | null | undefined} */
   blockedTags = null;
   excludeSynonyms = false;
   excludeHasSynonyms = false;

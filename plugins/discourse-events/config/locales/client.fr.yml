@@ -393,6 +393,7 @@ fr:
         filter_placeholder: "Filtrer les utilisateurs"
         remove_invitee: "Supprimer l'invité de la liste"
         add_invitee: "Ajouter l'invité à la liste"
+        this_event: "Cet événement"
       bulk_invite_modal:
         confirm: "confirmer"
         text: "Téléverser un fichier CSV"
@@ -453,7 +454,6 @@ fr:
               one: "%{count} utilisateur est invité"
               other: "%{count} utilisateurs sont invités"
         event:
-          expired: "Expiré"
           closed: "Fermé"
           full: "Complet"
           status:
@@ -466,6 +466,8 @@ fr:
             private:
               title: "Privé"
               description: "Un événement privé ne peut être rejoint que par les utilisateurs invités."
+      recording_modal:
+        save: "Enregistrer"
       composer:
         name_placeholder: "Nom de l'événement"
         end_date_placeholder: "Date de fin"

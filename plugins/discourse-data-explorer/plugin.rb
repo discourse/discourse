@@ -34,6 +34,8 @@ end
 require_relative "lib/discourse_data_explorer/engine"
 
 after_initialize do
+  register_seedfu_fixtures(Rails.root.join("plugins/discourse-data-explorer/db/fixtures"))
+
   require_relative "lib/discourse_data_explorer/mcp_tools"
 
   register_mcp_tool(
@@ -281,6 +283,20 @@ after_initialize do
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/tools/submit_query"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
+    require_relative "lib/discourse_data_explorer/query_generation"
+    require_relative "lib/discourse_data_explorer/admin_assistant/capability"
+    require_relative "lib/discourse_data_explorer/admin_assistant/query_draft"
+    require_relative "lib/discourse_data_explorer/admin_assistant/generate_query"
+    require_relative "lib/discourse_data_explorer/admin_assistant/create_query"
+
+    admin_assistant_tools = [
+      DiscourseDataExplorer::AdminAssistant::GenerateQuery,
+      DiscourseDataExplorer::AdminAssistant::CreateQuery,
+    ]
+
+    register_modifier(:admin_assistant_tools) { |tools, _agent| tools + admin_assistant_tools }
+
+    DiscourseAi.register_tools(admin_assistant_tools, plugin: self)
 
     DiscourseAi.register_feature(
       module_name: :data_explorer,

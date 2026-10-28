@@ -10,12 +10,14 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
   end
 
   describe "#output" do
-    it "returns topic_id and tags" do
-      trigger = described_class.new(topic, "closed", true)
-      output = trigger.output
+    it "returns the topic and the actor", :aggregate_failures do
+      moderator = Fabricate(:moderator)
+      output = described_class.new(topic, "closed", true, acting_user: moderator).output
 
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
+      expect(output[:actor]).to include(id: moderator.id, username: moderator.username)
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 
@@ -59,9 +61,5 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
         ),
       ).to eq(false)
     end
-  end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

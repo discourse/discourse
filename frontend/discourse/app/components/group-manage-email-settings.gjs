@@ -1,69 +1,68 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Input } from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
+import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { tagName } from "@ember-decorators/component";
-import { on as onEvent } from "@ember-decorators/object";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class GroupManageEmailSettings extends Component {
   @service dialog;
+  @service store;
 
-  smtpSettingsValid = false;
+  @tracked smtpSettingsValid = false;
 
-  @computed("smtpSettingsValid", "group.smtp_enabled")
+  constructor() {
+    super(...arguments);
+    this._determineSettingsValid();
+  }
+
   get emailSettingsValid() {
-    return !this.group?.smtp_enabled || this.smtpSettingsValid;
+    return !get(this.args.group, "smtp_enabled") || this.smtpSettingsValid;
   }
 
   @action
   onChangeSmtpSettingsValid(valid) {
-    this.set("smtpSettingsValid", valid);
+    this.smtpSettingsValid = valid;
   }
 
   @action
   smtpEnabledChange(event) {
     if (
       !event.target.checked &&
-      this.group.smtp_enabled &&
+      this.args.group.smtp_enabled &&
       this._anySmtpFieldsFilled()
     ) {
       this.dialog.confirm({
         message: i18n("groups.manage.email.smtp_disable_confirm"),
-        didConfirm: () => this.group.set("smtp_enabled", true),
+        didConfirm: () => this.args.group.set("smtp_enabled", true),
       });
     }
 
-    this.group.set("smtp_enabled", event.target.checked);
+    this.args.group.set("smtp_enabled", event.target.checked);
   }
 
   @action
   afterSave() {
-    this.store.find("group", this.group.name).then(() => {
+    this.store.find("group", this.args.group.name).then(() => {
       this._determineSettingsValid();
     });
   }
 
-  @onEvent("init")
   _determineSettingsValid() {
-    this.set(
-      "smtpSettingsValid",
-      this.group.smtp_enabled && this.group.smtp_server
-    );
+    this.smtpSettingsValid =
+      this.args.group.smtp_enabled && this.args.group.smtp_server;
   }
 
   _anySmtpFieldsFilled() {
     return [
-      this.group.smtp_server,
-      this.group.smtp_port,
-      this.group.email_username,
-      this.group.email_password,
+      this.args.group.smtp_server,
+      this.args.group.smtp_port,
+      this.args.group.email_username,
+      this.args.group.email_password,
     ].some((value) => !isEmpty(value));
   }
 
@@ -76,16 +75,16 @@ export default class GroupManageEmailSettings extends Component {
         <Input
           id="enable_smtp"
           tabindex="1"
-          @checked={{this.group.smtp_enabled}}
+          @checked={{@group.smtp_enabled}}
           @type="checkbox"
           {{on "input" this.smtpEnabledChange}}
         />
         {{i18n "groups.manage.email.enable_smtp"}}
       </label>
 
-      {{#if this.group.smtp_enabled}}
+      {{#if @group.smtp_enabled}}
         <GroupSmtpEmailSettings
-          @group={{this.group}}
+          @group={{@group}}
           @onChangeSmtpSettingsValid={{this.onChangeSmtpSettingsValid}}
           @smtpSettingsValid={{this.smtpSettingsValid}}
         />
@@ -102,7 +101,7 @@ export default class GroupManageEmailSettings extends Component {
               id="allow_unknown_sender_topic_replies"
               name="allow_unknown_sender_topic_replies"
               tabindex="13"
-              @checked={{this.group.allow_unknown_sender_topic_replies}}
+              @checked={{@group.allow_unknown_sender_topic_replies}}
               @type="checkbox"
             />
             <span>{{i18n
@@ -118,9 +117,9 @@ export default class GroupManageEmailSettings extends Component {
       <br />
       <GroupManageSaveButton
         @afterSave={{this.afterSave}}
-        @beforeSave={{this.beforeSave}}
+        @beforeSave={{@beforeSave}}
         @disabled={{not this.emailSettingsValid}}
-        @model={{this.group}}
+        @model={{@group}}
         @tabindex="15"
       />
     </div>

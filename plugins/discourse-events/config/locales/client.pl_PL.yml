@@ -427,6 +427,8 @@ pl_PL:
         filter_placeholder: "Filtruj użytkowników"
         remove_invitee: "Usuń zaproszonego z listy"
         add_invitee: "Dodaj zaproszonego do listy"
+        this_event: "To wydarzenie"
+        first_event_only: "Tylko pierwsze wydarzenie"
       bulk_invite_modal:
         confirm: "potwierdź"
         text: "Prześlij plik CSV"
@@ -442,6 +444,7 @@ pl_PL:
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
         attendance_label: "Obecność"
+        recurring: "Zastosuj obecność do tego wydarzenia i wszystkich kolejnych wydarzeń"
         inline_title: "Zaproszenie zbiorcze w trybie inline"
         csv_title: "Zaproszenie zbiorcze CSV"
       upcoming_events:
@@ -496,7 +499,7 @@ pl_PL:
               many: "%{count} użytkowników zaproszonych"
               other: "%{count} użytkowników zaproszonych"
         event:
-          expired: "Wygasły"
+          expired: "Zakończone"
           closed: "Zamknięte"
           full: "Pełne"
           status:
@@ -509,12 +512,24 @@ pl_PL:
             private:
               title: "Prywatne"
               description: "Do wydarzenia prywatnego mogą dołączyć wyłącznie zaproszeni użytkownicy."
+      recording:
+        watch: "Obejrzyj nagranie"
+        add: "Dodaj link do nagrania"
+      recording_modal:
+        add_title: "Dodaj nagranie"
+        edit_title: "Edytuj nagranie"
+        label: "Link do nagrania"
+        save: "Zapisz"
+        remove: "Usuń nagranie"
+        edit_reason: "Zaktualizowano link do nagrania"
+        no_event: "Wydarzenie nie zostało znalezione w jego wpisie."
       composer:
         name_placeholder: "Nazwa wydarzenia"
         end_date_placeholder: "Data zakończenia"
         location_or_url_placeholder: "Dodaj lokalizację lub adres URL"
         location_placeholder: "Dodaj lokalizację"
         url_placeholder: "Dodaj URL"
+        recording_placeholder: "Dodaj link do nagrania"
         max_attendees_placeholder: "Nieograniczona liczba uczestników"
         max_attendees_display:
           one: "Maksymalnie %{count} uczestnik"
@@ -635,6 +650,9 @@ pl_PL:
         livestream:
           label: "Transmisja na żywo"
           checkbox_label: "Osadź adres URL jako wideo i otwórz czat na żywo dla uczestników"
+        recording:
+          label: "Nagranie"
+          placeholder: "Dodaj link do nagrania"
         location:
           label: "Lokalizacja"
           label_or_url: "Lokalizacja lub adres URL"

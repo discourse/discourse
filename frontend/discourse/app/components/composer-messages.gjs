@@ -18,7 +18,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 import { userPath } from "discourse/lib/url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { autoTrackedArray } from "../lib/tracked-tools";
+import { autoTrackedArray } from "../lib/tracked-tools.ts";
 
 let _messagesCache = {};
 let _educationMessageShown = false;
@@ -36,19 +36,36 @@ function visibleMessages(messages) {
   return messages?.content?.filter((msg) => msg.id !== "education") || [];
 }
 
+/**
+ * @typedef {import("discourse/models/rest").default & { id: number, topic: import("discourse/models/topic").default, blurb: string, created_at: string, url: string }} SimilarComposerTopic
+ * @typedef {EmberObject & { id?: string, templateName: string, extraClass?: string, title?: string, body?: string | import("@ember/template").TrustedHTML, wait_for_typing?: boolean, hide_if_whisper?: boolean, reply_username?: string | null, similarTopics?: SimilarComposerTopic[] }} ComposerPopupMessage
+ */
 @tagName("")
 export default class ComposerMessages extends Component {
   @tracked showShareModal;
+
+  /** @type {SimilarComposerTopic[] | null} */
   @autoTrackedArray similarTopics = null;
+
+  /** @type {ComposerPopupMessage[] | null} */
   @autoTrackedArray messages = null;
 
   checkedMessages = false;
+
+  /** @type {Record<string, ComposerPopupMessage | undefined> | null} */
   messagesByTemplate = null;
+
+  /** @type {ComposerPopupMessage[] | null} */
   queuedForTyping = null;
+
+  /** @type {string | null} */
   usersNotSeen = null;
   recipientNames = [];
 
+  /** @type {string | null} */
   _lastSimilaritySearch = null;
+
+  /** @type {ComposerPopupMessage | null} */
   _similarTopicsMessage = null;
 
   @computed("composer.viewOpenOrFullscreen")

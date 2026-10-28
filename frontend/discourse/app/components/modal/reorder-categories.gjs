@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -30,6 +30,8 @@ export default class ReorderCategories extends Component {
 
   @tracked changed = false;
   @tracked entries = this.reorder();
+
+  /** @type {number | null} */
   @tracked highlightedCategoryId = null;
 
   get sortedEntries() {
@@ -148,6 +150,13 @@ export default class ReorderCategories extends Component {
     this.changed = true;
 
     this.toggleHighlight(entry.category.id);
+
+    const focused = document.activeElement;
+    schedule("afterRender", () => {
+      if (document.activeElement === document.body) {
+        focused?.focus();
+      }
+    });
   }
 
   @action
@@ -202,7 +211,7 @@ export default class ReorderCategories extends Component {
             </th>
           </thead>
           <tbody>
-            {{#each this.sortedEntries as |entry|}}
+            {{#each this.sortedEntries key="category.id" as |entry|}}
               <tr
                 class={{if
                   (eq this.highlightedCategoryId entry.category.id)

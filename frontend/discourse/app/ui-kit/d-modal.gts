@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -20,7 +21,6 @@ import type Site from "discourse/models/site";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DFlashMessage, {
@@ -190,7 +190,7 @@ export default class DModal extends Component<DModalSignature> {
 
   @tracked animating = false;
   registerModalContainer = modifierFn((el: HTMLElement) => {
-    this.#modalContainer = el;
+    this.#modalContainerElement = el;
   });
   setupModalBody = modifierFn((el: HTMLElement) => {
     if (this.site.desktopView) {
@@ -222,9 +222,16 @@ export default class DModal extends Component<DModalSignature> {
       }
     };
   });
-  #modalContainer: HTMLElement;
+  #modalContainerElement?: HTMLElement;
   #lockedScrollY?: number;
   @tracked _wrapperElement?: HTMLElement;
+
+  /** Registered on insert; every reader runs after the modal has rendered. */
+  get #modalContainer(): HTMLElement {
+    const element = this.#modalContainerElement;
+    assert("DModal: the container is read before it was registered", element);
+    return element;
+  }
 
   get autofocus() {
     return this.args.autofocus ?? true;

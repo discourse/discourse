@@ -120,11 +120,20 @@ module ApplicationHelper
       end
     end
 
+    EmberAssets.import_map.each do |stable, real|
+      real_url = script_asset_path(real)
+      imports[real_url.sub(File.basename(real), File.basename(stable))] = real_url
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
   def script_asset_path(script)
-    path = ActionController::Base.helpers.asset_path("#{script}.js")
+    asset_cdn_path("#{script}.js", brotli: true)
+  end
+
+  def asset_cdn_path(logical_path, brotli: false)
+    path = ActionController::Base.helpers.asset_path(logical_path)
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       resolved_s3_asset_cdn_url =
@@ -146,7 +155,7 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      path = path.sub("/assets/js/", "/assets/br/") if is_brotli_req?
+      path = path.sub("/assets/js/", "/assets/br/") if brotli && is_brotli_req?
     end
 
     path
@@ -676,6 +685,7 @@ module ApplicationHelper
   def user_scheme_id
     return @user_scheme_id if defined?(@user_scheme_id)
     scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    return if scheme_id.nil?
 
     @user_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
       id: scheme_id,
@@ -703,6 +713,7 @@ module ApplicationHelper
   def user_dark_scheme_id
     return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
     scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
+    return if scheme_id.nil?
 
     @user_dark_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
       id: scheme_id,
@@ -1073,6 +1084,10 @@ module ApplicationHelper
 
   def rss_creator(user)
     user&.display_name
+  end
+
+  def rss_cdata(value)
+    value.to_s.gsub("]]>", "]]]]><![CDATA[>").html_safe
   end
 
   def anonymous_top_menu_items

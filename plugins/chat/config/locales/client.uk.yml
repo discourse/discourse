@@ -642,6 +642,8 @@ uk:
         original_channel: 'Спочатку надіслано в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитату чату скопійовано в буфер обміну"
         default_thread_title: "Нитка"
+        transcript_label: "Транскрипт"
+        transcript_region: "Транскрипція з %{channel}"
       notification_levels:
         never: "Ніколи"
         mention: "Тільки для згадок"
@@ -723,7 +725,7 @@ uk:
           alphabetical: "В алфавітному порядку"
           recent_activity: "Нещодавня активність"
           priority: "Пріоритет"
-          priority_description: "Згадки, потім непрочитані, а потім нещодавня активність"
+          priority_description_dms: "Згадки, потім непрочитані, а потім нещодавня активність"
         empty:
           filtered: "Жоден канал не відповідає цьому фільтру."
           show_all: "Показати всі канали"
@@ -989,15 +991,19 @@ uk:
         "action:chat_approval": "Схвалення чату"
         "trigger:chat_message_created": "Повідомлення чату створено"
       node_descriptions:
-        "action:send_chat_message": "Надішліть повідомлення в чат"
         "action:chat_approval": "Надіслати запит на схвалення до каналу чату та чекати на відповідь"
         "trigger:chat_message_created": "Спрацьовує при створенні нового повідомлення в чаті"
       chat_message_created:
         channel_id: "Канал"
         channel_id_description: "Залиште поле порожнім, щоб активувати для всіх каналів чату."
       send_chat_message:
+        target: "Надіслати"
+        targets:
+          channel: "Канал"
         channel_id: "Канал"
+        target_usernames: "Одержувачі"
         message: "Повідомлення"
+        actor_username: "Відправник"
       chat_approval:
         message: "Повідомлення"
         buttons: "Кнопки"

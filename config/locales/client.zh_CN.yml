@@ -6,6 +6,24 @@
 
 zh_CN:
   js:
+    dsa_notice:
+      title: "举报非法内容"
+      content_url: "内容的确切 URL"
+      explanation: "你为什么认为这些内容是非法的？"
+      explanation_help: "请描述事实并说明内容可能违法的原因。无需引用具体法律条文。"
+      name: "全名或组织名称"
+      email: "电子邮件地址"
+      declaration_section: "声明"
+      declaration: "我确认我真诚地相信本通知中的信息和指控是准确完整的。"
+      submit: "提交报告"
+      get_email_code: "获取电子邮件验证码"
+      resend_email_code: "重新发送验证码"
+      email_verified: "已验证"
+      verification_code: "验证码"
+      received: "已收到报告"
+      received_description: "%{site} 已收到您的报告进行审核。"
+      reference: "您的报告参考号为 <strong>%{reference}</strong>。"
+      contact_confirmation: "我们会通过电子邮件向您发送收据和报告副本。审核小组也会通过电子邮件告知您审核结果。"
     mcp_oauth_client_id_metadata_policy:
       disabled: "仅限管理员注册"
       approved_domains: "来自已批准域的 CIMD"
@@ -61,6 +79,8 @@ zh_CN:
       manage:
         access_permission_editor: "编辑者"
         access_permission_editor_description: "可以创建和编辑此实体的内容"
+        access_permission_owner: "所有者"
+        access_permission_owner_description: "所有者对 %{target}拥有完全控制权，可以添加或删除其他所有者。"
         access_permission_viewer: "查看者"
         access_permission_viewer_description: "可以查看此实体的内容"
         access_permission_remove: "移除"
@@ -70,6 +90,7 @@ zh_CN:
         mandatory: "必要"
         disallowed: "不允许"
         required_permission_not_added: "此 %{typeName} 至少需要一名授权对象拥有 %{permission} 权限"
+        owner_required: "至少必须有一位用户保留此 %{typeName} 的所有权。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -291,7 +312,6 @@ zh_CN:
       zh_CN:
         name: 简体中文
     share:
-      topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} 发布的帖子 #%{postNumber}"
       close: "关闭"
       twitter: "在 X 上分享"
@@ -346,6 +366,24 @@ zh_CN:
     skip_to_last_reply: "跳转到最后一条回复"
     skip_to_top: "跳转到顶部"
     skip_user_nav: "跳到个人资料内容"
+    reorder:
+      announcement: "将 %{label} 移动到 %{total} 的位置 %{position}"
+      announcement_cross_list: "将 %{label} 移动到 %{list}，位置 %{position} ，共 %{total}。"
+      handle: "重新排序 %{label}"
+      handle_description: "使用方向键在行之间移动。按 Enter 键查看移动选项。"
+      handle_description_drag_only: "拖动即可移动此行。"
+      remove: "移除 %{label}"
+      removed: "移除了 %{label}"
+      move_up: "上移"
+      move_down: "下移"
+      move_to_top: "返回顶部"
+      move_to_bottom: "移至底部"
+      move_to_list: "移至 %{list}"
+      position: "%{position}/%{total}"
+      at_start: "%{label} 已经是第一个"
+      at_end: "%{label} 已经是最后一个了"
+      move_refused: "无法移动 %{label}"
+      add_item: "添加一项"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_no_smtp: "由于未配置 SMTP 服务器，所有外发电子邮件均已禁用。无法发送任何类型的电子邮件。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
@@ -484,8 +522,6 @@ zh_CN:
     every_six_months: "每六个月"
     max_of_count:
       other: "最多 %{count} 个"
-    character_count:
-      other: "%{count} 个字符"
     period_chooser:
       aria_label: "按期间筛选"
     related_messages:
@@ -837,6 +873,20 @@ zh_CN:
       title:
         search: "搜索消息"
         placeholder: "在此处输入消息标题、URL 或 ID"
+    dsa_statements:
+      title: "DSA分类"
+      help_title: "关于DSA分类"
+      help: "请选择解释此审核决定的社区规则和类别。这些信息将与《数字服务法案》规定的理由声明一同保存。"
+      rule: "社区规则"
+      rule_prompt: "选择一条社区规则"
+      category: "类别"
+      category_prompt: "选择一个类别"
+      pending: "DSA分类待定"
+      confirm_title: "保留DSA分类？"
+      confirm_message: "请查看社区规则和类别。保存后无法更改此分类。"
+      save: "保存分类"
+      saving: "正在保存…"
+      saved: "分类已保存"
     review:
       show_more: "展开"
       show_less: "收起"
@@ -1112,6 +1162,8 @@ zh_CN:
         chars_remaining: "剩余 %{count} 个字符"
         delete_note: "删除此注释"
         delete: "删除"
+        mentions_not_notified:
+          other: "%{usernames} 将不会收到通知，因为他们没有权限访问此可审核内容。"
       topic_label: "话题"
       queued_user: "已加入队列的用户"
       posted_in: "发表于"
@@ -1697,6 +1749,8 @@ zh_CN:
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
         您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
+      no_mentions_title: "你还没被提到呢。"
+      no_mentions_body: "当有人在帖子中提及你的 @用户名 时，通知将显示在此处。"
       no_other_notifications_title: "您还没有任何其他通知"
       no_other_notifications_body: >
         您将在此面板中收到可能与您相关的其他类型活动的通知 – 例如，当有人链接到或编辑您的帖子时。
@@ -1730,6 +1784,9 @@ zh_CN:
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
       enable_quoting: "为高亮显示的文字启用引用回复"
       enable_smart_lists: "在编辑器中编写时启用智能列表"
+      composer_toolbar:
+        title: "编辑器工具栏"
+        instructions: "选择哪些按钮显示在编辑器工具栏中。隐藏的按钮仍然可以使用键盘快捷键。"
       enable_markdown_monospace_font: "在输入框的 Markdown 模式下使用等宽字体"
       automatically_translate: "自动翻译以其他语言发布的话题和帖子"
       content_languages:
@@ -2109,10 +2166,12 @@ zh_CN:
         letter_based: "系统分配的个人资料照片"
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "上传自定义图片"
+        current_avatar: "当前图片"
+        associated_account: "%{provider} 图片"
         upload_title: "上传图片"
         image_is_not_a_square: "警告：我们已经裁剪了您的图片；宽度和高度不相等。"
         logo_small: "网站的小徽标。默认情况下使用。"
-        use_custom: "或上传自定义头像："
+        use_custom: "或者选择另一张图片："
       change_profile_background:
         title: "个人资料标题"
         instructions: "个人资料标题将居中且默认宽度为 1110px。"
@@ -2553,6 +2612,7 @@ zh_CN:
     user_status:
       save: "保存"
       set_custom_status: "设置自定义状态"
+      edit_status: "编辑状态"
       what_are_you_doing: "您在做什么？"
       pause_notifications: "暂停通知"
       remove_status: "移除状态"
@@ -2687,7 +2747,7 @@ zh_CN:
       hide_forever: "不，谢谢"
       hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
-      value_prop: "厌倦了滚动浏览相同的帖子？当您创建帐户后，您将始终回到您离开的地方。使用帐户，您还可以收到新回复通知、保存书签，以及使用“赞”来感谢他人。我们可以共同努力，使这个社区变得更好。:heart:"
+      value_prop: "厌倦了浏览同样的帖子？创建账号后，您就能随时回到上次离开的地方。有了账号，您还可以收到新回复通知、保存书签，以及点赞感谢他人。让我们携手共建更美好的社区。"
     offline_indicator:
       no_internet: "没有网络连接。"
       refresh_page: "刷新页面"
@@ -2796,6 +2856,7 @@ zh_CN:
       signup_instructions: "输入您的电子邮件地址即可加入此社区。我们将向您发送验证码，验证通过后您就可以加入了！"
       user_fields_title: "即将完成"
       user_fields_instructions: "只需再填写一些详细信息，即可完成帐户创建。"
+      signup_details_title: "选择您的用户名和头像"
       account_ready_continue: "继续"
       account_details_title: "完成账户创建"
       account_details_instructions: "在提交帐户以供审核之前，请选择您在社区中的显示方式。"
@@ -3270,8 +3331,7 @@ zh_CN:
       cancel_edit: "取消编辑"
       draft_saved: "草稿已保存！"
       users_placeholder: "选择用户或群组"
-      title_placeholder: "用一句话概括讨论内容…"
-      title_placeholder_redesign: "标题"
+      title_placeholder: "标题"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
@@ -3290,9 +3350,9 @@ zh_CN:
       hide_preview: "隐藏预览"
       resize: "调整编辑器大小"
       switch_to_markdown: "切换到标准 Markdown 编辑器 (%{keyboardShortcut})"
-      switch_to_rich_text: "切换到新的富文本编辑器 (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "切换到标准 Markdown 编辑器"
-      switch_to_rich_text_no_shortcut: "切换到新的富文本编辑器"
+      switch_to_rich_text: "切换到富文本编辑器（%{keyboardShortcut}）"
+      switch_to_markdown_no_shortcut: "切换到 Markdown 编辑器"
+      switch_to_rich_text_no_shortcut: "切换到富文本编辑器"
       quote_post_title: "引用整个帖子"
       bold_label: "B"
       bold_title: "粗体"
@@ -3452,6 +3512,7 @@ zh_CN:
         show_source: "显示来源"
         show_preview: "显示预览"
       table:
+        default_heading: "第 %{number} 列"
         add_row: "添加行"
         add_column: "添加列"
         insert_row_above: "在上面插入"
@@ -5477,8 +5538,6 @@ zh_CN:
         search_open: "打开管理员界面的搜索"
         search_full_page: "打开整页管理员搜索"
     badges:
-      earned_n_times:
-        other: "已获得此徽章 %{count} 次"
       granted_on: "%{date}授予"
       others_count:
         other: "授予他人 %{count} 次"
@@ -5491,6 +5550,8 @@ zh_CN:
         other: "其他 (+%{count})"
       awarded:
         other: "已授予 %{number} 个"
+      granted_times:
+        other: "已授予 %{number} 次"
       select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
       successfully_granted: "已成功将“%{badge}”授予 %{username}"
@@ -5980,63 +6041,6 @@ zh_CN:
           other: "输入内容必须大于 %{count}。"
         pattern_mismatch: "请匹配请求的格式。"
         bad_input: "请输入有效的输入内容。"
-    table_builder:
-      title: "表生成器"
-      modal:
-        title: "表生成器"
-        create: "创建表"
-        help:
-          title: "使用电子表格编辑器"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "在行末尾插入新行。"
-          new_col: "在列末尾插入新列。"
-          options: "右键点击单元格可访问下拉菜单中的更多选项。"
-        confirm_close: "确定要关闭表格生成器吗？任何未保存的更改都将丢失。"
-      edit:
-        btn_edit: "编辑表"
-        modal:
-          title: "编辑表"
-          cancel: "取消"
-          create: "保存"
-          reason: "为何进行编辑？"
-          trigger_reason: "添加编辑原因"
-        default_edit_reason: "使用表编辑器更新表"
-      default_header:
-        col_1: "第 1 列"
-        col_2: "第 2 列"
-        col_3: "第 3 列"
-        col_4: "第 4 列"
-      spreadsheet:
-        no_records_found: "找不到记录"
-        show: "显示"
-        entries: "个条目"
-        about: "关于"
-        prompts:
-          delete_selected_rows: "确定要删除所选行吗？"
-          delete_selected_cols: "确定要删除所选列吗？"
-          will_destroy_merged_cells: "此操作将破坏任何现有的合并单元格。确定吗？"
-          will_clear_search_results: "此操作将破坏任何现有的合并单元格。确定吗？"
-          conflicts_with_merged_cells: "与另一合并单元格存在冲突"
-        invalid_merge_props: "合并属性无效"
-        cells_already_merged: "单元格已合并"
-        no_cells_selected: "未选择单元格"
-        context_menu:
-          row:
-            before: "在前面插入新行"
-            after: "在后面插入新行"
-            delete: "删除所选行"
-          col:
-            before: "在前面插入新列"
-            after: "在后面插入新列"
-            delete: "删除所选列"
-            rename: "重命名此列"
-          order:
-            ascending: "按升序排序"
-            descending: "按降序排序"
-          copy: "复制…"
-          paste: "粘贴…"
-          save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
     safari_15_warning: "您的浏览器很快将与此社区不兼容。要继续参与此社区，请升级您的浏览器或<a href='%{url}'>了解详情</a>。"
     filter:
@@ -6332,7 +6336,7 @@ zh_CN:
               kind: "类型"
             groups_label: "原语群组"
             all_primitives: "所有原语"
-            group_count: "%{enabled} 中的 %{total} 已启用"
+            group_count: "%{total} 中的 %{enabled} 已启用"
             provider: "提供商"
             kind: "类型"
             scope: "作用域"
@@ -6389,8 +6393,15 @@ zh_CN:
             client_id_description: "此应用程序的标识符。配置客户端时请输入相同的值。"
             redirect_uris: "重定向 URI"
             redirect_uris_description: "用户批准访问后浏览器返回的页面。每行输入一个完整的 URI。"
+            management: "注册更新"
+            manual: "由管理员管理"
+            automatic: "自动"
+            manual_description: "管理员负责管理此客户端的名称和重定向 URI。元数据刷新不会更改这些内容，因此请保持其最新状态。"
+            automatic_description: "名称和重定向 URI 会根据已发布的客户端元数据进行更新。更改其中任何一项都会将两者切换到管理员管理模式。"
             create: "添加客户端"
             created: "已添加 OAuth 客户端。"
+            edit: "编辑 OAuth 客户端"
+            updated: "OAuth客户端已更新。"
             empty: "未注册 OAuth 客户端。"
             no_results: "没有 OAuth 客户端符合此搜索条件。"
             detail_title: "客户端详细信息"
@@ -8385,8 +8396,9 @@ zh_CN:
           upload: "上传"
           select_component: "选择一个组件…"
           unsaved_changes_alert: "您尚未保存变更，要舍弃变更并继续吗？"
-          unsaved_parent_themes: "您尚未将组件分配给主题，要继续吗？"
+          unsaved_parent_themes: "您尚未将此组件添加到任何主题中，因此它不会显示在任何地方。您仍然要离开吗？"
           discard: "舍弃"
+          leave: "离开"
           stay: "保留"
           css_html: "自定义代码"
           edit_css_html: "编辑代码"
@@ -8766,12 +8778,16 @@ zh_CN:
           previous_value: "上一个"
           new_value: "新"
           show: "显示"
+          scheduled_duration: "计划时长"
+          scheduled_expiry: "预定到期日"
+          indefinite: "无限期"
           modal_title: "详细信息"
           no_previous: "没有之前的值。"
           deleted: "没有新值。记录已被删除。"
           filter_date_time: "筛选日期和时间"
           actions:
             permanently_delete_post_revisions: "永久删除帖子修订"
+            mcp_client_updated: "更新 MCP OAuth 客户端"
             delete_user: "删除用户"
             change_trust_level: "更改信任级别"
             change_username: "更改用户名"
@@ -8898,6 +8914,9 @@ zh_CN:
             configure_category_type: "配置类别类型"
             unconfigure_category_type: "取消配置类别类型"
             change_access_control_list_permissions: "更改访问控制列表权限"
+            add_access_control_list_owner: "添加访问控制列表所有者"
+            remove_access_control_list_owner: "移除访问控制列表所有者"
+            assume_access_control_ownership: "接管访问控制所有权"
             admin_onboarding_step_completed: "完成管理员入门步骤"
             admin_onboarding_completed: "完成管理员入门"
             admin_onboarding_dismissed: "忽略管理员入门"

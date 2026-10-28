@@ -44,6 +44,13 @@ te:
         type: "రకం"
         error: "లోపం"
         response: "ప్రతిస్పందన"
+      discourse_workflows:
+        classify:
+          text: "వచనం"
+          upload_ids: "చిత్రాలు"
+          name: "పేరు"
+          type: "రకం"
+          type_score: "స్కోర్"
       ai_tool_approval:
         loading: "లోడవుతోంది..."
         tool: "చర్య"
@@ -66,6 +73,8 @@ te:
         filters:
           all: "అన్నీ"
           reset: "రీసెట్ చేయండి"
+        sentiment:
+          enabled: "ప్రారంభించబడింది"
         search:
           name: "శోధించండి"
         image_caption:
@@ -183,6 +192,11 @@ te:
         edit: "సవరించండి"
         delete: "తొలగించు"
         embedding: "పొందుపరచడం"
+      decision_models:
+        no_preset: "ఏదీ లేదు"
+        display_name: "పేరు"
+        edit: "సవరించండి"
+        delete: "తొలగించు"
       mcp_servers:
         name: "పేరు"
         description: "వివరణ"
@@ -194,6 +208,13 @@ te:
         delete: "తొలగించండి"
         tools_modal:
           required: "అవసరం"
+      models:
+        name: "పేరు"
+        type: "రకం"
+        edit: "సవరించండి"
+        select_type: "ఎంచుకోండి"
+        types:
+          embedding: "పొందుపరచడం"
       llms:
         display_name: "పేరు"
         vision_modes:
@@ -240,6 +261,13 @@ te:
         providers:
           google: "గూగుల్"
           fake: "అనుకూల"
+      ai_artifact:
+        editor:
+          version: "సంస్కరణ"
+          default: "అప్రమేయ"
+          apply: "దరఖాస్తు చేసుకోండి"
+        share: "షేర్ చేయండి"
+        filter_all: "అన్నీ"
       ai_bot:
         debug_ai_modal:
           duration_label: "వ్యవధి:"
@@ -263,6 +291,13 @@ te:
             tag: "ట్యాగ్"
           table:
             total_count: "మొత్తం"
+      ai_search:
+        related_replies:
+          one: "%{count} ప్రత్యుత్తరం"
+          other: "%{count} ప్రత్యుత్తరాలు"
+        tabs:
+          topics: "విషయాలు"
+          messages: "సందేశాలు"
       discobot_discoveries:
         legacy:
           regular_results: "విషయాలు"

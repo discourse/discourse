@@ -21,6 +21,8 @@ export default class ConfirmSession extends Component {
   @service siteSettings;
 
   @tracked errorMessage;
+
+  /** @type {string | null} */
   @tracked resetEmailSent = null;
   @tracked isLoading = false;
 

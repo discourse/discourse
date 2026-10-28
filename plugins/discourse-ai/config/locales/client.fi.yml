@@ -172,6 +172,12 @@ fi:
       discourse_workflows:
         ai_agent:
           mode: "Tila"
+        classify:
+          text: "Teksti"
+          upload_ids: "Kuvat"
+          name: "Nimi"
+          type: "Tyyppi"
+          type_score: "Arvo"
       ai_tool_approval:
         loading: "Ladataan..."
         tool: "Toiminto"
@@ -181,7 +187,7 @@ fi:
         approved: "Hyväksytty"
         rejected: "Hylätty"
       default_llm:
-        title: "Oletusarvoinen LLM-malli"
+        title: "Oletuskielimalli"
       llm_selector:
         none: "Ei valittu"
       features:
@@ -194,6 +200,7 @@ fi:
         no_llm: "LLM:ää ei ole valittu"
         no_agent: "Ei asetettu"
         no_groups: "Ei valittu"
+        classification_model: "Malli:"
         edit: "Asetukset"
         expand_list:
           one: "(%{count} muuta)"
@@ -210,6 +217,13 @@ fi:
           no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."
           reset: "Palauta"
         no_automations: "Automaatioita ei ole vielä"
+        sentiment:
+          sentiment: "Sävy"
+          emotion: "Tunne"
+          enabled: "Käytössä"
+          setting_groups:
+            sentiment: "Sävy"
+            emotion: "Tunne"
         summarization:
           name: "Yhteenvedot"
           description: "Tarjoaa yhteenvetopainikkeen, jonka avulla kävijät voivat tehdä yhteenvetoja aiheita"
@@ -573,6 +587,14 @@ fi:
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      decision_models:
+        no_preset: "Ei valittu"
+        display_name: "Nimi"
+        model: "Malli"
+        provider: "Palveluntarjoaja"
+        edit: "Muokkaa"
+        delete: "Poista"
+        test: "Suorita testi"
       mcp_servers:
         name: "Nimi"
         description: "Kuvaus"
@@ -590,6 +612,18 @@ fi:
         tools_modal:
           parameters: "Parametrit"
           required: "Pakollinen"
+      models:
+        new: "Uusi malli"
+        name: "Nimi"
+        type: "Tyyppi"
+        provider: "Palveluntarjoaja"
+        edit: "Muokkaa"
+        select_type: "Valitse"
+        types:
+          embedding: "Upottaminen"
+        filters:
+          all: "Kaikki tyypit"
+          reset: "Palauta suodattimet"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"
@@ -802,9 +836,23 @@ fi:
         quick_search:
           suffix: "kaikissa ketjuissa ja viesteissä tekoälyllä"
       ai_artifact:
+        editor:
+          version: "Versio"
+          default: "Oletus"
+          option_on: "Käytössä"
+          option_off: "Pois käytöstä"
+          apply: "Käytä"
         expand_view_label: "Laajenna näkymä"
         collapse_view_label: "Poistu koko näytön tilasta (Esc- tai Takaisin-painike)"
         click_to_run_label: "Suorita artefakti"
+        share: "Jaa"
+        create_link: "Luo linkki"
+        copied: "Kopioitiin leikepöydälle"
+        copy_link: "Kopioi linkki"
+        copy_embed: "Kopioi upotus"
+        new_tab: "Näytä uudessa välilehdessä"
+        filter_all: "Kaikki"
+        filter_standalone: "Erillinen"
       ai_bot:
         title: "Tekoälybotti"
         llm: "Malli:"
@@ -915,6 +963,15 @@ fi:
             compact: "Kompakti"
             expanded: "Laajennettu"
             expanded_description: "tekoäly-yhteenvedoilla"
+      ai_search:
+        related_topics: "Liittyvät ketjut"
+        related_replies:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+        tabs:
+          ask: "Kysy tekoälyltä"
+          topics: "Aiheet"
+          messages: "Viestit"
       discobot_discoveries:
         main_title: "Kysy tekoälyltä"
         loading_convo: "Ladataan keskustelua"

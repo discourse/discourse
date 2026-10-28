@@ -3,17 +3,19 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { deepEqual } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import WorkflowEditorSession from "../../../lib/workflows/editor-session";
+import WorkflowEditorSession from "../../../lib/workflows/editor-session.js";
 import {
   connectionMatchesEndpoint,
   nextAvailableTargetInputIndex,
   normalizeSourceOutputIndex,
   portIndexFromKey,
-} from "../../../lib/workflows/graph-constants";
+} from "../../../lib/workflows/graph-constants.js";
 import {
   nodeTypeInputUsesConnectionIndexes,
   nodeTypeLabel,
@@ -22,28 +24,28 @@ import {
   nodeTypeVersion,
   resolveNodeTypeVersion,
   typeVersionForNode,
-} from "../../../lib/workflows/node-types";
-import { mergeImportedStaticData } from "../../../lib/workflows/static-data";
-import { workflowNodeUrl, workflowUrl } from "../../../lib/workflows/urls";
-import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note";
-import { deserializeConnections } from "../../../models/workflow-connection";
-import WorkflowNode from "../../../models/workflow-node";
-import WorkflowCanvas from "../canvas";
-import NodePanel from "../canvas/node-panel";
-import NodeConfigurator from "../node/configurator";
+} from "../../../lib/workflows/node-types.js";
+import { mergeImportedStaticData } from "../../../lib/workflows/static-data.js";
+import { workflowNodeUrl, workflowUrl } from "../../../lib/workflows/urls.js";
+import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note.js";
+import { deserializeConnections } from "../../../models/workflow-connection.js";
+import WorkflowNode from "../../../models/workflow-node.js";
+import WorkflowCanvas from "../canvas/index.gjs";
+import NodePanel from "../canvas/node-panel.gjs";
+import NodeConfigurator from "../node/configurator.gjs";
 import {
   LOOP_NODE_TYPE,
   normalizeConnectionsForNodes,
   normalizeNodeConfiguration,
   removeNodesFromGraph,
-} from "./graph-utils";
+} from "./graph-utils.js";
 import {
   createNode,
   defaultNodeName,
   takenNodeNames,
   uniqueNodeName,
-} from "./node-factory";
-import UndoManager from "./undo-manager";
+} from "./node-factory.js";
+import UndoManager from "./undo-manager.js";
 
 const MAX_NODES = 50;
 
@@ -157,13 +159,13 @@ export default class WorkflowsEditor extends Component {
   ignoreDirty = () => false;
   undoManager = new UndoManager();
   currentSavePromise = null;
-  pendingGraphSnapshot = null;
   pendingSaveOptions = null;
   initialNodeHandled = false;
   workflowSession = new WorkflowEditorSession({
     workflowId: this.args.workflow?.id,
     lastExecutionRunData: this.args.workflow?.lastExecutionRunData || null,
     pinData: this.args.workflow?.pinData || {},
+    variables: this.args.workflow?.variables || [],
   });
 
   formData = {
@@ -514,6 +516,7 @@ export default class WorkflowsEditor extends Component {
               options
             ),
           onRemove: () => this.removeNodes([clientId]),
+          onUpgrade: () => this.upgradeNode(clientId),
         },
       })
       .finally(() => {
@@ -680,6 +683,7 @@ export default class WorkflowsEditor extends Component {
       position,
       {
         typeVersion: nodeTypeVersion(nodeType),
+        nodeTypes: this.workflowsNodeTypes.nodeTypes,
         configOverrides,
       }
     );
@@ -781,6 +785,30 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
+  async upgradeNode(clientId) {
+    const nodes = this.formApi
+      .get("nodes")
+      .map((n) =>
+        n.clientId === clientId
+          ? { ...n, typeVersion: nodeTypeVersion(this.#nodeTypeFor(n)) }
+          : n
+      );
+    this.formApi.set("nodes", nodes);
+
+    try {
+      await this.handleSubmit({ throwOnError: true });
+    } catch {
+      return;
+    }
+
+    if (this.isDestroying) {
+      return;
+    }
+
+    this.editNode(clientId);
+  }
+
+  @action
   replaceTrigger(clientId, nodeType) {
     this.#captureUndo();
     const existingNodes = this.formApi.get("nodes");
@@ -790,6 +818,7 @@ export default class WorkflowsEditor extends Component {
       null,
       {
         typeVersion: nodeTypeVersion(nodeType),
+        nodeTypes: this.workflowsNodeTypes.nodeTypes,
       }
     );
 
@@ -810,7 +839,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  importNodes(newNodes, newConnections, newStickyNotes, staticData) {
+  importNodes(newNodes, newConnections, newStickyNotes, staticData, variables) {
     const existingNodes = this.formApi.get("nodes");
     if (!this.#canAddNodes(newNodes.length, existingNodes)) {
       return;
@@ -848,7 +877,7 @@ export default class WorkflowsEditor extends Component {
       );
     }
 
-    this.handleSubmit(saveOptions);
+    this.#saveThenImportVariables(saveOptions, variables);
   }
 
   @action
@@ -1049,11 +1078,10 @@ export default class WorkflowsEditor extends Component {
   async handleSubmit(options = {}) {
     if (this.saving) {
       if (options.throwOnError) {
-        await this.currentSavePromise;
+        await this.currentSavePromise?.catch(() => {});
         return this.handleSubmit(options);
       } else {
         this.pendingSave = true;
-        this.pendingGraphSnapshot = this.#captureGraphSnapshot();
         this.pendingSaveOptions = this.#mergePendingSaveOptions(
           this.pendingSaveOptions,
           options
@@ -1076,7 +1104,6 @@ export default class WorkflowsEditor extends Component {
   @action
   replaceWorkflow(workflow) {
     this.pendingSave = false;
-    this.pendingGraphSnapshot = null;
     this.pendingSaveOptions = null;
 
     this.args.workflow.setProperties({
@@ -1088,6 +1115,7 @@ export default class WorkflowsEditor extends Component {
       versionCounter: workflow.version_counter,
       hasUnpublishedChanges: workflow.has_unpublished_changes,
       settings: workflow.settings || {},
+      variables: workflow.variables || [],
       timezone: workflow.timezone,
       staticData: workflow.static_data || {},
       pinData: workflow.pin_data || {},
@@ -1372,6 +1400,7 @@ export default class WorkflowsEditor extends Component {
       position,
       {
         typeVersion: nodeTypeVersion(nodeType),
+        nodeTypes: this.workflowsNodeTypes.nodeTypes,
         configOverrides,
       }
     );
@@ -1440,6 +1469,49 @@ export default class WorkflowsEditor extends Component {
     );
   }
 
+  async #saveThenImportVariables(saveOptions, variables) {
+    try {
+      await this.handleSubmit({ ...saveOptions, throwOnError: true });
+    } catch {
+      return;
+    }
+
+    if (variables?.length) {
+      await this.#importVariables(variables);
+    }
+  }
+
+  async #importVariables(variables) {
+    try {
+      const response = await ajax(
+        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}/variables/import.json`,
+        {
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ variables }),
+        }
+      );
+      this.replaceWorkflow(response.workflow);
+
+      if (response.skipped_keys?.length) {
+        this.toasts.warning({
+          duration: "long",
+          data: {
+            message: i18n(
+              "discourse_workflows.canvas.import_variables_skipped",
+              {
+                count: response.skipped_keys.length,
+                keys: response.skipped_keys.join(", "),
+              }
+            ),
+          },
+        });
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
   async #saveWorkflow(options = {}) {
     this.saving = true;
     try {
@@ -1471,8 +1543,11 @@ export default class WorkflowsEditor extends Component {
         saveProperties.static_data = options.staticData;
       }
 
+      const sentGraph = this.#captureGraphSnapshot();
       await this.args.workflow.save(saveProperties);
-      this.#syncFromServer();
+      if (deepEqual(this.#captureGraphSnapshot(), sentGraph)) {
+        this.#syncFromServer();
+      }
 
       if (!this.isUndoRedo) {
         this.undoManager.commitAction(this.#captureGraphSnapshot());
@@ -1494,7 +1569,6 @@ export default class WorkflowsEditor extends Component {
     } finally {
       this.saving = false;
       if (this.pendingSave) {
-        const pendingSnapshot = this.pendingGraphSnapshot;
         const pendingOptions = this.pendingSaveOptions || {};
         if (
           options.staticData !== undefined &&
@@ -1506,11 +1580,7 @@ export default class WorkflowsEditor extends Component {
           );
         }
         this.pendingSave = false;
-        this.pendingGraphSnapshot = null;
         this.pendingSaveOptions = null;
-        if (pendingSnapshot) {
-          this.#applyGraphSnapshot(pendingSnapshot);
-        }
         this.handleSubmit(pendingOptions);
       }
     }

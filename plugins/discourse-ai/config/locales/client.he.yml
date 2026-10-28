@@ -208,6 +208,12 @@ he:
       discourse_workflows:
         ai_agent:
           mode: "מצב"
+        classify:
+          text: "טקסט"
+          upload_ids: "תמונות"
+          name: "שם"
+          type: "סוג"
+          type_score: "ניקוד"
       ai_tool_approval:
         loading: "בטעינה…"
         tool: "פעולה"
@@ -217,7 +223,7 @@ he:
         approved: "אושר"
         rejected: "נדחה"
       default_llm:
-        title: "מודל LLM/מש״ג ברירת מחדל"
+        title: "מודל שפה כברירת מחדל"
       llm_selector:
         none: "ללא"
       features:
@@ -231,6 +237,7 @@ he:
         no_llm: "לא נבחר מש״ג/LLM"
         no_agent: "לא מוגדר"
         no_groups: "ללא"
+        classification_model: "מודל:"
         edit: "הגדרות"
         expand_list:
           one: "(עוד %{count})"
@@ -248,6 +255,13 @@ he:
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
         no_automations: "אין אוטומציות עדיין"
+        sentiment:
+          sentiment: "רגש"
+          emotion: "רגש"
+          enabled: "פעיל"
+          setting_groups:
+            sentiment: "רגש"
+            emotion: "רגש"
         summarization:
           name: "סיכומים"
           description: "להנגיש את כפתור הסיכום שמאפשר למבקרים לסכם נושאים"
@@ -633,6 +647,14 @@ he:
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      decision_models:
+        no_preset: "ללא"
+        display_name: "שם"
+        model: "מודל"
+        provider: "ספק"
+        edit: "עריכה"
+        delete: "מחיקה"
+        test: "הרצת בדיקה"
       mcp_servers:
         name: "שם"
         description: "תיאור"
@@ -650,6 +672,18 @@ he:
         tools_modal:
           parameters: "משתנים"
           required: "נדרש"
+      models:
+        new: "מודל חדש"
+        name: "שם"
+        type: "סוג"
+        provider: "ספק"
+        edit: "עריכה"
+        select_type: "בחירה"
+        types:
+          embedding: "שילוב (embedding)"
+        filters:
+          all: "כל הסוגים"
+          reset: "איפוס מסננים"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -866,9 +900,21 @@ he:
         quick_search:
           suffix: "בכל הנושאים והפוסטים עם בינה מלאכותית"
       ai_artifact:
+        editor:
+          version: "גרסה"
+          default: "ברירת מחדל"
+          apply: "החלה"
         expand_view_label: "הרחבת תצוגה"
         collapse_view_label: "יציאה ממסך מלא (כפתורי ESC או Back)"
         click_to_run_label: "הרצת תוצר"
+        share: "שיתוף"
+        create_link: "יצירת קישור"
+        copied: "הועתקה ללוח הגזירים"
+        copy_link: "העתקת קישור"
+        copy_embed: "העתקת הטמעה"
+        new_tab: "הצגה בלשונית חדשה"
+        filter_all: "הכול"
+        filter_standalone: "עצמאי"
       ai_bot:
         title: "בוט בינה מלאכותית"
         llm: "מודל:"
@@ -985,6 +1031,16 @@ he:
             compact: "מצומצם"
             expanded: "מורחב"
             expanded_description: "עם סיכוי בינה מלאכותית"
+      ai_search:
+        related_topics: "נושאים קשורים"
+        related_replies:
+          one: "תגובה"
+          two: "שתי תגובות"
+          other: "שתי תגובות"
+        tabs:
+          ask: "לשאול בינה מלאכותית"
+          topics: "נושאים"
+          messages: "הודעות"
       discobot_discoveries:
         main_title: "לשאול בינה מלאכותית"
         loading_convo: "הדיון נטען"

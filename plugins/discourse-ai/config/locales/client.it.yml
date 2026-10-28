@@ -172,6 +172,12 @@ it:
       discourse_workflows:
         ai_agent:
           mode: "Modalità"
+        classify:
+          text: "Testo"
+          upload_ids: "Immagini"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Punteggio"
       ai_tool_approval:
         loading: "In caricamento..."
         tool: "Azione"
@@ -181,7 +187,7 @@ it:
         approved: "Approvato"
         rejected: "Rifiutata"
       default_llm:
-        title: "Modello LLM predefinito"
+        title: "Modello linguistico predefinito"
       llm_selector:
         none: "Nessuna"
       features:
@@ -194,6 +200,7 @@ it:
         no_llm: "Nessun LLM selezionato"
         no_agent: "Non impostato"
         no_groups: "Nessuna"
+        classification_model: "Modello:"
         edit: "Impostazioni"
         expand_list:
           one: "(%{count} altro)"
@@ -210,6 +217,13 @@ it:
           no_results: "Nessuna funzionalità trovata per i filtri impostati."
           reset: "Annulla"
         no_automations: "Non ci sono ancora automazioni"
+        sentiment:
+          sentiment: "Sentimento"
+          emotion: "Emozione"
+          enabled: "Abilitato"
+          setting_groups:
+            sentiment: "Sentimento"
+            emotion: "Emozione"
         summarization:
           name: "Riepiloghi"
           description: "Rende disponibile un pulsante attraverso cui i visitatori possono ottenere un riepilogo degli argomenti"
@@ -573,6 +587,14 @@ it:
         delete: "Elimina"
         embedding: "Integrazione"
         tool: "Strumento"
+      decision_models:
+        no_preset: "Nessuna"
+        display_name: "Nome"
+        model: "Modello"
+        provider: "Fornitore"
+        edit: "Modifica"
+        delete: "Elimina"
+        test: "Esegui test"
       mcp_servers:
         name: "Nome"
         description: "Descrizione"
@@ -590,6 +612,18 @@ it:
         tools_modal:
           parameters: "Parametri"
           required: "Obbligatorie"
+      models:
+        new: "Nuovo modello"
+        name: "Nome"
+        type: "Tipo"
+        provider: "Fornitore"
+        edit: "Modifica"
+        select_type: "Seleziona"
+        types:
+          embedding: "Integrazione"
+        filters:
+          all: "Tutti i tipi"
+          reset: "Reimposta i filtri"
       llms:
         short_title: "LLM"
         no_llms: "Ancora nessun LLM"
@@ -802,9 +836,23 @@ it:
         quick_search:
           suffix: "in tutti gli argomenti e i post con IA"
       ai_artifact:
+        editor:
+          version: "Versione"
+          default: "Predefinito"
+          option_on: "On"
+          option_off: "Off"
+          apply: "Applica"
         expand_view_label: "Espandi vista"
         collapse_view_label: "Esci dalla modalità a schermo intero (tasto ESC o Indietro)"
         click_to_run_label: "Esegui artefatto"
+        share: "Condividi"
+        create_link: "Crea link"
+        copied: "Copiato negli appunti"
+        copy_link: "Copia link"
+        copy_embed: "Copia incorporato"
+        new_tab: "Mostra in nuova scheda"
+        filter_all: "Tutte"
+        filter_standalone: "Evento autonomo"
       ai_bot:
         title: "Bot IA"
         llm: "Modello:"
@@ -915,6 +963,15 @@ it:
             compact: "Compatto"
             expanded: "Espanso"
             expanded_description: "con riepiloghi IA"
+      ai_search:
+        related_topics: "Argomenti correlati"
+        related_replies:
+          one: "%{count} risposta"
+          other: "%{count} risposte"
+        tabs:
+          ask: "Chiedi all'IA"
+          topics: "Argomenti"
+          messages: "Messaggi"
       discobot_discoveries:
         main_title: "Chiedi all'IA"
         loading_convo: "Caricamento conversazione"

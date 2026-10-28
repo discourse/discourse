@@ -7,12 +7,21 @@ if defined?(DiscourseWorkflows)
         CARD_PROPERTIES = JSON.parse(<<~JSON).freeze
           {
             "id": { "type": "integer" },
-            "title": { "type": "string" },
+            "title": { "type": ["string", "null"] },
             "unicode_title": { "type": "string" },
             "board_id": { "type": "integer" },
             "column_id": { "type": "integer" },
             "assigned_to_id": { "type": ["integer", "null"] },
-            "topic_id": { "type": ["integer", "null"] }
+            "topic_id": { "type": ["integer", "null"] },
+            "url": { "type": "string" }
+          }
+        JSON
+
+        BOARD_PROPERTIES = JSON.parse(<<~JSON).freeze
+          {
+            "id": { "type": "integer" },
+            "name": { "type": "string" },
+            "url": { "type": "string" }
           }
         JSON
 
@@ -51,19 +60,34 @@ if defined?(DiscourseWorkflows)
         CARD_SCHEMA =
           DiscourseWorkflows::Schema.entity(
             "card",
-            CARD_PROPERTIES,
+            CARD_PROPERTIES.merge("assignee" => DiscourseWorkflows::Schema::ASSIGNEE_PROPERTIES),
             "Card, with board and column details",
           )
+
+        BOARD_SCHEMA = DiscourseWorkflows::Schema.entity("board", BOARD_PROPERTIES, "Board")
 
         ACTING_USER_SCHEMA =
           DiscourseWorkflows::Schema.entity(
             "acting_user",
-            DiscourseWorkflows::Schema::BASIC_USER_PROPERTIES,
+            DiscourseWorkflows::Schema::USER_PROPERTIES,
             "User who moved the card",
           )
 
         CARD_MOVED_OUTPUT_SCHEMA =
-          DiscourseWorkflows::Schema.merge(CARD_SCHEMA, CARD_MOVED_SCHEMA, ACTING_USER_SCHEMA)
+          DiscourseWorkflows::Schema.merge(
+            CARD_SCHEMA,
+            BOARD_SCHEMA,
+            CARD_MOVED_SCHEMA,
+            ACTING_USER_SCHEMA,
+          )
+
+        CARD_MOVED_V2_OUTPUT_SCHEMA =
+          DiscourseWorkflows::Schema.merge(
+            CARD_SCHEMA,
+            BOARD_SCHEMA,
+            CARD_MOVED_SCHEMA,
+            DiscourseWorkflows::Schema::ACTOR_SCHEMA,
+          )
       end
     end
   end

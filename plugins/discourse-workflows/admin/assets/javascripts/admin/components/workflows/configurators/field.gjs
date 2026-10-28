@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { eq } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
-import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
+import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry.js";
+import { fieldValidator } from "../../../lib/workflows/field-validators.js";
 import {
   fieldControl,
   fieldFormat,
@@ -13,35 +12,12 @@ import {
   fieldSupportsExpression,
   fieldType,
   findNodeType,
-  isExpression,
   propertyDescription,
   propertyDynamicValueHint,
   propertyLabel,
   propertyPlaceholder,
   propertyTooltip,
-} from "../../../lib/workflows/property-engine";
-
-const CRON_FIELD_PATTERN =
-  /^(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+)(,(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+))*$/;
-
-function isValidCron(value) {
-  if (!value || typeof value !== "string") {
-    return false;
-  }
-  const fields = value.trim().split(/\s+/);
-  return fields.length === 5 && fields.every((f) => CRON_FIELD_PATTERN.test(f));
-}
-
-const FIELD_VALIDATORS = {
-  cron: (name, value, { addError }) => {
-    if (value && !isExpression(value) && !isValidCron(value)) {
-      addError(name, {
-        title: i18n("discourse_workflows.schedule.cron"),
-        message: i18n("discourse_workflows.schedule.cron_invalid"),
-      });
-    }
-  },
-};
+} from "../../../lib/workflows/property-engine.js";
 
 export default class Field extends Component {
   get control() {
@@ -103,7 +79,10 @@ export default class Field extends Component {
   }
 
   get placeholder() {
-    return propertyPlaceholder(this.nodeDefinition, this.args.fieldName);
+    return (
+      this.args.placeholder ??
+      propertyPlaceholder(this.nodeDefinition, this.args.fieldName)
+    );
   }
 
   get showLabel() {
@@ -140,7 +119,7 @@ export default class Field extends Component {
   }
 
   get customValidation() {
-    return FIELD_VALIDATORS[this.args.schema?.validate];
+    return fieldValidator(this.args.schema, this.fieldTitle);
   }
 
   get fieldDescription() {
@@ -197,10 +176,12 @@ export default class Field extends Component {
         @nodes={{@nodes}}
         @nodeTypes={{@nodeTypes}}
         @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+        @onChange={{@onChange}}
         @onSet={{@onSet}}
         @schema={{@schema}}
         @session={{@session}}
         @showOptional={{this.showOptional}}
+        @validate={{this.customValidation}}
       />
     {{else}}
       <@form.Field

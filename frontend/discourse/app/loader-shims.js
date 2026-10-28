@@ -80,7 +80,6 @@ loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("jquery", () => importSync("jquery"));
-loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
 loaderShim("discourse/truth-helpers", () =>
@@ -119,7 +118,7 @@ loaderShim("truth-helpers/helpers/or", () =>
 );
 loaderShim("xss", () => importSync("xss"));
 loaderShim("ember-this-fallback/deprecations-helper", () =>
-  importSync("./lib/ember-this-fallback-deprecation-helper")
+  importSync("./lib/ember-this-fallback-deprecation-helper.js")
 );
 loaderShim("pretty-text/allow-lister", () =>
   importSync("pretty-text/allow-lister")
@@ -172,17 +171,17 @@ loaderShim("discourse/modifiers/will-destroy", () =>
   importSync("@ember/render-modifiers/modifiers/will-destroy")
 );
 loaderShim("ember-this-fallback/deprecations-helper", () =>
-  importSync("./lib/ember-this-fallback/deprecations-helper")
+  importSync("./lib/ember-this-fallback/deprecations-helper.js")
 );
 loaderShim("ember-this-fallback/is-component", () =>
-  importSync("./lib/ember-this-fallback/is-component")
+  importSync("./lib/ember-this-fallback/is-component.js")
 );
 loaderShim("ember-this-fallback/this-fallback-helper", () =>
-  importSync("./lib/ember-this-fallback/this-fallback-helper")
+  importSync("./lib/ember-this-fallback/this-fallback-helper.js")
 );
 loaderShim("ember-this-fallback/try-lookup-helper", () =>
-  importSync("./lib/ember-this-fallback/try-lookup-helper")
+  importSync("./lib/ember-this-fallback/try-lookup-helper.js")
 );
 loaderShim("ember-buffered-proxy/proxy", () =>
-  importSync("./lib/buffered-proxy")
+  importSync("./lib/buffered-proxy.js")
 );

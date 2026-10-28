@@ -64,6 +64,12 @@ ro:
       discourse_workflows:
         ai_agent:
           mode: "Mod"
+        classify:
+          text: "Text"
+          upload_ids: "Imagini"
+          name: "Nume"
+          type: "Tip"
+          type_score: "Scor"
       ai_tool_approval:
         loading: "Se încarcă..."
         tool: "Acțiune"
@@ -72,8 +78,6 @@ ro:
         reject: "Respingere"
         approved: "Aprobat"
         rejected: "Respins"
-      default_llm:
-        title: "Model LLM implicit"
       llm_selector:
         none: "Nimic"
       features:
@@ -91,6 +95,8 @@ ro:
         filters:
           all: "Toate"
           reset: "Resetare"
+        sentiment:
+          enabled: "Activate"
         search:
           name: "Caută"
         image_caption:
@@ -248,6 +254,13 @@ ro:
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      decision_models:
+        no_preset: "Nimic"
+        display_name: "Nume"
+        provider: "Furnizor"
+        edit: "Editează"
+        delete: "Șterge"
+        test: "Rulează test"
       mcp_servers:
         name: "Nume"
         description: "Descriere"
@@ -260,6 +273,16 @@ ro:
         delete: "Șterge"
         tools_modal:
           required: "Obligatoriu"
+      models:
+        name: "Nume"
+        type: "Tip"
+        provider: "Furnizor"
+        edit: "Editează"
+        types:
+          embedding: "Înglobare"
+        filters:
+          all: "Toate tipurile"
+          reset: "Resetează filtre"
       llms:
         display_name: "Nume"
         provider: "Furnizor"
@@ -319,6 +342,15 @@ ro:
         providers:
           google: "Google"
           fake: "Personalizat"
+      ai_artifact:
+        editor:
+          version: "Versiune"
+          default: "Implicit"
+          apply: "Aplică"
+        share: "Partajează"
+        create_link: "Creează legătură"
+        copy_link: "Copiază legătură"
+        filter_all: "Toate"
       ai_bot:
         try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
@@ -350,6 +382,14 @@ ro:
           title: "Rezumați mesajele"
           description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
           summarize: "Rezumat"
+      ai_search:
+        related_replies:
+          one: "%{count} răspuns"
+          few: "%{count} de răspunsuri"
+          other: "%{count} răspunsuri"
+        tabs:
+          topics: "Discuții"
+          messages: "Mesaje"
       discobot_discoveries:
         user_setting: "Activează descoperirile de căutare IA"
         legacy:

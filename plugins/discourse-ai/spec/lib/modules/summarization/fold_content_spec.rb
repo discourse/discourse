@@ -15,15 +15,27 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
 
   describe "#summarize" do
     before do
-      # Make sure each content fits in a single chunk.
-      # 700 is the number of tokens reserved for the prompt.
-      model_tokens =
-        700 +
-          DiscourseAi::Tokenizer::OpenAiTokenizer.size(
-            "(1 #{post_1.user.username_lower} said: This is a text ",
-          ) + 3
-
-      llm_model.update!(max_prompt_tokens: model_tokens)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: summarizer.strategy.as_llm_messages(summarizer.strategy.targets_data),
+        )
+      prompt = summarizer.bot.agent.craft_prompt(context, llm: summarizer.bot.llm)
+      response_format =
+        if summarizer.bot.agent.response_format.present?
+          DiscourseAi::Agents::Bot.build_json_schema(summarizer.bot.agent.response_format)
+        end
+      input_tokens, _, output_tokens =
+        summarizer.bot.llm.prompt_capacity(
+          prompt,
+          max_tokens: 64,
+          max_tokens_is_total: true,
+          response_format:,
+        )
+      llm_model.update!(
+        max_prompt_tokens: input_tokens + output_tokens + 128,
+        max_output_tokens: 64,
+      )
     end
 
     let(:summary) { "this is a summary" }
@@ -32,11 +44,68 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
 
     it "summarizes the content" do
       result =
-        DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do |spy|
-          summarizer.summarize(user).tap { expect(spy.completions).to eq(1) }
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do |spy, _, prompts|
+          summarizer
+            .summarize(user)
+            .tap do
+              expect(spy.completions).to eq(1)
+              expect(prompts.first.messages.to_s).to include(post_1.raw)
+            end
         end
 
       expect(result.summarized_text).to eq(summary)
+    end
+
+    it "fits the serialized prompt when post text expands during JSON encoding" do
+      SiteSetting.ai_summarization_agent = Fabricate(:ai_agent).id
+      bounded_summarizer = DiscourseAi::Summarization.topic_summary(topic)
+      oversized_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          post_number: 2,
+          raw: "A post with whitespace #{"\n" * 2000}end",
+        )
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: bounded_summarizer.strategy.as_llm_messages([]),
+        )
+      prompt = bounded_summarizer.bot.agent.craft_prompt(context, llm: bounded_summarizer.bot.llm)
+      input_tokens, _, output_tokens =
+        bounded_summarizer.bot.llm.prompt_capacity(
+          prompt,
+          max_tokens: 256,
+          max_tokens_is_total: true,
+        )
+      llm_model.update!(
+        max_prompt_tokens: input_tokens + output_tokens + 384,
+        max_output_tokens: 256,
+      )
+
+      bounded_summarizer.bot.llm.llm_model.reload
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do |spy, _, prompts|
+          bounded_summarizer
+            .summarize(user)
+            .tap do
+              expect(spy.completions).to eq(1)
+              content = prompts.first.messages.last[:content]
+              expect(content).to include(post_1.raw)
+              expect(content).not_to include(oversized_post.raw)
+            end
+        end
+
+      expect(result.summarized_text).to eq(summary)
+    end
+
+    it "rejects a model context that cannot fit the summary instructions" do
+      summarizer.bot.llm.llm_model.update!(max_prompt_tokens: 1)
+
+      expect { summarizer.summarize(user) }.to raise_error(
+        DiscourseAi::Completions::ContextPreparation::Error,
+      ) { |error| expect(error.reason).to eq("hard_overflow") }
+      expect(AiSummary.where(target: topic)).to be_empty
     end
 
     it "lets a forced-tool gist inspect delegated images before setting the summary" do

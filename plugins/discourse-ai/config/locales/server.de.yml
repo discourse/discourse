@@ -63,7 +63,6 @@ de:
   site_settings:
     discourse_ai_enabled: "Aktiviere das Discourse-KI-Plug-in."
     enable_ai_bot_starred_conversations: "Ermögliche es Benutzern, Unterhaltungen mit KI-Bots mit einem Sternchen zu markieren und diese in einem dazugehörigen Bereich in der Seitenleiste anzuzeigen."
-    ai_default_llm_model: "Das Standard-LLM-Modell, das für alle KI-Funktionen verwendet wird"
     ai_artifact_security: "Das KI-Artefaktsystem generiert IFRAMEs mit ausführbarem Code. Der strikte Modus erfordert einen zusätzlichen Klick zum Ausführen des Codes. Der laxe Modus führt Code sofort aus. Im Hybridmodus kann der Benutzer data-ai-artifact-autorun angeben, um den Code sofort anzuzeigen. Der deaktivierte Modus deaktiviert das Artefaktsystem."
     ai_toxicity_enabled: "Aktiviere das Toxizitätsmodul."
     ai_toxicity_inference_service_api_endpoint: "URL, unter der die API für das Toxizitätsmodul läuft"
@@ -78,15 +77,12 @@ de:
     ai_toxicity_flag_threshold_threat: "Bedrohung"
     ai_toxicity_flag_threshold_sexual_explicit: "Sexuell explizit"
     ai_toxicity_groups_bypass: "Die Beiträge von Benutzern in diesen Gruppen werden nicht durch das Toxizitätsmodul eingestuft."
-    ai_sentiment_enabled: "Aktiviere das Stimmungsmodul."
     ai_sentiment_inference_service_api_endpoint: "URL, unter der die API für das Stimmungsmodul läuft"
     ai_sentiment_inference_service_api_key: "API-Schlüssel für die Stimmungsmodul-API"
     ai_sentiment_model_configs: "Endpunkte des Klassifikationsmodells, die für die Inferenz verwendet werden sollen. Bei der Stimmungsanalyse werden Beiträge als positiv, neutral oder negativ klassifiziert. Bei der Emotionsanalyse werden Beiträge anhand der unterstützten Emotionsbezeichnungen klassifiziert."
     ai_sentiment_models: "Endpunkte des Klassifikationsmodells, die für die Inferenz verwendet werden sollen. Bei der Stimmungsanalyse werden Beiträge als positiv, neutral oder negativ klassifiziert. Bei der Emotionsanalyse werden Beiträge anhand der unterstützten Emotionsbezeichnungen klassifiziert."
     ai_sentiment_sentiment_classification_strategy: "Backend für die Stimmungsklassifizierung."
-    ai_sentiment_sentiment_agent: "Agent, der für die Stimmungsklassifizierung verwendet werden soll, wenn das Stimmungs-Backend „Agent“ ist."
     ai_sentiment_emotion_classification_strategy: "Backend für die Emotionsklassifizierung."
-    ai_sentiment_emotion_agent: "Agent, der für die Emotionsklassifizierung verwendet werden soll, wenn das Emotions-Backend „Agent“ ist."
     ai_nsfw_detection_enabled: "Aktiviere das NSFW-Modul."
     ai_nsfw_inference_service_api_endpoint: "URL, unter der die API für das NSFW-Modul läuft"
     ai_nsfw_inference_service_api_key: "API-Schlüssel für die NSFW-API"
@@ -134,7 +130,6 @@ de:
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
     ai_summary_gists_agent: "Agent, der zur Erstellung kurzer Themenzusammenfassungen verwendet wird. Bei der Erstellung von Zusammenfassungen wird immer das integrierte Tool „final-summary“ verwendet; andere auf dem Agenten konfigurierte Tools und strukturierte Antwortformate werden ignoriert."
-    ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde rückwirkend ergänzt werden sollen. Jede lokalisierte Zusammenfassung zählt zu diesem Limit."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
@@ -173,93 +168,64 @@ de:
       description: "Dieser Bericht enthält eine Stimmungsanalyse für Beiträge, gruppiert nach Kategorie, mit positiven, negativen und neutralen Bewertungen für jeden Beitrag und jede Kategorie."
     overall_sentiment:
       title: "Allgemeine Stimmung"
-      description: "Das Diagramm vergleicht die Anzahl der Beiträge, die entweder als positiv oder negativ eingestuft wurden. Diese werden ermittelt, wenn die positiven oder negativen Werte den festgelegten Schwellenwert überschreiten. Das bedeutet, dass neutrale Beiträge nicht angezeigt werden. Persönliche Nachrichten (PN) werden ebenfalls ausgeschlossen. Je nach ausgewählter Methode zur Stimmungsanalyse werden die Beiträge entweder mit dem konfigurierten Modell zur Stimmungsanalyse („cardiffnlp/twitter-roberta-base-sentiment-latest“) oder mit dem konfigurierten Agenten zur Stimmungsanalyse klassifiziert."
       xaxis: "Positiv (%)"
       yaxis: "Datum"
     emotion_admiration:
       title: "🤩 Bewunderung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Bewunderung“ klassifiziert wurden."
     emotion_amusement:
       title: "😄 Unterhaltung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Unterhaltung“ klassifiziert wurden."
     emotion_anger:
       title: "😠 Wut"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Wut“ klassifiziert wurden."
     emotion_annoyance:
       title: "😒 Ärgernis"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Ärgernis“ klassifiziert wurden."
     emotion_approval:
       title: "👍 Zustimmung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Zustimmung“ klassifiziert wurden."
     emotion_caring:
       title: "🤗 Fürsorge"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Fürsorge“ klassifiziert wurden."
     emotion_confusion:
       title: "😕 Verwirrung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Verwirrung“ klassifiziert wurden."
     emotion_curiosity:
       title: "🤔 Neugierde"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Neugierde“ klassifiziert wurden."
     emotion_desire:
       title: "😍 Wunsch"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Wunsch“ klassifiziert wurden."
     emotion_disappointment:
       title: "😞 Enttäuschung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Enttäuschung“ klassifiziert wurden."
     emotion_disapproval:
       title: "👎 Missbilligung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Missbilligung“ klassifiziert wurden."
     emotion_disgust:
       title: "🤢 Ekel"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Ekel“ klassifiziert wurden."
     emotion_embarrassment:
       title: "😳 Verlegenheit"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Verlegenheit“ klassifiziert wurden."
     emotion_excitement:
       title: "🤪 Aufregung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Aufregung“ klassifiziert wurden."
     emotion_fear:
       title: "😨 Furcht"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Furcht“ klassifiziert wurden."
     emotion_gratitude:
       title: "🙏 Dankbarkeit"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Dankbarkeit“ klassifiziert wurden."
     emotion_grief:
       title: "😢 Kummer"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Kummer“ klassifiziert wurden."
     emotion_joy:
       title: "😊 Freude"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Freude“ klassifiziert wurden."
     emotion_love:
       title: '❤️ Liebe'
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Liebe“ klassifiziert wurden."
     emotion_nervousness:
       title: "😰 Nervosität"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Nervosität“ klassifiziert wurden."
     emotion_neutral:
       title: "😐 Neutral"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Neutral“ klassifiziert wurden."
     emotion_optimism:
       title: "🌟 Optimismus"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Optimismus“ klassifiziert wurden."
     emotion_pride:
       title: "🦁 Stolz"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Stolz“ klassifiziert wurden."
     emotion_realization:
       title: "💡 Realisierung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Realisierung“ klassifiziert wurden."
     emotion_relief:
       title: "😌 Erleichterung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Erleichterung“ klassifiziert wurden."
     emotion_remorse:
       title: "😔 Reue"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Reue“ klassifiziert wurden."
     emotion_sadness:
       title: "😭 Traurigkeit"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Traurigkeit“ klassifiziert wurden."
     emotion_surprise:
       title: "😲 Überraschung"
-      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Überraschung“ klassifiziert wurden."
   discourse_ai:
     ai_artifact:
       errors:
@@ -426,6 +392,28 @@ de:
       read_post:
         unknown_post: "Beitrag"
       chat_tool_approval:
+        topic_states:
+          open: "Offen"
+          closed: "Geschlossen"
+          active: "Aktiv"
+          deleted: "Gelöscht"
+        solution_post: "Beitrag #%{number}"
+        duration_label: "Dauer:"
+        user_duration:
+          one: "%{count} Tag"
+          other: "%{count} Tage"
+        post_states:
+          locked: "Gesperrt"
+        posts_label: "Beiträge"
+        category_label: "Kategorie"
+        category_fields:
+          name: "Name"
+          description: "beschreibung"
+          color: "farbe"
+          text_color: "textfarbe"
+        approve_label: "Ja"
+        reject_label: "Nein"
+        empty_value: "Leer"
         approved: "Genehmigt von @%{username}."
         rejected: "Abgelehnt von @%{username}."
         failed: "Aktion konnte nicht abgeschlossen werden: %{error}"
@@ -1031,8 +1019,8 @@ de:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
         model_test_failed: "Es ist uns nicht gelungen, mit diesem Modell eine Testeinbettung zu generieren. Überprüfe, ob es richtig konfiguriert ist."
-    secrets:
-      delete_failed_in_use: "Diese Anmeldedaten werden derzeit von einem oder mehreren LLM, Einbettungen oder Tools verwendet und können nicht gelöscht werden."
+    decision_models:
+      secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht"
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
       invalid_provider_param: "%{param} hat ein ungültiges Format"

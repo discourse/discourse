@@ -1,5 +1,6 @@
 import { setOwner } from "@ember/owner";
-import UppyUploadDebugging from "./upload-debugging";
+import deprecated from "discourse/lib/deprecated";
+import UppyUploadDebugging from "./upload-debugging.js";
 
 /**
  * Use this class whenever you need to upload files or images
@@ -10,31 +11,16 @@ import UppyUploadDebugging from "./upload-debugging";
  * - UppyMediaOptimization
  * - UppyChecksum
  *
- * Once installed with useUploadPlugin(PluginClass, opts), we track the following
- * status for every preprocessor plugin:
- *
- * - needProcessing - The total number of files that have been added to uppy that
- *                    will need to be run through the preprocessor plugins.
- * - activeProcessing - The number of files that are currently being processed,
- *                      which is determined by the preprocess-progress event.
- * - completeProcessing - The number of files that have completed being processed,
- *                        which is determined by the preprocess-complete event.
- * - allComplete - Whether all files have completed the preprocessing for the plugin.
- *
- * There is a caveat - you must call addNeedProcessing(data.fileIDs.length) when
- * handling the "upload" event with uppy, otherwise this mixin does not know how
- * many files need to be processed.
+ * Once installed with useUploadPlugin(PluginClass, opts), we track, for every
+ * preprocessor plugin, the files that still need to be run through it. Files
+ * are picked up from uppy's "upload" event; files removed from uppy
+ * mid-preprocessing stop being waited on, and late events for them are ignored.
  *
  * If you need to do something else on progress or completion of preprocessors,
  * hook into the onPreProcessProgress(callback) or onPreProcessComplete(callback, allCompleteCallback)
  * functions. Note the onPreProcessComplete function takes a second callback
  * that is fired only when _all_ of the files have been preprocessed for all
  * preprocessor plugins.
- *
- * A preprocessor is considered complete if the completeProcessing count is
- * equal to needProcessing, at which point the allComplete prop is set to true.
- * If all preprocessor plugins have allComplete set to true, then the allCompleteCallback
- * is called for onPreProcessComplete.
  *
  * To completely reset the preprocessor state for all plugins, call resetPreProcessors.
  *
@@ -43,7 +29,11 @@ import UppyUploadDebugging from "./upload-debugging";
 export default class UppyWrapper {
   debug;
   uppyInstance;
+
+  /** @type {Record<string, Set<string>>} pending file ids per preprocessor */
   #preProcessorStatus = {};
+  #allCompleteCallbacks = [];
+  #trackedInstance = null;
 
   constructor(owner) {
     setOwner(this, owner);
@@ -54,6 +44,8 @@ export default class UppyWrapper {
     if (!this.uppyInstance) {
       return;
     }
+
+    this.#trackUploads();
 
     if (!pluginClass.pluginId) {
       throw new Error(
@@ -79,28 +71,40 @@ export default class UppyWrapper {
     );
 
     if (pluginClass.pluginType === "preprocessor") {
-      this.#trackPreProcessorStatus(pluginClass.pluginId);
+      this.#preProcessorStatus[pluginClass.pluginId] = new Set();
     }
   }
 
-  // NOTE: This and _onPreProcessComplete will need to be tweaked
+  // NOTE: This and onPreProcessComplete will need to be tweaked
   // if we ever add support for "determinate" preprocessors for uppy, which
   // means the progress will have a value rather than a started/complete
   // state ("indeterminate").
   //
   // See: https://uppy.io/docs/writing-plugins/#Progress-events
   onPreProcessProgress(callback) {
+    this.#trackUploads();
     this.uppyInstance.on("preprocess-progress", (file, progress, pluginId) => {
-      this.debug.log(`[${pluginId}] processing file ${file.name} (${file.id})`);
+      if (!this.#isPending(pluginId, file)) {
+        return;
+      }
 
-      this.#preProcessorStatus[pluginId].activeProcessing++;
+      this.debug.log(`[${pluginId}] processing file ${file.name} (${file.id})`);
 
       callback(file);
     });
   }
 
   onPreProcessComplete(callback, allCompleteCallback = null) {
+    this.#trackUploads();
+    if (allCompleteCallback) {
+      this.#allCompleteCallbacks.push(allCompleteCallback);
+    }
+
     this.uppyInstance.on("preprocess-complete", (file, skipped, pluginId) => {
+      if (!this.#isPending(pluginId, file)) {
+        return;
+      }
+
       this.debug.log(
         `[${pluginId}] ${skipped ? "skipped" : "completed"} processing file ${
           file.name
@@ -109,76 +113,73 @@ export default class UppyWrapper {
 
       callback(file);
 
-      this.#completePreProcessing(pluginId, (allComplete) => {
-        if (allComplete) {
-          this.debug.log("[uppy] All upload preprocessors complete!");
-          if (allCompleteCallback) {
-            allCompleteCallback();
-          }
-        }
-      });
+      this.#preProcessorStatus[pluginId].delete(file.id);
+      this.#notifyIfAllComplete();
     });
   }
 
   resetPreProcessors() {
     this.#eachPreProcessor((pluginId) => {
-      this.#preProcessorStatus[pluginId] = {
-        needProcessing: 0,
-        activeProcessing: 0,
-        completeProcessing: 0,
-        allComplete: false,
-      };
+      this.#preProcessorStatus[pluginId] = new Set();
     });
   }
 
-  addNeedProcessing(fileCount) {
-    this.#eachPreProcessor((pluginName, status) => {
-      status.needProcessing += fileCount;
-      status.allComplete = false;
-    });
+  addNeedProcessing() {
+    deprecated(
+      "`UppyWrapper#addNeedProcessing` is no longer needed; files are tracked from uppy's `upload` event.",
+      { id: "discourse.uppy-wrapper-add-need-processing", since: "2026.10.0" }
+    );
   }
 
-  #trackPreProcessorStatus(pluginId) {
-    this.#preProcessorStatus[pluginId] = {
-      needProcessing: 0,
-      activeProcessing: 0,
-      completeProcessing: 0,
-      allComplete: false,
-    };
+  // The wrapper outlives its Uppy instance, which is rebuilt whenever the
+  // editor is set up again, so tracking starts over for each instance.
+  #trackUploads() {
+    if (this.#trackedInstance === this.uppyInstance) {
+      return;
+    }
+    this.#trackedInstance = this.uppyInstance;
+    this.#preProcessorStatus = {};
+    this.#allCompleteCallbacks = [];
+
+    this.uppyInstance.on("upload", (uploadId, files) => {
+      this.#eachPreProcessor((pluginId, pendingFileIds) => {
+        files.forEach((file) => pendingFileIds.add(file.id));
+      });
+    });
+
+    this.uppyInstance.on("file-removed", (file) => {
+      let wasPending = false;
+      this.#eachPreProcessor((pluginId, pendingFileIds) => {
+        wasPending = pendingFileIds.delete(file.id) || wasPending;
+      });
+
+      // Removing the last file is a cancel-all, which consumers reset on themselves
+      if (wasPending && this.uppyInstance.getFiles().length > 0) {
+        this.#notifyIfAllComplete();
+      }
+    });
   }
 
   #eachPreProcessor(cb) {
-    for (const [pluginId, status] of Object.entries(this.#preProcessorStatus)) {
-      cb(pluginId, status);
+    for (const [pluginId, pendingFileIds] of Object.entries(
+      this.#preProcessorStatus
+    )) {
+      cb(pluginId, pendingFileIds);
     }
   }
 
-  #allPreprocessorsComplete() {
-    let completed = [];
-    this.#eachPreProcessor((pluginId, status) => {
-      completed.push(status.allComplete);
-    });
-    return completed.every(Boolean);
+  #isPending(pluginId, file) {
+    return !!file && !!this.#preProcessorStatus[pluginId]?.has(file.id);
   }
 
-  #completePreProcessing(pluginId, callback) {
-    const preProcessorStatus = this.#preProcessorStatus[pluginId];
-    preProcessorStatus.activeProcessing--;
-    preProcessorStatus.completeProcessing++;
+  #notifyIfAllComplete() {
+    const allComplete = Object.values(this.#preProcessorStatus).every(
+      (pendingFileIds) => pendingFileIds.size === 0
+    );
 
-    if (
-      preProcessorStatus.completeProcessing ===
-      preProcessorStatus.needProcessing
-    ) {
-      preProcessorStatus.allComplete = true;
-      preProcessorStatus.needProcessing = 0;
-      preProcessorStatus.completeProcessing = 0;
-
-      if (this.#allPreprocessorsComplete()) {
-        callback(true);
-      } else {
-        callback(false);
-      }
+    if (allComplete) {
+      this.debug.log("[uppy] All upload preprocessors complete!");
+      this.#allCompleteCallbacks.forEach((callback) => callback());
     }
   }
 }

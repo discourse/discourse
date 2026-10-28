@@ -28,7 +28,6 @@ id:
     ai_toxicity_flag_threshold_threat: "Ancaman"
     ai_toxicity_flag_threshold_sexual_explicit: "Eksplisit Seksual"
     ai_toxicity_groups_bypass: "Posting pengguna di grup tersebut tidak akan diklasifikasikan berdasarkan modul toxicity."
-    ai_sentiment_enabled: "Aktifkan modul sentiment."
     ai_sentiment_inference_service_api_endpoint: "URL tempat API berjalan untuk modul sentiment"
     ai_sentiment_inference_service_api_key: "Kunci API untuk API sentiment"
     ai_nsfw_detection_enabled: "Aktifkan modul NSFW."
@@ -60,6 +59,23 @@ id:
       default_pm_prefix: "[PM bot AI tanpa judul]"
       read_post:
         unknown_post: "post"
+      chat_tool_approval:
+        topic_states:
+          open: "Buka"
+          closed: "Tertutup"
+          active: "Aktif"
+          deleted: "Dihapus"
+        solution_post: "Post #%{number}"
+        duration_label: "Durasi:"
+        user_duration:
+          other: "%{count} hari"
+        posts_label: "Pos"
+        category_label: "Kategori"
+        category_fields:
+          name: "nama"
+          description: "deskripsi"
+        approve_label: "Ya"
+        reject_label: "Tidak"
       tool_options:
         search:
           search_private:

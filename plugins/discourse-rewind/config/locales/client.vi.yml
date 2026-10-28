@@ -22,5 +22,8 @@ vi:
           author: Bạn
           author_others: "%{username}"
           status_online: "● trực tuyến"
+        live_usage:
+          minutes:
+            other: "%{count} phút"
         writing_analysis:
           menu_other: Khác

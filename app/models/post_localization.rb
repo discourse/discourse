@@ -15,7 +15,13 @@ class PostLocalization < ActiveRecord::Base
   validates :localizer_user_id, presence: true
   validates :locale, uniqueness: { scope: :post_id }
 
+  after_commit :trigger_saved_event, on: %i[create update]
+
   private
+
+  def trigger_saved_event
+    DiscourseEvent.trigger(:post_localization_saved, self)
+  end
 
   def access_control_post_id_for_upload
     post_id

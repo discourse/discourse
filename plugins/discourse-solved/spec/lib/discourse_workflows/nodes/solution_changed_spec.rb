@@ -15,7 +15,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SolutionChanged::V1, discourse_workflo
   end
 
   describe "#matches?" do
-    it "filters changes, categories, and tags" do
+    it "filters changes, categories, tags, and topics" do
       post.topic.tags << tag
       trigger = described_class.from_event(:accepted_solution, post)
 
@@ -23,10 +23,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SolutionChanged::V1, discourse_workflo
       expect(trigger.matches?(trigger_context(changes: ["removed"]))).to eq(false)
       expect(trigger.matches?(trigger_context(category_ids: [other_category.id]))).to eq(false)
       expect(trigger.matches?(trigger_context(tag_names: ["missing"]))).to eq(false)
+      expect(trigger.matches?(trigger_context(topic_ids: [topic.id + 1]))).to eq(false)
       expect(
         trigger.matches?(
           trigger_context(
             changes: ["accepted"],
+            topic_ids: [topic.id],
             category_ids: [category.id],
             tag_names: [tag.name],
           ),
@@ -61,6 +63,10 @@ RSpec.describe DiscourseWorkflows::Nodes::SolutionChanged::V1, discourse_workflo
         [answer.id, other_answer.id, answer.id],
       )
       expect(data.map { |payload| payload.dig("topic", "id") }.uniq).to eq([topic.id])
+      expect(data.map { |payload| payload.dig("actor", "username") }.uniq).to eq([admin.username])
+      expect(data.map { |payload| payload.dig("user", "id") }).to eq(
+        [answer.user_id, other_answer.user_id, answer.user_id],
+      )
       expect(data).to all(match_node_output_schema(described_class))
       expect(post.topic.reload.topic_answers.pluck(:answer_post_id)).to eq([other_answer.id])
     end

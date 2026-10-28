@@ -311,6 +311,7 @@ module UpcomingChanges
 
   def self.group_ids_for(change_setting_name)
     change_setting_name = change_setting_name.to_sym
+    return [] if change_status(change_setting_name) == :permanent
     settings_provider.site_setting_group_ids[change_setting_name].presence || []
   end
 
@@ -426,7 +427,7 @@ module UpcomingChanges
   # @example
   #   enabled_for_with_groups(:new_feature, true, { 1 => "Group 1", 2 => "Group 2" })
   def self.enabled_for_with_groups(setting_name, setting_value, upcoming_change_selected_groups)
-    group_ids_for_setting = settings_provider.site_setting_group_ids[setting_name]
+    group_ids_for_setting = group_ids_for(setting_name)
     setting_groups =
       upcoming_change_selected_groups.values_at(*group_ids_for_setting).join(
         ",",
@@ -443,7 +444,7 @@ module UpcomingChanges
         # option. Backend access (`enabled_for_user?`) is unchanged — until the
         # admin picks a scope, the change is still effectively on for everyone.
         allow = allow_enabled_for(setting_name)
-        if allow.nil? || allow.include?(:everyone)
+        if change_status(setting_name) == :permanent || allow.nil? || allow.include?(:everyone)
           "everyone"
         elsif allow.include?(:staff)
           # Have to do this because the staff auto group name is localized
@@ -491,7 +492,7 @@ module UpcomingChanges
             GROUP BY upcoming_change_name
             ORDER BY MAX(created_at) DESC
           )
-          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value
+          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value, (upcoming_change_events.event_data->>'was_conditionally_displayed')::boolean as was_conditionally_displayed
           FROM latest_status_changes
           INNER JOIN upcoming_change_events ON upcoming_change_events.upcoming_change_name = latest_status_changes.upcoming_change_name AND upcoming_change_events.created_at = latest_status_changes.created_at
           ORDER BY latest_status_changes.created_at DESC
@@ -501,6 +502,7 @@ module UpcomingChanges
           statuses[result.upcoming_change_name] = {
             status: result.new_value,
             changed_at: result.created_at,
+            was_conditionally_displayed: result.was_conditionally_displayed,
           }
         end
       end

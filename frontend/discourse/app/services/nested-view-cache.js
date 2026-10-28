@@ -41,6 +41,7 @@ export default class NestedViewCacheService extends Service {
     this.#forceUseCache = true;
   }
 
+  /** @param {{ isPoppedState?: boolean, allowLocalSignal?: boolean } | null} [options] */
   consumeTraversal(options = null) {
     if (this.#forceUseCache) {
       this.#forceUseCache = false;

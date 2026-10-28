@@ -185,6 +185,9 @@ class UserHistory < ActiveRecord::Base
         admin_onboarding_dismissed: 130,
         removed_avatar: 131,
         create_group: 132,
+        add_access_control_list_owner: 133,
+        remove_access_control_list_owner: 134,
+        assume_access_control_ownership: 135,
       )
   end
 
@@ -321,6 +324,9 @@ class UserHistory < ActiveRecord::Base
       admin_onboarding_dismissed
       removed_avatar
       create_group
+      add_access_control_list_owner
+      remove_access_control_list_owner
+      assume_access_control_ownership
     ]
   end
 
@@ -502,6 +508,7 @@ end
 #  custom_type    :string
 #  details        :text
 #  email          :string
+#  expires_at     :datetime
 #  ip_address     :string
 #  new_value      :text
 #  previous_value :text

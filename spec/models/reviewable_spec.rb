@@ -104,6 +104,52 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
+    it "triggers one transition to pending once the re-opening score is added" do
+      ReviewableUser.needs_review!(target: user, created_by: admin).transition_to(:approved, admin)
+
+      events =
+        DiscourseEvent.track_events do
+          2.times do
+            ReviewableUser.needs_review!(target: user, created_by: admin).add_score(
+              admin,
+              ReviewableScore.types[:needs_approval],
+            )
+          end
+        end
+
+      expect(events.map { |event| event[:event_name] }).to eq(
+        %i[reviewable_transitioned_to reviewable_score_updated],
+      )
+      expect(events.first[:params]).to eq([:pending, Reviewable.find_by(target: user)])
+    end
+
+    it "does not trigger a transition to pending when the re-opening score takes action" do
+      ReviewableUser.needs_review!(target: user, created_by: admin).transition_to(:approved, admin)
+
+      events =
+        DiscourseEvent.track_events(:reviewable_transitioned_to) do
+          ReviewableUser.needs_review!(target: user, created_by: admin).add_score(
+            admin,
+            ReviewableScore.types[:needs_approval],
+            take_action: true,
+          )
+        end
+
+      expect(events).to be_empty
+    end
+
+    it "saves the score added after re-opening an ignored reviewable" do
+      post = Fabricate(:post)
+      reviewable = ReviewableFlaggedPost.needs_review!(target: post, created_by: admin)
+      reviewable.add_score(user, PostActionType.types[:off_topic])
+      reviewable.transition_to(:ignored, admin)
+
+      reopened = ReviewableFlaggedPost.needs_review!(target: post, created_by: admin)
+      reviewable_score = reopened.add_score(user, PostActionType.types[:off_topic])
+
+      expect(reopened.reload.score).to eq(reviewable_score.score)
+    end
+
     it "preserves an approved queued reviewable when reusing the target's flagged reviewable" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)
@@ -142,28 +188,30 @@ RSpec.describe Reviewable, type: :model do
       expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
     end
 
-    it "includes flagged private messages for moderators outside the conversation" do
+    it "includes every reviewable on a flagged private message for moderators outside the conversation" do
       flagged_reviewable =
         Fabricate(:reviewable_flagged_post, target: pm_post, topic: pm_topic, category: nil)
 
       expect(described_class.viewable_by(outsider_moderator)).to exist(id: flagged_reviewable.id)
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: reviewable.id)
     end
 
-    it "includes private-message reviewables for participating moderators" do
-      participant_moderator = Fabricate(:moderator)
-      participant_topic =
-        Fabricate(:private_message_topic, user: pm_author, recipient: participant_moderator)
-      participant_post = Fabricate(:post, topic: participant_topic, user: pm_author)
-      participant_reviewable =
-        ReviewablePost.needs_review!(
-          target: participant_post,
-          created_by: Discourse.system_user,
-          reviewable_by_moderator: true,
-        )
+    it "includes private-message reviewables for moderators allowed in the conversation" do
+      pm_topic.topic_allowed_users.create!(user: outsider_moderator)
 
-      expect(described_class.viewable_by(participant_moderator)).to exist(
-        id: participant_reviewable.id,
-      )
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: reviewable.id)
+    end
+
+    it "excludes queued replies to private messages from moderators outside the conversation" do
+      queued_reply = Fabricate(:reviewable_queued_post, topic: pm_topic, category: nil)
+
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: queued_reply.id)
+    end
+
+    it "excludes hidden private-message targets when the reviewable has no topic" do
+      reviewable.update_columns(topic_id: nil)
+
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: reviewable.id)
     end
   end
 
@@ -592,6 +640,7 @@ RSpec.describe Reviewable, type: :model do
       expect(event).to be_present
       expect(event[:params][0]).to eq(:approved)
       expect(event[:params][1]).to eq(reviewable)
+      expect(event[:params][2]).to eq(acting_user: moderator)
     end
   end
 

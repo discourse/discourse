@@ -36,7 +36,7 @@ import Site from "discourse/models/site";
 import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
-import Category from "./category";
+import Category from "./category.ts";
 
 export function _addTrackedTopicProperty(propertyKey) {
   stampModelClass(Topic, "topic");
@@ -872,7 +872,7 @@ export default class Topic extends RestModel {
         return bookmark.id !== id;
       })
     );
-    this.set("bookmarked", this.bookmarks.length);
+    this.set("bookmarked", this.bookmarks.length > 0);
     this.incrementProperty("bookmarksWereChanged");
   }
 
@@ -922,7 +922,7 @@ export default class Topic extends RestModel {
     })
       .then(() => {
         this.setProperties({
-          deleted_at: new Date(),
+          deleted_at: new Date().toISOString(),
           deleted_by,
           "details.can_delete": false,
           "details.can_recover": true,

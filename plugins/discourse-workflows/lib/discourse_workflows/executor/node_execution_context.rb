@@ -3,6 +3,8 @@
 module DiscourseWorkflows
   class Executor
     class NodeExecutionContext
+      include NodeErrorHandling
+
       BYPASSED_PERMISSION_CHECKS_FIELD = "discourse_workflows_bypassed_permission_checks"
       WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
       WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
@@ -25,47 +27,9 @@ module DiscourseWorkflows
           end
         end
 
-      def self.serialize_post(
-        post,
-        guardian: Discourse.system_user.guardian,
-        include_raw: true,
-        include_cooked: false
-      )
-        MultiJson.load(
-          DiscourseWorkflows::PostSerializer.new(
-            post,
-            scope: guardian,
-            root: false,
-            include_raw: include_raw,
-            include_cooked: include_cooked,
-          ).to_json,
-        ).deep_symbolize_keys
-      end
-
-      def self.serialize_topic(
-        topic,
-        guardian: Discourse.system_user.guardian,
-        custom_field_names: []
-      )
-        MultiJson.load(
-          DiscourseWorkflows::TopicSerializer.new(
-            topic,
-            scope: guardian,
-            root: false,
-            custom_field_names: custom_field_names,
-          ).to_json,
-        ).deep_symbolize_keys
-      end
-
-      def self.serialize_user(user, guardian: Discourse.system_user.guardian)
-        return if user.blank?
-
-        MultiJson.load(
-          DiscourseWorkflows::UserSerializer.new(user, scope: guardian, root: false).to_json,
-        ).deep_symbolize_keys
-      end
-
       class RuntimeState
+        MAX_ITEM_ERROR_GROUPS = 20
+
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 
         def initialize
@@ -85,8 +49,20 @@ module DiscourseWorkflows
           @condition_step_details.concat(details)
         end
 
+        # Per-item nodes would otherwise repeat the same hint once per item.
         def add_execution_hints(hints)
-          @execution_hints.concat(hints.map(&:deep_stringify_keys))
+          @execution_hints |= hints.map(&:deep_stringify_keys)
+        end
+
+        def add_item_error(item_index, error)
+          groups = (@metadata["item_errors"] ||= [])
+          group = groups.find { |entry| entry["message"] == error.summary }
+
+          if group
+            group["items"] << item_index
+          elsif groups.size < MAX_ITEM_ERROR_GROUPS
+            groups << { "message" => error.summary, "items" => [item_index] }
+          end
         end
 
         def merge_metadata(metadata)
@@ -101,7 +77,13 @@ module DiscourseWorkflows
         end
       end
 
-      attr_reader :user, :vars, :execution_id, :node_id, :webhook_ctx, :workflow_call_stack
+      attr_reader :user,
+                  :vars,
+                  :execution_id,
+                  :node_id,
+                  :webhook_ctx,
+                  :workflow_call_stack,
+                  :deadline
 
       def initialize(
         input_items:,
@@ -116,6 +98,7 @@ module DiscourseWorkflows
         user: nil,
         resolver: nil,
         vars: nil,
+        workflow_vars: nil,
         workflow: nil,
         workflow_version: nil,
         execution_id: nil,
@@ -131,7 +114,8 @@ module DiscourseWorkflows
         webhook_context: nil,
         workflow_call_stack: [],
         runtime_state: RuntimeState.new,
-        static_data_state: nil
+        static_data_state: nil,
+        deadline: nil
       )
         @input_groups = normalize_input_groups(input_groups, input_items)
         @input_items = @input_groups[0] || []
@@ -150,6 +134,7 @@ module DiscourseWorkflows
         @user = user
         @resolver = resolver
         @vars = vars
+        @workflow_vars = workflow_vars
         @workflow = workflow
         @workflow_version = workflow_version
         @execution_id = execution_id
@@ -167,6 +152,7 @@ module DiscourseWorkflows
         @webhook_ctx = webhook_context
         @workflow_call_stack = Array(workflow_call_stack).map(&:to_s)
         @static_data_state = static_data_state
+        @deadline = deadline
       end
 
       # Static data access.
@@ -211,6 +197,10 @@ module DiscourseWorkflows
         Array.new(max_index + 1) { |index| @input_groups[index] || [] }
       end
 
+      def input_indexes
+        @input_groups.keys.sort
+      end
+
       def input_context
         InputContext.from_node_context(get_context(:node))
       end
@@ -244,6 +234,10 @@ module DiscourseWorkflows
         )
       end
 
+      def nearest_upstream_metadata(key, item_index: 0)
+        NodeOutputProxy.new(@resolver_context).nearest_upstream_metadata(key, item_index:)
+      end
+
       def get_input_data(input_index = 0, _connection_type = nil)
         input_items(input_index)
       end
@@ -257,9 +251,34 @@ module DiscourseWorkflows
 
       def continue_on_fail
         on_error = @node_settings["onError"]
-        return %w[continueRegularOutput continueErrorOutput].include?(on_error) if on_error.present?
+        return NodeDataShape::CONTINUE_ON_ERROR_MODES.include?(on_error) if on_error.present?
 
         ActiveModel::Type::Boolean.new.cast(@node_settings["continueOnFail"]) == true
+      end
+
+      # Fails only this item when the node continues on error, so items already handled
+      # aren't reported as failed too.
+      def guard_item(item, item_index)
+        expression_error_count = expression_errors.size
+        yield
+      rescue DiscourseWorkflows::NodeError => e
+        raise if !continue_on_fail
+
+        demote_expression_errors(from: expression_error_count, item_index:)
+        @runtime_state.add_item_error(item_index, e)
+        Item.with_error(item, e, paired_item: item_index).merge(Item::FAILED_KEY => true)
+      end
+
+      def each_item
+        input_items.flat_map.with_index do |item, item_index|
+          Array
+            .wrap(guard_item(item, item_index) { yield item, item_index })
+            .map do |output|
+              next output if Item.paired_item(output)
+
+              Item.with_paired_item(output, item_index)
+            end
+        end
       end
 
       def start_job(job_type, settings, item_index)
@@ -279,10 +298,10 @@ module DiscourseWorkflows
       end
 
       def ensure_no_expression_errors!
-        error = @resolver.expression_errors.first
+        error = expression_errors.first
         return unless error
 
-        raise NodeError, "#{error[:expression]}: #{error[:error]}"
+        raise NodeError, format_expression_error(error)
       end
 
       def helpers
@@ -303,38 +322,41 @@ module DiscourseWorkflows
         username = get_node_parameter(path, item_index, default: default)
 
         if username.blank?
-          raise DiscourseWorkflows::NodeError,
-                I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s)
+          raise_node_error!(
+            I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s),
+            item_index:,
+          )
         end
 
-        actor_from(username: username, field: path.to_s, item_index: item_index)
+        actor_from(username: username, item_index: item_index)
       end
 
-      def actor_from(username: nil, id: nil, field: nil, item_index: nil)
+      def actor_from(username: nil, id: nil, item_index: nil)
         actor =
           if username == DiscourseWorkflows::AnonymousActor::USERNAME
             DiscourseWorkflows::AnonymousActor.new
           else
-            find_user(username: username.presence, id: id)
+            find_user(username: username.presence, id: id, item_index: item_index)
           end
-        ensure_actor_allowed!(actor, field: field, item_index: item_index)
+        ensure_actor_allowed!(actor, item_index:)
         actor
       end
 
-      def find_user(username: nil, id: nil)
+      def find_user(username: nil, id: nil, item_index: nil)
         if username.present? == id.present?
           raise ArgumentError, "Provide exactly one of username or id"
         end
 
-        if username.present?
-          user = User.find_by_username(username)
-          raise DiscourseWorkflows::NodeError, "User '#{username}' not found" if user.nil?
-        else
-          user = User.find_by(id: id)
-          raise DiscourseWorkflows::NodeError, "User with id #{id} not found" if user.nil?
-        end
+        user = username.present? ? User.find_by_username(username) : User.find_by(id:)
+        return user if user
 
-        user
+        message =
+          if username.present?
+            I18n.t("discourse_workflows.errors.actor.not_found", username:)
+          else
+            I18n.t("discourse_workflows.errors.actor.id_not_found", id:)
+          end
+        raise_node_error!(message, item_index:)
       end
 
       def http_request(method:, url:, headers: {}, body: nil, options: {}, item_index: 0)
@@ -372,11 +394,11 @@ module DiscourseWorkflows
         }.compact
 
         if ActiveModel::Type::Boolean.new.cast(whisper)
-          unless guardian.can_create_whisper?
-            raise Discourse::InvalidAccess.new(
-                    "invalid_whisper_access",
-                    nil,
-                    custom_message: "invalid_whisper_access",
+          if !guardian.can_create_whisper?
+            raise DiscourseWorkflows::NodeError,
+                  I18n.t(
+                    "discourse_workflows.errors.post.whisper_not_allowed",
+                    username: guardian.user.username,
                   )
           end
 
@@ -422,19 +444,6 @@ module DiscourseWorkflows
 
         post_destroyer(user, post).recover
         post
-      end
-
-      def serialize_post(
-        post,
-        guardian: Discourse.system_user.guardian,
-        include_raw: true,
-        include_cooked: false
-      )
-        self.class.serialize_post(post, guardian:, include_raw:, include_cooked:)
-      end
-
-      def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
-        self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
       def put_execution_to_wait(
@@ -522,6 +531,43 @@ module DiscourseWorkflows
 
       private
 
+      def expression_errors
+        @resolver&.expression_errors || []
+      end
+
+      # Any expression error fails the whole step, so a failed item's own ones become warnings.
+      # Those of an item that succeeds still fail the step.
+      def demote_expression_errors(from:, item_index:)
+        @resolver
+          &.discard_expression_errors(from:)
+          &.each { |error| log.warn("#{format_expression_error(error)} [item #{item_index}]") }
+      end
+
+      def format_expression_error(error)
+        "#{error[:expression]}: #{error[:error]}"
+      end
+
+      def ensure_actor_allowed!(actor, item_index:)
+        return if actor.is_a?(DiscourseWorkflows::AnonymousActor)
+
+        reason =
+          if actor.staged?
+            :staged
+          elsif actor.silenced?
+            :silenced
+          elsif actor.suspended?
+            :suspended
+          elsif !actor.active?
+            :inactive
+          end
+        return if reason.nil?
+
+        raise_node_error!(
+          I18n.t("discourse_workflows.errors.actor.restricted.#{reason}", username: actor.username),
+          item_index:,
+        )
+      end
+
       def post_destroyer(user, post)
         PostDestroyer.new(
           user,
@@ -554,30 +600,6 @@ module DiscourseWorkflows
         end
 
         with_item_index(item_index) { @resolver.resolve_hash(credential.data || {}) }
-      end
-
-      def ensure_actor_allowed!(actor, field:, item_index:)
-        actor_policy.ensure_allowed!(
-          actor,
-          field: field,
-          item_index: item_index,
-          source: actor_source(field, item_index),
-          purpose: @node_identifier,
-        )
-      end
-
-      def actor_policy
-        @actor_policy ||= ActorPolicy.new(self)
-      end
-
-      def actor_source(field, item_index)
-        return :direct if field.blank?
-
-        raw_value = get_node_parameter(field, item_index || 0, options: { raw_expressions: true })
-        return :default if raw_value.nil?
-        return :expression if Schema.expression_value?(raw_value)
-
-        :static_config
       end
 
       def current_snapshot_node
@@ -709,6 +731,7 @@ module DiscourseWorkflows
             resolver_context: @resolver_context,
             user: @user,
             vars: @vars,
+            workflow_vars: @workflow_vars,
             flow_context: @flow_context,
             runtime_state: @runtime_state,
           )

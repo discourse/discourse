@@ -18,6 +18,7 @@ ko:
       link: "링크"
   mcp:
     errors:
+      category_not_found: "카테고리를 찾을수 없습니다"
       topic_not_found: "글을 찾을 수 없음"
     oauth:
       deny: "거부"
@@ -2945,31 +2946,15 @@ ko:
     account_suspended:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-      text_body_template: |
-        %{suspended_till}까지 포럼에서 계정이 정지되었습니다.
-
-        이유 - %{reason}
     account_suspended_forever:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-      text_body_template: |
-        포럼에서 계정이 정지되었습니다.
-
-        이유 - %{reason}
     account_silenced:
       title: "계정이 차단됨"
       subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-      text_body_template: |
-        %{suspended_till}까지 포럼에서 계정이 차단되었습니다.
-
-        이유 - %{reason}
     account_silenced_forever:
       title: "계정이 차단됨"
       subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-      text_body_template: |
-        포럼에서 계정이 차단되었습니다.
-
-        이유 - %{reason}
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -3591,10 +3576,13 @@ ko:
     google_meet:
       meeting_code: "코드:"
     github:
+      header:
+        success: "성공"
       opened: "열림"
       closed: "닫힘"
-      status_date:
-        open: "열림"
+      pr_status:
+        draft: "임시저장"
+        open: "열기"
         approved: "승인"
         closed: "닫힘"
   discourse_push_notifications:

@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const suggestionShortcuts = [

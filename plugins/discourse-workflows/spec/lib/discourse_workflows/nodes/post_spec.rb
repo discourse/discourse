@@ -164,25 +164,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
-    it "raises when the create author cannot whisper" do
-      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
-      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
-      topic = first_post.topic
-
-      expect do
-        execute_node(
-          configuration: {
-            "operation" => "create",
-            "topic_id" => topic.id.to_s,
-            "raw" => "Unauthorized whisper",
-            "whisper" => true,
-            "author_username" => user.username,
-          },
-          item: item,
-        )
-      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
-    end
-
     it "raises when the create author cannot be found" do
       first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
 
@@ -196,7 +177,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
           },
           item: item,
         )
-      end.to raise_error(DiscourseWorkflows::NodeError, "User 'nonexistent_user' not found")
+      end.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error_message(:not_found, scope: :actor, item_index: 0, username: "nonexistent_user"),
+      )
     end
 
     it "raises when the create author cannot see the topic" do
@@ -664,6 +648,28 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
         "tags" => [tag.name],
         "raw" => "alpha body",
       )
+    end
+
+    it "lists posts with their reply_to_post_id" do
+      topic = Fabricate(:topic, category: category, user: user)
+      first_post = Fabricate(:post, topic: topic, user: user, post_number: 1)
+      reply = Fabricate(:post, topic: topic, user: user, post_number: 2, reply_to_post_number: 1)
+
+      result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "topics" => topic.id.to_s,
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+
+      expect(
+        result.to_h do |output_item|
+          output_item.dig("json", "post").values_at("id", "reply_to_post_id")
+        end,
+      ).to eq(first_post.id => nil, reply.id => first_post.id)
     end
 
     it "lists posts matching the query field" do

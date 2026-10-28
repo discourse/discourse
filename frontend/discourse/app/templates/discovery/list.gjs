@@ -3,7 +3,6 @@ import Layout from "discourse/components/discovery/layout";
 import Navigation from "discourse/components/discovery/navigation";
 import Topics from "discourse/components/discovery/topics";
 import TagInfo from "discourse/components/tag-info";
-import { and } from "discourse/truth-helpers";
 
 export default <template>
   <Layout

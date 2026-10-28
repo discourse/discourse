@@ -11,6 +11,10 @@ th:
         context_menu:
           actions:
             delete: "ลบ"
+        reorderable_list:
+          policies_pinned: "ปักหมุดแล้ว"
+          policies_required: "ต้องการ"
+          table_type: "ชนิด"
         colors:
           title: "สี"
         categories:

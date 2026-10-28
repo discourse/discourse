@@ -70,7 +70,128 @@ class ReviewableAiToolAction < Reviewable
     resolution_result(:rejected, args)
   end
 
+  def approval_resolved_title
+    tool, = build_tool!
+    tool.approval_resolved_title
+  rescue Discourse::InvalidAccess
+    nil
+  end
+
   private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    return unless action_id == :approve
+
+    parameters = target.tool_parameters
+
+    case target.tool_name
+    when "close_topic"
+      return unless parameters["closed"]
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was closed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "unlist_topic"
+      return unless parameters["unlisted"]
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was unlisted.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_DEMOTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "delete_topic"
+      return unless parameters["deleted"]
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "lock_post"
+      return unless parameters["locked"]
+
+      post = Post.with_deleted.find(parameters["post_id"])
+
+      {
+        decision_facts: "The post was locked.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "set_slow_mode"
+      return unless parameters["slow_mode_seconds"].to_i.positive?
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was placed in slow mode, limiting how often users can reply.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "edit_post"
+      post = Post.with_deleted.find(parameters["post_id"])
+
+      {
+        decision_facts: "The post was edited.",
+        decision_visibility: ["DECISION_VISIBILITY_OTHER"],
+        decision_visibility_other: "Content edited",
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "suspend_user"
+      user = User.find_by_username(parameters["username"])
+
+      {
+        decision_facts: "The account was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }.compact
+    when "silence_user"
+      user = User.find_by_username(parameters["username"])
+
+      {
+        decision_facts: "The account had its ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }.compact
+    end
+  end
 
   def resolution_result(status, args, tool_result: nil)
     result = create_result(:success, status)
@@ -124,9 +245,10 @@ class ReviewableAiToolAction < Reviewable
     tool =
       tool_class.new(
         tool_action.tool_parameters.symbolize_keys,
-        bot_user: bot_user,
+        agent_options: tool_action.tool_options,
+        bot_user:,
         llm: nil,
-        context: context,
+        context:,
       )
 
     [tool, tool_class, context]
@@ -163,17 +285,19 @@ class ReviewableAiToolAction < Reviewable
       message&.blocks.to_a.any? do |block|
         block["elements"].to_a.any? { |element| element["action_id"] == action_id }
       end
+    valid_context =
+      !source ||
+        (
+          source.chat_channel_id == message&.chat_channel_id &&
+            (
+              source.thread_id == message&.thread_id ||
+                (message&.thread_id.nil? && source.thread&.original_message_id == source.id)
+            )
+        )
 
     if !message || !message.chat_channel.direct_message_channel? ||
          ![target&.bot_user_id, target&.ai_agent&.user_id].compact.include?(message.user_id) ||
-         !valid_block ||
-         (
-           source &&
-             (
-               source.chat_channel_id != message.chat_channel_id ||
-                 source.thread_id != message.thread_id
-             )
-         )
+         !valid_block || !valid_context
       raise Discourse::InvalidAccess
     end
   end

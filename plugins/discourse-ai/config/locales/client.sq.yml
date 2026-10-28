@@ -41,6 +41,13 @@ sq:
       ai_decoded_transcript:
         type: "Lloji"
         error: "Gabim"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Imazhet"
+          name: "Emri"
+          type: "Lloji"
+          type_score: "Vlerësimi"
       ai_tool_approval:
         loading: "Duke ngarkuar..."
         tool: "Veprimi"
@@ -66,6 +73,8 @@ sq:
         filters:
           all: "Të gjitha"
           reset: "Rivendosni"
+        sentiment:
+          enabled: "Aktivizuar"
         search:
           name: "Kërko"
         image_caption:
@@ -184,6 +193,11 @@ sq:
         edit: "Redaktoni"
         delete: "Fshij"
         embedding: "Embedding"
+      decision_models:
+        no_preset: "Asnjë"
+        display_name: "Emri"
+        edit: "Redaktoni"
+        delete: "Fshij"
       mcp_servers:
         name: "Emri"
         description: "Përshkrimi"
@@ -195,6 +209,15 @@ sq:
         delete: "Fshij"
         tools_modal:
           required: "E nevojshme"
+      models:
+        name: "Emri"
+        type: "Lloji"
+        edit: "Redaktoni"
+        select_type: "Zgjidhni"
+        types:
+          embedding: "Embedding"
+        filters:
+          all: "Të gjitha llojet"
       llms:
         display_name: "Emri"
         vision_modes:
@@ -242,6 +265,15 @@ sq:
         providers:
           google: "Google"
           fake: "Grupet e krijuara"
+      ai_artifact:
+        editor:
+          version: "Versioni"
+          default: "Paracaktuar"
+          apply: "Apliko"
+        share: "Shpërndaje"
+        create_link: "Krijoni lidhje"
+        copy_link: "Kopjoni lidhjen"
+        filter_all: "Të gjitha"
       ai_bot:
         debug_ai_modal:
           duration_label: "Kohëzgjatja:"
@@ -265,6 +297,13 @@ sq:
       summarization:
         chat:
           summarize: "Përmblidhni"
+      ai_search:
+        related_replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+        tabs:
+          topics: "Topics"
+          messages: "Mesazhet"
       discobot_discoveries:
         legacy:
           regular_results: "Topics"

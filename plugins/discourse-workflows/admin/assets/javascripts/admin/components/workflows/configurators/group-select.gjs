@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DButton from "discourse/ui-kit/d-button";
-import ComboBoxField, { DynamicOptionsComboBox } from "./combo-box";
-import ExpressionWrapper from "./expression-wrapper";
+import ComboBoxField, { DynamicOptionsComboBox } from "./combo-box.gjs";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export class DynamicOptionsGroupChooser extends GroupChooser {
   search(filter) {

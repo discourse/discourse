@@ -8,11 +8,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class UrlPreview extends Component {
   @tracked copied = false;

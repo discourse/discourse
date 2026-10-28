@@ -54,7 +54,6 @@ nl:
         scoring_configuration: "Scoreconfiguratie"
         scoring_configuration_description: "Negeer de globale scoringsregels voor dit klassement. Laat de velden leeg om de algemene standaardwaarden te gebruiken."
         scorable_categories: "Scoorbare categorieën"
-        scorable_categories_help: "Categorieën om mee te nemen in de score. Laat leeg om de algemene instelling te gebruiken."
         score_overrides: "Scoregewichten"
         score_overrides_help: "Negeer de puntwaarden voor elke actie. Laat leeg laten om de algemene standaard te gebruiken. Stel in op 0 om uit te schakelen."
         weight:
@@ -86,9 +85,7 @@ nl:
       close: "Sluiten"
       delete: "Verwijderen"
       edit: "Bewerken"
-      back: "Terug"
       save: "Opslaan"
-      apply: "Toepassen"
       recalculate: "Scores herberekenen"
       recalculating: "Scores herberekenen..."
       completed: "Gereed! De scores zijn herberekend."
@@ -107,9 +104,11 @@ nl:
       admin:
         title: "Gamificatie"
         name: "Naam"
+        created_by: "Gemaakt door"
         period: "Periode"
     discourse_workflows:
       gamification_score:
         username: "Gebruiker"
         date: "Datum"
         description: "Beschrijving"
+        category_id: "Categorie"

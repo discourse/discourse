@@ -21,6 +21,7 @@ th:
         failed: "ล้มเหลว"
     access_control:
       manage:
+        access_permission_owner: "เจ้าของ"
         access_permission_remove: "ลบ"
     number:
       format:
@@ -175,7 +176,6 @@ th:
       ja:
         name: ญี่ปุ่น
     share:
-      topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber} โดย @%{username}"
       close: "ปิด"
       facebook: "แชร์บนเฟสบุ๊ค"
@@ -220,6 +220,8 @@ th:
     skip_to_last_reply: "ข้ามไปยังคำตอบสุดท้าย"
     skip_to_top: "ข้ามไปที่ด้านบน"
     skip_user_nav: "ข้ามไปยังเนื้อหาโปรไฟล์"
+    reorder:
+      removed: "ลบ %{label}"
     emails_are_disabled: "อีเมลขาออกทั้งหมดถูกปิดโดยผู้ดูแลระบบ จะไม่มีอีเมลแจ้งเตือนใดๆถูกส่งออกไป"
     emails_are_disabled_no_smtp: "ระบบส่งอีเมลขาออกทั้งหมดถูกปิดใช้งาน เนื่องจากไม่ได้ตั้งค่าเซิร์ฟเวอร์ SMTP ไว้ จึงไม่สามารถส่งอีเมลใดๆ ได้"
     emails_are_disabled_non_staff: "การส่งอีเมลออกถูกปิดใช้งานสำหรับผู้ใช้ที่ไม่ใช่เจ้าหน้าที่"
@@ -305,8 +307,6 @@ th:
     every_six_months: "ทุกหกเดือน"
     max_of_count:
       other: "สูงสุดของ %{count}"
-    character_count:
-      other: "%{count} ตัวอักษร"
     period_chooser:
       aria_label: "กรองตามช่วงเวลา"
     related_messages:
@@ -427,6 +427,8 @@ th:
       title:
         search: "ค้นหาข้อความ"
         placeholder: "ระบุหัวข้อข้อความ หมายเลข หรือ url ที่นี่ "
+    dsa_statements:
+      category: "หมวดหมู่"
     review:
       order_by: "สั่งโดย"
       in_reply_to: "ตอบไปยัง"
@@ -1528,8 +1530,7 @@ th:
       reply: "ตอบกลับ"
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
-      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
-      title_placeholder_redesign: "ชื่อเรื่อง"
+      title_placeholder: "ชื่อเรื่อง"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
       topic_featured_link_placeholder: "กรอกลิงก์ที่แสดงหัวข้อ"
@@ -2649,18 +2650,6 @@ th:
         type_mismatch:
           default: "กรอกค่าที่ถูกต้อง"
           email: "กรุณาใส่อีเมลที่ถูกต้อง."
-    table_builder:
-      modal:
-        help:
-          enter_key: "เอ็นเทอร์"
-      edit:
-        modal:
-          cancel: "ยกเลิก"
-          create: "บันทึก"
-          reason: "ทำไมคุณถึงแก้ไข"
-      spreadsheet:
-        show: "แสดง"
-        about: "เกี่ยวกับ"
     filter:
       description:
         yesterday: "เมื่อวาน"
@@ -2738,6 +2727,7 @@ th:
           clients:
             actions: "การกระทำ"
             block: "บล็อก"
+            automatic: "อัตโนมัติ"
           authorizations:
             user: "ผู้ใช้"
             status: "สถานะ"
@@ -3204,6 +3194,7 @@ th:
           collapse: ย่อ
           uploads: "อัปโหลด"
           upload: "อัปโหลด"
+          leave: "ออก"
           add_all: "เพิ่มทั้งหมด"
           install: "ติดตั้ง"
           installed: "ติดตั้งแล้ว"

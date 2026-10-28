@@ -422,7 +422,6 @@ ja:
             invited_count:
               other: "%{count} 招待済みユーザー"
         event:
-          expired: "期限切れ"
           closed: "終了"
           full: "満席"
           status:
@@ -435,6 +434,8 @@ ja:
             private:
               title: "非公開"
               description: "非公開イベントは招待されたユーザーのみが参加できます。"
+      recording_modal:
+        save: "保存"
       composer:
         name_placeholder: "イベント名"
         location_or_url_placeholder: "場所または URL を追加"

@@ -127,6 +127,8 @@ class DiscourseConnect < DiscourseConnectBase
       sso_record = user.single_sign_on_record
     end
 
+    user.skip_username_watched_words_validation = true
+
     # ensure it's not staged anymore
     user.unstage!
 
@@ -265,6 +267,7 @@ class DiscourseConnect < DiscourseConnectBase
         end
 
         user = User.new(user_params)
+        user.skip_username_watched_words_validation = true
 
         if SiteSetting.must_approve_users && EmailValidator.can_auto_approve_user?(email)
           ReviewableUser.set_approved_fields!(user, Discourse.system_user)
@@ -424,7 +427,7 @@ class DiscourseConnect < DiscourseConnectBase
     suggester_input = [username]
     suggester_input << name if SiteSetting.use_name_for_username_suggestions
     suggester_input << email if SiteSetting.use_email_for_username_and_name_suggestions
-    UserNameSuggester.suggest(*suggester_input)
+    UserNameSuggester.suggest(*suggester_input, skip_watched_words: true)
   end
 
   def resolve_name

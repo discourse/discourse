@@ -33,7 +33,6 @@ import PostLocalization from "discourse/models/post-localization";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";

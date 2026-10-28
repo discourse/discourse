@@ -1173,7 +1173,11 @@ class Plugin::Instance
   #
   # @param id [String, Symbol] stable identifier stored in the site setting
   # @param name [String] client-side translation key used in the admin setting
-  # @param path [String] application path for the homepage
+  # @param path [String, Proc] application path for the homepage, excluding any
+  #   subfolder, or a lambda returning one when it depends on settings. A lambda
+  #   is resolved when the site data is built; anonymous site data is cached
+  #   until a site setting changes, so call `Site.clear_anon_cache!` if the path
+  #   depends on anything else.
   # @param route [String] Rails controller action, in `controller#action` form
   # @param anonymous [Boolean] whether logged-out visitors may use this homepage
   # @param server_side [Boolean] whether navigation requires a full page request
@@ -1182,7 +1186,7 @@ class Plugin::Instance
   #   back to the top menu homepage
   # @param available [Proc, nil] called with `guardian:` and `request:` (which
   #   may be nil); when it returns false the visitor gets the regular top menu
-  #   homepage instead. It runs whenever the homepage is resolved, including on
+  #   homepage instead, and a lambda `path` is not sent to them. It runs whenever the homepage is resolved, including on
   #   page loads and topic list requests, so keep it cheap.
   def register_homepage(
     id,
@@ -1201,7 +1205,9 @@ class Plugin::Instance
             "homepage id must contain only lowercase letters, numbers, underscores, and hyphens"
     end
     raise ArgumentError, "homepage name must be present" if name.blank?
-    raise ArgumentError, "homepage path must start with /" if !path.to_s.start_with?("/")
+    if !path.respond_to?(:call) && !path.to_s.start_with?("/")
+      raise ArgumentError, "homepage path must start with /"
+    end
     if !route.to_s.match?(/\A[^#]+#[^#]+\z/)
       raise ArgumentError, "homepage route must use controller#action format"
     end
@@ -1230,7 +1236,7 @@ class Plugin::Instance
       {
         id: id,
         name: name,
-        path: path.to_s,
+        path: path.respond_to?(:call) ? path : path.to_s,
         route: route.to_s,
         anonymous: anonymous,
         server_side: server_side,

@@ -419,7 +419,7 @@ class Group < ActiveRecord::Base
   end
 
   def incoming_email_validator
-    return if automatic || incoming_email.blank?
+    return if incoming_email.blank?
 
     incoming_email
       .split("|")
@@ -561,8 +561,11 @@ class Group < ActiveRecord::Base
   end
 
   def self.can_use_name?(name, group)
-    UsernameValidator.new(name, skip_length_validation: group.automatic).valid_format? &&
-      (group.name == name || !User.username_exists?(name))
+    UsernameValidator.new(
+      name,
+      skip_length_validation: group.automatic,
+      skip_watched_words: true,
+    ).valid_format? && (group.name == name || !User.username_exists?(name))
   end
 
   def self.refresh_automatic_group!(name)
@@ -1114,7 +1117,12 @@ class Group < ActiveRecord::Base
       self.name = stripped
     end
 
-    UsernameValidator.perform_validation(self, "name", skip_length_validation: automatic) ||
+    UsernameValidator.perform_validation(
+      self,
+      "name",
+      skip_length_validation: automatic,
+      skip_watched_words: true,
+    ) ||
       begin
         normalized_name = User.normalize_username(name)
 

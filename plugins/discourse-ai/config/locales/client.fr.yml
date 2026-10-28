@@ -31,7 +31,6 @@ fr:
             failed: "Échec"
         emotion:
           title: "Émotion"
-          description: "Le tableau indique le nombre de publications classées selon une émotion donnée. Selon la méthode de classification des émotions sélectionnée, les publications sont classées soit avec le modèle de classification configuré (« SamLowe/roberta-base-go_emotions »), soit avec l'agent de classification des émotions configuré."
         reports:
           filters:
             group_by:
@@ -271,6 +270,12 @@ fr:
           upload_ids: "ID téléversés"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Sélectionner un agent..."
+        classify:
+          text: "Texte"
+          upload_ids: "Images"
+          name: "Nom"
+          type: "Type"
+          type_score: "Score"
       bot_chats:
         tab_label: "Chats avec les bots"
       ai_tool_approval:
@@ -285,14 +290,11 @@ fr:
         rejected: "Rejeté"
         awaiting_staff: "En attente de l'approbation d'un responsable"
       default_llm:
-        title: "Modèle LLM par défaut"
-        description: "Modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA. Il sera utilisé si aucun LLM n'est indiqué dans la configuration de la fonctionnalité ou de l'agent. Si aucun LLM par défaut n'est défini, le dernier LLM créé sera utilisé."
+        title: "Modèle linguistique par défaut"
       llm_selector:
         none: "Jamais"
-        saved: "Le modèle LLM par défaut a été mis à jour."
       features:
         short_title: "Fonctionnalités"
-        description: "Voici les fonctionnalités d'IA accessibles aux visiteurs de votre site. Elles peuvent être configurées pour utiliser des agents et des LLM précis, et leur accès peut être contrôlé par groupe."
         back: "Revenir aux fonctionnalités d'IA"
         settings_save_error: "Certains paramètres n'ont pas pu être enregistrés."
         disabled: "(désactivée)"
@@ -306,6 +308,7 @@ fr:
         no_llm: "Aucun LLM sélectionné"
         no_agent: "Non défini"
         no_groups: "Aucun"
+        classification_model: "Modèle :"
         edit: "Paramètres"
         expand_list:
           one: "(%{count} autre)"
@@ -325,10 +328,17 @@ fr:
           not_enabled: "Non activé"
         filters:
           all: "Tout"
-          text: "Rechercher des fonctionnalités, des agents, des LLM ou des groupes..."
           no_results: "Aucune fonctionnalité correspondant à vos filtres n'a été trouvée."
           reset: "Réinitialiser"
         no_automations: "Il n'y a pas encore d'automatisations"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Émotion"
+          enabled: "Activées"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Émotion"
         summarization:
           name: "Résumés"
           description: "Met à disposition un bouton de résumé qui permet aux visiteurs de résumer les sujets"
@@ -719,8 +729,6 @@ fr:
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
         use_parent_llm: "Utiliser le modèle de langage de l'agent"
-        max_turn_tokens: "Nombre maximal de jetons par tour"
-        max_turn_tokens_help: "Nombre maximal total de jetons (entrée + sortie) consommés par l'ensemble des appels au LLM au cours d'une même réponse du bot. Laissez ce champ vide pour utiliser par défaut la moitié de la fenêtre de contexte du modèle."
         compression_threshold: "Seuil de compression"
         compression_threshold_help: "Pourcentage d'utilisation du contexte (20 à 99) à partir duquel la compression automatique se déclenche. Une valeur plus faible déclenche la compression plus tôt et conserve davantage de marge disponible."
         vision_enabled: Inclure les images téléversées
@@ -915,7 +923,6 @@ fr:
           result: "Résultat du test"
       secrets:
         short_title: "Identifiants"
-        description: "Gérer les identifiants d'authentification partagés entre les LLM, les intégrations et les outils."
         name: "Nom"
         secret: "Valeur"
         select_secret: "Sélectionner un identifiant..."
@@ -940,6 +947,16 @@ fr:
         mcp_server_oauth_client_secret: "Secret client OAuth du serveur MCP"
         modal:
           title: "Créer un nouvel identifiant"
+      decision_models:
+        no_preset: "Jamais"
+        display_name: "Nom"
+        model: "Modèle"
+        provider: "Fournisseur"
+        api_key: "Identifiant"
+        vision_enabled: "Prend en charge l'entrée d'images"
+        edit: "Modifier"
+        delete: "Supprimer"
+        test: "Lancer le test"
       mcp_servers:
         short_title: "Serveurs MCP"
         new: "Nouveau serveur MCP"
@@ -1021,6 +1038,18 @@ fr:
         test_summary:
           one: "Découverte de %{count} outil à l'aide du protocole %{version}."
           other: "Découverte de %{count} outils à l'aide du protocole %{version}."
+      models:
+        new: "Nouveau modèle"
+        name: "Nom"
+        type: "Type"
+        provider: "Fournisseur"
+        edit: "Modifier"
+        select_type: "Sélectionner"
+        types:
+          embedding: "Intégration"
+        filters:
+          all: "Tous les types"
+          reset: "Réinitialiser les filtres"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"
@@ -1303,9 +1332,23 @@ fr:
         quick_search:
           suffix: "dans tous les sujets et publications avec IA"
       ai_artifact:
+        editor:
+          version: "Version"
+          default: "Par défaut"
+          option_on: "Activé"
+          option_off: "Désactivé"
+          apply: "Appliquer"
         expand_view_label: "Agrandir la vue"
         collapse_view_label: "Quitter le mode plein écran (bouton Échap ou Retour)"
         click_to_run_label: "Exécuter l'artefact"
+        share: "Partager"
+        create_link: "Créer un lien"
+        copied: "Copié dans le presse-papiers"
+        copy_link: "Copier le lien"
+        copy_embed: "Copier l'intégration"
+        new_tab: "Afficher dans un nouvel onglet"
+        filter_all: "Tout"
+        filter_standalone: "Indépendant"
       ai_bot:
         title: "Robot IA"
         agent: "Agent :"
@@ -1443,6 +1486,15 @@ fr:
             compact: "Compact"
             expanded: "Étendu"
             expanded_description: "avec des résumés d'IA"
+      ai_search:
+        related_topics: "Sujets connexes"
+        related_replies:
+          one: "%{count} réponse"
+          other: "%{count} réponses"
+        tabs:
+          ask: "Demander à l'IA"
+          topics: "Sujets"
+          messages: "Messages directs"
       discobot_discoveries:
         main_title: "Demander à l'IA"
         loading_convo: "Chargement de la conversation"

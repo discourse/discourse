@@ -1,8 +1,7 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryVariables from "discourse/helpers/category-variables";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -10,16 +9,19 @@ import CategoryDrop from "discourse/select-kit/components/category-drop";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument";
+import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
 
-@tagName("")
 export default class BreadCrumbs extends Component {
-  editingCategory = false;
-  editingCategoryTab = null;
+  @service site;
+  @service siteSettings;
 
-  @computed("category", "categories", "noSubcategories")
+  get editingCategory() {
+    return this.args.editingCategory ?? false;
+  }
+
+  @cached
   get categoryBreadcrumbs() {
-    const ancestors = this.category?.ancestors || [];
+    const ancestors = this.args.category?.ancestors || [];
     const parentCategories = [undefined, ...ancestors];
     const categories = [...ancestors, undefined];
 
@@ -28,7 +30,7 @@ export default class BreadCrumbs extends Component {
       .map((record) => {
         const [parentCategory, subCategory] = record;
 
-        const options = this.categories.filter(
+        const options = this.args.categories.filter(
           (c) =>
             c.get("parentCategory.id") === (parentCategory && parentCategory.id)
         );
@@ -38,20 +40,18 @@ export default class BreadCrumbs extends Component {
           parentCategory,
           options,
           isSubcategory: !!parentCategory,
-          noSubcategories: !subCategory && this.noSubcategories,
+          noSubcategories: !subCategory && this.args.noSubcategories,
           hasOptions: !parentCategory || parentCategory.has_children,
         };
       });
   }
 
-  @computed("siteSettings.tagging_enabled", "editingCategory")
   get showTagsSection() {
-    return this.siteSettings?.tagging_enabled && !this.editingCategory;
+    return this.siteSettings.tagging_enabled && !this.editingCategory;
   }
 
-  @computed("category")
   get hidden() {
-    return this.site.mobileView && !this.category;
+    return this.site.mobileView && !this.args.category;
   }
 
   <template>
@@ -63,7 +63,7 @@ export default class BreadCrumbs extends Component {
         @connectorTagName="li"
         @deprecatedArgs={{lazyHash
           tagId=(deprecatedOutletArgument
-            value=this.tag.name
+            value=@tag.name
             message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-left', use 'tag.name' instead"
             id="discourse.plugin-connector.deprecated-arg.bread-crumbs-left"
             since="2025.12.0-latest"
@@ -72,18 +72,18 @@ export default class BreadCrumbs extends Component {
         }}
         @name="bread-crumbs-left"
         @outletArgs={{lazyHash
-          tag=this.tag
-          additionalTags=this.additionalTags
-          noSubcategories=this.noSubcategories
+          tag=@tag
+          additionalTags=@additionalTags
+          noSubcategories=@noSubcategories
           showTagsSection=this.showTagsSection
-          currentCategory=this.category
+          currentCategory=@category
           categoryBreadcrumbs=this.categoryBreadcrumbs
           editingCategory=this.editingCategory
-          editingCategoryTab=this.editingCategoryTab
+          editingCategoryTab=@editingCategoryTab
         }}
       />
 
-      {{#each this.categoryBreadcrumbs as |breadcrumb|}}
+      {{#each this.categoryBreadcrumbs key="parentCategory.id" as |breadcrumb|}}
         {{#if breadcrumb.hasOptions}}
           <li
             style={{if
@@ -100,34 +100,34 @@ export default class BreadCrumbs extends Component {
               @categories={{breadcrumb.options}}
               @category={{breadcrumb.category}}
               @editingCategory={{this.editingCategory}}
-              @editingCategoryTab={{this.editingCategoryTab}}
+              @editingCategoryTab={{@editingCategoryTab}}
               @options={{hash
                 parentCategory=breadcrumb.parentCategory
                 subCategory=breadcrumb.isSubcategory
                 noSubcategories=breadcrumb.noSubcategories
               }}
-              @tag={{this.tag}}
+              @tag={{@tag}}
             />
           </li>
         {{/if}}
       {{/each}}
 
       {{#if this.showTagsSection}}
-        {{#if this.additionalTags}}
+        {{#if @additionalTags}}
           <li>
             <TagsIntersectionChooser
-              @additionalTags={{this.additionalTags}}
-              @currentCategory={{this.category}}
-              @mainTag={{this.tag}}
-              @options={{hash categoryId=this.category.id}}
+              @additionalTags={{@additionalTags}}
+              @currentCategory={{@category}}
+              @mainTag={{@tag}}
+              @options={{hash categoryId=@category.id}}
             />
           </li>
         {{else}}
           <li>
             <TagDrop
-              @currentCategory={{this.category}}
-              @noSubcategories={{this.noSubcategories}}
-              @tag={{this.tag}}
+              @currentCategory={{@category}}
+              @noSubcategories={{@noSubcategories}}
+              @tag={{@tag}}
             />
           </li>
         {{/if}}
@@ -137,7 +137,7 @@ export default class BreadCrumbs extends Component {
         @connectorTagName="li"
         @deprecatedArgs={{lazyHash
           tagId=(deprecatedOutletArgument
-            value=this.tag.name
+            value=@tag.name
             message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-right', use 'tag.name' instead"
             id="discourse.plugin-connector.deprecated-arg.bread-crumbs-right"
             since="2025.12.0-latest"
@@ -146,14 +146,14 @@ export default class BreadCrumbs extends Component {
         }}
         @name="bread-crumbs-right"
         @outletArgs={{lazyHash
-          tag=this.tag
-          additionalTags=this.additionalTags
-          noSubcategories=this.noSubcategories
+          tag=@tag
+          additionalTags=@additionalTags
+          noSubcategories=@noSubcategories
           showTagsSection=this.showTagsSection
-          currentCategory=this.category
+          currentCategory=@category
           categoryBreadcrumbs=this.categoryBreadcrumbs
           editingCategory=this.editingCategory
-          editingCategoryTab=this.editingCategoryTab
+          editingCategoryTab=@editingCategoryTab
         }}
       />
     </ol>

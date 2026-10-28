@@ -4,13 +4,14 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import { bind } from "discourse/lib/decorators";
-import { not } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+/** @typedef {{ id: number | string, name: string, isNew?: boolean }} BulkTagChoice */
 export default class ManageTagsForm extends Component {
   formApi;
 
+  /** @type {{ remove_all_tags: boolean, remove_tags: BulkTagChoice[], add_tags: BulkTagChoice[], replace_rows: { from: BulkTagChoice[], to: BulkTagChoice[] }[] }} */
   initialData = {
     remove_all_tags: false,
     remove_tags: [],

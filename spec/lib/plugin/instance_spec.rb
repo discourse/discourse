@@ -133,9 +133,9 @@ TEXT
         :participating_users_last_day,
         :participating_users_7_days,
         :participating_users_30_days,
-        # onboarding stats are grouped under their stat type rather than being
-        # flat top-level keys
+        # grouped under their stat type rather than being flat top-level keys
         :onboarding,
+        :category_types,
       )
     end
 
@@ -1275,6 +1275,15 @@ TEXT
           server_side: nil,
         )
       end.to raise_error(ArgumentError, /server_side/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "other",
+          route: "plugin#other",
+        )
+      end.to raise_error(ArgumentError, /path/)
 
       expect do
         plugin_instance.register_homepage(

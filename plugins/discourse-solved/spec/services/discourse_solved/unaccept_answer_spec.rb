@@ -163,7 +163,7 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
       end
 
       it "triggers the :unaccepted_solution event" do
-        expect(events).to include(a_hash_including(params: [post]))
+        expect(events).to include(a_hash_including(params: [post, { acting_user: user }]))
       end
 
       it "broadcasts the unaccepted solution" do

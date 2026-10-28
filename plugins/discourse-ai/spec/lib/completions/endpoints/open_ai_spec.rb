@@ -211,6 +211,341 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
 
   before { enable_current_plugin }
 
+  def stub_audited_completion(text, finish_reason: "stop", streaming: false)
+    usage = {
+      prompt_tokens: 10,
+      completion_tokens: 5,
+      completion_tokens_details: {
+        reasoning_tokens: 4,
+      },
+    }
+    response =
+      if streaming
+        "data: #{{ choices: [{ delta: { content: text }, finish_reason: finish_reason }] }.to_json}\n\n" +
+          "data: #{{ choices: [], usage: usage }.to_json}\n\ndata: [DONE]\n\n"
+      else
+        {
+          choices: [{ message: { content: text }, finish_reason: finish_reason }],
+          usage: usage,
+        }.to_json
+      end
+    open_ai_mock.stub_raw(response)
+  end
+
+  it "resets stop reasons, usage, and an unfinished decoder across retried streaming attempts" do
+    response = instance_double(Net::HTTPResponse, code: "200")
+    reads = 0
+    allow(response).to receive(:read_body) do |&block|
+      reads += 1
+      if reads == 1
+        block.call(
+          "data: #{{ choices: [{ delta: {}, finish_reason: "length" }], usage: { prompt_tokens: 10, completion_tokens: 0, completion_tokens_details: { reasoning_tokens: 7 } } }.to_json}\n\ndata: {\"choices\":",
+        )
+        raise EOFError, "Unexpected EOF"
+      end
+      block.call(
+        "data: #{{ choices: [{ delta: { content: "Recovered answer" }, finish_reason: "stop" }] }.to_json}\n\ndata: [DONE]\n\n",
+      )
+    end
+    http = instance_double(Net::HTTP)
+    allow(http).to receive(:request).and_yield(response)
+    allow(FinalDestination::HTTP).to receive(:start).and_yield(http)
+    endpoint.stubs(:sleep_before_retry)
+    emitted = []
+    endpoint.perform_completion!(
+      compliance.dialect(prompt: compliance.generic_prompt),
+      user,
+    ) { |partial| emitted << partial }
+    expect(emitted).to eq(["Recovered answer"])
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+      stop_reason: "stop",
+      reasoning_tokens: nil,
+    )
+  end
+
+  describe "completion state" do
+    it "classifies non-streaming normal text" do
+      stub_audited_completion("Answer", finish_reason: "stop")
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+        stop_reason: "stop",
+        reasoning_tokens: 4,
+        response_tokens: 5,
+      )
+    end
+
+    it "classifies non-streaming limited text" do
+      stub_audited_completion("Partial", finish_reason: "length")
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::TRUNCATED,
+        stop_reason: "length",
+        reasoning_tokens: 4,
+        response_tokens: 5,
+      )
+    end
+
+    it "classifies non-streaming blank output" do
+      stub_audited_completion(" ", finish_reason: "length")
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "length",
+        reasoning_tokens: 4,
+        response_tokens: 5,
+      )
+    end
+
+    it "classifies non-streaming structured empty objects" do
+      stub_audited_completion("{}", finish_reason: "length")
+      params = {
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user, params)
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::EMPTY)
+    end
+
+    it "classifies non-streaming structured broken JSON" do
+      stub_audited_completion("{broken", finish_reason: "length")
+      params = {
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user, params)
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::TRUNCATED)
+    end
+
+    it "classifies non-streaming structured a finished incomplete JSON prefix" do
+      stub_audited_completion("{", finish_reason: "length")
+      params = {
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user, params)
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::TRUNCATED)
+    end
+
+    it "classifies streamed normal text" do
+      stub_audited_completion("Answer", finish_reason: "stop", streaming: true)
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+        stop_reason: "stop",
+        reasoning_tokens: 4,
+        response_tokens: 5,
+      )
+    end
+
+    it "classifies streamed limited text" do
+      stub_audited_completion("Partial", finish_reason: "length", streaming: true)
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::TRUNCATED,
+        stop_reason: "length",
+        reasoning_tokens: 4,
+        response_tokens: 5,
+      )
+    end
+
+    it "classifies streamed blank output" do
+      stub_audited_completion(" ", finish_reason: "length", streaming: true)
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user) { |partial| }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::EMPTY,
+        stop_reason: "length",
+        reasoning_tokens: 4,
+        response_tokens: 5,
+      )
+    end
+
+    it "classifies streamed structured empty objects" do
+      stub_audited_completion("{}", finish_reason: "length", streaming: true)
+      params = {
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user, params) { |partial| }
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::EMPTY)
+    end
+
+    it "classifies streamed structured broken JSON" do
+      stub_audited_completion("{broken", finish_reason: "length", streaming: true)
+      params = {
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user, params) { |partial| }
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::TRUNCATED)
+    end
+
+    it "classifies streamed structured a finished incomplete JSON prefix" do
+      stub_audited_completion("{", finish_reason: "length", streaming: true)
+      params = {
+        response_format: {
+          json_schema: {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+      dialect = compliance.dialect(prompt: compliance.generic_prompt)
+      endpoint.perform_completion!(dialect, user, params) { |partial| }
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::TRUNCATED)
+    end
+
+    it "classifies disable_streaming replay using the processed non-streaming output" do
+      model.update!(provider_params: { disable_streaming: true })
+      open_ai_mock.stub_raw(
+        { choices: [{ message: { content: "Partial" }, finish_reason: "length" }] }.to_json,
+      )
+      emitted = []
+      endpoint.perform_completion!(
+        compliance.dialect(prompt: compliance.generic_prompt),
+        user,
+      ) { |partial| emitted << partial }
+      expect(emitted).to eq(["Partial"])
+      expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::TRUNCATED)
+    end
+
+    it "leaves failed requests unclassified and records only final-attempt metadata after a retry" do
+      endpoint.stubs(:sleep_before_retry)
+      stub_request(:post, model.url).to_return(
+        { status: 500, body: "Server error" },
+        {
+          status: 200,
+          body: { choices: [{ message: { content: "Answer" }, finish_reason: "stop" }] }.to_json,
+        },
+      )
+      endpoint.perform_completion!(compliance.dialect(prompt: compliance.generic_prompt), user)
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: AiApiAuditLog::CompletionState::COMPLETE,
+        stop_reason: "stop",
+        reasoning_tokens: nil,
+      )
+      expect(AiApiAuditLog.last.request_attempts.map { |attempt| attempt["status"] }).to eq(
+        [500, 200],
+      )
+
+      stub_request(:post, model.url).to_return(status: 500, body: "Server error")
+      stub_const(DiscourseAi::Completions::Endpoints::Base, :TRANSIENT_ERROR_RETRY_DELAYS, []) do
+        expect {
+          endpoint.perform_completion!(compliance.dialect(prompt: compliance.generic_prompt), user)
+        }.to raise_error(DiscourseAi::Completions::Endpoints::Base::CompletionFailed)
+      end
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: nil,
+        stop_reason: nil,
+        reasoning_tokens: nil,
+      )
+    end
+
+    it "bounds unexpected provider stop reasons before persisting" do
+      reason = "x" * 100
+      stub_audited_completion("Answer", finish_reason: reason)
+      endpoint.perform_completion!(compliance.dialect(prompt: compliance.generic_prompt), user)
+      expect(AiApiAuditLog.last.stop_reason).to eq(reason.first(50))
+    end
+
+    it "preserves successful cancellation settlement while leaving completion state unknown" do
+      partial = "A long partial answer with more than one token"
+      payload = {
+        choices: [{ delta: { content: partial } }],
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 1,
+        },
+      }
+      open_ai_mock.stub_raw("data: #{payload.to_json}\n\n")
+      execution =
+        DiscourseAi::Completions::ExecutionContext.new(
+          work_budget: DiscourseAi::Completions::TurnWorkBudget.new(limit: 4000),
+        )
+      cancel = DiscourseAi::Completions::CancelManager.new
+      model
+        .to_llm
+        .generate(
+          "Input",
+          user: user,
+          execution_context: execution,
+          cancel_manager: cancel,
+        ) { |fragment| cancel.cancel! }
+      expect(AiApiAuditLog.last).to have_attributes(
+        completion_state: nil,
+        response_status: 200,
+        response_tokens: 1,
+      )
+      # Cancelled streams settle as incomplete: exposed output wins over an
+      # early usage snapshot.
+      expect(execution.work_budget.used).to eq(
+        DiscourseAi::Completions::Llm.proxy(model).tokenizer.size(partial),
+      )
+    end
+  end
+
   describe "DNS SRV endpoints" do
     let(:domain) { "_openai._tcp.example.com" }
     let(:resolved_url) { "https://llm.example.com:8443" }
@@ -739,6 +1074,20 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
         }
       end
 
+      it "counts streamed XML-only tool output as visible" do
+        model.update!(provider_params: { disable_native_tools: true })
+        response =
+          "data: #{{ choices: [{ delta: { content: xml_tool_call_response }, finish_reason: "stop" }] }.to_json}\n\ndata: [DONE]\n\n"
+        open_ai_mock.stub_raw(response)
+        emitted = []
+        endpoint.perform_completion!(
+          compliance.dialect(prompt: compliance.generic_prompt(tools: [weather_tool])),
+          user,
+        ) { |partial| emitted << partial }
+        expect(emitted.grep(DiscourseAi::Completions::ToolCall).map(&:name)).to eq(["get_weather"])
+        expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::COMPLETE)
+      end
+
       it "parses XML tool calls" do
         response = {
           id: "chatcmpl-6sZfAb30Rnv9Q7ufzFwvQsMpjZh8S",
@@ -774,6 +1123,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
 
         expect(body_parsed[:messages][0][:content]).to include("<function_calls>")
 
+        expect(AiApiAuditLog.last.completion_state).to eq(AiApiAuditLog::CompletionState::COMPLETE)
         expect(tool_call.name).to eq("get_weather")
         expect(tool_call.parameters).to eq({ location: "Sydney", unit: "c", is_it_hot: true })
       end
@@ -900,6 +1250,34 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
         expect(body_parsed["max_completion_tokens"]).to eq(321)
         expect(body_parsed["max_tokens"]).to be_nil
         expect(body_parsed["reasoning"]).to eq({ "effort" => "low" })
+        expect(body_parsed["messages"].first["role"]).to eq("developer")
+        expect(body_parsed["messages"].first["content"]).to eq("You are a bot")
+      end
+
+      it "supports gpt-6, remaps max_tokens, and uses developer message" do
+        model.update!(name: "gpt-6.1-sol")
+
+        prompt =
+          DiscourseAi::Completions::Prompt.new(
+            "You are a bot",
+            messages: [type: :user, content: "hello"],
+          )
+        dialect = compliance.dialect(prompt: prompt)
+
+        body_parsed = nil
+        stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+          body:
+            proc do |body|
+              body_parsed = JSON.parse(body)
+              true
+            end,
+        ).to_return(status: 200, body: { choices: [{ message: { content: "ok" } }] }.to_json)
+
+        endpoint.perform_completion!(dialect, user, { max_tokens: 321 })
+
+        expect(body_parsed["model"]).to eq("gpt-6.1-sol")
+        expect(body_parsed["max_completion_tokens"]).to eq(321)
+        expect(body_parsed["max_tokens"]).to be_nil
         expect(body_parsed["messages"].first["role"]).to eq("developer")
         expect(body_parsed["messages"].first["content"]).to eq("You are a bot")
       end
@@ -1342,6 +1720,74 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("max")
     end
 
+    it "maps none to low for GPT-6 Astra, which does not support none" do
+      model.update!(name: "gpt-6-astra")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+    end
+
+    it "maps none to low for GPT-6.1 Sol snapshots, which do not support none" do
+      model.update!(name: "gpt-6.1-sol-2026-09-01", provider_params: { reasoning_effort: "none" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+    end
+
+    it "keeps none for GPT-6 Sol, which supports none" do
+      model.update!(name: "gpt-6-sol")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("none")
+    end
+
+    it "uses native max effort for GPT-6 Astra" do
+      model.update!(name: "gpt-6-astra")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "max" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("max")
+    end
+
     it "uses native max effort for future OpenAI models by default" do
       model.update!(name: "gpt-5.7")
 
@@ -1402,6 +1848,14 @@ TEXT
       prepared_params = endpoint.prepare_model_params(thinking_effort: "none")
 
       expect(prepared_params).not_to have_key(:reserved_output_tokens)
+    end
+
+    it "reserves output room when none maps to low on GPT-6.1 Sol" do
+      model.update!(name: "gpt-6.1-sol")
+
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "none")
+
+      expect(prepared_params[:reserved_output_tokens]).to eq(25_000)
     end
 
     it "treats standard reasoning mode as a no-op for Chat Completions" do

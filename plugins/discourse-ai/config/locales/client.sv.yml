@@ -45,6 +45,13 @@ sv:
         type: "Typ"
         error: "Fel"
         response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Bilder"
+          name: "Namn"
+          type: "Typ"
+          type_score: "Poäng"
       ai_tool_approval:
         loading: "Laddar..."
         tool: "Åtgärd"
@@ -70,6 +77,8 @@ sv:
         filters:
           all: "Alla"
           reset: "Återställ"
+        sentiment:
+          enabled: "Aktiverad"
         search:
           name: "Sök"
         image_caption:
@@ -208,6 +217,12 @@ sv:
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Namn"
+        provider: "Leverantör"
+        edit: "Redigera"
+        delete: "Radera"
       mcp_servers:
         name: "Namn"
         description: "Beskrivning"
@@ -223,6 +238,16 @@ sv:
         delete: "Ta bort"
         tools_modal:
           required: "Krävs"
+      models:
+        name: "Namn"
+        type: "Typ"
+        provider: "Leverantör"
+        edit: "Redigera"
+        select_type: "Välj"
+        types:
+          embedding: "Inbäddning"
+        filters:
+          all: "Alla typer"
       llms:
         display_name: "Namn"
         provider: "Leverantör"
@@ -279,6 +304,14 @@ sv:
         providers:
           google: "Google"
           fake: "Anpassad"
+      ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          apply: "Tillämpa"
+        share: "Dela"
+        filter_all: "Alla"
+        filter_standalone: "Fristående"
       ai_bot:
         debug_ai_modal:
           duration_label: "Varaktighet:"
@@ -314,6 +347,13 @@ sv:
             other: "Senaste %{count} timmarna"
         topic:
           title: "Sammanfattning av ämne"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Ämnen"
+          messages: "Meddelanden"
       discobot_discoveries:
         legacy:
           regular_results: "Ämnen"

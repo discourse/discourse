@@ -45,10 +45,19 @@ export default class BookmarkModal extends Component {
   @service site;
   @service keyboardShortcuts;
 
+  /** @type {string | null | undefined} */
   @tracked postDetectedLocalDate = null;
+
+  /** @type {string | null | undefined} */
   @tracked postDetectedLocalTime = null;
+
+  /** @type {string | null | undefined} */
   @tracked postDetectedLocalTimezone = null;
+
+  /** @type {string | import("moment").Moment | null} */
   @tracked prefilledDatetime = null;
+
+  /** @type {string | null} */
   @tracked flash = null;
 
   @tracked _closeWithoutSaving = false;

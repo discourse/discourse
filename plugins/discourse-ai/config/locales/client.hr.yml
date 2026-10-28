@@ -48,6 +48,12 @@ hr:
       discourse_workflows:
         ai_agent:
           mode: "Modus"
+        classify:
+          text: "Tekst"
+          upload_ids: "Slike"
+          name: "Ime"
+          type: "Tip"
+          type_score: "Ocjena"
       ai_tool_approval:
         loading: "Očitavanje..."
         tool: "Akcija"
@@ -74,6 +80,8 @@ hr:
         filters:
           all: "Sve"
           reset: "Resetirati"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraživanje"
         image_caption:
@@ -214,6 +222,12 @@ hr:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Ugrađivanje"
+      decision_models:
+        no_preset: "Ništa"
+        display_name: "Ime"
+        provider: "Pružatelj usluga"
+        edit: "Uredi"
+        delete: "Izbriši"
       mcp_servers:
         name: "Ime"
         description: "Opis"
@@ -227,6 +241,17 @@ hr:
         delete: "Izbriši"
         tools_modal:
           required: "Potrebno"
+      models:
+        name: "Ime"
+        type: "Tip"
+        provider: "Pružatelj usluga"
+        edit: "Uredi"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
+          reset: "Poništi filtere"
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"
@@ -281,6 +306,15 @@ hr:
         providers:
           google: "Google"
           fake: "Posebna"
+      ai_artifact:
+        editor:
+          version: "Inačica"
+          default: "Zadano"
+          apply: "Primijeni"
+        share: "Podijeli"
+        create_link: "Kreirajte poveznicu"
+        copy_link: "Kopirajte poveznicu"
+        filter_all: "Sve"
       ai_bot:
         debug_ai_modal:
           duration_label: "Trajanje:"
@@ -314,6 +348,14 @@ hr:
             one: "Posljednji sat"
             few: "Posljednja %{count} sata"
             other: "Posljednjih %{count} sati"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Tema"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Tema"

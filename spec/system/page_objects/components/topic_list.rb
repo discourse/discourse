@@ -90,6 +90,10 @@ module PageObjects
         find("#{topic_list_item_class(topic)} a.raw-topic-link").click
       end
 
+      def scroll_to_topic_at_index(index)
+        page.scroll_to(all(TOPIC_LIST_ITEM_SELECTOR)[index], align: :top)
+      end
+
       def scroll_page_down(amount: 50)
         page.execute_script(<<~JS, amount)
           const listArea = document.querySelector("#list-area");

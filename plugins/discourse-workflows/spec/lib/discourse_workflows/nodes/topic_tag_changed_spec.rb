@@ -44,6 +44,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       expect(output[:added_tags]).to eq(%w[urgent])
       expect(output[:removed_tags]).to eq(%w[help])
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)
+      expect(output[:actor]).to include(id: topic.user.id, username: topic.user.username)
       expect(output).to match_node_output_schema(described_class)
     end
 
@@ -131,9 +132,5 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
         false,
       )
     end
-  end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

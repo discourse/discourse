@@ -42,6 +42,13 @@ th:
       ai_decoded_transcript:
         type: "ชนิด"
         error: "ผิดพลาด"
+      discourse_workflows:
+        classify:
+          text: "ข้อความ"
+          upload_ids: "รูปภาพ"
+          name: "ชื่อ"
+          type: "ชนิด"
+          type_score: "คะแนน"
       ai_tool_approval:
         loading: "กำลังโหลด..."
         user: "ผู้ใช้"
@@ -166,6 +173,11 @@ th:
         edit: "แก้ไข"
         delete: "ลบ"
         embedding: "ฝั่ง"
+      decision_models:
+        no_preset: "ไม่มี"
+        display_name: "ชื่อ"
+        edit: "แก้ไข"
+        delete: "ลบ"
       mcp_servers:
         name: "ชื่อ"
         description: "รายละเอียด"
@@ -176,6 +188,14 @@ th:
         delete: "ลบ"
         tools_modal:
           required: "ต้องการ"
+      models:
+        name: "ชื่อ"
+        type: "ชนิด"
+        edit: "แก้ไข"
+        types:
+          embedding: "ฝั่ง"
+        filters:
+          all: "ทุกประเภท"
       llms:
         display_name: "ชื่อ"
         vision_modes:
@@ -212,6 +232,13 @@ th:
         display_name: "ชื่อ"
         providers:
           google: "กูเกิล"
+      ai_artifact:
+        editor:
+          version: "เวอร์ชัน"
+          default: "ค่าเริ่มต้น"
+          apply: "นำไปใช้"
+        share: "แบ่งปัน"
+        filter_all: "ทั้งหมด"
       ai_bot:
         debug_ai_modal:
           duration_label: "ช่วงเวลา:"
@@ -234,6 +261,12 @@ th:
             category: "หมวดหมู่"
           table:
             total_count: "ทั้งหมด"
+      ai_search:
+        related_replies:
+          other: "%{count} ตอบ"
+        tabs:
+          topics: "หัวข้อ"
+          messages: "ข้อความ"
       discobot_discoveries:
         legacy:
           regular_results: "หัวข้อ"

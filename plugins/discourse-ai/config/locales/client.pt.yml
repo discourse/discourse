@@ -81,6 +81,12 @@ pt:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imagens"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Pontuação"
       ai_tool_approval:
         loading: "A carregar..."
         tool: "Ação"
@@ -89,8 +95,6 @@ pt:
         reject: "Rejeitar"
         approved: "Aprovado"
         rejected: "Rejeitado"
-      default_llm:
-        title: "Modelo de LLM Predefinido"
       llm_selector:
         none: "Nenhuma"
       features:
@@ -103,6 +107,7 @@ pt:
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não definido"
         no_groups: "Nenhuma"
+        classification_model: "Modelo:"
         edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
@@ -117,6 +122,11 @@ pt:
         filters:
           all: "Todos"
           reset: "Repor"
+        sentiment:
+          emotion: "Emoção"
+          enabled: "Ativado"
+          setting_groups:
+            emotion: "Emoção"
         summarization:
           name: "Resumos"
           topic_summaries: "Resumos de tópico"
@@ -299,6 +309,13 @@ pt:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporação"
+      decision_models:
+        no_preset: "Nenhuma"
+        display_name: "Nome"
+        model: "Modelo"
+        provider: "Provedor"
+        edit: "Editar"
+        delete: "Eliminar"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -310,6 +327,16 @@ pt:
         delete: "Eliminar"
         tools_modal:
           required: "Necessário"
+      models:
+        name: "Nome"
+        type: "Tipo"
+        provider: "Provedor"
+        edit: "Editar"
+        select_type: "Selecionar"
+        types:
+          embedding: "Incorporação"
+        filters:
+          all: "Todos os tipos"
       llms:
         display_name: "Nome"
         provider: "Provedor"
@@ -361,6 +388,15 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
+      ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Predefinição"
+          apply: "Aplicar"
+        share: "Partilhar"
+        create_link: "Criar ligação"
+        copy_link: "Copiar hiperligação"
+        filter_all: "Todos"
       ai_bot:
         llm: "Modelo:"
         debug_ai_modal:
@@ -391,6 +427,13 @@ pt:
           summarize: "Resumir"
         topic:
           regenerate_summaries_option: "Resumos de tópico"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
         legacy:
           regular_results: "Tópicos"

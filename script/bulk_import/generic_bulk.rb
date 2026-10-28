@@ -25,6 +25,8 @@ class BulkImport::Generic < BulkImport::Base
   DELTA_IMPORT = ENV["DELTA_IMPORT"].present?
   CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
   LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
+  # Same quote pairs as the BBCode parser accepts (QUOTATION_MARKS in discourse-markdown-it).
+  BBCODE_QUOTATION_MARKS = ["\"\"", "''", "«»", "“”", "””", "‘’", "„“", "‚’", "‹›"]
 
   def initialize(db_path, uploads_db_path = nil)
     self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
@@ -677,9 +679,11 @@ class BulkImport::Generic < BulkImport::Base
     import_engagement
     import_post_voting_votes
     import_topic_voting_votes
+    import_category_topic_voting
     import_answers
     import_gamification_scores
     import_post_events
+    import_event_invitees
 
     import_badge_groupings
     import_badges
@@ -690,6 +694,7 @@ class BulkImport::Generic < BulkImport::Base
     import_optimized_images
 
     import_topic_users
+    import_event_invitee_topic_tracking
     update_topic_users
     import_bookmarks
 
@@ -2362,6 +2367,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing posts..."
 
     start_delta_entity(:posts, "posts", :posts, @last_post_id)
+    load_event_lookups
     update_delta_posts if delta_import?
 
     posts = query(<<~SQL)
@@ -2504,7 +2510,7 @@ class BulkImport::Generic < BulkImport::Base
          WHERE id = :event_id
       SQL
 
-      raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
+      raw.gsub!(event["placeholder"], event_bbcode(event_details).to_s) if event_details
     end
 
     if (quotes = placeholders&.fetch("quotes", nil))
@@ -2684,6 +2690,7 @@ class BulkImport::Generic < BulkImport::Base
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
+    timezone = event_timezone(event)
     status = DiscourseEvents::Events::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
@@ -2692,19 +2699,103 @@ class BulkImport::Generic < BulkImport::Base
         )
       end
     url = event["url"]
+    location = event_location(event)
+    allowed_groups = event_allowed_group_names(event)
+    image = @event_image_urls_by_upload_id[event_image_upload_id(event)]
     custom_fields = event["custom_fields"] ? JSON.parse(event["custom_fields"]) : nil
 
     text = +"[event"
-    text << %{ start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}"} if starts_at
-    text << %{ end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}"} if ends_at
-    text << %{ timezone="UTC"}
+    # The plugin reads start and end as local times in the event's timezone.
+    text << %{ start="#{format_event_time(starts_at, timezone)}"} if starts_at
+    text << %{ end="#{format_event_time(ends_at, timezone)}"} if ends_at
+    text << %{ timezone="#{timezone}"}
     text << %{ status="#{status}"} if status
-    text << %{ name="#{name}"} if name
-    text << %{ url="#{url}"} if url
-    custom_fields.each { |key, value| text << %{ #{key}="#{value}"} } if custom_fields
+    text << bbcode_attribute("name", name) if name
+    text << bbcode_attribute("url", url) if url
+    text << bbcode_attribute("location", location) if location
+    text << %{ allowed-groups="#{allowed_groups.join(",")}"} if allowed_groups.present?
+    text << %{ image="#{image}"} if image
+    text << %{ closed="true"} if to_boolean(event["closed"])
+    custom_fields&.each { |key, value| text << bbcode_attribute(key, value) }
     text << "]\n"
     text << "[/event]\n"
     text
+  end
+
+  def event_timezone(event)
+    timezone = event["timezone"].presence
+    timezone && ActiveSupport::TimeZone[timezone] ? timezone : "UTC"
+  end
+
+  def format_event_time(time, timezone)
+    time.in_time_zone(timezone).strftime("%Y-%m-%d %H:%M")
+  end
+
+  # The plugin only keeps invited groups on private events. Public events invite
+  # everyone and standalone events nobody.
+  def event_allowed_group_names(event)
+    return [] if event["status"] != DiscourseEvents::Events::Event.statuses[:private]
+
+    event_allowed_group_ids(event).filter_map { |id| @group_names_by_id[id] }
+  end
+
+  def event_allowed_group_ids(event)
+    return [] if event["allowed_group_ids"].blank?
+
+    JSON.parse(event["allowed_group_ids"]).filter_map { |id| group_id_from_imported_id(id) }
+  end
+
+  # Events are converted while rows are copied, when the connection can't run queries.
+  def load_event_lookups
+    return unless defined?(DiscourseEvents::Events)
+
+    @group_names_by_id = Group.pluck(:id, :name).to_h
+
+    upload_ids =
+      if table_column_names("events").include?("image_upload_id")
+        query(
+          "SELECT DISTINCT image_upload_id FROM events WHERE image_upload_id IS NOT NULL",
+        ) { |rows| rows.filter_map { |row| upload_id_from_original_id(row["image_upload_id"]) } }
+      else
+        []
+      end
+    @event_image_urls_by_upload_id =
+      Upload.where(id: upload_ids).to_h { |upload| [upload.id, upload.short_url] }
+  end
+
+  def log_event_allowed_group_issues(event)
+    return if event["allowed_group_ids"].blank?
+
+    if event["status"] != DiscourseEvents::Events::Event.statuses[:private]
+      log_import_issue("event allowed groups ignored (event isn't private)", "event #{event["id"]}")
+      return
+    end
+
+    missing = JSON.parse(event["allowed_group_ids"]).reject { |id| group_id_from_imported_id(id) }
+    return if missing.empty?
+
+    log_import_issue(
+      "event allowed groups not found",
+      "#{missing.join(", ")} (event #{event["id"]})",
+    )
+  end
+
+  def event_image_upload_id(event)
+    upload_id_from_original_id(event["image_upload_id"]) if event["image_upload_id"].present?
+  end
+
+  # Line breaks would end the BBCode tag, and the plugin stores at most 1000 characters.
+  def event_location(event)
+    event["location"]&.squish.presence&.[](0..999)
+  end
+
+  # Picks a quote pair that doesn't occur in the value, so it needs no escaping.
+  def bbcode_attribute(name, value)
+    value = value.to_s
+    marks = BBCODE_QUOTATION_MARKS.find { |pair| pair.chars.none? { |mark| value.include?(mark) } }
+    return %{ #{name}="#{value.delete('"')}"} unless marks
+
+    %{ #{name}=#{marks[0]}#{value}#{marks[1]}}
   end
 
   def import_post_custom_fields
@@ -3005,6 +3096,38 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     topic_users.close
+  end
+
+  # Mirrors Invitee#update_topic_tracking!. Runs after the imported topic users, so an
+  # explicit subscription from the source wins, and before update_topic_users, which
+  # keeps the level because the row has a notification reason.
+  def import_event_invitee_topic_tracking
+    return unless defined?(DiscourseEvents::Events)
+
+    puts "", "Importing topic tracking of event invitees..."
+
+    statuses = DiscourseEvents::Events::Invitee.statuses
+    levels = TopicUser.notification_levels
+
+    DB.exec(
+      <<~SQL,
+      INSERT INTO topic_users (user_id, topic_id, notification_level, notifications_changed_at,
+                               notifications_reason_id)
+      SELECT i.user_id, p.topic_id,
+             CASE i.status WHEN :going THEN :watching WHEN :interested THEN :tracking ELSE :regular END,
+             i.created_at, :user_changed
+        FROM discourse_post_event_invitees i
+             JOIN posts p ON p.id = i.post_id
+       WHERE i.status IS NOT NULL
+          ON CONFLICT (user_id, topic_id) DO NOTHING
+    SQL
+      going: statuses[:going],
+      interested: statuses[:interested],
+      watching: levels[:watching],
+      tracking: levels[:tracking],
+      regular: levels[:regular],
+      user_changed: TopicUser.notification_reasons[:user_changed],
+    )
   end
 
   def update_topic_users
@@ -3805,8 +3928,23 @@ class BulkImport::Generic < BulkImport::Base
     SQL
     puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
+    import_event_upload_references
+
     import_content_upload_references("posts")
     import_content_upload_references("chat_messages")
+  end
+
+  def import_event_upload_references
+    return unless defined?(DiscourseEvents::Events)
+
+    puts "", "Importing upload references for events..."
+    DB.exec(<<~SQL, target_type: DiscourseEvents::Events::Event.name)
+      INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
+      SELECT image_upload_id, :target_type, id, NOW(), NOW()
+        FROM discourse_post_event_events
+       WHERE image_upload_id IS NOT NULL
+          ON CONFLICT DO NOTHING
+    SQL
   end
 
   def import_content_upload_references(type)
@@ -3976,7 +4114,7 @@ class BulkImport::Generic < BulkImport::Base
       intermediate_group_ids = []
       if row["tag_group_ids"] && !row["tag_group_ids"].empty?
         intermediate_group_ids = JSON.parse(row["tag_group_ids"])
-      elsif row["tag_group_id"] && !row["tag_group_id"].empty?
+      elsif row["tag_group_id"].present?
         # Support old single tag_group_id
         intermediate_group_ids = [row["tag_group_id"]]
       end
@@ -4163,6 +4301,30 @@ class BulkImport::Generic < BulkImport::Base
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
+  # Runs after the votes are imported because creating a CategorySetting unarchives
+  # votes of the category's existing open topics.
+  def import_category_topic_voting
+    unless defined?(DiscourseTopicVoting)
+      puts "", "Skipping topic voting categories, because the topic voting plugin is not installed."
+      return
+    end
+
+    return if table_column_names("categories").exclude?("topic_voting")
+
+    puts "", "Enabling topic voting on categories..."
+
+    rows = query("SELECT id FROM categories WHERE topic_voting = 1 ORDER BY id")
+
+    rows.each do |row|
+      category_id = category_id_from_imported_id(row["id"])
+      next unless category_id
+
+      DiscourseTopicVoting::CategorySetting.find_or_create_by!(category_id:)
+    end
+
+    rows.close
+  end
+
   def import_answers
     unless defined?(DiscourseSolved)
       puts "  Skipping import of solved topics"
@@ -4304,15 +4466,35 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     default_custom_fields = "{}"
-    timezone = "UTC"
-    public_group_invitees = "{#{DiscourseEvents::Events::Event::PUBLIC_GROUP}}"
-    standalone_invitees = "{}"
+    statuses = DiscourseEvents::Events::Event.statuses
+    array_encoder = PG::TextEncoder::Array.new
 
     existing_events = DiscourseEvents::Events::Event.pluck(:id).to_set
+    load_event_lookups
 
     create_post_events(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       next if !post_id || existing_events.include?(post_id)
+
+      timezone = event_timezone(row)
+      if row["timezone"].present? && timezone != row["timezone"]
+        log_import_issue(
+          "invalid event timezone, using UTC",
+          "#{row["timezone"]} (event #{row["id"]})",
+        )
+      end
+
+      raw_invitees =
+        case row["status"]
+        when statuses[:public]
+          [DiscourseEvents::Events::Event::PUBLIC_GROUP]
+        when statuses[:private]
+          event_allowed_group_names(row)
+        else
+          []
+        end
+
+      log_event_allowed_group_issues(row)
 
       {
         id: post_id,
@@ -4321,18 +4503,34 @@ class BulkImport::Generic < BulkImport::Base
         original_ends_at: to_datetime(row["ends_at"]),
         name: row["name"],
         url: row["url"] ? row["url"][0..999] : nil,
+        location: event_location(row),
         custom_fields: row["custom_fields"] || default_custom_fields,
-        timezone: timezone,
-        raw_invitees:
-          (
-            if row["status"] == DiscourseEvents::Events::Event.statuses[:public]
-              public_group_invitees
-            else
-              standalone_invitees
-            end
-          ),
+        timezone:,
+        raw_invitees: array_encoder.encode(raw_invitees),
+        closed: to_boolean(row["closed"]),
+        image_upload_id: event_image_upload_id(row),
       }
     end
+
+    # Like Event#sync_image_to_post_and_topic, without waiting for a rebake.
+    DB.exec(<<~SQL)
+      UPDATE posts p
+         SET image_upload_id = e.image_upload_id
+        FROM discourse_post_event_events e
+       WHERE e.id = p.id
+         AND e.image_upload_id IS NOT NULL
+         AND p.image_upload_id IS DISTINCT FROM e.image_upload_id
+    SQL
+    DB.exec(<<~SQL)
+      UPDATE topics t
+         SET image_upload_id = p.image_upload_id
+        FROM posts p
+             JOIN discourse_post_event_events e ON e.id = p.id
+       WHERE p.topic_id = t.id
+         AND p.post_number = 1
+         AND e.image_upload_id IS NOT NULL
+         AND t.image_upload_id IS DISTINCT FROM e.image_upload_id
+    SQL
 
     puts "", "Importing event dates..."
 
@@ -4383,6 +4581,90 @@ class BulkImport::Generic < BulkImport::Base
     post_events.close
   end
 
+  def import_event_invitees
+    unless defined?(DiscourseEvents::Events)
+      puts "", "Skipping event invitees, because the events plugin is not installed."
+      return
+    end
+
+    unless @source_db.get_first_value(
+             "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'event_invitees'",
+           )
+      return
+    end
+
+    puts "", "Importing event invitees..."
+
+    invitees = query(<<~SQL)
+      SELECT event_invitees.*, events.post_id AS event_post_id
+        FROM event_invitees
+             JOIN events ON events.id = event_invitees.event_id
+       ORDER BY event_invitees.event_id, event_invitees.user_id
+    SQL
+
+    statuses = DiscourseEvents::Events::Invitee.statuses
+    event_statuses = DiscourseEvents::Events::Event.statuses
+    events =
+      DiscourseEvents::Events::Event
+        .pluck(:id, :status, :raw_invitees)
+        .to_h { |id, status, groups| [id, { status:, groups: groups || [] }] }
+    private_event_groups =
+      events.values.filter_map do |event|
+        event[:groups] if event[:status] == event_statuses[:private]
+      end
+    group_members =
+      GroupUser
+        .joins(:group)
+        .where(groups: { name: private_event_groups.flatten.uniq })
+        .pluck(:user_id, "groups.name")
+        .to_set
+    # The default scope hides suspended, silenced and staged users.
+    existing_invitees = DiscourseEvents::Events::Invitee.unscoped.pluck(:post_id, :user_id).to_set
+
+    create_event_invitees(invitees) do |row|
+      post_id = post_id_from_imported_id(row["event_post_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      event = events[post_id]
+      next unless event && user_id
+
+      # The plugin removes invitees from standalone events, and from private events
+      # when they aren't in one of the allowed groups.
+      case event[:status]
+      when event_statuses[:standalone]
+        log_import_issue(
+          "event invitee skipped (standalone event)",
+          "user #{row["user_id"]} of event #{row["event_id"]}",
+        )
+        next
+      when event_statuses[:private]
+        if event[:groups].none? { |group| group_members.include?([user_id, group]) }
+          log_import_issue(
+            "event invitee skipped (not in the event's allowed groups)",
+            "user #{row["user_id"]} of event #{row["event_id"]}",
+          )
+          next
+        end
+      end
+
+      status = row["status"] || statuses[:going]
+      if statuses.values.exclude?(status)
+        log_import_issue(
+          "event invitee skipped (unknown status)",
+          "status #{status} of user #{row["user_id"]} in event #{row["event_id"]}",
+        )
+        next
+      end
+
+      next unless existing_invitees.add?([post_id, user_id])
+
+      created_at = to_datetime(row["created_at"])
+
+      { post_id:, user_id:, status:, created_at:, updated_at: created_at }
+    end
+
+    invitees.close
+  end
+
   def import_tag_users
     puts "", "Importing tag users..."
 
@@ -4413,6 +4695,7 @@ class BulkImport::Generic < BulkImport::Base
     rows = query(<<~SQL)
       SELECT DISTINCT badge_group
         FROM badges
+       WHERE badge_group IS NOT NULL
        ORDER BY badge_group
     SQL
 
@@ -4455,7 +4738,7 @@ class BulkImport::Generic < BulkImport::Base
         name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
-        badge_grouping_id: @badge_group_mapping[row["badge_group"]],
+        badge_grouping_id: @badge_group_mapping[row["badge_group"]] || BadgeGrouping::Other,
         long_description: row["long_description"],
         image_upload_id:
           (

@@ -39,7 +39,6 @@ sk:
     ai_toxicity_flag_threshold_threat: "Hrozba"
     ai_toxicity_flag_threshold_sexual_explicit: "Explicitný sexuálny obsah"
     ai_toxicity_groups_bypass: "Používatelia v týchto skupinách nebudú mať svoje príspevky klasifikované modulom toxicity."
-    ai_sentiment_enabled: "Povoľte modul sentimentu."
     ai_sentiment_inference_service_api_endpoint: "URL adresa, na ktorej je spustené API pre modul sentimentu"
     ai_sentiment_inference_service_api_key: "Kľúč API pre API sentimentu"
     ai_nsfw_detection_enabled: "Povoľte modul NSFW."
@@ -96,88 +95,60 @@ sk:
       yaxis: "Dátum"
     emotion_admiration:
       title: "🤩 Obdiv"
-      description: "Príspevky klasifikované emóciou obdiv prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
       title: "😄 Zábava"
-      description: "Príspevky klasifikované pomocou emócie amusement prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
       title: "😠 Hnev"
-      description: "Príspevky klasifikované emóciou hnev pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
       title: "😒 Otravnosť"
-      description: "Príspevky klasifikované pomocou emócie otravnosti pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
       title: "👍 Schválenie"
-      description: "Príspevky klasifikované so schválením emócie pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
       title: "🤗 Starostlivosť"
-      description: "Príspevky klasifikované pomocou emócie starostlivosť prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
       title: "😕 Zmätok"
-      description: "Príspevky klasifikované pomocou zámeny emócií pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
       title: "🤔 Zvedavosť"
-      description: "Príspevky klasifikované pomocou emócie zvedavosť prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
       title: "😍 Túžba"
-      description: "Príspevky klasifikované pomocou emócie túžby pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
       title: "😞 Sklamanie"
-      description: "Príspevky klasifikované pomocou emócie sklamanie pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
       title: "👎 Nesúhlas"
-      description: "Príspevky klasifikované emóciou nesúhlasu pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
       title: "🤢 Znechutenie"
-      description: "Príspevky klasifikované emóciou znechutenia pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
       title: "😳 Rozpaky"
-      description: "Príspevky klasifikované emóciou rozpaky pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
       title: "🤪 Vzrušenie"
-      description: "Príspevky klasifikované pomocou emócie vzrušenie pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
       title: "😨 Strach"
-      description: "Príspevky klasifikované emóciou strach pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
       title: "🙏 Vďačnosť"
-      description: "Príspevky klasifikované pomocou emócie vďačnosti pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
       title: "😢 Smútok"
-      description: "Príspevky klasifikované emóciou smútok pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
       title: "😊 Radosť"
-      description: "Príspevky klasifikované s emóciou radosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_love:
       title: '❤️ Láska'
-      description: "Príspevky klasifikované s emóciou láska prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_nervousness:
       title: "😰 Nervozita"
-      description: "Príspevky klasifikované emóciou nervozita pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
       title: "😐 Neutrálna"
-      description: "Príspevky klasifikované pomocou AI s neutrálnou emóciou pomocou modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
       title: "🌟 Optimizmus"
-      description: "Príspevky klasifikované pomocou emócie optimizmus pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
       title: "🦁 Hrdosť"
-      description: "Príspevky klasifikované s emóciou hrdosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_realization:
       title: "💡 Realizácia"
-      description: "Príspevky klasifikované pomocou realizácie emócií pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
       title: "😌 Úľava"
-      description: "Príspevky klasifikované s úľavou od emócií prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_remorse:
       title: "😔 Výčitky svedomia"
-      description: "Príspevky klasifikované s emóciou ľútosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_sadness:
       title: "😭 Smútok"
-      description: "Príspevky klasifikované pomocou emócie smútku pomocou AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_surprise:
       title: "😲 Prekvapenie"
-      description: "Príspevky klasifikované s emóciou prekvapenia prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
   discourse_ai:
     ai_artifact:
       errors:
@@ -263,6 +234,27 @@ sk:
       default_pm_prefix: "[Bez názvu AI bot PM]"
       read_post:
         unknown_post: "príspevok"
+      chat_tool_approval:
+        topic_states:
+          open: "Zahájiť"
+          closed: "Hlasovanie ukončené"
+          active: "Aktívny"
+        solution_post: "Príspevok #%{number}"
+        duration_label: "Trvanie:"
+        user_duration:
+          one: "%{count} deň"
+          few: "%{count} dni"
+          many: "%{count} dní"
+          other: "%{count} dní"
+        posts_label: "Príspevky"
+        category_label: "Kategória"
+        category_fields:
+          name: "mena"
+          description: "popis"
+          color: "farba"
+          text_color: "farba textu"
+        approve_label: "Áno"
+        reject_label: "Nie"
       agents:
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"
         github_helper:

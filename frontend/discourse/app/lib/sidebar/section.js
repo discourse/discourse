@@ -124,7 +124,7 @@ export default class Section {
    * Commits a dragged row's drop into this section: a drop from this very
    * section reorders it, one from another section transfers the link here.
    *
-   * @param {Object} dragData - The drag source's payload: `sectionId`,
+   * @param {{ sectionId: number, linkId: number, public: boolean }} dragData - The drag source's payload: `sectionId`,
    *   `linkId`, and whether the source section is `public`.
    * @param {number|undefined} dropIndex - The measured drop offset;
    *   undefined appends.

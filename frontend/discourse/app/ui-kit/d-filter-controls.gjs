@@ -14,7 +14,6 @@ import DiscourseURL, {
   applyQueryParams,
   searchParamsFromPath,
 } from "discourse/lib/url";
-import { and, eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
@@ -284,9 +283,9 @@ export default class DFilterControls extends Component {
    * Allows searchable props in the format user.name, this function gets the
    * nested value based on a dot-separated path.
    *
-   * @param {Object} obj - The object to get value from
+   * @param {object} obj - The object to get value from
    * @param {String} path - The property path (e.g. "user.name")
-   * @returns {*} The value at the path
+   * @returns {unknown} The value at the path
    */
   getNestedValue(obj, path) {
     return path.split(".").reduce((current, key) => current?.[key], obj);

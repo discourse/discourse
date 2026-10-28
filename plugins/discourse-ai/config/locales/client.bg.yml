@@ -42,6 +42,13 @@ bg:
       ai_decoded_transcript:
         type: "Тип"
         error: "Грешка"
+      discourse_workflows:
+        classify:
+          text: "Текст"
+          upload_ids: "Изображения"
+          name: "Име"
+          type: "Тип"
+          type_score: "Точки"
       ai_tool_approval:
         loading: "Зарежда се..."
         tool: "Действия"
@@ -67,6 +74,8 @@ bg:
         filters:
           all: "Всички"
           reset: "Нулиране"
+        sentiment:
+          enabled: "Да е включен"
         search:
           name: "Търсене"
         image_caption:
@@ -192,6 +201,11 @@ bg:
         edit: "Редактирай"
         delete: "Изтрий"
         embedding: "Ембедване"
+      decision_models:
+        no_preset: "Без"
+        display_name: "Име"
+        edit: "Редактирай"
+        delete: "Изтрий"
       mcp_servers:
         name: "Име "
         description: "Описание"
@@ -203,6 +217,14 @@ bg:
         delete: "Изтрий"
         tools_modal:
           required: "Задъжителни"
+      models:
+        name: "Име"
+        type: "Тип"
+        edit: "Редактирай"
+        types:
+          embedding: "Ембедване"
+        filters:
+          all: "Всички видове"
       llms:
         display_name: "Име"
         vision_modes:
@@ -247,6 +269,13 @@ bg:
         providers:
           google: "Google"
           fake: "По избор"
+      ai_artifact:
+        editor:
+          version: "Версия"
+          default: "По подразбиране"
+          apply: "Приложи"
+        share: "Споделяне"
+        filter_all: "Всички"
       ai_bot:
         debug_ai_modal:
           duration_label: "Продължителност:"
@@ -272,6 +301,13 @@ bg:
       summarization:
         chat:
           summarize: "Обобщаване"
+      ai_search:
+        related_replies:
+          one: "%{count} отговор"
+          other: "%{count} отговора"
+        tabs:
+          topics: "Теми"
+          messages: "Съобщения"
       discobot_discoveries:
         legacy:
           regular_results: "Теми"

@@ -49,6 +49,13 @@ ko:
         type: "형식"
         error: "에러"
         response: "응답"
+      discourse_workflows:
+        classify:
+          text: "텍스트"
+          upload_ids: "이미지"
+          name: "그룹명"
+          type: "형식"
+          type_score: "점수"
       ai_tool_approval:
         loading: "로드 중..."
         tool: "처리"
@@ -74,6 +81,8 @@ ko:
         filters:
           all: "모두"
           reset: "리셋"
+        sentiment:
+          enabled: "활성화"
         summarization:
           setting_groups:
             settings: "기본 설정"
@@ -220,6 +229,12 @@ ko:
         edit: "편집"
         delete: "삭제"
         embedding: "삽입(Embedding)"
+      decision_models:
+        no_preset: "없음"
+        display_name: "그룹명"
+        provider: "공급자"
+        edit: "편집"
+        delete: "삭제"
       mcp_servers:
         name: "그룹명"
         description: "내용"
@@ -233,6 +248,16 @@ ko:
         delete: "삭제"
         tools_modal:
           required: "필수"
+      models:
+        name: "그룹명"
+        type: "형식"
+        provider: "공급자"
+        edit: "편집"
+        select_type: "선택"
+        types:
+          embedding: "삽입(Embedding)"
+        filters:
+          all: "모든 유형"
       llms:
         display_name: "그룹명"
         provider: "공급자"
@@ -291,6 +316,17 @@ ko:
         providers:
           google: "구글"
           fake: "사용자 정의"
+      ai_artifact:
+        editor:
+          version: "버전"
+          default: "기본"
+          option_on: "켜기"
+          option_off: "끄기"
+          apply: "적용"
+        share: "공유하기"
+        create_link: "링크 만들기"
+        copy_link: "링크 복사"
+        filter_all: "모두"
       ai_bot:
         debug_ai_modal:
           duration_label: "기간:"
@@ -324,6 +360,12 @@ ko:
           summarize: "요약하기"
           since:
             other: "약 %{count}시간"
+      ai_search:
+        related_replies:
+          other: "%{count} 댓글"
+        tabs:
+          topics: "글"
+          messages: "메시지"
       discobot_discoveries:
         legacy:
           regular_results: "글"

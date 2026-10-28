@@ -3,6 +3,53 @@
 RSpec.describe User do
   subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
+  describe "#available_notification_types" do
+    fab!(:user)
+
+    it "returns distinct types for this user's read and unread notifications" do
+      expect(user.available_notification_types).to eq([])
+      like =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:liked],
+          read: true,
+        )
+      Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
+      Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
+      Fabricate(:notification, notification_type: Notification.types[:replied])
+
+      expect(user.available_notification_types).to contain_exactly(
+        Notification.types[:liked],
+        Notification.types[:mentioned],
+      )
+
+      like.destroy!
+      expect(user.available_notification_types).to eq([Notification.types[:mentioned]])
+    end
+
+    it "excludes notifications for deleted topics" do
+      notification = Fabricate(:notification, user: user)
+      notification.topic.update!(deleted_at: Time.current)
+
+      expect(user.available_notification_types).to eq([])
+    end
+
+    it "publishes current availability after creating and deleting notifications" do
+      user.update!(last_seen_at: 1.minute.ago)
+      notification = nil
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") do
+          notification =
+            Fabricate(:notification, user: user, notification_type: Notification.types[:liked])
+        end
+      expect(messages.last.data[:available_notification_types]).to eq([Notification.types[:liked]])
+
+      messages = MessageBus.track_publish("/notification/#{user.id}") { notification.destroy! }
+      expect(messages.last.data[:available_notification_types]).to eq([])
+    end
+  end
+
   it_behaves_like "it has custom fields"
 
   describe "#reload" do
@@ -239,6 +286,22 @@ RSpec.describe User do
             new_name: "Batman",
           },
         ) { user.update(name: "Batman") }
+      end
+    end
+
+    describe "#display_name" do
+      it "uses the name when names are enabled and names are prioritized" do
+        SiteSetting.enable_names = true
+        SiteSetting.prioritize_username_in_ux = false
+
+        expect(user.display_name).to eq(user.name)
+      end
+
+      it "uses the username when names are disabled" do
+        SiteSetting.enable_names = false
+        SiteSetting.prioritize_username_in_ux = false
+
+        expect(user.display_name).to eq(user.username)
       end
     end
   end
@@ -1500,6 +1563,8 @@ RSpec.describe User do
   end
 
   describe "update_timezone_if_missing" do
+    subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago, timezone: nil) }
+
     let(:timezone) { nil }
 
     it "does nothing if timezone is nil" do
@@ -3373,6 +3438,60 @@ RSpec.describe User do
   end
 
   describe "#destroy!" do
+    it "destroys an unsaved user without attempting an ownership handoff" do
+      user = Fabricate.build(:user)
+
+      user.destroy!
+
+      expect(user).to be_destroyed
+    end
+
+    it "transfers owned ACLs after removing the user record" do
+      user = Fabricate(:user)
+      admin = Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+
+      queries = track_sql_queries { user.destroy! }
+
+      expect(user).to be_destroyed
+      expect(owner_acl.reload.allowed_user_ids).to eq([admin.id])
+      deletion_index = queries.index { |query| query.match?(/DELETE FROM "users"/) }
+      transfer_index = queries.index { |query| query.match?(/UPDATE "access_control_lists"/) }
+      expect(deletion_index).to be < transfer_index
+    end
+
+    it "rolls back ownership and its audit entry when a later destruction callback fails" do
+      user = Fabricate(:user)
+      Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+      user.stubs(:clear_acls).raises(ActiveRecord::RecordNotDestroyed)
+      audit_count =
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count
+
+      expect { user.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+
+      expect(User.exists?(user.id)).to eq(true)
+      expect(owner_acl.reload.allowed_user_ids).to eq([user.id])
+      expect(
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count,
+      ).to eq(audit_count)
+    end
+
+    it "preserves the user and ownership if the assumption cannot be audited" do
+      user = Fabricate(:user)
+      Fabricate(:admin)
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+      StaffActionLogger
+        .any_instance
+        .stubs(:log_assume_access_control_ownership)
+        .raises(ActiveRecord::RecordInvalid)
+
+      expect { user.destroy! }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(User.exists?(user.id)).to eq(true)
+      expect(owner_acl.reload.allowed_user_ids).to eq([user.id])
+    end
+
     it "clears up associated data on destroy!" do
       user = Fabricate(:user)
       post = Fabricate(:post)
@@ -3803,12 +3922,19 @@ RSpec.describe User do
 
       group.add(whisperer)
 
-      expect(whisperer.whisperer?).to eq(true)
+      expect(whisperer.reload.whisperer?).to eq(true)
       expect(user.whisperer?).to eq(false)
     end
 
     it "returns false if no whispers groups exist" do
       expect(user.whisperer?).to eq(false)
+    end
+
+    it "looks up whisper group membership once" do
+      SiteSetting.whispers_allowed_groups = "#{group.id}"
+      user.whisperer?
+
+      expect(track_sql_queries { user.whisperer? }).to be_empty
     end
   end
 

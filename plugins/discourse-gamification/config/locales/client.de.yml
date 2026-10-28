@@ -54,7 +54,6 @@ de:
         scoring_configuration: "Scoring-Konfiguration"
         scoring_configuration_description: "Überschreibe die allgemeinen Scoring-Regeln für diese Rangliste. Lass die Felder leer, um die allgemeinen Standardeinstellungen zu verwenden."
         scorable_categories: "Kategorien im Scoring"
-        scorable_categories_help: "Kategorien, die in das Scoring einfließen sollen. Lass das Feld leer, um die globale Einstellung zu verwenden."
         score_overrides: "Gewichtung der Scores"
         score_overrides_help: "Überschreibe die Punktwerte für jede Aktion. Lass das Feld leer, um die globale Standardeinstellung zu verwenden. Setze den Wert auf 0, um die Funktion zu deaktivieren."
         weight:
@@ -86,9 +85,7 @@ de:
       close: "Schließen"
       delete: "Löschen"
       edit: "Bearbeiten"
-      back: "Zurück"
       save: "Speichern"
-      apply: "Anwenden"
       recalculate: "Scores neu berechnen"
       recalculating: "Scores werden neu berechnet …"
       completed: "Fertig! Die Scores wurden erfolgreich neu berechnet."
@@ -107,9 +104,11 @@ de:
       admin:
         title: "Gamifizierung"
         name: "Name"
+        created_by: "Erstellt von"
         period: "Zeitraum"
     discourse_workflows:
       gamification_score:
         username: "Nutzer"
         date: "Datum"
         description: "Beschreibung"
+        category_id: "Kategorie"

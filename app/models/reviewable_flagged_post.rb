@@ -3,16 +3,22 @@
 class ReviewableFlaggedPost < Reviewable
   include ReviewableActionBuilder
 
+  class << self
+    def additional_args(params)
+      args = ReviewableActionBuilder.penalty_args(params)
+
+      args[:post_version] = params[:post_version] if params[:action_id] == "agree_and_edit"
+
+      args
+    end
+  end
+
   scope :pending_and_default_visible, -> { pending.default_visible }
 
-  # Penalties are handled by the modal after the action is performed
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_keep,
       agree_and_keep_deleted: :agree_and_keep,
-      agree_and_silence: :agree_and_keep,
-      agree_and_suspend: :agree_and_keep,
-      agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
       disagree_and_keep_deleted: :disagree,
       ignore_and_do_nothing: :ignore,
@@ -250,6 +256,35 @@ class ReviewableFlaggedPost < Reviewable
     create_result(:success, :ignored, actions.map(&:user_id), false)
   end
 
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_edit(performed_by, args)
+    post_version = performed_by.staff? ? post.version : post.public_version
+    revision = post.revisions.find_by(number: post.version)
+    latest_flag_at = reviewable_scores.pending.maximum(:created_at) || created_at
+
+    unless args[:post_version].to_s == post_version.to_s && revision &&
+             revision.updated_at >= latest_flag_at && revision.modifications.present?
+      raise Discourse::InvalidParameters.new(:post_version)
+    end
+
+    result = perform_agree_and_keep(performed_by, args)
+    result.post_revision = revision
+    result
+  end
+
   def perform_agree_and_keep(performed_by, args)
     agree(performed_by, args)
   end
@@ -380,6 +415,81 @@ class ReviewableFlaggedPost < Reviewable
 
   private
 
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_edit
+      {
+        decision_facts: "The flagged post was edited.",
+        decision_visibility: ["DECISION_VISIBILITY_OTHER"],
+        decision_visibility_other: "Content edited",
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :agree_and_hide, :agree_and_keep_hidden
+      {
+        decision_facts: "Access to the flagged post was disabled.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :delete_and_agree, :delete_and_ignore, :delete_and_agree_replies,
+         :delete_and_ignore_replies, :agree_and_keep_deleted
+      {
+        decision_facts: "The flagged post was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :agree_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_facts: "The author of the flagged post was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_facts:
+          "The author of the flagged post had their ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_and_block_user, :delete_user_block
+      user = target_created_by
+
+      {
+        decision_facts: "The author of the flagged post had their account deleted.",
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    end
+  end
+
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable_id: id)
   end
@@ -392,6 +502,7 @@ class ReviewableFlaggedPost < Reviewable
       user_id: post.user_id,
       message_type: "flags_disagreed",
       message_options: {
+        **Dsa::AppealInstructions.message_options,
         flagged_post_raw_content: post.raw,
         url: post.url,
       },

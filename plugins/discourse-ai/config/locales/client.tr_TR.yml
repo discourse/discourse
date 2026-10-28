@@ -250,6 +250,12 @@ tr_TR:
         ai_agent:
           agent_id: "Ajan"
           mode: "Mod"
+        classify:
+          text: "Metin"
+          upload_ids: "Görüntüler"
+          name: "Ad"
+          type: "Tür"
+          type_score: "Puan"
       ai_tool_approval:
         loading: "Yükleniyor..."
         agent: "Ajan"
@@ -260,14 +266,11 @@ tr_TR:
         approved: "Onaylandı"
         rejected: "Reddedilen"
       default_llm:
-        title: "Varsayılan LLM modeli"
-        description: "Tüm AI özellikleri için kullanılacak varsayılan LLM modeli. Bu, özellik yapılandırmasında veya ajanda herhangi bir LLM belirtilmediğinde kullanılır. Varsayılan bir LLM belirtilmezse, en son oluşturulan LLM kullanılır."
+        title: "Varsayılan dil modeli"
       llm_selector:
         none: "Hiçbiri"
-        saved: "Varsayılan LLM modeli başarıyla güncellendi"
       features:
         short_title: "Özellikler"
-        description: "Bunlar, sitenizdeki ziyaretçilerin kullanabileceği yapay zeka özellikleridir. Bu özellikler, belirli ajanlar ve büyü LLM'ler kullanacak şekilde yapılandırılabilir ve gruplara göre erişim kontrolü uygulanabilir."
         back: "AI özelliklerine geri dön"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
         disabled: "(devre Dışı)"
@@ -281,6 +284,7 @@ tr_TR:
         no_llm: "LLM seçilmedi"
         no_agent: "Ayarlanmamış"
         no_groups: "Hiçbiri"
+        classification_model: "Model:"
         edit: "Ayarlar"
         expand_list:
           one: "(%{count} tane Daha)"
@@ -299,10 +303,17 @@ tr_TR:
           enabled: "Etkin mi"
         filters:
           all: "Tümü"
-          text: "Arama özellikleri, ajanlar, büyük dil modelleri veya gruplar..."
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"
+        sentiment:
+          sentiment: "Duyarlılık"
+          emotion: "Duygu"
+          enabled: "Etkin mi"
+          agent: "Ajan"
+          setting_groups:
+            sentiment: "Duyarlılık"
+            emotion: "Duygu"
         summarization:
           name: "Özetler"
           description: "Ziyaretçilerin konuları özetlemesine olanak tanıyan bir özetleme düğmesi sunar"
@@ -807,7 +818,6 @@ tr_TR:
           result: "Test sonucu"
       secrets:
         short_title: "Kimlik bilgileri"
-        description: "LLM'ler, gömülü öğeler ve araçlar arasında paylaşılan kimlik doğrulama bilgilerini yönetin."
         name: "Ad"
         secret: "Değer"
         select_secret: "Bir kimlik bilgisi seçin..."
@@ -832,6 +842,15 @@ tr_TR:
         mcp_server_oauth_client_secret: "MCP sunucusu OAuth istemci gizli anahtarı"
         modal:
           title: "Yeni kimlik bilgisi oluştur"
+      decision_models:
+        no_preset: "Hiçbiri"
+        display_name: "Ad"
+        model: "Model"
+        provider: "Sağlayıcı"
+        api_key: "Kimlik bilgisi"
+        edit: "Düzenle"
+        delete: "Sil"
+        test: "Testi çalıştır"
       mcp_servers:
         short_title: "MCP sunucuları"
         new: "Yeni MCP sunucusu"
@@ -913,6 +932,18 @@ tr_TR:
         test_summary:
           one: "%{version} protokolü kullanılarak %{count} aracı keşfedildi."
           other: "%{version} protokolü kullanılarak %{count} aracı keşfedildi."
+      models:
+        new: "Yeni model"
+        name: "Ad"
+        type: "Tür"
+        provider: "Sağlayıcı"
+        edit: "Düzenle"
+        select_type: "Seç"
+        types:
+          embedding: "Gömme"
+        filters:
+          all: "Bütün türler"
+          reset: "Filtreleri sıfırla"
       llms:
         short_title: "LLM'ler"
         no_llms: "Henüz LLM yok"
@@ -1167,9 +1198,24 @@ tr_TR:
         quick_search:
           suffix: "YZ ile tüm konu ve gönderilerde"
       ai_artifact:
+        editor:
+          version: "Sürüm"
+          default: "Varsayılan"
+          option_on: "Açık"
+          option_off: "Kapalı"
+          apply: "Uygula"
         expand_view_label: "Görünümü genişlet"
         collapse_view_label: "Tam Ekrandan Çık (ESC veya Geri tuşu)"
         click_to_run_label: "Artifact'i çalıştır"
+        share: "Paylaş"
+        create_link: "Bağlantı oluştur"
+        copied: "Panoya kopyalandı"
+        copy_link: "Bağlantıyı kopyala"
+        copy_embed: "Yerleştirmeyi kopyala"
+        new_tab: "Yeni sekmede göster"
+        filter_all: "Tümü"
+        filter_standalone: "Bağımsız"
+        filter_conversation: "Konuşma"
       ai_bot:
         title: "YZ botu"
         agent: "Ajan:"
@@ -1299,6 +1345,15 @@ tr_TR:
             compact: "Kompakt"
             expanded: "Genişletilmiş"
             expanded_description: "YZ özetleriyle"
+      ai_search:
+        related_topics: "İlgili konular"
+        related_replies:
+          one: "%{count} yanıt"
+          other: "%{count} yanıt"
+        tabs:
+          ask: "YZ'ye sor"
+          topics: "Konular"
+          messages: "İletiler"
       discobot_discoveries:
         main_title: "YZ'ye sor"
         loading_convo: "Konuşma yükleniyor"

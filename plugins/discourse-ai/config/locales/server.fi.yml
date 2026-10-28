@@ -25,7 +25,6 @@ fi:
         description: "Säännöllinen raportti laajan kielimallin perusteella"
   site_settings:
     discourse_ai_enabled: "Ota Discoursen tekoälylisäosa käyttöön."
-    ai_default_llm_model: "Oletusarvoinen LLM-malli, jota käytetään kaikkiin tekoälyominaisuuksiin"
     ai_artifact_security: "Tekoälyartefaktijärjestelmä luo iframe-kehyksiä suoritettavalla koodilla. Tiukka tila pakottaa ylimääräisen klikkauksen koodin suorittamiseksi. Löyhä tila suorittaa koodin välittömästi. Hybriditila antaa käyttäjälle mahdollisuuden syöttää data-ai-artifact-autorun-parametrin näytettäväksi heti. Pois käytöstä -tila poistaa artefaktijärjestelmän käytöstä."
     ai_toxicity_enabled: "Ota toksisuusmoduuli käyttöön."
     ai_toxicity_inference_service_api_endpoint: "URL-osoite, jossa toksisuusmoduulin API on käynnissä"
@@ -40,7 +39,6 @@ fi:
     ai_toxicity_flag_threshold_threat: "Uhkaus"
     ai_toxicity_flag_threshold_sexual_explicit: "Seksuaalinen"
     ai_toxicity_groups_bypass: "Toksisuusmoduuli ei luokittele näiden ryhmien käyttäjien viestejä."
-    ai_sentiment_enabled: "Ota sävymoduuli käyttöön."
     ai_sentiment_inference_service_api_endpoint: "URL-osoite, jossa sävymoduulin API on käynnissä"
     ai_sentiment_inference_service_api_key: "Sävy-APIn API-avain"
     ai_nsfw_detection_enabled: "Ota NSFW-moduuli käyttöön."
@@ -98,88 +96,60 @@ fi:
       yaxis: "Päivämäärä"
     emotion_admiration:
       title: "🤩 Ihailu"
-      description: "Viestit, jotka on luokiteltu ihailun tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_amusement:
       title: "😄 Huvittuneisuus"
-      description: "Viestit, jotka on luokiteltu huvittuneisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_anger:
       title: "😠 Viha"
-      description: "Viestit, jotka on luokiteltu vihan tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_annoyance:
       title: "😒 Ärsytys"
-      description: "Viestit, jotka on luokiteltu ärsytyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_approval:
       title: "👍 Hyväksyntä"
-      description: "Viestit, jotka on luokiteltu hyväksynnän tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_caring:
       title: "🤗 Välittäminen"
-      description: "Viestit, jotka on luokiteltu välittämisen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_confusion:
       title: "😕 Hämmennys"
-      description: "Viestit, jotka on luokiteltu hämmennyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_curiosity:
       title: "🤔 Uteliaisuus"
-      description: "Viestit, jotka on luokiteltu uteliaisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_desire:
       title: "😍 Halu"
-      description: "Viestit, jotka on luokiteltu halun tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_disappointment:
       title: "😞 Pettymys"
-      description: "Viestit, jotka on luokiteltu pettymyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_disapproval:
       title: "👎 Paheksunta"
-      description: "Viestit, jotka on luokiteltu paheksunnan tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_disgust:
       title: "🤢 Inho"
-      description: "Viestit, jotka on luokiteltu inhon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_embarrassment:
       title: "😳 Häpeä"
-      description: "Viestit, jotka on luokiteltu häpeän tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_excitement:
       title: "🤪 Innostus"
-      description: "Viestit, jotka on luokiteltu innostuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_fear:
       title: "😨 Pelko"
-      description: "Viestit, jotka on luokiteltu pelon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_gratitude:
       title: "🙏 Kiitollisuus"
-      description: "Viestit, jotka on luokiteltu kiitollisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_grief:
       title: "😢 Murheellisuus"
-      description: "Viestit, jotka on luokiteltu murheellisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
       title: "😊 Ilo"
-      description: "Viestit, jotka on luokiteltu ilon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_love:
       title: '❤️ Rakkaus'
-      description: "Viestit, jotka on luokiteltu rakkauden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_nervousness:
       title: "😰 Hermostuneisuus"
-      description: "Viestit, jotka on luokiteltu hermostuneisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_neutral:
       title: "😐 Neutraali"
-      description: "Viestit, jotka on luokiteltu neutraalilla tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_optimism:
       title: "🌟 Optimismi"
-      description: "Viestit, jotka on luokiteltu optimismin tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_pride:
       title: "🦁 Ylpeys"
-      description: "Viestit, jotka on luokiteltu ylpeyden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_realization:
       title: "💡 Oivallus"
-      description: "Viestit, jotka on luokiteltu oivalluksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_relief:
       title: "😌 Helpotus"
-      description: "Viestit, jotka on luokiteltu helpotuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_remorse:
       title: "😔 Katumus"
-      description: "Viestit, jotka on luokiteltu katumuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_sadness:
       title: "😭 Suru"
-      description: "Viestit, jotka on luokiteltu surullisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_surprise:
       title: "😲 Yllätys"
-      description: "Viestit, jotka on luokiteltu yllätyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
     ai_artifact:
       errors:
@@ -263,6 +233,26 @@ fi:
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
       read_post:
         unknown_post: "viesti"
+      chat_tool_approval:
+        topic_states:
+          open: "Avoinna"
+          closed: "Suljettu"
+          active: "Aktiivinen"
+          deleted: "Poistettu"
+        solution_post: "%{number}. Viesti"
+        duration_label: "Kesto:"
+        user_duration:
+          one: "%{count} päivä"
+          other: "%{count} päivää"
+        posts_label: "Viestit"
+        category_label: "Luokka"
+        category_fields:
+          name: "nimi"
+          description: "kuvaus"
+          color: "väri"
+          text_color: "tekstin väri"
+        approve_label: "Kyllä"
+        reject_label: "Ei"
       agents:
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:

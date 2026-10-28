@@ -42,6 +42,13 @@ sl:
       ai_decoded_transcript:
         type: "Tip"
         error: "napaka"
+      discourse_workflows:
+        classify:
+          text: "Besedilo"
+          upload_ids: "Slike"
+          name: "Ime"
+          type: "Tip"
+          type_score: "Ocena"
       ai_tool_approval:
         loading: "Nalagam..."
         tool: "Dejanje"
@@ -69,6 +76,8 @@ sl:
         filters:
           all: "Vsi"
           reset: "Ponastavi"
+        sentiment:
+          enabled: "Vključeno"
         search:
           name: "Išči"
         image_caption:
@@ -204,6 +213,11 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      decision_models:
+        no_preset: "Brez"
+        display_name: "Ime"
+        edit: "Uredi"
+        delete: "Izbriši"
       mcp_servers:
         name: "Ime"
         description: "Opis"
@@ -215,6 +229,14 @@ sl:
         delete: "Izbriši"
         tools_modal:
           required: "Zahtevano"
+      models:
+        name: "Ime"
+        type: "Tip"
+        edit: "Uredi"
+        types:
+          embedding: "Vdelovanje"
+        filters:
+          all: "Vse vrste"
       llms:
         display_name: "Ime"
         vision_modes:
@@ -265,6 +287,14 @@ sl:
         providers:
           google: "Google"
           fake: "Po meri"
+      ai_artifact:
+        editor:
+          version: "Verzija"
+          default: "Privzeto"
+          apply: "Uporabi"
+        share: "Deli"
+        filter_all: "Vsi"
+        filter_standalone: "Samostojni"
       ai_bot:
         debug_ai_modal:
           duration_label: "Trajanje:"
@@ -287,6 +317,15 @@ sl:
             category: "Kategorija"
           table:
             total_count: "Skupaj"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        tabs:
+          topics: "Tem"
+          messages: "Zasebna sporočila"
       discobot_discoveries:
         legacy:
           regular_results: "Tem"

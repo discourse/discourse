@@ -7,7 +7,7 @@ import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import I18n, { i18n } from "discourse-i18n";
-import Category from "./category";
+import Category from "./category.ts";
 
 export const PENDING = 0;
 export const APPROVED = 1;
@@ -33,6 +33,7 @@ export default class Reviewable extends RestModel {
   @tracked created_by;
   @tracked created_from_flag;
   @tracked deleted_at;
+  @tracked dsa_classification;
   @tracked editable_fields;
   @tracked fancy_title;
   @tracked id;

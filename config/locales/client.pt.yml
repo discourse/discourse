@@ -24,6 +24,7 @@ pt:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Dono(a)"
         access_permission_remove: "Remover"
     number:
       format:
@@ -262,7 +263,6 @@ pt:
       zh_CN:
         name: Chinês Simplificado
     share:
-      topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "publicação #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Partilhar no X"
@@ -314,6 +314,12 @@ pt:
     skip_to_last_reply: "Ir para a última resposta"
     skip_to_top: "Ir para o topo"
     skip_user_nav: "Ir para conteúdo do perfil"
+    reorder:
+      remove: "Remover %{label}"
+      removed: "Removeu %{label}"
+      move_up: "Mover para cima"
+      move_down: "Mover para baixo"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todas as mensagens a enviar foram globalmente desativadas por um administrador. Não será enviada nenhuma mensagem de notificações."
     emails_are_disabled_non_staff: "Mensagem a enviar foi desativado para os utilizadores que não são funcionários."
     software_update_prompt:
@@ -421,9 +427,6 @@ pt:
     max_of_count:
       one: "máximo de %{count}"
       other: "máximo de %{count}"
-    character_count:
-      one: "%{count} caráter"
-      other: "%{count} carateres"
     period_chooser:
       aria_label: "Filtrar por período"
     related_messages:
@@ -437,6 +440,17 @@ pt:
     admin_onboarding_banner:
       start_posting:
         back: "Anterior"
+        category_unavailable: "Esta categoria não está disponível para publicação."
+        icebreakers:
+          plan_categories:
+            title: "Por que categorias devemos começar?"
+            body: "Vamos descobrir como organizar as coisas antes do lançamento! Sobre o que as pessoas mais vão querer falar? Podemos começar com algumas categorias e acrescentar outras depois."
+          plan_invites:
+            title: "Que membros devemos convidar antes do lançamento?"
+            body: "É melhor juntar-se a uma comunidade que já tenha alguns membros. Quem devemos convidar em primeiro lugar? Pense em pessoas que gostem de conversar, de ajudar os outros e ficariam entusiasmadas por participar desde o início."
+          write_your_own:
+            title: "Escreva o seu próprio"
+            body: "Inicie uma conversa com um tema adequado à sua comunidade."
     design_wizard:
       back: "Anterior"
       next: "Próximo"
@@ -682,6 +696,9 @@ pt:
       title:
         search: "Pesquisar por uma Mensagem"
         placeholder: "digite aqui o título da mensagem, url ou id"
+    dsa_statements:
+      category: "Categoria"
+      saving: "Guardando..."
     review:
       show_more: "Mostrar mais"
       show_less: "Mostrar menos"
@@ -1851,10 +1868,12 @@ pt:
         letter_based: "Imagem de perfil atribuída pelo sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Adicionar foto personalizada"
+        current_avatar: "Imagem atual"
+        associated_account: "Imagem %{provider} "
         upload_title: "Carregar a sua foto"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
-        use_custom: "Ou carregue um avatar personalizado:"
+        use_custom: "Ou escolha outra imagem:"
       change_profile_background:
         title: "Cabeçalho do Perfil"
         instructions: "Os cabeçalhos do perfil serão centrados e com uma largura padrão de 1110px."
@@ -2422,7 +2441,7 @@ pt:
       hide_forever: "não, obrigado"
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
-      value_prop: "Estás cansado de percorrer as mesmas mensagens? Ao criares uma conta, voltarás sempre ao ponto onde paraste. Com uma conta, também podes ser notificado de novas respostas, guardar favoritos e utilizar os gostos para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade fantástica. :heart:"
+      value_prop: "Estás cansado de percorrer as mesmas mensagens? Ao criares uma conta, voltarás sempre ao ponto onde paraste. Com uma conta, também podes ser notificado de novas respostas, guardar favoritos e utilizar os gostos para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade fantástica."
     offline_indicator:
       no_internet: "Não tens ligação à Internet."
       refresh_page: "Actualiza a página"
@@ -2815,8 +2834,7 @@ pt:
       discard: "Descartar"
       draft_saved: "Rascunho guardado!"
       users_placeholder: "Adicionar utilizadores ou grupos"
-      title_placeholder: "Numa breve frase, de que se trata esta discussão?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
       topic_featured_link_placeholder: "Inserir hiperligação mostrada com o título."
@@ -2833,8 +2851,6 @@ pt:
       uploading: "A enviar…"
       show_preview: "mostrar pré-visualização"
       hide_preview: "ocultar pré-visualização"
-      switch_to_markdown: "Mudar para o editor de Marcação padrão (%{keyboardShortcut})"
-      switch_to_rich_text: "Mudar para o novo editor de texto formatado (%{keyboardShortcut})"
       quote_post_title: "Citar toda a publicação"
       bold_label: "B"
       bold_title: "Negrito"
@@ -2946,6 +2962,8 @@ pt:
       onebox_toolbar:
         copy: "Copiar hiperligação"
         link_copied: "Ligação copiada!"
+      table:
+        default_heading: "Coluna %{number}"
     notifications:
       tooltip:
         regular:
@@ -4315,9 +4333,6 @@ pt:
       admin:
         title: "Administração"
     badges:
-      earned_n_times:
-        one: "Ganhou este distintivo %{count} vez"
-        other: "Ganhou este crachá %{count} vezes"
       granted_on: "Concedido %{date}"
       title: Crachás
       allow_title: "Pode usar este crachá como título"
@@ -4555,6 +4570,7 @@ pt:
               content: "Revisão"
             invite:
               content: "Convidar"
+      back_to_admin: "Voltar ao painel de administração"
       no_results:
         title: "Sem resultados"
       search: "Pesquisar"
@@ -4567,18 +4583,6 @@ pt:
         type_mismatch:
           default: "Por favor introduza um valor válido."
           email: "Por favor introduza um endereço de email válido."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Entrar"
-      edit:
-        modal:
-          cancel: "cancelar"
-          create: "Guardar"
-          reason: "Porque está a editar?"
-      spreadsheet:
-        show: "Mostrar"
-        about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
     filter:
       description:
@@ -4686,6 +4690,13 @@ pt:
             block: "Bloquear"
             presets:
               custom: "Personalizar"
+            management: "Atualizações de inscrição"
+            manual: "Gerido por administradores"
+            automatic: "Automático"
+            manual_description: "Os administradores gerem o nome deste cliente e os URIs de redirecionamento. As atualizações de metadados não os alterarão, por isso mantenha-os atualizados."
+            automatic_description: "O nome e os URI de redirecionamento são atualizados a partir dos metadados do cliente publicado. Alterar qualquer um deles alterna ambos para a gestão administrativa."
+            edit: "Editar cliente OAuth"
+            updated: "Cliente OAuth atualizado."
           authorizations:
             user: "Utilizador"
             status: "Estado"
@@ -5477,6 +5488,7 @@ pt:
           uploads: "Uploads"
           upload: "Carregar"
           discard: "Descartar"
+          leave: "Sair"
           direct_install_tip: "Tem a certeza que pretende instalar <strong>%{name}</strong> do repositório listado abaixo?"
           install: "Instalar"
           installed: "Instalado"

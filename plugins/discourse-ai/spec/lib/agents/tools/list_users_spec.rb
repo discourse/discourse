@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::ListUsers do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
   before do
@@ -55,6 +55,28 @@ RSpec.describe DiscourseAi::Agents::Tools::ListUsers do
       expect(column_value(row_for(result, suspended_user.username), result, "suspended")).to eq(
         true,
       )
+    end
+
+    it "does not search or return names when names are disabled" do
+      SiteSetting.enable_names = false
+      user = Fabricate(:user, username: "visible_handle", name: "Hidden Person")
+
+      name_result =
+        described_class.new(
+          { query: "Hidden Person", limit: 100 },
+          bot_user: bot_user,
+          llm: llm,
+        ).invoke
+      username_result =
+        described_class.new(
+          { query: "visible_handle", limit: 100 },
+          bot_user: bot_user,
+          llm: llm,
+        ).invoke
+
+      expect(usernames_from(name_result)).not_to include(user.username)
+      expect(usernames_from(username_result)).to include(user.username)
+      expect(username_result[:column_names]).not_to include("name")
     end
 
     it "filters users by account status when requested" do

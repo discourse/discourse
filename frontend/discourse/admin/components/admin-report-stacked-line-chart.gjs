@@ -3,7 +3,7 @@ import hexToRGBA from "discourse/admin/lib/hex-to-rgba";
 import Report from "discourse/admin/models/report";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
-import Chart from "./chart";
+import Chart from "./chart.gjs";
 
 export default class AdminReportStackedLineChart extends Component {
   get chartConfig() {

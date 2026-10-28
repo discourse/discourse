@@ -43,6 +43,13 @@ ca:
         type: "Tipus"
         error: "Error"
         response: "Reacció"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Imatges"
+          name: "Nom"
+          type: "Tipus"
+          type_score: "Puntuació"
       ai_tool_approval:
         loading: "Carregant..."
         tool: "Acció"
@@ -66,6 +73,8 @@ ca:
         filters:
           all: "Tots"
           reset: "Restableix"
+        sentiment:
+          enabled: "Activat"
         search:
           name: "Cerca"
         image_caption:
@@ -195,6 +204,12 @@ ca:
         edit: "Edita"
         delete: "Suprimeix"
         embedding: "Incrustant"
+      decision_models:
+        no_preset: "Cap"
+        display_name: "Nom"
+        provider: "Proveïdor"
+        edit: "Edita"
+        delete: "Suprimeix"
       mcp_servers:
         name: "Nom"
         description: "Descripció"
@@ -208,6 +223,15 @@ ca:
         delete: "Suprimeix"
         tools_modal:
           required: "Necessari"
+      models:
+        name: "Nom"
+        type: "Tipus"
+        provider: "Proveïdor"
+        edit: "Edita"
+        types:
+          embedding: "Incrustant"
+        filters:
+          all: "Tots els tipus"
       llms:
         display_name: "Nom"
         provider: "Proveïdor"
@@ -252,6 +276,13 @@ ca:
         providers:
           google: "Google"
           fake: "Personalitzat"
+      ai_artifact:
+        editor:
+          version: "Versió"
+          default: "Per defecte"
+          apply: "Aplica"
+        share: "Comparteix"
+        filter_all: "Tots"
       ai_bot:
         debug_ai_modal:
           duration_label: "Duració:"
@@ -276,6 +307,13 @@ ca:
             category: "Categoria"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        tabs:
+          topics: "Temes"
+          messages: "Missatges"
       discobot_discoveries:
         legacy:
           regular_results: "Temes"

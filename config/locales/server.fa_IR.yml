@@ -16,6 +16,7 @@ fa_IR:
       link: "پیوند"
   mcp:
     errors:
+      category_not_found: "دسته یافت نشد"
       draft_too_long: "پیش‌نویس خیلی طولانی است"
       topic_not_found: "موضوع پیدا نشد"
     oauth:
@@ -2852,9 +2853,13 @@ fa_IR:
     google_meet:
       meeting_code: "کد:"
     github:
+      header:
+        success: "موفقیت"
       closed: "بسته"
-      status_date:
-        approved: "تایید شده"
+      pr_status:
+        draft: "درفت"
+        open: "باز"
+        approved: "پذیرفته شده"
         closed: "بسته شده"
   discourse_push_notifications:
     popup:

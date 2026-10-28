@@ -179,6 +179,54 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
   before { enable_current_plugin }
 
+  it "classifies non-streaming reasoning-only output as empty" do
+    payload = {
+      choices: [
+        { message: { reasoning_content: "Considering", content: "" }, finish_reason: "length" },
+      ],
+      usage: {
+        prompt_tokens: 10,
+        completion_tokens: 100,
+        completion_tokens_details: {
+          reasoning_tokens: 100,
+        },
+      },
+    }
+    stub_request(:post, llm_model.url).to_return(body: payload.to_json)
+    llm_model.to_llm.generate("Input", user: user, output_thinking: true)
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+      stop_reason: "length",
+      reasoning_tokens: 100,
+      response_tokens: 100,
+    )
+  end
+
+  it "classifies streamed reasoning-only output as empty" do
+    payload = {
+      choices: [
+        { delta: { reasoning_content: "Considering", content: "" }, finish_reason: "length" },
+      ],
+      usage: {
+        prompt_tokens: 10,
+        completion_tokens: 100,
+        completion_tokens_details: {
+          reasoning_tokens: 100,
+        },
+      },
+    }
+    stub_request(:post, llm_model.url).to_return(
+      body: "data: #{payload.to_json}\n\ndata: [DONE]\n\n",
+    )
+    llm_model.to_llm.generate("Input", user: user, output_thinking: true) { |partial| }
+    expect(AiApiAuditLog.last).to have_attributes(
+      completion_state: AiApiAuditLog::CompletionState::EMPTY,
+      stop_reason: "length",
+      reasoning_tokens: 100,
+      response_tokens: 100,
+    )
+  end
+
   def capture_payload_for_completion(**generation_args)
     captured_payload = nil
     stub =
@@ -950,7 +998,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
   end
 
   describe "request header providers" do
-    after { described_class.reset_request_headers_providers! }
+    after { DiscourseAi::RequestHeaders.reset! }
 
     def capture_headers(feature_name: nil)
       captured = nil
@@ -978,24 +1026,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
       expect(headers["X-Test-Feature"]).to eq("summarize")
     end
 
-    it "passes request context (llm_model, streaming, vision) to the provider" do
+    it "passes request context (model, streaming, vision) to the provider" do
       captured_context = nil
-      described_class.register_request_headers_provider do |context|
+      DiscourseAi::RequestHeaders.register do |context|
         captured_context = context
         {}
       end
 
       capture_headers(feature_name: "ai_helper")
 
-      expect(captured_context.llm_model).to eq(llm_model)
+      expect(captured_context.model).to eq(llm_model)
       expect(captured_context.feature_name).to eq("ai_helper")
       expect(captured_context.streaming).to eq(false)
       expect(captured_context.has_images).to eq(false)
     end
 
     it "isolates provider failures so the completion still succeeds" do
-      described_class.register_request_headers_provider { |_context| raise "boom" }
-      described_class.register_request_headers_provider { |_context| { "X-Test-Survivor" => "1" } }
+      DiscourseAi::RequestHeaders.register { |_context| raise "boom" }
+      DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Survivor" => "1" } }
 
       headers = nil
       expect { headers = capture_headers }.not_to raise_error

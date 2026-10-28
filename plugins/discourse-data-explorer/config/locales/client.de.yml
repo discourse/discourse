@@ -40,7 +40,6 @@ de:
       admins_only: "Der Daten-Explorer ist nur für Administratoren verfügbar."
       allow_groups: "Gruppen erlauben, auf diese Anfrage zuzugreifen"
       title: "Daten-Explorer"
-      create: "Erstellen"
       create_placeholder: "Name der Anfrage …"
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
       ai:
@@ -56,15 +55,12 @@ de:
         save_query: "Abfrage speichern"
         write_manually: "SQL manuell eingeben"
         sql_label: "SQL"
-        optional: "optional"
       import:
-        label: "Importieren"
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."
         wrong_json: "Falsche JSON-Datei. Eine JSON-Datei sollte ein „query“-Objekt enthalten, das zumindest eine „sql“-Eigenschaft haben sollte."
       help:
         label: "Hilfe"
         modal_title: "Daten-Explorer-Hilfe"
-        auto_resolution: "<h2>Automatische Auflösung von Entitäten</h2> <p>Wenn deine Anfrage eine Entitäts-ID zurückgibt, kann der Daten-Explorer diese automatisch durch den Entitätsnamen und andere nützliche Informationen in den Anfrageergebnissen ersetzen. Die automatische Auflösung ist verfügbar für <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> und <i><b>badge_id</b></i>. Um dies auszuprobieren, führe diese Anfrage aus:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>Benutzerdefinierte Parameter erstellen</h2> <p>Um benutzerdefinierte Parameter für deine Anfragen zu erstellen, füge Folgendes am Anfang deiner Anfrage ein und befolge das Format:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Hinweis: Die erste Zeile mit [params] ist erforderlich, zusammen mit zwei Bindestrichen davor und jedem benutzerdefinierten Parameter, den du deklarieren möchtest.</i></p>"
         default_values: "<h3>Standardwerte</h3> <p>Du kannst Parameter mit oder ohne Standardwerte deklarieren. Die Standardwerte werden in einem Textfeld unter dem Anfrage-Editor angezeigt, das du beliebig bearbeiten kannst. Bei Parametern, die ohne Standardwerte angegeben werden, erscheint zwar immer noch ein Textfeld, aber es ist leer und rot markiert.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
         data_types: "<h3>Datentypen</h3> <p>Hier sind gängige Datentypen, die du verwenden kannst:</p> <ul> <li><b>Ganzzahl</b> - vorzeichenbehaftete Vier-Byte-Ganzzahl</li> <li><b>Text</b> - Zeichenkette mit variabler Länge</li> <li><b>Boolean</b> – wahr/falsch</li> <li><b>Datum</b> - Kalenderdatum (Jahr, Monat, Tag)</li> <li><b>current_user_id</b> - ID des anfragenden Benutzers (automatisch eingefügt, nützlich bei mit Gruppen geteilten Berichten)</li> </ul> <p>Weitere Informationen über Datentypen findest du auf <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>dieser Website</a>.</p>"
@@ -113,7 +109,6 @@ de:
         results_json: "Ergebnisse (JSON)"
         results_csv: "Ergebnisse (CSV)"
         query_json: "Abfragedefinition (JSON)"
-      others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Anfrage in %{value} ms abgeschlossen."
       cached_result_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
       result_count:
@@ -122,7 +117,7 @@ de:
       max_result_count:
         one: "Zeige das Top-%{count} Ergebnis."
         other: "Zeige die Top-%{count} Ergebnisse."
-      query_name: "Anfrage"
+      name: "Name"
       query_groups: "Gruppen"
       query_tags: "Schlagwörter"
       link: "Link für"
@@ -133,7 +128,6 @@ de:
       column: "Spalte %{number}"
       save_params: "Standards festlegen"
       reset_params: "Zurücksetzen"
-      search_placeholder: "Suche …"
       no_search_results: "Leider konnten wir keine Ergebnisse finden, die deinem Text entsprechen."
       form:
         errors:

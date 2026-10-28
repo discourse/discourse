@@ -11,8 +11,8 @@ class ::Assigner
   def self.backfill_auto_assign
     staff_mention =
       User
-        .assign_allowed
-        .pluck("username")
+        .where(id: DiscourseAssign::AssignmentPermissions.assignable_user_ids(nil))
+        .pluck(:username)
         .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
         .join(" OR ")
 
@@ -96,10 +96,7 @@ class ::Assigner
   end
 
   def self.is_last_staff_post?(post)
-    allowed_user_ids =
-      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic)
-    return false if allowed_user_ids.empty?
-
+    allowed_user_ids = DiscourseAssign::AssignmentPermissions.assignable_user_ids(post.topic)
     Post.where(topic_id: post.topic_id, user_id: allowed_user_ids).maximum(:post_number) ==
       post.post_number
   end
@@ -109,7 +106,7 @@ class ::Assigner
     if mentions.present?
       User
         .human_users
-        .where(id: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic))
+        .where(id: DiscourseAssign::AssignmentPermissions.assignable_user_ids(post.topic))
         .where(username_lower: mentions.map(&:downcase))
         .first
     end
@@ -141,12 +138,7 @@ class ::Assigner
 
   def allowed_user_ids
     @allowed_user_ids ||=
-      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(@target)
-  end
-
-  def allowed_group_ids
-    @allowed_group_ids ||=
-      DiscourseAssign::AssignmentPermissions.allowed_group_ids_for_target(@assigned_by, @target)
+      DiscourseAssign::AssignmentPermissions.assignable_user_ids(@target).pluck(:id)
   end
 
   def can_assign_to?(assign_to)
@@ -165,9 +157,12 @@ class ::Assigner
 
   def can_be_assigned?(assign_to)
     if assign_to.is_a?(User)
-      allowed_user_ids.include?(assign_to.id)
+      DiscourseAssign::AssignmentPermissions.assignable_user_ids(@target).exists?(id: assign_to.id)
     else
-      allowed_group_ids.include?(assign_to.id)
+      DiscourseAssign::AssignmentPermissions.assignable_groups(
+        @target,
+        assigner: @assigned_by,
+      ).exists?(id: assign_to.id)
     end
   end
 
@@ -412,7 +407,7 @@ class ::Assigner
       WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
     end
 
-    DiscourseEvent.trigger(:assigned, assignment)
+    DiscourseEvent.trigger(:assigned, assignment, acting_user: @assigned_by)
 
     { success: true }
   end
@@ -477,7 +472,7 @@ class ::Assigner
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
 
-      DiscourseEvent.trigger(:unassigned, assignment)
+      DiscourseEvent.trigger(:unassigned, assignment, acting_user: @assigned_by)
 
       if allowed_user_ids.present?
         MessageBus.publish(

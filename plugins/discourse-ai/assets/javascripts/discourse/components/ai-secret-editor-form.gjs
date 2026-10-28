@@ -11,7 +11,6 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AiSecretEditorForm extends Component {
@@ -135,6 +134,11 @@ export default class AiSecretEditorForm extends Component {
                   <LinkTo
                     @model={{usage.id}}
                     @route="adminPlugins.show.discourse-ai-embeddings.edit"
+                  >{{usage.name}}</LinkTo>
+                {{~else if (eq usage.type "decision_model")~}}
+                  <LinkTo
+                    @model={{usage.id}}
+                    @route="adminPlugins.show.discourse-ai-decision-models.edit"
                   >{{usage.name}}</LinkTo>
                 {{~else if (eq usage.type "tool")~}}
                   <LinkTo

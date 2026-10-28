@@ -2,10 +2,9 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import AiFeatureCard from "./ai-feature-card";
+import AiFeatureCard from "./ai-feature-card.gjs";
 
 export default class AiFeaturesList extends Component {
   @service router;
@@ -19,6 +18,11 @@ export default class AiFeaturesList extends Component {
   @action
   isSpamModule(aModule) {
     return aModule.module_name === "spam";
+  }
+
+  @action
+  showGroups(aModule) {
+    return !["spam", "sentiment"].includes(aModule.module_name);
   }
 
   @action
@@ -96,7 +100,7 @@ export default class AiFeaturesList extends Component {
                 <AiFeatureCard
                   @feature={{feature}}
                   @localizedFeatureName={{this.featureName feature module}}
-                  @showGroups={{not (this.isSpamModule module)}}
+                  @showGroups={{this.showGroups module}}
                 />
               {{/each}}
             {{/if}}

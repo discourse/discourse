@@ -465,6 +465,9 @@ basic:
     refresh: true
     disallowed_groups: "0|4|5"
     area: "group_permissions"
+    upcoming_change_default_override:
+      upcoming_change: "update_whispers_allowed_groups_default"
+      new_default: "3"
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
@@ -490,6 +493,10 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_localization_max_wait_mins:
+    default: 3
+    min: 0
+    hidden: true
   short_title:
     default: ""
     max: 12
@@ -550,7 +557,7 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   about_page_extra_groups:
     client: true
@@ -1425,6 +1432,7 @@ posting:
     client: true
     default: false
     refresh: true
+    validator: "AllowUncategorizedTopicsValidator"
     area: "posts_and_topics"
   remove_and_replace_uncategorized:
     default: false
@@ -4291,6 +4299,9 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
+  concord_in_wizard:
+    default: false
+    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4782,14 +4793,23 @@ dashboard:
     client: true
 
 experimental:
+  enable_user_menu_mentions_tab:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415579"
   enable_markdown_endpoints:
     default: false
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413006"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_generated_llms_txt:
@@ -4825,15 +4845,15 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
-  enable_new_post_reactions_menu:
+  enable_new_reordering_controls:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "permanent"
+      status: "alpha"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/389820"
+      learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
     default: false
     client: true
@@ -4844,6 +4864,16 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_main_outlet_grid_layout_change:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
+      body_class: true
+      learn_more_url: "https://meta.discourse.org/t/-/414357"
   enable_composer_toolbar_customization:
     default: false
     client: true
@@ -4882,6 +4912,37 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    hidden: true
+    area: "experimental"
+  dsa_reporting_enabled:
+    client: true
+    default: false
+    hidden: true
+    area: "experimental"
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    hidden: true
+  dsa_community_rules:
+    type: objects
+    default: []
+    area: "experimental"
+    schema:
+      name: community_rule
+      properties:
+        ground:
+          type: string
+          required: true
+          validations:
+            max_length: 500
+        explanation:
+          type: string
+          required: true
+          validations:
+            max_length: 2000
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -5010,6 +5071,17 @@ experimental:
       status: "alpha"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/408429"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
+  update_whispers_allowed_groups_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/414354"
       permanent_warning: false
       allow_enabled_for:
         - everyone

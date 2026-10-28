@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "playwright": "1.62.1"
+    "playwright": "1.64.0",
+    "source-map-js": "^1.2.2"
   }
 }

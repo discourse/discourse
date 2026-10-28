@@ -96,6 +96,23 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(json["workflows"].length).to eq(1)
       expect(json["workflows"][0]["id"]).to eq(workflow_1.id.to_s)
     end
+
+    it "omits variables and does not query them per workflow" do
+      3.times do
+        workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+        Fabricate(:discourse_workflows_workflow_variable, workflow:, value: "urgent")
+      end
+
+      queries = track_sql_queries { get "/admin/plugins/discourse-workflows/workflows.json" }
+
+      expect(response).to have_http_status(:ok)
+      json = response.parsed_body
+      expect(json["workflows"].length).to eq(3)
+      json["workflows"].each { |workflow| expect(workflow).not_to have_key("variables") }
+
+      variable_queries = queries.select { |query| query.include?("discourse_workflows_variables") }
+      expect(variable_queries).to be_empty
+    end
   end
 
   describe "POST /admin/plugins/discourse-workflows/workflows" do
@@ -205,6 +222,29 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body["workflow"]).to include("name" => "Updated Name")
       expect(response.parsed_body["workflow"]["active_version_id"]).to be_nil
+    end
+
+    it "drops connections with a malformed input index" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            workflow: {
+              nodes: [
+                { id: "t1", type: "trigger:topic_closed", name: "Topic Closed" },
+                { id: "a1", type: "action:log", name: "Log" },
+              ],
+              connections: {
+                "Topic Closed" => {
+                  "main" => [[{ "node" => "Log", "type" => "main", "index" => {} }]],
+                },
+              },
+            },
+          },
+          as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(workflow.reload.connections).to eq({})
     end
 
     it "updates the workflow tags" do

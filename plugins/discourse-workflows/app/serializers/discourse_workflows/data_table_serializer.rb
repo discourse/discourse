@@ -17,7 +17,11 @@ module DiscourseWorkflows
     end
 
     def columns
-      @columns ||= object.columns
+      @columns ||=
+        object.columns.map do |column|
+          next column unless DiscourseWorkflows::DataTables::Types.system_column?(column["name"])
+          column.merge("reserved" => true)
+        end
     end
 
     def size

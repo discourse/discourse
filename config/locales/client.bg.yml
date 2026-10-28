@@ -21,6 +21,7 @@ bg:
     access_control:
       manage:
         access_permission_editor: "Редактор"
+        access_permission_owner: "Собественик"
         access_permission_remove: "Премахване"
     number:
       format:
@@ -158,7 +159,6 @@ bg:
         last_7_days: "Последните 7 дни"
         last_30_days: "Последните 30 дни"
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикация #%{postNumber} от @%{username}"
       close: "затвори"
       facebook: "Споделете във Facebook"
@@ -205,6 +205,8 @@ bg:
     topic_admin_menu: "действия по темата"
     skip_to_main_content: "Прескачане към основното съдържание"
     skip_user_nav: "Преминаване към съдържанието на профила"
+    reorder:
+      removed: "Премахнат %{label}"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     emails_are_disabled_non_staff: "Изходящият имейл е деактивиран за потребители, които не са от екипа"
     software_update_prompt:
@@ -288,9 +290,6 @@ bg:
     max_of_count:
       one: "максимално от %{count}"
       other: "максимално от %{count}"
-    character_count:
-      one: "%{count} символ"
-      other: "%{count} символа"
     period_chooser:
       aria_label: "Филтриране по период"
     related_messages:
@@ -451,6 +450,9 @@ bg:
       title:
         search: "Търси съобщения"
         placeholder: "въведете тук заглавието на съобщението, url или ID"
+    dsa_statements:
+      category: "Категория"
+      saving: "Запазване…"
     review:
       show_more: "Покажи повече"
       show_less: "Покажи по-малко"
@@ -1420,7 +1422,6 @@ bg:
         upload_title: "Качете изображение"
         image_is_not_a_square: "Внимание: изрязахмеИзрязахме вашата снимка,снимка защото не е с квадратна форма."
         logo_small: "Малко лого на сайта. Използва се по подразбиране."
-        use_custom: "Или качете персонализиран аватар:"
       change_profile_background:
         title: "Заглавен ред на профила"
         instructions: "Заглавните редове на профилите ще бъдат центрирани и имат ширина по подразбиране от 1110px."
@@ -1853,7 +1854,7 @@ bg:
       hide_forever: "не благодаря"
       hidden_for_session: "Добре, ще те попитаме утре. Винаги можете да използвате „Вход“ и за създаване на акаунт."
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
-      value_prop: "Уморихте ли се да превъртате едни и същи публикации? Когато създадете акаунт, винаги ще се връщате там, до където сте стигнали. С акаунт можете също да получавате известия за нови отговори, да запазвате отметки и да използвате харесвания, за да благодарите на другите. Всички можем да работим заедно, за да направим тази общност страхотна. :heart:"
+      value_prop: "Уморихте ли се да превъртате едни и същи публикации? Когато създадете акаунт, винаги ще се връщате там, до където сте стигнали. С акаунт можете също да получавате известия за нови отговори, да запазвате отметки и да използвате харесвания, за да благодарите на другите. Всички можем да работим заедно, за да направим тази общност страхотна."
     offline_indicator:
       no_internet: "Няма интернет връзка."
       refresh_page: "Опресняване на страницата"
@@ -2154,8 +2155,7 @@ bg:
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
       discard: "Отхвърляне"
-      title_placeholder: "За какво става дума в дискусията с едно изречение?"
-      title_placeholder_redesign: "Заглавие"
+      title_placeholder: "Заглавие"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "Защо редактирате ?"
       topic_featured_link_placeholder: "Въведете връзка, показана със заглавие."
@@ -3479,18 +3479,6 @@ bg:
         type_mismatch:
           default: "Моля, въведете валидна стойност."
           email: "Моля, въведете валиден имейл адрес."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Въведете"
-      edit:
-        modal:
-          cancel: "прекрати"
-          create: "Запази "
-          reason: "Защо редактирате ?"
-      spreadsheet:
-        show: "Покажи"
-        about: "Относно"
     filter:
       description:
         yesterday: "Вчера"
@@ -3572,6 +3560,7 @@ bg:
             block: "Блокирай "
             presets:
               custom: "По избор"
+            automatic: "Автоматично"
           authorizations:
             user: "Потребител"
             status: "Статус"
@@ -4083,6 +4072,7 @@ bg:
           collapse: Намали
           upload: "Качване"
           discard: "Отхвърляне"
+          leave: "Напусни"
           installed: "Инсталирани"
           install_popular: "Популярни"
           about_theme: "Относно"

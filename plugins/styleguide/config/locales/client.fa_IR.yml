@@ -26,6 +26,12 @@ fa_IR:
           actions:
             duplicate: "تکراری"
             delete: "حذف"
+        reorderable_list:
+          policies_pinned: "سنجاق شده"
+          policies_required: "مورد نیاز"
+          table_field: "فیلد"
+          table_type: "نوع"
+          cross_list_primary: "اصلی"
         font_scale:
           title: "سیستم فونت"
         colors:

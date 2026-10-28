@@ -2,12 +2,11 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import AiSecretEditorForm from "./ai-secret-editor-form";
+import AiSecretEditorForm from "discourse/plugins/discourse-ai/discourse/components/ai-secret-editor-form";
 
 export default class AiSecretsListEditor extends Component {
   @service adminPluginNavManager;
@@ -73,6 +72,14 @@ export default class AiSecretsListEditor extends Component {
                                 {{usage.name}}
                               </LinkTo>
                               ({{i18n "discourse_ai.secrets.embedding"}})
+                            {{else if (eq usage.type "decision_model")}}
+                              <LinkTo
+                                @model={{usage.id}}
+                                @route="adminPlugins.show.discourse-ai-decision-models.edit"
+                              >
+                                {{usage.name}}
+                              </LinkTo>
+                              ({{i18n "discourse_ai.secrets.decision_model"}})
                             {{else if (eq usage.type "mcp_server")}}
                               <LinkTo
                                 @model={{usage.id}}

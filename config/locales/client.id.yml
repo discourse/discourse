@@ -23,6 +23,7 @@ id:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Pemilik"
         access_permission_remove: "Hapus"
     number:
       format:
@@ -130,7 +131,6 @@ id:
         last_7_days: "7 hari terakhir"
         last_30_days: "30 hari terakhir"
     share:
-      topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "kiriman #%{postNumber} oleh @%{username}"
       close: "tutup"
       facebook: "Bagikan di Facebook"
@@ -177,6 +177,8 @@ id:
     topic_admin_menu: "tindakan topik"
     skip_to_main_content: "Lewati ke konten utama"
     skip_user_nav: "Lewati ke konten profil"
+    reorder:
+      removed: "Dihapus %{label}"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     emails_are_disabled_non_staff: "Surel keluar telah dimatikan untuk pengguna yang bukan staf."
     software_update_prompt:
@@ -263,8 +265,6 @@ id:
     every_six_months: "setiap enam bulan"
     max_of_count:
       other: "maksimal dari %{count}"
-    character_count:
-      other: "%{count} karakter"
     period_chooser:
       aria_label: "Filter berdasarkan periode"
     related_messages:
@@ -435,6 +435,9 @@ id:
       title:
         search: "Cari Pesan"
         placeholder: "ketikkan judul pesan, url atau id di sini"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Menyimpan…"
     review:
       show_more: "Tampilkan lebih banyak"
       show_less: "Tampilkan lebih sedikit"
@@ -1696,8 +1699,7 @@ id:
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
       discard: "Batalkan"
-      title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
-      title_placeholder_redesign: "Judul"
+      title_placeholder: "Judul"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "Mengapa Anda menyunting?"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
@@ -2415,18 +2417,6 @@ id:
           other: "Masukan harus lebih dari %{count}."
         pattern_mismatch: "Harap sesuaikan dengan format yang diminta."
         bad_input: "Harap masukkan masukan yang valid."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Enter"
-      edit:
-        modal:
-          cancel: "batal"
-          create: "Simpan"
-          reason: "Mengapa Anda menyunting?"
-      spreadsheet:
-        show: "Tunjukkan"
-        about: "Tentang"
     discovery:
       headings:
         categories: "Semua kategori"
@@ -2489,6 +2479,7 @@ id:
             kind: "Tipe"
           clients:
             actions: "Aksi"
+            automatic: "Otomatis"
           authorizations:
             user: "Pengguna"
             status: "Status"
@@ -2866,6 +2857,7 @@ id:
           collapse: Persempit
           upload: "Unggah"
           discard: "Batalkan"
+          leave: "Keluar"
           direct_install_tip: "Apakah Anda yakin ingin memasang <strong>%{name}</strong> dari repositori yang tercantum di bawah ini?"
           about_theme: "Tentang"
           enable: "Aktifkan"

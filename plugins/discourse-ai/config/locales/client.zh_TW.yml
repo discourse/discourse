@@ -32,7 +32,6 @@ zh_TW:
             failed: "失敗"
         emotion:
           title: "情緒"
-          description: "該表格列出了按特定情緒分類的貼文數量。根據所選情緒分類方法，貼文將使用配置的情緒分類模型（“SamLowe/roberta-base-go_emotions”）或配置的情緒分類智能體進行分類。"
         reports:
           filters:
             group_by:
@@ -281,6 +280,12 @@ zh_TW:
           upload_ids: "上傳 ID"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "選擇智能體…"
+        classify:
+          text: "文字"
+          upload_ids: "圖像"
+          name: "名稱"
+          type: "類型"
+          type_score: "分數"
       bot_chats:
         tab_label: "機器人聊天"
       ai_tool_approval:
@@ -295,14 +300,11 @@ zh_TW:
         rejected: "已拒絕"
         awaiting_staff: "等待管理人員審批"
       default_llm:
-        title: "默認 LLM 模型"
-        description: "所有 AI 智能體使用的默認 LLM 模型。如果功能配置或智能體中未指定 LLM，將使用此模型。如果未指定默認 LLM，將使用最后創建的 LLM。"
+        title: "默認語言模型"
       llm_selector:
         none: "無"
-        saved: "默認 LLM 模型更新成功"
       features:
         short_title: "功能"
-        description: "這些是您網站的訪客可以使用的 AI 功能。可以將這些功能配置為使用特定的智能體和 LLM，并按群組控制訪問權限。"
         back: "返回 AI 功能"
         settings_save_error: "某些設置無法保存。"
         disabled: "（已禁用）"
@@ -314,6 +316,7 @@ zh_TW:
         no_llm: "未選擇 LLM"
         no_agent: "未設置"
         no_groups: "無"
+        classification_model: "模型："
         edit: "設置"
         expand_list:
           other: "（另外 %{count} 個）"
@@ -332,10 +335,17 @@ zh_TW:
           not_enabled: "未啟用"
         filters:
           all: "所有"
-          text: "搜尋功能、智能體、LLM 或群組…"
           no_results: "找不到符合您的篩選條件的功能。"
           reset: "重置"
         no_automations: "尚無自動化"
+        sentiment:
+          sentiment: "情緒"
+          emotion: "情緒"
+          enabled: "已啟用"
+          agent: "智能體"
+          setting_groups:
+            sentiment: "情緒"
+            emotion: "情緒"
         summarization:
           name: "總結"
           description: "提供總結按鈕，允許訪客總結主題"
@@ -773,8 +783,6 @@ zh_TW:
         description: "描述"
         no_llm_selected: "未選擇語言模型"
         use_parent_llm: "使用智能體的語言模型"
-        max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "單次機器人回復期間所有 LLM 調用消耗的最大 token 總量（輸入 + 輸出）。留空則默認為模型上下文窗口的一半。"
         compression_threshold: "壓縮閾值"
         compression_threshold_help: "上下文使用百分比（20-99%），超過該百分比時自動壓縮開始生效。數值越低，壓縮觸發越早，從而保留更多空間。"
         vision_enabled: 包含圖片上傳
@@ -986,7 +994,6 @@ zh_TW:
           result: "測試結果"
       secrets:
         short_title: "憑據"
-        description: "管理在 LLM 和嵌入向量之間共享的身份驗證憑據。"
         name: "名稱"
         secret: "值"
         select_secret: "選擇憑據…"
@@ -1011,6 +1018,16 @@ zh_TW:
         mcp_server_oauth_client_secret: "MCP 服務器 OAuth 客戶端密鑰"
         modal:
           title: "創建新憑據"
+      decision_models:
+        no_preset: "無"
+        display_name: "名稱"
+        model: "模型"
+        provider: "服務提供者"
+        api_key: "憑據"
+        vision_enabled: "支持圖片輸入"
+        edit: "編輯"
+        delete: "刪除"
+        test: "運行測試"
       mcp_servers:
         short_title: "MCP 服務器"
         new: "新 MCP 服務器"
@@ -1089,6 +1106,17 @@ zh_TW:
         test_result: "連接結果"
         test_summary:
           other: "使用 %{version} 通訊協定探索到 %{count} 個工具。"
+      models:
+        new: "新建模型"
+        name: "名稱"
+        type: "類型"
+        provider: "服務提供者"
+        edit: "編輯"
+        select_type: "選擇"
+        types:
+          embedding: "嵌入"
+        filters:
+          reset: "重設篩選條件"
       llms:
         short_title: "LLM"
         no_llms: "暫無 LLM"
@@ -1382,9 +1410,23 @@ zh_TW:
         quick_search:
           suffix: "在所有主題和貼文中使用 AI 搜尋"
       ai_artifact:
+        editor:
+          version: "版本"
+          default: "默認"
+          option_on: "開"
+          option_off: "關"
+          apply: "應用"
         expand_view_label: "展開視圖"
         collapse_view_label: "退出全屏（按 ESC 或“返回”按鈕）"
         click_to_run_label: "運行工件"
+        share: "比例"
+        create_link: "建立連結"
+        copied: "已複製到剪貼簿"
+        copy_link: "復制連結"
+        copy_embed: "複製嵌入碼"
+        new_tab: "在新分頁中顯示"
+        filter_all: "所有"
+        filter_standalone: "獨立活動"
       ai_bot:
         title: "AI 機器人"
         agent: "智能體："
@@ -1522,6 +1564,14 @@ zh_TW:
             compact: "緊湊"
             expanded: "展開"
             expanded_description: "帶 AI 摘要"
+      ai_search:
+        related_topics: "相關主題"
+        related_replies:
+          other: "%{count} 則回覆"
+        tabs:
+          ask: "詢問 AI"
+          topics: "主題"
+          messages: "訊息"
       discobot_discoveries:
         main_title: "詢問 AI"
         loading_convo: "正在加載對話"

@@ -31,7 +31,6 @@ ar:
             failed: "فشل"
         emotion:
           title: "العاطفة"
-          description: "يعرض الجدول عدد المنشورات المصنَّفة وفقًا لمشاعر محدَّدة. وبناءً على طريقة تصنيف المشاعر المختارة، تُصنَّف المنشورات إما باستخدام نموذج تصنيف المشاعر المُهيَّأ ('SamLowe/roberta-base-go_emotions') أو باستخدام وكيل تصنيف المشاعر المُهيَّأ."
         reports:
           filters:
             group_by:
@@ -271,6 +270,12 @@ ar:
           upload_ids: "معرِّفات التحميل"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "حدِّد وكيلًا..."
+        classify:
+          text: "النص"
+          upload_ids: "الصور"
+          name: "الاسم"
+          type: "النوع"
+          type_score: "النقاط"
       bot_chats:
         tab_label: "دردشات الروبوت"
       ai_tool_approval:
@@ -285,14 +290,11 @@ ar:
         rejected: "تم الرفض"
         awaiting_staff: "في انتظار موافقة فريق العمل"
       default_llm:
-        title: "نموذج اللغة الكبير الافتراضي"
-        description: "نموذج اللغة الكبير الافتراضي المستخدم لجميع ميزات الذكاء الاصطناعي. سيتم استخدامه إذا لم يتم تحديد نموذج آخر في إعدادات الميزة أو الوكيل. وإذا لم يُحدد نموذج افتراضي، سيتم استخدام آخر نموذج تم إنشاؤه."
+        title: "نموذج اللغة الافتراضي"
       llm_selector:
         none: "لا يوجد"
-        saved: "تم تحديث النموذج اللغوي الكبير الافتراضي بنجاح"
       features:
         short_title: "الميزات"
-        description: "تمثل هذه الميزات وظائف الذكاء الاصطناعي المتاحة لزوار موقعك. ويمكن تكوينها لاستخدام وكلاء ونماذج لغة كبيرة محدَّدة، كما يمكن التحكم في الوصول إليها وفقًا للمجموعات."
         back: "العودة إلى ميزات الذكاء الاصطناعي"
         settings_save_error: "تعذّر حفظ بعض الإعدادات."
         disabled: "(متوقفة)"
@@ -314,6 +316,7 @@ ar:
         no_llm: "لم يتم تحديد نموذج اللغة الكبير (LLM)"
         no_agent: "غير معيَّن"
         no_groups: "لا يوجد"
+        classification_model: "النموذج:"
         edit: "الإعدادان"
         expand_list:
           zero: "(%{count} أكثر)"
@@ -337,10 +340,17 @@ ar:
           not_enabled: "غير مفعَّل"
         filters:
           all: "الكل"
-          text: "ابحث عن الميزات، أو الوكلاء، أو نماذج اللغة الكبيرة، أو المجموعات..."
           no_results: "لا توجد ميزات تتوافق مع معايير التصفية المحدَّدة."
           reset: "إعادة التعيين"
         no_automations: "لا يوجد أتمتة حتى الآن"
+        sentiment:
+          sentiment: "المشاعر"
+          emotion: "العاطفة"
+          enabled: "مفعَّلة"
+          agent: "الوكيل"
+          setting_groups:
+            sentiment: "المشاعر"
+            emotion: "العاطفة"
         summarization:
           name: "الملخصات"
           description: "يتيح زرًا للتلخيص يمكن للزوار استخدامه لتلخيص الموضوعات"
@@ -830,8 +840,6 @@ ar:
         description: "الوصف"
         no_llm_selected: "لم يتم تحديد نموذج لغة"
         use_parent_llm: "استخدم نموذج اللغة الخاص بالوكيل"
-        max_turn_tokens: "الحد الأقصى لرموز الدور"
-        max_turn_tokens_help: "الحد الأقصى لإجمالي الرموز (المدخلات + المخرجات) المُستهلَكة عبر جميع استدعاءات نموذج اللغة الكبير (LLM) خلال رد واحد للروبوت. اترك الحقل فارغًا لاستخدام نصف نافذة سياق النموذج بشكلٍ افتراضي."
         compression_threshold: "حدّ الضغط"
         compression_threshold_help: "النسبة المئوية لاستخدام السياق (من 20 إلى 99) التي يبدأ عندها الضغط التلقائي. تؤدي القيم الأقل إلى بدء الضغط في وقت أبكر، ما يحافظ على مساحة أكبر."
         vision_enabled: تضمين تحميل الصور
@@ -1042,7 +1050,6 @@ ar:
           result: "نتيجة الاختبار"
       secrets:
         short_title: "بيانات الاعتماد"
-        description: "إدارة بيانات اعتماد المصادقة المشتركة عبر أنظمة إدارة التعلم، والتضمينات، والأدوات."
         name: "الاسم"
         secret: "القيمة"
         select_secret: "اختيار بيانات اعتماد..."
@@ -1067,6 +1074,16 @@ ar:
         mcp_server_oauth_client_secret: "سر عميل OAuth لخادم MCP"
         modal:
           title: "إنشاء بيانات اعتماد جديدة"
+      decision_models:
+        no_preset: "لا يوجد"
+        display_name: "الاسم"
+        model: "النموذج"
+        provider: "مقدِّم الخدمة"
+        api_key: "بيانات الاعتماد"
+        vision_enabled: "يدعم إدخال الصور"
+        edit: "تعديل"
+        delete: "حذف"
+        test: "تشغيل الاختبار"
       mcp_servers:
         short_title: "خوادم MCP"
         new: "خادم MCP جديد"
@@ -1160,6 +1177,18 @@ ar:
           few: "تم العثور على %{count} أدوات باستخدام البروتوكول %{version}"
           many: "تم العثور على %{count} أداة باستخدام البروتوكول %{version}"
           other: "تم العثور على %{count} أداة باستخدام البروتوكول %{version}"
+      models:
+        new: "نموذج جديد"
+        name: "الاسم"
+        type: "النوع"
+        provider: "مقدِّم الخدمة"
+        edit: "تعديل"
+        select_type: "تحديد"
+        types:
+          embedding: "التضمين"
+        filters:
+          all: "كل الأنواع"
+          reset: "إعادة تعيين عوامل التصفية"
       llms:
         short_title: "نماذج اللغة الكبيرة"
         no_llms: "لا توجد نماذج لغة كبيرة بعد"
@@ -1450,9 +1479,22 @@ ar:
         quick_search:
           suffix: "في كل الموضوعات والمنشورات بالذكاء الاصطناعي"
       ai_artifact:
+        editor:
+          version: "الإصدار"
+          default: "افتراضي"
+          apply: "تطبيق"
         expand_view_label: "توسيع العرض"
         collapse_view_label: "الخروج من وضع الشاشة الكاملة (ESC أو زر الرجوع)"
         click_to_run_label: "تشغيل أداة الويب"
+        share: "المشاركة"
+        create_link: "إنشاء رابط"
+        copied: "تم النسخ إلى الحافظة"
+        copy_link: "نسخ الرابط"
+        copy_embed: "نسخ الرابط المضمّن"
+        new_tab: "عرض في تبويب جديد"
+        filter_all: "الكل"
+        filter_standalone: "مستقل"
+        filter_conversation: "المحادثة"
       ai_bot:
         title: "روبوت الذكاء الاصطناعي"
         agent: "الوكيل:"
@@ -1606,6 +1648,19 @@ ar:
             compact: "مضغوط"
             expanded: "موسَّع"
             expanded_description: "مع ملخصات الذكاء الاصطناعي"
+      ai_search:
+        related_topics: "الموضوعات ذات الصلة"
+        related_replies:
+          zero: "%{count} من الردود"
+          one: "رد واحد (%{count})"
+          two: "%{count} من الردود"
+          few: "%{count} من الردود"
+          many: "%{count} من الردود"
+          other: "%{count} من الردود"
+        tabs:
+          ask: "اسأل الذكاء الاصطناعي"
+          topics: "الموضوعات"
+          messages: "الرسائل"
       discobot_discoveries:
         main_title: "اسأل الذكاء الاصطناعي"
         loading_convo: "تحميل المحادثة"

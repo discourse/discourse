@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import Topic from "discourse/models/topic";
-import { or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -18,8 +17,8 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { loadCategory } from "../../lib/boards-categories";
-import { columnColorVariable } from "../../lib/boards-column-helpers";
+import { loadCategory } from "../../lib/boards-categories.js";
+import { columnColorVariable } from "../../lib/boards-column-helpers.js";
 
 export default class BoardsTopicCardDetail extends Component {
   @service currentUser;

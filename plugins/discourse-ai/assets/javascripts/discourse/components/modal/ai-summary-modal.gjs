@@ -11,19 +11,18 @@ import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { smartShortDate } from "discourse/lib/formatter";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiSummarySkeleton from "../../components/ai-summary-skeleton";
+import AiSummarySkeleton from "../../components/ai-summary-skeleton.gjs";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import SmoothStreamer from "../../lib/smooth-streamer";
+} from "../../lib/ai-errors.js";
+import SmoothStreamer from "../../lib/smooth-streamer.gjs";
 
 export default class AiSummaryModal extends Component {
   @service messageBus;

@@ -65,6 +65,7 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      title: "مصنوعی ذہانت"
       copied: "کاپی کر لیا"
       view_raw: "خام دیکھیں"
       ai_decoded_transcript:
@@ -75,6 +76,12 @@ ur:
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
+        classify:
+          text: "ٹیکسٹ"
+          upload_ids: "تصاویر"
+          name: "نام"
+          type: "قِسم"
+          type_score: "اسکور"
       ai_tool_approval:
         loading: "لوڈ ہو رہا ہے..."
         tool: "عمل"
@@ -99,6 +106,11 @@ ur:
         filters:
           all: "تمام"
           reset: "رِی سَیٹ"
+        sentiment:
+          emotion: "جذبات"
+          enabled: "فعال شدہ"
+          setting_groups:
+            emotion: "جذبات"
         search:
           name: "تلاش کریں"
         admin_dashboard:
@@ -254,6 +266,13 @@ ur:
         edit: "ترمیم کریں"
         delete: "مٹائیں"
         embedding: "اَیمبَیڈ کرنا"
+      decision_models:
+        no_preset: "کوئی نہیں"
+        display_name: "نام"
+        provider: "پرووَائیڈر"
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+        test: "ٹیسٹ چلائیں"
       mcp_servers:
         name: "نام"
         description: "تفصیل"
@@ -269,6 +288,17 @@ ur:
         delete: "حذف کریں"
         tools_modal:
           required: "درکار"
+      models:
+        name: "نام"
+        type: "قِسم"
+        provider: "پرووَائیڈر"
+        edit: "ترمیم کریں"
+        select_type: "منتخب"
+        types:
+          embedding: "اَیمبَیڈ کرنا"
+        filters:
+          all: "تمام اقسام"
+          reset: "فلٹرز ری سیٹ کریں"
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
@@ -326,6 +356,15 @@ ur:
         providers:
           google: "گُوگَل"
           fake: "اپنی مرضی کا"
+      ai_artifact:
+        editor:
+          version: "ورژن"
+          default: "ڈِیفالٹ"
+          apply: "لاگو کریں"
+        share: "اشتراک"
+        create_link: "رابطہ بنائیں"
+        copy_link: "رابطہ کاپی کریں"
+        filter_all: "تمام"
       ai_bot:
         pm_warning: "AI چیٹ بوٹ پیغامات کو نگرانوں کے ذریعے باقاعدگی سے مانیٹر کیا جاتا ہے۔"
         debug_ai_modal:
@@ -340,6 +379,7 @@ ur:
           delete: "شیئر کو حذف کریں"
         invite_ai_conversation:
           button: "دعوت دیں"
+        ai_label: "مصنوعی ذہانت"
         share_modal:
           copy: "کاپی"
         conversations:
@@ -364,6 +404,14 @@ ur:
         topic:
           title: "موضوع کا خلاصہ"
           close: "خلاصہ پینل بند کریں"
+      ai_search:
+        related_topics: "متعلقہ موضوعات"
+        related_replies:
+          one: "%{count} جواب"
+          other: "%{count} جوابات"
+        tabs:
+          topics: "موضوعات"
+          messages: "پیغامات"
       discobot_discoveries:
         create_topic: "موضوع بنائیں"
         legacy:
@@ -375,7 +423,9 @@ ur:
             content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
             actions:
               disable: "غیر فعال کریں"
+        search_type: "مصنوعی ذہانت"
         search_all_topics: "تمام موضوعات"
         search_messages: "پیغامات"
+        ask_ai: "مصنوعی ذہانت"
         sources:
           related_discussions: "متعلقہ موضوعات"

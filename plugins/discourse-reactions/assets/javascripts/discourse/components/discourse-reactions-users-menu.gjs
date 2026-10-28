@@ -5,12 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import UsersPopup from "discourse/components/user/users-popup";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
-import CustomReaction from "../models/discourse-reactions-custom-reaction";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji.js";
+import CustomReaction from "../models/discourse-reactions-custom-reaction.js";
 
 export default class DiscourseReactionsUsersMenu extends Component {
   @service router;

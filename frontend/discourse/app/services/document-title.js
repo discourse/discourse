@@ -12,6 +12,8 @@ export default class DocumentElement extends Service {
 
   contextCount = 0;
   notificationCount = 0;
+
+  /** @type {string | null} */
   #title = null;
   #backgroundNotify = null;
 

@@ -84,3 +84,32 @@ acceptance("User's bookmarks - no bookmarks", function (needs) {
     assert.dom("div.empty-state").exists("renders the empty-state message");
   });
 });
+
+acceptance("User's bookmarks - bulk select", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    server.get("/u/eviltrout/bookmarks.json", () => {
+      const json = cloneJSON(userFixtures["/u/eviltrout/bookmarks.json"]);
+      const bookmarks = json.user_bookmark_list.bookmarks;
+      bookmarks.push({ ...bookmarks[0], id: 9001 });
+      return helper.response(json);
+    });
+  });
+
+  test("shift-clicking selects the bookmarks in between", async function (assert) {
+    await visit("/u/eviltrout/activity/bookmarks");
+    await click(".bookmark-list thead .bulk-select");
+
+    const checkboxes = "input.bulk-select";
+    await click(`.bookmark-list-item:nth-child(1) ${checkboxes}`);
+    await click(`.bookmark-list-item:nth-child(3) ${checkboxes}`, {
+      shiftKey: true,
+    });
+
+    assert
+      .dom(`.bookmark-list-item ${checkboxes}:checked`)
+      .exists({ count: 3 }, "selects the whole range");
+    assert.dom(".bulk-select-bookmarks-dropdown").exists();
+  });
+});

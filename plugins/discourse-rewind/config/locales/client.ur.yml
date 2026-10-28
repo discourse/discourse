@@ -18,5 +18,9 @@ ur:
           author: آپ
           author_others: "%{username}"
           status_online: "● آن لائن"
+        live_usage:
+          minutes:
+            one: "%{count} منٹ"
+            other: "%{count} منٹ"
         writing_analysis:
           menu_other: دیگر

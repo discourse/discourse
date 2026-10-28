@@ -33,6 +33,8 @@ module JsonApiKit
 
         def attribute_names = declared_attributes.map(&:name)
 
+        def writable_attributes = declared_attributes.select(&:writable?)
+
         def relationships = Declarations::Relationships.new(declared_relationships)
 
         def fields(names = nil, guardian:)
@@ -61,7 +63,24 @@ module JsonApiKit
         end
       end
 
-      delegate :attribute_names, :relationships, :fields, :resolves?, to: :class
+      delegate :attribute_names,
+               :writable_attributes,
+               :relationships,
+               :fields,
+               :resolves?,
+               to: :class
+
+      def attribute_value(name, record:)
+        unless name.type == type && attribute_names.include?(name.value)
+          raise KeyError, "#{name} is not an attribute of #{type}."
+        end
+        fields([name.value], guardian:)
+          .attributes
+          .values_for(record)
+          .fetch(name) do
+            raise UnreadableAttribute, "The existing value of #{name} is not readable."
+          end
+      end
     end
   end
 end

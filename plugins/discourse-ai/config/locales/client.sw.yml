@@ -42,6 +42,12 @@ sw:
         type: "Aina"
         error: "Hitilafu"
         response: "Mwitikio"
+      discourse_workflows:
+        classify:
+          text: "Neno"
+          upload_ids: "Picha"
+          name: "Jina"
+          type: "Aina"
       ai_tool_approval:
         loading: "Inaandaa...."
         tool: "Kitendo"
@@ -62,6 +68,8 @@ sw:
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
+        sentiment:
+          enabled: "Imeruhusiwa"
         search:
           name: "Tafuta"
         image_caption:
@@ -173,6 +181,12 @@ sw:
         edit: "Hariri"
         delete: "Futa"
         embedding: "Ambatanisha"
+      decision_models:
+        no_preset: "Hakuna"
+        display_name: "Jina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        delete: "Futa"
       mcp_servers:
         name: "Jina"
         description: "Maelezo"
@@ -184,6 +198,13 @@ sw:
         delete: "Futa"
         tools_modal:
           required: "Muhimu na Inahitajika"
+      models:
+        name: "Jina"
+        type: "Aina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        types:
+          embedding: "Ambatanisha"
       llms:
         display_name: "Jina"
         provider: "Mkimu"
@@ -223,6 +244,13 @@ sw:
         providers:
           google: "Google"
           fake: "Binafsi"
+      ai_artifact:
+        editor:
+          version: "Toleo"
+          default: "Halisi"
+          apply: "Tumia"
+        share: "Shirikisha"
+        filter_all: "Yote"
       ai_bot:
         debug_ai_modal:
           request: "Ombi"
@@ -243,6 +271,13 @@ sw:
             category: "Kikundi"
           table:
             total_count: "Jumla"
+      ai_search:
+        related_replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        tabs:
+          topics: "Mada"
+          messages: "Ujumbe"
       discobot_discoveries:
         legacy:
           regular_results: "Mada"

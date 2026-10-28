@@ -35,7 +35,8 @@ if defined?(DiscourseWorkflows)
                   acl_target_type: "Boards::Board",
                   acl_target_key: Boards::Board.acl_target_key,
                   acl_target_name: "boards.manage.board",
-                  permissions: Boards::Board::ACL_PERMISSIONS.values,
+                  permissions:
+                    Boards::Board::ACL_PERMISSIONS.values - [Boards::Board::ACL_PERMISSIONS.owner],
                 },
               },
               slug: {
@@ -70,7 +71,7 @@ if defined?(DiscourseWorkflows)
                       exec_ctx.get_node_parameter("tag_names", item_index, default: []),
                     ),
                   "category_ids" =>
-                    DiscourseWorkflows::NodeType.normalize_category_ids(
+                    DiscourseWorkflows::NodeType.normalize_ids(
                       exec_ctx.get_node_parameter("category_ids", item_index, default: []),
                     ),
                   "acl" => exec_ctx.get_node_parameter("acl", item_index, default: []),

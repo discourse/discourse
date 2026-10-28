@@ -16,6 +16,7 @@ sw:
       location: "Sehemu"
   mcp:
     errors:
+      category_not_found: "Kategoria haijapatikana"
       topic_not_found: "Mada haijapatikana"
     oauth:
       approve: "Idhini"
@@ -2038,10 +2039,14 @@ sw:
     google_meet:
       meeting_code: "Kodi:"
     github:
+      header:
+        success: "Mafanikio"
       closed: "imefungwa"
-      status_date:
-        approved: "wamekubaliwa"
-        closed: "imefungwa"
+      pr_status:
+        draft: "Rasimu"
+        open: "Fungua"
+        approved: "Wamekubaliwa"
+        closed: "Imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'

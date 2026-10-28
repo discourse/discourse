@@ -12,6 +12,7 @@ import {
   getPropertySchema,
   i18nPrefix,
   i18nScope,
+  isEmptyExpression,
   localeKeyPart,
   normalizeOptions,
   propertyDescription,
@@ -20,6 +21,8 @@ import {
   propertyOptionLabel,
   propertyPlaceholder,
   propertySelectNoneKey,
+  pruneModeHiddenFields,
+  wholeExpressionBody,
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/property-engine";
 
 module("Unit | Utility | workflows property engine", function () {
@@ -31,6 +34,39 @@ module("Unit | Utility | workflows property engine", function () {
     identifier: "action:data_table",
     ui: { i18n_scope: "data_table_node" },
   };
+
+  test("pruneModeHiddenFields drops fields hidden by the current mode only", function (assert) {
+    const schema = {
+      resume: { type: "options" },
+      wait_amount: { display_options: { show: { resume: ["time_interval"] } } },
+      webhook_suffix: { display_options: { show: { resume: ["webhook"] } } },
+      channel_name: { ui: { hidden: true } },
+      notes: {},
+    };
+    const configuration = {
+      resume: "time_interval",
+      wait_amount: 2,
+      webhook_suffix: "abc",
+      channel_name: "Staff",
+      notes: "",
+      alwaysOutputData: false,
+    };
+
+    assert.deepEqual(pruneModeHiddenFields(schema, configuration), {
+      resume: "time_interval",
+      wait_amount: 2,
+      channel_name: "Staff",
+      notes: "",
+      alwaysOutputData: false,
+    });
+    assert.deepEqual(
+      pruneModeHiddenFields(schema, {
+        ...configuration,
+        resume: "={{ $json.mode }}",
+      }),
+      { ...configuration, resume: "={{ $json.mode }}" }
+    );
+  });
 
   test("derives the translation scope from the node identifier", function (assert) {
     assert.strictEqual(i18nScope("action:topic"), "topic");
@@ -84,6 +120,10 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertyLabel("trigger:topic_tag_changed", "include_subcategories"),
       "Include subcategories"
+    );
+    assert.strictEqual(
+      propertyLabel("trigger:post_created", "topic_ids"),
+      "Topics"
     );
     assert.strictEqual(
       propertyLabel("trigger:user_updated", "group_ids"),
@@ -505,5 +545,41 @@ module("Unit | Utility | workflows property engine", function () {
       '[\n  "alpha",\n  "beta"\n]'
     );
     assert.strictEqual(normalizeCodeEditorValue("plain", "json"), "plain");
+  });
+
+  test("wholeExpressionBody", function (assert) {
+    [
+      ["={{ $json.id }}", "$json.id"],
+      ["={{ { val: 'x' } }}", "{ val: 'x' }"],
+      ["={{ {a: {b: 1} } }}", "{a: {b: 1} }"],
+      ["={{ `${x}` }}", "`${x}`"],
+      ["={{ (() => { return 1 })() }}", "(() => { return 1 })()"],
+      ["= {{ a }} ", "a"],
+      ["={{ a }} x {{ b }}", null],
+      ["=a {{ b }} c {{ d }}", null],
+      ["={{ a", null],
+      ["={{  }}", null],
+      ["{{ a }}", null],
+      [42, null],
+    ].forEach(([input, expected]) => {
+      assert.strictEqual(wholeExpressionBody(input), expected, String(input));
+    });
+  });
+
+  test("isEmptyExpression", function (assert) {
+    [
+      ["=", true],
+      ["=  ", true],
+      ["={{ }}", true],
+      ["={{   }}", true],
+      ["= {{ }} ", true],
+      ["={{ x }}", false],
+      ["={{ }}{{ x }}", false],
+      ["", false],
+      [null, false],
+      [false, false],
+    ].forEach(([input, expected]) => {
+      assert.strictEqual(isEmptyExpression(input), expected, String(input));
+    });
   });
 });

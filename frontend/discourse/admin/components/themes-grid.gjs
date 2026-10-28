@@ -7,7 +7,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ThemesGridCard from "./themes-grid-card";
+import ThemesGridCard from "./themes-grid-card.gjs";
 
 const FILTER_MINIMUM = 8;
 

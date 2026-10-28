@@ -49,6 +49,18 @@ module PageObjects
         find(".clear-filters").click
       end
 
+      def filter_by_staff_user(user)
+        find(".staff-logs .staff-user button", text: user.username, match: :first).click
+      end
+
+      def has_staff_user_filter?(user)
+        has_button?(staff_user_filter_label(user))
+      end
+
+      def clear_staff_user_filter(user)
+        click_button(staff_user_filter_label(user))
+      end
+
       def click_export_button
         find(".export-staff-action-logs").click
       end
@@ -59,6 +71,12 @@ module PageObjects
 
       def fill_date_filter_to(date)
         find(".d-date-time-input.to .d-date-input input").set(date)
+      end
+
+      private
+
+      def staff_user_filter_label(user)
+        "#{I18n.t("admin_js.admin.logs.staff_actions.staff_user")}: #{user.username}"
       end
     end
   end

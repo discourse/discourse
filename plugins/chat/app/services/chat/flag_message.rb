@@ -38,7 +38,10 @@ module Chat
 
       validates :message_id, presence: true
       validates :channel_id, presence: true
-      validates :flag_type_id, inclusion: { in: -> { ::ReviewableScore.types.values } }
+      validates :flag_type_id,
+                inclusion: {
+                  in: -> { Flag.enabled.applicable_to("Chat::Message").ids },
+                }
     end
 
     model :message

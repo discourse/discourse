@@ -11,5 +11,8 @@ et:
         all: "Kõik"
       main_reaction:
         add: "Laigi seda postitust"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Lisatud"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

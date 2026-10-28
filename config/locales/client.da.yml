@@ -6,6 +6,8 @@
 
 da:
   js:
+    dsa_notice:
+      email: "E-mail adresse"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"
@@ -25,6 +27,7 @@ da:
     access_control:
       manage:
         access_permission_editor: "Redaktør"
+        access_permission_owner: "Ejer"
         access_permission_remove: "Fjern"
     number:
       format:
@@ -263,7 +266,6 @@ da:
       zh_CN:
         name: Forenklet kinesisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber} af @%{username}"
       close: "luk"
       twitter: "Del på X"
@@ -311,6 +313,11 @@ da:
     topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Spring til hovedindhold"
     skip_user_nav: "Spring til profilindhold"
+    reorder:
+      removed: "Fjernede %{label}"
+      move_up: "Flyt op"
+      move_down: "Flyt ned"
+      position: "%{position} af %{total}"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     emails_are_disabled_non_staff: "Udgående post er slået fra alle andre end personalet."
     software_update_prompt:
@@ -413,9 +420,6 @@ da:
     max_of_count:
       one: "maks af %{count}"
       other: "maks af %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer efter periode"
     related_messages:
@@ -508,6 +512,9 @@ da:
           other: "Oprettet %{count} år siden"
     bookmarked:
       title: "Bogmærke"
+      edit_bookmark:
+        one: "Rediger bogmærke"
+        other: "Rediger bogmærker"
       help:
         bookmark: "Klik for at bogmærke dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
@@ -632,6 +639,9 @@ da:
       title:
         search: "Søg efter en besked"
         placeholder: "indtast beskeds titel, url eller id her"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Gemmer…"
     review:
       show_more: "Vis mere"
       show_less: "Vis mindre"
@@ -1658,7 +1668,6 @@ da:
         upload_title: "Overfør dit profil billede"
         image_is_not_a_square: "Advarsel: vi har beskåret billedet; bredde og højde var ikke ens."
         logo_small: "Webstedets lille logo. Anvendes som standard."
-        use_custom: "Eller overfør en brugerdefineret avatar:"
       change_profile_background:
         title: "Profiloverskrift"
         instructions: "Profiloverskrifter vil blive centreret og har en standardbredde på 1110px."
@@ -2475,8 +2484,7 @@ da:
       discard: "Kassér"
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
-      title_placeholder: "Hvad handler diskussionen om i korte træk?"
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -3962,9 +3970,6 @@ da:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Blev tildelt dette emblem %{count} gang"
-        other: "Blev tildelt dette emblem %{count} gange"
       granted_on: "Tildelt %{date}"
       others_count:
         one: "Givet til andre %{count} gang"
@@ -4331,45 +4336,6 @@ da:
           number: "Indtast venligst et tal."
           text: "Indtast venligst en tekstværdi."
           url: "Indtast venligst en gyldig URL."
-    table_builder:
-      title: "Tabel Bygger"
-      modal:
-        title: "Tabel Bygger"
-        create: "Byg Tabel"
-        help:
-          enter_key: "Enter"
-          tab_key: "Fane"
-      edit:
-        btn_edit: "Rediger tabel"
-        modal:
-          title: "Rediger tabel"
-          cancel: "annuller"
-          create: "Gem"
-          reason: "Hvorfor redigerer du?"
-          trigger_reason: "Tilføj årsag til redigering"
-      default_header:
-        col_1: "Kolonne 1"
-        col_2: "Kolonne 2"
-        col_3: "Kolonne 3"
-        col_4: "Kolonne 4"
-      spreadsheet:
-        show: "Vis"
-        about: "Om"
-        cells_already_merged: "Celle allerede flettet"
-        no_cells_selected: "Ingen celler valgt"
-        context_menu:
-          row:
-            before: "Indsæt en ny række før"
-            after: "Indsæt en ny række efter"
-            delete: "Slet valgte rækker"
-          col:
-            before: "Indsæt en ny kolonne før"
-            after: "Indsæt en ny kolonne efter"
-            delete: "Slet valgte kolonner"
-            rename: "Omdøb denne kolonne"
-          copy: "Kopiér..."
-          paste: "Indsæt..."
-          save: "Gem som..."
     powered_by_discourse: "Drevet af Discourse"
     filter:
       description:
@@ -4482,6 +4448,7 @@ da:
             block: "Blokér"
             presets:
               custom: "Tilpasset"
+            automatic: "Automatisk"
           authorizations:
             user: "Bruger"
             status: "Status"
@@ -5493,8 +5460,8 @@ da:
           upload: "Overfør"
           select_component: "Vælg en komponent…"
           unsaved_changes_alert: "Du har ikke gemt dine ændringer endnu, vil du kassere dem og gå videre?"
-          unsaved_parent_themes: "Du har ikke tildelt komponenten til temaer, vil du fortsætte?"
           discard: "Kassér"
+          leave: "Forlad"
           stay: "Bliv"
           delete_upload_confirm: "Slet denne overførsel? (Tema CSS kan muligvis stoppe med at virke!)"
           component_on_themes: "Inkluder komponent i disse temaer"

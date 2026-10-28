@@ -39,7 +39,9 @@ de:
         unassign_from_topic: "Zuordnung von @%{username} zu Thema aufheben"
         unassign_from_post: "Zuordnung von @%{username} zu #%{post_number} aufheben"
         edit_assignments: "Zuordnungen bearbeiten …"
-        created_by: "Erstellt von"
+        owners:
+          one: "Eigentümer"
+          other: "Eigentümer"
       manage:
         name: "Name"
         slug: "Sprechender Name für URL"

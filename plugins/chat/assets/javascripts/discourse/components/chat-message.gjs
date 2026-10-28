@@ -10,6 +10,8 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import EmojiPicker from "discourse/components/emoji-picker";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -17,7 +19,6 @@ import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
-import { eq, lt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -92,6 +93,12 @@ export default class ChatMessage extends Component {
 
   get pane() {
     return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
+  }
+
+  get hasConfirmationBlock() {
+    return this.args.message.blocks?.some(
+      (block) => block.type === "confirmation"
+    );
   }
 
   get includeSeparator() {
@@ -380,11 +387,11 @@ export default class ChatMessage extends Component {
 
   @bind
   decorateCookedMessage(element, helper) {
-    this.messageContainer = element;
+    this.messageContainer = element.closest(".chat-confirmation") || element;
     this.initMentionedUsers();
     this.decorateMentions(element);
     _chatMessageDecorators.forEach((decorator) => {
-      decorator(element, helper);
+      decorator(element, helper, this.args.message);
     });
   }
 
@@ -619,10 +626,6 @@ export default class ChatMessage extends Component {
 
     cancel(this._onMouseEnterMessageDebouncedHandler);
 
-    if (!this.chat.userCanInteractWithChat) {
-      return;
-    }
-
     if (!this.args.message.expanded) {
       return;
     }
@@ -756,37 +759,14 @@ export default class ChatMessage extends Component {
                   @threadContext={{this.threadContext}}
                 />
 
-                <ChatMessageText
-                  @cooked={{@message.cooked}}
-                  @decorate={{this.decorateCookedMessage}}
-                  @edited={{@message.edited}}
-                  @uploads={{@message.uploads}}
-                >
-                  {{#if this.shouldRenderReactions}}
-                    <div class="chat-message-reaction-list">
-                      {{#each @message.reactions as |reaction|}}
-                        <ChatMessageReaction
-                          @interactive={{@interactive}}
-                          @message={{@message}}
-                          @onReaction={{this.messageInteractor.react}}
-                          @reaction={{reaction}}
-                          @showTooltip={{true}}
-                        />
-                      {{/each}}
-
-                      {{#if this.shouldRenderOpenEmojiPickerButton}}
-                        <EmojiPicker
-                          class="chat-message-reaction"
-                          @btnClass="btn-flat react-btn chat-message-react-btn"
-                          @context="chat"
-                          @didSelectEmoji={{this.messageInteractor.selectReaction}}
-                          @onClose={{this.onEmojiPickerClose}}
-                          @onShow={{this.onEmojiPickerShow}}
-                        />
-                      {{/if}}
-                    </div>
-                  {{/if}}
-                </ChatMessageText>
+                {{#unless this.hasConfirmationBlock}}
+                  <ChatMessageText
+                    @cooked={{@message.cooked}}
+                    @decorate={{this.decorateCookedMessage}}
+                    @edited={{@message.edited}}
+                    @uploads={{@message.uploads}}
+                  />
+                {{/unless}}
 
                 {{#if this.shouldRenderStopMessageStreamingButton}}
                   <div class="stop-streaming-btn-container">
@@ -800,7 +780,40 @@ export default class ChatMessage extends Component {
                   </div>
                 {{/if}}
 
-                <ChatMessageBlocks @message={{@message}} />
+                <ChatMessageBlocks
+                  @decorate={{this.decorateCookedMessage}}
+                  @message={{@message}}
+                />
+
+                <PluginOutlet
+                  @name="chat-message-after"
+                  @outletArgs={{lazyHash message=@message}}
+                />
+
+                {{#if this.shouldRenderReactions}}
+                  <div class="chat-message-reaction-list">
+                    {{#each @message.reactions as |reaction|}}
+                      <ChatMessageReaction
+                        @interactive={{@interactive}}
+                        @message={{@message}}
+                        @onReaction={{this.messageInteractor.react}}
+                        @reaction={{reaction}}
+                        @showTooltip={{true}}
+                      />
+                    {{/each}}
+
+                    {{#if this.shouldRenderOpenEmojiPickerButton}}
+                      <EmojiPicker
+                        class="chat-message-reaction"
+                        @btnClass="btn-flat react-btn chat-message-react-btn"
+                        @context="chat"
+                        @didSelectEmoji={{this.messageInteractor.selectReaction}}
+                        @onClose={{this.onEmojiPickerClose}}
+                        @onShow={{this.onEmojiPickerShow}}
+                      />
+                    {{/if}}
+                  </div>
+                {{/if}}
 
                 <ChatMessageError
                   @message={{@message}}

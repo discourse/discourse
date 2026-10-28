@@ -5,10 +5,18 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 
 export default class GroupsIndexController extends Controller {
   queryParams = ["order", "asc", "filter", "type"];
+
+  /** @type {string | null} */
   order = null;
+
+  /** @type {boolean | string | null} */
   asc = null;
   filter = "";
+
+  /** @type {string | null} */
   type = null;
+
+  /** @type {import("discourse/models/result-set").default | null} */
   groups = null;
 
   @action

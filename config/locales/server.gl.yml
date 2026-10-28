@@ -17,6 +17,7 @@ gl:
       link: "Ligazón"
   mcp:
     errors:
+      category_not_found: "Non foi posíbel atopar a categoría"
       topic_not_found: "Non foi posíbel atopar o tema"
     oauth:
       deny: "Rexeitar"
@@ -2851,20 +2852,12 @@ gl:
     account_suspended:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-      text_body_template: |
-        Queda suspendida a súa participación no foro ata %{suspended_till}.
-
-        Razón - %{reason}
     account_suspended_forever:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-      text_body_template: |
-        Queda silenciado no foro ata %{silenced_till}.
-
-        Razón - %{reason}
     account_silenced_forever:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
@@ -3455,10 +3448,14 @@ gl:
     google_meet:
       meeting_code: "Código:"
     github:
+      header:
+        success: "Feito"
       closed: "pechado"
-      status_date:
-        approved: "aprobado"
-        closed: "pechado"
+      pr_status:
+        draft: "Borrador"
+        open: "Abrir"
+        approved: "Aprobado"
+        closed: "Pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'

@@ -21,6 +21,7 @@ sr:
     access_control:
       manage:
         access_permission_editor: "Urednik"
+        access_permission_owner: "Vlasnik"
         access_permission_remove: "Ukloni"
     number:
       format:
@@ -190,7 +191,6 @@ sr:
         last_3_months: "Poslednja 3 meseca"
         last_6_months: "Poslednja 6 meseca"
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} od @%{username}"
       close: "затвори"
       twitter: "Podelite na X"
@@ -237,6 +237,9 @@ sr:
     topic_admin_menu: "радње око теме"
     skip_to_main_content: "Predji na glavni sadržaj"
     skip_user_nav: "Preskoči do sadržaja profila"
+    reorder:
+      removed: "Уклања групу %{label}"
+      position: "%{position} od %{total}"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     emails_are_disabled_non_staff: "Odlazni email je omogućen samo za osoblje."
     software_update_prompt:
@@ -347,10 +350,6 @@ sr:
       one: "maksimalno od %{count}"
       few: "maksimalno od %{count}"
       other: "maksimalno od %{count}"
-    character_count:
-      one: "%{count} karakter"
-      few: "%{count} karaktera"
-      other: "%{count} karaktera"
     period_chooser:
       aria_label: "Filtriraj po periodu"
     related_messages:
@@ -630,6 +629,9 @@ sr:
       title:
         search: "Potražite poruku"
         placeholder: "ovde unesite naslov poruke, link ili ID"
+    dsa_statements:
+      category: "Kategorija"
+      saving: "Snimanje…"
     review:
       show_more: "Pokaži više"
       show_less: "Pokaži manje"
@@ -1855,8 +1857,7 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
-      title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
-      title_placeholder_redesign: "Naslov"
+      title_placeholder: "Naslov"
       edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
@@ -2807,15 +2808,6 @@ sr:
         type_mismatch:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
-    table_builder:
-      edit:
-        modal:
-          cancel: "otkaži"
-          create: "Sačuvaj"
-          reason: "Zašto izmenjujete?"
-      spreadsheet:
-        show: "Pokaži"
-        about: "O nama"
     filter:
       description:
         yesterday: "Juče"
@@ -2893,6 +2885,7 @@ sr:
             block: "Blokiraj"
             presets:
               custom: "Posebna"
+            automatic: "Automatska"
           authorizations:
             user: "Korisnik"
             status: "Status"

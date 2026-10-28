@@ -246,7 +246,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
     it "raises when the username does not resolve" do
       expect { flag("username" => "nope") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nope' not found",
+        node_error_message(:not_found, scope: :actor, username: "nope"),
       )
     end
   end

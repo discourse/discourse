@@ -17,6 +17,13 @@ RSpec.describe SvgSprite do
     expect(bundle).to match(/angles-down/)
   end
 
+  it "lets symbols draw outside their viewBox" do
+    symbols = Nokogiri.XML(SvgSprite.bundle).css("symbol")
+
+    expect(symbols).to be_present
+    expect(symbols.map { |symbol| symbol["overflow"] }.uniq).to eq(["visible"])
+  end
+
   it "can generate paths" do
     version = SvgSprite.version # Icons won't change for this test
 
@@ -102,6 +109,12 @@ RSpec.describe SvgSprite do
     Fabricate(:badge, name: "Seedling Badge", icon: "seedling")
 
     expect(SvgSprite.picker_icon_ids(nil, true)).to include("seedling")
+  end
+
+  it "renders legacy icon names without offering them in the full picker list" do
+    expect(SvgSprite.search("user-large")).to match(/user-large/)
+    expect(SvgSprite.picker_icon_ids(nil, false)).to include("user")
+    expect(SvgSprite.picker_icon_ids(nil, false)).not_to include("user-large")
   end
 
   it "includes icons from badges" do

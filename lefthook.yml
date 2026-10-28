@@ -209,5 +209,5 @@ lints:
     i18n-lint:
       glob: *i18n_glob
       run: bundle exec ruby script/i18n_lint.rb {all_files}
-    glint:
+    tsc:
       run: pnpm lint:types

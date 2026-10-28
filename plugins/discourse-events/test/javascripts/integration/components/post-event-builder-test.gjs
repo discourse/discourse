@@ -3,8 +3,8 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import PostEventBuilder from "../../discourse/components/modal/post-event-builder";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function eventWith(attrs = {}) {
   return DiscoursePostEventEvent.create({
@@ -227,6 +227,26 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
       null,
       "clearing the field clears the event url, so buildParams drops it"
     );
+  });
+
+  test("advanced screen offers a recording field once a livestream has ended", async function (assert) {
+    const event = eventWith({ livestream: true });
+    await renderAdvanced(event);
+
+    await fillIn(`[data-name="recordingUrl"] input`, "https://youtu.be/abc");
+
+    assert.strictEqual(event.recordingUrl, "https://youtu.be/abc");
+  });
+
+  test("advanced screen hides the recording field before a livestream ends", async function (assert) {
+    const event = eventWith({
+      livestream: true,
+      starts_at: "2099-07-01T10:00:00Z",
+      ends_at: "2099-07-01T11:00:00Z",
+    });
+    await renderAdvanced(event);
+
+    assert.dom(`[data-name="recordingUrl"]`).doesNotExist();
   });
 
   test("offers livestream when the url field carries the livestream link", async function (assert) {

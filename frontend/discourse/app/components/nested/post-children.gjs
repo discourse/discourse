@@ -9,8 +9,8 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import processNode from "../../lib/process-node";
-import NestedPost from "./post";
+import processNode from "../../lib/process-node.js";
+import NestedPost from "./post.gjs";
 
 export default class NestedPostChildren extends Component {
   @service appEvents;
@@ -26,7 +26,11 @@ export default class NestedPostChildren extends Component {
 
   // Tracks whether we've fetched from the server yet (vs only having preloaded data)
   _fetchedFromServer = false;
+
+  /** @type {string | null} */
   _identityKey = null;
+
+  /** @type {string | null} */
   _activeCacheKey = null;
 
   constructor() {

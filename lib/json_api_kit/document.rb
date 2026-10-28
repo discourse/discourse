@@ -3,7 +3,25 @@
 module JsonApiKit
   class Document
     class << self
+      def from(value)
+        case value
+        when Document, Errors
+          value
+        when Array, ActiveRecord::Relation
+          Collection.from(value, **yield)
+        else
+          Individual.from(value, **yield)
+        end
+      end
+
       private
+
+      def from_records(records, resource:, input:, client:)
+        request = Request.new(input.to_h, guardian: client.guardian, edition: client.edition)
+        assemble(
+          new(Query::Result.new(resource, request, records:), client:, fieldsets: input.fieldsets),
+        )
+      end
 
       def build(raw, resource:, client:)
         resource = resource.new(guardian: client.guardian, edition: client.edition)
@@ -28,6 +46,8 @@ module JsonApiKit
     def to_h = @to_h ||= { data:, included:, links: }
 
     def status = "200"
+
+    def headers(**) = {}
 
     private
 

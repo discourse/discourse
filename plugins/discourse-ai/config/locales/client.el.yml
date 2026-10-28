@@ -107,6 +107,12 @@ el:
       discourse_workflows:
         ai_agent:
           mode: "Λειτουργία"
+        classify:
+          text: "Κείμενο"
+          upload_ids: "Εικόνες"
+          name: "Όνομα"
+          type: "Τύπος"
+          type_score: "Βαθμολογία"
       bot_chats:
         tab_label: "Συνομιλίες bot"
       ai_tool_approval:
@@ -125,6 +131,7 @@ el:
         groups: "Ομάδες:"
         no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
+        classification_model: "Μοντέλο:"
         edit: "Ρυθμίσεις"
         expand_list:
           one: "(%{count} περισσότερο)"
@@ -138,6 +145,8 @@ el:
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
+        sentiment:
+          enabled: "Ενεργοποιημένη"
         search:
           name: "Αναζήτηση"
         admin_dashboard:
@@ -321,6 +330,15 @@ el:
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
+      decision_models:
+        no_preset: "Κανένα"
+        display_name: "Όνομα"
+        model: "Μοντέλο"
+        provider: "Πάροχος"
+        api_key: "Διαπιστευτήρια"
+        edit: "Επεξεργασία"
+        delete: "Σβήσιμο"
+        test: "Εκτέλεση δοκιμής"
       mcp_servers:
         name: "Όνομα"
         description: "Περιγραφή"
@@ -352,6 +370,17 @@ el:
         tools_modal:
           required: "Απαιτείται"
         test_result: "Αποτέλεσμα σύνδεσης"
+      models:
+        name: "Όνομα"
+        type: "Τύπος"
+        provider: "Πάροχος"
+        edit: "Επεξεργασία"
+        select_type: "Επιλογή"
+        types:
+          embedding: "Ενσωμάτωση"
+        filters:
+          all: "Όλοι οι τύποι"
+          reset: "Επαναφορά φίλτρων"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
@@ -414,6 +443,19 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
+      ai_artifact:
+        editor:
+          version: "Έκδοση"
+          default: "Προεπιλογή"
+          option_on: "Ενεργό"
+          option_off: "Ανενεργό"
+          apply: "Εφαρμογή"
+        share: "Κοινοποίηση"
+        create_link: "Δημιουργία συνδέσμου"
+        copy_link: "Αντιγραφή συνδέσμου"
+        filter_all: "Όλα"
+        filter_standalone: "Αυτόνομη"
+        filter_conversation: "Συνομιλία"
       ai_bot:
         title: "AI bot"
         llm: "Μοντέλο:"
@@ -462,6 +504,13 @@ el:
       summarization:
         chat:
           summarize: "Συνοψίστε"
+      ai_search:
+        related_replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        tabs:
+          topics: "Θέματα"
+          messages: "Μηνύματα"
       discobot_discoveries:
         create_topic: "Δημιουργία θέματος"
         legacy:

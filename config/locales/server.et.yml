@@ -16,6 +16,7 @@ et:
       location: "Asukoht"
   mcp:
     errors:
+      category_not_found: "Kategooriat ei leitud"
       draft_too_long: "Mustand on liiga pikk"
       topic_not_found: "Teemat ei leitud"
     oauth:
@@ -1131,10 +1132,14 @@ et:
     google_meet:
       meeting_code: "Kood:"
     github:
+      header:
+        success: "Korras"
       closed: "suletud"
-      status_date:
-        approved: "heakskiidetud"
-        closed: "suletud"
+      pr_status:
+        draft: "Mustand"
+        open: "Ava"
+        approved: "Heakskiidetud"
+        closed: "Suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'

@@ -43,7 +43,6 @@ ru:
   site_settings:
     discourse_ai_enabled: "Включить плагин AI для Discourse."
     enable_ai_bot_starred_conversations: "Предоставьте пользователям возможность отмечать диалоги с ИИ-ботами звездочкой и отображать их в боковой панели в разделе «Избранное»."
-    ai_default_llm_model: "Модель LLM по умолчанию для всех AI-функций"
     ai_artifact_security: "Система AI-артефактов генерирует IFRAME с исполняемым кодом. В режиме Strict требуется дополнительный клик для запуска кода. В режиме Lax код запускается сразу. В режиме Hybrid пользователь может указать data-ai-artifact-autorun, чтобы запускать код автоматически. В режиме Disabled система артефактов не используется."
     ai_toxicity_enabled: "Включить модуль проверки на токсичность."
     ai_toxicity_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля проверки на токсичность"
@@ -58,7 +57,6 @@ ru:
     ai_toxicity_flag_threshold_threat: "Угроза"
     ai_toxicity_flag_threshold_sexual_explicit: "Контент сексуального характера"
     ai_toxicity_groups_bypass: "Сообщения пользователей в этих группах не будут оцениваться модулем проверки на токсичность."
-    ai_sentiment_enabled: "Включить модуль оценки настроения."
     ai_sentiment_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля оценки настроения"
     ai_sentiment_inference_service_api_key: "API-ключ для API оценки настроения"
     ai_nsfw_detection_enabled: "Включить модуль проверки на NSFW-контент."
@@ -126,88 +124,60 @@ ru:
       yaxis: "Дата"
     emotion_admiration:
       title: "🤩 Восхищение"
-      description: "Публикации, классифицированные AI по эмоции «восхищение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
       title: "😄 Веселье"
-      description: "Публикации, классифицированные AI по эмоции «веселье» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
       title: "😠 Гнев"
-      description: "Публикации, классифицированные AI по эмоции «гнев» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
       title: "😒 Недовольство"
-      description: "Публикации, классифицированные AI по эмоции «недовольство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
       title: "👍 Одобрение"
-      description: "Публикации, классифицированные AI по эмоции «одобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
       title: "🤗 Забота"
-      description: "Публикации, классифицированные AI по эмоции «забота» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
       title: "😕 Замешательство"
-      description: "Публикации, классифицированные AI по эмоции «замешательство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
       title: "🤔 Любопытство"
-      description: "Публикации, классифицированные AI по эмоции «любопытство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
       title: "😍 Восторг"
-      description: "Публикации, классифицированные AI по эмоции «восторг» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
       title: "😞 Разочарование"
-      description: "Публикации, классифицированные AI по эмоции «разочарование» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
       title: "👎 Неодобрение"
-      description: "Публикации, классифицированные AI по эмоции «неодобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
       title: "🤢 Отвращение"
-      description: "Публикации, классифицированные AI по эмоции «отвращение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
       title: "😳 Смущение"
-      description: "Публикации, классифицированные AI по эмоции «смущение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
       title: "🤪 Волнение"
-      description: "Публикации, классифицированные AI по эмоции «волнение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
       title: "😨 Страх"
-      description: "Публикации, классифицированные AI по эмоции «страх» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
       title: "🙏 Благодарность"
-      description: "Публикации, классифицированные AI по эмоции «благодарность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
       title: "😢 Печаль"
-      description: "Публикации, классифицированные AI по эмоции «печаль» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
       title: "😊 Радость"
-      description: "Публикации, классифицированные AI по эмоции «радость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Любовь'
-      description: "Публикации, классифицированные AI по эмоции «любовь» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
       title: "😰 Тревога"
-      description: "Публикации, классифицированные AI по эмоции «тревога» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
       title: "😐 Нейтральность"
-      description: "Публикации, классифицированные AI по эмоции «нейтральность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
       title: "🌟 Оптимизм"
-      description: "Публикации, классифицированные AI по эмоции «оптимизм» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
       title: "🦁 Гордость"
-      description: "Публикации, классифицированные AI по эмоции «гордость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
       title: "💡 Озарение"
-      description: "Публикации, классифицированные AI по эмоции «озарение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
       title: "😌 Облегчение"
-      description: "Публикации, классифицированные AI по эмоции «облегчение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
       title: "😔 Сожаление"
-      description: "Публикации, классифицированные AI по эмоции «сожаление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
       title: "😭 Грусть"
-      description: "Публикации, классифицированные AI по эмоции «грусть» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
       title: "😲 Удивление"
-      description: "Публикации, классифицированные AI по эмоции «удивление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
       errors:
@@ -305,6 +275,31 @@ ru:
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
       read_post:
         unknown_post: "публикация"
+      chat_tool_approval:
+        topic_states:
+          open: "Открытые"
+          closed: "Закрытое"
+          active: "Активна"
+          deleted: "Удалённые"
+        solution_post: "Cообщение #%{number}"
+        duration_label: "Продолжительность:"
+        user_duration:
+          one: "%{count} день"
+          few: "%{count} дней"
+          many: "%{count} дней"
+          other: "%{count} дня"
+        post_states:
+          locked: "Заблокировано"
+        posts_label: "Количество сообщений"
+        category_label: "Категория"
+        category_fields:
+          name: "Название"
+          description: "описание"
+          color: "цвет"
+          text_color: "цвет текста"
+        approve_label: "Да"
+        reject_label: "Нет"
+        empty_value: "Пустой"
       agents:
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
         admin_dashboard_highlights:
@@ -761,6 +756,8 @@ ru:
         disable_embeddings: "Сначала вам необходимо отключить настройку 'ai embeddings enabled'."
         choose_model: "Сначала задайте 'ai embeddings selected model'."
         model_test_failed: "Не удалось создать тестовую встраиваемую модель с этой моделью. Проверьте правильность её настройки."
+    decision_models:
+      secret_not_found: "Выбранные учетные данные не существуют."
     llm_models:
       missing_provider_param: "Параметр %{param} не может быть пустым"
       bedrock_invalid_url: "Чтобы использовать эту модель, заполните все поля."

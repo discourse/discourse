@@ -6,7 +6,6 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { eq } from "discourse/truth-helpers";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";

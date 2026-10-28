@@ -52,7 +52,6 @@ nl:
         description: "Automatisch topics taggen met AI"
   site_settings:
     discourse_ai_enabled: "Schakel de Discourse-AI-plug-in in."
-    ai_default_llm_model: "Het standaard LLM-model om te gebruiken voor alle AI-functies"
     ai_artifact_security: "Het AI-artefactsysteem genereert IFRAME's met uitvoerbare code. De modus Strikt forceert een extra klik om code uit te voeren. De modus Soepel voert code direct uit. De modus Hybride stelt de gebruiker in staat om data-ai-artifact-autorun op te geven voor directe weergave. De modus Uitgeschakeld schakelt het artefactsysteem uit."
     ai_toxicity_enabled: "Schakel de toxiciteitsmodule in."
     ai_toxicity_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de toxiciteitsmodule"
@@ -67,7 +66,6 @@ nl:
     ai_toxicity_flag_threshold_threat: "Bedreiging"
     ai_toxicity_flag_threshold_sexual_explicit: "Seksueel expliciet"
     ai_toxicity_groups_bypass: "De berichten van gebruikers in die groepen worden niet geclassificeerd door de toxiciteitsmodule."
-    ai_sentiment_enabled: "Schakel de sentimentmodule in."
     ai_sentiment_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de sentimentmodule"
     ai_sentiment_inference_service_api_key: "API-sleutel voor de sentiment-API"
     ai_nsfw_detection_enabled: "Schakel de NVWW-module in."
@@ -145,88 +143,60 @@ nl:
       yaxis: "Datum"
     emotion_admiration:
       title: "🤩 Bewondering"
-      description: "Berichten geclassificeerd met de emotie bewondering via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
       title: "😄 Geamuseerd"
-      description: "Berichten geclassificeerd met de emotie geamuseerd via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
       title: "😠 Boosheid"
-      description: "Berichten geclassificeerd met de emotie woede via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
       title: "😒 Ergernis"
-      description: "Berichten geclassificeerd met de emotie ergernis via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
       title: "👍 Goedkeuring"
-      description: "Berichten geclassificeerd met de emotie goedkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
       title: "🤗 Zorgzaam"
-      description: "Berichten geclassificeerd met de emotie zorgzaam via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
       title: "😕 Verwarring"
-      description: "Berichten geclassificeerd met de emotie verwarring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
       title: "🤔 Nieuwsgierigheid"
-      description: "Berichten geclassificeerd met de emotie nieuwsgierigheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
       title: "😍 Verlangen"
-      description: "Berichten geclassificeerd met de emotie verlangen via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
       title: "😞 Teleurstelling"
-      description: "Berichten geclassificeerd met de emotie teleurstelling via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
       title: "👎 Afkeuring"
-      description: "Berichten geclassificeerd met de emotie afkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
       title: "🤢 Afschuw"
-      description: "Berichten geclassificeerd met de emotie afschuw via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
       title: "😳 Schaamte"
-      description: "Berichten geclassificeerd met de emotie schaamte via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
       title: "🤪 Opwinding"
-      description: "Berichten geclassificeerd met de emotie opwinding via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
       title: "😨 Angst"
-      description: "Berichten geclassificeerd met de emotie angst via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
       title: "🙏 Dankbaarheid"
-      description: "Berichten geclassificeerd met de emotie dankbaarheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
       title: "😢 Verdriet"
-      description: "Berichten geclassificeerd met de emotie verdriet via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
       title: "😊 Vreugde"
-      description: "Berichten geclassificeerd met de emotie vreugde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Liefde'
-      description: "Berichten geclassificeerd met de emotie liefde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
       title: "😰 Nervositeit"
-      description: "Berichten geclassificeerd met de emotie nervositeit via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
       title: "😐 Neutraal"
-      description: "Berichten geclassificeerd met de emotie neutraal via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
       title: "🌟 Optimisme"
-      description: "Berichten geclassificeerd met de emotie optimisme via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
       title: "🦁 Trots"
-      description: "Berichten geclassificeerd met de emotie trots via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
       title: "💡 Besef"
-      description: "Berichten geclassificeerd met de emotie besef via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
       title: "😌 Opluchting"
-      description: "Berichten geclassificeerd met de emotie oplichting via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
       title: "😔 Spijt"
-      description: "Berichten geclassificeerd met de emotie spijt via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
       title: "😭 Droefheid"
-      description: "Berichten geclassificeerd met de emotie droefheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
       title: "😲 Verrassing"
-      description: "Berichten geclassificeerd met de emotie verrassing via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
       errors:
@@ -373,6 +343,28 @@ nl:
       read_post:
         unknown_post: "bericht"
       chat_tool_approval:
+        topic_states:
+          open: "Openen"
+          closed: "Gesloten"
+          active: "Actief"
+          deleted: "Verwijderd"
+        solution_post: "Bericht %{number}"
+        duration_label: "Duur:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dagen"
+        post_states:
+          locked: "Vergrendeld"
+        posts_label: "Berichten"
+        category_label: "Categorie"
+        category_fields:
+          name: "naam"
+          description: "beschrijving"
+          color: "kleur"
+          text_color: "tekstkleur"
+        approve_label: "Ja"
+        reject_label: "Nee"
+        empty_value: "Leeg"
         unexpected_error: "er is een onverwachte fout opgetreden"
       agents:
         cannot_delete_system_agent: "Systeemagenten kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit."
@@ -895,8 +887,8 @@ nl:
         disable_embeddings: "Je moet 'ai embeddings enabled' eerst uitschakelen."
         choose_model: "Stel eerst 'ai embeddings selected model' in."
         model_test_failed: "Het generen van een testinsluiting van dit model is mislukt. Controleer of het juist is geconfigureerd."
-    secrets:
-      delete_failed_in_use: "Deze aanmeldingsgegevens worden momenteel gebruikt door één of meer LLM's, insluitingen of tools en kunnen niet worden verwijderd."
+    decision_models:
+      secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet"
     llm_models:
       missing_provider_param: "%{param} mag niet leeg zijn"
       secret_required: "Er moeten aanmeldingsgegevens worden geselecteerd"

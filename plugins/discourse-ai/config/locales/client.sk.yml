@@ -169,6 +169,13 @@ sk:
         type: "Typ"
         error: "Chyba"
         response: "Odpoveď"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Meno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Prebieha načítavanie..."
         tool: "Akcia"
@@ -177,6 +184,8 @@ sk:
         reject: "Zamietnuť"
         approved: "Schválený"
         rejected: "Zamietnuté"
+      default_llm:
+        title: "Predvolený jazykový model"
       llm_selector:
         none: "Žiadny"
       features:
@@ -191,6 +200,7 @@ sk:
         no_llm: "Nie je vybraný žiadny LLM"
         no_agent: "Nie je nastavené"
         no_groups: "Žiadny"
+        classification_model: "Model:"
         edit: "Nastavení"
         expand_list:
           one: "(%{count} ďalší)"
@@ -208,6 +218,13 @@ sk:
           all: "Všetky"
           no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."
           reset: "Resetovať"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Emócia"
+          enabled: "Povolené"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emócia"
         summarization:
           name: "Súhrny"
           description: "Sprístupňuje tlačidlo na zhrnutie, ktoré umožňuje návštevníkom zhrnúť témy"
@@ -574,6 +591,14 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žiadny"
+        display_name: "Meno"
+        model: "Model"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        test: "Spustiť test"
       mcp_servers:
         name: "Meno"
         description: "Popis"
@@ -590,6 +615,18 @@ sk:
         tools_modal:
           parameters: "Parametre"
           required: "Povinné"
+      models:
+        new: "Nový model"
+        name: "Meno"
+        type: "Typ"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        select_type: "Vyberte"
+        types:
+          embedding: "Vkladám"
+        filters:
+          all: "Všetky typy"
+          reset: "Obnovenie filtrov"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"
@@ -803,9 +840,23 @@ sk:
         quick_search:
           suffix: "vo všetkých témach a príspevkoch s AI"
       ai_artifact:
+        editor:
+          version: "Verzia"
+          default: "Predvolené"
+          option_on: "Zapnuté"
+          option_off: "Vypnuté"
+          apply: "Použi"
         expand_view_label: "Rozbaliť zobrazenie"
         collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
         click_to_run_label: "Spustiť artefakt"
+        share: "Zdieľať"
+        create_link: "Vytvorte odkaz"
+        copied: "Skopírované do schránky"
+        copy_link: "Kopírovať odkaz"
+        copy_embed: "Kopírovať vloženie"
+        new_tab: "Zobraziť na novej karte"
+        filter_all: "Všetky"
+        filter_standalone: "Samostatný"
       ai_bot:
         title: "AI bot"
         llm: "Model:"
@@ -919,6 +970,17 @@ sk:
             compact: "Kompaktné"
             expanded: "Rozšírené"
             expanded_description: "so súhrnmi AI"
+      ai_search:
+        related_topics: "Súvisiace témy"
+        related_replies:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
+        tabs:
+          ask: "Spýtajte sa AI"
+          topics: "Témy"
+          messages: "Správy"
       discobot_discoveries:
         main_title: "Spýtajte sa AI"
         loading_convo: "Načítanie konverzácie"

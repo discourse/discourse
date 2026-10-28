@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module DiscourseAssignSpecHelpers
-  def allow_group_to_assign_in_category(category, group)
+  def allow_group_to_assign_in_category(category, *groups)
     category.custom_fields[
       DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
-    ] = group.id.to_s
+    ] = groups.map(&:id).join("|")
     category.save_custom_fields
   end
 end

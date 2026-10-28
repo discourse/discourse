@@ -19,6 +19,7 @@ cs:
       link: "Odkaz"
   mcp:
     errors:
+      category_not_found: "Kategorie nebyla nalezena"
       draft_too_long: "Koncept je příliš dlouhý"
       topic_not_found: "Téma nenalezeno"
     oauth:
@@ -928,6 +929,7 @@ cs:
     post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů nebo pravidel ke kategorii:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měla témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
     errors:
       not_found: "Kategorie nebyla nalezena!"
+      self_lockout: "Chystáte se změnit oprávnění kategorie tak, že odeberete svůj vlastní přístup. Opravdu chcete pokračovat?"
       uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
       self_parent: "Nadřazená kategorie nemůže zároveň být podkategorie"
       depth: "Podkategorie se nedají vnořovat"
@@ -3578,31 +3580,15 @@ cs:
     account_suspended:
       title: "Účet pozastaven"
       subject_template: "[%{email_prefix}] Váš účet byl pozastaven"
-      text_body_template: |
-        Do %{suspended_till} vám byl pozastaven přístup do fóra.
-
-        Důvod - %{reason}
     account_suspended_forever:
       title: "Účet pozastaven"
       subject_template: "[%{email_prefix}] Váš účet byl pozastaven"
-      text_body_template: |
-        Byl vám pozastaven přístup do fóra.
-
-        Důvod - %{reason}
     account_silenced:
       title: "Účet ztišen"
       subject_template: "[%{email_prefix}] Váš účet byl ztišen"
-      text_body_template: |
-        Byli jste ztišeni do %{silenced_till}.
-
-        Důvod - %{reason}
     account_silenced_forever:
       title: "Účet ztišen"
       subject_template: "[%{email_prefix}] Váš účet byl ztišen"
-      text_body_template: |
-        Byli jste na fóru ztišeni.
-
-        Důvod - %{reason}
     account_exists:
       title: "Účet již existuje"
       subject_template: "[%{email_prefix}] Účet již existuje"
@@ -4363,13 +4349,18 @@ cs:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
     github:
+      header:
+        file: "Soubor"
+        success: "Úspěch"
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
       closed: "uzavřeno"
-      status_date:
-        approved: "schválen"
-        merged: "sloučeno"
-        closed: "zavřeno"
+      pr_status:
+        draft: "Koncept"
+        open: "Otevřeno"
+        approved: "Schválen"
+        merged: "Sloučeno"
+        closed: "Zavřeno"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'

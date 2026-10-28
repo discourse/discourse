@@ -12,7 +12,6 @@ import getURL from "discourse/lib/get-url";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, gt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
@@ -64,6 +63,7 @@ export default <template>
         @action={{@controller.saveUsername}}
         @editing={{@controller.editingUsername}}
         @name="user.username.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingUsername"}}
         @value={{@controller.model.username}}
       />
     </div>
@@ -73,6 +73,7 @@ export default <template>
         @action={{@controller.saveName}}
         @editing={{@controller.editingName}}
         @name="user.name.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingName"}}
         @value={{@controller.model.name}}
       />
     </div>
@@ -220,6 +221,7 @@ export default <template>
         @action={{@controller.saveTitle}}
         @editing={{@controller.editingTitle}}
         @name="user.title.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingTitle"}}
         @value={{@controller.model.title}}
       />
     </div>

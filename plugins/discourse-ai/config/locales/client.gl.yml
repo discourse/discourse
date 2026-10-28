@@ -45,6 +45,13 @@ gl:
         type: "Tipo"
         error: "Erro"
         response: "Resposta"
+      discourse_workflows:
+        classify:
+          text: "Texto"
+          upload_ids: "Imaxes"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Puntuación"
       ai_tool_approval:
         loading: "Cargando..."
         tool: "Acción"
@@ -68,6 +75,8 @@ gl:
         filters:
           all: "Todas"
           reset: "Restabelecer"
+        sentiment:
+          enabled: "Activado"
         search:
           name: "Buscar"
         image_caption:
@@ -195,6 +204,12 @@ gl:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporando"
+      decision_models:
+        no_preset: "Ningunha"
+        display_name: "Nome"
+        provider: "Fornecedor"
+        edit: "Editar"
+        delete: "Eliminar"
       mcp_servers:
         name: "Nome"
         description: "Descrición"
@@ -208,6 +223,15 @@ gl:
         delete: "Eliminar"
         tools_modal:
           required: "Obrigatorio"
+      models:
+        name: "Nome"
+        type: "Tipo"
+        provider: "Fornecedor"
+        edit: "Editar"
+        types:
+          embedding: "Incorporando"
+        filters:
+          all: "Todos os tipos"
       llms:
         display_name: "Nome"
         provider: "Fornecedor"
@@ -257,6 +281,13 @@ gl:
         providers:
           google: "Google"
           fake: "Personalizado"
+      ai_artifact:
+        editor:
+          version: "Versión"
+          default: "Predeterminado"
+          apply: "Aplicar"
+        share: "Compartir"
+        filter_all: "Todas"
       ai_bot:
         debug_ai_modal:
           duration_label: "Duración:"
@@ -280,6 +311,13 @@ gl:
             tag: "Etiqueta"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} repostas"
+        tabs:
+          topics: "Temas"
+          messages: "Mensaxes"
       discobot_discoveries:
         legacy:
           regular_results: "Temas"

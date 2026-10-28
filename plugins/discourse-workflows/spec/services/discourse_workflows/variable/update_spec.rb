@@ -46,6 +46,18 @@ RSpec.describe DiscourseWorkflows::Variable::Update do
       it { is_expected.to fail_with_an_invalid_model(:variable) }
     end
 
+    context "when the target id is actually a workflow-scoped local variable" do
+      fab!(:local_variable) { Fabricate(:discourse_workflows_workflow_variable, key: "local") }
+
+      let(:params) { { variable_id: local_variable.id, key: "NEW_KEY", value: "new_value" } }
+
+      it { is_expected.to fail_to_find_a_model(:variable) }
+
+      it "does not modify the local variable" do
+        expect { result }.not_to change { local_variable.reload.key }
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

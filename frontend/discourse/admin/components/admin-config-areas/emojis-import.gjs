@@ -8,7 +8,6 @@ import BackButton from "discourse/components/back-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -149,11 +148,27 @@ const ImportSection = <template>
   </div>
 </template>;
 
+/**
+ * @typedef {{
+ *   index: number,
+ *   name: string,
+ *   group: string,
+ *   filename: string,
+ *   category: "new" | "identical" | "invalid" | "conflict_group" | "conflict_image" | "conflict_both",
+ *   errors?: string[],
+ *   incoming_url?: string,
+ *   existing_url?: string,
+ *   existing_group?: string
+ * }} EmojiImportPreviewRow
+ */
 export default class AdminConfigAreasEmojisImport extends Component {
   @service router;
   @service adminEmojis;
 
+  /** @type {string | null} */
   @tracked previewToken = null;
+
+  /** @type {EmojiImportPreviewRow[] | null} */
   @tracked previewRows = null;
   @tracked resolutions = {};
   @tracked isUploading = false;

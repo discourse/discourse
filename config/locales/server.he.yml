@@ -16,6 +16,7 @@ he:
       link: "קישור"
   mcp:
     errors:
+      category_not_found: "לא נמצאה קטגוריה"
       draft_too_long: "הטיוטה ארוכה מדי"
       topic_not_found: "הנושא לא נמצא"
     oauth:
@@ -2517,7 +2518,6 @@ he:
     experimental_impersonation_time_limit_minutes: "כמה זמן עד שהפעלת התחזות מסתיימת אוטומטית."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
-    about_page_hidden_groups: "לא להציג חברים מקבוצות מסוימות בדף ‎/about."
     about_page_extra_groups: "קבוצות להצגה בעמוד ‚על אודות’ מתחת למפקחים."
     about_page_extra_groups_initial_members: "מספר חברים להרחבה על כל קבוצה בעמוד ‚על אודות’."
     about_page_extra_groups_show_description: "האם לכלול את תיאורי הקבוצות בעמוד ‚על אודות’."
@@ -2525,6 +2525,7 @@ he:
     adobe_analytics_tags_url: "כתובת תגיות Adobe Analytics‏ (`https://assets.adobedtm.com/...‎`)"
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
     reviewable_ui_refresh: "קבוצות שיכולות להשתמש בממשק המשתמש הניסיוני החדש בתור הסקירה."
+    update_whispers_allowed_groups_default: "אנחנו מעדכנים את ברירת המחדל של ההגדרה {{setting:whispers_allowed_groups}} כדי לאפשר לסגל לפרסם לחישות כברירת מחדל. אם שינית את ההגדרה הזאת בעבר, ההגדרות שלך לא ישתנו אלא אם כן הן תתאפסנה."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -4005,34 +4006,18 @@ he:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-      text_body_template: |
-        הושעית מהפורום עד %{suspended_till}.
-
-        סיבה - %{reason}
     account_suspended_forever:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-      text_body_template: |
-        הושעית מהפורום.
-
-        הסיבה - %{reason}
     account_silenced:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
       subject_template_improved: "חשבונך הושתק"
-      text_body_template: |
-        הושתקת בפורום עד %{silenced_till}.
-
-        סיבה - %{reason}
     account_silenced_forever:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
       subject_template_improved: "חשבונך הושתק"
-      text_body_template: |
-        הושתקת בפורום.
-
-        הסיבה - %{reason}
     account_deleted:
       title: "החשבון נמחק"
       subject_template: "[%{email_prefix}] החשבון שלך נמחק"
@@ -4869,6 +4854,8 @@ he:
       truncated_file: "הקובץ הזה נקטע."
       show_original: "הצגת המקורי"
     github:
+      header:
+        success: "הצלחה"
       binary_file: "זה קובץ בינרי."
       truncated_file: "הקובץ הזה נקטע."
       show_original: "הצגת המקורי"
@@ -4882,17 +4869,10 @@ he:
       review_by: "סקירה של"
       pr_summary: "%{commits} הגשות שינו %{changed_files} קבצים עם %{additions} תוספים ו־%{deletions} מחיקות"
       no_description: "אפשר לתרום לפיתוח של %{repo} דרך יצירת חשבון ב־GitHub."
-      pr_title:
-        default: "בקשת משיכה"
-        draft: "טיוטת בקשת משיכה"
-        open: "בקשת משיכה פתוחה"
-        approved: "בקשת משיכה שאושרה"
-        changes_requested: "התבקשו שינויים"
-        merged: "בקשת משיכה ממוזגת"
-        closed: "בקשת משיכה סגורה"
-      status_date:
-        open: "נפתח"
-        approved: "מאושר"
+      pr_status:
+        draft: "טיוטה"
+        open: "פתוח"
+        approved: "אושר"
         closed: "סגור"
   discourse_push_notifications:
     popup:

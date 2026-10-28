@@ -218,6 +218,12 @@ ja:
       discourse_workflows:
         ai_agent:
           mode: "モード"
+        classify:
+          text: "テキスト"
+          upload_ids: "画像"
+          name: "名前"
+          type: "タイプ"
+          type_score: "スコア"
       ai_tool_approval:
         loading: "読み込み中..."
         tool: "操作"
@@ -227,7 +233,7 @@ ja:
         approved: "承認済み"
         rejected: "拒否"
       default_llm:
-        title: "デフォルトの LLM モデル"
+        title: "デフォルトの言語モデル"
       llm_selector:
         none: "なし"
       features:
@@ -240,6 +246,7 @@ ja:
         no_llm: "LLM が選択されていません"
         no_agent: "未設定"
         no_groups: "なし"
+        classification_model: "モデル:"
         edit: "設定"
         expand_list:
           other: "(他 %{count})"
@@ -260,6 +267,13 @@ ja:
           no_results: "フィルタに一致する機能は見つかりませんでした。"
           reset: "リセット"
         no_automations: "まだ自動化はありません"
+        sentiment:
+          sentiment: "センチメント"
+          emotion: "感情"
+          enabled: "有効"
+          setting_groups:
+            sentiment: "センチメント"
+            emotion: "感情"
         summarization:
           name: "要約"
           description: "訪問者がトピックを要約できる要約ボタンを使用可能にします"
@@ -678,6 +692,14 @@ ja:
         delete: "削除"
         embedding: "埋め込み"
         tool: "ツール"
+      decision_models:
+        no_preset: "なし"
+        display_name: "名前"
+        model: "モデル"
+        provider: "プロバイダー"
+        edit: "編集"
+        delete: "削除"
+        test: "テストを実行"
       mcp_servers:
         name: "名前"
         description: "説明"
@@ -695,6 +717,18 @@ ja:
         tools_modal:
           parameters: "パラメーター"
           required: "必須"
+      models:
+        new: "新しいモデル"
+        name: "名前"
+        type: "タイプ"
+        provider: "プロバイダー"
+        edit: "編集"
+        select_type: "選択"
+        types:
+          embedding: "埋め込み"
+        filters:
+          all: "全タイプ"
+          reset: "フィルタをリセット"
       llms:
         short_title: "LLM"
         no_llms: "まだ LLM がありません"
@@ -928,9 +962,23 @@ ja:
         quick_search:
           suffix: "AI によるすべてのトピックと投稿"
       ai_artifact:
+        editor:
+          version: "バージョン"
+          default: "デフォルト"
+          option_on: "オン"
+          option_off: "オフ"
+          apply: "適用"
         expand_view_label: "表示を拡大"
         collapse_view_label: "全画面表示を終了 (ESC または「戻る」ボタン)"
         click_to_run_label: "アーティファクトを実行"
+        share: "共有"
+        create_link: "リンクを作成"
+        copied: "クリップボードにコピーしました"
+        copy_link: "リンクをコピー"
+        copy_embed: "埋め込みをコピー"
+        new_tab: "新しいタブで表示"
+        filter_all: "すべて"
+        filter_standalone: "単発"
       ai_bot:
         title: "AI ボット"
         llm: "モデル:"
@@ -1049,6 +1097,14 @@ ja:
             compact: "コンパクト"
             expanded: "展開"
             expanded_description: "AI 要約を使用"
+      ai_search:
+        related_topics: "関連トピック"
+        related_replies:
+          other: "返信: %{count} 件"
+        tabs:
+          ask: "AI に尋ねる"
+          topics: "トピック"
+          messages: "メッセージ"
       discobot_discoveries:
         main_title: "AI に尋ねる"
         loading_convo: "会話を読み込み中"

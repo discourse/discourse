@@ -3,13 +3,12 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { gt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
+import ToggleChannelMembershipButton from "./toggle-channel-membership-button.gjs";
 
 export default <template>
   {{#if @channel}}

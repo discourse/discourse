@@ -6,6 +6,9 @@
 
 sk:
   js:
+    dsa_notice:
+      title: "Nahlásiť nezákonný obsah"
+      email: "E-mailová adresa"
     user_api_key:
       authorize: "Autorizovať"
       deny: "Zrušiť"
@@ -25,6 +28,7 @@ sk:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Vlastník"
         access_permission_remove: "Odstrániť"
     number:
       format:
@@ -224,7 +228,6 @@ sk:
         last_6_months: "Posledných 6 mesiacov"
         last_year: "Minulý rok"
     share:
-      topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
       close: "zatvoriť"
       twitter: "Zdieľať na X"
@@ -272,6 +275,11 @@ sk:
     topic_admin_menu: "tematické akcie"
     skip_to_main_content: "Preskočiť na hlavný obsah"
     skip_user_nav: "Preskočiť na obsah profilu"
+    reorder:
+      removed: "Odstránené %{label}"
+      move_up: "Posunúť sa nahor"
+      move_down: "Posunúť sa nadol"
+      position: "%{position} z %{total}"
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     emails_are_disabled_non_staff: "Odchádzajúca pošta bola zakázaná pre používateľov, ktorí nie sú personál."
     software_update_prompt:
@@ -380,11 +388,6 @@ sk:
       few: "najviac %{count}"
       many: "najviac %{count}"
       other: "najviac %{count}"
-    character_count:
-      one: "%{count} znak"
-      few: "%{count} znakov"
-      many: "%{count} znakov"
-      other: "%{count} znakov"
     period_chooser:
       aria_label: "Filtrovať podľa obdobia"
     related_messages:
@@ -691,6 +694,10 @@ sk:
       title:
         search: "Vyhľadajte správu"
         placeholder: "sem zadajte názov témy, adresu URL alebo ID"
+    dsa_statements:
+      category: "Kategória"
+      category_prompt: "Vyberte kategóriu"
+      saving: "Ukladanie…"
     review:
       show_more: "Zobraziť viac"
       show_less: "Zobraziť menej"
@@ -1952,7 +1959,6 @@ sk:
         upload_title: "Nahrať váš obrázok"
         image_is_not_a_square: "Upozornenie: váš obrázok sme orezali; mal rozdielnu šírku a výšku"
         logo_small: "Malé logo stránky. Používa sa v predvolenom nastavení."
-        use_custom: "Alebo nahrajte vlastný avatar:"
       change_profile_background:
         title: "Hlavička profilu"
         instructions: "Hlavičky profilov budú vycentrované a budú mať predvolenú šírku 1110 pixelov."
@@ -2569,7 +2575,7 @@ sk:
       hide_forever: "Nie, ďakujem"
       hidden_for_session: "Dobre, zajtra sa ťa opýtame. Na vytvorenie účtu môžete vždy použiť aj 'Prihlásiť sa'."
       intro: "Dobrý deň! Zdá sa, že sa vám diskusia páči, ale ešte ste si nezaložili účet."
-      value_prop: "Unavený z prehliadania tých istých príspevkov? Keď si vytvoríte účet, vždy sa vrátite tam, kde ste prestali. S účtom môžete tiež byť upozornení na nové odpovede, ukladať záložky a používať lajky na poďakovanie ostatným. Spoločne môžeme pracovať na tom, aby táto komunita bola skvelá. :heart:"
+      value_prop: "Unavený z prehliadania tých istých príspevkov? Keď si vytvoríte účet, vždy sa vrátite tam, kde ste prestali. S účtom môžete tiež byť upozornení na nové odpovede, ukladať záložky a používať lajky na poďakovanie ostatným. Spoločne môžeme pracovať na tom, aby táto komunita bola skvelá."
     offline_indicator:
       no_internet: "Žiadne internetové pripojenie."
       refresh_page: "Obnoviť stránku"
@@ -3011,8 +3017,7 @@ sk:
       edit_shared_draft: "Upraviť zdieľaný návrh"
       discard: "Zahodiť"
       users_placeholder: "Pridanie používateľov alebo skupín"
-      title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
-      title_placeholder_redesign: "Názov"
+      title_placeholder: "Názov"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
       edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
@@ -3029,10 +3034,6 @@ sk:
       uploading: "Nahráva sa…"
       show_preview: "zobraziť náhľad"
       hide_preview: "skryť náhľad"
-      switch_to_markdown: "Prepnutie na štandardný editor Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Prepnutie na nový textový editor (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Prepnutie na štandardný editor Markdown"
-      switch_to_rich_text_no_shortcut: "Prepnutie na nový textový editor"
       quote_post_title: "Citovať celý príspevok"
       bold_label: "B"
       bold_title: "Výrazne"
@@ -3137,6 +3138,8 @@ sk:
       onebox_toolbar:
         copy: "Kopírovať odkaz"
         link_copied: "Odkaz skopírovaný!"
+      table:
+        default_heading: "Stĺpec %{number}"
     notifications:
       tooltip:
         regular:
@@ -4976,11 +4979,6 @@ sk:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Získal tento odkaz %{count}-krát"
-        few: "Získal tento odkaz %{count}-krát"
-        many: "Získal tento odkaz %{count}-krát"
-        other: "Získal tento odkaz %{count}-krát"
       granted_on: "Udelený dňa %{date}"
       others_count:
         one: "Udelené ostatným %{count} krát"
@@ -5478,63 +5476,6 @@ sk:
           other: "Vstup musí byť väčší ako %{count}."
         pattern_mismatch: "Zodpovedajte požadovaný formát."
         bad_input: "Zadajte platný vstup."
-    table_builder:
-      title: "Zostavovač tabuľky"
-      modal:
-        title: "Zostavovač tabuľky"
-        create: "Vytvoriť tabuľku"
-        help:
-          title: "Používanie tabuľkového editora"
-          enter_key: "Zadajte"
-          tab_key: "Tab"
-          new_row: "na konci riadku vložte nový riadok."
-          new_col: "na konci stĺpca vložte nový stĺpec."
-          options: "Kliknutím pravým tlačidlom myši na bunky získate prístup k ďalším možnostiam."
-        confirm_close: "Naozaj chcete zatvoriť nástroj na tvorbu tabuliek? Všetky neuložené zmeny sa stratia."
-      edit:
-        btn_edit: "Upraviť tabuľku"
-        modal:
-          title: "Upraviť tabuľku"
-          cancel: "zrušiť"
-          create: "Uložiť"
-          reason: "Prečo upravujete?"
-          trigger_reason: "Pridať dôvod úpravy"
-        default_edit_reason: "Aktualizujte tabuľku pomocou editora tabuliek"
-      default_header:
-        col_1: "Stĺpec 1"
-        col_2: "Stĺpec 2"
-        col_3: "Stĺpec 3"
-        col_4: "Stĺpec 4"
-      spreadsheet:
-        no_records_found: "Nenašli sa žiadne záznamy"
-        show: "Zobraziť"
-        entries: "záznamy"
-        about: "O stránke"
-        prompts:
-          delete_selected_rows: "Naozaj chcete odstrániť vybraté riadky?"
-          delete_selected_cols: "Naozaj chcete odstrániť vybraté stĺpce?"
-          will_destroy_merged_cells: "Táto akcia zničí všetky existujúce zlúčené bunky. Ste si istí?"
-          will_clear_search_results: "Táto akcia zničí všetky existujúce zlúčené bunky. Ste si istí?"
-          conflicts_with_merged_cells: "Došlo ku konfliktu s inou zlúčenou bunkou"
-        invalid_merge_props: "Neplatné zlúčené vlastnosti"
-        cells_already_merged: "Bunka už bola zlúčená"
-        no_cells_selected: "Nie sú vybraté žiadne bunky"
-        context_menu:
-          row:
-            before: "Vloženie nového riadku pred"
-            after: "Vloženie nového riadku za"
-            delete: "Odstrániť vybraté riadky"
-          col:
-            before: "Vloženie nového stĺpca pred"
-            after: "Vloženie nového stĺpca za"
-            delete: "Odstrániť vybraté stĺpce"
-            rename: "Premenovať tento stĺpec"
-          order:
-            ascending: "Poradie vzostupne"
-            descending: "Poradie zostupne"
-          copy: "Kopírovať..."
-          paste: "Prilepiť..."
-          save: "Uložiť ako..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Váš prehliadač bude čoskoro nekompatibilný s touto komunitou. Ak sa chcete naďalej zúčastňovať, aktualizujte svoj prehliadač alebo <a href='%{url}'>sa dozviete viac.</a>"
     filter:
@@ -5715,6 +5656,7 @@ sk:
             use_preset: "Nastavenie"
             presets:
               custom: "Vlastné"
+            automatic: "Automaticky"
           authorizations:
             user: "Používateľ"
             last_used: "Naposledy použité"
@@ -7181,8 +7123,8 @@ sk:
           upload: "Upload"
           select_component: "Vyberte komponent…"
           unsaved_changes_alert: "Ešte ste neuložili svoje zmeny, chcete ich zrušiť a pokračovať ďalej?"
-          unsaved_parent_themes: "Komponent ste nepriradili k témam, chcete pokračovať?"
           discard: "Zahodiť"
+          leave: "Opustiť"
           stay: "Ponechať"
           css_html: "Vlastný kód"
           edit_css_html: "Upraviť kód"

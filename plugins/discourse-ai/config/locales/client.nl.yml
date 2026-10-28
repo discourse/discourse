@@ -250,6 +250,12 @@ nl:
         ai_agent:
           agent_id: "Agent"
           mode: "Modus"
+        classify:
+          text: "Tekst"
+          upload_ids: "Afbeeldingen"
+          name: "Naam"
+          type: "Type"
+          type_score: "Score"
       ai_tool_approval:
         loading: "Laden..."
         agent: "Agent"
@@ -260,14 +266,11 @@ nl:
         approved: "Goedgekeurd"
         rejected: "Geweigerd"
       default_llm:
-        title: "Standaard LLM-model"
-        description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of agent. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
+        title: "Standaard taalmodel"
       llm_selector:
         none: "Geen"
-        saved: "Standaard LLM-model bijgewerkt"
       features:
         short_title: "Functies"
-        description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke agenten en LLM's en de toegang kan per groep worden beheerd."
         back: "Terug naar AI-functies"
         settings_save_error: "Sommige instellingen kunnen niet worden opgeslagen."
         disabled: "(uitgeschakeld)"
@@ -281,6 +284,7 @@ nl:
         no_llm: "Geen LLM geselecteerd"
         no_agent: "Niet ingesteld"
         no_groups: "Geen"
+        classification_model: "Model:"
         edit: "Instellingen"
         expand_list:
           one: "(Nog %{count})"
@@ -299,10 +303,17 @@ nl:
           enabled: "Ingeschakeld"
         filters:
           all: "Alles"
-          text: "Zoek naar functies, agenten, LLM's of groepen..."
           no_results: "Geen functies gevonden die aan je filters voldoen."
           reset: "Resetten"
         no_automations: "Er zijn nog geen automatiseringen"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Emotie"
+          enabled: "Ingeschakeld"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emotie"
         summarization:
           name: "Samenvattingen"
           description: "Maakt een samenvattingsknop beschikbaar waarmee bezoekers topics kunnen samenvatten"
@@ -807,7 +818,6 @@ nl:
           result: "Testresultaat"
       secrets:
         short_title: "Aanmeldgegevens"
-        description: "Beheer verificatieaanmeldingsgegevens die worden gedeeld door LLM's, insluitingen en tools."
         name: "Naam"
         secret: "Waarde"
         select_secret: "Selecteer aanmeldingsgegevens..."
@@ -832,6 +842,15 @@ nl:
         mcp_server_oauth_client_secret: "OAuth-clientgeheim MCP-server"
         modal:
           title: "Nieuwe aanmeldingsgegevens maken"
+      decision_models:
+        no_preset: "Geen"
+        display_name: "Naam"
+        model: "Model"
+        provider: "Provider"
+        api_key: "Aanmeldgegevens"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        test: "Test uitvoeren"
       mcp_servers:
         short_title: "MCP-servers"
         new: "Nieuwe MCP-server"
@@ -913,6 +932,18 @@ nl:
         test_summary:
           one: "%{count} tool ontdekt met protocol %{version}."
           other: "%{count} tools ontdekt met protocol %{version}."
+      models:
+        new: "Nieuw model"
+        name: "Naam"
+        type: "Type"
+        provider: "Provider"
+        edit: "Bewerken"
+        select_type: "Selecteren"
+        types:
+          embedding: "Insluiting"
+        filters:
+          all: "Alle typen"
+          reset: "Filters resetten"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -1167,9 +1198,24 @@ nl:
         quick_search:
           suffix: "in alle topics en berichten met AI"
       ai_artifact:
+        editor:
+          version: "Versie"
+          default: "Standaard"
+          option_on: "Aan"
+          option_off: "Uit"
+          apply: "Toepassen"
         expand_view_label: "Weergave uitvouwen"
         collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
         click_to_run_label: "Artefact uitvoeren"
+        share: "Delen"
+        create_link: "Link maken"
+        copied: "Gekopieerd naar klembord"
+        copy_link: "Link kopiëren"
+        copy_embed: "Insluiting kopiëren"
+        new_tab: "Weergeven in nieuw tabblad"
+        filter_all: "Alles"
+        filter_standalone: "Losstaand"
+        filter_conversation: "Conversatie"
       ai_bot:
         title: "AI-bot"
         agent: "Agent:"
@@ -1299,6 +1345,15 @@ nl:
             compact: "Compact"
             expanded: "Uitgebreid"
             expanded_description: "met AI-samenvattingen"
+      ai_search:
+        related_topics: "Gerelateerde topics"
+        related_replies:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
+        tabs:
+          ask: "AI vragen"
+          topics: "Topics"
+          messages: "Berichten"
       discobot_discoveries:
         main_title: "AI vragen"
         loading_convo: "Conversatie laden"

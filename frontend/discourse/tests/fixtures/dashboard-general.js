@@ -1,3 +1,8 @@
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const dashboardGeneralFixtures = {
   "/admin/dashboard/general.json": {
     reports: [],

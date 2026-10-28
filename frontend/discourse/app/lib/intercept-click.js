@@ -10,7 +10,7 @@ export function wantsNewWindow(e, link = e.currentTarget) {
     e.metaKey ||
     e.ctrlKey ||
     (e.button && e.button !== MOUSE_EVENT_PRIMARY_BUTTON_ID) ||
-    link?.target === "_blank"
+    link?.getAttribute?.("target") === "_blank"
   );
 }
 
@@ -23,10 +23,6 @@ export default function interceptClick(e) {
   const target = e.target.closest("a");
 
   if (!target) {
-    return;
-  }
-
-  if (target.target === "_blank") {
     return;
   }
 

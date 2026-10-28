@@ -19,6 +19,7 @@ module DiscourseMcp
     THEMES_READ = "mcp:themes:read"
     THEMES_WRITE = "mcp:themes:write"
     GROUPS_READ = "mcp:groups:read"
+    GROUPS_WRITE = "mcp:groups:write"
     USERS_READ = "mcp:users:read"
     USERS_WRITE = "mcp:users:write"
   end

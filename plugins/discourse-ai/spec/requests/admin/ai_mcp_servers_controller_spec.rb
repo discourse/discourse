@@ -350,6 +350,39 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
     end
   end
 
+  describe "read-only API key cannot invoke OAuth state mutations" do
+    fab!(:ai_mcp_server) { Fabricate(:ai_mcp_server, auth_type: "oauth") }
+
+    def readonly_headers
+      api_key =
+        Fabricate(:api_key, user: admin).tap do |key|
+          ApiKeyScope.create!(api_key_id: key.id, resource: "global", action: "read")
+        end
+      { "Api-Key" => api_key.key, "Api-Username" => admin.username }
+    end
+
+    it "rejects oauth_start invoked with a read-only API key" do
+      DiscourseAi::Mcp::OAuthFlow.stubs(:start!).returns("https://auth.example.com/authorize")
+
+      get "/admin/plugins/discourse-ai/ai-mcp-servers/#{ai_mcp_server.id}/oauth/start.json",
+          headers: readonly_headers
+
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects oauth_callback invoked with a read-only API key" do
+      DiscourseAi::Mcp::OAuthFlow.stubs(:complete!).returns(ai_mcp_server)
+
+      get "/admin/plugins/discourse-ai/ai-mcp-servers/oauth/callback.json",
+          headers: readonly_headers,
+          params: {
+            state: "abc",
+          }
+
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "DELETE #oauth_disconnect" do
     fab!(:ai_mcp_server) do
       Fabricate(:ai_mcp_server, auth_type: "oauth", oauth_status: "connected")

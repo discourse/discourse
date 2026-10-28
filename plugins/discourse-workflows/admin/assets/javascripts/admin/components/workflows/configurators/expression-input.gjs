@@ -2,29 +2,30 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
 import {
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
-} from "../../../lib/workflows/data-preview";
-import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
+} from "../../../lib/workflows/data-preview.js";
+import { buildScope } from "../../../lib/workflows/expression-context.js";
+import buildExpressionExtensions from "../../../lib/workflows/expression-extensions/index.js";
 import {
   inputIndexForConnection,
   nodeOutputJsonPath,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields";
+} from "../../../lib/workflows/expression-paths.js";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields.js";
 import {
   ancestorOutputNodes,
   inputConnectionsForNode,
   previousNodeForConnection,
-  resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import ExpressionPreview from "../variable/expression-preview";
-import VariableInput from "../variable/input";
-import ReferencePropertyPicker from "../variable/reference-property-picker";
+} from "../../../lib/workflows/schema-graph.js";
+import ExpressionPreview from "../variable/expression-preview.gjs";
+import VariableInput from "../variable/input.gjs";
+import ReferencePropertyPicker from "../variable/reference-property-picker.gjs";
 
 const REFERENCE_PICKER_IDENTIFIER = "workflows-reference-picker";
 
@@ -36,10 +37,17 @@ export default class ExpressionInput extends Component {
   @tracked isFocused = false;
   @tracked segments = [];
   wrapperElement = null;
+  #editorView = null;
   #focusOutTimer = null;
+  #liveScope = new Proxy(Object.create(null), {
+    get: (_, key) => this.#currentScope()[key],
+    has: (_, key) => key in this.#currentScope(),
+  });
   #pickerDismiss = null;
   #pickerEditorElement = null;
   #pickerTrigger = null;
+  #scope = null;
+  #scopeOutputSchemas = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -64,76 +72,12 @@ export default class ExpressionInput extends Component {
 
   @action
   buildExtensions(cmParams) {
-    const session = this.args.session;
-    const node = session?.editingNode;
-    const graph = {
-      nodes: session?.graphNodes || [],
-      connections: session?.graphConnections || [],
-      nodeTypes: this.workflowsNodeTypes.nodeTypes || [],
-    };
-    const itemPrefix =
-      this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
-    const runData = session?.lastExecutionRunData || {};
-    const declaredOutputSchemas = resolveDeclaredOutputSchemas(graph);
-    const previousConnection = node
-      ? inputConnectionsForNode(node, graph)[0]
-      : null;
-    const previousNode = previousNodeForConnection(previousConnection, graph);
-    const currentInputIndex = previousConnection
-      ? inputIndexForConnection(previousConnection)
-      : 0;
-    const previousOutputIndex = previousConnection
-      ? outputIndexForConnection(previousConnection)
-      : 0;
-    const pinnedInputItems =
-      previousOutputIndex === 0
-        ? session?.pinnedItemsForNode(previousNode?.name)
-        : undefined;
-    const inputFields = node
-      ? schemaFieldsForNodeInput(runData, node.name, {
-          inputIndex: currentInputIndex,
-          node,
-          sourceNode: previousNode,
-          outputIndex: previousOutputIndex,
-          prefix: itemPrefix,
-          graph,
-          pinnedItems: pinnedInputItems,
-          declaredOutputSchemas,
-        })
-      : [];
-    // Pinned sample data, falling back to the last run.
-    const ancestorNodes = node
-      ? ancestorOutputNodes(node, graph).map((ancestor) => {
-          const pinnedItems =
-            ancestor.outputIndex === 0
-              ? session?.pinnedItemsForNode(ancestor.node.name)
-              : undefined;
-          const prefix = nodeOutputJsonPath(runData, ancestor.node.name, {
-            outputIndex: ancestor.outputIndex,
-            node: ancestor.node,
-            itemCount: pinnedItems?.length,
-          });
-          return {
-            node: ancestor.node,
-            fields:
-              pinnedItems === undefined
-                ? schemaFieldsForNodeOutput(runData, ancestor.node.name, {
-                    outputIndex: ancestor.outputIndex,
-                    node: ancestor.node,
-                    prefix,
-                    graph,
-                    declaredOutputSchemas,
-                  })
-                : schemaFieldsForItems(pinnedItems, { prefix }),
-          };
-        })
-      : [];
+    const { graph, itemPrefix, node, session, ancestorNodes } =
+      this.#scopeOptions();
 
     return buildExpressionExtensions(cmParams, {
-      inputFields,
+      scope: this.#liveScope,
       ancestorNodes,
-      siteSettings: this.siteSettings,
-      workflowVars: this.workflowsNodeTypes.workflowVars,
       nodes: graph.nodes,
       itemPrefix,
       workflowId: session?.workflowId,
@@ -141,6 +85,11 @@ export default class ExpressionInput extends Component {
       onSegmentsResolved: (segs) => (this.segments = segs),
       onOpenReferencePicker: this.openReferencePicker,
     });
+  }
+
+  @action
+  refreshScope() {
+    this.#editorView?.dispatch({ selection: this.#editorView.state.selection });
   }
 
   @action
@@ -219,6 +168,7 @@ export default class ExpressionInput extends Component {
 
   @action
   labelEditor(view) {
+    this.#editorView = view;
     if (this.args.inputId) {
       view.contentDOM.id = this.args.inputId;
     }
@@ -230,6 +180,93 @@ export default class ExpressionInput extends Component {
   @action
   registerWrapper(element) {
     this.wrapperElement = element;
+  }
+
+  #currentScope() {
+    const outputSchemas = this.args.session?.outputSchemas;
+    if (!this.#scope || this.#scopeOutputSchemas !== outputSchemas) {
+      this.#scopeOutputSchemas = outputSchemas;
+      this.#scope = buildScope(this.#scopeOptions());
+    }
+
+    return this.#scope;
+  }
+
+  #scopeOptions() {
+    const session = this.args.session;
+    const node = session?.editingNode;
+    const graph = {
+      nodes: session?.graphNodes || [],
+      connections: session?.graphConnections || [],
+    };
+    const itemPrefix =
+      this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
+    const runData = session?.lastExecutionRunData || {};
+    const declaredOutputSchemas = session?.outputSchemas;
+    const previousConnection = node
+      ? inputConnectionsForNode(node, graph)[0]
+      : null;
+    const previousNode = previousNodeForConnection(previousConnection, graph);
+    const currentInputIndex = previousConnection
+      ? inputIndexForConnection(previousConnection)
+      : 0;
+    const previousOutputIndex = previousConnection
+      ? outputIndexForConnection(previousConnection)
+      : 0;
+    const pinnedInputItems =
+      previousOutputIndex === 0
+        ? session?.pinnedItemsForNode(previousNode?.name)
+        : undefined;
+    const inputFields = node
+      ? schemaFieldsForNodeInput(runData, node.name, {
+          inputIndex: currentInputIndex,
+          node,
+          sourceNode: previousNode,
+          outputIndex: previousOutputIndex,
+          prefix: itemPrefix,
+          pinnedItems: pinnedInputItems,
+          declaredOutputSchemas,
+        })
+      : [];
+    // Pinned sample data, falling back to the last run.
+    const ancestorNodes = node
+      ? ancestorOutputNodes(node, graph).map((ancestor) => {
+          const pinnedItems =
+            ancestor.outputIndex === 0
+              ? session?.pinnedItemsForNode(ancestor.node.name)
+              : undefined;
+          const prefix = nodeOutputJsonPath(runData, ancestor.node.name, {
+            outputIndex: ancestor.outputIndex,
+            node: ancestor.node,
+            itemCount: pinnedItems?.length,
+          });
+          return {
+            node: ancestor.node,
+            fields:
+              pinnedItems === undefined
+                ? schemaFieldsForNodeOutput(runData, ancestor.node.name, {
+                    outputIndex: ancestor.outputIndex,
+                    node: ancestor.node,
+                    prefix,
+                    declaredOutputSchemas,
+                  })
+                : schemaFieldsForItems(pinnedItems, { prefix }),
+          };
+        })
+      : [];
+
+    return {
+      graph,
+      itemPrefix,
+      node,
+      session,
+      inputFields,
+      ancestorNodes,
+      siteSettings: this.siteSettings,
+      globalVars: this.workflowsNodeTypes.workflowVars,
+      workflowVariables: session?.variables,
+      nodes: graph.nodes,
+    };
   }
 
   // CodeMirror swallows pointerdowns before float-kit's outside-click detector
@@ -278,7 +315,10 @@ export default class ExpressionInput extends Component {
   }
 
   <template>
-    <div {{didInsert this.registerWrapper}}>
+    <div
+      {{didInsert this.registerWrapper}}
+      {{didUpdate this.refreshScope @session.outputSchemas}}
+    >
       <VariableInput
         @extensions={{this.buildExtensions}}
         @onChange={{this.handleChange}}

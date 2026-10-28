@@ -35,7 +35,10 @@ export default class TopicRoute extends DiscourseRoute {
   @service modal;
   @service router;
 
+  /** @type {ReturnType<typeof import("discourse/lib/later").default> | null} */
   scheduledReplace = null;
+
+  /** @type {number | null} */
   lastScrollPos = null;
   isTransitioning = false;
   queryParams = {
@@ -79,6 +82,15 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showFlags(model) {
+    if (!this.currentUser && this.siteSettings.dsa_reporting_enabled) {
+      this.router.transitionTo("report-illegal-content", {
+        queryParams: {
+          content_url: window.location.origin + model.urlWithNumber,
+        },
+      });
+      return;
+    }
+
     this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
       model: {
         flagTarget: new PostFlag(),

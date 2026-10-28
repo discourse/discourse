@@ -34,6 +34,18 @@ RSpec.describe DiscourseWorkflows::Variable::Destroy do
       it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
+    context "when the target id is actually a workflow-scoped local variable" do
+      fab!(:local_variable) { Fabricate(:discourse_workflows_workflow_variable, key: "local") }
+
+      let(:params) { { variable_id: local_variable.id } }
+
+      it { is_expected.to fail_to_find_a_model(:variable) }
+
+      it "does not destroy the local variable" do
+        expect { result }.not_to change { DiscourseWorkflows::Variable.count }
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

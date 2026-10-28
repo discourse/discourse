@@ -12,7 +12,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import { i18n } from "discourse-i18n";
 import Board from "discourse/plugins/boards/discourse/models/board";
-import BoardsAddFromTopicColumnSubmenu from "./boards-add-from-topic-column-submenu";
+import BoardsAddFromTopicColumnSubmenu from "./boards-add-from-topic-column-submenu.gjs";
 
 const SKELETON_ROWS = Array.from({ length: 3 });
 
