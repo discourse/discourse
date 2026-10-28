@@ -282,13 +282,13 @@ module UpcomingChanges
   end
 
   # The `allow_enabled_for` metadata for an upcoming change, or nil if unset.
-  # When nil, every "Enabled for" dropdown option is permitted. Otherwise it
-  # is an array containing any subset of [:everyone, :staff, :specific_groups].
+  # When nil, admins can enable for everyone or select groups. Otherwise it
+  # restricts the audience to everyone, staff, specific_groups, or staff plus specific_groups.
   def self.allow_enabled_for(change_setting_name)
     change_metadata(change_setting_name)[:allow_enabled_for]
   end
 
-  # Whether a setting's `allow_enabled_for` permits a given dropdown target.
+  # Whether a setting's `allow_enabled_for` permits a given audience.
   # `:no_one` is always allowed. Returns true when the metadata is absent.
   def self.target_allowed?(change_setting_name, target)
     return true if target.to_sym == :no_one
@@ -305,12 +305,64 @@ module UpcomingChanges
     allow.include?(:staff) || allow.include?(:specific_groups)
   end
 
+  def self.group_setting_name(change_setting_name)
+    change_metadata(change_setting_name)[:group_setting]&.to_sym
+  end
+
+  def self.group_setting_data(change_setting_name)
+    name = group_setting_name(change_setting_name)
+    return unless name && settings_provider.has_setting?(name)
+    return unless settings_provider.type_supervisor.get_type(name) == :group_list
+
+    {
+      setting: name,
+      value: settings_provider.public_send(name).to_s,
+      mandatory_values: settings_provider.mandatory_values[name],
+      disallowed_groups: settings_provider.disallowed_groups[name],
+      requires_confirmation: settings_provider.requires_confirmation_settings[name],
+    }
+  end
+
+  def self.normalize_group_names(change_setting_name, group_names)
+    names = Array.wrap(group_names).reject(&:blank?).uniq
+    unless exists?(change_setting_name) && !group_setting_name(change_setting_name) &&
+             target_allowed?(change_setting_name, :everyone)
+      return names
+    end
+
+    everyone_groups =
+      Group.where(id: Group::AUTO_GROUPS.values_at(:logged_in_users, :anonymous_users)).pluck(:name)
+    everyone_groups.length == 2 && (everyone_groups - names).empty? ? [] : names
+  end
+
+  def self.group_scope_allowed?(change_setting_name, group_names)
+    allow = allow_enabled_for(change_setting_name)
+    staff_name = Group.find(Group::AUTO_GROUPS[:staff]).name
+    if allow&.include?(:staff) && allow.include?(:specific_groups) &&
+         !group_names.include?(staff_name)
+      return false
+    end
+
+    target =
+      if group_names.empty?
+        :everyone
+      elsif group_names == [staff_name]
+        :staff
+      else
+        :specific_groups
+      end
+    target_allowed?(change_setting_name, target)
+  end
+
   def self.has_groups?(change_setting_name)
-    group_ids_for(change_setting_name).present?
+    group_setting_name(change_setting_name).present? || group_ids_for(change_setting_name).present?
   end
 
   def self.group_ids_for(change_setting_name)
     change_setting_name = change_setting_name.to_sym
+    if (group_setting = group_setting_name(change_setting_name))
+      return settings_provider.public_send("#{group_setting}_map")
+    end
     return [] if change_status(change_setting_name) == :permanent
     settings_provider.site_setting_group_ids[change_setting_name].presence || []
   end
@@ -328,9 +380,13 @@ module UpcomingChanges
     change_setting_name = change_setting_name.to_sym
     setting_enabled = UpcomingChanges.enabled?(change_setting_name)
 
-    # Anon users can only have upcoming changes enabled if it's set for Everyone
     if user.blank?
-      return false if UpcomingChanges.has_groups?(change_setting_name)
+      if UpcomingChanges.has_groups?(change_setting_name)
+        return(
+          setting_enabled &&
+            group_ids_for(change_setting_name).include?(Group::AUTO_GROUPS[:anonymous_users])
+        )
+      end
     else
       if UpcomingChanges.has_groups?(change_setting_name)
         return(
@@ -375,8 +431,10 @@ module UpcomingChanges
   #   #   },
   #   # ]
   def self.stats_for_user(user:, acting_guardian:)
-    guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
-    user_belonging_to_group_ids = user.belonging_to_group_ids
+    guardian_visible_group_ids =
+      Group.visible_groups(acting_guardian.user, nil, include_pseudogroups: true).pluck(:id)
+    user_belonging_to_group_ids =
+      user.belonging_to_group_ids | [Group::AUTO_GROUPS[:logged_in_users]]
 
     settings_provider.upcoming_change_site_settings.filter_map do |name|
       next if UpcomingChanges.change_status(name) == :conceptual
@@ -436,6 +494,17 @@ module UpcomingChanges
     enabled_for =
       if !setting_value
         "no_one"
+      elsif group_setting_name(setting_name)
+        if (
+             Group::AUTO_GROUPS.values_at(:anonymous_users, :logged_in_users) -
+               group_ids_for_setting
+           ).empty?
+          "everyone"
+        elsif group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
       elsif setting_groups.blank?
         # When `allow_enabled_for` excludes `:everyone` and the change is enabled
         # without an admin-configured scope (typically because it was auto-promoted

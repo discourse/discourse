@@ -45,6 +45,11 @@ export default class SelectedChoice extends Component {
     return this.get("mandatoryValues")?.split("|") || [];
   }
 
+  @computed("itemValue", "selectKit.options.lockedValues.[]")
+  get locked() {
+    return this.selectKit.options.lockedValues?.includes(this.itemValue);
+  }
+
   @computed("item")
   get readOnly() {
     if (typeof this.item === "string") {
@@ -61,7 +66,19 @@ export default class SelectedChoice extends Component {
   }
 
   <template>
-    {{#if this.readOnly}}
+    {{#if this.locked}}
+      <button
+        class="btn btn-default disabled selected-choice tag-choice"
+        data-name={{this.itemName}}
+        data-value={{this.itemValue}}
+        disabled
+        title={{this.readOnlyTitle}}
+        type="button"
+      >
+        <span class="d-button-label">{{this.itemName}}</span>
+        {{dIcon "lock"}}
+      </button>
+    {{else if this.readOnly}}
       <button
         class="btn btn-default disabled tag-choice"
         title={{this.readOnlyTitle}}

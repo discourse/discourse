@@ -3,7 +3,7 @@
   width: 100%;
 
   td.d-table__cell {
-    vertical-align: middle;
+    vertical-align: top;
     padding: var(--space-4) var(--space-3);
   }
 
@@ -68,36 +68,45 @@
     }
   }
 
-  &__groups {
-    display: flex;
-
-    .group-selector-wrapper {
-      // make space for button
-      width: calc(100% - 3.125em);
-    }
-  }
-
   &__description-details {
     display: inline-block;
   }
 
-  &__save-groups {
-    align-self: start;
-    margin-left: var(--space-2);
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
   }
 
   &__toggle-cell {
     display: flex;
     flex-direction: column;
+    gap: var(--space-2);
+  }
 
-    .upcoming-change__group-selection-wrapper {
-      margin-top: 0.5rem;
-      display: flex;
+  &__group-selection-wrapper {
+    min-width: 0;
+  }
 
-      .group-selector-wrapper {
-        flex: 1 1 auto;
-      }
+  &__group-controls {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+
+    .email-group-user-chooser {
+      flex: 1;
+      min-width: 0;
     }
+  }
+
+  &__save-groups {
+    flex-shrink: 0;
+  }
+
+  &__groups-description {
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    margin-block: var(--space-2) 0;
   }
 
   &__plugin {

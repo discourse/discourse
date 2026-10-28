@@ -55,58 +55,101 @@ module PageObjects
         find_item(@setting_name).has_no_css?(".upcoming-change__depends-on-notice")
       end
 
-      def select_enabled_for(option)
-        enabled_for_dropdown.select(option)
+      def toggle_switch
+        PageObjects::Components::DToggleSwitch.new(
+          "#{change_item_selector(@setting_name)} .upcoming-change__enabled",
+        )
+      end
+
+      def toggle
+        toggle_switch.toggle
+      end
+
+      def enabled?
+        toggle_switch.checked?
+      end
+
+      def disabled?
+        toggle_switch.unchecked?
+      end
+
+      def toggle_groups
+        find_item(@setting_name).find(".upcoming-change__edit-groups").click
+      end
+
+      def has_group_button?
+        find_item(@setting_name).has_css?(".upcoming-change__edit-groups")
+      end
+
+      def has_no_group_button?
+        find_item(@setting_name).has_no_css?(".upcoming-change__edit-groups")
+      end
+
+      def group_selector
+        PageObjects::Components::SelectKit.new(
+          "#{change_item_selector(@setting_name)} .email-group-user-chooser",
+        )
+      end
+
+      def has_no_group_selector?
+        find_item(@setting_name).has_no_css?(".email-group-user-chooser")
+      end
+
+      def open_group_selector
+        if group_selector.is_collapsed?
+          group_selector.collapsed_component.find(".select-kit-header").send_keys(:enter)
+        end
+      end
+
+      def has_groups?(*group_names)
+        open_group_selector
+        group_names.all? do |group_name|
+          find_item(@setting_name).has_css?(".selected-choice[data-value='#{group_name}']")
+        end
+      end
+
+      def has_no_groups?
+        find_item(@setting_name).has_no_css?(".selected-choice")
+      end
+
+      def add_group(group_name)
+        open_group_selector
+        group_selector.search(group_name)
+        group_selector.select_row_by_value(group_name)
+      end
+
+      def remove_group(group_name)
+        open_group_selector
+        find_item(@setting_name).find(".selected-choice[data-value='#{group_name}']").click
       end
 
       def save_groups
         find_item(@setting_name).find(".upcoming-change__save-groups").click
       end
 
-      def enabled?
-        enabled_for != "no_one"
+      def has_disabled_group_save?
+        find_item(@setting_name).has_css?(".upcoming-change__save-groups[disabled]")
       end
 
-      def disabled?
-        enabled_for == "no_one"
-      end
-
-      def enabled_for
-        enabled_for_dropdown.value
-      end
-
-      def enabled_for_dropdown
-        PageObjects::Components::DNativeSelect.new(
-          "#{change_item_selector(@setting_name)} .upcoming-change__enabled-for",
+      def has_empty_groups_description?
+        find_item(@setting_name).has_css?(
+          ".upcoming-change__groups-description",
+          text: I18n.t("admin_js.admin.upcoming_changes.toggle_instead_of_empty_groups"),
         )
       end
 
-      def enabled_for_options
-        enabled_for_dropdown.select_element.all("option").map { |o| o["value"] }
+      def has_staff_description?
+        find_item(@setting_name).has_css?(
+          ".upcoming-change__groups-description",
+          text: I18n.t("admin_js.admin.upcoming_changes.staff_always_included"),
+        )
       end
 
-      def group_selector
-        PageObjects::Components::GroupSelector.new(change_item_selector(@setting_name))
-      end
-
-      def has_no_group_selector?
-        expect(group_selector).to be_hidden
-      end
-
-      def has_groups?(*group_names)
-        group_selector.has_selected_groups?(*group_names)
-      end
-
-      def has_no_groups?
-        group_selector.has_no_selected_groups?
-      end
-
-      def add_group(group_name)
-        group_selector.add_group(group_name)
-      end
-
-      def remove_group(group_name)
-        group_selector.remove_group(group_name)
+      def has_locked_group?(group_name)
+        open_group_selector
+        find_item(@setting_name).has_css?(
+          ".selected-choice[data-value='#{group_name}'] .d-icon-lock",
+        )
       end
     end
   end

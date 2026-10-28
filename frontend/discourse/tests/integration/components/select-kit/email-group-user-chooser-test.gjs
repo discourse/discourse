@@ -16,6 +16,48 @@ module(
       this.set("subject", selectKit());
     });
 
+    test("groupsOnly searches groups including pseudogroups without searching users", async function (assert) {
+      let searchParams;
+      pretender.get("/groups/search.json", (request) => {
+        searchParams = request.queryParams;
+        return response([
+          { id: 4, name: "anonymous_users" },
+          { id: 0, name: "everyone" },
+        ]);
+      });
+      await render(
+        <template>
+          <EmailGroupUserChooser @options={{hash groupsOnly=true}} />
+        </template>
+      );
+      await this.subject.expand();
+      assert.strictEqual(searchParams.include_pseudogroups, "true");
+      assert.dom('.select-kit-row[data-value="anonymous_users"]').exists();
+      assert.dom('.select-kit-row[data-value="everyone"]').doesNotExist();
+      assert.dom(".email-group-user-chooser__user").doesNotExist();
+    });
+
+    test("groupsOnly does not create pasted usernames or emails", async function (assert) {
+      const changes = [];
+      this.set("onChange", (values) => changes.push(values));
+      pretender.get("/groups/search.json", () => response([]));
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @onChange={{this.onChange}}
+            @options={{hash groupsOnly=true allowAny=true}}
+          />
+        </template>
+      );
+      await this.subject.expand();
+      await paste(
+        ".select-kit input.filter-input",
+        "someone@example.com, a_user"
+      );
+      assert.true(changes.every((values) => values.length === 0));
+      assert.dom(".selected-choice").doesNotExist();
+    });
+
     test("renders group results with group name and full name", async function (assert) {
       this.set("defaultSearchResults", [
         {

@@ -50,6 +50,206 @@ RSpec.describe UpcomingChanges::Toggle do
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
     end
 
+    context "when enabling with an explicit staff audience" do
+      let(:params) { super().merge(group_names: ["staff"]) }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: [:staff],
+          },
+        )
+        SiteSetting.enable_form_templates = false
+      end
+
+      it "saves the required audience and enables the change together" do
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq(
+          Group::AUTO_GROUPS[:staff].to_s,
+        )
+      end
+    end
+
+    context "when an explicit audience contains an unknown group" do
+      let(:params) { super().merge(group_names: %w[staff nonexistent_group]) }
+
+      before do
+        SiteSetting.enable_form_templates = false
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "3")
+      end
+
+      it "rejects the audience without applying its valid subset" do
+        expect(result).to fail_to_find_a_model(:group_ids)
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3")
+      end
+    end
+
+    context "when enabling with an audience outside the allowed targets" do
+      let(:params) { super().merge(group_names: ["trust_level_2"]) }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: [:staff],
+          },
+        )
+        SiteSetting.enable_form_templates = false
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "3")
+      end
+
+      it "rejects the audience without changing the toggle or stored groups" do
+        expect(result).to fail_a_policy(:allowed_enabled_for_target)
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3")
+      end
+    end
+
+    context "when disabling a change with a saved audience" do
+      let(:enabled) { false }
+
+      before do
+        SiteSetting.enable_form_templates = true
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "3|12")
+      end
+
+      it "keeps the audience for the next enablement" do
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3|12")
+      end
+    end
+
+    context "when everyone is selected explicitly for an unrestricted change" do
+      let(:params) { super().merge(group_names: %w[logged_in_users anonymous_users staff]) }
+
+      before do
+        SiteSetting.enable_form_templates = false
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "3")
+      end
+
+      it "enables the change for everyone without storing group restrictions" do
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSettingGroup.where(name: setting_name)).to be_empty
+      end
+    end
+
+    context "when enabling a staff-inclusive change with additional groups" do
+      let(:params) { super().merge(group_names: %w[staff trust_level_2]) }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: %i[staff specific_groups],
+          },
+        )
+        SiteSetting.enable_form_templates = false
+      end
+
+      it "enables the change for staff and the selected groups" do
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3|12")
+      end
+    end
+
+    context "when clearing the audience disables a specific-groups-only change" do
+      let(:params) { super().merge(enabled: false, group_names: []) }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: [:specific_groups],
+          },
+        )
+        SiteSetting.enable_form_templates = true
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "12")
+      end
+
+      it "removes the audience and disables the change together" do
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSettingGroup.where(name: setting_name)).to be_empty
+      end
+    end
+
+    context "when a staff-inclusive change is enabled without staff" do
+      let(:params) { super().merge(group_names: ["trust_level_2"]) }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            allow_enabled_for: %i[staff specific_groups],
+          },
+        )
+        SiteSetting.enable_form_templates = false
+      end
+
+      it "rejects the audience without enabling the change" do
+        expect(result).to fail_a_policy(:allowed_enabled_for_target)
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSettingGroup.where(name: setting_name)).to be_empty
+      end
+    end
+
+    context "when the audience comes from a linked group setting" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            group_setting: :about_page_extra_groups,
+          },
+        )
+        SiteSetting.about_page_extra_groups = "12"
+        Fabricate(:site_setting_group, name: setting_name, group_ids: "3")
+      end
+
+      it "enables the flag without changing either audience store" do
+        SiteSetting.enable_form_templates = false
+
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSetting.about_page_extra_groups).to eq("12")
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("3")
+      end
+
+      it "enables the flag independently of an empty linked audience" do
+        SiteSetting.enable_form_templates = false
+        SiteSetting.about_page_extra_groups = ""
+
+        expect(result).to run_successfully
+        expect(SiteSetting.enable_form_templates).to eq(true)
+        expect(SiteSetting.about_page_extra_groups).to eq("")
+      end
+    end
+
+    context "when a linked audience is submitted through the toggle" do
+      let(:params) { super().merge(group_names: ["staff"]) }
+
+      before do
+        mock_upcoming_change_metadata(
+          enable_form_templates: {
+            status: :experimental,
+            group_setting: :about_page_extra_groups,
+          },
+        )
+        SiteSetting.enable_form_templates = false
+      end
+
+      it "requires the dedicated audience update instead" do
+        expect(result).to fail_a_policy(:allowed_enabled_for_target)
+        expect(SiteSetting.enable_form_templates).to eq(false)
+        expect(SiteSetting.about_page_extra_groups).to eq("")
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
@@ -131,7 +331,7 @@ RSpec.describe UpcomingChanges::Toggle do
           let(:enabled) { true }
 
           fab!(:site_setting_group) do
-            Fabricate(:site_setting_group, name: "enable_form_templates", group_ids: "1|2")
+            Fabricate(:site_setting_group, name: "enable_form_templates", group_ids: "1|3")
           end
 
           it { is_expected.to run_successfully }

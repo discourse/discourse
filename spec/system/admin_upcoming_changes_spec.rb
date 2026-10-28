@@ -162,96 +162,139 @@ describe "Admin upcoming changes" do
     ).to have_plugin_name("Sample plugin")
   end
 
-  it "can enable and disable an upcoming change using the dropdown" do
+  it "lets an admin enable and disable an upcoming change with the toggle" do
     upcoming_changes_page.visit
+    item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
 
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
+    expect(item).to be_disabled
+    item.toggle
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
-    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+    expect(item).to be_enabled
 
-    # Revisit the page to skip the rate limit
     upcoming_changes_page.visit
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
+    expect(item).to be_enabled
+    item.toggle
     expect(upcoming_changes_page).to have_disabled_success_toast
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
 
-    expect(SiteSetting.enable_upload_debug_mode).to be_falsey
+    upcoming_changes_page.visit
+    expect(item).to be_disabled
   end
 
-  it "tests different enabled_for options behavior" do
-    upcoming_changes_page.visit
-
-    # Add a group to test clearing behavior
+  it "keeps the configured audience when an admin switches a change off and on" do
     SiteSetting.enable_upload_debug_mode = true
     Fabricate(
       :site_setting_group,
       name: "enable_upload_debug_mode",
       group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
     )
-
-    # Refresh after setting up the group
     upcoming_changes_page.visit
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_groups(
-      "trust_level_4",
-    )
-    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
+    item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+    item.toggle_groups
+    expect(item).to have_groups("trust_level_4")
 
-    # Test 'no_one' option - should disable the change and clear groups
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
+    item.toggle
     expect(upcoming_changes_page).to have_disabled_success_toast
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
-
     upcoming_changes_page.visit
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
-    expect(SiteSetting.enable_upload_debug_mode).to be_falsey
-    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_falsey
+    expect(item).to be_disabled
+    item.toggle_groups
+    expect(item).to have_groups("trust_level_4")
 
-    # Test 'everyone' option - should enable the change and clear groups
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
+    item.toggle
+    expect(item).to be_enabled
+    upcoming_changes_page.visit
+    item.toggle_groups
+    expect(item).to have_groups("trust_level_4")
+    expect(item).to be_enabled
+  end
+
+  it "lets an admin refine the default audience by saving group changes" do
+    upcoming_changes_page.visit
+    item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+    item.toggle
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    item.toggle_groups
+    expect(item).to have_groups("logged_in_users", "anonymous_users")
+    item.remove_group("anonymous_users")
+    item.save_groups
+    expect(upcoming_changes_page).to have_groups_updated_success_toast
 
     upcoming_changes_page.visit
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
-    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
-
-    # Test 'staff' option - should enable the change and set staff group
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("staff")
-    expect(upcoming_changes_page).to have_enabled_for_success_toast(
-      "staff",
-      translation_args: {
-        staffGroupName: I18n.t("groups.default_names.staff").titleize,
-      },
-    )
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    item.toggle_groups
+    expect(item).to have_groups("logged_in_users")
+    item.add_group("trust_level_4")
+    item.save_groups
+    expect(upcoming_changes_page).to have_groups_updated_success_toast
 
     upcoming_changes_page.visit
-    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
-    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+    item.toggle_groups
+    expect(item).to have_groups("logged_in_users", "trust_level_4")
+  end
 
-    # Test 'groups' option - should not change enabled state until groups are selected and saved
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("groups")
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).add_group("trust_level_4")
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).save_groups
-    expect(upcoming_changes_page).to have_enabled_for_success_toast(
-      "specific_groups_with_group_names",
-      translation_args: {
-        groupNames: "staff, trust_level_4",
-        count: 2,
-      },
-    )
+  context "when an upcoming change uses a linked group setting" do
+    before do
+      mock_upcoming_change_metadata(
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          impact_type: "other",
+          impact_role: "developers",
+          status: :experimental,
+          group_setting: :hidden_post_visible_groups,
+        },
+      )
+    end
 
-    upcoming_changes_page.visit
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_groups(
-      "staff",
-      "trust_level_4",
-    )
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
-    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
-    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+    it "lets an admin save the audience separately and retains its mandatory groups" do
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item).to be_disabled
+      item.toggle_groups
+      expect(item).to have_groups("admins", "moderators", "trust_level_4")
+      expect(item).to have_locked_group("admins")
+      expect(item).to have_locked_group("moderators")
+      item.remove_group("trust_level_4")
+      item.add_group("trust_level_2")
+      expect(item).to be_disabled
+      item.save_groups
+      expect(upcoming_changes_page).to have_groups_updated_success_toast
+      expect(item).to be_disabled
+
+      upcoming_changes_page.visit
+      item.toggle_groups
+      expect(item).to have_groups("admins", "moderators", "trust_level_2")
+      item.toggle
+      expect(item).to be_enabled
+
+      upcoming_changes_page.visit
+      expect(item).to be_enabled
+      item.toggle_groups
+      expect(item).to have_groups("admins", "moderators", "trust_level_2")
+    end
+
+    it "requires a nonempty linked audience before saving without changing the flag" do
+      mock_upcoming_change_metadata(
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          impact_type: "other",
+          impact_role: "developers",
+          status: :experimental,
+          group_setting: :about_page_extra_groups,
+        },
+      )
+      SiteSetting.about_page_extra_groups = "12"
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.toggle_groups
+      expect(item).to have_groups("trust_level_2")
+      item.remove_group("trust_level_2")
+      expect(item).to have_disabled_group_save
+      expect(item).to have_empty_groups_description
+      expect(item).to be_disabled
+
+      upcoming_changes_page.visit
+      item.toggle_groups
+      expect(item).to have_groups("trust_level_2")
+      expect(item).to be_disabled
+    end
   end
 
   describe "allow_enabled_for restrictions" do
@@ -269,64 +312,96 @@ describe "Admin upcoming changes" do
       )
     end
 
-    it "shows only No one and Everyone when allow_enabled_for is [everyone]" do
+    it "offers only a toggle for changes limited to everyone" do
       mock_with_allow([:everyone])
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item.enabled_for_options).to contain_exactly("no_one", "everyone")
+      expect(item).to have_no_group_button
+      item.toggle
+      expect(item).to be_enabled
     end
 
-    it "shows only No one and Staff when allow_enabled_for is [staff]" do
+    it "offers only a toggle for changes limited to staff" do
       mock_with_allow([:staff])
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item.enabled_for_options).to contain_exactly("no_one", "staff")
-    end
-
-    it "shows No one, Staff, and Specific group(s) when allow_enabled_for is [staff, specific_groups]" do
-      mock_with_allow(%i[staff specific_groups])
-      upcoming_changes_page.visit
-      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item.enabled_for_options).to contain_exactly("no_one", "staff", "groups")
-    end
-
-    it "shows all four options when allow_enabled_for is omitted" do
-      upcoming_changes_page.visit
-      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item.enabled_for_options).to contain_exactly("no_one", "everyone", "staff", "groups")
-    end
-
-    it "displays the broadest allowed target when an auto-promoted change has no admin scope" do
-      mock_with_allow(%i[staff specific_groups])
-      # Simulate the post-promotion state: setting is enabled globally but the
-      # admin has not configured a SiteSettingGroup. "Everyone" is no longer an
-      # allowed dropdown target, so the row should display "staff" as the
-      # broadest allowed scope.
-      SiteSetting.enable_upload_debug_mode = true
-
-      upcoming_changes_page.visit
-      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      expect(item.enabled_for).to eq("staff")
-    end
-
-    it "enables the change for staff when everyone is excluded" do
-      mock_with_allow(%i[staff specific_groups])
-      SiteSetting.enable_upload_debug_mode = false
-
-      upcoming_changes_page.visit
-      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
-      item.select_enabled_for("staff")
-
+      expect(item).to have_no_group_button
+      item.toggle
       expect(upcoming_changes_page).to have_enabled_for_success_toast(
         "staff",
         translation_args: {
-          staffGroupName: I18n.t("groups.default_names.staff").titleize,
+          staffGroupName: Group.find(Group::AUTO_GROUPS[:staff]).name,
         },
       )
       expect(item).to be_enabled
-      expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
-        Group::AUTO_GROUPS[:staff].to_s,
+    end
+
+    it "keeps staff locked while letting an admin include additional groups" do
+      mock_with_allow(%i[staff specific_groups])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.toggle
+      expect(item).to be_enabled
+      item.toggle_groups
+      expect(item).to have_groups("staff")
+      expect(item).to have_locked_group("staff")
+      expect(item).to have_staff_description
+      item.add_group("trust_level_4")
+      item.save_groups
+      expect(upcoming_changes_page).to have_groups_updated_success_toast
+
+      upcoming_changes_page.visit
+      item.toggle_groups
+      expect(item).to have_groups("staff", "trust_level_4")
+      expect(item).to have_locked_group("staff")
+      expect(item).to have_staff_description
+    end
+
+    it "asks for a group before enabling a change limited to specific groups" do
+      mock_with_allow([:specific_groups])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.toggle
+      expect(item).to be_disabled
+      expect(item).to have_no_groups
+      item.add_group("trust_level_4")
+      item.save_groups
+      expect(upcoming_changes_page).to have_enabled_for_success_toast(
+        "specific_groups_with_group_names",
+        translation_args: {
+          groupNames: "trust_level_4",
+          count: 1,
+        },
       )
+      expect(item).to be_enabled
+
+      upcoming_changes_page.visit
+      item.toggle_groups
+      expect(item).to have_groups("trust_level_4")
+      item.remove_group("trust_level_4")
+      item.save_groups
+      expect(upcoming_changes_page).to have_disabled_success_toast
+      expect(item).to be_disabled
+    end
+
+    it "offers group refinement when allow_enabled_for is omitted" do
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item).to have_group_button
+      expect(item).to have_no_group_selector
+      item.toggle_groups
+      expect(item).to have_groups("logged_in_users", "anonymous_users")
+      expect(item).to be_disabled
+    end
+
+    it "shows auto-promoted changes as enabled before an admin configures their scope" do
+      mock_with_allow(%i[staff specific_groups])
+      SiteSetting.enable_upload_debug_mode = true
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item).to be_enabled
+      item.toggle_groups
+      expect(item).to have_groups("staff")
     end
   end
 
@@ -472,28 +547,26 @@ describe "Admin upcoming changes" do
       Group.refresh_automatic_group!(:staff)
     end
 
-    it "displays the localized name in the enabled for options and enabling staff works correctly" do
-      upcoming_changes_page.visit
-
-      upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for(
-        Group.find(Group::AUTO_GROUPS[:staff]).name,
+    it "lets an admin enable the change for the localized staff group" do
+      mock_upcoming_change_metadata(
+        enable_upload_debug_mode: {
+          status: :experimental,
+          allow_enabled_for: [:staff],
+        },
       )
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.toggle
       expect(upcoming_changes_page).to have_enabled_for_success_toast(
         "staff",
         translation_args: {
-          staffGroupName: I18n.t("groups.default_names.staff", locale: SiteSetting.default_locale),
+          staffGroupName: Group.find(Group::AUTO_GROUPS[:staff]).name,
         },
       )
-      expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
-      expect(SiteSetting.enable_upload_debug_mode).to be_truthy
-      expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
-        Group::AUTO_GROUPS[:staff].to_s,
-      )
+      expect(item).to be_enabled
 
       upcoming_changes_page.visit
-      expect(upcoming_changes_page.change_item(:enable_upload_debug_mode).enabled_for).to eq(
-        Group.find(Group::AUTO_GROUPS[:staff]).name,
-      )
+      expect(item).to be_enabled
     end
   end
 
