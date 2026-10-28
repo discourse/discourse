@@ -2004,6 +2004,16 @@ RSpec.describe DiscourseTagging do
     end
 
     describe "clean_tag" do
+      it "preserves emoji and emoji sequences in tag names" do
+        %w[😊 🔞 🇫🇷 🛠️ 👩‍💻 release-😊].each do |name|
+          expect(DiscourseTagging.clean_tag(name)).to eq(name)
+        end
+      end
+
+      it "still removes invalid characters around ordinary text and emoji" do
+        expect(DiscourseTagging.clean_tag("  #AL\u200B\u202E™PHA & 😊  ")).to eq("alpha-😊")
+      end
+
       it "downcases new tags if setting enabled" do
         expect(DiscourseTagging.clean_tag("HeLlO")).to eq("hello")
 
