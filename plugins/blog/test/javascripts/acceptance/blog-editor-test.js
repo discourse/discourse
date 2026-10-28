@@ -263,6 +263,20 @@ acceptance("Blog editor", function (needs) {
     );
   });
 
+  test("offers page actions in the header", async function (assert) {
+    await visit("/blog/editor");
+    assert
+      .dom(".d-page-header__actions .btn-primary")
+      .hasText("New draft", "starting a draft is the primary action");
+    await click(".blog-dashboard__page-actions");
+    assert
+      .dom(".blog-dashboard__visit-blog")
+      .hasAttribute("href", "https://blog.example.com", "the blog is linked");
+    assert
+      .dom(".blog-dashboard__appearance")
+      .exists("admins can reach the blog appearance settings");
+  });
+
   test("keeps filters in the URL and restores them on reload", async function (assert) {
     const requests = [];
     pretender.get("/blog/editor.json", (request) => {

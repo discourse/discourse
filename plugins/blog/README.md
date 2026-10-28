@@ -9,7 +9,7 @@ Discourse discussion below each article.
 - Exactly one configured public Blog category; subcategories are not included.
 - Separate editorial-only drafts category and native Discourse composer autosave.
 - Editorial dashboard with server-side status filtering, title/path search, and
-  pages of 30 that load as you scroll.
+  pages of 20 that load as you scroll.
 - An editor-only publication panel on the article's own topic: state, one-click
   publish or correction, an inline summary and diff of pending changes, inline
   article settings, and scheduling, approval, and withdrawal behind a menu.
@@ -421,7 +421,7 @@ style `.blog-post-summary` without reaching into cooked article content.
 
 ## Finding articles in the editor
 
-`/blog/editor` does not download the whole library. It fetches 30 results at a
+`/blog/editor` does not download the whole library. It fetches 20 results at a
 time and loads the next page as you scroll near the end of the list, while another
 page exists.
 

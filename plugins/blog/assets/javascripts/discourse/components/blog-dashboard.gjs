@@ -168,16 +168,51 @@ export default class BlogDashboard extends Component {
       <DPageHeader
         @collapseActionsOnMobile={{false}}
         @descriptionLabel={{i18n "blog.editor_description"}}
+        @hideTabs={{true}}
         @titleLabel={{i18n "blog.editor_title"}}
       >
-        <:actions>
-          <DButton
-            class="btn-primary"
+        <:actions as |actions|>
+          <actions.Primary
             @action={{this.newDraft}}
             @disabled={{this.data.error}}
             @icon="pen-to-square"
             @label="blog.new_draft"
           />
+          <actions.Wrapped>
+            <DMenu
+              @icon="ellipsis-vertical"
+              @identifier="blog-dashboard-page-actions"
+              @placement="bottom-end"
+              @title={{i18n "blog.editor_table.more_actions"}}
+              @triggerClass="btn-default btn-small blog-dashboard__page-actions"
+            >
+              <:content>
+                <DDropdownMenu as |dropdown|>
+                  <dropdown.item>
+                    <DButton
+                      class="btn-transparent blog-dashboard__visit-blog"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      @href={{this.data.blog_url}}
+                      @icon="up-right-from-square"
+                      @label="blog.visit_blog"
+                    />
+                  </dropdown.item>
+                  {{#if this.currentUser.admin}}
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent blog-dashboard__appearance"
+                        @icon="palette"
+                        @label="blog.appearance_link"
+                        @route="adminPlugins.show.discourse-blog-themes"
+                        @routeModels="blog"
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                </DDropdownMenu>
+              </:content>
+            </DMenu>
+          </actions.Wrapped>
         </:actions>
       </DPageHeader>
       {{#if this.data.error}}
@@ -186,17 +221,6 @@ export default class BlogDashboard extends Component {
             "blog.settings"
           }}</a>
       {{/if}}
-      <div class="blog-dashboard__links">
-        {{#if this.currentUser.admin}}<a
-            href="/admin/plugins/blog/themes"
-          >{{i18n "blog.appearance_link"}}</a>{{/if}}
-        <a
-          href={{this.data.blog_url}}
-          rel="noopener noreferrer"
-          target="_blank"
-        >{{i18n "blog.visit_blog"}} ↗</a>
-      </div>
-      <p class="blog-dashboard__hint">{{i18n "blog.drafts_hint"}}</p>
       <DFilterControls
         @array={{this.topics}}
         @dropdownFilterQueryParam="status"
