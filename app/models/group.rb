@@ -844,7 +844,15 @@ class Group < ActiveRecord::Base
 
     Group.transaction do
       (current_group_ids - desired_group_ids).each do |group_id|
-        GroupUser.find_by!(user_id: user.id, group_id:).destroy!
+        # A concurrent refresh may have removed it already: only the one that does reports it.
+        group_user = GroupUser.find_by(user_id: user.id, group_id:)
+        next if group_user.nil?
+        begin
+          group_user.lock!
+        rescue ActiveRecord::RecordNotFound
+          next
+        end
+        group_user.destroy!
         groups_by_id[group_id].trigger_user_removed_event(user, acting_user: Discourse.system_user)
       end
       (desired_group_ids - current_group_ids).each do |group_id|
@@ -864,7 +872,20 @@ class Group < ActiveRecord::Base
     desired = desired_trust_level_groups(trust_level)
     undesired = trust_group_ids - desired
 
-    GroupUser.where(group_id: undesired, user_id: user_id).delete_all
+    removed_group_ids =
+      if undesired.present?
+        DB.query_single(
+          "DELETE FROM group_users WHERE group_id IN (:undesired) AND user_id = :user_id RETURNING group_id",
+          undesired:,
+          user_id:,
+        )
+      end
+    if removed_group_ids.present?
+      user = User.find_by(id: user_id)
+      Group
+        .where(id: removed_group_ids)
+        .each { |group| group.trigger_user_removed_event(user, acting_user: Discourse.system_user) }
+    end
 
     desired.each do |id|
       if group = find_by(id: id)
