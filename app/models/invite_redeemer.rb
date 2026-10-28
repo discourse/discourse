@@ -116,6 +116,7 @@ class InviteRedeemer
     user = User.where(staged: true).with_email(signup_email).first || User.new
     authenticator = UserAuthenticator.new(user, session, require_password: false)
     authenticator.unstage!(signup_email:) if user.staged?
+    user.created_by = user
 
     user.attributes = {
       email: email,

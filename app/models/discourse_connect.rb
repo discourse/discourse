@@ -267,6 +267,7 @@ class DiscourseConnect < DiscourseConnectBase
         end
 
         user = User.new(user_params)
+        user.created_by = Discourse.system_user
         user.skip_username_watched_words_validation = true
 
         if SiteSetting.must_approve_users && EmailValidator.can_auto_approve_user?(email)

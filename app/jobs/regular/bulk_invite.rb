@@ -165,7 +165,12 @@ module Jobs
           if user_fields.present? || locale.present?
             user = User.where(staged: true).find_by_email(email)
             user ||=
-              User.new(username: UserNameSuggester.suggest(email), email: email, staged: true)
+              User.new(
+                username: UserNameSuggester.suggest(email),
+                email: email,
+                staged: true,
+                created_by: @current_user,
+              )
 
             if user_fields.present?
               user_fields.each { |user_field, value| user.set_user_field(user_field, value) }

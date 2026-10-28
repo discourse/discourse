@@ -1305,6 +1305,7 @@ RSpec.describe UserMerger do
           old_username: "alice1",
           new_username: "alice",
           avatar_template: target_user.avatar_template,
+          acting_user_id: nil,
         },
       )
       .once
