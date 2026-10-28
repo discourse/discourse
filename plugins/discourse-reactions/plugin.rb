@@ -34,6 +34,11 @@ after_initialize do
         DiscourseWorkflows::Nodes::PostReaction::V1,
         DiscourseWorkflows::Nodes::PostReactionChanged::V1,
         DiscourseWorkflows::Nodes::PostReactionChanged::V2,
+        DiscourseWorkflows::Nodes::AddReaction::V1,
+        DiscourseWorkflows::Nodes::RemoveReaction::V1,
+        DiscourseWorkflows::Nodes::ReactionAdded::V1,
+        DiscourseWorkflows::Nodes::ReactionChanged::V1,
+        DiscourseWorkflows::Nodes::ReactionRemoved::V1,
       ]
     end
   end
