@@ -45,13 +45,18 @@ class DiscourseEvents::Events::Action::GenerateSchemaJson < Service::ActionBase
   def schedule
     return if !event.recurring?
 
-    starts_at =
-      event.all_day ? event.starts_at.utc : event.starts_at.in_time_zone(event.rrule_timezone)
-    weekday = "https://schema.org/#{starts_at.strftime("%A")}"
+    # The recurrence rule is anchored on the original start, which sets the week of the month
+    original_starts_at =
+      if event.all_day
+        event.original_starts_at.utc
+      else
+        event.original_starts_at.in_time_zone(event.rrule_timezone)
+      end
+    weekday = "https://schema.org/#{original_starts_at.strftime("%A")}"
 
     {
       "@type" => "Schedule",
-      **schedule_pattern(starts_at, weekday),
+      **schedule_pattern(original_starts_at, weekday),
       "endDate" => event.recurrence_until&.in_time_zone(event.rrule_timezone)&.strftime("%Y-%m-%d"),
       "scheduleTimezone" => (event.rrule_timezone if !event.all_day),
     }.compact

@@ -254,6 +254,22 @@ RSpec.describe DiscourseEvents::Events::Action::GenerateSchemaJson do
         expect(schema["eventSchedule"]).to include("byMonthWeek" => -1)
       end
 
+      it "takes the week of the month from the start of the series" do
+        # The series runs on the last Thursday, even when the current one is also the fourth
+        event.update!(
+          recurrence: "every_month",
+          original_starts_at: Time.iso8601("2026-10-29T13:00:00Z"),
+          original_ends_at: Time.iso8601("2026-10-29T14:00:00Z"),
+        )
+        event.event_dates.create!(
+          starts_at: Time.iso8601("2026-11-26T14:00:00Z"),
+          ends_at: Time.iso8601("2026-11-26T15:00:00Z"),
+        )
+
+        expect(schema).to include("startDate" => "2026-11-26T09:00:00.000-05:00")
+        expect(schema["eventSchedule"]).to include("byMonthWeek" => -1)
+      end
+
       it "describes multi-week intervals" do
         event.update!(recurrence: "every_two_weeks")
         expect(schema["eventSchedule"]).to include("repeatFrequency" => "P2W")

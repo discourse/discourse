@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
-import { withFrozenTime } from "discourse/tests/helpers/qunit-helpers";
 import decorateEventOneboxes from "discourse/plugins/discourse-events/discourse/lib/decorate-event-oneboxes";
+
+const ONEBOX_SRC = "https://other.example.com/t/community-hangout/123";
 
 module("Unit | Lib | decorate-event-oneboxes", function () {
   test("localizes timed event oneboxes to the viewer's timezone", function (assert) {
@@ -65,129 +66,82 @@ module("Unit | Lib | decorate-event-oneboxes", function () {
       .hasText("All day", "the event is identified as all day");
   });
 
-  test("moves a recurring event on to its upcoming occurrence", function (assert) {
+  test("shows the current occurrence from the server", function (assert) {
     const element = buildOnebox({
       startsAt: "2026-10-22T09:00:00.000-04:00",
       endsAt: "2026-10-22T10:00:00.000-04:00",
-      schedule: { frequency: "P1W", byDay: "Thursday" },
+      schedule: { frequency: "P1W", byDay: "Thursday", until: "2026-12-31" },
     });
 
-    withFrozenTime("2026-11-10T12:00:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "America/New_York")
-    );
+    decorateEventOneboxes(element, "America/New_York", {
+      [ONEBOX_SRC]: {
+        starts_at: "2026-11-12T09:00:00.000-05:00",
+        ends_at: "2026-11-12T10:00:00.000-05:00",
+      },
+    });
 
     assert
       .dom(".discourse-event-onebox__month", element)
-      .hasText("Nov", "the month follows the upcoming occurrence");
+      .hasText("Nov", "the month follows the current occurrence");
     assert
       .dom(".discourse-event-onebox__day", element)
-      .hasText("12", "the day follows the upcoming occurrence");
+      .hasText("12", "the day follows the current occurrence");
     assert
-      .dom(".discourse-event-onebox__time-text", element)
-      .hasText(
-        "9:00 AM → 10:00 AM (EST)",
-        "the wall-clock time is kept across the DST change"
+      .dom(".discourse-event-onebox__date", element)
+      .hasAttribute(
+        "datetime",
+        "2026-11-12T09:00:00.000-05:00",
+        "the machine-readable date matches the visible one"
       );
     assert
+      .dom(".discourse-event-onebox__time-text", element)
+      .hasText("9:00 AM → 10:00 AM (EST)", "the time is localized");
+    assert
       .dom(".discourse-event-onebox__recurrence-text", element)
-      .hasText("Every Thursday", "the recurrence is labelled");
+      .hasText(
+        "Every Thursday until December 31, 2026",
+        "the recurrence and the end of the series are labelled"
+      );
   });
 
-  test("keeps an occurrence that is still underway", function (assert) {
+  test("keeps the cooked occurrence without server data", function (assert) {
     const element = buildOnebox({
       startsAt: "2026-10-22T09:00:00.000-04:00",
-      endsAt: "2026-10-22T10:00:00.000-04:00",
       schedule: { frequency: "P1W", byDay: "Thursday" },
     });
 
-    withFrozenTime("2026-10-22T13:30:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "America/New_York")
-    );
+    decorateEventOneboxes(element, "America/New_York");
 
     assert
       .dom(".discourse-event-onebox__day", element)
-      .hasText("22", "the current occurrence is shown");
-  });
-
-  test("stops at the end of the schedule", function (assert) {
-    const element = buildOnebox({
-      startsAt: "2026-10-22T09:00:00.000-04:00",
-      endsAt: "2026-10-22T10:00:00.000-04:00",
-      schedule: { frequency: "P1W", byDay: "Thursday", until: "2026-11-01" },
-    });
-
-    withFrozenTime("2026-11-10T12:00:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "America/New_York")
-    );
-
-    assert
-      .dom(".discourse-event-onebox__day", element)
-      .hasText("29", "the final occurrence is shown");
+      .hasText("22", "the cooked occurrence is shown");
     assert
       .dom(".discourse-event-onebox__recurrence-text", element)
-      .hasText(
-        "Every Thursday until November 1, 2026",
-        "the end of the series is included"
-      );
+      .hasText("Every Thursday", "the recurrence is still labelled");
   });
 
-  test("moves a monthly event to the same week of the month", function (assert) {
-    const element = buildOnebox({
+  test("labels monthly and weekday recurrences", function (assert) {
+    const monthly = buildOnebox({
       startsAt: "2026-10-29T09:00:00.000-04:00",
       schedule: { frequency: "P1M", byDay: "Thursday", byMonthWeek: "-1" },
     });
-
-    withFrozenTime("2026-11-10T12:00:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "America/New_York")
-    );
-
-    assert
-      .dom(".discourse-event-onebox__day", element)
-      .hasText("26", "the last Thursday of the next month is shown");
-    assert
-      .dom(".discourse-event-onebox__recurrence-text", element)
-      .hasText("The last Thursday of every month");
-  });
-
-  test("skips weekends for a weekday event", function (assert) {
-    const element = buildOnebox({
-      startsAt: "2026-10-23T09:00:00.000-04:00",
+    const weekdays = buildOnebox({
+      startsAt: "2026-10-26T09:00:00.000-04:00",
       schedule: {
         frequency: "P1D",
         byDay: "Monday,Tuesday,Wednesday,Thursday,Friday",
       },
     });
 
-    withFrozenTime("2026-10-24T12:00:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "America/New_York")
-    );
+    decorateEventOneboxes(monthly, "America/New_York");
+    decorateEventOneboxes(weekdays, "America/New_York");
 
     assert
-      .dom(".discourse-event-onebox__day", element)
-      .hasText("26", "Monday follows Friday");
+      .dom(".discourse-event-onebox__recurrence-text", monthly)
+      .hasText("The last Thursday of every month");
     assert
-      .dom(".discourse-event-onebox__recurrence-text", element)
+      .dom(".discourse-event-onebox__recurrence-text", weekdays)
       .hasText("Every weekday");
-  });
-
-  test("moves an all-day event by whole days", function (assert) {
-    const element = buildOnebox({
-      allDay: true,
-      startsAt: "2026-10-22",
-      endsAt: "2026-10-22",
-      schedule: { frequency: "P1W", byDay: "Thursday" },
-    });
-
-    withFrozenTime("2026-10-23T12:00:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "UTC")
-    );
-
-    assert
-      .dom(".discourse-event-onebox__day", element)
-      .hasText("29", "the next week's date is shown");
-    assert
-      .dom(".discourse-event-onebox__time-text", element)
-      .hasText("All day");
   });
 
   test("labels the weekday as the viewer sees it", function (assert) {
@@ -196,79 +150,11 @@ module("Unit | Lib | decorate-event-oneboxes", function () {
       schedule: { frequency: "P1W", byDay: "Thursday" },
     });
 
-    withFrozenTime("2026-10-01T12:00:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "Australia/Brisbane")
-    );
+    decorateEventOneboxes(element, "Australia/Brisbane");
 
     assert
       .dom(".discourse-event-onebox__recurrence-text", element)
       .hasText("Every Friday", "Thursday evening in New York is Friday");
-  });
-
-  test("catches up on oneboxes fetched years ago", function (assert) {
-    const cases = [
-      {
-        description: "a daily event lands on today",
-        startsAt: "2020-01-01T09:00:00.000-05:00",
-        schedule: { frequency: "P1D" },
-        now: "2026-11-10T12:00:00Z",
-        day: "10",
-      },
-      {
-        description: "a weekday event skips the weekend",
-        startsAt: "2023-01-02T09:00:00.000-05:00",
-        schedule: {
-          frequency: "P1D",
-          byDay: "Monday,Tuesday,Wednesday,Thursday,Friday",
-        },
-        now: "2026-10-24T12:00:00Z",
-        day: "26",
-      },
-      {
-        description: "a fortnightly event keeps its alternate weeks",
-        startsAt: "2026-10-22T09:00:00.000-04:00",
-        schedule: { frequency: "P2W", byDay: "Thursday" },
-        now: "2027-06-01T12:00:00Z",
-        day: "3",
-      },
-      {
-        description: "a monthly event keeps its week of the month",
-        startsAt: "2024-01-25T09:00:00.000-05:00",
-        schedule: { frequency: "P1M", byDay: "Thursday", byMonthWeek: "-1" },
-        now: "2026-11-10T12:00:00Z",
-        day: "26",
-      },
-    ];
-
-    cases.forEach(({ description, startsAt, schedule, now, day }) => {
-      const element = buildOnebox({ startsAt, schedule });
-
-      withFrozenTime(now, "UTC", () =>
-        decorateEventOneboxes(element, "America/New_York")
-      );
-
-      assert
-        .dom(".discourse-event-onebox__day", element)
-        .hasText(day, description);
-      assert
-        .dom(".discourse-event-onebox__time-text", element)
-        .includesText("9:00 AM", `${description} at the same time`);
-    });
-  });
-
-  test("leaves an unsupported schedule alone", function (assert) {
-    const element = buildOnebox({
-      startsAt: "2026-10-22T09:00:00.000-04:00",
-      schedule: { frequency: "P3W", byDay: "Thursday" },
-    });
-
-    withFrozenTime("2026-11-10T12:00:00Z", "UTC", () =>
-      decorateEventOneboxes(element, "America/New_York")
-    );
-
-    assert
-      .dom(".discourse-event-onebox__day", element)
-      .hasText("22", "the fetched occurrence is kept");
   });
 
   test("exposes the image's dominant color for the letterbox", function (assert) {
@@ -340,6 +226,7 @@ function buildOnebox({
 }) {
   const element = document.createElement("div");
   element.innerHTML = `
+    <aside class="onebox" data-onebox-src="${ONEBOX_SRC}">
     <div
       class="discourse-event-onebox"
       data-event-all-day="${allDay}"
@@ -356,11 +243,14 @@ function buildOnebox({
           ? `<img class="discourse-event-onebox__image" data-dominant-color="${dominantColor}" width="${imageWidth ?? ""}" height="${imageHeight ?? ""}">`
           : ""
       }
-      <span class="discourse-event-onebox__month"></span>
-      <span class="discourse-event-onebox__day"></span>
+      <time class="discourse-event-onebox__date" datetime="${startsAt}">
+        <span class="discourse-event-onebox__month"></span>
+        <span class="discourse-event-onebox__day"></span>
+      </time>
       <span class="discourse-event-onebox__time-text"></span>
       <span class="discourse-event-onebox__recurrence-text"></span>
     </div>
+    </aside>
   `;
   return element;
 }

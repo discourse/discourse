@@ -19,6 +19,16 @@ module Onebox
         "-1" => "last",
       }
 
+      def self.format_event_time(starts_at, ends_at = nil)
+        time = starts_at.strftime("%-I:%M %p")
+        time = "#{time} → #{ends_at.strftime("%-I:%M %p")}" if ends_at
+        "#{time} (#{format_utc_offset(starts_at)})"
+      end
+
+      def self.format_utc_offset(time)
+        time.utc_offset.zero? ? "UTC" : "UTC#{time.formatted_offset}"
+      end
+
       def layout
         @layout ||= Layout.new(event? ? "discoursetopic_with_event" : self.class.onebox_name, data)
       end
@@ -124,12 +134,10 @@ module Onebox
         return unless event?
         return I18n.t("onebox.discourse.event_all_day") if event_all_day?
 
-        starts_at = event_time_value(raw[:event_starts_at])
-        ends_at = event_time_value(raw[:event_ends_at])
-
-        time = starts_at.strftime("%-I:%M %p")
-        time = "#{time} → #{ends_at.strftime("%-I:%M %p")}" if ends_at
-        "#{time} (#{event_timezone})"
+        self.class.format_event_time(
+          event_time_value(raw[:event_starts_at]),
+          event_time_value(raw[:event_ends_at]),
+        )
       rescue ArgumentError
         nil
       end
@@ -189,9 +197,9 @@ module Onebox
 
       def event_timezone
         starts_at = event_time_value(raw[:event_starts_at])
-        return "UTC" if starts_at.blank? || starts_at.utc_offset.zero?
+        return "UTC" if starts_at.blank?
 
-        "UTC#{starts_at.formatted_offset}"
+        self.class.format_utc_offset(starts_at)
       rescue ArgumentError
         "UTC"
       end

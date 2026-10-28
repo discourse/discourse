@@ -11,29 +11,39 @@ const MONTH_WEEK_ORDINALS = {
   4: "fourth",
   "-1": "last",
 };
-// After skipping ahead, at most a couple of weeks of weekdays remain to step through
-const MAX_STEPS = 20;
 
-export default function decorateEventOneboxes(element, timezone) {
+/**
+ * @param {Element} element
+ * @param {string} timezone - the viewer's timezone
+ * @param {Object} [occurrences] - current occurrences of recurring events, keyed by
+ *   onebox source URL, for oneboxes whose cooked occurrence has passed
+ */
+export default function decorateEventOneboxes(
+  element,
+  timezone,
+  occurrences = {}
+) {
   element.querySelectorAll(".discourse-event-onebox").forEach((onebox) => {
     applyImageStyles(onebox);
 
+    const src = onebox.closest("aside.onebox")?.dataset.oneboxSrc;
+    const occurrence = (src && occurrences?.[src]) || {
+      starts_at: onebox.dataset.eventStartsAt,
+      ends_at: onebox.dataset.eventEndsAt,
+    };
+
     const allDay = onebox.dataset.eventAllDay === "true";
-    let startsAt = parseDate(onebox.dataset.eventStartsAt, allDay);
+    let startsAt = parseDate(occurrence.starts_at, allDay);
     if (!startsAt?.isValid()) {
       return;
     }
 
-    let endsAt = parseDate(onebox.dataset.eventEndsAt, allDay);
+    let endsAt = parseDate(occurrence.ends_at, allDay);
     const schedule = parseSchedule(onebox.dataset);
 
-    // The cooked onebox keeps whichever occurrence was next when it was fetched
-    if (schedule) {
-      ({ startsAt, endsAt } = upcomingOccurrence(startsAt, endsAt, {
-        allDay,
-        schedule,
-      }));
-    }
+    onebox
+      .querySelector(".discourse-event-onebox__date")
+      ?.setAttribute("datetime", occurrence.starts_at);
 
     if (!allDay) {
       startsAt = startsAt.tz(timezone);
@@ -71,9 +81,6 @@ function parseSchedule(dataset) {
     byDay,
     ordinal: MONTH_WEEK_ORDINALS[dataset.eventRepeatByMonthWeek],
     until: dataset.eventRepeatUntil || null,
-    timezone: moment.tz.zone(dataset.eventScheduleTimezone ?? "")
-      ? dataset.eventScheduleTimezone
-      : null,
   };
   schedule.key = recurrenceKey(schedule);
 
@@ -106,109 +113,6 @@ function recurrenceKey({ interval, unit, byDay, ordinal }) {
   }
 
   return null;
-}
-
-function upcomingOccurrence(startsAt, endsAt, { allDay, schedule }) {
-  // Stepping in the event's own timezone keeps its wall-clock time across DST changes
-  let start =
-    !allDay && schedule.timezone
-      ? startsAt.clone().tz(schedule.timezone)
-      : startsAt.clone();
-  const unit = allDay ? "days" : "milliseconds";
-  const duration = endsAt?.isValid() ? endsAt.diff(startsAt, unit) : null;
-  const until = parseUntil(schedule, allDay);
-  const finishesAt = (date) => {
-    const end =
-      duration === null ? date.clone() : date.clone().add(duration, unit);
-    return allDay ? end.endOf("day") : end;
-  };
-
-  const now = moment();
-  if (finishesAt(start).isBefore(now)) {
-    const latestStart = now.clone().subtract(duration ?? 0, unit);
-    start = skipAhead(
-      start,
-      until && until.isBefore(latestStart) ? until : latestStart,
-      schedule
-    );
-  }
-
-  for (let i = 0; i < MAX_STEPS && finishesAt(start).isBefore(now); i++) {
-    const next = nextOccurrence(start, schedule);
-    if (until && next.isAfter(until)) {
-      break;
-    }
-    start = next;
-  }
-
-  return {
-    startsAt: start,
-    endsAt: duration === null ? endsAt : start.clone().add(duration, unit),
-  };
-}
-
-// The schedule's end date includes its final day
-function parseUntil({ until, timezone }, allDay) {
-  if (!until) {
-    return null;
-  }
-
-  const date =
-    allDay || !timezone
-      ? moment(until, "YYYY-MM-DD", true)
-      : moment.tz(until, "YYYY-MM-DD", true, timezone);
-  return date.isValid() ? date.endOf("day") : null;
-}
-
-// Jumps whole intervals so the cost doesn't grow with how stale the onebox is. One
-// interval is held back because DST can make the diff overshoot; stepping covers the rest.
-function skipAhead(start, target, { key, interval, ordinal }) {
-  const periods = (unit, size = 1) =>
-    Math.max(Math.floor(target.diff(start, unit) / size) - 1, 0);
-
-  switch (key) {
-    case "every_day":
-      return start.clone().add(periods("days"), "days");
-    case "every_month":
-      return nthWeekdayOfMonth(
-        start.clone().add(periods("months"), "months"),
-        start.day(),
-        ordinal
-      );
-    case "every_weekday":
-      return start.clone().add(periods("weeks"), "weeks");
-    default:
-      return start.clone().add(periods("weeks", interval) * interval, "weeks");
-  }
-}
-
-function nextOccurrence(date, { key, interval, ordinal }) {
-  const next = date.clone();
-
-  switch (key) {
-    case "every_weekday":
-      do {
-        next.add(1, "day");
-      } while (next.day() === 0 || next.day() === 6);
-      return next;
-    case "every_month":
-      return nthWeekdayOfMonth(next.add(1, "month"), date.day(), ordinal);
-    case "every_day":
-      return next.add(1, "day");
-    default:
-      return next.add(interval, "weeks");
-  }
-}
-
-function nthWeekdayOfMonth(month, weekday, ordinal) {
-  if (ordinal === "last") {
-    const last = month.clone().date(month.daysInMonth());
-    return last.subtract((last.day() - weekday + 7) % 7, "days");
-  }
-
-  const nth = Object.values(MONTH_WEEK_ORDINALS).indexOf(ordinal);
-  const first = month.clone().date(1);
-  return first.add(((weekday - first.day() + 7) % 7) + nth * 7, "days");
 }
 
 function recurrenceLabel(schedule, startsAt) {
