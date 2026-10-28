@@ -6,17 +6,13 @@ import sinon from "sinon";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
-import LiveCallControls from "discourse/plugins/live/discourse/components/live/call-controls";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import LiveLocalRecordingMenuItem from "discourse/plugins/live/discourse/components/live/local-recording-menu-item";
 import LiveRecordingBadge from "discourse/plugins/live/discourse/components/live/recording-badge";
 
 class LiveWebrtcStub extends Service {
   @tracked recordingRoomId = null;
 
-  audioEnabled = true;
-  deafened = false;
-  localVideoKind = null;
-  noiseSuppressionState = "off";
-  pttEnabled = false;
   screenShareSupported = false;
   startCalls = [];
 
@@ -44,20 +40,16 @@ class LiveWebrtcStub extends Service {
   stopLocalRecording() {
     this.recordingRoomId = null;
   }
-
-  videoAllowedIn() {
-    return false;
-  }
-
-  screenShareAllowedIn() {
-    return false;
-  }
-
-  toggleDeafen() {}
-  toggleMute() {}
 }
 
-const RECORD_BUTTON = ".live-call-controls__record";
+const RECORD_BUTTON = ".live-local-recording-toggle";
+
+const MenuItem = <template>
+  <DialogHolder />
+  <DDropdownMenu as |dropdown|>
+    <LiveLocalRecordingMenuItem @item={{dropdown.item}} @room={{@room}} />
+  </DDropdownMenu>
+</template>;
 
 module("Integration | Component | live/local-recording", function (hooks) {
   setupRenderingTest(hooks);
@@ -73,18 +65,18 @@ module("Integration | Component | live/local-recording", function (hooks) {
     this.room = { id: 1, slug: "standup", active_participants: [] };
   });
 
-  test("hides the record button without the permission", async function (assert) {
+  test("hides the record entry without the permission", async function (assert) {
     this.currentUser.set("live_can_record_locally", false);
     const room = this.room;
 
-    await render(<template><LiveCallControls @room={{room}} /></template>);
+    await render(<template><MenuItem @room={{room}} /></template>);
 
     assert.dom(RECORD_BUTTON).doesNotExist();
   });
 
   test("records audio only when the browser can't capture video", async function (assert) {
     const room = this.room;
-    await render(<template><LiveCallControls @room={{room}} /></template>);
+    await render(<template><MenuItem @room={{room}} /></template>);
 
     await click(RECORD_BUTTON);
     assert.deepEqual(this.liveWebrtc.startCalls, [
@@ -104,7 +96,7 @@ module("Integration | Component | live/local-recording", function (hooks) {
       .resolves(displayStream);
     const room = this.room;
 
-    await render(<template><LiveCallControls @room={{room}} /></template>);
+    await render(<template><MenuItem @room={{room}} /></template>);
     await click(RECORD_BUTTON);
 
     assert.deepEqual(this.liveWebrtc.startCalls, [
@@ -119,12 +111,7 @@ module("Integration | Component | live/local-recording", function (hooks) {
       .rejects(new DOMException("denied", "NotAllowedError"));
     const room = this.room;
 
-    await render(
-      <template>
-        <DialogHolder />
-        <LiveCallControls @room={{room}} />
-      </template>
-    );
+    await render(<template><MenuItem @room={{room}} /></template>);
     await click(RECORD_BUTTON);
 
     assert

@@ -102,24 +102,25 @@ Stop and finalize on:
 While recording, a `beforeunload` guard warns before a reload, because
 anything not yet flushed is lost.
 
-The control must be a plain `<button>`, not `DButton`, for the reason already
-documented in `call-controls.gjs`: Firefox only allows `getDisplayMedia`
-during the click dispatch itself, and `DButton` defers its action via
-`next()`.
+The menu entry binds its handler with `{{on "click"}}` rather than `DButton`'s
+`@action`: Firefox only allows `getDisplayMedia` during the click dispatch
+itself, and `@action` defers via `next()`.
 
 ## Controls
 
-One "Record to this device" button in the call controls, not separate audio
-and video buttons:
+One "Record to this device" entry in the room's overflow (kebab) menu, on both
+the room page and the call widget, not separate audio and video entries. The
+recording badge already makes a running recording visible, so the control
+doesn't need a spot in the call controls.
 
 1. Browsers without `getDisplayMedia` (mobile) record audio only right away.
 2. Otherwise the click opens the tab-capture prompt. If it is declined or
    fails, a dialog offers an audio-only recording instead.
-3. Clicking again stops the recording and downloads the file (through
-   `deliverBlobDownload`, so the mobile app bridge works too).
+3. Choosing the entry again stops the recording and downloads the file
+   (through `deliverBlobDownload`, so the mobile app bridge works too).
 
-Where the user can start a server (LiveKit) recording, that button takes the
-slot and the local one is hidden, so nobody sees two record buttons.
+Where the user can start a server (LiveKit) recording, the entry is hidden, so
+nobody sees two ways to record.
 
 ## Reusing the recording indicator
 
