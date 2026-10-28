@@ -27,6 +27,7 @@ RSpec.describe Admin::UsersController do
           "id" => bot.id,
           "bot_creator" => {
             "username" => creator.username,
+            "avatar_template" => creator.avatar_template,
             "url" => "/admin/users/#{creator.id}/renamedcreator",
           },
         ),
@@ -45,6 +46,7 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body.first["bot_creator"]).to eq(
         "username" => creator.username,
+        "avatar_template" => creator.avatar_template,
         "url" => "/forum/admin/users/#{creator.id}/%C3%A9l%C3%A8ve",
       )
     end

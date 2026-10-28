@@ -1,4 +1,11 @@
-import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  settled,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
@@ -21,7 +28,12 @@ acceptance("Admin - Users List", function (needs) {
         {
           id: -100,
           username: "helper_bot",
-          bot_creator: { username: "sam", url: "/admin/users/2/sam" },
+          bot_creator: {
+            username: "sam",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/s/3be4f8/{size}.png",
+            url: "/admin/users/2/sam",
+          },
           sources: [
             { label: "<strong>Helper</strong>", url: "/admin/bots/helper" },
             { label: "Support", url: "/forum/admin/bots/support" },
@@ -32,12 +44,23 @@ acceptance("Admin - Users List", function (needs) {
           username: "historical_bot",
           sources: [{ label: "<em>Historical integration</em>" }],
         },
+        {
+          id: -106,
+          username: "paused_bot",
+          sources: [{ label: "Paused agent", note: "Integration disabled" }],
+          bot_inactive: true,
+        },
         { id: -102, username: "unknown_bot" },
         { id: -103, username: "unattributed_bot", sources: [] },
         {
           id: -105,
           username: "manual_bot",
-          bot_creator: { username: "sam", url: "/admin/users/2/sam" },
+          bot_creator: {
+            username: "sam",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/s/3be4f8/{size}.png",
+            url: "/admin/users/2/sam",
+          },
         },
         {
           id: -106,
@@ -180,8 +203,11 @@ acceptance("Admin - Users List", function (needs) {
 
     const label = i18n("admin.users.bots.created_by", { username: "sam" });
     assert
+      .dom('[data-user-id="-105"] .admin-users-list__source a img.avatar')
+      .exists("shows the creator's avatar");
+    assert
       .dom('[data-user-id="-105"] .admin-users-list__source a')
-      .hasText("@sam", "identifies the creator without a visible prefix")
+      .hasText("sam", "identifies the creator by username")
       .hasAttribute(
         "aria-label",
         label,
@@ -207,7 +233,7 @@ acceptance("Admin - Users List", function (needs) {
 
     assert
       .dom('[data-user-id="-106"] .admin-users-list__source a')
-      .hasText("@<em>sam</em>", "escapes the creator name")
+      .hasText("<em>sam</em>", "escapes the creator name")
       .hasAttribute(
         "href",
         "/forum/admin/users/2/sam",
@@ -223,10 +249,8 @@ acceptance("Admin - Users List", function (needs) {
 
     const label = "An agent with a very very very long name dot com";
     assert
-      .dom('[data-user-id="-104"] .admin-users-list__source-item')
-      .hasAttribute("title", label, "reveals the full name on hover");
-    assert
       .dom('[data-user-id="-104"] .admin-users-list__source-item a')
+      .hasAttribute("title", label, "reveals the full name on hover")
       .hasText(label, "retains the full accessible link text")
       .hasAttribute(
         "href",
@@ -252,6 +276,28 @@ acceptance("Admin - Users List", function (needs) {
       )
       .doesNotExist(
         "does not add a link or trust HTML for a historical source"
+      );
+  });
+
+  test("shows a source note in a tooltip", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom('[data-user-id="-106"] .admin-users-list__source-label')
+      .hasText("Paused agent", "the label is shown as is");
+
+    await triggerEvent(
+      '[data-user-id="-106"] .admin-users-list__source-label',
+      "pointermove"
+    );
+    assert
+      .dom(".fk-d-tooltip__content")
+      .hasText("Integration disabled", "the note is shown in a tooltip");
+    assert
+      .dom('[data-user-id="-106"]')
+      .hasClass(
+        "not-activated",
+        "an inactive bot is dimmed like a disabled one"
       );
   });
 
@@ -305,7 +351,7 @@ acceptance("Admin - Users List", function (needs) {
       .exists("admins retain the Source header");
     assert
       .dom(".admin-users-list__source")
-      .exists({ count: 7 }, "admins retain a Source cell for every bot");
+      .exists({ count: 8 }, "admins retain a Source cell for every bot");
     assert
       .dom(".users-list")
       .hasAttribute(

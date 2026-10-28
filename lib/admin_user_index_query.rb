@@ -260,12 +260,20 @@ class AdminUserIndexQuery
       .order(:target_user_id, :id)
       .select(
         "DISTINCT ON (user_histories.target_user_id) user_histories.target_user_id, " \
-          "creators.id AS creator_id, creators.username AS creator_username",
+          "creators.id AS creator_id, creators.username AS creator_username, " \
+          "creators.uploaded_avatar_id AS creator_uploaded_avatar_id",
       )
       .filter_map do |history|
         next unless history.creator_id
 
-        [history.target_user_id, { id: history.creator_id, username: history.creator_username }]
+        [
+          history.target_user_id,
+          {
+            id: history.creator_id,
+            username: history.creator_username,
+            uploaded_avatar_id: history.creator_uploaded_avatar_id,
+          },
+        ]
       end
       .to_h
   end

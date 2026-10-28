@@ -48,6 +48,41 @@ acceptance("Admin - New bot", function (needs) {
         })
       );
 
+      server.get(
+        `${prefix}/admin/users/bots/username_suggestion.json`,
+        (request) =>
+          helper.response({
+            username: request.queryParams.name
+              .toLowerCase()
+              .replace(/\s+/g, "_"),
+          })
+      );
+
+      server.get(`${prefix}/admin/api/keys/scopes.json`, () =>
+        helper.response({
+          scopes: {
+            global: [
+              {
+                scope_id: "global:read",
+                key: "read",
+                name: "read",
+                params: null,
+                urls: [],
+              },
+            ],
+            topics: [
+              {
+                scope_id: "topics:write",
+                key: "write",
+                name: "write",
+                params: ["topic_id"],
+                urls: [],
+              },
+            ],
+          },
+        })
+      );
+
       server.get(`${prefix}/admin/users/list/bots.json`, (request) => {
         listQueries.push(request.queryParams);
         return helper.response(
@@ -66,7 +101,7 @@ acceptance("Admin - New bot", function (needs) {
       });
 
       server.post(`${prefix}/admin/users/bots.json`, (request) => {
-        const payload = helper.parsePostData(request.requestBody);
+        const payload = JSON.parse(request.requestBody);
         payloads.push(payload);
 
         if (failCreation) {
@@ -76,7 +111,15 @@ acceptance("Admin - New bot", function (needs) {
         }
 
         createdUser = { id: -200, ...payload.bot };
-        return helper.response(201, { user: createdUser });
+        return helper.response(201, {
+          user: createdUser,
+          ...(payload.key && {
+            key: {
+              key: "generated-secret-key",
+              description: payload.bot.username,
+            },
+          }),
+        });
       });
     });
   });
@@ -138,7 +181,10 @@ acceptance("Admin - New bot", function (needs) {
       .hasValue("2", "the site default trust level is selected");
     assert
       .dom(`${FORM} [data-name]`)
-      .exists({ count: 3 }, "only name, username and trust level are editable");
+      .exists(
+        { count: 4 },
+        "only name, username, trust level and the API key toggle are editable"
+      );
   });
 
   test("creates a bot with the site's default trust level and shows a success toast", async function (assert) {
@@ -158,7 +204,7 @@ acceptance("Admin - New bot", function (needs) {
           bot: {
             name: "Release helper",
             username: "release_helper",
-            trust_level: "2",
+            trust_level: 2,
           },
         },
       ],
@@ -181,8 +227,123 @@ acceptance("Admin - New bot", function (needs) {
     assert
       .dom(".admin-users-list__source-values")
       .hasText(
-        `@${currentUser().username}`,
+        currentUser().username,
         "a manual bot identifies its creator in Source"
+      );
+  });
+
+  test("suggests a username from the name until one is typed", async function (assert) {
+    await visit("/admin/users/bots/new");
+    const form = formKit(FORM);
+
+    await form.field("name").fillIn("Release helper");
+    await settled();
+    assert
+      .form(FORM)
+      .field("username")
+      .hasValue("release_helper", "the username follows the name");
+
+    await form.field("name").fillIn("Deploy helper");
+    await settled();
+    assert
+      .form(FORM)
+      .field("username")
+      .hasValue("deploy_helper", "the suggestion updates with the name");
+
+    await form.field("username").fillIn("custom_bot");
+    await form.field("name").fillIn("Another helper");
+    await settled();
+    assert
+      .form(FORM)
+      .field("username")
+      .hasValue("custom_bot", "a typed username is kept");
+  });
+
+  test("clearing the name clears a suggested username only", async function (assert) {
+    await visit("/admin/users/bots/new");
+    const form = formKit(FORM);
+
+    await form.field("name").fillIn("Release helper");
+    await settled();
+    await form.field("name").fillIn("");
+    await settled();
+    assert
+      .form(FORM)
+      .field("username")
+      .hasValue("", "the suggested username is cleared");
+
+    await form.field("username").fillIn("custom_bot");
+    await form.field("name").fillIn("Release helper");
+    await form.field("name").fillIn("");
+    await settled();
+    assert
+      .form(FORM)
+      .field("username")
+      .hasValue("custom_bot", "a typed username is kept");
+  });
+
+  test("can generate an API key that is shown once", async function (assert) {
+    await visit("/admin/users/bots/new");
+    const form = formKit(FORM);
+    await form.field("username").fillIn("release_helper");
+
+    assert
+      .form(FORM)
+      .field("scope_mode")
+      .doesNotExist("key fields stay hidden until requested");
+
+    await form.field("generate_api_key").toggle();
+    await form.field("scope_mode").select("read_only");
+    await form.submit();
+
+    assert.deepEqual(
+      payloads[0].key,
+      {
+        scope_mode: "read_only",
+        scopes: [
+          {
+            scope_id: "global:read",
+            key: "read",
+            name: "read",
+            params: null,
+            urls: [],
+          },
+        ],
+      },
+      "the key request is sent alongside the bot"
+    );
+    assert
+      .dom(".generated-api-key")
+      .hasText("generated-secret-key", "the new key is shown");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/bots/new",
+      "the key stays on screen until dismissed"
+    );
+
+    await click(".admin-bot-form__back");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/list/bots?order=created",
+      "back returns to newest-first Bots"
+    );
+  });
+
+  test("a granular key requires at least one scope", async function (assert) {
+    await visit("/admin/users/bots/new");
+    const form = formKit(FORM);
+    await form.field("username").fillIn("release_helper");
+    await form.field("generate_api_key").toggle();
+    await form.field("scope_mode").select("granular");
+    await form.submit();
+
+    assert.deepEqual(payloads, [], "nothing is submitted");
+    assert
+      .form(FORM)
+      .hasErrors(
+        { scopes: i18n("admin.api.scopes.one_or_more") },
+        "the missing scope is reported"
       );
   });
 
@@ -195,7 +356,7 @@ acceptance("Admin - New bot", function (needs) {
 
     assert.deepEqual(
       payloads,
-      [{ bot: { name: "", username: "custom_bot", trust_level: "0" } }],
+      [{ bot: { name: "", username: "custom_bot", trust_level: 0 } }],
       "the explicit trust level is sent without extra fields"
     );
   });
@@ -213,7 +374,7 @@ acceptance("Admin - New bot", function (needs) {
 
     assert.strictEqual(
       payloads[0].bot.trust_level,
-      "0",
+      0,
       "the zero default is valid and submitted"
     );
   });

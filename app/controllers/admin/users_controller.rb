@@ -3,7 +3,7 @@
 class Admin::UsersController < Admin::StaffController
   skip_before_action :check_xhr, only: :new_bot
 
-  before_action :ensure_admin, only: %i[new_bot create_bot]
+  before_action :ensure_admin, only: %i[new_bot create_bot bot_username_suggestion]
   before_action :rate_limit_bot_creation, only: :create_bot
 
   before_action :fetch_user,
@@ -70,6 +70,10 @@ class Admin::UsersController < Admin::StaffController
     end
   end
 
+  def bot_username_suggestion
+    render json: { username: UserNameSuggester.suggest(params.require(:name)) }
+  end
+
   def create_bot
     bot = params.require(:bot)
     raise Discourse::InvalidParameters.new(:bot) unless bot.is_a?(ActionController::Parameters)
@@ -84,11 +88,19 @@ class Admin::UsersController < Admin::StaffController
     invalid_attributes = bot.keys - permitted.keys
     raise Discourse::InvalidParameters.new(invalid_attributes.first) if invalid_attributes.present?
 
-    User::CreateBot.call(service_params.deep_merge(params: permitted.to_h)) do
-      on_success do |user:|
+    # Request uses `key`, as `api_key` would be read as an authentication credential.
+    key = params[:key]
+    raise Discourse::InvalidParameters.new(:key) if key && !key.is_a?(ActionController::Parameters)
+
+    User::CreateBot.call(
+      service_params.deep_merge(params: { **permitted.to_h, api_key: key&.to_unsafe_h }),
+    ) do
+      on_success do |user:, api_key: nil|
         render json: {
                  user: AdminUserSerializer.new(user, scope: guardian, root: false).as_json,
-               },
+                 key:
+                   api_key && ApiKeySerializer.new(api_key, scope: guardian, root: false).as_json,
+               }.compact,
                status: :created,
                location: admin_user_show_path(id: user.id, username: user.username)
       end
@@ -97,6 +109,11 @@ class Admin::UsersController < Admin::StaffController
       on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
       on_model_errors(:user) { |user| render_json_error(user) }
       on_model_not_found(:user) do |result|
+        raise result.exception if result.exception
+        raise Discourse::NotFound
+      end
+      on_model_errors(:api_key) { |invalid_key| render_json_error(invalid_key) }
+      on_model_not_found(:api_key) do |result|
         raise result.exception if result.exception
         raise Discourse::NotFound
       end

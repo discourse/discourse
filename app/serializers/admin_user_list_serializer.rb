@@ -148,6 +148,7 @@ class AdminUserListSerializer < BasicUserSerializer
     creator = @options[:bot_creators][object.id]
     {
       username: creator[:username],
+      avatar_template: User.avatar_template(creator[:username], creator[:uploaded_avatar_id]),
       url:
         "#{Discourse.base_path}/admin/users/#{creator[:id]}/#{UrlHelper.encode_component(creator[:username].downcase)}",
     }

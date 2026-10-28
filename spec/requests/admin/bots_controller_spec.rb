@@ -77,6 +77,26 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#bot_username_suggestion" do
+    it "suggests an available username from the name for admins" do
+      Fabricate(:user, username: "release_helper")
+      sign_in(admin)
+
+      get "/admin/users/bots/username_suggestion.json", params: { name: "Release helper" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to eq("Release_helper1")
+    end
+
+    it "rejects moderators" do
+      sign_in(Fabricate(:moderator))
+
+      get "/admin/users/bots/username_suggestion.json", params: { name: "Release helper" }
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#create_bot" do
     let(:bot_params) { { name: "Release helper", username: "release_helper", trust_level: 0 } }
 
@@ -406,6 +426,70 @@ RSpec.describe Admin::UsersController do
           expect(bot.reload).to have_attributes(admin: false, moderator: false)
         end
         expect(AdminConfirmation.exists_for?(bot.id)).to eq(false)
+      end
+
+      context "with an API key" do
+        let(:key_params) do
+          {
+            description: "Release key",
+            scope_mode: "granular",
+            scopes: [{ scope_id: "topics:write", topic_id: "1" }],
+          }
+        end
+
+        it "creates a key for the bot and returns it once" do
+          expect do
+            post "/admin/users/bots.json", params: { bot: bot_params, key: key_params }, as: :json
+          end.to change(User, :count).by(1).and change(ApiKey, :count).by(1)
+
+          expect(response.status).to eq(201)
+          bot = User.find(response.parsed_body.dig("user", "id"))
+          api_key = ApiKey.last
+          expect(api_key).to have_attributes(user: bot, created_by: admin, scope_mode: "granular")
+          expect(response.parsed_body.dig("key", "key")).to be_present
+          expect(ApiKey.with_key(response.parsed_body.dig("key", "key")).first).to eq(api_key)
+        end
+
+        it "returns no key when none was requested" do
+          post "/admin/users/bots.json", params: { bot: bot_params }
+
+          expect(response.status).to eq(201)
+          expect(response.parsed_body).not_to have_key("key")
+        end
+
+        it "rejects an unknown scope without creating the bot" do
+          key_params[:scopes] = [{ scope_id: "topics:explode" }]
+
+          expect do
+            post "/admin/users/bots.json", params: { bot: bot_params, key: key_params }
+          end.to not_change(User, :count).and not_change(ApiKey, :count)
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects malformed scopes without creating the bot" do
+          key_params[:scopes] = ["topics:write"]
+
+          expect do
+            post "/admin/users/bots.json", params: { bot: bot_params, key: key_params }, as: :json
+          end.to not_change(User, :count).and not_change(ApiKey, :count)
+          expect(response.status).to eq(400)
+        end
+
+        it "returns key validation errors without creating the bot" do
+          key_params[:scopes] = []
+
+          expect do
+            post "/admin/users/bots.json", params: { bot: bot_params, key: key_params }, as: :json
+          end.to not_change(User, :count).and not_change(ApiKey, :count)
+          expect(response.status).to eq(422)
+        end
+
+        it "requires an object-shaped key" do
+          expect do
+            post "/admin/users/bots.json", params: { bot: bot_params, key: "a-key" }
+          end.not_to change(User, :count)
+          expect(response.status).to eq(400)
+        end
       end
     end
 

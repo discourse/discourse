@@ -110,6 +110,7 @@ after_initialize do
   add_to_serializer(
     :admin_user_list,
     :sources,
+    respect_plugin_enabled: false,
     include_condition: -> { scope.is_admin? && object.bot? && @options[:user_ids].present? },
   ) do
     # Collection serializers share options, keeping these lookups bounded to one batch per page.
@@ -118,6 +119,23 @@ after_initialize do
         @options[:user_ids],
       )
     sources_by_user_id.fetch(object.id, [])
+  end
+
+  # Disabling an agent deactivates its bot; a disabled plugin only dims them in the list.
+  add_to_serializer(
+    :admin_user_list,
+    :bot_inactive,
+    respect_plugin_enabled: false,
+    include_condition: -> do
+      !SiteSetting.discourse_ai_enabled && scope.is_admin? && object.bot? &&
+        @options[:user_ids].present?
+    end,
+  ) do
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, []).present?
   end
 
   register_admin_dashboard_section(

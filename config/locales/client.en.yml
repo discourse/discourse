@@ -10018,7 +10018,10 @@ en:
         bots:
           new: "New bot"
           back: "Back to bots"
-          help: "Creates an account, not an integration. No password or API key is created."
+          help: "Bots are user accounts that can't log in, for integrations and automated posting."
+          generate_api_key: "Generate API key"
+          generate_api_key_description: "Only needed for external services that act as this bot. Discourse plugins don't need one."
+          scope_mode_description: "The key only has this bot's permissions."
           name: "Name"
           username: "Username"
           trust_level: "Trust level"

@@ -1,3 +1,4 @@
+import { loadApiKeyScopes } from "discourse/admin/lib/api-key-scopes";
 import { RouteException } from "discourse/controllers/exception";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -13,8 +14,12 @@ export default class AdminBotsNewRoute extends DiscourseRoute {
     }
   }
 
-  model() {
-    return ajax("/admin/users/bots/new.json");
+  async model() {
+    const [defaults, apiKeyScopes] = await Promise.all([
+      ajax("/admin/users/bots/new.json"),
+      loadApiKeyScopes(),
+    ]);
+    return { ...defaults, apiKeyScopes };
   }
 
   titleToken() {

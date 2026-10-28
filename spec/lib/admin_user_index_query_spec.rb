@@ -241,6 +241,7 @@ RSpec.describe AdminUserIndexQuery do
         bot.id => {
           id: creator.id,
           username: creator.username,
+          uploaded_avatar_id: creator.uploaded_avatar_id,
         },
       )
     end
@@ -291,6 +292,7 @@ RSpec.describe AdminUserIndexQuery do
         page_bot.id => {
           id: creator.id,
           username: creator.username,
+          uploaded_avatar_id: creator.uploaded_avatar_id,
         },
       )
     end
@@ -303,10 +305,17 @@ RSpec.describe AdminUserIndexQuery do
             bot.id => {
               id: creator.id,
               username: creator.username,
+              uploaded_avatar_id: creator.uploaded_avatar_id,
             },
           )
         end
-      expected_creators = { bot.id => { id: creator.id, username: creator.username } }
+      expected_creators = {
+        bot.id => {
+          id: creator.id,
+          username: creator.username,
+          uploaded_avatar_id: creator.uploaded_avatar_id,
+        },
+      }
       4.times do |index|
         additional_bot = Fabricate(:user, id: -1301 - index)
         additional_creator = Fabricate(:admin)
@@ -314,6 +323,7 @@ RSpec.describe AdminUserIndexQuery do
         expected_creators[additional_bot.id] = {
           id: additional_creator.id,
           username: additional_creator.username,
+          uploaded_avatar_id: additional_creator.uploaded_avatar_id,
         }
       end
 

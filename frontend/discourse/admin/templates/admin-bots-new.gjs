@@ -16,6 +16,7 @@ export default <template>
       >
         <:content>
           <AdminBotForm
+            @apiKeyScopes={{@model.apiKeyScopes}}
             @defaultTrustLevel={{@model.default_trust_level}}
             @nameRequired={{@model.name_required}}
           />

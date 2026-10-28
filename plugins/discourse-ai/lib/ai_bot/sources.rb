@@ -10,23 +10,21 @@ module DiscourseAi::AiBot::Sources
       .where(user_id: user_ids)
       .order(:id)
       .pluck(:user_id, :id, :name)
-      .each do |user_id, id, name|
-        sources[user_id] << {
-          label: name,
-          url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-agents/#{id}/edit",
-        }
-      end
+      .each { |user_id, id, name| sources[user_id] << source(name, "ai-agents/#{id}/edit") }
 
     LlmModel
       .where(user_id: user_ids)
       .order(:id)
       .pluck(:user_id, :id, :display_name)
-      .each do |user_id, id, name|
-        sources[user_id] << {
-          label: name,
-          url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{id}/edit",
-        }
-      end
+      .each { |user_id, id, name| sources[user_id] << source(name, "ai-llms/#{id}/edit") }
+
+    spam_user_id = SiteSetting.ai_spam_detection_user_id.presence&.to_i
+    if spam_user_id && user_ids.include?(spam_user_id)
+      sources[spam_user_id] << source(
+        I18n.t("discourse_ai.ai_bot.sources.spam_detection"),
+        "ai-spam",
+      )
+    end
 
     UserCustomField
       .where(user_id: user_ids, name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD)
@@ -39,4 +37,14 @@ module DiscourseAi::AiBot::Sources
 
     sources
   end
+
+  # Admin pages require the plugin, so a disabled plugin keeps the name but drops the link.
+  def self.source(label, admin_path)
+    if SiteSetting.discourse_ai_enabled
+      { label:, url: "#{Discourse.base_path}/admin/plugins/discourse-ai/#{admin_path}" }
+    else
+      { label:, note: I18n.t("discourse_ai.ai_bot.sources.plugin_disabled") }
+    end
+  end
+  private_class_method :source
 end

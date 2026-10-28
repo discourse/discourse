@@ -63,6 +63,36 @@ RSpec.describe User::CreateBot do
       expect(contract).to be_valid
       expect(contract.trust_level).to eq(2)
     end
+
+    context "with an API key" do
+      subject(:contract) do
+        described_class.new(username: "release_helper", api_key: api_key_attributes)
+      end
+
+      let(:api_key_attributes) { { description: "Release key", scope_mode: "global" } }
+
+      it { is_expected.to be_valid }
+
+      it "allows an omitted description" do
+        api_key_attributes.delete(:description)
+
+        expect(contract).to be_valid
+      end
+
+      it "limits the description length" do
+        api_key_attributes[:description] = "x" * 256
+
+        expect(contract).not_to be_valid
+        expect(contract.errors).to include(:"api_key.description")
+      end
+
+      it "requires a known scope mode" do
+        api_key_attributes[:scope_mode] = "everything"
+
+        expect(contract).not_to be_valid
+        expect(contract.errors).to include(:"api_key.scope_mode")
+      end
+    end
   end
 
   describe ".call" do
@@ -183,6 +213,80 @@ RSpec.describe User::CreateBot do
           .and(not_change { Jobs::InviteEmail.jobs.size })
           .and(not_change { Jobs::InvitePasswordInstructionsEmail.jobs.size })
           .and(not_change { Jobs::SendSystemMessage.jobs.size })
+      end
+    end
+
+    context "when an API key is requested" do
+      let(:params) do
+        {
+          username: "release_helper",
+          trust_level: 2,
+          api_key: {
+            description: "Release key",
+            scope_mode: "granular",
+            scopes: [{ scope_id: "topics:write", topic_id: "1,2" }],
+          },
+        }
+      end
+
+      context "with an unknown scope" do
+        before { params[:api_key][:scopes] = [{ scope_id: "topics:explode" }] }
+
+        it "creates neither the bot nor the key" do
+          expect { result }.to not_change(User, :count).and(not_change(ApiKey, :count))
+          expect(result).to fail_to_find_a_model(:api_key)
+        end
+      end
+
+      context "with an invalid key" do
+        before { params[:api_key][:scopes] = [] }
+
+        it "creates neither the bot nor the key" do
+          expect { result }.to not_change(User, :count).and(not_change(ApiKey, :count))
+          expect(result).to fail_with_an_invalid_model(:api_key)
+        end
+      end
+
+      context "when everything is valid" do
+        it { is_expected.to run_successfully }
+
+        it "creates a key for the bot with the requested scopes" do
+          expect(result.api_key).to have_attributes(
+            user: result.user,
+            created_by: actor,
+            description: "Release key",
+            scope_mode: "granular",
+          )
+          expect(result.api_key).to be_key_available
+          expect(result.api_key.api_key_scopes.map(&:attributes)).to contain_exactly(
+            include(
+              "resource" => "topics",
+              "action" => "write",
+              "allowed_parameters" => {
+                "topic_id" => %w[1 2],
+              },
+            ),
+          )
+        end
+
+        context "without a description" do
+          before { params[:api_key].delete(:description) }
+
+          it "describes the key with the bot's username" do
+            expect(result.api_key.description).to eq("release_helper")
+          end
+        end
+
+        it "logs the key creation" do
+          expect { result }.to change {
+            UserHistory.where(action: UserHistory.actions[:api_key_create]).count
+          }.by(1)
+
+          expect(UserHistory.last).to have_attributes(
+            acting_user_id: actor.id,
+            subject: result.api_key.truncated_key,
+          )
+        end
       end
     end
 

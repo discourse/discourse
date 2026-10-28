@@ -72,13 +72,53 @@ RSpec.describe Admin::UsersController do
     expect(listed_user(bot)).not_to have_key("sources")
   end
 
-  it "omits sources when the plugin is disabled" do
+  it "omits configuration metadata for moderators while the plugin is disabled" do
     SiteSetting.discourse_ai_enabled = false
+    sign_in(moderator)
 
     get "/admin/users/list/bots.json"
 
     expect(response.status).to eq(200)
     expect(listed_user(bot)).not_to have_key("sources")
+    expect(listed_user(bot)).not_to have_key("bot_inactive")
+  end
+
+  it "keeps sources unlinked and noted when the plugin is disabled" do
+    SiteSetting.discourse_ai_enabled = false
+
+    get "/admin/users/list/bots.json"
+
+    expect(response.status).to eq(200)
+    expect(listed_user(bot)["sources"]).to eq(
+      [{ "label" => agent.name, "note" => I18n.t("discourse_ai.ai_bot.sources.plugin_disabled") }],
+    )
+  end
+
+  it "marks AI bots inactive only while the plugin is disabled" do
+    get "/admin/users/list/bots.json"
+    expect(listed_user(bot)).not_to have_key("bot_inactive")
+
+    SiteSetting.discourse_ai_enabled = false
+    get "/admin/users/list/bots.json"
+
+    expect(listed_user(bot)["bot_inactive"]).to eq(true)
+    expect(listed_user(unattributed_bot)["bot_inactive"]).to eq(false)
+  end
+
+  it "links the spam detection bot to its settings" do
+    SiteSetting.ai_spam_detection_user_id = other_bot.id
+
+    get "/admin/users/list/bots.json"
+
+    expect(response.status).to eq(200)
+    expect(listed_user(other_bot)["sources"]).to eq(
+      [
+        {
+          "label" => I18n.t("discourse_ai.ai_bot.sources.spam_detection"),
+          "url" => "/admin/plugins/discourse-ai/ai-spam",
+        },
+      ],
+    )
   end
 
   it "does not enrich other users lists" do

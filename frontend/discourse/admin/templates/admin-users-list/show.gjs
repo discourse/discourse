@@ -336,6 +336,7 @@ export default <template>
                 class="user
                   {{user.selected}}
                   {{unless user.active 'not-activated'}}
+                  {{if user.bot_inactive 'not-activated'}}
                   directory-table__row"
                 data-user-id={{user.id}}
               >
@@ -379,7 +380,12 @@ export default <template>
                   >
                     {{dAvatar user imageSize="small"}}
                   </a>
-                  <LinkTo @model={{user}} @route="adminUser">
+                  <LinkTo
+                    class="admin-users-list__username"
+                    title={{user.username}}
+                    @model={{user}}
+                    @route="adminUser"
+                  >
                     {{user.username}}
                   </LinkTo>
                   {{#if user.staged}}
@@ -395,14 +401,24 @@ export default <template>
                       class="directory-table__value admin-users-list__source-values"
                     >
                       {{#each user.sources as |source|}}
-                        <div
-                          class="admin-users-list__source-item"
-                          title={{source.label}}
-                        >
-                          {{#if source.url}}
-                            <a href={{source.url}}>{{source.label}}</a>
+                        <div class="admin-users-list__source-item">
+                          {{#if source.note}}
+                            <DTooltip
+                              class="admin-users-list__source-label"
+                              @content={{source.note}}
+                              @label={{source.label}}
+                            />
+                          {{else if source.url}}
+                            <a
+                              class="admin-users-list__source-label"
+                              href={{source.url}}
+                              title={{source.label}}
+                            >{{source.label}}</a>
                           {{else}}
-                            {{source.label}}
+                            <span
+                              class="admin-users-list__source-label"
+                              title={{source.label}}
+                            >{{source.label}}</span>
                           {{/if}}
                         </div>
                       {{else}}
@@ -419,8 +435,12 @@ export default <template>
                                 "admin.users.bots.created_by"
                                 username=user.bot_creator.username
                               }}
+                              class="admin-users-list__source-label admin-users-list__source-user"
                               href={{user.bot_creator.url}}
-                            >@{{user.bot_creator.username}}</a>
+                            >
+                              {{dAvatar user.bot_creator imageSize="tiny"}}
+                              {{user.bot_creator.username}}
+                            </a>
                           </div>
                         {{else}}
                           &mdash;

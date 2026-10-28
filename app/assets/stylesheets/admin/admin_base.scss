@@ -1142,8 +1142,9 @@ section.details {
     .directory-table__cell {
       &,
       a,
-      a:visited {
-        color: #bbb;
+      a:visited,
+      .directory-table__value {
+        color: var(--primary-low-mid);
       }
     }
   }

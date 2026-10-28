@@ -10,6 +10,14 @@ class User::CreateBot
     attribute :name, :string
     attribute :username, :string
     attribute :trust_level, :integer, default: -> { SiteSetting.default_trust_level }
+    attribute :api_key, :hash do
+      attribute :description, :string
+      attribute :scope_mode, :string
+      attribute :scopes, :array
+
+      validates :description, length: { maximum: 255 }
+      validates :scope_mode, inclusion: { in: ApiKey.scope_modes.keys }
+    end
 
     validates :name,
               presence: true,
@@ -38,6 +46,10 @@ class User::CreateBot
   transaction do
     model :user, :create_bot
     step :log_creation
+    only_if(:api_key_requested) do
+      model :api_key, :create_api_key
+      step :log_api_key_creation
+    end
   end
 
   private
@@ -71,5 +83,27 @@ class User::CreateBot
 
   def log_creation(user:, guardian:)
     StaffActionLogger.new(guardian.user).log_bot_creation(user)
+  end
+
+  def api_key_requested(params:)
+    params.api_key.present?
+  end
+
+  def create_api_key(params:, user:, guardian:)
+    ApiKey.create(
+      user:,
+      created_by: guardian.user,
+      description: params.api_key.description.presence || user.username,
+      scope_mode: params.api_key.scope_mode,
+      api_key_scopes: ApiKeyScope.build_from_params(params.api_key.scopes),
+    )
+  end
+
+  def log_api_key_creation(api_key:, guardian:)
+    StaffActionLogger.new(guardian.user).log_api_key(
+      api_key,
+      UserHistory.actions[:api_key_create],
+      changes: api_key.saved_changes,
+    )
   end
 end
