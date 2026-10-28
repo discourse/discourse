@@ -39,6 +39,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       action:user
       action:send_personal_message
       action:group
+      action:add_user_to_group
       action:ai_agent
       flow:wait
     ]
@@ -204,21 +205,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.id" => "integer",
       "post.post_url" => "string",
     )
-    expect(output_contracts_by_type.fetch("action:group")[:variants]).to include(
-      a_hash_including(
-        mode: "replace",
-        display_options: {
-          "show" => {
-            "operation" => %w[add remove],
-          },
-        },
-        fields:
-          a_hash_including(
-            "group.id" => "integer",
-            "group.name" => "string",
-            "user.username" => "string",
-          ),
-      ),
+    expect(output_fields_by_type.fetch("action:add_user_to_group")).to include(
+      "group.id" => "integer",
+      "group.name" => "string",
+      "user.username" => "string",
+      "actor.username" => "string",
+      "changed" => "boolean",
+    )
+    expect(output_contracts_by_type.fetch("action:group")[:variants]).to contain_exactly(
       a_hash_including(
         mode: "replace",
         display_options: {
@@ -378,6 +372,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(result[:nodes].pluck(:type)).to contain_exactly(
       "action:suspend_user",
       "action:silence_user",
+    )
+  end
+
+  it "includes an example adding the trigger post's author to a group" do
+    parameters = invoke_tool(%w[action:add_user_to_group])[:nodes].sole[:examples].sole[:parameters]
+
+    expect(parameters).to include(username: "={{ $json.user.username }}", group_id: 123)
+    expect(DiscourseWorkflows::Nodes::AddUserToGroup::V1.properties.keys).to include(
+      *parameters.keys,
     )
   end
 

@@ -232,6 +232,11 @@ en:
         failed: "Slow mode could not be changed on topic %{topic_id}."
       post_liking:
         failed: "The like on post %{post_id} couldn't be changed."
+      group_membership_action:
+        group_not_found: "Group %{group_id} doesn't exist."
+        automatic_group: "%{group} is an automatic group, so members can't be added to or removed from it."
+        add_not_allowed: "'%{username}' can't add members to %{group}. Only admins, group owners and moderators allowed to manage groups can."
+        remove_not_allowed: "'%{username}' can't remove members from %{group}. Only admins, group owners and moderators allowed to manage groups can."
       user_moderation_action:
         suspend_not_allowed: "'%{username}' can't suspend '%{target}'. Only staff can suspend users, and staff can't be suspended."
         unsuspend_not_allowed: "'%{username}' can't unsuspend '%{target}'. Only staff can, and only admins can unsuspend staff."

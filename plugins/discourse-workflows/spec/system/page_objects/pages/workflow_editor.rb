@@ -294,8 +294,6 @@ module PageObjects
             "revoke" => "Revoke badge",
           },
           "action:group" => {
-            "add" => "Add to group",
-            "remove" => "Remove from group",
             "get" => "Get group",
             "check_membership" => "Check membership",
           },
