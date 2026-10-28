@@ -468,6 +468,7 @@ module DiscourseWorkflows
     BADGE_SCHEMA = entity("badge", BADGE_PROPERTIES, "Badge involved in the grant event")
     BADGE_GRANTED_SCHEMA =
       document(USER_SCHEMA.fetch("properties").merge(BADGE_SCHEMA.fetch("properties")))
+    BADGE_ENTITY_SCHEMA = entity("badge", BADGE_PROPERTIES, "Badge granted or revoked")
 
     class << self
       def normalize(schema)

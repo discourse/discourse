@@ -69,6 +69,7 @@ Shape entities only with `DiscourseWorkflows::EntitySerializers` (`lib/discourse
 | Assignee (user or group) | `serialize_assignee(assignee, guardian:)` | `Schema::ASSIGNEE_PROPERTIES` |
 | Group (basic) | `serialize_basic_group(group)` | `BASIC_GROUP_PROPERTIES` |
 | Group | `serialize_group(group, guardian:)` | `Schema::GROUP_SCHEMA` |
+| Badge | `serialize_badge(badge)` | `Schema::BADGE_ENTITY_SCHEMA` / `BADGE_PROPERTIES` |
 | Any serializer | `serialize_record(record, SerializerClass, scope:)` | |
 
 - Name every helper that shapes an entity for output `serialize_<entity>` (`serialize_badge`, `serialize_group`, `serialize_timer`, `serialize_assignee`, `serialize_channel`, `serialize_event`...), never `<entity>_data`; `node_entity_builders_spec` fails on `def <entity>_data`.

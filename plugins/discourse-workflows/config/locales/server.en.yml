@@ -15,6 +15,8 @@ en:
       topic_pin_output: "The output no longer has topic_id, pinned, pinned_globally, pinned_at or banner. Use topic.id, topic.pinned and topic.pinned_globally instead, and topic.archetype, which is banner for the banner topic. Pin topic keeps pinned_until and Make banner keeps bannered_until, and the new changed is false when the topic was already in that state."
       post_like_output: "The output no longer has post_id. Use post.id instead: post now holds the whole post, including its like_count. actor and changed are unchanged."
       post_like_username: "The output no longer has username. Use actor.username instead."
+      badge_output: "The output no longer has user_id, username, badge_id or badge_name. Use user.id, user.username, badge.id and badge.name instead. changed is unchanged, and actor is new."
+      badge_revoke_all_grants: "For a badge that can be granted several times, Revoke badge removes every grant the user has (or only the one for post_id), where this node removed one."
       topic_post_removed: "The output no longer includes the topic's first post. If a later step uses post, add a Topic node with the Get operation to read it."
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
@@ -232,6 +234,13 @@ en:
         failed: "Slow mode could not be changed on topic %{topic_id}."
       post_liking:
         failed: "The like on post %{post_id} couldn't be changed."
+      badge_action:
+        badge_not_found: "Badge %{badge_id} doesn't exist."
+        grant_not_allowed: "'%{username}' can't grant badges to '%{target}'. Only staff can, and badges must be enabled."
+        revoke_not_allowed: "'%{username}' can't revoke badges from '%{target}'. Only staff can, and badges must be enabled."
+        badge_disabled: "The %{badge} badge is disabled, so it can't be granted."
+        post_not_found: "Post %{post_id} doesn't exist, or the actor can't see it."
+        grant_failed: "The %{badge} badge couldn't be granted to '%{target}'."
       group_membership_action:
         group_not_found: "Group %{group_id} doesn't exist."
         automatic_group: "%{group} is an automatic group, so members can't be added to or removed from it."

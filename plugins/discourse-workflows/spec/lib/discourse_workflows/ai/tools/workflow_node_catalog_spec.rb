@@ -384,6 +384,17 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
   end
 
+  it "includes an example granting the trigger post's author a badge for that post" do
+    parameters = invoke_tool(%w[action:grant_badge])[:nodes].sole[:examples].sole[:parameters]
+
+    expect(parameters).to include(
+      username: "={{ $json.user.username }}",
+      badge_id: 123,
+      post_id: "={{ $json.post.id }}",
+    )
+    expect(DiscourseWorkflows::Nodes::GrantBadge::V1.properties.keys).to include(*parameters.keys)
+  end
+
   it "leaves the hidden user moderation trigger out, but not its per-change triggers" do
     result = invoke_tool(%w[trigger:user_moderation_changed trigger:user_suspended])
 
