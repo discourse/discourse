@@ -119,6 +119,16 @@ RSpec.describe User::Suspend do
     end
 
     context "when everything's ok" do
+      it "checks and applies the penalty under a lock per user" do
+        DistributedMutex
+          .expects(:synchronize)
+          .with("user/suspend:user_id:#{user.id}")
+          .yields
+          .returns(:success)
+
+        expect(result).to run_successfully
+      end
+
       it "suspends all provided users" do
         result
         expect([user, other_user].map(&:reload)).to all be_suspended
