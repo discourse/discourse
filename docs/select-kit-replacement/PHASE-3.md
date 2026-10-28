@@ -31,9 +31,15 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `@exclude` never offers a category even when held, the drop searches through
     `Category.search` and draws the core caret, and rows render through `dCategoryBadge`. A
     loader that answers without a promise is no longer debounced, so no recipe sets `@debounce`.
+  - ☑ **One search (2026-10-28):** the picker loads through `Category.searchCategories`, which
+    answers from the site when every category is loaded and from `/categories/search` otherwise,
+    with the same rules and order; families are grouped with a footer each (`@groupFooter`).
   - ☑ **VoiceOver pass and visual review** across themes and color modes (2026-10-26). Rows read
     their name, topic count ("2 topics in this category") and position; searches announce the
     result count; "and all subcategories" rows read by name. Open findings:
+    - ☐ Hear again after the category cycle (2026-10-28): the descendants row became each
+      family's footer, named "%{category} (%{count} topics) and all subcategories", with the
+      badge drawn but hidden from the name.
     - ☐ Not yet heard: the read-only row itself. Opening the composer chooser with ArrowDown made
       the second row active and read nothing for it; the breadcrumb drop, opened with Enter, read
       its active row.

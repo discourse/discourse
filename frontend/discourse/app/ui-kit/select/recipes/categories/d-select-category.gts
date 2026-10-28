@@ -3,12 +3,12 @@ import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
-import type Site from "discourse/models/site";
 import DSelect from "discourse/ui-kit/select/d-select";
 import type {
+  SelectControl,
+  SelectItem,
   SelectLoadOptions,
   SelectSnapshot,
   SelectValue,
@@ -18,7 +18,6 @@ import {
   CategoryBadge,
   categoryItem,
   decodeCategoryText,
-  normalizeCategoryName,
 } from "./category-renderers.gts";
 import type {
   CategoryItem,
@@ -91,9 +90,16 @@ interface DSelectCategorySignature {
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
+/** Continues with a value now, or with a promise's value when it settles. */
+function then<T, R>(
+  value: T | Promise<T>,
+  next: (value: T) => R | Promise<R>
+): R | Promise<R> {
+  return value instanceof Promise ? value.then(next) : next(value);
+}
+
 /** Picks categories to store and leaves loading and update authority with DSelect. */
 export default class DSelectCategory extends Component<DSelectCategorySignature> {
-  @service declare site: Site;
   @service declare siteSettings: CategorySettings;
 
   get legacyKind() {
@@ -148,47 +154,35 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       descriptions: this.args.descriptions,
       multiple: this.args.multiple,
       selectDescendants: this.args.selectDescendants,
-      lazy: this.site.lazy_load_categories,
-      categories: this.site.lazy_load_categories
-        ? undefined
-        : this.site.sortedCategories,
-      fixed: this.siteSettings.fixed_category_positions_on_create,
+      treeOrder: this.#treeOrder,
+      categories: Category.localSearchCategories(),
     };
+  }
+
+  get #treeOrder(): "topics" | "position" {
+    return this.siteSettings.fixed_category_positions_on_create
+      ? "position"
+      : "topics";
   }
 
   @action
   load(query: string, opts: SelectLoadOptions) {
-    if (this.site.lazy_load_categories) {
-      return this.#loadPage(query, opts);
-    }
-    let categories: Category[] = this.siteSettings
-      .fixed_category_positions_on_create
-      ? Category.sortCategories(this.site.categories)
-      : this.site.sortedCategories;
-    const family = this.#familyId(this.args.scope ?? this.args.prioritize);
-    const allowed = this.#categoryAllowed();
-    const readOnly = new Set(this.#readOnly);
-    const term = normalizeCategoryName(query);
-    categories = categories.filter(
-      (category) =>
-        allowed(category) &&
-        (!query || this.#matches(category, term)) &&
-        (query ||
-          !this.args.scope ||
-          !family ||
-          this.#inFamily(category, family) ||
-          readOnly.has(category.id!))
+    // The pinned rows and the family ids below read these records synchronously from the site.
+    const ids = [
+      ...[this.args.scope, this.args.prioritize].map((value) =>
+        this.#idOf(value)
+      ),
+      ...this.#readOnly,
+    ].filter((id) => id != null);
+    return then(Category.findByIdsOrLoad(ids), () =>
+      // The scope's family root may be a parent the first lookup did not cover.
+      then(
+        Category.findByIdsOrLoad(
+          [this.#familyId(this.args.scope)].filter((id) => id != null)
+        ),
+        () => this.#search(query, opts)
+      )
     );
-    if (!query && this.args.prioritize && family && !this.args.scope) {
-      const prioritized: Category[] = [];
-      const rest: Category[] = [];
-      for (const category of categories) {
-        const target = this.#inFamily(category, family) ? prioritized : rest;
-        target.push(category);
-      }
-      categories = prioritized.concat(rest);
-    }
-    return this.#rows(categories, query);
   }
 
   @action
@@ -209,10 +203,30 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         onSelect: (control) => control.clear(),
       });
     }
-    if (this.site.lazy_load_categories && !this.args.load) {
-      rows.push(...this.#rows(this.#pinned(snapshot.filter), snapshot.filter));
+    if (!this.args.load) {
+      rows.push(...this.#pinned(snapshot.filter));
     }
     return rows;
+  }
+
+  /**
+   * A family's footer selects its key category and every level below it. It is offered only
+   * when the key category is among the family's rows, so it never acts on a family the search
+   * did not show.
+   */
+  @action
+  groupFooter(key: unknown, rows: readonly SelectItem[]): CategoryItem | null {
+    const row = key == null ? undefined : rows.find((item) => item.id === key);
+    const category = (row as CategoryItem | undefined)?.category;
+    if (!category || row!.disabled) {
+      return null;
+    }
+    return {
+      id: `category-descendants-${category.id}`,
+      name: this.#footerLabel(category),
+      category,
+      onSelect: (control) => this.#selectFamily(control, category),
+    };
   }
 
   @action
@@ -223,28 +237,15 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   }
 
   #categoryAllowed() {
-    const readOnly = new Set(this.#readOnly);
     const excluded = new Set((this.args.exclude ?? []).map(Number));
     const onlyPostable = this.args.permission === "create";
     const uncategorized = this.#uncategorized;
     const subcategories = this.args.subcategories !== false;
     return (category: Category) =>
-      readOnly.has(category.id!) ||
-      ((!onlyPostable || category.canCreateTopic) &&
-        (uncategorized || !category.isUncategorizedCategory) &&
-        (subcategories || !category.parent_category_id) &&
-        !excluded.has(category.id!));
-  }
-
-  #matches(category: Category, term: string) {
-    if (normalizeCategoryName(category.name ?? "").includes(term)) {
-      return true;
-    }
-    return (
-      !this.args.multiple &&
-      !!category.parentCategory &&
-      normalizeCategoryName(category.parentCategory.name ?? "").includes(term)
-    );
+      (!onlyPostable || category.canCreateTopic) &&
+      (uncategorized || !category.isUncategorizedCategory) &&
+      (subcategories || !category.parent_category_id) &&
+      !excluded.has(category.id!);
   }
 
   #idOf(value?: CategoryValue | null) {
@@ -257,23 +258,29 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return category?.parent_category_id || category?.id;
   }
 
-  /** Lazy rows the server pages leave out: the scope's family root while browsing, and read-only categories. */
-  #pinned(query: string): Category[] {
-    const term = normalizeCategoryName(query);
-    const root = query
-      ? []
-      : [this.#familyId(this.args.scope)].filter((id) => id != null);
-    const readOnly = Category.findByIds(this.#readOnly).filter(
-      (category) => !query || this.#matches(category, term)
+  /**
+   * Rows the search leaves out. A scope lists its family's children, so its root is pinned
+   * while browsing. Read-only categories are excluded from the search, so they are always
+   * offered as disabled rows whenever they match, and are never grouped or given a footer.
+   */
+  #pinned(query: string): CategoryItem[] {
+    const root = query ? undefined : this.#familyId(this.args.scope);
+    const roots = Category.findByIds(root == null ? [] : [root]).filter(
+      this.#categoryAllowed()
     );
-    return uniqueItemsFromArray([
-      ...Category.findByIds(root),
-      ...readOnly,
-    ]).filter(this.#categoryAllowed());
-  }
-
-  #inFamily(category: Category, id: number) {
-    return category.id === id || category.parent_category_id === id;
+    const readOnly = Category.findByIds(this.#readOnly).filter((category) =>
+      Category.matchesSearch(category, query)
+    );
+    const descriptions = this.args.descriptions ?? !this.args.multiple;
+    const readOnlyDescription = i18n("category_row.read_only_description");
+    return [...new Set([...roots, ...readOnly])].map((category) => {
+      const row = categoryItem(category, descriptions);
+      if (readOnly.includes(category)) {
+        row.disabled = true;
+        row.description = readOnlyDescription;
+      }
+      return row;
+    });
   }
 
   #offersDescendants(query: string) {
@@ -285,73 +292,15 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
-  #rows(categories: Category[], query: string): CategoryItem[] {
-    const descendantsEnabled = this.#offersDescendants(query);
-    const byParent = descendantsEnabled
-      ? this.site.categoriesByParentId
-      : undefined;
-    const readOnly = new Set(this.#readOnly);
-    const descriptions = this.args.descriptions ?? !this.args.multiple;
-    const readOnlyDescription = i18n("category_row.read_only_description");
-    const items: CategoryItem[] = [];
-    for (const category of categories) {
-      const isReadOnly = readOnly.has(category.id!);
-      const row = categoryItem(category, descriptions);
-      row.disabled = isReadOnly;
-      row.description = isReadOnly ? readOnlyDescription : row.description;
-      items.push(row);
-      if (
-        !descendantsEnabled ||
-        isReadOnly ||
-        !(category.has_children || byParent?.has(category.id))
-      ) {
-        continue;
-      }
-      items.push({
-        id: `category-descendants-${category.id}`,
-        name: i18n("category.select_with_subcategories", {
-          category: category.name,
-        }),
-        category,
-        onSelect: (control) => {
-          void control.update(async (scope) => {
-            const descendants: Category[] =
-              await Category.asyncFindDescendants(category);
-            const allowed = this.#categoryAllowed();
-            const locked = new Set(this.#readOnly);
-            scope.selectMany(
-              descendants
-                .filter((child) => !locked.has(child.id!) && allowed(child))
-                .map((child) => categoryItem(child))
-            );
-          });
-        },
-      });
-    }
-    return items;
-  }
-
-  async #loadPage(query: string, opts: SelectLoadOptions) {
-    const page = typeof opts.cursor === "number" ? opts.cursor : 1;
-    // `#pinned` and the family ids below read these records synchronously from the site.
-    await Category.asyncFindByIds(
-      [
-        ...[this.args.scope, this.args.prioritize].map((value) =>
-          this.#idOf(value)
-        ),
-        ...this.#readOnly,
-      ].filter((id) => id != null)
-    );
-    // The scope's family root may be a parent the first lookup did not cover.
-    await Category.asyncFindByIds(
-      [this.#familyId(this.args.scope)].filter((id) => id != null)
-    );
-    const { categories, categoriesCount } = await Category.asyncSearch(query, {
+  #search(query: string, opts: SelectLoadOptions) {
+    const groupFamilies = this.#offersDescendants(query);
+    const search = Category.searchCategories(query, {
+      groupFamilies: groupFamilies || undefined,
       includeAncestors: true,
       includeSubcategories: this.args.subcategories !== false,
       includeUncategorized: this.#uncategorized,
       onlyPostable: this.args.permission === "create",
-      page,
+      page: opts.page,
       parentCategoryId: query ? undefined : this.#familyId(this.args.scope),
       prioritizedCategoryId: query
         ? undefined
@@ -362,12 +311,49 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
           ...this.#readOnly,
         ]),
       ],
+      treeOrder: query ? undefined : this.#treeOrder,
     });
-    const items = this.#rows(categories, query);
-    // Descendant rows outnumber the categories, so the server's count cannot size the list.
-    return this.#offersDescendants(query)
-      ? { items, cursor: page + 1, hasMore: categories.length > 0 }
-      : { items, cursor: page + 1, total: categoriesCount };
+    const descriptions = this.args.descriptions ?? !this.args.multiple;
+    return then(search, ({ categories, categoriesCount, familyKeys }) => ({
+      items: categories.map((category) => {
+        const row = categoryItem(category, descriptions);
+        if (groupFamilies && familyKeys) {
+          row.familyKey = familyKeys[category.id!];
+        }
+        return row;
+      }),
+      total: categoriesCount,
+    }));
+  }
+
+  /**
+   * The footer names its category's own topic count, as the badge it draws shows it. The badge
+   * draws no count of zero, so neither does the label.
+   */
+  #footerLabel(category: Category) {
+    const count = category.topic_count;
+    return count
+      ? i18n("category.select_with_subcategories_count", {
+          category: category.displayName,
+          count,
+        })
+      : i18n("category.select_with_subcategories", {
+          category: category.displayName,
+        });
+  }
+
+  #selectFamily(control: SelectControl, category: Category) {
+    void control.update(async (scope) => {
+      const descendants: Category[] =
+        await Category.asyncFindDescendants(category);
+      const allowed = this.#categoryAllowed();
+      const locked = new Set(this.#readOnly);
+      scope.selectMany(
+        descendants
+          .filter((child) => !locked.has(child.id!) && allowed(child))
+          .map((child) => categoryItem(child))
+      );
+    });
   }
 
   <template>
@@ -376,6 +362,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @clearable={{@clearable}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
+      @groupBy="familyKey"
+      @groupDividers={{false}}
+      @groupFooter={{this.groupFooter}}
       @icon={{@icon}}
       @id={{@id}}
       @identifier={{@identifier}}
@@ -411,6 +400,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
           <CategoryBadge @ancestors={{true}} @counts={{true}} @item={{item}} />
         {{/if}}
       </:item>
+      <:groupFooter as |item|>
+        <CategoryBadge @counts={{true}} @family={{true}} @item={{item}} />
+      </:groupFooter>
       <:selection as |item options|>
         {{#if (has-block "selection")}}
           {{yield item options to="selection"}}

@@ -670,8 +670,8 @@ Presentation:
 Shared helpers outside the engine: `makeArray` (`lib/helpers.ts`) normalizes one-or-many values,
 `removeAccents` (`lib/utilities.js`) folds accents, and the `ui-kit/helpers/` badges
 (`dCategoryBadge`, `dDiscourseTag`) render domain rows. A domain model's statics, such as
-`Category.findByIds`, `asyncFindByIds`, `search`, `asyncSearch` and `asyncFindDescendants`,
-answer lookups and searches; a recipe calls them instead of wrapping them in a `lib/*-source`
+`Category.findByIds`, `findByIdsOrLoad`, `asyncFindByIds`, `search`, `searchCategories`,
+`matchesSearch` and `asyncFindDescendants`, answer lookups and searches; a recipe calls them instead of wrapping them in a `lib/*-source`
 module.
 
 #### Tag recipes
@@ -725,13 +725,16 @@ The category family has two recipes:
     with several lists passes each list only the categories the other lists hold.
   - `@scope`, `@prioritize` and `@readOnly` are the composer's rules. While browsing, scope and
     prioritize act one level up: the category's parent and that parent's children.
-    `@readOnly` categories show as disabled rows, described as read-only, and stay listed while
-    a search matches them.
+    `@readOnly` categories show as disabled rows at the top, described as read-only, and stay
+    listed while a search matches them.
   - `@placeholder` is the trigger text with no value. `@noneLabel` adds a selectable "none" row
     instead.
   - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.
-  - `@selectDescendants` (the default when multiple) adds an "and all subcategories" row to
-    matches that have children, once the filter is two or more characters long.
+  - `@selectDescendants` (the default when multiple) groups a search of two or more characters
+    by family and ends each family with a footer row that adds the category and every level
+    below it. The footer draws the category's badge with its topic count and "+ Subcategories",
+    and its label speaks the same words. A family gets a footer only when its own category is
+    among the results, is not disabled, and has a descendant the list could offer.
 - **`DSelectCategoryFilter`** (kind `select-category-filter`) narrows a topic list, one level at
   a time. Its value is a category, `ALL_CATEGORIES_ID` or `NO_CATEGORIES_ID` (exported by the
   module), and `@parentCategory` names the level. `@items` is the caller's list for the level, so
@@ -742,13 +745,19 @@ The category family has two recipes:
   `:footer` block receives the number left out and the parent, so the caller can link to the
   rest.
 
-When the site preloads its categories, both recipes answer from them without a request,
-returning every matching row for the engine to window: the picker in the site's order, the drop
-in its caller's `@items` order while browsing and in `Category.search`'s ranking while searching.
-A site that loads categories lazily pages `Category.asyncSearch` instead (the drop then ignores
-`@items`), leaves every rule to the server, and keeps the server's order; the scope's own category and read-only categories, which the server pages
-leave out, are special rows. Held ids resolve through `Category.asyncFindByIds` either way, and
-"and all subcategories" walks the tree through `Category.asyncFindDescendants`.
+The picker has one loader, `Category.searchCategories`, which answers from the site without a
+request when every category is loaded and asks `/categories/search` otherwise. Both answers use
+the same rules and order: browsing lists each category after its parent, siblings by topic count
+(or by position when `fixed_category_positions_on_create` is on); a search ranks the server's way
+and keeps each family together. A preloaded site answers synchronously with every match at once,
+for the engine to window, so typing never waits for the input delay; a lazy site pages by
+`opts.page`. The scope's own category and the read-only categories, which the search leaves out,
+are special rows. Held ids resolve through `Category.asyncFindByIds`, and a family's footer walks
+the tree through `Category.asyncFindDescendants`.
+
+The drop answers from its caller's `@items` while browsing and from `Category.search`'s ranking
+while searching on a preloaded site, and pages `Category.asyncSearch` on a lazy one (ignoring
+`@items`).
 
 Until cleanup, `DSelectCategory` defaults `@legacyKind` to `category-chooser` (single) or
 `category-selector` (multiple), and the filter to `category-drop`. Call sites that replaced other

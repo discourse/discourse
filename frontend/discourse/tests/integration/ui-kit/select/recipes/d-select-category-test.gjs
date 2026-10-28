@@ -6,6 +6,7 @@ import {
   find,
   findAll,
   render,
+  rerender,
   settled,
   triggerEvent,
   triggerKeyEvent,
@@ -13,6 +14,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
@@ -320,7 +322,7 @@ module(
     });
 
     module("browsing", function () {
-      test("lists every visible category in activity order", async function (assert) {
+      test("lists every visible category in tree order, siblings by topic count", async function (assert) {
         const expected = Site.current().sortedCategories.map((category) =>
           String(category.id)
         );
@@ -332,7 +334,7 @@ module(
         assert.deepEqual(
           optionValues(),
           expected.slice(0, optionValues().length),
-          "in activity order"
+          "in tree order"
         );
       });
 
@@ -486,7 +488,7 @@ module(
         assert.true(optionValues().includes("1"));
       });
 
-      test("prioritize lists that family first, then everything else", async function (assert) {
+      test("prioritize lists that subtree first, then everything else", async function (assert) {
         this.siteSettings.allow_uncategorized_topics = true;
         const total = Site.current().sortedCategories.length;
 
@@ -571,7 +573,7 @@ module(
     });
 
     module("searching", function () {
-      test("single mode matches the name or the parent name, ignoring case", async function (assert) {
+      test("single mode matches the name, ignoring case", async function (assert) {
         await render(<template><Host @multiple={{false}} /></template>);
         await select().open();
 
@@ -580,9 +582,9 @@ module(
 
         await select().search("feature");
         assert.deepEqual(
-          optionValues().sort(),
-          ["2", "26"],
-          "a child matches through its parent"
+          optionValues(),
+          ["2"],
+          "a child no longer matches through its parent's name"
         );
       });
 
@@ -925,12 +927,7 @@ module(
         await select().open();
         await select().search("Parent Category");
 
-        assert.strictEqual(
-          findAll("[role='option']").length,
-          2,
-          "only the name and parent-name matches"
-        );
-        assert.deepEqual(optionValues().sort(), ["1001", "1002"]);
+        assert.deepEqual(optionValues(), ["1001"], "only the name match");
       });
 
       test("no descendants rows when subcategories are left out", async function (assert) {
@@ -943,6 +940,223 @@ module(
         await select().search("Parent Category");
 
         assert.deepEqual(optionValues(), ["1001"], "only the category itself");
+      });
+    });
+
+    module("family footers", function () {
+      test("each family's footer follows its last row, and a second level gets its own", async function (assert) {
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+        await select().search("Category");
+
+        assert.deepEqual(optionValues(), [
+          "1001",
+          "category-descendants-1001",
+          "1002",
+          "1003",
+          "category-descendants-1002",
+        ]);
+        assert
+          .dom(".d-select__option.--action-footer")
+          .exists({ count: 2 }, "both footers are group footers");
+        assert.dom(".d-select__divider").doesNotExist("no dividers");
+      });
+
+      test("a footer needs its key category among the results", async function (assert) {
+        Site.current().updateCategories([
+          { id: 9950, name: "Orchard", slug: "orchard", permission: 1 },
+          {
+            id: 9951,
+            name: "Apple tree",
+            slug: "apple-tree",
+            parent_category_id: 9950,
+            permission: 1,
+          },
+          {
+            id: 9952,
+            name: "Apple seed",
+            slug: "apple-seed",
+            parent_category_id: 9951,
+            permission: 1,
+          },
+        ]);
+
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+        await select().search("seed");
+
+        assert.deepEqual(optionValues(), ["9952"], "only the child matched");
+      });
+
+      test("no footer for a leaf, Uncategorized, or a family whose descendants are all excluded", async function (assert) {
+        const exclude = [1002, 1003];
+
+        await render(
+          <template>
+            <div class="plain"><Host @multiple={{true}} /></div>
+            <div class="excluded"><Host
+                @exclude={{exclude}}
+                @multiple={{true}}
+              /></div>
+          </template>
+        );
+
+        await select(".plain").open();
+        await select(".plain").search("bug");
+        assert.deepEqual(optionValues(), ["1"], "a top-level leaf");
+        await select(".plain").search("uncategorized");
+        assert.deepEqual(optionValues(), ["17"], "Uncategorized");
+        await select(".plain").close();
+
+        await select(".excluded").open();
+        await select(".excluded").search("Parent Category");
+        assert.deepEqual(optionValues(), ["1001"], "nothing to add below it");
+      });
+
+      test("a family reached through an excluded child still gets a footer", async function (assert) {
+        const exclude = [1002];
+
+        await render(
+          <template><Host @exclude={{exclude}} @multiple={{true}} /></template>
+        );
+        await select().open();
+        await select().search("Parent Category");
+
+        assert.deepEqual(optionValues(), ["1001", "category-descendants-1001"]);
+      });
+
+      test("a disabled category gets no footer", async function (assert) {
+        await render(
+          <template><Host @multiple={{true}} @readOnly={{1001}} /></template>
+        );
+        await select().open();
+        await select().search("Parent Category");
+
+        assert.dom(optionFor(1001)).hasAttribute("aria-disabled", "true");
+        assert
+          .dom("[data-value='category-descendants-1001']")
+          .doesNotExist("the bulk action never runs for it");
+      });
+
+      test("the footer draws its category's badge, count and subcategories, all named in its label", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+        await select().search("Category");
+
+        for (const id of [1001, 1002]) {
+          const footer = find(`[data-value='category-descendants-${id}']`);
+          const drawing = footer.querySelector("[aria-hidden='true']");
+          assert
+            .dom(".badge-category__name", drawing)
+            .hasText(Category.findById(id).name, "the family's own badge");
+          assert
+            .dom(".plus-subcategories", drawing)
+            .exists("it says the subcategories are included");
+          assert
+            .dom(".badge-category__wrapper", drawing)
+            .exists({ count: 1 }, "no ancestor badges");
+
+          const name = accessibleName(footer).toLowerCase();
+          assert.true(name.includes("95"), `the count is spoken: ${name}`);
+          for (const word of drawing.textContent.match(/[\p{L}\p{N}]+/gu)) {
+            assert.true(
+              name.includes(word.toLowerCase()),
+              `"${word}" is in the name "${name}"`
+            );
+          }
+        }
+      });
+
+      test("picking a footer adds the family and every level below it", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <Host @emit="ids" @multiple={{true}} @onChange={{onChange}} />
+          </template>
+        );
+        await select().open();
+        await select().search("Category");
+        await click("[data-value='category-descendants-1002']");
+
+        assert.deepEqual(onChange.lastCall.args[0], [1002, 1003]);
+      });
+
+      test("an eager site answers locally, without a request or an input delay", async function (assert) {
+        let requests = 0;
+        pretender.post("/categories/search", () => {
+          requests++;
+          return response({ categories: [], categories_count: 0 });
+        });
+
+        // A loader that answers with a promise gets the input delay and the loading rows.
+        const answers = [];
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-category", (spec) =>
+              spec.load((load) => (query, opts) => {
+                const answer = load(query, opts);
+                answers.push(typeof answer?.then === "function");
+                return answer;
+              })
+            );
+          })
+        );
+
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+
+        // Dispatched raw: `fillIn` awaits `settled()`, which would wait out any debounce.
+        const input = filterInput();
+        input.value = "bug";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        await rerender();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        await rerender();
+
+        assert.deepEqual(
+          optionValues(),
+          ["1"],
+          "the list already shows its answer"
+        );
+        await settled();
+        assert.deepEqual(answers, [false, false], "every load answers at once");
+        assert.strictEqual(requests, 0, "no search request");
+      });
+
+      test("an eager list loads every category at once", async function (assert) {
+        enableVirtualization();
+        const search = sinon.spy(Category, "searchCategories");
+        try {
+          const categories = setPagedCategories();
+          await render(
+            <template><DSelectCategory @multiple={{true}} /></template>
+          );
+          await dSelect().open();
+          const list = find(".d-virtual-list");
+          list.scrollTop = list.scrollHeight;
+          await triggerEvent(list, "scroll");
+          await settledAfterFrame();
+
+          assert.strictEqual(
+            search.callCount,
+            1,
+            "one load answers the whole list"
+          );
+          assert
+            .dom(optionFor(categories.at(-1).id))
+            .hasAttribute("aria-posinset", String(categories.length))
+            .hasAttribute(
+              "aria-setsize",
+              String(categories.length),
+              "the last category is reached without another load"
+            );
+        } finally {
+          search.restore();
+          disableVirtualization();
+        }
       });
     });
 
@@ -1031,6 +1245,141 @@ module(
         assert.dom(optionFor(3)).hasAttribute("aria-disabled", "true");
       });
 
+      test("searches ask for families and browsing asks for tree order, exactly when they apply", async function (assert) {
+        const requests = stubServer(this.table);
+
+        await render(
+          <template>
+            <div class="multiple"><Host @multiple={{true}} /></div>
+            <div class="single"><Host @multiple={{false}} /></div>
+            <div class="flat"><Host
+                @multiple={{true}}
+                @subcategories={{false}}
+              /></div>
+            <div class="manual"><Host
+                @multiple={{true}}
+                @selectDescendants={{false}}
+              /></div>
+          </template>
+        );
+        const sent = () => {
+          const params = requests.at(-1);
+          return [params.get("group_families"), params.get("tree_order")];
+        };
+
+        await select(".multiple").open();
+        await settled();
+        assert.deepEqual(sent(), [null, "topics"], "browsing is in tree order");
+        await select(".multiple").search("b");
+        await settled();
+        assert.deepEqual(
+          sent(),
+          [null, null],
+          "one character asks for neither"
+        );
+        await select(".multiple").search("bu");
+        await settled();
+        assert.deepEqual(sent(), ["true", null], "a search groups families");
+        await select(".multiple").close();
+
+        for (const scope of [".single", ".flat", ".manual"]) {
+          await select(scope).open();
+          await select(scope).search("bu");
+          await settled();
+          assert.deepEqual(sent(), [null, null], `${scope} offers no footers`);
+          await select(scope).close();
+        }
+
+        this.siteSettings.fixed_category_positions_on_create = true;
+        await select(".single").open();
+        await settled();
+        assert.deepEqual(
+          sent(),
+          [null, "position"],
+          "fixed positions browse by position"
+        );
+      });
+
+      test("the last family's footer waits for its next page", async function (assert) {
+        enableVirtualization();
+        try {
+          const filler = Array.from({ length: 22 }, (_, index) => ({
+            id: 9700 + index,
+            name: `Album ${index}`,
+            slug: `album-${index}`,
+            permission: 1,
+          }));
+          const families = [
+            { id: 9800, name: "Alpha", slug: "alpha", permission: 1 },
+            {
+              id: 9801,
+              name: "Alpha one",
+              slug: "alpha-one",
+              parent_category_id: 9800,
+              permission: 1,
+            },
+            { id: 9802, name: "Alpine", slug: "alpine", permission: 1 },
+            {
+              id: 9803,
+              name: "Alpine one",
+              slug: "alpine-one",
+              parent_category_id: 9802,
+              permission: 1,
+            },
+          ];
+          const rows = [...filler, ...families];
+          const familyKeys = { 9800: 9800, 9801: 9800, 9802: 9802, 9803: 9802 };
+          const pages = [];
+          pretender.post("/categories/search", (request) => {
+            const params = new URLSearchParams(request.requestBody);
+            const page = Number(params.get("page") || 1);
+            pages.push(page);
+            const categories = rows.slice((page - 1) * 25, page * 25);
+            return response({
+              categories_count: rows.length,
+              categories,
+              ancestors: [],
+              family_keys: Object.fromEntries(
+                categories.map((row) => [row.id, familyKeys[row.id] ?? null])
+              ),
+            });
+          });
+
+          await render(
+            <template><DSelectCategory @multiple={{true}} /></template>
+          );
+          await dSelect().open();
+          await dSelect().search("Al");
+          await settled();
+          assert.strictEqual(
+            setSize(),
+            rows.length + 1,
+            "the finished family's footer counts, the last family's does not"
+          );
+
+          const list = find(".d-virtual-list");
+          list.scrollTop = list.scrollHeight;
+          await triggerEvent(list, "scroll");
+          await settledAfterFrame();
+          list.scrollTop = list.scrollHeight;
+          await triggerEvent(list, "scroll");
+          await settledAfterFrame();
+
+          assert.true(pages.includes(2), "the next page loaded");
+          assert.deepEqual(optionValues().slice(-6), [
+            "9800",
+            "9801",
+            "category-descendants-9800",
+            "9802",
+            "9803",
+            "category-descendants-9802",
+          ]);
+          assert.strictEqual(setSize(), rows.length + 2, "the footer lands");
+        } finally {
+          disableVirtualization();
+        }
+      });
+
       test("a held id the site has not loaded is fetched", async function (assert) {
         pretender.get("/categories/find", () =>
           response({
@@ -1099,7 +1448,7 @@ module(
         );
       });
 
-      test("single searching includes a child matching its parent's name without an action row", async function (assert) {
+      test("single searching matches names only, without an action row", async function (assert) {
         await render(
           <template><DSelectCategory @multiple={{false}} /></template>
         );
@@ -1107,8 +1456,8 @@ module(
         await dSelect().search("Parent Category");
         assert.deepEqual(
           optionValues(),
-          ["1001", "1002"],
-          "both category matches remain"
+          ["1001"],
+          "a child no longer matches through its parent's name"
         );
         assert.false(
           findAll("[role='option']").some((row) =>
@@ -1118,7 +1467,7 @@ module(
         );
       });
 
-      test("prioritizing a family still respects uncategorized", async function (assert) {
+      test("prioritizing a subtree still respects uncategorized", async function (assert) {
         this.siteSettings.allow_uncategorized_topics = false;
         await render(
           <template>
@@ -1129,7 +1478,7 @@ module(
         assert.deepEqual(
           optionValues().slice(0, 4),
           ["5", "22", "6", "21"],
-          "family first"
+          "the subtree first"
         );
         assert.strictEqual(
           Number(find("[role='option']").getAttribute("aria-setsize")),
@@ -1324,6 +1673,9 @@ module(
             categories_count: categories.length,
             categories,
             ancestors: [],
+            ...(params.get("group_families") === "true" && {
+              family_keys: { 9900: 9900 },
+            }),
           });
         });
         const exclude = [9901];
@@ -1376,6 +1728,7 @@ module(
               },
             ],
             ancestors: [],
+            family_keys: { 9900: 9900 },
           });
         });
         const value = tracked([]);
@@ -1464,7 +1817,7 @@ module(
         );
       });
 
-      test("fixed creation positions keep the site's order", async function (assert) {
+      test("fixed creation positions browse in tree order by position", async function (assert) {
         Site.current().updateCategories([
           {
             id: 9900,
@@ -1649,7 +2002,7 @@ module(
         );
       });
 
-      test("local descendant actions keep their count and adjacency across pages", async function (assert) {
+      test("local family footers follow each family and keep their count", async function (assert) {
         enableVirtualization();
         try {
           const categories = Array.from({ length: 61 }, (_, index) => {
@@ -1688,17 +2041,19 @@ module(
             await triggerEvent(list, "scroll");
             await settledAfterFrame();
           }
-          const actionRow = find("[data-value='category-descendants-99120']");
+          const actionRow = find("[data-value='category-descendants-99118']");
           assert.strictEqual(
             actionRow.previousElementSibling.dataset.value,
-            "99120"
+            "99119",
+            "the footer follows the family's last row"
           );
           assert.strictEqual(
             actionRow.nextElementSibling.dataset.value,
-            "99121"
+            "99120",
+            "the next family starts after it"
           );
           await click(actionRow);
-          assert.deepEqual(onChange.lastCall.args[0], [99120, 99121]);
+          assert.deepEqual(onChange.lastCall.args[0], [99118, 99119]);
         } finally {
           disableVirtualization();
         }
@@ -1728,7 +2083,7 @@ module(
             categories
               .slice(0, optionValues().length)
               .map((category) => String(category.id)),
-            "the window starts in activity order"
+            "the window starts in search order"
           );
         } finally {
           disableVirtualization();

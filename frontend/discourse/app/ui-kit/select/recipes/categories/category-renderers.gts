@@ -42,9 +42,12 @@ export function categoryItem(
   };
 }
 
-/** The category a row renders as a badge; action rows render their label instead. */
-function record(item: SelectItem): Category | undefined {
-  if (item.onSelect) {
+/**
+ * The category a row renders as a badge. Action rows render their label instead, except a
+ * family footer, which draws its own category.
+ */
+function record(item: SelectItem, family?: boolean): Category | undefined {
+  if (item.onSelect && !family) {
     return;
   }
   return (
@@ -81,14 +84,17 @@ export const CategoryBadge: TemplateOnlyComponent<{
     counts?: boolean;
     /** Includes subcategories in the option's topic count. */
     countSubcategories?: boolean;
+    /** Draws a family footer: the action row's own category, marked as including subcategories. */
+    family?: boolean;
   };
 }> = <template>
-  {{#let (record @item) as |category|}}
+  {{#let (record @item @family) as |category|}}
     {{#if category}}
       {{dCategoryBadge
         category
         allowUncategorized=true
         ancestors=(if @ancestors category.predecessors)
+        hasSubcategories=@family
         hideParent=true
         readOnly=@item.disabled
         topicCount=(topicCount category @counts @countSubcategories)

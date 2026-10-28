@@ -5578,6 +5578,9 @@ en:
 
     category:
       select_with_subcategories: "%{category} and all subcategories"
+      select_with_subcategories_count:
+        one: "%{category} (%{count} topic) and all subcategories"
+        other: "%{category} (%{count} topics) and all subcategories"
       none: "(no category)"
       all: "All categories"
       choose: "Category&hellip;"

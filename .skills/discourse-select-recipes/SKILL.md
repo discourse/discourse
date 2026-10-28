@@ -19,7 +19,8 @@ Do all of this before the first line of recipe code, and note what you found:
    `d-select.gts` for anything you plan to rely on.
 2. **The domain model.** Read the model's statics and getters, not only its fields. For
    categories that is `frontend/discourse/app/models/category.ts` (`findById`, `findByIds`,
-   `asyncFindByIds`, `findUncategorized`, `search`, `asyncSearch`, `asyncFindDescendants`,
+   `findByIdsOrLoad`, `asyncFindByIds`, `findUncategorized`, `search`, `searchCategories`,
+   `matchesSearch`, `localSearchCategories`, `asyncSearch`, `asyncFindDescendants`,
    `listByActivity`, `sortCategories`) and its instance getters (`descendants`, `subcategories`,
    `isParent`, `canCreateTopic`, `isUncategorizedCategory`). That list is a start, not the
    whole model. Note what each member caches, what it writes to the site, and its defaults
@@ -42,6 +43,7 @@ Each of these means existing code is being re-implemented. Use the alternative, 
 | Slicing rows by `offset`, computing `total`/`hasMore` from positions, a page size constant | Return the full array from a client loader; for a server, return `{ items, total, cursor }` and let the engine page |
 | A cursor object that counts received rows | `total` (or `hasMore` when rows and records differ); the engine counts |
 | A cursor that counts pages, or a page computed from `offset` | `opts.page`, the engine's 1-based count of settled pages |
+| One loader for a preloaded site and another for a lazy one, or a `lazy` flag in `@loadContext` | One loader over a model static that answers with a value or a promise (`Category.searchCategories`); a value keeps the list synchronous |
 | De-duplicating rows (`findIndex`, `Set` of seen ids) across pages | The engine de-duplicates by key |
 | Extra rows after a record (an action on its family, a "more" row), or `hasMore` given only because of them | Group the family with `@groupBy` and return the row from `@groupFooter`; the engine places, keys and counts it, and never pages on it |
 | Injecting extra rows into a page and correcting `total` | `@specialItems`, with the source leaving those rows out. `@specialItems` is synchronous, so a lazy loader resolves the records those rows need before it answers; the list is built only after the load resolves |

@@ -298,8 +298,10 @@ customization ports are done.
   - Categories, 2026-10-26: the filter keeps select-kit's lowercase strings (`categories`,
     `subcategories`, `no subcategories`, `remove filter`, `view all`), as the tag filter does, so
     the navigation bar reads the same in both modes. Its level name has no override yet (the gap
-    in `PATCH-MATRIX.md`). The new "%{category} and all subcategories" row name is a placeholder
-    string, so translations can reorder it.
+    in `PATCH-MATRIX.md`). The family footer's names, "%{category} and all subcategories"
+    (`category.select_with_subcategories`) and "%{category} (%{count} topics) and all
+    subcategories" (`category.select_with_subcategories_count`), are placeholder strings, so
+    translations can reorder them.
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
   to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each
@@ -342,7 +344,7 @@ customization ports are done.
   | `.category-row .category-desc` | `.d-select__option-description` |
   | `.category-row .topic-count`, `.read-only` | `.d-select__option .topic-count`, `.read-only` |
   | `.select-kit-row[data-value="all-categories"]`, `[data-value="no-categories"]` | `.d-select__option` with the same `data-value` |
-  | `.plus-subcategories` | None: the descendants row is a plain-text option, `[data-value^="category-descendants-"]` |
+  | `.plus-subcategories` | The same class, inside the family footer `.d-select__option.--action-footer[data-value^="category-descendants-"]` |
   | `.selected-choice-category` | `.d-select__chip` |
   | `.category-drop-footer` | The same class, inside `.d-select__footer`; the breadcrumbs render it |
 
@@ -370,6 +372,25 @@ Open items need a decision after manual testing; the rest are intended but still
   "+N more" for a long level.
 - [ ] **"+ Subcategories" includes every level.** In lazy mode the legacy row missed
   grandchildren; the new one adds the whole tree, minus excluded categories.
+- [ ] **"+ Subcategories" follows each family.** The legacy selector offered the row only when
+  one category matched or the first match had the exact name, right below it. The new picker
+  groups every search of two or more characters by family and ends each family with its own
+  footer, at every level, drawn with the category's badge and topic count.
+- [ ] **Browsing is in tree order on lazy sites too.** The legacy lazy chooser kept the server's
+  order: top-level categories first, then by id. Both modes now list each category after its
+  parent, with siblings by topic count, or by position when `fixed_category_positions_on_create`
+  is on. On lazy sites, a category whose parent the user cannot see is listed as a top-level
+  category.
+- [ ] **Searching ranks the server's way in both modes.** The legacy eager chooser filtered its
+  activity order; the new one ranks prefix matches and top-level categories first, as the server
+  does, and keeps each family together.
+- [ ] **Single choosers match the category's own name.** The legacy eager chooser also matched a
+  subcategory by its parent's name. Lazy sites never did, and now neither mode does.
+- [ ] **`_` and `%` match literally.** On a lazy site, the legacy search treated them as
+  wildcards, so `_` matched every category.
+- [ ] **Read-only categories are listed at the top.** The legacy eager chooser kept the
+  composer's read-only category in its sorted place; it is now a disabled row above the list in
+  both modes, as it already was on lazy sites.
 - [ ] **Reopening the chooser cancels a pending pick.** A row that picks asynchronously (a
   suggestion request, for example) is cancelled when the list reopens, by a later pick, or when
   the control goes away. The legacy chooser applied the result unless the value had changed.
