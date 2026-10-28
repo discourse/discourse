@@ -39,6 +39,7 @@ after_initialize do
       [
         DiscourseWorkflows::Nodes::TopicReceivedVote::V1,
         DiscourseWorkflows::Nodes::TopicReceivedVote::V2,
+        DiscourseWorkflows::Nodes::TopicVoteRemoved::V1,
       ]
     end
   end
