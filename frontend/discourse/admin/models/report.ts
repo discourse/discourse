@@ -1,5 +1,7 @@
+/* eslint-disable prefer-const -- Preserve the original JavaScript emit for this types-only port. */
 import EmberObject, { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import type { Moment, MomentInput } from "moment";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
 import { ajax } from "discourse/lib/ajax";
 import { durationTiny, number } from "discourse/lib/formatter";
@@ -15,12 +17,178 @@ import {
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import I18n, { i18n } from "discourse-i18n";
 
-// Change this line each time report format change
-// and you want to ensure cache is reset
-export const SCHEMA_VERSION = 5;
+/** Change when the report format changes and cached reports must be reset. */
+export const SCHEMA_VERSION = 5 as const;
 
+/** Table keys are supplied by column descriptors; SQL decimals can be strings. */
+export type ReportCellValue = string | number | boolean | null | undefined;
+export type ReportRow = Record<string, ReportCellValue>;
+
+export interface ReportPoint {
+  x: string;
+  y: number;
+  end_date?: string;
+}
+
+export interface ReportSeries {
+  req?: string;
+  label: string;
+  color: string;
+  data: ReportPoint[];
+}
+
+export interface ReportStorageStats {
+  backups: {
+    used_bytes: number;
+    free_bytes: number | null;
+    count: number;
+    last_backup_taken_at: string | null;
+  } | null;
+  uploads: { used_bytes: number; free_bytes: number | null };
+}
+
+export type ReportData =
+  | ReportPoint[]
+  | ReportSeries[]
+  | ReportRow[]
+  | ReportStorageStats
+  | null;
+export type ReportComparison = number | ReportRow | ReportRow[] | null;
+export type ReportGrouping = "daily" | "weekly" | "monthly";
+export type ReportTrend =
+  | "high-trending-up"
+  | "high-trending-down"
+  | "trending-up"
+  | "trending-down"
+  | "no-change";
+export type ReportTrendIcon =
+  | "angle-up"
+  | "angle-down"
+  | "angles-up"
+  | "angles-down"
+  | "minus";
+
+/** Semantic names (or link positions) map to keys in a table row. */
+export type ReportLabelProperties = Record<string, string> | string[];
+export interface ReportLabel {
+  title: string;
+  html_title?: string;
+  type?: string;
+  property?: string;
+  properties?: ReportLabelProperties;
+  sort_property?: string;
+}
+
+export interface ReportCellOptions {
+  useSortProperty?: boolean;
+  formatNumbers?: boolean;
+}
+
+/** Table consumers may add the descriptor's type and property to a computed cell. */
+export interface ReportCell {
+  value: ReportCellValue;
+  formattedValue: ReportCellValue;
+  type?: string;
+  property?: string;
+}
+
+export interface ReportComputedLabel {
+  title: string;
+  htmlTitle?: string;
+  mainProperty: string;
+  sortProperty: string;
+  type: string;
+  compute: (row: ReportRow, options?: ReportCellOptions) => ReportCell;
+}
+
+export interface ReportFilter {
+  id: string;
+  type: string;
+  default?: ReportCellValue | string[] | number[];
+  choices?: (string | { id: string | number; name: string })[];
+  allow_any?: boolean;
+  auto_insert_none_item?: boolean;
+  disabled?: boolean;
+}
+
+/** Related-item renderers interpret their own JSON, including nested plugin payloads. */
+export type ReportRelatedValue =
+  | string
+  | number
+  | boolean
+  | null
+  | ReportRelatedValue[]
+  | { [key: string]: ReportRelatedValue };
+
+/** Full endpoint view and client state. */
+export interface ReportFields {
+  type: string;
+  title: string | null;
+  xaxis: string | Record<string, string> | null;
+  yaxis: string | null;
+  data: ReportData;
+  start_date: string;
+  end_date: string;
+  prev_start_date: string;
+  prev_end_date: string;
+  prev_data: ReportPoint[] | ReportSeries[] | null;
+  prev30Days: number | ReportRow[] | null;
+  prev_period?: ReportComparison;
+  dates_filtering: boolean;
+  report_key: string;
+  primary_color: string;
+  secondary_color: string;
+  available_filters: ReportFilter[];
+  labels: ReportLabel[] | string[];
+  modes: string[];
+  legacy?: boolean;
+  icon?: string;
+  error?: "not_found" | "timeout" | "exception" | null;
+  total?: number | string;
+  limit?: number;
+  default_group_by?: string;
+  y_axis_title?: string;
+  related_items?: Record<string, ReportRelatedValue[]>;
+  related_items_totals?: Record<string, number>;
+  related_report?: ReportPayload | null;
+  relatedReport?: Report;
+  chartData?: ReportPoint[] | ReportSeries[];
+  prevChartData?: ReportPoint[] | ReportSeries[];
+  empty?: boolean;
+}
+
+/** Full endpoint JSON without Ember methods or computed properties. */
+export type ReportPayload = ReportFields &
+  Pick<
+    Report,
+    | "average"
+    | "percent"
+    | "higher_is_better"
+    | "description"
+    | "description_link"
+  >;
+export type ReportCreateAttrs<M extends EmberObject = Report> = Partial<M>;
+
+/** Property names to read/write, rather than date values. */
+export interface ReportFillOptions {
+  dataField?: string;
+  filledField?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface Report extends ReportFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class Report extends EmberObject {
-  static groupingForDatapoints(count) {
+  /** Inherited factory; find initially creates only type, and tests may supply only data. */
+  declare static create: <C extends typeof EmberObject>(
+    this: C,
+    ...args: ReportCreateAttrs<InstanceType<C>>[]
+  ) => InstanceType<C>;
+
+  static groupingForDatapoints(count: number): ReportGrouping | undefined {
     if (count < DAILY_LIMIT_DAYS) {
       return "daily";
     }
@@ -34,7 +202,7 @@ export default class Report extends EmberObject {
     }
   }
 
-  static unitForDatapoints(count) {
+  static unitForDatapoints(count: number): "day" | "week" | "month" {
     if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
       return "week";
     } else if (count >= WEEKLY_LIMIT_DAYS) {
@@ -44,7 +212,9 @@ export default class Report extends EmberObject {
     }
   }
 
-  static unitForGrouping(grouping) {
+  static unitForGrouping(
+    grouping: string | undefined
+  ): "day" | "week" | "month" {
     switch (grouping) {
       case "monthly":
         return "month";
@@ -55,7 +225,25 @@ export default class Report extends EmberObject {
     }
   }
 
-  static collapse(model, data, grouping) {
+  static collapse(
+    model: {
+      start_date: MomentInput;
+      end_date: MomentInput;
+      average?: boolean;
+    },
+    data: ReportPoint[],
+    grouping?: string
+  ): ReportPoint[];
+
+  static collapse(
+    model: {
+      start_date: MomentInput;
+      end_date: MomentInput;
+      average?: boolean;
+    },
+    data: ReportPoint[],
+    grouping: string | undefined
+  ): ReportPoint[] {
     grouping = grouping || Report.groupingForDatapoints(data.length);
 
     if (grouping === "daily") {
@@ -118,7 +306,15 @@ export default class Report extends EmberObject {
     return data;
   }
 
-  static fillMissingDates(report, options = {}) {
+  static fillMissingDates<T extends { modes: string[] }>(
+    report: T,
+    options?: ReportFillOptions
+  ): void;
+
+  static fillMissingDates(
+    report: { modes: string[]; [key: string]: unknown },
+    options: ReportFillOptions = {}
+  ): void {
     const dataField = options.dataField || "data";
     const filledField = options.filledField || "data";
     const startDate = options.startDate || "start_date";
@@ -126,11 +322,11 @@ export default class Report extends EmberObject {
 
     if (Array.isArray(report[dataField])) {
       const startDateFormatted = moment
-        .utc(report[startDate])
+        .utc(report[startDate] as MomentInput)
         .locale("en")
         .format("YYYY-MM-DD");
       const endDateFormatted = moment
-        .utc(report[endDate])
+        .utc(report[endDate] as MomentInput)
         .locale("en")
         .format("YYYY-MM-DD");
 
@@ -138,18 +334,20 @@ export default class Report extends EmberObject {
         report.modes[0] === "stacked_chart" ||
         report.modes[0] === "stacked_line_chart"
       ) {
-        report[filledField] = report[dataField].map((rep) => {
-          return {
-            req: rep.req,
-            label: rep.label,
-            color: rep.color,
-            data: fillMissingDates(
-              JSON.parse(JSON.stringify(rep.data)),
-              startDateFormatted,
-              endDateFormatted
-            ),
-          };
-        });
+        report[filledField] = (report[dataField] as ReportSeries[]).map(
+          (rep) => {
+            return {
+              req: rep.req,
+              label: rep.label,
+              color: rep.color,
+              data: fillMissingDates(
+                JSON.parse(JSON.stringify(rep.data)),
+                startDateFormatted,
+                endDateFormatted
+              ),
+            };
+          }
+        );
       } else if (report.modes[0] !== "radar") {
         report[filledField] = fillMissingDates(
           JSON.parse(JSON.stringify(report[dataField])),
@@ -160,7 +358,22 @@ export default class Report extends EmberObject {
     }
   }
 
-  static find(type, startDate, endDate, categoryId, groupId) {
+  static find(
+    type: string,
+    startDate: string,
+    endDate: string,
+    categoryId?: number,
+    groupId?: number
+  ): Promise<Report>;
+
+  static find(
+    type: string,
+    startDate: string,
+    endDate: string,
+    categoryId: number | undefined,
+    groupId: number | undefined
+  ): Promise<Report> {
+    // TODO(typescript-pending): ajax has no response generic; remove this callback annotation when it does.
     return ajax("/admin/reports/" + type, {
       data: {
         start_date: startDate,
@@ -168,7 +381,7 @@ export default class Report extends EmberObject {
         category_id: categoryId,
         group_id: groupId,
       },
-    }).then((json) => {
+    }).then((json: { report: ReportPayload }) => {
       // don’t fill for large multi column tables
       // which are not date based
       const modes = json.report.modes;
@@ -177,14 +390,16 @@ export default class Report extends EmberObject {
       }
 
       const model = Report.create({ type });
-      model.setProperties(json.report);
+      model.setProperties<keyof ReportPayload, ReportPayload>(json.report);
 
       if (json.report.related_report) {
         // TODO: fillMissingDates if xaxis is date
         const related = Report.create({
           type: json.report.related_report.type,
         });
-        related.setProperties(json.report.related_report);
+        related.setProperties<keyof ReportPayload, ReportPayload>(
+          json.report.related_report
+        );
         model.set("relatedReport", related);
       }
 
@@ -192,7 +407,7 @@ export default class Report extends EmberObject {
     });
   }
 
-  static #dateMoment(value) {
+  static #dateMoment(value: MomentInput): Moment {
     if (moment.isMoment(value)) {
       return value.clone().startOf("day");
     }
@@ -204,18 +419,19 @@ export default class Report extends EmberObject {
     return moment.utc(value).startOf("day");
   }
 
+  /** Forwarded to the avatar renderer, but nothing assigns it on reports. */
+  declare siteSettings?: unknown;
+
   average = false;
   percent = false;
   higher_is_better = true;
 
-  /** @type {string | null} */
-  description_link = null;
+  description_link: string | null = null;
 
-  /** @type {string | null} */
-  description = null;
+  description: string | null = null;
 
   @computed("type", "start_date", "end_date")
-  get reportUrl() {
+  get reportUrl(): string {
     const start_date = moment
       .utc(this.start_date)
       .locale("en")
@@ -231,16 +447,20 @@ export default class Report extends EmberObject {
     );
   }
 
-  get combinedData() {
+  /** Only stacked-chart mode is flattened; other modes retain their original data shape. */
+  get combinedData(): ReportData {
     if (this.modes?.includes(REPORT_MODES.stacked_chart)) {
       return Object.values(
-        this.data
+        (this.data as ReportSeries[])
           .flatMap((series) => series.data)
-          .reduce((acc, { x, y }) => {
-            acc[x] ??= { x, y: 0 };
-            acc[x].y += y;
-            return acc;
-          }, {})
+          .reduce(
+            (acc, { x, y }) => {
+              acc[x] ??= { x, y: 0 };
+              acc[x].y += y;
+              return acc;
+            },
+            {} as Record<string, ReportPoint>
+          )
       );
     }
     return this.data;
@@ -294,17 +514,22 @@ export default class Report extends EmberObject {
     );
   }
 
+  /** Flat numeric points are assumed here, even though other report modes carry different data. */
   @computed("data")
   get currentTotal() {
-    return this.data.reduce((cur, pair) => cur + pair.y, 0);
+    return (this.data as ReportPoint[]).reduce((cur, pair) => cur + pair.y, 0);
   }
 
+  /** Keeps the original parseFloat coercion of the point count. */
   @computed("data", "currentTotal")
   get currentAverage() {
-    return makeArray(this.data).length === 0
+    return makeArray<ReportData>(this.data).length === 0
       ? 0
       : parseFloat(
-          (this.currentTotal / parseFloat(this.data.length)).toFixed(1)
+          (
+            this.currentTotal /
+            parseFloat((this.data as ReportPoint[]).length as unknown as string)
+          ).toFixed(1)
         );
   }
 
@@ -349,7 +574,7 @@ export default class Report extends EmberObject {
   }
 
   @computed("type")
-  get method() {
+  get method(): "average" | "sum" {
     if (this.type === "time_to_first_response") {
       return "average";
     } else {
@@ -357,21 +582,28 @@ export default class Report extends EmberObject {
     }
   }
 
+  /** Average-mode formatting assumes a numeric comparison, without validating other producer shapes. */
   @computed("prev_period", "currentTotal", "currentAverage")
-  get trendTitle() {
-    let prev = this.prev_period;
-    let current = this.average ? this.currentAverage : this.currentTotal;
+  get trendTitle(): string {
+    let prev: number | string | null | undefined = this.prev_period as
+      | number
+      | null
+      | undefined;
+    let current: number | string = this.average
+      ? this.currentAverage
+      : this.currentTotal;
     let percent = this.percentChangeString(prev, current);
 
     if (this.average) {
-      prev = prev ? prev.toFixed(1) : "0";
+      prev = prev ? (prev as number).toFixed(1) : "0";
       if (this.percent) {
-        current += "%";
+        (current as number | string) += "%";
         prev += "%";
       }
     } else {
-      prev = number(prev);
-      current = number(current);
+      // TODO(typescript-pending): formatter.number's inferred signature requires optional options; remove casts when typed.
+      prev = (number as (value: unknown) => string)(prev);
+      current = (number as (value: unknown) => string)(current);
     }
 
     return i18n("admin.dashboard.reports.trend_title", {
@@ -395,6 +627,7 @@ export default class Report extends EmberObject {
     );
   }
 
+  /** Returns the comparison value itself, including zero, null, or an omitted period. */
   @computed("prev30Days", "prev_period")
   get canDisplayTrendIcon() {
     return this.prev30Days ?? this.prev_period;
@@ -409,35 +642,48 @@ export default class Report extends EmberObject {
     );
   }
 
+  /** Array modes only; storage data and null are not iterable. */
   @computed("data")
-  get sortedData() {
-    return this.xAxisIsDate ? [...this.data].reverse() : [...this.data];
+  get sortedData(): (ReportPoint | ReportSeries | ReportRow)[] {
+    return this.xAxisIsDate
+      ? [
+          ...(this.data as Exclude<ReportData, ReportStorageStats | null>),
+        ].reverse()
+      : [...(this.data as Exclude<ReportData, ReportStorageStats | null>)];
   }
 
+  /** Assumes flat string-x points and returns the match result, rather than a boolean. */
   @computed("data")
-  get xAxisIsDate() {
-    if (!this.data[0]) {
+  get xAxisIsDate(): false | RegExpMatchArray | null {
+    if (!(this.data as ReportPoint[])[0]) {
       return false;
     }
-    return this.data && this.data[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/);
+    return (
+      this.data &&
+      (this.data as ReportPoint[])[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/)
+    );
   }
 
+  /** Table mode assumes descriptors; plugin string labels are consumed by their custom renderers. */
   @computed("labels")
-  get computedLabels() {
-    return this.labels.map((label) => {
+  get computedLabels(): ReportComputedLabel[] {
+    // Descriptor types select semantic keys; the wire format does not enforce their correlation.
+    return (this.labels as ReportLabel[]).map((label) => {
       const type = label.type || "string";
 
       let mainProperty;
       if (label.property) {
         mainProperty = label.property;
       } else if (type === "user") {
-        mainProperty = label.properties["username"];
+        mainProperty = (label.properties as Record<string, string>)["username"];
       } else if (type === "topic") {
-        mainProperty = label.properties["title"];
+        mainProperty = (label.properties as Record<string, string>)["title"];
       } else if (type === "post") {
-        mainProperty = label.properties["truncated_raw"];
+        mainProperty = (label.properties as Record<string, string>)[
+          "truncated_raw"
+        ];
       } else {
-        mainProperty = label.properties[0];
+        mainProperty = (label.properties as string[])[0];
       }
 
       return {
@@ -446,7 +692,7 @@ export default class Report extends EmberObject {
         sortProperty: label.sort_property || mainProperty,
         mainProperty,
         type,
-        compute: (row, opts = {}) => {
+        compute: (row: ReportRow, opts: ReportCellOptions = {}): ReportCell => {
           let value;
 
           if (opts.useSortProperty) {
@@ -456,19 +702,28 @@ export default class Report extends EmberObject {
           }
 
           if (type === "user") {
-            return this._userLabel(label.properties, row);
+            return this._userLabel(
+              label.properties as Record<string, string>,
+              row
+            );
           }
           if (type === "post") {
-            return this._postLabel(label.properties, row);
+            return this._postLabel(
+              label.properties as Record<string, string>,
+              row
+            );
           }
           if (type === "topic") {
-            return this._topicLabel(label.properties, row);
+            return this._topicLabel(
+              label.properties as Record<string, string>,
+              row
+            );
           }
           if (type === "seconds") {
             return this._secondsLabel(value);
           }
           if (type === "link") {
-            return this._linkLabel(label.properties, row);
+            return this._linkLabel(label.properties as string[], row);
           }
           if (type === "percent") {
             return this._percentLabel(value);
@@ -480,13 +735,13 @@ export default class Report extends EmberObject {
             return this._numberLabel(value, opts);
           }
           if (type === "date") {
-            const date = moment(value);
+            const date = moment(value as MomentInput);
             if (date.isValid()) {
               return this._dateLabel(value, date);
             }
           }
           if (type === "precise_date") {
-            const date = moment(value);
+            const date = moment(value as MomentInput);
             if (date.isValid()) {
               return this._dateLabel(value, date, "LLL");
             }
@@ -506,13 +761,16 @@ export default class Report extends EmberObject {
     });
   }
 
-  valueAt(numDaysAgo) {
+  /** Count helpers assume combinedData is a flat numeric time series. */
+  valueAt(numDaysAgo: number): number {
     if (this.combinedData) {
       const wantedDate = moment()
         .subtract(numDaysAgo, "days")
         .locale("en")
         .format("YYYY-MM-DD");
-      const item = this.combinedData.find((d) => d.x === wantedDate);
+      const item = (this.combinedData as ReportPoint[]).find(
+        (d) => d.x === wantedDate
+      );
       if (item) {
         return item.y;
       }
@@ -520,14 +778,15 @@ export default class Report extends EmberObject {
     return 0;
   }
 
-  valueFor(startDaysAgo, endDaysAgo) {
+  /** Returns undefined when data is absent, including on partially constructed reports. */
+  valueFor(startDaysAgo: number, endDaysAgo: number): number | undefined {
     if (this.combinedData) {
       const earliestDate = moment().subtract(endDaysAgo, "days").startOf("day");
       const latestDate = moment().subtract(startDaysAgo, "days").startOf("day");
-      let d,
+      let d: Moment,
         sum = 0,
         count = 0;
-      this.combinedData.forEach((datum) => {
+      (this.combinedData as ReportPoint[]).forEach((datum) => {
         d = moment(datum.x);
         if (d >= earliestDate && d <= latestDate) {
           sum += datum.y;
@@ -541,11 +800,15 @@ export default class Report extends EmberObject {
     }
   }
 
-  averageCount(count, value) {
-    return this.average ? value / count : value;
+  /** Undefined is passed through, or coerced to NaN by division for average reports. */
+  averageCount(count: number, value: number | undefined): number | undefined {
+    return this.average ? (value as number) / count : value;
   }
 
-  percentChangeString(val1, val2) {
+  percentChangeString(
+    val1: ReportComparison | undefined,
+    val2: number | string | undefined
+  ): string | null {
     const change = this._computeChange(val1, val2);
 
     if (isNaN(change) || !isFinite(change)) {
@@ -557,7 +820,11 @@ export default class Report extends EmberObject {
     }
   }
 
-  changeTitle(valAtT1, valAtT2, prevPeriodString) {
+  changeTitle(
+    valAtT1: ReportComparison | undefined,
+    valAtT2: number | undefined,
+    prevPeriodString: string
+  ): string {
     const change = this.percentChangeString(valAtT1, valAtT2);
     const title = [];
     if (change) {
@@ -572,20 +839,28 @@ export default class Report extends EmberObject {
         `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
         {
           count: valAtT1,
-          previousValue: number(valAtT1),
+          // TODO(typescript-pending): remove when formatter.number types its optional options.
+          previousValue: (number as (value: unknown) => string)(valAtT1),
         }
       )
     );
     return title.join(" ");
   }
 
-  _userLabel(properties, row) {
+  _userLabel(properties: Record<string, string>, row: ReportRow): ReportCell {
     const username = row[properties.username];
 
     const formattedValue = () => {
       const userId = row[properties.id];
 
-      const user = EmberObject.create({
+      // EmberObject.create only accepts declared members, and this anonymous record declares none.
+      const user = (
+        EmberObject.create as (attrs: {
+          username: ReportCellValue;
+          name: string;
+          avatar_template: ReportCellValue;
+        }) => EmberObject & { name: string }
+      )({
         username,
         name: formatUsername(username),
         avatar_template: row[properties.avatar],
@@ -608,7 +883,7 @@ export default class Report extends EmberObject {
     };
   }
 
-  _topicLabel(properties, row) {
+  _topicLabel(properties: Record<string, string>, row: ReportRow): ReportCell {
     const topicTitle = row[properties.title];
 
     const formattedValue = () => {
@@ -623,7 +898,7 @@ export default class Report extends EmberObject {
     };
   }
 
-  _postLabel(properties, row) {
+  _postLabel(properties: Record<string, string>, row: ReportRow): ReportCell {
     const postTitle = row[properties.truncated_raw];
     const postNumber = row[properties.number];
     const topicId = row[properties.topic_id];
@@ -639,21 +914,27 @@ export default class Report extends EmberObject {
     };
   }
 
-  _secondsLabel(value) {
+  _secondsLabel(value: ReportCellValue): ReportCell {
     return {
       value: toNumber(value),
-      formattedValue: durationTiny(value),
+      // TODO(typescript-pending): remove when durationTiny types its optional options.
+      formattedValue: (durationTiny as (value: ReportCellValue) => string)(
+        value
+      ),
     };
   }
 
-  _percentLabel(value) {
+  _percentLabel(value: ReportCellValue): ReportCell {
     return {
       value: toNumber(value),
       formattedValue: value === null || value === undefined ? "—" : `${value}%`,
     };
   }
 
-  _numberLabel(value, options = {}) {
+  _numberLabel(
+    value: ReportCellValue,
+    options: ReportCellOptions = {}
+  ): ReportCell {
     const formatNumbers = isEmpty(options.formatNumbers)
       ? true
       : options.formatNumbers;
@@ -667,21 +948,24 @@ export default class Report extends EmberObject {
     };
   }
 
-  _bytesLabel(value) {
+  _bytesLabel(value: ReportCellValue): ReportCell {
     return {
       value: toNumber(value),
-      formattedValue: I18n.toHumanSize(value),
+      // TODO(typescript-pending): remove when toHumanSize publishes its optional options and string return.
+      formattedValue: (I18n.toHumanSize as (value: ReportCellValue) => string)(
+        value
+      ),
     };
   }
 
-  _dateLabel(value, date, format = "LL") {
+  _dateLabel(value: ReportCellValue, date: Moment, format = "LL"): ReportCell {
     return {
       value,
       formattedValue: value ? date.format(format) : "—",
     };
   }
 
-  _textLabel(value) {
+  _textLabel(value: ReportCellValue): ReportCell {
     const escaped = escapeExpression(value);
 
     return {
@@ -690,10 +974,10 @@ export default class Report extends EmberObject {
     };
   }
 
-  _linkLabel(properties, row) {
+  _linkLabel(properties: string[], row: ReportRow): ReportCell {
     const property = properties[0];
-    const value = getURL(row[property]);
-    const formattedValue = (href, anchor) => {
+    const value = getURL(row[property] as string);
+    const formattedValue = (href: string, anchor: ReportCellValue) => {
       return `<a href="${escapeExpression(href)}">${escapeExpression(
         anchor
       )}</a>`;
@@ -705,11 +989,21 @@ export default class Report extends EmberObject {
     };
   }
 
-  _computeChange(valAtT1, valAtT2) {
-    return ((valAtT2 - valAtT1) / valAtT1) * 100;
+  /** Preserves arithmetic coercion of nullable, object, and row-valued comparisons. */
+  _computeChange(
+    valAtT1: ReportComparison | undefined,
+    valAtT2: number | string | undefined
+  ): number {
+    return (
+      (((valAtT2 as number) - (valAtT1 as number)) / (valAtT1 as number)) * 100
+    );
   }
 
-  _computeTrend(valAtT1, valAtT2, higherIsBetter) {
+  _computeTrend(
+    valAtT1: ReportComparison | undefined,
+    valAtT2: number | undefined,
+    higherIsBetter: boolean
+  ): ReportTrend | undefined {
     const change = this._computeChange(valAtT1, valAtT2);
 
     if (change > 50) {
@@ -725,7 +1019,10 @@ export default class Report extends EmberObject {
     }
   }
 
-  _iconForTrend(trend, higherIsBetter) {
+  _iconForTrend(
+    trend: ReportTrend | undefined,
+    higherIsBetter: boolean
+  ): ReportTrendIcon {
     switch (trend) {
       case "trending-up":
         return higherIsBetter ? "angle-up" : "angle-down";
@@ -741,10 +1038,13 @@ export default class Report extends EmberObject {
   }
 }
 
-export const WEEKLY_LIMIT_DAYS = 365;
-export const DAILY_LIMIT_DAYS = 34;
+export const WEEKLY_LIMIT_DAYS = 365 as const;
+export const DAILY_LIMIT_DAYS = 34 as const;
 
-function applyAverage(value, start, end) {
+function applyAverage(value: number, start: Moment, end: Moment): number {
   const count = end.diff(start, "day") + 1; // 1 to include start
   return parseFloat((value / count).toFixed(2));
 }
+
+/** The application provides moment globally. */
+declare const moment: typeof import("moment");
