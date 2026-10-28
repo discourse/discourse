@@ -36,6 +36,14 @@
   }
 }
 
+// The family footer has no checkbox, so it is inset by one to line up with the rows.
+.d-select__content.--kind-select-category .d-select__option.--action-footer {
+  padding-inline-start: calc(
+    var(--d-select-option-padding-inline) + var(--d-select-option-marker-size) +
+      var(--d-select-option-gap)
+  );
+}
+
 .d-select__option {
   .badge-category__wrapper .topic-count,
   .badge-category__wrapper .plus-subcategories {

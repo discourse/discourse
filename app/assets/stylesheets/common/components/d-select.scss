@@ -259,10 +259,15 @@
 }
 
 .d-select__option {
+  // Exposed so a row without a selection marker can line its content up with the rows that
+  // have one.
+  --d-select-option-padding-inline: 0.75em;
+  --d-select-option-gap: 0.5em;
+  --d-select-option-marker-size: 1em;
   display: flex;
   align-items: center;
-  gap: 0.5em;
-  padding: 0.5em 0.75em;
+  gap: var(--d-select-option-gap);
+  padding: 0.5em var(--d-select-option-padding-inline);
   cursor: pointer;
 
   &.--sticky {
@@ -330,6 +335,12 @@
   font-size: var(--font-down-1);
   font-weight: normal;
   overflow-wrap: anywhere;
+}
+
+// Scoped to the row to outrank the base icon size, which loads later.
+.d-select__option .d-select__option-selected-icon {
+  width: var(--d-select-option-marker-size);
+  height: var(--d-select-option-marker-size);
 }
 
 .d-select__option-selected-icon {

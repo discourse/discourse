@@ -1130,6 +1130,31 @@ module(
           "the subcategories mark has the same gap"
         );
       });
+
+      test("the footer's badge lines up with the rows' badges, from the rows' own spacing", async function (assert) {
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+        await select().search("Category");
+
+        const badgeLeft = (value) =>
+          find(
+            `[role='option'][data-value='${value}'] .badge-category__wrapper`
+          ).getBoundingClientRect().left;
+        const offset = () =>
+          badgeLeft("category-descendants-1001") - badgeLeft("1001");
+
+        assert.true(Math.abs(offset()) < 0.5, `aligned (off by ${offset()})`);
+
+        for (const option of findAll("[role='option']")) {
+          option.style.setProperty("--d-select-option-padding-inline", "2em");
+          option.style.setProperty("--d-select-option-gap", "1.5em");
+          option.style.setProperty("--d-select-option-marker-size", "2em");
+        }
+        assert.true(
+          Math.abs(offset()) < 0.5,
+          `still aligned when the spacing changes (off by ${offset()})`
+        );
+      });
       test("picking a footer adds the family and every level below it", async function (assert) {
         const onChange = sinon.spy();
 
