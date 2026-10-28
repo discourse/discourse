@@ -62,8 +62,15 @@ if (errors.length === 0) {
       twinReads += rewrite.rewritten;
     }
 
-    if (isStylesheet && (text !== original || definitionsByFile.has(file))) {
-      text = tidy(text, file, definitionsByFile.get(file) ?? []);
+    if (isStylesheet) {
+      try {
+        text = tidy(text, file, definitionsByFile.get(file) ?? []);
+      } catch (error) {
+        // Broken stylesheets the mapping does not change, such as test fixtures, are left alone
+        if (text !== original || definitionsByFile.has(file)) {
+          errors.push(`${file}: ${error.message}`);
+        }
+      }
     }
 
     if (text !== original) {
@@ -117,6 +124,24 @@ function tidy(text, file, fileDefinitions) {
       );
       removeDeclaration(decl);
     }
+  });
+
+  // Two old names renamed to one new name; the last declaration is the one in effect
+  root.walkRules((rule) => {
+    const seen = new Map();
+    rule.each((node) => {
+      if (node.type !== "decl" || !node.prop.startsWith("--")) {
+        return;
+      }
+      const earlier = seen.get(node.prop);
+      if (earlier) {
+        report.push(
+          `${file}:${earlier.source.start.line}: removed ${earlier.prop}, a later declaration in the same rule sets it`
+        );
+        removeDeclaration(earlier);
+      }
+      seen.set(node.prop, node);
+    });
   });
 
   for (const definition of fileDefinitions) {
