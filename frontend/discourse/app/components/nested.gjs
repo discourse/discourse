@@ -1005,10 +1005,10 @@ export default class Nested extends Component {
         <div class="nested-view__controls">
           <div class="nested-view__controls-left">
             <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-            <NestedViewToggle @topic={{@topic}} />
           </div>
 
           <div class="nested-view__controls-right">
+            <NestedViewToggle @topic={{@topic}} />
             {{#if @topic.has_activity_log}}
               <DButton
                 class="btn-flat nested-view__activity-link"
