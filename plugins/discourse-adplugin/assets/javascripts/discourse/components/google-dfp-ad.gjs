@@ -222,11 +222,20 @@ export function dfpConfig(placement, settings, isMobile, context) {
   );
   resolved = applyCategoryCustomFields(resolved, context.categoryConfig);
 
-  const overrides =
-    applyValueTransformer("dfp-ad-config", resolved, {
-      placement,
-      ...context,
-    }) || {};
+  let overrides = {};
+  try {
+    overrides =
+      applyValueTransformer("dfp-ad-config", resolved, {
+        placement,
+        ...context,
+      }) || {};
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      "[discourse-adplugin] dfp-ad-config transformer failed",
+      error
+    );
+  }
 
   const targeting = {
     ...resolved.targeting,
@@ -450,15 +459,22 @@ export default class GoogleDfpAd extends AdComponent {
 
   @on("didUpdate")
   updated() {
+    if (!this.get("showAd") || !this.get("loadedGoogletag")) {
+      return;
+    }
+
+    // A prior instance can be torn down by route churn before it defines its
+    // slot; a still-mounted component defines it here so the ad is not lost.
+    if (!ads[this.get("divId")]?.ad) {
+      this.#defineSlot();
+      return;
+    }
+
     if (!this.shouldRefreshAd()) {
       return;
     }
 
     const slot = ads[this.get("divId")];
-    if (!slot?.ad || !this.get("loadedGoogletag")) {
-      return;
-    }
-
     const config = dfpConfig(
       this.get("placement"),
       this.siteSettings,
@@ -469,6 +485,10 @@ export default class GoogleDfpAd extends AdComponent {
     this.set("lastAdRefresh", new Date());
 
     window.googletag.cmd.push(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       if (config.adUnitPath !== slot.adUnitPath) {
         destroySlot(this.get("divId"));
         const redefined = defineSlot(
@@ -483,6 +503,10 @@ export default class GoogleDfpAd extends AdComponent {
         window.googletag.display(this.get("divId"));
         window.googletag.pubads().refresh([redefined.ad]);
       } else {
+        // setConfig merges into existing slot targeting, so keys omitted from
+        // the new config (e.g. gam_keywords dropped when a category stops
+        // overriding them) would linger. Clear first for replace semantics.
+        slot.ad.clearTargeting();
         slot.ad.setConfig({ targeting: config.targeting });
         window.googletag.pubads().refresh([slot.ad]);
       }
@@ -523,6 +547,37 @@ export default class GoogleDfpAd extends AdComponent {
     };
   }
 
+  #defineSlot() {
+    if (this.isDestroying || this.isDestroyed || !this.get("showAd")) {
+      return;
+    }
+
+    this.set("loadedGoogletag", true);
+    this.set("lastAdRefresh", new Date());
+
+    window.googletag.cmd.push(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const slot = defineSlot(
+        this.get("divId"),
+        this.get("placement"),
+        this.siteSettings,
+        this.site.mobileView,
+        this.get("width"),
+        this.get("height"),
+        this.#buildDfpContext()
+      );
+      if (slot && slot.ad) {
+        // Display has to be called before refresh
+        // and after the slot div is in the page.
+        window.googletag.display(this.get("divId"));
+        window.googletag.pubads().refresh([slot.ad]);
+      }
+    });
+  }
+
   @on("didInsertElement")
   _initGoogleDFP() {
     if (isTesting()) {
@@ -533,28 +588,7 @@ export default class GoogleDfpAd extends AdComponent {
       return;
     }
 
-    loadGoogle().then(() => {
-      this.set("loadedGoogletag", true);
-      this.set("lastAdRefresh", new Date());
-
-      window.googletag.cmd.push(() => {
-        const slot = defineSlot(
-          this.get("divId"),
-          this.get("placement"),
-          this.siteSettings,
-          this.site.mobileView,
-          this.get("width"),
-          this.get("height"),
-          this.#buildDfpContext()
-        );
-        if (slot && slot.ad) {
-          // Display has to be called before refresh
-          // and after the slot div is in the page.
-          window.googletag.display(this.get("divId"));
-          window.googletag.pubads().refresh([slot.ad]);
-        }
-      });
-    });
+    loadGoogle().then(() => this.#defineSlot());
   }
 
   <template>

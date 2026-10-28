@@ -1,7 +1,7 @@
 # discourse-adplugin — DFP / GAM category targeting
 
 How to target Google Ad Manager (DFP/GAM) ads per category using this plugin, with no
-theme component and no code changes.
+theme component or code changes.
 
 For the full technical deep-dive (how the plug rules compose, the `dfp-ad-config` value
 transformer, examples for every option), see
@@ -19,8 +19,7 @@ globally configured ad unit.
 - `gam_keywords` — comma-separated targeting values for that category
   (e.g. `sports,mlb`).
 - `gtm_taxonomy` — optional taxonomy string exposed to theme components (e.g. to push
-  into `window.dataLayer`). Stored on the category for you; the plugin does not use it
-  itself.
+  into `window.dataLayer`). The plugin stores it but does not use it itself.
 
 ## Prerequisites
 
@@ -28,6 +27,62 @@ globally configured ad unit.
 2. DFP/GAM is configured: `dfp_publisher_id` is set and at least one DFP ad placement is
    in use (e.g. `dfp_topic_list_top_code`).
 3. The ad units you reference exist in your GAM network.
+
+## Local testing without a GAM account
+
+Google provides a test network and ad units that can be used without a GAM account. Do
+not copy this configuration to a production site.
+
+1. In the site settings admin, set:
+
+   ```yaml
+   discourse_adplugin_enabled: true
+   dfp_publisher_id: 6355419
+   dfp_topic_list_top_code: Travel/Europe
+   dfp_topic_list_top_ad_sizes: "300*250 - medium rectangle"
+   ```
+
+   `dfp_topic_list_top_*` creates a slot on category pages. To test the same
+   category override inside a topic, also set:
+
+   ```yaml
+   dfp_topic_above_post_stream_code: Travel/Europe
+   dfp_topic_above_post_stream_ad_sizes: "300*250 - medium rectangle"
+   ```
+
+2. Open **Admin → Plugins → discourse-adplugin → DFP / GAM**, click **Add category
+   configuration**, and select a public category:
+
+   ```text
+   GAM ad unit:  /6355419/Travel/Europe/France/Paris
+   GAM keywords: local-test,category-override
+   GTM taxonomy: local/test
+   ```
+
+3. Reload the site in a logged-out browser window and visit the configured category.
+   Logged-out testing avoids the normal group settings that can hide ads from staff.
+4. Open the browser console and inspect the active slots:
+
+   ```js
+   googletag.pubads().getSlots().map((slot) => ({
+     adUnitPath: slot.getAdUnitPath(),
+     targeting: slot.getConfig("targeting").targeting,
+   }));
+   ```
+
+   The category page should report the Paris ad unit, `gam_keywords` containing both
+   configured keywords, and `discourse-category` containing the category slug.
+5. Navigate without a full reload to an unconfigured category. Its ad unit should
+   change to `/6355419/Travel/Europe`, while `discourse-category` changes to the new
+   slug. Returning to the configured category should restore the Paris ad unit.
+
+The visual test creative may be inspected with Google's Publisher Console by adding
+`?google_console=1` to the page URL. Once the full GPT library has loaded,
+`googletag.openConsole()` opens the same console. The slot and targeting output above is
+the authoritative check for this feature even if an ad blocker, consent configuration,
+or network policy prevents the creative from rendering. See
+[Google's test-ad guide](https://developers.google.com/publisher-tag/guides/get-started)
+and [Publisher Console guide](https://developers.google.com/publisher-tag/guides/publisher-console).
 
 ## Step 1 — Configure the fallback (site settings)
 
@@ -44,7 +99,8 @@ dfp_topic_list_top_ad_sizes: "728*90 - leaderboard"
 
 ## Step 2 — Set per-category values (admin)
 
-Admin → **Categories** → open a category → the **GAM / DFP** section:
+Open **Admin → Plugins → discourse-adplugin → DFP / GAM**, click **Add category
+configuration**, and select a category:
 
 | Field | Example for "Cards Talk" | Example for "Food Talk" |
 |---|---|---|
@@ -54,22 +110,23 @@ Admin → **Categories** → open a category → the **GAM / DFP** section:
 
 Rules:
 
-- Values are saved as category custom fields (`gam_adunit`, `gam_keywords`,
-  `gtm_taxonomy`) and applied wherever that category appears (category and topic pages,
-  desktop and mobile).
+- Values are saved in the plugin's per-category settings and applied wherever that
+  category appears (category and topic pages, desktop and mobile).
 - Leave **GAM ad unit / GAM keywords blank** to inherit the fallback — this is how
   private or special categories (e.g. Limbo, Probation, Recycle Bin) keep the fallback
   unit.
-- There is no migration: these are free-form custom fields; editing takes effect on the
-  next page load.
+- Edits are pushed to connected browsers live, each viewer receiving only the
+  categories they can see (restricted-category config reaches just the members
+  allowed to view it).
 
 ## How the ad unit is resolved
 
 For each placement the plugin resolves, in priority order, the first match:
 
 1. `dfp-ad-config` value transformer registered by a theme component/plugin (if any).
-2. The category's `gam_adunit` custom field.
-3. The site settings (`dfp_publisher_id` + `dfp_*_code`).
+2. The plugin dashboard's per-category setting.
+3. Legacy category custom fields, when present.
+4. The site settings (`dfp_publisher_id` + `dfp_*_code`).
 
 Keywords (`gam_keywords`) are merged into the slot targeting over any configured
 `dfp_target_*` values, and `discourse-category` is always set to the category's leaf slug
@@ -92,7 +149,8 @@ at slot-creation time — a plain refresh would keep the old one).
 
 Power users can override or extend the resolved ad config from a theme component. The
 transformer receives the current `value` and a `context` with `placement`,
-`categorySlug`, `categoryPath`, `categoryId`, `routeName` and `customFields`:
+`categorySlug`, `categoryPath`, `categoryId`, `routeName`, `customFields`, and
+`categoryConfig`:
 
 ```js
 import { apiInitializer } from "discourse/lib/api";
@@ -111,8 +169,8 @@ export default apiInitializer((api) => {
 });
 ```
 
-Registering a transformer is optional — without it the settings + category custom fields
-behaviour above applies.
+Registering a transformer is optional — without it the site settings and per-category
+dashboard configuration above apply.
 
 ## Tests
 
@@ -120,5 +178,5 @@ behaviour above applies.
 bin/qunit --standalone plugins/discourse-adplugin/test/javascripts/
 ```
 
-Covers `dfpConfig` resolution (settings, category custom fields, transformer), the
-per-category settings connector, and DFP advertising behaviour.
+Covers `dfpConfig` resolution (site settings, legacy category custom fields, dashboard
+configuration, and transformers), the configuration UI, and DFP advertising behaviour.

@@ -164,4 +164,52 @@ module("Unit | Lib | dfp-config", function (hooks) {
       "transformer targeting replaces the resolved values"
     );
   });
+
+  test("keeps ad unit constant when only keywords change, dropping stale keywords", function (assert) {
+    // Base targeting uses an unrelated key so gam_keywords only appears when a
+    // category explicitly overrides it. This is the case the reused-slot bug
+    // leaked: same ad unit across categories, keywords removed on navigation.
+    const settings = {
+      ...SETTINGS,
+      dfp_target_topic_list_top_key_code: "geo",
+      dfp_target_topic_list_top_value_code: "eu",
+    };
+    const unit = "/123456789/example.com/forums";
+
+    const first = dfpConfig(
+      "topic-list-top",
+      settings,
+      false,
+      context({
+        categorySlug: "sports",
+        categoryConfig: { gam_adunit: unit, gam_keywords: "a,b" },
+      })
+    );
+    assert.deepEqual(first.targeting.gam_keywords, ["a", "b"]);
+
+    const second = dfpConfig(
+      "topic-list-top",
+      settings,
+      false,
+      context({
+        categorySlug: "general",
+        categoryConfig: { gam_adunit: unit },
+      })
+    );
+
+    assert.strictEqual(
+      second.adUnitPath,
+      unit,
+      "same ad unit path keeps the slot mounted (exercises the reuse branch)"
+    );
+    assert.false(
+      "gam_keywords" in second.targeting,
+      "a category with no keyword override returns no gam_keywords to clear on the reused slot"
+    );
+    assert.deepEqual(
+      second.targeting.geo,
+      ["eu"],
+      "unrelated base targeting is preserved"
+    );
+  });
 });

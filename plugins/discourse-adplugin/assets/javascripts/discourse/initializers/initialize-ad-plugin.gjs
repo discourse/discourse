@@ -13,13 +13,21 @@ export default {
     const messageBus = container.lookup("service:message-bus");
     const currentUser = container.lookup("service:current-user");
 
-    const channel = currentUser
+    const houseAdsChannel = currentUser
       ? "/site/house-creatives/logged-in"
       : "/site/house-creatives/anonymous";
 
-    messageBus.subscribe(channel, function (houseAdsSettings) {
+    messageBus.subscribe(houseAdsChannel, function (houseAdsSettings) {
       Site.currentProp("house_creatives", houseAdsSettings);
     });
+
+    const dfpConfig = container.lookup("service:dfp-config");
+    messageBus.subscribe(
+      "/site/dfp-category-settings/changed",
+      function (payload) {
+        dfpConfig.onSignal(payload);
+      }
+    );
   },
 };
 

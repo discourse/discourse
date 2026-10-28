@@ -8,6 +8,7 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-adplugin
 
 register_asset "stylesheets/adplugin.scss"
+register_asset "stylesheets/admin/dfp-category-settings.scss", :admin
 register_svg_icon "rectangle-ad"
 
 add_admin_route "admin.adplugin.house_ads.title", "discourse-adplugin", use_new_show_route: true
@@ -48,6 +49,7 @@ after_initialize do
     post "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
     patch "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
     post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
+    get "/ad_plugin/dfp_category_settings" => "ad_plugin/dfp_category_settings#map"
 
     mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
 
@@ -61,23 +63,13 @@ after_initialize do
       put "/house-settings/:id" => "ad_plugin/house_ad_settings#update", :format => false
 
       get "/dfp-settings" => "ad_plugin/dfp_category_settings#index", :format => false
-      post "/dfp-settings" => "ad_plugin/dfp_category_settings#create", :format => false
-      put "/dfp-settings/:id" => "ad_plugin/dfp_category_settings#update", :format => false
-      delete "/dfp-settings/:id" => "ad_plugin/dfp_category_settings#destroy", :format => false
+      get "/dfp-settings/new" => "ad_plugin/dfp_category_settings#index", :format => false
+      get "/dfp-settings/:id/edit" => "ad_plugin/dfp_category_settings#index", :format => false
     end
   end
 
   add_to_serializer :site, :dfp_category_settings do
-    AdPlugin::DfpCategorySetting.all.to_h do |setting|
-      [
-        setting.category_id.to_s,
-        {
-          gam_adunit: setting.gam_adunit,
-          gam_keywords: setting.gam_keywords,
-          gtm_taxonomy: setting.gtm_taxonomy,
-        },
-      ]
-    end
+    AdPlugin::DfpCategorySetting.site_settings_for(scope)
   end
 
   add_to_serializer :site, :house_creatives do

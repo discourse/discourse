@@ -30,7 +30,7 @@ module("Integration | Component | DfpAdCategorySettings", function (hooks) {
       .exists("the gam_adunit field renders")
       .hasAttribute(
         "placeholder",
-        i18n("adplugin.gam_category_settings.gam_adunit_placeholder"),
+        i18n("adplugin.gam_adunit_placeholder"),
         "the gam_adunit placeholder is shown"
       );
     assert
@@ -77,5 +77,27 @@ module("Integration | Component | DfpAdCategorySettings", function (hooks) {
     assert
       .dom('.dfp-ad-category-settings input[name="custom_fields.gtm_taxonomy"]')
       .hasValue("sports/forums/cards-talk", "the saved gtm_taxonomy is shown");
+  });
+
+  test("renders the legacy explanation as the section subtitle", async function (assert) {
+    this.data = { custom_fields: {} };
+    this.category = { id: 41, slug: "cards-talk", custom_fields: {} };
+
+    await render(
+      <template>
+        <Form @data={{this.data}} as |form|>
+          <DfpAdCategorySettings
+            @outletArgs={{hash category=this.category form=form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".dfp-ad-category-settings .form-kit__section-subtitle")
+      .hasText(
+        i18n("adplugin.gam_category_settings.legacy_description"),
+        "the explanation renders via @subtitle (Section has no @description)"
+      );
   });
 });

@@ -90,9 +90,11 @@ export default class AdComponent extends Component {
     )?.custom_fields;
   }
 
-  @computed("currentCategoryId")
+  @computed("currentCategoryId", "site.dfp_category_settings")
   get currentCategoryDfpConfig() {
-    return this.site?.dfp_category_settings?.[String(this.currentCategoryId)];
+    return this.site?.get("dfp_category_settings")?.[
+      String(this.currentCategoryId)
+    ];
   }
 
   @computed(
