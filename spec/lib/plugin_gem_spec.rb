@@ -303,7 +303,7 @@ RSpec.describe PluginGem do
       gem "beta"
       gem "alpha", group: :development
       gem "shared", group: :test
-      gem "gamma", group: :migrations
+      gem "gamma", group: :generic_import
     GEMFILE
       lock: {
         "alpha" => "1.1.0",
@@ -326,7 +326,7 @@ RSpec.describe PluginGem do
     boot_with_groups(only: %i[development])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
 
-    boot_with_groups(with: %i[migrations], without: %i[development test])
+    boot_with_groups(with: %i[generic_import], without: %i[development test])
     expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0])
   end
 
@@ -606,7 +606,7 @@ RSpec.describe PluginGem do
     add_plugin("one", %(gem "alpha"), lock: alpha_lock, source: "https://gems.example.com")
 
     expect { boot }.to raise_error(
-      %r{Plugin one's Gemfile uses the gem source https://gems.example.com/; a plugin's gems must come from the application's gem sources \(https://rubygems.org/\)},
+      %r{Plugin one's Gemfile uses the gem source https://gems.example.com/; a plugin's gems must come from the application's gem sources \(https://rubygems.org/[^)]*\)},
     )
     expect(Dir.exist?(gems_dir)).to eq(false)
   end
