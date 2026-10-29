@@ -82,6 +82,32 @@ RSpec.describe "DiscoursePoll hidden post serialization", type: :request do
     expect(serialized["polls"].first["options"].map { |o| o["html"] }).to include("Secret option A")
   end
 
+  describe "poll refresh through the post endpoint" do
+    it "returns current poll data for a visible post" do
+      poll_post.unhide!
+      get "/posts/#{poll_post.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["polls"].first["options"].map { |o| o["html"] }).to include(
+        "Secret option A",
+      )
+    end
+
+    it "preserves refresh access for the hidden post's author" do
+      sign_in(author)
+      get "/posts/#{poll_post.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["polls"]).to be_present
+    end
+
+    it "denies refresh access for viewers who cannot see the hidden post" do
+      get "/posts/#{poll_post.id}.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "poll broadcasts" do
     def poll_messages(&block)
       MessageBus.track_publish("/polls/#{topic.id}", &block)
@@ -143,8 +169,7 @@ RSpec.describe "DiscoursePoll hidden post serialization", type: :request do
       messages = poll_messages { DiscoursePoll::PollsUpdater.publish_changes(poll_post) }
 
       expect(messages.size).to eq(1)
-      expect(messages.first.data[:post_id]).to eq(poll_post.id)
-      expect(messages.first.data[:polls]).to be_present
+      expect(messages.first.data).to eq(post_id: poll_post.id)
     end
   end
 

@@ -4,11 +4,12 @@ module DiscoursePoll
   module PostExtension
     extend ActiveSupport::Concern
 
-    def publish_poll_message!(payload)
+    def publish_poll_message!
       # Topic access alone does not grant access to a hidden post's poll content.
       return if hidden?
 
-      publish_message!("/polls/#{topic_id}", payload)
+      # Retained messages must not contain content whose visibility can change.
+      publish_message!("/polls/#{topic_id}", post_id: id)
     end
 
     prepended do

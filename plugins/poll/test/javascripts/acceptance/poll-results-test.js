@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
@@ -1039,6 +1040,27 @@ acceptance("Poll results", function (needs) {
     );
   });
 
+  test("ignores invalidations for unloaded posts", async function (assert) {
+    await visit("/t/load-more-poll-voters/134");
+    let fetches = 0;
+    pretender.get("/posts/999999.json", () => {
+      fetches++;
+      return response({});
+    });
+
+    await publishToMessageBus("/polls/134", { post_id: 999999 });
+    assert.strictEqual(fetches, 0, "unloaded posts must not be fetched");
+    assert.dom(".poll-container").exists();
+  });
+
+  test("handles a post becoming inaccessible before refresh", async function (assert) {
+    await visit("/t/load-more-poll-voters/134");
+    pretender.get("/posts/156.json", () => response(404, {}));
+
+    await publishToMessageBus("/polls/134", { post_id: 156 });
+    assert.dom(".poll-container").exists();
+  });
+
   test("can load more voters", async function (assert) {
     await visit("/t/load-more-poll-voters/134");
     assert
@@ -1048,44 +1070,48 @@ acceptance("Poll results", function (needs) {
       .dom(".poll-container .results li:nth-child(2) .poll-voters li")
       .doesNotExist("initially, no voter shown on second option");
 
-    await publishToMessageBus("/polls/134", {
-      post_id: "156",
-      polls: [
-        {
-          name: "poll",
-          type: "regular",
-          status: "open",
-          public: true,
-          results: "always",
-          options: [
-            {
-              id: "db753fe0bc4e72869ac1ad8765341764",
-              html: 'Option <span class="hashtag">#1</span>',
-              votes: 2,
-            },
-            {
-              id: "d8c22ff912e03740d9bc19e133e581e0",
-              html: 'Option <span class="hashtag">#2</span>',
-              votes: 0,
-            },
-          ],
-          voters: 2,
-          preloaded_voters: {
-            db753fe0bc4e72869ac1ad8765341764: [
+    pretender.get("/posts/156.json", () =>
+      response({
+        post_id: "156",
+        polls: [
+          {
+            name: "poll",
+            type: "regular",
+            status: "open",
+            public: true,
+            results: "always",
+            options: [
               {
-                id: 1,
-                username: "bianca",
-                name: null,
-                avatar_template:
-                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+                id: "db753fe0bc4e72869ac1ad8765341764",
+                html: 'Option <span class="hashtag">#1</span>',
+                votes: 2,
+              },
+              {
+                id: "d8c22ff912e03740d9bc19e133e581e0",
+                html: 'Option <span class="hashtag">#2</span>',
+                votes: 0,
               },
             ],
+            voters: 2,
+            preloaded_voters: {
+              db753fe0bc4e72869ac1ad8765341764: [
+                {
+                  id: 1,
+                  username: "bianca",
+                  name: null,
+                  avatar_template:
+                    "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+                },
+              ],
+            },
+            chart_type: "bar",
+            title: null,
           },
-          chart_type: "bar",
-          title: null,
-        },
-      ],
-    });
+        ],
+      })
+    );
+
+    await publishToMessageBus("/polls/134", { post_id: "156" });
 
     assert
       .dom(".poll-container .results li:nth-child(1) .poll-voters li")
@@ -1149,69 +1175,73 @@ acceptance("Poll results", function (needs) {
         "after clicking fetch voters button, two voters shown on first option"
       );
 
-    await publishToMessageBus("/polls/135", {
-      post_id: "158",
-      polls: [
-        {
-          name: "poll",
-          type: "ranked_choice",
-          status: "open",
-          public: true,
-          results: "always",
-          options: [
-            {
-              id: "def034c6770c6fd3754c054ef9ec4721",
-              html: "This",
-              votes: 3,
-            },
-            {
-              id: "d8c22ff912e03740d9bc19e133e581e0",
-              html: "That",
-              votes: 0,
-            },
-          ],
-          voters: 3,
-          preloaded_voters: {
-            def034c6770c6fd3754c054ef9ec4721: [
+    pretender.get("/posts/158.json", () =>
+      response({
+        post_id: "158",
+        polls: [
+          {
+            name: "poll",
+            type: "ranked_choice",
+            status: "open",
+            public: true,
+            results: "always",
+            options: [
               {
-                rank: 1,
-                user: {
-                  id: 1,
-                  username: "bianca",
-                  name: null,
-                  avatar_template:
-                    "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
-                },
+                id: "def034c6770c6fd3754c054ef9ec4721",
+                html: "This",
+                votes: 3,
               },
               {
-                rank: 1,
-                user: {
-                  id: 7,
-                  username: "foo",
-                  name: null,
-                  avatar_template:
-                    "/letter_avatar_proxy/v4/letter/f/b19c9b/{size}.png",
-                  title: null,
-                },
-              },
-              {
-                rank: 1,
-                user: {
-                  id: 11,
-                  username: "bar",
-                  name: null,
-                  avatar_template:
-                    "/letter_avatar_proxy/v4/letter/f/f33bef/{size}.png",
-                  title: null,
-                },
+                id: "d8c22ff912e03740d9bc19e133e581e0",
+                html: "That",
+                votes: 0,
               },
             ],
+            voters: 3,
+            preloaded_voters: {
+              def034c6770c6fd3754c054ef9ec4721: [
+                {
+                  rank: 1,
+                  user: {
+                    id: 1,
+                    username: "bianca",
+                    name: null,
+                    avatar_template:
+                      "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+                  },
+                },
+                {
+                  rank: 1,
+                  user: {
+                    id: 7,
+                    username: "foo",
+                    name: null,
+                    avatar_template:
+                      "/letter_avatar_proxy/v4/letter/f/b19c9b/{size}.png",
+                    title: null,
+                  },
+                },
+                {
+                  rank: 1,
+                  user: {
+                    id: 11,
+                    username: "bar",
+                    name: null,
+                    avatar_template:
+                      "/letter_avatar_proxy/v4/letter/f/f33bef/{size}.png",
+                    title: null,
+                  },
+                },
+              ],
+            },
+            chart_type: "bar",
+            title: null,
           },
-          chart_type: "bar",
-          title: null,
-        },
-      ],
-    });
+        ],
+      })
+    );
+
+    await publishToMessageBus("/polls/135", { post_id: "158" });
 
     assert
       .dom(

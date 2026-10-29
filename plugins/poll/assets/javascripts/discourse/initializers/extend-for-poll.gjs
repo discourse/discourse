@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
+import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder.gjs";
@@ -78,10 +79,26 @@ function initializePolls(api) {
         }
 
         @bind
-        _onPollMessage(msg) {
-          const post = this.get("model.postStream").findLoadedPost(msg.post_id);
-          if (post) {
-            post.polls = msg.polls;
+        async _onPollMessage(msg) {
+          const postStream = this.get("model.postStream");
+          const post = postStream.findLoadedPost(msg.post_id);
+          if (!post) {
+            return;
+          }
+
+          try {
+            // Fetch with current permissions instead of trusting retained content.
+            const refreshed = await ajax(`/posts/${post.id}.json`);
+            if (
+              !this.isDestroying &&
+              !this.isDestroyed &&
+              this.get("model.postStream") === postStream &&
+              postStream.findLoadedPost(post.id) === post
+            ) {
+              post.polls = refreshed.polls || [];
+            }
+          } catch {
+            // The post may have been hidden, deleted, or made inaccessible.
           }
         }
       }

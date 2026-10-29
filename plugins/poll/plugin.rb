@@ -125,21 +125,18 @@ after_initialize do
     doc.css("div.poll").each { |poll| poll.replace(replacement) }
   end
 
-  on(:post_created) do |post, _opts, user|
-    guardian = Guardian.new(user)
+  # Drop content-bearing messages retained before invalidation-only broadcasts.
+  MessageBus.register_client_message_filter("/polls/") do |message|
+    message.data.keys.map(&:to_s) == ["post_id"]
+  end
+
+  on(:post_created) do |post, _opts, _user|
     DiscoursePoll::Poll.schedule_jobs(post)
 
     next if post.is_first_post?
     next if post.custom_fields[DiscoursePoll::HAS_POLLS].blank?
 
-    polls =
-      ActiveModel::ArraySerializer.new(
-        post.polls,
-        each_serializer: PollSerializer,
-        root: false,
-        scope: guardian,
-      ).as_json
-    post.publish_poll_message!(post_id: post.id, polls: polls)
+    post.publish_poll_message!
   end
 
   on(:post_moved) do |new_post, _original_topic_id, old_post|
