@@ -55,7 +55,7 @@ if actual_type != "png"
 end
 
 # Use OptimizedImage.downsize to resize (max 1200px width, maintain aspect ratio)
-OptimizedImage.downsize(path, path, "1200x>")
+OptimizedImage.downsize(from: path, to: path, width: 1200, height: FastImage.size(path)[1])
 
 # Force pngquant optimization for better compression (OptimizedImage skips it for files > 500KB)
 FileHelper.optimize_image!(path, allow_pngquant: true)
