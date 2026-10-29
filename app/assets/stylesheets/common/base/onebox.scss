@@ -6,6 +6,8 @@
 }
 
 @mixin onebox-shadow($thickness) {
+  $thickness: var(--onebox-shadow-width, #{$thickness});
+
   border: 0;
   margin-inline: $thickness;
   box-shadow:
@@ -761,6 +763,7 @@ aside.onebox.github-onebox {
   --github-onebox-header-background: var(--primary-very-low);
   --onebox-border-color: light-dark(#d1d9e0, #3d444d);
   --onebox-shadow-color: transparent;
+  --onebox-shadow-width: 1px;
   container: github-onebox / inline-size;
   padding: 0;
   overflow: hidden;
