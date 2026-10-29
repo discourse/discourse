@@ -4590,7 +4590,7 @@ tr_TR:
     category:
       none: "(kategori yok)"
       all: "Tüm kategoriler"
-      choose: "Kategori&hellip;"
+      choose: "Kategori…"
       edit: "Düzenle"
       edit_title: "Bu kategoriyi düzenle"
       edit_dialog_title: "Düzenle: %{categoryName}"

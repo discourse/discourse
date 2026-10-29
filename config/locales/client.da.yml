@@ -3554,7 +3554,7 @@ da:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "Kategori&hellip;"
+      choose: "Kategori…"
       edit: "Rediger"
       edit_title: "Rediger denne kategori"
       edit_dialog_title: "Rediger: %{categoryName}"

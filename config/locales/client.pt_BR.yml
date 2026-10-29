@@ -4487,7 +4487,7 @@ pt_BR:
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "Categoria&hellip;"
+      choose: "Categoria…"
       edit: "Editar"
       edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"

@@ -4448,7 +4448,7 @@ sk:
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
-      choose: "Kategória&hellip;"
+      choose: "Kategória…"
       edit: "Upraviť"
       edit_title: "Upraviť túto kategóriu"
       edit_dialog_title: "Úprava: %{categoryName}"

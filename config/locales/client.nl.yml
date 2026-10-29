@@ -4564,7 +4564,7 @@ nl:
     category:
       none: "(geen categorie)"
       all: "Alle categorieën"
-      choose: "Categorie&hellip;"
+      choose: "Categorie…"
       edit: "Bewerken"
       edit_title: "Bewerk deze categorie"
       edit_dialog_title: "Bewerken: %{categoryName}"

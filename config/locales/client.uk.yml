@@ -5634,7 +5634,7 @@ uk:
     category:
       none: "(без розділу)"
       all: "Всі розділи"
-      choose: "Розділ &hellip;"
+      choose: "Розділ …"
       edit: "Редагувати"
       edit_title: "Редагувати цей розділ"
       edit_dialog_title: "Редагувати:%{categoryName}"

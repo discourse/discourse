@@ -5887,7 +5887,7 @@ ar:
     category:
       none: "(بلا فئة)"
       all: "جميع الفئات"
-      choose: "الفئة&hellip;"
+      choose: "الفئة…"
       edit: "تعديل"
       edit_title: "تعديل هذه الفئة"
       edit_dialog_title: "تعديل: %{categoryName}"

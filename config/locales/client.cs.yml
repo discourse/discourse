@@ -4772,7 +4772,7 @@ cs:
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
-      choose: "Kategorie&hellip;"
+      choose: "Kategorie…"
       edit: "Upravit"
       edit_title: "Upravit tuto kategorii"
       edit_dialog_title: "Upravit: %{categoryName}"

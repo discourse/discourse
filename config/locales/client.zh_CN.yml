@@ -4904,7 +4904,7 @@ zh_CN:
     category:
       none: "（无类别）"
       all: "所有类别"
-      choose: "类别&hellip;"
+      choose: "类别…"
       edit: "编辑"
       edit_title: "编辑此类别"
       edit_dialog_title: "编辑: %{categoryName}"

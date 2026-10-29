@@ -5692,7 +5692,7 @@ lt:
     category:
       none: "(be kategorijos)"
       all: "Visos kategorijos"
-      choose: "Kategorija&hellip;"
+      choose: "Kategorija…"
       edit: "Redaguoti"
       edit_title: "Redaguoti šią kategoriją"
       edit_dialog_title: "Redaguoti: %{categoryName}"

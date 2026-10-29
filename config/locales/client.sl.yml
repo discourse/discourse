@@ -3061,7 +3061,7 @@ sl:
     category:
       none: "(brez kategorije)"
       all: "Vse kategorije"
-      choose: "Kategorija&hellip;"
+      choose: "Kategorija…"
       edit: "Uredi"
       edit_dialog_title: "Uredi: %{categoryName}"
       view: "Poglej teme v kategoriji"

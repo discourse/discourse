@@ -4893,7 +4893,7 @@ ru:
     category:
       none: "(разное)"
       all: "Все категории"
-      choose: "Выберите категорию&hellip;"
+      choose: "Выберите категорию…"
       edit: "Изменить"
       edit_title: "Редактировать категорию"
       edit_dialog_title: "Редактировать: %{categoryName}"

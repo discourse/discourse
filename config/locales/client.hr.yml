@@ -4346,7 +4346,7 @@ hr:
     category:
       none: "(nema kategorije)"
       all: "Sve kategorije"
-      choose: "Kategorija&hellip;"
+      choose: "Kategorija…"
       edit: "Izmijeni"
       edit_title: "Uredite ovu kategoriju"
       edit_dialog_title: "Uredi: %{categoryName}"

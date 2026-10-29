@@ -2822,7 +2822,7 @@ gl:
     category:
       none: "(sen categoría)"
       all: "Todas as categorías"
-      choose: "Categoría&hellip;"
+      choose: "Categoría…"
       edit: "Editar"
       edit_dialog_title: "Editar: %{categoryName}"
       view: "Ver os temas na categoría"

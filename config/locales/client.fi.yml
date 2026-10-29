@@ -4128,7 +4128,7 @@ fi:
     category:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
-      choose: "Alue&hellip;"
+      choose: "Alue…"
       edit: "Muokkaa"
       edit_title: "Muokkaa tätä aluetta"
       edit_dialog_title: "Muokkaa: %{categoryName}"
