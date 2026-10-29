@@ -97,6 +97,40 @@ that exits while a PostgreSQL connection remains referenced is not sufficient ev
 that native cleanup was exercised. Repeated full conversions supplement these tests;
 they do not prove that all lifecycle interleavings are safe.
 
+#### Proposed lifecycle API
+
+The following is a design direction, not an implemented guarantee. Prefer composition:
+one managed connection factory should own native construction, configuration, registration,
+failure cleanup, and close. Source adapters and the importer should share this mechanism;
+their query and conversion APIs can remain separate. Driver implementations should not
+register independent fork hooks or expose untracked native handles to callers.
+
+An unreviewed driver should prohibit raw worker forks by default. Explicitly supported
+policies can permit child-side discard (PostgreSQL) or parent-side close and restoration
+(the converter's SQLite run connection). SQLite restoration is an opt-in capability:
+reopening a filename alone does not restore attachments, temporary tables, transactions,
+or other session state. Never silently commit a caller's transaction to make a fork work.
+
+The fork backend needs one lifecycle protocol for ordinary forks and batches. Exclude
+construction and destruction throughout preparation, process creation, and parent
+restoration; quiesce operations on connections that must close. Track operation leases,
+including streaming results, and restore every successfully prepared resource even if
+a later preparation or fork fails. An unexpected child discard failure must prevent
+worker execution and terminate without running inherited cleanup. PID checks help catch
+accidental use, but cannot prevent native finalizers from running.
+
+A worker backend launched through exec provides a stronger isolation boundary: pass
+serializable job descriptions and explicitly allowed IPC descriptors, then open database
+connections inside each fresh worker. A persistent worker pool can amortize startup,
+with measured tradeoffs in memory sharing and job serialization. Unknown drivers can
+use this backend without a custom inherited-handle cleanup strategy. It still needs
+normal connection ownership, transaction, and SQLite writer coordination.
+
+Enforce the boundary with a narrow allowlist for native database constructors and raw
+fork calls, shared adapter contract tests, and real-driver CI coverage. Such repository
+checks catch accidental bypasses; they cannot prove that arbitrary native dependencies
+are safe to execute after a multithreaded fork.
+
 ### Partitioning large steps
 
 Most steps run in a single worker. A handful are large enough that it's worth
