@@ -1171,4 +1171,493 @@ RSpec.describe Email::Sender do
       end
     end
   end
+
+  describe "critical SMTP routing" do
+    fab!(:user)
+
+    let(:default_settings) do
+      {
+        address: "default.example.com",
+        port: 587,
+        domain: "default-helo.example.com",
+        user_name: "default-user",
+        password: "default-password",
+        authentication: :login,
+        enable_starttls_auto: false,
+        tls: true,
+        openssl_verify_mode: "none",
+        open_timeout: 20,
+        read_timeout: 40,
+      }
+    end
+    let(:delivered) { [] }
+    let(:smtp_response) { Net::SMTP::Response.new("250", "250 queued as critical-message\r\n") }
+
+    def delivered_addresses
+      delivered.map { |message| message.delivery_method.settings[:address] }
+    end
+
+    around do |example|
+      original_settings = ActionMailer::Base.smtp_settings
+      original_method = ActionMailer::Base.delivery_method
+      example.run
+    ensure
+      ActionMailer::Base.smtp_settings = original_settings
+      ActionMailer::Base.delivery_method = original_method
+    end
+
+    before do
+      ActionMailer::Base.delivery_method = :smtp
+      ActionMailer::Base.smtp_settings = default_settings
+      global_setting :critical_smtp_address, "critical.example.com"
+      Mail::SMTP
+        .any_instance
+        .stubs(:deliver!)
+        .with do |message|
+          delivered << message
+          true
+        end
+        .returns(smtp_response)
+    end
+
+    it "keeps the default transport when critical SMTP is disabled" do
+      global_setting :critical_smtp_address, nil
+      message = UserNotifications.forgot_password(user, email_token: "reset-token").message
+      transport = message.delivery_method
+
+      Email::Sender.new(message, :forgot_password, user).send
+
+      expect(delivered).to eq([message])
+      expect(message.delivery_method).to equal(transport)
+      expect(transport.settings).to include(default_settings)
+    end
+
+    it "preserves disabled-email behavior and the existing admin-login exception" do
+      SiteSetting.disable_emails = "yes"
+      Jobs::CriticalUserEmail.new.execute(user_id: user.id, type: "forgot_password")
+      Jobs::CriticalUserEmail.new.execute(user_id: user.id, type: "admin_login")
+
+      expect(delivered.size).to eq(1)
+      expect(EmailLog.last.email_type).to eq("admin_login")
+      expect(delivered_addresses).to eq(["critical.example.com"])
+    end
+
+    it "preserves login-link rate and bounce limits without adding routing types to exemptions" do
+      SiteSetting.max_emails_per_day_per_user = 1
+      Jobs::CriticalUserEmail.new.execute(user_id: user.id, type: "signup")
+      Jobs::CriticalUserEmail.new.execute(user_id: user.id, type: "email_login")
+
+      expect(SkippedEmailLog.last.reason_type).to eq(
+        SkippedEmailLog.reason_types[:exceeded_emails_limit],
+      )
+
+      SiteSetting.max_emails_per_day_per_user = 0
+      user.user_stat.update!(bounce_score: SiteSetting.bounce_score_threshold)
+      Jobs::CriticalUserEmail.new.execute(user_id: user.id, type: "email_login")
+
+      expect(SkippedEmailLog.last.reason_type).to eq(
+        SkippedEmailLog.reason_types[:exceeded_bounces_limit],
+      )
+      expect(delivered.size).to eq(1)
+    end
+
+    %w[
+      signup
+      activation_reminder
+      forgot_password
+      account_created
+      email_login
+      admin_login
+      confirm_old_email
+      confirm_old_email_add
+      confirm_new_email
+    ].each do |type|
+      it "routes the real #{type} mailer through the account email job" do
+        job =
+          if %w[activation_reminder account_created].include?(type)
+            Jobs::UserEmail.new
+          else
+            Jobs::CriticalUserEmail.new
+          end
+        job.execute(user_id: user.id, type: type, email_token: "account-access-token")
+
+        expect(delivered.size).to eq(1)
+        message = delivered.first
+        expect(message.to).to eq([user.email])
+        expect(message.text_part.decoded).to include("account-access-token")
+        expect(delivered_addresses).to eq(["critical.example.com"])
+        expect(EmailLog.last.email_type).to eq(type)
+      end
+    end
+
+    it "routes login and password reset codes through their independent job" do
+      SiteSetting.enable_local_logins_via_code = true
+
+      [false, true].each do |password_reset|
+        Jobs::SendEmailLoginCode.new.execute(
+          to_address: user.email,
+          code: "123456",
+          password_reset: password_reset,
+        )
+      end
+
+      expect(delivered_addresses).to eq(%w[critical.example.com critical.example.com])
+      expect(delivered.map(&:subject)).to eq(
+        %w[email_login_code_mailer password_reset_code_mailer].map do |template|
+          I18n.t("#{template}.subject_template", code: "123456")
+        end,
+      )
+    end
+
+    it "routes invited-user password setup and admin confirmation through their own jobs" do
+      admin_token = SecureRandom.hex
+      Jobs::InvitePasswordInstructionsEmail.new.execute(username: user.username)
+      Jobs::AdminConfirmationEmail.new.execute(
+        to_address: user.email,
+        target_email: "new-admin@example.com",
+        target_username: "new_admin",
+        token: admin_token,
+      )
+
+      expect(delivered_addresses).to eq(%w[critical.example.com critical.example.com])
+      password_token = delivered.first.text_part.decoded[%r{/password-reset/([0-9a-f]+)}, 1]
+      expect(
+        EmailToken.confirmable(password_token, scope: EmailToken.scopes[:password_reset])&.user,
+      ).to eq(user)
+      expect(delivered.last.text_part.decoded).to include(admin_token)
+      expect(EmailLog.order(:id).last(2).map(&:email_type)).to eq(
+        %w[invite_password_instructions admin_confirmation_message],
+      )
+    end
+
+    it "uses the verification recipient for an email-address change" do
+      Jobs::CriticalUserEmail.new.execute(
+        user_id: user.id,
+        type: "confirm_new_email",
+        email_token: "email-change-token",
+        to_address: "new-address@example.com",
+      )
+
+      expect(delivered.size).to eq(1)
+      expect(delivered.first.to).to eq(["new-address@example.com"])
+      expect(delivered.first.text_part.decoded).to include("email-change-token")
+      expect(delivered_addresses).to eq(["critical.example.com"])
+    end
+
+    it "leaves digests, ordinary, unknown, invite, moderation, and notice types on default SMTP" do
+      %w[
+        digest
+        user_replied
+        unknown_plugin_email
+        invite
+        signup_after_approval
+        signup_after_reject
+        suspicious_login
+        notify_old_email
+        notify_old_email_add
+        account_exists
+        account_associated
+        account_second_factor_disabled
+        account_silenced
+        account_suspended
+        account_deleted
+      ].each do |type|
+        message = TestMailer.send_test(user.email).message
+        transport = message.delivery_method
+
+        Email::Sender.new(message, type, user).send
+
+        expect(message.delivery_method).to equal(transport)
+        expect(message.delivery_method.settings).to include(default_settings)
+      end
+    end
+
+    it "keeps the real approval welcome and address-change notices on default SMTP" do
+      %w[signup_after_approval notify_old_email notify_old_email_add].each do |type|
+        Jobs::CriticalUserEmail.new.execute(
+          user_id: user.id,
+          type: type,
+          new_email: "new-address@example.com",
+        )
+      end
+
+      expect(delivered_addresses).to eq(Array.new(3, default_settings[:address]))
+    end
+
+    [false, true].each do |code_mode|
+      it "keeps real #{code_mode ? "code-mode" : "token-link"} invitations on default SMTP" do
+        SiteSetting.allow_email_invites = true
+        SiteSetting.enable_local_logins_via_code = code_mode
+        invite = Fabricate(:invite)
+
+        Jobs::InviteEmail.new.execute(invite_id: invite.id)
+
+        expect(delivered.size).to eq(1)
+        message = delivered.first
+        expect(message.to).to eq([invite.email])
+        expect(message.text_part.decoded).to include(invite.link(with_email_token: !code_mode))
+        if code_mode
+          expect(message.text_part.decoded).not_to include(invite.email_token)
+        else
+          expect(message.text_part.decoded).to include(invite.email_token)
+        end
+        expect(message.delivery_method.settings).to include(default_settings)
+        expect(EmailLog.last.email_type).to eq("invite")
+      end
+    end
+
+    it "uses independent relay defaults and retains transaction-response logging" do
+      message = UserNotifications.forgot_password(user).message
+      original_from = message.from
+      original_reply_to = message.reply_to
+
+      log = Email::Sender.new(message, :forgot_password, user).send
+
+      expect(message.delivery_method.settings).to include(
+        address: "critical.example.com",
+        port: 25,
+        domain: nil,
+        user_name: nil,
+        password: nil,
+        authentication: nil,
+        enable_starttls_auto: true,
+        tls: nil,
+        openssl_verify_mode: nil,
+        open_timeout: 5.0,
+        read_timeout: 30.0,
+        return_response: true,
+      )
+      expect(message.from).to eq(original_from)
+      expect(message.reply_to).to eq(original_reply_to)
+      expect(log.smtp_transaction_response).to eq(smtp_response.message.chomp)
+    end
+
+    it "passes configured credentials, TLS, and timeouts to the individual transport" do
+      global_setting :critical_smtp_port, 465
+      global_setting :critical_smtp_domain, "critical-helo.example.com"
+      global_setting :critical_smtp_user_name, "critical-user"
+      global_setting :critical_smtp_password, "critical-password"
+      global_setting :critical_smtp_authentication, "plain"
+      global_setting :critical_smtp_force_tls, true
+      global_setting :critical_smtp_openssl_verify_mode, "peer"
+      global_setting :critical_smtp_open_timeout, "1.5"
+      global_setting :critical_smtp_read_timeout, "9.5"
+      message = UserNotifications.signup(user).message
+
+      Email::Sender.new(message, :signup, user).send
+
+      expect(message.delivery_method.settings).to include(
+        address: "critical.example.com",
+        port: 465,
+        domain: "critical-helo.example.com",
+        user_name: "critical-user",
+        password: "critical-password",
+        authentication: "plain",
+        tls: true,
+        enable_starttls_auto: false,
+        openssl_verify_mode: "peer",
+        open_timeout: 1.5,
+        read_timeout: 9.5,
+        return_response: true,
+      )
+    end
+
+    it "routes interleaved messages individually without changing global settings" do
+      global_settings = default_settings.deep_dup
+      {
+        signup: UserNotifications.signup(user).message,
+        test_message: TestMailer.send_test(user.email).message,
+        forgot_password: UserNotifications.forgot_password(user).message,
+      }.each { |type, message| Email::Sender.new(message, type, user).send }
+
+      expect(delivered_addresses).to eq(
+        %w[critical.example.com default.example.com critical.example.com],
+      )
+      expect(ActionMailer::Base.smtp_settings).to eq(global_settings)
+      expect(ActionMailer::Base.delivery_method).to eq(:smtp)
+    end
+
+    it "routes mailer subclasses that inherit the default SMTP configuration" do
+      stub_const(Object, :CriticalSmtpTestMailer, Class.new(TestMailer)) do
+        message = CriticalSmtpTestMailer.send_test(user.email).message
+
+        Email::Sender.new(message, :signup, user).send
+
+        expect(message.delivery_method.settings[:address]).to eq("critical.example.com")
+      end
+    end
+
+    it "preserves SMTP transports that differ from the default" do
+      stub_const(Object, :CriticalSmtpTestMailer, Class.new(TestMailer)) do
+        CriticalSmtpTestMailer.smtp_settings = default_settings.merge(port: 2525)
+        edited = UserNotifications.signup(user).message
+        edited.delivery_method.settings[:password] = "per-message-password"
+
+        [
+          TestMailer.send_test(
+            user.email,
+            delivery_method_options: {
+              address: "custom.example.com",
+            },
+          ).message,
+          CriticalSmtpTestMailer.send_test(user.email).message,
+          edited,
+        ].each do |message|
+          transport = message.delivery_method
+          settings = transport.settings.deep_dup
+
+          Email::Sender.new(message, :signup, user).send
+
+          expect(message.delivery_method).to equal(transport)
+          expect(transport.settings).to eq(settings)
+        end
+      end
+    end
+
+    it "preserves real group SMTP even for an included email type" do
+      SiteSetting.enable_smtp = true
+      group = Fabricate(:smtp_group)
+      message = GroupSmtpMailer.send_mail(group, user.email, Fabricate(:post)).message
+      transport = message.delivery_method
+
+      log = Email::Sender.new(message, :signup, user).send
+
+      expect(message.delivery_method).to equal(transport)
+      expect(transport.settings).to include(
+        address: group.smtp_server,
+        user_name: group.email_username,
+        password: group.email_password,
+      )
+      expect(log.smtp_group_id).to eq(group.id)
+    end
+
+    it "preserves test, file, sendmail, custom adapters, and SMTP subclasses" do
+      custom_adapter =
+        Class.new do
+          attr_reader :settings
+
+          def initialize(settings)
+            @settings = settings
+          end
+        end
+
+      [:test, :file, :sendmail, custom_adapter, Class.new(Mail::SMTP)].each do |adapter|
+        message = UserNotifications.signup(user).message
+        message.delivery_method(adapter, default_settings.merge(return_response: true))
+        transport = message.delivery_method
+        transport.stubs(:deliver!).returns(smtp_response)
+
+        Email::Sender.new(message, :signup, user).send
+
+        expect(message.delivery_method).to equal(transport)
+      end
+    end
+
+    it "treats explicitly supplied settings identical to the defaults as default SMTP" do
+      message = Mail::Message.new(to: user.email, body: "account mail")
+      message.delivery_method(:smtp, default_settings)
+
+      Email::Sender.new(message, :signup, user).send
+
+      expect(delivered).to eq([message])
+      expect(delivered_addresses).to eq(["critical.example.com"])
+    end
+
+    it "preserves local capture in the profile environment" do
+      Rails.env.stubs(:profile?).returns(true)
+      message = UserNotifications.signup(user).message
+      transport = message.delivery_method
+
+      Email::Sender.new(message, :signup, user).send
+
+      expect(message.delivery_method).to equal(transport)
+    end
+
+    it "preserves local capture in development unless environment SMTP is enabled" do
+      Rails.env.stubs(:development?).returns(true)
+      local_settings = { address: "localhost", port: 1025 }
+      ActionMailer::Base.smtp_settings = local_settings
+
+      # use_smtp_environment_in_development is normally undefined in development.
+      captured = UserNotifications.signup(user).message
+      Email::Sender.new(captured, :signup, user).send
+
+      expect(captured.delivery_method.settings).to include(local_settings)
+
+      global_setting :use_smtp_environment_in_development, true
+      routed = UserNotifications.signup(user).message
+      Email::Sender.new(routed, :signup, user).send
+
+      expect(routed.delivery_method.settings[:address]).to eq("critical.example.com")
+    end
+
+    it "adds provider metadata for the critical destination" do
+      ActionMailer::Base.smtp_settings = default_settings.merge(address: "smtp.mandrillapp.com")
+
+      {
+        "in-v3.mailjet.com" => "X-MJ-CustomID",
+        "smtp.mandrillapp.com" => "X-MC-Metadata",
+        "smtp.sparkpostmail.com" => "X-MSYS-API",
+      }.each do |address, header|
+        global_setting :critical_smtp_address, address
+        message = UserNotifications.signup(user).message
+
+        Email::Sender.new(message, :signup, user).send
+
+        expect(message.header[header].to_s).to include(message.message_id)
+        expect(message.header["X-MC-Metadata"]).to be_nil unless header == "X-MC-Metadata"
+      end
+    end
+
+    it "retains global-provider metadata for mail outside the critical route" do
+      ActionMailer::Base.smtp_settings = default_settings.merge(address: "smtp.mandrillapp.com")
+      message = TestMailer.send_test(user.email).message
+
+      Email::Sender.new(message, :test_message, user).send
+
+      expect(JSON.parse(message.header["X-MC-Metadata"].to_s)).to eq(
+        "message_id" => message.message_id,
+      )
+    end
+
+    it "allows a hook to replace the selected transport with a non-SMTP adapter" do
+      handler = proc { |message, _type| message.delivery_method(:test) }
+      DiscourseEvent.on(:before_email_send, &handler)
+      message = UserNotifications.signup(user).message
+
+      Email::Sender.new(message, :signup, user).send
+
+      expect(ActionMailer::Base.deliveries).to include(message)
+      expect(delivered).to be_empty
+    ensure
+      DiscourseEvent.off(:before_email_send, &handler)
+    end
+
+    [Net::SMTPFatalError, Net::SMTPSyntaxError, Net::SMTPServerBusy, IOError].each do |error_class|
+      it "does not attempt a second route after #{error_class}" do
+        attempts = []
+        Mail::SMTP
+          .any_instance
+          .stubs(:deliver!)
+          .with do |message|
+            attempts << message.delivery_method.settings[:address]
+            true
+          end
+          .raises(error_class.new("SMTP route failed"))
+        message = UserNotifications.signup(user).message
+        sender = Email::Sender.new(message, :signup, user)
+
+        if [Net::SMTPFatalError, Net::SMTPSyntaxError].include?(error_class)
+          result = sender.send
+          expect(result).to be_a(SkippedEmailLog)
+          expect(result.custom_reason).to include("SMTP route failed")
+        else
+          expect { sender.send }.to raise_error(error_class)
+        end
+
+        expect(attempts).to eq(["critical.example.com"])
+        expect(EmailLog.where(email_type: "signup", user_id: user.id)).to be_empty
+      end
+    end
+  end
 end
