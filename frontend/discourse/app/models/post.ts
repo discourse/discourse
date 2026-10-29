@@ -374,16 +374,17 @@ export default class Post extends RestModel {
 
   static loadRevision(
     postId: number,
-    version: number
+    version: number,
+    { includeUnlisted = false }: { includeUnlisted?: boolean } = {}
   ): globalThis.Promise<EmberObject> {
-    return ajax(`/posts/${postId}/revisions/${version}.json`).then(
-      (result: RestPayload & { categories?: CategoryFields[] }) => {
-        result.categories?.forEach((c: CategoryFields) =>
-          Site.current().updateCategory(c)
-        );
-        return EmberObject.create(result as object);
-      }
-    );
+    return ajax(`/posts/${postId}/revisions/${version}.json`, {
+      data: includeUnlisted ? { include_unlisted: true } : {},
+    }).then((result: RestPayload & { categories?: CategoryFields[] }) => {
+      result.categories?.forEach((c: CategoryFields) =>
+        Site.current().updateCategory(c)
+      );
+      return EmberObject.create(result as object);
+    });
   }
 
   static hideRevision(
@@ -408,6 +409,24 @@ export default class Post extends RestModel {
     version: number
   ): globalThis.Promise<unknown> {
     return ajax(`/posts/${postId}/revisions/${version}/show`, {
+      type: "PUT",
+    });
+  }
+
+  static unlistRevision(
+    postId: number,
+    version: number
+  ): globalThis.Promise<unknown> {
+    return ajax(`/posts/${postId}/revisions/${version}/unlist`, {
+      type: "PUT",
+    });
+  }
+
+  static relistRevision(
+    postId: number,
+    version: number
+  ): globalThis.Promise<unknown> {
+    return ajax(`/posts/${postId}/revisions/${version}/relist`, {
       type: "PUT",
     });
   }

@@ -90,7 +90,13 @@ class ApiKeyScope < ActiveRecord::Base
             path_params: %i[post_id],
           },
           modify: {
-            actions: %w[posts#hide_revision posts#show_revision posts#revert],
+            actions: %w[
+              posts#hide_revision
+              posts#show_revision
+              posts#unlist_revision
+              posts#relist_revision
+              posts#revert
+            ],
             path_params: %i[post_id],
           },
           permanently_delete: {

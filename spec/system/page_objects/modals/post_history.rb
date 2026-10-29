@@ -10,6 +10,11 @@ module PageObjects
         self
       end
 
+      def click_next_revision
+        footer.find("button.next-revision").click
+        self
+      end
+
       def previous_locale
         body.find(".revision__locale .revision-content.--previous")
       end
@@ -22,17 +27,41 @@ module PageObjects
         revision_numbers.find("strong:nth-child(3)")
       end
 
-      def hide_revision
-        footer.find("button.hide-revision").click
+      def open_visibility_menu
+        footer.find(".revision-visibility__trigger").click
         self
       end
 
+      def choose_visibility(visibility)
+        open_visibility_menu
+        find("#{MODAL_SELECTOR} [data-revision-visibility='#{visibility}']").click
+        self
+      end
+
+      def show_all_edits
+        PageObjects::Components::DToggleSwitch.new(
+          "#{footer_selector} .show-unlisted-revisions",
+        ).toggle
+        self
+      end
+
+      def has_unlisted_marker?
+        body.has_css?(
+          ".revision-details__unlisted",
+          text: I18n.t("js.post.revisions.unlisted.label"),
+        )
+      end
+
+      def has_no_unlisted_marker?
+        body.has_no_css?(".revision-details__unlisted")
+      end
+
       def destroy_revisions
-        footer.find("button.destroy-revision").click
+        find("#{MODAL_SELECTOR} .destroy-revision").click
       end
 
       def has_destroy_revisions_button?
-        footer.has_css?("button.destroy-revision")
+        has_css?("#{MODAL_SELECTOR} .destroy-revision")
       end
 
       def has_tag_changes?
@@ -49,6 +78,10 @@ module PageObjects
 
       def has_body_diff?(text)
         body.has_css?(".body-diff", text: text)
+      end
+
+      def has_no_body_diff?(text)
+        body.has_no_css?(".body-diff", text: text)
       end
 
       def previous_tags

@@ -71,6 +71,15 @@
     gap: 0.25em;
   }
 
+  .revision-details__unlisted {
+    color: var(--primary-medium);
+
+    .fk-d-tooltip__trigger-container {
+      align-items: center;
+      gap: 0.25em;
+    }
+  }
+
   .revision__title,
   .revision__locale,
   .body-diff,
@@ -232,6 +241,7 @@
     @include viewport.until(md) {
       width: 100%;
       flex: 1 1 100%;
+      flex-wrap: wrap;
 
       button {
         font-size: var(--font-down-1);
