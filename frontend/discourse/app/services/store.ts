@@ -11,6 +11,7 @@ import WeakValueMap from "discourse/lib/weak-value-map";
 import type Category from "discourse/models/category";
 import type Composer from "discourse/models/composer";
 import type Group from "discourse/models/group";
+import type NavItem from "discourse/models/nav-item";
 import type PendingPost from "discourse/models/pending-post";
 import type { default as Post, PostCreateAttrs } from "discourse/models/post";
 import type PostStream from "discourse/models/post-stream";
@@ -28,6 +29,7 @@ import type {
   default as Topic,
   TopicCreateAttrs,
 } from "discourse/models/topic";
+import type TopicList from "discourse/models/topic-list";
 import type { default as User, UserCreateAttrs } from "discourse/models/user";
 import type UserDraft from "discourse/models/user-draft";
 
@@ -36,12 +38,14 @@ export interface ModelRegistry {
   category: Category;
   composer: Composer;
   group: Group;
+  "nav-item": NavItem;
   "pending-post": PendingPost;
   post: Post;
   "post-stream": PostStream;
   "published-page": PublishedPage;
   site: Site;
   topic: Topic;
+  "topic-list": TopicList;
   user: User;
   "user-draft": UserDraft;
 }

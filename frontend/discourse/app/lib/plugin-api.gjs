@@ -1701,6 +1701,8 @@ class _PluginApi {
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
+   *
+   * @param {import("discourse/models/nav-item").NavigationBarItem} item
    */
   addNavigationBarItem(item) {
     if (!item["name"]) {
