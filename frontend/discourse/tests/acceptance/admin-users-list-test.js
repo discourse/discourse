@@ -139,20 +139,12 @@ acceptance("Admin - Users List", function (needs) {
     });
   });
 
-  test("shows Groups after Bots in the users tabs", async function (assert) {
+  test("shows Bots without Groups in the users tabs", async function (assert) {
     await visit("/admin/users/list/active");
 
     assert
-      .dom(".admin-users-tabs__bots + .admin-users-tabs__groups a")
-      .hasText(
-        i18n("groups.index.title"),
-        "shows Groups immediately after Bots"
-      )
-      .hasAttribute(
-        "href",
-        "/admin/groups",
-        "links to the existing Groups page"
-      );
+      .dom(".admin-users-tabs__groups")
+      .doesNotExist("omits the Groups tab");
     assert
       .dom(".admin-users-tabs__bots a")
       .hasText(i18n("admin.users.nav.bots"), "labels the tab Bots");
