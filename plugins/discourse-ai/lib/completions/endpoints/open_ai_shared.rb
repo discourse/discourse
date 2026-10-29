@@ -24,7 +24,7 @@ module DiscourseAi
         # effort they support.
         OPEN_AI_LOW_EFFORT_FLOOR_MODELS = %w[gpt-6-astra gpt-6.1-sol].freeze
         OPEN_AI_MODEL_SNAPSHOT_SUFFIX = /-\d{4}-\d{2}-\d{2}\z/
-        OPEN_AI_REASONING_MODEL_NAME = /\A(o\d|gpt-([5-9]|\d{2}))/
+        OPEN_AI_REASONING_MODEL_NAME = /\A(o\d|gpt-[5-9])/
         OPEN_AI_REASONING_OUTPUT_RESERVATION = 25_000
         # "minimal" isn't a distinct tier on every OpenAI reasoning model and can
         # be rejected outright, so collapse it into "low".
@@ -99,8 +99,8 @@ module DiscourseAi
               model_params[:thinking_effort],
             )
           # Non-reasoning models (and OpenAI-compatible hosts) reject the parameter,
-          # and omitting it already means no thinking for them.
-          effort = nil if effort == "none" && !reasoning_model?
+          # so agent-level efforts only apply where the model can reason.
+          effort = nil if !reasoning_model?
           effort ||= legacy_reasoning_effort
 
           if effort.blank?
