@@ -38,6 +38,7 @@ module Jobs
           url
           post_id
           created_at
+          form_data
         ],
         user_archive_profile: %w[location website bio views],
         auth_tokens: %w[
@@ -205,7 +206,17 @@ module Jobs
       Post
         .includes(topic: :category)
         .where(user_id: @archive_for_user.id)
-        .select(:id, :topic_id, :post_number, :raw, :cooked, :like_count, :reply_count, :created_at)
+        .select(
+          :id,
+          :topic_id,
+          :post_number,
+          :raw,
+          :cooked,
+          :like_count,
+          :reply_count,
+          :created_at,
+          :form_data,
+        )
         .order(:created_at)
         .with_deleted
         .each { |user_archive| yield get_user_archive_fields(user_archive) }
@@ -527,7 +538,7 @@ module Jobs
       topic_data = user_archive.topic
       user_archive =
         user_archive.as_json(
-          only: %i[topic_id post_number raw cooked like_count reply_count created_at id],
+          only: %i[topic_id post_number raw cooked like_count reply_count created_at id form_data],
         )
       topic_data =
         Topic
@@ -556,6 +567,7 @@ module Jobs
         "is_pm" => is_pm,
         "url" => url,
         "post_id" => user_archive["id"],
+        "form_data" => user_archive["form_data"]&.to_json,
       }
 
       user_archive.merge!(topic_hash)
@@ -589,7 +601,15 @@ module Jobs
       # where type = 'ReviewableQueuedPost' and (payload->'old_queued_post_id') IS NULL
       #
       # except raw, created_topic_id, created_post_id
-      %w[composer_open_duration_msecs is_poll reply_to_post_number tags title typing_duration_msecs]
+      %w[
+        composer_open_duration_msecs
+        is_poll
+        reply_to_post_number
+        tags
+        title
+        typing_duration_msecs
+        form_data
+      ]
     end
 
     def notify_user(export, export_title)

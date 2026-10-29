@@ -1020,6 +1020,7 @@ en:
       saving: "Saving…"
       saved: "Classification saved"
     review:
+      form_managed_notice: "This post was created using a form. Its content can be edited through the form after approval."
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
@@ -6729,6 +6730,7 @@ en:
       upload_field:
         upload: "Upload"
         uploading: "Uploading"
+        remove: "Remove"
       errors:
         value_missing:
           default: "Please fill out this field."

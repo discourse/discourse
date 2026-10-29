@@ -4,7 +4,7 @@ class FormTemplatesController < ApplicationController
   include FormTemplateSubmissions
 
   requires_login
-  before_action :ensure_form_templates_enabled
+  before_action :ensure_form_templates_enabled, except: :render_output
 
   def index
     form_templates = accessible_form_templates.order(:id)
@@ -24,10 +24,23 @@ class FormTemplatesController < ApplicationController
   end
 
   def render_output
-    render_form_submission(
-      category_id: params[:category_id],
-      allow_incomplete_answers: true,
-    ) { |raw| render json: { raw: } }
+    if params[:post_id].present?
+      post = Post.with_deleted.find(params[:post_id])
+      guardian.ensure_can_edit!(post)
+      submission =
+        FormTemplate::Submission.for_edit(
+          post,
+          payload: params.require(:form_template_data),
+          validate: false,
+        )
+      render json: { raw: submission.render }
+    else
+      ensure_form_templates_enabled
+      render_form_submission(
+        category_id: params[:category_id],
+        allow_incomplete_answers: true,
+      ) { |raw| render json: { raw: } }
+    end
   end
 
   private

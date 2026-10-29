@@ -60,6 +60,7 @@ class PostSerializer < BasicPostSerializer
              :bookmark_name,
              :bookmark_auto_delete_preference,
              :raw,
+             :form_submission,
              :actions_summary,
              :moderator?,
              :admin?,
@@ -426,6 +427,19 @@ class PostSerializer < BasicPostSerializer
 
   def include_slug_title?
     @topic_slug.present?
+  end
+
+  def include_form_submission?
+    include_raw? && object.form_data.present? && scope.can_edit?(object) &&
+      saved_form_submission.present?
+  end
+
+  def form_submission
+    saved_form_submission.editor_data(guardian: scope)
+  end
+
+  def saved_form_submission
+    @saved_form_submission ||= object.form_submission
   end
 
   def include_raw?

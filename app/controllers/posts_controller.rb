@@ -172,7 +172,8 @@ class PostsController < ApplicationController
     manager_params = create_params
     if params[:form_template_data].present?
       raise Discourse::InvalidParameters.new(:topic_id) if manager_params[:topic_id].present?
-      render_form_submission(category_id: manager_params[:category]) do |raw|
+      render_form_submission(category_id: manager_params[:category]) do |raw, submission|
+        manager_params[:form_data] = submission.to_h
         manager_params[:raw] = raw
       end
       return if performed?
@@ -237,6 +238,19 @@ class PostsController < ApplicationController
     original_text = params[:post][:original_text] || params[:post][:raw_old]
     if original_text.present? && original_text != post.raw
       return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
+
+    # Answers the output template omits never reach raw, so they need their own check.
+    original_answers = params[:post][:original_form_answers]
+    if original_answers.present? && !post.form_submission&.answers_match?(original_answers)
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
+
+    if params[:post][:form_template_data].present?
+      submission =
+        FormTemplate::Submission.for_edit(post, payload: params[:post][:form_template_data])
+      changes[:raw] = submission.render
+      changes[:form_data] = submission.to_h
     end
 
     # to stay consistent with the create api, we allow for title & category changes here
@@ -583,6 +597,7 @@ class PostsController < ApplicationController
     guardian.ensure_can_see!(post_revision)
     guardian.ensure_can_edit!(post)
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
+         post_revision.modifications["form_data"].blank? &&
          post_revision.modifications["category_id"].blank? &&
          post_revision.modifications["tags"].blank? &&
          post_revision.modifications["reply_to_post_number"].blank?
@@ -595,6 +610,14 @@ class PostsController < ApplicationController
     changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications[
       "raw"
     ].present? && post_revision.modifications["raw"][0] != post.raw
+    if post_revision.modifications["form_data"].present? &&
+         post_revision.modifications["form_data"][0] != post.form_data
+      changes[:form_data] = post_revision.modifications["form_data"][0]
+      # An answer-only revision has no raw change, so raw comes from the restored form.
+      if !changes.key?(:raw) && (raw = restored_form_raw(changes[:form_data])) && raw != post.raw
+        changes[:raw] = raw
+      end
+    end
     if post_revision.modifications["reply_to_post_number"].present? &&
          post_revision.modifications["reply_to_post_number"][0] != post.reply_to_post_number
       changes[:reply_to_post_number] = post_revision.modifications["reply_to_post_number"][0]
@@ -1105,6 +1128,12 @@ class PostsController < ApplicationController
       end
     end
     render_post_json(post)
+  end
+
+  def restored_form_raw(form_data)
+    FormTemplate::Submission.new(form_data, validate: false).normalized_raw
+  rescue ArgumentError, FormTemplate::InvalidAnswers
+    nil
   end
 
   def find_post_from_params

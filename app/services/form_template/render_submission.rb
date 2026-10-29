@@ -47,7 +47,10 @@ class FormTemplate::RenderSubmission
   only_if(:answers_must_be_complete) do
     policy :answers_are_complete, class_name: FormTemplate::Policy::AnswersAreComplete
   end
-  try(Liquid::Error) { step :render }
+  try(Liquid::Error, ArgumentError) do
+    step :build_form_submission
+    step :render
+  end
 
   private
 
@@ -77,6 +80,15 @@ class FormTemplate::RenderSubmission
 
   def answers_must_be_complete(options:)
     !options.allow_incomplete_answers
+  end
+
+  def build_form_submission(form_template:, field_values:, guardian:)
+    form_template.process!(guardian)
+    context[:form_submission] = FormTemplate::Submission.from_template(
+      form_template,
+      answers: field_values.answers,
+      validate: false,
+    )
   end
 
   def render(field_values:, form_template:)

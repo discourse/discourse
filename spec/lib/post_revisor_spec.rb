@@ -595,6 +595,84 @@ describe PostRevisor do
       end
     end
 
+    describe "form_data" do
+      fab!(:form_template) do
+        Fabricate(
+          :form_template,
+          template: [{ id: "description", type: "input" }].as_json.to_yaml,
+          output_template: "{{ answers.description }}",
+        )
+      end
+      let(:submission) do
+        FormTemplate::Submission.from_template(
+          form_template,
+          answers: {
+            "description" => "A sufficiently long description.",
+          },
+        )
+      end
+      let(:post) { create_post(raw: submission.render, form_data: submission.to_h).reload }
+
+      before { SiteSetting.editing_grace_period = 1.minute }
+
+      it "is tracked in revisions and restored by a revert" do
+        changed = submission.with_answers({ "description" => "A revised description." })
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: changed.render, form_data: changed.to_h }.with_indifferent_access,
+          force_new_version: true,
+        )
+        expect(post.revisions.last.modifications["form_data"]).to eq(
+          [submission.to_h, changed.to_h],
+        )
+
+        post.revert_to(1)
+        expect(post.raw).to eq(submission.render)
+        expect(post.form_submission.answers).to eq(submission.answers)
+      end
+
+      it "keeps the original form in the revision created after grace period edits" do
+        first = submission.with_answers({ "description" => "A first grace period edit." })
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: first.render, form_data: first.to_h },
+          revised_at: post.updated_at + 10.seconds,
+        )
+        expect(post.reload.version).to eq(1)
+
+        second = submission.with_answers({ "description" => "A second edit with a reason." })
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: second.render, form_data: second.to_h, edit_reason: "typo" },
+          revised_at: post.updated_at + 20.seconds,
+        )
+        expect(post.reload.version).to eq(2)
+        expect(post.revisions.last.modifications["raw"][0]).to eq(submission.render)
+        expect(post.revisions.last.modifications["form_data"][0]).to eq(submission.to_h)
+
+        post.revert_to(1)
+        expect(post.form_submission.answers).to eq(submission.answers)
+      end
+
+      it "drops a revision whose form change is undone within the grace period" do
+        changed = submission.with_answers({ "description" => "A revised description." })
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: changed.render, form_data: changed.to_h },
+          force_new_version: true,
+        )
+        expect(post.reload.version).to eq(2)
+
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: submission.render, form_data: submission.to_h },
+          revised_at: post.updated_at + 10.seconds,
+        )
+        expect(post.reload.version).to eq(1)
+        expect(post.revisions).to be_empty
+      end
+    end
+
     describe "grace period editing" do
       it "correctly applies edits" do
         SiteSetting.editing_grace_period = 1.minute

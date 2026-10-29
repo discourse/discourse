@@ -1869,6 +1869,35 @@ RSpec.describe Post do
     expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
+  describe "#form_submission" do
+    fab!(:form_template) do
+      Fabricate(
+        :form_template,
+        template: [{ id: "description", type: "input" }].as_json.to_yaml,
+        output_template: "## Invitation\n{{ answers.description }}",
+      )
+    end
+    let(:submission) do
+      FormTemplate::Submission.from_template(
+        form_template,
+        answers: {
+          "description" => "A sufficiently long description.",
+        },
+      )
+    end
+
+    it "returns the saved form only while it still renders the current raw" do
+      post = Fabricate(:post, raw: submission.render, form_data: submission.to_h)
+      expect(post.form_submission.answers).to eq(submission.answers)
+
+      post.update_columns(raw: "Rewritten outside the form.")
+      expect(post.reload.form_submission).to be_nil
+
+      post.update_columns(raw: submission.render, form_data: { "unexpected" => true })
+      expect(post.reload.form_submission).to be_nil
+    end
+  end
+
   describe "video_thumbnails" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:image_upload, :upload)

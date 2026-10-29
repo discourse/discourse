@@ -37,7 +37,7 @@ export default class FormTemplateFieldWrapper extends Component {
   /** @type {unknown} */
   @tracked parsedTemplate = null;
 
-  initialValues = this.args.initialValues ?? {};
+  @tracked initialValues = this.args.initialValues ?? {};
 
   fieldTypes = {
     checkbox: CheckboxField,
@@ -56,8 +56,6 @@ export default class FormTemplateFieldWrapper extends Component {
     super(...arguments);
 
     if (this.args.content) {
-      // Content used when no id exists yet
-      // (i.e. previewing while creating a new template)
       this.#loadTemplate(this.args.content);
     } else if (this.args.id) {
       this.#fetchTemplate(this.args.id);
@@ -82,7 +80,10 @@ export default class FormTemplateFieldWrapper extends Component {
       return;
     }
 
-    return this.#fetchTemplate(this.args.id);
+    this.initialValues = this.args.initialValues ?? {};
+    return this.args.content
+      ? this.#loadTemplate(this.args.content)
+      : this.#fetchTemplate(this.args.id);
   }
 
   async #fetchTemplate(id) {
@@ -110,6 +111,12 @@ export default class FormTemplateFieldWrapper extends Component {
       }
       this.parsedTemplate = load(templateContent);
       this.args.onSelectFormTemplate?.(this.parsedTemplate, id);
+      next(() => {
+        if (sequence === this.#templateLoadSequence && !this.isDestroying) {
+          this.args.onReady?.();
+          this.args.onChange?.();
+        }
+      });
     } catch (e) {
       this.error = e;
     }

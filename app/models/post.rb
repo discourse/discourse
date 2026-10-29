@@ -1124,6 +1124,15 @@ class Post < ActiveRecord::Base
     replies.reject { |r| !secured_ids.include?(r[:id]) }
   end
 
+  # Any rewrite of raw that bypasses form_data turns the post back into a markdown post.
+  def form_submission
+    return if form_data.nil?
+    submission = FormTemplate::Submission.new(form_data, validate: false)
+    submission if submission.normalized_raw == raw
+  rescue ArgumentError, FormTemplate::InvalidAnswers
+    nil
+  end
+
   def revert_to(number)
     return if number >= version
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
@@ -1319,6 +1328,7 @@ end
 #  cooked                  :text             not null
 #  deleted_at              :datetime
 #  edit_reason             :string
+#  form_data               :jsonb
 #  hidden                  :boolean          default(FALSE), not null
 #  hidden_at               :datetime
 #  illegal_count           :integer          default(0), not null

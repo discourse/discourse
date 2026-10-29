@@ -6778,6 +6778,7 @@ en:
   form_templates:
     invalid_answer: "The answer for %{field} is invalid."
     output_unavailable: "This form's output template could not be rendered. Please contact a staff member."
+    submission_too_large: "This form submission is too large. Please shorten your answers."
     errors:
       invalid_output_template: "contains an invalid output template"
       invalid_yaml: "is not a valid YAML string"
