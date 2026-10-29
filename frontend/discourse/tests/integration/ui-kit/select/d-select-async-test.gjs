@@ -1621,13 +1621,9 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    class Args {
-      @tracked kindContext = { step: 1 };
-      @tracked placeholder = "First";
-    }
-
     async function openWhilePending(assert, change) {
-      const args = new Args();
+      const kindContext = tracked({ step: 1 });
+      const placeholder = tracked("First");
       const releases = [];
       const load = () =>
         new Promise((resolve) =>
@@ -1638,15 +1634,15 @@ module(
         <template>
           <DSelect
             @kind="probe"
-            @kindContext={{@kindContext}}
+            @kindContext={{kindContext.value}}
             @load={{load}}
-            @placeholder={{@placeholder}}
+            @placeholder={{placeholder.value}}
           />
         </template>
       );
       const opening = click("[role='combobox']");
       await waitUntil(() => releases.length > 0);
-      change(args);
+      change({ kindContext, placeholder });
       await rerender();
       releases.forEach((release) => release());
       await opening;
@@ -1657,19 +1653,19 @@ module(
     }
 
     test("a changed kind context keeps the page in flight", async function (assert) {
-      await openWhilePending(assert, (args) => {
-        args.kindContext = { step: 2 };
+      await openWhilePending(assert, ({ kindContext }) => {
+        kindContext.value = { step: 2 };
       });
     });
 
     test("a changed placeholder keeps the page in flight", async function (assert) {
-      await openWhilePending(assert, (args) => {
-        args.placeholder = "Second";
+      await openWhilePending(assert, ({ placeholder }) => {
+        placeholder.value = "Second";
       });
     });
 
     test("a failed page offers retry after asking once", async function (assert) {
-      const args = new Args();
+      const kindContext = tracked({ step: 1 });
       let calls = 0;
       const load = () => {
         calls++;
@@ -1678,12 +1674,16 @@ module(
 
       await render(
         <template>
-          <DSelect @kind="probe" @kindContext={{@kindContext}} @load={{load}} />
+          <DSelect
+            @kind="probe"
+            @kindContext={{kindContext.value}}
+            @load={{load}}
+          />
         </template>
       );
       await click("[role='combobox']");
       await waitFor(".d-select__retry");
-      args.kindContext = { step: 2 };
+      kindContext.value = { step: 2 };
       await settled();
 
       assert.strictEqual(calls, 1, "the failed page is not asked for again");
