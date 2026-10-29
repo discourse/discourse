@@ -822,6 +822,24 @@ module(
         assert.strictEqual(requests.at(-1).get("parent_category_id"), "2");
       });
 
+      test("a lazy level ignores the caller's items, so new ones never reload it", async function (assert) {
+        const requests = stubLevel(3);
+        const state = new (class {
+          @tracked items = [Category.findById(1)];
+        })();
+
+        await render(
+          <template><DSelectCategoryFilter @items={{state.items}} /></template>
+        );
+        await select().open();
+        await settled();
+        // The breadcrumbs' level grows as the response adds categories to the site.
+        state.items = [...state.items, Category.findById(2)];
+        await settled();
+
+        assert.strictEqual(requests.length, 1);
+      });
+
       test("browsing lists the level in the preloaded order", async function (assert) {
         const requests = stubLevel(3);
 

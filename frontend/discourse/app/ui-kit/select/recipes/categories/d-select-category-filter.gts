@@ -150,7 +150,9 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   get loadContext() {
     return {
       parentCategory: this.args.parentCategory,
-      items: this.args.items,
+      // Only a preloaded site browses `@items`. A lazy response adds categories to the site,
+      // which grows the caller's level, and must not reload the list it just filled.
+      items: this.site.lazy_load_categories ? undefined : this.args.items,
       uncategorized: this.#uncategorized,
       descriptions: this.#descriptions,
       categories: Category.localSearchCategories(),
