@@ -110,6 +110,30 @@ real SQLite tests. Verify that removing protection makes regression tests fail. 
 full conversions supplement these deterministic tests; they cannot prove all possible
 interleavings safe.
 
+#### Performance baseline
+
+Local measurements comparing `943af8b6a13` with `b33564c4b9e` used Ruby 4.0.9,
+pg 1.7.0, a Unix socket, and six measured iterations after warmup. PostgreSQL
+stream comparisons used the same session and type map, alternating the previous
+Enumerator loop with `PostgresStream`. These are throughput microbenchmarks, not
+predictions for a large production conversion.
+
+| Workload | Previous median | Managed median |
+| --- | --- | --- |
+| 1M single-integer hash rows (`generate_series`) | 386 ms | 451 ms (+17%) |
+| 500k hash rows with an ID, username, 500-byte body, category ID, timestamp | 563 ms | 612 ms (+9%) |
+| 1M two-column array rows (ID and username) | 360 ms | 387 ms (+8%) |
+| 200k cached-statement SQLite inserts, 3 columns, 1,000-row transactions, journal off | 170 ms | 232 ms (+37%) |
+| Small local conversion, 32 steps and 7 posts, warm markdown bundle | 1.203 s | 1.194 s |
+
+Allocations per row were unchanged in the streaming and insert benchmarks. The
+stream adds a Fiber handoff and ownership checks per row; SQLite inserts add lifecycle
+and operation synchronization. The small conversion cannot establish that these costs
+are negligible at scale. Potential optimizations are direct block iteration while
+retaining the stream lease, and avoiding the global operation barrier for connections
+whose policy already prohibits forks. Both require retaining the lifecycle regression
+tests and measuring representative larger conversions.
+
 ### Partitioning large steps
 
 Most steps run in a single worker. A handful are large enough that it's worth
