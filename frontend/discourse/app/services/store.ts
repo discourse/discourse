@@ -133,12 +133,17 @@ export type ModelCreateAttrsFor<K extends string> = K extends unknown
     : RestModelAttrs<ModelFor<K>>
   : never;
 
-/** The content property is supplied by the legacy array proxy at runtime. */
-export type ResultSetOf<M> = ResultSet & { content: M[] };
+/** A collection of hydrated models. */
+export type ResultSetOf<M> = ResultSet<M>;
 
 type FindArgs = string | number | object | null | undefined;
 type StoreRecord = RestModel & RestPayload;
 type StoreResults = StoreRecord | ResultSetOf<StoreRecord>;
+/** Legacy cached models on the stale-update path expose collection content. */
+interface LegacyStoreCollection extends RestModel {
+  content: StoreRecord[];
+  [key: string]: unknown;
+}
 type ModelClass = RestModelClass &
   Pick<typeof RestModel, "munge"> & {
     create(attrs?: RestPayload): RestModelInstance;
@@ -390,7 +395,7 @@ export default class StoreService extends Service {
   }
 
   refreshResults(
-    resultSet: ResultSetOf<RestModel> | Pick<RestModel, "set">,
+    resultSet: ResultSetOf<unknown> | Pick<RestModel, "set">,
     type: string,
     url: string
   ) {
@@ -409,7 +414,7 @@ export default class StoreService extends Service {
     });
   }
 
-  appendResults(resultSet: ResultSetOf<RestModel>, type: string, url: string) {
+  appendResults(resultSet: ResultSetOf<unknown>, type: string, url: string) {
     const adapter = this.adapterFor(type);
     return ajax(url).then((result: RestPayload) => {
       const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
@@ -526,15 +531,20 @@ export default class StoreService extends Service {
     stale: StoreResults | undefined,
     hydrated: StoreResults,
     primaryKey: string
+  ): StoreResults;
+
+  /** When stale data exists, this path assumes both values expose collection content. */
+  _updateStale(
+    stale: LegacyStoreCollection | undefined,
+    hydrated: LegacyStoreCollection,
+    primaryKey: string
   ): StoreResults {
     if (!stale) {
       return hydrated;
     }
 
-    // TODO(typescript-pending): cached models expose collection content dynamically;
-    // remove these assertions when their collection shape is declared.
-    const newValues = (hydrated.get("content") as StoreRecord[]).map((item) => {
-      let staleItem = (stale as { content: StoreRecord[] }).content.find(
+    const newValues = hydrated.get("content").map((item) => {
+      let staleItem = stale.content.find(
         (i) => i.primaryKey === item.get(primaryKey)
       );
       if (staleItem) {
@@ -606,9 +616,7 @@ export default class StoreService extends Service {
       }
     }
 
-    // TODO(typescript-pending): create returns the legacy base type; remove this
-    // assertion once ResultSet declares its subclass return and proxy content.
-    return ResultSet.create(createArgs) as ResultSetOf<StoreRecord>;
+    return ResultSet.create<ResultSetOf<StoreRecord>>(createArgs);
   }
 
   _extrasClass(type: string) {
