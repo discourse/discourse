@@ -31,20 +31,20 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
       allow(socket_io).to receive(:reopen)
     end
 
-    it "registers a fork hook on creation and removes it on `close`" do
-      expect(Migrations::ForkManager.hook_count).to eq(0)
+    it "registers a managed connection on creation and removes it on close" do
+      expect(Migrations::Database::Lifecycle.connection_count).to eq(0)
 
       create_adapter do |adapter|
-        expect(Migrations::ForkManager.hook_count).to eq(1)
+        expect(Migrations::Database::Lifecycle.connection_count).to eq(1)
         adapter.close
-        expect(Migrations::ForkManager.hook_count).to eq(0)
+        expect(Migrations::Database::Lifecycle.connection_count).to eq(0)
       end
     end
 
-    it "registers its fork hook before it opens the socket" do
+    it "registers the managed connection before opening the socket" do
       hooks_at_connect = nil
       allow(PG::Connection).to receive(:new) do
-        hooks_at_connect = Migrations::ForkManager.hook_count
+        hooks_at_connect = Migrations::Database::Lifecycle.connection_count
         connection
       end
 
@@ -232,43 +232,6 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
       end
     end
 
-    describe "#discard!" do
-      it "redirects the connection's socket to the null device without closing it" do
-        create_adapter do |adapter|
-          adapter.discard!
-
-          expect(socket_io).to have_received(:reopen).with(IO::NULL)
-          expect(connection).to_not have_received(:finish)
-        end
-      end
-
-      it "raises a `DiscardedError` when the adapter is used afterwards" do
-        create_adapter do |adapter|
-          adapter.discard!
-
-          expect { adapter.exec("SELECT 1") }.to raise_error(described_class::DiscardedError)
-          expect { adapter.query("SELECT 1") }.to raise_error(described_class::DiscardedError)
-          expect { adapter.query_value("SELECT 1") }.to raise_error(described_class::DiscardedError)
-        end
-      end
-
-      it "ignores connections that no longer expose a usable socket" do
-        allow(connection).to receive(:socket_io).and_raise(PG::ConnectionBad)
-
-        create_adapter { |adapter| expect { adapter.discard! }.to_not raise_error }
-      end
-
-      it "can be followed by `close` without errors" do
-        create_adapter do |adapter|
-          adapter.discard!
-
-          expect { adapter.close }.to_not raise_error
-          expect(connection).to_not have_received(:finish)
-          expect(Migrations::ForkManager.hook_count).to eq(0)
-        end
-      end
-    end
-
     context "when `Migrations::ForkManager.fork` is used" do
       it "discards the adapter in the child process, but not in the parent" do
         create_adapter do |adapter|
@@ -284,24 +247,6 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
           expect(status.exitstatus).to eq(0)
 
           expect { adapter.exec("SELECT 1") }.to_not raise_error
-        end
-      end
-
-      it "no longer discards the adapter in child processes after `close`" do
-        create_adapter do |adapter|
-          allow(adapter).to receive(:discard!).and_call_original
-          adapter.close
-
-          pid =
-            Migrations::ForkManager.fork do
-              expect(adapter).to_not have_received(:discard!)
-              exit!(0)
-            rescue RSpec::Expectations::ExpectationNotMetError
-              exit!(1)
-            end
-
-          _, status = Process.waitpid2(pid)
-          expect(status.exitstatus).to eq(0)
         end
       end
     end
@@ -327,10 +272,7 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
       create_adapter do |adapter|
         expect(adapter.query_value("SELECT 1")).to eq(1)
 
-        # An empty fork is all it takes: without `discard!` the pg gem's
-        # cleanup at child exit sends a libpq Terminate message over the
-        # shared socket and the server closes the parent's session.
-        _, status = Process.waitpid2(Migrations::ForkManager.fork {})
+        _, status = Process.waitpid2(Migrations::ForkManager.fork { GC.start })
         expect(status).to be_success
 
         expect(adapter.query_value("SELECT 1")).to eq(1)

@@ -29,107 +29,86 @@ Public converters live in `converters/lib/migrations/converters/`. To run a priv
 (closed-source) converter, put its code in a subdirectory of `private/converters/`
 (or point `MIGRATIONS_PRIVATE_CONVERTERS_PATH` at it).
 
-### Source DB adapters and fork safety
+### Database ownership and fork safety
 
-Worker processes inherit the source DB connection's socket from the main process. Whether
-that's dangerous depends on the client library: a destructor that only closes the file
-descriptor is harmless (the parent still holds it, so the kernel sends nothing over the
-wire), but a destructor that writes a protocol goodbye kills the parent's session when
-the inherited object is collected — libpq sends a Terminate message, MySQL clients send
-`COM_QUIT`. A referenced connection need not be finalized at normal child exit.
+All database handles in migrations tooling must be opened through
+`Database::ManagedConnection.open(driver)`. The converter and importer share
+`Database::Drivers::Postgres`; SQLite uses `Database::Drivers::Sqlite` through
+`Database::Connection`. `Connection.open_database` also returns a managed wrapper,
+not a native SQLite handle. Close connections explicitly or use a block-scoped factory.
 
-`Adapter::Postgres` handles this by registering a `ForkManager.after_fork_child` hook that
-calls `discard!` in each worker: the inherited socket is redirected to `/dev/null`, and any
-later use of the adapter in the worker raises `DiscardedError`. New adapters should follow
-the same pattern. The discard mechanism itself is library-specific — mysql2 has
-`automatic_close = false`, trilogy has a native `discard!`. To check whether a library
-needs one at all: connect, fork a child that drops the inherited connection and triggers
-garbage collection, wait for it, and query again from the parent.
+A driver implements `open`, `configure(handle)`, and `close(handle)`. Its constructor
+must clean up native allocations if it raises before returning a handle. The manager
+owns registration, configuration failure cleanup, operation leases, and removal after
+successful close. A failed close retains the registration so a live handle cannot become
+invisible to the fork coordinator. Adapter code uses `with { |handle| ... }` internally;
+do not retain or expose the native handle outside that operation.
 
-Registering the hook before connecting is necessary but insufficient: the constructor
-can open a socket and yield to another thread before returning the connection object.
-A worker forked then inherits the socket, but the hook cannot reach it yet. Wrap both
-construction and assignment in `ForkManager.without_forks`, which shares a lock with
-the actual process fork. Keep queries outside that lock so steps can still read in
-parallel. The adapter spec pauses construction to exercise this window deterministically.
+Drivers without an explicit policy prohibit forks while their connections are open.
+There is no fallback worker backend. To support forks, implement and test one of:
 
-#### Current lifecycle boundaries
+| Policy | Driver contract | Current use |
+| --- | --- | --- |
+| `:forbid` (default) | Close the connection before starting workers. | General SQLite connections, including importer databases and schema tooling. |
+| `:discard` | `discard(handle)` must neutralize inherited native cleanup without affecting the parent. | PostgreSQL; redirect its socket before libpq can send Terminate. |
+| `:close_reopen` | `validate_fork!(handle)` must reject state that cannot be restored by `open` and `configure`. | Only explicitly reopenable SQLite connections, such as the converter's run database. |
 
-The converter's SQLite safety also depends on the scheduler: the run connection is
-created before scheduling, workers open their shards after forking, and the consolidator
-shares the coordinators' mutex. That mutex covers the whole close/fork/reopen batch.
-`Database::Connection` alone does not enforce those boundaries. In particular, opening
-a connection on another thread after a batch's before-fork hooks have run lets the child
-inherit an open SQLite handle. Guarding just construction against the fork syscall is
-insufficient for a resource that must be closed *before* the fork.
+SQLite connections require `reopenable: true` to opt in. Active transactions, attached
+schemas, and temporary schema objects prevent a fork. The caller must finish its work
+explicitly; forking does not commit transactions. This mode is for run connections whose
+session configuration is defined by the driver, not arbitrary user-managed SQLite
+sessions. Worker shards are opened in their worker and do not opt in. Do not use or call
+SQLite's close API on an inherited live connection; see
+[SQLite's fork guidance](https://www.sqlite.org/howtocorrupt.html#_carrying_an_open_database_connection_across_a_fork_).
 
-SQLite needs a different strategy from PostgreSQL: do not use or call SQLite's close API
-on a connection inherited from the parent. Close it in the parent before forking and
-open worker connections in the worker. See [SQLite's fork guidance](https://www.sqlite.org/howtocorrupt.html#_carrying_an_open_database_connection_across_a_fork_).
+`ForkManager` remains the sole worker-fork entry point. `Database::Lifecycle` owns the
+registry and barrier. Construction and destruction hold shared leases; SQLite operations
+also hold them. The entire prepare/fork-batch/restore interval holds exclusive access.
+Concurrent PostgreSQL queries can continue while workers fork. Reentrant shared leases
+follow threads so SQLite streaming fibers can nest operations, while PostgreSQL operation
+leases prevent another fiber from reusing an active protocol stream. Forking inside an
+active database operation or opening a connection inside a fork batch raises an error.
 
-Other gaps to address before treating the helpers as a general lifecycle manager:
+Ordinary forks and batches use the same protocol. All policies are validated before
+connections are closed. If preparation or forking fails, every successfully suspended
+connection is restored. Restoration attempts continue even if one fails; failed resources
+remain unavailable. Partially started batches terminate and reap their unreaped workers.
+If child-side discard or another child initialization hook fails, the child exits immediately
+without running worker code or inherited exit handlers. PID checks also reject accidental
+use of inherited connections and streams.
 
-- An unbatched `ForkManager.fork` failure skips the parent restoration hooks; a SQLite
-  connection closed by its before hook stays closed. The batched path has an `ensure`.
-- Postgres initialization removes its hook if configuration raises after connection
-  creation, but does not explicitly finish that connection.
-- `Importer::DiscourseDB` opens PostgreSQL directly without fork protection. The current
-  importer executes steps sequentially; adding worker forks requires a lifecycle policy.
-- Postgres `discard!` suppresses all `StandardError`s. A failed descriptor redirection
-  must not be assumed to mean the socket was already harmless.
+`Database::PostgresStream` is single-pass. `each` releases its lease and drains pending
+results on exhaustion, early block exit, or an exception. When manually using `next`,
+call `close` if stopping early. Closing a connection with an active operation raises
+`BusyError`; an abandoned stream must not silently release protection while its query is
+still in progress. The source adapter and importer both use this stream implementation.
 
-#### Verifying adapters and fork handling
+#### Testing and enforcing adapter contracts
 
-Test the resource's lifetime, including native construction before Ruby assignment,
-configuration failure, close/unregister, and parent restoration on failed forks. Use
-queues or barriers to force interleavings, and cover ordinary forks and batches. Exercise
-real database connections as well as doubles: after child garbage collection, PostgreSQL
-must still answer on the parent's original session; SQLite handles must be closed before
-the process split, and writes through fresh worker connections must preserve integrity.
+New drivers must pass the shared `a managed database driver` examples and add tests for
+their native discard or restoration strategy. The lifecycle tests force construction,
+close, and fork interleavings with queues, and exercise failure recovery for ordinary
+forks and batches. Every fork test must reap its child and check its status or transport
+its failure to the parent; assertions raised only in a child do not fail the parent runner.
 
-Every fork spec must reap its child and assert a successful exit status or explicitly
-transport failures back to the parent. An assertion raised only in the child does not
-fail the parent RSpec runner. Existing SQLite connection fork specs lack this check;
-forcing a child assertion to fail still produces a successful parent test exit.
+The core boundary spec parses production Ruby files to restrict known native connection
+constructors to their driver files and raw forks to `ForkManager`. Extend its constructor
+list when adding a database library. This catches accidental bypasses; arbitrary native
+libraries cannot be made fork-safe by inspecting their Ruby wrappers alone. Database
+drivers must not implement their own independent fork hooks.
 
-Verify that removing the protection makes each regression test fail. An empty child
-that exits while a PostgreSQL connection remains referenced is not sufficient evidence
-that native cleanup was exercised. Repeated full conversions supplement these tests;
-they do not prove that all lifecycle interleavings are safe.
+Real PostgreSQL lifecycle tests run without Rails against a disposable session in an
+existing database (only temporary objects may be created):
 
-#### Proposed lifecycle API
+```bash
+cd migrations/core
+PGHOST=/var/run/postgresql MIGRATIONS_POSTGRES_DB=discourse_development ../bin/rspec --tag postgres
+```
 
-The following is a design direction, not an implemented guarantee. Prefer composition:
-one managed connection factory should own native construction, configuration, registration,
-failure cleanup, and close. Source adapters and the importer should share this mechanism;
-their query and conversion APIs can remain separate. Driver implementations should not
-register independent fork hooks or expose untracked native handles to callers.
-
-An unreviewed driver should prohibit raw worker forks by default. Explicitly supported
-policies can permit child-side discard (PostgreSQL) or parent-side close and restoration
-(the converter's SQLite run connection). SQLite restoration is an opt-in capability:
-reopening a filename alone does not restore attachments, temporary tables, transactions,
-or other session state. Never silently commit a caller's transaction to make a fork work.
-
-The fork backend needs one lifecycle protocol for ordinary forks and batches. Exclude
-construction and destruction throughout preparation, process creation, and parent
-restoration; quiesce operations on connections that must close. Track operation leases,
-including streaming results, and restore every successfully prepared resource even if
-a later preparation or fork fails. An unexpected child discard failure must prevent
-worker execution and terminate without running inherited cleanup. PID checks help catch
-accidental use, but cannot prevent native finalizers from running.
-
-A worker backend launched through exec provides a stronger isolation boundary: pass
-serializable job descriptions and explicitly allowed IPC descriptors, then open database
-connections inside each fresh worker. A persistent worker pool can amortize startup,
-with measured tradeoffs in memory sharing and job serialization. Unknown drivers can
-use this backend without a custom inherited-handle cleanup strategy. It still needs
-normal connection ownership, transaction, and SQLite writer coordination.
-
-Enforce the boundary with a narrow allowlist for native database constructors and raw
-fork calls, shared adapter contract tests, and real-driver CI coverage. Such repository
-checks catch accidental bypasses; they cannot prove that arbitrary native dependencies
-are safe to execute after a multithreaded fork.
+The migration CI job enables these tests against the `postgres` database, alongside the
+real SQLite tests. Verify that removing protection makes regression tests fail. Repeated
+full conversions supplement these deterministic tests; they cannot prove all possible
+interleavings safe.
 
 ### Partitioning large steps
 

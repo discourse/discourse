@@ -1,77 +1,46 @@
 # frozen_string_literal: true
 
 module Migrations
-  # The fork hooks for a run. `before_fork` and `after_fork_parent` run around a
-  # fork, so a connection can close before it and reopen after. `after_fork_child`
-  # runs in the new child, e.g. to drop a connection it inherited.
-  #
-  # Steps add and remove hooks from several threads at once, so a mutex guards the
-  # hook lists. A fork copies the child hooks under that mutex, so the child always
-  # runs a consistent list.
+  # All worker forks pass through the database lifecycle barrier. Non-database
+  # resources may additionally invalidate their child-side state with a hook.
   module ForkManager
-    # The batching flag is per-thread: a batch belongs to the thread that opened
-    # it, so the module stays correct even if callers stop serializing their
-    # forks behind a shared mutex (today the coordinators do).
     BATCHED_FORKS_KEY = :migrations_fork_manager_batched_forks
     private_constant :BATCHED_FORKS_KEY
 
-    @before_fork_hooks = []
-    @after_fork_parent_hooks = []
     @after_fork_child_hooks = []
     @mutex = Mutex.new
-    @fork_mutex = Mutex.new
 
     class << self
-      # Protect resource creation until its child hook can reach the live handle.
-      # Keep this separate from the hook-list mutex: registration can happen here.
       def without_forks(&block)
-        @fork_mutex.synchronize(&block)
+        Database::Lifecycle.synchronize(&block)
       end
 
       def with_batched_forks
-        previous = Thread.current[BATCHED_FORKS_KEY]
+        return yield if Thread.current[BATCHED_FORKS_KEY]
 
-        # Restore the flag no matter what. If a before-fork hook raises, the flag
-        # would otherwise stick as true on this thread, and every later plain
-        # `fork` on it would silently skip its parent-side hooks.
+        children = []
         begin
-          Thread.current[BATCHED_FORKS_KEY] = true
-          @mutex.synchronize { run_before_fork_hooks }
-
-          # Always run the after-fork hooks even if forking raises (e.g.
-          # `Errno::EAGAIN`/`ENOMEM` under fork pressure). Otherwise the
-          # before-fork hooks' effects — a locked writer mutex, a closed run
-          # connection — would never be undone and the run would hang instead of
-          # failing the step. If a before-fork hook raises, these after-fork
-          # hooks don't run — the batch never started.
-          begin
-            yield
-          ensure
-            @mutex.synchronize { run_after_fork_parent_hooks }
+          Database::Lifecycle.with_fork do
+            Thread.current[BATCHED_FORKS_KEY] = children
+            begin
+              yield
+            ensure
+              Thread.current[BATCHED_FORKS_KEY] = nil
+            end
           end
-        ensure
-          Thread.current[BATCHED_FORKS_KEY] = previous
+        rescue Exception
+          # A partially started batch has no caller to drain its worker pipes.
+          # Reap only our unreaped children; their incomplete shards are discarded.
+          children.each do |pid|
+            unless Process.waitpid(pid, Process::WNOHANG)
+              Process.kill("KILL", pid)
+              Process.waitpid(pid)
+            end
+          rescue Errno::ECHILD, Errno::ESRCH
+            nil
+          end
+          raise
         end
-      end
-
-      def before_fork(&block)
-        return unless block
-        @mutex.synchronize { @before_fork_hooks << block }
-        block
-      end
-
-      def remove_before_fork(block)
-        @mutex.synchronize { @before_fork_hooks.delete(block) }
-      end
-
-      def after_fork_parent(&block)
-        return unless block
-        @mutex.synchronize { @after_fork_parent_hooks << block }
-        block
-      end
-
-      def remove_after_fork_parent(block)
-        @mutex.synchronize { @after_fork_parent_hooks.delete(block) }
       end
 
       def after_fork_child(&block)
@@ -84,50 +53,36 @@ module Migrations
         @mutex.synchronize { @after_fork_child_hooks.delete(block) }
       end
 
-      def fork
-        # In a batch the parent-side hooks already ran around the whole batch.
-        execute_parent = !Thread.current[BATCHED_FORKS_KEY]
-
-        @mutex.synchronize { run_before_fork_hooks } if execute_parent
+      def fork(&block)
+        return with_batched_forks { fork(&block) } unless Thread.current[BATCHED_FORKS_KEY]
 
         pid =
-          without_forks do
-            Process.fork do
-              # The child must be able to create resources and fork independently.
-              @fork_mutex = Mutex.new
-              child_hooks = @mutex.synchronize { @after_fork_child_hooks.dup }
-              child_hooks.each(&:call)
-              yield
+          Process.fork do
+            Thread.current[BATCHED_FORKS_KEY] = nil
+            begin
+              Database::Lifecycle.after_fork_child
+              @mutex = Mutex.new
+              @after_fork_child_hooks.dup.each(&:call)
+            rescue Exception => error
+              # Normal exit could finalize the very handle we failed to discard.
+              begin
+                STDERR.puts("Worker initialization failed: #{error.class}: #{error.message}")
+              ensure
+                Process.exit!(1)
+              end
             end
+            block.call
           end
-
-        @mutex.synchronize { run_after_fork_parent_hooks } if execute_parent
-
+        Thread.current[BATCHED_FORKS_KEY] << pid
         pid
       end
 
       def hook_count
-        @mutex.synchronize do
-          @before_fork_hooks.size + @after_fork_parent_hooks.size + @after_fork_child_hooks.size
-        end
+        @mutex.synchronize { @after_fork_child_hooks.size }
       end
 
       def clear!
-        @mutex.synchronize do
-          @before_fork_hooks.clear
-          @after_fork_parent_hooks.clear
-          @after_fork_child_hooks.clear
-        end
-      end
-
-      private
-
-      def run_before_fork_hooks
-        @before_fork_hooks.each(&:call)
-      end
-
-      def run_after_fork_parent_hooks
-        @after_fork_parent_hooks.each(&:call)
+        @mutex.synchronize { @after_fork_child_hooks.clear }
       end
     end
   end

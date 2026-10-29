@@ -8,39 +8,21 @@ module Migrations
       class Postgres
         include Conversion::PartitionSource
 
-        class DiscardedError < StandardError
-        end
+        DiscardedError = Database::ManagedConnection::DiscardedError
 
         def initialize(settings)
-          @fork_hook = ForkManager.after_fork_child { discard! }
-
-          begin
-            # The constructor opens the socket before returning it to our discard hook.
-            ForkManager.without_forks { @connection = PG::Connection.new(settings) }
-            @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
-            @connection.field_name_type = :symbol
-            configure_connection
-          rescue StandardError
-            ForkManager.remove_after_fork_child(@fork_hook)
-            @fork_hook = nil
-            raise
-          end
+          @connection =
+            Database::ManagedConnection.open(
+              Database::Drivers::Postgres.new(settings, field_names: :symbol, quiet: true),
+            )
         end
 
         def exec(sql)
-          connection.exec(sql)
+          @connection.with { |connection| connection.exec(sql) }
         end
 
         def query(sql, *params)
-          connection.send_query_params(sql, params)
-          connection.set_single_row_mode
-
-          Enumerator.new do |y|
-            while (result = connection.get_result)
-              result.stream_each { |row| y.yield(row) }
-              result.clear
-            end
-          end
+          Database::PostgresStream.new(@connection, sql, params)
         end
 
         def query_value(sql)
@@ -58,7 +40,7 @@ module Migrations
         # SQLite index inserts in the shard and, later, in the merge.
         def select_all(table, where: nil, order: nil)
           query(
-            "SELECT * FROM #{connection.quote_ident(table)}" \
+            "SELECT * FROM #{quote_identifier(table)}" \
               "#{where_clause(where)}#{order_clause(order)}",
           )
         end
@@ -66,7 +48,7 @@ module Migrations
         # The row count of `table`, optionally narrowed by `where`. Backs
         # `reads_table`'s default `max_progress`.
         def count_all(table, where: nil)
-          count("SELECT COUNT(*) FROM #{connection.quote_ident(table)}#{where_clause(where)}")
+          count("SELECT COUNT(*) FROM #{quote_identifier(table)}#{where_clause(where)}")
         end
 
         # The following back {Conversion::Partitioner}; see its primitive list.
@@ -77,7 +59,7 @@ module Migrations
           row =
             query_first_row(
               "SELECT MIN(#{column}) AS min, MAX(#{column}) AS max " \
-                "FROM #{connection.quote_ident(from)}#{where_clause(base)}",
+                "FROM #{quote_identifier(from)}#{where_clause(base)}",
             )
           [row[:min], row[:max]]
         end
@@ -103,7 +85,7 @@ module Migrations
             SELECT DISTINCT ON (bucket) #{select}
             FROM (
               SELECT #{select}, NTILE(#{count}) OVER (ORDER BY #{select}) AS bucket
-              FROM #{connection.quote_ident(from)}#{where_clause(base)}
+              FROM #{quote_identifier(from)}#{where_clause(base)}
             ) buckets
             ORDER BY bucket, #{select}
           SQL
@@ -123,32 +105,7 @@ module Migrations
         end
 
         def close
-          @connection.finish if @connection && !@connection.finished?
-          @connection = nil
-
-          if @fork_hook
-            ForkManager.remove_after_fork_child(@fork_hook)
-            @fork_hook = nil
-          end
-        end
-
-        # Forked worker processes inherit the connection's socket. If the inherited
-        # connection is garbage-collected, pg's cleanup sends a libpq Terminate message
-        # over that socket and the server closes the session — including for
-        # the main process, which still uses it. Redirecting the inherited
-        # file descriptor to /dev/null makes the cleanup harmless; calling
-        # `#finish` or `#close` instead would send the very message this
-        # needs to suppress.
-        def discard!
-          begin
-            @connection&.socket_io&.reopen(IO::NULL)
-          rescue StandardError
-            # When there's no usable socket (already closed, failed connection,
-            # older pg gem), there's also nothing the cleanup could corrupt.
-          end
-
-          @connection = nil
-          @discarded = true
+          @connection.close
         end
 
         def encode_array(array)
@@ -160,11 +117,11 @@ module Migrations
         private
 
         def query_first_row(sql)
-          connection.exec(sql).first
+          exec(sql).first
         end
 
         def escape_string(str)
-          connection.escape_string(str)
+          @connection.with { |connection| connection.escape_string(str) }
         end
 
         # `" WHERE <filter>"`, or "" when there's no filter — so a missing filter
@@ -197,19 +154,8 @@ module Migrations
           value.is_a?(Numeric) ? value.to_s : "'#{escape_string(value.to_s)}'"
         end
 
-        def connection
-          if @discarded
-            raise DiscardedError,
-                  "The source DB connection was discarded in this worker process. " \
-                    "Only sources may query the source DB; processors must work " \
-                    "with the items they receive."
-          end
-
-          @connection
-        end
-
-        def configure_connection
-          @connection.exec("SET client_min_messages TO WARNING")
+        def quote_identifier(value)
+          @connection.with { |connection| connection.quote_ident(value) }
         end
       end
     end
