@@ -465,14 +465,14 @@ importers:
         specifier: ^1.44.0
         version: 1.44.0
       chart.js:
-        specifier: 4.5.1
-        version: 4.5.1
+        specifier: 4.6.1
+        version: 4.6.1
       chartjs-adapter-moment:
         specifier: ^1.0.1
-        version: 1.0.1(chart.js@4.5.1)(moment@2.31.0)
+        version: 1.0.1(chart.js@4.6.1)(moment@2.31.0)
       chartjs-plugin-datalabels:
         specifier: 2.2.0
-        version: 2.2.0(chart.js@4.5.1)
+        version: 2.2.0(chart.js@4.6.1)
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
@@ -3817,8 +3817,8 @@ packages:
     resolution: {integrity: sha512-wqW3VdPnlSWT4eRiYX+hcs+C6ViBPUWk1qTCd+37qw9kEm/a5n2qcyQDMBWvSYKN/ctqZzeXNQaeBjOetJJUkw==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  chart.js@4.5.1:
-    resolution: {integrity: sha512-GIjfiT9dbmHRiYi6Nl2yFCq7kkwdkp1W/lp2J99rX0yo9tgJGn3lKQATztIjb5tVtevcBtIdICNWqlq5+E8/Pw==}
+  chart.js@4.6.1:
+    resolution: {integrity: sha512-hJyniucsFmq//EvXYvJ6c6mahPoI3kaxdjVH8awTaJ/fDNWeSqqqArixMJWkWNN6fcYvPU3HneSANFNYtRi61g==}
     engines: {pnpm: '>=8'}
 
   chartjs-adapter-moment@1.0.1:
@@ -11746,18 +11746,18 @@ snapshots:
     dependencies:
       inherits: 2.0.4
 
-  chart.js@4.5.1:
+  chart.js@4.6.1:
     dependencies:
       '@kurkle/color': 0.3.4
 
-  chartjs-adapter-moment@1.0.1(chart.js@4.5.1)(moment@2.31.0):
+  chartjs-adapter-moment@1.0.1(chart.js@4.6.1)(moment@2.31.0):
     dependencies:
-      chart.js: 4.5.1
+      chart.js: 4.6.1
       moment: 2.31.0
 
-  chartjs-plugin-datalabels@2.2.0(chart.js@4.5.1):
+  chartjs-plugin-datalabels@2.2.0(chart.js@4.6.1):
     dependencies:
-      chart.js: 4.5.1
+      chart.js: 4.6.1
 
   chokidar@5.0.0:
     dependencies:
