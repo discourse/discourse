@@ -1771,6 +1771,40 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("none")
     end
 
+    it "omits a per-call none for models that do not reason" do
+      model.update!(name: "gpt-4.1-mini")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+
+      expect(parsed_body).not_to have_key(:reasoning_effort)
+    end
+
+    it "sends a per-call none to reasoning models" do
+      model.update!(name: "gpt-5-mini")
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "none" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("none")
+    end
+
     it "uses native max effort for GPT-6 Astra" do
       model.update!(name: "gpt-6-astra")
 
