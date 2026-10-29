@@ -620,7 +620,8 @@ RSpec.describe UploadsController do
         expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
       end
 
-      it "returns the right response when anon tries to download a file when prevent_anons_from_downloading_files is true" do
+      it "returns the right response when anon tries to download a file " \
+           "when prevent_anons_from_downloading_files is true" do
         delete "/session/#{user.username}.json"
         SiteSetting.prevent_anons_from_downloading_files = true
 

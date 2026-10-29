@@ -579,8 +579,19 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     it "embeds text, markdown, and csv uploads as text" do
       uploads = [
         create_doc_upload(contents: "plain text with unicode café", filename: "notes.txt"),
-        create_doc_upload(contents: "# Heading\n\nmarkdown body", filename: "guide.md"),
-        create_doc_upload(contents: "name,value\nAlice,1", filename: "data.csv"),
+        create_doc_upload(
+          contents:
+            "# Heading
+
+markdown body",
+          filename: "guide.md",
+        ),
+        create_doc_upload(
+          contents:
+            "name,value
+Alice,1",
+          filename: "data.csv",
+        ),
       ]
 
       encoded =
@@ -594,9 +605,24 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.map { |payload| payload[:converted_from] }).to eq(%w[txt md csv])
       expect(encoded).to all(include(kind: :document, mime_type: "text/plain"))
       expect(encoded).to all(satisfy { |payload| !payload.key?(:base64) })
-      expect(encoded[0][:text]).to include("\n\nplain text with unicode café")
-      expect(encoded[1][:text]).to include("\n\n# Heading\n\nmarkdown body")
-      expect(encoded[2][:text]).to include("\n\nname,value\nAlice,1")
+      expect(encoded[0][:text]).to include(
+        "
+
+plain text with unicode café",
+      )
+      expect(encoded[1][:text]).to include(
+        "
+
+# Heading
+
+markdown body",
+      )
+      expect(encoded[2][:text]).to include(
+        "
+
+name,value
+Alice,1",
+      )
     end
 
     it "accepts legacy aliases for attachment types" do

@@ -2549,7 +2549,9 @@ RSpec.describe UserNotifications do
 
     it "returns a list of participants (except for the recipient), groups first, followed by users in order of their last reply" do
       expect(UserNotifications.participants(posts.last, user3)).to eq(
-        "[group1 (3)](http://test.localhost/g/group1), [four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [admin](http://test.localhost/u/admin)",
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
       )
     end
 
@@ -2575,7 +2577,9 @@ RSpec.describe UserNotifications do
 
     it "orders users by their last reply and user id" do
       expect(UserNotifications.participants(posts[-3], user4)).to eq(
-        "[group1 (3)](http://test.localhost/g/group1), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [three](http://test.localhost/u/three), [admin](http://test.localhost/u/admin)",
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [three](http://test.localhost/u/three), " \
+          "[admin](http://test.localhost/u/admin)",
       )
     end
 
@@ -2598,12 +2602,16 @@ RSpec.describe UserNotifications do
 
       SiteSetting.prioritize_username_in_ux = true
       expect(UserNotifications.participants(posts.last, user3)).to eq(
-        "[group1 (3)](http://test.localhost/g/group1), [four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [admin](http://test.localhost/u/admin)",
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
       )
 
       SiteSetting.prioritize_username_in_ux = false
       expect(UserNotifications.participants(posts.last, user3)).to eq(
-        "[group1 (3)](http://test.localhost/g/group1), [James Bond](http://test.localhost/u/four), [two](http://test.localhost/u/two), [Indiana Jones](http://test.localhost/u/one), [admin](http://test.localhost/u/admin)",
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[James Bond](http://test.localhost/u/four), [two](http://test.localhost/u/two), [Indiana Jones](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
       )
     end
 
@@ -2613,7 +2621,8 @@ RSpec.describe UserNotifications do
 
       SiteSetting.prioritize_username_in_ux = true
       expect(UserNotifications.participants(posts.last, user3, reveal_staged_email: true)).to eq(
-        "[group1 (3)](http://test.localhost/g/group1), james.bond@mi6.invalid, [two](http://test.localhost/u/two), indiana.jones@example.com, [admin](http://test.localhost/u/admin)",
+        "[group1 (3)](http://test.localhost/g/group1), james.bond@mi6.invalid, [two](http://test.localhost/u/two), " \
+          "indiana.jones@example.com, [admin](http://test.localhost/u/admin)",
       )
     end
 
@@ -2621,7 +2630,9 @@ RSpec.describe UserNotifications do
       topic.allowed_users << Discourse.system_user
 
       expect(UserNotifications.participants(posts.last, user3)).to eq(
-        "[group1 (3)](http://test.localhost/g/group1), [four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [admin](http://test.localhost/u/admin)",
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
       )
     end
   end
