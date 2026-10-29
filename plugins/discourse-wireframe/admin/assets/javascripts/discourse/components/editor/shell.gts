@@ -19,7 +19,6 @@ import EditorPanelSwitcher from "discourse/plugins/discourse-wireframe/discourse
 import PublishTargetStatus from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/publish-target-status";
 import RailResizeHandle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/rail-resize-handle";
 import ViewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-drawer";
-import ConditionsFloatingPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/conditions-floating-panel";
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
 import InplaceTextController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-text-controller";
 import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-panel";
@@ -190,7 +189,6 @@ export default class EditorShell extends Component {
     {{#if this.wireframeEditMode.active}}
       {{bodyClass
         "wireframe-active"
-        (if this.wireframeRail.leftCollapsed "wireframe-active--left-collapsed")
         (if
           this.wireframeRail.rightCollapsed "wireframe-active--right-collapsed"
         )
@@ -281,11 +279,8 @@ export default class EditorShell extends Component {
           {{/if}}
         </EditorPanelSwitcher>
 
-        {{#unless this.wireframeRail.leftCollapsed}}
-          {{! Resize handle on the left panel's inner (canvas-facing) seam;
-              hidden while collapsed since a collapsed rail isn't resizable. }}
-          <RailResizeHandle @side="left" />
-        {{/unless}}
+        {{! Resize handle on the left panel's inner (canvas-facing) seam. }}
+        <RailResizeHandle @side="left" />
 
         <div class="wireframe-canvas">
           <BlockBreadcrumb />
@@ -334,7 +329,6 @@ export default class EditorShell extends Component {
         </div>
       </div>
 
-      <ConditionsFloatingPanel />
       <DropPreview />
       <PublishReviewDrawer />
       <ViewDrawer

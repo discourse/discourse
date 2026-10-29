@@ -44,6 +44,7 @@ interface FeaturedBadgesSignature {
  * arrive as `@data` and the block stays a pure renderer.
  */
 @block("featured-badges", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/featured-badges"),
   displayName: "Recently awarded badges",
   icon: "certificate",

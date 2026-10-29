@@ -351,8 +351,16 @@ module PageObjects
         has_no_css?(".d-block-image-frame:has(img[alt='Grid image']) source", visible: false)
       end
 
+      # Clicks the canvas gutter just outside the outlet root: the homepage has
+      # no non-block content of its own to aim at.
       def click_outside_blocks
-        find(".welcome-banner__title").click
+        box =
+          find(".wireframe-block-chrome.--outlet-root").evaluate_script(
+            "this.getBoundingClientRect().toJSON()",
+          )
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.mouse.click(box["x"] - 8, box["y"] + box["height"] / 2)
+        end
       end
 
       def has_no_selected_block?
@@ -368,9 +376,8 @@ module PageObjects
       end
 
       def open_image_menu
-        find(".wireframe-block-chrome.--selected .wireframe-block-toolbar").click_button(
-          "Edit image",
-        )
+        find(".wireframe-block-chrome.--selected .wireframe-block-toolbar__more").click
+        find(".wireframe-toolbar-more-content").click_button("Edit image")
       end
 
       def has_no_image_menu?
@@ -504,7 +511,7 @@ module PageObjects
       def has_toolbar_anchored_menu?
         has_css?(".wireframe-image-editor-menu") { |menu| menu.evaluate_script(<<~JS) }
             (() => {
-              const trigger = document.querySelector('.wireframe-block-chrome.--selected button[title="Edit image"]').getBoundingClientRect();
+              const trigger = document.querySelector('.wireframe-block-chrome.--selected .wireframe-block-toolbar__actions').getBoundingClientRect();
               const menu = this.getBoundingClientRect();
               return Math.abs(menu.top - trigger.bottom) < trigger.height && menu.left <= trigger.right && menu.right >= trigger.left;
             })()

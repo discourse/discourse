@@ -36,7 +36,7 @@ describe "Wireframe editor drag and drop" do
   after { Theme.clear_cache! }
 
   it "mounts the grid overlay when entering the editor (drop target registers)" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
 
     # The overlay's empty-cell placeholders only render once the grid
@@ -47,7 +47,7 @@ describe "Wireframe editor drag and drop" do
   end
 
   it "offers stack, row, and grid as distinct layout choices" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
 
     expect(editor).to have_layout_palette_variants
@@ -56,7 +56,7 @@ describe "Wireframe editor drag and drop" do
   end
 
   it "keeps palette text from being selected while allowing search text selection" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     editor.drag_across_palette_heading
     expect(editor).to have_no_palette_text_selection
@@ -65,7 +65,7 @@ describe "Wireframe editor drag and drop" do
   end
 
   it "shows the selected layout's palette name throughout the editor" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
 
     editor.select_layout("Grid")
@@ -82,7 +82,7 @@ describe "Wireframe editor drag and drop" do
   end
 
   it "drops a palette block onto an occupied cell, inserting it into the adjacent gap" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
 
     # Seed grid: A @ col 1, B @ col 2. Dropping a fresh block on the trailing
@@ -104,7 +104,7 @@ describe "Wireframe editor drag and drop" do
   end
 
   it "drops a palette block into an empty grid cell" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
 
     editor.drag_palette_block("heading", onto: editor.empty_cell_selector(column: 3, row: 1))

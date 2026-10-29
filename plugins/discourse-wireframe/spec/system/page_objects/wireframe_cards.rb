@@ -149,7 +149,9 @@ module PageObjects
       end
 
       def show_issues
-        find('.wireframe-panel-switcher [role="tab"][aria-label^="Issues"]').click
+        find(
+          ".wireframe-panel-switcher__sections .d-segmented-control__label:has(input[value='issues'])",
+        ).click
       end
 
       def has_no_issues?

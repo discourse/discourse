@@ -27,7 +27,6 @@ module("Unit | Discourse Wireframe | service:wireframe-rail", function (hooks) {
   test("defaults to the palette panel when nothing is stored", function (assert) {
     const rail = this.owner.lookup("service:wireframe-rail");
     assert.strictEqual(rail.leftPanelTab, "palette");
-    assert.false(rail.leftCollapsed);
   });
 
   test("reads the persisted active panel at construction", function (assert) {
@@ -46,53 +45,28 @@ module("Unit | Discourse Wireframe | service:wireframe-rail", function (hooks) {
     assert.strictEqual(rail.leftPanelTab, "palette");
   });
 
-  test("setLeftPanelTab switches the panel, expands, and persists", function (assert) {
+  test("setLeftPanelTab switches the panel and persists", function (assert) {
     const rail = this.owner.lookup("service:wireframe-rail");
-    rail.toggleLeftCollapsed();
-    assert.true(rail.leftCollapsed, "starts collapsed");
 
     rail.setLeftPanelTab("outline");
     assert.strictEqual(rail.leftPanelTab, "outline");
-    assert.false(rail.leftCollapsed, "expands the rail");
     assert.strictEqual(
       this.owner.lookup("service:key-value-store").getObject(PANEL_KEY),
       "outline"
     );
   });
 
-  test("activatePanel toggles: re-activating the open panel collapses it", function (assert) {
+  test("showPalette switches to the palette from another panel", function (assert) {
     const rail = this.owner.lookup("service:wireframe-rail");
-
-    rail.activatePanel("outline");
-    assert.true(rail.isPanelOpen("outline"), "opens the chosen panel");
-    assert.false(rail.isPanelOpen("palette"), "other panels read closed");
-
-    rail.activatePanel("outline");
-    assert.true(rail.leftCollapsed, "re-activating collapses");
-    assert.false(
-      rail.isPanelOpen("outline"),
-      "no panel is open while collapsed"
-    );
-    assert.strictEqual(
-      rail.leftPanelTab,
-      "outline",
-      "the active panel is remembered across collapse"
-    );
-
-    rail.activatePanel("palette");
-    assert.true(rail.isPanelOpen("palette"), "activating another expands it");
-    assert.false(rail.leftCollapsed);
-  });
-
-  test("showPalette reveals the palette from a collapsed outline state", function (assert) {
-    const rail = this.owner.lookup("service:wireframe-rail");
-    rail.activatePanel("outline");
-    rail.toggleLeftCollapsed();
-    assert.true(rail.leftCollapsed);
+    rail.setLeftPanelTab("outline");
 
     rail.showPalette();
     assert.strictEqual(rail.leftPanelTab, "palette");
-    assert.false(rail.leftCollapsed);
+    assert.strictEqual(
+      this.owner.lookup("service:key-value-store").getObject(PANEL_KEY),
+      "palette",
+      "the palette becomes the remembered panel"
+    );
   });
 
   test("defaults to the seed widths and clamps stored values on hydration", function (assert) {
@@ -138,27 +112,16 @@ module("Unit | Discourse Wireframe | service:wireframe-rail", function (hooks) {
     );
   });
 
-  test("collapsing clears the inline width var; expanding restores it", function (assert) {
+  test("applyRailWidths always applies the left width", function (assert) {
     const rail = this.owner.lookup("service:wireframe-rail");
     rail.setLeftPanelWidth(360);
-    assert.strictEqual(leftVar(), "360px");
+    document.body.style.removeProperty(LEFT_VAR);
 
-    // A collapsed rail must drop its inline var so the stylesheet's collapse
-    // rule (which zeroes the var) wins — an inline value would override it.
-    rail.toggleLeftCollapsed();
-    assert.true(rail.leftCollapsed);
-    assert.strictEqual(
-      leftVar(),
-      "",
-      "the inline var is cleared while collapsed"
-    );
-
-    rail.toggleLeftCollapsed();
-    assert.false(rail.leftCollapsed);
+    rail.applyRailWidths();
     assert.strictEqual(
       leftVar(),
       "360px",
-      "expanding restores the persisted width"
+      "the left panel has no collapsed state to withhold its width for"
     );
   });
 
@@ -188,6 +151,14 @@ module("Unit | Discourse Wireframe | service:wireframe-rail", function (hooks) {
         .lookup("service:key-value-store")
         .getObject(RIGHT_COLLAPSED_KEY),
       "right collapse persists"
+    );
+
+    rail.toggleRightCollapsed();
+    assert.false(rail.rightCollapsed);
+    assert.strictEqual(
+      rightVar(),
+      "360px",
+      "expanding restores the persisted width"
     );
   });
 });

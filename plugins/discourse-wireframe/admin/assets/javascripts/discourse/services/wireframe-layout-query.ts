@@ -10,6 +10,7 @@ import { PART_KEY_SEGMENT } from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import type { BlockRegistryEntry } from "discourse/lib/blocks/-internals/types";
 import type BlocksService from "discourse/services/blocks";
+import { isEditorOutlet } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-outlets";
 import type {
   GridEntry,
   GridLayoutEntry,
@@ -83,18 +84,21 @@ export default class WireframeLayoutQueryService extends Service {
   #outletRootKeys = new Map<string, string>();
 
   /**
-   * The names of every block outlet that's editable on the current page — either
-   * one that already has a registered layout or one whose `<BlockOutlet>` is
-   * mounted in the DOM with no layout yet. Including the empty-mounted case makes
-   * "start a layout from scratch" possible — the entry pill surfaces even when no
-   * code path has called `api.renderBlocks(...)` for that outlet. Mounted outlets
-   * that aren't registered are silently ignored (they can't have a layout).
+   * The names of every block outlet that's editable on the current page — one
+   * the editor exposes (see `EDITOR_OUTLETS`) that either already has a
+   * registered layout or whose `<BlockOutlet>` is mounted in the DOM with no
+   * layout yet. Including the empty-mounted case makes "start a layout from
+   * scratch" possible — the entry pill surfaces even when no code path has
+   * called `api.renderBlocks(...)` for that outlet. Mounted outlets that aren't
+   * registered are silently ignored (they can't have a layout).
    */
   get editableOutlets(): string[] {
     const registered = this.blocks.listOutlets();
     const mounted = this.blocks.mountedOutletNames();
     return registered.filter(
-      (name) => this.blocks.hasLayout(name) || mounted.has(name)
+      (name) =>
+        isEditorOutlet(name) &&
+        (this.blocks.hasLayout(name) || mounted.has(name))
     );
   }
 

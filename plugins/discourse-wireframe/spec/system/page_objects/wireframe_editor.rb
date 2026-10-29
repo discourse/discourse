@@ -146,14 +146,16 @@ module PageObjects
 
       def has_layout_variant_name?(name)
         has_css?(
-          "#{LAYOUT_CHROME_SELECTOR}.--selected .wireframe-block-toolbar__handle > span:first-of-type",
+          "#{LAYOUT_CHROME_SELECTOR}.--selected .wireframe-block-toolbar__name",
           exact_text: name,
         ) && has_css?(".wireframe-inspector__block-name", exact_text: name) &&
           has_css?(".wireframe-breadcrumb__segment", exact_text: name)
       end
 
       def open_outline
-        find(".wireframe-panel-switcher__entry[aria-label='Layers']").click
+        find(
+          ".wireframe-panel-switcher__sections .d-segmented-control__label:has(input[value='outline'])",
+        ).click
       end
 
       def has_layout_variant_in_outline?(name)

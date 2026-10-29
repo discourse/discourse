@@ -26,7 +26,7 @@ describe "Edit wireframe images" do
   after { Theme.clear_cache! }
 
   it "lets an author position a section image and cancel canvas adjustment" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     frame_width, cell_width = image_editor.grid_frame_widths
     expect(frame_width).to eq(cell_width)
@@ -72,7 +72,7 @@ describe "Edit wireframe images" do
   end
 
   it "keeps the author's image position when clicking away and allows one-step undo" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_section
     image_editor.set_position(x: 25, y: 75)
@@ -99,7 +99,7 @@ describe "Edit wireframe images" do
   end
 
   it "lets an author resize an image with handles around its frame" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_image
 
@@ -122,7 +122,7 @@ describe "Edit wireframe images" do
   end
 
   it "lets an author open compact image actions and continue in the inspector" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_image
     expect(image_editor).to have_no_image_menu
@@ -157,7 +157,7 @@ describe "Edit wireframe images" do
   end
 
   it "lets an author edit the grid that controls a nested image's size" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     grid_key = image_editor.owning_grid_key
@@ -173,7 +173,7 @@ describe "Edit wireframe images" do
   end
 
   it "lets an author replace and remove image sources from compact inspector choosers" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.open_source
@@ -198,7 +198,7 @@ describe "Edit wireframe images" do
 
   it "lets an author move between consistent block inspectors" do
     image_editor.use_tall_viewport
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     expect(image_editor).to have_clear_section_hierarchy
@@ -222,7 +222,7 @@ describe "Edit wireframe images" do
   end
 
   it "replaces both image variants by dropping onto closed source rows" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.use_inspector_width(240)
@@ -255,7 +255,7 @@ describe "Edit wireframe images" do
   it "keeps image dimensions and controls readable on an Arabic page" do
     SiteSetting.default_locale = "ar"
     image_editor.use_tall_viewport
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.stretch_grid_image
@@ -286,7 +286,7 @@ describe "Edit wireframe images" do
       TranslationOverride.upsert!("de", "js.wireframe.inspector.#{key}", value)
     end
     image_editor.use_tall_viewport
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.use_inspector_width(240)
@@ -296,7 +296,7 @@ describe "Edit wireframe images" do
   end
 
   it "keeps the zoom track on the same subdued surface as the position pad" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.use_inspector_width(240)
@@ -310,7 +310,7 @@ describe "Edit wireframe images" do
 
   it "keeps the minimum inspector usable with zoom-equivalent viewport scaling" do
     image_editor.use_tall_viewport
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.use_inspector_width(240)
@@ -335,7 +335,7 @@ describe "Edit wireframe images" do
 
   it "keeps composition controls grouped across inspector widths in either direction" do
     image_editor.use_tall_viewport
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.stretch_grid_image
@@ -375,7 +375,7 @@ describe "Edit wireframe images" do
   it "identifies the visible source when an image has both color variants" do
     dark_scheme = ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
     Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_grid_image
     image_editor.open_image_menu
@@ -386,7 +386,7 @@ describe "Edit wireframe images" do
   end
 
   it "takes an author to image settings when the inspector is already open on another tab" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_image
     image_editor.open_image_menu
@@ -405,7 +405,7 @@ describe "Edit wireframe images" do
     dark_scheme = ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
     Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
     image_editor.use_color_mode("dark")
-    visit("/latest")
+    visit("/custom")
     editor.enter
     image_editor.select_image
     image_editor.open_image_menu
@@ -433,7 +433,7 @@ describe "Edit wireframe images" do
   end
 
   it "renders shared image frames on the published page" do
-    visit("/latest")
+    visit("/custom")
     expect(page).to have_css(".d-block-section .d-block-image-frame")
     expect(page).to have_css(".d-block-image__caption", text: "A shared image frame")
     screenshot_marker(label: "wireframe-image-published")

@@ -178,6 +178,25 @@ module(
       }
     });
 
+    test("an outlet the editor doesn't expose is never editable", async function (assert) {
+      await _renderBlocks("sidebar-blocks", tile("Side"), getOwner(this));
+      _registerMountedOutlet("sidebar-blocks");
+      try {
+        assert.false(
+          queryOf(this.editor).editableOutlets.includes("sidebar-blocks"),
+          "a mounted outlet with a layout stays out of the editor when it isn't an editor outlet"
+        );
+        this.editor.enter();
+        await settled();
+        assert.false(
+          engineOf(this.editor).draftedOutletNames().includes("sidebar-blocks"),
+          "no session draft is seeded for it"
+        );
+      } finally {
+        _unregisterMountedOutlet("sidebar-blocks");
+      }
+    });
+
     test("an unowned outlet targets the active theme, not a default component", async function (assert) {
       // A default (overridable code seed) outlet — nothing owns it yet.
       await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));

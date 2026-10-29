@@ -1234,3 +1234,22 @@
     font-size: var(--font-down-1);
   }
 }
+
+.styleguide-carousel {
+  max-width: 480px;
+
+  &__slide {
+    display: grid;
+    place-items: center;
+    height: 160px;
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-up-2);
+  }
+
+  &__status {
+    margin: var(--space-2) 0 0;
+    color: var(--primary-medium);
+    text-align: center;
+  }
+}

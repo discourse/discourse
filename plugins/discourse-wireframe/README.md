@@ -15,6 +15,14 @@ Two site settings gate the plugin:
 - `wireframe_enabled` — master switch (default: off).
 - `wireframe_allowed_groups` — groups whose members can use the editor (default: admins). Admins always have access regardless.
 
+## Editable outlets
+
+For now the editor only exposes the homepage outlet (`homepage-blocks`). Every other block outlet on the page renders as it does live — no boundary, chrome, drop target, outline row, issue, or draft. The allow-list lives in `admin/assets/javascripts/discourse/lib/editor-outlets.ts`; widening it is a change there only.
+
+## Editor chrome
+
+Every outlet and block in the editor carries a header strip (`components/editor/chrome/block-toolbar.gts`): its name on the left, status plus the gear and "…" actions menu on the right. The outlet strip always shows its publish state; a block strip shows a status only when something changes how it renders (hidden by conditions, a viewport or persona condition, a layout warning, a render error — see `lib/block-status.ts`). Settings and conditions stay in the inspector.
+
 ## Architecture
 
 See [`docs/PLAN.md`](docs/PLAN.md) for full details. Highlights:

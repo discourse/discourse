@@ -20,7 +20,7 @@
  * the editor service's `enter()` / `exit()` lifecycle. Tracked as a
  * follow-up — see `plugins/discourse-wireframe/docs/REVISIT.md`.
  *
- * Color tokens are duplicated locally rather than reused from core's
+ * Color tokens derive from the active color scheme rather than reusing core's
  * dev-tools overlay (frontend/discourse/app/static/dev-tools/styles.css),
  * whose CSS loads dynamically — its variables aren't guaranteed present.
  */
@@ -28,12 +28,15 @@
 @import "image-position-picker";
 
 :root {
-  --wf-accent: #d97706;
-  --wf-accent-rgb: 217, 119, 6;
-  --wf-accent-strong: #b45309;
-  --wf-outlet-accent: #f59e0b;
-  --wf-outlet-accent-rgb: 245, 158, 11;
-  --wf-on-accent: #fff;
+  /* Chrome is tinted from the scheme's tertiary so the overlay reads as part
+     of the site in light and dark palettes alike. Blocks take the base tone;
+     the outlet boundary takes a lighter tint so the two nesting levels stay
+     distinguishable, and hover deepens to the same tone core buttons use. */
+  --wf-accent: var(--tertiary);
+  --wf-accent-rgb: var(--tertiary-rgb);
+  --wf-accent-strong: var(--tertiary-hover);
+  --wf-outlet-accent: var(--tertiary-high);
+  --wf-on-accent: var(--secondary);
   --wireframe-block-color: var(--wf-accent);
   --wireframe-block-hover-color: var(--wf-accent-strong);
   --wireframe-block-outlet-color: var(--wf-outlet-accent);
@@ -74,17 +77,40 @@ body.wireframe-active {
   /* Block boundaries drawn via `outline` (not `border`) so toggling the ring
      on hover / selection takes no layout space and can't shift the page. */
 
+  /* Every chrome is a framed box whose first child is the header strip
+     (`.wireframe-block-toolbar`). The strip bleeds across the chrome's
+     horizontal padding (`--wf-strip-content-x`) so it spans the frame edge to
+     edge; the content below keeps that padding. Frames are real borders so the
+     strip's corners can follow the radius; the border width never changes
+     between states (selection adds a 1px shadow ring instead), so the page
+     doesn't shift as the author hovers and clicks. */
+
   .wireframe-block-chrome {
+    --wf-strip-content-x: 14px;
+    --wf-strip-content-y: 12px;
+    --wf-strip-gap: 12px;
     position: relative;
     margin: var(--wireframe-container-margin);
-    padding: var(--wireframe-container-padding);
-    transition:
-      outline-color 80ms ease-out,
-      background-color 80ms ease-out;
+    padding: 0 var(--wf-strip-content-x) var(--wf-strip-content-y);
+    border: var(--wireframe-container-border-width) dashed
+      var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
     scroll-margin-top: calc(var(--wf-toolbar-height) + 2rem);
 
     &.--empty-container {
       min-height: 4rem;
+    }
+
+    /* A nested block (inside another block) takes the compact strip and a
+       lighter frame, so the nesting levels stay readable. Its horizontal inset
+       stays small on purpose: insets compound at every nesting level and would
+       otherwise narrow row and grid children away from their live widths. */
+
+    &.--nested {
+      --wf-strip-content-x: 4px;
+      --wf-strip-content-y: 12px;
+      --wf-strip-gap: 8px;
+      border-color: var(--primary-low);
     }
 
     /* Hover treatment on the innermost hovered chrome only: the trailing
@@ -100,15 +126,17 @@ body.wireframe-active {
         .--overlapping,
         .--outlet-root
       ):hover:not(:has(.wireframe-block-chrome:hover)) {
-      outline: var(--wireframe-container-border-width) dotted
-        var(--wireframe-block-color);
-      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
+      border-style: solid;
+      border-color: var(--primary-medium);
     }
 
+    /* Selection reads as a 2px accent ring: the border turns solid accent and
+       a 1px shadow doubles it without changing the box size. */
+
     &.--selected {
-      outline: var(--wireframe-container-border-width) solid
-        var(--wireframe-block-hover-color);
-      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
+      border-style: solid;
+      border-color: var(--wf-accent);
+      box-shadow: 0 0 0 1px var(--wf-accent);
     }
 
     /* The chrome is itself keyboard-focusable (`role="button" tabindex="0"`) but
@@ -124,8 +152,8 @@ body.wireframe-active {
        entry. */
 
     &.--part.--selected {
-      outline-style: dashed;
-      outline-color: var(--wireframe-block-color);
+      border-style: dashed;
+      border-color: var(--wireframe-block-color);
     }
 
     &.--just-selected {
@@ -133,12 +161,15 @@ body.wireframe-active {
     }
 
     &.--in-grid-slot {
+      --wf-strip-content-x: 0px;
+      --wf-strip-content-y: 0px;
+      --wf-strip-gap: 4px;
       margin: 0;
       padding: 0;
     }
 
     &.--overlapping {
-      outline: var(--wireframe-container-border-width) solid var(--danger);
+      border: var(--wireframe-container-border-width) solid var(--danger);
       box-shadow: 0 0 0 1px var(--danger);
       background: rgb(var(--danger-rgb), 0.18);
     }
@@ -164,7 +195,6 @@ body.wireframe-active {
         .wireframe-block-toolbar,
         .wireframe-drop-zone,
         .wireframe-block-chrome__resize-handle,
-        .wireframe-block-chrome__overlap-badge,
         .wireframe-empty-drop-placeholder,
         .wireframe-image-arg-overlay,
         .wireframe-image-reposition,
@@ -222,66 +252,6 @@ body.wireframe-active {
     .d-block-carousel__nav,
     .d-block-carousel__dot {
       pointer-events: auto;
-    }
-
-    /* Horizontal scroll (`overflow-x: auto`) forces `overflow-y: auto`, which
-       would clip a selected slide's toolbar anchored above it. Reserve top
-       padding inside the scrollport so the toolbar stays visible. */
-
-    .d-block-carousel__viewport {
-      --wf-carousel-pad: 2rem;
-      padding-top: var(--wf-carousel-pad);
-      background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 5px,
-        var(--primary-low) 5px,
-        var(--primary-low) 6px
-      );
-      background-repeat: no-repeat;
-      background-size: 100% var(--wf-carousel-pad);
-      background-position: top left;
-    }
-  }
-
-  .wireframe-block-chrome__overlap-badge {
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    z-index: 1000;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--wf-gap-tight);
-    padding: var(--wireframe-badge-padding);
-    background: var(--danger);
-
-    /* `--secondary` is core's readable text color on a `--danger` fill and
-       flips with the scheme, unlike a literal white (same-file precedent: the
-       activity-bar count badge). No text-shadow — it renders dark-on-dark in
-       dark schemes. */
-    color: var(--secondary);
-    font-size: var(--wireframe-badge-font-size);
-    font-weight: bold;
-    border-radius: 0 0 0 var(--wf-radius);
-    pointer-events: auto;
-    cursor: help;
-
-    .d-icon {
-      color: var(--secondary) !important;
-      font-size: var(--wireframe-badge-font-size) !important;
-      width: var(--wireframe-badge-font-size) !important;
-      filter: drop-shadow(var(--wireframe-shadow));
-    }
-
-    &--info {
-      background: var(--highlight);
-      color: var(--primary);
-      text-shadow: none;
-
-      .d-icon {
-        color: var(--primary) !important;
-        filter: none;
-      }
     }
   }
 
@@ -602,80 +572,243 @@ body.wireframe-active {
     }
   }
 
-  /* Keep the bar in the DOM at idle (`opacity: 0`, not `display: none`) so the
-     drag-source modifier's registration stays stable across hover transitions. */
+  /* Header strip — the bar attached to the top edge of every outlet and block.
+     It stays in flow as the chrome's first child, so the block's name and its
+     status are always visible and the drag handle's registration is stable
+     across hover transitions. Hover / selection only reveal the trailing
+     actions (gear + "…" menu). The strip is its own inline-size container so a
+     narrow block can collapse status text and truncate its name without the
+     chrome measuring anything (see the container queries at the end). No
+     transitions, matching `--d-button-transition: none`. */
 
   .wireframe-block-toolbar {
-    position: absolute;
-    bottom: 100%;
-    left: calc(-1 * var(--wireframe-container-border-width));
-    z-index: 1000;
-    opacity: 0;
-    display: inline-flex;
-    align-items: stretch;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--wf-radius) var(--wf-radius) 0 0;
-    box-shadow: var(--shadow-card);
-    pointer-events: none;
-    overflow: hidden; /* clip the handle's bg into the rounded corners */
+    container-type: inline-size;
+    container-name: wireframe-strip;
+    margin: 0 calc(-1 * var(--wf-strip-content-x)) var(--wf-strip-gap);
+    border-radius: calc(var(--d-border-radius) - 1px)
+      calc(var(--d-border-radius) - 1px) 0 0;
+    background: var(--primary-very-low);
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    line-height: 1.2;
+    pointer-events: auto;
+    user-select: none;
 
-    /* Cap the bar to the block width so a wide selected bar can't spill past a
-       narrow block; the `d-fit`-driven tiers fold the actions into the
-       hamburger before it would clip. The bar is `position: absolute` (out of
-       flow) and MUST carry no margin — otherwise its size could feed back into
-       the chrome width the fit observer watches. */
-    max-width: 100%;
-    transition: opacity 80ms ease-out;
+    &__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--wf-gap);
+      padding: 5px 10px;
+    }
 
     &__handle {
       display: inline-flex;
       align-items: center;
-      gap: var(--wf-gap-tight);
-
-      /* Never shrink inside the width-capped bar — a shrunk handle wraps its
-         name/ordinal and, worse, makes the fit measurement under-report; the
-         tier collapse (not flex shrink) is what handles a narrow block. */
-      flex: none;
-      padding: var(--wireframe-badge-padding);
-      background: var(--wireframe-block-color);
-      color: var(--wf-on-accent);
-      font-size: var(--wireframe-badge-font-size);
-      font-weight: bold;
-      text-shadow: var(--wireframe-shadow);
+      gap: 6px;
+      flex: 1 1 auto;
+      min-width: 0;
+      color: var(--primary);
+      font-weight: 600;
       cursor: grab;
-
-      &:hover {
-        background: var(--wireframe-block-hover-color);
-      }
 
       &:active {
         cursor: grabbing;
       }
 
-      .d-icon {
-        color: var(--wf-on-accent) !important;
-        font-size: var(--wireframe-badge-font-size) !important;
-        width: var(--wireframe-badge-font-size) !important;
-        filter: drop-shadow(var(--wireframe-shadow));
+      &--outlet,
+      &--part {
+        cursor: default;
       }
     }
 
+    &__grip {
+      flex: none;
+      color: var(--primary-medium);
+
+      &.d-icon {
+        font-size: 10px;
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    &__name {
+      flex: 0 1 auto;
+      min-width: 6ch;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     &__ordinal {
+      flex: none;
       padding: 0 6px;
       border-radius: 999px;
-      background: var(--wf-chip-scrim);
-      color: var(--wf-on-accent);
+      background: var(--primary-low);
+      color: var(--primary-medium);
       font-weight: normal;
-      text-shadow: none;
       font-variant-numeric: tabular-nums;
     }
 
+    /* The selected nested block's ancestry, in place of its bare name:
+       ancestors are plain accent links, the block itself keeps the bold name. */
+
+    &__crumb.btn.btn-flat {
+      flex: 0 3 auto;
+      min-width: 2ch;
+      min-height: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--tertiary-medium);
+      font-size: inherit;
+      font-weight: normal;
+      line-height: inherit;
+
+      /* Ancestors give way before the block's own name does. */
+      .d-button-label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:hover,
+      &:focus-visible {
+        background: transparent;
+        color: var(--tertiary-hover);
+      }
+    }
+
+    /* The folded "…" segment never shrinks; its menu lists the hidden
+       ancestors. */
+
+    &__crumb--folded.btn.btn-flat {
+      flex: none;
+      min-width: 0;
+
+      .d-icon {
+        font-size: 10px;
+        width: 10px;
+        height: 10px;
+        color: var(--tertiary-medium);
+      }
+
+      &[aria-expanded="true"] {
+        color: var(--tertiary-hover);
+      }
+    }
+
+    &__crumb-sep {
+      flex: none;
+      color: var(--tertiary-medium);
+
+      &.d-icon {
+        font-size: 7px;
+        width: 7px;
+        height: 7px;
+      }
+    }
+
+    &__trail {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex: none;
+      min-width: 0;
+    }
+
+    &__status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      font-weight: normal;
+      color: var(--primary-medium);
+      cursor: help;
+
+      .d-icon {
+        flex: none;
+        font-size: 10px;
+        width: 10px;
+        height: 10px;
+        color: currentcolor;
+      }
+
+      &.--error {
+        color: var(--danger);
+        font-weight: 600;
+      }
+
+      &.--warning {
+        color: var(--danger);
+      }
+
+      &--publish {
+        gap: 4px;
+        font-weight: 600;
+        cursor: default;
+      }
+
+      &.--published {
+        color: var(--success);
+
+        .wireframe-block-toolbar__dot {
+          background: var(--success);
+        }
+      }
+
+      &.--unpublished_changes {
+        color: color-mix(in srgb, var(--quaternary) 70%, var(--primary));
+
+        .wireframe-block-toolbar__dot {
+          background: var(--quaternary);
+        }
+      }
+
+      &.--draft,
+      &.--locked {
+        color: var(--primary-medium);
+
+        .wireframe-block-toolbar__dot {
+          border: 1px solid var(--primary-medium);
+        }
+      }
+    }
+
+    &__dot {
+      flex: none;
+      box-sizing: border-box;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    &__status-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__count {
+      font-size: 11px;
+      color: var(--primary-medium);
+      white-space: nowrap;
+    }
+
+    /* The gear + "…" pair. Hidden until the chrome is hovered (innermost only)
+       or selected; the outlet strip keeps its menu visible at all times. */
+
+    &__actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      flex: none;
+      visibility: hidden;
+    }
+
     &__btn {
-      color: var(--primary);
-      transition:
-        background-color 120ms ease,
-        color 120ms ease;
+      color: var(--primary-medium);
 
       /* Core's `.btn-flat` zeroes the focus-visible outline, so these buttons
          would show no keyboard focus. Roving navigation makes that focus the
@@ -686,139 +819,141 @@ body.wireframe-active {
         outline-offset: -2px;
       }
 
-      &.btn.btn-icon {
+      &.btn.btn-flat {
         min-width: 0;
         min-height: 0;
         width: auto;
         height: auto;
-        padding: var(--wireframe-badge-padding);
+        padding: 2px;
         line-height: 1;
+        background: transparent;
+        color: inherit;
+
+        &:hover:not([disabled]) {
+          background: transparent;
+          color: var(--primary);
+        }
       }
 
       .d-icon {
-        font-size: var(--wireframe-badge-font-size) !important;
-        width: var(--wireframe-badge-font-size) !important;
+        font-size: 12px;
+        width: 12px;
+        height: 12px;
+        color: currentcolor;
       }
 
-      &.--active {
+      &.--active.btn {
         background: var(--d-selected);
         color: var(--d-selected-text-color);
-
-        .d-icon {
-          color: var(--d-selected-text-color);
-        }
-      }
-
-      &--danger {
-        &:hover:not([disabled]),
-        &:focus-visible:not([disabled]) {
-          background: var(--danger-low);
-          color: var(--danger);
-
-          .d-icon {
-            color: var(--danger);
-          }
-        }
       }
     }
 
-    &__separator {
-      align-self: stretch;
-      width: 1px;
-      background: var(--primary-low);
+    /* The open menu's trigger keeps a pressed background. */
+    &__more[aria-expanded="true"].btn.btn-flat {
+      background: var(--tertiary-low);
+      color: var(--tertiary-hover);
     }
 
-    &__url-input {
-      font-size: var(--wireframe-badge-font-size);
-      padding: var(--wireframe-badge-padding);
-      line-height: 1;
-      min-height: 0;
-    }
-
-    /* Collapsible structural-action row. Carries `width: max-content` so its
-       `offsetWidth` reports the true intrinsic width whether it's in flow (full
-       tier) or parked off-tier (narrow / narrower) — the toolbar's fit compute
-       reads it without ever toggling a style. */
-
-    &__actions {
-      display: inline-flex;
-      align-items: stretch;
-
-      /* Keep the intrinsic width (no flex shrink) so the fit measurement is
-         truthful and the buttons don't squeeze/wrap inside the capped bar. */
-      flex: none;
-      width: max-content;
-    }
-
-    &__more {
-      position: absolute;
-      visibility: hidden;
-      flex: none;
-      width: max-content;
-    }
-
-    /* Inline-format buttons stay inline whenever they show (they never collapse
-       into the hamburger — a menu can't preserve the ProseMirror selection). */
+    /* Inline-format buttons stay inline whenever they show (they never fold
+       into the menu — a menu can't preserve the ProseMirror selection). */
 
     &__format {
       display: inline-flex;
-      align-items: stretch;
-      flex: none;
-    }
-
-    /* The `max-width` cap keeps the measured handle width truthful (the fit
-       service reads the rendered, capped width) while letting an over-long name
-       ellipsize. */
-
-    &__handle
-      > span:not(
-        .wireframe-block-toolbar__ordinal,
-        .wireframe-block-toolbar__status
-      ) {
-      max-width: 16em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      align-items: center;
+      gap: 6px;
     }
   }
 
-  /* Toolbar fit tiers, keyed off the attribute the toolbar's `d-fit` wiring
-     writes on the chrome. The off-tier element is absolutely positioned
-     + `visibility: hidden`: out of flow (so it can't widen the bar or force a
-     line break) and out of the a11y tree / tab order, yet still measurable at
-     `width: max-content`. Swapping tiers is therefore a single, flicker-free
-     style change with no measurement toggling. Default (no attribute) is the
-     full tier — actions inline, hamburger parked. */
+  /* Hover tints the strip and reveals its actions on the innermost hovered
+     chrome only; selection paints the accent strip. */
 
-  .wireframe-block-chrome[data-wf-toolbar-fit="narrow"],
-  .wireframe-block-chrome[data-wf-toolbar-fit="narrower"] {
+  .wireframe-block-chrome:not(.--selected):hover:not(
+      :has(.wireframe-block-chrome:hover)
+    )
+    > .wireframe-block-toolbar {
+    background: var(--primary-low);
+
     .wireframe-block-toolbar__actions {
-      position: absolute;
-      visibility: hidden;
-    }
-
-    .wireframe-block-toolbar__more {
-      position: static;
       visibility: visible;
     }
   }
 
-  .wireframe-block-chrome[data-wf-toolbar-fit="narrower"] {
-    .wireframe-block-toolbar__handle
-      > span:not(
-        .wireframe-block-toolbar__ordinal,
-        .wireframe-block-toolbar__status
-      ),
-    .wireframe-block-toolbar__ordinal {
+  .wireframe-block-chrome.--selected > .wireframe-block-toolbar {
+    background: var(--tertiary-very-low);
+    color: var(--tertiary-hover);
+
+    .wireframe-block-toolbar__handle,
+    .wireframe-block-toolbar__grip,
+    .wireframe-block-toolbar__btn {
+      color: var(--tertiary-hover);
+    }
+
+    /* The selected strip gives its width to the breadcrumb and the actions;
+       the child count is a resting-state hint only. */
+
+    .wireframe-block-toolbar__count {
       display: none;
+    }
+
+    .wireframe-block-toolbar__actions {
+      visibility: visible;
     }
   }
 
-  .wireframe-block-chrome:hover:not(:has(.wireframe-block-chrome:hover))
-    > .wireframe-block-toolbar,
-  .wireframe-block-chrome.--selected > .wireframe-block-toolbar {
+  /* A nested block's strip has no fill at rest and the compact sizing. */
+  .wireframe-block-chrome.--nested > .wireframe-block-toolbar {
+    background: transparent;
+
+    > .wireframe-block-toolbar__bar {
+      padding: 3px 8px;
+      font-size: 11px;
+    }
+
+    .wireframe-block-toolbar__handle {
+      color: var(--primary-medium);
+    }
+
+    .wireframe-block-toolbar__grip {
+      color: var(--primary-low-mid);
+
+      &.d-icon {
+        font-size: 9px;
+        width: 9px;
+        height: 9px;
+      }
+    }
+  }
+
+  .wireframe-block-chrome.--nested:not(.--selected):hover:not(
+      :has(.wireframe-block-chrome:hover)
+    )
+    > .wireframe-block-toolbar {
+    background: var(--primary-very-low);
+  }
+
+  .wireframe-block-chrome.--nested.--selected > .wireframe-block-toolbar {
+    background: var(--tertiary-very-low);
+
+    .wireframe-block-toolbar__handle {
+      color: var(--tertiary-hover);
+    }
+  }
+
+  /* The block being dragged fades in place; the drag image is a copy of the
+     chrome in its selected dress, lifted off the page. The copy is rendered
+     into PDND's offscreen preview container, so it exists only for the drag. */
+
+  .wireframe-block-chrome.--drag-source {
+    opacity: 0.4;
+  }
+
+  .wireframe-block-chrome.--drag-preview {
     opacity: 1;
-    pointer-events: auto;
+    background: var(--secondary);
+    border: 1px solid var(--wf-accent);
+    box-shadow: var(--shadow-card);
+    transform: rotate(-1deg);
+    cursor: grabbing;
   }
 
   .block-debug-ghost {
@@ -838,43 +973,32 @@ body.wireframe-active {
   }
 
   .wireframe-block-chrome.--outlet-root {
-    outline: var(--wireframe-container-border-width) dashed
-      var(--wireframe-block-outlet-color);
-    background: rgb(var(--wf-outlet-accent-rgb), var(--wireframe-bg-opacity));
+    --wf-strip-content-x: 16px;
+    --wf-strip-content-y: 16px;
+    --wf-strip-gap: 16px;
+    border: var(--wireframe-container-border-width) solid var(--wf-accent);
+    background: transparent;
 
-    &:hover:not(:has(.wireframe-block-chrome:hover)),
     &.--selected {
-      outline-style: solid;
+      box-shadow: 0 0 0 1px var(--wf-accent);
     }
 
     > .wireframe-block-toolbar {
-      opacity: 1;
-      pointer-events: auto;
-    }
+      background: var(--tertiary-very-low);
+      border-bottom: 1px solid var(--tertiary-low);
+      color: var(--primary-medium);
 
-    .wireframe-block-toolbar__handle {
-      background: var(--wireframe-block-outlet-color);
-      cursor: default;
-
-      &:hover {
-        background: var(--wireframe-block-outlet-hover-color);
+      > .wireframe-block-toolbar__bar {
+        padding: 6px 12px;
       }
 
-      .wireframe-block-toolbar__status {
-        padding: 0 6px;
-        background: var(--wf-chip-scrim);
-        color: var(--wf-on-accent);
-        font-weight: normal;
-        border-radius: 999px;
-        text-shadow: none;
+      .wireframe-block-toolbar__handle,
+      .wireframe-block-toolbar__grip {
+        color: var(--tertiary-hover);
+      }
 
-        &.--editing {
-          background: var(--tertiary);
-        }
-
-        &.--published {
-          background: var(--success);
-        }
+      .wireframe-block-toolbar__actions {
+        visibility: visible;
       }
     }
   }
@@ -891,9 +1015,7 @@ body.wireframe-active {
 
   /* Rail widths are shared custom properties with `body.wireframe-active`
      (see below) so the grid columns and the live-page inset can never drift. */
-  grid-template-columns: var(--wf-activity-bar) var(--wf-left-panel) 1fr var(
-      --wf-right-rail
-    );
+  grid-template-columns: var(--wf-left-panel) 1fr var(--wf-right-rail);
   grid-template-rows: var(--wf-toolbar-height) auto 1fr;
   pointer-events: none;
 
@@ -1126,145 +1248,32 @@ body.wireframe-active {
 }
 
 .wireframe-canvas {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 3;
   pointer-events: none;
   position: relative;
 }
 
 .wireframe-panel-switcher {
-  grid-column: 1 / 3;
+  grid-column: 1;
   grid-row: 3;
-  display: grid;
-  grid-template-columns: var(--wf-activity-bar) minmax(0, 1fr);
+  min-width: 0;
   min-height: 0;
 
-  &__activity-bar {
-    grid-column: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--wf-gap-tight);
-    min-height: 0;
-    padding-block: var(--wf-gap-tight);
-    background: var(--secondary);
-    border-inline-end: 1px solid var(--primary-low);
-    overflow: hidden;
-
-    .d-tabs__strip-controls {
-      flex: 0 1 auto;
-      min-height: 0;
-    }
-
-    .d-tabs__tablist {
-      gap: var(--wf-gap-tight);
-    }
+  /* The panel sits where the site sidebar does, so its scroller reads the same. */
+  .panel-body {
+    @include hover-revealed-scrollbar;
   }
 
-  > .d-tabs__panel {
-    grid-column: 2;
-    display: flex;
-    min-height: 0;
-    overflow: hidden;
-  }
+  &__sections {
+    flex: 1;
+    min-width: 0;
+    gap: var(--space-1);
+    padding-inline: var(--space-1);
 
-  &.--collapsed > .d-tabs__panel {
-    display: none;
-  }
-
-  &__badge {
-    position: absolute;
-    top: 4px;
-    inset-inline-end: 4px;
-    min-width: 1rem;
-    height: 1rem;
-    padding: 0 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    background: var(--danger);
-    color: var(--secondary);
-    font-size: var(--font-down-2);
-    font-weight: 700;
-    line-height: 1;
-    pointer-events: none;
-  }
-
-  &__entry {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0.25rem;
-    border: none;
-    border-inline-start: 2px solid transparent;
-    border-radius: 0;
-    background: transparent;
-    color: var(--primary-medium);
-    cursor: pointer;
-
-    &:hover {
-      color: var(--primary);
-      background: var(--primary-very-low);
+    .d-segmented-control__label {
+      padding-inline: var(--space-2);
     }
-
-    &:focus-visible {
-      outline: 2px solid var(--wf-focus-ring);
-      outline-offset: -2px;
-    }
-
-    &[aria-selected="true"] {
-      color: var(--primary);
-      background: var(--primary-very-low);
-      border-inline-start-color: var(--tertiary);
-    }
-
-    .d-icon {
-      margin: 0;
-      color: inherit;
-      font-size: var(--font-up-3);
-    }
-  }
-
-  &__collapse {
-    margin-top: auto;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0.25rem;
-    border: none;
-    border-top: 1px solid var(--primary-low);
-    background: transparent;
-    color: var(--primary-medium);
-    cursor: pointer;
-
-    &:hover {
-      color: var(--primary);
-      background: var(--primary-very-low);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--wf-focus-ring);
-      outline-offset: -2px;
-    }
-  }
-}
-
-.wireframe-activity-tooltip {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  max-width: 220px;
-
-  &__name {
-    font-weight: 600;
-  }
-
-  &__description {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
   }
 }
 
@@ -1336,13 +1345,13 @@ body.wireframe-active {
   z-index: 5;
 
   &--left {
-    grid-column: 2;
+    grid-column: 1;
     justify-self: end;
     margin-right: -4px;
   }
 
   &--right {
-    grid-column: 4;
+    grid-column: 3;
     justify-self: start;
     margin-left: -4px;
   }
@@ -1392,13 +1401,12 @@ body.wireframe-active {
   overflow: hidden;
 
   &.--left {
-    flex: 1;
     min-width: 0;
     border-inline-end: 1px solid var(--primary-low);
   }
 
   &.--right {
-    grid-column: 4;
+    grid-column: 3;
     grid-row: 3;
     border-left: 1px solid var(--primary-low);
 
@@ -1409,6 +1417,7 @@ body.wireframe-active {
 
   &.--collapsed {
     overflow: hidden;
+    padding: 0 var(--space-2);
 
     .panel-header {
       padding: 0.5rem;
@@ -1418,27 +1427,17 @@ body.wireframe-active {
   }
 
   .panel-header {
-    padding: 0.75rem 1rem;
+    padding: 0 var(--space-2);
+    height: 3.25rem;
+
+    /* A flex item in the column panel; without this a tall body squeezes the
+       header below its height, down to the controls inside it. */
+    flex-shrink: 0;
     font-weight: 600;
     border-bottom: 1px solid var(--primary-low);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .panel-collapse-toggle {
-    background: transparent;
-    border: none;
-    padding: 0.25rem;
-    cursor: pointer;
-    color: var(--primary-medium);
-    display: inline-flex;
-    align-items: center;
-
-    &:hover {
-      color: var(--primary);
-    }
   }
 
   /* `.panel-body` is the panel's scroll surface. The outer
@@ -1496,26 +1495,18 @@ body.wireframe-active {
     gap: 2px;
   }
 
-  /* The Recent group is the one place the palette keeps compact tiles. */
-  &__recent {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
   &__section-header {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    background: var(--secondary);
     padding: 0.25rem 0.15rem;
     font-size: var(--font-down-2);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--primary-medium);
-    font-weight: 600;
-    border-bottom: 1px solid var(--primary-low);
+    color: var(--d-sidebar-header-color);
+    font-weight: var(--d-sidebar-header-font-weight);
+    border-top: 1px solid var(--primary-low);
+
+    &:first-of-type {
+      border-top: none;
+    }
   }
 }
 
@@ -1529,7 +1520,7 @@ body.wireframe-active {
   cursor: pointer;
 
   &:hover {
-    background: var(--primary-very-low);
+    background: var(--d-sidebar-highlight-background);
   }
 
   &:focus-visible {
@@ -1539,8 +1530,7 @@ body.wireframe-active {
 
   /* Keyboard cursor while DOM focus stays in the search input. */
   &.--active {
-    background: var(--primary-very-low);
-    box-shadow: inset 2px 0 0 var(--wf-accent);
+    background: var(--d-sidebar-highlight-background);
   }
 
   &.--dragging {
@@ -1554,6 +1544,7 @@ body.wireframe-active {
     height: auto;
     aspect-ratio: 3 / 2;
     border-radius: var(--d-border-radius);
+    background: var(--secondary);
   }
 
   &__text {
@@ -1723,16 +1714,12 @@ body.wireframe-active {
      this body padding (which insets the live page under the canvas), and
      fixed-position editor chrome (breadcrumb, future floating UI) all read one
      source and can't drift.
-     The left side is two columns: a persistent `--wf-activity-bar` icon strip
-     plus the wide `--wf-left-panel`; `--wf-left-rail` is their sum, the value
-     the body padding and breadcrumb mirror. Collapsing the left flips only
-     `--wf-left-panel` to zero, so the activity bar stays. `--wf-rail-collapsed`
-     is the slim strip the RIGHT rail shrinks to when collapsed (the left
-     collapses to the activity bar instead). */
+     `--wf-left-rail` aliases the left panel width for the body padding and the
+     breadcrumb. `--wf-rail-collapsed` is the slim strip the right rail shrinks
+     to when collapsed; the left panel does not collapse. */
   --wf-rail-collapsed: 40px;
-  --wf-activity-bar: 48px;
   --wf-left-panel: 320px;
-  --wf-left-rail: calc(var(--wf-activity-bar) + var(--wf-left-panel));
+  --wf-left-rail: var(--wf-left-panel);
   --wf-right-rail: 300px;
 
   /* Height of the fixed editor toolbar. Single source of truth: the shell's
@@ -1762,10 +1749,6 @@ body.wireframe-active {
   /* Focus-ring color for all editor chrome. Indirection over `--wf-accent` so
      the ring can be strengthened in one place if contrast review requires it. */
   --wf-focus-ring: var(--wf-accent);
-
-  &.wireframe-active--left-collapsed {
-    --wf-left-panel: 0px;
-  }
 
   &.wireframe-active--right-collapsed {
     --wf-right-rail: var(--wf-rail-collapsed);
@@ -2522,14 +2505,15 @@ body.wireframe-active {
       content: none;
     }
 
-    /* The inner block's chrome inside a slot must NOT add its own outline
-       decoration — the slot wrapper IS the visible cell outline. The inner
-       chrome's floating bar (`.wireframe-block-toolbar`) stays absolute-
-       positioned and still reveals on hover / selection, landing near the
-       slot's top-left corner (inside the slot's padding). */
+    /* The inner block's chrome inside a slot must NOT add its own frame — the
+       slot wrapper IS the visible cell outline. Its header strip still renders
+       in flow at the top of the slot. */
 
     .wireframe-block-chrome {
-      outline: 0 !important;
+      --wf-strip-content-x: 0px;
+      --wf-strip-content-y: 0px;
+      --wf-strip-gap: 4px;
+      border: 0 !important;
       background: transparent !important;
       box-shadow: none !important;
       padding: 0 !important;
@@ -3748,120 +3732,12 @@ body.wireframe-active {
   }
 }
 
-.wireframe-inspector__conditions-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0.35rem;
-}
-
-.wireframe-inspector__detach-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 0.2rem 0.45rem;
-  color: var(--primary-medium);
-  font-size: var(--font-down-2);
-  cursor: pointer;
-
-  &:hover {
-    color: var(--primary);
-    border-color: var(--primary-low-mid);
-    background: var(--primary-very-low);
-  }
-
-  .d-icon {
-    font-size: 0.75rem;
-  }
-}
-
-.wireframe-inspector__conditions-stub {
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-  font-style: italic;
-  padding: 1rem 0.5rem;
-  margin: 0;
-  text-align: center;
-  background: var(--primary-very-low);
-  border: 1px dashed var(--primary-low-mid);
-  border-radius: 4px;
-}
-
 /* Held on the body while the panel is dragged by its header, so the cursor
    survives the pointer outrunning the header. */
 
 body.wf-conditions-panel-dragging {
   cursor: grabbing;
   user-select: none;
-}
-
-.wireframe-conditions-floating {
-  position: fixed;
-  z-index: z("modal", "popover");
-  min-width: 320px;
-  min-height: 280px;
-  background: var(--secondary);
-  border: 1px solid var(--primary-low-mid);
-  border-radius: 6px;
-  box-shadow: var(--shadow-card);
-  display: flex;
-  flex-direction: column;
-  resize: both;
-  overflow: hidden;
-
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: var(--primary-very-low);
-    border-bottom: 1px solid var(--primary-low);
-    cursor: move;
-    user-select: none;
-    flex: 0 0 auto;
-  }
-
-  &__title {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--primary);
-    font-weight: 600;
-    font-size: var(--font-down-1);
-
-    .d-icon {
-      color: var(--primary-medium);
-      font-size: 0.85rem;
-    }
-  }
-
-  &__actions {
-    display: inline-flex;
-    gap: 0.25rem;
-  }
-
-  &__btn {
-    background: transparent;
-    border: none;
-    padding: 0.25rem 0.4rem;
-    color: var(--primary-medium);
-    cursor: pointer;
-    border-radius: 3px;
-
-    &:hover {
-      color: var(--primary);
-      background: var(--primary-low);
-    }
-  }
-
-  &__body {
-    flex: 1 1 auto;
-    overflow: auto;
-    padding: 0.75rem;
-  }
 }
 
 .wireframe-blocked-callout {
@@ -4770,25 +4646,32 @@ body.wf-conditions-panel-dragging {
 
 body.wireframe-active {
   .wireframe-block-chrome.--ghost {
-    outline: var(--wireframe-container-border-width) dashed
-      var(--wireframe-block-color);
+    border: var(--wireframe-container-border-width) dashed
+      var(--primary-low-mid);
     background: transparent;
   }
 
+  /* A render error tints the whole block and its strip; the strip's status
+     carries the message in the danger tone. */
+
   .wireframe-block-chrome.--error,
   .wireframe-block-chrome-wrapper.--error > .wireframe-block-chrome {
-    outline: var(--wireframe-container-border-width) solid var(--danger);
+    border: var(--wireframe-container-border-width) dashed var(--danger);
     background: rgb(var(--danger-rgb), 0.06);
+
+    > .wireframe-block-toolbar {
+      background: rgb(var(--danger-rgb), 0.08);
+    }
   }
 
   .wireframe-block-chrome.--cell {
-    outline: var(--wireframe-container-border-width) dashed
+    border: var(--wireframe-container-border-width) dashed
       var(--wireframe-block-outlet-color);
-    background: rgb(var(--wf-outlet-accent-rgb), 0.06);
+    background: color-mix(in srgb, var(--wf-outlet-accent) 6%, transparent);
 
     &:hover {
-      outline-color: var(--wireframe-block-outlet-hover-color);
-      background: rgb(var(--wf-outlet-accent-rgb), 0.12);
+      border-color: var(--wireframe-block-outlet-hover-color);
+      background: color-mix(in srgb, var(--wf-outlet-accent) 12%, transparent);
     }
   }
 
@@ -5291,9 +5174,82 @@ body.wireframe-active
   }
 }
 
+/* The strip's "…" menu: the danger item reads as destructive, the panel takes
+   the design's 200px width. */
+
+[data-identifier="wireframe-toolbar-more"] .dropdown-menu {
+  min-width: 200px;
+}
+
+.wireframe-block-toolbar__menu-item--danger.btn {
+  color: var(--danger);
+
+  .d-icon {
+    color: var(--danger);
+  }
+}
+
+/* Narrow strips: below ~360px the status collapses to its dot / icon (the
+   full text stays in `title`) and names truncate before the actions do. A
+   very narrow container (a sidebar) takes the compact sizing throughout.
+   These key off the strip's own width, never the viewport. */
+
+/* A strip too narrow to read a breadcrumb shows the selected block's bare
+   name; the canvas-bottom breadcrumb still carries the full path. */
+
+@container wireframe-strip (max-width: 360px) {
+  .wireframe-block-toolbar__crumb,
+  .wireframe-block-toolbar__crumb-sep,
+  .wireframe-block-toolbar__status-text,
+  .wireframe-block-toolbar__count {
+    display: none;
+  }
+
+  .wireframe-block-toolbar__dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@container wireframe-strip (max-width: 240px) {
+  .wireframe-block-toolbar__bar {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .wireframe-block-toolbar__grip.d-icon {
+    font-size: 9px;
+    width: 9px;
+    height: 9px;
+  }
+
+  .wireframe-block-toolbar__dot {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+/* Touch: roomier strips and tap spacing between the trailing controls. */
+
+@media (pointer: coarse) {
+  body.wireframe-active .wireframe-block-toolbar__bar {
+    padding: 8px 10px;
+  }
+
+  body.wireframe-active .wireframe-block-toolbar__trail {
+    gap: 14px;
+  }
+
+  body.wireframe-active .wireframe-block-toolbar__grip.d-icon {
+    font-size: 11px;
+    width: 11px;
+    height: 11px;
+  }
+}
+
 .wireframe-block-toolbar__url-input {
   width: 220px;
-  height: 24px;
+  height: 22px;
   padding: 0 6px;
   border: 1px solid var(--primary-low);
   border-radius: var(--wf-radius);

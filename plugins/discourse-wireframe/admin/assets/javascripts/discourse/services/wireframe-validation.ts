@@ -4,6 +4,7 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
 import type { BlockRegistryEntry } from "discourse/lib/blocks/-internals/types";
 import type BlocksService from "discourse/services/blocks";
+import { isEditorOutlet } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-outlets";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/entry-key";
 import {
   type FriendlyEntryMessage,
@@ -82,7 +83,7 @@ export default class WireframeValidationService extends Service {
     const layoutMap = _getResolvedLayouts();
     const warnings: ValidationWarning[] = [];
     for (const [outletName, record] of layoutMap) {
-      if (!record?.layout) {
+      if (!record?.layout || !isEditorOutlet(outletName)) {
         continue;
       }
       this.#collectStampedWarnings(record.layout, outletName, warnings);
@@ -129,7 +130,7 @@ export default class WireframeValidationService extends Service {
     );
     const issues: ValidationIssue[] = [];
     for (const [outletName, record] of layoutMap) {
-      if (!record?.layout) {
+      if (!record?.layout || !isEditorOutlet(outletName)) {
         continue;
       }
       this.#collectStampedIssues(
