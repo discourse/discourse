@@ -2,7 +2,7 @@
 
 describe "Admin Site Setting Category Bulk Action" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
-  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
   fab!(:admin)

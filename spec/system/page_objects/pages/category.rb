@@ -72,8 +72,8 @@ module PageObjects
       end
 
       def save_settings
-        if page.has_css?(".admin-changes-banner", wait: 0)
-          find(".admin-changes-banner .btn-primary").click
+        if page.has_css?(".d-floating-control-bar", wait: 0)
+          find(".d-floating-control-bar .btn-primary").click
         else
           find("#save-category").click
         end
@@ -185,7 +185,7 @@ module PageObjects
       end
 
       def has_changes_banner?
-        page.has_css?(".admin-changes-banner")
+        page.has_css?(".d-floating-control-bar")
       end
 
       def has_powered_by_discourse?
@@ -194,7 +194,7 @@ module PageObjects
 
       def changes_banner_is_clear_of_powered_by_discourse?
         page.evaluate_script(<<~JS)
-          document.querySelector(".admin-changes-banner").getBoundingClientRect().bottom <=
+          document.querySelector(".d-floating-control-bar").getBoundingClientRect().bottom <=
             document.querySelector(".powered-by-discourse").getBoundingClientRect().top
         JS
       end

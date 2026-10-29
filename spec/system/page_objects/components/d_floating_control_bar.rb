@@ -2,7 +2,7 @@
 
 module PageObjects
   module Components
-    class AdminChangesBanner < Base
+    class DFloatingControlBar < Base
       def visible?
         has_css?(selector)
       end
@@ -24,14 +24,18 @@ module PageObjects
       end
 
       def has_label?(label)
-        element.has_css?(".admin-changes-banner__main-label", text: label)
+        element.has_css?(".d-floating-control-bar__label", text: label)
       end
 
       private
 
       def selector
-        ".admin-changes-banner"
+        ".d-floating-control-bar"
       end
     end
+
+    # Retained so out-of-repo plugins that still reference the admin-era name keep
+    # working. Drop it once they have moved to DFloatingControlBar.
+    AdminChangesBanner = DFloatingControlBar
   end
 end

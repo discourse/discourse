@@ -1,0 +1,44 @@
+@use "lib/viewport";
+
+:root {
+  // The bar is fixed, so it reserves its own room at the end of the content
+  // rather than taking part in the layout.
+  --d-floating-control-bar-clearance: 6em;
+}
+
+body.d-floating-control-bar-visible #main-outlet {
+  padding-bottom: var(--d-floating-control-bar-clearance);
+}
+
+.d-floating-control-bar {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-300);
+  border-radius: var(--d-border-radius);
+  box-shadow: var(--shadow-card);
+  z-index: 1;
+
+  .footer-nav-visible & {
+    bottom: calc(
+      var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-4)
+    );
+  }
+
+  @include viewport.until(sm) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  &__controls {
+    display: flex;
+    gap: var(--space-3);
+  }
+}

@@ -226,15 +226,25 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
-  .admin-changes-banner {
+  .d-floating-control-bar {
     max-width: var(--form-kit-max-input);
     flex-direction: row-reverse;
     align-items: center;
     bottom: var(--powered-by-height, 0);
 
     @include viewport.until(sm) {
-      &__main-label {
+      &__label {
         display: none;
+      }
+
+      // The ui-kit stylesheet is imported ahead of this one, so these overrides
+      // now win ties against its base rules. That includes its footer-nav
+      // offset, which this block has to restore rather than inherit.
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--space-4)
+        );
       }
     }
 
@@ -249,7 +259,7 @@ $number-input-width: var(--form-kit-small-input);
       }
     }
 
-    .controls {
+    &__controls {
       flex-direction: row-reverse;
       margin-right: auto;
     }
