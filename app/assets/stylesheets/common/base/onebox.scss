@@ -7,7 +7,6 @@
 
 @mixin onebox-shadow($thickness) {
   $thickness: var(--onebox-shadow-width, #{$thickness});
-
   border: 0;
   margin-inline: $thickness;
   box-shadow:
