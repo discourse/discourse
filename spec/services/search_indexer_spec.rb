@@ -375,6 +375,29 @@ RSpec.describe SearchIndexer do
     end
   end
 
+  describe "category localizations" do
+    fab!(:category)
+
+    before { SearchIndexer.enable }
+
+    it "indexes a category localization with the current version and reindexes it when its name changes" do
+      localization = Fabricate(:category_localization, category:, locale: "fr", name: "Pâtisserie")
+
+      search_data = localization.reload.category_localization_search_data
+      expect(search_data.version).to eq(SearchIndexer::CATEGORY_LOCALIZATION_INDEX_VERSION)
+
+      expect { localization.update!(name: "Viennoiserie") }.to change {
+        localization.reload.category_localization_search_data.raw_data
+      }
+    end
+
+    it "removes the search data when the localization is destroyed" do
+      localization = Fabricate(:category_localization, category:, locale: "fr", name: "Pâtisserie")
+
+      expect { localization.destroy! }.to change { CategoryLocalizationSearchData.count }.by(-1)
+    end
+  end
+
   describe ".queue_post_reindex" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }

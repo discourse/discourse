@@ -2,6 +2,7 @@
 
 class CategoryLocalization < ActiveRecord::Base
   include LocaleMatchable
+  include Searchable
 
   belongs_to :category
 
@@ -9,6 +10,7 @@ class CategoryLocalization < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 50 }
   validates :category_id, uniqueness: { scope: :locale }
 
+  after_save :index_search
   after_commit :invalidate_site_cache
 
   def description_first_paragraph
@@ -40,6 +42,12 @@ class CategoryLocalization < ActiveRecord::Base
 
   def invalidate_site_cache
     I18n.with_locale(locale) { Site.clear_cache }
+  end
+
+  private
+
+  def index_search
+    SearchIndexer.index(self)
   end
 end
 

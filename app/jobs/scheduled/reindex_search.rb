@@ -9,6 +9,7 @@ module Jobs
       @cleanup_grace_period = 1.day.ago
 
       rebuild_categories
+      rebuild_category_localizations
       rebuild_tags
       rebuild_topics
       rebuild_posts
@@ -23,6 +24,12 @@ module Jobs
       category_ids = load_problem_category_ids(limit)
       puts "rebuilding #{category_ids.size} categories" if @verbose
       reindex_records(Category, category_ids, indexer)
+    end
+
+    def rebuild_category_localizations(limit: 10_000, indexer: SearchIndexer)
+      category_localization_ids = load_problem_category_localization_ids(limit)
+      puts "rebuilding #{category_localization_ids.size} category localizations" if @verbose
+      reindex_records(CategoryLocalization, category_localization_ids, indexer)
     end
 
     def rebuild_tags(limit: 1_000, indexer: SearchIndexer)
@@ -117,6 +124,21 @@ module Jobs
           SearchIndexer::CATEGORY_INDEX_VERSION,
         )
         .order("categories.id ASC")
+        .limit(limit)
+        .pluck(:id)
+    end
+
+    def load_problem_category_localization_ids(limit)
+      CategoryLocalization
+        .joins(
+          "LEFT JOIN category_localization_search_data ON category_localization_id = category_localizations.id",
+        )
+        .where(
+          "category_localization_search_data.locale IS NULL OR category_localization_search_data.locale != ? OR category_localization_search_data.version != ?",
+          SiteSetting.default_locale,
+          SearchIndexer::CATEGORY_LOCALIZATION_INDEX_VERSION,
+        )
+        .order("category_localizations.id ASC")
         .limit(limit)
         .pluck(:id)
     end

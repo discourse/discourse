@@ -1810,6 +1810,33 @@ RSpec.describe Search do
         ).to be_empty
       end
 
+      it "finds categories by a renamed localization and no longer by its previous name" do
+        localization =
+          Fabricate(:category_localization, category: baking, locale: "fr", name: "Pâtisserie")
+        localization.update!(name: "Viennoiserie")
+
+        I18n.with_locale(:fr) do
+          expect(Search.execute("Viennoiserie", type_filter: "exclude_topics").categories).to eq(
+            [baking],
+          )
+          expect(Search.execute("Pâtisserie", type_filter: "exclude_topics").categories).to be_empty
+        end
+      end
+
+      it "finds categories by a localized name with a Turkish dotted capital I when search_ignore_accents is disabled" do
+        SiteSetting.search_ignore_accents = false
+        Fabricate(:category_localization, category: baking, locale: "fr", name: "İletişim")
+
+        I18n.with_locale(:fr) do
+          expect(Search.execute("İletişim", type_filter: "exclude_topics").categories).to eq(
+            [baking],
+          )
+          expect(Search.execute("iletişim", type_filter: "exclude_topics").categories).to eq(
+            [baking],
+          )
+        end
+      end
+
       it "finds categories by their localized name typed without accents when search_ignore_accents is enabled" do
         SiteSetting.search_ignore_accents = true
         Fabricate(:category_localization, category: baking, locale: "fr", name: "Pâtisserie")

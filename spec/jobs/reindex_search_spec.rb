@@ -13,7 +13,7 @@ RSpec.describe Jobs::ReindexSearch do
   # This works since test db has a small record less than limit.
   # Didn't check `topic` because topic doesn't have posts in fabrication
   # thus no search data
-  %w[post category user].each do |m|
+  %w[post category user category_localization].each do |m|
     it "rebuilds `#{m}` when default_locale changes" do
       SiteSetting.default_locale = "en"
       model = Fabricate(m.to_sym)
@@ -91,6 +91,31 @@ RSpec.describe Jobs::ReindexSearch do
       job.rebuild_posts(indexer: FakeIndexer)
 
       expect(FakeIndexer.posts).to contain_exactly(post)
+    end
+  end
+
+  describe "category localizations" do
+    fab!(:category)
+
+    it "indexes localizations whose search data is missing or outdated" do
+      missing = Fabricate(:category_localization, category:, locale: "fr", name: "Pâtisserie")
+      outdated = Fabricate(:category_localization, category:, locale: "de", name: "Gebäck")
+      current = Fabricate(:category_localization, category:, locale: "es", name: "Pastelería")
+      CategoryLocalizationSearchData.where(category_localization_id: missing.id).delete_all
+      CategoryLocalizationSearchData.where(category_localization_id: outdated.id).update_all(
+        version: 0,
+      )
+      current.category_localization_search_data.update!(raw_data: "sentinel")
+
+      job.rebuild_category_localizations
+
+      expect(missing.reload.category_localization_search_data.version).to eq(
+        SearchIndexer::CATEGORY_LOCALIZATION_INDEX_VERSION,
+      )
+      expect(outdated.reload.category_localization_search_data.version).to eq(
+        SearchIndexer::CATEGORY_LOCALIZATION_INDEX_VERSION,
+      )
+      expect(current.reload.category_localization_search_data.raw_data).to eq("sentinel")
     end
   end
 
