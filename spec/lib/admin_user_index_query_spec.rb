@@ -159,6 +159,20 @@ RSpec.describe AdminUserIndexQuery do
       expect(users).not_to include(human)
     end
 
+    it "sorts bot activity and creation dates in both directions" do
+      other_bot = Fabricate(:user, id: -102, created_at: 2.days.ago)
+      bot.update!(created_at: 1.day.ago)
+      bot.user_stat.update!(topics_entered: 2, posts_read_count: 4, post_count: 6)
+      other_bot.user_stat.update!(topics_entered: 1, posts_read_count: 3, post_count: 5)
+
+      %w[topics_viewed posts_read posts created].each do |order|
+        params = { query: "bots", filter: "#{bot.username},#{other_bot.username}", order: }
+
+        expect(described_class.new(params).find_users).to eq([bot, other_bot])
+        expect(described_class.new(params.merge(asc: true)).find_users).to eq([other_bot, bot])
+      end
+    end
+
     it "searches within bot accounts" do
       expect(described_class.new(query: "bots", filter: bot.username).find_users).to eq([bot])
       expect(described_class.new(query: "bots", filter: human.username).find_users).to be_empty

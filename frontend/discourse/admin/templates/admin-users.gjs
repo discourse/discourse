@@ -85,6 +85,11 @@ export default <template>
           @route="adminUsersList.show"
           @routeParam="bots"
         />
+        <DNavItem
+          class="admin-users-tabs__groups"
+          @label="groups.index.title"
+          @route="adminGroups.index"
+        />
       </:tabs>
     </DPageHeader>
     <div class="admin-container admin-config-page__main-area">

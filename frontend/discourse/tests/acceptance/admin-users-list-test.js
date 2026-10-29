@@ -20,14 +20,17 @@ acceptance("Admin - Users List", function (needs) {
 
   let lastActivationFilter;
   let lastBotShowEmails;
+  let lastBotQuery;
 
   needs.pretender((server, helper) => {
     server.get("/admin/users/list/bots.json", (request) => {
       lastBotShowEmails = request.queryParams.show_emails;
+      lastBotQuery = request.queryParams;
       return helper.response([
         {
           id: -100,
           username: "helper_bot",
+          post_count: 12,
           bot_creator: {
             username: "sam",
             avatar_template:
@@ -136,12 +139,20 @@ acceptance("Admin - Users List", function (needs) {
     });
   });
 
-  test("Bots replaces Groups in the users tabs", async function (assert) {
+  test("shows Groups after Bots in the users tabs", async function (assert) {
     await visit("/admin/users/list/active");
 
     assert
-      .dom(".admin-users-tabs__groups")
-      .doesNotExist("removes the Groups tab");
+      .dom(".admin-users-tabs__bots + .admin-users-tabs__groups a")
+      .hasText(
+        i18n("groups.index.title"),
+        "shows Groups immediately after Bots"
+      )
+      .hasAttribute(
+        "href",
+        "/admin/groups",
+        "links to the existing Groups page"
+      );
     assert
       .dom(".admin-users-tabs__bots a")
       .hasText(i18n("admin.users.nav.bots"), "labels the tab Bots");
@@ -339,6 +350,51 @@ acceptance("Admin - Users List", function (needs) {
     }
   });
 
+  test("shows posts created on Bots and sorts activity columns in both directions", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom(
+        '[data-user-id="-100"] .admin-users-list__posts-created .directory-table__value'
+      )
+      .hasText("12", "shows the bot's post count");
+    assert
+      .dom("#table-header-toggle-posts")
+      .hasText(i18n("admin.user.post_count"), "labels the count column");
+
+    for (const field of ["topics_viewed", "posts_read", "posts", "created"]) {
+      const header = `#table-header-toggle-${field}`;
+      await click(header);
+      assert.strictEqual(
+        lastBotQuery.order,
+        field,
+        `requests sorting by ${field}`
+      );
+      assert.false(
+        Boolean(lastBotQuery.asc),
+        `${field} initially sorts descending`
+      );
+      assert
+        .dom(header)
+        .hasAttribute("aria-pressed", "true", "announces descending order");
+
+      await click(header);
+      assert.strictEqual(
+        lastBotQuery.asc,
+        "true",
+        `${field} can sort ascending`
+      );
+      assert
+        .dom(header)
+        .hasAttribute("aria-pressed", "mixed", "announces ascending order");
+    }
+
+    await visit("/admin/users/list/active");
+    assert
+      .dom("#table-header-toggle-posts, .admin-users-list__posts-created")
+      .doesNotExist("the added column is specific to Bots");
+  });
+
   test("hides human activity columns on Bots and keeps the grid aligned", async function (assert) {
     this.siteSettings.must_approve_users = false;
 
@@ -356,7 +412,7 @@ acceptance("Admin - Users List", function (needs) {
       .dom(".users-list")
       .hasAttribute(
         "style",
-        /repeat\(6,/,
+        /repeat\(7,/,
         "accounts for Source and the two hidden columns"
       );
 
@@ -392,7 +448,7 @@ acceptance("Admin - Users List", function (needs) {
 
     assert
       .dom(".users-list")
-      .hasAttribute("style", /repeat\(7,/, "adds the approval grid column");
+      .hasAttribute("style", /repeat\(8,/, "adds the approval grid column");
 
     await visit("/admin/users/list/active");
 
@@ -681,7 +737,7 @@ acceptance("Admin - Users List - moderator bots", function (needs) {
       .dom(".users-list")
       .hasAttribute(
         "style",
-        /repeat\(5,/,
+        /repeat\(6,/,
         "does not reserve a Source grid column"
       );
 
@@ -692,7 +748,7 @@ acceptance("Admin - Users List - moderator bots", function (needs) {
       .dom(".users-list")
       .hasAttribute(
         "style",
-        /repeat\(6,/,
+        /repeat\(7,/,
         "adds only the approval grid column"
       );
     assert

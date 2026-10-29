@@ -71,6 +71,10 @@ export default class AdminUsersListShowController extends Controller {
       colCount += 1;
     }
 
+    if (this.showPostCount) {
+      colCount += 1;
+    }
+
     if (!this.showLastEmailed) {
       colCount -= 1;
     }
@@ -108,6 +112,10 @@ export default class AdminUsersListShowController extends Controller {
 
   get showLastEmailed() {
     return this.query !== "bots";
+  }
+
+  get showPostCount() {
+    return this.query === "bots";
   }
 
   get showReadTime() {

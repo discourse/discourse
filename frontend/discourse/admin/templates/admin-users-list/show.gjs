@@ -270,6 +270,16 @@ export default <template>
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
             />
+            {{#if @controller.showPostCount}}
+              <DTableHeaderToggle
+                @asc={{@controller.asc}}
+                @automatic={{true}}
+                @field="posts"
+                @labelKey="admin.user.post_count"
+                @onToggle={{@controller.updateOrder}}
+                @order={{@controller.order}}
+              />
+            {{/if}}
             {{#if @controller.showReadTime}}
               <DTableHeaderToggle
                 @asc={{@controller.asc}}
@@ -514,6 +524,18 @@ export default <template>
                     {{dNumber user.posts_read_count}}
                   </span>
                 </div>
+                {{#if @controller.showPostCount}}
+                  <div
+                    class="directory-table__cell admin-users-list__posts-created"
+                  >
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.user.post_count"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{dNumber user.post_count}}
+                    </span>
+                  </div>
+                {{/if}}
                 {{#if @controller.showReadTime}}
                   <div class="directory-table__cell time-read">
                     <span class="directory-table__label">

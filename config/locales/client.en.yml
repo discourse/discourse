@@ -10176,10 +10176,10 @@ en:
         like_count: Likes Given / Received
         last_100_days: "in the last 100 days"
         private_topics_count: Personal Messages
-        posts_read_count: Posts Read
-        post_count: Posts Created
+        posts_read_count: Posts read
+        post_count: Posts created
         second_factor_enabled: Two-Factor Authentication Enabled
-        topics_entered: Topics Viewed
+        topics_entered: Topics viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         warnings_received_count: Warnings Received
