@@ -1,0 +1,75 @@
+@use "lib/viewport";
+
+.lovelace-onboarding {
+  &__columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1.5em;
+  }
+
+  &__configuration {
+    display: grid;
+    min-width: 0;
+    gap: 1em;
+
+    @include viewport.from(md) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-block: 0.25em;
+
+    > .btn {
+      flex-shrink: 0;
+    }
+  }
+
+  &__item {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+
+    p {
+      color: var(--primary-medium);
+      margin-block: 0.4em 0;
+    }
+  }
+
+  &__item-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0;
+
+    &:where(label) {
+      font-weight: normal;
+    }
+
+    input[type="checkbox"] {
+      flex-shrink: 0;
+      margin: 0;
+    }
+  }
+
+  &__editor {
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+}

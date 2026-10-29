@@ -1,0 +1,218 @@
+@use "lib/viewport";
+
+.lovelace-member-checklist {
+  position: relative;
+  box-sizing: border-box;
+  margin-block: 1em;
+  padding: 0;
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+
+  &.--dismissing {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    padding-inline: var(--space-4) var(--space-1);
+    background: var(--primary-100);
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin: 0;
+      font-size: var(--font-0);
+      font-weight: 600;
+
+      .d-icon {
+        flex-shrink: 0;
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+
+  &__minimize,
+  &__dismiss {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    grid-column: 1 / -1;
+    margin: 0;
+    padding-block-end: var(--space-2);
+    padding-inline-end: var(--space-3);
+    font-size: var(--font-down-2);
+    font-weight: normal;
+    color: var(--primary-700);
+
+    progress {
+      flex: 0 1 10em;
+      inline-size: 10em;
+      min-width: 0;
+      height: 0.35em;
+      accent-color: var(--tertiary);
+    }
+  }
+
+  &__items {
+    list-style: none;
+    margin: 0;
+  }
+
+  &__items[hidden] {
+    display: none;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "check title action" "check description action";
+    align-items: center;
+    column-gap: var(--space-2);
+    padding: var(--space-2);
+    border-block-start: 1px solid var(--content-border-color);
+    font-size: var(--font-down-1);
+
+    &.--complete {
+      .lovelace-member-checklist__check .d-icon {
+        color: var(--success);
+      }
+
+      .lovelace-member-checklist__title,
+      .lovelace-member-checklist__description {
+        color: var(--primary-medium);
+      }
+
+      .lovelace-member-checklist__action {
+        --d-button-transparent-text-color: var(--primary-medium);
+        font-weight: normal;
+      }
+    }
+
+    @include viewport.from(sm) {
+      grid-template-columns: auto auto minmax(0, 1fr) auto;
+      grid-template-areas: "check title description action";
+      padding: 0 var(--space-4) 0 var(--space-2);
+      column-gap: var(--space-4);
+    }
+  }
+
+  &__title {
+    grid-area: title;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__description {
+    grid-area: description;
+    margin: 0;
+    color: var(--primary-700);
+    overflow-wrap: anywhere;
+  }
+
+  &__action {
+    --d-button-transparent-text-color: var(--tertiary);
+    grid-area: action;
+    font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    max-width: 12em;
+    min-height: 44px;
+  }
+
+  &__check {
+    grid-area: check;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  &__celebration {
+    padding-inline: var(--space-4);
+  }
+
+  &__completion-actions {
+    display: inline-grid;
+    gap: var(--space-2);
+    margin-inline: var(--space-4);
+    margin-block-end: var(--space-4);
+  }
+
+  &__countdown {
+    height: 2px;
+    overflow: hidden;
+    border-radius: 1px;
+    background: var(--primary-200);
+  }
+
+  &__countdown-bar {
+    height: 100%;
+    background: var(--success);
+    transform-origin: 0 50%;
+
+    &:dir(rtl) {
+      transform-origin: 100% 50%;
+    }
+  }
+
+  &__confetti {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-around;
+
+    span {
+      animation: lovelace-confetti 2s ease-in both;
+      width: 0.5em;
+      height: 1em;
+      background: var(--tertiary);
+    }
+
+    span:nth-child(3n) {
+      background: var(--success);
+    }
+
+    span:nth-child(3n + 1) {
+      background: var(--love);
+    }
+
+    span:nth-child(even) {
+      animation-delay: 0.25s;
+    }
+  }
+}
+
+@keyframes lovelace-confetti {
+  from {
+    transform: translateY(-100%) rotate(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(35em) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lovelace-member-checklist {
+    transition: none;
+  }
+
+  .lovelace-member-checklist__confetti {
+    display: none;
+  }
+}
