@@ -1,6 +1,13 @@
 en:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            gamification:
+              read_score_events: "Read gamification score events."
+              create_score_events: "Create gamification score events to award or deduct points."
+              update_score_events: "Update existing gamification score events."
       site_settings:
         categories:
           discourse_gamification: "Discourse Gamification"
