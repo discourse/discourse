@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+import { untrack } from "@glimmer/validator";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
@@ -1523,10 +1524,14 @@ export default class SelectEngine {
     if (this.#dualSourceWarned || !this.#options.isAsync) {
       return;
     }
-    const local =
+    // Runs inside the list's load, so its reads must not become reload inputs: resolving the
+    // options reads the recipe's context and presentation arguments, and a change to any of them
+    // would cancel the page in flight.
+    const local = untrack(() =>
       typeof this.#options.items === "function"
         ? this.#options.items(this.resolvedOptions)
-        : this.#options.items;
+        : this.#options.items
+    );
     if (local != null && (makeArray(local) as SelectItem[]).length > 0) {
       this.#dualSourceWarned = true;
       // eslint-disable-next-line no-console

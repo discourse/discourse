@@ -57,6 +57,54 @@ module(
         assert.true(this.routeToUrl.calledOnceWithExactly("/c/bug/1"));
       });
 
+      test("a lazy subcategory level asks the server once as its categories arrive", async function (assert) {
+        Site.current().set("lazy_load_categories", true);
+        const category = Category.findById(2);
+        const requests = [];
+        pretender.post("/categories/search", () => {
+          requests.push(true);
+          return response({
+            categories_count: 2,
+            categories: [
+              {
+                id: 9701,
+                name: "Lazy child A",
+                slug: "lazy-a",
+                parent_category_id: 2,
+                permission: 1,
+              },
+              {
+                id: 9702,
+                name: "Lazy child B",
+                slug: "lazy-b",
+                parent_category_id: 2,
+                permission: 1,
+              },
+            ],
+            ancestors: [
+              {
+                id: 2,
+                name: category.name,
+                slug: category.slug,
+                permission: 1,
+              },
+            ],
+          });
+        });
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await click(`${SUB}.d-select, ${SUB} .d-select`);
+
+        assert.deepEqual(optionValues().slice(-2), ["9701", "9702"]);
+        assert.strictEqual(requests.length, 1);
+      });
+
       test("a subcategory pick routes under its parent", async function (assert) {
         const category = Category.findById(2);
         await render(
