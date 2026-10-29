@@ -992,10 +992,10 @@ module(
           .exists("anonymous descriptions are visible");
       });
 
-      test("filter source replacement keeps and emits an unloaded record", async function (assert) {
-        const row = { id: 99001, name: "Caller category" };
-        const load = () => [row];
+      test("a picked row the site does not know is listed but emits nothing and warns", async function (assert) {
+        const load = () => [{ id: 99001, name: "Caller category" }];
         const onChange = sinon.spy();
+        const warn = sinon.stub(console, "warn");
         await render(
           <template>
             <DSelectCategoryFilter @load={{load}} @onChange={{onChange}} />
@@ -1004,16 +1004,16 @@ module(
         await dSelect().open();
         assert
           .dom("[role='option'][data-value='99001']")
-          .includesText(
-            "Caller category",
-            "the caller's record is listed without a site lookup"
-          );
+          .includesText("Caller category", "the caller's row is listed");
+
         await click("[role='option'][data-value='99001']");
-        assert.strictEqual(
-          onChange.lastCall?.args[0],
-          row,
-          "the supplied record is emitted"
+
+        assert.true(onChange.notCalled, "only a site category can be routed");
+        assert.true(
+          warn.calledOnceWithMatch("DSelectCategoryFilter"),
+          "the dropped pick is reported"
         );
+        warn.restore();
       });
 
       test("mounts a window of the local list and reports the full matching count", async function (assert) {

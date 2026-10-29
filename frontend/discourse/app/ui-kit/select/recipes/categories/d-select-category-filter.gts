@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { warn } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -53,13 +55,9 @@ interface DSelectCategoryFilterSignature {
     label?: string;
     /** Text for an empty level; defaults to the level's name. */
     placeholder?: string;
-    /** Receives a site category, the caller's unloaded row, or a shortcut; never navigates. */
+    /** Receives a site category or a shortcut; never navigates. */
     onChange?: (
-      value:
-        | Category
-        | CategoryItem
-        | typeof ALL_CATEGORIES_ID
-        | typeof NO_CATEGORIES_ID
+      value: Category | typeof ALL_CATEGORIES_ID | typeof NO_CATEGORIES_ID
     ) => void;
     /** Temporary compatibility identity; defaults to category-drop. */
     legacyKind?: SelectSignature["Args"]["legacyKind"];
@@ -195,7 +193,10 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     return this.#shortcuts(snapshot.filter);
   }
 
-  /** Emits the site's category, the caller's unloaded row, or a shortcut id. */
+  /**
+   * Emits the site's category or a shortcut id. A row the site does not know, which only a
+   * caller's loader or a customization can supply, cannot be routed, so its pick is dropped.
+   */
   @action
   onChange(id: SelectValue, item: SelectItem | SelectItem[] | null) {
     if (id === ALL_CATEGORIES_ID || id === NO_CATEGORIES_ID) {
@@ -208,10 +209,12 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     const category = Category.findById(id as number | string);
     if (category) {
       this.args.onChange?.(category);
-      return;
-    }
-    if (this.#isCategoryItem(item)) {
-      this.args.onChange?.(item);
+    } else if (DEBUG) {
+      warn(
+        `DSelectCategoryFilter: dropped a pick of row ${String(id)}, which is not a site category`,
+        false,
+        { id: "discourse.d-select-category-filter.unknown-row" }
+      );
     }
   }
 
@@ -234,13 +237,6 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       });
     }
     return shortcuts;
-  }
-
-  #isCategoryItem(item: SelectItem): item is CategoryItem {
-    return (
-      (typeof item.id === "number" || typeof item.id === "string") &&
-      typeof item.name === "string"
-    );
   }
 
   <template>
