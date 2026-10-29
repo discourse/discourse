@@ -26,16 +26,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # The host's own root is somebody else's app, not the forum, so rewriting its
     # origin would move a link that never pointed at us.
-    shared_examples "internal links subdirectory for raw" do |raw|
-      it "leaves #{raw} alone, since only the prefix belongs to the forum" do
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-      end
+
+    it "leaves https://www.example.com alone, since only the prefix belongs to the forum" do
+      expect(extract("https://www.example.com")).to eq("https://www.example.com")
+      expect(buffer.links).to be_empty
     end
 
-    include_examples "internal links subdirectory for raw", "https://www.example.com"
-    include_examples "internal links subdirectory for raw", "https://www.example.com/"
-    include_examples "internal links subdirectory for raw", "https://www.example.com?ref=x"
+    it "leaves https://www.example.com/ alone, since only the prefix belongs to the forum" do
+      expect(extract("https://www.example.com/")).to eq("https://www.example.com/")
+      expect(buffer.links).to be_empty
+    end
+
+    it "leaves https://www.example.com?ref=x alone, since only the prefix belongs to the forum" do
+      expect(extract("https://www.example.com?ref=x")).to eq("https://www.example.com?ref=x")
+      expect(buffer.links).to be_empty
+    end
 
     it "detects a subfolder absolute bare URL in prose" do
       link, = link_for("look https://www.example.com/forum/t/slug/5 now")

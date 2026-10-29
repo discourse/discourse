@@ -295,28 +295,60 @@ RSpec.describe User::CreateBot do
       expect(ordinary_user.errors[:primary_email]).to include(I18n.t("user.email.not_allowed"))
     end
 
-    shared_examples "create bot for description and username" do |description, username|
-      it "rejects #{description} without creating a user or audit entry" do
-        SiteSetting.reserved_usernames = "reserved_helper"
-        SiteSetting.min_username_length = 4
-        SiteSetting.max_username_length = 20
-        params[:username] = username
+    it "rejects invalid characters without creating a user or audit entry" do
+      SiteSetting.reserved_usernames = "reserved_helper"
+      SiteSetting.min_username_length = 4
+      SiteSetting.max_username_length = 20
+      params[:username] = "invalid!username"
 
-        expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
-        expect(result).to fail_with_an_invalid_model(:user)
-        expect(result.user.errors[:username]).to be_present
-      end
+      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
+      expect(result).to fail_with_an_invalid_model(:user)
+      expect(result.user.errors[:username]).to be_present
     end
 
-    include_examples "create bot for description and username",
-                     ["invalid characters", "invalid!username"]
-    include_examples "create bot for description and username",
-                     ["a reserved username", "reserved_helper"]
-    include_examples "create bot for description and username", ["an existing route", "admin"]
-    include_examples "create bot for description and username",
-                     ["a username shorter than the site minimum", "bot"]
-    include_examples "create bot for description and username",
-                     ["a username longer than the site maximum", "x" * 21]
+    it "rejects a reserved username without creating a user or audit entry" do
+      SiteSetting.reserved_usernames = "reserved_helper"
+      SiteSetting.min_username_length = 4
+      SiteSetting.max_username_length = 20
+      params[:username] = "reserved_helper"
+
+      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
+      expect(result).to fail_with_an_invalid_model(:user)
+      expect(result.user.errors[:username]).to be_present
+    end
+
+    it "rejects an existing route without creating a user or audit entry" do
+      SiteSetting.reserved_usernames = "reserved_helper"
+      SiteSetting.min_username_length = 4
+      SiteSetting.max_username_length = 20
+      params[:username] = "admin"
+
+      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
+      expect(result).to fail_with_an_invalid_model(:user)
+      expect(result.user.errors[:username]).to be_present
+    end
+
+    it "rejects a username shorter than the site minimum without creating a user or audit entry" do
+      SiteSetting.reserved_usernames = "reserved_helper"
+      SiteSetting.min_username_length = 4
+      SiteSetting.max_username_length = 20
+      params[:username] = "bot"
+
+      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
+      expect(result).to fail_with_an_invalid_model(:user)
+      expect(result.user.errors[:username]).to be_present
+    end
+
+    it "rejects a username longer than the site maximum without creating a user or audit entry" do
+      SiteSetting.reserved_usernames = "reserved_helper"
+      SiteSetting.min_username_length = 4
+      SiteSetting.max_username_length = 20
+      params[:username] = ("x" * 21)
+
+      expect { result }.to not_change(User, :count).and(not_change(UserHistory, :count))
+      expect(result).to fail_with_an_invalid_model(:user)
+      expect(result.user.errors[:username]).to be_present
+    end
 
     it "rejects a case-insensitive duplicate username without creating a user or audit entry" do
       Fabricate(:user, username: params[:username].upcase)
@@ -373,7 +405,7 @@ RSpec.describe User::CreateBot, ".call" do
     PluginStoreRow.insert_all!(@saved_floors) if @saved_floors.present?
   end
 
-  shared_examples "create bot for floor" do |floor|
+  shared_examples "concurrent bot creation" do |floor|
     context "with concurrent creation and #{floor ? "an existing" : "no"} allocation floor" do
       it "creates distinct bots while another creation transaction is still open" do
         PluginStore.set("core", BotUser::FLOOR_KEY, floor) if floor
@@ -444,6 +476,6 @@ RSpec.describe User::CreateBot, ".call" do
     end
   end
 
-  include_examples "create bot for floor", nil
-  include_examples "create bot for floor", -5000
+  include_examples "concurrent bot creation", nil
+  include_examples "concurrent bot creation", -5000
 end

@@ -3,7 +3,7 @@
 describe McpOauthMetadataController do
   before { SiteSetting.mcp_server_enabled = true }
 
-  shared_examples "mcp oauth metadata controller for endpoint" do |endpoint|
+  shared_examples "public OAuth metadata when login is required" do |endpoint|
     context "when login is required for #{endpoint}" do
       before { SiteSetting.login_required = true }
 
@@ -24,11 +24,12 @@ describe McpOauthMetadataController do
     end
   end
 
-  include_examples "mcp oauth metadata controller for endpoint",
+  include_examples "public OAuth metadata when login is required",
                    "/.well-known/oauth-protected-resource/mcp"
-  include_examples "mcp oauth metadata controller for endpoint",
+  include_examples "public OAuth metadata when login is required",
                    "/.well-known/oauth-authorization-server"
-  include_examples "mcp oauth metadata controller for endpoint", "/.well-known/openid-configuration"
+  include_examples "public OAuth metadata when login is required",
+                   "/.well-known/openid-configuration"
 
   it "advertises every registered scope in protected resource metadata" do
     get "/.well-known/oauth-protected-resource/mcp"

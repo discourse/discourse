@@ -31,18 +31,28 @@ RSpec.describe Chat::Channel::Policy::MessageModification do
   describe "#reason" do
     subject(:reason) { policy.reason }
 
-    shared_examples "message modification for status" do |status|
-      context "when the channel is #{status}" do
-        before { chat_channel.update!(status:) }
+    context "when the channel is closed" do
+      before { chat_channel.update!(status: "closed") }
 
-        it "returns the #{status} message" do
-          expect(reason).to eq(I18n.t("chat.errors.channel_modify_message_disallowed.#{status}"))
-        end
+      it "returns the closed message" do
+        expect(reason).to eq(I18n.t("chat.errors.channel_modify_message_disallowed.closed"))
       end
     end
 
-    include_examples "message modification for status", "closed"
-    include_examples "message modification for status", "read_only"
-    include_examples "message modification for status", "archived"
+    context "when the channel is read_only" do
+      before { chat_channel.update!(status: "read_only") }
+
+      it "returns the read_only message" do
+        expect(reason).to eq(I18n.t("chat.errors.channel_modify_message_disallowed.read_only"))
+      end
+    end
+
+    context "when the channel is archived" do
+      before { chat_channel.update!(status: "archived") }
+
+      it "returns the archived message" do
+        expect(reason).to eq(I18n.t("chat.errors.channel_modify_message_disallowed.archived"))
+      end
+    end
   end
 end

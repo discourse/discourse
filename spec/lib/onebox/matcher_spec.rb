@@ -55,31 +55,43 @@ RSpec.describe Onebox::Matcher do
     end
 
     describe "with a allowlisted port/scheme" do
-      shared_examples "matcher for url" do |url|
-        it "finds an engine for '#{url}'" do
-          matcher = Onebox::Matcher.new(url, opts)
-          matcher.stubs(:ordered_engines).returns([TestEngine])
-          expect(matcher.oneboxed).not_to be_nil
-        end
+      it "finds an engine for 'http://example.com'" do
+        matcher = Onebox::Matcher.new("http://example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
       end
 
-      include_examples "matcher for url", "http://example.com"
-      include_examples "matcher for url", "https://example.com"
-      include_examples "matcher for url", "http://example.com:80"
-      include_examples "matcher for url", "//example.com"
+      it "finds an engine for 'https://example.com'" do
+        matcher = Onebox::Matcher.new("https://example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
+      end
+
+      it "finds an engine for 'http://example.com:80'" do
+        matcher = Onebox::Matcher.new("http://example.com:80", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
+      end
+
+      it "finds an engine for '//example.com'" do
+        matcher = Onebox::Matcher.new("//example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
+      end
     end
 
     describe "without a allowlisted port/scheme" do
-      shared_examples "matcher for url (2)" do |url|
-        it "doesn't find an engine for '#{url}'" do
-          matcher = Onebox::Matcher.new(url, opts)
-          matcher.stubs(:ordered_engines).returns([TestEngine])
-          expect(matcher.oneboxed).to be_nil
-        end
+      it "doesn't find an engine for 'http://example.com:21'" do
+        matcher = Onebox::Matcher.new("http://example.com:21", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).to be_nil
       end
 
-      include_examples "matcher for url (2)", "http://example.com:21"
-      include_examples "matcher for url (2)", "ftp://example.com"
+      it "doesn't find an engine for 'ftp://example.com'" do
+        matcher = Onebox::Matcher.new("ftp://example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).to be_nil
+      end
     end
 
     describe "with restricted iframe domains" do

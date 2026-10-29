@@ -2070,43 +2070,64 @@ RSpec.describe UserNotifications do
     fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2], name: "Message Inviter") }
     fab!(:invitee, :user)
 
-    shared_examples "user notifications for destination" do |destination|
-      it "identifies the inviter when another user started the #{destination}" do
-        SiteSetting.enable_names = true
-        SiteSetting.display_name_on_email_from = true
-        post =
-          if destination == :private_message
-            Fabricate(:private_message_post, recipient: inviter)
-          else
-            Fabricate(:post)
-          end
+    it "identifies the inviter when another user started the private_message" do
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_email_from = true
+      post =
+        if :private_message == :private_message
+          Fabricate(:private_message_post, recipient: inviter)
+        else
+          Fabricate(:post)
+        end
 
-        post.topic.invite(inviter, invitee.username)
-        notification = invitee.notifications.find_by!(topic_id: post.topic_id)
-        notification_type = "invited_to_#{destination}"
-        mail =
-          UserNotifications.public_send(
-            "user_#{notification_type}",
-            invitee,
-            notification_type: notification_type,
-            notification_data_hash: notification.data_hash,
-            post: notification.post,
-          )
+      post.topic.invite(inviter, invitee.username)
+      notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+      notification_type = "invited_to_private_message"
+      mail =
+        UserNotifications.public_send(
+          "user_#{notification_type}",
+          invitee,
+          notification_type: notification_type,
+          notification_data_hash: notification.data_hash,
+          post: notification.post,
+        )
 
-        expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
-        expect(mail[:from].display_names).to eq([inviter.name])
-      end
+      expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
+      expect(mail[:from].display_names).to eq([inviter.name])
     end
 
-    include_examples "user notifications for destination", :private_message
-    include_examples "user notifications for destination", :topic
+    it "identifies the inviter when another user started the topic" do
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_email_from = true
+      post =
+        if :topic == :private_message
+          Fabricate(:private_message_post, recipient: inviter)
+        else
+          Fabricate(:post)
+        end
+
+      post.topic.invite(inviter, invitee.username)
+      notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+      notification_type = "invited_to_topic"
+      mail =
+        UserNotifications.public_send(
+          "user_#{notification_type}",
+          invitee,
+          notification_type: notification_type,
+          notification_data_hash: notification.data_hash,
+          post: notification.post,
+        )
+
+      expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
+      expect(mail[:from].display_names).to eq([inviter.name])
+    end
   end
 
   describe "invitation email titles" do
     fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
     fab!(:invitee, :user)
 
-    shared_examples "user notifications for destination (2)" do |destination|
+    shared_examples "escaping HTML in invitation titles" do |destination|
       it "renders HTML in a #{destination} title as text" do
         post =
           if destination == :private_message
@@ -2136,8 +2157,8 @@ RSpec.describe UserNotifications do
       end
     end
 
-    include_examples "user notifications for destination (2)", :private_message
-    include_examples "user notifications for destination (2)", :topic
+    include_examples "escaping HTML in invitation titles", :private_message
+    include_examples "escaping HTML in invitation titles", :topic
   end
 
   describe "user invited to a private message" do
@@ -2327,49 +2348,139 @@ RSpec.describe UserNotifications do
     context "when user locale is allowed" do
       before { SiteSetting.allow_user_locale = true }
 
-      shared_examples "user notifications for mail_type" do |mail_type|
-        include_examples "with notification derived from template" do
-          let(:locale) { "fr" }
-          let(:mail_type) { mail_type }
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "signup" }
 
-          it "sets the locale" do
-            expects_build_with(has_entry(:locale, "fr"))
-          end
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
         end
       end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "signup_after_approval" }
 
-      include_examples "user notifications for mail_type", "signup"
-      include_examples "user notifications for mail_type", "signup_after_approval"
-      include_examples "user notifications for mail_type", "confirm_old_email"
-      include_examples "user notifications for mail_type", "notify_old_email"
-      include_examples "user notifications for mail_type", "confirm_new_email"
-      include_examples "user notifications for mail_type", "forgot_password"
-      include_examples "user notifications for mail_type", "admin_login"
-      include_examples "user notifications for mail_type", "account_created"
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "confirm_old_email" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "notify_old_email" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "confirm_new_email" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "forgot_password" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "admin_login" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "account_created" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "fr"))
+        end
+      end
     end
 
     context "when user locale is not allowed" do
       before { SiteSetting.allow_user_locale = false }
 
-      shared_examples "user notifications for mail_type (2)" do |mail_type|
-        include_examples "with notification derived from template" do
-          let(:locale) { "fr" }
-          let(:mail_type) { mail_type }
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "signup" }
 
-          it "sets the locale" do
-            expects_build_with(has_entry(:locale, "en"))
-          end
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
         end
       end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "signup_after_approval" }
 
-      include_examples "user notifications for mail_type (2)", "signup"
-      include_examples "user notifications for mail_type (2)", "signup_after_approval"
-      include_examples "user notifications for mail_type (2)", "notify_old_email"
-      include_examples "user notifications for mail_type (2)", "confirm_old_email"
-      include_examples "user notifications for mail_type (2)", "confirm_new_email"
-      include_examples "user notifications for mail_type (2)", "forgot_password"
-      include_examples "user notifications for mail_type (2)", "admin_login"
-      include_examples "user notifications for mail_type (2)", "account_created"
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "notify_old_email" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "confirm_old_email" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "confirm_new_email" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "forgot_password" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "admin_login" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
+        end
+      end
+      include_examples "with notification derived from template" do
+        let(:locale) { "fr" }
+        let(:mail_type) { "account_created" }
+
+        it "sets the locale" do
+          expects_build_with(has_entry(:locale, "en"))
+        end
+      end
     end
   end
 
@@ -2823,33 +2934,53 @@ RSpec.describe UserNotifications do
     end
 
     describe "notification email templates" do
-      shared_examples "user notifications for template_key" do |template_key|
-        it "has improved version for #{template_key}" do
-          assert_improved_template_format(template_key)
-        end
+      it "has improved version for user_replied" do
+        assert_improved_template_format("user_replied")
       end
 
-      include_examples "user notifications for template_key", "user_replied"
-      include_examples "user notifications for template_key", "user_replied_pm"
-      include_examples "user notifications for template_key", "user_quoted"
-      include_examples "user notifications for template_key", "user_mentioned"
-      include_examples "user notifications for template_key", "user_mentioned_pm"
-      include_examples "user notifications for template_key", "user_posted"
-      include_examples "user notifications for template_key", "user_posted_pm"
+      it "has improved version for user_replied_pm" do
+        assert_improved_template_format("user_replied_pm")
+      end
+
+      it "has improved version for user_quoted" do
+        assert_improved_template_format("user_quoted")
+      end
+
+      it "has improved version for user_mentioned" do
+        assert_improved_template_format("user_mentioned")
+      end
+
+      it "has improved version for user_mentioned_pm" do
+        assert_improved_template_format("user_mentioned_pm")
+      end
+
+      it "has improved version for user_posted" do
+        assert_improved_template_format("user_posted")
+      end
+
+      it "has improved version for user_posted_pm" do
+        assert_improved_template_format("user_posted_pm")
+      end
     end
 
     describe "account-related email templates" do
-      shared_examples "user notifications for template_key (2)" do |template_key|
-        it "has improved version for #{template_key} without email_prefix" do
-          improved = I18n.t("user_notifications.#{template_key}.subject_template_improved")
+      it "has improved version for account_exists without email_prefix" do
+        improved = I18n.t("user_notifications.account_exists.subject_template_improved")
 
-          expect(improved).not_to include("%{email_prefix}")
-        end
+        expect(improved).not_to include("%{email_prefix}")
       end
 
-      include_examples "user notifications for template_key (2)", "account_exists"
-      include_examples "user notifications for template_key (2)", "account_suspended"
-      include_examples "user notifications for template_key (2)", "account_silenced"
+      it "has improved version for account_suspended without email_prefix" do
+        improved = I18n.t("user_notifications.account_suspended.subject_template_improved")
+
+        expect(improved).not_to include("%{email_prefix}")
+      end
+
+      it "has improved version for account_silenced without email_prefix" do
+        improved = I18n.t("user_notifications.account_silenced.subject_template_improved")
+
+        expect(improved).not_to include("%{email_prefix}")
+      end
     end
   end
 end

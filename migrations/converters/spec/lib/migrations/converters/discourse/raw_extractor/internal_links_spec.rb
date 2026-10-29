@@ -89,39 +89,60 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # A destination can carry a title, padding, or angle brackets and still be a
     # link core resolves. Missing those left such a link pointing at the source
     # site after the migration. Each of these cooks to href="/t/slug/5".
-    shared_examples "internal links for label and raw" do |label, raw|
-      it "defers a topic link written with #{label}" do
-        link, = link_for(raw)
 
-        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
-      end
+    it "defers a topic link written with a title" do
+      link, = link_for("[t](/t/slug/5 \"title\")")
+
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
     end
 
-    include_examples "internal links for label and raw", ["a title", "[t](/t/slug/5 \"title\")"]
-    include_examples "internal links for label and raw",
-                     ["a single-quoted title", "[t](/t/slug/5 'title')"]
-    include_examples "internal links for label and raw",
-                     ["a parenthesized title", "[t](/t/slug/5 (title))"]
-    include_examples "internal links for label and raw", ["padding", "[t](  /t/slug/5  )"]
-    include_examples "internal links for label and raw", ["angle brackets", "[t](</t/slug/5>)"]
-    include_examples "internal links for label and raw",
-                     ["angle brackets and a title", "[t](</t/slug/5> \"ti\")"]
-    include_examples "internal links for label and raw",
-                     [
-                       "an absolute URL and a title",
-                       "[t](https://forum.example.com/t/slug/5 \"ti\")",
-                     ]
+    it "defers a topic link written with a single-quoted title" do
+      link, = link_for("[t](/t/slug/5 'title')")
+
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+    end
+
+    it "defers a topic link written with a parenthesized title" do
+      link, = link_for("[t](/t/slug/5 (title))")
+
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+    end
+
+    it "defers a topic link written with padding" do
+      link, = link_for("[t](  /t/slug/5  )")
+
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+    end
+
+    it "defers a topic link written with angle brackets" do
+      link, = link_for("[t](</t/slug/5>)")
+
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+    end
+
+    it "defers a topic link written with angle brackets and a title" do
+      link, = link_for("[t](</t/slug/5> \"ti\")")
+
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+    end
+
+    it "defers a topic link written with an absolute URL and a title" do
+      link, = link_for("[t](https://forum.example.com/t/slug/5 \"ti\")")
+
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
+    end
 
     # Core builds no link for either of these, so neither may be rewritten.
-    shared_examples "internal links for raw" do |raw|
-      it "leaves #{raw} literal, since core makes no link of it" do
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-      end
+
+    it "leaves [t](/t/slug/5 not-a-title) literal, since core makes no link of it" do
+      expect(extract("[t](/t/slug/5 not-a-title)")).to eq("[t](/t/slug/5 not-a-title)")
+      expect(buffer.links).to be_empty
     end
 
-    include_examples "internal links for raw", "[t](/t/slug/5 not-a-title)"
-    include_examples "internal links for raw", "[t](/t/slug/5 \"unclosed)"
+    it "leaves [t](/t/slug/5 \"unclosed) literal, since core makes no link of it" do
+      expect(extract("[t](/t/slug/5 \"unclosed)")).to eq("[t](/t/slug/5 \"unclosed)")
+      expect(buffer.links).to be_empty
+    end
 
     it "defers the id-only topic form" do
       link, = link_for("[x](/t/123)")
@@ -221,25 +242,42 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # Categories nest three deep, so the slug path has to survive a third level
     # with the tab tail still coming off it.
-    shared_examples "internal links for label and path and name and suffix" do |label, (path, name, suffix)|
-      it "reads a three-level category slug path with #{label}" do
-        link, = link_for("[x](#{path})")
 
-        expect(link).to include(target_name: name, target_id: nil, target_suffix: suffix)
-      end
+    it "reads a three-level category slug path with no tail" do
+      link, = link_for("[x](/c/gp/parent/child)")
+
+      expect(link).to include(target_name: "gp:parent:child", target_id: nil, target_suffix: nil)
     end
 
-    include_examples "internal links for label and path and name and suffix",
-                     ["no tail", ["/c/gp/parent/child", "gp:parent:child", nil]]
-    include_examples "internal links for label and path and name and suffix",
-                     ["a filter tail", %w[/c/gp/parent/child/l/latest gp:parent:child /l/latest]]
-    include_examples "internal links for label and path and name and suffix",
-                     [
-                       "a period tail",
-                       %w[/c/gp/parent/child/l/top/weekly gp:parent:child /l/top/weekly],
-                     ]
-    include_examples "internal links for label and path and name and suffix",
-                     ["a /none tail", %w[/c/gp/parent/child/none gp:parent:child /none]]
+    it "reads a three-level category slug path with a filter tail" do
+      link, = link_for("[x](/c/gp/parent/child/l/latest)")
+
+      expect(link).to include(
+        target_name: "gp:parent:child",
+        target_id: nil,
+        target_suffix: "/l/latest",
+      )
+    end
+
+    it "reads a three-level category slug path with a period tail" do
+      link, = link_for("[x](/c/gp/parent/child/l/top/weekly)")
+
+      expect(link).to include(
+        target_name: "gp:parent:child",
+        target_id: nil,
+        target_suffix: "/l/top/weekly",
+      )
+    end
+
+    it "reads a three-level category slug path with a /none tail" do
+      link, = link_for("[x](/c/gp/parent/child/none)")
+
+      expect(link).to include(
+        target_name: "gp:parent:child",
+        target_id: nil,
+        target_suffix: "/none",
+      )
+    end
 
     it "reads a three-level category by id, with the tail in the suffix" do
       link, = link_for("[x](/c/gp/parent/child/6/l/latest)")
@@ -249,24 +287,36 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # A tag name is a single segment, so anything after it is already suffix —
     # the tab tails that needed guarding on the category routes cost nothing here.
-    shared_examples "internal links for label and path and suffix" do |label, (path, suffix)|
-      it "keeps #{label} out of a tag name" do
-        link, = link_for("[x](#{path})")
 
-        expect(link).to include(
-          target_type: enums::LinkTarget::TAG,
-          target_name: "release",
-          target_suffix: suffix,
-        )
-      end
+    it "keeps a filter tail out of a tag name" do
+      link, = link_for("[x](/tag/release/l/latest)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::TAG,
+        target_name: "release",
+        target_suffix: "/l/latest",
+      )
     end
 
-    include_examples "internal links for label and path and suffix",
-                     ["a filter tail", %w[/tag/release/l/latest /l/latest]]
-    include_examples "internal links for label and path and suffix",
-                     ["a period tail", %w[/tags/release/l/top/weekly /l/top/weekly]]
-    include_examples "internal links for label and path and suffix",
-                     ["a /none tail", %w[/tag/release/none /none]]
+    it "keeps a period tail out of a tag name" do
+      link, = link_for("[x](/tags/release/l/top/weekly)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::TAG,
+        target_name: "release",
+        target_suffix: "/l/top/weekly",
+      )
+    end
+
+    it "keeps a /none tail out of a tag name" do
+      link, = link_for("[x](/tag/release/none)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::TAG,
+        target_name: "release",
+        target_suffix: "/none",
+      )
+    end
 
     it "keeps a filter tail out of a slugless category link" do
       link, = link_for("[x](/c/6/l/latest)")
@@ -317,31 +367,71 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # `Category.find_by_slug_path_with_id` sees the glob. The id-less form has to
     # stop there too, or the tab name folds into the slug and names no category.
     describe "filter tails on the legacy id-less form" do
-      shared_examples "internal links for url and name and suffix" do |url, (name, suffix)|
-        it "reads #{url} as #{name.inspect} with the tail in the suffix" do
-          link, = link_for("[x](#{url})")
+      it "reads /c/support/l/latest as \"support\" with the tail in the suffix" do
+        link, = link_for("[x](/c/support/l/latest)")
 
-          expect(link).to include(
-            target_type: enums::LinkTarget::CATEGORY,
-            target_id: nil,
-            target_name: name,
-            target_suffix: suffix,
-          )
-        end
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY,
+          target_id: nil,
+          target_name: "support",
+          target_suffix: "/l/latest",
+        )
       end
 
-      include_examples "internal links for url and name and suffix",
-                       ["/c/support/l/latest", %w[support /l/latest]]
-      include_examples "internal links for url and name and suffix",
-                       ["/c/support/l/top/weekly", %w[support /l/top/weekly]]
-      include_examples "internal links for url and name and suffix",
-                       ["/c/parent/child/l/hot", %w[parent:child /l/hot]]
-      include_examples "internal links for url and name and suffix",
-                       ["/c/support/none", %w[support /none]]
-      include_examples "internal links for url and name and suffix",
-                       ["/c/support/all", %w[support /all]]
-      include_examples "internal links for url and name and suffix",
-                       ["/c/support/subcategories", %w[support /subcategories]]
+      it "reads /c/support/l/top/weekly as \"support\" with the tail in the suffix" do
+        link, = link_for("[x](/c/support/l/top/weekly)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY,
+          target_id: nil,
+          target_name: "support",
+          target_suffix: "/l/top/weekly",
+        )
+      end
+
+      it "reads /c/parent/child/l/hot as \"parent:child\" with the tail in the suffix" do
+        link, = link_for("[x](/c/parent/child/l/hot)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY,
+          target_id: nil,
+          target_name: "parent:child",
+          target_suffix: "/l/hot",
+        )
+      end
+
+      it "reads /c/support/none as \"support\" with the tail in the suffix" do
+        link, = link_for("[x](/c/support/none)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY,
+          target_id: nil,
+          target_name: "support",
+          target_suffix: "/none",
+        )
+      end
+
+      it "reads /c/support/all as \"support\" with the tail in the suffix" do
+        link, = link_for("[x](/c/support/all)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY,
+          target_id: nil,
+          target_name: "support",
+          target_suffix: "/all",
+        )
+      end
+
+      it "reads /c/support/subcategories as \"support\" with the tail in the suffix" do
+        link, = link_for("[x](/c/support/subcategories)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY,
+          target_id: nil,
+          target_name: "support",
+          target_suffix: "/subcategories",
+        )
+      end
 
       # Only `/l/<filter>` is a tab; a bare segment that happens to spell a filter
       # is an ordinary subcategory slug, so it stays part of the path.
@@ -491,7 +581,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # linkify-it reads the scheme case-insensitively, so core links these too;
     # older forums carried over uppercase schemes.
-    shared_examples "internal links for scheme" do |scheme|
+    shared_examples "a bare internal link scheme" do |scheme|
       it "recognizes a bare link with a #{scheme} scheme" do
         link, = link_for("read #{scheme}://forum.example.com/t/slug/99 now")
 
@@ -509,10 +599,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
     end
 
-    include_examples "internal links for scheme", "HTTPS"
-    include_examples "internal links for scheme", "Https"
-    include_examples "internal links for scheme", "HTTP"
-    include_examples "internal links for scheme", "hTTp"
+    include_examples "a bare internal link scheme", "HTTPS"
+    include_examples "a bare internal link scheme", "Https"
+    include_examples "a bare internal link scheme", "HTTP"
+    include_examples "a bare internal link scheme", "hTTp"
 
     it "recognizes an uppercase scheme with an uppercase host" do
       link, = link_for("read HTTPS://FORUM.EXAMPLE.COM/t/slug/99 now")

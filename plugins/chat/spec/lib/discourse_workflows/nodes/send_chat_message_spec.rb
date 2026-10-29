@@ -420,50 +420,52 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
       )
     end
 
-    shared_examples "send chat message for condition and error_key and setup" do |condition, (error_key, setup)|
-      it "fails when the recipient #{condition}" do
-        instance_exec(&setup)
+    it "fails when the recipient is staged" do
+      instance_exec(&-> { recipient.update!(staged: true) })
 
-        expect { send_dm }.to raise_error(
-          DiscourseWorkflows::NodeError,
-          node_error(error_key, username: recipient.username),
-        )
-      end
+      expect { send_dm }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:recipient_staged, username: recipient.username),
+      )
     end
 
-    include_examples "send chat message for condition and error_key and setup",
-                     ["is staged", [:recipient_staged, -> { recipient.update!(staged: true) }]]
-    include_examples "send chat message for condition and error_key and setup",
-                     [
-                       "is suspended",
-                       [
-                         :recipient_suspended,
-                         -> do
-                           recipient.update!(
-                             suspended_till: 1.day.from_now,
-                             suspended_at: Time.zone.now,
-                           )
-                         end,
-                       ],
-                     ]
-    include_examples "send chat message for condition and error_key and setup",
-                     ["is inactive", [:recipient_inactive, -> { recipient.update!(active: false) }]]
-    include_examples "send chat message for condition and error_key and setup",
-                     [
-                       "disabled chat",
-                       [
-                         :recipient_chat_disabled,
-                         -> { recipient.user_option.update!(chat_enabled: false) },
-                       ],
-                     ]
-    include_examples "send chat message for condition and error_key and setup",
-                     [
-                       "is not allowed to chat",
-                       [
-                         :recipient_cannot_chat,
-                         -> { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] },
-                       ],
-                     ]
+    it "fails when the recipient is suspended" do
+      instance_exec(
+        &-> { recipient.update!(suspended_till: 1.day.from_now, suspended_at: Time.zone.now) }
+      )
+
+      expect { send_dm }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:recipient_suspended, username: recipient.username),
+      )
+    end
+
+    it "fails when the recipient is inactive" do
+      instance_exec(&-> { recipient.update!(active: false) })
+
+      expect { send_dm }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:recipient_inactive, username: recipient.username),
+      )
+    end
+
+    it "fails when the recipient disabled chat" do
+      instance_exec(&-> { recipient.user_option.update!(chat_enabled: false) })
+
+      expect { send_dm }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:recipient_chat_disabled, username: recipient.username),
+      )
+    end
+
+    it "fails when the recipient is not allowed to chat" do
+      instance_exec(&-> { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] })
+
+      expect { send_dm }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:recipient_cannot_chat, username: recipient.username),
+      )
+    end
 
     it "fails when the sender is anonymous" do
       expect {
@@ -471,69 +473,51 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
       }.to raise_error(DiscourseWorkflows::NodeError, node_error(:sender_anonymous))
     end
 
-    shared_examples "send chat message for condition and error_key and setup (2)" do |condition, (error_key, setup)|
-      it "fails when the sender #{condition}" do
-        instance_exec(&setup)
+    it "fails when the sender disabled chat" do
+      instance_exec(&-> { sender.user_option.update!(chat_enabled: false) })
 
+      expect { send_dm(actor_username: sender.username) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:sender_chat_disabled, sender: sender.username),
+      )
+    end
+
+    it "fails when the sender is not allowed to chat" do
+      instance_exec(
+        &-> do
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+          recipient.update!(trust_level: TrustLevel[2])
+          Group.refresh_automatic_groups_for_user!(recipient)
+        end
+      )
+
+      expect { send_dm(actor_username: sender.username) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:sender_cannot_chat, sender: sender.username),
+      )
+    end
+
+    it "fails without creating a direct message when the sender is not allowed to send direct messages" do
+      instance_exec(&-> { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] })
+
+      expect_no_dm_side_effects do
         expect { send_dm(actor_username: sender.username) }.to raise_error(
           DiscourseWorkflows::NodeError,
-          node_error(error_key, sender: sender.username),
+          node_error(:sender_cannot_create_dm, sender: sender.username),
         )
       end
     end
 
-    include_examples "send chat message for condition and error_key and setup (2)",
-                     [
-                       "disabled chat",
-                       [
-                         :sender_chat_disabled,
-                         -> { sender.user_option.update!(chat_enabled: false) },
-                       ],
-                     ]
-    include_examples "send chat message for condition and error_key and setup (2)",
-                     [
-                       "is not allowed to chat",
-                       [
-                         :sender_cannot_chat,
-                         -> do
-                           SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
-                           recipient.update!(trust_level: TrustLevel[2])
-                           Group.refresh_automatic_groups_for_user!(recipient)
-                         end,
-                       ],
-                     ]
+    it "fails without creating a direct message when the sender disabled personal messages" do
+      instance_exec(&-> { sender.user_option.update!(allow_private_messages: false) })
 
-    shared_examples "send chat message for condition and error_key and setup (3)" do |condition, (error_key, setup)|
-      it "fails without creating a direct message when the sender #{condition}" do
-        instance_exec(&setup)
-
-        expect_no_dm_side_effects do
-          expect { send_dm(actor_username: sender.username) }.to raise_error(
-            DiscourseWorkflows::NodeError,
-            node_error(error_key, sender: sender.username),
-          )
-        end
+      expect_no_dm_side_effects do
+        expect { send_dm(actor_username: sender.username) }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          node_error(:sender_dms_disabled, sender: sender.username),
+        )
       end
     end
-
-    include_examples "send chat message for condition and error_key and setup (3)",
-                     [
-                       "is not allowed to send direct messages",
-                       [
-                         :sender_cannot_create_dm,
-                         -> do
-                           SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-                         end,
-                       ],
-                     ]
-    include_examples "send chat message for condition and error_key and setup (3)",
-                     [
-                       "disabled personal messages",
-                       [
-                         :sender_dms_disabled,
-                         -> { sender.user_option.update!(allow_private_messages: false) },
-                       ],
-                     ]
 
     it "doesn't hint at a bypass when the direct message is not delivered" do
       staff_sender = Fabricate(:moderator, refresh_auto_groups: true)

@@ -93,18 +93,21 @@ RSpec.describe "Mentions warnings" do
     context "when channel has allow_channel_wide_mentions disabled" do
       before { channel_1.update(allow_channel_wide_mentions: false) }
 
-      shared_examples "mention warnings for mention_text" do |mention_text|
-        it "displays a warning" do
-          chat_page.visit_channel(channel_1)
-          channel_page.type_in_composer(mention_text)
+      it "displays a warning for @here" do
+        chat_page.visit_channel(channel_1)
+        channel_page.type_in_composer("@here")
 
-          expect(page).to have_css(".chat-mention-warnings")
-          expect(page.find(".chat-mention-warnings-list__simple")).to be_present
-        end
+        expect(page).to have_css(".chat-mention-warnings")
+        expect(page.find(".chat-mention-warnings-list__simple")).to be_present
       end
 
-      include_examples "mention warnings for mention_text", "@here"
-      include_examples "mention warnings for mention_text", "@all"
+      it "displays a warning for @all" do
+        chat_page.visit_channel(channel_1)
+        channel_page.type_in_composer("@all")
+
+        expect(page).to have_css(".chat-mention-warnings")
+        expect(page.find(".chat-mention-warnings-list__simple")).to be_present
+      end
 
       it "retains warnings when loading drafts or changing channels with no draft" do
         Chat::Draft.create!(

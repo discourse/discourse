@@ -28,29 +28,115 @@ RSpec.describe ReviewableScoreSerializer do
     end
 
     context "with site setting links" do
-      shared_examples "reviewable score serializer for r" do |r|
-        it "adds a link to a site setting for the #{r} reason" do
-          serialized = serialized_score(r)
-          setting_name = described_class::REASONS_AND_SETTINGS[r.to_sym]
-          link_url =
-            "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
-          link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+      it "adds a link to a site setting for the post_count reason" do
+        serialized = serialized_score("post_count")
+        setting_name = described_class::REASONS_AND_SETTINGS[:post_count]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
 
-          expect(serialized.reason).to include(link)
-        end
+        expect(serialized.reason).to include(link)
       end
 
-      include_examples "reviewable score serializer for r", "post_count"
-      include_examples "reviewable score serializer for r", "trust_level"
-      include_examples "reviewable score serializer for r", "new_topics_unless_trust_level"
-      include_examples "reviewable score serializer for r", "fast_typer"
-      include_examples "reviewable score serializer for r", "auto_silence_regex"
-      include_examples "reviewable score serializer for r", "staged"
-      include_examples "reviewable score serializer for r", "must_approve_users"
-      include_examples "reviewable score serializer for r", "invite_only"
-      include_examples "reviewable score serializer for r", "email_spam"
-      include_examples "reviewable score serializer for r", "suspect_user"
-      include_examples "reviewable score serializer for r", "contains_media"
+      it "adds a link to a site setting for the trust_level reason" do
+        serialized = serialized_score("trust_level")
+        setting_name = described_class::REASONS_AND_SETTINGS[:trust_level]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the new_topics_unless_trust_level reason" do
+        serialized = serialized_score("new_topics_unless_trust_level")
+        setting_name = described_class::REASONS_AND_SETTINGS[:new_topics_unless_trust_level]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the fast_typer reason" do
+        serialized = serialized_score("fast_typer")
+        setting_name = described_class::REASONS_AND_SETTINGS[:fast_typer]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the auto_silence_regex reason" do
+        serialized = serialized_score("auto_silence_regex")
+        setting_name = described_class::REASONS_AND_SETTINGS[:auto_silence_regex]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the staged reason" do
+        serialized = serialized_score("staged")
+        setting_name = described_class::REASONS_AND_SETTINGS[:staged]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the must_approve_users reason" do
+        serialized = serialized_score("must_approve_users")
+        setting_name = described_class::REASONS_AND_SETTINGS[:must_approve_users]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the invite_only reason" do
+        serialized = serialized_score("invite_only")
+        setting_name = described_class::REASONS_AND_SETTINGS[:invite_only]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the email_spam reason" do
+        serialized = serialized_score("email_spam")
+        setting_name = described_class::REASONS_AND_SETTINGS[:email_spam]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the suspect_user reason" do
+        serialized = serialized_score("suspect_user")
+        setting_name = described_class::REASONS_AND_SETTINGS[:suspect_user]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
+
+      it "adds a link to a site setting for the contains_media reason" do
+        serialized = serialized_score("contains_media")
+        setting_name = described_class::REASONS_AND_SETTINGS[:contains_media]
+        link_url =
+          "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+        link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
+
+        expect(serialized.reason).to include(link)
+      end
     end
 
     context "with a fast_typer reason" do
@@ -188,46 +274,122 @@ RSpec.describe ReviewableScoreSerializer do
   end
 
   describe "#reason_type" do
-    shared_examples "reviewable score serializer for reason" do |reason|
-      it "returns the correct reason type for #{reason}" do
-        serialized = serialized_score(reason)
-        expect(serialized.reason_type).to eq(reason)
-      end
+    it "returns the correct reason type for post_count" do
+      serialized = serialized_score("post_count")
+      expect(serialized.reason_type).to eq("post_count")
     end
 
-    include_examples "reviewable score serializer for reason", "post_count"
-    include_examples "reviewable score serializer for reason", "trust_level"
-    include_examples "reviewable score serializer for reason", "new_topics_unless_trust_level"
-    include_examples "reviewable score serializer for reason", "fast_typer"
-    include_examples "reviewable score serializer for reason", "auto_silence_regex"
-    include_examples "reviewable score serializer for reason", "staged"
-    include_examples "reviewable score serializer for reason", "must_approve_users"
-    include_examples "reviewable score serializer for reason", "invite_only"
-    include_examples "reviewable score serializer for reason", "email_spam"
-    include_examples "reviewable score serializer for reason", "suspect_user"
-    include_examples "reviewable score serializer for reason", "contains_media"
-    include_examples "reviewable score serializer for reason", "watched_word"
+    it "returns the correct reason type for trust_level" do
+      serialized = serialized_score("trust_level")
+      expect(serialized.reason_type).to eq("trust_level")
+    end
+
+    it "returns the correct reason type for new_topics_unless_trust_level" do
+      serialized = serialized_score("new_topics_unless_trust_level")
+      expect(serialized.reason_type).to eq("new_topics_unless_trust_level")
+    end
+
+    it "returns the correct reason type for fast_typer" do
+      serialized = serialized_score("fast_typer")
+      expect(serialized.reason_type).to eq("fast_typer")
+    end
+
+    it "returns the correct reason type for auto_silence_regex" do
+      serialized = serialized_score("auto_silence_regex")
+      expect(serialized.reason_type).to eq("auto_silence_regex")
+    end
+
+    it "returns the correct reason type for staged" do
+      serialized = serialized_score("staged")
+      expect(serialized.reason_type).to eq("staged")
+    end
+
+    it "returns the correct reason type for must_approve_users" do
+      serialized = serialized_score("must_approve_users")
+      expect(serialized.reason_type).to eq("must_approve_users")
+    end
+
+    it "returns the correct reason type for invite_only" do
+      serialized = serialized_score("invite_only")
+      expect(serialized.reason_type).to eq("invite_only")
+    end
+
+    it "returns the correct reason type for email_spam" do
+      serialized = serialized_score("email_spam")
+      expect(serialized.reason_type).to eq("email_spam")
+    end
+
+    it "returns the correct reason type for suspect_user" do
+      serialized = serialized_score("suspect_user")
+      expect(serialized.reason_type).to eq("suspect_user")
+    end
+
+    it "returns the correct reason type for contains_media" do
+      serialized = serialized_score("contains_media")
+      expect(serialized.reason_type).to eq("contains_media")
+    end
+
+    it "returns the correct reason type for watched_word" do
+      serialized = serialized_score("watched_word")
+      expect(serialized.reason_type).to eq("watched_word")
+    end
   end
 
   describe "#reason_data" do
-    shared_examples "reviewable score serializer for reason" do |reason|
-      it "returns nil for #{reason}" do
-        serialized = serialized_score(reason)
-        expect(serialized.reason_data).to be_nil
-      end
+    it "returns nil for post_count" do
+      serialized = serialized_score("post_count")
+      expect(serialized.reason_data).to be_nil
     end
 
-    include_examples "reviewable score serializer for reason", "post_count"
-    include_examples "reviewable score serializer for reason", "trust_level"
-    include_examples "reviewable score serializer for reason", "new_topics_unless_trust_level"
-    include_examples "reviewable score serializer for reason", "fast_typer"
-    include_examples "reviewable score serializer for reason", "auto_silence_regex"
-    include_examples "reviewable score serializer for reason", "staged"
-    include_examples "reviewable score serializer for reason", "must_approve_users"
-    include_examples "reviewable score serializer for reason", "invite_only"
-    include_examples "reviewable score serializer for reason", "email_spam"
-    include_examples "reviewable score serializer for reason", "suspect_user"
-    include_examples "reviewable score serializer for reason", "contains_media"
+    it "returns nil for trust_level" do
+      serialized = serialized_score("trust_level")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for new_topics_unless_trust_level" do
+      serialized = serialized_score("new_topics_unless_trust_level")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for fast_typer" do
+      serialized = serialized_score("fast_typer")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for auto_silence_regex" do
+      serialized = serialized_score("auto_silence_regex")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for staged" do
+      serialized = serialized_score("staged")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for must_approve_users" do
+      serialized = serialized_score("must_approve_users")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for invite_only" do
+      serialized = serialized_score("invite_only")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for email_spam" do
+      serialized = serialized_score("email_spam")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for suspect_user" do
+      serialized = serialized_score("suspect_user")
+      expect(serialized.reason_data).to be_nil
+    end
+
+    it "returns nil for contains_media" do
+      serialized = serialized_score("contains_media")
+      expect(serialized.reason_data).to be_nil
+    end
 
     it "returns the watched words found for the watched_word reason" do
       raw = "I'm a post with some bad words like 'bad' and 'words'."

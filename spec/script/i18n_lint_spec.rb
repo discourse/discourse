@@ -17,43 +17,134 @@ RSpec.describe LocaleFileValidator do
   end
 
   describe "setting link markers" do
-    shared_examples "i18n lint for marker" do |marker|
-      it "accepts #{marker}" do
-        errors = errors_for("Some text with #{marker} in it.")
-        expect(errors[:invalid_setting_link_format]).to be_empty
-        expect(errors[:invalid_interpolation_key_format]).to be_empty
-      end
+    it "accepts {{setting:title}}" do
+      errors = errors_for("Some text with {{setting:title}} in it.")
+      expect(errors[:invalid_setting_link_format]).to be_empty
+      expect(errors[:invalid_interpolation_key_format]).to be_empty
     end
 
-    include_examples "i18n lint for marker", "{{setting:title}}"
-    include_examples "i18n lint for marker", "{{setting:s3_upload_bucket}}"
-    include_examples "i18n lint for marker", "{{settings:title,logo}}"
-    include_examples "i18n lint for marker", "{{settings:title,logo|All required settings}}"
-    include_examples "i18n lint for marker",
-                     "{{settings:set_locale_from_cookie,allow_user_locale,title|View them}}"
-
-    shared_examples "i18n lint for marker (2)" do |marker|
-      it "flags #{marker} as malformed" do
-        errors = errors_for("Some text with #{marker} in it.")
-        expect(
-          errors[:invalid_setting_link_format].presence ||
-            errors[:invalid_interpolation_key_format].presence,
-        ).to eq(["test_key"])
-      end
+    it "accepts {{setting:s3_upload_bucket}}" do
+      errors = errors_for("Some text with {{setting:s3_upload_bucket}} in it.")
+      expect(errors[:invalid_setting_link_format]).to be_empty
+      expect(errors[:invalid_interpolation_key_format]).to be_empty
     end
 
-    include_examples "i18n lint for marker (2)", "{{setting:Title}}" # uppercase name
-    include_examples "i18n lint for marker (2)", "{{setting:title }}" # trailing space
-    include_examples "i18n lint for marker (2)", "{{setting:}}" # empty name
-    include_examples "i18n lint for marker (2)", "{{settings:title, logo|label}}" # space after comma
-    include_examples "i18n lint for marker (2)", "{{settings:title;logo|label}}" # wrong separator
-    include_examples "i18n lint for marker (2)", "{{settings:title,logo|}}" # empty label
-    include_examples "i18n lint for marker (2)", "{{settings:title,logo|la|bel}}" # pipe inside label
-    include_examples "i18n lint for marker (2)", "{{settings:title,logo|la{bel}}" # brace inside label
-    include_examples "i18n lint for marker (2)", "{{settings:,title}}" # leading comma
-    include_examples "i18n lint for marker (2)", "{{setting:title}" # unclosed singular marker
-    include_examples "i18n lint for marker (2)", "{{settings:title,logo|All}" # unclosed plural marker
-    include_examples "i18n lint for marker (2)", "{{setting:title" # no closing braces at all
+    it "accepts {{settings:title,logo}}" do
+      errors = errors_for("Some text with {{settings:title,logo}} in it.")
+      expect(errors[:invalid_setting_link_format]).to be_empty
+      expect(errors[:invalid_interpolation_key_format]).to be_empty
+    end
+
+    it "accepts {{settings:title,logo|All required settings}}" do
+      errors = errors_for("Some text with {{settings:title,logo|All required settings}} in it.")
+      expect(errors[:invalid_setting_link_format]).to be_empty
+      expect(errors[:invalid_interpolation_key_format]).to be_empty
+    end
+
+    it "accepts {{settings:set_locale_from_cookie,allow_user_locale,title|View them}}" do
+      errors =
+        errors_for(
+          "Some text with {{settings:set_locale_from_cookie,allow_user_locale,title|View them}} in it.",
+        )
+      expect(errors[:invalid_setting_link_format]).to be_empty
+      expect(errors[:invalid_interpolation_key_format]).to be_empty
+    end
+
+    it "flags {{setting:Title}} as malformed" do
+      errors = errors_for("Some text with {{setting:Title}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # uppercase name
+
+    it "flags {{setting:title }} as malformed" do
+      errors = errors_for("Some text with {{setting:title }} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # trailing space
+
+    it "flags {{setting:}} as malformed" do
+      errors = errors_for("Some text with {{setting:}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # empty name
+
+    it "flags {{settings:title, logo|label}} as malformed" do
+      errors = errors_for("Some text with {{settings:title, logo|label}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # space after comma
+
+    it "flags {{settings:title;logo|label}} as malformed" do
+      errors = errors_for("Some text with {{settings:title;logo|label}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # wrong separator
+
+    it "flags {{settings:title,logo|}} as malformed" do
+      errors = errors_for("Some text with {{settings:title,logo|}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # empty label
+
+    it "flags {{settings:title,logo|la|bel}} as malformed" do
+      errors = errors_for("Some text with {{settings:title,logo|la|bel}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # pipe inside label
+
+    it "flags {{settings:title,logo|la{bel}} as malformed" do
+      errors = errors_for("Some text with {{settings:title,logo|la{bel}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # brace inside label
+
+    it "flags {{settings:,title}} as malformed" do
+      errors = errors_for("Some text with {{settings:,title}} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # leading comma
+
+    it "flags {{setting:title} as malformed" do
+      errors = errors_for("Some text with {{setting:title} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # unclosed singular marker
+
+    it "flags {{settings:title,logo|All} as malformed" do
+      errors = errors_for("Some text with {{settings:title,logo|All} in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # unclosed plural marker
+
+    it "flags {{setting:title as malformed" do
+      errors = errors_for("Some text with {{setting:title in it.")
+      expect(
+        errors[:invalid_setting_link_format].presence ||
+          errors[:invalid_interpolation_key_format].presence,
+      ).to eq(["test_key"])
+    end # no closing braces at all
 
     it "still flags handlebars-style interpolation that isn't a setting marker" do
       expect(errors_for("Hello {{username}}!")[:invalid_interpolation_key_format]).to eq(
@@ -66,34 +157,158 @@ RSpec.describe LocaleFileValidator do
       expect(errors.values.flatten).to be_empty
     end
 
-    shared_examples "i18n lint for marker (3)" do |marker|
-      it "agrees with LabelFormatter about #{marker}" do
-        text = "Some text with #{marker} in it."
+    it "agrees with LabelFormatter about {{setting:title}}" do
+      text = "Some text with {{setting:title}} in it."
 
-        lint_accepts = errors_for(text).values.flatten.empty?
-        formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
 
-        expect(lint_accepts).to eq(formatter_expands)
-      end
+      expect(lint_accepts).to eq(formatter_expands)
     end
 
-    include_examples "i18n lint for marker (3)", "{{setting:title}}"
-    include_examples "i18n lint for marker (3)", "{{setting:s3_upload_bucket}}"
-    include_examples "i18n lint for marker (3)", "{{settings:title,logo}}"
-    include_examples "i18n lint for marker (3)", "{{settings:title,logo|All required settings}}"
-    include_examples "i18n lint for marker (3)",
-                     "{{settings:set_locale_from_cookie,allow_user_locale,title|View them}}"
-    include_examples "i18n lint for marker (3)", "{{setting:Title}}"
-    include_examples "i18n lint for marker (3)", "{{setting:title }}"
-    include_examples "i18n lint for marker (3)", "{{setting:}}"
-    include_examples "i18n lint for marker (3)", "{{settings:title, logo|label}}"
-    include_examples "i18n lint for marker (3)", "{{settings:title;logo|label}}"
-    include_examples "i18n lint for marker (3)", "{{settings:title,logo|}}"
-    include_examples "i18n lint for marker (3)", "{{settings:title,logo|la|bel}}"
-    include_examples "i18n lint for marker (3)", "{{settings:title,logo|la{bel}}"
-    include_examples "i18n lint for marker (3)", "{{settings:,title}}"
-    include_examples "i18n lint for marker (3)", "{{setting:title}"
-    include_examples "i18n lint for marker (3)", "{{settings:title,logo|All}"
-    include_examples "i18n lint for marker (3)", "{{setting:title"
+    it "agrees with LabelFormatter about {{setting:s3_upload_bucket}}" do
+      text = "Some text with {{setting:s3_upload_bucket}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title,logo}}" do
+      text = "Some text with {{settings:title,logo}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title,logo|All required settings}}" do
+      text = "Some text with {{settings:title,logo|All required settings}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:set_locale_from_cookie,allow_user_locale,title|View them}}" do
+      text =
+        "Some text with {{settings:set_locale_from_cookie,allow_user_locale,title|View them}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{setting:Title}}" do
+      text = "Some text with {{setting:Title}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{setting:title }}" do
+      text = "Some text with {{setting:title }} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{setting:}}" do
+      text = "Some text with {{setting:}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title, logo|label}}" do
+      text = "Some text with {{settings:title, logo|label}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title;logo|label}}" do
+      text = "Some text with {{settings:title;logo|label}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title,logo|}}" do
+      text = "Some text with {{settings:title,logo|}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title,logo|la|bel}}" do
+      text = "Some text with {{settings:title,logo|la|bel}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title,logo|la{bel}}" do
+      text = "Some text with {{settings:title,logo|la{bel}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:,title}}" do
+      text = "Some text with {{settings:,title}} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{setting:title}" do
+      text = "Some text with {{setting:title} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{settings:title,logo|All}" do
+      text = "Some text with {{settings:title,logo|All} in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
+
+    it "agrees with LabelFormatter about {{setting:title" do
+      text = "Some text with {{setting:title in it."
+
+      lint_accepts = errors_for(text).values.flatten.empty?
+      formatter_expands = SiteSettings::LabelFormatter.expand_setting_links(text) != text
+
+      expect(lint_accepts).to eq(formatter_expands)
+    end
   end
 end

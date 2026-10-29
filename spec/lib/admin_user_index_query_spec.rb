@@ -65,38 +65,82 @@ RSpec.describe AdminUserIndexQuery do
   end
 
   describe "no users with trust level" do
-    shared_examples "admin user index query for key and value" do |key, value|
-      it "#{key} returns no records" do
-        query = ::AdminUserIndexQuery.new(query: key.to_s)
-        expect(real_users(query)).to eq([])
-      end
+    it "newuser returns no records" do
+      query = ::AdminUserIndexQuery.new(query: :newuser.to_s)
+      expect(real_users(query)).to eq([])
     end
 
-    include_examples "admin user index query for key and value", [:newuser, 0]
-    include_examples "admin user index query for key and value", [:basic, 1]
-    include_examples "admin user index query for key and value", [:member, 2]
-    include_examples "admin user index query for key and value", [:regular, 3]
-    include_examples "admin user index query for key and value", [:leader, 4]
+    it "basic returns no records" do
+      query = ::AdminUserIndexQuery.new(query: :basic.to_s)
+      expect(real_users(query)).to eq([])
+    end
+
+    it "member returns no records" do
+      query = ::AdminUserIndexQuery.new(query: :member.to_s)
+      expect(real_users(query)).to eq([])
+    end
+
+    it "regular returns no records" do
+      query = ::AdminUserIndexQuery.new(query: :regular.to_s)
+      expect(real_users(query)).to eq([])
+    end
+
+    it "leader returns no records" do
+      query = ::AdminUserIndexQuery.new(query: :leader.to_s)
+      expect(real_users(query)).to eq([])
+    end
   end
 
   describe "users with trust level" do
-    shared_examples "admin user index query for key and value (2)" do |key, value|
-      it "finds user with trust #{key}" do
-        user = Fabricate(:user, trust_level: value)
+    it "finds user with trust newuser" do
+      user = Fabricate(:user, trust_level: 0)
 
-        next if !TrustLevel.valid?(value + 1)
-        Fabricate(:user, trust_level: value + 1)
+      next if !TrustLevel.valid?(0 + 1)
+      Fabricate(:user, trust_level: 0 + 1)
 
-        query = ::AdminUserIndexQuery.new(query: key.to_s)
-        expect(real_users(query).to_a).to eq([user])
-      end
+      query = ::AdminUserIndexQuery.new(query: :newuser.to_s)
+      expect(real_users(query).to_a).to eq([user])
     end
 
-    include_examples "admin user index query for key and value (2)", [:newuser, 0]
-    include_examples "admin user index query for key and value (2)", [:basic, 1]
-    include_examples "admin user index query for key and value (2)", [:member, 2]
-    include_examples "admin user index query for key and value (2)", [:regular, 3]
-    include_examples "admin user index query for key and value (2)", [:leader, 4]
+    it "finds user with trust basic" do
+      user = Fabricate(:user, trust_level: 1)
+
+      next if !TrustLevel.valid?(1 + 1)
+      Fabricate(:user, trust_level: 1 + 1)
+
+      query = ::AdminUserIndexQuery.new(query: :basic.to_s)
+      expect(real_users(query).to_a).to eq([user])
+    end
+
+    it "finds user with trust member" do
+      user = Fabricate(:user, trust_level: 2)
+
+      next if !TrustLevel.valid?(2 + 1)
+      Fabricate(:user, trust_level: 2 + 1)
+
+      query = ::AdminUserIndexQuery.new(query: :member.to_s)
+      expect(real_users(query).to_a).to eq([user])
+    end
+
+    it "finds user with trust regular" do
+      user = Fabricate(:user, trust_level: 3)
+
+      next if !TrustLevel.valid?(3 + 1)
+      Fabricate(:user, trust_level: 3 + 1)
+
+      query = ::AdminUserIndexQuery.new(query: :regular.to_s)
+      expect(real_users(query).to_a).to eq([user])
+    end
+
+    it "finds user with trust leader" do
+      user = Fabricate(:user, trust_level: 4)
+
+      next if !TrustLevel.valid?(4 + 1)
+      Fabricate(:user, trust_level: 4 + 1)
+
+      query = ::AdminUserIndexQuery.new(query: :leader.to_s)
+      expect(real_users(query).to_a).to eq([user])
+    end
   end
 
   describe "with a pending user" do
@@ -118,6 +162,7 @@ RSpec.describe AdminUserIndexQuery do
           suspended_till: 20.years.from_now,
         )
       end
+
       it "doesn't return the suspended user" do
         query = ::AdminUserIndexQuery.new(query: "pending")
         expect(query.find_users).not_to include(suspended_user)

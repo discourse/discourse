@@ -71,25 +71,35 @@ RSpec.describe InvitesController do
       end
     end
 
-    shared_examples "invites controller for setting" do |setting|
-      it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
-        SiteSetting.enable_local_logins_via_code = true
-        SiteSetting.public_send("#{setting}=", false)
-        enable_auth_provider(:google_oauth2)
+    it "verifies legacy email tokens when enable_local_logins is disabled after enabling codes" do
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.public_send("enable_local_logins=", false)
+      enable_auth_provider(:google_oauth2)
 
-        get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
-        expect(response.status).to eq(200)
-        expect(response.body).to have_tag("script#data-preloaded") do |element|
-          invite_info = JSON.parse(JSON.parse(element.current_scope.text)["invite_info"])
-          expect(invite_info["email"]).to eq(invite.email)
-          expect(invite_info["email_verified_by_link"]).to eq(true)
-        end
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        invite_info = JSON.parse(JSON.parse(element.current_scope.text)["invite_info"])
+        expect(invite_info["email"]).to eq(invite.email)
+        expect(invite_info["email_verified_by_link"]).to eq(true)
       end
     end
 
-    include_examples "invites controller for setting", :enable_local_logins
-    include_examples "invites controller for setting", :enable_local_logins_via_email
+    it "verifies legacy email tokens when enable_local_logins_via_email is disabled after enabling codes" do
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.public_send("enable_local_logins_via_email=", false)
+      enable_auth_provider(:google_oauth2)
+
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        invite_info = JSON.parse(JSON.parse(element.current_scope.text)["invite_info"])
+        expect(invite_info["email"]).to eq(invite.email)
+        expect(invite_info["email_verified_by_link"]).to eq(true)
+      end
+    end
 
     context "when email data is present in authentication data" do
       before { server_session[:authentication] = { email: invite.email } }

@@ -554,31 +554,47 @@ RSpec.describe CategoriesController do
     context "when a moderator evaluates public permissions" do
       fab!(:moderator)
 
-      shared_examples "categories controller for granular_permissions" do |granular_permissions|
-        it "retains access with granular pseudogroup behavior #{granular_permissions}" do
-          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
-          sign_in(moderator)
-          category.set_permissions(everyone: :readonly)
-          category.save!
+      it "retains access with granular pseudogroup behavior false" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = (false)
+        sign_in(moderator)
+        category.set_permissions(everyone: :readonly)
+        category.save!
 
-          expect(moderator.guardian.can_see_category?(category)).to eq(true)
+        expect(moderator.guardian.can_see_category?(category)).to eq(true)
 
-          post "/categories/evaluate_permissions.json",
-               params: {
-                 group_ids: [Group::AUTO_GROUPS[:everyone]],
-               },
-               as: :json
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [Group::AUTO_GROUPS[:everyone]],
+             },
+             as: :json
 
-          expect(response.status).to eq(200)
-          expect(response.parsed_body).to include(
-            "success" => "OK",
-            "current_user_will_lose_access" => false,
-          )
-        end
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "success" => "OK",
+          "current_user_will_lose_access" => false,
+        )
       end
 
-      include_examples "categories controller for granular_permissions", false
-      include_examples "categories controller for granular_permissions", true
+      it "retains access with granular pseudogroup behavior true" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = (true)
+        sign_in(moderator)
+        category.set_permissions(everyone: :readonly)
+        category.save!
+
+        expect(moderator.guardian.can_see_category?(category)).to eq(true)
+
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [Group::AUTO_GROUPS[:everyone]],
+             },
+             as: :json
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "success" => "OK",
+          "current_user_will_lose_access" => false,
+        )
+      end
     end
 
     context "when logged in" do

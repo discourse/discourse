@@ -4,41 +4,105 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
   before { enable_current_plugin }
 
   describe "#decode" do
-    shared_examples "gemini streaming decoder for line_ending and separator and split_position" do |line_ending, separator, split_position|
-      it "decodes all events when a chunk ends at byte #{split_position} of a #{line_ending} separator" do
-        decoder = described_class.new
-        events =
-          %w[A B C D].each_with_index.map do |text, index|
-            {
-              candidates: [{ content: { parts: [{ text: text }], role: "model" } }],
-              usageMetadata: {
-                candidatesTokenCount: [11, 38, 65, 95][index],
-              },
-            }
-          end
-        events.last[:candidates].first[:finishReason] = "STOP"
-        data_lines = events.map { |event| "data: #{event.to_json}" }
-        chunks = [
-          data_lines[0] + separator,
-          data_lines[1] + separator[0...split_position],
-          separator[split_position..] + data_lines[2] + separator,
-          data_lines[3] + separator,
-        ]
+    it "decodes all events when a chunk ends at byte 1 of a CRLF separator" do
+      decoder = described_class.new
+      events =
+        %w[A B C D].each_with_index.map do |text, index|
+          {
+            candidates: [{ content: { parts: [{ text: text }], role: "model" } }],
+            usageMetadata: {
+              candidatesTokenCount: [11, 38, 65, 95][index],
+            },
+          }
+        end
+      events.last[:candidates].first[:finishReason] = "STOP"
+      data_lines = events.map { |event| "data: #{event.to_json}" }
+      chunks = [
+        data_lines[0] + "\r\n\r\n",
+        data_lines[1] + "\r\n\r\n"[0...(1)],
+        "\r\n\r\n"[(1)..] + data_lines[2] + "\r\n\r\n",
+        data_lines[3] + "\r\n\r\n",
+      ]
 
-        decoded = chunks.flat_map { |chunk| decoder.decode(chunk) }
+      decoded = chunks.flat_map { |chunk| decoder.decode(chunk) }
 
-        expect(decoded).to eq(events)
-      end
+      expect(decoded).to eq(events)
     end
 
-    include_examples "gemini streaming decoder for line_ending and separator and split_position",
-                     ["CRLF", "\r\n\r\n", 1]
-    include_examples "gemini streaming decoder for line_ending and separator and split_position",
-                     ["CRLF", "\r\n\r\n", 2]
-    include_examples "gemini streaming decoder for line_ending and separator and split_position",
-                     ["CRLF", "\r\n\r\n", 3]
-    include_examples "gemini streaming decoder for line_ending and separator and split_position",
-                     ["LF", "\n\n", 1]
+    it "decodes all events when a chunk ends at byte 2 of a CRLF separator" do
+      decoder = described_class.new
+      events =
+        %w[A B C D].each_with_index.map do |text, index|
+          {
+            candidates: [{ content: { parts: [{ text: text }], role: "model" } }],
+            usageMetadata: {
+              candidatesTokenCount: [11, 38, 65, 95][index],
+            },
+          }
+        end
+      events.last[:candidates].first[:finishReason] = "STOP"
+      data_lines = events.map { |event| "data: #{event.to_json}" }
+      chunks = [
+        data_lines[0] + "\r\n\r\n",
+        data_lines[1] + "\r\n\r\n"[0...(2)],
+        "\r\n\r\n"[(2)..] + data_lines[2] + "\r\n\r\n",
+        data_lines[3] + "\r\n\r\n",
+      ]
+
+      decoded = chunks.flat_map { |chunk| decoder.decode(chunk) }
+
+      expect(decoded).to eq(events)
+    end
+
+    it "decodes all events when a chunk ends at byte 3 of a CRLF separator" do
+      decoder = described_class.new
+      events =
+        %w[A B C D].each_with_index.map do |text, index|
+          {
+            candidates: [{ content: { parts: [{ text: text }], role: "model" } }],
+            usageMetadata: {
+              candidatesTokenCount: [11, 38, 65, 95][index],
+            },
+          }
+        end
+      events.last[:candidates].first[:finishReason] = "STOP"
+      data_lines = events.map { |event| "data: #{event.to_json}" }
+      chunks = [
+        data_lines[0] + "\r\n\r\n",
+        data_lines[1] + "\r\n\r\n"[0...(3)],
+        "\r\n\r\n"[(3)..] + data_lines[2] + "\r\n\r\n",
+        data_lines[3] + "\r\n\r\n",
+      ]
+
+      decoded = chunks.flat_map { |chunk| decoder.decode(chunk) }
+
+      expect(decoded).to eq(events)
+    end
+
+    it "decodes all events when a chunk ends at byte 1 of a LF separator" do
+      decoder = described_class.new
+      events =
+        %w[A B C D].each_with_index.map do |text, index|
+          {
+            candidates: [{ content: { parts: [{ text: text }], role: "model" } }],
+            usageMetadata: {
+              candidatesTokenCount: [11, 38, 65, 95][index],
+            },
+          }
+        end
+      events.last[:candidates].first[:finishReason] = "STOP"
+      data_lines = events.map { |event| "data: #{event.to_json}" }
+      chunks = [
+        data_lines[0] + "\n\n",
+        data_lines[1] + "\n\n"[0...(1)],
+        "\n\n"[(1)..] + data_lines[2] + "\n\n",
+        data_lines[3] + "\n\n",
+      ]
+
+      decoded = chunks.flat_map { |chunk| decoder.decode(chunk) }
+
+      expect(decoded).to eq(events)
+    end
 
     it "decodes the same events at every possible chunk boundary" do
       events = [

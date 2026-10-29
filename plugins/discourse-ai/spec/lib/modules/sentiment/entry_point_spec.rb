@@ -206,26 +206,61 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
     fab!(:post)
     fab!(:admin)
 
-    shared_examples "entry point for sentiment and emotion" do |sentiment, emotion|
-      it "gates edited-post jobs and report visibility with sentiment=#{sentiment} and emotion=#{emotion}" do
-        SiteSetting.ai_sentiment_enabled = sentiment
-        SiteSetting.ai_sentiment_emotion_enabled = emotion
-        Fabricate(:sentiment_classification, target: post)
+    it "gates edited-post jobs and report visibility with sentiment=false and emotion=false" do
+      SiteSetting.ai_sentiment_enabled = (false)
+      SiteSetting.ai_sentiment_emotion_enabled = (false)
+      Fabricate(:sentiment_classification, target: post)
 
-        PostRevisor.new(post).revise!(post.user, raw: "#{post.raw} Edited content")
+      PostRevisor.new(post).revise!(post.user, raw: "#{post.raw} Edited content")
 
-        expect(job_enqueued?(job: :post_sentiment_analysis, args: { post_id: post.id })).to eq(
-          sentiment || emotion,
-        )
-        serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
-        expect(serializer.can_see_sentiment_reports).to eq(sentiment || emotion)
-      end
+      expect(job_enqueued?(job: :post_sentiment_analysis, args: { post_id: post.id })).to eq(
+        false || false,
+      )
+      serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+      expect(serializer.can_see_sentiment_reports).to eq(false || false)
     end
 
-    include_examples "entry point for sentiment and emotion", [false, false]
-    include_examples "entry point for sentiment and emotion", [true, false]
-    include_examples "entry point for sentiment and emotion", [false, true]
-    include_examples "entry point for sentiment and emotion", [true, true]
+    it "gates edited-post jobs and report visibility with sentiment=true and emotion=false" do
+      SiteSetting.ai_sentiment_enabled = (true)
+      SiteSetting.ai_sentiment_emotion_enabled = (false)
+      Fabricate(:sentiment_classification, target: post)
+
+      PostRevisor.new(post).revise!(post.user, raw: "#{post.raw} Edited content")
+
+      expect(job_enqueued?(job: :post_sentiment_analysis, args: { post_id: post.id })).to eq(
+        true || false,
+      )
+      serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+      expect(serializer.can_see_sentiment_reports).to eq(true || false)
+    end
+
+    it "gates edited-post jobs and report visibility with sentiment=false and emotion=true" do
+      SiteSetting.ai_sentiment_enabled = (false)
+      SiteSetting.ai_sentiment_emotion_enabled = (true)
+      Fabricate(:sentiment_classification, target: post)
+
+      PostRevisor.new(post).revise!(post.user, raw: "#{post.raw} Edited content")
+
+      expect(job_enqueued?(job: :post_sentiment_analysis, args: { post_id: post.id })).to eq(
+        false || true,
+      )
+      serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+      expect(serializer.can_see_sentiment_reports).to eq(false || true)
+    end
+
+    it "gates edited-post jobs and report visibility with sentiment=true and emotion=true" do
+      SiteSetting.ai_sentiment_enabled = (true)
+      SiteSetting.ai_sentiment_emotion_enabled = (true)
+      Fabricate(:sentiment_classification, target: post)
+
+      PostRevisor.new(post).revise!(post.user, raw: "#{post.raw} Edited content")
+
+      expect(job_enqueued?(job: :post_sentiment_analysis, args: { post_id: post.id })).to eq(
+        true || true,
+      )
+      serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+      expect(serializer.can_see_sentiment_reports).to eq(true || true)
+    end
 
     it "keeps report visibility off without stored results even when emotion is enabled" do
       SiteSetting.ai_sentiment_emotion_enabled = true

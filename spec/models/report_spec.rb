@@ -226,7 +226,7 @@ RSpec.describe Report do
     end
   end
 
-  shared_examples "report for arg" do |arg|
+  shared_examples "report totals over time" do |arg|
     describe "#{arg} report" do
       pluralized = arg.to_s.pluralize
 
@@ -281,14 +281,14 @@ RSpec.describe Report do
     end
   end
 
-  include_examples "report for arg", :signup
-  include_examples "report for arg", :topic
-  include_examples "report for arg", :post
-  include_examples "report for arg", :flag
-  include_examples "report for arg", :like
-  include_examples "report for arg", :email
+  include_examples "report totals over time", :signup
+  include_examples "report totals over time", :topic
+  include_examples "report totals over time", :post
+  include_examples "report totals over time", :flag
+  include_examples "report totals over time", :like
+  include_examples "report totals over time", :email
 
-  shared_examples "report for request_type" do |request_type|
+  shared_examples "a request type report" do |request_type|
     describe "#{request_type} request reports" do
       let(:report) do
         Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
@@ -352,15 +352,15 @@ RSpec.describe Report do
     end
   end
 
-  include_examples "report for request_type", :http_total
-  include_examples "report for request_type", :http_2xx
-  include_examples "report for request_type", :http_background
-  include_examples "report for request_type", :http_3xx
-  include_examples "report for request_type", :http_4xx
-  include_examples "report for request_type", :http_5xx
-  include_examples "report for request_type", :page_view_crawler
-  include_examples "report for request_type", :page_view_logged_in
-  include_examples "report for request_type", :page_view_anon
+  include_examples "a request type report", :http_total
+  include_examples "a request type report", :http_2xx
+  include_examples "a request type report", :http_background
+  include_examples "a request type report", :http_3xx
+  include_examples "a request type report", :http_4xx
+  include_examples "a request type report", :http_5xx
+  include_examples "a request type report", :page_view_crawler
+  include_examples "a request type report", :page_view_logged_in
+  include_examples "a request type report", :page_view_anon
 
   describe "page_view_legacy_total_reqs" do
     before do

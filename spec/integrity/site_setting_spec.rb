@@ -4,19 +4,23 @@ RSpec.describe "site setting integrity checks" do
   let(:site_setting_file) { Rails.root.join("config/site_settings.yml").to_s }
   let(:yaml) { YAML.load_file(site_setting_file) }
 
-  shared_examples "site setting for property" do |property|
-    it "set #{property} value as true or not set" do
-      yaml.each_value do |category|
-        category.each_value do |setting|
-          next unless setting.is_a?(Hash)
-          expect(setting[property] == nil || setting[property] == true).to be_truthy
-        end
+  it "set hidden value as true or not set" do
+    yaml.each_value do |category|
+      category.each_value do |setting|
+        next unless setting.is_a?(Hash)
+        expect(setting["hidden"] == nil || setting["hidden"] == true).to be_truthy
       end
     end
   end
 
-  include_examples "site setting for property", "hidden"
-  include_examples "site setting for property", "client"
+  it "set client value as true or not set" do
+    yaml.each_value do |category|
+      category.each_value do |setting|
+        next unless setting.is_a?(Hash)
+        expect(setting["client"] == nil || setting["client"] == true).to be_truthy
+      end
+    end
+  end
 
   it "has no duplicate keys" do
     duplicates = DuplicateKeyFinder.new.find_duplicates(site_setting_file)

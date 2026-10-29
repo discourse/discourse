@@ -8,31 +8,50 @@ describe DiscourseAi::AiBot::EntryPoint do
         SiteSetting.ai_bot_enabled = false
       end
 
-      shared_examples "entry point for first_setting" do |first_setting|
-        it "provisions users only after enabling both settings, starting with #{first_setting}" do
-          agent = Fabricate(:ai_agent)
-          second_setting =
-            first_setting == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
+      it "provisions users only after enabling both settings, starting with discourse_ai_enabled" do
+        agent = Fabricate(:ai_agent)
+        second_setting =
+          :discourse_ai_enabled == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
 
-          expect { SiteSetting.public_send("#{first_setting}=", true) }.not_to change(User, :count)
-          expect(agent.reload.user_id).to be_nil
+        expect { SiteSetting.public_send("discourse_ai_enabled=", true) }.not_to change(
+          User,
+          :count,
+        )
+        expect(agent.reload.user_id).to be_nil
 
-          SiteSetting.public_send("#{second_setting}=", true)
+        SiteSetting.public_send("#{second_setting}=", true)
 
-          user = agent.reload.user
-          expect(user).to be_present
-          expect(user).to be_bot
+        user = agent.reload.user
+        expect(user).to be_present
+        expect(user).to be_bot
 
-          expect do
-            SiteSetting.public_send("#{first_setting}=", false)
-            SiteSetting.public_send("#{first_setting}=", true)
-          end.not_to change(User, :count)
-          expect(agent.reload.user).to eq(user)
-        end
+        expect do
+          SiteSetting.public_send("discourse_ai_enabled=", false)
+          SiteSetting.public_send("discourse_ai_enabled=", true)
+        end.not_to change(User, :count)
+        expect(agent.reload.user).to eq(user)
       end
 
-      include_examples "entry point for first_setting", :discourse_ai_enabled
-      include_examples "entry point for first_setting", :ai_bot_enabled
+      it "provisions users only after enabling both settings, starting with ai_bot_enabled" do
+        agent = Fabricate(:ai_agent)
+        second_setting =
+          :ai_bot_enabled == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
+
+        expect { SiteSetting.public_send("ai_bot_enabled=", true) }.not_to change(User, :count)
+        expect(agent.reload.user_id).to be_nil
+
+        SiteSetting.public_send("#{second_setting}=", true)
+
+        user = agent.reload.user
+        expect(user).to be_present
+        expect(user).to be_bot
+
+        expect do
+          SiteSetting.public_send("ai_bot_enabled=", false)
+          SiteSetting.public_send("ai_bot_enabled=", true)
+        end.not_to change(User, :count)
+        expect(agent.reload.user).to eq(user)
+      end
 
       it "leaves users unprovisioned on unrelated changes and disablement" do
         SiteSetting.discourse_ai_enabled = true

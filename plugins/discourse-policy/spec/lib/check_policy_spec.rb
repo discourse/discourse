@@ -136,7 +136,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     expect(post.post_policy.accepted_by).to contain_exactly(user2)
   end
 
-  shared_examples "check policy for how_often" do |how_often|
+  shared_examples "scheduling policy renewal from its start date" do |how_often|
     it "sets correctly next_renew_at for #{how_often} when renew-start is set" do
       period =
         case how_often
@@ -176,11 +176,11 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  include_examples "check policy for how_often", "monthly"
-  include_examples "check policy for how_often", "quarterly"
-  include_examples "check policy for how_often", "yearly"
+  include_examples "scheduling policy renewal from its start date", "monthly"
+  include_examples "scheduling policy renewal from its start date", "quarterly"
+  include_examples "scheduling policy renewal from its start date", "yearly"
 
-  shared_examples "check policy for how_often (2)" do |how_often|
+  shared_examples "expiring a renewable policy" do |how_often|
     it "expires policies when #{how_often}" do
       period =
         case how_often
@@ -220,9 +220,9 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  include_examples "check policy for how_often (2)", "monthly"
-  include_examples "check policy for how_often (2)", "quarterly"
-  include_examples "check policy for how_often (2)", "yearly"
+  include_examples "expiring a renewable policy", "monthly"
+  include_examples "expiring a renewable policy", "quarterly"
+  include_examples "expiring a renewable policy", "yearly"
 
   it "sends high-priority notifications to users" do
     Jobs.run_immediately!

@@ -1190,76 +1190,165 @@ RSpec.describe User do
     context "when Unicode usernames are disabled" do
       before { SiteSetting.unicode_usernames = false }
 
-      shared_examples "user for username" do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows first.last" do
+        assert_good("first.last")
       end
 
-      include_examples "user for username", "first.last"
-      include_examples "user for username", "first"
-      include_examples "user for username", "first-last"
-      include_examples "user for username", "_name"
-      include_examples "user for username", "first_last"
-      include_examples "user for username", "mc.hammer_nose"
-      include_examples "user for username", "UPPERCASE"
-      include_examples "user for username", "sgif"
-
-      shared_examples "user for username (2)" do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows first" do
+        assert_good("first")
       end
 
-      include_examples "user for username (2)", "traildot."
-      include_examples "user for username (2)", "has space"
-      include_examples "user for username (2)", "double__underscore"
-      include_examples "user for username (2)", "with%symbol"
-      include_examples "user for username (2)", "Exclamation!"
-      include_examples "user for username (2)", "@twitter"
-      include_examples "user for username (2)", "my@email.com"
-      include_examples "user for username (2)", ".tester"
-      include_examples "user for username (2)", "sa$sy"
-      include_examples "user for username (2)", "sam.json"
-      include_examples "user for username (2)", "sam.xml"
-      include_examples "user for username (2)", "sam.html"
-      include_examples "user for username (2)", "sam.htm"
-      include_examples "user for username (2)", "sam.js"
-      include_examples "user for username (2)", "sam.woff"
-      include_examples "user for username (2)", "sam.Png"
-      include_examples "user for username (2)", "sam.gif"
+      it "allows first-last" do
+        assert_good("first-last")
+      end
+
+      it "allows _name" do
+        assert_good("_name")
+      end
+
+      it "allows first_last" do
+        assert_good("first_last")
+      end
+
+      it "allows mc.hammer_nose" do
+        assert_good("mc.hammer_nose")
+      end
+
+      it "allows UPPERCASE" do
+        assert_good("UPPERCASE")
+      end
+
+      it "allows sgif" do
+        assert_good("sgif")
+      end
+
+      it "disallows traildot." do
+        assert_bad("traildot.")
+      end
+
+      it "disallows has space" do
+        assert_bad("has space")
+      end
+
+      it "disallows double__underscore" do
+        assert_bad("double__underscore")
+      end
+
+      it "disallows with%symbol" do
+        assert_bad("with%symbol")
+      end
+
+      it "disallows Exclamation!" do
+        assert_bad("Exclamation!")
+      end
+
+      it "disallows @twitter" do
+        assert_bad("@twitter")
+      end
+
+      it "disallows my@email.com" do
+        assert_bad("my@email.com")
+      end
+
+      it "disallows .tester" do
+        assert_bad(".tester")
+      end
+
+      it "disallows sa$sy" do
+        assert_bad("sa$sy")
+      end
+
+      it "disallows sam.json" do
+        assert_bad("sam.json")
+      end
+
+      it "disallows sam.xml" do
+        assert_bad("sam.xml")
+      end
+
+      it "disallows sam.html" do
+        assert_bad("sam.html")
+      end
+
+      it "disallows sam.htm" do
+        assert_bad("sam.htm")
+      end
+
+      it "disallows sam.js" do
+        assert_bad("sam.js")
+      end
+
+      it "disallows sam.woff" do
+        assert_bad("sam.woff")
+      end
+
+      it "disallows sam.Png" do
+        assert_bad("sam.Png")
+      end
+
+      it "disallows sam.gif" do
+        assert_bad("sam.gif")
+      end
     end
 
     context "when Unicode usernames are enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      shared_examples "user for username (3)" do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows Джофрэй" do
+        assert_good("Джофрэй")
       end
 
-      include_examples "user for username (3)", "Джофрэй"
-      include_examples "user for username (3)", "Джо.фрэй"
-      include_examples "user for username (3)", "Джофр-эй"
-      include_examples "user for username (3)", "Д.жофрэй"
-      include_examples "user for username (3)", "乔夫雷"
-      include_examples "user for username (3)", "乔夫_雷"
-      include_examples "user for username (3)", "_乔夫雷"
-
-      shared_examples "user for username (4)" do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows Джо.фрэй" do
+        assert_good("Джо.фрэй")
       end
 
-      include_examples "user for username (4)", ".Джофрэй"
-      include_examples "user for username (4)", "Джофрэй."
-      include_examples "user for username (4)", "Джо фрэй"
-      include_examples "user for username (4)", "Джоф__рэй"
-      include_examples "user for username (4)", "乔夫雷.js"
-      include_examples "user for username (4)", "乔夫雷."
-      include_examples "user for username (4)", "乔夫%雷"
+      it "allows Джофр-эй" do
+        assert_good("Джофр-эй")
+      end
+
+      it "allows Д.жофрэй" do
+        assert_good("Д.жофрэй")
+      end
+
+      it "allows 乔夫雷" do
+        assert_good("乔夫雷")
+      end
+
+      it "allows 乔夫_雷" do
+        assert_good("乔夫_雷")
+      end
+
+      it "allows _乔夫雷" do
+        assert_good("_乔夫雷")
+      end
+
+      it "disallows .Джофрэй" do
+        assert_bad(".Джофрэй")
+      end
+
+      it "disallows Джофрэй." do
+        assert_bad("Джофрэй.")
+      end
+
+      it "disallows Джо фрэй" do
+        assert_bad("Джо фрэй")
+      end
+
+      it "disallows Джоф__рэй" do
+        assert_bad("Джоф__рэй")
+      end
+
+      it "disallows 乔夫雷.js" do
+        assert_bad("乔夫雷.js")
+      end
+
+      it "disallows 乔夫雷." do
+        assert_bad("乔夫雷.")
+      end
+
+      it "disallows 乔夫%雷" do
+        assert_bad("乔夫%雷")
+      end
     end
   end
 
@@ -3875,26 +3964,26 @@ RSpec.describe User do
   end
 
   describe "#username_equals_to?" do
-    shared_examples "user for testcase_name and current_username and another_username and is_equal" do |testcase_name, current_username, another_username, is_equal|
-      it "#{testcase_name}" do
-        user = Fabricate(:user, username: current_username)
-        result = user.username_equals_to?(another_username)
+    it "returns true for equal usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("john")
 
-        expect(result).to be(is_equal)
-      end
+      expect(result).to be(true)
     end
 
-    include_examples "user for testcase_name and current_username and another_username and is_equal",
-                     ["returns true for equal usernames", "john", "john", true]
-    include_examples "user for testcase_name and current_username and another_username and is_equal",
-                     ["returns false for different usernames", "john", "bill", false]
-    include_examples "user for testcase_name and current_username and another_username and is_equal",
-                     [
-                       "considers usernames that are different only in case as equal",
-                       "john",
-                       "JoHN",
-                       true,
-                     ]
+    it "returns false for different usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("bill")
+
+      expect(result).to be(false)
+    end
+
+    it "considers usernames that are different only in case as equal" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("JoHN")
+
+      expect(result).to be(true)
+    end
 
     it "considers usernames that are equal after unicode normalization as equal" do
       SiteSetting.unicode_usernames = true

@@ -408,7 +408,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       expect(Jobs::DiscourseWorkflows::RunWorkflowCall.jobs).to be_empty
     end
 
-    shared_examples "workflow call for label and wait_type and wait_configuration" do |label, wait_type, wait_configuration|
+    shared_examples "waiting for a child workflow" do |label, wait_type, wait_configuration|
       it "keeps the parent waiting while a child #{label} is waiting" do
         allow(MessageBus).to receive(:publish)
         resolved_wait_configuration =
@@ -446,7 +446,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       end
     end
 
-    include_examples "workflow call for label and wait_type and wait_configuration",
+    include_examples "waiting for a child workflow",
                      [
                        "flow wait",
                        "flow:wait",
@@ -456,9 +456,9 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
                          "wait_unit" => "seconds",
                        },
                      ]
-    include_examples "workflow call for label and wait_type and wait_configuration",
+    include_examples "waiting for a child workflow",
                      ["webhook wait", "flow:wait", { "resume" => "webhook" }]
-    include_examples "workflow call for label and wait_type and wait_configuration",
+    include_examples "waiting for a child workflow",
                      [
                        "form wait",
                        "action:form",
@@ -467,7 +467,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
                          "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
                        },
                      ]
-    include_examples "workflow call for label and wait_type and wait_configuration",
+    include_examples "waiting for a child workflow",
                      [
                        "modal wait",
                        "action:modal",

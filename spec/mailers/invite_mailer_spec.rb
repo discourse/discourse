@@ -42,17 +42,19 @@ RSpec.describe InviteMailer do
           expect(invite_mail.body.encoded).not_to include(invite.email_token)
         end
 
-        shared_examples "invite mailer for setting" do |setting|
-          it "includes the email token when #{setting} is disabled after enabling codes" do
-            SiteSetting.enable_local_logins_via_code = true
-            SiteSetting.public_send("#{setting}=", false)
+        it "includes the email token when enable_local_logins is disabled after enabling codes" do
+          SiteSetting.enable_local_logins_via_code = true
+          SiteSetting.public_send("enable_local_logins=", false)
 
-            expect(invite_mail.body.encoded).to include(invite.email_token)
-          end
+          expect(invite_mail.body.encoded).to include(invite.email_token)
         end
 
-        include_examples "invite mailer for setting", :enable_local_logins
-        include_examples "invite mailer for setting", :enable_local_logins_via_email
+        it "includes the email token when enable_local_logins_via_email is disabled after enabling codes" do
+          SiteSetting.enable_local_logins_via_code = true
+          SiteSetting.public_send("enable_local_logins_via_email=", false)
+
+          expect(invite_mail.body.encoded).to include(invite.email_token)
+        end
 
         it "includes the email token when DiscourseConnect is enabled" do
           SiteSetting.enable_local_logins_via_code = true

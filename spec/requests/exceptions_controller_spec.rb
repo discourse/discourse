@@ -45,22 +45,37 @@ RSpec.describe ExceptionsController do
         Theme.find_default.update!(color_scheme_id:, dark_color_scheme_id:)
       end
 
-      shared_examples "exceptions controller for cookie and media" do |cookie, media|
-        it "uses media=#{media.inspect} when forced_color_mode is #{cookie.inspect}" do
-          cookies[:forced_color_mode] = cookie
+      it "uses media=\"(prefers-color-scheme: dark)\" when forced_color_mode is nil" do
+        cookies[:forced_color_mode] = nil
 
-          get "/404"
+        get "/404"
 
-          expect(response.body).to have_tag("source", with: { media: })
-        end
+        expect(response.body).to have_tag("source", with: { media: "(prefers-color-scheme: dark)" })
       end
 
-      include_examples "exceptions controller for cookie and media",
-                       [nil, "(prefers-color-scheme: dark)"]
-      include_examples "exceptions controller for cookie and media",
-                       ["auto", "(prefers-color-scheme: dark)"]
-      include_examples "exceptions controller for cookie and media", %w[light none]
-      include_examples "exceptions controller for cookie and media", %w[dark all]
+      it "uses media=\"(prefers-color-scheme: dark)\" when forced_color_mode is \"auto\"" do
+        cookies[:forced_color_mode] = "auto"
+
+        get "/404"
+
+        expect(response.body).to have_tag("source", with: { media: "(prefers-color-scheme: dark)" })
+      end
+
+      it "uses media=\"none\" when forced_color_mode is \"light\"" do
+        cookies[:forced_color_mode] = "light"
+
+        get "/404"
+
+        expect(response.body).to have_tag("source", with: { media: "none" })
+      end
+
+      it "uses media=\"all\" when forced_color_mode is \"dark\"" do
+        cookies[:forced_color_mode] = "dark"
+
+        get "/404"
+
+        expect(response.body).to have_tag("source", with: { media: "all" })
+      end
     end
   end
 end

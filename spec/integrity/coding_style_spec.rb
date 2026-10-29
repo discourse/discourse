@@ -47,27 +47,26 @@ RSpec.describe "Coding style" do
   end
 
   describe "non-colocated component templates" do
-    shared_examples "coding style for name and dir" do |name, dir|
-      it "do not exist for #{name}" do
-        expect(list_files(dir)).to eq([])
-      end
+    it "do not exist for discourse" do
+      expect(list_files("frontend/discourse/app/templates/components")).to eq([])
     end
 
-    include_examples "coding style for name and dir",
-                     %w[discourse frontend/discourse/app/templates/components]
-    include_examples "coding style for name and dir",
-                     %w[admin frontend/admin/addon/templates/components]
-    include_examples "coding style for name and dir",
-                     %w[
-                       chat/discourse
-                       plugins/chat/assets/javascripts/discourse/templates/components
-                     ]
-    include_examples "coding style for name and dir",
-                     %w[chat/admin plugins/chat/assets/javascripts/admin/templates/components]
-    include_examples "coding style for name and dir",
-                     %w[
-                       styleguide
-                       plugins/styleguide/assets/javascripts/discourse/templates/components
-                     ]
+    it "do not exist for admin" do
+      expect(list_files("frontend/admin/addon/templates/components")).to eq([])
+    end
+
+    it "do not exist for chat/discourse" do
+      expect(list_files("plugins/chat/assets/javascripts/discourse/templates/components")).to eq([])
+    end
+
+    it "do not exist for chat/admin" do
+      expect(list_files("plugins/chat/assets/javascripts/admin/templates/components")).to eq([])
+    end
+
+    it "do not exist for styleguide" do
+      expect(
+        list_files("plugins/styleguide/assets/javascripts/discourse/templates/components"),
+      ).to eq([])
+    end
   end
 end

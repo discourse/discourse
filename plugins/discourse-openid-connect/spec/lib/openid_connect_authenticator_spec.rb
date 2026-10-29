@@ -45,21 +45,45 @@ describe OpenIDConnectAuthenticator do
   context "when the fallback is true and email_verified is supplied" do
     before { SiteSetting.openid_connect_email_verified_claim_fallback = true }
 
-    shared_examples "openid connect authenticator for claim and verified" do |claim, verified|
-      it "uses the supplied #{claim.inspect} value instead of the fallback" do
-        hash[:extra][:raw_info][:email_verified] = claim
-        result = authenticator.after_authenticate(hash)
+    it "uses the supplied true value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = true
+      result = authenticator.after_authenticate(hash)
 
-        expect(result.email_valid).to eq(verified)
-        expect(result.user).to eq(verified ? user : nil)
-      end
+      expect(result.email_valid).to eq(true)
+      expect(result.user).to eq(true ? user : nil)
     end
 
-    include_examples "openid connect authenticator for claim and verified", [true, true]
-    include_examples "openid connect authenticator for claim and verified", ["true", true]
-    include_examples "openid connect authenticator for claim and verified", ["True", true]
-    include_examples "openid connect authenticator for claim and verified", [false, false]
-    include_examples "openid connect authenticator for claim and verified", ["false", false]
+    it "uses the supplied \"true\" value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = "true"
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(true)
+      expect(result.user).to eq(true ? user : nil)
+    end
+
+    it "uses the supplied \"True\" value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = "True"
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(true)
+      expect(result.user).to eq(true ? user : nil)
+    end
+
+    it "uses the supplied false value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = false
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(false)
+      expect(result.user).to eq(false ? user : nil)
+    end
+
+    it "uses the supplied \"false\" value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = "false"
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(false)
+      expect(result.user).to eq(false ? user : nil)
+    end
   end
 
   context "when email_verified is true" do

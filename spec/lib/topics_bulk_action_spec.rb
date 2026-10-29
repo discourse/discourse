@@ -160,22 +160,29 @@ RSpec.describe TopicsBulkAction do
     fab!(:group) { Fabricate(:group).tap { |group| group.add(user) } }
     fab!(:private_message) { Fabricate(:private_message_topic, user: user, recipient: other_user) }
 
-    shared_examples "topics bulk action for operation" do |operation|
-      it "rejects #{operation} when the selected group is not a message recipient" do
-        topic_ids =
-          TopicsBulkAction.new(
-            user,
-            [private_message.id],
-            { type: operation },
-            group: group.name,
-          ).perform!
+    it "rejects archive_messages when the selected group is not a message recipient" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [private_message.id],
+          { type: "archive_messages" },
+          group: group.name,
+        ).perform!
 
-        expect(topic_ids).to be_empty
-      end
+      expect(topic_ids).to be_empty
     end
 
-    include_examples "topics bulk action for operation", "archive_messages"
-    include_examples "topics bulk action for operation", "move_messages_to_inbox"
+    it "rejects move_messages_to_inbox when the selected group is not a message recipient" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [private_message.id],
+          { type: "move_messages_to_inbox" },
+          group: group.name,
+        ).perform!
+
+      expect(topic_ids).to be_empty
+    end
   end
 
   describe "change_category" do
@@ -568,23 +575,38 @@ RSpec.describe TopicsBulkAction do
       expect(TopicUser.get(topic, topic.user)).to be_blank
     end
 
-    shared_examples "topics bulk action for invalid_value" do |invalid_value|
-      it "raises error when notification_level_id is #{invalid_value.inspect}" do
-        options = { type: "change_notification_level" }
-        options[:notification_level_id] = invalid_value unless invalid_value == :missing
+    it "raises error when notification_level_id is \"\"" do
+      options = { type: "change_notification_level" }
+      options[:notification_level_id] = "" unless "" == :missing
 
-        expect do
-          TopicsBulkAction.new(topic.user, [topic.id], **options).perform!
-        end.to raise_error(Discourse::InvalidParameters, /notification_level_id/)
-      end
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
     end
 
-    include_examples "topics bulk action for invalid_value", ""
-    include_examples "topics bulk action for invalid_value", nil
-    include_examples "topics bulk action for invalid_value", :missing
+    it "raises error when notification_level_id is nil" do
+      options = { type: "change_notification_level" }
+      options[:notification_level_id] = nil unless nil == :missing
+
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
+
+    it "raises error when notification_level_id is :missing" do
+      options = { type: "change_notification_level" }
+      options[:notification_level_id] = :missing unless :missing == :missing
+
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
   end
 
-  shared_examples "topics bulk action for action" do |action|
+  shared_examples "moderating topics in bulk" do |action|
     describe action do
       it "#{action}s topic when user can moderate" do
         Guardian.any_instance.expects(:can_moderate?).returns(true)
@@ -623,9 +645,9 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
-  include_examples "topics bulk action for action", "close"
-  include_examples "topics bulk action for action", "archive"
-  include_examples "topics bulk action for action", "unlist"
+  include_examples "moderating topics in bulk", "close"
+  include_examples "moderating topics in bulk", "archive"
+  include_examples "moderating topics in bulk", "unlist"
 
   describe "reset_bump_dates" do
     it "resets bump date when user can update" do

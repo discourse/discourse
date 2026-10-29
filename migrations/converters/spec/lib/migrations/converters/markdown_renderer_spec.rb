@@ -128,39 +128,30 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     # (deferrable) label and the fence lands as a sibling block in the raw. Only
     # code that is inline to begin with (`[tt]`, or a Code node with no `block`
     # flag) can stay in a label; the unit test further down covers that.
-    shared_examples "markdown renderer for label and bbcode and fence" do |label, (bbcode, fence)|
-      it "hoists #{label} code out of a link label instead of deferring it into text" do
-        raw = link_renderer.to_markdown(bbcode)
 
-        expect(buffer.links).to contain_exactly(
-          hash_including(url: "https://example.com", text: nil),
-        )
-        expect(raw).to include(buffer.links.first[:placeholder])
-        expect(raw).to include(fence)
-      end
+    it "hoists single-line, with a language code out of a link label instead of deferring it into text" do
+      raw = link_renderer.to_markdown("[url=https://example.com][code=ruby]x = 1[/code][/url]")
+
+      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
+      expect(raw).to include(buffer.links.first[:placeholder])
+      expect(raw).to include("```ruby\nx = 1\n```")
     end
 
-    include_examples "markdown renderer for label and bbcode and fence",
-                     [
-                       "single-line, with a language",
-                       [
-                         "[url=https://example.com][code=ruby]x = 1[/code][/url]",
-                         "```ruby\nx = 1\n```",
-                       ],
-                     ]
-    include_examples "markdown renderer for label and bbcode and fence",
-                     [
-                       "single-line, no language",
-                       ["[url=https://example.com][code]x = 1[/code][/url]", "```\nx = 1\n```"],
-                     ]
-    include_examples "markdown renderer for label and bbcode and fence",
-                     [
-                       "multi-line",
-                       [
-                         "[url=https://example.com][code=ruby]a\nb[/code][/url]",
-                         "```ruby\na\nb\n```",
-                       ],
-                     ]
+    it "hoists single-line, no language code out of a link label instead of deferring it into text" do
+      raw = link_renderer.to_markdown("[url=https://example.com][code]x = 1[/code][/url]")
+
+      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
+      expect(raw).to include(buffer.links.first[:placeholder])
+      expect(raw).to include("```\nx = 1\n```")
+    end
+
+    it "hoists multi-line code out of a link label instead of deferring it into text" do
+      raw = link_renderer.to_markdown("[url=https://example.com][code=ruby]a\nb[/code][/url]")
+
+      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
+      expect(raw).to include(buffer.links.first[:placeholder])
+      expect(raw).to include("```ruby\na\nb\n```")
+    end
 
     it "defers a link whose quote label the normalizer hoisted out" do
       # Markbridge's normalizer pulls the quote out of the link before we

@@ -77,20 +77,52 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
 
   include_context "an engine", urltype: :short
 
-  shared_examples "google maps onebox for kind and t" do |kind, t|
-    it "processes #{kind} url correctly", urltype: kind do
-      expect(onebox.url).to eq t[:expect]
-      expect(onebox.streetview?).to t[:streetview] ? be_truthy : be_falsey
-      expect(onebox.to_html).to include("<iframe")
-      expect(onebox.placeholder_html).to include("placeholder-icon map")
-    end
+  it "processes short url correctly", urltype: :short do
+    expect(onebox.url).to eq URLS.fetch(:short)[:expect]
+    expect(onebox.streetview?).to URLS.fetch(:short)[:streetview] ? be_truthy : be_falsey
+    expect(onebox.to_html).to include("<iframe")
+    expect(onebox.placeholder_html).to include("placeholder-icon map")
   end
 
-  include_examples "google maps onebox for kind and t", [:short, URLS.fetch(:short)]
-  include_examples "google maps onebox for kind and t", [:long, URLS.fetch(:long)]
-  include_examples "google maps onebox for kind and t", [:canonical, URLS.fetch(:canonical)]
-  include_examples "google maps onebox for kind and t", [:custom, URLS.fetch(:custom)]
-  include_examples "google maps onebox for kind and t", [:streetview, URLS.fetch(:streetview)]
-  include_examples "google maps onebox for kind and t", [:unresolveable, URLS.fetch(:unresolveable)]
-  include_examples "google maps onebox for kind and t", [:satellite, URLS.fetch(:satellite)]
+  it "processes long url correctly", urltype: :long do
+    expect(onebox.url).to eq URLS.fetch(:long)[:expect]
+    expect(onebox.streetview?).to URLS.fetch(:long)[:streetview] ? be_truthy : be_falsey
+    expect(onebox.to_html).to include("<iframe")
+    expect(onebox.placeholder_html).to include("placeholder-icon map")
+  end
+
+  it "processes canonical url correctly", urltype: :canonical do
+    expect(onebox.url).to eq URLS.fetch(:canonical)[:expect]
+    expect(onebox.streetview?).to URLS.fetch(:canonical)[:streetview] ? be_truthy : be_falsey
+    expect(onebox.to_html).to include("<iframe")
+    expect(onebox.placeholder_html).to include("placeholder-icon map")
+  end
+
+  it "processes custom url correctly", urltype: :custom do
+    expect(onebox.url).to eq URLS.fetch(:custom)[:expect]
+    expect(onebox.streetview?).to URLS.fetch(:custom)[:streetview] ? be_truthy : be_falsey
+    expect(onebox.to_html).to include("<iframe")
+    expect(onebox.placeholder_html).to include("placeholder-icon map")
+  end
+
+  it "processes streetview url correctly", urltype: :streetview do
+    expect(onebox.url).to eq URLS.fetch(:streetview)[:expect]
+    expect(onebox.streetview?).to URLS.fetch(:streetview)[:streetview] ? be_truthy : be_falsey
+    expect(onebox.to_html).to include("<iframe")
+    expect(onebox.placeholder_html).to include("placeholder-icon map")
+  end
+
+  it "processes unresolveable url correctly", urltype: :unresolveable do
+    expect(onebox.url).to eq URLS.fetch(:unresolveable)[:expect]
+    expect(onebox.streetview?).to URLS.fetch(:unresolveable)[:streetview] ? be_truthy : be_falsey
+    expect(onebox.to_html).to include("<iframe")
+    expect(onebox.placeholder_html).to include("placeholder-icon map")
+  end
+
+  it "processes satellite url correctly", urltype: :satellite do
+    expect(onebox.url).to eq URLS.fetch(:satellite)[:expect]
+    expect(onebox.streetview?).to URLS.fetch(:satellite)[:streetview] ? be_truthy : be_falsey
+    expect(onebox.to_html).to include("<iframe")
+    expect(onebox.placeholder_html).to include("placeholder-icon map")
+  end
 end

@@ -760,29 +760,73 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      shared_examples "new user narrative for raw" do |raw|
-        it "acknowledges the formatting and starts the quoting tutorial" do
-          post.update!(raw: raw)
+      it "acknowledges Markdown bold formatting and starts the quoting tutorial" do
+        post.update!(raw: "**bold**")
 
-          narrative.expects(:enqueue_timeout_job).with(user)
-          narrative.input(:reply, user, post: post)
-          new_post = Post.last
+        narrative.expects(:enqueue_timeout_job).with(user)
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
 
-          expected_raw = <<~RAW
-            #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
+        expected_raw = <<~RAW
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
 
-            #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
-          RAW
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
+        RAW
 
-          expect(new_post.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
-        end
+        expect(new_post.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
       end
 
-      include_examples "new user narrative for raw", "**bold**"
-      include_examples "new user narrative for raw", "__italic__"
-      include_examples "new user narrative for raw", "[b]bold[/b]"
-      include_examples "new user narrative for raw", "[i]italic[/i]"
+      it "acknowledges double underscore formatting and starts the quoting tutorial" do
+        post.update!(raw: "__italic__")
+
+        narrative.expects(:enqueue_timeout_job).with(user)
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expected_raw = <<~RAW
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
+
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
+        RAW
+
+        expect(new_post.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+      end
+
+      it "acknowledges BBCode bold formatting and starts the quoting tutorial" do
+        post.update!(raw: "[b]bold[/b]")
+
+        narrative.expects(:enqueue_timeout_job).with(user)
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expected_raw = <<~RAW
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
+
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
+        RAW
+
+        expect(new_post.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+      end
+
+      it "acknowledges BBCode italic formatting and starts the quoting tutorial" do
+        post.update!(raw: "[i]italic[/i]")
+
+        narrative.expects(:enqueue_timeout_job).with(user)
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expected_raw = <<~RAW
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.formatting.reply", base_uri: "")}
+
+          #{I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: "")}
+        RAW
+
+        expect(new_post.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
+      end
     end
 
     describe "quote tutorial" do

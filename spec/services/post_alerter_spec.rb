@@ -1016,20 +1016,32 @@ RSpec.describe PostAlerter do
     context "with topic" do
       fab!(:topic) { Fabricate(:topic, user: alice) }
 
-      shared_examples "post alerter for notification_level" do |notification_level|
-        context "when notification level is '#{notification_level}'" do
-          before { set_topic_notification_level(alice, topic, notification_level) }
+      context "when notification level is 'watching'" do
+        before { set_topic_notification_level(alice, topic, :watching) }
 
-          it "notifies about @username mention" do
-            args = { user: bob, topic: topic, raw: "Hello @alice" }
-            expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
-          end
+        it "notifies about @username mention" do
+          args = { user: bob, topic: topic, raw: "Hello @alice" }
+          expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
         end
       end
 
-      include_examples "post alerter for notification_level", :watching
-      include_examples "post alerter for notification_level", :tracking
-      include_examples "post alerter for notification_level", :regular
+      context "when notification level is 'tracking'" do
+        before { set_topic_notification_level(alice, topic, :tracking) }
+
+        it "notifies about @username mention" do
+          args = { user: bob, topic: topic, raw: "Hello @alice" }
+          expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+        end
+      end
+
+      context "when notification level is 'regular'" do
+        before { set_topic_notification_level(alice, topic, :regular) }
+
+        it "notifies about @username mention" do
+          args = { user: bob, topic: topic, raw: "Hello @alice" }
+          expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+        end
+      end
 
       context "when notification level is 'muted'" do
         before { set_topic_notification_level(alice, topic, :muted) }
@@ -1055,7 +1067,7 @@ RSpec.describe PostAlerter do
       end
 
       context "when user is part of conversation" do
-        shared_examples "post alerter for notification_level (2)" do |notification_level|
+        shared_examples "private message username mention notifications" do |notification_level|
           context "when notification level is '#{notification_level}'" do
             before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
@@ -1086,9 +1098,9 @@ RSpec.describe PostAlerter do
           end
         end
 
-        include_examples "post alerter for notification_level (2)", :watching
-        include_examples "post alerter for notification_level (2)", :tracking
-        include_examples "post alerter for notification_level (2)", :regular
+        include_examples "private message username mention notifications", :watching
+        include_examples "private message username mention notifications", :tracking
+        include_examples "private message username mention notifications", :regular
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }
@@ -1139,7 +1151,7 @@ RSpec.describe PostAlerter do
       before { some_group.bulk_add([alice.id, carol.id]) }
 
       context "when group is part of conversation" do
-        shared_examples "post alerter for notification_level (3)" do |notification_level|
+        shared_examples "private message group mention notifications" do |notification_level|
           context "when notification level is '#{notification_level}'" do
             before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
@@ -1160,9 +1172,9 @@ RSpec.describe PostAlerter do
           end
         end
 
-        include_examples "post alerter for notification_level (3)", :watching
-        include_examples "post alerter for notification_level (3)", :tracking
-        include_examples "post alerter for notification_level (3)", :regular
+        include_examples "private message group mention notifications", :watching
+        include_examples "private message group mention notifications", :tracking
+        include_examples "private message group mention notifications", :regular
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }

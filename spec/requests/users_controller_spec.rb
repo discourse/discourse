@@ -4493,20 +4493,25 @@ RSpec.describe UsersController do
         SiteSetting.selectable_avatars_mode = "no_one"
       end
 
-      shared_examples "users controller for setting" do |setting|
-        it "rejects preset selection when #{setting} is enabled" do
-          SiteSetting.public_send("#{setting}=", true)
-          user1.update!(uploaded_avatar_id: avatar2.id)
+      it "rejects preset selection when auth_overrides_avatar is enabled" do
+        SiteSetting.public_send("auth_overrides_avatar=", true)
+        user1.update!(uploaded_avatar_id: avatar2.id)
 
-          put "/u/#{user1.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+        put "/u/#{user1.username}/preferences/avatar/select.json", params: { url: avatar1.url }
 
-          expect(response).to be_unprocessable
-          expect(user1.reload.uploaded_avatar_id).to eq(avatar2.id)
-        end
+        expect(response).to be_unprocessable
+        expect(user1.reload.uploaded_avatar_id).to eq(avatar2.id)
       end
 
-      include_examples "users controller for setting", :auth_overrides_avatar
-      include_examples "users controller for setting", :discourse_connect_overrides_avatar
+      it "rejects preset selection when discourse_connect_overrides_avatar is enabled" do
+        SiteSetting.public_send("discourse_connect_overrides_avatar=", true)
+        user1.update!(uploaded_avatar_id: avatar2.id)
+
+        put "/u/#{user1.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+
+        expect(response).to be_unprocessable
+        expect(user1.reload.uploaded_avatar_id).to eq(avatar2.id)
+      end
 
       it "raises an error when url is blank" do
         put "/u/#{user1.username}/preferences/avatar/select.json", params: { url: "" }

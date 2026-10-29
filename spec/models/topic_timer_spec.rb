@@ -149,16 +149,20 @@ RSpec.describe TopicTimer, type: :model do
     end
 
     describe "#public_type" do
-      shared_examples "topic timer for public_type" do |public_type|
-        it "is true for #{public_type}" do
-          timer = Fabricate(:topic_timer, status_type: described_class.types[public_type])
-          expect(timer.public_type).to eq(true)
-        end
+      it "is true for close" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:close])
+        expect(timer.public_type).to eq(true)
       end
 
-      include_examples "topic timer for public_type", :close
-      include_examples "topic timer for public_type", :open
-      include_examples "topic timer for public_type", :delete
+      it "is true for open" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:open])
+        expect(timer.public_type).to eq(true)
+      end
+
+      it "is true for delete" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:delete])
+        expect(timer.public_type).to eq(true)
+      end
 
       it "is true for publish_to_category" do
         timer =
@@ -170,15 +174,15 @@ RSpec.describe TopicTimer, type: :model do
         expect(timer.public_type).to eq(true)
       end
 
-      shared_examples "topic timer for private_type" do |private_type|
-        it "is false for #{private_type}" do
-          timer = Fabricate(:topic_timer, status_type: described_class.types[private_type])
-          expect(timer.public_type).to be_falsey
-        end
+      it "is false for reminder" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:reminder])
+        expect(timer.public_type).to be_falsey
       end
 
-      include_examples "topic timer for private_type", :reminder
-      include_examples "topic timer for private_type", :clear_slow_mode
+      it "is false for clear_slow_mode" do
+        timer = Fabricate(:topic_timer, status_type: described_class.types[:clear_slow_mode])
+        expect(timer.public_type).to be_falsey
+      end
     end
   end
 

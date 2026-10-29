@@ -46,16 +46,17 @@ RSpec.describe DiscourseWorkflows::Credential::Create do
     end
 
     context "when data is not a hash" do
-      shared_examples "create for non_hash" do |non_hash|
-        context "with #{non_hash.class}" do
-          let(:params) { super().merge(data: non_hash) }
+      context "with #{"not-a-hash".class}" do
+        let(:params) { super().merge(data: "not-a-hash") }
 
-          it { is_expected.to fail_a_contract }
-        end
+        it { is_expected.to fail_a_contract }
       end
 
-      include_examples "create for non_hash", "not-a-hash"
-      include_examples "create for non_hash", %w[foo bar]
+      context "with #{%w[foo bar].class}" do
+        let(:params) { super().merge(data: %w[foo bar]) }
+
+        it { is_expected.to fail_a_contract }
+      end
     end
 
     context "when data is missing a required field" do

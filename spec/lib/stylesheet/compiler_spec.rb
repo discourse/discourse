@@ -4,33 +4,55 @@ require "stylesheet/compiler"
 
 RSpec.describe Stylesheet::Compiler do
   describe "compilation" do
-    shared_examples "compiler for path" do |path|
-      path = File.basename(path, ".scss")
-
-      # mobile and desktop scss files are intentionally empty stubs
-      next if path.start_with?("mobile", "desktop")
-
-      it "can compile '#{path}' css" do
-        css, _map = Stylesheet::Compiler.compile_asset(path)
-        expect(css.length).to be > 500
-      end
+    it "can compile 'admin' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("admin")
+      expect(css.length).to be > 500
     end
 
-    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/admin.scss").to_s
-    include_examples "compiler for path",
-                     Rails.root.join("app/assets/stylesheets/admin_rtl.scss").to_s
-    include_examples "compiler for path",
-                     Rails.root.join("app/assets/stylesheets/color_definitions.scss").to_s
-    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/common.scss").to_s
-    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/embed.scss").to_s
-    include_examples "compiler for path",
-                     Rails.root.join("app/assets/stylesheets/publish.scss").to_s
-    include_examples "compiler for path",
-                     Rails.root.join("app/assets/stylesheets/qunit-custom.scss").to_s
-    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/wcag.scss").to_s
-    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/wizard.scss").to_s
-    include_examples "compiler for path",
-                     Rails.root.join("app/assets/stylesheets/wizard_rtl.scss").to_s
+    it "can compile 'admin_rtl' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("admin_rtl")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'color_definitions' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("color_definitions")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'common' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("common")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'embed' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("embed")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'publish' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("publish")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'qunit-custom' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("qunit-custom")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'wcag' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("wcag")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'wizard' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("wizard")
+      expect(css.length).to be > 500
+    end
+
+    it "can compile 'wizard_rtl' css" do
+      css, _map = Stylesheet::Compiler.compile_asset("wizard_rtl")
+      expect(css.length).to be > 500
+    end
   end
 
   context "with a theme" do

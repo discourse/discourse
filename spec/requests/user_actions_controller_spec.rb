@@ -142,18 +142,25 @@ RSpec.describe UserActionsController do
         end
 
         context "when user is anonymous" do
-          shared_examples "user actions controller for action_type" do |action_type|
-            action_name = UserAction.types.key(action_type)
-            it "cannot list other users' actions of type: #{action_name}" do
-              list_and_check(action_type, 404)
-            end
+          it "cannot list other users' actions of type: was_liked" do
+            list_and_check(UserAction.types[:was_liked], 404)
           end
 
-          include_examples "user actions controller for action_type", UserAction.types[:was_liked]
-          include_examples "user actions controller for action_type", UserAction.types[:response]
-          include_examples "user actions controller for action_type", UserAction.types[:mention]
-          include_examples "user actions controller for action_type", UserAction.types[:quote]
-          include_examples "user actions controller for action_type", UserAction.types[:edit]
+          it "cannot list other users' actions of type: response" do
+            list_and_check(UserAction.types[:response], 404)
+          end
+
+          it "cannot list other users' actions of type: mention" do
+            list_and_check(UserAction.types[:mention], 404)
+          end
+
+          it "cannot list other users' actions of type: quote" do
+            list_and_check(UserAction.types[:quote], 404)
+          end
+
+          it "cannot list other users' actions of type: edit" do
+            list_and_check(UserAction.types[:edit], 404)
+          end
         end
 
         context "when user is logged in" do
@@ -161,20 +168,25 @@ RSpec.describe UserActionsController do
 
           before { sign_in(user) }
 
-          shared_examples "user actions controller for action_type (2)" do |action_type|
-            action_name = UserAction.types.key(action_type)
-            it "cannot list other users' actions of type: #{action_name}" do
-              list_and_check(action_type, 404)
-            end
+          it "cannot list other users' actions of type: was_liked" do
+            list_and_check(UserAction.types[:was_liked], 404)
           end
 
-          include_examples "user actions controller for action_type (2)",
-                           UserAction.types[:was_liked]
-          include_examples "user actions controller for action_type (2)",
-                           UserAction.types[:response]
-          include_examples "user actions controller for action_type (2)", UserAction.types[:mention]
-          include_examples "user actions controller for action_type (2)", UserAction.types[:quote]
-          include_examples "user actions controller for action_type (2)", UserAction.types[:edit]
+          it "cannot list other users' actions of type: response" do
+            list_and_check(UserAction.types[:response], 404)
+          end
+
+          it "cannot list other users' actions of type: mention" do
+            list_and_check(UserAction.types[:mention], 404)
+          end
+
+          it "cannot list other users' actions of type: quote" do
+            list_and_check(UserAction.types[:quote], 404)
+          end
+
+          it "cannot list other users' actions of type: edit" do
+            list_and_check(UserAction.types[:edit], 404)
+          end
         end
 
         context "when user is a moderator" do
@@ -182,20 +194,25 @@ RSpec.describe UserActionsController do
 
           before { sign_in(moderator) }
 
-          shared_examples "user actions controller for action_type (3)" do |action_type|
-            action_name = UserAction.types.key(action_type)
-            it "cannot list other users' actions of type: #{action_name}" do
-              list_and_check(action_type, 404)
-            end
+          it "cannot list other users' actions of type: was_liked" do
+            list_and_check(UserAction.types[:was_liked], 404)
           end
 
-          include_examples "user actions controller for action_type (3)",
-                           UserAction.types[:was_liked]
-          include_examples "user actions controller for action_type (3)",
-                           UserAction.types[:response]
-          include_examples "user actions controller for action_type (3)", UserAction.types[:mention]
-          include_examples "user actions controller for action_type (3)", UserAction.types[:quote]
-          include_examples "user actions controller for action_type (3)", UserAction.types[:edit]
+          it "cannot list other users' actions of type: response" do
+            list_and_check(UserAction.types[:response], 404)
+          end
+
+          it "cannot list other users' actions of type: mention" do
+            list_and_check(UserAction.types[:mention], 404)
+          end
+
+          it "cannot list other users' actions of type: quote" do
+            list_and_check(UserAction.types[:quote], 404)
+          end
+
+          it "cannot list other users' actions of type: edit" do
+            list_and_check(UserAction.types[:edit], 404)
+          end
         end
 
         context "when user is an admin" do
@@ -203,20 +220,25 @@ RSpec.describe UserActionsController do
 
           before { sign_in(admin) }
 
-          shared_examples "user actions controller for action_type (4)" do |action_type|
-            action_name = UserAction.types.key(action_type)
-            it "can list other users' actions of type: #{action_name}" do
-              list_and_check(action_type, 200)
-            end
+          it "can list other users' actions of type: was_liked" do
+            list_and_check(UserAction.types[:was_liked], 200)
           end
 
-          include_examples "user actions controller for action_type (4)",
-                           UserAction.types[:was_liked]
-          include_examples "user actions controller for action_type (4)",
-                           UserAction.types[:response]
-          include_examples "user actions controller for action_type (4)", UserAction.types[:mention]
-          include_examples "user actions controller for action_type (4)", UserAction.types[:quote]
-          include_examples "user actions controller for action_type (4)", UserAction.types[:edit]
+          it "can list other users' actions of type: response" do
+            list_and_check(UserAction.types[:response], 200)
+          end
+
+          it "can list other users' actions of type: mention" do
+            list_and_check(UserAction.types[:mention], 200)
+          end
+
+          it "can list other users' actions of type: quote" do
+            list_and_check(UserAction.types[:quote], 200)
+          end
+
+          it "can list other users' actions of type: edit" do
+            list_and_check(UserAction.types[:edit], 200)
+          end
         end
 
         def list_and_check(action_type, expected_response)
@@ -235,21 +257,41 @@ RSpec.describe UserActionsController do
         let(:offset) { "0" }
         let(:limit) { "10" }
 
-        shared_examples "user actions controller for parameter" do |parameter|
-          context "when providing bad data for '#{parameter}'" do
-            let(parameter) { { bad: "data" } }
+        context "when providing bad data for 'filter'" do
+          let(:filter) { { bad: "data" } }
 
-            it "doesn't raise an error" do
-              user_actions
-              expect(response).not_to have_http_status :error
-            end
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
           end
         end
 
-        include_examples "user actions controller for parameter", :filter
-        include_examples "user actions controller for parameter", :username
-        include_examples "user actions controller for parameter", :offset
-        include_examples "user actions controller for parameter", :limit
+        context "when providing bad data for 'username'" do
+          let(:username) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
+
+        context "when providing bad data for 'offset'" do
+          let(:offset) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
+
+        context "when providing bad data for 'limit'" do
+          let(:limit) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
       end
     end
   end

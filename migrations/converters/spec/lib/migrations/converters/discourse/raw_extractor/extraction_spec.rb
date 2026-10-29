@@ -260,22 +260,52 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
     let(:internal_link_hosts) { { source_host => nil } }
 
-    shared_examples "extraction for raw" do |raw|
-      it "leaves a mention inside #{raw} alone" do
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.mentions).to be_empty
-      end
+    it "leaves a mention inside [link](https://external.com/@bob) alone" do
+      expect(extract("[link](https://external.com/@bob)")).to eq(
+        "[link](https://external.com/@bob)",
+      )
+      expect(buffer.mentions).to be_empty
     end
 
-    include_examples "extraction for raw", "[link](https://external.com/@bob)"
-    include_examples "extraction for raw", "see https://external.com/x/@bob now"
-    include_examples "extraction for raw", "<https://external.com/@bob>"
-    include_examples "extraction for raw", "https://external.com/?a=1&t=@bob"
-    include_examples "extraction for raw", "[hi @bob](https://external.com/)"
-    include_examples "extraction for raw", "![alt @bob](https://external.com/p.png)"
-    include_examples "extraction for raw", "//external.com/@bob"
+    it "leaves a mention inside see https://external.com/x/@bob now alone" do
+      expect(extract("see https://external.com/x/@bob now")).to eq(
+        "see https://external.com/x/@bob now",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention inside <https://external.com/@bob> alone" do
+      expect(extract("<https://external.com/@bob>")).to eq("<https://external.com/@bob>")
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention inside https://external.com/?a=1&t=@bob alone" do
+      expect(extract("https://external.com/?a=1&t=@bob")).to eq("https://external.com/?a=1&t=@bob")
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention inside [hi @bob](https://external.com/) alone" do
+      expect(extract("[hi @bob](https://external.com/)")).to eq("[hi @bob](https://external.com/)")
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention inside ![alt @bob](https://external.com/p.png) alone" do
+      expect(extract("![alt @bob](https://external.com/p.png)")).to eq(
+        "![alt @bob](https://external.com/p.png)",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention inside //external.com/@bob alone" do
+      expect(extract("//external.com/@bob")).to eq("//external.com/@bob")
+      expect(buffer.mentions).to be_empty
+    end
+
     # `_` is a linkify boundary, so core links this one too.
-    include_examples "extraction for raw", "x_https://external.com/@bob"
+    it "leaves a mention inside x_https://external.com/@bob alone" do
+      expect(extract("x_https://external.com/@bob")).to eq("x_https://external.com/@bob")
+      expect(buffer.mentions).to be_empty
+    end
 
     it "leaves a hashtag inside a link alone" do
       raw = "see https://external.com/x/#general now"
@@ -286,27 +316,84 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # A destination may be followed by a title, and padded, and wrapped in angle
     # brackets. Core cooks all of these as links, so nothing inside them counts.
-    shared_examples "extraction for raw (2)" do |raw|
-      it "leaves a mention alone in #{raw.inspect}" do
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.mentions).to be_empty
-      end
+
+    it "leaves a mention alone in \"[x](https://external.com/@bob \\\"title\\\")\"" do
+      expect(extract("[x](https://external.com/@bob \"title\")")).to eq(
+        "[x](https://external.com/@bob \"title\")",
+      )
+      expect(buffer.mentions).to be_empty
     end
 
-    include_examples "extraction for raw (2)", "[x](https://external.com/@bob \"title\")"
-    include_examples "extraction for raw (2)", "[x](https://external.com/@bob 'title')"
-    include_examples "extraction for raw (2)", "[x](https://external.com/@bob (title))"
-    include_examples "extraction for raw (2)", "[x](<https://external.com/@bob> \"title\")"
-    include_examples "extraction for raw (2)", "[x](https://external.com/@bob   )"
-    include_examples "extraction for raw (2)", "[x](   https://external.com/@bob   )"
-    include_examples "extraction for raw (2)", "[x](https://external.com/@bob\n\"title\")"
-    include_examples "extraction for raw (2)", "![a](https://external.com/@bob/p.png \"t\")"
+    it "leaves a mention alone in \"[x](https://external.com/@bob 'title')\"" do
+      expect(extract("[x](https://external.com/@bob 'title')")).to eq(
+        "[x](https://external.com/@bob 'title')",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention alone in \"[x](https://external.com/@bob (title))\"" do
+      expect(extract("[x](https://external.com/@bob (title))")).to eq(
+        "[x](https://external.com/@bob (title))",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention alone in \"[x](<https://external.com/@bob> \\\"title\\\")\"" do
+      expect(extract("[x](<https://external.com/@bob> \"title\")")).to eq(
+        "[x](<https://external.com/@bob> \"title\")",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention alone in \"[x](https://external.com/@bob   )\"" do
+      expect(extract("[x](https://external.com/@bob   )")).to eq(
+        "[x](https://external.com/@bob   )",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention alone in \"[x](   https://external.com/@bob   )\"" do
+      expect(extract("[x](   https://external.com/@bob   )")).to eq(
+        "[x](   https://external.com/@bob   )",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention alone in \"[x](https://external.com/@bob\\n\\\"title\\\")\"" do
+      expect(extract("[x](https://external.com/@bob\n\"title\")")).to eq(
+        "[x](https://external.com/@bob\n\"title\")",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention alone in \"![a](https://external.com/@bob/p.png \\\"t\\\")\"" do
+      expect(extract("![a](https://external.com/@bob/p.png \"t\")")).to eq(
+        "![a](https://external.com/@bob/p.png \"t\")",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
     # The title itself is an attribute, never text.
-    include_examples "extraction for raw (2)", "[x](/some/path \"@bob title\")"
+    it "leaves a mention alone in \"[x](/some/path \\\"@bob title\\\")\"" do
+      expect(extract("[x](/some/path \"@bob title\")")).to eq("[x](/some/path \"@bob title\")")
+      expect(buffer.mentions).to be_empty
+    end
+
     # Malformed enough that core builds no markdown link — but then linkify
     # takes the destination, so the mention is still inside a link.
-    include_examples "extraction for raw (2)", "[x](https://external.com/@bob \"unclosed)"
-    include_examples "extraction for raw (2)", "[x](https://external.com/@bob extra \"t\")"
+    it "leaves a mention alone in \"[x](https://external.com/@bob \\\"unclosed)\"" do
+      expect(extract("[x](https://external.com/@bob \"unclosed)")).to eq(
+        "[x](https://external.com/@bob \"unclosed)",
+      )
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "leaves a mention alone in \"[x](https://external.com/@bob extra \\\"t\\\")\"" do
+      expect(extract("[x](https://external.com/@bob extra \"t\")")).to eq(
+        "[x](https://external.com/@bob extra \"t\")",
+      )
+      expect(buffer.mentions).to be_empty
+    end
 
     # Core builds no link here and does not linkify anything, so the mention is
     # ordinary text and must still be deferred.

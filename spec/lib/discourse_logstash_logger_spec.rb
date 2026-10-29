@@ -113,31 +113,117 @@ RSpec.describe DiscourseLogstashLogger do
         expect(parsed["exception.message"]).to eq("some error message\n\nsomething else")
       end
 
-      shared_examples "discourse logstash logger for header" do |header|
-        it "includes `#{header}` from `env` keyword argument in the logged JSON string" do
-          logger.add(
-            Logger::ERROR,
-            lograge_logstash_formatter_formatted_message,
-            "web-exception",
-            env: {
-              header => "header",
-            },
-          )
+      it "includes `REQUEST_URI` from `env` keyword argument in the logged JSON string" do
+        logger.add(
+          Logger::ERROR,
+          lograge_logstash_formatter_formatted_message,
+          "web-exception",
+          env: {
+            "REQUEST_URI" => "header",
+          },
+        )
 
-          output.rewind
-          parsed = JSON.parse(output.read.chomp)
+        output.rewind
+        parsed = JSON.parse(output.read.chomp)
 
-          expect(parsed["request.headers.#{header.downcase}"]).to eq("header")
-        end
+        expect(parsed["request.headers.request_uri"]).to eq("header")
       end
 
-      include_examples "discourse logstash logger for header", "REQUEST_URI"
-      include_examples "discourse logstash logger for header", "REQUEST_METHOD"
-      include_examples "discourse logstash logger for header", "HTTP_HOST"
-      include_examples "discourse logstash logger for header", "HTTP_USER_AGENT"
-      include_examples "discourse logstash logger for header", "HTTP_ACCEPT"
-      include_examples "discourse logstash logger for header", "HTTP_REFERER"
-      include_examples "discourse logstash logger for header", "HTTP_X_FORWARDED_FOR"
+      it "includes `REQUEST_METHOD` from `env` keyword argument in the logged JSON string" do
+        logger.add(
+          Logger::ERROR,
+          lograge_logstash_formatter_formatted_message,
+          "web-exception",
+          env: {
+            "REQUEST_METHOD" => "header",
+          },
+        )
+
+        output.rewind
+        parsed = JSON.parse(output.read.chomp)
+
+        expect(parsed["request.headers.request_method"]).to eq("header")
+      end
+
+      it "includes `HTTP_HOST` from `env` keyword argument in the logged JSON string" do
+        logger.add(
+          Logger::ERROR,
+          lograge_logstash_formatter_formatted_message,
+          "web-exception",
+          env: {
+            "HTTP_HOST" => "header",
+          },
+        )
+
+        output.rewind
+        parsed = JSON.parse(output.read.chomp)
+
+        expect(parsed["request.headers.http_host"]).to eq("header")
+      end
+
+      it "includes `HTTP_USER_AGENT` from `env` keyword argument in the logged JSON string" do
+        logger.add(
+          Logger::ERROR,
+          lograge_logstash_formatter_formatted_message,
+          "web-exception",
+          env: {
+            "HTTP_USER_AGENT" => "header",
+          },
+        )
+
+        output.rewind
+        parsed = JSON.parse(output.read.chomp)
+
+        expect(parsed["request.headers.http_user_agent"]).to eq("header")
+      end
+
+      it "includes `HTTP_ACCEPT` from `env` keyword argument in the logged JSON string" do
+        logger.add(
+          Logger::ERROR,
+          lograge_logstash_formatter_formatted_message,
+          "web-exception",
+          env: {
+            "HTTP_ACCEPT" => "header",
+          },
+        )
+
+        output.rewind
+        parsed = JSON.parse(output.read.chomp)
+
+        expect(parsed["request.headers.http_accept"]).to eq("header")
+      end
+
+      it "includes `HTTP_REFERER` from `env` keyword argument in the logged JSON string" do
+        logger.add(
+          Logger::ERROR,
+          lograge_logstash_formatter_formatted_message,
+          "web-exception",
+          env: {
+            "HTTP_REFERER" => "header",
+          },
+        )
+
+        output.rewind
+        parsed = JSON.parse(output.read.chomp)
+
+        expect(parsed["request.headers.http_referer"]).to eq("header")
+      end
+
+      it "includes `HTTP_X_FORWARDED_FOR` from `env` keyword argument in the logged JSON string" do
+        logger.add(
+          Logger::ERROR,
+          lograge_logstash_formatter_formatted_message,
+          "web-exception",
+          env: {
+            "HTTP_X_FORWARDED_FOR" => "header",
+          },
+        )
+
+        output.rewind
+        parsed = JSON.parse(output.read.chomp)
+
+        expect(parsed["request.headers.http_x_forwarded_for"]).to eq("header")
+      end
 
       it "does not include keys from `env` keyword argument in the logged JSOn string which are not in the allow list" do
         logger.add(

@@ -66,7 +66,7 @@ describe BackupRestore::Creator do
       extracted
     end
 
-    shared_examples "creator for concurrency" do |concurrency|
+    shared_examples "creating a backup with concurrent downloads" do |concurrency|
       it "downloads files with GET requests and no HEAD requests with #{concurrency} workers" do
         GlobalSetting.stubs(:backup_s3_download_concurrency).returns(concurrency)
         2.times do |index|
@@ -340,8 +340,8 @@ describe BackupRestore::Creator do
       end
     end
 
-    include_examples "creator for concurrency", 1
-    include_examples "creator for concurrency", 4
+    include_examples "creating a backup with concurrent downloads", 1
+    include_examples "creating a backup with concurrent downloads", 4
   end
 
   describe "#create_archive" do
@@ -363,7 +363,7 @@ describe BackupRestore::Creator do
       end
     end
 
-    shared_examples "creator for include_thumbnails" do |include_thumbnails|
+    shared_examples "creating a compatible backup archive" do |include_thumbnails|
       it "creates a compatible gzip archive with thumbnails #{include_thumbnails}" do
         Rails.stubs(:public_path).returns(Pathname.new(@directory))
         SiteSetting.include_thumbnails_in_backups = include_thumbnails
@@ -402,8 +402,8 @@ describe BackupRestore::Creator do
       end
     end
 
-    include_examples "creator for include_thumbnails", true
-    include_examples "creator for include_thumbnails", false
+    include_examples "creating a compatible backup archive", true
+    include_examples "creating a compatible backup archive", false
 
     it "skips dangling symlinks and still produces a readable backup" do
       File.symlink("missing", File.join(@local_uploads, "dangling"))
@@ -488,18 +488,21 @@ describe BackupRestore::Creator do
       expect(File.exist?(@staging)).to eq(false)
     end
 
-    shared_examples "creator for error" do |error|
-      it "removes the partial archive and waits for gzip when interrupted by #{error}" do
-        creator.stubs(:add_local_uploads_to_archive).raises(error)
-        expect { creator.send(:create_archive) }.to raise_error(error)
-        expect(Dir.glob(File.join(@directory, "backup*"))).to be_empty
-        expect(creator.instance_variable_get(:@archive)).to be_nil
-        expect($?.success?).to eq(true)
-      end
+    it "removes the partial archive and waits for gzip when interrupted by #{RuntimeError}" do
+      creator.stubs(:add_local_uploads_to_archive).raises(RuntimeError)
+      expect { creator.send(:create_archive) }.to raise_error(RuntimeError)
+      expect(Dir.glob(File.join(@directory, "backup*"))).to be_empty
+      expect(creator.instance_variable_get(:@archive)).to be_nil
+      expect($?.success?).to eq(true)
     end
 
-    include_examples "creator for error", RuntimeError
-    include_examples "creator for error", SystemExit
+    it "removes the partial archive and waits for gzip when interrupted by #{SystemExit}" do
+      creator.stubs(:add_local_uploads_to_archive).raises(SystemExit)
+      expect { creator.send(:create_archive) }.to raise_error(SystemExit)
+      expect(Dir.glob(File.join(@directory, "backup*"))).to be_empty
+      expect(creator.instance_variable_get(:@archive)).to be_nil
+      expect($?.success?).to eq(true)
+    end
 
     it "does not publish an archive when gzip fails" do
       SiteSetting.stubs(:backup_gzip_compression_level_for_uploads).returns("invalid")

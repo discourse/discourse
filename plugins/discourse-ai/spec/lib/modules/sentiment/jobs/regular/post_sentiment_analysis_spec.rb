@@ -71,35 +71,49 @@ describe Jobs::PostSentimentAnalysis do
       )
     end
 
-    shared_examples "post sentiment analysis for sentiment and emotion" do |sentiment, emotion|
-      it "processes only enabled decisions with sentiment=#{sentiment} and emotion=#{emotion}" do
-        model = Fabricate(:decision_model)
-        SiteSetting.ai_sentiment_enabled = sentiment
-        SiteSetting.ai_sentiment_emotion_enabled = emotion
-        SiteSetting.ai_sentiment_model_configs = ""
-        SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
-        SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
-        SiteSetting.ai_sentiment_sentiment_decision_model = model.id
-        SiteSetting.ai_sentiment_emotion_decision_model = model.id
+    it "processes only enabled decisions with sentiment=true and emotion=false" do
+      model = Fabricate(:decision_model)
+      SiteSetting.ai_sentiment_enabled = (true)
+      SiteSetting.ai_sentiment_emotion_enabled = (false)
+      SiteSetting.ai_sentiment_model_configs = ""
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
+      SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
+      SiteSetting.ai_sentiment_sentiment_decision_model = model.id
+      SiteSetting.ai_sentiment_emotion_decision_model = model.id
 
-        DiscourseAi::Decisions.with_canned_answers(
-          sentiment: "positive",
-          emotion: "joy",
-        ) do |canned|
-          job.execute(post_id: post.id)
+      DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
+        job.execute(post_id: post.id)
 
-          expect(canned.calls.map { |call| call[:feature_name] }).to eq(
-            [sentiment ? "sentiment" : "emotion"],
-          )
-        end
-        expect(ClassificationResult.where(target: post).pluck(:model_used)).to eq(
-          [sentiment ? "discourse-ai/sentiment-decision" : "discourse-ai/emotion-decision"],
+        expect(canned.calls.map { |call| call[:feature_name] }).to eq(
+          [true ? "sentiment" : "emotion"],
         )
       end
+      expect(ClassificationResult.where(target: post).pluck(:model_used)).to eq(
+        [true ? "discourse-ai/sentiment-decision" : "discourse-ai/emotion-decision"],
+      )
     end
 
-    include_examples "post sentiment analysis for sentiment and emotion", [true, false]
-    include_examples "post sentiment analysis for sentiment and emotion", [false, true]
+    it "processes only enabled decisions with sentiment=false and emotion=true" do
+      model = Fabricate(:decision_model)
+      SiteSetting.ai_sentiment_enabled = (false)
+      SiteSetting.ai_sentiment_emotion_enabled = (true)
+      SiteSetting.ai_sentiment_model_configs = ""
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
+      SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
+      SiteSetting.ai_sentiment_sentiment_decision_model = model.id
+      SiteSetting.ai_sentiment_emotion_decision_model = model.id
+
+      DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
+        job.execute(post_id: post.id)
+
+        expect(canned.calls.map { |call| call[:feature_name] }).to eq(
+          [false ? "sentiment" : "emotion"],
+        )
+      end
+      expect(ClassificationResult.where(target: post).pluck(:model_used)).to eq(
+        [false ? "discourse-ai/sentiment-decision" : "discourse-ai/emotion-decision"],
+      )
+    end
 
     it "successfully classifies the post" do
       expected_analysis = DiscourseAi::Sentiment::PostClassification.new.classifiers.length

@@ -321,18 +321,26 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
-    shared_examples "list controller for filter" do |filter|
-      context "with #{filter}" do
-        it "returns the requested list" do
-          get "/#{filter}"
-          expect(response.status).to eq(200)
-        end
+    context "with latest" do
+      it "returns the requested list" do
+        get "/latest"
+        expect(response.status).to eq(200)
       end
     end
 
-    include_examples "list controller for filter", :latest
-    include_examples "list controller for filter", :top
-    include_examples "list controller for filter", :hot
+    context "with top" do
+      it "returns the requested list" do
+        get "/top"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "with hot" do
+      it "returns the requested list" do
+        get "/hot"
+        expect(response.status).to eq(200)
+      end
+    end
 
     it "allows users to filter on a set of topic ids" do
       p = create_post
@@ -1074,20 +1082,41 @@ RSpec.describe ListController do
       expect(response.status).to eq(400)
     end
 
-    shared_examples "list controller for period" do |period|
-      it "renders #{period} top RSS" do
-        get "/top.rss?period=#{period}"
-        expect(response.status).to eq(200)
-        expect(response.media_type).to eq("application/rss+xml")
-      end
+    it "renders all top RSS" do
+      get "/top.rss?period=all"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
     end
 
-    include_examples "list controller for period", :all
-    include_examples "list controller for period", :yearly
-    include_examples "list controller for period", :quarterly
-    include_examples "list controller for period", :monthly
-    include_examples "list controller for period", :weekly
-    include_examples "list controller for period", :daily
+    it "renders yearly top RSS" do
+      get "/top.rss?period=yearly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders quarterly top RSS" do
+      get "/top.rss?period=quarterly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders monthly top RSS" do
+      get "/top.rss?period=monthly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders weekly top RSS" do
+      get "/top.rss?period=weekly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders daily top RSS" do
+      get "/top.rss?period=daily"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
 
     describe "RSS feeds ignore current user" do
       fab!(:muted_topic, :topic)

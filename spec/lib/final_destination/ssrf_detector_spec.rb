@@ -43,19 +43,33 @@ describe FinalDestination::SSRFDetector do
       expect(described_class.ip_allowed?("9001:82f3:8873::3")).to eq(false)
     end
 
-    shared_examples "ssrf detector for internal_ip" do |internal_ip|
-      it "returns false for '#{internal_ip}'" do
-        expect(described_class.ip_allowed?(internal_ip)).to eq(false)
-      end
+    it "returns false for '0.0.0.0'" do
+      expect(described_class.ip_allowed?("0.0.0.0")).to eq(false)
     end
 
-    include_examples "ssrf detector for internal_ip", "0.0.0.0"
-    include_examples "ssrf detector for internal_ip", "10.0.0.0"
-    include_examples "ssrf detector for internal_ip", "127.0.0.0"
-    include_examples "ssrf detector for internal_ip", "172.31.100.31"
-    include_examples "ssrf detector for internal_ip", "255.255.255.255"
-    include_examples "ssrf detector for internal_ip", "::1"
-    include_examples "ssrf detector for internal_ip", "::"
+    it "returns false for '10.0.0.0'" do
+      expect(described_class.ip_allowed?("10.0.0.0")).to eq(false)
+    end
+
+    it "returns false for '127.0.0.0'" do
+      expect(described_class.ip_allowed?("127.0.0.0")).to eq(false)
+    end
+
+    it "returns false for '172.31.100.31'" do
+      expect(described_class.ip_allowed?("172.31.100.31")).to eq(false)
+    end
+
+    it "returns false for '255.255.255.255'" do
+      expect(described_class.ip_allowed?("255.255.255.255")).to eq(false)
+    end
+
+    it "returns false for '::1'" do
+      expect(described_class.ip_allowed?("::1")).to eq(false)
+    end
+
+    it "returns false for '::'" do
+      expect(described_class.ip_allowed?("::")).to eq(false)
+    end
 
     it "returns false for private IPv4-mapped IPv6 addresses" do
       expect(described_class.ip_allowed?("::ffff:172.31.100.31")).to eq(false)

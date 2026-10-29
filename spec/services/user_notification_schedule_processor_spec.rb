@@ -13,7 +13,7 @@ RSpec.describe UserNotificationScheduleProcessor do
   end
 
   describe "#create_do_not_disturb_timings" do
-    shared_examples "user notification schedule processor for timezone_info" do |timezone_info|
+    shared_examples "creating quiet hours across time zones" do |timezone_info|
       it "creates dnd timings correctly for each timezone" do
         user.user_option.update(timezone: timezone_info[:timezone])
 
@@ -47,11 +47,10 @@ RSpec.describe UserNotificationScheduleProcessor do
       end
     end
 
-    include_examples "user notification schedule processor for timezone_info",
-                     { timezone: "UTC", offset: "+00:00" }
-    include_examples "user notification schedule processor for timezone_info",
+    include_examples "creating quiet hours across time zones", { timezone: "UTC", offset: "+00:00" }
+    include_examples "creating quiet hours across time zones",
                      { timezone: "America/Chicago", offset: "-06:00" }
-    include_examples "user notification schedule processor for timezone_info",
+    include_examples "creating quiet hours across time zones",
                      { timezone: "Australia/Sydney", offset: "+11:00" }
 
     it "does not create duplicate record, but ensures the correct records exist" do

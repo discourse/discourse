@@ -123,23 +123,43 @@ RSpec.describe "spam rules for users" do
       end
     end
 
-    shared_examples "spam rules for spammer_args" do |spammer_args|
-      context "if spammer is trusted #{spammer_args[0]}" do
-        let!(:spammer) { Fabricate(*spammer_args) }
-        let!(:spam_post) { Fabricate(:post, user: spammer) }
-        let!(:private_messages_count) { spammer.private_topics_count }
+    context "if spammer is trusted #{[:user, trust_level: TrustLevel[2]][0]}" do
+      let!(:spammer) { Fabricate(*[:user, trust_level: TrustLevel[2]]) }
+      let!(:spam_post) { Fabricate(:post, user: spammer) }
+      let!(:private_messages_count) { spammer.private_topics_count }
 
-        it "does not hide the post" do
-          PostActionCreator.create(user1, spam_post, :spam)
-          PostActionCreator.create(user2, spam_post, :spam)
+      it "does not hide the post" do
+        PostActionCreator.create(user1, spam_post, :spam)
+        PostActionCreator.create(user2, spam_post, :spam)
 
-          expect(spam_post.reload).to_not be_hidden
-        end
+        expect(spam_post.reload).to_not be_hidden
       end
     end
 
-    include_examples "spam rules for spammer_args", [:user, trust_level: TrustLevel[2]]
-    include_examples "spam rules for spammer_args", [:admin]
-    include_examples "spam rules for spammer_args", [:moderator]
+    context "if spammer is trusted #{[:admin][0]}" do
+      let!(:spammer) { Fabricate(*[:admin]) }
+      let!(:spam_post) { Fabricate(:post, user: spammer) }
+      let!(:private_messages_count) { spammer.private_topics_count }
+
+      it "does not hide the post" do
+        PostActionCreator.create(user1, spam_post, :spam)
+        PostActionCreator.create(user2, spam_post, :spam)
+
+        expect(spam_post.reload).to_not be_hidden
+      end
+    end
+
+    context "if spammer is trusted #{[:moderator][0]}" do
+      let!(:spammer) { Fabricate(*[:moderator]) }
+      let!(:spam_post) { Fabricate(:post, user: spammer) }
+      let!(:private_messages_count) { spammer.private_topics_count }
+
+      it "does not hide the post" do
+        PostActionCreator.create(user1, spam_post, :spam)
+        PostActionCreator.create(user2, spam_post, :spam)
+
+        expect(spam_post.reload).to_not be_hidden
+      end
+    end
   end
 end

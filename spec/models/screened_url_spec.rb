@@ -29,20 +29,37 @@ RSpec.describe ScreenedUrl do
 
     let(:record) { described_class.new(params) }
 
-    shared_examples "screened url for prefix" do |prefix|
-      context "with #{prefix} prefix" do
-        let(:params) { valid_params.merge(url: url.gsub("http://", prefix)) }
+    context "with http:// prefix" do
+      let(:params) { valid_params.merge(url: url.gsub("http://", "http://")) }
 
-        it "strips it" do
-          expect(normalized.url).to eq(url.gsub("http://", ""))
-        end
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
       end
     end
 
-    include_examples "screened url for prefix", "http://"
-    include_examples "screened url for prefix", "HTTP://"
-    include_examples "screened url for prefix", "https://"
-    include_examples "screened url for prefix", "HTTPS://"
+    context "with HTTP:// prefix" do
+      let(:params) { valid_params.merge(url: url.gsub("http://", "HTTP://")) }
+
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
+      end
+    end
+
+    context "with https:// prefix" do
+      let(:params) { valid_params.merge(url: url.gsub("http://", "https://")) }
+
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
+      end
+    end
+
+    context "with HTTPS:// prefix" do
+      let(:params) { valid_params.merge(url: url.gsub("http://", "HTTPS://")) }
+
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
+      end
+    end
 
     context "with a trailing slash" do
       let(:params) { valid_params.merge(url: "silverbullet.in/") }

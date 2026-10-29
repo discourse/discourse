@@ -471,31 +471,77 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    shared_examples "upload encoder for extension" do |extension|
-      it "logs #{extension} conversion failures and skips the upload" do
-        upload =
-          create_doc_upload(contents: "raw #{extension} bytes", filename: "sample.#{extension}")
+    it "logs docx conversion failures and skips the upload" do
+      upload = create_doc_upload(contents: "raw docx bytes", filename: "sample.docx")
 
-        allow(Rails.logger).to receive(:warn)
+      allow(Rails.logger).to receive(:warn)
 
-        encoded = encode_document(upload, [extension])
+      encoded = encode_document(upload, ["docx"])
 
-        expect(Rails.logger).to have_received(:warn).with(
-          a_string_including(
-            "Failed to convert .#{extension} upload to text",
-            "upload_id=#{upload.id}",
-            "sample.#{extension}",
-            "Zip",
-          ),
-        )
-        expect(encoded).to be_empty
-      end
+      expect(Rails.logger).to have_received(:warn).with(
+        a_string_including(
+          "Failed to convert .docx upload to text",
+          "upload_id=#{upload.id}",
+          "sample.docx",
+          "Zip",
+        ),
+      )
+      expect(encoded).to be_empty
     end
 
-    include_examples "upload encoder for extension", "docx"
-    include_examples "upload encoder for extension", "xlsx"
-    include_examples "upload encoder for extension", "odt"
-    include_examples "upload encoder for extension", "ods"
+    it "logs xlsx conversion failures and skips the upload" do
+      upload = create_doc_upload(contents: "raw xlsx bytes", filename: "sample.xlsx")
+
+      allow(Rails.logger).to receive(:warn)
+
+      encoded = encode_document(upload, ["xlsx"])
+
+      expect(Rails.logger).to have_received(:warn).with(
+        a_string_including(
+          "Failed to convert .xlsx upload to text",
+          "upload_id=#{upload.id}",
+          "sample.xlsx",
+          "Zip",
+        ),
+      )
+      expect(encoded).to be_empty
+    end
+
+    it "logs odt conversion failures and skips the upload" do
+      upload = create_doc_upload(contents: "raw odt bytes", filename: "sample.odt")
+
+      allow(Rails.logger).to receive(:warn)
+
+      encoded = encode_document(upload, ["odt"])
+
+      expect(Rails.logger).to have_received(:warn).with(
+        a_string_including(
+          "Failed to convert .odt upload to text",
+          "upload_id=#{upload.id}",
+          "sample.odt",
+          "Zip",
+        ),
+      )
+      expect(encoded).to be_empty
+    end
+
+    it "logs ods conversion failures and skips the upload" do
+      upload = create_doc_upload(contents: "raw ods bytes", filename: "sample.ods")
+
+      allow(Rails.logger).to receive(:warn)
+
+      encoded = encode_document(upload, ["ods"])
+
+      expect(Rails.logger).to have_received(:warn).with(
+        a_string_including(
+          "Failed to convert .ods upload to text",
+          "upload_id=#{upload.id}",
+          "sample.ods",
+          "Zip",
+        ),
+      )
+      expect(encoded).to be_empty
+    end
 
     it "routes .html uploads through the html converter" do
       upload =

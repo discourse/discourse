@@ -37,44 +37,159 @@ RSpec.describe TranslationOverride do
         end
 
         context "when custom interpolation keys are included" do
-          shared_examples "translation override for i18n_key" do |i18n_key|
-            it "validates keys for #{i18n_key}" do
-              interpolation_key_names =
-                described_class.custom_interpolation_keys("user_notifications.user_")
+          it "validates keys for user_notifications.user_did_something" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
 
-              string_with_interpolation_keys =
-                interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
 
-              translation_override =
-                TranslationOverride.upsert!(
-                  I18n.locale,
-                  i18n_key,
-                  "#{string_with_interpolation_keys} %{something}",
-                )
-
-              expect(translation_override.errors.full_messages).to include(
-                I18n.t(
-                  "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-                  keys: "something",
-                  count: 1,
-                ),
+            translation_override =
+              TranslationOverride.upsert!(
+                I18n.locale,
+                "user_notifications.user_did_something",
+                "#{string_with_interpolation_keys} %{something}",
               )
-            end
+
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something",
+                count: 1,
+              ),
+            )
           end
 
-          include_examples "translation override for i18n_key",
-                           "user_notifications.user_did_something"
-          include_examples "translation override for i18n_key",
-                           "user_notifications.only_reply_by_email"
-          include_examples "translation override for i18n_key",
-                           "user_notifications.only_reply_by_email_pm"
-          include_examples "translation override for i18n_key", "user_notifications.reply_by_email"
-          include_examples "translation override for i18n_key",
-                           "user_notifications.reply_by_email_pm"
-          include_examples "translation override for i18n_key",
-                           "user_notifications.visit_link_to_respond"
-          include_examples "translation override for i18n_key",
-                           "user_notifications.visit_link_to_respond_pm"
+          it "validates keys for user_notifications.only_reply_by_email" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
+
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+
+            translation_override =
+              TranslationOverride.upsert!(
+                I18n.locale,
+                "user_notifications.only_reply_by_email",
+                "#{string_with_interpolation_keys} %{something}",
+              )
+
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something",
+                count: 1,
+              ),
+            )
+          end
+
+          it "validates keys for user_notifications.only_reply_by_email_pm" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
+
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+
+            translation_override =
+              TranslationOverride.upsert!(
+                I18n.locale,
+                "user_notifications.only_reply_by_email_pm",
+                "#{string_with_interpolation_keys} %{something}",
+              )
+
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something",
+                count: 1,
+              ),
+            )
+          end
+
+          it "validates keys for user_notifications.reply_by_email" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
+
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+
+            translation_override =
+              TranslationOverride.upsert!(
+                I18n.locale,
+                "user_notifications.reply_by_email",
+                "#{string_with_interpolation_keys} %{something}",
+              )
+
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something",
+                count: 1,
+              ),
+            )
+          end
+
+          it "validates keys for user_notifications.reply_by_email_pm" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
+
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+
+            translation_override =
+              TranslationOverride.upsert!(
+                I18n.locale,
+                "user_notifications.reply_by_email_pm",
+                "#{string_with_interpolation_keys} %{something}",
+              )
+
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something",
+                count: 1,
+              ),
+            )
+          end
+
+          it "validates keys for user_notifications.visit_link_to_respond" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
+
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+
+            translation_override =
+              TranslationOverride.upsert!(
+                I18n.locale,
+                "user_notifications.visit_link_to_respond",
+                "#{string_with_interpolation_keys} %{something}",
+              )
+
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something",
+                count: 1,
+              ),
+            )
+          end
+
+          it "validates keys for user_notifications.visit_link_to_respond_pm" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
+
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+
+            translation_override =
+              TranslationOverride.upsert!(
+                I18n.locale,
+                "user_notifications.visit_link_to_respond_pm",
+                "#{string_with_interpolation_keys} %{something}",
+              )
+
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something",
+                count: 1,
+              ),
+            )
+          end
 
           it "validates keys reserved for user_notifications" do
             I18n.backend.store_translations(:en, "not_a_notification" => "Test %{key1}")

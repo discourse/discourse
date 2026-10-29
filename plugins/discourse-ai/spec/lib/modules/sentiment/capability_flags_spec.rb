@@ -18,7 +18,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     DiscourseAi::Utils::DnsSrv.stubs(:lookup).raises(RuntimeError, "Unexpected SRV lookup")
   end
 
-  shared_examples "capability flags for backend" do |backend|
+  shared_examples "independent sentiment capability settings" do |backend|
     describe "independent enable flags with #{backend}" do
       before do
         SiteSetting.ai_sentiment_sentiment_classification_strategy = backend
@@ -40,7 +40,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
             .to_json
       end
 
-      shared_examples "capability flags for sentiment and emotion" do |sentiment, emotion|
+      shared_examples "running enabled sentiment capabilities" do |sentiment, emotion|
         it "runs only enabled capabilities with sentiment=#{sentiment} and emotion=#{emotion}" do
           SiteSetting.ai_sentiment_enabled = sentiment
           SiteSetting.ai_sentiment_emotion_enabled = emotion
@@ -77,16 +77,16 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         end
       end
 
-      include_examples "capability flags for sentiment and emotion", [false, false]
-      include_examples "capability flags for sentiment and emotion", [true, false]
-      include_examples "capability flags for sentiment and emotion", [false, true]
-      include_examples "capability flags for sentiment and emotion", [true, true]
+      include_examples "running enabled sentiment capabilities", [false, false]
+      include_examples "running enabled sentiment capabilities", [true, false]
+      include_examples "running enabled sentiment capabilities", [false, true]
+      include_examples "running enabled sentiment capabilities", [true, true]
     end
   end
 
-  include_examples "capability flags for backend", "classification_model"
-  include_examples "capability flags for backend", "agent"
-  include_examples "capability flags for backend", "decision_model"
+  include_examples "independent sentiment capability settings", "classification_model"
+  include_examples "independent sentiment capability settings", "agent"
+  include_examples "independent sentiment capability settings", "decision_model"
 
   describe "dedicated capability attribution" do
     before do

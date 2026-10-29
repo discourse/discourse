@@ -14,19 +14,23 @@ RSpec.describe UserAvatarsController do
       )
     end
 
-    shared_examples "user avatars controller for setting" do |setting|
-      it "rejects refreshing the selected Gravatar when #{setting} is enabled" do
-        SiteSetting.public_send("#{setting}=", true)
+    it "rejects refreshing the selected Gravatar when auth_overrides_avatar is enabled" do
+      SiteSetting.public_send("auth_overrides_avatar=", true)
 
-        post "/user_avatar/#{user.username}/refresh_gravatar.json"
+      post "/user_avatar/#{user.username}/refresh_gravatar.json"
 
-        expect(response).to be_forbidden
-        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
-      end
+      expect(response).to be_forbidden
+      expect(user.reload.uploaded_avatar_id).to eq(upload.id)
     end
 
-    include_examples "user avatars controller for setting", :auth_overrides_avatar
-    include_examples "user avatars controller for setting", :discourse_connect_overrides_avatar
+    it "rejects refreshing the selected Gravatar when discourse_connect_overrides_avatar is enabled" do
+      SiteSetting.public_send("discourse_connect_overrides_avatar=", true)
+
+      post "/user_avatar/#{user.username}/refresh_gravatar.json"
+
+      expect(response).to be_forbidden
+      expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+    end
   end
 
   describe "#show_proxy_letter" do

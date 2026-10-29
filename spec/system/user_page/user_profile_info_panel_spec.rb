@@ -4,22 +4,54 @@ RSpec.describe "User Profile Info Panel" do
   let(:user_page) { PageObjects::Pages::User.new }
 
   describe "trust level" do
-    shared_examples "user profile info panel for trust_level" do |trust_level|
-      context "when user has trust level #{trust_level}" do
-        fab!(:user) { Fabricate(:user, trust_level: trust_level) }
-        before { sign_in(user) }
+    context "when user has trust level 0" do
+      fab!(:user) { Fabricate(:user, trust_level: 0) }
+      before { sign_in(user) }
 
-        it "displays the correct trust level element" do
-          user_page.visit(user).expand_info_panel
-          expect(user_page).to have_css("dd.trust-level", text: TrustLevel.name(trust_level))
-        end
+      it "displays the correct trust level element" do
+        user_page.visit(user).expand_info_panel
+        expect(user_page).to have_css("dd.trust-level", text: TrustLevel.name(0))
       end
     end
 
-    include_examples "user profile info panel for trust_level", 0
-    include_examples "user profile info panel for trust_level", 1
-    include_examples "user profile info panel for trust_level", 2
-    include_examples "user profile info panel for trust_level", 3
-    include_examples "user profile info panel for trust_level", 4
+    context "when user has trust level 1" do
+      fab!(:user) { Fabricate(:user, trust_level: 1) }
+      before { sign_in(user) }
+
+      it "displays the correct trust level element" do
+        user_page.visit(user).expand_info_panel
+        expect(user_page).to have_css("dd.trust-level", text: TrustLevel.name(1))
+      end
+    end
+
+    context "when user has trust level 2" do
+      fab!(:user) { Fabricate(:user, trust_level: 2) }
+      before { sign_in(user) }
+
+      it "displays the correct trust level element" do
+        user_page.visit(user).expand_info_panel
+        expect(user_page).to have_css("dd.trust-level", text: TrustLevel.name(2))
+      end
+    end
+
+    context "when user has trust level 3" do
+      fab!(:user) { Fabricate(:user, trust_level: 3) }
+      before { sign_in(user) }
+
+      it "displays the correct trust level element" do
+        user_page.visit(user).expand_info_panel
+        expect(user_page).to have_css("dd.trust-level", text: TrustLevel.name(3))
+      end
+    end
+
+    context "when user has trust level 4" do
+      fab!(:user) { Fabricate(:user, trust_level: 4) }
+      before { sign_in(user) }
+
+      it "displays the correct trust level element" do
+        user_page.visit(user).expand_info_panel
+        expect(user_page).to have_css("dd.trust-level", text: TrustLevel.name(4))
+      end
+    end
   end
 end

@@ -279,23 +279,33 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # cooks `\\@bob` as a mention. A counter that read the escape as a
     # rejection counted one occurrence too few here and handed the token to the
     # code-span look-alike — the post came back with its code span rewritten.
-    shared_examples "engine scanner for kind and escaped and shielded and rows and name" do |kind, escaped, shielded, rows, name|
-      it "rewrites an escaped #{kind} and leaves the code-span copy alone" do
-        output = extract("#{escaped} and #{shielded}")
 
-        expect(buffer.public_send(rows).map { |row| row[:name] }).to eq([name])
-        placeholder = buffer.public_send(rows).first[:placeholder]
-        expect(output).to eq("\\#{placeholder} and #{shielded}")
-        expect(refusals).to be_empty
-      end
+    it "rewrites an escaped mention and leaves the code-span copy alone" do
+      output = extract("\\@bob and `@bob`")
+
+      expect(buffer.public_send(:mentions).map { |row| row[:name] }).to eq(["bob"])
+      placeholder = buffer.public_send(:mentions).first[:placeholder]
+      expect(output).to eq("\\#{placeholder} and `@bob`")
+      expect(refusals).to be_empty
     end
 
-    include_examples "engine scanner for kind and escaped and shielded and rows and name",
-                     ["mention", "\\@bob", "`@bob`", :mentions, "bob"]
-    include_examples "engine scanner for kind and escaped and shielded and rows and name",
-                     ["hashtag", "\\#support", "`#support`", :hashtags, "support"]
-    include_examples "engine scanner for kind and escaped and shielded and rows and name",
-                     ["custom emoji", "\\:parrot:", "`:parrot:`", :emojis, "parrot"]
+    it "rewrites an escaped hashtag and leaves the code-span copy alone" do
+      output = extract("\\#support and `#support`")
+
+      expect(buffer.public_send(:hashtags).map { |row| row[:name] }).to eq(["support"])
+      placeholder = buffer.public_send(:hashtags).first[:placeholder]
+      expect(output).to eq("\\#{placeholder} and `#support`")
+      expect(refusals).to be_empty
+    end
+
+    it "rewrites an escaped custom emoji and leaves the code-span copy alone" do
+      output = extract("\\:parrot: and `:parrot:`")
+
+      expect(buffer.public_send(:emojis).map { |row| row[:name] }).to eq(["parrot"])
+      placeholder = buffer.public_send(:emojis).first[:placeholder]
+      expect(output).to eq("\\#{placeholder} and `:parrot:`")
+      expect(refusals).to be_empty
+    end
 
     it "rewrites a shortcode the author upper-cased and leaves the code-span copy alone" do
       # Core lowercases a shortcode before it looks a custom emoji up, so

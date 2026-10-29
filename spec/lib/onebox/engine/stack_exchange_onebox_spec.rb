@@ -2,7 +2,7 @@
 
 RSpec.describe Onebox::Engine::StackExchangeOnebox do
   describe "domains" do
-    shared_examples "stack exchange onebox for domain" do |domain|
+    shared_examples "a short Stack Exchange question URL" do |domain|
       it "matches question with short URL on #{domain}" do
         expect(described_class === URI("http://#{domain}/q/55495")).to eq(true)
       end
@@ -24,19 +24,19 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
       end
     end
 
-    include_examples "stack exchange onebox for domain", "stackoverflow.com"
-    include_examples "stack exchange onebox for domain", "meta.stackoverflow.com"
-    include_examples "stack exchange onebox for domain", "superuser.com"
-    include_examples "stack exchange onebox for domain", "meta.superuser.com"
-    include_examples "stack exchange onebox for domain", "serverfault.com"
-    include_examples "stack exchange onebox for domain", "meta.serverfault.com"
-    include_examples "stack exchange onebox for domain", "askubuntu.com"
-    include_examples "stack exchange onebox for domain", "meta.askubuntu.com"
-    include_examples "stack exchange onebox for domain", "mathoverflow.net"
-    include_examples "stack exchange onebox for domain", "meta.mathoverflow.net"
-    include_examples "stack exchange onebox for domain", "money.stackexchange.com"
-    include_examples "stack exchange onebox for domain", "meta.money.stackexchange.com"
-    include_examples "stack exchange onebox for domain", "stackapps.com"
+    include_examples "a short Stack Exchange question URL", "stackoverflow.com"
+    include_examples "a short Stack Exchange question URL", "meta.stackoverflow.com"
+    include_examples "a short Stack Exchange question URL", "superuser.com"
+    include_examples "a short Stack Exchange question URL", "meta.superuser.com"
+    include_examples "a short Stack Exchange question URL", "serverfault.com"
+    include_examples "a short Stack Exchange question URL", "meta.serverfault.com"
+    include_examples "a short Stack Exchange question URL", "askubuntu.com"
+    include_examples "a short Stack Exchange question URL", "meta.askubuntu.com"
+    include_examples "a short Stack Exchange question URL", "mathoverflow.net"
+    include_examples "a short Stack Exchange question URL", "meta.mathoverflow.net"
+    include_examples "a short Stack Exchange question URL", "money.stackexchange.com"
+    include_examples "a short Stack Exchange question URL", "meta.money.stackexchange.com"
+    include_examples "a short Stack Exchange question URL", "stackapps.com"
 
     it "doesn't match question on example.com" do
       expect(described_class === URI("http://example.com/q/4711")).to eq(false)
@@ -47,7 +47,7 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  shared_examples "stack exchange onebox for name and url" do |name, url|
+  shared_examples "a Stack Exchange question URL" do |name, url|
     describe "question with #{name}" do
       before do
         @link = url
@@ -77,15 +77,15 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  include_examples "stack exchange onebox for name and url",
+  include_examples "a Stack Exchange question URL",
                    [
                      "long URL",
                      "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code",
                    ]
-  include_examples "stack exchange onebox for name and url",
+  include_examples "a Stack Exchange question URL",
                    ["short URL", "http://stackoverflow.com/q/17992553"]
 
-  shared_examples "stack exchange onebox for name and url (2)" do |name, url|
+  shared_examples "a Stack Exchange answer URL" do |name, url|
     describe "answer with #{name}" do
       before do
         @link = url
@@ -115,11 +115,11 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  include_examples "stack exchange onebox for name and url (2)",
+  include_examples "a Stack Exchange answer URL",
                    [
                      "long URL",
                      "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906",
                    ]
-  include_examples "stack exchange onebox for name and url (2)",
+  include_examples "a Stack Exchange answer URL",
                    ["short URL", "http://stackoverflow.com/a/17992906"]
 end

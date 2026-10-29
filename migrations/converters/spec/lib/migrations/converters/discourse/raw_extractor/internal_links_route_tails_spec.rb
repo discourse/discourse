@@ -32,32 +32,41 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_name: "how-to-fix-it", target_suffix: "/?page=2")
     end
 
-    shared_examples "internal links route tails for label and path and fields" do |label, (path, fields)|
-      it "keeps a trailing slash out of the route for #{label}" do
-        link, = link_for("[x](#{path})")
+    it "keeps a trailing slash out of the route for a topic with a slug and id" do
+      link, = link_for("[x](/t/slug/18978/)")
 
-        expect(link).to include(**fields, target_suffix: "/")
-      end
+      expect(link).to include(**{ target_id: 18_978 }, target_suffix: "/")
     end
 
-    include_examples "internal links route tails for label and path and fields",
-                     ["a topic with a slug and id", ["/t/slug/18978/", { target_id: 18_978 }]]
-    include_examples "internal links route tails for label and path and fields",
-                     ["a category by id", ["/c/support/6/", { target_id: 6 }]]
-    include_examples "internal links route tails for label and path and fields",
-                     [
-                       "a category by slug path",
-                       ["/c/support/billing/", { target_name: "support:billing" }],
-                     ]
-    include_examples "internal links route tails for label and path and fields",
-                     ["a badge", ["/badges/9/great/", { target_id: 9 }]]
-    include_examples "internal links route tails for label and path and fields",
-                     ["a category+tag route", ["/tags/c/food/wine/", { target_tag_path: "wine" }]]
-    include_examples "internal links route tails for label and path and fields",
-                     [
-                       "a tag intersection",
-                       ["/tags/intersection/food/wine/", { target_tag_path: "food/wine" }],
-                     ]
+    it "keeps a trailing slash out of the route for a category by id" do
+      link, = link_for("[x](/c/support/6/)")
+
+      expect(link).to include(**{ target_id: 6 }, target_suffix: "/")
+    end
+
+    it "keeps a trailing slash out of the route for a category by slug path" do
+      link, = link_for("[x](/c/support/billing/)")
+
+      expect(link).to include(**{ target_name: "support:billing" }, target_suffix: "/")
+    end
+
+    it "keeps a trailing slash out of the route for a badge" do
+      link, = link_for("[x](/badges/9/great/)")
+
+      expect(link).to include(**{ target_id: 9 }, target_suffix: "/")
+    end
+
+    it "keeps a trailing slash out of the route for a category+tag route" do
+      link, = link_for("[x](/tags/c/food/wine/)")
+
+      expect(link).to include(**{ target_tag_path: "wine" }, target_suffix: "/")
+    end
+
+    it "keeps a trailing slash out of the route for a tag intersection" do
+      link, = link_for("[x](/tags/intersection/food/wine/)")
+
+      expect(link).to include(**{ target_tag_path: "food/wine" }, target_suffix: "/")
+    end
 
     # A digit run that overflows an id is still the numeric-title ambiguity, so
     # a trailing slash must not turn it into a slug-only link.
@@ -69,24 +78,35 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
     end
 
-    shared_examples "internal links route tails for label and path and id and suffix" do |label, (path, id, suffix)|
-      it "reads #{label}, keeping the format in the suffix" do
-        link, = link_for("[x](#{path})")
+    it "reads a `.json` topic link, keeping the format in the suffix" do
+      link, = link_for("[x](/t/some-slug/18978.json)")
 
-        expect(link).to include(
-          target_type: enums::LinkTarget::TOPIC,
-          target_id: id,
-          target_suffix: suffix,
-        )
-      end
+      expect(link).to include(
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 18_978,
+        target_suffix: ".json",
+      )
     end
 
-    include_examples "internal links route tails for label and path and id and suffix",
-                     ["a `.json` topic link", ["/t/some-slug/18978.json", 18_978, ".json"]]
-    include_examples "internal links route tails for label and path and id and suffix",
-                     ["an `.rss` topic link", ["/t/some-slug/233865.rss", 233_865, ".rss"]]
-    include_examples "internal links route tails for label and path and id and suffix",
-                     ["a `.json` id-only topic link", ["/t/18978.json", 18_978, ".json"]]
+    it "reads an `.rss` topic link, keeping the format in the suffix" do
+      link, = link_for("[x](/t/some-slug/233865.rss)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 233_865,
+        target_suffix: ".rss",
+      )
+    end
+
+    it "reads a `.json` id-only topic link, keeping the format in the suffix" do
+      link, = link_for("[x](/t/18978.json)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 18_978,
+        target_suffix: ".json",
+      )
+    end
 
     it "reads a `.json` post link" do
       link, = link_for("[x](/p/55.json)")

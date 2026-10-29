@@ -43,21 +43,47 @@ RSpec.describe TextSentinel do
   end
 
   describe "body_sentinel" do
-    shared_examples "text sentinel for valid_body" do |valid_body|
-      it "handles a valid body in a private message" do
-        expect(TextSentinel.body_sentinel(valid_body, private_message: true)).to be_valid
-      end
-
-      it "handles a valid body in a public post" do
-        expect(TextSentinel.body_sentinel(valid_body, private_message: false)).to be_valid
-      end
+    it "accepts Latin text in a private message" do
+      expect(TextSentinel.body_sentinel("evil trout is evil", private_message: true)).to be_valid
     end
 
-    include_examples "text sentinel for valid_body", "evil trout is evil"
-    include_examples "text sentinel for valid_body", "去年十社會警告"
-    include_examples "text sentinel for valid_body",
-                     "P.S. Пробирочка очень толковая и весьма умная, так что не обнимайтесь."
-    include_examples "text sentinel for valid_body", "Look: 去年十社會警告"
+    it "accepts Latin text in a public post" do
+      expect(TextSentinel.body_sentinel("evil trout is evil", private_message: false)).to be_valid
+    end
+
+    it "accepts Chinese text in a private message" do
+      expect(TextSentinel.body_sentinel("去年十社會警告", private_message: true)).to be_valid
+    end
+
+    it "accepts Chinese text in a public post" do
+      expect(TextSentinel.body_sentinel("去年十社會警告", private_message: false)).to be_valid
+    end
+
+    it "accepts Cyrillic text in a private message" do
+      expect(
+        TextSentinel.body_sentinel(
+          "P.S. Пробирочка очень толковая и весьма умная, так что не обнимайтесь.",
+          private_message: true,
+        ),
+      ).to be_valid
+    end
+
+    it "accepts Cyrillic text in a public post" do
+      expect(
+        TextSentinel.body_sentinel(
+          "P.S. Пробирочка очень толковая и весьма умная, так что не обнимайтесь.",
+          private_message: false,
+        ),
+      ).to be_valid
+    end
+
+    it "accepts mixed Latin and Chinese text in a private message" do
+      expect(TextSentinel.body_sentinel("Look: 去年十社會警告", private_message: true)).to be_valid
+    end
+
+    it "accepts mixed Latin and Chinese text in a public post" do
+      expect(TextSentinel.body_sentinel("Look: 去年十社會警告", private_message: false)).to be_valid
+    end
 
     it "uses a sensible min entropy value when min body length is less than min entropy" do
       SiteSetting.min_post_length = 3

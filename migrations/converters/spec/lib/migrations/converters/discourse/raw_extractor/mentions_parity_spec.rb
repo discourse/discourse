@@ -85,29 +85,40 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       slug && CGI.unescape(slug)
     end
 
-    shared_examples "mentions parity for username and raw and expected" do |username, raw, expected|
-      it "reads #{raw.inspect} the same name core links" do
-        Fabricate(:user, username:)
-        expect(extracted_name(raw, username)).to eq(expected)
-        expect(cooked_link(raw)).to eq(expected)
-      end
+    # interior dot
+    it "reads \"hi @john.doe there\" the same name core links" do
+      Fabricate(:user, username: "john.doe")
+      expect(extracted_name("hi @john.doe there", "john.doe")).to eq("john.doe")
+      expect(cooked_link("hi @john.doe there")).to eq("john.doe")
     end
 
-    # interior dot
-    include_examples "mentions parity for username and raw and expected",
-                     ["john.doe", "hi @john.doe there", "john.doe"]
     # trailing dot dropped
-    include_examples "mentions parity for username and raw and expected",
-                     ["john", "thanks @john.", "john"]
+    it "reads \"thanks @john.\" the same name core links" do
+      Fabricate(:user, username: "john")
+      expect(extracted_name("thanks @john.", "john")).to eq("john")
+      expect(cooked_link("thanks @john.")).to eq("john")
+    end
+
     # interior dash
-    include_examples "mentions parity for username and raw and expected",
-                     ["j-d", "cc @j-d please", "j-d"]
+    it "reads \"cc @j-d please\" the same name core links" do
+      Fabricate(:user, username: "j-d")
+      expect(extracted_name("cc @j-d please", "j-d")).to eq("j-d")
+      expect(cooked_link("cc @j-d please")).to eq("j-d")
+    end
+
     # trailing underscore dropped
-    include_examples "mentions parity for username and raw and expected",
-                     ["user", "ping @user_ here", "user"]
+    it "reads \"ping @user_ here\" the same name core links" do
+      Fabricate(:user, username: "user")
+      expect(extracted_name("ping @user_ here", "user")).to eq("user")
+      expect(cooked_link("ping @user_ here")).to eq("user")
+    end
+
     # multibyte
-    include_examples "mentions parity for username and raw and expected",
-                     ["café", "cc @café here", "café"]
+    it "reads \"cc @café here\" the same name core links" do
+      Fabricate(:user, username: "café")
+      expect(extracted_name("cc @café here", "café")).to eq("café")
+      expect(cooked_link("cc @café here")).to eq("café")
+    end
   end
 
   # The one deliberate divergence: core's name regex caps a username at 60

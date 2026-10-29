@@ -481,7 +481,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(thinking["message"]).to eq("Web search: OpenAI news")
     end
 
-    shared_examples "playground for custom_output" do |custom_output|
+    shared_examples "reporting tool script errors to the model" do |custom_output|
       it "returns script errors to the model #{custom_output ? "after #{custom_output}" : "without custom output"}" do
         custom_tool.update!(script: <<~JS)
           function invoke() {
@@ -511,9 +511,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
     end
 
-    include_examples "playground for custom_output", nil
-    include_examples "playground for custom_output", "setCustomRaw"
-    include_examples "playground for custom_output", "streamCustomRaw"
+    include_examples "reporting tool script errors to the model", nil
+    include_examples "reporting tool script errors to the model", "setCustomRaw"
+    include_examples "reporting tool script errors to the model", "streamCustomRaw"
 
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)
