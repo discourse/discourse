@@ -1078,15 +1078,15 @@ export default class Topic extends RestModel {
   @dependentKeyCompat
   get lastReadUrl() {
     if (this.rendersNested) {
-      return this.get("url");
+      return this.url;
     }
-    return this.urlForPostNumber(this.get("last_read_post_number"));
+    return this.urlForPostNumber(this.last_read_post_number);
   }
 
   @dependentKeyCompat
   get lastUnreadUrl() {
     if (this.rendersNested) {
-      return this.get("url");
+      return this.url;
     }
 
     let customUrl: string | null = null;
@@ -1102,19 +1102,16 @@ export default class Topic extends RestModel {
       return customUrl;
     }
 
-    const lastRead = this.get("last_read_post_number")!;
-    const highest = this.get("highest_post_number")!;
-
     if (
-      lastRead >= highest &&
+      this.last_read_post_number! >= this.highest_post_number! &&
       this.get("category.navigate_to_first_post_after_read")
     ) {
       return this.urlForPostNumber(1);
     }
 
-    let postNumber = lastRead + 1;
-    if (postNumber > highest) {
-      postNumber = highest;
+    let postNumber = this.last_read_post_number! + 1;
+    if (postNumber > this.highest_post_number!) {
+      postNumber = this.highest_post_number!;
     }
 
     return this.urlForPostNumber(postNumber);
@@ -1123,9 +1120,9 @@ export default class Topic extends RestModel {
   @dependentKeyCompat
   get lastPostUrl() {
     if (this.rendersNested) {
-      return this.get("url");
+      return this.url;
     }
-    return this.urlForPostNumber(this.get("highest_post_number"));
+    return this.urlForPostNumber(this.highest_post_number);
   }
 
   @computed("url")

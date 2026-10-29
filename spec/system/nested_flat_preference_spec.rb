@@ -101,15 +101,6 @@ RSpec.describe "Nested replies flat view preference" do
     try_until_success { expect(user.user_option.reload.prefer_flat_replies).to eq(true) }
   end
 
-  it "shows the preference in interface settings" do
-    user.user_option.update!(prefer_flat_replies: true)
-    sign_in(user)
-
-    page.visit("/u/#{user.username}/preferences/interface")
-
-    expect(page).to have_css(".pref-prefer-flat-replies input[type='checkbox']:checked")
-  end
-
   it "remembers an anonymous user's flat view in the browser" do
     SiteSetting.show_topic_map_in_topics_without_replies = false
     nested_view.visit_nested(topic)

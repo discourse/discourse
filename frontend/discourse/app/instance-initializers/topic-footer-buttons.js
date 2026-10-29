@@ -1,5 +1,4 @@
 import ShareTopicModal from "discourse/components/modal/share-topic";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { toggleFlatRepliesPreference } from "discourse/lib/nested-view-preference";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
@@ -116,23 +115,20 @@ export default {
       priority: NESTED_VIEW_PRIORITY,
       label: "nested_replies.nested_view",
       title: "nested_replies.nested_view_title",
-      async action() {
-        try {
-          await toggleFlatRepliesPreference({
-            currentUser: this.currentUser,
-            keyValueStore: owner.lookup("service:key-value-store"),
-            router: owner.lookup("service:router"),
-            topic: this.topic,
-          });
-        } catch (e) {
-          popupAjaxError(e);
-        }
+      action() {
+        toggleFlatRepliesPreference({
+          currentUser: this.currentUser,
+          keyValueStore: owner.lookup("service:key-value-store"),
+          router: owner.lookup("service:router"),
+          topic: this.topic,
+        });
       },
       classNames: ["toggle-nested-view"],
       dependentKeys: ["topic.is_nested_view", "topic.rendersNested"],
       dropdown() {
         return this.site.mobileView;
       },
+      // Rendered by whichever footer the viewer gets, anonymous or not.
       anonymousOnly() {
         return !this.currentUser;
       },

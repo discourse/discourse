@@ -123,8 +123,7 @@ export default class TopicController extends Controller {
   @tracked translationTitle = null;
   @tracked editingTopicLocalization = false;
 
-  // Set by the route once a view's data is loaded, so switching views keeps
-  // the current one on screen until the other is ready.
+  // Set by the route after a view's data loads, so the old view stays up meanwhile.
   @tracked shouldRenderNestedView = false;
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];

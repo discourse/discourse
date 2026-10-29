@@ -1,5 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   adoptAnonymousFlatRepliesPreference,
   switchTopicView,
@@ -103,22 +104,22 @@ module("Unit | Lib | nested-view-preference", function (hooks) {
       );
     });
 
-    test("nested context uses the visible reply instead of the URL", function (assert) {
+    test("nested context uses the visible reply instead of the URL", async function (assert) {
       this.addPost(3, -200, 50);
       this.addPost(8, 70, 300);
-      this.switch();
+      await this.switch();
       assert.strictEqual(this.path, "/t/example/123/8");
     });
 
-    test("nested root preserves a long post crossing the viewport top", function (assert) {
+    test("nested root preserves a long post crossing the viewport top", async function (assert) {
       this.router.currentRoute = { name: "topic.fromParams" };
       this.addPost(8, -1000, 200);
       this.addPost(9, 210, 400);
-      this.switch();
+      await this.switch();
       assert.strictEqual(this.path, "/t/example/123/8");
     });
 
-    test("ignores hidden posts and posts covered by the sticky controls", function (assert) {
+    test("ignores hidden posts and posts covered by the sticky controls", async function (assert) {
       const controls = document.createElement("div");
       controls.className = "nested-view__controls";
       controls.getBoundingClientRect = () => ({ top: 60, bottom: 110 });
@@ -126,33 +127,33 @@ module("Unit | Lib | nested-view-preference", function (hooks) {
       this.addPost(3, 60, 100);
       this.addPost(4, 110, 200, 0);
       this.addPost(8, 120, 300);
-      this.switch();
+      await this.switch();
       assert.strictEqual(this.path, "/t/example/123/8");
     });
 
-    test("flat view uses the visible post instead of stale tracking state", function (assert) {
+    test("flat view uses the visible post instead of stale tracking state", async function (assert) {
       this.topic.rendersNested = false;
       this.addPost(8, 70, 300);
-      this.switch();
+      await this.switch();
       assert.strictEqual(this.path, "/t/example/123/8");
     });
 
-    test("refreshes when the visible post already matches the route", function (assert) {
+    test("refreshes when the visible post already matches the route", async function (assert) {
       this.addPost(3, 70, 300);
-      this.switch();
+      await this.switch();
       assert.true(this.refreshed);
       assert.strictEqual(this.path, undefined);
     });
 
-    test("falls back to the route when no post is visible", function (assert) {
+    test("falls back to the route when no post is visible", async function (assert) {
       this.addPost(8, -200, 0);
-      this.switch();
+      await this.switch();
       assert.true(this.refreshed);
     });
 
-    test("a visible OP takes precedence over the context URL", function (assert) {
+    test("a visible OP takes precedence over the context URL", async function (assert) {
       this.addPost(1, 70, 300);
-      this.switch();
+      await this.switch();
       assert.strictEqual(this.path, "/t/example/123");
     });
 
@@ -191,6 +192,7 @@ module("Unit | Lib | nested-view-preference", function (hooks) {
       };
       this.addPost(8, 70, 300);
       pretender.put("/u/eviltrout.json", () => response(200, { user: {} }));
+      const alert = sinon.stub(this.owner.lookup("service:dialog"), "alert");
 
       await toggleFlatRepliesPreference({
         currentUser: logIn(this.owner),
@@ -200,6 +202,7 @@ module("Unit | Lib | nested-view-preference", function (hooks) {
       });
 
       assert.strictEqual(this.path, "/t/example/123/8");
+      assert.false(alert.called);
     });
   });
 });

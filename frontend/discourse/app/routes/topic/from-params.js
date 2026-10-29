@@ -151,7 +151,8 @@ export default class TopicFromParams extends DiscourseRoute {
   }
 
   setupController(controller, params, { _discourse_anchor }) {
-    this.controllerFor("topic").shouldRenderNestedView = params._loading_error
+    const topicController = this.controllerFor("topic");
+    topicController.shouldRenderNestedView = params._loading_error
       ? this.modelFor("topic").rendersNested
       : Boolean(params._nested);
 
@@ -166,7 +167,6 @@ export default class TopicFromParams extends DiscourseRoute {
       return;
     }
 
-    const topicController = this.controllerFor("topic");
     const nestedController = this.controllerFor("nested");
     const wasNestedView = Boolean(nestedController.topic);
     if (wasNestedView) {

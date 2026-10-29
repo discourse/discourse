@@ -178,13 +178,13 @@ export default class TopicAdminMenu extends Component {
     const slug = topic.get("slug");
 
     try {
-      await ajax(`/n/${slug}/${topicId}/toggle`, {
-        type: "PUT",
-        data: { enabled: newValue },
+      await switchTopicView(this.router, topic, async () => {
+        await ajax(`/n/${slug}/${topicId}/toggle`, {
+          type: "PUT",
+          data: { enabled: newValue },
+        });
+        topic.set("is_nested_view", newValue);
       });
-      switchTopicView(this.router, topic, () =>
-        topic.set("is_nested_view", newValue)
-      );
     } catch (e) {
       popupAjaxError(e);
     }

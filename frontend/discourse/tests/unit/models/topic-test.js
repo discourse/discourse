@@ -139,39 +139,41 @@ module("Unit | Model | topic", function (hooks) {
     assert.strictEqual(topic.lastPostUrl, "/t/hello/101/10");
   });
 
-  test("anonymous viewers keep their flat replies preference locally", function (assert) {
-    const keyValueStore = this.owner.lookup("service:key-value-store");
-    const topic = this.store.createRecord("topic", {
-      id: 101,
-      highest_post_number: 10,
-      slug: "hello",
-      is_nested_view: true,
+  module("local flat replies preference", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.keyValueStore = this.owner.lookup("service:key-value-store");
+      this.keyValueStore.set({ key: "prefer_flat_replies", value: "true" });
     });
 
-    assert.true(topic.rendersNested);
-    assert.strictEqual(topic.lastPostUrl, "/t/hello/101");
+    nestedHooks.afterEach(function () {
+      this.keyValueStore.remove("prefer_flat_replies");
+    });
 
-    keyValueStore.set({ key: "prefer_flat_replies", value: "true" });
-    try {
+    test("applies to anonymous viewers without a reload", function (assert) {
+      this.keyValueStore.remove("prefer_flat_replies");
+      const topic = this.store.createRecord("topic", {
+        id: 101,
+        highest_post_number: 10,
+        slug: "hello",
+        is_nested_view: true,
+      });
+      assert.strictEqual(topic.lastPostUrl, "/t/hello/101");
+
+      this.keyValueStore.set({ key: "prefer_flat_replies", value: "true" });
+
       assert.false(topic.rendersNested);
-      assert.strictEqual(
-        topic.lastPostUrl,
-        "/t/hello/101/10",
-        "links follow the new preference without a reload"
-      );
+      assert.strictEqual(topic.lastPostUrl, "/t/hello/101/10");
+    });
 
+    test("is ignored for logged-in users", function (assert) {
       logIn(this.owner);
-      const userTopic = this.store.createRecord("topic", {
+      const topic = this.store.createRecord("topic", {
         id: 102,
         is_nested_view: true,
       });
-      assert.true(
-        userTopic.rendersNested,
-        "logged-in users ignore the local preference"
-      );
-    } finally {
-      keyValueStore.remove("prefer_flat_replies");
-    }
+
+      assert.true(topic.rendersNested);
+    });
   });
 
   test("has details", function (assert) {
