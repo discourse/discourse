@@ -73,8 +73,8 @@ describe Jobs::PostSentimentAnalysis do
 
     it "processes only enabled decisions with sentiment=true and emotion=false" do
       model = Fabricate(:decision_model)
-      SiteSetting.ai_sentiment_enabled = (true)
-      SiteSetting.ai_sentiment_emotion_enabled = (false)
+      SiteSetting.ai_sentiment_enabled = true
+      SiteSetting.ai_sentiment_emotion_enabled = false
       SiteSetting.ai_sentiment_model_configs = ""
       SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
       SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
@@ -84,19 +84,17 @@ describe Jobs::PostSentimentAnalysis do
       DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
         job.execute(post_id: post.id)
 
-        expect(canned.calls.map { |call| call[:feature_name] }).to eq(
-          [true ? "sentiment" : "emotion"],
-        )
+        expect(canned.calls.map { |call| call[:feature_name] }).to eq(["sentiment"])
       end
       expect(ClassificationResult.where(target: post).pluck(:model_used)).to eq(
-        [true ? "discourse-ai/sentiment-decision" : "discourse-ai/emotion-decision"],
+        ["discourse-ai/sentiment-decision"],
       )
     end
 
     it "processes only enabled decisions with sentiment=false and emotion=true" do
       model = Fabricate(:decision_model)
-      SiteSetting.ai_sentiment_enabled = (false)
-      SiteSetting.ai_sentiment_emotion_enabled = (true)
+      SiteSetting.ai_sentiment_enabled = false
+      SiteSetting.ai_sentiment_emotion_enabled = true
       SiteSetting.ai_sentiment_model_configs = ""
       SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
       SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
@@ -106,12 +104,10 @@ describe Jobs::PostSentimentAnalysis do
       DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
         job.execute(post_id: post.id)
 
-        expect(canned.calls.map { |call| call[:feature_name] }).to eq(
-          [false ? "sentiment" : "emotion"],
-        )
+        expect(canned.calls.map { |call| call[:feature_name] }).to eq(["emotion"])
       end
       expect(ClassificationResult.where(target: post).pluck(:model_used)).to eq(
-        [false ? "discourse-ai/sentiment-decision" : "discourse-ai/emotion-decision"],
+        ["discourse-ai/emotion-decision"],
       )
     end
 

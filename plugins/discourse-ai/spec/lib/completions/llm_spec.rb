@@ -99,7 +99,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
       DiscourseAi::Completions::Llm.with_prepared_responses(["ok"]) do |endpoint|
         llm.generate("Input", user: user, max_response_tokens: 10, thinking_effort: "high")
 
-        expect(endpoint.model_params[:max_tokens]).to eq(10 + 16_384)
+        expect(endpoint.model_params[:max_tokens]).to eq(16_394)
       end
     end
 

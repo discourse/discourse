@@ -7,25 +7,25 @@ RSpec.describe IpAddressFormatValidator do
   let(:validator) { described_class.new(attributes: :ip_address) }
 
   it "accepts 99.232.23.123" do
-    record.ip_address = ("99.232.23.123")
+    record.ip_address = "99.232.23.123"
     validate
     expect(record.errors[:ip_address]).not_to be_present
   end
 
   it "accepts 99.232.0.0/16" do
-    record.ip_address = ("99.232.0.0/16")
+    record.ip_address = "99.232.0.0/16"
     validate
     expect(record.errors[:ip_address]).not_to be_present
   end
 
   it "accepts fd12:db8::ff00:42:8329" do
-    record.ip_address = ("fd12:db8::ff00:42:8329")
+    record.ip_address = "fd12:db8::ff00:42:8329"
     validate
     expect(record.errors[:ip_address]).not_to be_present
   end
 
   it "accepts fc00::/7" do
-    record.ip_address = ("fc00::/7")
+    record.ip_address = "fc00::/7"
     validate
     expect(record.errors[:ip_address]).not_to be_present
   end

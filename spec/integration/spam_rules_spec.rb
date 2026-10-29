@@ -123,8 +123,8 @@ RSpec.describe "spam rules for users" do
       end
     end
 
-    context "if spammer is trusted #{[:user, trust_level: TrustLevel[2]][0]}" do
-      let!(:spammer) { Fabricate(*[:user, trust_level: TrustLevel[2]]) }
+    context "if spammer is trusted user" do
+      let!(:spammer) { Fabricate(:user, trust_level: TrustLevel[2]) }
       let!(:spam_post) { Fabricate(:post, user: spammer) }
       let!(:private_messages_count) { spammer.private_topics_count }
 
@@ -136,8 +136,8 @@ RSpec.describe "spam rules for users" do
       end
     end
 
-    context "if spammer is trusted #{[:admin][0]}" do
-      let!(:spammer) { Fabricate(*[:admin]) }
+    context "if spammer is trusted admin" do
+      let!(:spammer) { Fabricate(:admin) }
       let!(:spam_post) { Fabricate(:post, user: spammer) }
       let!(:private_messages_count) { spammer.private_topics_count }
 
@@ -149,8 +149,8 @@ RSpec.describe "spam rules for users" do
       end
     end
 
-    context "if spammer is trusted #{[:moderator][0]}" do
-      let!(:spammer) { Fabricate(*[:moderator]) }
+    context "if spammer is trusted moderator" do
+      let!(:spammer) { Fabricate(:moderator) }
       let!(:spam_post) { Fabricate(:post, user: spammer) }
       let!(:private_messages_count) { spammer.private_topics_count }
 

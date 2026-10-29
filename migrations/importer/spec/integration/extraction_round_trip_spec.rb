@@ -18,73 +18,73 @@ RSpec.describe "markdown extraction round trip" do
   let(:fixtures) { ExtractionRoundTrip.round_trip_bodies }
 
   describe "resolution with nothing mapped" do
-    it "restores the #{"code".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the code body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("code"))
 
       expect(outcome.resolved["code"]).to eq(outcome.expected["code"])
     end
 
-    it "restores the #{"emoji".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the emoji body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("emoji"))
 
       expect(outcome.resolved["emoji"]).to eq(outcome.expected["emoji"])
     end
 
-    it "restores the #{"entities".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the entities body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("entities"))
 
       expect(outcome.resolved["entities"]).to eq(outcome.expected["entities"])
     end
 
-    it "restores the #{"hashtags".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the hashtags body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("hashtags"))
 
       expect(outcome.resolved["hashtags"]).to eq(outcome.expected["hashtags"])
     end
 
-    it "restores the #{"links".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the links body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("links"))
 
       expect(outcome.resolved["links"]).to eq(outcome.expected["links"])
     end
 
-    it "restores the #{"mentions".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the mentions body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("mentions"))
 
       expect(outcome.resolved["mentions"]).to eq(outcome.expected["mentions"])
     end
 
-    it "restores the #{"mixed".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the mixed body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("mixed"))
 
       expect(outcome.resolved["mixed"]).to eq(outcome.expected["mixed"])
     end
 
-    it "restores the #{"multiline_label".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the multiline label body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("multiline_label"))
 
       expect(outcome.resolved["multiline_label"]).to eq(outcome.expected["multiline_label"])
     end
 
-    it "restores the #{"quotes".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the quotes body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("quotes"))
 
       expect(outcome.resolved["quotes"]).to eq(outcome.expected["quotes"])
     end
 
-    it "restores the #{"references".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the references body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("references"))
 
       expect(outcome.resolved["references"]).to eq(outcome.expected["references"])
     end
 
-    it "restores the #{"uploads".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the uploads body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("uploads"))
 
       expect(outcome.resolved["uploads"]).to eq(outcome.expected["uploads"])
     end
 
-    it "restores the #{"mixed_crlf".tr("_", " ")} body, rewriting only source-site origins" do
+    it "restores the mixed crlf body, rewriting only source-site origins" do
       outcome = round_trip(fixtures.slice("mixed_crlf"))
 
       expect(outcome.resolved["mixed_crlf"]).to eq(outcome.expected["mixed_crlf"])

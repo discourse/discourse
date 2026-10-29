@@ -1212,14 +1212,14 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       }
     end
 
-    it "imports a conversational agent with automatic provisioning #{false ? "enabled" : "disabled"}" do
-      SiteSetting.ai_bot_enabled = (false)
+    it "imports a conversational agent with automatic provisioning disabled" do
+      SiteSetting.ai_bot_enabled = false
 
       expect do
         post "/admin/plugins/discourse-ai/ai-agents/import.json",
              params: valid_import_data,
              as: :json
-      end.to change(User, :count).by(false ? 1 : 0)
+      end.not_to change(User, :count)
 
       expect(response).to have_http_status(:created)
       agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
@@ -1227,14 +1227,14 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.user.present?).to eq(false)
     end
 
-    it "imports a conversational agent with automatic provisioning #{true ? "enabled" : "disabled"}" do
-      SiteSetting.ai_bot_enabled = (true)
+    it "imports a conversational agent with automatic provisioning enabled" do
+      SiteSetting.ai_bot_enabled = true
 
       expect do
         post "/admin/plugins/discourse-ai/ai-agents/import.json",
              params: valid_import_data,
              as: :json
-      end.to change(User, :count).by(true ? 1 : 0)
+      end.to change(User, :count).by(1)
 
       expect(response).to have_http_status(:created)
       agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))

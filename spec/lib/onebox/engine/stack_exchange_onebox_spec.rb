@@ -2,7 +2,7 @@
 
 RSpec.describe Onebox::Engine::StackExchangeOnebox do
   describe "domains" do
-    shared_examples "a short Stack Exchange question URL" do |domain|
+    shared_examples "a supported Stack Exchange domain" do |domain|
       it "matches question with short URL on #{domain}" do
         expect(described_class === URI("http://#{domain}/q/55495")).to eq(true)
       end
@@ -24,19 +24,19 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
       end
     end
 
-    include_examples "a short Stack Exchange question URL", "stackoverflow.com"
-    include_examples "a short Stack Exchange question URL", "meta.stackoverflow.com"
-    include_examples "a short Stack Exchange question URL", "superuser.com"
-    include_examples "a short Stack Exchange question URL", "meta.superuser.com"
-    include_examples "a short Stack Exchange question URL", "serverfault.com"
-    include_examples "a short Stack Exchange question URL", "meta.serverfault.com"
-    include_examples "a short Stack Exchange question URL", "askubuntu.com"
-    include_examples "a short Stack Exchange question URL", "meta.askubuntu.com"
-    include_examples "a short Stack Exchange question URL", "mathoverflow.net"
-    include_examples "a short Stack Exchange question URL", "meta.mathoverflow.net"
-    include_examples "a short Stack Exchange question URL", "money.stackexchange.com"
-    include_examples "a short Stack Exchange question URL", "meta.money.stackexchange.com"
-    include_examples "a short Stack Exchange question URL", "stackapps.com"
+    include_examples "a supported Stack Exchange domain", "stackoverflow.com"
+    include_examples "a supported Stack Exchange domain", "meta.stackoverflow.com"
+    include_examples "a supported Stack Exchange domain", "superuser.com"
+    include_examples "a supported Stack Exchange domain", "meta.superuser.com"
+    include_examples "a supported Stack Exchange domain", "serverfault.com"
+    include_examples "a supported Stack Exchange domain", "meta.serverfault.com"
+    include_examples "a supported Stack Exchange domain", "askubuntu.com"
+    include_examples "a supported Stack Exchange domain", "meta.askubuntu.com"
+    include_examples "a supported Stack Exchange domain", "mathoverflow.net"
+    include_examples "a supported Stack Exchange domain", "meta.mathoverflow.net"
+    include_examples "a supported Stack Exchange domain", "money.stackexchange.com"
+    include_examples "a supported Stack Exchange domain", "meta.money.stackexchange.com"
+    include_examples "a supported Stack Exchange domain", "stackapps.com"
 
     it "doesn't match question on example.com" do
       expect(described_class === URI("http://example.com/q/4711")).to eq(false)

@@ -180,9 +180,9 @@ describe "Uploading files in the composer" do
   context "when multiple images are uploaded" do
     before { SiteSetting.enable_auto_grid_images = true }
 
-    before { SiteSetting.default_locale = ("en") }
-
     context "when the locale is en" do
+      before { SiteSetting.default_locale = "en" }
+
       it "automatically wraps images in [grid] tags on 3 or more images" do
         visit "/new-topic"
         expect(composer).to be_opened
@@ -198,10 +198,10 @@ describe "Uploading files in the composer" do
         )
       end
     end
-
-    before { SiteSetting.default_locale = ("fr") }
 
     context "when the locale is fr" do
+      before { SiteSetting.default_locale = "fr" }
+
       it "automatically wraps images in [grid] tags on 3 or more images" do
         visit "/new-topic"
         expect(composer).to be_opened
@@ -218,9 +218,9 @@ describe "Uploading files in the composer" do
       end
     end
 
-    before { SiteSetting.default_locale = ("de") }
-
     context "when the locale is de" do
+      before { SiteSetting.default_locale = "de" }
+
       it "automatically wraps images in [grid] tags on 3 or more images" do
         visit "/new-topic"
         expect(composer).to be_opened

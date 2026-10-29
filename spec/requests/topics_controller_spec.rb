@@ -3997,111 +3997,64 @@ RSpec.describe TopicsController do
 
       shared_examples "various scenarios" do |expected, request_json:|
         it "returns #{expected.fetch(:normal_topic)} for normal_topic" do
-          slug = :normal_topic == :nonexistent ? "garbage-slug" : send(:normal_topic.to_s).slug
-          topic_id =
-            :normal_topic == :nonexistent ? nonexistent_topic_id : send(:normal_topic.to_s).id
+          slug = normal_topic.slug
+          topic_id = normal_topic.id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:normal_topic))
         end
 
         it "returns #{expected.fetch(:secure_topic)} for secure_topic" do
-          slug = :secure_topic == :nonexistent ? "garbage-slug" : send(:secure_topic.to_s).slug
-          topic_id =
-            :secure_topic == :nonexistent ? nonexistent_topic_id : send(:secure_topic.to_s).id
+          slug = secure_topic.slug
+          topic_id = secure_topic.id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:secure_topic))
         end
 
         it "returns #{expected.fetch(:private_topic)} for private_topic" do
-          slug = :private_topic == :nonexistent ? "garbage-slug" : send(:private_topic.to_s).slug
-          topic_id =
-            :private_topic == :nonexistent ? nonexistent_topic_id : send(:private_topic.to_s).id
+          slug = private_topic.slug
+          topic_id = private_topic.id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:private_topic))
         end
 
         it "returns #{expected.fetch(:deleted_topic)} for deleted_topic" do
-          slug = :deleted_topic == :nonexistent ? "garbage-slug" : send(:deleted_topic.to_s).slug
-          topic_id =
-            :deleted_topic == :nonexistent ? nonexistent_topic_id : send(:deleted_topic.to_s).id
+          slug = deleted_topic.slug
+          topic_id = deleted_topic.id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:deleted_topic))
         end
 
         it "returns #{expected.fetch(:deleted_secure_topic)} for deleted_secure_topic" do
-          slug =
-            (
-              if :deleted_secure_topic == :nonexistent
-                "garbage-slug"
-              else
-                send(:deleted_secure_topic.to_s).slug
-              end
-            )
-          topic_id =
-            (
-              if :deleted_secure_topic == :nonexistent
-                nonexistent_topic_id
-              else
-                send(:deleted_secure_topic.to_s).id
-              end
-            )
+          slug = deleted_secure_topic.slug
+          topic_id = deleted_secure_topic.id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:deleted_secure_topic))
         end
 
         it "returns #{expected.fetch(:deleted_private_topic)} for deleted_private_topic" do
-          slug =
-            (
-              if :deleted_private_topic == :nonexistent
-                "garbage-slug"
-              else
-                send(:deleted_private_topic.to_s).slug
-              end
-            )
-          topic_id =
-            (
-              if :deleted_private_topic == :nonexistent
-                nonexistent_topic_id
-              else
-                send(:deleted_private_topic.to_s).id
-              end
-            )
+          slug = deleted_private_topic.slug
+          topic_id = deleted_private_topic.id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:deleted_private_topic))
         end
 
         it "returns #{expected.fetch(:nonexistent)} for nonexistent" do
-          slug = :nonexistent == :nonexistent ? "garbage-slug" : send(:nonexistent.to_s).slug
-          topic_id =
-            :nonexistent == :nonexistent ? nonexistent_topic_id : send(:nonexistent.to_s).id
+          slug = "garbage-slug"
+          topic_id = nonexistent_topic_id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:nonexistent))
         end
 
         it "returns #{expected.fetch(:secure_accessible_topic)} for secure_accessible_topic" do
-          slug =
-            (
-              if :secure_accessible_topic == :nonexistent
-                "garbage-slug"
-              else
-                send(:secure_accessible_topic.to_s).slug
-              end
-            )
-          topic_id =
-            (
-              if :secure_accessible_topic == :nonexistent
-                nonexistent_topic_id
-              else
-                send(:secure_accessible_topic.to_s).id
-              end
-            )
+          slug = secure_accessible_topic.slug
+          topic_id = secure_accessible_topic.id
           format = request_json ? ".json" : ""
           get "/t/#{slug}/#{topic_id}#{format}"
           expect(response.status).to eq(expected.fetch(:secure_accessible_topic))

@@ -880,21 +880,21 @@ RSpec.describe Email::Receiver do
       end
 
       it "enqueues the post and silences the user for X-Spam-Flag" do
-        SiteSetting.email_in_spam_header = ("X-Spam-Flag")
+        SiteSetting.email_in_spam_header = "X-Spam-Flag"
 
         expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
         expect(user.reload.silenced?).to be(true)
       end
 
       it "enqueues the post and silences the user for X-Spam-Status" do
-        SiteSetting.email_in_spam_header = ("X-Spam-Status")
+        SiteSetting.email_in_spam_header = "X-Spam-Status"
 
         expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
         expect(user.reload.silenced?).to be(true)
       end
 
       it "enqueues the post and silences the user for X-SES-Spam-Verdict" do
-        SiteSetting.email_in_spam_header = ("X-SES-Spam-Verdict")
+        SiteSetting.email_in_spam_header = "X-SES-Spam-Verdict"
 
         expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
         expect(user.reload.silenced?).to be(true)

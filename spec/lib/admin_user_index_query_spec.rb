@@ -66,27 +66,27 @@ RSpec.describe AdminUserIndexQuery do
 
   describe "no users with trust level" do
     it "newuser returns no records" do
-      query = ::AdminUserIndexQuery.new(query: :newuser.to_s)
+      query = ::AdminUserIndexQuery.new(query: "newuser")
       expect(real_users(query)).to eq([])
     end
 
     it "basic returns no records" do
-      query = ::AdminUserIndexQuery.new(query: :basic.to_s)
+      query = ::AdminUserIndexQuery.new(query: "basic")
       expect(real_users(query)).to eq([])
     end
 
     it "member returns no records" do
-      query = ::AdminUserIndexQuery.new(query: :member.to_s)
+      query = ::AdminUserIndexQuery.new(query: "member")
       expect(real_users(query)).to eq([])
     end
 
     it "regular returns no records" do
-      query = ::AdminUserIndexQuery.new(query: :regular.to_s)
+      query = ::AdminUserIndexQuery.new(query: "regular")
       expect(real_users(query)).to eq([])
     end
 
     it "leader returns no records" do
-      query = ::AdminUserIndexQuery.new(query: :leader.to_s)
+      query = ::AdminUserIndexQuery.new(query: "leader")
       expect(real_users(query)).to eq([])
     end
   end
@@ -95,50 +95,45 @@ RSpec.describe AdminUserIndexQuery do
     it "finds user with trust newuser" do
       user = Fabricate(:user, trust_level: 0)
 
-      next if !TrustLevel.valid?(0 + 1)
-      Fabricate(:user, trust_level: 0 + 1)
+      Fabricate(:user, trust_level: 1)
 
-      query = ::AdminUserIndexQuery.new(query: :newuser.to_s)
+      query = ::AdminUserIndexQuery.new(query: "newuser")
       expect(real_users(query).to_a).to eq([user])
     end
 
     it "finds user with trust basic" do
       user = Fabricate(:user, trust_level: 1)
 
-      next if !TrustLevel.valid?(1 + 1)
-      Fabricate(:user, trust_level: 1 + 1)
+      Fabricate(:user, trust_level: 2)
 
-      query = ::AdminUserIndexQuery.new(query: :basic.to_s)
+      query = ::AdminUserIndexQuery.new(query: "basic")
       expect(real_users(query).to_a).to eq([user])
     end
 
     it "finds user with trust member" do
       user = Fabricate(:user, trust_level: 2)
 
-      next if !TrustLevel.valid?(2 + 1)
-      Fabricate(:user, trust_level: 2 + 1)
+      Fabricate(:user, trust_level: 3)
 
-      query = ::AdminUserIndexQuery.new(query: :member.to_s)
+      query = ::AdminUserIndexQuery.new(query: "member")
       expect(real_users(query).to_a).to eq([user])
     end
 
     it "finds user with trust regular" do
       user = Fabricate(:user, trust_level: 3)
 
-      next if !TrustLevel.valid?(3 + 1)
-      Fabricate(:user, trust_level: 3 + 1)
+      Fabricate(:user, trust_level: 4)
 
-      query = ::AdminUserIndexQuery.new(query: :regular.to_s)
+      query = ::AdminUserIndexQuery.new(query: "regular")
       expect(real_users(query).to_a).to eq([user])
     end
 
     it "finds user with trust leader" do
       user = Fabricate(:user, trust_level: 4)
 
-      next if !TrustLevel.valid?(4 + 1)
-      Fabricate(:user, trust_level: 4 + 1)
+      Fabricate(:user, trust_level: 3)
 
-      query = ::AdminUserIndexQuery.new(query: :leader.to_s)
+      query = ::AdminUserIndexQuery.new(query: "leader")
       expect(real_users(query).to_a).to eq([user])
     end
   end

@@ -10,45 +10,38 @@ describe DiscourseAi::AiBot::EntryPoint do
 
       it "provisions users only after enabling both settings, starting with discourse_ai_enabled" do
         agent = Fabricate(:ai_agent)
-        second_setting =
-          :discourse_ai_enabled == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
 
-        expect { SiteSetting.public_send("discourse_ai_enabled=", true) }.not_to change(
-          User,
-          :count,
-        )
+        expect { SiteSetting.discourse_ai_enabled = true }.not_to change(User, :count)
         expect(agent.reload.user_id).to be_nil
 
-        SiteSetting.public_send("#{second_setting}=", true)
+        SiteSetting.ai_bot_enabled = true
 
         user = agent.reload.user
         expect(user).to be_present
         expect(user).to be_bot
 
         expect do
-          SiteSetting.public_send("discourse_ai_enabled=", false)
-          SiteSetting.public_send("discourse_ai_enabled=", true)
+          SiteSetting.discourse_ai_enabled = false
+          SiteSetting.discourse_ai_enabled = true
         end.not_to change(User, :count)
         expect(agent.reload.user).to eq(user)
       end
 
       it "provisions users only after enabling both settings, starting with ai_bot_enabled" do
         agent = Fabricate(:ai_agent)
-        second_setting =
-          :ai_bot_enabled == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
 
-        expect { SiteSetting.public_send("ai_bot_enabled=", true) }.not_to change(User, :count)
+        expect { SiteSetting.ai_bot_enabled = true }.not_to change(User, :count)
         expect(agent.reload.user_id).to be_nil
 
-        SiteSetting.public_send("#{second_setting}=", true)
+        SiteSetting.discourse_ai_enabled = true
 
         user = agent.reload.user
         expect(user).to be_present
         expect(user).to be_bot
 
         expect do
-          SiteSetting.public_send("ai_bot_enabled=", false)
-          SiteSetting.public_send("ai_bot_enabled=", true)
+          SiteSetting.ai_bot_enabled = false
+          SiteSetting.ai_bot_enabled = true
         end.not_to change(User, :count)
         expect(agent.reload.user).to eq(user)
       end

@@ -166,7 +166,7 @@ RSpec.describe Admin::Config::DesignWizardController do
     end
 
     it "restores the original chat homepage and channel settings after a preview" do
-      SiteSetting.default_homepage = ("chat")
+      SiteSetting.default_homepage = "chat"
       SiteSetting.chat_homepage_channel = other_channel.id
 
       get "/admin/config/design-wizard.json"
@@ -187,7 +187,7 @@ RSpec.describe Admin::Config::DesignWizardController do
     end
 
     it "restores the original categories homepage and channel settings after a preview" do
-      SiteSetting.default_homepage = ("categories")
+      SiteSetting.default_homepage = "categories"
       SiteSetting.chat_homepage_channel = other_channel.id
 
       get "/admin/config/design-wizard.json"

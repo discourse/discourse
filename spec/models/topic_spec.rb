@@ -3812,22 +3812,22 @@ RSpec.describe Topic do
     let(:topic) { Fabricate.build(:topic) }
 
     it "extracts the root domain from https://meta.discourse.org" do
-      topic.featured_link = ("https://meta.discourse.org")
+      topic.featured_link = "https://meta.discourse.org"
       expect(topic.featured_link_root_domain).to eq("discourse.org")
     end
 
     it "extracts the root domain from https://meta.discourse.org/" do
-      topic.featured_link = ("https://meta.discourse.org/")
+      topic.featured_link = "https://meta.discourse.org/"
       expect(topic.featured_link_root_domain).to eq("discourse.org")
     end
 
     it "extracts the root domain from https://meta.discourse.org/?filter=test" do
-      topic.featured_link = ("https://meta.discourse.org/?filter=test")
+      topic.featured_link = "https://meta.discourse.org/?filter=test"
       expect(topic.featured_link_root_domain).to eq("discourse.org")
     end
 
     it "extracts the root domain from https://meta.discourse.org/t/中國/1" do
-      topic.featured_link = ("https://meta.discourse.org/t/中國/1")
+      topic.featured_link = "https://meta.discourse.org/t/中國/1"
       expect(topic.featured_link_root_domain).to eq("discourse.org")
     end
   end

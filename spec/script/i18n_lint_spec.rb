@@ -50,101 +50,113 @@ RSpec.describe LocaleFileValidator do
       expect(errors[:invalid_interpolation_key_format]).to be_empty
     end
 
+    # uppercase name
     it "flags {{setting:Title}} as malformed" do
       errors = errors_for("Some text with {{setting:Title}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # uppercase name
+    end
 
+    # trailing space
     it "flags {{setting:title }} as malformed" do
       errors = errors_for("Some text with {{setting:title }} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # trailing space
+    end
 
+    # empty name
     it "flags {{setting:}} as malformed" do
       errors = errors_for("Some text with {{setting:}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # empty name
+    end
 
+    # space after comma
     it "flags {{settings:title, logo|label}} as malformed" do
       errors = errors_for("Some text with {{settings:title, logo|label}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # space after comma
+    end
 
+    # wrong separator
     it "flags {{settings:title;logo|label}} as malformed" do
       errors = errors_for("Some text with {{settings:title;logo|label}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # wrong separator
+    end
 
+    # empty label
     it "flags {{settings:title,logo|}} as malformed" do
       errors = errors_for("Some text with {{settings:title,logo|}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # empty label
+    end
 
+    # pipe inside label
     it "flags {{settings:title,logo|la|bel}} as malformed" do
       errors = errors_for("Some text with {{settings:title,logo|la|bel}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # pipe inside label
+    end
 
+    # brace inside label
     it "flags {{settings:title,logo|la{bel}} as malformed" do
       errors = errors_for("Some text with {{settings:title,logo|la{bel}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # brace inside label
+    end
 
+    # leading comma
     it "flags {{settings:,title}} as malformed" do
       errors = errors_for("Some text with {{settings:,title}} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # leading comma
+    end
 
+    # unclosed singular marker
     it "flags {{setting:title} as malformed" do
       errors = errors_for("Some text with {{setting:title} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # unclosed singular marker
+    end
 
+    # unclosed plural marker
     it "flags {{settings:title,logo|All} as malformed" do
       errors = errors_for("Some text with {{settings:title,logo|All} in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # unclosed plural marker
+    end
 
+    # no closing braces at all
     it "flags {{setting:title as malformed" do
       errors = errors_for("Some text with {{setting:title in it.")
       expect(
         errors[:invalid_setting_link_format].presence ||
           errors[:invalid_interpolation_key_format].presence,
       ).to eq(["test_key"])
-    end # no closing braces at all
+    end
 
     it "still flags handlebars-style interpolation that isn't a setting marker" do
       expect(errors_for("Hello {{username}}!")[:invalid_interpolation_key_format]).to eq(

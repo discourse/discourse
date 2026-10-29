@@ -35,37 +35,37 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "keeps a trailing slash out of the route for a topic with a slug and id" do
       link, = link_for("[x](/t/slug/18978/)")
 
-      expect(link).to include(**{ target_id: 18_978 }, target_suffix: "/")
+      expect(link).to include(target_id: 18_978, target_suffix: "/")
     end
 
     it "keeps a trailing slash out of the route for a category by id" do
       link, = link_for("[x](/c/support/6/)")
 
-      expect(link).to include(**{ target_id: 6 }, target_suffix: "/")
+      expect(link).to include(target_id: 6, target_suffix: "/")
     end
 
     it "keeps a trailing slash out of the route for a category by slug path" do
       link, = link_for("[x](/c/support/billing/)")
 
-      expect(link).to include(**{ target_name: "support:billing" }, target_suffix: "/")
+      expect(link).to include(target_name: "support:billing", target_suffix: "/")
     end
 
     it "keeps a trailing slash out of the route for a badge" do
       link, = link_for("[x](/badges/9/great/)")
 
-      expect(link).to include(**{ target_id: 9 }, target_suffix: "/")
+      expect(link).to include(target_id: 9, target_suffix: "/")
     end
 
     it "keeps a trailing slash out of the route for a category+tag route" do
       link, = link_for("[x](/tags/c/food/wine/)")
 
-      expect(link).to include(**{ target_tag_path: "wine" }, target_suffix: "/")
+      expect(link).to include(target_tag_path: "wine", target_suffix: "/")
     end
 
     it "keeps a trailing slash out of the route for a tag intersection" do
       link, = link_for("[x](/tags/intersection/food/wine/)")
 
-      expect(link).to include(**{ target_tag_path: "food/wine" }, target_suffix: "/")
+      expect(link).to include(target_tag_path: "food/wine", target_suffix: "/")
     end
 
     # A digit run that overflows an id is still the numeric-title ambiguity, so

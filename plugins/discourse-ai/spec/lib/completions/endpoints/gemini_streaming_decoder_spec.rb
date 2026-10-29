@@ -19,8 +19,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
       data_lines = events.map { |event| "data: #{event.to_json}" }
       chunks = [
         data_lines[0] + "\r\n\r\n",
-        data_lines[1] + "\r\n\r\n"[0...(1)],
-        "\r\n\r\n"[(1)..] + data_lines[2] + "\r\n\r\n",
+        data_lines[1] + "\r\n\r\n"[0...1],
+        "\r\n\r\n"[1..] + data_lines[2] + "\r\n\r\n",
         data_lines[3] + "\r\n\r\n",
       ]
 
@@ -44,8 +44,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
       data_lines = events.map { |event| "data: #{event.to_json}" }
       chunks = [
         data_lines[0] + "\r\n\r\n",
-        data_lines[1] + "\r\n\r\n"[0...(2)],
-        "\r\n\r\n"[(2)..] + data_lines[2] + "\r\n\r\n",
+        data_lines[1] + "\r\n\r\n"[0...2],
+        "\r\n\r\n"[2..] + data_lines[2] + "\r\n\r\n",
         data_lines[3] + "\r\n\r\n",
       ]
 
@@ -69,8 +69,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
       data_lines = events.map { |event| "data: #{event.to_json}" }
       chunks = [
         data_lines[0] + "\r\n\r\n",
-        data_lines[1] + "\r\n\r\n"[0...(3)],
-        "\r\n\r\n"[(3)..] + data_lines[2] + "\r\n\r\n",
+        data_lines[1] + "\r\n\r\n"[0...3],
+        "\r\n\r\n"[3..] + data_lines[2] + "\r\n\r\n",
         data_lines[3] + "\r\n\r\n",
       ]
 
@@ -94,8 +94,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
       data_lines = events.map { |event| "data: #{event.to_json}" }
       chunks = [
         data_lines[0] + "\n\n",
-        data_lines[1] + "\n\n"[0...(1)],
-        "\n\n"[(1)..] + data_lines[2] + "\n\n",
+        data_lines[1] + "\n\n"[0...1],
+        "\n\n"[1..] + data_lines[2] + "\n\n",
         data_lines[3] + "\n\n",
       ]
 

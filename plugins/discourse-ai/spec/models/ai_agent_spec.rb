@@ -588,10 +588,10 @@ RSpec.describe AiAgent do
 
   describe ".ensure_users!" do
     it "only provisions automatically with both settings enabled (AI: false, bot: false)" do
-      SiteSetting.discourse_ai_enabled = (false)
-      SiteSetting.ai_bot_enabled = (false)
+      SiteSetting.discourse_ai_enabled = false
+      SiteSetting.ai_bot_enabled = false
       agent = Fabricate(:ai_agent)
-      provisioning_enabled = false && false
+      provisioning_enabled = false
 
       expect(agent.needs_user?).to eq(provisioning_enabled)
       expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
@@ -601,10 +601,10 @@ RSpec.describe AiAgent do
     end
 
     it "only provisions automatically with both settings enabled (AI: false, bot: true)" do
-      SiteSetting.discourse_ai_enabled = (false)
-      SiteSetting.ai_bot_enabled = (true)
+      SiteSetting.discourse_ai_enabled = false
+      SiteSetting.ai_bot_enabled = true
       agent = Fabricate(:ai_agent)
-      provisioning_enabled = false && true
+      provisioning_enabled = false
 
       expect(agent.needs_user?).to eq(provisioning_enabled)
       expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
@@ -614,10 +614,10 @@ RSpec.describe AiAgent do
     end
 
     it "only provisions automatically with both settings enabled (AI: true, bot: false)" do
-      SiteSetting.discourse_ai_enabled = (true)
-      SiteSetting.ai_bot_enabled = (false)
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.ai_bot_enabled = false
       agent = Fabricate(:ai_agent)
-      provisioning_enabled = true && false
+      provisioning_enabled = false
 
       expect(agent.needs_user?).to eq(provisioning_enabled)
       expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
@@ -627,10 +627,10 @@ RSpec.describe AiAgent do
     end
 
     it "only provisions automatically with both settings enabled (AI: true, bot: true)" do
-      SiteSetting.discourse_ai_enabled = (true)
-      SiteSetting.ai_bot_enabled = (true)
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.ai_bot_enabled = true
       agent = Fabricate(:ai_agent)
-      provisioning_enabled = true && true
+      provisioning_enabled = true
 
       expect(agent.needs_user?).to eq(provisioning_enabled)
       expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(

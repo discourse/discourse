@@ -421,7 +421,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails when the recipient is staged" do
-      instance_exec(&-> { recipient.update!(staged: true) })
+      recipient.update!(staged: true)
 
       expect { send_dm }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -430,9 +430,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails when the recipient is suspended" do
-      instance_exec(
-        &-> { recipient.update!(suspended_till: 1.day.from_now, suspended_at: Time.zone.now) }
-      )
+      recipient.update!(suspended_till: 1.day.from_now, suspended_at: Time.zone.now)
 
       expect { send_dm }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -441,7 +439,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails when the recipient is inactive" do
-      instance_exec(&-> { recipient.update!(active: false) })
+      recipient.update!(active: false)
 
       expect { send_dm }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -450,7 +448,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails when the recipient disabled chat" do
-      instance_exec(&-> { recipient.user_option.update!(chat_enabled: false) })
+      recipient.user_option.update!(chat_enabled: false)
 
       expect { send_dm }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -459,7 +457,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails when the recipient is not allowed to chat" do
-      instance_exec(&-> { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] })
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect { send_dm }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -474,7 +472,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails when the sender disabled chat" do
-      instance_exec(&-> { sender.user_option.update!(chat_enabled: false) })
+      sender.user_option.update!(chat_enabled: false)
 
       expect { send_dm(actor_username: sender.username) }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -483,13 +481,9 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails when the sender is not allowed to chat" do
-      instance_exec(
-        &-> do
-          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
-          recipient.update!(trust_level: TrustLevel[2])
-          Group.refresh_automatic_groups_for_user!(recipient)
-        end
-      )
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+      recipient.update!(trust_level: TrustLevel[2])
+      Group.refresh_automatic_groups_for_user!(recipient)
 
       expect { send_dm(actor_username: sender.username) }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -498,7 +492,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails without creating a direct message when the sender is not allowed to send direct messages" do
-      instance_exec(&-> { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] })
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff]
 
       expect_no_dm_side_effects do
         expect { send_dm(actor_username: sender.username) }.to raise_error(
@@ -509,7 +503,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
     end
 
     it "fails without creating a direct message when the sender disabled personal messages" do
-      instance_exec(&-> { sender.user_option.update!(allow_private_messages: false) })
+      sender.user_option.update!(allow_private_messages: false)
 
       expect_no_dm_side_effects do
         expect { send_dm(actor_username: sender.username) }.to raise_error(

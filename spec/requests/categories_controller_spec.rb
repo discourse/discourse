@@ -555,7 +555,7 @@ RSpec.describe CategoriesController do
       fab!(:moderator)
 
       it "retains access with granular pseudogroup behavior false" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = (false)
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
         sign_in(moderator)
         category.set_permissions(everyone: :readonly)
         category.save!
@@ -576,7 +576,7 @@ RSpec.describe CategoriesController do
       end
 
       it "retains access with granular pseudogroup behavior true" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = (true)
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
         sign_in(moderator)
         category.set_permissions(everyone: :readonly)
         category.save!

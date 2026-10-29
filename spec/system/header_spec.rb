@@ -143,14 +143,13 @@ RSpec.describe "Glimmer Header" do
     expect(header.active_element_id).to eq("user-menu-button-profile")
   end
 
-  it "navigates the reduced menu with #{[].length} available notification types" do
-    [].each { |type| Fabricate(:notification, user: current_user, notification_type: type) }
+  it "navigates the reduced menu with 0 available notification types" do
     sign_in(current_user)
     visit "/"
     user_menu.open
 
     expect(user_menu).to have_focused_tab("all-notifications")
-    visible_tabs = [].empty? ? %w[bookmarks profile] : %w[likes bookmarks profile]
+    visible_tabs = %w[bookmarks profile]
     visible_tabs.each do |tab|
       user_menu.press_key(:down)
       expect(user_menu).to have_focused_tab(tab)
@@ -165,17 +164,14 @@ RSpec.describe "Glimmer Header" do
     expect(user_menu).to have_selected_tab("bookmarks")
   end
 
-  it "navigates the reduced menu with #{[Notification.types[:liked]].length} available notification types" do
-    [Notification.types[:liked]].each do |type|
-      Fabricate(:notification, user: current_user, notification_type: type)
-    end
+  it "navigates the reduced menu with 1 available notification type" do
+    Fabricate(:notification, user: current_user, notification_type: Notification.types[:liked])
     sign_in(current_user)
     visit "/"
     user_menu.open
 
     expect(user_menu).to have_focused_tab("all-notifications")
-    visible_tabs =
-      [Notification.types[:liked]].empty? ? %w[bookmarks profile] : %w[likes bookmarks profile]
+    visible_tabs = %w[likes bookmarks profile]
     visible_tabs.each do |tab|
       user_menu.press_key(:down)
       expect(user_menu).to have_focused_tab(tab)

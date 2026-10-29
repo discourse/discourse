@@ -625,13 +625,13 @@ RSpec.describe TrustLevel3Requirements do
     end
 
     it "is not lost if default_trust_level is 3" do
-      SiteSetting.default_trust_level = (3)
+      SiteSetting.default_trust_level = 3
       tl3_requirements.stubs(:days_visited).returns(1)
       expect(tl3_requirements.requirements_lost?).to eq(false)
     end
 
     it "is not lost if default_trust_level is 4" do
-      SiteSetting.default_trust_level = (4)
+      SiteSetting.default_trust_level = 4
       tl3_requirements.stubs(:days_visited).returns(1)
       expect(tl3_requirements.requirements_lost?).to eq(false)
     end

@@ -516,7 +516,7 @@ if generic_import_dependencies_available
         expect(UserCustomField.where(name: "user_notes_count")).to be_empty
       end
 
-      it "preserves existing notes and counts in #{false ? "merge" : "ordinary"} imports" do
+      it "preserves existing notes and counts in ordinary imports" do
         allow(importer).to receive(:delta_import?).and_return(false)
         existing = [stored_note("Existing")]
         PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
@@ -534,7 +534,7 @@ if generic_import_dependencies_available
         ).to eq("1")
       end
 
-      it "preserves existing notes and counts in #{true ? "merge" : "ordinary"} imports" do
+      it "preserves existing notes and counts in merge imports" do
         allow(importer).to receive(:delta_import?).and_return(false)
         existing = [stored_note("Existing")]
         PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)

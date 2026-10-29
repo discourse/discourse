@@ -577,7 +577,7 @@ RSpec.describe TopicsBulkAction do
 
     it "raises error when notification_level_id is \"\"" do
       options = { type: "change_notification_level" }
-      options[:notification_level_id] = "" unless "" == :missing
+      options[:notification_level_id] = ""
 
       expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
         Discourse::InvalidParameters,
@@ -587,7 +587,7 @@ RSpec.describe TopicsBulkAction do
 
     it "raises error when notification_level_id is nil" do
       options = { type: "change_notification_level" }
-      options[:notification_level_id] = nil unless nil == :missing
+      options[:notification_level_id] = nil
 
       expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
         Discourse::InvalidParameters,
@@ -597,7 +597,6 @@ RSpec.describe TopicsBulkAction do
 
     it "raises error when notification_level_id is :missing" do
       options = { type: "change_notification_level" }
-      options[:notification_level_id] = :missing unless :missing == :missing
 
       expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
         Discourse::InvalidParameters,

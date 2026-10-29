@@ -15,11 +15,9 @@ RSpec.describe Jobs::SentimentBackfill do
   end
 
   it "backfills only enabled decisions with sentiment=false and emotion=false" do
-    SiteSetting.ai_sentiment_enabled = (false)
-    SiteSetting.ai_sentiment_emotion_enabled = (false)
+    SiteSetting.ai_sentiment_enabled = false
+    SiteSetting.ai_sentiment_emotion_enabled = false
     enabled_types = []
-    enabled_types << "sentiment" if false
-    enabled_types << "emotion" if false
 
     DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
       job.execute({})
@@ -33,11 +31,9 @@ RSpec.describe Jobs::SentimentBackfill do
   end
 
   it "backfills only enabled decisions with sentiment=true and emotion=false" do
-    SiteSetting.ai_sentiment_enabled = (true)
-    SiteSetting.ai_sentiment_emotion_enabled = (false)
-    enabled_types = []
-    enabled_types << "sentiment" if true
-    enabled_types << "emotion" if false
+    SiteSetting.ai_sentiment_enabled = true
+    SiteSetting.ai_sentiment_emotion_enabled = false
+    enabled_types = %w[sentiment]
 
     DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
       job.execute({})
@@ -51,11 +47,9 @@ RSpec.describe Jobs::SentimentBackfill do
   end
 
   it "backfills only enabled decisions with sentiment=false and emotion=true" do
-    SiteSetting.ai_sentiment_enabled = (false)
-    SiteSetting.ai_sentiment_emotion_enabled = (true)
-    enabled_types = []
-    enabled_types << "sentiment" if false
-    enabled_types << "emotion" if true
+    SiteSetting.ai_sentiment_enabled = false
+    SiteSetting.ai_sentiment_emotion_enabled = true
+    enabled_types = %w[emotion]
 
     DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
       job.execute({})
@@ -69,11 +63,9 @@ RSpec.describe Jobs::SentimentBackfill do
   end
 
   it "backfills only enabled decisions with sentiment=true and emotion=true" do
-    SiteSetting.ai_sentiment_enabled = (true)
-    SiteSetting.ai_sentiment_emotion_enabled = (true)
-    enabled_types = []
-    enabled_types << "sentiment" if true
-    enabled_types << "emotion" if true
+    SiteSetting.ai_sentiment_enabled = true
+    SiteSetting.ai_sentiment_emotion_enabled = true
+    enabled_types = %w[sentiment emotion]
 
     DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
       job.execute({})

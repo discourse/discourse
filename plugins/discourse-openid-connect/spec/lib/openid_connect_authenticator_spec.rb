@@ -50,7 +50,7 @@ describe OpenIDConnectAuthenticator do
       result = authenticator.after_authenticate(hash)
 
       expect(result.email_valid).to eq(true)
-      expect(result.user).to eq(true ? user : nil)
+      expect(result.user).to eq(user)
     end
 
     it "uses the supplied \"true\" value instead of the fallback" do
@@ -58,7 +58,7 @@ describe OpenIDConnectAuthenticator do
       result = authenticator.after_authenticate(hash)
 
       expect(result.email_valid).to eq(true)
-      expect(result.user).to eq(true ? user : nil)
+      expect(result.user).to eq(user)
     end
 
     it "uses the supplied \"True\" value instead of the fallback" do
@@ -66,7 +66,7 @@ describe OpenIDConnectAuthenticator do
       result = authenticator.after_authenticate(hash)
 
       expect(result.email_valid).to eq(true)
-      expect(result.user).to eq(true ? user : nil)
+      expect(result.user).to eq(user)
     end
 
     it "uses the supplied false value instead of the fallback" do
@@ -74,7 +74,7 @@ describe OpenIDConnectAuthenticator do
       result = authenticator.after_authenticate(hash)
 
       expect(result.email_valid).to eq(false)
-      expect(result.user).to eq(false ? user : nil)
+      expect(result.user).to eq(nil)
     end
 
     it "uses the supplied \"false\" value instead of the fallback" do
@@ -82,7 +82,7 @@ describe OpenIDConnectAuthenticator do
       result = authenticator.after_authenticate(hash)
 
       expect(result.email_valid).to eq(false)
-      expect(result.user).to eq(false ? user : nil)
+      expect(result.user).to eq(nil)
     end
   end
 

@@ -30,7 +30,7 @@ RSpec.describe ScreenedUrl do
     let(:record) { described_class.new(params) }
 
     context "with http:// prefix" do
-      let(:params) { valid_params.merge(url: url.gsub("http://", "http://")) }
+      let(:params) { valid_params.merge(url: url) }
 
       it "strips it" do
         expect(normalized.url).to eq(url.gsub("http://", ""))

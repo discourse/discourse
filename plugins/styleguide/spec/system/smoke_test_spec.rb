@@ -237,70 +237,70 @@ RSpec.describe "Styleguide Smoke Test" do
       sign_in(admin)
     end
 
-    it "renders the syntax: BEM page correctly" do
+    it "renders the /syntax/bem page correctly" do
       item = sections.fetch("syntax").find { |candidate| candidate[:href] == "/syntax/bem" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Typography page correctly" do
+    it "renders the /atoms/typography page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/typography" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Font System page correctly" do
+    it "renders the /atoms/font-scale page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/font-scale" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Buttons page correctly" do
+    it "renders the /atoms/buttons page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/buttons" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Colors page correctly" do
+    it "renders the /atoms/colors page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/colors" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Icons page correctly" do
+    it "renders the /atoms/icons page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/icons" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Forms page correctly" do
+    it "renders the /atoms/forms page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/forms" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Spinners page correctly" do
+    it "renders the /atoms/spinners page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/spinners" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: OTP page correctly" do
+    it "renders the /atoms/otp page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/otp" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Date/Time inputs page correctly" do
+    it "renders the /atoms/date-time-inputs page correctly" do
       item =
         sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/date-time-inputs" }
       visit "/styleguide/#{item[:href]}"
@@ -308,21 +308,21 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Dropdowns page correctly" do
+    it "renders the /atoms/dropdowns page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/dropdowns" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Topic Link and Status page correctly" do
+    it "renders the /atoms/topic-link page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/topic-link" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Segmented Control (Button toggle group) page correctly" do
+    it "renders the /atoms/segmented-control page correctly" do
       item =
         sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/segmented-control" }
       visit "/styleguide/#{item[:href]}"
@@ -330,14 +330,14 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the atoms: Shortcut page correctly" do
+    it "renders the /atoms/shortcut page correctly" do
       item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/shortcut" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Bread Crumbs page correctly" do
+    it "renders the /molecules/bread-crumbs page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -347,7 +347,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Categories page correctly" do
+    it "renders the /molecules/categories page correctly" do
       item =
         sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/categories" }
       visit "/styleguide/#{item[:href]}"
@@ -355,7 +355,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Character Counter page correctly" do
+    it "renders the /molecules/char-counter page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -365,7 +365,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Combo Button page correctly" do
+    it "renders the /molecules/combo-button page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -375,7 +375,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Context menu page correctly" do
+    it "renders the /molecules/context-menu page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -385,7 +385,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Empty State page correctly" do
+    it "renders the /molecules/empty-state page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -395,14 +395,14 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Menus page correctly" do
+    it "renders the /molecules/menus page correctly" do
       item = sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/menus" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Navigation Bar page correctly" do
+    it "renders the /molecules/navigation-bar page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -412,7 +412,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Navigation Stacked page correctly" do
+    it "renders the /molecules/navigation-stacked page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -422,7 +422,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Post Menu page correctly" do
+    it "renders the /molecules/post-menu page correctly" do
       item =
         sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/post-menu" }
       visit "/styleguide/#{item[:href]}"
@@ -430,7 +430,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Reorderable list page correctly" do
+    it "renders the /molecules/reorderable-list page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -440,7 +440,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Roving focus page correctly" do
+    it "renders the /molecules/roving-focus page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -450,7 +450,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Signup CTA page correctly" do
+    it "renders the /molecules/signup-cta page correctly" do
       item =
         sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/signup-cta" }
       visit "/styleguide/#{item[:href]}"
@@ -458,7 +458,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Multi select page correctly" do
+    it "renders the /molecules/multi-select page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -468,7 +468,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Toasts page correctly" do
+    it "renders the /molecules/toasts page correctly" do
       item =
         sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/toasts" }
       visit "/styleguide/#{item[:href]}"
@@ -476,7 +476,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Dialog page correctly" do
+    it "renders the /molecules/dialog page correctly" do
       item =
         sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/dialog" }
       visit "/styleguide/#{item[:href]}"
@@ -484,7 +484,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Drag and drop page correctly" do
+    it "renders the /molecules/drag-and-drop page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -494,7 +494,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Tooltips page correctly" do
+    it "renders the /molecules/tooltips page correctly" do
       item =
         sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/tooltips" }
       visit "/styleguide/#{item[:href]}"
@@ -502,7 +502,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Topic List Item page correctly" do
+    it "renders the /molecules/topic-list-item page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -512,7 +512,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Topic Notifications page correctly" do
+    it "renders the /molecules/topic-notifications page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -522,7 +522,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Topic Timers page correctly" do
+    it "renders the /molecules/topic-timer-info page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -532,7 +532,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Virtual list page correctly" do
+    it "renders the /molecules/virtual-list page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -542,14 +542,14 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Tabs page correctly" do
+    it "renders the /molecules/tabs page correctly" do
       item = sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/tabs" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the molecules: Overflow controls page correctly" do
+    it "renders the /molecules/overflow-controls page correctly" do
       item =
         sections
           .fetch("molecules")
@@ -559,14 +559,14 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Post page correctly" do
+    it "renders the /organisms/post page correctly" do
       item = sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/post" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Post List page correctly" do
+    it "renders the /organisms/post-list page correctly" do
       item =
         sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/post-list" }
       visit "/styleguide/#{item[:href]}"
@@ -574,7 +574,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Post Oneboxes page correctly" do
+    it "renders the /organisms/post-oneboxes page correctly" do
       item =
         sections
           .fetch("organisms")
@@ -584,7 +584,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Topic Map page correctly" do
+    it "renders the /organisms/topic-map page correctly" do
       item =
         sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/topic-map" }
       visit "/styleguide/#{item[:href]}"
@@ -592,7 +592,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Topic Footer Buttons page correctly" do
+    it "renders the /organisms/topic-footer-buttons page correctly" do
       item =
         sections
           .fetch("organisms")
@@ -602,7 +602,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Topic List page correctly" do
+    it "renders the /organisms/topic-list page correctly" do
       item =
         sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/topic-list" }
       visit "/styleguide/#{item[:href]}"
@@ -610,7 +610,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Basic Topic List page correctly" do
+    it "renders the /organisms/basic-topic-list page correctly" do
       item =
         sections
           .fetch("organisms")
@@ -620,7 +620,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Categories List page correctly" do
+    it "renders the /organisms/categories-list page correctly" do
       item =
         sections
           .fetch("organisms")
@@ -630,14 +630,14 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Chat page correctly" do
+    it "renders the /organisms/chat page correctly" do
       item = sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/chat" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Docked Composer page correctly" do
+    it "renders the /organisms/docked-composer page correctly" do
       item =
         sections
           .fetch("organisms")
@@ -647,14 +647,14 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Modal page correctly" do
+    it "renders the /organisms/modal page correctly" do
       item = sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/modal" }
       visit "/styleguide/#{item[:href]}"
 
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Navigation page correctly" do
+    it "renders the /organisms/navigation page correctly" do
       item =
         sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/navigation" }
       visit "/styleguide/#{item[:href]}"
@@ -662,7 +662,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: Site Header page correctly" do
+    it "renders the /organisms/site-header page correctly" do
       item =
         sections
           .fetch("organisms")
@@ -672,7 +672,7 @@ RSpec.describe "Styleguide Smoke Test" do
       expect(styleguide).to have_heading(item[:title])
     end
 
-    it "renders the organisms: More Topics page correctly" do
+    it "renders the /organisms/more-topics page correctly" do
       item =
         sections
           .fetch("organisms")
