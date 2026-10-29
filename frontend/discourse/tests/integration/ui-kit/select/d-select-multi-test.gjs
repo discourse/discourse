@@ -1171,6 +1171,37 @@ module(
       forceMobile();
     });
 
+    for (const [kind, multiple, field] of [
+      ["multiple", true, ".d-select__chips"],
+      ["single", false, ".d-select__search"],
+    ]) {
+      test(`the mobile modal's ${kind} search field lines up with the rows' content`, async function (assert) {
+        await render(
+          <template>
+            <StripHost @multiple={{multiple}} @variant="button" />
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        const box = find(`${MODAL} ${field}`).getBoundingClientRect();
+        const option = find(`${MODAL} .d-select__option`);
+        const row = option.getBoundingClientRect();
+        const style = getComputedStyle(option);
+        // The test container is scaled, so rects and computed padding differ by that factor.
+        const scale = row.width / option.offsetWidth;
+        const start = parseFloat(style.paddingLeft) * scale;
+        const end = parseFloat(style.paddingRight) * scale;
+        assert.true(
+          Math.abs(box.left - (row.left + start)) < 1,
+          `left edge ${box.left} vs ${row.left} + ${start}`
+        );
+        assert.true(
+          Math.abs(box.right - (row.right - end)) < 1,
+          `right edge ${box.right} vs ${row.right} - ${end}`
+        );
+      });
+    }
+
     test("the mobile modal lists held items inside the field", async function (assert) {
       await render(
         <template>

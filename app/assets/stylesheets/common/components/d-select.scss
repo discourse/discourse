@@ -258,12 +258,16 @@
   overscroll-behavior: contain;
 }
 
-.d-select__option {
-  // Exposed so a row without a selection marker can line its content up with the rows that
-  // have one.
+// Exposed on the containers so a row without a selection marker, and the mobile panel's search
+// field, can line up with the rows' content.
+.d-select__panel,
+.d-select.--list {
   --d-select-option-padding-inline: 0.75em;
   --d-select-option-gap: 0.5em;
   --d-select-option-marker-size: 1em;
+}
+
+.d-select__option {
   display: flex;
   align-items: center;
   gap: var(--d-select-option-gap);
@@ -730,6 +734,13 @@
     top: 50%;
     transform: translateY(-50%);
   }
+}
+
+.fk-d-menu-modal
+  .d-select__panel
+  > :is(.d-select__search, .d-select__chips.--field) {
+  width: auto;
+  margin-inline: var(--d-select-option-padding-inline);
 }
 
 .d-select__search-icon {
