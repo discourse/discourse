@@ -44,7 +44,7 @@ interface DSelectCategoryFilterSignature {
     items?: readonly Category[];
     /** Owns rows, order and paging in place of the model's search. */
     load?: SelectSignature["Args"]["load"];
-    /** Names an empty level as no subcategories. */
+    /** Holds the no-subcategories filter while no category is held. */
     noSubcategories?: boolean;
     /** Omits the shortcut back to every category. */
     editing?: boolean;
@@ -52,8 +52,10 @@ interface DSelectCategoryFilterSignature {
     countSubcategories?: boolean;
     /** Includes Uncategorized; defaults to the site setting. */
     uncategorized?: boolean;
-    /** Accessible control name; defaults to the level's name. */
+    /** Accessible control name; defaults to what the level filters. The held value follows it. */
     label?: string;
+    /** Text for an empty level; defaults to the level's name. */
+    placeholder?: string;
     /** Receives a site category, the caller's unloaded row, or a shortcut; never navigates. */
     onChange?: (
       value:
@@ -79,25 +81,46 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   @service declare site: Site;
   @service declare siteSettings: CategorySettings;
 
-  get levelName() {
-    if (this.args.noSubcategories || this.args.value === NO_CATEGORIES_ID) {
-      return i18n("categories.no_subcategories");
-    }
-    return i18n(
-      this.args.parentCategory
-        ? "categories.subcategories_label"
-        : "categories.categories_label"
+  get label() {
+    return (
+      this.args.label ||
+      i18n(
+        this.args.parentCategory
+          ? "categories.filter_by_subcategories_label"
+          : "categories.filter_by_categories_label"
+      )
+    );
+  }
+
+  get placeholder() {
+    return (
+      this.args.placeholder ??
+      i18n(
+        this.args.parentCategory
+          ? "categories.subcategories_label"
+          : "categories.categories_label"
+      )
     );
   }
 
   get filtering() {
-    return this.selection.id !== ALL_CATEGORIES_ID;
+    return !!this.selection;
   }
 
-  get selection(): CategoryItem {
+  /** The held filter. An empty level and the "all" shortcut hold nothing, so the placeholder shows. */
+  get selection(): CategoryItem | undefined {
     const value = this.args.value;
+    if (
+      value === NO_CATEGORIES_ID ||
+      (value == null && this.args.noSubcategories)
+    ) {
+      return {
+        id: NO_CATEGORIES_ID,
+        name: i18n("categories.no_subcategories"),
+      };
+    }
     if (typeof value !== "object" || !value) {
-      return { id: value ?? ALL_CATEGORIES_ID, name: this.levelName };
+      return;
     }
     const category: Category | undefined = Category.findById(value.id);
     if (category) {
@@ -230,11 +253,12 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @instanceContext={{@instanceContext}}
       @kind="select-category-filter"
       @kindContext={{hash value=@value parentCategory=@parentCategory}}
-      @label={{if @label @label this.levelName}}
+      @label={{this.label}}
       @legacyKind={{if @legacyKind @legacyKind "category-drop"}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
       @onChange={{this.onChange}}
+      @placeholder={{this.placeholder}}
       @specialItems={{this.specialItems}}
       @value={{this.selection.id}}
       @valueItems={{this.selection}}

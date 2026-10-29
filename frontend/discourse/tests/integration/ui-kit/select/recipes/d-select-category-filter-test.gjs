@@ -173,6 +173,112 @@ module(
           .includesText(i18n("categories.no_subcategories"));
       });
 
+      test("an empty level is named for what it filters and shows the level as its placeholder", async function (assert) {
+        const top = topLevel();
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+
+        await render(
+          <template>
+            <div class="top"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="sub"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+              /></div>
+            <div class="all"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+                @value={{ALL_CATEGORIES_ID}}
+              /></div>
+          </template>
+        );
+
+        for (const [scope, label, level] of [
+          [".top", "Filter by: categories", "categories"],
+          [".sub", "Filter by: subcategories", "subcategories"],
+          [".all", "Filter by: subcategories", "subcategories"],
+        ]) {
+          const root = select(scope).element();
+          assert.strictEqual(root.getAttribute("aria-label"), label, scope);
+          assert.strictEqual(root.dataset.value, "", `${scope} holds nothing`);
+          assert
+            .dom(".d-select__placeholder", root)
+            .hasText(level, `${scope} shows the level`);
+        }
+      });
+
+      test("a held filter follows the level's name", async function (assert) {
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+        const value = Category.findById(26);
+
+        await render(
+          <template>
+            <div class="held"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+                @value={{value}}
+              /></div>
+            <div class="none"><DSelectCategoryFilter
+                @items={{children}}
+                @noSubcategories={{true}}
+                @parentCategory={{parent}}
+              /></div>
+          </template>
+        );
+
+        assert.strictEqual(
+          select(".held").element().getAttribute("aria-label"),
+          "Filter by: subcategories, spec"
+        );
+        assert.strictEqual(
+          select(".none").element().getAttribute("aria-label"),
+          "Filter by: subcategories, no subcategories"
+        );
+        assert.strictEqual(
+          select(".none").element().dataset.value,
+          NO_CATEGORIES_ID,
+          "no subcategories is a held filter"
+        );
+      });
+
+      test("a call site or a customization can replace the empty level's text", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-category-filter", (spec) =>
+              spec.options((previous, { kindContext }) =>
+                kindContext.parentCategory?.id === 2
+                  ? { placeholder: "pick a child" }
+                  : undefined
+              )
+            );
+          })
+        );
+        const top = topLevel();
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+
+        await render(
+          <template>
+            <div class="top"><DSelectCategoryFilter
+                @items={{top}}
+                @placeholder="any category"
+              /></div>
+            <div class="sub"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+              /></div>
+          </template>
+        );
+
+        assert
+          .dom(".d-select__placeholder", select(".top").element())
+          .hasText("any category", "the call site's text");
+        assert
+          .dom(".d-select__placeholder", select(".sub").element())
+          .hasText("pick a child", "one parent's drop, customized");
+      });
+
       test("adjacent levels have distinct accessible names", async function (assert) {
         const top = topLevel();
         const parent = Category.findById(2);

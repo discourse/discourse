@@ -1735,6 +1735,8 @@ en:
     categories:
       categories_label: "categories"
       subcategories_label: "subcategories"
+      filter_by_categories_label: "Filter by: categories"
+      filter_by_subcategories_label: "Filter by: subcategories"
       no_subcategories: "no subcategories"
       remove_filter: "remove filter"
       plus_more_count:

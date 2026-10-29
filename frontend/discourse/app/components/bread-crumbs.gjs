@@ -182,6 +182,7 @@ export default class BreadCrumbs extends Component {
                   "category-breadcrumb__category-selector"
                 }}
                 @editing={{this.editingCategory}}
+                @identifier="breadcrumb-category"
                 @items={{breadcrumb.options}}
                 @noSubcategories={{breadcrumb.noSubcategories}}
                 @onChange={{fn this.changeCategory breadcrumb}}

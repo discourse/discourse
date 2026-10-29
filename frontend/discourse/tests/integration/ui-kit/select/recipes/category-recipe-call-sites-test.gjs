@@ -5,6 +5,7 @@ import SiteSettingCategoryList from "discourse/admin/components/site-settings/ca
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import UserPreferencesCategories from "discourse/components/user-preferences/categories";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { MIGRATED_SELECT_KIT_MODULES } from "discourse/lib/select-kit-modify-class-deprecation";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -141,6 +142,21 @@ module(
         await pick(TOP, 1);
 
         assert.true(this.routeToUrl.calledOnceWithExactly("/c/bug/1"));
+      });
+
+      test("customizations reach the breadcrumbs' category drops by identifier", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forIdentifier("breadcrumb-category", (spec) =>
+              spec.options(() => ({ placeholder: "breadcrumb level" }))
+            );
+          })
+        );
+        await render(
+          <template><BreadCrumbs @categories={{this.categories}} /></template>
+        );
+
+        assert.dom(`${TOP} .d-select__placeholder`).hasText("breadcrumb level");
       });
 
       test("removing the filter at the top level routes home", async function (assert) {
