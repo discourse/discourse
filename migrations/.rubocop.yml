@@ -1,5 +1,15 @@
 inherit_from: ../.rubocop.yml
 
+require:
+  - ./tooling/rubocop/single_value_yielder.rb
+
+Migrations/SingleValueYielder:
+  Description: Prefer the single-value Yielder API when its return value is unused.
+  Enabled: true
+  Safe: false
+  Include:
+    - "**/*.rb"
+
 Style/HashSyntax:
   EnforcedShorthandSyntax: always
 
