@@ -263,7 +263,7 @@ class CategoryUser < ActiveRecord::Base
     query.where(conditions.join(" OR "))
   end
 
-  # SQL condition on `categories` matching what `indirectly_muted_category_ids` returns.
+  # SQL condition on `categories` matching the indirect set of `muted_category_ids_query`.
   # It looks up each row's own level and its parent's, so its cost follows the rows it
   # filters rather than the site's size.
   def self.indirectly_muted_condition(user)
@@ -307,7 +307,7 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.indirectly_muted_category_ids(user)
-    muted_category_ids_query(user).pluck("categories.id")
+    Category.where(indirectly_muted_condition(user)).pluck(:id)
   end
 end
 

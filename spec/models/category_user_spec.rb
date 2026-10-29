@@ -560,7 +560,7 @@ RSpec.describe CategoryUser do
 
         expect(
           Category.where(CategoryUser.indirectly_muted_condition(user)).pluck(:id),
-        ).to match_array(CategoryUser.indirectly_muted_category_ids(user)),
+        ).to match_array(CategoryUser.muted_category_ids_query(user).pluck("categories.id")),
         state.inspect
       end
     end
