@@ -73,17 +73,14 @@ class PushNotificationPusher
   end
 
   def self.subscribe(user, push_params, send_confirmation)
-    data = push_params.to_json
-    subscriptions = PushSubscription.where(user: user, data: data)
-    subscriptions_count = subscriptions.count
-
-    new_subscription =
-      if subscriptions_count > 1
-        subscriptions.destroy_all
-        PushSubscription.create!(user: user, data: data)
-      elsif subscriptions_count == 0
-        PushSubscription.create!(user: user, data: data)
-      end
+    push_params = push_params.to_h.with_indifferent_access
+    push_params[:endpoint] = PushSubscription.normalize_endpoint(push_params[:endpoint])
+    result =
+      PushSubscription.upsert(
+        { user_id: user.id, data: push_params.to_json },
+        unique_by: :index_push_subscriptions_on_endpoint,
+        returning: %w[id],
+      )
 
     if send_confirmation == "true"
       message = {
@@ -95,12 +92,18 @@ class PushNotificationPusher
         tag: "#{Discourse.current_hostname}-subscription",
       }
 
-      send_notification(user, new_subscription, message)
+      send_notification(user, PushSubscription.find(result.rows.first.first), message)
     end
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.where(user: user, data: subscription.to_json).delete_all
+    PushSubscription
+      .where(user: user)
+      .where(
+        "data::jsonb ->> 'endpoint' = ?",
+        PushSubscription.normalize_endpoint(subscription.to_h.with_indifferent_access[:endpoint]),
+      )
+      .delete_all
   end
 
   def self.get_badge

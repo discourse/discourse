@@ -1,7 +1,23 @@
 # frozen_string_literal: true
 
 class PushSubscription < ActiveRecord::Base
+  MAX_ENDPOINT_BYTES = 2048
+
   belongs_to :user
+
+  def self.normalize_endpoint(endpoint)
+    unless endpoint.is_a?(String) && endpoint.present?
+      raise Discourse::InvalidParameters.new(:endpoint)
+    end
+
+    normalized = Addressable::URI.parse(endpoint).normalize.omit(:fragment).to_s
+    if normalized.blank? || normalized.bytesize > MAX_ENDPOINT_BYTES
+      raise Discourse::InvalidParameters.new(:endpoint)
+    end
+    normalized
+  rescue Addressable::URI::InvalidURIError
+    raise Discourse::InvalidParameters.new(:endpoint)
+  end
 
   def parsed_data
     JSON.parse(data)
@@ -19,4 +35,8 @@ end
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  user_id        :integer          not null
+#
+# Indexes
+#
+#  index_push_subscriptions_on_endpoint  ((((data)::jsonb ->> 'endpoint'::text))) UNIQUE WHERE (octet_length(((data)::jsonb ->> 'endpoint'::text)) <= 2048)
 #

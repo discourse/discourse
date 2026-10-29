@@ -1,0 +1,81 @@
+# frozen_string_literal: true
+
+require "addressable/uri"
+
+class EnsureUniquePushSubscriptionEndpoints < ActiveRecord::Migration[8.0]
+  def up
+    # Keep registrations from recreating duplicates before the index exists.
+    execute "LOCK TABLE push_subscriptions IN SHARE ROW EXCLUSIVE MODE"
+    normalize_endpoints
+    # Raw endpoint values must fit PostgreSQL's B-tree index tuple limit.
+    execute <<~SQL
+      DELETE FROM push_subscriptions
+      WHERE octet_length(data::jsonb ->> 'endpoint') > 2048
+    SQL
+    execute <<~SQL
+      DELETE FROM push_subscriptions
+      WHERE id IN (
+        SELECT id FROM (
+          SELECT id, ROW_NUMBER() OVER (
+            PARTITION BY data::jsonb ->> 'endpoint' ORDER BY id DESC
+          ) AS position
+          FROM push_subscriptions
+          WHERE data::jsonb ->> 'endpoint' IS NOT NULL
+        ) duplicates
+        WHERE position > 1
+      )
+    SQL
+
+    add_index :push_subscriptions,
+              "(data::jsonb ->> 'endpoint')",
+              unique: true,
+              # Index builds can still see oversized tuples deleted in this transaction.
+              where: "octet_length(data::jsonb ->> 'endpoint') <= 2048",
+              name: "index_push_subscriptions_on_endpoint"
+  end
+
+  def down
+    remove_index :push_subscriptions, name: "index_push_subscriptions_on_endpoint"
+  end
+
+  private
+
+  def normalize_endpoints
+    last_id = 0
+    loop do
+      rows =
+        DB.query(
+          "SELECT id, data FROM push_subscriptions WHERE id > :id ORDER BY id LIMIT 1000",
+          id: last_id,
+        )
+      break if rows.empty?
+
+      rows.each do |row|
+        data = JSON.parse(row.data)
+        endpoint = data["endpoint"]
+        normalized = normalize_endpoint(endpoint)
+        if normalized.blank?
+          DB.exec("DELETE FROM push_subscriptions WHERE id = :id", id: row.id)
+          next
+        end
+        next if endpoint == normalized
+
+        data["endpoint"] = normalized
+        DB.exec(
+          "UPDATE push_subscriptions SET data = :data WHERE id = :id",
+          data: data.to_json,
+          id: row.id,
+        )
+      end
+      last_id = rows.last.id
+    end
+  end
+
+  def normalize_endpoint(endpoint)
+    return unless endpoint.is_a?(String) && endpoint.present?
+
+    Addressable::URI.parse(endpoint).normalize.omit(:fragment).to_s
+  rescue Addressable::URI::InvalidURIError
+    nil
+  end
+end
