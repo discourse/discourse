@@ -102,11 +102,15 @@ function initializeDiscoursePostEventDecorator(api) {
   const currentUser = api.container.lookup("service:current-user");
   const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
 
-  api.addTrackedPostProperties("event_oneboxes");
+  api.addTrackedPostProperties("event_oneboxes", "event_onebox_occurrences");
 
   api.decorateCookedElement(
     (cooked, helper) => {
-      decorateEventOneboxes(cooked, timezone);
+      decorateEventOneboxes(
+        cooked,
+        timezone,
+        helper?.getModel()?.event_onebox_occurrences
+      );
 
       if (cooked.classList.contains("d-editor-preview")) {
         _decorateEventPreview(api, cooked, helper);

@@ -5424,6 +5424,20 @@ en:
       revisions:
         diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
         diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
+        unlisted:
+          label: "Unlisted"
+          description: "This edit is skipped when browsing the edit history, but its content is still public."
+        show_all_edits: "Show all edits"
+        visibility:
+          listed:
+            title: "Listed"
+            description: "Shown when browsing the edit history."
+          unlisted:
+            title: "Unlisted"
+            description: "Skipped when browsing the edit history."
+          hidden:
+            title: "Hidden"
+            description: "Removed from the public edit history, along with the diffs next to it."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -5434,9 +5448,7 @@ en:
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
-          hide: "Hide revision"
-          show: "Show revision"
-          destroy: "Delete revisions"
+          destroy: "Delete all revisions"
           destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
@@ -7813,27 +7825,17 @@ en:
           combined: "Results include the most recent %{limit} pageviews, beginning %{pageviewLimitDate} at %{pageviewLimitTime}. Earlier pageviews in the selected date range are not included; pageview data before %{date} is no longer available."
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard updated:"
-        discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
         up_to_date_newer_commits:
           one: "You're on the most recent release, but %{count} new change is available."
           other: "You're on the most recent release, but %{count} new changes are available."
         updates_available: "Updates are available."
-        please_update: "Please update!"
-        no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you updated recently. Fantastic!"
-        installed_version: "Installed"
-        latest_version: "Available"
-        github: "GitHub"
         commit_on_github: "View commit %{sha} on GitHub"
-        changelog: "Changelog"
         commits_ahead:
           one: "Running %{count} additional change since the start of this release series"
           other: "Running %{count} additional changes since the start of this release series"
-        problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
         site_advice:
           title:
@@ -7846,16 +7848,7 @@ en:
           no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
           learn_more: "Learn more..."
 
-        last_checked: "Last checked"
         refresh_problems: "Refresh"
-        no_problems: "No problems were found."
-        moderators: "Moderators:"
-        admins: "Admins:"
-        silenced: "Silenced:"
-        suspended: "Suspended:"
-        private_messages_short: "Msgs"
-        private_messages_title: "Messages"
-        mobile_title: "Mobile"
         space_used: "%{usedSize} used"
         space_used_and_free: "%{usedSize} (%{freeSize} free)"
         uploads: "Uploads"
@@ -7864,20 +7857,7 @@ en:
           one: "%{count} backup on %{location}"
           other: "%{count} backups on %{location}"
         lastest_backup: "Latest: %{date}"
-        traffic_short: "Traffic"
-        traffic: "Application web requests"
-        page_views: "Pageviews"
-        page_views_short: "Pageviews"
-        show_traffic_report: "Show Detailed Traffic Report"
-        community_health: Community health
-        moderators_activity: Moderators activity
         whats_new_in_discourse: What’s new in Discourse?
-        activity_metrics: Activity Metrics
-        all_reports: "All reports"
-        general_tab: "General"
-        moderation_tab: "Moderation"
-        security_tab: "Security"
-        reports_tab: "Reports"
         report_filter_any: "any"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
@@ -8116,7 +8096,6 @@ en:
             latest_backup: "Latest backup %{date}"
             manage_backups: "Manage backups"
             discourse_updated: "Discourse updated"
-            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
@@ -8228,12 +8207,6 @@ en:
             crawlers: "Crawlers"
           see_details: "See details"
           crawler_learn_more: "Learn more"
-        period:
-          last_7_days: "Last 7 days"
-          last_30_days: "Last 30 days"
-          last_3_months: "Last 3 months"
-          custom: "Custom"
-          custom_range: "%{start} – %{end}"
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
@@ -8281,9 +8254,6 @@ en:
               other: "%{count} posts"
             deselect: "Deselect %{name}"
             fetch_error: "Couldn't load users for this group."
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
-            disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
           average_chart_label: Showing averages, not totals
           sort_button: "Sort by %{column}"
           sort_button_current: "Sorted by %{column}, %{direction}"
@@ -8471,7 +8441,7 @@ en:
               list: List latest posts and private posts. RSS is also supported.
             revisions:
               read: "Get the latest or a specific revision."
-              modify: "Hide, show, or revert revisions."
+              modify: "Hide, show, unlist, relist, or revert revisions."
               permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.
@@ -10081,7 +10051,7 @@ en:
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
           custom: "Custom…"
         suspend_message: "Email Message"
-        suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
+        suspend_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the suspended user."
         suspended_by: "Suspended by"
         silence_reason: "Reason"
         silenced_by: "Silenced By"
@@ -10092,7 +10062,7 @@ en:
         silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
         silence_message: "Email Message"
-        silence_message_placeholder: "(leave blank to send default message)"
+        silence_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the silenced user."
         suspended_until: "(until %{until})"
         suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."

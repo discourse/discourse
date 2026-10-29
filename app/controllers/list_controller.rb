@@ -469,15 +469,10 @@ class ListController < ApplicationController
     end
     real_slug = @category.full_slug("/")
     if CGI.unescape(current_slug) != CGI.unescape(real_slug)
-      path = CGI.unescape(request.path)
-      query = request.query_string
-      new_path = path.gsub(current_slug, real_slug)
-      url = query.present? ? "#{new_path}?#{query}" : new_path
-      if ActionController::Base.config.relative_url_root
-        url = url.sub(ActionController::Base.config.relative_url_root, "")
-      end
-
-      return redirect_to path(url), status: :moved_permanently
+      return(
+        redirect_to category_redirect_url(category_slug_path_with_id, real_slug),
+                    status: :moved_permanently
+      )
     end
 
     @description_meta =
@@ -490,6 +485,23 @@ class ListController < ApplicationController
     if use_crawler_layout?
       @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
     end
+  end
+
+  # The canonical URL of the category, keeping whatever followed the slug path
+  # in the request (such as "/l/latest" or ".json") and the query string.
+  #
+  # `canonical_slug_path` comes from `Category#url` and is already encoded. It
+  # is used rather than substituting into the request path: with encoded slugs
+  # the decoded path contains raw non-ASCII characters, which Rails refuses to
+  # redirect to.
+  def category_redirect_url(requested_slug_path, canonical_slug_path)
+    requested_prefix = "/c/#{requested_slug_path}"
+    path_info = UrlHelper.unencode(request.path_info)
+    rest = path_info.start_with?(requested_prefix) ? path_info.delete_prefix(requested_prefix) : ""
+
+    url = "#{Discourse.base_path}/c/#{canonical_slug_path}#{rest}"
+    url = "#{url}?#{request.query_string}" if request.query_string.present?
+    url
   end
 
   def generate_list_for(action, target_user, opts)

@@ -1626,6 +1626,21 @@ RSpec.describe PostsController do
       end
     end
 
+    it "creates a regular topic when an unregistered archetype is supplied" do
+      sign_in(user_trust_level_1)
+
+      post "/posts.json",
+           params: {
+             raw: "this is a test topic body",
+             title: "this is a test topic title",
+             category: category.id,
+             archetype: "unknown",
+           }
+
+      expect(response.status).to eq(200)
+      expect(Topic.find(response.parsed_body["topic_id"]).archetype).to eq(Archetype.default)
+    end
+
     context "with api" do
       it "memoizes duplicate requests" do
         raw = "this is a test post 123 #{SecureRandom.hash}"
@@ -3832,6 +3847,36 @@ RSpec.describe PostsController do
       end
     end
 
+    context "with an unlisted revision" do
+      fab!(:revised_post) { Fabricate(:post, version: 3) }
+
+      before do
+        Fabricate(:post_revision, post: revised_post, number: 2)
+        Fabricate(:post_revision, post: revised_post, number: 3, unlisted: true)
+      end
+
+      it "steps to it only when unlisted revisions are included" do
+        SiteSetting.edit_history_visible_to_public = true
+
+        get "/posts/#{revised_post.id}/revisions/2.json"
+        expect(response.parsed_body["next_revision"]).to eq(nil)
+
+        get "/posts/#{revised_post.id}/revisions/2.json", params: { include_unlisted: true }
+        expect(response.parsed_body["next_revision"]).to eq(3)
+      end
+
+      it "doesn't grant access to edit history that isn't visible" do
+        SiteSetting.edit_history_visible_to_public = false
+        sign_in(user)
+
+        get "/posts/#{revised_post.id}/revisions/2.json", params: { include_unlisted: true }
+        expect(response.status).to eq(403)
+
+        get "/posts/#{revised_post.id}/revisions/latest.json", params: { include_unlisted: true }
+        expect(response.status).to eq(403)
+      end
+    end
+
     context "with a tagged topic" do
       let(:tag) { Fabricate(:tag) }
 
@@ -3848,6 +3893,147 @@ RSpec.describe PostsController do
         get "/posts/#{post_revision.post_id}/revisions/latest.json"
         expect(response.status).to eq(200)
       end
+    end
+  end
+
+  describe "#latest_revision" do
+    fab!(:post_owner, :user)
+    fab!(:revised_post) { Fabricate(:post, user: post_owner, raw: "Initial version") }
+
+    before do
+      SiteSetting.edit_history_visible_to_public = true
+      SiteSetting.editing_grace_period = 0
+
+      revised_post.revise(post_owner, raw: "Listed version")
+      revised_post.revise(post_owner, raw: "Unlisted version")
+      revised_post.revisions.find_by(number: 3).unlist!
+    end
+
+    it "opens the latest listed revision for non-staff" do
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_revision" => 2, "next_revision" => nil)
+    end
+
+    it "opens the latest revision for non-staff who include unlisted revisions" do
+      get "/posts/#{revised_post.id}/revisions/latest.json", params: { include_unlisted: true }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_revision" => 3, "unlisted" => true)
+    end
+
+    it "opens the latest revision for staff" do
+      sign_in(moderator)
+
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["current_revision"]).to eq(3)
+    end
+
+    it "falls back to the latest visible revision when no listed revision is left" do
+      revised_post.revisions.find_by(number: 2).unlist!
+      revised_post.revisions.find_by(number: 3).hide!
+
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include(
+        "current_revision" => 2,
+        "last_revision" => 2,
+        "unlisted" => true,
+      )
+    end
+
+    it "opens a loaded revision when the latest listed one is older than the loaded history" do
+      (4..102).each do |number|
+        Fabricate(:post_revision, post: revised_post, user: post_owner, number:, unlisted: true)
+      end
+
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_revision" => 102, "unlisted" => true)
+    end
+  end
+
+  describe "#hide_revision" do
+    fab!(:revised_post) { Fabricate(:post, version: 2, public_version: 2) }
+    fab!(:post_revision) { Fabricate(:post_revision, post: revised_post, unlisted: true) }
+
+    it "clears the unlisted flag when hiding an unlisted revision" do
+      sign_in(moderator)
+
+      expect { put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/hide" }.to change {
+        revised_post.reload.public_version
+      }.by(-1)
+
+      expect(response.status).to eq(200)
+      expect(post_revision.reload).to have_attributes(hidden: true, unlisted: false)
+    end
+  end
+
+  describe "#unlist_revision" do
+    fab!(:revised_post) { Fabricate(:post, version: 2) }
+    fab!(:post_revision) { Fabricate(:post_revision, post: revised_post) }
+
+    it "only allows staff to unlist a revision" do
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+      expect(response.status).to eq(403)
+
+      sign_in(user)
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+      expect(response.status).to eq(403)
+
+      expect(post_revision.reload.unlisted).to eq(false)
+    end
+
+    it "unlists the revision" do
+      sign_in(moderator)
+
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+
+      expect(response.status).to eq(204)
+      expect(post_revision.reload.unlisted).to eq(true)
+    end
+
+    it "refuses to unlist a hidden revision" do
+      post_revision.hide!
+      sign_in(moderator)
+
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("cannot_unlist_hidden_revision"),
+      )
+      expect(post_revision.reload).to have_attributes(hidden: true, unlisted: false)
+    end
+  end
+
+  describe "#relist_revision" do
+    fab!(:revised_post) { Fabricate(:post, version: 2) }
+    fab!(:post_revision) { Fabricate(:post_revision, post: revised_post, unlisted: true) }
+
+    it "only allows staff to relist a revision" do
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/relist"
+      expect(response.status).to eq(403)
+
+      sign_in(user)
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/relist"
+      expect(response.status).to eq(403)
+
+      expect(post_revision.reload.unlisted).to eq(true)
+    end
+
+    it "relists the revision" do
+      sign_in(moderator)
+
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/relist"
+
+      expect(response.status).to eq(204)
+      expect(post_revision.reload.unlisted).to eq(false)
     end
   end
 

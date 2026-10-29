@@ -446,11 +446,23 @@ RSpec.describe AiAgent do
     expect(agent.thinking_effort).to eq("max")
   end
 
-  it "declares a default thinking effort for reasoning-enabled system agents" do
+  it "declares an explicit thinking effort for every built-in system agent" do
+    DiscourseAi::Agents::Agent
+      .send(:builtin_system_agents)
+      .each_key do |klass|
+        expect(DiscourseAi::Completions::ThinkingConfig::VALUES).to include(
+          klass.new.thinking_effort,
+        ),
+        "expected #{klass} to declare a thinking effort, got #{klass.new.thinking_effort.inspect}"
+      end
+  end
+
+  it "disables thinking for single-shot agents and enables it for multi-step ones" do
     {
-      DiscourseAi::Agents::Creative => "low",
+      DiscourseAi::Agents::Summarizer => "none",
+      DiscourseAi::Agents::Translator => "none",
+      DiscourseAi::Agents::Proofreader => "none",
       DiscourseAi::Agents::General => "low",
-      DiscourseAi::Agents::DiscourseHelper => "low",
       DiscourseAi::Agents::SqlHelper => "medium",
       DiscourseAi::Agents::ForumResearcher => "high",
     }.each do |klass, effort|

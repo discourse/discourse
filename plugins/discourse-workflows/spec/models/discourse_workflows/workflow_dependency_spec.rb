@@ -59,4 +59,21 @@ RSpec.describe DiscourseWorkflows::WorkflowDependency do
       expect(described_class.cached_user_modals?).to eq(false)
     end
   end
+
+  describe ".references_node_type?" do
+    it "is true for node types used by a draft or published workflow" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "t1", "trigger:composer_paused"
+          g.node "c1", "action:composer_message", configuration: { "title" => "Hi", "body" => "Hi" }
+          g.chain "t1", "c1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
+      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
+      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow, version:)
+
+      expect(described_class.references_node_type?("action:composer_message")).to eq(true)
+      expect(described_class.references_node_type?("action:modal")).to eq(false)
+    end
+  end
 end

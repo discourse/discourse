@@ -22,9 +22,11 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { removeAccents } from "discourse/lib/utilities";
+import type { CategoryListCategory } from "discourse/models/category-list";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import type { TopicCreateAttrs } from "discourse/models/topic";
 import type User from "discourse/models/user";
 import type StoreService from "discourse/services/store";
 import Topic from "./topic.ts";
@@ -161,7 +163,7 @@ export interface CategoryFields {
   has_children?: boolean | null;
   subcategory_count?: number | null;
   subcategory_ids?: number[] | null;
-  subcategory_list?: object[];
+  subcategory_list?: CategoryListCategory[];
   subcategory_list_style?: string | null;
   sort_order?: string | null;
   sort_ascending?: boolean | null;
@@ -206,7 +208,7 @@ export interface CategoryFields {
   category_type_settings?: Record<string, unknown>;
   category_type_site_settings?: Record<string, unknown>;
   site_texts?: Record<string, string>;
-  topics?: object[];
+  topics?: (TopicCreateAttrs<Topic> | Topic)[];
   topics_day?: number;
   topics_week?: number;
   topics_month?: number;
@@ -846,17 +848,12 @@ export default class Category extends RestModel {
 
   @computed("subcategory_list")
   get serializedSubcategories() {
-    // TODO(typescript-pending): serialized subcategories include topic payloads; remove when typed at the source.
-    return (
-      this.subcategory_list as
-        | (Omit<CategoryFields, "topics"> & {
-            topics?: Record<string, unknown>[];
-          })[]
-        | undefined
-    )?.map((c) => {
+    return this.subcategory_list?.map((c) => {
       const subcategory = Category.create({
         ...c,
-        topics: c.topics?.map((t) => Topic.create(t)),
+        topics: c.topics?.map((t) =>
+          Topic.create(t as TopicCreateAttrs<Topic>)
+        ),
       });
       return subcategory;
     });
@@ -882,18 +879,17 @@ export default class Category extends RestModel {
   }
 
   @computed
-  get availablePermissions() {
-    // TODO(typescript-pending): PermissionType reads its create-assigned id but does not declare it.
+  get availablePermissions(): PermissionType[] {
     return [
       PermissionType.create({
         id: PermissionType.FULL,
-      } as Partial<PermissionType> & { id: number }),
+      }),
       PermissionType.create({
         id: PermissionType.CREATE_POST,
-      } as Partial<PermissionType> & { id: number }),
+      }),
       PermissionType.create({
         id: PermissionType.READONLY,
-      } as Partial<PermissionType> & { id: number }),
+      }),
     ];
   }
 

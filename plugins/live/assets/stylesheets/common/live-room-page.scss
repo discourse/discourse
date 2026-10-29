@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // One step above the fixed site header so a widget dragged to the top edge
 // stays visible and grabbable, while everything that already outranked the
 // header (mobile composer, fullscreen layers, modals) keeps outranking the
@@ -766,32 +768,42 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   }
 }
 
+// Same proportions as the post reactions picker (1.2em emoji, 0.25em
+// spacing, 1.5x hover), scaled up to our larger emoji.
 .live-reaction-picker {
+  --live-reaction-size: 1.75rem;
+  --live-reaction-spacing: calc(var(--live-reaction-size) * 0.25 / 1.2);
+
+  // So a full seven-column row still fits a phone.
+  @include viewport.until(sm) {
+    --live-reaction-size: 1.5rem;
+  }
   display: grid;
-  grid-template-columns: repeat(var(--live-reaction-columns, 7), auto);
-  gap: var(--space-1);
-  padding: var(--space-1);
+  grid-template-columns: repeat(var(--live-reaction-columns, 7), 1fr);
+  gap: var(--live-reaction-spacing);
+  padding: var(--live-reaction-spacing);
 
   &__emoji,
   &__more {
-    padding: var(--space-1);
-  }
+    padding: var(--live-reaction-spacing);
+    margin: var(--live-reaction-spacing);
+    border-radius: var(--d-border-radius);
 
-  &__more .d-icon {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-
-  &__emoji {
-    .emoji {
-      width: 1.75rem;
-      height: 1.75rem;
-      transition: transform 0.1s ease-out;
+    .emoji,
+    .d-icon {
+      width: var(--live-reaction-size);
+      height: var(--live-reaction-size);
     }
+  }
 
-    &:hover .emoji,
-    &:focus-visible .emoji {
-      transform: scale(1.2);
+  // Scales the button, not the image: hovering swaps in the animated image,
+  // which would otherwise skip the transition.
+  &__emoji {
+    transition: transform 0.1s ease-out;
+
+    .discourse-no-touch &:hover,
+    &:focus-visible {
+      transform: scale(1.5);
     }
   }
 }
