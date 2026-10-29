@@ -3061,7 +3061,6 @@ sl:
     category:
       none: "(brez kategorije)"
       all: "Vse kategorije"
-      choose: "Kategorija&hellip;"
       edit: "Uredi"
       edit_dialog_title: "Uredi: %{categoryName}"
       view: "Poglej teme v kategoriji"
@@ -4702,6 +4701,9 @@ sl:
         activation_filter:
           activated: "Aktiviran"
         approved: "Potrjen?"
+        bots:
+          name: "Ime"
+          username: "Uporabniško ime"
         titles:
           active: "Aktivni uporabniki"
           pending: "Uporabniki za odobritev"

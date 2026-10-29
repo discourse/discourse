@@ -25,6 +25,8 @@ cs:
         illustrate_post: "Ilustrovat příspěvek"
         replace_dates: "Chytré datumy"
     ai_bot:
+      sources:
+        spam_detection: "Detekce spamu"
       navigation:
         settings:
           title: "Nastavení webu"

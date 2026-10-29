@@ -4820,7 +4820,6 @@ zh_TW:
     category:
       none: "( 無分類 )"
       all: "所有分類"
-      choose: "選擇一個分類&hellip;"
       edit: "編輯"
       edit_title: "編輯此類別"
       edit_dialog_title: "編輯：%{categoryName}"
@@ -8901,6 +8900,11 @@ zh_TW:
           activated: "已啟動"
           not_activated: "未啟用"
         approved: "已批准？"
+        source: "來源："
+        bots:
+          name: "名稱"
+          username: "使用者名"
+          trust_level: "信任等級"
         titles:
           active: "活躍使用者"
           new: "新使用者"
@@ -8927,6 +8931,7 @@ zh_TW:
           title: "刪除此使用者的所有關聯帳號"
           text: "刪除關聯的帳戶"
       user:
+        bot: "機器人"
         suspend_failed: "將此使用者停權時發生錯誤 %{error}"
         unsuspend_failed: "恢復此使用者的權限時發生錯誤 %{error}"
         suspend_duration: "停權使用者至："

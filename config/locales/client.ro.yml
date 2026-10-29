@@ -5410,6 +5410,9 @@ ro:
         activation_filter:
           all: "Toți utilizatorii"
         approved: "Aprobați?"
+        bots:
+          name: "Nume"
+          username: "Nume utilizator"
         titles:
           active: "Utilizatori activi"
           new: "Utilizatori noi"

@@ -3136,7 +3136,6 @@ ko:
     category:
       none: "(카테고리 없음)"
       all: "모든 카테고리"
-      choose: "카테고리&hellip;"
       edit: "수정"
       edit_title: "이 카테고리 편집"
       edit_dialog_title: "편집 : %{categoryName}"
@@ -5205,6 +5204,11 @@ ko:
           all: "모든 사용자"
           activated: "활성화됨"
         approved: "승인되었나요?"
+        source: "출처"
+        bots:
+          name: "그룹명"
+          username: "아이디"
+          trust_level: "신뢰 레벨"
         titles:
           pending: "검토 대기 중인 사용자"
           newuser: "신뢰 레벨 0 사용자(신규 사용자)"

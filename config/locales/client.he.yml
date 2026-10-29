@@ -4746,7 +4746,6 @@ he:
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
-      choose: "קטגוריה&hellip;"
       edit: "עריכה"
       edit_title: "עריכת הקטגוריה הזאת"
       edit_dialog_title: "עריכה: %{categoryName}"
@@ -8361,6 +8360,11 @@ he:
           all: "כל המשתמשים"
           activated: "מופעל"
         approved: "מאושר?"
+        source: "מקור"
+        bots:
+          name: "שם"
+          username: "שם משתמש"
+          trust_level: "דרגת אמון"
         titles:
           active: "משתמשים פעילים"
           new: "משתמשים חדשים"
@@ -8387,6 +8391,7 @@ he:
           title: "מחיקת כל החשבונות שמשויכים למשתמש הזה"
           text: "מחיקת חשבונות משויכים"
       user:
+        bot: "בוט"
         suspend_failed: "משהו נכשל בהשעיית המשתמש הזה %{error}"
         unsuspend_failed: "משהו נכשל בביטול השעיית המשתמש הזה %{error}"
         suspend_duration: "להשעות את המשתמש עד:"

@@ -4566,7 +4566,6 @@ nl:
     category:
       none: "(geen categorie)"
       all: "Alle categorieën"
-      choose: "Categorie&hellip;"
       edit: "Bewerken"
       edit_title: "Bewerk deze categorie"
       edit_dialog_title: "Bewerken: %{categoryName}"
@@ -8165,6 +8164,11 @@ nl:
           all: "Alle gebruikers"
           activated: "Geactiveerd"
         approved: "Goedgekeurd?"
+        source: "Bron"
+        bots:
+          name: "Naam"
+          username: "Gebruikersnaam"
+          trust_level: "Vertrouwensniveau"
         titles:
           active: "Actieve gebruikers"
           new: "Nieuwe gebruikers"
@@ -8191,6 +8195,7 @@ nl:
           title: "Verwijder alle gekoppelde accounts voor deze gebruiker"
           text: "Gekoppelde accounts verwijderen"
       user:
+        bot: "Bot"
         suspend_failed: "Er is iets misgegaan bij het schorsen van deze gebruiker: %{error}"
         unsuspend_failed: "Er is iets misgegaan bij het opheffen van de schorsing van deze gebruiker: %{error}"
         suspend_duration: "Gebruiker schorsen tot:"

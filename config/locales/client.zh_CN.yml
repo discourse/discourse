@@ -4905,7 +4905,6 @@ zh_CN:
     category:
       none: "（无类别）"
       all: "所有类别"
-      choose: "类别&hellip;"
       edit: "编辑"
       edit_title: "编辑此类别"
       edit_dialog_title: "编辑: %{categoryName}"
@@ -9185,6 +9184,11 @@ zh_CN:
           bot: "机器人帐户"
           all: "所有账户"
         approved: "已批准？"
+        source: "来源"
+        bots:
+          name: "名称"
+          username: "用户名"
+          trust_level: "信任级别"
         titles:
           active: "活跃用户"
           new: "新用户"
@@ -9211,6 +9215,7 @@ zh_CN:
           title: "删除此用户的所有关联帐户"
           text: "删除关联帐户"
       user:
+        bot: "机器人"
         suspend_failed: "封禁此用户时出错 %{error}"
         unsuspend_failed: "取消封禁此用户时出错 %{error}"
         suspend_duration: "将用户封禁至："

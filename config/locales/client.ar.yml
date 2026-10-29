@@ -5889,7 +5889,6 @@ ar:
     category:
       none: "(بلا فئة)"
       all: "جميع الفئات"
-      choose: "الفئة&hellip;"
       edit: "تعديل"
       edit_title: "تعديل هذه الفئة"
       edit_dialog_title: "تعديل: %{categoryName}"
@@ -10202,6 +10201,11 @@ ar:
           activated: "نشط"
           not_activated: "غير مفعَّل"
         approved: "تمت الموافقة عليه؟"
+        source: "المصدر"
+        bots:
+          name: "الاسم"
+          username: "اسم المستخدم"
+          trust_level: "مستوى الثقة"
         titles:
           active: "المستخدمون النشطون"
           new: "المستخدمون الجُدد"
@@ -10228,6 +10232,7 @@ ar:
           title: "حذف جميع الحسابات المرتبطة لهذا المستخدم"
           text: "حذف الحسابات المرتبطة"
       user:
+        bot: "روبوت"
         suspend_failed: "حدث خطأ في أثناء تعليق هذا المستخدم %{error}"
         unsuspend_failed: "حدث خطأ في أثناء إلغاء تعليق هذا المستخدم %{error}"
         suspend_duration: "تعليق المستخدم حتى:"

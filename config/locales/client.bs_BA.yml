@@ -2577,7 +2577,6 @@ bs_BA:
     category:
       none: "(no category)"
       all: "Sve kategorije"
-      choose: "Kategorij i pomoć"
       edit: "Izmijeni"
       edit_dialog_title: "promjeni: %{categoryName}"
       view: "View Topics in Category"
@@ -4338,6 +4337,10 @@ bs_BA:
         activation_filter:
           activated: "Aktivirano"
         approved: "Approved?"
+        source: "Izvor"
+        bots:
+          name: "Ime"
+          username: "Nadimak"
         titles:
           pending: "Users Pending Review"
           newuser: "Users at Trust Level 0 (New User)"

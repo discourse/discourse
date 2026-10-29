@@ -3555,7 +3555,6 @@ da:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "Kategori&hellip;"
       edit: "Rediger"
       edit_title: "Rediger denne kategori"
       edit_dialog_title: "Rediger: %{categoryName}"
@@ -5991,6 +5990,11 @@ da:
           all: "Alle brugere"
           activated: "Aktiveret"
         approved: "Godkendt?"
+        source: "Kilde"
+        bots:
+          name: "Navn"
+          username: "Brugernavn"
+          trust_level: "Tillidsniveau"
         titles:
           active: "Aktive brugere"
           new: "Nye brugere"

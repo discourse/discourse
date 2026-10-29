@@ -18,6 +18,9 @@ ug:
     spam_detection:
       logging_subject: "ئەخلەت ئۇچۇر بايقاش"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "ئەخلەت ئۇچۇر بايقاش"
       navigation:
         settings:
           title: "بېكەت تەڭشىكى"

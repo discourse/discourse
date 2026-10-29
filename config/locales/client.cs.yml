@@ -4773,7 +4773,6 @@ cs:
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
-      choose: "Kategorie&hellip;"
       edit: "Upravit"
       edit_title: "Upravit tuto kategorii"
       edit_dialog_title: "Upravit: %{categoryName}"
@@ -8413,6 +8412,11 @@ cs:
           all: "Všichni uživatelé"
           activated: "Aktivován"
         approved: "Schválen?"
+        source: "Zdroj"
+        bots:
+          name: "Jméno"
+          username: "Uživatelské jméno"
+          trust_level: "Úroveň důvěry"
         titles:
           active: "Aktivní uživatelé"
           new: "Noví uživatelé"
