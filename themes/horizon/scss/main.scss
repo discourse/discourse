@@ -110,9 +110,8 @@ body:not(.has-full-page-chat, .wizard) {
   }
 }
 
-body.has-floating-control-bar #main-outlet-wrapper #main-outlet {
-  // makes space so save banner doesn't overlap content
-  padding-bottom: 6em;
+body.d-floating-control-bar-visible #main-outlet-wrapper #main-outlet {
+  padding-bottom: var(--d-floating-control-bar-clearance);
 }
 
 @include viewport.until(sm) {

@@ -1,8 +1,13 @@
 @use "lib/viewport";
 
-body.has-floating-control-bar #main-outlet {
-  // makes space so banner doesn't overlap content
-  padding-bottom: 6em;
+:root {
+  // The bar is fixed, so it reserves its own room at the end of the content
+  // rather than taking part in the layout.
+  --d-floating-control-bar-clearance: 6em;
+}
+
+body.d-floating-control-bar-visible #main-outlet {
+  padding-bottom: var(--d-floating-control-bar-clearance);
 }
 
 .d-floating-control-bar {
