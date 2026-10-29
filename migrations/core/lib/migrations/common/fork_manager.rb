@@ -19,8 +19,15 @@ module Migrations
     @after_fork_parent_hooks = []
     @after_fork_child_hooks = []
     @mutex = Mutex.new
+    @fork_mutex = Mutex.new
 
     class << self
+      # Protect resource creation until its child hook can reach the live handle.
+      # Keep this separate from the hook-list mutex: registration can happen here.
+      def without_forks(&block)
+        @fork_mutex.synchronize(&block)
+      end
+
       def with_batched_forks
         previous = Thread.current[BATCHED_FORKS_KEY]
 
@@ -84,10 +91,14 @@ module Migrations
         @mutex.synchronize { run_before_fork_hooks } if execute_parent
 
         pid =
-          Process.fork do
-            child_hooks = @mutex.synchronize { @after_fork_child_hooks.dup }
-            child_hooks.each(&:call)
-            yield
+          without_forks do
+            Process.fork do
+              # The child must be able to create resources and fork independently.
+              @fork_mutex = Mutex.new
+              child_hooks = @mutex.synchronize { @after_fork_child_hooks.dup }
+              child_hooks.each(&:call)
+              yield
+            end
           end
 
         @mutex.synchronize { run_after_fork_parent_hooks } if execute_parent

@@ -15,7 +15,8 @@ module Migrations
           @fork_hook = ForkManager.after_fork_child { discard! }
 
           begin
-            @connection = PG::Connection.new(settings)
+            # The constructor opens the socket before returning it to our discard hook.
+            ForkManager.without_forks { @connection = PG::Connection.new(settings) }
             @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
             @connection.field_name_type = :symbol
             configure_connection
@@ -131,8 +132,8 @@ module Migrations
           end
         end
 
-        # Forked worker processes inherit the connection's socket. When such a
-        # process exits, the pg gem's cleanup sends a libpq Terminate message
+        # Forked worker processes inherit the connection's socket. If the inherited
+        # connection is garbage-collected, pg's cleanup sends a libpq Terminate message
         # over that socket and the server closes the session — including for
         # the main process, which still uses it. Redirecting the inherited
         # file descriptor to /dev/null makes the cleanup harmless; calling

@@ -1,7 +1,33 @@
 # frozen_string_literal: true
 
+require "timeout"
+
 RSpec.describe Migrations::ForkManager do
   after { described_class.clear! }
+
+  it "lets child threads create resources and fork again" do
+    reader, writer = IO.pipe
+
+    pid =
+      described_class.fork do
+        Timeout.timeout(5) do
+          Thread
+            .new do
+              described_class.without_forks { writer.write("child") }
+              Process.waitpid(described_class.fork { writer.write(" grandchild") })
+            end
+            .value
+        end
+      end
+    _, status = Process.waitpid2(pid)
+    writer.close
+
+    expect(status).to be_success
+    expect(reader.read).to eq("child grandchild")
+  ensure
+    reader&.close
+    writer&.close unless writer&.closed?
+  end
 
   describe ".after_fork_child" do
     it "runs hooks in the forked process before the fork block" do

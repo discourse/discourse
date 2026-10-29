@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "timeout"
+
 RSpec.describe Migrations::Converters::Adapter::Postgres do
   def create_adapter(settings = {})
     adapter = described_class.new(settings)
@@ -49,6 +51,41 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
       create_adapter { |adapter| adapter.close }
 
       expect(hooks_at_connect).to eq(1)
+    end
+
+    it "discards a connection whose constructor overlaps a worker fork" do
+      reader, writer = IO.pipe
+      connected = Queue.new
+      release = Queue.new
+      pending_connection = connection
+      allow(connection).to receive(:socket_io).and_return(reader)
+      allow(PG::Connection).to receive(:new) do
+        connected << true
+        release.pop
+        pending_connection
+      end
+
+      Timeout.timeout(5) do
+        opener = Thread.new { described_class.new({}) }
+        connected.pop
+        forker = Thread.new { Migrations::ForkManager.fork { exit!(reader.stat.chardev? ? 0 : 1) } }
+
+        # Let the fork either wait for construction or expose the unassigned socket.
+        Thread.pass until forker.stop?
+        release << true
+        adapter = opener.value
+        _, status = Process.waitpid2(forker.value)
+
+        expect(status).to be_success
+      ensure
+        release << true
+        opener&.join
+        forker&.join
+        adapter&.close
+      end
+    ensure
+      reader&.close
+      writer&.close
     end
 
     it "implements the whole PartitionSource interface" do

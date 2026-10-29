@@ -34,16 +34,24 @@ Public converters live in `converters/lib/migrations/converters/`. To run a priv
 Worker processes inherit the source DB connection's socket from the main process. Whether
 that's dangerous depends on the client library: a destructor that only closes the file
 descriptor is harmless (the parent still holds it, so the kernel sends nothing over the
-wire), but a destructor that writes a protocol goodbye kills the parent's session as soon
-as a worker exits — libpq sends a Terminate message, MySQL clients send `COM_QUIT`.
+wire), but a destructor that writes a protocol goodbye kills the parent's session when
+the inherited object is collected — libpq sends a Terminate message, MySQL clients send
+`COM_QUIT`. A referenced connection need not be finalized at normal child exit.
 
 `Adapter::Postgres` handles this by registering a `ForkManager.after_fork_child` hook that
 calls `discard!` in each worker: the inherited socket is redirected to `/dev/null`, and any
 later use of the adapter in the worker raises `DiscardedError`. New adapters should follow
 the same pattern. The discard mechanism itself is library-specific — mysql2 has
 `automatic_close = false`, trilogy has a native `discard!`. To check whether a library
-needs one at all: connect, fork an empty child that exits normally, wait for it, and query
-again from the parent (see the fork-safety specs in `postgres_spec.rb`).
+needs one at all: connect, fork a child that drops the inherited connection and triggers
+garbage collection, wait for it, and query again from the parent.
+
+Registering the hook before connecting is necessary but insufficient: the constructor
+can open a socket and yield to another thread before returning the connection object.
+A worker forked then inherits the socket, but the hook cannot reach it yet. Wrap both
+construction and assignment in `ForkManager.without_forks`, which shares a lock with
+the actual process fork. Keep queries outside that lock so steps can still read in
+parallel. The adapter spec pauses construction to exercise this window deterministically.
 
 ### Partitioning large steps
 
