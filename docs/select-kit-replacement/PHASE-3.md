@@ -63,6 +63,17 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     - ☐ `dCategoryBadge` with `ancestors` and `hasSubcategories` draws "+ Subcategories" after
       every ancestor (`ui-kit/helpers/d-category-link.js`), as select-kit's `category-row` did.
       The family footer draws without ancestors, so it is not affected.
+    - ☐ **Engine: a lazy breadcrumb level asks for page 1 twice.**
+      - The first response adds the level's categories to the site. That rebuilds the
+        breadcrumb objects and dirties every argument of the drop.
+      - The list re-renders and aborts the request that is still settling, and `PagedSource`'s
+        retry rule sends it again.
+      - It was hidden while the lazy search was cached; browse requests with `tree_order` are
+        not cached.
+      - Fix in the engine: a re-render must not abort a load whose inputs are unchanged.
+      - To reproduce, render `BreadCrumbs` on a lazy site with a response that returns the
+        children and their parent as an ancestor, then count `/categories/search` requests on
+        opening the subcategory drop.
 - ☐ **Tag recipe rework**, the follow-up to the category rework: `cleanTagName` and
   `sortTagRows` in `lib/tag-source.ts` copy select-kit's `tag-utils` service
   (`createContentFromInput`, `sortSearchResults`); the tag filter draws its own caret from the
