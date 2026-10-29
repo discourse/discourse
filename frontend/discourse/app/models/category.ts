@@ -108,6 +108,11 @@ type CategorySearchOptions = {
   includeUncategorized?: boolean;
   selectCategoryIds?: number[];
   rejectCategoryIds?: number[];
+  /**
+   * Leaves out subcategories the current user mutes only through a muted parent or grandparent.
+   * A category muted directly stays.
+   */
+  rejectIndirectlyMuted?: boolean;
   includeSubcategories?: boolean;
   includeAncestors?: boolean;
   prioritizedCategoryId?: number;
@@ -904,6 +909,7 @@ export default class Category extends RestModel {
       include_uncategorized: opts.includeUncategorized,
       select_category_ids: opts.selectCategoryIds,
       reject_category_ids: opts.rejectCategoryIds,
+      reject_indirectly_muted: opts.rejectIndirectlyMuted,
       include_subcategories: opts.includeSubcategories,
       include_ancestors: opts.includeAncestors,
       prioritized_category_id: opts.prioritizedCategoryId,
@@ -914,12 +920,14 @@ export default class Category extends RestModel {
     };
 
     // Ordered requests are never cached: topic counts change, and one list must not mix pages
-    // fetched at different times.
-    const ordered =
-      data.group_families !== undefined || data.tree_order !== undefined;
+    // fetched at different times. Nor are muted ones, because the user's mutes change too.
+    const uncacheable =
+      data.group_families !== undefined ||
+      data.tree_order !== undefined ||
+      data.reject_indirectly_muted !== undefined;
     const fetch = (): Promise<CategorySearchResponse> =>
       ajax("/categories/search", { method: "POST", data });
-    const result = ordered
+    const result = uncacheable
       ? await fetch()
       : (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||= await fetch());
 
@@ -940,8 +948,12 @@ export default class Category extends RestModel {
   ): CategorySearchAnswer {
     const visible = Site.current().categories;
     const { text, words } = parseSearchTerm(term);
-    const eligible = visible.filter((category) =>
-      this.#passesSearchFilters(category, opts)
+    const muted = opts.rejectIndirectlyMuted
+      ? this.#indirectlyMutedIds()
+      : undefined;
+    const eligible = visible.filter(
+      (category) =>
+        this.#passesSearchFilters(category, opts) && !muted?.has(category.id!)
     );
     const matched = eligible.filter((category) => {
       const name = normalizeSearchText(category.name);
@@ -1032,6 +1044,17 @@ export default class Category extends RestModel {
       return false;
     }
     return true;
+  }
+
+  /** The current user's indirectly muted category ids, kept current by the message bus. */
+  static #indirectlyMutedIds(): Set<number> {
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    ) as User | null;
+    const ids = currentUser?.get("indirectly_muted_category_ids") as
+      | number[]
+      | undefined;
+    return new Set(ids ?? []);
   }
 
   /** The server's `topic_create_allowed`, which also keeps non-staff out of Uncategorized. */

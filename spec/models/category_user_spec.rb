@@ -517,4 +517,77 @@ RSpec.describe CategoryUser do
       end
     end
   end
+
+  describe ".indirectly_muted_condition" do
+    fab!(:other_user, :user)
+
+    let(:levels) { CategoryUser.notification_levels }
+    let(:states) do
+      [
+        {},
+        { top: :muted },
+        { top: :muted, middle: :regular },
+        { top: :muted, leaf: :muted },
+        { top: :muted, middle: :tracking, child: :muted },
+        { middle: :muted },
+        { middle: :muted, leaf: :watching },
+      ]
+    end
+
+    before { SiteSetting.max_category_nesting = 3 }
+
+    def tree
+      top = Fabricate(:category)
+      middle = Fabricate(:category, parent_category: top)
+      {
+        top:,
+        middle:,
+        child: Fabricate(:category, parent_category: top),
+        leaf: Fabricate(:category, parent_category: middle),
+      }
+    end
+
+    def expect_agreement(categories)
+      states.each do |state|
+        CategoryUser.where(user: user).delete_all
+        state.each do |name, level|
+          CategoryUser.create!(
+            user: user,
+            category: categories.fetch(name),
+            notification_level: levels.fetch(level),
+          )
+        end
+
+        expect(
+          Category.where(CategoryUser.indirectly_muted_condition(user)).pluck(:id),
+        ).to match_array(CategoryUser.indirectly_muted_category_ids(user)),
+        state.inspect
+      end
+    end
+
+    it "picks out the indirectly muted categories at nesting 3, ignoring other users" do
+      categories = tree
+      CategoryUser.create!(
+        user: other_user,
+        category: categories[:top],
+        notification_level: levels[:muted],
+      )
+
+      expect_agreement(categories)
+    end
+
+    it "checks only the parent at nesting 2" do
+      categories = tree
+      SiteSetting.max_category_nesting = 2
+
+      expect_agreement(categories)
+    end
+
+    it "follows the default level when every category is muted by default" do
+      categories = tree
+      SiteSetting.mute_all_categories_by_default = true
+
+      expect_agreement(categories)
+    end
+  end
 end

@@ -11,6 +11,7 @@ const optionNames = {
   include_uncategorized: "includeUncategorized",
   select_category_ids: "selectCategoryIds",
   reject_category_ids: "rejectCategoryIds",
+  reject_indirectly_muted: "rejectIndirectlyMuted",
   include_subcategories: "includeSubcategories",
   include_ancestors: "includeAncestors",
   prioritized_category_id: "prioritizedCategoryId",
@@ -71,6 +72,10 @@ module("Unit | Model | category | search", function (hooks) {
       fixture.categories.map((row, index) => [row.symbol, index + 1])
     );
     this.siteSettings.uncategorized_category_id = this.ids.uncategorized;
+    this.currentUser.set(
+      "indirectly_muted_category_ids",
+      idsFor(fixture.indirectly_muted, this.ids)
+    );
     this.site.setProperties({
       categories: [],
       lazy_load_categories: false,
@@ -434,6 +439,45 @@ module("Unit | Model | category | search", function (hooks) {
       "missing family_keys stays undefined"
     );
     assert.strictEqual(result.categoriesCount, 1, "the count is preserved");
+  });
+
+  test("lazy searches send the indirectly muted filter and are never cached", async function (assert) {
+    this.site.set("lazy_load_categories", true);
+    const requests = [];
+    pretender.post("/categories/search", (request) => {
+      requests.push(new URLSearchParams(request.requestBody));
+      return response({ categories: [], categories_count: 0 });
+    });
+
+    await Category.searchCategories("ember", { rejectIndirectlyMuted: true });
+    await Category.searchCategories("ember", { rejectIndirectlyMuted: true });
+
+    assert.strictEqual(
+      requests.length,
+      2,
+      "mutes change during a session, so each search asks again"
+    );
+    assert.strictEqual(
+      requests[0].get("reject_indirectly_muted"),
+      "true",
+      "the filter is sent"
+    );
+  });
+
+  test("a local search with no current user leaves out nothing", function (assert) {
+    this.owner.unregister("service:current-user");
+    this.owner.register("service:current-user", null, { instantiate: false });
+
+    const result = Category.searchCategories("", {
+      parentCategoryId: this.ids.root,
+      rejectIndirectlyMuted: true,
+    });
+
+    assert.deepEqual(
+      result.categories.map((category) => category.id).sort((a, b) => a - b),
+      idsFor(["branch", "sibling"], this.ids),
+      "no user means no mutes"
+    );
   });
 
   test("findByIdsOrLoad is synchronous on eager sites and parses string ids", function (assert) {

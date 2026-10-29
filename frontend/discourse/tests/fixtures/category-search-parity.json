@@ -9,8 +9,10 @@
     "forge is created before blue, and both names start with Blue; only blue starts with the entire term Blue ember. This distinguishes whole-term prefix ranking from first-word prefix ranking.",
     "An explicit groupFamilies:false is sent as group_families:false and bypasses the lazy request cache because the request carries that field; it does not enable grouping.",
     "Non-breaking-space-only and em-space-only terms are present in Discourse and remain one literal search word because stripping and word splitting use only ASCII whitespace. They bypass tree_order and enable requested grouping. Only nbsp contains a non-breaking space, so that term returns one row; no category name contains an em space, so that grouped term returns no rows and empty family_keys. A non-breaking space between words also stays literal.",
-    "Fullwidth percent and underscore normalization is server-only coverage in the request spec: PostgreSQL unaccent folds them to ASCII percent and underscore, which must still match literally. The client's folding does not cover these fullwidth forms; this is an accepted difference."
+    "Fullwidth percent and underscore normalization is server-only coverage in the request spec: PostgreSQL unaccent folds them to ASCII percent and underscore, which must still match literally. The client's folding does not cover these fullwidth forms; this is an accepted difference.",
+    "level is the signed-in user's notification level for a category. root is muted, sibling is set to regular, and reply is muted directly under an unmuted parent. So branch and leaf (through branch, at nesting 3) are indirectly muted, and sibling and reply are not."
   ],
+  "indirectly_muted": ["branch", "leaf"],
   "categories": [
     {
       "symbol": "uncategorized",
@@ -28,6 +30,7 @@
       "topic_count": 40,
       "position": 30,
       "access": "full",
+      "level": "muted",
       "visible": true
     },
     {
@@ -55,6 +58,7 @@
       "topic_count": 10,
       "position": 10,
       "access": "full",
+      "level": "regular",
       "visible": true
     },
     {
@@ -73,6 +77,7 @@
       "topic_count": 3,
       "position": null,
       "access": "readonly",
+      "level": "muted",
       "visible": true
     },
     {
@@ -1687,6 +1692,187 @@
           "reply"
         ],
         "count": 15
+      }
+    },
+    {
+      "name": "tree level keeps indirectly muted without the flag",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics",
+        "parent_category_id": "root"
+      },
+      "expected": {
+        "categories": [
+          "sibling",
+          "branch"
+        ],
+        "count": 2
+      }
+    },
+    {
+      "name": "tree level rejects indirectly muted",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics",
+        "parent_category_id": "root",
+        "reject_indirectly_muted": true
+      },
+      "expected": {
+        "categories": [
+          "sibling"
+        ],
+        "count": 1
+      }
+    },
+    {
+      "name": "tree rejects indirectly muted",
+      "params": {
+        "limit": 25,
+        "term": "",
+        "tree_order": "topics",
+        "reject_indirectly_muted": true
+      },
+      "expected": {
+        "categories": [
+          "orphan",
+          "solo",
+          "reply",
+          "root",
+          "sibling",
+          "group",
+          "hollow",
+          "accent",
+          "plain",
+          "blue",
+          "forge",
+          "underscore_decoy",
+          "underscore",
+          "percent",
+          "percent_decoy",
+          "numeric",
+          "nbsp",
+          "uncategorized",
+          "quarry1",
+          "quarry2",
+          "quarry3",
+          "quarry4",
+          "quarry5",
+          "quarry6"
+        ],
+        "count": 24
+      }
+    },
+    {
+      "name": "base rejects indirectly muted and keeps direct mutes",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "reject_indirectly_muted": true
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "sibling",
+          "orphan",
+          "root",
+          "forge",
+          "blue",
+          "reply"
+        ],
+        "count": 13
+      }
+    },
+    {
+      "name": "grouped rejects indirectly muted",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "reject_indirectly_muted": true
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "reply",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "root",
+          "sibling",
+          "orphan",
+          "forge",
+          "blue"
+        ],
+        "count": 13,
+        "family_keys": {
+          "solo": "solo",
+          "reply": "solo",
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "root": "root",
+          "sibling": "root",
+          "orphan": null,
+          "forge": null,
+          "blue": null
+        }
+      }
+    },
+    {
+      "name": "grouped muted parent with no eligible child is no family",
+      "params": {
+        "limit": 25,
+        "term": "ember",
+        "group_families": true,
+        "reject_category_ids": [
+          "sibling"
+        ],
+        "reject_indirectly_muted": true
+      },
+      "expected": {
+        "categories": [
+          "solo",
+          "reply",
+          "group",
+          "hollow",
+          "underscore",
+          "underscore_decoy",
+          "percent",
+          "percent_decoy",
+          "orphan",
+          "root",
+          "forge",
+          "blue"
+        ],
+        "count": 12,
+        "family_keys": {
+          "solo": "solo",
+          "reply": "solo",
+          "group": null,
+          "hollow": null,
+          "underscore": null,
+          "underscore_decoy": null,
+          "percent": null,
+          "percent_decoy": null,
+          "orphan": null,
+          "root": null,
+          "forge": null,
+          "blue": null
+        }
       }
     }
   ]

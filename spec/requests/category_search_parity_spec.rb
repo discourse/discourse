@@ -55,6 +55,19 @@ RSpec.describe CategoriesController do
     records
   end
 
+  fab!(:category_users) do
+    fixture
+      .fetch("categories")
+      .filter { |row| row["level"] }
+      .map do |row|
+        CategoryUser.create!(
+          user: user,
+          category: search_categories.fetch(row.fetch("symbol")),
+          notification_level: CategoryUser.notification_levels.fetch(row.fetch("level").to_sym),
+        )
+      end
+  end
+
   def search_params(params)
     params.deep_dup.tap do |result|
       %w[parent_category_id prioritized_category_id].each do |key|
@@ -86,6 +99,12 @@ RSpec.describe CategoriesController do
       SiteSetting.max_category_nesting = 3
       SiteSetting.allow_uncategorized_topics = false
       sign_in(user)
+    end
+
+    it "agrees with the fixture on which categories are indirectly muted" do
+      expect(CategoryUser.indirectly_muted_category_ids(user)).to contain_exactly(
+        *expected_ids(fixture.fetch("indirectly_muted")),
+      )
     end
 
     fixture
@@ -257,6 +276,23 @@ RSpec.describe CategoriesController do
         response.parsed_body.fetch("categories").map { |category| category.fetch("id") },
       ).to eq(expected_ids(["uncategorized"]))
       expect(response.parsed_body.fetch("categories_count")).to eq(1)
+    end
+  end
+
+  describe "#search signed out" do
+    before { SiteSetting.max_category_nesting = 3 }
+
+    it "ignores the indirectly muted filter when signed out" do
+      post "/categories/search.json",
+           params: {
+             term: "",
+             parent_category_id: search_categories.fetch("root").id,
+             reject_indirectly_muted: true,
+           }
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body.fetch("categories").map { |category| category.fetch("id") },
+      ).to contain_exactly(*expected_ids(%w[branch sibling]))
     end
   end
 end

@@ -489,6 +489,8 @@ class CategoriesController < ApplicationController
       else
         false
       end
+    reject_indirectly_muted =
+      guardian.user && ActiveModel::Type::Boolean.new.cast(params[:reject_indirectly_muted])
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
@@ -524,6 +526,11 @@ class CategoriesController < ApplicationController
     categories = categories.where(id: select_category_ids) if select_category_ids
 
     categories = categories.where.not(id: reject_category_ids) if reject_category_ids
+
+    if reject_indirectly_muted
+      categories =
+        categories.where.not(Arel.sql(CategoryUser.indirectly_muted_condition(guardian.user)))
+    end
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 
