@@ -21,8 +21,9 @@ module Migrations
 
         migrate_from_path(@migrations_path, performed_migrations)
 
-        @db.close
         nil
+      ensure
+        @db&.close
       end
 
       private

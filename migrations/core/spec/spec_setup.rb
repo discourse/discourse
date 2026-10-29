@@ -41,6 +41,7 @@ module MigrationsSpecSetup
       # introspection, plugin manifests). They run in the Rails integration job,
       # not the isolated gem suite.
       config.filter_run_excluding(:rails) unless ENV["MIGRATIONS_RAILS"]
+      config.filter_run_excluding(:postgres) unless ENV["MIGRATIONS_POSTGRES_DB"]
     end
   end
 

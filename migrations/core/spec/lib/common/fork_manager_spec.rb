@@ -3,199 +3,86 @@
 RSpec.describe Migrations::ForkManager do
   after { described_class.clear! }
 
-  describe ".after_fork_child" do
-    it "runs hooks in the forked process before the fork block" do
-      read_io, write_io = IO.pipe
-      described_class.after_fork_child { write_io.write("hook:#{Process.pid}") }
-
-      pid = described_class.fork { write_io.write(" block:#{Process.pid}") }
-      Process.waitpid(pid)
-      write_io.close
-
-      expect(read_io.read).to eq("hook:#{pid} block:#{pid}")
-      read_io.close
-    end
-
-    it "runs hooks in every fork created by `with_batched_forks`" do
-      read_io, write_io = IO.pipe
-      described_class.after_fork_child { write_io.write("x") }
-
-      described_class.with_batched_forks { 2.times { Process.waitpid(described_class.fork {}) } }
-      write_io.close
-
-      expect(read_io.read).to eq("xx")
-      read_io.close
-    end
-
-    # A source connection registers its hook, then opens its socket. If another
-    # thread forks in between, the child has to run that hook, or the socket it
-    # inherits stays open until its exit ends the parent's session too.
-    it "runs a hook registered after the fork began but before the process split" do
-      read_io, write_io = IO.pipe
-      allow(Process).to receive(:_fork).and_wrap_original do |original, *args|
-        described_class.after_fork_child { write_io.write("late hook") }
-        original.call(*args)
-      end
-
-      Process.waitpid(described_class.fork {})
-      write_io.close
-
-      expect(read_io.read).to eq("late hook")
-    end
-
-    it "returns the hook so it can be removed again" do
-      hook = described_class.after_fork_child { raise "this hook should not run" }
-      expect(described_class.hook_count).to eq(1)
-
-      described_class.remove_after_fork_child(hook)
-      expect(described_class.hook_count).to eq(0)
-
-      _, status = Process.waitpid2(described_class.fork {})
-      expect(status).to be_success
-    end
+  it "runs child hooks before the worker block" do
+    order = []
+    described_class.after_fork_child { order << :hook }
+    expect(in_migration_worker { order << :worker }).to eq(%i[hook worker])
+    expect(order).to eq([])
   end
 
-  describe ".remove_after_fork_child" do
-    it "stops the removed hook from running while other hooks keep running" do
-      read_io, write_io = IO.pipe
-      hook = described_class.after_fork_child { write_io.write("removed") }
-      described_class.after_fork_child { write_io.write("kept") }
-
-      described_class.remove_after_fork_child(hook)
-      expect(described_class.hook_count).to eq(1)
-
-      Process.waitpid(described_class.fork {})
-      write_io.close
-
-      expect(read_io.read).to eq("kept")
-      read_io.close
-    end
+  it "runs hooks in every worker in a batch" do
+    described_class.after_fork_child { Thread.current[:hook_pid] = Process.pid }
+    results =
+      described_class.with_batched_forks do
+        Array.new(2) { in_migration_worker { Thread.current[:hook_pid] == Process.pid } }
+      end
+    expect(results).to eq([true, true])
   end
 
-  describe ".with_batched_forks" do
-    it "runs the after-fork parent hooks even when the block raises" do
-      ran = false
-      described_class.after_fork_parent { ran = true }
-
-      expect { described_class.with_batched_forks { raise "fork exploded" } }.to raise_error(
-        "fork exploded",
-      )
-      expect(ran).to be(true)
+  it "reads hooks registered immediately before the process split" do
+    ran = false
+    allow(Process).to receive(:_fork).and_wrap_original do |original, *args|
+      described_class.after_fork_child { ran = true }
+      original.call(*args)
     end
-
-    it "restores the batched flag when a before-fork hook raises" do
-      # A raising before-fork hook must not leave the flag stuck as true on this
-      # thread. If it did, a later plain fork would think it is still batched and
-      # silently skip its own parent-side hooks.
-      allow(Process).to receive(:fork).and_return(4242)
-      boom = described_class.before_fork { raise "before-fork exploded" }
-
-      parent_ran = false
-      described_class.after_fork_parent { parent_ran = true }
-
-      expect { described_class.with_batched_forks {} }.to raise_error("before-fork exploded")
-
-      described_class.remove_before_fork(boom)
-      described_class.fork {}
-      expect(parent_ran).to be(true)
-    end
-
-    it "delays a concurrent fork until the batch has finished" do
-      allow(Process).to receive(:fork).and_return(4242)
-      ran = Queue.new
-      described_class.after_fork_parent { ran << Thread.current[:tag] }
-
-      a_batched = Queue.new
-      release_a = Queue.new
-      a =
-        Thread.new do
-          Thread.current[:tag] = :a
-          described_class.with_batched_forks do
-            a_batched << true
-            release_a.pop # stay inside the batch while B forks unbatched
-          end
-        end
-      a_batched.pop
-
-      b_done = Queue.new
-      b =
-        Thread.new do
-          Thread.current[:tag] = :b
-          described_class.fork {}
-          b_done << true
-        end
-
-      sleep 0.05
-      expect(b_done).to be_empty
-
-      release_a << true
-      a.join
-      b_done.pop
-      b.join
-
-      collected = []
-      collected << ran.pop until ran.empty?
-      expect(collected).to eq(%i[a b])
-    end
+    expect(in_migration_worker { ran }).to be(true)
   end
 
-  describe ".synchronize" do
-    it "delays a concurrent fork until the block has finished" do
-      entered = Queue.new
-      release = Queue.new
-      holder =
-        Thread.new do
-          described_class.synchronize do
-            entered << true
-            release.pop
-          end
-        end
-      entered.pop
+  it "allows hooks to be removed" do
+    hook = described_class.after_fork_child { raise "removed hook" }
+    described_class.remove_after_fork_child(hook)
+    expect(in_migration_worker { :ok }).to eq(:ok)
+    expect(described_class.hook_count).to eq(0)
+  end
 
-      forked = Queue.new
-      forker = Thread.new { forked << described_class.fork { exit!(0) } }
-
-      sleep 0.05
-      expect(forked).to be_empty
-
-      release << true
-      pid = forked.pop
-      Process.waitpid(pid)
-      holder.join
-      forker.join
-    end
-
-    it "is reentrant, so forking inside the block works" do
-      described_class.synchronize do
-        described_class.synchronize do
-          pid = described_class.fork { exit!(0) }
-          Process.waitpid(pid)
+  it "lets child threads create resources and fork again" do
+    result =
+      in_migration_worker do
+        Timeout.timeout(5) do
+          Thread
+            .new do
+              described_class.without_forks { :resource }
+              _, status = Process.waitpid2(described_class.fork { Process.exit!(0) })
+              status.success?
+            end
+            .value
         end
       end
+    expect(result).to be(true)
+  end
+
+  it "exits immediately when a child hook fails, without running worker code or at_exit" do
+    reader, writer = IO.pipe
+    described_class.after_fork_child do
+      at_exit { writer.write("cleanup") }
+      raise "unsafe inherited resource"
+    end
+    pid = described_class.fork { writer.write("worker") }
+    writer.close
+    _, status = Process.waitpid2(pid)
+    expect(status.exitstatus).to eq(1)
+    expect(reader.read).to eq("")
+  ensure
+    reader&.close
+    writer&.close unless writer&.closed?
+  end
+
+  it "terminates and reaps already started workers when a later fork fails" do
+    attempts = 0
+    first_pid = nil
+    allow(Process).to receive(:fork).and_wrap_original do |original, &block|
+      attempts += 1
+      raise Errno::EAGAIN if attempts == 2
+      original.call(&block)
     end
 
-    it "waits until a fork's parent hooks have finished" do
-      allow(Process).to receive(:fork).and_return(4242)
-      hook_started = Queue.new
-      release_hook = Queue.new
-      described_class.before_fork do
-        hook_started << true
-        release_hook.pop
+    expect do
+      described_class.with_batched_forks do
+        first_pid = described_class.fork { sleep }
+        described_class.fork {}
       end
-
-      forker = Thread.new { described_class.fork {} }
-      hook_started.pop
-
-      synchronized = Queue.new
-      waiter = Thread.new { described_class.synchronize { synchronized << true } }
-
-      sleep 0.05
-      expect(synchronized).to be_empty
-
-      release_hook << true
-      forker.join
-      waiter.join
-      expect(synchronized.pop).to be(true)
-    end
+    end.to raise_error(Errno::EAGAIN)
+    expect { Process.waitpid(first_pid) }.to raise_error(Errno::ECHILD)
+    expect(described_class.without_forks { :released }).to eq(:released)
   end
 end

@@ -42,7 +42,7 @@ RSpec.describe Migrations::Database::Connection do
   describe "#close" do
     it "closes the underlying database" do
       create_connection do |connection|
-        db = connection.db
+        db = connection
         connection.close
         expect(db).to be_closed
       end
@@ -133,7 +133,7 @@ RSpec.describe Migrations::Database::Connection do
 
         connection.attach_database(":memory:", name: 'source"db')
 
-        expect(connection.db.transaction_active?).to be false
+        expect(connection.transaction_active?).to be false
         expect(connection.query_value("SELECT COUNT(*) FROM values_before_attach")).to eq(1)
         expect(
           connection.query_value(
@@ -159,7 +159,7 @@ RSpec.describe Migrations::Database::Connection do
       Dir.mktmpdir do |dir|
         source_path = File.join(dir, "source.db")
         connection = described_class.new(path: File.join(dir, "main.db"))
-        create_schema(connection.db)
+        create_schema(connection)
 
         source = described_class.open_database(path: source_path)
         create_schema(source)
@@ -172,30 +172,30 @@ RSpec.describe Migrations::Database::Connection do
 
     it "merges non-colliding rows from every listed table" do
       with_merge_dbs do |connection, source, source_path|
-        connection.db.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        connection.execute("INSERT INTO topic_tags VALUES (1, 10)")
         source.execute("INSERT INTO topic_tags VALUES (2, 20)")
         source.execute("INSERT INTO uploads VALUES ('a', 'a.png')")
         source.close
 
         connection.merge_database(source_path, tables: %w[topic_tags uploads])
 
-        expect(connection.db.query("SELECT topic_id, tag_id FROM topic_tags")).to contain_exactly(
+        expect(connection.query("SELECT topic_id, tag_id FROM topic_tags")).to contain_exactly(
           { topic_id: 1, tag_id: 10 },
           { topic_id: 2, tag_id: 20 },
         )
-        expect(connection.db.query_splat("SELECT id FROM uploads")).to contain_exactly("a")
+        expect(connection.query_splat("SELECT id FROM uploads")).to contain_exactly("a")
       end
     end
 
     it "dedups an `OR IGNORE` table across shards, keeping the first writer's row" do
       with_merge_dbs do |connection, source, source_path|
-        connection.db.execute("INSERT INTO uploads VALUES ('x', 'first.png')")
+        connection.execute("INSERT INTO uploads VALUES ('x', 'first.png')")
         source.execute("INSERT INTO uploads VALUES ('x', 'second.png')")
         source.close
 
         connection.merge_database(source_path, tables: %w[uploads], dedupe_tables: %w[uploads])
 
-        expect(connection.db.query("SELECT id, filename FROM uploads")).to contain_exactly(
+        expect(connection.query("SELECT id, filename FROM uploads")).to contain_exactly(
           { id: "x", filename: "first.png" },
         )
       end
@@ -203,7 +203,7 @@ RSpec.describe Migrations::Database::Connection do
 
     it "raises, naming the table, when a plain table has a cross-shard duplicate" do
       with_merge_dbs do |connection, source, source_path|
-        connection.db.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        connection.execute("INSERT INTO topic_tags VALUES (1, 10)")
         source.execute("INSERT INTO topic_tags VALUES (1, 10)")
         source.close
 
@@ -215,7 +215,7 @@ RSpec.describe Migrations::Database::Connection do
 
     it "detaches the merge source even when a merge raises, so the next merge works" do
       with_merge_dbs do |connection, source, source_path|
-        connection.db.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        connection.execute("INSERT INTO topic_tags VALUES (1, 10)")
         source.execute("INSERT INTO topic_tags VALUES (1, 10)")
         source.close
 
@@ -229,51 +229,81 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
-  context "when `Migrations::ForkManager.fork` is used" do
-    it "temporarily closes the connection while a process fork is created" do
+  context "when workers fork" do
+    it "prohibits forks by default" do
       create_connection do |connection|
-        expect(connection.closed?).to be false
+        expect { Migrations::ForkManager.fork {} }.to raise_error(
+          Migrations::Database::Lifecycle::UnsafeForkError,
+        )
+        expect(connection.query_value("SELECT 1")).to eq(1)
+      end
+    end
 
-        connection.db.execute("CREATE TABLE foo (id INTEGER)")
-        connection.insert("INSERT INTO foo (id) VALUES (?)", [1])
-        expect(connection.db.query_splat("SELECT id FROM foo")).to contain_exactly(1)
+    it "closes a reopenable connection before each fork and restores it in the parent" do
+      create_connection(reopenable: true) do |connection|
+        connection.execute("CREATE TABLE foo (id INTEGER)")
+        connection.insert("INSERT INTO foo VALUES (?)", [1])
+        connection.commit_transaction
 
-        db_before_fork = connection.db
-
-        Migrations::ForkManager.fork do
-          expect(connection.closed?).to be true
-          expect(connection.db).to be_nil
+        2.times do
+          expect(in_migration_worker { connection.closed? }).to be(true)
+          expect(connection.query_splat("SELECT id FROM foo")).to eq([1])
+          expect(connection.query_value("PRAGMA integrity_check")).to eq("ok")
         end
-
-        expect(connection.closed?).to be false
-        expect(connection.db).to_not eq(db_before_fork)
-
-        connection.insert("INSERT INTO foo (id) VALUES (?)", [2])
-        expect(connection.db.query_splat("SELECT id FROM foo")).to contain_exactly(1, 2)
       end
     end
 
-    it "works with multiple forks" do
-      create_connection do |connection|
-        expect(connection.closed?).to be false
-
-        Migrations::ForkManager.fork { expect(connection.closed?).to be true }
-
-        expect(connection.closed?).to be false
-
-        Migrations::ForkManager.fork { expect(connection.closed?).to be true }
-
-        expect(connection.closed?).to be false
+    it "rejects an active transaction without committing it" do
+      create_connection(reopenable: true) do |connection|
+        connection.execute("CREATE TABLE foo (id INTEGER)")
+        connection.insert("INSERT INTO foo VALUES (?)", [1])
+        expect { Migrations::ForkManager.fork {} }.to raise_error(
+          Migrations::Database::Lifecycle::UnsafeForkError,
+          /active transaction/,
+        )
+        expect(connection).to be_transaction_active
+        connection.execute("ROLLBACK")
+        expect(connection.count("SELECT COUNT(*) FROM foo")).to eq(0)
       end
     end
 
-    it "cleans up fork hooks when connection gets closed" do
-      expect(Migrations::ForkManager.hook_count).to eq(0)
+    it "rejects attached databases and temporary schema" do
+      create_connection(reopenable: true) do |connection|
+        connection.attach_database(":memory:", name: "attached")
+        expect { Migrations::ForkManager.fork {} }.to raise_error(
+          Migrations::Database::Lifecycle::UnsafeForkError,
+        )
+        connection.execute("DETACH DATABASE attached")
+        connection.execute("CREATE TEMP TABLE retained (id INTEGER)")
+        expect { Migrations::ForkManager.fork {} }.to raise_error(
+          Migrations::Database::Lifecycle::UnsafeForkError,
+        )
+        expect(connection.query_value("SELECT COUNT(*) FROM retained")).to eq(0)
+      end
+    end
 
-      create_connection do |connection|
-        expect(Migrations::ForkManager.hook_count).to eq(2)
-        connection.close
-        expect(Migrations::ForkManager.hook_count).to eq(0)
+    it "waits for an active SQLite query before closing for a fork" do
+      create_connection(reopenable: true) do |connection|
+        entered, release = Queue.new, Queue.new
+        reader =
+          Thread.new do
+            connection.query("SELECT 1") do
+              entered << true
+              release.pop
+            end
+          end
+        entered.pop
+        forker = Thread.new { in_migration_worker { connection.closed? } }
+        wait_until_stopped(forker)
+        expect(forker).to be_alive
+        release << true
+        reader.value
+        expect(forker.value).to be(true)
+        expect(connection.query_value("SELECT 2")).to eq(2)
+      ensure
+        release << true
+        reader&.join
+        forker&.join
       end
     end
   end

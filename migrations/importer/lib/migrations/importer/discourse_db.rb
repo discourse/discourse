@@ -8,9 +8,8 @@ module Migrations
       COPY_BATCH_SIZE = 1_000
       SKIP_ROW_MARKER = :$skip
 
-      def initialize
-        @connection = PG::Connection.new(database_configuration)
-        @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
+      def initialize(settings = database_configuration)
+        @connection = Database::ManagedConnection.open(Database::Drivers::Postgres.new(settings))
       end
 
       def copy_data(table_name, column_names, rows)
@@ -31,31 +30,33 @@ module Migrations
           # will stop the whole import. Which seems fine because ideally the import script
           # should ensure all data is valid. We might need to see how this works out in
           # actual migrations...
-          @connection.transaction do
-            @connection.copy_data(sql, encoder) do
-              sliced_rows.each do |row|
-                if row[SKIP_ROW_MARKER]
-                  skipped_rows << row
-                  next
-                end
+          @connection.with do |connection|
+            connection.transaction do
+              connection.copy_data(sql, encoder) do
+                sliced_rows.each do |row|
+                  if row[SKIP_ROW_MARKER]
+                    skipped_rows << row
+                    next
+                  end
 
-                i = 0
-                while i < column_count
-                  data[i] = row[column_names[i]]
-                  i += 1
-                end
+                  i = 0
+                  while i < column_count
+                    data[i] = row[column_names[i]]
+                    i += 1
+                  end
 
-                @connection.put_copy_data(data)
-                inserted_rows << row
+                  connection.put_copy_data(data)
+                  inserted_rows << row
+                end
               end
+
+              # give the caller a chance to do some work when a batch has been committed,
+              # for example, to store ID mappings
+              yield inserted_rows, skipped_rows
+
+              inserted_rows.clear
+              skipped_rows.clear
             end
-
-            # give the caller a chance to do some work when a batch has been committed,
-            # for example, to store ID mappings
-            yield inserted_rows, skipped_rows
-
-            inserted_rows.clear
-            skipped_rows.clear
           end
         end
 
@@ -69,7 +70,7 @@ module Migrations
           WHERE id > 0
         SQL
 
-        result = @connection.exec(query)
+        result = @connection.with { |connection| connection.exec(query) }
         result.getvalue(0, 0)
       end
 
@@ -81,7 +82,7 @@ module Migrations
           HAVING MAX(id) > 0
         SQL
 
-        @connection.exec(query)
+        @connection.with { |connection| connection.exec(query) }
         nil
       end
 
@@ -93,7 +94,7 @@ module Migrations
           ORDER BY ordinal_position
         SQL
 
-        result = @connection.exec_params(query, [table_name])
+        result = @connection.with { |connection| connection.exec_params(query, [table_name]) }
         result.column_values(0).map(&:to_sym)
       end
 
@@ -102,31 +103,12 @@ module Migrations
       end
 
       def query_result(sql, *params)
-        @connection.send_query_params(sql, params)
-        @connection.set_single_row_mode
-
-        first_result = @connection.get_result
-        return QueryResult.new(rows: Enumerator.new {}, column_count: 0) unless first_result
-
-        column_count = first_result.nfields
-        single_column = column_count == 1
-
-        rows_enumerator =
-          Enumerator.new do |y|
-            first_result.stream_each_row { |row| single_column ? y << row[0] : y << row }
-            first_result.clear
-
-            while (result = @connection.get_result)
-              result.stream_each_row { |row| single_column ? y << row[0] : y << row }
-              result.clear
-            end
-          end
-
-        QueryResult.new(rows: rows_enumerator, column_count:)
+        rows = Database::PostgresStream.new(@connection, sql, params, arrays: true)
+        QueryResult.new(rows:, column_count: rows.column_count)
       end
 
       def close
-        @connection.finish
+        @connection.close
       end
 
       private
@@ -164,7 +146,7 @@ module Migrations
             AND NOT a.attisdropped
         SQL
 
-        result = @connection.exec_params(sql, [table_name]).to_a
+        result = @connection.with { |connection| connection.exec_params(sql, [table_name]).to_a }
         column_type_map = result.to_h { |row| [row["name"].to_sym, row["pg_type"]] }
 
         encoders =

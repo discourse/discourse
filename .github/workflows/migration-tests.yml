@@ -82,6 +82,8 @@ jobs:
 
       - parallel:
           - name: RSpec (no Rails)
+            env:
+              MIGRATIONS_POSTGRES_DB: postgres
             # The wrapper resolves the suites through the app's Gemfile, so the
             # root lockfile governs the versions here, locally, and at runtime.
             # Nothing boots Rails here; specs that need it are tagged `:rails`
