@@ -1626,6 +1626,21 @@ RSpec.describe PostsController do
       end
     end
 
+    it "creates a regular topic when an unregistered archetype is supplied" do
+      sign_in(user_trust_level_1)
+
+      post "/posts.json",
+           params: {
+             raw: "this is a test topic body",
+             title: "this is a test topic title",
+             category: category.id,
+             archetype: "unknown",
+           }
+
+      expect(response.status).to eq(200)
+      expect(Topic.find(response.parsed_body["topic_id"]).archetype).to eq(Archetype.default)
+    end
+
     context "with api" do
       it "memoizes duplicate requests" do
         raw = "this is a test post 123 #{SecureRandom.hash}"
