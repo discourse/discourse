@@ -139,7 +139,10 @@ export default {
       const link = links[linkIndex];
       if (shouldOpenInNewTab(link.href)) {
         link.setAttribute("target", "_blank");
-      } else if (!samePrefix(link.href)) {
+      } else if (
+        link.origin === window.location.origin &&
+        !samePrefix(link.href)
+      ) {
         // Same origin but outside the subfolder: the router can't handle it.
         link.classList.add("raw-link");
       }

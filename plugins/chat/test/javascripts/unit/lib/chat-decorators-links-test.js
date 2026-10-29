@@ -30,6 +30,7 @@ module("Discourse Chat | Unit | chat-decorators | links", function (hooks) {
     const element = decoratedLinks();
 
     assert.dom(".external", element).doesNotHaveAttribute("target");
+    assert.dom(".external", element).doesNotHaveClass("raw-link");
     assert.dom(".in-prefix", element).doesNotHaveAttribute("target");
     assert.dom(".in-prefix", element).doesNotHaveClass("raw-link");
     assert.dom(".out-of-prefix", element).doesNotHaveAttribute("target");
