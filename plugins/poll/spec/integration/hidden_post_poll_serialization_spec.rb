@@ -48,6 +48,32 @@ RSpec.describe "DiscoursePoll hidden post serialization", type: :request do
     expect(serialized).not_to have_key("polls_votes")
   end
 
+  it "keeps polls and the viewer's votes visible on ordinary posts" do
+    poll_post.unhide!
+    sign_in(voter)
+
+    serialized = serialized_poll_post
+
+    expect(serialized["polls"].first["options"].map { |o| o["html"] }).to include("Secret option A")
+    expect(serialized["polls_votes"]["poll"]).to contain_exactly(
+      poll_post.polls.first.poll_options.first.digest,
+    )
+  end
+
+  it "keeps hidden polls and votes visible to members of allowed groups" do
+    group = Fabricate(:group)
+    group.add(voter)
+    SiteSetting.hidden_post_visible_groups = group.id.to_s
+    sign_in(voter)
+
+    serialized = serialized_poll_post
+
+    expect(serialized["polls"].first["options"].map { |o| o["html"] }).to include("Secret option A")
+    expect(serialized["polls_votes"]["poll"]).to contain_exactly(
+      poll_post.polls.first.poll_options.first.digest,
+    )
+  end
+
   it "keeps polls visible to staff" do
     sign_in(admin)
 
