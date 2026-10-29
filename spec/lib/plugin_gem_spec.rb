@@ -303,7 +303,7 @@ RSpec.describe PluginGem do
       gem "beta"
       gem "alpha", group: :development
       gem "shared", group: :test
-      gem "gamma", group: :generic_import
+      gem "gamma", group: :migrations
     GEMFILE
       lock: {
         "alpha" => "1.1.0",
@@ -326,7 +326,7 @@ RSpec.describe PluginGem do
     boot_with_groups(only: %i[development])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
 
-    boot_with_groups(with: %i[generic_import], without: %i[development test])
+    boot_with_groups(with: %i[migrations], without: %i[development test])
     expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0])
   end
 
