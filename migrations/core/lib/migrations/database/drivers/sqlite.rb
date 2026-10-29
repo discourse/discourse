@@ -14,10 +14,6 @@ module Migrations
           @statement_cache = statement_cache
         end
 
-        def quiesce?
-          true
-        end
-
         def fork_policy
           @reopenable ? :close_reopen : :forbid
         end

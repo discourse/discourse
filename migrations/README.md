@@ -41,8 +41,15 @@ A driver implements `open`, `configure(handle)`, and `close(handle)`. Its constr
 must clean up native allocations if it raises before returning a handle. The manager
 owns registration, configuration failure cleanup, operation leases, and removal after
 successful close. A failed close retains the registration so a live handle cannot become
-invisible to the fork coordinator. Adapter code uses `with { |handle| ... }` internally;
-do not retain or expose the native handle outside that operation.
+invisible to the fork coordinator. Ordinary adapter operations use
+`with { |handle| ... }`. PostgreSQL streams reserve the connection with `checkout` and
+release it with `checkin` when drained; never expose that handle to callers.
+
+Registration alone is insufficient: a native constructor can open a socket before
+returning the handle to Ruby. A child forked in that interval cannot find the handle to
+discard it, and later native cleanup can terminate the parent's session. The barrier
+must cover native construction **and assignment**, configuration, and close through
+unregistration. Keep the deterministic constructor-overlap test when changing this code.
 
 Drivers without an explicit policy prohibit forks while their connections are open.
 There is no fallback worker backend. To support forks, implement and test one of:
@@ -62,12 +69,20 @@ SQLite's close API on an inherited live connection; see
 [SQLite's fork guidance](https://www.sqlite.org/howtocorrupt.html#_carrying_an_open_database_connection_across_a_fork_).
 
 `ForkManager` remains the sole worker-fork entry point. `Database::Lifecycle` owns the
-registry and barrier. Construction and destruction hold shared leases; SQLite operations
-also hold them. The entire prepare/fork-batch/restore interval holds exclusive access.
-Concurrent PostgreSQL queries can continue while workers fork. Reentrant shared leases
-follow threads so SQLite streaming fibers can nest operations, while PostgreSQL operation
-leases prevent another fiber from reusing an active protocol stream. Forking inside an
-active database operation or opening a connection inside a fork batch raises an error.
+registry and barrier. Construction and destruction hold shared leases; operations on
+reopenable SQLite connections also hold them. The entire prepare/fork-batch/restore
+interval holds exclusive access. Concurrent PostgreSQL queries can continue while workers
+fork. PostgreSQL reserves its protocol once per stream, preventing another query or close
+until consumption finishes. Opening a connection inside a fork batch raises an error.
+
+Worker shards and importer SQLite connections prohibit forks for their entire lifetime.
+They therefore need no global operation barrier. Cached inserts execute directly, with
+ownership checks at transaction boundaries and statement preparation; close clears the
+cache. These connections belong to one worker or importer thread, and must not be shared
+for concurrent inserts and close. The converter's reopenable run database retains an
+operation lease around inserts, reads, and merges. Keep that distinction explicit when
+adding a new execution path: do not add locks to every row to protect against a fork that
+the connection's lifetime policy already prohibits.
 
 Ordinary forks and batches use the same protocol. All policies are validated before
 connections are closed. If preparation or forking fails, every successfully suspended
@@ -77,7 +92,9 @@ If child-side discard or another child initialization hook fails, the child exit
 without running worker code or inherited exit handlers. PID checks also reject accidental
 use of inherited connections and streams.
 
-`Database::PostgresStream` is single-pass. `each` releases its lease and drains pending
+`Database::PostgresStream` is single-pass. Normal `each` iteration passes the consumer's
+block directly to the native stream, without a Fiber switch or ownership check per row.
+Only explicit `next` iteration creates a Fiber. `each` releases its lease and drains pending
 results on exhaustion, early block exit, or an exception. When manually using `next`,
 call `close` if stopping early. Closing a connection with an active operation raises
 `BusyError`; an abandoned stream must not silently release protection while its query is
@@ -110,29 +127,57 @@ real SQLite tests. Verify that removing protection makes regression tests fail. 
 full conversions supplement these deterministic tests; they cannot prove all possible
 interleavings safe.
 
-#### Performance baseline
+#### Benchmarking database changes
 
-Local measurements comparing `943af8b6a13` with `b33564c4b9e` used Ruby 4.0.9,
-pg 1.7.0, a Unix socket, and six measured iterations after warmup. PostgreSQL
-stream comparisons used the same session and type map, alternating the previous
-Enumerator loop with `PostgresStream`. These are throughput microbenchmarks, not
-predictions for a large production conversion.
+Use [the database pipeline benchmark](tooling/benchmarks/database_pipeline.rb) for changes
+to drivers, connection wrappers, streaming, or fork coordination. Run the **same script**
+against both revisions using their respective `BUNDLE_GEMFILE`, with the same Ruby,
+PostgreSQL, and storage. Alternate revision order, warm each process before measuring,
+and compare repeated samples of elapsed time and CPU time. CPU includes reaped workers;
+allocation counts cover only the parent. Do not run tests or other benchmarks concurrently.
 
-| Workload | Previous median | Managed median |
-| --- | --- | --- |
-| 1M single-integer hash rows (`generate_series`) | 386 ms | 451 ms (+17%) |
-| 500k hash rows with an ID, username, 500-byte body, category ID, timestamp | 563 ms | 612 ms (+9%) |
-| 1M two-column array rows (ID and username) | 360 ms | 387 ms (+8%) |
-| 200k cached-statement SQLite inserts, 3 columns, 1,000-row transactions, journal off | 170 ms | 232 ms (+37%) |
-| Small local conversion, 32 steps and 7 posts, warm markdown bundle | 1.203 s | 1.194 s |
+```bash
+BUNDLE_WITH=migrations PGHOST=/var/run/postgresql PGDATABASE=discourse_development \
+  ROWS=250000 ROUNDS=7 bundle exec ruby migrations/tooling/benchmarks/database_pipeline.rb convert
+```
 
-Allocations per row were unchanged in the streaming and insert benchmarks. The
-stream adds a Fiber handoff and ownership checks per row; SQLite inserts add lifecycle
-and operation synchronization. The small conversion cannot establish that these costs
-are negligible at scale. Potential optimizations are direct block iteration while
-retaining the stream lease, and avoiding the global operation barrier for connections
-whose policy already prohibits forks. Both require retaining the lifecycle regression
-tests and measuring representative larger conversions.
+Modes are `sqlite`, `stream_hash`, `stream_wide`, `stream_array`, `convert`,
+`convert_inline`, and `import`. `convert` runs four concurrent steps, each with `ROWS`
+source records, through the actual scheduler, PostgreSQL adapter, processors, worker
+shards, and consolidator. `convert_inline` runs the same steps without forks. `import`
+reads SQLite rows, copies them through the importer's PostgreSQL adapter in 1,000-row
+batches, and writes ID mappings to SQLite between batches. These synthetic pipelines
+check counts and sums, use temporary SQLite files and PostgreSQL temporary tables, and
+leave existing source data unchanged. They isolate database throughput; they do not
+represent markdown processing, uploads, or a complete production-site import.
+
+The initial managed implementation added 8–17% to PostgreSQL stream time and 37% to
+cached SQLite insert time. Mandatory per-row Fiber switching and operation locking were
+removed from these paths. Fork barriers remain around resource lifetime transitions;
+reopenable SQLite operations remain protected. Benchmark results for the revised
+implementation against `b33564c4b9e` (the narrow, proven fork fix) follow below.
+
+Local measurements on Ruby 4.0.9 and pg 1.7.0 over a Unix socket used six alternating
+pairs of measured processes per streaming/converter case and ten pairs for SQLite/COPY.
+Each process warmed up once before its measured run. Times include workload setup and
+verification but exclude Ruby startup.
+
+| Workload | Previous median | Revised median | Change |
+| --- | --- | --- | --- |
+| 1M cached SQLite inserts, 3 columns, 1,000-row transactions, journal off | 567 ms | 567 ms | +0.1% |
+| 1M single-integer PostgreSQL hash rows | 400 ms | 340 ms | −15.0% |
+| 500k PostgreSQL hash rows with ID, username, 500-byte body, category, timestamp | 602 ms | 563 ms | −6.4% |
+| 1M PostgreSQL array rows, ID and username | 377 ms | 333 ms | −11.7% |
+| Four concurrent conversion steps, 1M rows total, including shard merges | 699 ms | 680 ms | −2.6% |
+| Same conversion without forks | 1.557 s | 1.481 s | −4.9% |
+| 1M SQLite rows → PostgreSQL COPY, including SQLite mapping writes | 2.460 s | 2.465 s | +0.2% |
+
+SQLite and COPY elapsed times were indistinguishable within run-to-run variation; paired
+95% intervals included both improvement and regression. SQLite median CPU was unchanged;
+COPY CPU was 1.890 s versus 1.907 s (+0.9%). These measurements establish parity within
+benchmark precision, not a guarantee for every workload or machine. Re-run them when
+changing these paths, and supplement them with a representative real migration when
+source data is available.
 
 ### Partitioning large steps
 

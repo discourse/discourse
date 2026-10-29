@@ -88,6 +88,24 @@ RSpec.describe Migrations::Database::Connection do
   end
 
   describe "#insert" do
+    it "keeps cached shard inserts protected by the connection's fork policy" do
+      create_connection do |connection|
+        connection.execute("CREATE TABLE records (id INTEGER)")
+        connection.insert("INSERT INTO records VALUES (?)", [1])
+        connection.commit_transaction
+
+        expect { Migrations::ForkManager.fork {} }.to raise_error(
+          Migrations::Database::Lifecycle::UnsafeForkError,
+        )
+        connection.insert("INSERT INTO records VALUES (?)", [2])
+        expect(connection.query_splat("SELECT id FROM records ORDER BY id")).to eq([1, 2])
+        connection.close
+        expect { connection.insert("INSERT INTO records VALUES (?)", [3]) }.to raise_error(
+          Migrations::Database::ManagedConnection::UnavailableError,
+        )
+      end
+    end
+
     it "commits inserted rows when reaching `batch_size`" do
       transaction_batch_size = 3
 
