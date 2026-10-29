@@ -99,6 +99,43 @@ RSpec.describe DiscourseEvents::Events::OneboxOccurrence do
       )
     end
 
+    it "skips ahead from an ancient start rather than stepping through every occurrence" do
+      freeze_time Time.utc(2026, 11, 10, 12)
+      dtstarts = []
+      allow(RRule::Rule).to receive(:new).and_wrap_original do |original, pattern, **options|
+        dtstarts << options[:dtstart]
+        original.call(pattern, **options)
+      end
+
+      expect(
+        current(
+          starts_at: "1000-01-01T09:00:00.000+00:00",
+          rrule: "FREQ=WEEKLY;INTERVAL=2;BYDAY=WE",
+          timezone: "UTC",
+        ),
+      ).to include(starts_at: "2026-11-18T09:00:00.000Z")
+      expect(dtstarts).to all(be > Time.utc(2026, 9, 1))
+    end
+
+    it "skips ahead to the final occurrence of a series that ended long ago" do
+      freeze_time Time.utc(2026, 11, 10, 12)
+
+      expect(
+        current(
+          starts_at: "1000-01-01T09:00:00.000+00:00",
+          rrule: "FREQ=WEEKLY;INTERVAL=4;BYDAY=WE;UNTIL=20200101T235959",
+          timezone: "UTC",
+        ),
+      ).to include(starts_at: "2019-12-25T09:00:00.000Z")
+    end
+
+    it "ignores rules the onebox doesn't write" do
+      freeze_time Time.utc(2026, 11, 10, 12)
+
+      expect(current(**weekly, rrule: "FREQ=WEEKLY;INTERVAL=2;BYDAY=TH;COUNT=100000")).to be_nil
+      expect(current(**weekly, rrule: "FREQ=SECONDLY")).to be_nil
+    end
+
     it "moves an all-day event by whole days once its day is over" do
       freeze_time Time.utc(2026, 10, 23, 12)
 

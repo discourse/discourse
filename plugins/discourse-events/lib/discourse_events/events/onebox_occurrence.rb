@@ -11,6 +11,11 @@ module DiscourseEvents
       # The longest gap between occurrences, for monthly events, is five weeks
       MAX_GAP = 5.weeks
 
+      # Only the rules the topic onebox writes, as others (e.g. with COUNT) can't skip ahead safely
+      DAY = "(SU|MO|TU|WE|TH|FR|SA)"
+      SUPPORTED_RRULE =
+        /\AFREQ=(DAILY(;BYDAY=MO,TU,WE,TH,FR)?|WEEKLY;INTERVAL=[124];BYDAY=#{DAY}|MONTHLY;BYDAY=(-1|[1-4])#{DAY})(;UNTIL=\d{8}T\d{6})?\z/
+
       # Returns { onebox source URL => { starts_at:, ends_at: } } for oneboxes that have moved on
       def self.for_cooked(cooked)
         return {} if !cooked&.include?("discourse-event-onebox")
@@ -31,10 +36,13 @@ module DiscourseEvents
       end
 
       def current
-        return if (rule = rrule).blank?
+        return if !SUPPORTED_RRULE.match?(@node["data-event-rrule"].to_s)
 
         # The earliest start whose occurrence hasn't finished yet
         earliest = @now - duration - (all_day? ? 1.day : 0) + 1.second
+
+        finishes = repeat_until
+        rule = rrule(anchor: finishes ? [earliest, finishes - MAX_GAP].min : earliest)
 
         # `between` rather than `from`, which returns nothing for rules with an interval
         upcoming = rule.between(earliest, earliest + MAX_GAP).first || final_occurrence(rule)
@@ -65,11 +73,19 @@ module DiscourseEvents
 
       private
 
-      def rrule
+      # Rules with an interval are stepped through from their start, which is untrusted and can be
+      # ages ago, so it's moved up to just before `anchor` by whole periods, keeping the same series.
+      # One period is held back so a DST change can't push the start past `anchor`.
+      def rrule(anchor:)
         pattern = @node["data-event-rrule"]
-        return if pattern.blank?
+        period = [pattern[/INTERVAL=(\d)/, 1].to_i, 1].max.weeks
+        periods = [((anchor - starts_at) / period.to_i).floor - 1, 0].max
 
-        ::RRule::Rule.new(pattern, dtstart: starts_at, tzid: timezone.tzinfo.name)
+        ::RRule::Rule.new(
+          pattern,
+          dtstart: starts_at + (periods * period),
+          tzid: timezone.tzinfo.name,
+        )
       end
 
       def final_occurrence(rule)

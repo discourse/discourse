@@ -23,6 +23,8 @@ module Onebox
         "4" => "fourth",
         "-1" => "last",
       }
+      # Pages give the upcoming occurrence, so an older start isn't a live schedule
+      MAX_SCHEDULE_AGE = 1.year
 
       def self.format_event_time(starts_at, ends_at = nil)
         time = starts_at.strftime("%-I:%M %p")
@@ -173,6 +175,7 @@ module Onebox
       def event_schedule
         return @event_schedule if defined?(@event_schedule)
         return @event_schedule = nil if !event? || (date = event_date).nil?
+        return @event_schedule = nil if date < MAX_SCHEDULE_AGE.ago.to_date
 
         weekday = I18n.t("onebox.discourse.recurrence.weekdays.#{WEEKDAYS[date.wday]}")
         day = WEEKDAYS[date.wday][0, 2].upcase

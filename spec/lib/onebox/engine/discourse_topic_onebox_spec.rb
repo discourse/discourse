@@ -83,7 +83,10 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
           </html>
         HTML
 
-      before { stub_request(:get, url).to_return(status: 200, body: html) }
+      before do
+        freeze_time Time.utc(2026, 10, 20, 12)
+        stub_request(:get, url).to_return(status: 200, body: html)
+      end
 
       it "uses the event description and exposes event display data" do
         expect(data).to include(
@@ -171,6 +174,17 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
         it "labels the weekdays" do
           expect(data[:event_recurrence]).to eq("Every weekday")
           expect(data[:event_rrule]).to eq("FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR")
+        end
+      end
+
+      context "with a schedule that started long ago" do
+        let(:event_schedule_json) { %("eventSchedule": { "repeatFrequency": "P1D" },) }
+
+        before { freeze_time Time.utc(2028, 1, 1) }
+
+        it "does not keep the schedule" do
+          expect(data[:event_recurrence]).to be_nil
+          expect(data[:event_rrule]).to be_nil
         end
       end
 
