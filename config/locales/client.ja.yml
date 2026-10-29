@@ -4096,7 +4096,6 @@ ja:
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
-      choose: "カテゴリ&hellip;"
       edit: "編集"
       edit_title: "このカテゴリの編集"
       edit_dialog_title: "編集: %{categoryName}"
@@ -7519,6 +7518,11 @@ ja:
           all: "すべてのユーザー"
           activated: "有効"
         approved: "承認済み？"
+        source: "ソース"
+        bots:
+          name: "名前"
+          username: "ユーザー名"
+          trust_level: "信頼レベル"
         titles:
           active: "アクティブユーザー"
           new: "新規ユーザー"
@@ -7545,6 +7549,7 @@ ja:
           title: "このユーザーのすべての関連アカウントを削除"
           text: "関連アカウントの削除"
       user:
+        bot: "ボット"
         suspend_failed: "このユーザーを凍結中にエラーが発生しました: %{error}"
         unsuspend_failed: "このユーザーの凍結を解除中にエラーが発生しました: %{error}"
         suspend_duration: "次の期間までユーザーを凍結する:"

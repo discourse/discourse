@@ -1,6 +1,10 @@
 import { waitForPromise } from "@ember/test-waiters";
 import AllowLister from "pretty-text/allow-lister";
-import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
+import {
+  buildAnimatedEmojiUrl,
+  buildEmojiUrl,
+  performEmojiUnescape,
+} from "pretty-text/emoji";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import deprecated from "discourse/lib/deprecated";
 import { getURLWithCDN } from "discourse/lib/get-url";
@@ -94,6 +98,13 @@ export function emojiUrlFor(code) {
   const opts = emojiOptions();
   if (opts) {
     return buildEmojiUrl(code, opts);
+  }
+}
+
+export function animatedEmojiUrlFor(code) {
+  const opts = emojiOptions();
+  if (opts) {
+    return buildAnimatedEmojiUrl(code, opts);
   }
 }
 

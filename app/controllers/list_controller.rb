@@ -120,7 +120,7 @@ class ListController < ApplicationController
     end
 
     define_method("category_#{filter}") do
-      canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
+      canonical_list_url(@category.url)
       public_send(filter, category: @category.id)
     end
 
@@ -149,7 +149,7 @@ class ListController < ApplicationController
   end
 
   def category_default
-    canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
+    canonical_list_url(@category.url)
     public_send(category_default_view, category: @category.id)
   end
 

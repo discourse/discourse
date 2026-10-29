@@ -3661,7 +3661,6 @@ nb_NO:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "Kategori&hellip;"
       edit: "Rediger"
       edit_title: "Rediger denne kategorien"
       edit_dialog_title: "Rediger: %{categoryName}"
@@ -5516,6 +5515,9 @@ nb_NO:
           silenced: "Dempet"
           staged: "Arrangert"
         approved: "Godkjent?"
+        bots:
+          name: "Navn"
+          username: "Brukernavn"
         titles:
           active: "Aktive brukere"
           pending: "Brukere som venter på evaluering"

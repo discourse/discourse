@@ -1706,7 +1706,6 @@ be:
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
-      choose: "Катэгорыя&hellip;"
       edit: "Рэдагаваць"
       view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
@@ -2854,6 +2853,9 @@ be:
           suspended: "Прыпыненыя"
           silenced: "Заглушаныя"
         approved: "Ухвалены?"
+        bots:
+          name: "Імя"
+          username: "Імя карыстальніка"
         titles:
           staff: "Персанал"
           moderators: "Мадэратары"

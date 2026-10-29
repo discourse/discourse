@@ -6136,6 +6136,9 @@ pl_PL:
     enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
     enter: "Przejdź do trybu programisty"
   design_wizard:
+    themes:
+      concord:
+        description: "Zastępuje pasek boczny pojedynczą listą kanałów składającą się z kategorii, kanałów czatu oraz pokoi audio/wideo na żywo."
     errors:
       palette_unavailable: "Jedna z wybranych palet kolorów nie jest dostępna dla wybranego motywu."
       site_settings_update_failed: "Nie udało się zaktualizować ustawień witryny."

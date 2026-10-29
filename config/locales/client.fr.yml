@@ -4888,7 +4888,6 @@ fr:
     category:
       none: "(aucune catégorie)"
       all: "Toutes les catégories"
-      choose: "Catégorie&hellip;"
       edit: "Modifier"
       edit_title: "Modifier cette catégorie"
       edit_dialog_title: "Modifier : %{categoryName}"
@@ -8846,6 +8845,11 @@ fr:
           activated: "Activé"
           not_activated: "Non activé"
         approved: "Approuvé ?"
+        source: "Source"
+        bots:
+          name: "Nom"
+          username: "Nom d'utilisateur"
+          trust_level: "Niveau de confiance"
         titles:
           active: "Utilisateurs actifs"
           new: "Nouveaux utilisateurs"
@@ -8872,6 +8876,7 @@ fr:
           title: "Supprimer tous les comptes associés à cet utilisateur"
           text: "Supprimer les comptes associés"
       user:
+        bot: "Robot"
         suspend_failed: "Une erreur s'est produite lors de la suspension de cet utilisateur %{error}"
         unsuspend_failed: "Une erreur s'est produite lors de la réactivation de cet utilisateur %{error}"
         suspend_duration: "Suspendre l'utilisateur jusqu'à :"

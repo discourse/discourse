@@ -4573,7 +4573,6 @@ el:
     category:
       none: "(χωρίς κατηγορία)"
       all: "Όλες οι κατηγορίες"
-      choose: "Κατηγορία&hellip;"
       edit: "Επεξεργασία"
       edit_title: "Επεξεργασία αυτής της κατηγορίας"
       edit_dialog_title: "Επεξεργασία: %{categoryName}"
@@ -7992,6 +7991,11 @@ el:
           all: "Όλοι οι χρήστες"
           activated: "Ενεργοποιήθηκε"
         approved: "Εγκεκριμένο;"
+        source: "Πηγή"
+        bots:
+          name: "Όνομα"
+          username: "Όνομα χρήστη"
+          trust_level: "Επίπεδο εμπιστοσύνης"
         titles:
           active: "Ενεργοί χρήστες"
           new: "Νέοι χρήστες"

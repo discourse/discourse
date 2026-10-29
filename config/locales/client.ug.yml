@@ -4448,7 +4448,6 @@ ug:
     category:
       none: "(سەھىپە يوق)"
       all: "ھەممە سەھىپە"
-      choose: "سەھىپە&hellip;"
       edit: "تەھرىر"
       edit_title: "بۇ سەھىپىنى تەھرىرلەيدۇ"
       edit_dialog_title: "تەھرىر: %{categoryName}"
@@ -7857,6 +7856,11 @@ ug:
           all: "بارلىق ئىشلەتكۈچى"
           activated: "ئاكتىپلاندى"
         approved: "تەستىقلاندىمۇ؟"
+        source: "مەنبە"
+        bots:
+          name: "ئىسمى"
+          username: "ئىشلەتكۈچى ئاتى"
+          trust_level: "ئىشەنچ دەرىجىسى"
         titles:
           active: "ئاكتىپ ئىشلەتكۈچى"
           new: "يېڭى ئىشلەتكۈچى"

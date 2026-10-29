@@ -16,6 +16,216 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  describe "bot account activation" do
+    fab!(:agent, :ai_agent)
+
+    it "deactivates and reactivates the same account when the agent is toggled" do
+      bot = agent.create_user!
+
+      expect { agent.update!(enabled: false) }.not_to change(User, :count)
+      expect(bot.reload).not_to be_active
+      expect(agent.reload.user_id).to eq(bot.id)
+
+      expect { agent.update!(enabled: true) }.not_to change(User, :count)
+      expect(bot.reload).to be_active
+      expect(agent.reload.user_id).to eq(bot.id)
+    end
+
+    it "keeps a shared bot active while any linked agent is enabled" do
+      bot = agent.create_user!
+      other_agent = Fabricate(:ai_agent, user: bot)
+
+      agent.update!(enabled: false)
+      expect(bot.reload).to be_active
+
+      other_agent.update!(enabled: false)
+      expect(bot.reload).not_to be_active
+
+      agent.update!(enabled: true)
+      expect(bot.reload).to be_active
+    end
+
+    it "preserves the system account activation when linked to an agent" do
+      system_user = Discourse.system_user
+      agent.update!(user: system_user, enabled: false)
+      expect(system_user.reload).to be_active
+
+      system_user.update!(active: false)
+      agent.update!(enabled: true)
+      expect(system_user.reload).not_to be_active
+
+      system_user.update!(active: true)
+      agent.destroy!
+      expect(system_user.reload).to be_active
+    end
+
+    %i[admin moderator].each do |role|
+      it "preserves activation of a bot with the #{role} role" do
+        bot = agent.create_user!
+        bot.update!(role => true)
+
+        agent.update!(enabled: false)
+        expect(bot.reload).to be_active
+
+        bot.update!(active: false)
+        agent.update!(enabled: true)
+        expect(bot.reload).not_to be_active
+
+        bot.update!(active: true)
+        agent.destroy!
+        expect(bot.reload).to be_active
+      end
+    end
+
+    it "synchronizes both accounts when reassigned by user ID" do
+      bot = agent.create_user!
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
+      expect(agent.user).to eq(bot)
+
+      agent.update!(user_id: replacement.id)
+
+      expect(bot.reload).not_to be_active
+      expect(replacement.reload).to be_active
+    end
+
+    it "keeps the previous bot active on reassignment while another linked agent is enabled" do
+      bot = agent.create_user!
+      Fabricate(:ai_agent, user: bot)
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
+
+      agent.update!(user_id: replacement.id)
+
+      expect(bot.reload).to be_active
+      expect(replacement.reload).to be_active
+    end
+
+    it "deactivates the previous bot when its last agent reference is cleared" do
+      bot = agent.create_user!
+
+      agent.update!(user_id: nil)
+
+      expect(bot.reload).not_to be_active
+      expect(agent.reload.user_id).to be_nil
+    end
+
+    it "keeps a shared bot active when one agent reference is cleared" do
+      bot = agent.create_user!
+      Fabricate(:ai_agent, user: bot)
+
+      agent.update!(user_id: nil)
+
+      expect(bot.reload).to be_active
+    end
+
+    it "synchronizes the previous bot without changing a human target's activation" do
+      bot = agent.create_user!
+      human = Fabricate(:user)
+      agent.update!(user: human, enabled: false)
+      expect(bot.reload).not_to be_active
+      expect(human.reload).to be_active
+
+      human.update!(active: false)
+      agent.update!(enabled: true)
+      expect(human.reload).not_to be_active
+
+      agent.destroy!
+      expect(human.reload).not_to be_active
+    end
+
+    it "deactivates the bot when its last enabled agent is destroyed" do
+      bot = agent.create_user!
+      Fabricate(:ai_agent, user: bot, enabled: false)
+
+      agent.destroy!
+
+      expect(bot.reload).not_to be_active
+    end
+
+    it "keeps a shared bot active until its last enabled agent is destroyed" do
+      bot = agent.create_user!
+      other_agent = Fabricate(:ai_agent, user: bot)
+
+      agent.destroy!
+      expect(bot.reload).to be_active
+
+      other_agent.destroy!
+      expect(bot.reload).not_to be_active
+    end
+
+    it "keeps a shared bot inactive when a disabled agent is destroyed" do
+      bot = agent.create_user!
+      agent.update!(enabled: false)
+      Fabricate(:ai_agent, user: bot, enabled: false)
+
+      agent.destroy!
+
+      expect(bot.reload).not_to be_active
+    end
+
+    it "synchronizes only the current bot on destroy after reassignment" do
+      bot = agent.create_user!
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
+      agent.update!(user_id: replacement.id)
+      bot.reload.update!(active: true)
+
+      agent.destroy!
+
+      expect(bot.reload).to be_active
+      expect(replacement.reload).not_to be_active
+    end
+
+    it "preserves both accounts' activation when reassignment fails validation" do
+      bot = agent.create_user!
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
+
+      expect(agent.update(user_id: replacement.id, name: "")).to eq(false)
+
+      expect(bot.reload).to be_active
+      expect(replacement.reload).not_to be_active
+    end
+
+    it "preserves bot activation when destruction is aborted" do
+      bot = agent.create_user!
+      agent.update!(system: true)
+      bot.update!(active: false)
+
+      expect(agent.destroy).to eq(false)
+
+      expect(bot.reload).not_to be_active
+      expect(agent).to be_persisted
+    end
+
+    it "creates an inactive account for a disabled agent" do
+      agent.update!(enabled: false)
+
+      bot = agent.create_user!
+
+      expect(bot.reload).not_to be_active
+    end
+
+    it "preserves account activation when unrelated agent fields change or validation fails" do
+      bot = agent.create_user!
+      bot.update!(active: false)
+
+      agent.update!(description: "Updated description")
+      expect(bot.reload).not_to be_active
+
+      bot.update!(active: true)
+      expect(agent.update(enabled: false, name: "")).to eq(false)
+      expect(bot.reload).to be_active
+    end
+
+    it "does not create an account solely to synchronize activation" do
+      expect { agent.update!(enabled: false) }.not_to change(User, :count)
+      expect { agent.update!(enabled: true) }.not_to change(User, :count)
+      expect(agent.reload.user_id).to be_nil
+    end
+  end
+
   describe "#allowed_group_ids" do
     it "aliases Everyone while granular permissions are enabled without changing stored groups" do
       group = Fabricate(:group)
@@ -446,7 +656,7 @@ RSpec.describe AiAgent do
     expect(user.username).to eq("test_bot")
     expect(user.name).to eq("Test")
     expect(user.bot?).to be(true)
-    expect(user.id).to be < DiscourseAi::BotUser::FIRST_ID
+    expect(user.id).to be < ::BotUser::FIRST_ID
   end
 
   it "does not recycle an id another agent still points at" do
@@ -454,7 +664,7 @@ RSpec.describe AiAgent do
     stale_user = other.create_user!
     stale_user.destroy!
     other.update_columns(user_id: stale_user.id)
-    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, ::BotUser::FLOOR_KEY)
 
     user = basic_agent.create_user!
 
@@ -463,7 +673,7 @@ RSpec.describe AiAgent do
 
   it "does not recycle an id an llm model still points at" do
     llm_model.update_columns(user_id: -5000)
-    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, ::BotUser::FLOOR_KEY)
 
     user = basic_agent.create_user!
 

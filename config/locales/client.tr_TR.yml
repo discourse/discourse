@@ -4592,7 +4592,6 @@ tr_TR:
     category:
       none: "(kategori yok)"
       all: "Tüm kategoriler"
-      choose: "Kategori&hellip;"
       edit: "Düzenle"
       edit_title: "Bu kategoriyi düzenle"
       edit_dialog_title: "Düzenle: %{categoryName}"
@@ -8191,6 +8190,11 @@ tr_TR:
           all: "Tüm kullanıcılar"
           activated: "Etkinleştirildi"
         approved: "Onaylanmış mı?"
+        source: "Kaynak"
+        bots:
+          name: "Ad"
+          username: "Kullanıcı Adı"
+          trust_level: "Güven seviyesi"
         titles:
           active: "Aktif kullanıcılar"
           new: "Yeni kullanıcılar"
@@ -8217,6 +8221,7 @@ tr_TR:
           title: "Bu kullanıcıyla ilişkili tüm hesapları silin"
           text: "Ilişkili hesapları sil"
       user:
+        bot: "Bot"
         suspend_failed: "Bu kullanıcı askıya alınırken bir sorun oluştu %{error}"
         unsuspend_failed: "Bu kullanıcının askıya alınması kaldırılırken bir sorun oluştu %{error}"
         suspend_duration: "Kullanıcıyı şu tarihe kadar askıya al:"

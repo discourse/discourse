@@ -17,8 +17,10 @@ module Onebox
         @data ||= {
           categories: categories,
           link: link,
-          article_published_time: published_time.strftime("%-d %b %y"),
-          article_published_time_title: published_time.strftime("%I:%M%p - %d %B %Y"),
+          # The event date is shown in the body, so a post date in the header reads as a second event date
+          article_published_time: (published_time.strftime("%-d %b %y") unless event?),
+          article_published_time_title:
+            (published_time.strftime("%I:%M%p - %d %B %Y") unless event?),
           domain: html_entities.decode(raw[:site_name].truncate(80, separator: " ")),
           description: description,
           is_event: event?,

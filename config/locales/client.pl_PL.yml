@@ -8,6 +8,7 @@ pl_PL:
   js:
     dsa_notice:
       choice_title: "To nielegalne"
+      choice_description: "Prześlij szczegółowy raport wyjaśniający, dlaczego ta treść jest nielegalna."
       go_back: "Cofnij"
       title: "Zgłoś nielegalną treść"
       content_url: "Dokładny adres URL treści"
@@ -16,6 +17,7 @@ pl_PL:
       name: "Imię i nazwisko lub nazwa organizacji"
       email: "Adres e-mail"
       declaration_section: "Oświadczenie"
+      declaration: "Szczerze wierzę, że fakty i twierdzenia zawarte w tym raporcie są prawdziwe i kompletne"
       submit: "Prześlij zgłoszenie"
       get_email_code: "Pobierz kod przez e-mail"
       resend_email_code: "Wyślij ponownie kod"
@@ -1888,6 +1890,7 @@ pl_PL:
       optional: (opcjonalne)
     user:
       said: "%{username}:"
+      bot_account: "Zautomatyzowane konto"
       profile: "Profil"
       profile_possessive: "profil %{username}"
       mute: "Wycisz"
@@ -5718,7 +5721,7 @@ pl_PL:
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
-      choose: "Kategoria&hellip;"
+      choose: "Kategoria…"
       edit: "Edytuj"
       edit_title: "Edytuj tę kategorię"
       edit_dialog_title: "Edytuj: %{categoryName}"
@@ -9901,6 +9904,7 @@ pl_PL:
             permanently_delete_post_revisions: "trwale usuń wersje wpisu"
             mcp_client_updated: "aktualizacja klienta MCP OAuth"
             delete_user: "usunięcie użytkownika"
+            create_bot: "Utwórz bota"
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
             change_site_setting: "zmiana ustawień serwisu"
@@ -10307,6 +10311,7 @@ pl_PL:
           suspended: "Zawieszeni"
           silenced: "Wyciszeni"
           staged: "Etapowi"
+          bots: "Boty"
         activation_filter:
           label: "Status aktywacji"
           all: "Wszyscy użytkownicy"
@@ -10317,6 +10322,24 @@ pl_PL:
           bot: "Konta botów"
           all: "Wszystkie konta"
         approved: "Zatwierdzony?"
+        source: "Źródło"
+        bots:
+          new: "Nowy bot"
+          new_options:
+            bot:
+              label: "Bot ogólnego przeznaczenia"
+              description: "Konto do integracji, webhooków lub automatycznego publikowania za pośrednictwem interfejsu API."
+          back: "Powrót do botów"
+          help: "Boty to konta użytkowników, które nie mogą się logować w celu integracji i automatycznego publikowania."
+          generate_api_key: "Wygeneruj klucz API"
+          generate_api_key_description: "Potrzebne tylko dla usług zewnętrznych, które działają jako ten bot. Wtyczki Discourse nie wymagają tego."
+          scope_mode_description: "Klucz ma uprawnienia wyłącznie tego bota."
+          name: "Nazwa"
+          username: "Nazwa użytkownika"
+          trust_level: "Poziom zaufania"
+          create: "Utwórz bota"
+          created: "Bot @%{username} został utworzony."
+          created_by: "Utworzone przez @%{username}"
         titles:
           active: "Aktywni użytkownicy"
           new: "Nowi użytkownicy"
@@ -10332,6 +10355,7 @@ pl_PL:
           silenced: "Wyciszeni użytkownicy"
           suspended: "Zawieszeni użytkownicy"
           staged: "Użytkownicy etapowi"
+          bots: "Boty"
         not_verified: "Niezweryfikowany"
         check_email:
           title: "Wyświetl adres email tego użytkownika"
@@ -10343,6 +10367,8 @@ pl_PL:
           title: "Usuń wszystkie powiązane konta dla tego użytkownika"
           text: "Usuń powiązane konta"
       user:
+        account_type: "Typ konta"
+        bot: "Bot"
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika %{error}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika %{error}"
         suspend_duration: "Zawieś użytkownika do:"

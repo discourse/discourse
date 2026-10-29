@@ -457,11 +457,6 @@ aside.onebox:has(.discourse-event-onebox) {
     }
   }
 
-  &__metadata {
-    display: flex;
-    justify-content: space-between;
-  }
-
   &.--banner-image {
     container-type: inline-size;
 
@@ -494,7 +489,6 @@ aside.onebox:has(.discourse-event-onebox) {
       "image date title" auto
       "image time time" auto
       "image description description" auto
-      "image metadata metadata" auto
       "image . ." 1fr / 8rem auto minmax(0, 1fr);
     row-gap: 0;
 
@@ -530,10 +524,6 @@ aside.onebox:has(.discourse-event-onebox) {
       grid-area: description;
     }
 
-    .discourse-event-onebox__metadata {
-      grid-area: metadata;
-    }
-
     // Two columns leave too little room for long titles in narrow spaces like phones or the chat
     // drawer, so the image goes above, letterboxed into the same 16:9 frame as banner images
     @container event-onebox (width < 30rem) {
@@ -542,8 +532,7 @@ aside.onebox:has(.discourse-event-onebox) {
         "image image" auto
         "date title" auto
         ". time" auto
-        ". description" auto
-        ". metadata" auto / auto minmax(0, 1fr);
+        ". description" auto / auto minmax(0, 1fr);
 
       .discourse-event-onebox__image.thumbnail {
         @include letterboxed-event-image;

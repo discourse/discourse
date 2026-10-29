@@ -3779,6 +3779,9 @@ lv:
           suspended: "Apturēts"
           staged: "Izveidots"
         approved: "Apstiprināt?"
+        bots:
+          name: "Vārds"
+          username: "Lietotājvārds"
         titles:
           pending: "Lietotāji, kas jāizskata"
           newuser: "Lietotāji ar 0. uzticības pakāpi (Jauns lietotājs)"

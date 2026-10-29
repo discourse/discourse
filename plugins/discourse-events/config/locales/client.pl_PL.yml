@@ -375,6 +375,7 @@ pl_PL:
       new_event: "Nowe wydarzenie"
       onebox:
         all_day: "Cały dzień"
+        all_day_range: "Cały dzień · %{start} → %{end}"
       notifications:
         before_event_reminder: "Wydarzenie wkrótce się rozpocznie"
         after_event_reminder: "Wydarzenie zakończyło się"

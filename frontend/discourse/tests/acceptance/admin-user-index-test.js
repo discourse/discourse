@@ -30,6 +30,18 @@ acceptance("Admin - User Index", function (needs) {
       return helper.response({ id: 2, username: "new-sam" });
     });
 
+    server.get("/admin/users/-1234.json", () =>
+      helper.response({
+        id: -1234,
+        username: "helper_bot",
+        name: "Helper bot",
+        active: true,
+        admin: false,
+        moderator: false,
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/f0a364/{size}.png",
+      })
+    );
+
     server.get("/admin/users/3.json", () => {
       return helper.response({
         id: 3,
@@ -222,6 +234,21 @@ acceptance("Admin - User Index", function (needs) {
   needs.hooks.beforeEach(() => {
     deleteAndBlock = null;
     deleteData = null;
+  });
+
+  test("identifies bot accounts on the user details page", async function (assert) {
+    await visit("/admin/users/-1234/helper_bot");
+    assert
+      .dom(".admin-user__bot-indicator .value")
+      .hasText(i18n("admin.user.bot"), "the bot account is identified");
+    assert
+      .dom(".admin-user__bot-indicator .d-icon-robot")
+      .exists("the indicator includes the bot icon");
+
+    await visit("/admin/users/2/sam");
+    assert
+      .dom(".admin-user__bot-indicator")
+      .doesNotExist("human accounts have no bot indicator");
   });
 
   test("can edit username", async function (assert) {

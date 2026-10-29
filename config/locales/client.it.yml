@@ -4127,7 +4127,6 @@ it:
     category:
       none: "(nessuna categoria)"
       all: "Tutte le categorie"
-      choose: "Categoria&hellip;"
       edit: "Modifica"
       edit_title: "Modifica questa categoria"
       edit_dialog_title: "Modifica: %{categoryName}"
@@ -7412,6 +7411,11 @@ it:
           all: "Tutti gli utenti"
           activated: "Attivati"
         approved: "Approvato?"
+        source: "Fonte"
+        bots:
+          name: "Nome"
+          username: "Nome utente"
+          trust_level: "Livello di attendibilità"
         titles:
           active: "Utenti attivi"
           new: "Nuovi utenti"
@@ -7438,6 +7442,7 @@ it:
           title: "Elimina tutti gli account associati a questo utente"
           text: "Elimina account associati"
       user:
+        bot: "Bot"
         suspend_failed: "Si è verificato un errore durante la sospensione di questo utente %{error}"
         unsuspend_failed: "Si è verificato un errore durante la riattivazione di questo utente %{error}"
         suspend_duration: "Sospendi utente fino a:"

@@ -1034,7 +1034,8 @@
   font-size: var(--font-down-1);
 }
 
-.live-room-page__transcript-toggle {
+.live-room-page__transcript-toggle,
+.live-local-recording-toggle {
   &.--recording {
     .d-icon {
       color: var(--danger);

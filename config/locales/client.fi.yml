@@ -4130,7 +4130,6 @@ fi:
     category:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
-      choose: "Alue&hellip;"
       edit: "Muokkaa"
       edit_title: "Muokkaa tätä aluetta"
       edit_dialog_title: "Muokkaa: %{categoryName}"
@@ -7421,6 +7420,11 @@ fi:
           all: "Kaikki käyttäjät"
           activated: "Aktivoitu"
         approved: "Hyväksytty?"
+        source: "Lähde"
+        bots:
+          name: "Nimi"
+          username: "Käyttäjätunnus"
+          trust_level: "Luottamustaso"
         titles:
           active: "Aktiivisia käyttäjiä"
           new: "Uudet käyttäjät"
@@ -7447,6 +7451,7 @@ fi:
           title: "Poista kaikki tämän käyttäjän liittyvät tilit"
           text: "Poista liittyvät tilit"
       user:
+        bot: "Botti"
         suspend_failed: "Jokin meni vikaan hyllytettäessä tätä käyttäjää: %{error}"
         unsuspend_failed: "Jokin meni vikaan peruttaessa tämän käyttäjän hyllytystä: %{error}"
         suspend_duration: "Hyllytä käyttäjä asti:"
