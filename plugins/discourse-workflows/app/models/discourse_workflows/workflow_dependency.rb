@@ -73,6 +73,40 @@ module DiscourseWorkflows
       end
     end
 
+    # Serialized for every logged-in page load, so the compiled patterns are cached. Patterns
+    # depend on the watched words regex mode, which is part of the key.
+    def self.cached_composer_paused_triggers
+      trigger_class = DiscourseWorkflows::Nodes::ComposerPaused::V1
+      key = "composer_paused_triggers:#{SiteSetting.watched_words_regular_expressions}"
+
+      cache.defer_get_set(key) do
+        cached_published_triggers(trigger_class.identifier).filter_map do |published_trigger|
+          parameters = NodeData.parameters(published_trigger.trigger_node)
+          next if !trigger_class.fires_on?(parameters, trigger_class::PAUSE)
+
+          {
+            trigger_node_id: published_trigger.trigger_node_id,
+            workflow_id: published_trigger.workflow_id,
+            patterns: trigger_class.patterns(parameters),
+            composer_actions: trigger_class.composer_actions(parameters),
+            category_ids: trigger_class.normalize_ids(parameters["category_ids"]),
+            include_subcategories: parameters["include_subcategories"] != false,
+            group_ids: trigger_class.normalized_group_ids(parameters),
+          }
+        end
+      end
+    end
+
+    def self.composer_paused_triggers_for(user)
+      return [] if user.blank?
+
+      cached_composer_paused_triggers.filter_map do |trigger|
+        next if trigger[:group_ids].present? && !user.in_any_groups?(trigger[:group_ids])
+
+        trigger.except(:group_ids)
+      end
+    end
+
     def self.active_node_types
       cached_dependency_index[:active_node_types].to_set
     end
@@ -86,9 +120,11 @@ module DiscourseWorkflows
     end
 
     def self.cached_user_modals?
-      cached_dependency_index[:referenced_node_types].include?(
-        DiscourseWorkflows::Nodes::Modal::V1.identifier,
-      )
+      references_node_type?(DiscourseWorkflows::Nodes::Modal::V1.identifier)
+    end
+
+    def self.references_node_type?(identifier)
+      cached_dependency_index[:referenced_node_types].include?(identifier)
     end
 
     def self.workflows_referencing(type, key)
