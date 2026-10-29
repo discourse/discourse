@@ -226,15 +226,22 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
-  .admin-changes-banner {
+  .d-floating-control-bar {
     max-width: var(--form-kit-max-input);
     flex-direction: row-reverse;
     align-items: center;
     bottom: var(--powered-by-height, 0);
 
     @include viewport.until(sm) {
-      &__main-label {
+      &__label {
         display: none;
+      }
+
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--space-4)
+        );
       }
     }
 
@@ -249,7 +256,7 @@ $number-input-width: var(--form-kit-small-input);
       }
     }
 
-    .controls {
+    &__controls {
       flex-direction: row-reverse;
       margin-right: auto;
     }

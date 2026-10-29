@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import ChangesBanner from "discourse/admin/components/changes-banner";
 import EditCategoryLocalizations from "discourse/admin/components/edit-category-localizations";
 import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
 import UpsertCategoryAppearance from "discourse/admin/components/upsert-category/appearance";
@@ -15,6 +14,7 @@ import EditCategoryTypeSchemaFields from "discourse/components/edit-category-typ
 import Form from "discourse/components/form";
 import { bind } from "discourse/lib/decorators";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import DFloatingControlBar from "discourse/ui-kit/d-floating-control-bar";
 import { i18n } from "discourse-i18n";
 
 const TAB_COMPONENTS = {
@@ -151,11 +151,11 @@ export default class Tabs extends Component {
       </Form>
 
       {{#if (or @controller.model.isNew @controller.isFormDirty)}}
-        <ChangesBanner
-          @bannerLabel={{i18n "category.unsaved_changes"}}
-          @discard={{@controller.formApi.reset}}
+        <DFloatingControlBar
           @discardLabel={{i18n "form_kit.reset"}}
-          @save={{@controller.formApi.submit}}
+          @label={{i18n "category.unsaved_changes"}}
+          @onDiscard={{@controller.formApi.reset}}
+          @onSave={{@controller.formApi.submit}}
           @saveButtonId="save-category"
           @saveLabel={{if
             @controller.model.id

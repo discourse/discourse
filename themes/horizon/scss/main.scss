@@ -110,7 +110,7 @@ body:not(.has-full-page-chat, .wizard) {
   }
 }
 
-body.has-admin-changes-banner #main-outlet-wrapper #main-outlet {
+body.has-floating-control-bar #main-outlet-wrapper #main-outlet {
   // makes space so save banner doesn't overlap content
   padding-bottom: 6em;
 }
