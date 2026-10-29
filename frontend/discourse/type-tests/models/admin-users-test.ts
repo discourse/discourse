@@ -387,10 +387,22 @@ expectTypeOf(
 expectTypeOf(
   PluginIncomingEmail.create({ pluginValue: "x" })
 ).toEqualTypeOf<PluginIncomingEmail>();
+// Web hooks sideload their categories through the basic category serializer.
+const webHookCategory = {
+  id: 1,
+  name: "Support",
+  slug: "support",
+  color: "0088CC",
+  text_color: "FFFFFF",
+  style_type: "square",
+  icon: null,
+  emoji: null,
+  read_restricted: false,
+} as const;
 expectTypeOf(
   PluginWebHook.create({
     pluginValue: "x",
-    categories: [{ id: 1, name: "Support" }],
+    categories: [webHookCategory],
   })
 ).toEqualTypeOf<PluginWebHook>();
 expectTypeOf<typeof WebHook>().toExtend<typeof RestModel>();
@@ -450,6 +462,8 @@ expectTypeOf(webHook.categories).toEqualTypeOf<
 expectTypeOf<ModelCreateAttrsFor<"web-hook">["categories"]>().toEqualTypeOf<
   WebHookCategory[] | undefined
 >();
+webHook.categories = [webHookCategory];
+// @ts-expect-error an id and a name are not a saved category
 webHook.categories = [{ id: 1, name: "Support" }];
 webHook.tags = [1, "support", { id: 2, name: "help", slug: "help" }];
 const emptyExtras = new WebHook.ExtrasClass({ categories: null });
