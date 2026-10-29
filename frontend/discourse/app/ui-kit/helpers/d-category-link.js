@@ -96,7 +96,9 @@ export function categoryBadgeHTML(category, opts) {
       .map((c) => {
         return categoryBadgeHTML(c, {
           ...newOpts,
-          ...(c !== category ? { topicCount: undefined } : {}),
+          ...(c !== category
+            ? { topicCount: undefined, hasSubcategories: undefined }
+            : {}),
           ...(readOnly && c === category ? { readOnly } : {}),
         });
       })
@@ -221,7 +223,8 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (opts.styleType === "emoji" && opts.emoji) {
-    html += dEmoji(opts.emoji) ?? "";
+    // Decorative: the name follows, and the emoji's code would be read before it.
+    html += dEmoji(opts.emoji, { alt: "", skipTitle: true }) ?? "";
   }
 
   // not ideal as we have to call it manually and we pass a fake category object

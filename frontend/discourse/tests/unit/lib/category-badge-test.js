@@ -140,6 +140,23 @@ module("Unit | Utility | category-badge", function (hooks) {
     );
   });
 
+  test("emoji style draws the emoji as decoration beside the name", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const category = store.createRecord("category", {
+      name: "hello",
+      id: 123,
+      style_type: "emoji",
+      emoji: "wave",
+    });
+
+    const emoji = domFromString(categoryBadgeHTML(category))[0].querySelector(
+      "img.emoji"
+    );
+
+    assert.strictEqual(emoji.getAttribute("alt"), "", "has an empty alt");
+    assert.false(emoji.hasAttribute("title"), "has no title");
+  });
+
   test("emoji style falls back to square when emoji are disabled", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", {

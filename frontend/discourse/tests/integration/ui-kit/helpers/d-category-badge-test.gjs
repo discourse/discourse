@@ -91,6 +91,26 @@ module("Integration | ui-kit | Helper | dCategoryBadge", function (hooks) {
       .exists({ count: 1 }, "only the leaf carries the count");
   });
 
+  test("options.ancestors draws the subcategories note after the category alone", async function (assert) {
+    const category = Category.findById(1);
+    const parent = Category.findById(2);
+
+    await render(
+      <template>
+        {{dCategoryBadge
+          category
+          ancestors=(array parent)
+          hasSubcategories=true
+        }}
+      </template>
+    );
+
+    assert.dom(".plus-subcategories").exists({ count: 1 });
+    assert
+      .dom(".badge-category__wrapper:last-child .plus-subcategories")
+      .exists("the note follows the category, not its ancestor");
+  });
+
   test("options.ancestors", async function (assert) {
     const parent = Category.findById(1001);
     const subcategory = Category.findById(1002);

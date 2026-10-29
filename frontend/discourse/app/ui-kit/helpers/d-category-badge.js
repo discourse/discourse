@@ -18,7 +18,7 @@ import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
  * @param {boolean} [options.previewColor] - apply the colour as an inline style.
  * @param {boolean|string} [options.link] - link the badge. Defaults to false.
  * @param {Array} [options.ancestors] - ancestor categories, rendered outermost first. Only the
- *   category itself keeps `topicCount` and `readOnly`.
+ *   category itself keeps `topicCount`, `hasSubcategories` and `readOnly`.
  * @param {number} [options.topicCount] - topics in the category.
  * @param {boolean} [options.hasSubcategories] - append the "+ Subcategories" note.
  * @param {boolean} [options.readOnly] - mark the category as one that cannot be posted in.
