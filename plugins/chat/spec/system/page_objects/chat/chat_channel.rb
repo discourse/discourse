@@ -262,6 +262,35 @@ module PageObjects
         has_no_css?(".c-navbar__star-channel-button")
       end
 
+      def has_onboarding_banner_below_header?
+        has_css?(".c-routes.--channel .chat-channel__overlays .admin-onboarding-banner") &&
+          has_css?(".admin-onboarding-banner", count: 1)
+      end
+
+      def has_onboarding_banner_below_pinned_bar?
+        has_css?(".chat-pinned-bar") &&
+          has_css?(".chat-channel__overlays .admin-onboarding-banner") &&
+          page.evaluate_script(<<~JS)
+            document.querySelector(".chat-channel__overlays .admin-onboarding-banner").getBoundingClientRect().top >=
+              document.querySelector(".chat-pinned-bar").getBoundingClientRect().bottom
+          JS
+      end
+
+      def has_elevated_overlays?
+        has_css?(".chat-channel__overlays.--over-content")
+      end
+
+      def has_no_elevated_overlays?
+        has_no_css?(".chat-channel__overlays.--over-content")
+      end
+
+      def has_notices_below_onboarding_banner?
+        has_css?(".chat-notices .chat-retention-reminder") && page.evaluate_script(<<~JS)
+            document.querySelector(".chat-notices").getBoundingClientRect().top >=
+              document.querySelector(".chat-channel__overlays .admin-onboarding-banner").getBoundingClientRect().bottom
+          JS
+      end
+
       def thread_list_button_selector
         ".c-navbar__threads-list-button"
       end

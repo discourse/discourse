@@ -7,6 +7,8 @@
 fi:
   js:
     dsa_notice:
+      choice_title: "Se on laiton"
+      go_back: "Palaa takaisin"
       title: "Ilmoita laittomasta sisällöstä"
       email: "Sähköpostiosoite"
     user_api_key:
@@ -4128,7 +4130,6 @@ fi:
     category:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
-      choose: "Alue&hellip;"
       edit: "Muokkaa"
       edit_title: "Muokkaa tätä aluetta"
       edit_dialog_title: "Muokkaa: %{categoryName}"
@@ -7419,6 +7420,11 @@ fi:
           all: "Kaikki käyttäjät"
           activated: "Aktivoitu"
         approved: "Hyväksytty?"
+        source: "Lähde"
+        bots:
+          name: "Nimi"
+          username: "Käyttäjätunnus"
+          trust_level: "Luottamustaso"
         titles:
           active: "Aktiivisia käyttäjiä"
           new: "Uudet käyttäjät"
@@ -7445,6 +7451,7 @@ fi:
           title: "Poista kaikki tämän käyttäjän liittyvät tilit"
           text: "Poista liittyvät tilit"
       user:
+        bot: "Botti"
         suspend_failed: "Jokin meni vikaan hyllytettäessä tätä käyttäjää: %{error}"
         unsuspend_failed: "Jokin meni vikaan peruttaessa tämän käyttäjän hyllytystä: %{error}"
         suspend_duration: "Hyllytä käyttäjä asti:"
@@ -7466,7 +7473,7 @@ fi:
         silenced_by: "Hiljentäjä"
         silence_modal_title: "Hiljennä käyttäjä"
         silence_duration: "Kuinka pitkäksi aikaa käyttäjä hiljennetään?"
-        silence_reason_label: "Miksi hiljennät käyttäjän?"
+        silence_reason_title: "Hiljennyksen syy"
         silence_reason_placeholder: "Hiljennyksen syy"
         silence_message: "Sähköpostiviesti"
         silence_message_placeholder: "(jätä tyhjäksi, jos haluat lähettää oletusviestin)"

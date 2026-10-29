@@ -230,6 +230,10 @@ module Chat
     end
 
     def can_flag_message_as?(chat_message, flag_type_id, opts)
+      if flag_type_id == ReviewableScore.types[:illegal] && SiteSetting.dsa_reporting_enabled
+        return false
+      end
+
       return false if !is_staff? && (opts[:take_action] || opts[:queue_for_review])
 
       if can_only_flag_chat_messages_as_illegal? && flag_type_id != ReviewableScore.types[:illegal]

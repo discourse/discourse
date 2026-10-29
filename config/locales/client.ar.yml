@@ -7,6 +7,8 @@
 ar:
   js:
     dsa_notice:
+      choice_title: "إنه غير قانوني"
+      go_back: "العودة"
       title: "الإبلاغ عن المحتوى غير القانوني"
       email: "عنوان البريد الإلكتروني"
       resend_email_code: "إعادة إرسال الرمز"
@@ -5887,7 +5889,6 @@ ar:
     category:
       none: "(بلا فئة)"
       all: "جميع الفئات"
-      choose: "الفئة&hellip;"
       edit: "تعديل"
       edit_title: "تعديل هذه الفئة"
       edit_dialog_title: "تعديل: %{categoryName}"
@@ -10200,6 +10201,11 @@ ar:
           activated: "نشط"
           not_activated: "غير مفعَّل"
         approved: "تمت الموافقة عليه؟"
+        source: "المصدر"
+        bots:
+          name: "الاسم"
+          username: "اسم المستخدم"
+          trust_level: "مستوى الثقة"
         titles:
           active: "المستخدمون النشطون"
           new: "المستخدمون الجُدد"
@@ -10226,6 +10232,7 @@ ar:
           title: "حذف جميع الحسابات المرتبطة لهذا المستخدم"
           text: "حذف الحسابات المرتبطة"
       user:
+        bot: "روبوت"
         suspend_failed: "حدث خطأ في أثناء تعليق هذا المستخدم %{error}"
         unsuspend_failed: "حدث خطأ في أثناء إلغاء تعليق هذا المستخدم %{error}"
         suspend_duration: "تعليق المستخدم حتى:"
@@ -10247,7 +10254,7 @@ ar:
         silenced_by: "كتمه"
         silence_modal_title: "كتم المستخدم"
         silence_duration: "إلى متى سيتم كتم المستخدم؟"
-        silence_reason_label: "لماذا تكتم هذا المستخدم؟"
+        silence_reason_title: "سبب الكتم"
         silence_reason_placeholder: "سبب الكتم"
         silence_message: "رسالة إلكترونية"
         silence_message_placeholder: "(اتركه فارغا لإرسال الرسالة الافتراضية)"

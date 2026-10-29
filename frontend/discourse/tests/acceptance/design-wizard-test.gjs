@@ -326,6 +326,52 @@ acceptance("Design wizard - admin launch", function (needs) {
     });
   });
 
+  test("resuming drops homepage options that are no longer available", async function (assert) {
+    wizardData.homepage = "chat";
+    wizardData.homepage_settings = { chat_homepage_channel: "23" };
+    wizardData.additional_homepages = [
+      {
+        id: "chat",
+        name: "Chat",
+        path: "/categories",
+        settings: { chat_homepage_channel: "12" },
+      },
+    ];
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+
+    wizardData.additional_homepages = [];
+    wizardData.homepage_settings = {};
+    const wizard = this.owner.lookup("service:design-wizard");
+    await wizard.start({ resuming: true });
+    await wizard.saveProgress();
+
+    assert.strictEqual(savedPayloads.at(-1).homepage, "latest");
+    assert.strictEqual(savedPayloads.at(-1).homepage_settings, undefined);
+
+    await click(".design-wizard__next");
+    await click(".design-wizard__next");
+    await click('[data-homepage="categories"]');
+    await wizard.saveProgress();
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings,
+      undefined,
+      "selecting a homepage does not reintroduce unavailable original settings"
+    );
+
+    await click(".design-wizard__close");
+    await click(".dialog-footer .btn-danger");
+    assert.strictEqual(savedPayloads.at(-1).homepage, "");
+    assert.strictEqual(
+      savedPayloads.at(-1).homepage_settings,
+      undefined,
+      "reverting does not send unavailable snapshot settings"
+    );
+  });
+
   ["topics", "categories"].forEach((choice) => {
     [false, true].forEach((resume) => {
       test(`switching from Chat to ${choice} preserves the original channel${resume ? " after a preview reload" : ""}`, async function (assert) {

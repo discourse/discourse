@@ -7,6 +7,7 @@
 sk:
   js:
     dsa_notice:
+      choice_title: "Je to nezákonné"
       title: "Nahlásiť nezákonný obsah"
       email: "E-mailová adresa"
     user_api_key:
@@ -4448,7 +4449,6 @@ sk:
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
-      choose: "Kategória&hellip;"
       edit: "Upraviť"
       edit_title: "Upraviť túto kategóriu"
       edit_dialog_title: "Úprava: %{categoryName}"
@@ -7850,6 +7850,11 @@ sk:
           all: "Všetci používatelia"
           activated: "Aktivované"
         approved: "Schválený?"
+        source: "Zdroj"
+        bots:
+          name: "Meno"
+          username: "Používateľské meno"
+          trust_level: "Úroveň dôvery"
         titles:
           active: "Aktívni používatelia"
           new: "Noví používatelia"
@@ -7876,6 +7881,7 @@ sk:
           title: "Odstráňte všetky priradené účty pre tohto používateľa"
           text: "Odstrániť priradené účty"
       user:
+        bot: "Bot"
         suspend_failed: "Niečo sa pokazilo pri odoberaní práv tomuto používateľovi %{error}"
         unsuspend_failed: "Niečo sa pokazilo pri obnovovaní práv tomuto používateľovi %{error}"
         suspend_duration: "Používateľa pozastaviť až do:"
@@ -7897,7 +7903,7 @@ sk:
         silenced_by: "Umlčané"
         silence_modal_title: "Tichý užívateľ"
         silence_duration: "Na ako dlho bude používateľ umlčaný?"
-        silence_reason_label: "Prečo umlčujete tohto používateľa?"
+        silence_reason_title: "Dôvod ticha"
         silence_reason_placeholder: "Dôvod ticha"
         silence_message: "E-mailová správa"
         silence_message_placeholder: "(pre odoslanie predvolenej správy nechajte prázdne)"

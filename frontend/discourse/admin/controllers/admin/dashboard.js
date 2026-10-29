@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import {
   calculatePresetStartDate,
@@ -9,12 +9,9 @@ import {
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
-import VersionCheck from "discourse/admin/models/version-check";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-
-const PROBLEMS_CHECK_MINUTES = 1;
 
 /**
  * @typedef {Object} LoadedDashboardSections
@@ -25,12 +22,8 @@ const PROBLEMS_CHECK_MINUTES = 1;
  * @property {{ sections: { id: string, visible: boolean }[] }} [configuration]
  */
 export default class AdminDashboardController extends Controller {
-  @service siteSettings;
-  @service exception;
   @service loadingSlider;
 
-  @tracked loadingProblems = false;
-  @tracked problemsFetchedAt;
   @tracked range = DEFAULT_PERIOD;
 
   /** @type {string | null} */
@@ -47,10 +40,6 @@ export default class AdminDashboardController extends Controller {
 
   queryParams = ["range", "start_date", "end_date"];
 
-  isLoading = false;
-
-  /** @type {Date | null} */
-  dashboardFetchedAt = null;
   _sectionsLoadId = 0;
   _sectionsLoadingCount = 0;
   _configSaveId = 0;
@@ -77,42 +66,6 @@ export default class AdminDashboardController extends Controller {
     return (
       this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
     );
-  }
-
-  get showRedesign() {
-    return this.siteSettings.dashboard_improvements;
-  }
-
-  @computed("siteSettings.version_checks")
-  get showVersionChecks() {
-    return this.siteSettings.version_checks;
-  }
-
-  @computed("siteSettings.dashboard_visible_tabs")
-  get visibleTabs() {
-    return (this.siteSettings.dashboard_visible_tabs || "")
-      .split("|")
-      .filter(Boolean);
-  }
-
-  @computed("visibleTabs")
-  get isModerationTabVisible() {
-    return this.visibleTabs.includes("moderation");
-  }
-
-  @computed("visibleTabs")
-  get isSecurityTabVisible() {
-    return this.visibleTabs.includes("security");
-  }
-
-  @computed("visibleTabs")
-  get isReportsTabVisible() {
-    return this.visibleTabs.includes("reports");
-  }
-
-  @computed("problemsFetchedAt")
-  get problemsTimestamp() {
-    return moment(this.problemsFetchedAt).format("LLL");
   }
 
   @action
@@ -204,59 +157,6 @@ export default class AdminDashboardController extends Controller {
     }
   }
 
-  fetchProblems() {
-    if (this.isLoadingProblems) {
-      return;
-    }
-
-    if (
-      !this.problemsFetchedAt ||
-      moment().subtract(PROBLEMS_CHECK_MINUTES, "minutes").toDate() >
-        this.problemsFetchedAt
-    ) {
-      this._loadProblems();
-    }
-  }
-
-  fetchDashboard() {
-    const versionChecks = this.siteSettings.version_checks;
-
-    if (this.isLoading || !versionChecks) {
-      return;
-    }
-
-    if (
-      !this.dashboardFetchedAt ||
-      moment().subtract(30, "minutes").toDate() > this.dashboardFetchedAt
-    ) {
-      this.set("isLoading", true);
-
-      AdminDashboard.fetch()
-        .then((model) => {
-          let properties = {
-            dashboardFetchedAt: new Date(),
-          };
-
-          if (versionChecks) {
-            properties.versionCheck = new VersionCheck(model.version_check);
-          }
-
-          this.setProperties(properties);
-        })
-        .catch((e) => {
-          this.exception.show(e.jqXHR);
-        })
-        .finally(() => {
-          this.set("isLoading", false);
-        });
-    }
-  }
-
-  @action
-  refreshProblems() {
-    this._loadProblems();
-  }
-
   @action
   async refreshSiteAdvice() {
     try {
@@ -319,20 +219,6 @@ export default class AdminDashboardController extends Controller {
         this.loadedSections = revertTo;
       }
       popupAjaxError(e);
-    }
-  }
-
-  async _loadProblems() {
-    this.setProperties({
-      loadingProblems: true,
-      problemsFetchedAt: new Date(),
-    });
-
-    try {
-      const model = await AdminDashboard.fetchProblems();
-      this.problems = model.problems;
-    } finally {
-      this.loadingProblems = false;
     }
   }
 }

@@ -7,6 +7,8 @@
 ru:
   js:
     dsa_notice:
+      choice_title: "Это незаконный контент"
+      go_back: "Назад"
       title: "Сообщите о незаконном контенте"
       email: "Адрес электронной почты"
     user_api_key:
@@ -4893,7 +4895,6 @@ ru:
     category:
       none: "(разное)"
       all: "Все категории"
-      choose: "Выберите категорию&hellip;"
       edit: "Изменить"
       edit_title: "Редактировать категорию"
       edit_dialog_title: "Редактировать: %{categoryName}"
@@ -8579,6 +8580,11 @@ ru:
           all: "Все пользователи"
           activated: "Активирован"
         approved: "Подтвердить?"
+        source: "Источник"
+        bots:
+          name: "Название"
+          username: "Псевдоним"
+          trust_level: "Уровень доверия"
         titles:
           active: "Активные пользователи"
           new: "Новые пользователи"
@@ -8605,6 +8611,7 @@ ru:
           title: "Удалить все связанные с этим пользователем аккаунты"
           text: "Удалить связанные аккаунты"
       user:
+        bot: "Бот"
         suspend_failed: "Ошибка блокировки пользователя: %{error}"
         unsuspend_failed: "Ошибка разблокировки пользователя: %{error}"
         suspend_duration: "Блокировка пользователя до:"
@@ -8626,7 +8633,7 @@ ru:
         silenced_by: "Кем заморожен"
         silence_modal_title: "Заморозка пользователя"
         silence_duration: "Как долго пользователь будет заморожен?"
-        silence_reason_label: "Почему вы блокируете пользователя?"
+        silence_reason_title: "Причина заморозки"
         silence_reason_placeholder: "Причина заморозки"
         silence_message: "Сообщение на электронную почту"
         silence_message_placeholder: "(оставьте незаполненным, если необходимо отправить стандартное сообщение)"

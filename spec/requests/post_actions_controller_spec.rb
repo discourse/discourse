@@ -103,6 +103,30 @@ RSpec.describe PostActionsController do
       expect(response.status).to eq(403)
     end
 
+    it "forbids illegal flags when DSA reporting is enabled" do
+      SiteSetting.dsa_reporting_enabled = true
+      sign_in(user)
+      target_post = Fabricate(:post, user: coding_horror)
+      reviewable =
+        PostActionCreator.off_topic(
+          Fabricate(:user, refresh_auto_groups: true),
+          target_post,
+        ).reviewable
+
+      post "/post_actions.json",
+           params: {
+             id: target_post.id,
+             post_action_type_id: PostActionType.types[:illegal],
+             message: "This content appears to be illegal.",
+           }
+
+      expect(response).to be_forbidden
+      expect(reviewable.reload.potentially_illegal?).to eq(false)
+      expect(
+        PostAction.where(post: target_post, post_action_type_id: PostActionType.types[:illegal]),
+      ).not_to exist
+    end
+
     it "does not reveal private post existence" do
       sign_in(user)
       pm = Fabricate(:private_message_post, user: coding_horror)

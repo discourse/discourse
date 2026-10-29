@@ -60,6 +60,7 @@ export default class PostVotingCommentActions extends Component {
     this.comment.availableFlags = this.comment.available_flags;
     this.modal.show(FlagModal, {
       model: {
+        allowIllegalContentReport: true,
         flagTarget: new PostVotingFlag(),
         flagModel: this.comment,
         setHidden: () => (this.comment.hidden = true),

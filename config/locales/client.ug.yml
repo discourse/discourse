@@ -7,6 +7,7 @@
 ug:
   js:
     dsa_notice:
+      choice_title: "قانۇنسىز"
       title: "قانۇنسىز مەزمۇننى مەلۇم قىلىدۇ"
       email: "ئېلخەت ئادرېسى"
     mcp_oauth_client_id_metadata_policy:
@@ -4447,7 +4448,6 @@ ug:
     category:
       none: "(سەھىپە يوق)"
       all: "ھەممە سەھىپە"
-      choose: "سەھىپە&hellip;"
       edit: "تەھرىر"
       edit_title: "بۇ سەھىپىنى تەھرىرلەيدۇ"
       edit_dialog_title: "تەھرىر: %{categoryName}"
@@ -7856,6 +7856,11 @@ ug:
           all: "بارلىق ئىشلەتكۈچى"
           activated: "ئاكتىپلاندى"
         approved: "تەستىقلاندىمۇ؟"
+        source: "مەنبە"
+        bots:
+          name: "ئىسمى"
+          username: "ئىشلەتكۈچى ئاتى"
+          trust_level: "ئىشەنچ دەرىجىسى"
         titles:
           active: "ئاكتىپ ئىشلەتكۈچى"
           new: "يېڭى ئىشلەتكۈچى"
@@ -7903,7 +7908,7 @@ ug:
         silenced_by: "ئۈنسىزلىگۈچى"
         silence_modal_title: "ئۈنسىز ئىشلەتكۈچى"
         silence_duration: "ئىشلەتكۈچى قاچانغىچە سۈكۈت قىلىدۇ؟"
-        silence_reason_label: "نېمىشقا بۇ ئىشلەتكۈچىنى سۈكۈت قىلدۇرىسىز؟"
+        silence_reason_title: "ئۈنسىز قىلىش سەۋەبى"
         silence_reason_placeholder: "سۈكۈت قىلىش سەۋەبى"
         silence_message: "ئېلخەت ئۇچۇرى"
         silence_message_placeholder: "(كۆڭۈلدىكى ئۇچۇرنى ئەۋەتىشتە بوش قالدۇرۇلىدۇ)"

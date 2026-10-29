@@ -147,7 +147,7 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get showDashboardToggle() {
-    return this.siteSettings.dashboard_improvements && !this.model.destroyed;
+    return !this.model.destroyed;
   }
 
   get dashboardToggleIcon() {

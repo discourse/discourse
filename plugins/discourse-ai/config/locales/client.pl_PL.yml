@@ -130,12 +130,15 @@ pl_PL:
       node_unavailable:
         requires_ai: "Wymaga włączenia wtyczki AI"
         requires_decision_model: "Wymaga modelu decyzyjnego"
+        requires_ai_translation: "Wymaga skonfigurowania tłumaczenia AI"
       nodes:
         "action:ai_agent": "Agent AI"
         "action:classify": "Klasyfikuj"
+        "trigger:post_locale_detected": "Wykryto język wpisu"
       node_descriptions:
         "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
         "action:classify": "Zadaj modelowi decyzyjnemu pytania dotyczące każdego elementu"
+        "trigger:post_locale_detected": "Uruchamia się, gdy zostanie wykryty język nowego lub edytowanego wpisu"
     discourse_automation:
       scriptables:
         llm_report:
@@ -936,6 +939,9 @@ pl_PL:
             summary_forever: "Ładunki przechowywane %{detailed} dni, podsumowania przechowywane na zawsze"
             finite: "Ładunki były przechowywane przez %{detailed} dni, podsumowania trwały %{summary} dni, a następnie usuwane"
       ai_agent:
+        new_bot_option:
+          label: "Agent AI"
+          description: "Tworzy bota wraz z jego modelem językowym, podpowiedziami, narzędziami i uprawnieniami."
         ai_tools: "Narzędzia"
         native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"

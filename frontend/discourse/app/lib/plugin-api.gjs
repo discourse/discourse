@@ -821,6 +821,10 @@ class _PluginApi {
    * You'll need to do this if you've added properties to a Topic and need them to be
    * automatically updated in the UI when there are changes in the model.
    *
+   * To type the properties for TypeScript, augment `TopicFields` from
+   * `discourse/models/topic`, as described in the "JS type hinting &
+   * validation" developer guide.
+   *
    * @param {...string} names - The names of the properties to be tracked.
    */
   addTrackedTopicProperties(...names) {
@@ -832,6 +836,10 @@ class _PluginApi {
    * (e.g. one included in the server payload) is reactive in the UI.
    *
    * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * To type the field for TypeScript, augment the model's fields interface,
+   * such as `TopicFields` from `discourse/models/topic`, as described in the
+   * "JS type hinting & validation" developer guide.
    *
    * @param {string} modelName - The model's resolver name, e.g. "bookmark".
    * @param {string} name - The name of the field to add.
@@ -1693,6 +1701,8 @@ class _PluginApi {
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
+   *
+   * @param {import("discourse/models/nav-item").NavigationBarItem} item
    */
   addNavigationBarItem(item) {
     if (!item["name"]) {
@@ -3255,9 +3265,8 @@ class _PluginApi {
   }
 
   /**
-   * Registers a component to render a whole section in the redesigned admin
-   * dashboard (gated by the `dashboard_improvements` upcoming change). Pair it
-   * with the server-side `register_admin_dashboard_section`: the `id` here must
+   * Registers a component to render a whole section in the admin dashboard.
+   * Pair it with the server-side `register_admin_dashboard_section`: the `id` here must
    * match the one registered there, and the loader block registered there
    * produces the `@data` this component receives.
    *

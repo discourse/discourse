@@ -6,6 +6,8 @@
 
 te:
   js:
+    dsa_notice:
+      choice_title: "ఇది చట్టవిరుద్ధం"
     user_api_key:
       authorize: "అధికారం ఇవ్వండి"
       deny: "రద్దుచేయండి"
@@ -3455,7 +3457,6 @@ te:
     category:
       none: "(ఏ వర్గం లేదు)"
       all: "అన్ని వర్గాలు"
-      choose: "వర్గం&hellip;"
       edit: "సవరించండి"
       edit_title: "ఈ వర్గాన్ని సవరించండి"
       edit_dialog_title: "సవరించండి: %{categoryName}"
@@ -5867,6 +5868,11 @@ te:
         activation_filter:
           activated: "యాక్టివేట్ చేయబడిన వారు"
         approved: "అంగీకరించు"
+        source: "మూలం URL"
+        bots:
+          name: "పేరు"
+          username: "సభ్యనామం"
+          trust_level: "విశ్వసనీయ స్థాయి"
         titles:
           active: "క్రియాశీల సభ్యులు"
           pending: "రివ్యూ పెండింగులో ఉన్న సభ్యులు"
@@ -5906,7 +5912,6 @@ te:
         silenced_by: "చేత నిశ్శబ్దం చేయబడింది"
         silence_modal_title: "సభ్యుని నిశ్శబ్దం చేయండి"
         silence_duration: "సభ్యుడు ఎంతకాలం నిశ్శబ్దం చేయబడతారు?"
-        silence_reason_label: "మీరు ఈ సభ్యుని ఎందుకు నిశ్శబ్దం చేస్తున్నారు?"
         silence_reason_placeholder: "నిశ్శబ్దం కారణం"
         silence_message: "ఇమెయిల్ సందేశం"
         silence_message_placeholder: "(డిఫాల్ట్ సందేశాన్ని పంపడానికి ఖాళీగా ఉంచండి)"

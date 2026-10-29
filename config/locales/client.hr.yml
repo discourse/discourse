@@ -7,6 +7,7 @@
 hr:
   js:
     dsa_notice:
+      choice_title: "Nezakonito je."
       title: "Prijavite ilegalni sadržaj"
       email: "E-mail adresa"
     user_api_key:
@@ -4346,7 +4347,6 @@ hr:
     category:
       none: "(nema kategorije)"
       all: "Sve kategorije"
-      choose: "Kategorija&hellip;"
       edit: "Izmijeni"
       edit_title: "Uredite ovu kategoriju"
       edit_dialog_title: "Uredi: %{categoryName}"
@@ -7161,6 +7161,10 @@ hr:
           all: "Svi korisnici"
           activated: "Aktivirano"
         approved: "Potvrđeni?"
+        source: "Izvor"
+        bots:
+          name: "Ime"
+          username: "Korisničko ime"
         titles:
           active: "Aktivni korisnici"
           new: "Novi korisnici"
@@ -7202,7 +7206,6 @@ hr:
         silenced_by: "Utišao/la"
         silence_modal_title: "Utišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti utišan?"
-        silence_reason_label: "Zašto utišavate ovog korisnika?"
         silence_reason_placeholder: "Razlog utišavanja"
         silence_message: "Pošaljite poruku e-mailom"
         silence_message_placeholder: "(ostavite praznim za slanje standardne poruke)"

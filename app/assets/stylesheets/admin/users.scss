@@ -125,12 +125,75 @@
 }
 
 .admin-users-list {
+  &__source,
+  &__source-header {
+    justify-content: start;
+    text-align: start;
+  }
+
+  // Matches the cell padding so the heading lines up with the sources below.
+  &__source-header.directory-table__column-header {
+    padding-inline: 0.25em;
+  }
+
+  // Long usernames truncate instead of widening the column past its header.
+  &__username {
+    @include ellipsis;
+    flex: 1 1 auto;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  &__source-values {
+    min-width: 0;
+    max-width: 28ch;
+  }
+
+  &__source-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  &__source-label {
+    @include ellipsis;
+    min-width: 0;
+  }
+
+  &__source-user {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    // Outranks the list's general avatar margin; the gap spaces it instead.
+    img.avatar {
+      margin: 0;
+    }
+  }
+
+  // Same breakpoint as the directory table's stacked layout.
+  @container (max-width: 47em) {
+    &__source .directory-table__label {
+      flex-basis: 30%;
+    }
+
+    &__source-values {
+      max-width: 70%;
+    }
+  }
+
   .directory-table__cell {
     padding: 0.5em 0.25em;
 
     &.username {
       align-items: center;
       justify-content: start;
+      min-width: 0;
+
+      .avatar {
+        flex-shrink: 0;
+      }
     }
 
     &.email {
@@ -173,6 +236,12 @@
 
     &__column-header-wrapper {
       display: flex;
+      border-bottom: 1px solid var(--table-border-color);
+
+      // The wrapper's border runs under the bulk-select buttons too.
+      .directory-table__column-header {
+        border-bottom: none;
+      }
     }
 
     &__cell-bulk-select {
@@ -253,4 +322,44 @@
   justify-content: flex-end;
   width: 100%;
   gap: var(--space-2);
+}
+
+.admin-bot-form {
+  .form-kit__field-toggle {
+    display: grid;
+    grid-template-areas:
+      "title content"
+      "description description";
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.5em;
+    width: 100%;
+
+    @include viewport.from(sm) {
+      width: var(--form-kit-large-input);
+    }
+
+    .form-kit__container-title,
+    .form-kit__container-description,
+    .form-kit__container-content {
+      width: auto;
+    }
+
+    .form-kit__container-title {
+      grid-area: title;
+    }
+
+    .form-kit__container-description {
+      grid-area: description;
+    }
+
+    .form-kit__container-content {
+      grid-area: content;
+    }
+  }
+}
+
+.select-kit.admin-users__subheader-new-bot .select-kit-body {
+  min-width: auto;
+  max-width: 22em;
 }

@@ -7,6 +7,8 @@
 el:
   js:
     dsa_notice:
+      choice_title: "Είναι παράνομο"
+      go_back: "Μετάβαση πίσω"
       title: "Αναφορά παράνομου περιεχομένου"
       email: "Διεύθυνση email"
     user_api_key:
@@ -4571,7 +4573,6 @@ el:
     category:
       none: "(χωρίς κατηγορία)"
       all: "Όλες οι κατηγορίες"
-      choose: "Κατηγορία&hellip;"
       edit: "Επεξεργασία"
       edit_title: "Επεξεργασία αυτής της κατηγορίας"
       edit_dialog_title: "Επεξεργασία: %{categoryName}"
@@ -7990,6 +7991,11 @@ el:
           all: "Όλοι οι χρήστες"
           activated: "Ενεργοποιήθηκε"
         approved: "Εγκεκριμένο;"
+        source: "Πηγή"
+        bots:
+          name: "Όνομα"
+          username: "Όνομα χρήστη"
+          trust_level: "Επίπεδο εμπιστοσύνης"
         titles:
           active: "Ενεργοί χρήστες"
           new: "Νέοι χρήστες"
@@ -8035,7 +8041,6 @@ el:
         silenced_by: "Σίγαση Από"
         silence_modal_title: "Σίγαση Χρήστη"
         silence_duration: "Για πόσο χρονικό διάστημα ο χρήστης θα σιωπηθεί;"
-        silence_reason_label: "Γιατί εσείς σιωπάτε αυτό τον χρήστη;"
         silence_reason_placeholder: "Αιτία σιώπησης"
         silence_message: "Μήνυμα email"
         silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"

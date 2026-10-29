@@ -367,6 +367,9 @@ fr:
       configuration_missing: "La configuration de détection de contenu indésirable par IA est manquante. Ajoutez une configuration dans « Administration > Extensions > Discourse AI > Contenu indésirable » avant d'activer la fonctionnalité."
       logging_subject: "Détection des contenus indésirables"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Détection des contenus indésirables"
       navigation:
         settings:
           title: "Paramètres du site"

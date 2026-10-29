@@ -3391,6 +3391,9 @@ sw:
           silenced: "Amenyamazishwa"
           staged: "Sehemu ya kujaribu"
         approved: "Wamekubaliwa?"
+        bots:
+          name: "Jina"
+          username: "Jina la mtumiaji"
         titles:
           pending: "Ukaguzi wa watuamiaji ambao hawajapitishwa"
           newuser: "Watumiaji wenye Kiwango 0 cha Uaminifu (Mtumiaji Mpya)"
@@ -3420,7 +3423,6 @@ sw:
         silenced_by: "Amenyamazishwa na"
         silence_modal_title: "Nyamazisha Mtumiaji"
         silence_duration: "Mtumiaji atanyamazishwa kwa mda gani?"
-        silence_reason_label: "Kwa nini unamnyamazisha mtumiaji?"
         silence_reason_placeholder: "Nyamazisha Sababu"
         silence_message: "Tuma ujumbe kwa Barua Pepe"
         silence_message_placeholder: "(acha wazi kutuma ujumbe halisi au msingi)"

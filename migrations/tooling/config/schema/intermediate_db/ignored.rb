@@ -132,7 +132,8 @@ Migrations::Tooling::Schema.ignored do
 
   tables :incoming_domains, :incoming_emails, :incoming_links, :incoming_referers
 
-  tables :dsa_statement_of_records,
+  tables :dsa_notices,
+         :dsa_statement_of_records,
          :reviewable_claimed_topics,
          :reviewable_histories,
          :reviewable_notes,

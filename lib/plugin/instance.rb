@@ -355,6 +355,46 @@ class Plugin::Instance
     TopicList.on_preload_user_ids(enabled: method(:enabled?), &block)
   end
 
+  # Preloads a user custom field for the users serialized by `/user-cards.json`,
+  # so it can be read while serializing them without N+1 queries. It is not
+  # added to the response.
+  #
+  # The field is preloaded under its string name, so read it with a string key
+  # (`user.custom_fields["field_name"]`). A symbol key raises a NotPreloadedError.
+  #
+  # @param field [String, Symbol] The name of the user custom field.
+  #
+  # @example
+  #   register_user_cards_preloaded_custom_field(:card_theme)
+  #
+  # @return [void]
+  def register_user_cards_preloaded_custom_field(field)
+    DiscoursePluginRegistry.register_user_cards_preloaded_custom_field(field.to_s, self)
+  end
+
+  # Allows plugins to load data for all the users serialized by `/user-cards.json`
+  # at once, instead of querying per user in their serializer attributes. The
+  # block runs after core has preloaded the users' associations and custom fields.
+  #
+  # @yieldparam users [Array<User>] The users that will be serialized.
+  # @yieldparam guardian [Guardian] The guardian of the requesting user.
+  #
+  # @example
+  #   add_to_class(:user, :muted_by_current_user=) { |muted| @muted_by_current_user = muted }
+  #   add_to_class(:user, :muted_by_current_user) { @muted_by_current_user }
+  #
+  #   register_user_cards_preloader do |users, guardian|
+  #     next if guardian.anonymous?
+  #
+  #     muted_ids = guardian.user.muted_users.where(id: users.map(&:id)).pluck(:id)
+  #     users.each { |user| user.muted_by_current_user = muted_ids.include?(user.id) }
+  #   end
+  #
+  # @return [void]
+  def register_user_cards_preloader(&block)
+    DiscoursePluginRegistry.register_user_cards_preloader(block, self)
+  end
+
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
   # Example usage:
   #   register_search_topic_eager_load do |opts|
@@ -1406,9 +1446,8 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_stat(stat, self)
   end
 
-  # Registers a KPI tile in the admin dashboard "Highlights" section
-  # (gated by the dashboard_improvements upcoming change). The KPI is rendered
-  # as a tile linking to /admin/reports/:report.
+  # Registers a KPI tile in the admin dashboard "Highlights" section. The KPI
+  # is rendered as a tile linking to /admin/reports/:report.
   #
   # @param type [Symbol] unique identifier for the KPI. Used as the i18n key
   #   (admin.dashboard.highlights.kpi.<type>.label / .tooltip) and to
@@ -1423,9 +1462,9 @@ class Plugin::Instance
     )
   end
 
-  # Registers a whole section in the redesigned admin dashboard (gated by the
-  # dashboard_improvements upcoming change). The matching client-side section
-  # component must be registered via the JS `api.registerAdminDashboardSection`.
+  # Registers a whole section in the admin dashboard. The matching client-side
+  # section component must be registered via the JS
+  # `api.registerAdminDashboardSection`.
   #
   # @param id [String] unique section id. Matched against the persisted
   #   configuration and the client-side component registry.

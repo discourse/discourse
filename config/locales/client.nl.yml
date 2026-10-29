@@ -7,6 +7,8 @@
 nl:
   js:
     dsa_notice:
+      choice_title: "Het is illegaal"
+      go_back: "Terug"
       title: "Illegale content melden"
       email: "E-mailadres"
     user_api_key:
@@ -4564,7 +4566,6 @@ nl:
     category:
       none: "(geen categorie)"
       all: "Alle categorieën"
-      choose: "Categorie&hellip;"
       edit: "Bewerken"
       edit_title: "Bewerk deze categorie"
       edit_dialog_title: "Bewerken: %{categoryName}"
@@ -8163,6 +8164,11 @@ nl:
           all: "Alle gebruikers"
           activated: "Geactiveerd"
         approved: "Goedgekeurd?"
+        source: "Bron"
+        bots:
+          name: "Naam"
+          username: "Gebruikersnaam"
+          trust_level: "Vertrouwensniveau"
         titles:
           active: "Actieve gebruikers"
           new: "Nieuwe gebruikers"
@@ -8189,6 +8195,7 @@ nl:
           title: "Verwijder alle gekoppelde accounts voor deze gebruiker"
           text: "Gekoppelde accounts verwijderen"
       user:
+        bot: "Bot"
         suspend_failed: "Er is iets misgegaan bij het schorsen van deze gebruiker: %{error}"
         unsuspend_failed: "Er is iets misgegaan bij het opheffen van de schorsing van deze gebruiker: %{error}"
         suspend_duration: "Gebruiker schorsen tot:"
@@ -8210,7 +8217,7 @@ nl:
         silenced_by: "Gedempt door"
         silence_modal_title: "Gebruiker dempen"
         silence_duration: "Hoelang wordt de gebruiker gedempt?"
-        silence_reason_label: "Waarom demp je deze gebruiker?"
+        silence_reason_title: "Reden van dempen"
         silence_reason_placeholder: "Reden van dempen"
         silence_message: "E-mailbericht"
         silence_message_placeholder: "(laat leeg om standaardbericht te sturen)"

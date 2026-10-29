@@ -7,6 +7,8 @@
 ja:
   js:
     dsa_notice:
+      choice_title: "違法です"
+      go_back: "戻る"
       title: "違法コンテンツの報告"
       email: "メールアドレス"
     user_api_key:
@@ -4094,7 +4096,6 @@ ja:
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
-      choose: "カテゴリ&hellip;"
       edit: "編集"
       edit_title: "このカテゴリの編集"
       edit_dialog_title: "編集: %{categoryName}"
@@ -7517,6 +7518,11 @@ ja:
           all: "すべてのユーザー"
           activated: "有効"
         approved: "承認済み？"
+        source: "ソース"
+        bots:
+          name: "名前"
+          username: "ユーザー名"
+          trust_level: "信頼レベル"
         titles:
           active: "アクティブユーザー"
           new: "新規ユーザー"
@@ -7543,6 +7549,7 @@ ja:
           title: "このユーザーのすべての関連アカウントを削除"
           text: "関連アカウントの削除"
       user:
+        bot: "ボット"
         suspend_failed: "このユーザーを凍結中にエラーが発生しました: %{error}"
         unsuspend_failed: "このユーザーの凍結を解除中にエラーが発生しました: %{error}"
         suspend_duration: "次の期間までユーザーを凍結する:"
@@ -7564,7 +7571,7 @@ ja:
         silenced_by: "投稿禁止設定者:"
         silence_modal_title: "ユーザーを投稿禁止"
         silence_duration: "ユーザーをどれくらいの期間、投稿禁止にしますか？"
-        silence_reason_label: "このユーザーの投稿を禁止する理由を説明してください。"
+        silence_reason_title: "投稿禁止の理由"
         silence_reason_placeholder: "投稿禁止の理由"
         silence_message: "メールメッセージ"
         silence_message_placeholder: "(デフォルトのメッセージを送信する場合は空白のままにします)"

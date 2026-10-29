@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT.strip
           You are an advanced summarization bot. Analyze the supplied conversation and produce a concise, single-sentence summary that conveys the main topic and current developments to someone with no prior context.

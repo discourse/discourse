@@ -6,6 +6,9 @@
 
 sv:
   js:
+    dsa_notice:
+      choice_title: "Det är olagligt"
+      go_back: "Gå tillbaka"
     user_api_key:
       authorize: "Godkänn"
       deny: "Avbryt"
@@ -3555,7 +3558,6 @@ sv:
     category:
       none: "(ingen kategori)"
       all: "Alla kategorier"
-      choose: "Kategori&hellip;"
       edit: "Redigera"
       edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
@@ -5994,6 +5996,11 @@ sv:
           all: "Alla användare"
           activated: "Aktiverad"
         approved: "Godkänd?"
+        source: "Källa"
+        bots:
+          name: "Namn"
+          username: "Användarnamn"
+          trust_level: "Förtroendenivå"
         titles:
           active: "Aktiva användare"
           pending: "Användare under granskning"
@@ -6033,7 +6040,6 @@ sv:
         silenced_by: "Tystad av"
         silence_modal_title: "Tysta användaren"
         silence_duration: "Hur länge ska användaren vara tystad?"
-        silence_reason_label: "Varför tystar du den här användaren?"
         silence_reason_placeholder: "Anledning till att tysta"
         silence_message: "E-postmeddelande"
         silence_message_placeholder: "(lämna tomt för att skicka standardmeddelande)"

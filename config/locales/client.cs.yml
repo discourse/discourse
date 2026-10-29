@@ -7,6 +7,7 @@
 cs:
   js:
     dsa_notice:
+      choice_title: "Je to nezákonné"
       title: "Nahlásit protizákonný obsah"
       email: "E-mailová adresa"
     user_api_key:
@@ -4772,7 +4773,6 @@ cs:
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
-      choose: "Kategorie&hellip;"
       edit: "Upravit"
       edit_title: "Upravit tuto kategorii"
       edit_dialog_title: "Upravit: %{categoryName}"
@@ -8412,6 +8412,11 @@ cs:
           all: "Všichni uživatelé"
           activated: "Aktivován"
         approved: "Schválen?"
+        source: "Zdroj"
+        bots:
+          name: "Jméno"
+          username: "Uživatelské jméno"
+          trust_level: "Úroveň důvěry"
         titles:
           active: "Aktivní uživatelé"
           new: "Noví uživatelé"
@@ -8459,7 +8464,7 @@ cs:
         silenced_by: "Ztišený uživatelem"
         silence_modal_title: "Ztišení uživatele"
         silence_duration: "Na jak dlouhou dobu bude uživatel ztišený?"
-        silence_reason_label: "Proč ztišujete tohoto uživatele?"
+        silence_reason_title: "Důvod ztišení"
         silence_reason_placeholder: "Důvod ztišení "
         silence_message: "e-mailová zpráva"
         silence_message_placeholder: "()"

@@ -3088,6 +3088,7 @@ pl_PL:
     suggest_weekends_in_date_pickers: "Uwzględnij weekendy (sobota i niedziela) w sugestiach selektora dat (wyłącz tę opcję, jeśli używasz Discourse tylko w dni powszednie, od poniedziałku do piątku)."
     show_bottom_topic_map: "Wyświetla mapę tematu u dołu tematu, gdy ma on 10 lub więcej odpowiedzi."
     show_topic_map_in_topics_without_replies: "Wyświetla mapę tematu, nawet jeśli temat nie ma odpowiedzi."
+    concord_in_wizard: "Dodaj Concord i stronę główną czatu ogólnego w kreatorze projektu."
     enable_site_owner_onboarding: "Pokazuje nowym administratorom panel na stronie głównej, który ułatwia im rozpoczęcie pracy. Włącz to ustawienie ponownie, aby ponownie zobaczyć kroki wdrażania."
     site_owner_onboarding_max_days: "Maksymalna liczba dni po utworzeniu witryny, w ciągu których ma zostać wyświetlony baner powitalny."
     enable_welcome_banner: "Wyświetlaj baner na głównych stronach z listą tematów, aby powitać członków i umożliwić im przeszukiwanie zawartości witryny."
@@ -6135,6 +6136,9 @@ pl_PL:
     enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
     enter: "Przejdź do trybu programisty"
   design_wizard:
+    themes:
+      concord:
+        description: "Zastępuje pasek boczny pojedynczą listą kanałów składającą się z kategorii, kanałów czatu oraz pokoi audio/wideo na żywo."
     errors:
       palette_unavailable: "Jedna z wybranych palet kolorów nie jest dostępna dla wybranego motywu."
       site_settings_update_failed: "Nie udało się zaktualizować ustawień witryny."
@@ -6182,6 +6186,7 @@ pl_PL:
     graph_title: "Liczba wyszukiwań"
   onebox:
     discourse:
+      event_all_day: "Cały dzień"
       user_joined_community: "Dołączył %{date}"
     google_meet:
       title: "Spotkanie w Google Meet"

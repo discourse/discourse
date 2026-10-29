@@ -510,6 +510,10 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Spam detection"
+        plugin_disabled: "AI plugin disabled"
       search_discourse_navigation:
         not_allowed: "You are not allowed to search administration destinations."
         invalid_query: "Enter a search query between 1 and %{max} characters."

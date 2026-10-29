@@ -7,6 +7,8 @@
 he:
   js:
     dsa_notice:
+      choice_title: "זה לא חוקי"
+      go_back: "חזרה"
       title: "דיווח על תוכן לא חוקי"
       email: "כתובת דוא״ל"
     mcp_oauth_client_id_metadata_policy:
@@ -4744,7 +4746,6 @@ he:
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
-      choose: "קטגוריה&hellip;"
       edit: "עריכה"
       edit_title: "עריכת הקטגוריה הזאת"
       edit_dialog_title: "עריכה: %{categoryName}"
@@ -8359,6 +8360,11 @@ he:
           all: "כל המשתמשים"
           activated: "מופעל"
         approved: "מאושר?"
+        source: "מקור"
+        bots:
+          name: "שם"
+          username: "שם משתמש"
+          trust_level: "דרגת אמון"
         titles:
           active: "משתמשים פעילים"
           new: "משתמשים חדשים"
@@ -8385,6 +8391,7 @@ he:
           title: "מחיקת כל החשבונות שמשויכים למשתמש הזה"
           text: "מחיקת חשבונות משויכים"
       user:
+        bot: "בוט"
         suspend_failed: "משהו נכשל בהשעיית המשתמש הזה %{error}"
         unsuspend_failed: "משהו נכשל בביטול השעיית המשתמש הזה %{error}"
         suspend_duration: "להשעות את המשתמש עד:"
@@ -8406,7 +8413,7 @@ he:
         silenced_by: "הושתק על ידי"
         silence_modal_title: "השתקת משתמש"
         silence_duration: "למשך כמה זמן יושתק המשתמש?"
-        silence_reason_label: "למה בחרת להשתיק את המשתמש הזה?"
+        silence_reason_title: "סיבת השתקה"
         silence_reason_placeholder: "סיבת השתקה"
         silence_message: "הודעה בדוא״ל"
         silence_message_placeholder: "(להשאיר ריק כדי לשלוח את הודעת בררת המחדל)"

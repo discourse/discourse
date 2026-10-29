@@ -92,6 +92,39 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  reloadable_patch { ::BotUser.prepend DiscourseAi::BotUserExtensions }
+
+  add_to_serializer(
+    :admin_user_list,
+    :sources,
+    respect_plugin_enabled: false,
+    include_condition: -> { scope.is_admin? && object.bot? && @options[:user_ids].present? },
+  ) do
+    # Collection serializers share options, keeping these lookups bounded to one batch per page.
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, [])
+  end
+
+  # Disabling an agent deactivates its bot; a disabled plugin only dims them in the list.
+  add_to_serializer(
+    :admin_user_list,
+    :bot_inactive,
+    respect_plugin_enabled: false,
+    include_condition: -> do
+      !SiteSetting.discourse_ai_enabled && scope.is_admin? && object.bot? &&
+        @options[:user_ids].present?
+    end,
+  ) do
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, []).present?
+  end
+
   register_admin_dashboard_section(
     id: "ask_ai",
     enabled: -> { SiteSetting.ai_ask_ai_enabled },
@@ -127,6 +160,7 @@ after_initialize do
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::PostLocaleDetected::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })

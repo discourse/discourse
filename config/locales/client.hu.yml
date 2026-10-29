@@ -7,6 +7,8 @@
 hu:
   js:
     dsa_notice:
+      choice_title: "Ez illegális"
+      go_back: "Visszalépés"
       title: "Illegális tartalom bejelentése"
       email: "E-mail-cím"
     user_api_key:
@@ -4403,7 +4405,6 @@ hu:
     category:
       none: "(nincs kategória)"
       all: "Összes kategória"
-      choose: "Kategória&hellip;"
       edit: "Szerkesztés"
       edit_title: "Kategória szerkesztése"
       edit_dialog_title: "Szerkesztés: %{categoryName}"
@@ -7948,6 +7949,11 @@ hu:
           all: "Minden felhasználó"
           activated: "Aktiválva"
         approved: "Jóváhagyott?"
+        source: "Forrás"
+        bots:
+          name: "Név"
+          username: "Felhasználónév"
+          trust_level: "Bizalmi szint"
         titles:
           active: "Aktív felhasználók"
           new: "Új felhasználó"
@@ -7995,7 +8001,7 @@ hu:
         silenced_by: "Némítva általa"
         silence_modal_title: "Felhasználó elnémítása"
         silence_duration: "Mennyi ideig lesz elnémítva a felhasználó?"
-        silence_reason_label: "Miért némítod el ezt a felhasználót?"
+        silence_reason_title: "Némítás oka"
         silence_reason_placeholder: "Némítás oka"
         silence_message: "E-mail üzenet"
         silence_message_placeholder: "(Hagyd üresen hogy az alapértelmezett üzenetet küldje el)"

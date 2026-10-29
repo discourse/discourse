@@ -14,6 +14,10 @@ import Category, {
 } from "discourse/models/category";
 import type RestModel from "discourse/models/rest";
 import type {
+  default as Topic,
+  TopicCreateAttrs,
+} from "discourse/models/topic";
+import type {
   default as StoreService,
   ModelFor,
 } from "discourse/services/store";
@@ -88,14 +92,14 @@ expectTypeOf(typeMetadata["type_specific_extra"]).toEqualTypeOf<unknown>();
 
 // Every data field core sends or assigns, with its presence and nullability.
 interface ExpectedCategoryFields {
-  id?: number;
-  name?: string;
-  slug?: string | null;
-  color?: string;
-  text_color?: string;
-  style_type?: ExpectedStyle;
-  icon?: string | null;
-  emoji?: string | null;
+  id: number;
+  name: string;
+  slug: string | null;
+  color: string;
+  text_color: string;
+  style_type: ExpectedStyle;
+  icon: string | null;
+  emoji: string | null;
   description?: string | null;
   description_text?: string | null;
   description_excerpt?: string | null;
@@ -103,7 +107,7 @@ interface ExpectedCategoryFields {
   topic_count?: number;
   post_count?: number;
   position?: number | null;
-  read_restricted?: boolean;
+  read_restricted: boolean;
   permission?: number | null;
   parent_category_id?: number | null;
   notification_level?: number | null;
@@ -117,7 +121,7 @@ interface ExpectedCategoryFields {
   has_children?: boolean | null;
   subcategory_count?: number | null;
   subcategory_ids?: number[] | null;
-  subcategory_list?: object[];
+  subcategory_list?: ExpectedCategoryListCategory[];
   subcategory_list_style?: string | null;
   sort_order?: string | null;
   sort_ascending?: boolean | null;
@@ -162,7 +166,7 @@ interface ExpectedCategoryFields {
   category_type_settings?: Record<string, unknown>;
   category_type_site_settings?: Record<string, unknown>;
   site_texts?: Record<string, string>;
-  topics?: object[];
+  topics?: (TopicCreateAttrs<Topic> | Topic)[];
   topics_day?: number;
   topics_week?: number;
   topics_month?: number;
@@ -172,6 +176,15 @@ interface ExpectedCategoryFields {
   stat?: string;
   statTitle?: string;
   statTotal?: string;
+}
+
+/** Category pages recursively include listable topic payloads before hydration. */
+interface ExpectedCategoryListCategory extends Omit<
+  ExpectedCategoryFields,
+  "subcategory_list"
+> {
+  type_test_plugin_flag?: boolean;
+  subcategory_list?: ExpectedCategoryListCategory[];
 }
 
 declare module "discourse/models/category" {
@@ -284,3 +297,9 @@ Category.create({ style_type: "circle" });
 declare const store: StoreService;
 expectTypeOf<ModelFor<"category">>().toEqualTypeOf<Category>();
 expectTypeOf(store.createRecord("category")).toEqualTypeOf<Category>();
+
+// New categories are built without an id until they are saved.
+expectTypeOf(Category.create({ name: "Draft" })).toEqualTypeOf<Category>();
+expectTypeOf(
+  store.createRecord("category", { name: "Draft" })
+).toEqualTypeOf<Category>();

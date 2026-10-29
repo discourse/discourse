@@ -298,6 +298,8 @@ module Jobs
         exception = {}
 
         RailsMultisite::ConnectionManagement.with_connection(db) do
+          next if skip_current_site?
+
           job_instrumenter =
             JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
           begin
@@ -350,6 +352,12 @@ module Jobs
 
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
+
+    private
+
+    def skip_current_site?
+      false
+    end
   end
 
   class HandledExceptionWrapper < StandardError
@@ -371,8 +379,10 @@ module Jobs
       @perform_when_readonly || false
     end
 
-    def perform(*args)
-      super if self.class.perform_when_readonly? || !Discourse.readonly_mode?
+    private
+
+    def skip_current_site?
+      Sidekiq.paused? || (!self.class.perform_when_readonly? && Discourse.readonly_mode?)
     end
   end
 

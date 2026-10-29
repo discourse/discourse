@@ -3,6 +3,8 @@
 module Middleware
   class CrawlerHooks
     NON_LOCALIZABLE_PATH_PREFIXES = %w[/uploads/ /secure-uploads/ /secure-media-uploads/].freeze
+    # Anchors, plus the pagination link tags, which crawlers follow like anchors.
+    LOCALIZABLE_LINK_TAGS = %w[a link[rel='prev'] link[rel='next']].freeze
 
     def initialize(app)
       @app = app
@@ -26,12 +28,16 @@ module Middleware
 
     def transform_response(request:, response:)
       locale = request.params[Discourse::LOCALE_PARAM]
+      # Set by the controller when the page's tags use the plain URL for the default locale.
+      plain_url =
+        locale == SiteSetting.default_locale &&
+          request.env[ContentLocalization::PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV]
 
-      if ContentLocalization.crawler_locale_param_enabled? && locale.present?
+      if ContentLocalization.crawler_locale_param_enabled? && locale.present? && !plain_url
         html_fragment = Nokogiri::HTML5.parse(response.body)
 
         html_fragment
-          .css("a[href^='/'], a[href^='#{Discourse.base_url}']")
+          .css(localizable_link_selector)
           .each do |link|
             uri = Addressable::URI.parse(link["href"])
             next if non_localizable_path?(uri.path)
@@ -44,6 +50,13 @@ module Middleware
       end
 
       response
+    end
+
+    def localizable_link_selector
+      LOCALIZABLE_LINK_TAGS
+        .product(["/", Discourse.base_url])
+        .map { |tag, prefix| "#{tag}[href^='#{prefix}']" }
+        .join(", ")
     end
 
     def non_localizable_path?(path)

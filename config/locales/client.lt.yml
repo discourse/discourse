@@ -7,6 +7,7 @@
 lt:
   js:
     dsa_notice:
+      choice_title: "Tai neteisėta"
       title: "Pranešti apie neteisėtą turinį"
       email: "El. pašto adresas"
       resend_email_code: "Išsiųsti kodą dar kartą"
@@ -5692,7 +5693,6 @@ lt:
     category:
       none: "(be kategorijos)"
       all: "Visos kategorijos"
-      choose: "Kategorija&hellip;"
       edit: "Redaguoti"
       edit_title: "Redaguoti šią kategoriją"
       edit_dialog_title: "Redaguoti: %{categoryName}"
@@ -6985,39 +6985,91 @@ lt:
           other: "Įvestis turi būti didesnė nei %{count}."
         pattern_mismatch: "Prašome atitikti prašomą formatą."
         bad_input: "Įveskite tinkamą įvestį."
+    powered_by_discourse: "Veikia naudojant Discourse"
+    safari_15_warning: "Jūsų naršyklė netrukus bus nesuderinama su šia bendruomene. Norėdami toliau dalyvauti, atnaujinkite naršyklę arba <a href='%{url}'>sužinokite daugiau</a>."
     filter:
+      placeholder: "Filtruoti temas pagal kategoriją, žymą ar kitus kriterijus"
       description:
         yesterday: "Vakar"
+        last_week: "Praėjusią savaitę"
+        last_month: "Praėjusį mėnesį"
+        last_year: "Praėjusiais metais"
     discovery:
       headings:
         all:
+          latest: "Visos naujausios temos"
+          top: "Visos populiariausios temos"
+          new: "Visos naujos temos"
+          unread: "Visos neskaitytos temos"
+          unseen: "Visos dar neperžiūrėtos temos"
           hot: "Visos aktualios temos"
+          posted: "Visos temos, kuriose paskelbėte"
+          bookmarks: "Visos temos, kurias pažymėjote"
           default: "Visos %{filter} temos"
         category:
+          latest: "Naujausios temos %{category}"
+          top: "Populiariausios temos %{category}"
+          new: "Naujos temos %{category}"
+          unread: "Neskaitytos temos %{category}"
+          unseen: "Neperžiūrėtos temos %{category}"
           hot: "Karštos temos %{category}"
+          posted: "Temos %{category} , kuriose paskelbėte"
+          bookmarks: "Temos %{category}, kurias jūs pažymėjote"
           default: "%{filter} temos %{category}"
         single_tag:
-          hot: "Karštos temos su žyme %{tag}"
+          latest: "Naujausios temos su žyma %{tag}"
+          top: "Populiariausios temos su žyma %{tag}"
+          new: "Naujos temos su žyma %{tag}"
+          unread: "Neskaitytos temos su žyma %{tag}"
+          unseen: "Neperžiūrėtos temos su žyma %{tag}"
+          hot: "Karštos temos su žyma %{tag}"
+          posted: "Temos, pažymėtos žyma %{tag}, kurias jūs paskelbėte"
+          bookmarks: "Temos, pažymėtos žyma %{tag}, kurias jūs pažymėjote"
           default: "%{filter} temos su žyma %{tag}"
         multi_tag:
           default: "Temos pažymėtos %{tags}"
         category_tag:
-          hot: "Karštos temos %{category} pažymėtos žyme %{tag}"
+          latest: "Naujausios temos %{category} su žyma %{tag}"
+          top: "Populiariausios temos %{category} pažymėtos žyma %{tag}"
+          new: "Naujos temos %{category} su žyma %{tag}"
+          unread: "Neskaitytos temos %{category} su žyma %{tag}"
+          unseen: "Neperžiūrėtos temos %{category} su žyma %{tag}"
+          hot: "Karštos temos %{category} su žyma %{tag}"
+          posted: "Temos %{category} pažymėtos žyma %{tag} , kuriose paskelbėte"
+          bookmarks: "Temos %{category} su žyma %{tag} , kurias pažymėjote"
           default: "%{filter} temos %{category} pažymėtos %{tag}"
         no_tags:
           all:
-            hot: "Karštos temos be etikečių"
+            latest: "Naujausios temos be žymų"
+            top: "Populiariausios temos be žymų"
+            new: "Naujos temos be žymų"
+            unread: "Neskaitytos temos be žymų"
+            unseen: "Neperžiūrėtos temos be žymų"
+            hot: "Karštos temos be žymų"
+            posted: "Temos be žymų, kuriose paskelbėte"
+            bookmarks: "Temos be žymių, kurias pažymėjote"
+            default: "Temos be žymų"
           category:
+            latest: "Naujausios temos %{category} be žymų"
+            top: "Populiariausios temos %{category} be žymų"
+            new: "Naujos temos %{category} be žymų"
+            unread: "Neskaitytos temos %{category} be žymų"
+            unseen: "Neperžiūrėtos temos %{category} be žymų"
             hot: "Karštos temos %{category} be žymų"
+            posted: "Temos %{category}, kuriose skelbėte, be žymų"
+            bookmarks: "Temos %{category}, kurias pažymėjote, be žymų"
             default: "%{filter} temos %{category} be žymų"
         categories: "Visos kategorijos"
+    language_switcher:
+      title: "Keisti svetainės kalbą"
   admin_js:
-    type_to_filter: "Įveskite filtrą…"
+    type_to_filter: "Įveskite tekstą, kad filtruotumėte…"
     settings: "Nustatymai"
     admin:
-      title: "Forumo administratorius"
+      title: "Discourse administratorius"
       moderator: "Moderatorius"
       filter_reports: "Filtruoti ataskaitas..."
+      filter_reports_no_results: "Nėra ataskaitų, atitinkančių jūsų filtrą"
       tags:
         remove_muted_tags_from_latest:
           always: "visada"
@@ -7026,15 +7078,36 @@ lt:
       reports:
         title: "Galimų ataskaitų sąrašas"
         sidebar_title: "Pranešimai"
+        back: "Atgal į visas ataskaitas"
+        back_to_dashboard: "Atgal į suvestinę"
         all_groups: "Visos grupės"
+        group_engagement: "Įsitraukimas"
         group_traffic: "Srautas"
         group_members: "Nariai"
+        group_content: "Turinys ir sveikata"
+        group_moderation_and_security: "Moderavimas ir saugumas"
         group_other: "Kiti"
+        legacy_warning: "Tai yra senoji ataskaita. Ji netrukus bus pašalinta. Jei reikia pagalbos ieškant pakaitalo, kreipkitės į pagalbos liniją."
+        chart:
+          total: "Iš viso: %{count}"
         related_items:
+          showing: "Rodomi naujausi %{shown} iš %{total}."
           users:
             title: "Vartotojai"
+            signups:
+              description: "Naujos paskyros, sukurtos tarp %{startDate} ir %{endDate}, pradedant naujausiomis."
+            new_contributors:
+              description: "Vartotojai, kurie paskelbė savo pirmąjį įrašą tarp %{startDate} ir %{endDate}, pradedant naujausiais."
           labels:
-            user: "Narys"
+            user: "Vartotojas"
+            created_at: "Sukurta"
+            first_post: "Pirmas įrašas sukurtas"
+          table_summary:
+            trigger: "%{count}, rodyti %{date} santrauką"
+            users_title: "Vartotojai, esantys %{date}"
+            loading: "Kraunama santrauka…"
+            empty: "Išsamesnės informacijos nėra."
+            error: "Nepavyko įkelti santraukos."
       config_sections:
         account:
           title: "Paskyra"
@@ -7050,35 +7123,131 @@ lt:
           title: "Apsauga"
         plugins:
           title: "Apklausos"
+        advanced:
+          title: "Išplėstinis"
       upcoming_changes:
-        name: "Vardas"
-        enabled: "Galimas"
+        name: "Pavadinimas"
+        plugin: "Įskiepis"
+        metadata: "Metaduomenys"
+        enabled: "Įgalinta"
+        enabled_for: "Įgalinta..."
+        show_image: "Rodyti vaizdą"
+        edit_groups: "Redaguoti pasirinkimo grupes"
+        groups_updated: "Grupės atnaujintos!"
+        save_groups: "Išsaugoti grupes"
+        add_groups_to_enable: "Pridėkite grupes, kad įgalintumėte šią funkciją"
+        no_changes_to_save: "Nėra pakeitimų, kuriuos būtų galima išsaugoti"
+        select_groups: "Pasirinkite grupes…"
+        opt_in_groups: "Pasirinkimo grupės"
+        show_related_settings: "Rodyti susijusius nustatymus..."
+        opt_in_groups_instructions: "Pasirinkimo grupes galima naudoti tam, kad tam tikra vartotojų grupė galėtų išbandyti pakeitimą prieš jį išleidžiant visiems. Atminkite, kad šios grupės taps nereikšmingos, kai pakeitimas pasieks stabilią būseną."
+        enabled_for_throttle: "Per greitai pakeitėte, kam šis pakeitimas įjungtas. Palaukite kelias sekundes ir bandykite dar kartą."
+        change_enabled_for_success: "Įjungėte šį pakeitimą %{enabledFor}"
+        change_disabled: "Jūs atsisakėte šio pakeitimo"
+        depends_on_notice: "Šiam pakeitimui atlikti reikia įjungti %{dependencyLinks}."
+        permanent_notice: "Šis pakeitimas dabar yra nuolatinis ir netrukus bus pašalintas. Jūs nebegalėsite atsisakyti."
+        permanent_soon_notice: "Šis pakeitimas netrukus taps nuolatiniu. Nebegalėsite atsisakyti."
+        permanent_no_group_selection: "N/A, nuolatiniai pakeitimai taikomi visoms grupėms."
+        no_changes: "Šiuo metu nėra jokių būsimų pakeitimų."
         preview: "Peržiūrėti"
+        default_warning: "Šio nustatymo numatytoji reikšmė pasikeitė iš %{oldDefaultValue} į %{newDefaultValue} dėl būsimo <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>pakeitimo</a>."
+        default_warning_short: "Šio nustatymo numatytoji reikšmė pasikeitė, daugiau apie tai skaitykite <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>būsimų pakeitimų</a> puslapyje."
         enabled_for_options:
+          no_one: "Niekas"
           everyone: "Visi"
+          staff: "tik %{staffGroupName}"
+          specific_groups: "Konkreti(-ios) grupė(-ės)"
+          specific_groups_with_group_names:
+            one: "grupė %{groupNames}"
+            few: "grupės %{groupNames}"
+            many: "grupės %{groupNames}"
+            other: "grupės %{groupNames}"
+        statuses:
+          experimental: "Eksperimentinis"
+          alpha: "Alfa"
+          beta: "Beta"
+          stable: "Stabilus"
+          permanent: "Nuolatinis"
+        status_descriptions:
+          experimental: "Ši funkcija dar tik pradinėje kūrimo stadijoje, todėl gali smarkiai pasikeisti arba būti nutraukta. Gali būti, kad ji ne visiškai suderinama su kitomis funkcijomis."
+          alpha: "Ši funkcija šiuo metu aktyviai kuriama ir tobulinama. Jos funkcionalumas gali keistis, be to, ji dar nėra visiškai išbaigta, tačiau yra pakankamai stabili, kad ją būtų galima išbandyti."
+          beta: "Šis funkcija jau beveik baigta ir ją galima pradėti naudoti iš anksto. Dar galima atlikti nedidelius pakeitimus."
+          stable: "Ši funkcija yra visiškai išbaigta ir gerai palaikoma. Netrukus ji bus prieinama visose Discourse svetainėse."
         impact_roles:
           admins: "Administratoriai"
           moderators: "Moderatoriai"
           staff: "Personalas"
+          all_members: "Visi nariai"
+          developers: "Kūrėjai"
         impact_types:
+          feature_type: "Funkcija"
           other_type: "Kiti"
+          site_setting_default_type: "Numatytasis nustatymas"
         filter:
+          search_placeholder: "Filtruoti pagal pavadinimą, aprašymą arba papildinį..."
+          no_results: "Nėra jokių būsimų pakeitimų, atitinkančių jūsų filtrą"
           all: "Visi"
-          enabled: "Galimas"
-          disabled: "Uždrausta"
+          enabled_all: "Visos įjungtos būsenos"
+          enabled: "Įgalinta"
+          enabled_for_staff: "Įgalinta %{staffGroupName}"
+          enabled_for_specific_groups: "Įgalinta konkrečioms grupėms"
+          disabled: "Išjungta"
+          impact_type_all: "Visų poveikių tipai"
+          impact_type_feature: "Funkcija"
           impact_type_other: "Kiti"
+          impact_type_site_setting_default: "Numatytasis nustatymas"
+          status_all: "Visos būsenos"
+          status_conceptual: "Konceptualus"
+          status_experimental: "Eksperimentinis"
+          status_alpha: "Alfa"
+          status_beta: "Beta"
+          status_stable: "Stabilus"
+          status_permanent: "Nuolatinis"
+          impact_role_all: "Visi poveikio rolės"
           impact_role_admins: "Administratoriai"
           impact_role_moderators: "Moderatoriai"
           impact_role_staff: "Personalas"
+          impact_role_all_members: "Visi nariai"
+          impact_role_developers: "Kūrėjai"
       config:
+        about:
+          title: "Apie jūsų svetainę"
+          header_description: "Pateikite čia informaciją apie šią svetainę ir savo komandą, kad žmonės galėtų sužinoti, apie ką yra jūsų bendruomenė, kas už jos stovi ir kaip su jumis susisiekti kilus problemai. Rodoma jūsų svetainės <a href='%{basePath}/about'>puslapyje „Apie“</a>."
         developer:
-          title: "Programuotojams"
+          title: "Kūrėjas"
+          header_description: "Kūrėjo nustatymai, skirti valdyti saugųjį režimą ir kitas išplėstines funkcijas"
         mcp:
+          title: "MCP serveris"
+          header_description: "Nustatykite MCP prieigą, elementus, OAuth klientus, autorizacijas ir veiklą."
+          settings:
+            description: "Svetainės nustatymai, kuriais valdomas MCP serveris ir OAuth saugumas."
           tabs:
+            overview: "Apžvalga"
             access: "Prieiga"
+            capabilities: "Galimybės"
+            clients: "OAuth klientai"
+            authorizations: "Autorizacijos"
             activity: "Aktyvumas"
           overview:
+            title: "MCP serverio apžvalga"
+            description: "Peržiūrėkite serverio būseną, galinį tašką, atvirus primityvus ir sąrankos kontrolinį sąrašą."
+            endpoint_title: "Serverio galinis taškas"
+            protocol: "Protokolo versija"
+            server_version: "Serverio versija"
             status: "Statusas"
+            catalog_title: "Atskleisti primityvai"
+            tools: "Įrankiai"
+            resources: "Ištekliai"
+            prompts: "Promts"
+            schema_size: "Numatomas schemos dydis"
+            schema_size_value: "%{bytes} baitai"
+            activity_title: "Dabartinis naudojimas"
+            approved_oauth_clients: "Patvirtinti OAuth klientai"
+            authorizations: "Autorizacijos"
+            tokens: "Aktyvūs žetonai"
+            errors: "Naujausios klaidos"
+            setup_title: "Sąrankos kontrolinis sąrašas"
+            warnings_title: "Saugos įspėjimai"
           access:
             title: "Prieiga"
             group: "Grupė"
@@ -7201,7 +7370,8 @@ lt:
         user_api:
           title: "Nario API"
         dashboard:
-          title: "Apžvalga"
+          title: "Suvestinė"
+          header_description: "Suvestinėje pateikiama jūsų bendruomenės būklės apžvalga, įskaitant srautą, vartotojų aktyvumą ir kitus svarbius rodiklius."
         users:
           title: "Vartotojai"
         groups:
@@ -7212,6 +7382,8 @@ lt:
             logs:
               title: "Įrašai"
         problem_checks:
+          title: "Problemų patikrinimai"
+          priority: "Prioritetas"
           status: "Statusas"
           ignore: "Ignoruoti"
           more_options:
@@ -7279,12 +7451,24 @@ lt:
         default_value: "Numatytasis"
       search:
         title: "Paieška"
+      new_features:
+        title: "Kas naujo?"
       site_traffic_explorer:
+        title: "Svetainės srauto naršyklė"
         metric_information: "Apie %{metric}"
+        filtering_to:
+          language:
+            one: "Filtruojama %{count} kalba"
+            few: "Filtruojamos %{count} kalbos"
+            many: "Filtruojama %{count} kalbų"
+            other: "Filtruojama %{count} kalbų"
         apply: "Kandidatuoti"
+        apply_filters: "Taikyti filtrus"
         view_more: "Žiūrėti daugiau"
         cards:
           visitors: "Lankytojai"
+        dimensions:
+          languages: "Kalbos"
         filters:
           browser: "Naršyklė"
           language: "Kalba"
@@ -7292,16 +7476,26 @@ lt:
         series:
           anonymous_human: "Anonimas"
       dashboard:
-        title: "Apžvalga"
+        title: "Suvestinė"
         last_updated: "Informacijos suvestinė atnaujinta:"
         discourse_last_updated: "Discourse atnaujinta:"
         version: "Versija"
         up_to_date: "Jūs turite naujausią versiją!"
+        up_to_date_newer_commits:
+          one: "Naudojate naujausią versiją, bet yra %{count} naujas pakeitimas."
+          few: "Naudojate naujausią versiją, bet yra %{count} nauji pakeitimai."
+          many: "Naudojate naujausią versiją, bet yra %{count} naujų pakeitimų."
+          other: "Naudojate naujausią versiją, bet yra %{count} naujų pakeitimų."
         updates_available: "Yra atnaujinimų."
-        no_check_performed: "Atnaujinimų patikrinimas neįvykdytas. Patikrinkite ar veikia sidekiq."
-        stale_data: "Artimiausiu metu atnaujinimų patikrinimas nebuvo įvykdytas. Patikrinkite ar veikia sidekiq."
+        please_update: "Prašome atnaujinti!"
+        no_check_performed: "Atnaujinimų patikrinimas neįvykdytas. Patikrinkite ar veikia Sidekiq."
+        stale_data: "Artimiausiu metu atnaujinimų patikrinimas nebuvo įvykdytas. Patikrinkite ar veikia Sidekiq."
+        version_check_pending: "Panašu, kad neseniai atnaujinai. Puiku!"
         installed_version: "Įrašyta"
+        latest_version: "Prieinama"
         github: "GitHub"
+        commit_on_github: "Peržiūrėti commit %{sha} GitHub"
+        changelog: "Pakeitimų žurnalas"
         problems_found: "Keletas patarimų, pagrįstų dabartiniais svetainės nustatymais"
         dismiss_notice: "Ignoruoti"
         new_features:
@@ -7371,7 +7565,7 @@ lt:
             title: "Sistema"
             status: "Statusas"
             discourse_updated: "Discourse atnaujinta"
-            dashboard_updated: "Informacijos suvestinė atnaujinta"
+            dashboard_updated: "Suvestinė atnaujinta"
         reports_section:
           header_action: "Redaguoti"
           no_data: "Nėra rodomų duomenų"
@@ -7379,6 +7573,10 @@ lt:
             enabled_heading: "Galimas"
             all_heading: "Visi pranešimai"
             apply: "Kandidatuoti"
+        configure:
+          tooltip: "Konfigūruokite, kaip ši suvestinė bus rodoma visiems šios svetainės nariams."
+          menu_title: "Konfigūruoti suvestinę"
+          toggle_visibility: "Rodyti %{label} suvestinėje"
         site_traffic:
           series:
             anonymous: "Anonimas"
@@ -8306,6 +8504,11 @@ lt:
           bot: "Botų paskyros"
           all: "Visos paskyros"
         approved: "Patvirtinta?"
+        source: "Šaltinis"
+        bots:
+          name: "Vardas"
+          username: "Naudotojo vardas"
+          trust_level: "Patikimumo lygis"
         titles:
           pending: "Vartotojai laukiantys patvirtinimo"
           newuser: "Vartotojai su 0 pasitikėjimo lygiu (Naujas vartotojas)"
@@ -8337,7 +8540,7 @@ lt:
         silenced_by: "Nutildė"
         silence_modal_title: "Nutildyti narį"
         silence_duration: "Kiek laiko vartotojas bus nutildytas?"
-        silence_reason_label: "Kodėl nutildote šį vartotoją?"
+        silence_reason_title: "Nutildymo priežastis"
         silence_reason_placeholder: "Tylos priežastis"
         silence_message: "E-pašto žinutė"
         silence_message_placeholder: "(palikite tuščią, kad išsiųstumėte numatytąjį pranešimą)"
@@ -8631,7 +8834,7 @@ lt:
           tags: "Žymos"
           search: "Ieškoti"
           groups: "Grupės"
-          dashboard: "Apžvalga"
+          dashboard: "Suvestinė"
           navigation: "Navigacija"
         default_categories:
           modal_yes: "Taip"

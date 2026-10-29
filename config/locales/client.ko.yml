@@ -3136,7 +3136,6 @@ ko:
     category:
       none: "(카테고리 없음)"
       all: "모든 카테고리"
-      choose: "카테고리&hellip;"
       edit: "수정"
       edit_title: "이 카테고리 편집"
       edit_dialog_title: "편집 : %{categoryName}"
@@ -5205,6 +5204,11 @@ ko:
           all: "모든 사용자"
           activated: "활성화됨"
         approved: "승인되었나요?"
+        source: "출처"
+        bots:
+          name: "그룹명"
+          username: "아이디"
+          trust_level: "신뢰 레벨"
         titles:
           pending: "검토 대기 중인 사용자"
           newuser: "신뢰 레벨 0 사용자(신규 사용자)"
@@ -5241,7 +5245,6 @@ ko:
         silenced_by: "차단자:"
         silence_modal_title: "사용자 차단"
         silence_duration: "이 사용자를 언제까지 차단할까요?"
-        silence_reason_label: "이 사용자를 차단하는 이유가 무엇인가요?"
         silence_reason_placeholder: "차단 이유"
         silence_message: "메시지 이메일 전송"
         silence_message_placeholder: "(디폴트 메시지를 보내려면 비워 두세요)"

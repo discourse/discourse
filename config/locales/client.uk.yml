@@ -7,6 +7,8 @@
 uk:
   js:
     dsa_notice:
+      choice_title: "Це незаконно."
+      go_back: "Повернутися назад"
       title: "Повідомити про незаконний вміст"
       email: "Адреса електронної пошти"
       resend_email_code: "Надіслати код повторно"
@@ -5634,7 +5636,6 @@ uk:
     category:
       none: "(без розділу)"
       all: "Всі розділи"
-      choose: "Розділ &hellip;"
       edit: "Редагувати"
       edit_title: "Редагувати цей розділ"
       edit_dialog_title: "Редагувати:%{categoryName}"
@@ -10192,6 +10193,11 @@ uk:
           activated: "Активоване"
           not_activated: "Не активовано"
         approved: "Схвалено?"
+        source: "Джерело"
+        bots:
+          name: "Імʼя"
+          username: "Імʼя користувача"
+          trust_level: "Рівень довіри"
         titles:
           active: "Активні користувачі"
           new: "Нові користувачі"
@@ -10218,6 +10224,7 @@ uk:
           title: "Видалити всі пов’язані облікові записи цього користувача"
           text: "Видалити пов'язані облікові записи"
       user:
+        bot: "Бот"
         suspend_failed: "Щось трапилося під час призупинення цього користувача: %{error}"
         unsuspend_failed: "Щось трапилося під час скасування призупинення цього користувача: %{error}"
         suspend_duration: "Призупинити користувача до:"
@@ -10239,7 +10246,7 @@ uk:
         silenced_by: "Відключено користувачем"
         silence_modal_title: "Відключений користувач"
         silence_duration: "Як довго користувач буде відключений?"
-        silence_reason_label: "Чому ви збираєтеся відключити користувача?"
+        silence_reason_title: "Причина заморожування"
         silence_reason_placeholder: "Причина відключення"
         silence_message: "Повідомлення пошти"
         silence_message_placeholder: "(Залиште незаповненим, щоб відправити дефолтне повідомлення)"

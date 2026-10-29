@@ -6019,6 +6019,7 @@ ar:
     graph_title: "عدد مرات البحث"
   onebox:
     discourse:
+      event_all_day: "طوال اليوم"
       user_joined_community: "تاريخ الانضمام: %{date}"
     google_meet:
       title: "اجتماع Google Meet"

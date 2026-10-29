@@ -831,9 +831,12 @@ RSpec.describe Discourse do
   end
 
   describe ".anonymous_locale" do
-    def locale_for(cookie: nil, path: "/")
-      env = cookie ? { "HTTP_COOKIE" => "locale=#{cookie}" } : {}
-      Discourse.anonymous_locale(ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)))
+    def locale_for(cookie: nil, path: "/", env: {}, include_param: true)
+      env = env.merge("HTTP_COOKIE" => "locale=#{cookie}") if cookie
+      Discourse.anonymous_locale(
+        ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)),
+        include_param:,
+      )
     end
 
     before do
@@ -896,6 +899,29 @@ RSpec.describe Discourse do
       it "still prefers the locale param over the cookie" do
         SiteSetting.set_locale_from_param = true
 
+        expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
+      end
+    end
+
+    context "without the locale param" do
+      before do
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.set_locale_from_accept_language_header = true
+      end
+
+      it "resolves the locale the plain URL would serve" do
+        expect(locale_for(cookie: "es", path: "/?tl=fr", include_param: false)).to eq("es")
+        expect(
+          locale_for(
+            path: "/?tl=fr",
+            env: {
+              "HTTP_ACCEPT_LANGUAGE" => "ja",
+            },
+            include_param: false,
+          ),
+        ).to eq("ja")
+        expect(locale_for(path: "/?tl=fr", include_param: false)).to eq("en")
         expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
       end
     end
