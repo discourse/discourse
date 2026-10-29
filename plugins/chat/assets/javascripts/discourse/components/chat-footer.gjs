@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   UnreadChannelsIndicator,
@@ -11,6 +12,7 @@ import {
   UnreadStarredIndicator,
   UnreadThreadsIndicator,
 } from "discourse/plugins/chat/discourse/components/chat/footer/unread-indicator";
+import ChannelListOptionsButton from "discourse/plugins/chat/discourse/components/chat/navbar/channel-list-options-button";
 
 export default class ChatFooter extends Component {
   @service chat;
@@ -30,6 +32,12 @@ export default class ChatFooter extends Component {
     return this.currentUser && this.siteSettings.chat_search_enabled;
   }
 
+  // Search is an action rather than a list, so with the tab bar it sits in the
+  // site header, where every section keeps its search
+  get searchInHeader() {
+    return this.includeSearch && this.mobileTabBar.enabled;
+  }
+
   get includeThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
       return false;
@@ -39,6 +47,16 @@ export default class ChatFooter extends Component {
 
   get directMessagesEnabled() {
     return this.chat.userCanAccessDirectMessages;
+  }
+
+  // With the tab bar, the routes' own title bars go, so their list options
+  // sit at the end of these tabs instead
+  get listOptionsSection() {
+    return {
+      "chat.channels": "channels",
+      "chat.direct-messages": "dms",
+      "chat.starred-channels": "starred",
+    }[this.currentRouteName];
   }
 
   get currentRouteName() {
@@ -97,17 +115,41 @@ export default class ChatFooter extends Component {
         ariaLabel: "chat.my_threads.aria_label",
         indicator: UnreadThreadsIndicator,
       },
-      this.includeSearch && {
-        id: "c-footer-search",
-        route: "chat.search",
-        icon: "magnifying-glass",
-        label: "chat.search.short_title",
-        ariaLabel: "chat.search.aria_label",
-      },
+      this.includeSearch &&
+        !this.searchInHeader && {
+          id: "c-footer-search",
+          route: "chat.search",
+          icon: "magnifying-glass",
+          label: "chat.search.short_title",
+          ariaLabel: "chat.search.aria_label",
+        },
     ].filter(Boolean);
   }
 
   <template>
+    {{#if (and this.searchInHeader this.chatStateManager.headerNavbarSlot)}}
+      {{#in-element this.chatStateManager.headerNavbarSlot insertBefore=null}}
+        {{! Built like the site header's own icons, so it sizes and spaces the same }}
+        <ul class="d-header-icons c-header__search">
+          <li
+            class={{dConcatClass
+              "header-dropdown-toggle"
+              (if (eq this.currentRouteName "chat.search") "active")
+            }}
+          >
+            <LinkTo
+              aria-label={{i18n "chat.search.aria_label"}}
+              class="btn btn-icon no-text icon btn-flat"
+              title={{i18n "chat.search.aria_label"}}
+              @route="chat.search"
+            >
+              {{dIcon "magnifying-glass"}}
+            </LinkTo>
+          </li>
+        </ul>
+      {{/in-element}}
+    {{/if}}
+
     {{#if this.shouldRenderFooter}}
       {{! The site's tab bar holds the bottom edge, so these become pills up top }}
       {{#if this.mobileTabBar.enabled}}
@@ -128,6 +170,11 @@ export default class ChatFooter extends Component {
               </li>
             {{/each}}
           </DHorizontalOverflowNav>
+          {{#if this.listOptionsSection}}
+            <div class="c-footer__options">
+              <ChannelListOptionsButton @section={{this.listOptionsSection}} />
+            </div>
+          {{/if}}
         </div>
       {{else}}
         <nav class="c-footer">

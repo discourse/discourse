@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import DButton from "discourse/ui-kit/d-button";
 import ApiPanels from "./api-panels.gjs";
 import Footer from "./footer.gjs";
 import Sections from "./sections.gjs";
@@ -14,7 +13,6 @@ import Sections from "./sections.gjs";
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
   @service currentUser;
-  @service mobileTabBar;
   @service site;
   @service sidebarState;
 
@@ -24,17 +22,6 @@ export default class SidebarHamburgerDropdown extends Component {
     } else {
       return this.args.collapsableSections;
     }
-  }
-
-  get menuAction() {
-    return this.mobileTabBar.enabled && this.mobileTabBar.menuAction;
-  }
-
-  @action
-  runMenuAction() {
-    const { action: run } = this.menuAction;
-    this.mobileTabBar.closeMenu();
-    run();
   }
 
   @action
@@ -66,16 +53,6 @@ export default class SidebarHamburgerDropdown extends Component {
                 class="sidebar-hamburger-dropdown"
                 {{didInsert this.focusFirstLink}}
               >
-                {{#if this.menuAction}}
-                  <div class="sidebar-menu-action">
-                    <DButton
-                      class="btn-primary sidebar-menu-action__button"
-                      @action={{this.runMenuAction}}
-                      @icon={{this.menuAction.icon}}
-                      @translatedLabel={{this.menuAction.label}}
-                    />
-                  </div>
-                {{/if}}
                 <PluginOutlet
                   @name="before-sidebar-sections"
                   @outletArgs={{lazyHash

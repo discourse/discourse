@@ -4629,6 +4629,8 @@ en:
       title: "Shared content"
       description: "What would you like to do with the shared content?"
       new_topic: "New topic"
+      new_personal_message: "New personal message"
+      create: "Create"
       new_message: "New message"
       add_to_reply: "Add to a reply"
       added_to_reply: "Saved. The content will be added the next time you open a reply."
@@ -6446,9 +6448,15 @@ en:
 
     mobile_tab_bar:
       label: "Site sections"
-      more: "More"
       new_topic: "New topic"
+      new_personal_message: "New personal message"
+      create: "Create"
       menu: "Menu"
+      back: "Back"
+      topics: "Topics"
+      drafts:
+        one: "Drafts (%{count})"
+        other: "Drafts (%{count})"
       hub: "Hub"
 
     safe_mode:

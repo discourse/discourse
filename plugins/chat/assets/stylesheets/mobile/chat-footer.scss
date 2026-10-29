@@ -53,9 +53,18 @@ html.mobile-tab-bar-visible {
   }
 
   .c-footer.--pills {
-    display: block;
-    padding: var(--space-2) var(--space-3) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    // Spaced like the topic lists' menu row above their list
+    padding: var(--space-4) var(--space-3) var(--space-2);
     border-top: none;
+
+    > :first-child {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
 
     .nav-pills {
       margin: 0;
@@ -63,6 +72,25 @@ html.mobile-tab-bar-visible {
 
     .c-unread-indicator {
       margin-left: var(--space-1);
+    }
+
+    .c-footer__options {
+      display: flex;
+      flex: none;
+      gap: var(--space-2);
+      margin-left: auto;
+
+      // Bordered like the buttons beside the topic lists' menu
+      .btn {
+        padding: 0.5em 0.65em;
+        border: var(--d-button-default-border);
+        border-radius: var(--d-button-border-radius);
+        background: var(--d-button-default-bg-color);
+
+        .d-icon {
+          color: var(--d-button-default-icon-color);
+        }
+      }
     }
   }
 
@@ -74,4 +102,17 @@ html.mobile-tab-bar-visible {
 .mobile-tab-bar__badge .chat-channel-unread-indicator {
   position: static;
   margin: 0;
+}
+
+// The tabs name the list, so the lists' own title bars only repeat them
+html.mobile-tab-bar-visible
+  .c-routes:is(
+    .--channels,
+    .--direct-messages,
+    .--starred-channels,
+    .--threads,
+    .--search
+  )
+  > .c-navbar-container {
+  display: none;
 }

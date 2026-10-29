@@ -13,6 +13,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class NavigationBarComponent extends Component {
+  @service mobileTabBar;
   @service site;
 
   get filterType() {
@@ -29,9 +30,10 @@ export default class NavigationBarComponent extends Component {
   }
 
   get showDropdown() {
+    // The tab bar's pages lay their lists out as tabs, as chat's are
     return applyValueTransformer(
       "navigation-bar-dropdown-mode",
-      this.site.mobileView
+      this.site.mobileView && !this.mobileTabBar.enabled
     );
   }
 

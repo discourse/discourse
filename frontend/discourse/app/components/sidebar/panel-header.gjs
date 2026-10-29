@@ -9,12 +9,16 @@ import ToggleAllSections from "./toggle-all-sections.gjs";
 export default class PanelHeader extends Component {
   @service sidebarState;
 
+  get panel() {
+    return this.args.panel ?? this.sidebarState.currentPanel;
+  }
+
   get shouldDisplay() {
-    return this.sidebarState.currentPanel.displayHeader;
+    return this.panel.displayHeader;
   }
 
   get showFilter() {
-    const minimum = this.sidebarState.currentPanel.filterableMinLinks;
+    const minimum = this.panel.filterableMinLinks;
 
     if (!minimum || this.sidebarState.filter) {
       return true;
@@ -38,8 +42,8 @@ export default class PanelHeader extends Component {
       <div class="sidebar-panel-header">
         <div class="sidebar-panel-header__row">
           <BackToForum
-            @href={{this.sidebarState.currentPanel.backLink.href}}
-            @label={{this.sidebarState.currentPanel.backLink.label}}
+            @href={{this.panel.backLink.href}}
+            @label={{this.panel.backLink.label}}
           />
           <ToggleAllSections @sections={{@sections}} />
         </div>

@@ -3,6 +3,8 @@ import { i18n } from "discourse-i18n";
 import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation.gjs";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager.js";
 
+const NEW_CONVERSATION_ROUTE = "discourse-ai-bot-conversations";
+
 // Matches the rule the sidebar uses to treat a topic as an AI conversation
 function isOwnBotConversation(routeInfo, currentUser) {
   for (let route = routeInfo; route; route = route.parent) {
@@ -35,6 +37,19 @@ export default {
       );
       aiConversationsSidebarManager.api = api;
 
+      const startNewConversation = () => {
+        const appEvents = api.container.lookup("service:app-events");
+        const router = api.container.lookup("service:router");
+        appEvents.trigger("discourse-ai:new-conversation-btn-clicked");
+
+        // The page focuses its input when it loads
+        if (router.currentRouteName === NEW_CONVERSATION_ROUTE) {
+          document.getElementById("ai-bot-conversations-input")?.focus();
+        } else {
+          router.transitionTo(NEW_CONVERSATION_ROUTE);
+        }
+      };
+
       api.addSidebarPanel(
         (BaseCustomSidebarPanel) =>
           class AiConversationsSidebarPanel extends BaseCustomSidebarPanel {
@@ -61,6 +76,16 @@ export default {
                   isOwnBotConversation(routeInfo, currentUser),
                 isNestedRoute: (routeInfo) =>
                   routeInfo.name.startsWith("topic."),
+                showsTitleInHeader: () => true,
+                createActions: [
+                  {
+                    label: i18n(
+                      "discourse_ai.ai_bot.conversations.new_conversation"
+                    ),
+                    icon: "discobot",
+                    action: startNewConversation,
+                  },
+                ],
               };
             }
           }

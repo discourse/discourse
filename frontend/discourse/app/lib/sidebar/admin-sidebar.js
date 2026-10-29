@@ -394,8 +394,10 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       label: i18n("admin_title"),
       icon: "wrench",
       badgeComponent: MobileTabBarReviewBadge,
-      url: "/admin",
+      url: "/admin/menu",
       ownsRoute: (routeInfo) => routeInfo.name.startsWith("admin"),
+      isNestedRoute: (routeInfo) => routeInfo.name !== "adminMenu",
+      showsTitleInHeader: () => true,
     };
   }
 

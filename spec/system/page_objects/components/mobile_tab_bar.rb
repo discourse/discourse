@@ -10,9 +10,24 @@ module PageObjects
         self
       end
 
-      def open_section_menu
-        find(".header-section-nav button").click
+      def open_menu
+        find("#{SELECTOR} .mobile-tab-bar__menu").click
         self
+      end
+
+      def click_create
+        find("#{SELECTOR} .mobile-tab-bar__create").click
+        self
+      end
+
+      def click_create_action(label)
+        find(".mobile-tab-bar__create-action", text: label).click
+        self
+      end
+
+      def has_create_actions?(*labels)
+        has_css?(".mobile-tab-bar__create-action", count: labels.size) &&
+          all(".mobile-tab-bar__create-action").map(&:text) == labels
       end
 
       def has_tabs?(*keys)

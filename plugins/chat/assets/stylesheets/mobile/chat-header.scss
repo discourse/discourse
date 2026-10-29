@@ -55,6 +55,18 @@
     overflow: hidden;
     font-weight: bold;
   }
+
+  // Where the site's search would be, beside the user menu. The site's icons
+  // share one list; this one sits in its own, so it takes back the margin the
+  // next list opens with.
+  .c-header__search {
+    margin-left: auto;
+    margin-right: -0.5em;
+
+    .active .d-icon {
+      color: var(--d-nav-color--active);
+    }
+  }
 }
 
 // The channel's navbar lives in the site header, so the channel no longer

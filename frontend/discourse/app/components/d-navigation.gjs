@@ -32,6 +32,7 @@ export default class DNavigation extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service mobileTabBar;
 
   @computed("siteSettings.fixed_category_positions")
   get fixedCategoryPositions() {
@@ -406,17 +407,20 @@ export default class DNavigation extends Component {
         }}
       />
 
-      <CreateTopicButton
-        @action={{this.clickCreateTopicButton}}
-        @btnTypeClass={{if
-          this.siteSettings.modernize_foundation_theme
-          "btn-primary"
-        }}
-        @canCreateTopic={{this.canCreateTopic}}
-        @icon={{this.createTopicIcon}}
-        @label={{this.createTopicLabel}}
-        @showDrafts={{if (gt this.draftCount 0) true false}}
-      />
+      {{! The tab bar's create button starts topics and opens drafts }}
+      {{#unless this.mobileTabBar.enabled}}
+        <CreateTopicButton
+          @action={{this.clickCreateTopicButton}}
+          @btnTypeClass={{if
+            this.siteSettings.modernize_foundation_theme
+            "btn-primary"
+          }}
+          @canCreateTopic={{this.canCreateTopic}}
+          @icon={{this.createTopicIcon}}
+          @label={{this.createTopicLabel}}
+          @showDrafts={{if (gt this.draftCount 0) true false}}
+        />
+      {{/unless}}
 
       <PluginOutlet
         @name="after-create-topic-button"

@@ -327,12 +327,19 @@ export default {
                 ownsRoute: (routeInfo) => /^chat(\.|$)/.test(routeInfo.name),
                 isNestedRoute: (routeInfo) =>
                   /^chat\.channel(\.|$)/.test(routeInfo.name),
-                menuAction: chatService.userCanChat && {
-                  label: i18n("chat.start_new_message"),
-                  icon: "plus",
-                  action: () =>
-                    container.lookup("service:modal").show(ChatModalNewMessage),
-                },
+                showsTitleInHeader: () => true,
+                createActions: chatService.userCanChat
+                  ? [
+                      {
+                        label: i18n("chat.new_chat"),
+                        icon: "d-chat",
+                        action: () =>
+                          container
+                            .lookup("service:modal")
+                            .show(ChatModalNewMessage),
+                      },
+                    ]
+                  : [],
               };
             }
           }

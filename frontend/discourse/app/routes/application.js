@@ -254,6 +254,7 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   _collectTitleTokens(tokens) {
+    this.documentTitle.pageTitle = tokens[0] ?? null;
     tokens.push(this.siteTitle);
     if (
       (window.location.pathname === getURL("/") ||

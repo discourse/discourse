@@ -30,17 +30,35 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
   get mobileTab() {
     const owner = getOwnerWithFallback(this);
     const currentUser = owner.lookup("service:current-user");
+    const composer = () => owner.lookup("service:composer");
 
     return {
-      label: i18n("sidebar.panels.forum.label"),
-      icon: "house",
+      label: i18n("mobile_tab_bar.topics"),
+      icon: "layer-group",
       url: "/",
       isNestedRoute: (routeInfo) => routeInfo.name.startsWith("topic."),
-      menuAction: currentUser?.can_create_topic && {
-        label: i18n("mobile_tab_bar.new_topic"),
-        icon: "plus",
-        action: () => owner.lookup("service:composer").openNewTopic(),
-      },
+      showsTitleInHeader: () => true,
+      createActions: [
+        currentUser?.can_create_topic && {
+          label: i18n("mobile_tab_bar.new_topic"),
+          icon: "far-pen-to-square",
+          action: () => {
+            // A category or topic page, or a tag's list, seeds the new topic
+            const attributes =
+              owner.lookup("service:router").currentRoute?.attributes;
+
+            composer().openNewTopic({
+              category: attributes?.category,
+              tags: attributes?.tag?.name,
+            });
+          },
+        },
+        currentUser?.can_send_private_messages && {
+          label: i18n("mobile_tab_bar.new_personal_message"),
+          icon: "envelope",
+          action: () => composer().openNewMessage({}),
+        },
+      ].filter(Boolean),
     };
   }
 }
@@ -62,9 +80,11 @@ export function addSidebarSection(func, panelKey) {
       `Error adding section to ${panelKey} because panel doesn't exist. Check addSidebarPanel API.`
     );
   }
-  panel.sections.push(
-    func.call(this, BaseCustomSidebarSection, BaseCustomSidebarSectionLink)
-  );
+  // Reassigned so pages showing the panel pick up sections added later
+  panel.sections = [
+    ...panel.sections,
+    func.call(this, BaseCustomSidebarSection, BaseCustomSidebarSectionLink),
+  ];
 }
 
 export function resetPanelSections(

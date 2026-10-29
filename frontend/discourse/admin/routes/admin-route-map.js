@@ -480,6 +480,8 @@ export default function () {
         this.route("index", { path: "/" });
       }
     );
+
+    this.route("adminMenu", { path: "/menu", resetNamespace: true });
   });
 
   this.route("newCategory", { path: "/new-category" }, function () {

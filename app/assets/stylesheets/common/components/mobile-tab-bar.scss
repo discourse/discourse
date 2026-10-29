@@ -1,54 +1,148 @@
 html.mobile-tab-bar-visible {
   // Layouts across the app already clear the footer nav by this height
-  --footer-nav-height: 3.625rem;
+  --footer-nav-height: 4.125rem;
 }
 
+// Floating controls over the page: the menu and create buttons on their own,
+// the section tabs grouped in a pill between them
 .mobile-tab-bar {
+  --mobile-tab-bar-control-size: 3.25rem;
   position: fixed;
   bottom: 0;
   left: 0;
   z-index: z("footer-nav");
   display: flex;
+  align-items: center;
+  gap: var(--space-2);
   width: 100%;
   height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
+  padding: 0 var(--space-3) env(safe-area-inset-bottom);
   box-sizing: border-box;
-  background: var(--header_background);
-  border-top: 1px solid var(--content-border-color);
+
+  // Content scrolls underneath, so fade it out behind the controls
+  background: linear-gradient(to bottom, transparent, var(--secondary) 45%);
+  pointer-events: none;
 
   @include unselectable;
 
+  &__menu,
+  &__tabs,
+  &__create {
+    flex: none;
+    height: var(--mobile-tab-bar-control-size);
+    border-radius: 999px;
+    box-shadow: var(--shadow-card);
+    pointer-events: auto;
+  }
+
+  &__menu,
+  &__create {
+    width: var(--mobile-tab-bar-control-size);
+
+    .d-icon {
+      margin: 0;
+      font-size: var(--font-0);
+    }
+  }
+
+  &__menu,
+  &__tabs {
+    border: 1px solid var(--content-border-color);
+    background: var(--header_background);
+  }
+
+  &__menu {
+    // Outweighs the transparent button style it's built on
+    &.btn-transparent {
+      background: var(--header_background);
+    }
+
+    .d-icon {
+      color: var(--header_primary-medium);
+    }
+
+    &[aria-expanded="true"].btn-transparent {
+      background: var(--d-selected);
+
+      .d-icon {
+        color: var(--d-nav-color--active);
+      }
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: var(--space-1);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  // Scrolls when the tabs don't fit, fading whichever edge has more past it
+  &__track {
+    --fade-before: 0px;
+    --fade-after: 0px;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: stretch;
+    min-width: 0;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--fade-before),
+      #000 calc(100% - var(--fade-after)),
+      transparent
+    );
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &.--more-before {
+      --fade-before: 1.5rem;
+    }
+
+    &.--more-after {
+      --fade-after: 1.5rem;
+    }
+
+    // Past four, the next tab peeks in to show the bar scrolls
+    &:has(> :nth-child(5)) .mobile-tab-bar__tab {
+      flex-basis: 28.5%;
+    }
+  }
+
   &__tab {
-    flex: 1 1 0;
+    flex: 1 0 25%;
+    scroll-snap-align: start;
     flex-direction: column;
     gap: var(--space-half);
     min-width: 0;
-    padding: var(--space-1) 0;
-    border-radius: 0;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 999px;
     color: var(--header_primary-medium);
 
-    &.--active {
+    // Colour alone doesn't mark the active tab, so it also gets a pill;
+    // outweighs the transparent button style it's built on
+    &.--active.btn-transparent {
+      background: var(--d-selected);
       color: var(--d-nav-color--active);
     }
   }
 
-  // Colour alone doesn't mark the active tab, so it also gets a pill
   &__indicator {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 3.5rem;
-    height: 1.9rem;
-    border-radius: 999px;
-
-    .--active & {
-      background: var(--d-selected);
-    }
 
     .d-icon {
       margin: 0;
-      font-size: var(--font-up-1);
+      font-size: var(--font-0);
       color: inherit;
     }
   }
@@ -56,7 +150,7 @@ html.mobile-tab-bar-visible {
   &__label {
     max-width: 100%;
     overflow: hidden;
-    font-size: var(--font-down-2);
+    font-size: var(--font-down-3);
     text-overflow: ellipsis;
     white-space: nowrap;
 
@@ -110,21 +204,76 @@ html.mobile-tab-bar-visible {
   }
 }
 
-.sidebar-menu-action {
-  padding: var(--space-2) var(--d-sidebar-row-horizontal-padding) var(--space-3);
-
-  &__button {
-    width: 100%;
-  }
-}
-
 // Sits before the logo, so it needs the header icons' spacing mirrored
-.d-header-icons.header-section-nav {
-  margin: 0 var(--space-1) 0 0;
+.mobile-tab-bar-back {
+  margin-right: var(--space-1);
+
+  .d-icon {
+    font-size: var(--font-up-1);
+  }
 }
 
 // Next to a topic or channel title the small logo only crowds it; the tabs
 // already lead home
-html.mobile-tab-bar-nested .d-header .title--minimized {
+html.mobile-tab-bar-titled .d-header .title--minimized {
   display: none;
+}
+
+// The header already holds the title, category and tags; the title is still
+// edited with the first post
+html.mobile-tab-bar-titled #topic-title {
+  display: none;
+}
+
+// Topic lists lay their lists out as one scrolling row of tabs, as chat's
+// are, with their controls kept at its end
+html.mobile-tab-bar-visible .navigation-container {
+  align-items: center;
+
+  .category-breadcrumb {
+    flex-basis: 100%;
+  }
+
+  #navigation-bar {
+    flex: 1 1 0;
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > li {
+      flex: none;
+    }
+  }
+
+  .navigation-controls {
+    flex: none;
+  }
+}
+
+.mobile-tab-bar-title {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-up-1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// The header names the page and the back button leads up a level, so the
+// page's own title and trail only repeat them
+html.mobile-tab-bar-titled .d-page-header {
+  .d-page-header__breadcrumbs,
+  .d-page-header__title {
+    display: none;
+  }
+
+  // The page's actions keep their place at the end of the row
+  .d-page-header__title-row {
+    justify-content: flex-end;
+  }
 }

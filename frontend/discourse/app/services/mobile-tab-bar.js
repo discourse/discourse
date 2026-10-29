@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { arrangeTabs, MORE_TAB } from "discourse/lib/mobile-tab-bar";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
@@ -12,24 +11,25 @@ import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 const LOADING_ROUTE = /(^|[._-])loading$/;
-const SEARCH_ROUTE = "full-page-search";
-const SEARCH_TAB = "search";
 const HUB_TAB = "hub";
+const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
 /**
- * Drives the mobile tab bar and the header controls that go with it. Each tab
- * is a section of the site: a sidebar panel that opted in through
- * `mobileTab`, plus search. Tabs navigate and remember where the user was;
- * the header's menu button opens the current section's panel.
+ * Drives the mobile tab bar. Each tab is a section of the site: a sidebar
+ * panel that opted in through `mobileTab`. Tabs navigate and remember where
+ * the user was. The menu button, always first, opens the forum's menu
+ * wherever the user is, since other sections keep their navigation on their
+ * own pages, and the create button, always last, starts something new in any
+ * section.
  */
 @disableImplicitInjections
 export default class MobileTabBar extends Service {
+  @service appEvents;
   @service capabilities;
   @service currentUser;
   @service header;
   @service routeHistory;
   @service router;
-  @service search;
   @service sidebarState;
   @service site;
   @service siteSettings;
@@ -40,8 +40,10 @@ export default class MobileTabBar extends Service {
   /** Whether the current page sits below its section's top level. */
   @tracked isNestedPage = false;
 
-  /** The panel the menu shows while it is open. */
-  @tracked menuPanelKey = null;
+  /** Whether the current page puts its own title in the header. */
+  @tracked isTitledPage = false;
+
+  @tracked draftCount = this.currentUser?.draft_count ?? 0;
 
   #lastURLs = new Map();
   #parentURLs = new Map();
@@ -49,6 +51,7 @@ export default class MobileTabBar extends Service {
   init() {
     super.init(...arguments);
     this.router.on("routeDidChange", this.routeDidChange);
+    this.appEvents.on(USER_DRAFTS_CHANGED_EVENT, this, this.#updateDraftCount);
 
     if (this.router.currentRoute) {
       this.routeDidChange();
@@ -58,47 +61,60 @@ export default class MobileTabBar extends Service {
   willDestroy() {
     super.willDestroy(...arguments);
     this.router.off("routeDidChange", this.routeDidChange);
+    this.appEvents.off(USER_DRAFTS_CHANGED_EVENT, this, this.#updateDraftCount);
   }
 
   get enabled() {
     return (
       !!this.currentUser &&
       this.siteSettings.enable_mobile_tab_bar &&
-      this.site.mobileView &&
-      this.#allTabs.length > 1
+      this.site.mobileView
     );
   }
 
-  /** The tabs to show, with any that don't fit held by a "More" tab. */
+  /**
+   * The tabs to show between the menu and create buttons, which scroll when
+   * they don't all fit.
+   *
+   * @returns {Array<Object>}
+   */
   get tabs() {
-    return arrangeTabs(this.#allTabs, {
-      foldOrder: [ADMIN_PANEL],
-      keep: [
-        MAIN_PANEL,
-        SEARCH_TAB,
-        HUB_TAB,
-        ...this.#allTabs.filter((tab) => tab.primary).map((tab) => tab.key),
-      ],
-      moreTab: {
-        key: MORE_TAB,
-        label: i18n("mobile_tab_bar.more"),
-        icon: "ellipsis",
-      },
-    });
+    return this.#allTabs;
   }
 
-  get isSectionMenuOpen() {
-    return this.#isMenuOpen(this.#sectionPanelKey);
+  /**
+   * Every way to start something new, the current section's first, then a way
+   * back to unfinished drafts.
+   *
+   * @returns {Array<{label: string, icon: string, action: Function}>}
+   */
+  get createActions() {
+    const tabs = this.#allTabs;
+    const current = tabs.filter((tab) => tab.key === this.sectionTabKey);
+    const others = tabs.filter((tab) => tab.key !== this.sectionTabKey);
+    const actions = [...current, ...others].flatMap(
+      (tab) => tab.createActions || []
+    );
+
+    if (this.draftCount > 0) {
+      actions.push({
+        label: i18n("mobile_tab_bar.drafts", { count: this.draftCount }),
+        icon: "pencil",
+        action: () =>
+          this.router.transitionTo("userActivity.drafts", this.currentUser),
+      });
+    }
+
+    return actions;
   }
 
-  /** The action at the top of the open menu, such as starting a new topic. */
-  get menuAction() {
-    return this.#tab(this.menuPanelKey)?.menuAction;
+  get isMenuOpen() {
+    return this.header.hamburgerVisible;
   }
 
-  // Forum leads, then primary sections and search, which hold their slots.
-  // Other sections follow, then admin, the first to fold into "More". Inside
-  // the app, a tab back to its list of sites leads the bar.
+  // Forum leads, then primary sections, so they show without scrolling. Other
+  // sections follow, then admin. Inside the app, a tab back to its list of
+  // sites leads the bar.
   get #allTabs() {
     const panelTabs = this.sidebarState.panels
       .map((panel) => panel.mobileTab && { key: panel.key, ...panel.mobileTab })
@@ -115,40 +131,48 @@ export default class MobileTabBar extends Service {
       },
       byKey(MAIN_PANEL),
       ...sections.filter((tab) => tab.primary),
-      this.site.can_search && {
-        key: SEARCH_TAB,
-        label: i18n("search.title"),
-        icon: "magnifying-glass",
-        url: this.search.fullPageSearchURL,
-        ownsRoute: (routeInfo) => routeInfo.name === SEARCH_ROUTE,
-      },
       ...sections.filter((tab) => !tab.primary),
       byKey(ADMIN_PANEL),
     ].filter(Boolean);
   }
 
-  // Search has no panel of its own, so its menu is the forum's
-  get #sectionPanelKey() {
-    return this.sidebarState.panels.some(
-      (panel) => panel.key === this.sectionTabKey
-    )
-      ? this.sectionTabKey
-      : MAIN_PANEL;
-  }
-
-  get #isSearchPage() {
-    return this.router.currentRouteName === SEARCH_ROUTE;
-  }
-
   /**
    * @param {Object} tab A tab from `tabs`.
-   * @returns {boolean} Whether the tab, or one it holds, is the current section.
+   * @returns {boolean} Whether the tab is the current section.
    */
   @bind
   isActive(tab) {
-    return (
-      tab.key === this.sectionTabKey ||
-      !!tab.overflow?.some((held) => held.key === this.sectionTabKey)
+    return tab.key === this.sectionTabKey;
+  }
+
+  /**
+   * The forum's menu leaves out links to sections that have their own tab.
+   *
+   * @param {Object} link A sidebar section link.
+   * @returns {boolean} Whether the link leads into a section other than the
+   * forum that has a tab of its own.
+   */
+  @bind
+  leadsToSectionTab(link) {
+    let routeInfo;
+
+    try {
+      const models = link.models ?? (link.model ? [link.model] : []);
+      // Links built from the admin-edited section keep their URL as `value`
+      const url =
+        link.href ??
+        (link.route
+          ? this.router.urlFor(link.route, ...models, {
+              queryParams: link.query ?? {},
+            })
+          : link.value);
+      routeInfo = this.router.recognize(url);
+    } catch {
+      return false;
+    }
+
+    return this.#allTabs.some(
+      (tab) => tab.key !== MAIN_PANEL && tab.ownsRoute?.(routeInfo)
     );
   }
 
@@ -170,7 +194,9 @@ export default class MobileTabBar extends Service {
     }
 
     const url = this.router.currentURL;
-    this.isNestedPage = !!this.#tab(this.sectionTabKey)?.isNestedRoute?.(route);
+    const tab = this.#tab(this.sectionTabKey);
+    this.isNestedPage = !!tab?.isNestedRoute?.(route);
+    this.isTitledPage = this.isNestedPage && !!tab?.showsTitleInHeader?.(route);
     this.#lastURLs.set(this.sectionTabKey, url);
 
     if (!this.isNestedPage) {
@@ -197,31 +223,44 @@ export default class MobileTabBar extends Service {
       return;
     }
 
-    // Search starts fresh, so the page focuses its empty input
     if (key !== this.sectionTabKey) {
-      const lastURL = key !== SEARCH_TAB && this.#lastURLs.get(key);
-      DiscourseURL.routeTo(lastURL || tab.url);
+      DiscourseURL.routeTo(this.#lastURLs.get(key) || tab.url);
     } else if (this.isNestedPage) {
       this.#returnToList(tab);
-    } else if (this.router.currentURL !== tab.url && !this.#isSearchPage) {
+    } else if (this.router.currentURL !== tab.url) {
       DiscourseURL.routeTo(tab.url);
     } else {
       scrollTop();
-
-      if (this.#isSearchPage) {
-        document.querySelector(".full-page-search")?.focus();
-      }
     }
   }
 
+  /** Returns from a nested page to the list it was opened from. */
   @bind
-  toggleSectionMenu() {
-    this.#toggleMenu(this.#sectionPanelKey);
+  goBack() {
+    this.#returnToList(this.#tab(this.sectionTabKey));
+  }
+
+  @bind
+  toggleMenu() {
+    if (this.isMenuOpen) {
+      this.closeMenu();
+      return;
+    }
+
+    this.sidebarState.setPanel(MAIN_PANEL);
+    this.sidebarState.setSeparatedMode();
+    this.sidebarState.hideSwitchPanelButtons();
+    this.header.userVisible = false;
+    this.#setMenuVisible(true);
   }
 
   @bind
   closeMenu() {
     this.#setMenuVisible(false);
+  }
+
+  #updateDraftCount() {
+    this.draftCount = this.currentUser?.draft_count ?? 0;
   }
 
   #tab(key) {
@@ -237,24 +276,6 @@ export default class MobileTabBar extends Service {
     } else {
       DiscourseURL.routeTo(parent);
     }
-  }
-
-  #isMenuOpen(key) {
-    return this.header.hamburgerVisible && this.menuPanelKey === key;
-  }
-
-  #toggleMenu(key) {
-    if (this.#isMenuOpen(key)) {
-      this.closeMenu();
-      return;
-    }
-
-    this.menuPanelKey = key;
-    this.sidebarState.setPanel(key);
-    this.sidebarState.setSeparatedMode();
-    this.sidebarState.hideSwitchPanelButtons();
-    this.header.userVisible = false;
-    this.#setMenuVisible(true);
   }
 
   #setMenuVisible(visible) {

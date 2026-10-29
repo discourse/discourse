@@ -551,8 +551,9 @@ $mobile-avatar-height: 1.532em;
   overflow: auto;
 }
 
-.mobile-view {
-  // Hide header avatar + icons while topic title is visible in mobile header
+// Hide header avatar + icons while topic title is visible in mobile header,
+// except with the tab bar, which keeps them like its other titled pages
+.mobile-view:not(.mobile-tab-bar-visible) {
   .extra-info-wrapper ~ .panel {
     .before-header-panel-outlet,
     .header-buttons,

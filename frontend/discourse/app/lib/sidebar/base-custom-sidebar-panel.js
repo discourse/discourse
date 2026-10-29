@@ -49,7 +49,7 @@ export default class BaseCustomSidebarPanel {
    * @property {string} icon
    * @property {string} url The section's top level.
    * @property {boolean} [primary] Places the tab right after the forum's,
-   * ahead of search, where it never folds into "More".
+   * where it shows without scrolling the bar.
    * @property {Object} [badgeComponent] Renders over the icon, for unread
    * counts and the like; it should render nothing when there is nothing new.
    * @property {(routeInfo: Object) => boolean} [ownsRoute] Whether a route
@@ -57,15 +57,21 @@ export default class BaseCustomSidebarPanel {
    * tab takes every route no other tab owns, so it needs no matcher.
    * @property {(routeInfo: Object) => boolean} [isNestedRoute] Whether a
    * route sits below the section's top level. Tapping the active tab there
-   * returns to the list the page was opened from.
-   * @property {{label: string, icon: string, action: Function}} [menuAction]
-   * Leads the section's menu, for starting something new in the section.
+   * returns to the list the page was opened from, as does the back button the
+   * header shows there.
+   * @property {(routeInfo: Object) => boolean} [showsTitleInHeader] Whether a
+   * nested route keeps its title in the header, beside the back button in
+   * place of the logo. A topic's title then stays there however the page
+   * scrolls.
+   * @property {Array<{label: string, icon: string, action: Function}>}
+   * [createActions] Ways to start something new in the section, offered by
+   * the bar's create button; they lead its menu while the section is current.
    */
 
   /**
    * Opts the panel into the mobile tab bar as a section of the site. Tapping
-   * the tab goes to the section, and the header's menu button opens this
-   * panel while the user is in it.
+   * the tab goes to the section, whose top-level page should hold its
+   * navigation: the bar's menu tab always opens the forum's menu.
    *
    * @returns {MobileTab|null} The tab, or null to stay out of the tab bar.
    */

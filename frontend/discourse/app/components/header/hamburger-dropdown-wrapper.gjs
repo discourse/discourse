@@ -45,11 +45,11 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
-    // The header's menu button opens and closes this menu itself
+    // The tab bar's menu button opens and closes this menu itself
     let exceptionSelectors = [
       ".sidebar-more-section-content",
       ".fk-d-menu-modal",
-      ".header-section-nav",
+      ".mobile-tab-bar__menu",
     ];
 
     exceptionSelectors = applyValueTransformer(
