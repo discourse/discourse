@@ -47,7 +47,7 @@ RSpec.describe EmailStyleUpdater do
         false,
       )
       expect(updater.errors).to_not be_empty
-      expect(updater.errors.first).to include('expected "}".')
+      expect(updater.errors.first).to include("expected end of rule.")
       expect_settings_to_be_unset
     end
   end

@@ -121,7 +121,7 @@ RSpec.describe ThemeField do
     css = "body {"
     field = theme.set_field(target: :common, name: :scss, value: css)
     theme.save!
-    expect(field.reload.error).to include('expected "}"')
+    expect(field.reload.error).to include("expected end of rule.")
 
     theme.set_field(target: :common, name: :scss, value: <<~SCSS)
       body {
