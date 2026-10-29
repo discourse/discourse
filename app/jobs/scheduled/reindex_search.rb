@@ -10,6 +10,7 @@ module Jobs
 
       rebuild_categories
       rebuild_tags
+      rebuild_tag_localizations
       rebuild_topics
       rebuild_posts
       rebuild_users
@@ -17,6 +18,7 @@ module Jobs
 
       clean_topics
       clean_posts
+      clean_tag_localizations
     end
 
     def rebuild_categories(limit: 500, indexer: SearchIndexer)
@@ -29,6 +31,12 @@ module Jobs
       tag_ids = load_problem_tag_ids(limit)
       puts "rebuilding #{tag_ids.size} tags" if @verbose
       reindex_records(Tag, tag_ids, indexer)
+    end
+
+    def rebuild_tag_localizations(limit: 10_000, indexer: SearchIndexer)
+      tag_localization_ids = load_problem_tag_localization_ids(limit)
+      puts "rebuilding #{tag_localization_ids.size} tag localizations" if @verbose
+      reindex_records(TagLocalization, tag_localization_ids, indexer)
     end
 
     def rebuild_topics(limit: 10_000, indexer: SearchIndexer)
@@ -108,6 +116,20 @@ module Jobs
       SQL
     end
 
+    def clean_tag_localizations
+      puts "cleaning up tag localization search data" if @verbose
+
+      DB.exec(<<~SQL)
+        DELETE FROM tag_localization_search_data
+         WHERE tag_localization_id IN (
+          SELECT tag_localization_id
+            FROM tag_localization_search_data
+       LEFT JOIN tag_localizations ON tag_localization_id = tag_localizations.id
+           WHERE tag_localizations.id IS NULL
+          )
+      SQL
+    end
+
     def load_problem_category_ids(limit)
       Category
         .joins("LEFT JOIN category_search_data ON category_id = categories.id")
@@ -130,6 +152,21 @@ module Jobs
           SearchIndexer::TAG_INDEX_VERSION,
         )
         .order("tags.id ASC")
+        .limit(limit)
+        .pluck(:id)
+    end
+
+    def load_problem_tag_localization_ids(limit)
+      TagLocalization
+        .joins(
+          "LEFT JOIN tag_localization_search_data ON tag_localization_id = tag_localizations.id",
+        )
+        .where(
+          "tag_localization_search_data.locale IS NULL OR tag_localization_search_data.locale != ? OR tag_localization_search_data.version != ?",
+          SiteSetting.default_locale,
+          SearchIndexer::TAG_LOCALIZATION_INDEX_VERSION,
+        )
+        .order("tag_localizations.id ASC")
         .limit(limit)
         .pluck(:id)
     end

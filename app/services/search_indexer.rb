@@ -8,6 +8,7 @@ class SearchIndexer
   CATEGORY_INDEX_VERSION = 3
   USER_INDEX_VERSION = 3
   TAG_INDEX_VERSION = 3
+  TAG_LOCALIZATION_INDEX_VERSION = 1
 
   # version to apply when issuing a background reindex
   REINDEX_VERSION = 0
@@ -241,6 +242,10 @@ class SearchIndexer
     update_index(table: "tag", id: tag_id, a_weight: name.downcase)
   end
 
+  def self.update_tag_localizations_index(tag_localization_id, name)
+    update_index(table: "tag_localization", id: tag_localization_id, a_weight: name)
+  end
+
   def self.queue_category_posts_reindex(category_id)
     return if @disabled
 
@@ -362,6 +367,10 @@ class SearchIndexer
 
     if Tag === obj && (obj.saved_change_to_name? || force)
       SearchIndexer.update_tags_index(obj.id, obj.name)
+    end
+
+    if TagLocalization === obj && (obj.saved_change_to_name? || force)
+      SearchIndexer.update_tag_localizations_index(obj.id, obj.name)
     end
   end
 

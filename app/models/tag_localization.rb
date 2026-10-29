@@ -2,12 +2,14 @@
 
 class TagLocalization < ActiveRecord::Base
   include LocaleMatchable
+  include Searchable
   include HasCookedTagDescription
 
   belongs_to :tag
 
   before_validation :clean_name
   before_save :cook_description
+  after_save :index_search
 
   validates :locale, presence: true, length: { maximum: 20 }
   validates :name, presence: true
@@ -15,6 +17,10 @@ class TagLocalization < ActiveRecord::Base
   validates :description, length: { maximum: 1000 }
 
   private
+
+  def index_search
+    SearchIndexer.index(self)
+  end
 
   def clean_name
     self.name = DiscourseTagging.clean_tag(name) if name.present?
