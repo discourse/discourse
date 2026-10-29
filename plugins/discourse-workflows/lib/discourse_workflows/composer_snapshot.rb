@@ -155,7 +155,9 @@ module DiscourseWorkflows
         if user.blank? || ACTIONS.exclude?(action)
           false
         elsif reply?
-          topic.present? && !topic.private_message? &&
+          # Posting permission comes from the category, so it doesn't cover topics hidden
+          # inside it, like shared drafts.
+          topic.present? && !topic.private_message? && user.guardian.can_see_topic?(topic) &&
             user.guardian.can_create_post_on_topic?(topic)
         else
           user.guardian.can_create_topic_on_category?(category_id)

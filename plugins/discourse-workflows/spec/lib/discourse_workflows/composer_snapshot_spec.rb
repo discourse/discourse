@@ -39,6 +39,37 @@ RSpec.describe DiscourseWorkflows::ComposerSnapshot do
     end
   end
 
+  describe "#composable?" do
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:shared_drafts_category, :category)
+    fab!(:shared_draft_topic) { Fabricate(:topic, category: shared_drafts_category) }
+
+    before do
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
+      Fabricate(:shared_draft, topic: shared_draft_topic, category: Fabricate(:category))
+    end
+
+    def reply_to(topic)
+      described_class.new(
+        user:,
+        action: described_class::REPLY,
+        draft_key: "topic_#{topic.id}",
+        raw: "Magic words",
+        topic:,
+      )
+    end
+
+    it "is false for a topic the user can post in but can't see" do
+      expect(user.guardian.can_create_post_on_topic?(shared_draft_topic)).to eq(true)
+      expect(reply_to(shared_draft_topic)).not_to be_composable
+    end
+
+    it "is true for a topic the user can see" do
+      expect(reply_to(Fabricate(:topic))).to be_composable
+    end
+  end
+
   describe "#own_text" do
     fab!(:user)
 
