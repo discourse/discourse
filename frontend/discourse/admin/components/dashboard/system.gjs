@@ -3,7 +3,9 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import VersionCheck from "discourse/admin/models/version-check";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import dashIfEmpty from "discourse/helpers/dash-if-empty";
+import lazyHash from "discourse/helpers/lazy-hash";
 import getUrl from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
@@ -222,6 +224,11 @@ export default class DashboardSystem extends Component {
               {{this.versionStatus.message}}
             </span>
           </div>
+
+          <PluginOutlet
+            @name="admin-upgrade-header"
+            @outletArgs={{lazyHash versionCheck=this.versionCheck}}
+          />
         </div>
 
         {{#if @data.storage}}
