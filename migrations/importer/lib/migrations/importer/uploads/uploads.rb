@@ -67,7 +67,9 @@ module Migrations
         end
 
         def configure_services
+          DatabasePool.configure!(synchronous_commit: false)
           configure_site_settings
+          DiscoursePatches.apply!
         end
 
         def configure_site_settings
