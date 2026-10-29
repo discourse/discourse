@@ -271,7 +271,7 @@ export default class WorkflowsIndex extends Component {
   }
 
   <template>
-    <DPageSubheader @titleLabel={{i18n "discourse_workflows.title"}}>
+    <DPageSubheader>
       <:actions as |actions|>
         {{#if this.hasWorkflows}}
           <actions.Primary

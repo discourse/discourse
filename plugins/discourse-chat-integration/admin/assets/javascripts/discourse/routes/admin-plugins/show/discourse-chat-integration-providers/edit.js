@@ -3,7 +3,7 @@ import { getOwner } from "@ember/owner";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default class DiscourseChatIntegrationProvidersShow extends DiscourseRoute {
+export default class DiscourseChatIntegrationProvidersEdit extends DiscourseRoute {
   async model(params) {
     const providers = this.modelFor(
       "adminPlugins.show.discourse-chat-integration-providers"

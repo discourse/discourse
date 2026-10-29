@@ -246,9 +246,6 @@ export default class AdminConfigAreasComponents extends Component {
       @descriptionLabel={{i18n
         "admin.config_areas.themes_and_components.components.description"
       }}
-      @titleLabel={{i18n
-        "admin.config_areas.themes_and_components.components.title"
-      }}
     >
       <:actions as |actions|>
         <PluginOutlet

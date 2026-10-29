@@ -9,13 +9,9 @@ module PageObjects
         @form ||= PageObjects::Components::FormKit.new(FORM_SCOPE)
       end
 
-      def add_provider_menu
-        PageObjects::Components::DMenu.new(find(".chat-integration-add-provider-trigger"))
-      end
-
-      def setup_popular_provider(provider_name)
-        find(".chat-integration-providers-list").find(
-          ".chat-integration-popular-provider-setup.--#{provider_name}",
+      def setup_provider(provider_name)
+        find(".chat-integration-provider-new__item.--#{provider_name}").find(
+          ".chat-integration-provider-new__setup",
         ).click
         self
       end

@@ -7,7 +7,7 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <DPageHeader
     @descriptionLabel={{i18n "admin.config.api_keys.header_description"}}
-    @hideTabs={{@controller.hideTabs}}
+    @shouldDisplay={{@controller.showHeader}}
     @titleLabel={{i18n "admin.config.api_keys.title"}}
   >
     <:breadcrumbs>

@@ -113,3 +113,106 @@ $mobile-breakpoint: 700px;
     content: "• ";
   }
 }
+
+// Admin pages: breadcrumbs lead, the tabs name the current page, and the
+// description and actions describe it, side by side. The title is kept for
+// assistive tech.
+.d-page-header.--compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "breadcrumbs breadcrumbs"
+    "tabs tabs"
+    "description actions"
+    "drawer drawer";
+  column-gap: var(--space-4);
+  align-items: start;
+
+  // Styled like a page navbar: a full-width strip at the top of the content
+  // column, with the current page as the emphasised item.
+  .d-page-header__breadcrumbs {
+    grid-area: breadcrumbs;
+    display: flex;
+    align-items: center;
+    min-height: 45px;
+    margin: 0 0 var(--space-2);
+    padding: 0 0.67em;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--content-border-color);
+    background: var(--secondary);
+
+    .desktop-view & {
+      margin-top: calc(-1 * var(--main-outlet-padding-top));
+    }
+
+    .d-breadcrumbs {
+      margin: 0;
+    }
+
+    .d-breadcrumbs__item[aria-current="page"] .d-breadcrumbs__link {
+      color: var(--primary);
+      font-weight: 500;
+    }
+  }
+
+  .d-nav-submenu {
+    grid-area: tabs;
+  }
+
+  .d-page-header__description {
+    grid-area: description;
+    margin: var(--space-3) 0 var(--space-4);
+  }
+
+  .d-page-header__title-row {
+    grid-area: actions;
+    margin: var(--space-3) 0 var(--space-4);
+
+    &:not(:has(.d-page-header__actions)) {
+      margin: 0;
+    }
+  }
+
+  .d-page-header__drawer {
+    grid-area: drawer;
+  }
+
+  .d-page-header__actions {
+    margin-left: auto;
+    gap: var(--space-2);
+
+    button {
+      margin-left: 0;
+    }
+  }
+}
+
+// A subheader without a title sits under the tab nav, which already names
+// the page, so the description leads and the actions sit beside it.
+.d-page-subheader:not(:has(.d-page-subheader__title)) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "description actions";
+  column-gap: var(--space-4);
+  align-items: start;
+  margin-bottom: var(--space-4);
+
+  .d-page-subheader__description {
+    grid-area: description;
+    margin: 0;
+  }
+
+  .d-page-subheader__title-row {
+    grid-area: actions;
+    margin: 0;
+  }
+
+  .d-page-subheader__actions {
+    margin-left: auto;
+    gap: var(--space-2);
+
+    button {
+      margin-left: 0;
+    }
+  }
+}

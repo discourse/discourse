@@ -14,6 +14,7 @@ import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DStatTiles from "discourse/ui-kit/d-stat-tiles";
@@ -23,6 +24,7 @@ import { i18n } from "discourse-i18n";
 import SpamTestModal from "discourse/plugins/discourse-ai/discourse/components/modal/spam-test-modal";
 
 export default class AiSpam extends Component {
+  @service adminPluginNavManager;
   @service toasts;
   @service modal;
 
@@ -239,6 +241,10 @@ export default class AiSpam extends Component {
   }
 
   <template>
+    <DBreadcrumbsItem
+      @label={{i18n "discourse_ai.spam.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-spam"
+    />
     <div class="ai-spam">
       <section class="ai-spam__settings">
         <div class="ai-spam__errors">
@@ -255,7 +261,6 @@ export default class AiSpam extends Component {
         </div>
         <DPageSubheader
           @descriptionLabel={{i18n "discourse_ai.spam.spam_description"}}
-          @titleLabel={{i18n "discourse_ai.spam.title"}}
         />
         <div class="control-group ai-spam__enabled">
           <DToggleSwitch

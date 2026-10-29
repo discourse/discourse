@@ -5,13 +5,7 @@ import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <DPageHeader
-    @descriptionLabel={{i18n
-      "admin.config.themes_and_components.header_description"
-    }}
-    @learnMoreUrl="https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
-    @titleLabel={{i18n "admin.config.themes_and_components.title"}}
-  >
+  <DPageHeader @titleLabel={{i18n "admin.config.themes_and_components.title"}}>
     <:breadcrumbs>
       <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
     </:breadcrumbs>

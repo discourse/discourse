@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import BackButton from "discourse/components/back-button";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -35,7 +36,7 @@ export default class extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @label={{this.providerTitle @controller.model.provider}}
+      @label={{this.providerTitle}}
       @path="/admin/plugins/discourse-chat-integration/providers/{{@controller.model.provider.name}}"
     />
 
@@ -49,13 +50,18 @@ export default class extends Component {
     {{/if}}
 
     <div class="admin-detail">
+      <BackButton
+        @label="chat_integration.back_to_providers"
+        @route="adminPlugins.show.discourse-chat-integration-providers.index"
+      />
+
       <DPageSubheader
         @descriptionLabel={{i18n
           "chat_integration.channels_description"
           provider=this.providerTitle
         }}
         @learnMoreUrl={{this.providerLearnMoreUrl}}
-        @titleLabel={{i18n "chat_integration.channels_title"}}
+        @titleLabel={{this.providerTitle}}
       >
         <:actions as |actions|>
           <actions.Default

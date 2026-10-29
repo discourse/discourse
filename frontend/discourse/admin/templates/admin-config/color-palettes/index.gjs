@@ -25,7 +25,6 @@ export default <template>
   <DPageSubheader
     @descriptionLabel={{i18n "admin.config.color_palettes.header_description"}}
     @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
-    @titleLabel={{i18n "admin.config.color_palettes.title"}}
   >
     <:actions as |actions|>
       <PluginOutlet

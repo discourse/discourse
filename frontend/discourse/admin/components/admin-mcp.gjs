@@ -1058,7 +1058,6 @@ export default class AdminMcp extends Component {
     {{#if (eq @section "overview")}}
       <DPageSubheader
         @descriptionLabel={{i18n "admin.config.mcp.overview.description"}}
-        @titleLabel={{i18n "admin.config.mcp.overview.title"}}
       />
       <div class="admin-mcp__overview-grid">
         <AdminConfigAreaCard
@@ -1161,7 +1160,6 @@ export default class AdminMcp extends Component {
       <section class="admin-mcp__access-section">
         <DPageSubheader
           @descriptionLabel={{i18n "admin.config.mcp.access.description"}}
-          @titleLabel={{i18n "admin.config.mcp.access.title"}}
         >
           <:actions as |actions|>
             <actions.Primary
@@ -1326,7 +1324,6 @@ export default class AdminMcp extends Component {
     {{else if (eq @section "primitives")}}
       <DPageSubheader
         @descriptionLabel={{i18n "admin.config.mcp.capabilities.description"}}
-        @titleLabel={{i18n "admin.config.mcp.capabilities.title"}}
       />
       <div
         class="admin-mcp__primitives-section"
@@ -1587,7 +1584,6 @@ export default class AdminMcp extends Component {
       <DPageSubheader
         @descriptionLabel={{i18n "admin.config.mcp.clients.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/connecting-your-apps-to-discourse-mcp-server/411637#p-2033870-connecting-apps-via-oauth-2"
-        @titleLabel={{i18n "admin.config.mcp.clients.title"}}
       >
         <:actions as |actions|>
           <actions.Primary
@@ -1936,7 +1932,6 @@ export default class AdminMcp extends Component {
     {{else if (eq @section "authorizations")}}
       <DPageSubheader
         @descriptionLabel={{i18n "admin.config.mcp.authorizations.description"}}
-        @titleLabel={{i18n "admin.config.mcp.authorizations.title"}}
       />
       <Form
         class="admin-mcp__table-filter"
@@ -2043,7 +2038,6 @@ export default class AdminMcp extends Component {
     {{else if (eq @section "activity")}}
       <DPageSubheader
         @descriptionLabel={{i18n "admin.config.mcp.activity.description"}}
-        @titleLabel={{i18n "admin.config.mcp.activity.title"}}
       />
       <Form
         class="admin-mcp__activity-filters"

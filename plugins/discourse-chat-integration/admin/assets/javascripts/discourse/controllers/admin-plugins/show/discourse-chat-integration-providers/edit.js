@@ -6,7 +6,7 @@ import ChannelErrorModal from "../../../../components/modal/channel-error.gjs";
 import EditRuleModal from "../../../../components/modal/edit-rule.gjs";
 import TestModal from "../../../../components/modal/test-integration.gjs";
 
-export default class DiscourseChatIntegrationProvidersShow extends Controller {
+export default class DiscourseChatIntegrationProvidersEdit extends Controller {
   @service modal;
   @service store;
 

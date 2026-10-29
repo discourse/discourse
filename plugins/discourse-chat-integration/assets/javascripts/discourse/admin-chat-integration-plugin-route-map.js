@@ -6,7 +6,8 @@ export default {
       "discourse-chat-integration-providers",
       { path: "providers" },
       function () {
-        this.route("show", { path: "/:provider" });
+        this.route("new");
+        this.route("edit", { path: "/:provider" });
       }
     );
   },

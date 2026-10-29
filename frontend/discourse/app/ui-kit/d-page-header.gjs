@@ -17,6 +17,7 @@ import {
   WrappedActionListItem,
   WrappedButton,
 } from "discourse/ui-kit/d-page-action-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const HEADLESS_ACTIONS = ["new", "edit"];
@@ -25,6 +26,7 @@ export default class DPageHeader extends Component {
   @service site;
   @service router;
 
+  @tracked compact = false;
   @tracked shouldDisplay = true;
 
   constructor() {
@@ -44,31 +46,44 @@ export default class DPageHeader extends Component {
 
   @bind
   #checkIfShouldDisplay() {
+    // NOTE: This has a little admin-specific logic in it, in future
+    // we could extract this out and have it a bit more generic,
+    // for now I think it's a fine tradeoff.
+    const currentPath = this.router._router.currentPath;
+    const pathSegments = currentPath ? currentPath.split(".") : [];
+    const isAdminRoute = pathSegments.includes("admin");
+
+    // Admin pages lead with breadcrumbs and tabs; the title stays in the
+    // DOM for assistive tech only.
+    this.compact = isAdminRoute;
+
     if (this.args.shouldDisplay !== undefined) {
       return (this.shouldDisplay = this.args.shouldDisplay);
     }
 
-    const currentPath = this.router._router.currentPath;
     if (!currentPath) {
       return (this.shouldDisplay = true);
     }
 
-    // NOTE: This has a little admin-specific logic in it, in future
-    // we could extract this out and have it a bit more generic,
-    // for now I think it's a fine tradeoff.
-    const pathSegments = currentPath.split(".");
     this.shouldDisplay =
-      !pathSegments.includes("admin") ||
+      !isAdminRoute ||
       !HEADLESS_ACTIONS.find((segment) => pathSegments.includes(segment));
   }
 
   <template>
+    {{! Crumbs register with the breadcrumbs service in render order, so they
+    stay mounted while the header is hidden to keep their place when it
+    reappears. }}
+    {{yield to="breadcrumbs"}}
+
     {{#if this.shouldDisplay}}
-      <div class="d-page-header" ...attributes>
+      <div
+        class={{dConcatClass "d-page-header" (if this.compact "--compact")}}
+        ...attributes
+      >
         {{#if (has-block "breadcrumbs")}}
           <div class="d-page-header__breadcrumbs">
             <DBreadcrumbsContainer />
-            {{yield to="breadcrumbs"}}
           </div>
         {{/if}}
 
@@ -82,11 +97,21 @@ export default class DPageHeader extends Component {
         }}
           <div class="d-page-header__title-row">
             {{#if (has-block "title")}}
-              <h1 class="d-page-header__title">
+              <h1
+                class={{dConcatClass
+                  "d-page-header__title"
+                  (if this.compact "sr-only")
+                }}
+              >
                 {{yield to="title"}}
               </h1>
             {{else if @titleLabel}}
-              <h1 class="d-page-header__title">{{@titleLabel}}</h1>
+              <h1
+                class={{dConcatClass
+                  "d-page-header__title"
+                  (if this.compact "sr-only")
+                }}
+              >{{@titleLabel}}</h1>
             {{/if}}
 
             {{#if (or (has-block "actions") @headerActionComponent)}}

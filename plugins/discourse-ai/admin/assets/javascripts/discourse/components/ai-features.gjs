@@ -202,7 +202,6 @@ export default class AiFeatures extends Component {
       <DPageSubheader
         @descriptionLabel={{i18n "discourse_ai.features.description"}}
         @learnMoreUrl="todo"
-        @titleLabel={{i18n "discourse_ai.features.short_title"}}
       />
 
       <div class="ai-features__controls">

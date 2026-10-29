@@ -1,29 +1,6 @@
 @use "lib/viewport";
 
 #admin-plugin-chat-integration {
-  &.admin-detail {
-    padding-top: 0;
-  }
-
-  .admin-nav-submenu {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: var(--space-4);
-    border-bottom: 1px solid var(--content-border-color);
-
-    .chat-integration-add-provider-trigger {
-      margin-left: auto;
-    }
-
-    .nav-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 0;
-    }
-  }
-
   .admin-config-area__header {
     display: flex;
     justify-content: flex-end;
@@ -147,13 +124,6 @@
   .admin-config-area-empty-list__title {
     font-size: var(--font-up-1);
     font-weight: bold;
-  }
-
-  .chat-integration-providers-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
   }
 }
 

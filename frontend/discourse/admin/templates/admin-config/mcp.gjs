@@ -4,10 +4,7 @@ import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <DPageHeader
-    @descriptionLabel={{i18n "admin.config.mcp.header_description"}}
-    @titleLabel={{i18n "admin.config.mcp.title"}}
-  >
+  <DPageHeader @titleLabel={{i18n "admin.config.mcp.title"}}>
     <:breadcrumbs>
       <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem

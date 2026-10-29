@@ -8,12 +8,19 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
 import DLoadMore from "discourse/ui-kit/d-load-more";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
+  <DPageSubheader
+    @descriptionLabel={{i18n
+      "admin.config.staff_action_logs.header_description"
+    }}
+  />
+
   <div class="staff-action-logs-controls">
     <div class="staff-action-logs-controls__left">
       {{#if @controller.filtersExists}}

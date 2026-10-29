@@ -26,7 +26,6 @@ export default class AiSecretsListEditor extends Component {
       {{else}}
         <DPageSubheader
           @descriptionLabel={{i18n "discourse_ai.secrets.description"}}
-          @titleLabel={{i18n "discourse_ai.secrets.short_title"}}
         >
           <:actions as |actions|>
             <actions.Primary

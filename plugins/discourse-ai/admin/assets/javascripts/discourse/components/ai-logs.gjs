@@ -17,6 +17,7 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import DiscourseURL from "discourse/lib/url";
 import userSearch, { validateSearchResult } from "discourse/lib/user-search";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
@@ -44,6 +45,7 @@ const PERIODS = {
 };
 
 export default class AiLogs extends Component {
+  @service adminPluginNavManager;
   @service currentUser;
   @service modal;
   @service router;
@@ -690,6 +692,10 @@ export default class AiLogs extends Component {
   }
 
   <template>
+    <DBreadcrumbsItem
+      @label={{i18n "discourse_ai.logs.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-logs"
+    />
     <section
       class="ai-logs admin-detail"
       {{didInsert this.attachUserAutocomplete}}
@@ -697,7 +703,6 @@ export default class AiLogs extends Component {
     >
       <DPageSubheader
         @descriptionLabel={{i18n "discourse_ai.logs.description"}}
-        @titleLabel={{i18n "discourse_ai.logs.short_title"}}
       >
         <:actions as |actions|>
           <actions.Primary

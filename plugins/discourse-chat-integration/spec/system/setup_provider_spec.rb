@@ -13,20 +13,16 @@ RSpec.describe "Chat integration setup provider" do
     sign_in(admin)
   end
 
-  def setup_provider_from_menu(provider_name)
-    visit "/admin/plugins/discourse-chat-integration/providers"
-
-    setup_page.add_provider_menu.expand
-    setup_page
-      .add_provider_menu
-      .option(".chat-integration-add-provider-button.--#{provider_name.downcase}")
-      .click
+  def setup_provider_from_list(provider_name)
+    visit "/admin/plugins/discourse-chat-integration/providers/new"
+    setup_page.setup_provider(provider_name)
   end
 
-  describe "quick setup when no providers are enabled" do
+  describe "setup from the empty state when no providers are enabled" do
     it "sets up Discord" do
       visit "/admin/plugins/discourse-chat-integration/providers"
-      setup_page.setup_popular_provider("discord")
+      find(".chat-integration-providers__empty-add").click
+      setup_page.setup_provider("discord")
 
       expect(dialog).to be_open
       expect(dialog).to have_content(
@@ -48,7 +44,7 @@ RSpec.describe "Chat integration setup provider" do
     before { SiteSetting.chat_integration_teams_enabled = true }
 
     it "sets up Discord" do
-      setup_provider_from_menu("discord")
+      setup_provider_from_list("discord")
 
       expect(dialog).to be_open
       expect(dialog).to have_content(
@@ -74,7 +70,7 @@ RSpec.describe "Chat integration setup provider" do
           },
         )
 
-        setup_provider_from_menu("slack")
+        setup_provider_from_list("slack")
         expect(modal).to be_open
 
         setup_page.fill_slack_access_token("xoxb-system-test")
@@ -90,7 +86,7 @@ RSpec.describe "Chat integration setup provider" do
       end
 
       it "shows a field error on the webhook field when the URL is invalid" do
-        setup_provider_from_menu("slack")
+        setup_provider_from_list("slack")
         expect(modal).to be_open
 
         setup_page.fill_slack_webhook_url("https://example.com/not-slack")
@@ -109,7 +105,7 @@ RSpec.describe "Chat integration setup provider" do
           },
         )
 
-        setup_provider_from_menu("slack")
+        setup_provider_from_list("slack")
         expect(modal).to be_open
 
         setup_page.fill_slack_access_token("xoxb-bad")
@@ -126,7 +122,7 @@ RSpec.describe "Chat integration setup provider" do
           },
         )
 
-        setup_provider_from_menu("telegram")
+        setup_provider_from_list("telegram")
         expect(modal).to be_open
 
         setup_page.fill_telegram_access_token("systok")
@@ -151,7 +147,7 @@ RSpec.describe "Chat integration setup provider" do
         allow(Rails.logger).to receive(:error).and_call_original
         allow(Rails.logger).to receive(:error).with(/\AFailed to setup telegram webhook\./)
 
-        setup_provider_from_menu("telegram")
+        setup_provider_from_list("telegram")
         expect(modal).to be_open
 
         setup_page.fill_telegram_access_token("badsys")

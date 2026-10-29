@@ -5,7 +5,6 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @descriptionLabel={{i18n "admin.config.email_logs.header_description"}}
     @shouldDisplay={{true}}
     @titleLabel={{i18n "admin.config.email_logs.title"}}
   >
