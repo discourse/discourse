@@ -10,19 +10,36 @@ function git(...args) {
   });
 }
 
-function select({
-  mapping,
-  revision,
-  inventory,
-  changed,
-  prChanged = changed,
-}) {
+function containerCpuSeconds() {
+  try {
+    if (fs.readFileSync("/proc/self/cgroup", "utf8").trim() !== "0::/")
+      return null;
+    const match = fs
+      .readFileSync("/sys/fs/cgroup/cpu.stat", "utf8")
+      .match(/^usage_usec (\d+)$/m);
+    return match ? Number(match[1]) / 1_000_000 : null;
+  } catch {
+    return null;
+  }
+}
+
+function select({ mapping, revision, inventory, changed, structural = [] }) {
   const full = (reason) => ({ mode: "full", revision, reason });
   if (
-    mapping.version !== 1 ||
+    mapping.version !== 3 ||
+    !Array.isArray(mapping.worker_spec_order) ||
+    !mapping.worker_spec_order.every(
+      (order) =>
+        Array.isArray(order) && order.every((spec) => typeof spec === "string")
+    ) ||
+    !Array.isArray(mapping.shared_files) ||
+    !mapping.shared_files.every((file) => typeof file === "string") ||
     !Array.isArray(mapping.shared_globs) ||
     !mapping.shared_globs.every((pattern) => typeof pattern === "string") ||
     !/^[a-f0-9]{40}$/.test(mapping.revision) ||
+    !mapping.source_checks ||
+    typeof mapping.source_checks !== "object" ||
+    Array.isArray(mapping.source_checks) ||
     !mapping.dependencies ||
     typeof mapping.dependencies !== "object" ||
     Array.isArray(mapping.dependencies)
@@ -31,9 +48,14 @@ function select({
   }
 
   const selected = new Set(
-    inventory.filter((spec) => spec.startsWith("spec/integrity/"))
+    inventory.filter(
+      (spec) =>
+        spec.startsWith("spec/integrity/") &&
+        spec !== "spec/integrity/i18n_spec.rb"
+    )
   );
   const changedPaths = new Set(changed);
+  const directlyAffected = new Set();
   const sources = new Set();
   for (const [spec, dependencies] of Object.entries(mapping.dependencies)) {
     if (
@@ -47,6 +69,27 @@ function select({
       dependencies.some((path) => changedPaths.has(path.replace(/^\.\//, "")))
     ) {
       selected.add(spec.replace(/^\.\//, ""));
+      directlyAffected.add(spec.replace(/^\.\//, ""));
+    }
+  }
+
+  const orderedSpecs = new Set(
+    mapping.worker_spec_order.flat().map((spec) => spec.replace(/^\.\//, ""))
+  );
+  if (
+    Object.keys(mapping.dependencies).some(
+      (spec) => !orderedSpecs.has(spec.replace(/^\.\//, ""))
+    )
+  ) {
+    return full("Incomplete worker order");
+  }
+  for (const order of mapping.worker_spec_order) {
+    const normalized = order.map((spec) => spec.replace(/^\.\//, ""));
+    const firstAffected = normalized.findIndex((spec) =>
+      directlyAffected.has(spec)
+    );
+    if (firstAffected !== -1) {
+      normalized.slice(firstAffected).forEach((spec) => selected.add(spec));
     }
   }
 
@@ -56,7 +99,17 @@ function select({
     }
   }
 
-  for (const path of prChanged) {
+  const sourceChecks = {};
+  for (const path of changed) {
+    if (/(^|\/)locale[^/]*\/[^/]+\.ya?ml$/.test(path)) {
+      return full(`Locale input: ${path}`);
+    }
+    if (mapping.shared_files.includes(path)) {
+      return full(`Shared file input: ${path}`);
+    }
+    if (structural.includes(path) && path.startsWith("frontend/")) {
+      return full(`Changed frontend file inventory: ${path}`);
+    }
     if (mapping.shared_globs.some((pattern) => matchesGlob(path, pattern))) {
       return full(`Shared bundle input: ${path}`);
     }
@@ -64,21 +117,22 @@ function select({
       continue;
     }
     if (/^(app|lib)\/.*\.rb$/.test(path)) {
-      if (!sources.has(path)) {
-        const directory = path.startsWith("lib/") ? "lib" : path.split("/")[1];
-        const related = inventory.filter((spec) =>
-          spec.startsWith(`spec/${directory}/`)
-        );
-        if (related.length === 0) {
-          return full(`No subsystem rule for ${path}`);
-        }
-        related.forEach((spec) => selected.add(spec));
+      if (
+        structural.includes(path) ||
+        !sources.has(path) ||
+        !mapping.source_checks[path]
+      ) {
+        return full(`Unmapped Ruby source: ${path}`);
       }
+      sourceChecks[path] = mapping.source_checks[path];
       continue;
     }
     if (
-      /^(frontend\/|docs\/|plugins\/|spec\/system\/)/.test(path) ||
-      /^[^/]+\.md$/.test(path)
+      /^(docs\/|plugins\/|spec\/system\/)/.test(path) ||
+      /^[^/]+\.md$/.test(path) ||
+      /^frontend\/discourse\/(app|admin|tests)\/.*\.(js|gjs|ts|gts|hbs|css|scss)$/.test(
+        path
+      )
     ) {
       continue;
     }
@@ -89,17 +143,32 @@ function select({
     mode: "subset",
     revision,
     mapping_revision: mapping.revision,
+    source_checks: sourceChecks,
     specs: inventory.filter((spec) => selected.has(spec)),
   };
 }
 
-async function prepare({ github, context, core }) {
+async function prepare({
+  github,
+  context,
+  core,
+  mode = process.env.RSPEC_SELECTION_MODE || "select",
+  auditPercent = Number(process.env.RSPEC_SELECTION_AUDIT_PERCENT ?? 10),
+}) {
   const started = Date.now();
+  const containerBefore = containerCpuSeconds();
   const revision = context.sha;
+  const configuredFull =
+    !["select", "audit", "full"].includes(mode) ||
+    !Number.isInteger(auditPercent) ||
+    auditPercent < 0 ||
+    auditPercent > 100 ||
+    mode === "full";
   let selection = { mode: "full", revision, reason: "Not a PR targeting main" };
   fs.mkdirSync("tmp/rspec-mapping", { recursive: true });
   try {
     if (
+      !configuredFull &&
       context.eventName === "pull_request" &&
       context.payload.pull_request.base.ref === "main"
     ) {
@@ -118,99 +187,115 @@ async function prepare({ github, context, core }) {
         .sort((left, right) => right.workflow_run.id - left.workflow_run.id);
       selection.reason = "No successful main mapping available";
       for (const artifact of candidates) {
-        const { data: run } = await github.rest.actions.getWorkflowRun({
-          ...context.repo,
-          run_id: artifact.workflow_run.id,
-        });
-        if (
-          run.path !== ".github/workflows/tests.yml" ||
-          run.event !== "push" ||
-          run.head_branch !== "main" ||
-          run.repository.id !== context.payload.repository.id ||
-          run.head_repository.id !== context.payload.repository.id
-        ) {
-          continue;
-        }
-        const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun(
-          {
+        try {
+          const { data: run } = await github.rest.actions.getWorkflowRun({
             ...context.repo,
-            run_id: run.id,
-            per_page: 100,
+            run_id: artifact.workflow_run.id,
+          });
+          if (
+            run.path !== ".github/workflows/tests.yml" ||
+            run.event !== "push" ||
+            run.head_branch !== "main" ||
+            run.repository.id !== context.payload.repository.id ||
+            run.head_repository.id !== context.payload.repository.id
+          ) {
+            continue;
           }
-        );
-        if (
-          !jobs.jobs.some(
-            (job) => job.name === "core backend" && job.conclusion === "success"
-          )
-        ) {
-          continue;
-        }
-        const archive = await github.rest.actions.downloadArtifact({
-          ...context.repo,
-          artifact_id: artifact.id,
-          archive_format: "zip",
-        });
-        fs.writeFileSync(
-          "tmp/rspec-mapping/mapping.zip",
-          Buffer.from(archive.data)
-        );
-        const mapping = JSON.parse(
-          execFileSync(
-            "python3",
-            [
-              "-c",
-              "import sys,zipfile; z=zipfile.ZipFile(sys.argv[1]); e=z.getinfo('mapping.json'); assert e.file_size <= 50000000; sys.stdout.buffer.write(z.read(e))",
-              "tmp/rspec-mapping/mapping.zip",
-            ],
-            { encoding: "utf8", timeout: 30_000, maxBuffer: 50_000_000 }
-          )
-        );
-        if (mapping.revision !== run.head_sha) {
-          throw new Error("Mapping revision differs from producer");
-        }
-        const baseRevision = context.payload.pull_request.base.sha;
-        git(
-          "fetch",
-          "--no-tags",
-          "--depth=1",
-          "origin",
-          mapping.revision,
-          baseRevision
-        );
-        const inventory = git("ls-files", "-z", "spec")
-          .split("\0")
-          .filter((path) => /^spec\/(?!system\/).*_spec\.rb$/.test(path));
-        const prChanged = git(
-          "diff",
-          "--no-renames",
-          "--name-only",
-          "-z",
-          `${baseRevision}..${revision}`
-        )
-          .split("\0")
-          .filter(Boolean);
-        const changed = [
-          ...new Set([
-            ...prChanged,
-            ...git(
-              "diff",
-              "--no-renames",
-              "--name-only",
-              "-z",
-              `${mapping.revision}..${revision}`
+          const { data: jobs } =
+            await github.rest.actions.listJobsForWorkflowRun({
+              ...context.repo,
+              run_id: run.id,
+              per_page: 100,
+            });
+          if (
+            !jobs.jobs.some(
+              (job) =>
+                job.name === "core backend" && job.conclusion === "success"
             )
-              .split("\0")
-              .filter(Boolean),
-          ]),
-        ];
-        selection = select({
-          mapping,
-          revision,
-          inventory,
-          changed,
-          prChanged,
-        });
-        break;
+          ) {
+            continue;
+          }
+          const archive = await github.rest.actions.downloadArtifact({
+            ...context.repo,
+            artifact_id: artifact.id,
+            archive_format: "zip",
+          });
+          fs.writeFileSync(
+            "tmp/rspec-mapping/mapping.zip",
+            Buffer.from(archive.data)
+          );
+          const mapping = JSON.parse(
+            execFileSync(
+              "python3",
+              [
+                "-c",
+                "import sys,zipfile; z=zipfile.ZipFile(sys.argv[1]); e=z.getinfo('mapping.json'); assert e.file_size <= 50000000; sys.stdout.buffer.write(z.read(e))",
+                "tmp/rspec-mapping/mapping.zip",
+              ],
+              { encoding: "utf8", timeout: 30_000, maxBuffer: 50_000_000 }
+            )
+          );
+          if (mapping.revision !== run.head_sha) {
+            throw new Error("Mapping revision differs from producer");
+          }
+          const baseRevision = context.payload.pull_request.base.sha;
+          git(
+            "fetch",
+            "--no-tags",
+            "--depth=1",
+            "origin",
+            mapping.revision,
+            baseRevision
+          );
+          const inventory = git("ls-files", "-z", "spec")
+            .split("\0")
+            .filter((path) => /^spec\/(?!system\/).*_spec\.rb$/.test(path));
+          const prChanged = git(
+            "diff",
+            "--no-renames",
+            "--name-only",
+            "-z",
+            `${baseRevision}..${revision}`
+          )
+            .split("\0")
+            .filter(Boolean);
+          const changed = [
+            ...new Set([
+              ...prChanged,
+              ...git(
+                "diff",
+                "--no-renames",
+                "--name-only",
+                "-z",
+                `${mapping.revision}..${revision}`
+              )
+                .split("\0")
+                .filter(Boolean),
+            ]),
+          ];
+          selection = select({
+            mapping,
+            revision,
+            inventory,
+            changed,
+            structural: [mapping.revision, baseRevision].flatMap((base) =>
+              git(
+                "diff",
+                "--no-renames",
+                "--diff-filter=ADRT",
+                "--name-only",
+                "-z",
+                `${base}..${revision}`
+              )
+                .split("\0")
+                .filter(Boolean)
+            ),
+          });
+          break;
+        } catch (error) {
+          selection.reason = `Mapping unavailable: ${error.message.slice(0, 500)}`;
+          core.warning(selection.reason);
+        }
       }
     }
   } catch (error) {
@@ -221,7 +306,21 @@ async function prepare({ github, context, core }) {
     };
     core.warning(selection.reason);
   }
+  if (configuredFull) {
+    selection = { mode: "full", revision, reason: "Full execution configured" };
+  } else if (selection.mode === "subset") {
+    selection.audit =
+      mode === "audit" ||
+      parseInt(revision.slice(0, 8), 16) % 100 < auditPercent;
+  }
   selection.selection_seconds = (Date.now() - started) / 1000;
+  const containerAfter = containerCpuSeconds();
+  selection.selection_cpu_seconds =
+    containerBefore !== null && containerAfter !== null
+      ? containerAfter - containerBefore
+      : null;
+  selection.selection_cpu_scope =
+    "cgroup namespace root, including all its processes";
   fs.writeFileSync(
     "tmp/rspec-mapping/selection.json",
     JSON.stringify(selection)

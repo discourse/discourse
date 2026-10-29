@@ -22,37 +22,10 @@ permissions:
   contents: read
 
 jobs:
-  select-rspec:
-    name: Select core RSpec tests
+  build:
     permissions:
       contents: read
       actions: read
-    if: github.event_name == 'pull_request' && github.base_ref == 'main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - uses: actions/checkout@v7
-      - name: Test RSpec selection
-        uses: actions/github-script@v9
-        with:
-          script: |
-            require('node:child_process').execFileSync(process.execPath, ['--test', '.github/scripts/select-rspec.test.cjs'], { stdio: 'inherit' });
-      - name: Select specs using the latest main mapping
-        continue-on-error: true
-        uses: actions/github-script@v9
-        with:
-          script: |
-            await require('./.github/scripts/select-rspec.cjs').prepare({ github, context, core });
-      - uses: actions/upload-artifact@v7
-        continue-on-error: true
-        with:
-          name: rspec-core-selection
-          overwrite: true
-          path: tmp/rspec-mapping/selection.json
-          retention-days: 7
-
-  build:
-    needs: select-rspec
     if: always() && !cancelled() && (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror')
     name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
@@ -85,7 +58,9 @@ jobs:
         shell: bash
 
     env:
-      COLLECT_RSPEC_MAPPING: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.target == 'core' && matrix.build_type == 'backend' && '1' || '0' }}
+      RSPEC_SELECTION_MODE: ${{ vars.RSPEC_SELECTION_MODE || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'full') || 'select' }}
+      RSPEC_SELECTION_AUDIT_PERCENT: ${{ vars.RSPEC_SELECTION_AUDIT_PERCENT || '10' }}
+      COLLECT_RSPEC_MAPPING: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(fromJSON('["", "select", "audit"]'), vars.RSPEC_SELECTION_MODE) && matrix.target == 'core' && matrix.build_type == 'backend' && '1' || '0' }}
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
@@ -322,13 +297,15 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         run: find . -name node_modules -type d -prune -not -path './tmp/*' -print0 | xargs -0 rm -rf
 
-      - name: Download core RSpec selection
+      - name: Select core RSpec tests
         if: github.event_name == 'pull_request' && github.base_ref == 'main' && matrix.build_type == 'backend' && matrix.target == 'core'
-        uses: actions/download-artifact@v8
+        timeout-minutes: 2
         continue-on-error: true
+        uses: actions/github-script@v9
         with:
-          name: rspec-core-selection
-          path: tmp/rspec-mapping
+          script: |
+            require('node:fs').rmSync('tmp/rspec-mapping/selection.json', { force: true });
+            await require('./.github/scripts/select-rspec.cjs').prepare({ github, context, core });
 
       - name: Prepare RSpec mapping collection
         if: env.COLLECT_RSPEC_MAPPING == '1'
@@ -337,6 +314,18 @@ jobs:
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: LD_PRELOAD="$RUBY_ALLOCATOR" ruby script/ci/rspec_selection.rb run
+
+      - name: Publish core RSpec selection report
+        if: always() && matrix.build_type == 'backend' && matrix.target == 'core'
+        uses: actions/upload-artifact@v7
+        with:
+          name: rspec-core-selection-report
+          overwrite: true
+          path: |
+            tmp/rspec-mapping/run.json
+            tmp/rspec-mapping/selection.json
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Merge core RSpec mappings
         if: env.COLLECT_RSPEC_MAPPING == '1'

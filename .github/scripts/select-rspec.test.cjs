@@ -14,7 +14,17 @@ const inventory = [
   "spec/models/post_spec.rb",
 ];
 const mapping = {
-  version: 1,
+  version: 3,
+  worker_spec_order: inventory.map((spec) => [spec]),
+  shared_files: [],
+  source_checks: Object.fromEntries(
+    [
+      "lib/url_helper.rb",
+      "lib/slug.rb",
+      "app/models/topic.rb",
+      "app/models/post.rb",
+    ].map((file) => [file, { digest: "d".repeat(64), immutable_methods: [] }])
+  ),
   shared_globs: [
     "frontend/pretty-text/addon/**/*.js",
     "frontend/asset-processor/**/*.{js,mjs}",
@@ -54,7 +64,7 @@ test("includes specs absent from an older mapping", () => {
   assert.deepEqual(result.specs, [newSpec]);
 });
 
-test("broadens an unmapped Ruby file to its subsystem", () => {
+test("runs full for an unmapped Ruby file", () => {
   const result = select({
     mapping,
     revision,
@@ -62,11 +72,10 @@ test("broadens an unmapped Ruby file to its subsystem", () => {
     changed: ["app/models/topic_formatter.rb"],
   });
 
-  assert.equal(result.mode, "subset");
-  assert.deepEqual(result.specs, inventory.slice(2));
+  assert.equal(result.mode, "full");
 });
 
-test("retains consumers of deleted or renamed source paths", () => {
+test("runs full when a renamed source introduces an unmapped path", () => {
   const result = select({
     mapping,
     revision,
@@ -74,7 +83,7 @@ test("retains consumers of deleted or renamed source paths", () => {
     changed: ["lib/url_helper.rb", "lib/renamed_helper.rb"],
   });
 
-  assert.deepEqual(result.specs, inventory.slice(0, 3));
+  assert.equal(result.mode, "full");
 });
 
 test("runs the full backend for shared setup or unbounded changes", () => {
@@ -271,6 +280,67 @@ test("restores a trusted mapping and includes changes since its commit", async (
     assert.deepEqual(result.specs.toSorted(), inventory.toSorted());
     assert.equal(result.mapping_revision, baseline);
 
+    const originalList = github.rest.actions.listArtifactsForRepo;
+    const originalDownload = github.rest.actions.downloadArtifact;
+    const originalRun = github.rest.actions.getWorkflowRun;
+    github.rest.actions.listArtifactsForRepo = async () => ({
+      data: {
+        artifacts: [
+          { id: 11, size_in_bytes: 10, workflow_run: { id: 21 } },
+          { id: 10, size_in_bytes: archive.length, workflow_run: { id: 20 } },
+        ],
+      },
+    });
+    github.rest.actions.getWorkflowRun = async ({ run_id }) => ({
+      data: {
+        ...producer,
+        id: run_id,
+        head_sha: run_id === 21 ? head : baseline,
+      },
+    });
+    github.rest.actions.downloadArtifact = async ({ artifact_id }) =>
+      artifact_id === 11
+        ? { data: Buffer.from("invalid zip") }
+        : { data: archive };
+    await prepare({ github, context, core });
+    assert.equal(
+      JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json"))
+        .mapping_revision,
+      baseline
+    );
+    assert.equal(
+      JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).mode,
+      "subset"
+    );
+    github.rest.actions.listArtifactsForRepo = originalList;
+    github.rest.actions.downloadArtifact = originalDownload;
+    github.rest.actions.getWorkflowRun = originalRun;
+
+    await prepare({ github, context, core, auditPercent: 100 });
+    assert.equal(
+      JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).audit,
+      true
+    );
+    await prepare({ github, context, core, mode: "audit", auditPercent: 0 });
+    assert.equal(
+      JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).audit,
+      true
+    );
+    github.rest.actions.listArtifactsForRepo = async () => {
+      throw new Error("Full mode must not request mappings");
+    };
+    await prepare({ github, context, core, mode: "full" });
+    assert.equal(
+      JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).reason,
+      "Full execution configured"
+    );
+    await prepare({ github, context, core, auditPercent: 101 });
+    assert.equal(
+      JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).reason,
+      "Full execution configured"
+    );
+    github.rest.actions.listArtifactsForRepo = originalList;
+
     producer.event = "pull_request";
 
     await prepare({ github, context, core });
@@ -295,17 +365,15 @@ test("restores a trusted mapping and includes changes since its commit", async (
   }
 });
 
-test("main configuration changes since mapping do not force full PR runs", () => {
+test("unsafe configuration drift runs the full suite", () => {
   const result = select({
     mapping,
     revision,
     inventory,
     changed: ["config/site_settings.yml", "lib/url_helper.rb"],
-    prChanged: ["lib/url_helper.rb"],
   });
 
-  assert.equal(result.mode, "subset");
-  assert.deepEqual(result.specs, [inventory[0], inventory[2]]);
+  assert.equal(result.mode, "full");
 });
 
 test("retains backend integrity checks for frontend changes", () => {
@@ -314,6 +382,7 @@ test("retains backend integrity checks for frontend changes", () => {
     mapping: {
       ...mapping,
       dependencies: { ...mapping.dependencies, [integrity]: [] },
+      worker_spec_order: [...mapping.worker_spec_order, [integrity]],
     },
     revision,
     inventory: [...inventory, integrity],
@@ -322,4 +391,134 @@ test("retains backend integrity checks for frontend changes", () => {
 
   assert.equal(result.mode, "subset");
   assert.deepEqual(result.specs, [integrity]);
+});
+
+test("runs full for data files under frontend paths", () => {
+  for (const file of [
+    "frontend/rspec-lab/value.json",
+    "frontend/discourse/app/value.json",
+    "frontend/discourse/app/value.txt",
+  ]) {
+    assert.equal(
+      select({ mapping, revision, inventory, changed: [file] }).mode,
+      "full"
+    );
+  }
+});
+
+test("a deleted mapped Ruby file requires a full run", () => {
+  const result = select({
+    mapping,
+    revision,
+    inventory,
+    changed: ["lib/url_helper.rb"],
+    structural: ["lib/url_helper.rb"],
+  });
+  assert.equal(result.mode, "full");
+});
+
+test("runs full for observed file inputs, including cached reads", () => {
+  assert.equal(
+    select({
+      mapping: { ...mapping, shared_files: ["frontend/discourse/app/data.js"] },
+      revision,
+      inventory,
+      changed: ["frontend/discourse/app/data.js"],
+    }).mode,
+    "full"
+  );
+});
+
+test("new frontend files require a full run", () => {
+  const path = "frontend/discourse/app/new-module.js";
+  assert.equal(
+    select({
+      mapping,
+      revision,
+      inventory,
+      changed: [path],
+      structural: [path],
+    }).mode,
+    "full"
+  );
+});
+
+test("selects locale integrity through its mapped dependencies", () => {
+  const localeSpec = "spec/integrity/i18n_spec.rb";
+  const fixture = {
+    ...mapping,
+    worker_spec_order: [...mapping.worker_spec_order, [localeSpec]],
+    dependencies: { ...mapping.dependencies, [localeSpec]: ["lib/slug.rb"] },
+  };
+  const files = [...inventory, localeSpec];
+  assert.deepEqual(
+    select({
+      mapping: fixture,
+      revision,
+      inventory: files,
+      changed: ["README.md"],
+    }).specs,
+    []
+  );
+  assert.deepEqual(
+    select({
+      mapping: fixture,
+      revision,
+      inventory: files,
+      changed: ["lib/slug.rb"],
+    }).specs,
+    [inventory[1], localeSpec]
+  );
+});
+
+test("includes later cache consumers in an affected worker without selecting earlier or unrelated specs", () => {
+  const fixture = {
+    ...mapping,
+    worker_spec_order: [
+      [inventory[3], inventory[1], inventory[0], inventory[3]],
+      [inventory[2]],
+    ],
+  };
+  const result = select({
+    mapping: fixture,
+    revision,
+    inventory,
+    changed: ["lib/url_helper.rb"],
+  });
+  assert.equal(result.mode, "subset");
+  assert.deepEqual(result.specs, [inventory[0], inventory[2], inventory[3]]);
+});
+
+test("rejects mappings without complete worker ordering", () => {
+  for (const fixture of [
+    { ...mapping, version: 2 },
+    { ...mapping, worker_spec_order: [] },
+    { ...mapping, worker_spec_order: null },
+  ]) {
+    assert.equal(
+      select({
+        mapping: fixture,
+        revision,
+        inventory,
+        changed: ["lib/url_helper.rb"],
+      }).mode,
+      "full"
+    );
+  }
+});
+
+test("new and existing locale files require a full run", () => {
+  for (const path of [
+    "config/locales/server.en.yml",
+    "plugins/chat/config/locales/server.zz.yml",
+    "docs/locales/new.en.yml",
+  ]) {
+    for (const structural of [[], [path]]) {
+      assert.equal(
+        select({ mapping, revision, inventory, changed: [path], structural })
+          .mode,
+        "full"
+      );
+    }
+  }
 });

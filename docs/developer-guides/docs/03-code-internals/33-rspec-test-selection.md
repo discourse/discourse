@@ -5,55 +5,117 @@ id: rspec-test-selection
 ---
 
 Every push to `main` runs the full test matrix. Its core backend job uses
-Ruby coverage tracing to map source files to spec files.
-Capture covers each outer example group, including nested contexts, shared
-examples and `before(:context)` setup such as `fab!`.
+GitLab Crystalball coverage and described class strategies to map Ruby source
+files to spec files. Capture includes outer context setup, nested contexts and
+shared examples. Ruby File and IO reads record shared file inputs across every
+example group, including integrity specs. Changing an observed input runs the
+full core suite. This protects consumers of cached values, including native
+accessors that execute no covered Ruby lines. Symlink reads record both the link
+and its resolved target. Native extensions and external
+process file reads are outside this instrumentation. The collector does not
+propagate into nested test subprocesses.
 
-Worker mappings are merged into the `rspec-core-mapping-main` Actions artifact.
-Each artifact includes its source commit. Artifacts are immutable, so the
-selector treats the newest successful core backend job as the current mapping.
-Other jobs in that producer workflow need not succeed.
-A failed or unfinished producer does not replace the previous usable mapping.
+The consumer records the expected worker identities and assigned files before
+starting Turbo. Mapping publication requires complete matching worker records.
+The merged `rspec-core-mapping-main` artifact includes its commit, dependencies,
+shared bundle inputs, worker execution orders and Ruby source structure checks. The newest usable main
+producer is selected by workflow run ID. A failed producer or unreadable archive
+does not replace an older usable artifact.
 
-For a PR targeting `main`, one preparation job downloads the mapping and
-compares its commit with the PR merge commit. It also compares the PR base
-with the merge commit, so PR changes remain included when they cancel changes
-since the mapping. This includes intervening changes on `main`.
-It selects the union of:
+Only the PR core backend job prepares a selection, inside its existing container.
+There is no separate selection runner or dependency that delays other jobs.
+Preparation compares the mapping commit and PR base with the PR merge commit,
+then takes the union of both change sets. It does not wait for an exact base
+mapping. Missing artifacts, preparation failures and invalid plans run the full
+core backend suite.
 
-1. Specs mapped to changed source paths, including deleted paths.
-2. New or modified specs and specs missing from the mapping.
-3. Backend integrity specs, which read frontend and plugin files directly.
-4. A broader subsystem for unmapped Ruby files: `lib/` selects `spec/lib/`,
-   and `app/models/` selects `spec/models/`, for example.
+The selection includes mapped consumers, new or modified specs, specs absent
+from the mapping and backend integrity specs. Turbo distributes the chosen files
+using its existing workers and multisite pass. Other test suites retain their
+full commands. PR core timings cannot overwrite complete timing history.
 
-The core backend job downloads that selection. `bin/turbo_rspec` distributes
-the selected files among its existing workers, including the multisite worker.
-An empty selection exits without starting RSpec. PR core backend jobs restore
-runtime timings without saving their partial logs over the full history.
-Other matrix jobs retain their existing full test commands. PRs targeting other branches also retain full runs.
+Locale integrity specs follow their recorded dependencies instead of running on
+every PR. Any locale YAML change runs the full suite, including additions under
+plugins and documentation. This protects the locale directory discovery checks
+while avoiding thousands of unrelated translation examples on frontend PRs.
 
-PR changes to shared configuration, dependency files, database changes, test
-support, themes and unknown file types select the full core backend suite.
-The mapping also includes shared JavaScript bundle input globs from `PrettyText::CoreBundle` and
-`AssetProcessor`, so changes to those inputs run backend tests too.
-A missing, invalid or unavailable mapping also runs the full suite. Other frontend, plugin,
-documentation and system spec paths do not independently select core backend
-specs because their existing jobs still run.
+A worker can populate a cache in one spec and read it later without executing the
+producer again. Line coverage alone would miss that later dependency, especially
+through native accessors such as `attr_reader`. The mapping retains each worker's
+observed root group order, including repeated spec filenames. When a source affects a spec, selection also includes every
+later spec in that worker. This protects cached consumers without tracing every
+method call or marking every cache owner as a global input. Retaining repeated
+filenames protects a consumer file whose groups run both before and after a
+producer. Retry and multisite workers contribute their own orders. Worker
+suffixes assume application state is isolated between workers, as required by
+the existing parallel runner.
 
-For example, changing `lib/url_helper.rb` selects every spec recorded as using
-it. Adding an unmapped `app/models/topic_formatter.rb` selects model specs plus
-any specs selected by other changed paths. This subsystem rule is a heuristic:
-an older mapping cannot reveal every new dependency introduced by a PR.
-Broad fallback rules apply to the PR's own changes. Intervening changes on
-`main` contribute mapped consumers and changed specs, while full `main` runs
-verify their shared configuration changes. This avoids repeatedly running the
-full suite on PRs just because the mapping is behind `main`.
-Full runs on `main` remain necessary to detect regressions missed before merge.
+For example, worker 1 runs `[a_spec, b_spec, c_spec]`. `a_spec` calls
+`Producer.values` and stores the result in `Reader`. `c_spec` reads `Reader.values`
+without calling `Producer`. Changing the body of `Producer.values` selects all
+three specs from worker 1. An unrelated worker remains eligible to skip its
+specs. Early dependencies can therefore select a large worker suffix. Reports
+must measure this execution cost rather than counting only direct consumers.
 
-The preparation job reports selected file count and selection duration.
-Compare total CI runner usage, including tracing on `main`, with the previous
-full runs. A smaller spec count alone does not establish a compute saving.
-When a failure appears on `main`, check the PR selection artifact to determine
-whether selection omitted that spec. Results must account for intermittent
-failures and changes merged since the PR was tested.
+Unknown Ruby files, Ruby additions or deletions, configuration, dependencies,
+database inputs, test support and unknown data paths run the full core suite.
+Shared JavaScript bundle globs come from the existing PrettyText and asset
+processor bundle definitions. Only explicit documentation, plugin, system spec
+and Discourse frontend code paths are delegated to their existing jobs.
+JSON and other unknown frontend data files are not ignored.
+Observed plugin inputs, such as metadata and locales read by core tests, remain
+shared inputs and require full core execution despite normal plugin delegation.
+
+Ruby coverage alone cannot track every constant or generated Rails method.
+Prism structure checks retain declarations and method signatures while removing
+method bodies from a source fingerprint. Methods executed before the first
+example group remain in the fingerprint too. The consumer verifies these checks
+against the checked out source. A changed constant, Rails declaration, method
+signature or boot method therefore runs the full core suite. A changed ordinary
+method body can use the mapped selection. Unsafe intervening changes on `main`
+also cause full execution because the old mapping may no longer describe them.
+
+For example, editing the body of `UrlHelper.normalized_encode` can select its
+recorded consumers. Adding an unmapped model or changing a model validation runs
+the full core suite. This avoids assuming that all consumers are model specs.
+
+Ten percent of otherwise selected revisions run the full core suite as an audit.
+The audit reporter records all failing examples and those outside the predicted selection,
+including failures from shared context setup. Collection must include every
+expected worker. Audit observations may include failures later recovered by
+flaky test retries, so distinguish those from reproducible omitted regressions.
+
+Preparation uses the existing workflow token with `actions: read`. That
+permission applies to the build matrix job, including its other legs, because
+GitHub does not scope permissions to individual steps. No new secret is needed.
+
+Repository variables control new runs:
+
+| Variable                        | Default  | Behavior                                                                                                          |
+| ------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `RSPEC_SELECTION_MODE`          | `select` | Use selection and sampled audits. `audit` runs every predicted subset as a full audit. `full` disables selection. |
+| `RSPEC_SELECTION_AUDIT_PERCENT` | `10`     | Integer from 0 to 100. Invalid values select full execution.                                                      |
+
+Fork PRs use full execution when selection mode configuration is unavailable.
+This avoids relying on base repository variables being delivered to fork runs
+for the emergency full control. Same repository PRs default to `select`.
+
+The `rspec-core-selection-report` artifact contains the prediction and actual
+execution report. Reports include revision, actual mode, selected and available
+file counts, selection duration, CPU time, elapsed time, exit status and audit
+omissions. Worker CPU excludes database and Redis services. When cgroup version 2
+metrics are available at the cgroup namespace root, CPU includes all processes in
+that cgroup. This includes database and Redis services in an isolated container.
+Metrics are omitted when the process belongs to a nested visible cgroup, rather
+than accidentally measuring its host's root cgroup. Selection records the same
+scope. Compare allocated runner time as well, since waiting for
+selection holds the runner's capacity. Use these to measure both missed failures and total compute. Count
+tracing and publication on every main run, PR selection, audits, fallbacks and
+retries. A smaller file count alone does not prove savings.
+
+Use `audit` for a rollout that observes all PRs before skipping. Investigate every
+reproducible omission and set `full` while correcting a selection defect. The
+local replay harness exercises the actual collector, preparation and consumer
+with disposable Git histories and local artifact transport. GitHub service
+latency and artifact permissions still require CI verification.
+No finite replay matrix proves that all future regressions will be detected.
