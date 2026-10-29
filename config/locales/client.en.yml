@@ -8084,7 +8084,6 @@ en:
             latest_backup: "Latest backup %{date}"
             manage_backups: "Manage backups"
             discourse_updated: "Discourse updated"
-            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."

@@ -13,12 +13,7 @@ class AdminDashboardSystem
   end
 
   def build
-    {
-      version: version,
-      storage: storage,
-      discourse_updated_at: Discourse.last_commit_date,
-      dashboard_updated_at: Time.zone.now.as_json,
-    }
+    { version: version, storage: storage, discourse_updated_at: Discourse.last_commit_date }
   end
 
   private

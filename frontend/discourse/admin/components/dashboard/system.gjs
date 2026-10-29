@@ -135,10 +135,7 @@ export default class DashboardSystem extends Component {
   }
 
   get hasStatus() {
-    return !!(
-      this.args.data?.discourse_updated_at ||
-      this.args.data?.dashboard_updated_at
-    );
+    return !!this.args.data?.discourse_updated_at;
   }
 
   get backupsSummary() {
@@ -318,17 +315,6 @@ export default class DashboardSystem extends Component {
                 </div>
                 <div class="db-system__label">
                   {{i18n "admin.dashboard.sections.system.discourse_updated"}}
-                </div>
-              </div>
-            {{/if}}
-
-            {{#if @data.dashboard_updated_at}}
-              <div class="db-system__headline">
-                <div class="db-system__value">
-                  {{dFormatDate @data.dashboard_updated_at leaveAgo="true"}}
-                </div>
-                <div class="db-system__label">
-                  {{i18n "admin.dashboard.sections.system.dashboard_updated"}}
                 </div>
               </div>
             {{/if}}
