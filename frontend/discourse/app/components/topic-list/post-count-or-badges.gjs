@@ -3,7 +3,7 @@ import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 
 const PostCountOrBadges = <template>
-  {{#if @topic.is_nested_view}}
+  {{#if @topic.rendersNested}}
     {{#if @topic.has_new_replies}}
       <NewRepliesDot @topic={{@topic}} />
     {{else}}

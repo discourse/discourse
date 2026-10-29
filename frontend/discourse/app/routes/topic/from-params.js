@@ -72,7 +72,7 @@ export default class TopicFromParams extends DiscourseRoute {
     const topic = this.modelFor("topic");
 
     const queryParams = transition?.to?.queryParams || {};
-    if (topic.is_nested_view) {
+    if (topic.rendersNested) {
       return this.#loadNestedModel(topic, params, queryParams).catch((e) => {
         if (!isTesting()) {
           // eslint-disable-next-line no-console
@@ -94,7 +94,7 @@ export default class TopicFromParams extends DiscourseRoute {
     return postStream
       .refresh(params)
       .then(() => {
-        if (topic.is_nested_view) {
+        if (topic.rendersNested) {
           return this.#loadNestedModel(topic, params, queryParams);
         }
         return params;
@@ -151,6 +151,11 @@ export default class TopicFromParams extends DiscourseRoute {
   }
 
   setupController(controller, params, { _discourse_anchor }) {
+    const topicController = this.controllerFor("topic");
+    topicController.shouldRenderNestedView = params._loading_error
+      ? this.modelFor("topic").rendersNested
+      : Boolean(params._nested);
+
     // Don't do anything else if we couldn't load
     // TODO: Tests require this but it seems bad
     if (params._loading_error) {
@@ -162,7 +167,6 @@ export default class TopicFromParams extends DiscourseRoute {
       return;
     }
 
-    const topicController = this.controllerFor("topic");
     const nestedController = this.controllerFor("nested");
     const wasNestedView = Boolean(nestedController.topic);
     if (wasNestedView) {

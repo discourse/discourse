@@ -78,7 +78,7 @@ export default class Info extends Component {
 
     e.preventDefault();
     if (this.args.topicInfo) {
-      if (this.args.topicInfo.is_nested_view) {
+      if (this.args.topicInfo.rendersNested) {
         scrollTop();
         return;
       }

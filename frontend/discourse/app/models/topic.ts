@@ -18,6 +18,7 @@ import {
   stampModelClass,
 } from "discourse/lib/model-extensions";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
+import { prefersFlatReplies } from "discourse/lib/nested-view-preference";
 import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { serializeTags } from "discourse/lib/serialize-tags";
@@ -46,6 +47,7 @@ import Site from "discourse/models/site";
 import TopicDetails from "discourse/models/topic-details";
 import type User from "discourse/models/user";
 import type AppEventsService from "discourse/services/app-events";
+import type KeyValueStoreService from "discourse/services/key-value-store";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
 import Category, { type CategoryFields } from "./category.ts";
@@ -675,6 +677,7 @@ export default class Topic extends RestModel {
   }
 
   @service declare currentUser: User | null;
+  @service declare keyValueStore: KeyValueStoreService;
   @service declare siteSettings: RestModel["siteSettings"];
 
   @tracked chunk_size?: TopicFields["chunk_size"];
@@ -1059,22 +1062,30 @@ export default class Topic extends RestModel {
     return this.unread_posts || this.new_posts;
   }
 
-  @computed("last_read_post_number", "url", "is_nested_view")
+  /**
+   * Whether the topic renders as nested replies for the current viewer, who
+   * may prefer the flat view even when the topic itself is nested.
+   */
+  @dependentKeyCompat
+  get rendersNested(): boolean {
+    return (
+      !!this.get("is_nested_view") &&
+      !prefersFlatReplies(this.currentUser, this.keyValueStore)
+    );
+  }
+
+  // Uncached, since rendersNested can depend on untracked local storage.
+  @dependentKeyCompat
   get lastReadUrl() {
-    if (this.is_nested_view) {
+    if (this.rendersNested) {
       return this.url;
     }
     return this.urlForPostNumber(this.last_read_post_number);
   }
 
-  @computed(
-    "last_read_post_number",
-    "highest_post_number",
-    "url",
-    "is_nested_view"
-  )
+  @dependentKeyCompat
   get lastUnreadUrl() {
-    if (this.is_nested_view) {
+    if (this.rendersNested) {
       return this.url;
     }
 
@@ -1106,9 +1117,9 @@ export default class Topic extends RestModel {
     return this.urlForPostNumber(postNumber);
   }
 
-  @computed("highest_post_number", "url", "is_nested_view")
+  @dependentKeyCompat
   get lastPostUrl() {
-    if (this.is_nested_view) {
+    if (this.rendersNested) {
       return this.url;
     }
     return this.urlForPostNumber(this.highest_post_number);

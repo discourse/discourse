@@ -9,6 +9,7 @@ import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
 import ShareTopicModal from "discourse/components/modal/share-topic";
+import NestedViewToggle from "discourse/components/nested/view-toggle";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostA11yHeading from "discourse/components/post/a11y-heading";
 import PostActionsSummary from "discourse/components/post/actions-summary";
@@ -706,6 +707,7 @@ export default class Post extends Component {
                       @showPMMap={{eq @post.topic.archetype "private_message"}}
                       @topicDetails={{@post.topic.details}}
                     />
+                    <NestedViewToggle @topic={{@post.topic}} />
                   </div>
                 {{/if}}
               </PluginOutlet>

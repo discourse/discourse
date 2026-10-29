@@ -5,6 +5,7 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :external_links_in_new_tab,
              :enable_quoting,
              :enable_smart_lists,
+             :prefer_flat_replies,
              :enable_markdown_monospace_font,
              :dynamic_favicon,
              :automatically_unpin_topics,

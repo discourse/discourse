@@ -767,6 +767,9 @@
             "enable_smart_lists": {
               "type": "boolean"
             },
+            "prefer_flat_replies": {
+              "type": "boolean"
+            },
             "enable_markdown_monospace_font": {
               "type": "boolean"
             },
@@ -913,6 +916,7 @@
             "dynamic_favicon",
             "enable_quoting",
             "enable_smart_lists",
+            "prefer_flat_replies",
             "enable_markdown_monospace_font",
             "digest_after_minutes",
             "automatically_unpin_topics",

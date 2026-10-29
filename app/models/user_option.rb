@@ -362,6 +362,7 @@ end
 #  notify_on_solved                               :boolean          default(TRUE), not null
 #  oldest_search_log_date                         :datetime
 #  policy_email_frequency                         :integer          default("never"), not null
+#  prefer_flat_replies                            :boolean          default(FALSE), not null
 #  push_notification_level                        :integer          default("all"), not null
 #  seen_popups                                    :integer          is an Array
 #  send_shortcut                                  :integer          default("enter"), not null

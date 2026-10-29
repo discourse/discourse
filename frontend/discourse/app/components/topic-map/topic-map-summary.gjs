@@ -72,7 +72,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get shouldShowReplyCount() {
-    return this.args.topic.is_nested_view;
+    return this.args.topic.rendersNested;
   }
 
   get replyCount() {
