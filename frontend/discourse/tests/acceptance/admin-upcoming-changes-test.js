@@ -236,4 +236,12 @@ acceptance("Admin - Upcoming Changes - Sorting", function (needs) {
     assert.dom(".upcoming-changes__sort-trigger").hasText("Recently updated");
     assert.strictEqual(rowOrder()[0], "experimental_untracked");
   });
+
+  test("falls back to the default for an inherited object property", async function (assert) {
+    await visit("/admin/config/upcoming-changes?sort=constructor");
+
+    assert.dom(".upcoming-changes__sort-trigger").hasText("Recently updated");
+    assert.dom(".upcoming-change-row").exists({ count: 4 });
+    assert.strictEqual(rowOrder()[0], "experimental_untracked");
+  });
 });

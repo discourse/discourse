@@ -60,7 +60,9 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   get sort() {
-    return SORTS[this.args.sort] ? this.args.sort : DEFAULT_SORT;
+    return Object.hasOwn(SORTS, this.args.sort ?? "")
+      ? this.args.sort
+      : DEFAULT_SORT;
   }
 
   @cached
