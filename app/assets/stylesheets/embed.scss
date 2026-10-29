@@ -176,6 +176,7 @@ footer {
 
 // load onebox CSS at the end
 @import "./common/base/onebox";
+@import "./common/base/github-onebox";
 
 // we apparently use bottom margins on paras in the embed CSS, leading to weirdness
 // which we will now clean up
