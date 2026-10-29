@@ -6,12 +6,14 @@ import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import chatDecorators from "discourse/plugins/chat/discourse/initializers/chat-decorators";
 
 function decoratedLinks() {
-  const origin = window.location.origin;
-  const element = document.createElement("div");
+  // Chat decorates messages in a detached document, like this one.
+  const element = document.implementation
+    .createHTMLDocument("detached")
+    .createElement("div");
   element.innerHTML = `
     <a class="external" href="https://example.com/thing">external</a>
-    <a class="in-prefix" href="${origin}/forum/t/topic/1">in prefix</a>
-    <a class="out-of-prefix" href="${origin}/item/thing">out of prefix</a>
+    <a class="in-prefix" href="/forum/t/topic/1">in prefix</a>
+    <a class="out-of-prefix" href="/item/thing">out of prefix</a>
   `;
   chatDecorators.decorateLinkTargets(element);
   return element;
@@ -37,12 +39,12 @@ module("Discourse Chat | Unit | chat-decorators | links", function (hooks) {
     assert.dom(".out-of-prefix", element).hasClass("raw-link");
   });
 
-  test("opens links outside the forum in a new tab when the user opts in", function (assert) {
+  test("opens only external links in a new tab when the user opts in", function (assert) {
     User.currentProp("user_option.external_links_in_new_tab", true);
     const element = decoratedLinks();
 
     assert.dom(".external", element).hasAttribute("target", "_blank");
     assert.dom(".in-prefix", element).doesNotHaveAttribute("target");
-    assert.dom(".out-of-prefix", element).hasAttribute("target", "_blank");
+    assert.dom(".out-of-prefix", element).doesNotHaveAttribute("target");
   });
 });

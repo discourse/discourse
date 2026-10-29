@@ -6,6 +6,7 @@ import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export default {
@@ -137,12 +138,16 @@ export default {
     );
     for (let linkIndex = 0; linkIndex < links.length; linkIndex++) {
       const link = links[linkIndex];
-      if (shouldOpenInNewTab(link.href)) {
+      // Messages are decorated in a detached document, where relative
+      // `link.href` values don't resolve.
+      const href = link.getAttribute("href");
+      if (!href) {
+        continue;
+      }
+
+      if (shouldOpenInNewTab(href)) {
         link.setAttribute("target", "_blank");
-      } else if (
-        link.origin === window.location.origin &&
-        !samePrefix(link.href)
-      ) {
+      } else if (DiscourseURL.isInternal(href) && !samePrefix(href)) {
         // Same origin but outside the subfolder: the router can't handle it.
         link.classList.add("raw-link");
       }
