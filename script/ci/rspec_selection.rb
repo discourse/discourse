@@ -72,12 +72,8 @@ module RspecSelection
         grouping_runtime_log: manifest.fetch("grouping_runtime_log"),
         dependencies:,
         worker_specs:
-          workers.map do |worker|
-            if worker["identity"] == "multisite"
-              worker.fetch("dependencies").keys
-            else
-              worker.fetch("files")
-            end
+          workers.filter_map do |worker|
+            worker.fetch("files") unless worker["multisite_only"] == true
           end,
         empty_specs: manifest.fetch("workers").values.flatten.uniq - dependencies.keys,
         source_checks:,

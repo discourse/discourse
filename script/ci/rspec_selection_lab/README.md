@@ -13,6 +13,9 @@ an independent Git repository and a local bare origin inside it. It copies
 the current source, including local changes. Source files remain unchanged.
 Ignored dependency and configuration paths may be linked to the source.
 Tests use the environment's disposable test databases, so runs must be serialized.
+Snapshots require at least 8 GiB and 15 percent free disk space. Low disk
+space can disable remote image downloads inside Discourse and invalidate a
+baseline. Retained snapshots and compiled dependencies consume this reserve.
 The snapshot copies generated uploads referenced by the existing seeded databases.
 RSpec runs set `CI=true` for eager loading and `GITHUB_ACTIONS=true`, matching the
 production backend environment. Bytecode caches are excluded from source copies.
@@ -79,7 +82,6 @@ worker omission. Run just these cases with:
 python3 script/ci/rspec_selection_lab/cohort_cases.py \
   --directory /experiment/harness/cohorts-001
 ```
-
 
 `report.json` contains selected files, example failure identifiers, worker seeds,
 exit codes, elapsed time and CPU time. Every worker writes structured results.

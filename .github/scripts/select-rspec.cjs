@@ -23,6 +23,10 @@ function containerCpuSeconds() {
   }
 }
 
+function isCoreSpec(path) {
+  return /^spec\/(?!system\/).*_spec\.rb$/.test(path);
+}
+
 function select({ mapping, revision, inventory, changed, structural = [] }) {
   const full = (reason) => ({ mode: "full", revision, reason });
   if (
@@ -82,7 +86,7 @@ function select({ mapping, revision, inventory, changed, structural = [] }) {
   }
 
   for (const spec of changed) {
-    if (spec.startsWith("spec/") && spec.endsWith("_spec.rb")) {
+    if (isCoreSpec(spec)) {
       directlyAffected.add(spec);
     }
   }
@@ -128,7 +132,7 @@ function select({ mapping, revision, inventory, changed, structural = [] }) {
     if (mapping.shared_globs.some((pattern) => matchesGlob(path, pattern))) {
       return full(`Shared bundle input: ${path}`);
     }
-    if (/^spec\/(?!system\/).*_spec\.rb$/.test(path)) {
+    if (isCoreSpec(path)) {
       continue;
     }
     if (/^(app|lib)\/.*\.rb$/.test(path)) {
@@ -271,7 +275,7 @@ async function prepare({
           );
           const inventory = git("ls-files", "-z", "spec")
             .split("\0")
-            .filter((path) => /^spec\/(?!system\/).*_spec\.rb$/.test(path));
+            .filter(isCoreSpec);
           const prChanged = git(
             "diff",
             "--no-renames",

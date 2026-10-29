@@ -347,7 +347,7 @@ RSpec.describe Crystalball do
         "lib/loader.rb",
         "lib/producer.rb",
       )
-      expect(mapping["worker_specs"]).to eq([[paths[:second], paths[:first]]])
+      expect(mapping["worker_specs"].sole).to contain_exactly(*paths.values)
       expect(mapping["dependencies"][paths[:second]]).not_to include("lib/producer.rb")
       loader = "#{directory}/lib/producer.rb"
       File.write(loader, File.read(loader).sub('"second" => "good"', '"second" => "broken"'))
@@ -468,6 +468,43 @@ RSpec.describe Crystalball do
       )
       expect(mapping.fetch("shared_globs")).to eq(["frontend/pretty-text/**/*.js"])
 
+      %w[multisite retry].each do |name|
+        File.write(
+          "#{output_directory}/worker-#{name}.json",
+          JSON.generate(
+            worker.merge(
+              identity: "multisite",
+              multisite_only: name == "multisite",
+              dependencies: {
+                "spec/example_spec.rb" => ["lib/#{name}.rb"],
+              },
+            ),
+          ),
+        )
+      end
+      output, status =
+        Open3.capture2e(
+          {
+            "GITHUB_SHA" => revision,
+            "COLLECT_RSPEC_MAPPING" => nil,
+            "RSPEC_SELECTION_AUDIT" => nil,
+            "RUBYOPT" => nil,
+          },
+          "ruby",
+          Rails.root.join("script/ci/rspec_selection.rb").to_s,
+          "merge",
+          chdir: directory,
+        )
+      expect(status.success?).to eq(true), output
+      mapping = JSON.parse(File.read("#{output_directory}/mapping.json"))
+      expect(mapping.fetch("worker_specs")).to eq(Array.new(3) { ["spec/example_spec.rb"] })
+      expect(mapping.fetch("dependencies").fetch("spec/example_spec.rb")).to contain_exactly(
+        "lib/first.rb",
+        "lib/second.rb",
+        "lib/multisite.rb",
+        "lib/retry.rb",
+      )
+
       File.delete("#{output_directory}/worker-second.json")
       output, status =
         Open3.capture2e(
@@ -524,6 +561,86 @@ RSpec.describe Crystalball do
         expect(status.success?).to eq(false)
         expect(output).to include("Incomplete RSpec mapping")
       end
+    end
+  end
+
+  it "runs whole affected workers without moving mandatory specs into skipped slots" do
+    Dir.mktmpdir do |directory|
+      FileUtils.mkdir_p("#{directory}/lib")
+      FileUtils.mkdir_p("#{directory}/spec")
+      FileUtils.mkdir_p("#{directory}/tmp")
+      File.symlink(Rails.root.join("lib/turbo_tests"), "#{directory}/lib/turbo_tests")
+      File.symlink(Rails.root.join("db"), "#{directory}/db")
+      File.write(
+        "#{directory}/lib/turbo_tests.rb",
+        "Dir.chdir(#{Rails.root.to_s.inspect}) { require #{Rails.root.join("lib/turbo_tests.rb").to_s.inspect} }\n",
+      )
+      File.write("#{directory}/child.rb", <<~RUBY)
+        require "json"
+        require #{Rails.root.join("lib/turbo_tests/json_example.rb").to_s.inspect}
+        require #{Rails.root.join("lib/turbo_tests/json_rows_formatter.rb").to_s.inspect}
+      RUBY
+      files = %w[a b c d e f].map { |name| "spec/#{name}_spec.rb" }
+      files.each { |path| File.write("#{directory}/#{path}", <<~RUBY) }
+          RSpec.describe #{path.inspect} do
+            it "runs a regular example" do
+              File.write("seen-\#{ENV.fetch('TEST_ENV_NUMBER')}-#{File.basename(path)}", "regular")
+            end
+            it "runs a multisite example", type: :multisite do
+              File.write("seen-multisite-#{File.basename(path)}", "multisite")
+            end
+          end
+        RUBY
+      File.write(
+        "#{directory}/tmp/turbo_rspec_runtime.log",
+        files.each_with_index.map { |path, index| "#{path}:#{6 - index}\n" }.join,
+      )
+      File.write(
+        "#{directory}/selection.json",
+        JSON.generate(specs: files.first(2), cohort_specs: [files.second], full_multisite: true),
+      )
+
+      output, status =
+        Open3.capture2e(
+          {
+            "BUNDLE_GEMFILE" => Rails.root.join("Gemfile").to_s,
+            "PARALLEL_TEST_PROCESSORS" => "3",
+            "DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS" => nil,
+            "COLLECT_RSPEC_MAPPING" => nil,
+            "RSPEC_SELECTION_AUDIT" => nil,
+            "RUBYOPT" => nil,
+            "SPEC_OPTS" => "--options /dev/null --require #{directory}/child.rb",
+          },
+          "ruby",
+          Rails.root.join("bin/turbo_rspec").to_s,
+          "--use-runtime-info",
+          "--selection",
+          "selection.json",
+          "--execution-plan",
+          "execution.json",
+          *files,
+          chdir: directory,
+        )
+
+      expect(status.success?).to eq(true), output
+      execution = JSON.parse(File.read("#{directory}/execution.json"))
+      expect(execution.fetch("workers").transform_values(&:sort)).to eq(
+        "1" => [files.first],
+        "2" => [files.second, files.fifth],
+        "multisite" => files,
+      )
+      expect(execution.fetch("predicted_regular_specs")).to contain_exactly(
+        files.first,
+        files.second,
+        files.fifth,
+      )
+      expect(execution.fetch("predicted_multisite_specs")).to eq(files)
+      expect(Dir["#{directory}/seen-*"].map { |path| File.basename(path) }).to contain_exactly(
+        "seen-1-a_spec.rb",
+        "seen-2-b_spec.rb",
+        "seen-2-e_spec.rb",
+        *files.map { |path| "seen-multisite-#{File.basename(path)}" },
+      )
     end
   end
 end

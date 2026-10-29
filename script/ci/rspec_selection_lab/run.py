@@ -79,6 +79,9 @@ def git(workspace, *arguments):
 
 
 def snapshot(source, workspace, *, all_specs, ci_bootstrap, include_probes=True):
+    capacity = shutil.disk_usage(workspace.parent)
+    if capacity.free < max(8 * 1024**3, capacity.total * 0.15):
+        raise RuntimeError("Insufficient replay disk reserve, require 8 GiB and 15 percent free to preserve application behavior")
     workspace.mkdir()
     archive = workspace.parent / "source.tar"
     with archive.open("wb") as output:

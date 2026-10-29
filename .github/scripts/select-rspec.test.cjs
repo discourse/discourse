@@ -570,3 +570,16 @@ test("a deleted setup file still selects the multisite process", () => {
   assert.deepEqual(result.cohort_specs, []);
   assert.equal(result.full_multisite, true);
 });
+
+test("delegates system spec changes without expanding backend multisite", () => {
+  for (const changed of [
+    ["spec/system/example_spec.rb"],
+    ["frontend/discourse/app/example.gjs", "spec/system/example_spec.rb"],
+  ]) {
+    const result = select({ mapping, revision, inventory, changed });
+    assert.equal(result.mode, "subset");
+    assert.deepEqual(result.specs, []);
+    assert.deepEqual(result.cohort_specs, []);
+    assert.equal(result.full_multisite, false);
+  }
+});

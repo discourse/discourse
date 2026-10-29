@@ -63,6 +63,13 @@ cache warmers that start calling a producer after moving to a different worker.
 It assumes application state is isolated between workers, as required by the
 existing parallel runner.
 
+Regular worker assignments and retry assignments supply these cohorts. The
+initial multisite process does not seed additional regular workers, because its
+complete context is already retained by full multisite execution. Collection
+records its explicit inclusion tag before examples run to distinguish it from
+retries, which also lack a regular worker number. All processes still contribute
+dependencies, shared inputs and boot fingerprints.
+
 For example, main runs `[a_spec, c_spec]` in worker 1. `a_spec` calls
 `Producer.values` and fills a cache. `c_spec` finds that cache populated and never
 calls Producer. A later assignment puts `c_spec` with `b_spec` in worker 2, where

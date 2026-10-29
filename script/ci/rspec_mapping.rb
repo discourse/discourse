@@ -17,10 +17,12 @@ completed_groups = 0
 expected_groups = nil
 boot_lines = nil
 shared_globs = nil
+multisite_only = false
 RspecFileAccess.enable
 
 RSpec.configure do |config|
   config.before(:suite) do
+    multisite_only = config.inclusion_filter.rules[:type].to_s == "multisite"
     expected_groups =
       RSpec.world.example_groups.count do |group|
         !group.metadata[:skip] &&
@@ -95,6 +97,7 @@ RSpec.configure do |config|
         spec_order: spec_order,
         boot_lines: boot_lines || {},
         identity: ENV.fetch("TEST_ENV_NUMBER", "multisite"),
+        multisite_only:,
         files:
           RSpec.configuration.files_to_run.map do |path|
             path.delete_prefix("#{Dir.pwd}/").delete_prefix("./")
