@@ -185,9 +185,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       DoNotDisturbTiming,
     ].each { |c| copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true) }
 
-    [MutedUser, IgnoredUser].each do |c|
-      copy_model(c, is_a_user_model: true, skip_processing: true)
-    end
+    [MutedUser, IgnoredUser].each { |c| copy_model(c, is_a_user_model: true) }
 
     [
       UserAssociatedAccount,
@@ -216,11 +214,31 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       Group,
       mapping: @groups,
       skip_processing: true,
-      select_sql:
-        "SELECT #{Group.columns.map { |c| "\"#{c.name}\"" }.join(", ")} FROM groups WHERE automatic = false",
+      select_sql: merge_same_named_rows(Group, @groups, where: "automatic = false"),
     )
 
     copy_model(GroupUser, skip_if_merged: true)
+  end
+
+  # Maps source rows onto destination rows with the same case-insensitive name,
+  # because copying them would violate the unique name index. Returns the SQL
+  # that selects the remaining source rows for copying.
+  def merge_same_named_rows(klass, mapping, where: "TRUE")
+    existing_ids = klass.unscoped.pluck(:name, :id).to_h { |name, id| [name.downcase, id] }
+    merged_ids = []
+
+    source_raw_connection
+      .exec("SELECT id, name FROM #{klass.table_name} WHERE #{where}")
+      .each do |row|
+        next unless existing_id = existing_ids[row["name"].downcase]
+        mapping[row["id"].to_i] = existing_id
+        merged_ids << row["id"].to_i
+      end
+
+    sql = +"SELECT #{klass.columns.map { |c| "\"#{c.name}\"" }.join(", ")} FROM #{klass.table_name}"
+    sql << " WHERE #{where}"
+    sql << " AND id NOT IN (#{merged_ids.join(", ")})" if merged_ids.any?
+    sql
   end
 
   def category_exists(cat_row)
@@ -428,15 +446,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @sequences[Tag.sequence_name] = last_id + 1
 
     [TagUser, TopicTag, CategoryTag, CategoryTagStat].each { |k| copy_model(k) }
-    copy_model(TagGroup, mapping: @tag_groups)
-    [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each do |k|
-      copy_model(k, skip_processing: true)
-    end
+    copy_model(
+      TagGroup,
+      mapping: @tag_groups,
+      select_sql: merge_same_named_rows(TagGroup, @tag_groups),
+    )
+    [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each { |k| copy_model(k) }
 
     col_list = TagGroupPermission.columns.map { |c| "\"#{c.name}\"" }.join(", ")
     copy_model(
       TagGroupPermission,
-      skip_processing: true,
       select_sql:
         "SELECT #{col_list} FROM tag_group_permissions WHERE group_id NOT IN (#{@auto_group_ids.join(", ")})",
     )
@@ -451,12 +470,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     columns = Upload.columns.map(&:name)
     last_id = Upload.unscoped.maximum(:id) || 1
     sql = "COPY uploads (#{columns.map { |c| "\"#{c}\"" }.join(", ")}) FROM STDIN"
+    existing_ids_by_sha1 = Upload.unscoped.where.not(sha1: nil).pluck(:sha1, :id).to_h
 
     @raw_connection.copy_data(sql, @encoder) do
       source_raw_connection
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM uploads")
         .each do |row|
-          next if Upload.where(sha1: row["sha1"]).exists?
+          if existing_id = existing_ids_by_sha1[row["sha1"]]
+            @uploads[row["id"].to_s] = existing_id
+            next
+          end
 
           # make sure to get a backup with uploads then convert them to local.
           # when the backup is restored to a site with s3 uploads, it will upload the items
@@ -494,17 +517,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_everything_else
-    [
-      PostTiming,
-      UserArchivedMessage,
-      UnsubscribeKey,
-      GroupMention,
-      Bookmark,
-      CategoryUser,
-      UserUpload,
-    ].each { |k| copy_model(k, skip_processing: true) }
+    [PostTiming, UserArchivedMessage, UnsubscribeKey, GroupMention, Bookmark].each do |k|
+      copy_model(k, skip_processing: true)
+    end
 
-    [UserHistory, UserWarning, GroupArchivedMessage].each { |k| copy_model(k) }
+    [UserHistory, UserWarning, GroupArchivedMessage, CategoryUser, UserUpload].each do |k|
+      copy_model(k)
+    end
 
     copy_model(Notification, mapping: @notifications)
 
@@ -1071,6 +1090,95 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def process_category_tag_stat(x)
     return nil if CategoryTagStat.where(category_id: x["category_id"], tag_id: x["tag_id"]).exists?
+    x
+  end
+
+  def process_tag_group_membership(x)
+    if TagGroupMembership.where(tag_group_id: x["tag_group_id"], tag_id: x["tag_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_tag_group(x)
+    if CategoryTagGroup.where(
+         category_id: x["category_id"],
+         tag_group_id: x["tag_group_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_required_tag_group(x)
+    if CategoryRequiredTagGroup.where(
+         category_id: x["category_id"],
+         tag_group_id: x["tag_group_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_tag_group_permission(x)
+    if TagGroupPermission.where(tag_group_id: x["tag_group_id"], group_id: x["group_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_group_tag_notification_default(x)
+    if GroupTagNotificationDefault.where(group_id: x["group_id"], tag_id: x["tag_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_group_category_notification_default(x)
+    if GroupCategoryNotificationDefault.where(
+         group_id: x["group_id"],
+         category_id: x["category_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_muted_user(x)
+    return nil if MutedUser.where(user_id: x["user_id"], muted_user_id: x["muted_user_id"]).exists?
+    x
+  end
+
+  def process_ignored_user(x)
+    if IgnoredUser.where(user_id: x["user_id"], ignored_user_id: x["ignored_user_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_user_upload(x)
+    return nil if UserUpload.where(upload_id: x["upload_id"], user_id: x["user_id"]).exists?
+    x
+  end
+
+  def process_category_user(x)
+    return nil if CategoryUser.where(category_id: x["category_id"], user_id: x["user_id"]).exists?
+    x
+  end
+
+  def process_upload_reference(x)
+    if UploadReference.where(
+         upload_id: x["upload_id"],
+         target_type: x["target_type"],
+         target_id: x["target_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_search_data(x)
+    return nil if CategorySearchData.where(category_id: x["category_id"]).exists?
     x
   end
 
