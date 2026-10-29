@@ -81,8 +81,6 @@ class StubWireframeService extends Service {
   registerBeforeChange() {
     return () => {};
   }
-
-  toggleConditionsDetached() {}
 }
 
 function stubWireframe(owner, blockData, options) {

@@ -544,3 +544,38 @@ $hpad: 0.65em;
   padding: 0;
   margin: 0;
 }
+
+// A scrollbar that stays out of the way: a thin, transparent track whose thumb
+// shows only while the pointer is over the scroller, after a short delay so a
+// pass across the surface does not flash it. The sidebar and the editor panels
+// share it so their scrollers read the same.
+@mixin hover-revealed-scrollbar($width: var(--space-2)) {
+  --scrollbarBg: transparent;
+  --scrollbarThumbBg: var(--token-color-surface-hovered);
+  --scrollbarWidth: #{$width};
+  scrollbar-color: transparent var(--scrollbarBg);
+  transition: scrollbar-color 0.25s ease-in-out;
+  transition-delay: 0.5s;
+
+  &::-webkit-scrollbar {
+    width: var(--scrollbarWidth);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: calc(var(--scrollbarWidth) / 2);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &:hover {
+    scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+    transition-delay: 0s;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbarThumbBg);
+    }
+  }
+}

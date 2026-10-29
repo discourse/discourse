@@ -11,20 +11,6 @@ import {
 import type BlocksService from "discourse/services/blocks";
 
 /**
- * What the palette's Recent group offers before a layout has taught it
- * anything: the blocks a page is most likely to start with, in the order they
- * are usually reached for.
- */
-export const RECENT_FALLBACK: readonly string[] = [
-  "layout:stack",
-  "heading",
-  "paragraph",
-  "image",
-  "card",
-  "button-link",
-];
-
-/**
  * Within each group, the blocks worth reaching first, in that order. Blocks
  * not named here follow alphabetically, which is where a plugin's block lands.
  */
@@ -41,10 +27,7 @@ export const CATEGORY_LEADS: Readonly<
     "featured-topics",
     "featured-categories",
     "featured-tags",
-    "featured-badges",
     "featured-users",
-    "category-banner",
-    "tag-banner",
   ],
 };
 

@@ -1548,7 +1548,6 @@ function insertDispatch({
       args: {
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
-        paletteId: source.data.paletteId,
         targetKey: targetKey ?? containerKey,
         position: targetKey ? position : "inside",
         targetOutletName: outletName,
@@ -1602,7 +1601,6 @@ function insideDispatch({
       args: {
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
-        paletteId: source.data.paletteId,
         targetKey,
         position: "inside",
         targetOutletName: outletName,
@@ -1643,7 +1641,6 @@ function cellDropDispatch({
         cellKey: targetKey,
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
-        paletteId: source.data.paletteId,
       },
     };
   }

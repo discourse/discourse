@@ -189,33 +189,37 @@ module(
       // (with move buttons) renders.
       await click("[data-wf-append-child]");
 
-      // The move arrows on a horizontal container (a tabs strip) point
-      // left/right; only the selected block renders them.
+      // The move actions on a horizontal container (a tabs strip) read
+      // left/right; they live in the selected panel's strip menu.
+      const toolbar = document.querySelector(
+        ".wireframe-block-chrome.--selected > .wireframe-block-toolbar"
+      );
+      assert.true(!!toolbar, "the appended panel is selected");
+      await click(
+        ".wireframe-block-chrome.--selected > .wireframe-block-toolbar .wireframe-block-toolbar__more"
+      );
       assert
-        .dom("[title='Move left']")
-        .exists("a horizontal container shows a left move arrow");
+        .dom(".wireframe-toolbar-more-content [title='Move left']")
+        .exists("a horizontal container offers a left move");
       assert
-        .dom("[title='Move right']")
-        .exists("a horizontal container shows a right move arrow");
+        .dom(".wireframe-toolbar-more-content [title='Move right']")
+        .exists("a horizontal container offers a right move");
 
-      // The selected panel's toolbar badge reads the layout's palette variant
-      // plus a chip for its tab position.
-      const toolbar = document
-        .querySelector("[title='Move left']")
-        .closest(".wireframe-block-toolbar");
+      // The selected panel's strip reads the layout's palette variant plus a
+      // chip for its tab position.
       assert.strictEqual(
         toolbar
-          ?.querySelector(".wireframe-block-toolbar__handle span")
+          ?.querySelector(".wireframe-block-toolbar__name")
           ?.textContent.trim(),
         "Stack",
-        "the badge reads the effective layout variant"
+        "the strip reads the effective layout variant"
       );
       assert.strictEqual(
         toolbar
           ?.querySelector(".wireframe-block-toolbar__ordinal")
           ?.textContent.trim(),
         "Tab 2",
-        "the badge shows the tab position as a chip"
+        "the strip shows the tab position as a chip"
       );
     });
 

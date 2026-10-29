@@ -10,7 +10,7 @@ import {
  * The nested grid adds selection coverage without changing the drag targets.
  */
 export default apiInitializer((api) => {
-  api.renderBlocks("main-outlet-blocks", [
+  api.renderBlocks("homepage-blocks", [
     {
       block: Layout,
       args: { mode: "grid", columns: 3, rows: 1 },

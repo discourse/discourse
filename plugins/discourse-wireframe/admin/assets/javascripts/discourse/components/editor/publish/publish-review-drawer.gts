@@ -18,6 +18,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dCloseOnClickOutsideUntyped from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
+import { HOMEPAGE_OUTLET } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-outlets";
 import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
 import WireframeLayoutQueryService, {
   OUTLET_STATE,
@@ -89,9 +90,6 @@ type ThemeActionResult = {
   /** Error message returned when the action fails. */
   error?: string;
 };
-
-/** The outlet whose layout the homepage opt-in publishes as `/`. */
-const HOMEPAGE_OUTLET = "homepage-blocks";
 
 /**
  * The save-and-publish review surface: a right-docked drawer that consolidates

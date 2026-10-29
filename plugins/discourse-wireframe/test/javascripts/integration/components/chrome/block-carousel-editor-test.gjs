@@ -87,13 +87,13 @@ module(
       const dots = () => [
         ...document.querySelectorAll(".d-block-carousel__dot"),
       ];
-      assert.dom(dots()[0]).hasClass("is-active", "starts on the first slide");
+      assert.dom(dots()[0]).hasClass("--active", "starts on the first slide");
 
       await click(".d-block-carousel__nav--next", { detail: 1 });
 
       assert
         .dom(dots()[1])
-        .hasClass("is-active", "next pages to the second slide");
+        .hasClass("--active", "next pages to the second slide");
     });
 
     test("paging still works after inserting a slide between two others", async function (assert) {
@@ -123,12 +123,12 @@ module(
       await click(".d-block-carousel__nav--next", { detail: 1 });
       assert
         .dom(dots()[1])
-        .hasClass("is-active", "next pages to the inserted middle slide");
+        .hasClass("--active", "next pages to the inserted middle slide");
 
       await click(dots()[2], { detail: 1 });
       assert
         .dom(dots()[2])
-        .hasClass("is-active", "the last dot pages to the last slide");
+        .hasClass("--active", "the last dot pages to the last slide");
     });
   }
 );

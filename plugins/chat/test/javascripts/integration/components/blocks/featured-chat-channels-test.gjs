@@ -4,6 +4,7 @@ import BlockOutlet, {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
 import { resetBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -92,5 +93,14 @@ module("Integration | Blocks | chat featured-channels", function (hooks) {
 
     assert.dom(".d-block-featured-chat-channels__empty").exists();
     assert.dom(".d-block-featured-chat-channels__grid").doesNotExist();
+  });
+
+  test("is registered but hidden from the block palette", function (assert) {
+    const metadata = getBlockMetadata(FeaturedChatChannels);
+    assert.strictEqual(metadata.blockName, "chat:featured-channels");
+    assert.true(
+      metadata.paletteHidden,
+      "hidden until channels can be chosen from a picker"
+    );
   });
 });

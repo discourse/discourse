@@ -4,6 +4,7 @@ import BlockOutlet, {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
 import { resetBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -100,5 +101,14 @@ module("Integration | Blocks | chat channel-card", function (hooks) {
 
     assert.dom(".d-block-chat-channel-card__empty").exists();
     assert.dom(".d-block-chat-channel-card .chat-channel-card").doesNotExist();
+  });
+
+  test("is registered but hidden from the block palette", function (assert) {
+    const metadata = getBlockMetadata(ChatChannelCardBlock);
+    assert.strictEqual(metadata.blockName, "chat:channel-card");
+    assert.true(
+      metadata.paletteHidden,
+      "hidden until the channel can be chosen from a picker"
+    );
   });
 });

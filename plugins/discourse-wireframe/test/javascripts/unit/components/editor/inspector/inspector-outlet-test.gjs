@@ -47,10 +47,6 @@ class StubWireframeService extends Service {
     return false;
   }
 
-  get conditionsDetached() {
-    return false;
-  }
-
   isOutletRoot() {
     return this.#blockData?.isOutletRoot === true;
   }
@@ -80,8 +76,6 @@ class StubWireframeService extends Service {
   partLockForSelection() {
     return null;
   }
-
-  toggleConditionsDetached() {}
 
   // Surface the per-outlet section (rendered for an outlet root) reads. Safe
   // defaults: a default, editable, non-Git outlet with no unsaved edits; a test

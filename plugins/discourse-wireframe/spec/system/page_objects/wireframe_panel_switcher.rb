@@ -3,12 +3,14 @@
 module PageObjects
   module Components
     class WireframePanelSwitcher < PageObjects::Components::Base
+      SECTIONS = ".wireframe-panel-switcher__sections"
+
       def open_layers
-        find(".wireframe-panel-switcher__entry[aria-label='Layers']").click
+        select_section("outline")
       end
 
-      def toggle_collapsed
-        find(".wireframe-panel-switcher__collapse").click
+      def select_section(panel)
+        find("#{SECTIONS} .d-segmented-control__label:has(input[value='#{panel}'])").click
       end
 
       def resize_to_minimum
@@ -20,13 +22,8 @@ module PageObjects
       end
 
       def has_layers_panel?
-        has_css?(
-          ".wireframe-panel-switcher [role='tabpanel'] .panel-header",
-          exact_text: "Layers",
-        ) &&
-          has_css?(
-            ".wireframe-panel-switcher [role='tab'][aria-label='Layers'][aria-selected='true']",
-          )
+        has_css?("#{SECTIONS} input[value='outline']:checked") &&
+          has_css?(".wireframe-panel-switcher .panel-body .wireframe-outline")
       end
 
       def has_minimum_width?
@@ -41,27 +38,18 @@ module PageObjects
         end
       end
 
-      def has_collapsed_panel?
-        has_no_css?(".wireframe-panel-switcher [role='tabpanel']") &&
-          has_no_css?(".wireframe-rail-resizer--left") &&
-          has_no_css?(".wireframe-panel-switcher [aria-selected='true']") &&
-          has_css?(".wireframe-panel-switcher__collapse[aria-expanded='false']")
-      end
-
       def has_aligned_panel?
-        has_css?(".wireframe-panel-switcher") { |rail| rail.evaluate_script(<<~JS) }
+        has_css?(".wireframe-panel-switcher") { |panel| panel.evaluate_script(<<~JS) }
             (() => {
-              const strip = this.querySelector(".wireframe-panel-switcher__activity-bar").getBoundingClientRect();
-              const panel = this.querySelector(".wireframe-panel.--left").getBoundingClientRect();
+              const rect = this.getBoundingClientRect();
               const canvas = document.querySelector(".wireframe-canvas").getBoundingClientRect();
               const handle = document.querySelector(".wireframe-rail-resizer--left");
               const seam = handle.getBoundingClientRect();
-              return Math.abs(strip.right - panel.left) < 1 &&
-                Math.abs(panel.right - canvas.left) < 1 &&
-                Math.abs(panel.width - Number(handle.getAttribute("aria-valuenow"))) < 1 &&
-                Math.abs(panel.top - canvas.top) < 1 &&
-                Math.abs(panel.bottom - canvas.bottom) < 1 &&
-                Math.abs((seam.left + seam.right) / 2 - panel.right) < 1;
+              return Math.abs(rect.right - canvas.left) < 1 &&
+                Math.abs(rect.width - Number(handle.getAttribute("aria-valuenow"))) < 1 &&
+                Math.abs(rect.top - canvas.top) < 1 &&
+                Math.abs(rect.bottom - canvas.bottom) < 1 &&
+                Math.abs((seam.left + seam.right) / 2 - rect.right) < 1;
             })()
           JS
       end

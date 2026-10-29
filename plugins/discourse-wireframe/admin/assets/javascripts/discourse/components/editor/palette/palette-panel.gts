@@ -7,7 +7,7 @@ import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { type ModifierLike } from "@glint/template";
-import { BLOCK_CATEGORIES, type LayoutEntry } from "discourse/blocks/types";
+import { BLOCK_CATEGORIES } from "discourse/blocks/types";
 import type { BlockDisplayCategory } from "discourse/lib/blocks/-internals/display-metadata";
 import type A11yService from "discourse/services/a11y";
 import type BlocksService from "discourse/services/blocks";
@@ -18,12 +18,10 @@ import dDragAndDropSource, {
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import BlockRow from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-row";
-import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
 import {
   type BlockPaletteEntry,
   buildBlockPalette,
   compareWithinCategory,
-  RECENT_FALLBACK,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 import { buildPaletteDragGhost } from "discourse/plugins/discourse-wireframe/discourse/lib/palette-drag-ghost";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
@@ -31,9 +29,6 @@ import WireframeDragSessionService, {
   type PaletteDragPayload,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
-import WireframeRecentBlocksService, {
-  RECENT_BLOCKS_LIMIT,
-} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-recent-blocks";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 // `dAutoFocus` is a plain JS modifier with no Signature; Glint yields no
@@ -65,19 +60,17 @@ const SECTION_ORDER: readonly BlockDisplayCategory[] = [
 ];
 
 /**
- * Palette of registered blocks, shown in the left rail when the user
- * picks the "Palette" tab. One roving-focus listbox holds a Recent group of
- * compact tiles (what this layout inserted last), then every block as a row
- * under category section headers. Each row is a drag source for inserting a
- * fresh entry onto the canvas, and is also keyboard- and double-click
- * activatable to insert into the current selection.
+ * Palette of registered blocks, shown in the left panel's Add section. One
+ * roving-focus listbox holds every block as a row under category section
+ * headers. Each row is a drag source for inserting a fresh entry onto the
+ * canvas, and is also keyboard- and double-click activatable to insert into
+ * the current selection.
  *
  * Search comes first: the input takes focus when the panel opens and stays
  * the keyboard's home, with the arrow keys moving an active row and Enter
  * inserting it (the combobox shape the inserter menu uses). The term narrows
  * the list by a case-insensitive substring match against `displayName`,
- * registered block name, and `description`. It hides the Recent group while
- * set so matches are never listed twice.
+ * registered block name, and `description`.
  *
  * The block registry is frozen post-boot, so we read it once on
  * insertion and memoise the decorated rows via `@cached`.
@@ -97,9 +90,6 @@ export default class PalettePanel extends Component {
 
   /** Classifies the current insertion target. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
-
-  /** The blocks inserted most recently into this layout. */
-  @service declare wireframeRecentBlocks: WireframeRecentBlocksService;
 
   /** Provides the current insertion selection. */
   @service declare wireframeSelection: WireframeSelectionService;
@@ -185,40 +175,6 @@ export default class PalettePanel extends Component {
   }
 
   /**
-   * The Recent group, newest first: the blocks inserted last into this
-   * layout, topped up with the block types the layout uses most and then
-   * with the palette's defaults, so the group is full even for a fresh
-   * page. Limited to blocks the palette still lists. Empty while searching,
-   * so a match is never shown twice.
-   *
-   * @returns Palette entries for the Recent group.
-   */
-  get recentRows(): BlockPaletteEntry[] {
-    if (this.searchTerm.trim()) {
-      return [];
-    }
-    const seen = new Set<string>();
-    const rows: BlockPaletteEntry[] = [];
-    for (const id of [
-      ...this.wireframeRecentBlocks.ids,
-      ...this.#mostUsedPaletteIds(),
-      ...RECENT_FALLBACK,
-    ]) {
-      if (rows.length === RECENT_BLOCKS_LIMIT) {
-        break;
-      }
-      const row =
-        this.rows.find((candidate) => candidate.id === id) ??
-        this.rows.find((candidate) => candidate.blockName === id);
-      if (row && !seen.has(row.id)) {
-        seen.add(row.id);
-        rows.push(row);
-      }
-    }
-    return rows;
-  }
-
-  /**
    * The insert hint to show, or `null`. Backed by `_insertHintMessage`, but
    * gated on the selection still being the one the hint was about — the moment
    * the user changes selection (acting on the hint), it's stale and hides
@@ -295,7 +251,6 @@ export default class PalettePanel extends Component {
     this.wireframeBlockMutations.insertBlock({
       blockName: entry.blockName,
       defaultArgs: { ...entry.defaultArgs },
-      paletteId: entry.id,
       targetKey: selectedKey,
       position: selected.metadata?.isContainer ? "inside" : "after",
       targetOutletName: selected.outletName,
@@ -330,14 +285,14 @@ export default class PalettePanel extends Component {
   }
 
   /**
-   * Builds the native drag preview for a palette row or tile: a tile-shaped
-   * ghost with the sketch and the name, rendered into the isolated offscreen
-   * container so nothing around the source bleeds into the drag image.
+   * Builds the native drag preview for a palette row: a tile-shaped ghost with
+   * the sketch and the name, rendered into the isolated offscreen container so
+   * nothing around the source bleeds into the drag image.
    *
    * @param args - Drag preview elements.
    *   - `container` - The offscreen host the browser photographs; appended to
    *     `document.body` and removed after cleanup.
-   *   - `element` - The dragged row or tile.
+   *   - `element` - The dragged row.
    * @returns Cleanup that removes the ghost.
    */
   @action
@@ -347,56 +302,12 @@ export default class PalettePanel extends Component {
   }: {
     /** Offscreen host photographed by the browser. */
     container: HTMLElement;
-    /** Palette row or tile being dragged. */
+    /** Palette row being dragged. */
     element: HTMLElement;
   }): () => void {
     const ghost = buildPaletteDragGhost(element);
     container.append(ghost);
     return () => ghost.remove();
-  }
-
-  /**
-   * Palette choice ids used across the editable outlets, most used first. The
-   * implicit root layout that wraps an outlet's content is not a choice the
-   * author made, so counting starts at its children.
-   *
-   * @returns Stable choice ids ordered by how often the layout uses them.
-   */
-  #mostUsedPaletteIds(): string[] {
-    const counts = new Map<string, number>();
-    const count = (entries: readonly LayoutEntry[]) => {
-      for (const entry of entries) {
-        const blockName = this.wireframeLayoutQuery.blockNameOf(entry);
-        if (blockName) {
-          const choices = this.rows.filter(
-            (candidate) => candidate.blockName === blockName
-          );
-          const paletteId =
-            choices.find((candidate) =>
-              Object.entries(candidate.defaultArgs).every(
-                ([name, value]) => entry.args?.[name] === value
-              )
-            )?.id ??
-            choices[0]?.id ??
-            blockName;
-          counts.set(paletteId, (counts.get(paletteId) ?? 0) + 1);
-        }
-        if (entry.children?.length) {
-          count(entry.children);
-        }
-      }
-    };
-    for (const outletName of this.wireframeLayoutQuery.editableOutlets) {
-      const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
-      if (!layout) {
-        continue;
-      }
-      const [root] = layout;
-      count(layout.length === 1 && root?.children ? root.children : layout);
-    }
-    return [...counts.entries()]
-      .sort(([nameA, a], [nameB, b]) => b - a || nameA.localeCompare(nameB))
-      .map(([name]) => name);
   }
 
   /**
@@ -448,40 +359,13 @@ export default class PalettePanel extends Component {
           {{dRovingFocus
             focusStrategy="active-descendant"
             controllerElement=this.searchInput
-            itemSelector=".wireframe-block-tile, .wireframe-block-row"
+            itemSelector=".wireframe-block-row"
             itemsKey=this.searchTerm
             entryFocus="none"
             activeClass="--active"
             onActivate=this.activateRow
           }}
         >
-          {{#if this.recentRows.length}}
-            <div class="wireframe-palette__section-header">
-              {{i18n "wireframe.palette.recent"}}
-            </div>
-            <div class="wireframe-palette__recent">
-              {{#each this.recentRows key="id" as |row|}}
-                <BlockTile
-                  @activateOn="dblclick"
-                  @entry={{row}}
-                  @onActivate={{this.insertFromPalette}}
-                  {{dDragAndDropSource
-                    type="wf-palette-block"
-                    data=(hash
-                      blockName=row.blockName
-                      defaultArgs=row.defaultArgs
-                      paletteId=row.id
-                      displayName=row.displayName
-                    )
-                    dragPreview=this.renderDragPreview
-                    dragPreviewOffset=(hash x="1rem" y="0.5rem")
-                    onDragStart=this.handleDragStart
-                    onDragEnd=this.wireframeDragSession.endDrag
-                  }}
-                />
-              {{/each}}
-            </div>
-          {{/if}}
           {{#each this.filteredRowsByCategory key="category" as |section|}}
             <div class="wireframe-palette__section-header">
               {{i18n (concat "blocks.categories." section.category)}}

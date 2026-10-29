@@ -10,7 +10,9 @@ import { setupBlockLayoutDraftsStub } from "../../../helpers/stub-block-layout-d
 import { engineOf, queryOf } from "../../../helpers/wireframe-peers";
 
 const OUTLET = "homepage-blocks";
-const DUPLICATE = `.wireframe-block-toolbar__btn:has(.d-icon-copy)`;
+const MORE = ".wireframe-block-toolbar__more";
+const DUPLICATE =
+  ".wireframe-toolbar-more-content [data-toolbar-action='duplicate']";
 
 function outletChildren(editor) {
   return queryOf(editor).readResolvedLayout(OUTLET)?.[0]?.children ?? [];
@@ -45,7 +47,7 @@ module(
       this.editor.exit();
     });
 
-    test("the Duplicate button clones the block once", async function (assert) {
+    test("the Duplicate menu item clones the block once", async function (assert) {
       // Wrap in a block-chrome so the editor's document mouseup handler treats
       // the click as in-scope and doesn't deselect before the action runs.
       await render(
@@ -61,7 +63,8 @@ module(
         </template>
       );
 
-      assert.dom(DUPLICATE).exists("the Duplicate button renders");
+      await click(MORE);
+      assert.dom(DUPLICATE).exists("the Duplicate item renders in the menu");
 
       await click(DUPLICATE);
       assert.strictEqual(

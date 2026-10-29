@@ -22,7 +22,6 @@ import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/comp
 import OutletThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/outlet-thumbnail";
 import { layoutPaletteDisplayName } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
-import type WireframeConditionsPanelService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-conditions-panel";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
@@ -56,8 +55,8 @@ const FKAlert = FKAlertUntyped as unknown as ComponentLike<{
 export default class InspectorPanel extends Component {
   @service declare blocks: BlocksService;
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
-  @service declare wireframeConditionsPanel: WireframeConditionsPanelService;
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
   @service declare wireframeRail: WireframeRailService;
   @service declare wireframeSelection: WireframeSelectionService;
 
@@ -311,11 +310,6 @@ export default class InspectorPanel extends Component {
     this.wireframeRail.inspectorField = null;
   }
 
-  @action
-  toggleDetachConditions() {
-    this.wireframeConditionsPanel.toggleDetached();
-  }
-
   <template>
     {{#if this.hasMultiSelection}}
       <div class="wireframe-inspector__multi">
@@ -431,30 +425,7 @@ export default class InspectorPanel extends Component {
             @key="conditions"
             @label={{i18n "wireframe.inspector.tab_conditions"}}
           >
-            <div class="wireframe-inspector__conditions-header">
-              <DButton
-                class="btn-flat wireframe-inspector__detach-btn"
-                @action={{this.toggleDetachConditions}}
-                @icon={{if
-                  this.wireframeConditionsPanel.detached
-                  "down-left-and-up-right-to-center"
-                  "up-right-and-down-left-from-center"
-                }}
-                @label={{if
-                  this.wireframeConditionsPanel.detached
-                  "wireframe.inspector.conditions.redock_panel"
-                  "wireframe.inspector.conditions.detach_panel"
-                }}
-                @title="wireframe.inspector.conditions.detach_panel"
-              />
-            </div>
-            {{#if this.wireframeConditionsPanel.detached}}
-              <p class="wireframe-inspector__conditions-stub">
-                {{i18n "wireframe.inspector.conditions.detached_stub"}}
-              </p>
-            {{else}}
-              <ConditionsTree />
-            {{/if}}
+            <ConditionsTree />
           </tabs.Tab>
         {{/unless}}
         {{#unless this.isPart}}

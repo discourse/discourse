@@ -40,13 +40,11 @@ module(
         "video",
         "embed",
         "head",
+        "featured-badges",
+        "category-banner",
+        "tag-banner",
       ];
       const palette = buildBlockPalette(blocks);
-      this.owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
-      const recentBlocks = this.owner.lookup("service:wireframe-recent-blocks");
-      for (const name of deferred) {
-        recentBlocks.record(name);
-      }
 
       await render(<template><PalettePanel /></template>);
 
@@ -58,7 +56,7 @@ module(
         );
         assert
           .dom(`[data-block-name='${name}']`)
-          .doesNotExist(`${name} is absent from palette groups and recents`);
+          .doesNotExist(`${name} is absent from the palette groups`);
       }
 
       await fillIn(".wireframe-palette__search", "CTA");
@@ -75,9 +73,9 @@ module(
       );
       for (const name of [
         "topic-card",
-        "featured-badges",
-        "category-banner",
-        "tag-banner",
+        "featured-categories",
+        "featured-tags",
+        "featured-users",
       ]) {
         assert.true(
           palette.some((entry) => entry.blockName === name),
@@ -200,7 +198,7 @@ module(
       ].map((el) => el.textContent.trim());
       assert.deepEqual(
         headers,
-        ["Recent", "Layout", "Text", "Media", "Cards & actions", "Community"],
+        ["Layout", "Text", "Media", "Cards & actions", "Community"],
         "structure first, the rest in the declared order, no invented group"
       );
     });
@@ -223,57 +221,6 @@ module(
       assert.deepEqual(names.slice(0, 3), ["heading", "paragraph", "callout"]);
     });
 
-    test("offers the default blocks as Recent until the layout has taught it anything", async function (assert) {
-      await render(<template><PalettePanel /></template>);
-
-      const recentIds = [
-        ...document.querySelectorAll(
-          ".wireframe-palette__recent .wireframe-block-tile"
-        ),
-      ].map((el) => el.dataset.paletteId);
-      assert.deepEqual(recentIds.slice(0, 2), ["layout:stack", "heading"]);
-      assert.strictEqual(recentIds.length, 6, "the group is full");
-    });
-
-    test("tops Recent up with the block types the layout uses most", async function (assert) {
-      this.owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
-      this.owner.lookup("service:wireframe-recent-blocks").record("icon");
-      this.owner
-        .lookup("service:wireframe-recent-blocks")
-        .record("button-link");
-      stubService(this.owner, "wireframe-layout-query", {
-        editableOutlets: ["homepage-blocks"],
-        // The root layout wraps the content; only its children count.
-        readResolvedLayout: () => [
-          {
-            block: "layout",
-            children: [
-              { block: "callout" },
-              { block: "list", children: [{ block: "callout" }] },
-              { block: "quote" },
-            ],
-          },
-        ],
-        blockNameOf: (entry) => entry.block,
-        findEntryAndOutletSync: () => null,
-        isGridContainer: () => false,
-        isGridCellEntry: () => false,
-      });
-
-      await render(<template><PalettePanel /></template>);
-
-      const recentNames = [
-        ...document.querySelectorAll(
-          ".wireframe-palette__recent .wireframe-block-tile"
-        ),
-      ].map((el) => el.dataset.blockName);
-      assert.deepEqual(
-        recentNames,
-        ["button-link", "callout", "layout", "heading", "paragraph", "image"],
-        "inserted first, then most used, then defaults, skipping hidden blocks"
-      );
-    });
-
     test("each row carries the block's description", async function (assert) {
       await render(<template><PalettePanel /></template>);
 
@@ -281,41 +228,6 @@ module(
       assert
         .dom(".wireframe-block-row .wireframe-block-row__description")
         .hasAnyText("the description is on the row, not hover-only");
-    });
-
-    test("lists the blocks inserted most recently first, newest at the top", async function (assert) {
-      this.owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
-      const recent = this.owner.lookup("service:wireframe-recent-blocks");
-      recent.record("paragraph");
-      recent.record("heading");
-
-      await render(<template><PalettePanel /></template>);
-
-      const headers = [
-        ...document.querySelectorAll(".wireframe-palette__section-header"),
-      ].map((el) => el.textContent.trim());
-      assert.strictEqual(headers[0], "Recent");
-      const recentNames = [
-        ...document.querySelectorAll(
-          ".wireframe-palette__recent .wireframe-block-tile"
-        ),
-      ].map((el) => el.dataset.blockName);
-      assert.deepEqual(
-        recentNames.slice(0, 2),
-        ["heading", "paragraph"],
-        "recent blocks are compact tiles, newest first"
-      );
-      assert
-        .dom(".wireframe-block-row[data-block-name='heading']")
-        .exists("a recent block still appears in its category too");
-
-      await fillIn(".wireframe-palette__search", "heading");
-      assert
-        .dom(".wireframe-palette__section-header")
-        .doesNotIncludeText("Recent", "the group hides while searching");
-      assert
-        .dom(".wireframe-palette__recent")
-        .doesNotExist("so a match is listed once");
     });
 
     test("arrowing down from the search marks a row active and Enter inserts it", async function (assert) {
@@ -380,12 +292,10 @@ module(
         {
           blockName: lastInsert?.blockName,
           defaultArgs: lastInsert?.defaultArgs,
-          paletteId: lastInsert?.paletteId,
         },
         {
           blockName: "layout",
           defaultArgs: { mode: "grid" },
-          paletteId: "layout:grid",
         }
       );
     });

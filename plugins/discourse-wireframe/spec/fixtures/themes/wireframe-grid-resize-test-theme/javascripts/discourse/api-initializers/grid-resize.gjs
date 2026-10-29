@@ -3,7 +3,7 @@ import Layout from "discourse/blocks/builtin/layout";
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer((api) => {
-  api.renderBlocks("main-outlet-blocks", [
+  api.renderBlocks("homepage-blocks", [
     {
       block: Layout,
       args: {
