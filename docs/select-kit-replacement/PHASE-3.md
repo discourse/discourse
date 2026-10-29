@@ -81,6 +81,18 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       - To reproduce, render `BreadCrumbs` on a lazy site with a response that returns the
         children and their parent as an ancestor, then count `/categories/search` requests on
         opening the subcategory drop.
+    - ☐ **Float-kit: a closing menu takes focus back from a menu opened after it.**
+      - `DMenuInstance.close` (`float-kit/lib/d-menu-instance.ts`) waits for the closing
+        animation, then focuses the trigger whenever the caller asked for it, as Escape does. It
+        never checks whether focus has moved on in the meantime; it checks that only when the
+        caller didn't ask.
+      - Pressing Escape on one breadcrumb drop and opening the other within about 150 ms closes
+        the new one. Letters typed next reach the global keyboard shortcuts; in a dev-site test
+        that navigated to `/latest`.
+      - Fix in float-kit: after the animation, return focus only if it is still unowned or inside
+        the closed menu.
+      - To reproduce, on a category page open the subcategory drop, press Escape, and at once
+        open the category drop and type.
 - ☐ **Tag recipe rework**, the follow-up to the category rework: `cleanTagName` and
   `sortTagRows` in `lib/tag-source.ts` copy select-kit's `tag-utils` service
   (`createContentFromInput`, `sortSearchResults`); the tag filter draws its own caret from the
