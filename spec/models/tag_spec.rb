@@ -39,6 +39,15 @@ RSpec.describe Tag do
       expect(event[:params].first).to eq(tag)
     end
 
+    it "says who created the tag" do
+      admin = Fabricate(:admin)
+      tag.created_by = admin
+
+      event = DiscourseEvent.track(:tag_created) { tag.save! }
+
+      expect(event[:params].last).to eq(acting_user: admin)
+    end
+
     it "prevents case-insensitive duplicates" do
       Fabricate.build(:tag, name: "hello").save!
       expect { Fabricate.build(:tag, name: "hElLo").save! }.to raise_error(

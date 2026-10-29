@@ -904,6 +904,15 @@ RSpec.describe User do
       expect(event[:params].first).to eq(user)
     end
 
+    it "says who created the account, nil when the code didn't" do
+      admin = Fabricate(:admin)
+      user.created_by = admin
+
+      event = DiscourseEvent.track(:user_created) { user.save! }
+
+      expect(event[:params].last).to eq(acting_user: admin)
+    end
+
     context "with after_save" do
       before { user.save! }
 
@@ -2058,7 +2067,7 @@ RSpec.describe User do
           .track_events(:user_updated) { user.update!(uploaded_avatar_id: avatar.id) }
           .first
 
-      expect(event[:params]).to eq([user, %w[uploaded_avatar_id]])
+      expect(event[:params]).to eq([user, %w[uploaded_avatar_id], { acting_user: nil }])
     end
   end
 
@@ -2452,6 +2461,19 @@ RSpec.describe User do
       expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
       expect(group_history.acting_user).to eq(Discourse.system_user)
       expect(group_history.target_user).to eq(user)
+    end
+
+    it "reports the system user as the actor of the membership event" do
+      user = Fabricate(:user, active: true, email: "foo@bar.com")
+      email_token = Fabricate(:email_token, user:)
+
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) { EmailToken.confirm(email_token.token) }
+
+      expect(events).to include(
+        event_name: :user_added_to_group,
+        params: [user, group, { automatic: false, acting_user: Discourse.system_user }],
+      )
     end
 
     it "is automatically added to a group when the email matches the SSO record" do
@@ -4260,6 +4282,18 @@ RSpec.describe User do
   describe "#silence_reason" do
     before { user.update!(silenced_till: 1.day.from_now) }
 
+    it "ignores the log of a silence that was lifted since" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "old reason",
+      )
+      Fabricate(:user_history, action: UserHistory.actions[:unsilence_user], target_user: user)
+
+      expect(user.silence_reason).to be_nil
+    end
+
     it "returns only the first line when details contain a message body" do
       Fabricate(
         :user_history,
@@ -4329,6 +4363,18 @@ RSpec.describe User do
 
   describe "#suspend_reason" do
     before { user.update!(suspended_till: 1.day.from_now) }
+
+    it "ignores the log of a suspension that was lifted since" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        target_user: user,
+        details: "old reason",
+      )
+      Fabricate(:user_history, action: UserHistory.actions[:unsuspend_user], target_user: user)
+
+      expect(user.suspend_reason).to be_nil
+    end
 
     it "returns sanitized suspend reason" do
       Fabricate(

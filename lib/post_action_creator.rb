@@ -2,7 +2,8 @@
 
 class PostActionCreator
   class CreateResult < PostActionResult
-    attr_accessor :post_action, :reviewable, :reviewable_score
+    # `already_existed`: a concurrent request performed the same action first, so this one created nothing.
+    attr_accessor :post_action, :reviewable, :reviewable_score, :already_existed
   end
 
   # Shortcut methods for easier invocation
@@ -162,6 +163,7 @@ class PostActionCreator
       # If the user already performed this action, it's probably due to a different browser tab
       # or non-debounced clicking. We can ignore.
       result.success = true
+      result.already_existed = true
       result.post_action =
         PostAction.find_by(
           user: @created_by,
@@ -257,18 +259,26 @@ class PostActionCreator
         @post_action_type_id,
         Post.hidden_reasons[:flag_threshold_reached],
         custom_message: :queued_by_staff,
+        acting_user: @created_by,
       )
       return
     end
 
+    # Staff taking action also pass the trusted spam flagger check.
+    auto_actor = @take_action ? @created_by : Discourse.system_user
+
     if trusted_spam_flagger?
-      @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
+      @post.hide!(
+        @post_action_type_id,
+        Post.hidden_reasons[:flagged_by_tl3_user],
+        acting_user: auto_actor,
+      )
       return
     end
 
     score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
     if score >= Reviewable.score_required_to_hide_post || @take_action
-      @post.hide!(@post_action_type_id)
+      @post.hide!(@post_action_type_id, acting_user: auto_actor)
     end
   end
 
@@ -306,7 +316,17 @@ class PostActionCreator
         .first
 
     if post_action
-      post_action.recover!
+      # Only the request that revives it reports it: a concurrent revival finds it already live.
+      revived =
+        PostAction
+          .with_deleted
+          .where(id: post_action.id)
+          .where.not(deleted_at: nil)
+          .update_all(deleted_at: nil, deleted_by_id: nil) == 1
+      raise ActiveRecord::RecordNotUnique.new("post action already revived") if !revived
+
+      post_action.assign_attributes(deleted_at: nil, deleted_by_id: nil)
+      post_action.clear_attribute_changes(%i[deleted_at deleted_by_id])
       action_attrs.each { |attr, val| post_action.public_send("#{attr}=", val) }
       post_action.save
     else
@@ -316,23 +336,18 @@ class PostActionCreator
       end
     end
 
-    if post_action
-      case @post_action_type_id
-      when *@post_action_type_view.notify_flag_type_ids
-        DiscourseEvent.trigger(:flag_created, post_action, self)
-      when @post_action_type_view.types[:like]
+    case @post_action_type_id
+    when *@post_action_type_view.notify_flag_type_ids
+      DiscourseEvent.trigger(:flag_created, post_action, self)
+    when @post_action_type_view.types[:like]
+      # A like that lost a race with a concurrent one fails validation and was never saved.
+      if post_action.persisted? && post_action.errors.empty?
         DiscourseEvent.trigger(:like_created, post_action, self)
+        GivenDailyLike.increment_for(@created_by.id)
       end
     end
 
-    if @post_action_type_id == @post_action_type_view.types[:like]
-      GivenDailyLike.increment_for(@created_by.id)
-    end
-
     post_action
-  rescue ActiveRecord::RecordNotUnique
-    # can happen despite being .create
-    PostAction.where(where_attrs).first
   end
 
   def create_message_creator

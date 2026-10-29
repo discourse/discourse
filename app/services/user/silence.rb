@@ -27,11 +27,15 @@ class User::Silence
 
   options { attribute :raise_on_failure, :boolean, default: false }
 
-  model :user
-  policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
-  model :users
-  policy :can_silence_all_users
-  step :silence
+  # Two concurrent silences of the same user would both pass the check, so the second one waits and sees
+  # the first.
+  lock(:user_id) do
+    model :user
+    policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
+    model :users
+    policy :can_silence_all_users
+    step :silence
+  end
   model :post, optional: true
   step :perform_post_action
 
@@ -42,7 +46,7 @@ class User::Silence
   end
 
   def fetch_users(user:, params:)
-    [user, *User.where(id: params.other_user_ids.to_a.uniq).to_a]
+    [user, *User.where(id: params.other_user_ids.to_a.uniq).where.not(id: user.id).to_a]
   end
 
   def can_silence_all_users(guardian:, users:)

@@ -260,4 +260,132 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::ApplyPatch do
       errors: ['Classify post references unknown AI agent client_id "missing-agent"'],
     )
   end
+
+  context "with deprecated node versions" do
+    before do
+      register_versioned_workflow_nodes(
+        "action:patch_replaced_test",
+        v1_deprecation: {
+          replaced_by: ["action:log"],
+        },
+        v1_upgrade: ->(parameters) do
+          { type: "action:log", parameters: { "message" => parameters["name"] } }
+        end,
+      )
+      register_versioned_workflow_nodes(
+        "action:patch_superseded_test",
+        v1_deprecation: {
+          superseded_by: "2.0",
+        },
+      )
+      workflow.update!(
+        nodes: [
+          saved_node("replaced-1", "action:patch_replaced_test", "1.0"),
+          saved_node("superseded-1", "action:patch_superseded_test", "1.0"),
+          saved_node("current-1", "action:patch_superseded_test", "2.0"),
+        ],
+      )
+    end
+
+    def saved_node(id, type, type_version)
+      {
+        "id" => id,
+        "type" => type,
+        "typeVersion" => type_version,
+        "name" => id.titleize,
+        "parameters" => {
+          "name" => "Hello",
+        },
+      }
+    end
+
+    def apply(*operations)
+      described_class.call(workflow:, operations:, persist: false, user: admin)
+    end
+
+    def node(result, id)
+      result[:nodes].find { |node| node["id"] == id }
+    end
+
+    it "upgrades a deprecated node with the shared upgrader" do
+      result = apply({ op: "upgrade_node", node_id: "replaced-1" })
+
+      expect(node(result, "replaced-1")).to include(
+        "type" => "action:log",
+        "typeVersion" => DiscourseWorkflows::Registry.latest_version("action:log"),
+        "name" => "Replaced 1",
+        "parameters" => {
+          "message" => "Hello",
+        },
+      )
+    end
+
+    it "refuses to upgrade a node that is not deprecated" do
+      result = apply({ op: "upgrade_node", node_id: "current-1" })
+
+      expect(result).to include(valid: false, errors: ["Node Current 1 is not deprecated"])
+    end
+
+    it "refuses to upgrade a node its upgrade can't move" do
+      register_versioned_workflow_nodes(
+        "action:patch_stuck_test",
+        v1_deprecation: {
+          replaced_by: ["action:log"],
+        },
+        v1_upgrade: ->(_parameters) { nil },
+      )
+      workflow.update!(nodes: [saved_node("stuck-1", "action:patch_stuck_test", "1.0")])
+
+      result = apply({ op: "upgrade_node", node_id: "stuck-1" })
+
+      expect(result).to include(
+        valid: false,
+        errors: ["Node Stuck 1 can't be upgraded automatically"],
+      )
+    end
+
+    it "refuses to edit a replaced node until it is upgraded" do
+      edit = { op: "update_node_parameters", node_id: "replaced-1", parameters: { "x" => 1 } }
+
+      expect(apply(edit)).to include(
+        valid: false,
+        errors: ["Node Replaced 1 was replaced, upgrade it with upgrade_node first"],
+      )
+      expect(
+        node(apply({ op: "upgrade_node", node_id: "replaced-1" }, edit), "replaced-1"),
+      ).to include("parameters" => { "message" => "Hello", "x" => 1 })
+    end
+
+    it "edits a superseded node, which keeps its parameters in the newer version" do
+      result =
+        apply({ op: "update_node_parameters", node_id: "superseded-1", parameters: { "x" => 1 } })
+
+      expect(node(result, "superseded-1")).to include(
+        "typeVersion" => "1.0",
+        "parameters" => {
+          "name" => "Hello",
+          "x" => 1,
+        },
+      )
+    end
+
+    it "refuses to add a deprecated version" do
+      result =
+        apply(
+          {
+            op: "add_node",
+            node: {
+              type: "action:patch_superseded_test",
+              typeVersion: "1.0",
+              name: "New",
+            },
+          },
+        )
+
+      expect(result).to include(
+        valid: false,
+        errors: ["action:patch_superseded_test 1.0 is deprecated, add the latest version instead"],
+      )
+    end
+  end
 end

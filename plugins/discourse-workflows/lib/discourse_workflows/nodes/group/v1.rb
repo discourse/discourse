@@ -5,6 +5,7 @@ module DiscourseWorkflows
     module Group
       class V1 < NodeType
         OPERATIONS = %w[add remove get check_membership].freeze
+        DEFAULT_OPERATION = "add"
         GROUP_ACTION_SCHEMA =
           Schema.merge(
             Schema::GROUP_SCHEMA,
@@ -52,7 +53,7 @@ module DiscourseWorkflows
               type: :options,
               required: true,
               options: OPERATIONS,
-              default: "add",
+              default: DEFAULT_OPERATION,
               ui: {
                 expression: true,
               },
@@ -102,22 +103,45 @@ module DiscourseWorkflows
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "groups"
-            ::Group
-              .order(:name)
-              .pluck(:id, :name)
-              .select { |_, name| context.matches_filter?(name) }
-              .map { |id, name| { id:, name: } }
+        deprecated(
+          superseded_by: "2.0",
+          replaced_by: %w[action:add_user_to_group action:remove_user_from_group],
+          description_key: "discourse_workflows.node_descriptions.action:group_v1",
+        ) do |parameters|
+          membership_parameters = parameters.slice("username", "group_id", "actor_username")
+
+          # An operation set by an expression can't be upgraded automatically.
+          case parameters.fetch("operation", DEFAULT_OPERATION)
+          when "add"
+            {
+              type: "action:add_user_to_group",
+              parameters: membership_parameters.merge(parameters.slice("set_primary_group")),
+            }
+          when "remove"
+            { type: "action:remove_user_from_group", parameters: membership_parameters }
+          when "get", "check_membership"
+            {
+              type: "action:group",
+              version: "2.0",
+              parameters: parameters.except("set_primary_group"),
+            }
           end
+        end
+
+        def self.load_options_context(context)
+          load_group_options(context)
         end
 
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.map.with_index do |item, item_index|
               config = {
-                "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "add"),
+                "operation" =>
+                  exec_ctx.get_node_parameter(
+                    "operation",
+                    item_index,
+                    default: self.class::DEFAULT_OPERATION,
+                  ),
                 "username" => exec_ctx.get_node_parameter("username", item_index),
                 "group_id" => exec_ctx.get_node_parameter("group_id", item_index),
                 "set_primary_group" =>
@@ -142,7 +166,7 @@ module DiscourseWorkflows
           guardian = actor.guardian
           guardian.ensure_can_see_group!(group)
 
-          return { group: serialize_group(group, guardian) } if config["operation"] == "get"
+          return { group: serialize_group(group, guardian:) } if config["operation"] == "get"
 
           guardian.ensure_can_edit_group!(group)
 
@@ -152,10 +176,10 @@ module DiscourseWorkflows
 
           case config["operation"]
           when "remove"
-            changed = group.remove(user)
+            changed = group.remove(user, acting_user: actor)
             logger.log_remove_user_from_group(user)
           else
-            changed = GroupManager.new(group).add([user.id]).present?
+            changed = GroupManager.new(group).add([user.id], acting_user: actor).present?
             logger.log_add_user_to_group(user)
             changed = set_primary_group(user, group, guardian) || changed if config[
               "set_primary_group"
@@ -163,7 +187,7 @@ module DiscourseWorkflows
           end
 
           {
-            group: serialize_group(group.reload, guardian),
+            group: serialize_group(group.reload, guardian:),
             user: serialize_user(user.reload, guardian:),
             changed:,
           }
@@ -195,10 +219,6 @@ module DiscourseWorkflows
             item.fetch("json", {}).merge("group_membership" => membership_data),
             paired_item: exec_ctx.paired_item_for(item),
           )
-        end
-
-        def serialize_group(group, guardian)
-          serialize_record(group, WebHookGroupSerializer, scope: guardian)
         end
       end
     end

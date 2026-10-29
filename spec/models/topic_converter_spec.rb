@@ -206,6 +206,113 @@ RSpec.describe TopicConverter do
         expect(Notification.exists?(admin_notification.id)).to eq(true)
       end
     end
+
+    describe "topic_converted_to_public_topic event" do
+      it "triggers once the conversion is committed, with the acting user" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq(
+          [[first_post.topic, { acting_user: admin }]],
+        )
+      end
+
+      it "triggers for silent conversions too" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(first_post.topic, admin, silent: true).convert_to_public_topic(
+              category.id,
+            )
+          end
+
+        expect(events.size).to eq(1)
+      end
+
+      it "doesn't trigger when the post revision fails" do
+        required_tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag)])
+        category.category_required_tag_groups.create!(tag_group: required_tag_group, min_count: 1)
+
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(first_post.topic, Fabricate(:moderator)).convert_to_public_topic(
+              category.id,
+            )
+          end
+
+        expect(first_post.topic.reload.archetype).to eq(Archetype.private_message)
+        expect(events).to be_empty
+      end
+
+      it "refuses a topic that is already public, without changing it", :aggregate_failures do
+        public_topic = Fabricate(:post).topic
+        category_id = public_topic.category_id
+
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            TopicConverter.new(public_topic, admin).convert_to_public_topic(category.id)
+          end
+
+        expect(events).to be_empty
+        expect(public_topic.errors.full_messages).to eq(
+          [I18n.t("topic_converter.already_public_topic")],
+        )
+        expect(public_topic.reload.category_id).to eq(category_id)
+      end
+
+      it "reports why the revision failed on the topic" do
+        required_tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag)])
+        category.category_required_tag_groups.create!(tag_group: required_tag_group, min_count: 1)
+
+        topic =
+          TopicConverter.new(first_post.topic, Fabricate(:moderator)).convert_to_public_topic(
+            category.id,
+          )
+
+        expect(topic.errors.full_messages).to be_present
+      end
+
+      it "fails with an error when there is no public category to move it to" do
+        SiteSetting.allow_uncategorized_topics = false
+        Category
+          .where.not(id: SiteSetting.uncategorized_category_id)
+          .update_all(read_restricted: true)
+
+        topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic
+
+        expect(topic.errors.full_messages).to include(I18n.t("topic_converter.no_public_category"))
+        expect(topic.reload.archetype).to eq(Archetype.private_message)
+      end
+
+      it "only rolls itself back inside an enclosing transaction", :aggregate_failures do
+        required_tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag)])
+        category.category_required_tag_groups.create!(tag_group: required_tag_group, min_count: 1)
+        other_topic = Fabricate(:topic)
+
+        ActiveRecord::Base.transaction do
+          other_topic.update!(title: "Written by the enclosing transaction")
+          TopicConverter.new(first_post.topic, Fabricate(:moderator)).convert_to_public_topic(
+            category.id,
+          )
+        end
+
+        expect(other_topic.reload.title).to eq("Written by the enclosing transaction")
+        expect(first_post.topic.reload.archetype).to eq(Archetype.private_message)
+      end
+
+      it "doesn't trigger when an enclosing transaction rolls back" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_public_topic) do
+            ActiveRecord::Base.transaction do
+              TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
+              raise ActiveRecord::Rollback
+            end
+          end
+
+        expect(events).to be_empty
+      end
+    end
   end
 
   describe "convert_to_private_message" do
@@ -400,6 +507,51 @@ RSpec.describe TopicConverter do
 
         expect(author.user_profile.reload.featured_topic).to eq(nil)
       end
+    end
+
+    describe "topic_converted_to_private_message event" do
+      it "triggers once the conversion is committed, with the acting user" do
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_private_message) do
+            topic.convert_to_private_message(admin)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: admin }]])
+      end
+
+      it "doesn't trigger when posters exceed max_allowed_message_recipients" do
+        SiteSetting.max_allowed_message_recipients = 2
+        Fabricate(:post, topic: topic)
+        Fabricate(:post, topic: topic)
+
+        events =
+          DiscourseEvent.track_events(:topic_converted_to_private_message) do
+            topic.convert_to_private_message(admin)
+          end
+
+        expect(events).to be_empty
+      end
+    end
+
+    it "refuses a topic that is already a personal message" do
+      private_message = Fabricate(:private_message_topic)
+
+      TopicConverter.new(private_message, admin).convert_to_private_message
+
+      expect(private_message.errors.full_messages).to eq(
+        [I18n.t("topic_converter.already_personal_message")],
+      )
+    end
+
+    it "removes the banner like the admin button before converting it", :aggregate_failures do
+      topic.make_banner!(admin)
+
+      events =
+        DiscourseEvent.track_events(:topic_unbannered) { topic.convert_to_private_message(admin) }
+
+      expect(topic.reload).to be_private_message
+      expect(topic.bannered_until).to be_nil
+      expect(events.sole[:params]).to eq([topic, { acting_user: admin }])
     end
   end
 end

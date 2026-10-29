@@ -98,11 +98,14 @@ register_svg_icon "user-xmark"
 register_svg_icon "grip-vertical"
 register_svg_icon "paragraph"
 register_svg_icon "arrow-down-a-z"
+register_svg_icon "bullhorn"
+register_svg_icon "hourglass-end"
 register_svg_icon "layer-group"
 register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"
 register_svg_icon "sliders"
+register_svg_icon "microphone"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -111,6 +114,8 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential
 
 after_initialize do
   Rails.application.config.filter_parameters += %i[signature]
+
+  register_problem_check ProblemCheck::DeprecatedWorkflowNodes
 
   add_custom_reviewable_filter(
     [

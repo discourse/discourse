@@ -1036,6 +1036,22 @@ RSpec.describe PostMover do
             expect(Topic.with_deleted.find(topic.id).deleted_at).to be_present
           end
 
+          it "trashes the merged topic once, as the merging user" do
+            SiteSetting.delete_merged_stub_topics_after_days = 0
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+
+            events = []
+            expect {
+              events =
+                DiscourseEvent.track_events(:topic_trashed) do
+                  topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+                end
+            }.to change { Category.find(topic.category_id).topic_count }.by(-1)
+
+            expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: user }]])
+            expect(Topic.with_deleted.find(topic.id).deleted_by).to eq(user)
+          end
+
           it "ignores moderator posts and closes the topic if all regular posts were moved" do
             add_moderator_post_to topic, Post.types[:moderator_action]
             add_moderator_post_to topic, Post.types[:small_action]
@@ -3076,9 +3092,9 @@ RSpec.describe PostMover do
 
         event = events.first
         expect(event[:event_name]).to eq(:post_moved)
-        expect(event[:params][0]).to eq(post_2)
-        expect(event[:params][1]).to eq(topic_1.id)
-        expect(event[:params][2]).to eq(post_2)
+        expect(event[:params]).to eq(
+          [post_2, topic_1.id, post_2, { acting_user: Discourse.system_user }],
+        )
       end
 
       context "with 'freeze_original' option" do
@@ -3099,9 +3115,9 @@ RSpec.describe PostMover do
 
           event = events.first
           expect(event[:event_name]).to eq(:post_moved)
-          expect(event[:params][0]).to eq(moved_post.new_post)
-          expect(event[:params][1]).to eq(topic_1.id)
-          expect(event[:params][2]).to eq(post_2)
+          expect(event[:params]).to eq(
+            [moved_post.new_post, topic_1.id, post_2, { acting_user: Discourse.system_user }],
+          )
         end
       end
     end

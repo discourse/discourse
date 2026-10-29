@@ -39,7 +39,7 @@ DiscourseAutomation::Scriptable.add(
           next unless group_id = group_ids_by_name[user.group_name]
 
           group = groups_by_id[group_id] ||= Group.find(group_id)
-          group.add(user)
+          group.add(user, acting_user: Discourse.system_user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
     when DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN
@@ -60,7 +60,7 @@ DiscourseAutomation::Scriptable.add(
       next if !group
 
       user = trigger["user"]
-      group.add(user)
+      group.add(user, acting_user: Discourse.system_user)
       GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
     end
   end

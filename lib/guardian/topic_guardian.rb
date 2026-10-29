@@ -68,6 +68,16 @@ module TopicGuardian
     @user.in_any_groups?(SiteSetting.topic_timers_allowed_groups_map)
   end
 
+  # Setting or clearing a timer of a given type; `category` is where a publication timer publishes to.
+  def can_change_topic_timer?(topic, status_type, category = nil)
+    return false if !can_set_topic_timer?(topic)
+    return false if TopicTimer.destructive_types.value?(status_type) && !can_delete?(topic)
+    return true if category.nil?
+
+    can_create_topic_on_category?(category) &&
+      (!topic.private_message? || can_convert_topic?(topic))
+  end
+
   def can_move_topic_to_category?(category)
     category =
       (

@@ -78,7 +78,7 @@ module DiscourseSubscriptions
         item = line_items[:data].first
 
         group = plan_group(item[:price])
-        group.add(user) unless group.nil?
+        group.add(user, acting_user: Discourse.system_user) unless group.nil?
 
         if SiteSetting.discourse_subscriptions_enable_verbose_logging
           Rails.logger.warn("Line item with group name meta data: #{item[:price]}")
@@ -115,7 +115,7 @@ module DiscourseSubscriptions
         return render_json_error "user not found" if !user
 
         if group = plan_group(subscription[:plan])
-          group.add(user)
+          group.add(user, acting_user: Discourse.system_user)
         end
       when "customer.subscription.deleted"
         subscription = event[:data][:object]
@@ -130,7 +130,7 @@ module DiscourseSubscriptions
         return render_json_error "user not found" if !user
 
         if group = plan_group(subscription[:plan])
-          group.remove(user)
+          group.remove(user, acting_user: Discourse.system_user)
         end
       end
 

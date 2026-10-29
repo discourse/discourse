@@ -647,18 +647,13 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_set_topic_timer!(topic)
 
-    guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
-
     creating_timer = params[:time].present? || params[:duration_minutes].present?
 
     if status_type == TopicTimer.types[:publish_to_category] && creating_timer
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
-      raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
-      if topic.private_message? && !guardian.can_convert_topic?(topic)
-        raise Discourse::InvalidAccess
-      end
     end
+    guardian.ensure_can_change_topic_timer!(topic, status_type, category)
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }
 
@@ -666,7 +661,6 @@ class TopicsController < ApplicationController
     if params[:duration_minutes].present?
       options.merge!(duration_minutes: params[:duration_minutes].to_i)
     end
-    options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
     begin
       topic_timer = topic.set_or_create_timer(status_type, params[:time], **options)
@@ -1340,26 +1334,14 @@ class TopicsController < ApplicationController
   end
 
   def set_slow_mode
-    topic = Topic.find(params[:topic_id])
-    slow_mode_type = TopicTimer.types[:clear_slow_mode]
-    timer = TopicTimer.find_by(topic: topic, status_type: slow_mode_type)
-
-    guardian.ensure_can_moderate!(topic)
-    topic.update!(slow_mode_seconds: params[:seconds])
-    enabled = params[:seconds].to_i > 0
-
-    time = enabled && params[:enabled_until].present? ? params[:enabled_until] : nil
-
-    topic.set_or_create_timer(slow_mode_type, time, by_user: timer&.user)
-
-    StaffActionLogger.new(current_user).log_topic_slow_mode(
-      topic,
-      enabled:,
-      seconds: params[:seconds],
-      until: time,
-    )
-
-    head :ok
+    Topic::UpdateSlowMode.call(service_params) do
+      on_success { head :ok }
+      on_failed_contract do |contract|
+        raise Discourse::InvalidParameters.new(contract.errors.full_messages.join("\n"))
+      end
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_update_slow_mode) { raise Discourse::InvalidAccess }
+    end
   end
 
   private

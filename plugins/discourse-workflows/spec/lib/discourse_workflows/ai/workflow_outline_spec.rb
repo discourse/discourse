@@ -34,6 +34,26 @@ RSpec.describe DiscourseWorkflows::Ai::WorkflowOutline do
     )
   end
 
+  it "marks nodes saved on a deprecated version" do
+    register_versioned_workflow_nodes(
+      "action:outline_deprecated_test",
+      v1_deprecation: {
+        superseded_by: "2.0",
+      },
+    )
+    graph =
+      build_workflow_graph do |g|
+        g.node "old-1", "action:outline_deprecated_test", name: "Old", type_version: "1.0"
+        g.node "new-1", "action:outline_deprecated_test", name: "New", type_version: "2.0"
+      end
+    workflow.update!(**graph)
+
+    expect(described_class.text(workflow).lines(chomp: true)).to include(
+      "- old-1 | Old | action:outline_deprecated_test | deprecated: upgrade_node to move it to its replacement",
+      "- new-1 | New | action:outline_deprecated_test",
+    )
+  end
+
   it "says when nodes are not shown" do
     stub_const(described_class, "MAX_NODES", 2) do
       expect(described_class.text(workflow)).to include(

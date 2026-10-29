@@ -271,6 +271,7 @@ module(
             { op: "add_connection", from: "start", to: "temporary" },
             { op: "remove_node", client_id: "temporary" },
             { op: "rename_node", client_id: "kept", name: "Renamed" },
+            { op: "upgrade_node", node_id: "saved-node" },
             addNode("after", "After removal"),
             { op: "add_connection", from: "start", to: "after" },
             { op: "remove_connection", from: "start", to: "after" },

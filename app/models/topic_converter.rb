@@ -10,7 +10,9 @@ class TopicConverter
   end
 
   def convert_to_public_topic(category_id = nil)
-    Topic.transaction do
+    return refuse("topic_converter.already_public_topic") if !@topic.private_message?
+
+    transaction do
       category_id ||=
         SiteSetting.uncategorized_category_id if SiteSetting.allow_uncategorized_topics
 
@@ -20,6 +22,7 @@ class TopicConverter
           .where(read_restricted: false)
           .where.not(id: SiteSetting.uncategorized_category_id)
           .first
+      rollback!("topic_converter.no_public_category") if @category.nil?
 
       revised =
         PostRevisor.new(@topic.first_post, @topic).revise!(
@@ -28,7 +31,7 @@ class TopicConverter
           revise_opts,
         )
 
-      raise ActiveRecord::Rollback if !revised || !@topic.valid?
+      rollback! if !revised || !@topic.valid?
 
       update_user_stats
       update_post_uploads_secure_status
@@ -40,12 +43,16 @@ class TopicConverter
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
       watch_topic(@topic) unless @silent
+
+      trigger_after_commit(:topic_converted_to_public_topic)
     end
 
     @topic
   end
 
   def convert_to_private_message
+    return refuse("topic_converter.already_personal_message") if @topic.private_message?
+
     if exceeds_recipient_cap?
       @topic.errors.add(
         :base,
@@ -57,7 +64,10 @@ class TopicConverter
       return @topic
     end
 
-    Topic.transaction do
+    transaction do
+      # Removed like the admin button does, so the banner's events and live update still happen.
+      @topic.remove_banner!(@user) if @topic.archetype == Archetype.banner
+
       was_public = !@topic.category.read_restricted
       @topic.update_category_topic_count_by(-1) if @topic.visible
 
@@ -68,7 +78,7 @@ class TopicConverter
           revise_opts,
         )
 
-      raise ActiveRecord::Rollback if !revised || !@topic.valid?
+      rollback! if !revised || !@topic.valid?
 
       PublishedPage.unpublish!(@user, @topic) if @topic.published_page
       add_allowed_users
@@ -82,12 +92,39 @@ class TopicConverter
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
       watch_topic(@topic) unless @silent
+
+      trigger_after_commit(:topic_converted_to_private_message)
     end
 
     @topic
   end
 
   private
+
+  # A savepoint, so failing rolls back only the conversion when a caller (publishing a topic) already
+  # opened a transaction.
+  def transaction(&)
+    Topic.transaction(requires_new: true, &)
+  end
+
+  def refuse(key)
+    @topic.errors.add(:base, I18n.t(key))
+    @topic
+  end
+
+  # The revision reports why it failed on the first post; callers look at the topic.
+  def rollback!(key = nil)
+    @topic.errors.add(:base, I18n.t(key)) if key
+    @topic.errors.merge!(@topic.first_post.errors) if @topic.first_post
+    @topic.errors.add(:base, I18n.t("topic_converter.failed")) if @topic.errors.empty?
+    raise ActiveRecord::Rollback
+  end
+
+  # Registered after the success check so a failed conversion never fires it, and after the small
+  # action so listeners see it.
+  def trigger_after_commit(event)
+    DB.after_commit { DiscourseEvent.trigger(event, @topic, acting_user: @user) }
+  end
 
   def update_tag_counters(topic_count_delta, include_public:)
     counters = { staff_topic_count: topic_count_delta, pm_topic_count: -topic_count_delta }

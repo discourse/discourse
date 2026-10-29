@@ -12,7 +12,7 @@ module DiscourseAi::AiBot::UserFlair
 
     if user_ids.any?
       group = ensure_group!
-      group.bulk_add(user_ids, automatic: true)
+      group.bulk_add(user_ids, automatic: true, acting_user: Discourse.system_user)
       User
         .where(id: user_ids)
         .where("flair_group_id IS DISTINCT FROM ?", group.id)
@@ -22,7 +22,7 @@ module DiscourseAi::AiBot::UserFlair
     stale_users = group.group_users
     stale_users = stale_users.where.not(user_id: user_ids) if user_ids.any?
     stale_user_ids = stale_users.pluck(:user_id)
-    group.bulk_remove(stale_user_ids) if stale_user_ids.any?
+    group.bulk_remove(stale_user_ids, acting_user: Discourse.system_user) if stale_user_ids.any?
   end
 
   def self.sync_user_ids!(user_ids)
@@ -39,10 +39,10 @@ module DiscourseAi::AiBot::UserFlair
   def self.sync_user!(user, associated:)
     if associated
       group = ensure_group!
-      group.add(user, automatic: true)
+      group.add(user, automatic: true, acting_user: Discourse.system_user)
       user.update!(flair_group_id: group.id) if user.flair_group_id != group.id
     elsif group = Group.find_by(name: GROUP_NAME)
-      group.remove(user)
+      group.remove(user, acting_user: Discourse.system_user)
     end
   end
   private_class_method :sync_user!

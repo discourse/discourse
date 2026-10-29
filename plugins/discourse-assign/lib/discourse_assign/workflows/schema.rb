@@ -12,6 +12,31 @@ module DiscourseAssign
         },
       }.freeze
 
+      ASSIGN_TOPIC_V2_OUTPUT_SCHEMA = {
+        "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+        "type" => "object",
+        "properties" => {
+          "assignee" => DiscourseWorkflows::Schema::ASSIGNEE_PROPERTIES,
+          "previously_assigned" => DiscourseWorkflows::Schema::ASSIGNEE_PROPERTIES,
+          "changed" => {
+            "type" => "boolean",
+            "description" => "False when the assignee was already assigned",
+          },
+        },
+      }.freeze
+
+      UNASSIGN_TOPIC_OUTPUT_SCHEMA = {
+        "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+        "type" => "object",
+        "properties" => {
+          "previously_assigned" => DiscourseWorkflows::Schema::ASSIGNEE_PROPERTIES,
+          "changed" => {
+            "type" => "boolean",
+            "description" => "False when nothing was assigned",
+          },
+        },
+      }.freeze
+
       CHECK_ASSIGNMENT_OUTPUT_SCHEMA = {
         "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
         "type" => "object",

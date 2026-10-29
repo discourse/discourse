@@ -71,13 +71,13 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
 
       it "includes specialized property-engine controls in node schemas" do
-        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:badge" }
+        grant_badge = result[:node_types].find { |nt| nt[:identifier] == "action:grant_badge" }
         code = result[:node_types].find { |nt| nt[:identifier] == "action:code" }
         data_table = result[:node_types].find { |nt| nt[:identifier] == "action:data_table" }
         condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
         webhook = result[:node_types].find { |nt| nt[:identifier] == "trigger:webhook" }
 
-        expect(award_badge.dig(:properties, :badge_id, :ui, :control)).to eq(:combo_box)
+        expect(grant_badge.dig(:properties, :badge_id, :ui, :control)).to eq(:combo_box)
         expect(code.dig(:properties, :code, :ui, :control)).to eq(:code)
         expect(data_table.dig(:properties, :columns, :ui, :control)).to eq(:data_table_columns)
         expect(data_table.dig(:properties, :sort_column, :ui, :control)).to eq(
@@ -88,12 +88,12 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
 
       it "sideloads options metadata for dynamic combo box fields" do
-        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:badge" }
+        grant_badge = result[:node_types].find { |nt| nt[:identifier] == "action:grant_badge" }
 
-        expect(award_badge.dig(:properties, :badge_id, :type_options)).to include(
+        expect(grant_badge.dig(:properties, :badge_id, :type_options)).to include(
           load_options_method: "badges",
         )
-        expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
+        expect(grant_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
       end
 
       it "serializes the required group selector for group membership triggers",
@@ -184,6 +184,23 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         loop_node = result[:node_types].find { |nt| nt[:identifier] == "flow:loop_over_items" }
 
         expect(loop_node[:palette_visible]).to eq(false)
+      end
+
+      it "lists the per-change user moderation triggers in the palette, not the generic one" do
+        expected = {
+          "trigger:user_moderation_changed" => false,
+          "trigger:user_suspended" => true,
+          "trigger:user_unsuspended" => true,
+          "trigger:user_silenced" => true,
+          "trigger:user_unsilenced" => true,
+        }
+
+        palette_visible =
+          result[:node_types]
+            .select { |nt| expected.key?(nt[:identifier]) }
+            .to_h { |nt| [nt[:identifier], nt[:palette_visible]] }
+
+        expect(palette_visible).to eq(expected)
       end
 
       it "includes manually_triggerable for triggers that support it" do

@@ -3108,6 +3108,29 @@ RSpec.describe Search do
     end
   end
 
+  describe "user_search event" do
+    it "triggers with the searching user" do
+      searcher = Fabricate(:user)
+
+      event =
+        DiscourseEvent.track(:user_search) do
+          Search.new("indiana jones", search_type: :header, guardian: searcher.guardian).execute
+        end
+
+      expect(event[:params].first).to eq("indiana jones")
+      expect(event[:params].last).to include(acting_user: searcher)
+    end
+
+    it "triggers with no acting user for anonymous searches" do
+      event =
+        DiscourseEvent.track(:user_search) do
+          Search.new("indiana jones", search_type: :header).execute
+        end
+
+      expect(event[:params].last).to include(acting_user: nil)
+    end
+  end
+
   describe "in:title" do
     it "allows for search in title" do
       topic = Fabricate(:topic, title: "I am testing a title search")

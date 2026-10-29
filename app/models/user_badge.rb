@@ -9,6 +9,8 @@ class UserBadge < ActiveRecord::Base
 
   BOOLEAN_ATTRIBUTES = %w[is_favorite]
 
+  attr_accessor :revoked_by
+
   scope :grouped_with_count,
         -> do
           group(:badge_id, :user_id)
@@ -65,7 +67,7 @@ class UserBadge < ActiveRecord::Base
     UserBadge.update_featured_ranks!(user_ids)
 
     DiscourseEvent.trigger(:user_badge_removed, badge_id, user_id)
-    DiscourseEvent.trigger(:user_badge_revoked, user_badge: self)
+    DiscourseEvent.trigger(:user_badge_revoked, user_badge: self, acting_user: revoked_by)
   end
 
   def self.ensure_consistency!(user_ids = [])
@@ -113,14 +115,14 @@ class UserBadge < ActiveRecord::Base
     DB.exec query
   end
 
-  def self.trigger_user_badge_granted_event(badge_id, user_id)
-    DiscourseEvent.trigger(:user_badge_granted, badge_id, user_id)
+  def self.trigger_user_badge_granted_event(badge_id, user_id, acting_user: nil)
+    DiscourseEvent.trigger(:user_badge_granted, badge_id, user_id, acting_user:)
   end
 
   private
 
   def trigger_user_badge_granted_event
-    self.class.trigger_user_badge_granted_event(badge_id, user_id)
+    self.class.trigger_user_badge_granted_event(badge_id, user_id, acting_user: granted_by)
   end
 
   def single_grant_badge?

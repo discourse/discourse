@@ -1,9 +1,58 @@
 ---
 name: discourse-workflow-nodes
-description: Use when creating, changing, or reviewing Discourse Workflows nodes (triggers, actions, conditions) in plugins/discourse-workflows or plugins/*/lib/discourse_workflows, including their output schemas and specs
+description: Use when creating, changing, splitting, or reviewing Discourse Workflows nodes (triggers, actions, conditions, flow) in plugins/discourse-workflows or plugins/*/lib/discourse_workflows, including their settings, output schemas, events, and specs
 ---
 
 # Discourse Workflow Nodes
+
+Nodes are small bricks admins combine in the workflow editor. Each node does one thing, is findable by the name
+of what it does, and has a trigger counterpart when it changes state.
+
+## Granularity
+
+1. **Resource nodes own lifecycle, reads, and field edits.** `create`, `get`, `list`, `edit`, `delete`,
+   `recover`, and edits of a value or of a set edited as a whole (category, tags, trust level, custom fields,
+   a tag group's tags) are operations on one node per noun: Topic, Post, User, Group, Data table…
+2. **A change with a natural opposite gets one node per direction, as an action and as a trigger.**
+   Close / Reopen topic, Pin / Unpin topic, Like / Unlike post, Add user to / Remove user from group,
+   Grant / Revoke badge, Suspend / Unsuspend user, Set / Clear topic timer. Judge by the underlying event,
+   not by today's trigger: `:topic_timer_changed` passes `created`, `updated`, `cancelled` or `completed`,
+   so the timer gets split triggers and split actions.
+3. **Triggers split per change, keeping the generic trigger hidden.** The generic `*_changed` trigger stays
+   registered with `palette_visible: false` because it can match several changes in one node. Each change gets
+   a palette trigger built from it, as `TopicStatusChanged::V1.description_for_change("closed")` does.
+   Splitting a trigger never breaks saved workflows. A palette trigger may cover several event reasons when
+   admins see them as one change: Topic timer set covers `created` and `updated`, listed in `fixed_changes`
+   by `TopicTimerChanged::V1.description_for_change("set")`.
+4. **Actions don't keep a hidden generic.** Picking the direction from data is an If node feeding two actions.
+5. **Share code, not nodes.** Nodes that differ only by direction share a module (see `PostLifecycle`).
+   Never add an intermediate base class: every `NodeType` subclass registers itself as a node. That module
+   builds on the entity's base when there is one: `TopicChangeAction`, `PostChangeAction` and
+   `UserChangeAction` (description, per-item loop, `changed` output) for actions, `TopicEventTrigger` and
+   `PostModerationTrigger` for triggers whose event passes `acting_user:`.
+
+## Naming
+
+| | Identifier | Label | Example |
+|---|---|---|---|
+| Action | `action:<verb>_<noun>` | Imperative, sentence case | `action:close_topic`, "Close topic" |
+| Trigger | `trigger:<noun>_<past participle>` | Noun + past participle | `trigger:topic_closed`, "Topic closed" |
+| Resource node | `action:<noun>` | Noun | `action:topic`, "Topic" |
+
+The palette search matches a node's label, its operation labels and its search terms
+(`discourse_workflows.node_search_terms."<identifier>"` in `client.en.yml`, comma-separated). Add search terms
+for words admins would type that aren't in the name, such as "hide" for unlisting a topic.
+
+## Settings
+
+- Option lists that come from site data or runtime registries (groups, badges, channels, reviewable types,
+  site settings) use `type_options: { load_options_method: "…" }`, answered by `self.load_options_context`.
+  Never compute them inside `properties`: a node's definition must not depend on the site or on which plugins
+  are enabled.
+- Static option lists stay inline in `options`.
+- The AI author resolves loaded option values through `workflow_resolve_entity(kind: "node_option")`, which
+  calls the node's `self.load_options_context` the way the editor does, so a new option list needs no
+  AI-specific code. Loaders that need credentials return nothing there.
 
 ## Entities in output
 
@@ -16,8 +65,11 @@ Shape entities only with `DiscourseWorkflows::EntitySerializers` (`lib/discourse
 | Topic (actions) | `serialize_topic(topic, guardian:, custom_field_names:)` | `TOPIC_LIST_ITEM_SCHEMA` |
 | Post | `serialize_post(post, guardian:, include_raw:, include_cooked:)` (nil for nil post) | `Schema::POST_SCHEMA` / `POST_PROPERTIES` |
 | Reviewable | `serialize_reviewable(reviewable)` | `Schema::REVIEWABLE_EVENT_SCHEMA` |
+| Timer | `serialize_timer(timer, attributes = timer.attributes)` (pass the previous attributes for the timer before a change) | `Schema::TOPIC_TIMER` / `NULLABLE_TOPIC_TIMER` / `TOPIC_TIMER_PROPERTIES` |
 | Assignee (user or group) | `serialize_assignee(assignee, guardian:)` | `Schema::ASSIGNEE_PROPERTIES` |
 | Group (basic) | `serialize_basic_group(group)` | `BASIC_GROUP_PROPERTIES` |
+| Group | `serialize_group(group, guardian:)` | `Schema::GROUP_SCHEMA` |
+| Badge | `serialize_badge(badge)` | `Schema::BADGE_ENTITY_SCHEMA` / `BADGE_PROPERTIES` |
 | Any serializer | `serialize_record(record, SerializerClass, scope:)` | |
 
 - Name every helper that shapes an entity for output `serialize_<entity>` (`serialize_badge`, `serialize_group`, `serialize_timer`, `serialize_assignee`, `serialize_channel`, `serialize_event`...), never `<entity>_data`; `node_entity_builders_spec` fails on `def <entity>_data`.
@@ -25,7 +77,6 @@ Shape entities only with `DiscourseWorkflows::EntitySerializers` (`lib/discourse
 - `serialize_topic_list_item` (`DiscourseWorkflows::TopicListItemSerializer`) carries plugin-added list fields (assign `assigned_to_*`, solved `has_accepted_answer`, voting `can_vote`/`vote_count`...); `serialize_topic` (`DiscourseWorkflows::TopicSerializer`) adds posters, participants and custom fields. Both emit every `TOPIC_PROPERTIES` key.
 - Outside a `NodeType`, call them on the module: `DiscourseWorkflows::EntitySerializers.serialize_user(...)`.
 - Never use `BasicUserSerializer` or `TopicListItemSerializer` in node files; `node_entity_builders_spec` fails if you do.
-- Groups: `BasicGroupSerializer` (`BASIC_GROUP_PROPERTIES`) or `WebHookGroupSerializer` (`GROUP_SCHEMA`).
 
 ## `user` vs `actor`
 
@@ -44,22 +95,66 @@ DiscourseEvent.trigger(:topic_status_updated, topic, status, enabled, acting_use
 
 Trigger nodes receive it as a trailing hash: `def initialize(topic, status, enabled, payload = {})` and read `payload[:acting_user]`. Specs that assert exact event params must include `{ acting_user: ... }`.
 
+- Every state change an action makes fires a `DiscourseEvent`, so a trigger can mirror it. If core or the plugin doesn't fire one, add it.
+- Fire it where the change happens, in the model method or service, not in the controller.
+- Jobs and automatic changes pass `Discourse.system_user`. Expiry jobs fire the event too: a change that happens on a timer is still a change (`Jobs::ClearSlowMode`).
+- When a record is saved from many places and its owner isn't who changed it, carry the user on the record rather than guessing in the trigger (`TopicTimer#acting_user`, set by `Topic#set_or_create_timer` and by jobs).
+- When the change only happens in a controller, move it into a core service that fires the event after its transaction, only when something changed, and call that service from the controller and the action alike (`Topic::UpdateSlowMode`).
+- When a model method wraps the change in a transaction that can still roll back, register the event with `DB.after_commit` after its success check, and only when the state really changed, so a failed or no-op call never fires it (`TopicConverter` checks the archetype it started from).
+- When a record's `acting_user` falls back to its owner (`Post#acting_user` returns the author), never read that method for the event, or automatic changes report the owner as actor. Take an `acting_user:` keyword defaulting to the explicitly set value, and pass it from every caller (`Post#hide!` / `#unhide!`).
+- When core fires an existing event inside its lock on purpose, so a failing listener rolls the change back (`UserSuspender.unsuspend`), leave it there: workflow runs are enqueued after commit anyway.
+- When a writer repeats a change on purpose (re-locking a locked post records the new locker and logs again), keep its writes and fire only on the transition, comparing the state read before the write (`PostLocker`).
+- Bulk writers of the same state (`update_all`, raw SQL) fire the event once per record they actually changed: limit the update to records not yet in that state and fire for the ids it returns (`UserSilencer#hide_posts`).
+- When several emitters report a change, listen to the event fired by the model method that makes it and ignore wrappers: Topic deleted listens to `Topic#trash!`'s `:topic_trashed`, not `PostDestroyer`'s `:topic_destroyed` (also fired when authors only mark their topic for deletion, and on permanent deletes). When a wrapper fires the same event itself for a different change, have it say so with an extra kwarg the trigger checks: `PostDestroyer` fires `:topic_recovered` with `from_trash: false` when authors cancel their own pending deletion, and Topic recovered ignores it.
+- Pass every positional argument, even when it's `nil`, so the trailing hash never binds to an optional positional.
+- When an event gains `acting_user:`, every trigger listening to it must accept the trailing hash (`payload = {}`, or a `from_event` override that drops it). Otherwise building the trigger raises `ArgumentError`, which `EventListener` logs and swallows, so the trigger silently stops firing.
+- Other listeners of that event must accept the new keyword too: a block or `|*args|` ignores it, but a block declaring a strict keyword (`|user, group, automatic:|`) or a lambda / `&method` with a fixed arity raises out of `DiscourseEvent.trigger`, failing the caller and skipping later listeners. Grep the monorepo for `on(:event_name)` and fix them in the same commit (`:user_added_to_group` in discourse-assign).
+- Declare `actor` only once the event carries `acting_user:` (or the actor is known by construction). Never declare an `actor` that is always `null`: make the event carry the user first.
+
 ## Breaking output changes
 
 Renaming or removing an output key, or changing its meaning, breaks saved workflows. Ship a new version instead; additive keys can go in the existing version.
 
 - Freeze V1 and mark it, after `description(...)`: `deprecated(superseded_by: "2.0", changes: { "editor" => "actor" })`.
 - The shared `node_descriptions.<identifier>` locale describes the latest version. If it no longer fits V1, add `description_key: "discourse_workflows.node_descriptions.<identifier>_v1"` to `deprecated(...)` with V1's text; V2 does not inherit it.
-- `class V2 < V1` in `v2.rb`, calling `description(superclass.description.merge(version: "2.0", output_contracts: [{ schema: V2_OUTPUT_SCHEMA }]))`, then override `output` / `execute` or a private `serialize_*` helper.
+- `class V2 < V1` in `v2.rb`, calling `description(superclass.description.merge(version: "2.0", output_contracts: [{ schema: V2_OUTPUT_SCHEMA }]))`, then override `output` / `execute` or a private `serialize_*` helper. Rebuild `properties` and `output_contracts` whole rather than deep-merging them, and read values V2 changes through `self.class::` (`self.class::DEFAULT_OPERATION` in Group 1.0), since a bare constant in V1's methods always resolves to V1's.
+- A version superseded without output changes (Group 1.0, whose membership changes moved to their own nodes) omits `changes:`; the editor then only says a newer version exists.
 - Core nodes self-register; plugin nodes need `register_discourse_workflows_node(...::V2)` next to V1.
 - Services resolve the saved version with `NodeData.node_type(node)`, never a hard-coded `V1`.
-- Deprecated versions keep running for saved workflows, are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action. Remove them after a deprecation window.
-- Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones. `node_deprecation_spec` checks `superseded_by`.
+- Deprecated versions keep running for saved workflows (drafts, published versions, history and paused executions reference them), are hidden from the palette and AI catalog, and show an editor notice with an Upgrade action; the AI author upgrades them with its `upgrade_node` patch operation. The admin dashboard lists the workflows that still use them. Remove them only after the deprecation window, and only together with the removal migration that upgrades every stored copy (drafts, `WorkflowVersion`s, execution and webhook snapshots).
+- Spec both: `match_node_output_schema(Foo::V1)` pins the old keys, `match_node_output_schema(Foo::V2)` the new ones. `node_deprecation_spec` checks that `superseded_by` and every `replaced_by` node are registered and not deprecated.
+
+### Replacing a node
+
+When an operation becomes its own node (or a node splits into several), deprecate the old version towards the nodes replacing it, with a block mapping each saved configuration to its replacement:
+
+```ruby
+deprecated(replaced_by: %w[action:close_topic action:archive_topic]) do |parameters|
+  case parameters["operation"]
+  when "close"
+    { type: "action:close_topic", parameters: parameters.slice("topic_id"), notes: ["discourse_workflows.node_upgrades.topic_post_removed"] }
+  when "archive"
+    { type: "action:archive_topic", parameters: parameters.slice("topic_id") }
+  end
+end
+```
+
+- The block returns `{ type:, version:, parameters:, notes: }`. `version` defaults to `superseded_by` for the same node and to the latest version of another node. It can also go with `superseded_by:` when the newer version takes different parameters; without a block, Upgrade keeps the parameters.
+- Return nil for a configuration that can't be upgraded automatically, such as an operation chosen by an expression. The admin then replaces that node by hand.
+- `notes` are server I18n keys under `discourse_workflows.node_upgrades.*` telling admins what changes for them, such as an output key that's gone. `changes:` and `notice_key:` still describe the old version before the upgrade.
+- The replacement must have the same number of output ports, because connections are stored per port. `NodeUpgrader` skips a node otherwise, or when the target is missing or deprecated.
+- `NodeUpgrader` keeps the node's id, name, position, credentials and settings, so connections, expressions and pinned data still find it.
+- A saved node goes through at most one upgrade: never deprecate towards another deprecated version, and when a node is both versioned and split, do both in one step.
+- Spec every route with `Foo::V1.upgrade(parameters)`, including the configurations that return nil.
+
+## Finding records
+
+- Actions staff take from the post menu (hide, lock…) find the post with `PostModerationLookup#find_post`, which mirrors `PostsController#find_post_using`: deleted posts and posts in deleted topics for those who can moderate the topic, and the topic loaded with deleted ones so guardian checks don't fail on it.
 
 ## Output conventions
 
 - URLs are absolute (`Discourse.base_url + ...`, `full_url`). Keep existing relative keys such as `post_url`.
-- Actions that may no-op output `changed` (boolean), computed by comparing state before and after (see badge, group, post_like).
+- Actions that may no-op output `changed` (boolean), computed by comparing state before and after (see `TopicStatusAction`), or from the result of a service that reports whether it acted, so a concurrent request making the same change doesn't report it too (see `PostLiking`).
 - Actions that mutate a topic also return `topic`.
 - Cap user lists with a named constant (e.g. `PostEventScoping::MAX_GOING_USERNAMES`).
 

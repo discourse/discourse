@@ -701,6 +701,10 @@ en:
   invalid_access: "You are not permitted to view the requested resource."
   topic_converter:
     too_many_recipients: "Cannot convert: this topic has more participants than the max allowed (%{max})."
+    already_public_topic: "Cannot convert: this topic is already public."
+    already_personal_message: "Cannot convert: this topic is already a personal message."
+    no_public_category: "Cannot convert: there is no public category to move this topic to."
+    failed: "The topic couldn't be converted."
   topic_og_image:
     preview_not_eligible: "Cannot generate an OG image for personal messages or topics in private categories."
     preview_generation_failed: "Failed to generate preview image."
@@ -3792,6 +3796,8 @@ en:
     email_in_spam_header: "User's first email was flagged as spam"
     already_silenced: "User was already silenced by %{staff} %{time_ago}."
     already_suspended: "User was already suspended by %{staff} %{time_ago}."
+    already_silenced_without_details: "User is already silenced."
+    already_suspended_without_details: "User is already suspended."
     cannot_delete_has_posts:
       one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
       other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."

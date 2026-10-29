@@ -677,7 +677,8 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  # `acting_user` defaults to the one a caller set on the post, never to the author.
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, acting_user: @acting_user)
     return if hidden?
 
     reason ||=
@@ -744,9 +745,19 @@ class Post < ActiveRecord::Base
     end
 
     topic.reset_bumped_at if should_reset_bumped_at
+
+    DB.after_commit do
+      DiscourseEvent.trigger(:post_hidden, self, acting_user:, post_action_type_id:)
+    end
   end
 
-  def unhide!
+  # `acting_user` defaults to the one a caller set on the post, never to the author. Validations run as it.
+  def unhide!(acting_user: @acting_user)
+    # Relisting the topic, bumping it and counting the post again only make sense for a hidden post.
+    return if !hidden?
+
+    self.acting_user = acting_user if acting_user
+
     Post.transaction do
       update!(hidden: false)
       should_update_user_stat = true
@@ -776,6 +787,8 @@ class Post < ActiveRecord::Base
 
       save(validate: false)
     end
+
+    DB.after_commit { DiscourseEvent.trigger(:post_unhidden, self, acting_user:) }
 
     publish_change_to_clients!(:acted)
   end

@@ -296,7 +296,10 @@ module DiscourseAi
                   # Those flags are off_topic, inappropriate, and spam. We want a more generic type for triage, so none of those
                   # fit here.
                   if flag_type == :review_hide
-                    post.hide!(PostActionType.types[:notify_moderators])
+                    post.hide!(
+                      PostActionType.types[:notify_moderators],
+                      acting_user: Discourse.system_user,
+                    )
                   elsif flag_type == :review_delete || flag_type == :review_delete_silence
                     # Soft-delete the post so it is hidden from users until a moderator handles it in review.
                     PostDestroyer.new(Discourse.system_user, post, context: "llm_triage").destroy

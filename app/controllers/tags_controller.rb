@@ -332,7 +332,7 @@ class TagsController < ::ApplicationController
           tag_name = DiscourseTagging.clean_tag(row[0])
           tag_group_name = row[1] || nil
 
-          tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
+          tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name, created_by: current_user)
 
           if tag_group_name
             tag_group =

@@ -227,6 +227,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Who created the account, for `:user_created` (not stored): the user when they sign up.
+  attr_accessor :created_by
+
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
   after_commit :deactivate_anonymous_shadow_users!, on: :update, if: :deactivated?
@@ -1433,6 +1436,10 @@ class User < ActiveRecord::Base
     main_user_record[:silenced_till]
   end
 
+  def main_user_record
+    (anonymous? && master_user) ? master_user : self
+  end
+
   def silenced?
     !!(silenced_till && silenced_till > Time.zone.now)
   end
@@ -1451,7 +1458,7 @@ class User < ActiveRecord::Base
   end
 
   def silenced_record
-    user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
+    current_penalty_record(:silence_user, :unsilence_user)
   end
 
   def full_silence_reason
@@ -1471,7 +1478,7 @@ class User < ActiveRecord::Base
   end
 
   def suspend_record
-    user_histories.where(action: UserHistory.actions[:suspend_user]).order("id DESC").first
+    current_penalty_record(:suspend_user, :unsuspend_user)
   end
 
   def full_suspend_reason
@@ -1839,7 +1846,7 @@ class User < ActiveRecord::Base
         domains = group.automatic_membership_email_domains.gsub(".", '\.')
 
         if email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
-          group.add(self)
+          group.add(self, acting_user: Discourse.system_user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
         end
       end
@@ -2317,6 +2324,20 @@ class User < ActiveRecord::Base
 
   private
 
+  # The latest penalty log, unless the penalty was lifted (or expired) since: a new penalty that wasn't logged
+  # mustn't be explained by an older one.
+  def current_penalty_record(action, lift_action)
+    record = user_histories.where(action: UserHistory.actions[action]).order(id: :desc).first
+    return if record.nil?
+
+    lifted =
+      user_histories
+        .where(action: UserHistory.actions[lift_action])
+        .where("id > ?", record.id)
+        .exists?
+    record if !lifted
+  end
+
   def deactivate_anonymous_shadow_users!
     update_anonymous_shadow_users!(active: false)
   end
@@ -2350,10 +2371,6 @@ class User < ActiveRecord::Base
 
         shadow.log_out!
       end
-  end
-
-  def main_user_record
-    (anonymous? && master_user) ? master_user : self
   end
 
   def set_default_sidebar_section_links(update: false)
@@ -2392,7 +2409,7 @@ class User < ActiveRecord::Base
   end
 
   def trigger_user_updated_event
-    DiscourseEvent.trigger(:user_updated, self, %w[uploaded_avatar_id])
+    DiscourseEvent.trigger(:user_updated, self, %w[uploaded_avatar_id], acting_user: nil)
     true
   end
 
@@ -2421,7 +2438,7 @@ class User < ActiveRecord::Base
   end
 
   def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self)
+    DiscourseEvent.trigger(:user_created, self, acting_user: created_by)
     true
   end
 

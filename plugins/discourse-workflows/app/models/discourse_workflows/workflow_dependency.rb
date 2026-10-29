@@ -91,9 +91,9 @@ module DiscourseWorkflows
       )
     end
 
-    def self.workflows_referencing(type, key)
+    def self.workflows_referencing(type, keys)
       joins(:workflow)
-        .where(dependency_type: type, dependency_key: key.to_s)
+        .where(dependency_type: type, dependency_key: Array.wrap(keys).map(&:to_s))
         .where(
           "discourse_workflows_workflow_dependencies.workflow_version_id IN " \
             "(discourse_workflows_workflows.version_id, " \

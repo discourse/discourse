@@ -30,11 +30,13 @@ RSpec.describe Jobs::AutomaticGroupMembership do
     group = Fabricate(:group, automatic_membership_email_domains: "wat.com")
 
     automatic = nil
+    acting_user = nil
     called = false
 
     blk =
       Proc.new do |_u, _g, options|
         automatic = options[:automatic]
+        acting_user = options[:acting_user]
         called = true
       end
 
@@ -44,6 +46,7 @@ RSpec.describe Jobs::AutomaticGroupMembership do
 
       expect(automatic).to eql(true)
       expect(called).to eq(true)
+      expect(acting_user).to eq(Discourse.system_user)
     ensure
       DiscourseEvent.off(:user_added_to_group, &blk)
     end

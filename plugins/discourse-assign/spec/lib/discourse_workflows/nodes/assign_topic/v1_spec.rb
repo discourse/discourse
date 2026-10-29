@@ -16,6 +16,45 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
     SiteSetting.assign_enabled = true
   end
 
+  describe ".upgrade" do
+    let(:target_parameters) { { "resource" => "topic", "topic_id" => "={{ $json.topic.id }}" } }
+    let(:notes) { ["discourse_assign.discourse_workflows.node_upgrades.assign_topic_actor"] }
+
+    it "moves assigning to version 2.0" do
+      parameters =
+        target_parameters.merge(
+          "operation" => "assign",
+          "assignee" => "sam",
+          "replace_existing" => false,
+        )
+
+      expect(described_class.upgrade(parameters)).to eq(
+        type: "action:assign_topic",
+        version: "2.0",
+        parameters: parameters.except("operation"),
+        notes:,
+      )
+    end
+
+    it "treats a node without an operation as assigning" do
+      expect(described_class.upgrade(target_parameters)).to include(version: "2.0")
+    end
+
+    it "moves unassigning to Unassign topic" do
+      parameters = target_parameters.merge("operation" => "unassign", "assignee" => "sam")
+
+      expect(described_class.upgrade(parameters)).to eq(
+        type: "action:unassign_topic",
+        parameters: target_parameters,
+        notes:,
+      )
+    end
+
+    it "leaves a node whose operation is an expression to be replaced by hand" do
+      expect(described_class.upgrade("operation" => "={{ $json.operation }}")).to be_nil
+    end
+  end
+
   describe ".property_schema" do
     it "selects a topic by default and conditionally requires the target ID" do
       schema = described_class.property_schema

@@ -59,6 +59,23 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       it { is_expected.to fail_a_policy(:can_accept_answer) }
     end
 
+    context "when a concurrent request accepts the same answer first" do
+      before do
+        allow(DistributedMutex).to receive(
+          :synchronize,
+        ).and_wrap_original do |original, *args, &block|
+          DiscourseSolved::TopicAnswer.create!(
+            solved_topic: DiscourseSolved::SolvedTopic.find_or_create_by!(topic:),
+            post:,
+            accepter: Discourse.system_user,
+          )
+          original.call(*args, &block)
+        end
+      end
+
+      it { is_expected.to fail_a_policy(:answer_is_acceptable) }
+    end
+
     context "when everything is valid" do
       let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
       let(:events) { DiscourseEvent.track_events(:accepted_solution) { result } }

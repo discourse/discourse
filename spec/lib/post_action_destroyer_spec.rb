@@ -77,10 +77,42 @@ RSpec.describe PostActionDestroyer do
           expect(result.not_found).to eq(true)
         end
       end
+
+      it "treats a like staff already took back as not found" do
+        PostActionCreator.like(admin, post)
+        PostActionDestroyer.destroy(admin, post, :like)
+
+        result = nil
+        events =
+          DiscourseEvent.track_events(:like_destroyed) do
+            expect { result = PostActionDestroyer.destroy(admin, post, :like) }.not_to change {
+              GivenDailyLike.find_for(admin.id, Date.today).pick(:likes_given)
+            }
+          end
+
+        expect(result.not_found).to eq(true)
+        expect(events).to be_empty
+      end
     end
 
     context "with any other notifiable type" do
       before { PostActionCreator.new(user, post, PostActionType.types[:spam]).perform }
+
+      it "lets staff destroy a flag that was already trashed" do
+        PostActionCreator.spam(admin, post)
+        PostAction.find_by(
+          user: admin,
+          post:,
+          post_action_type_id: PostActionType.types[:spam],
+        ).trash!(admin)
+
+        events =
+          DiscourseEvent.track_events(:flag_destroyed) do
+            expect(PostActionDestroyer.destroy(admin, post, :spam).success).to eq(true)
+          end
+
+        expect(events.size).to eq(1)
+      end
 
       it "destroys the post action" do
         expect { PostActionDestroyer.destroy(user, post, :spam) }.to change { PostAction.count }.by(
@@ -92,6 +124,39 @@ RSpec.describe PostActionDestroyer do
         messages = MessageBus.track_publish { PostActionDestroyer.destroy(user, post, :spam) }
 
         expect(messages.last.data[:type]).to eq(:acted)
+      end
+    end
+
+    context "with a flag staff took action on" do
+      fab!(:moderator)
+
+      before do
+        PostActionCreator.new(
+          moderator,
+          post,
+          PostActionType.types[:inappropriate],
+          take_action: true,
+        ).perform
+      end
+
+      it "unhides the post as the staff member removing the flag" do
+        events =
+          DiscourseEvent.track_events(:post_unhidden) do
+            PostActionDestroyer.destroy(moderator, post, :inappropriate)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq([[post, { acting_user: moderator }]])
+      end
+
+      it "reports no unhide when the post was already visible again" do
+        post.reload.unhide!
+
+        events =
+          DiscourseEvent.track_events(:post_unhidden) do
+            PostActionDestroyer.destroy(moderator, post, :inappropriate)
+          end
+
+        expect(events).to be_empty
       end
     end
 

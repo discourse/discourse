@@ -65,4 +65,95 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(option_ids).not_to include(SiteSetting.hidden_settings.first.to_s)
     end
   end
+
+  describe "POST /admin/plugins/discourse-workflows/node-types/upgrades" do
+    before do
+      register_versioned_workflow_nodes(
+        "action:upgrade_request_test",
+        v1_upgrade: ->(parameters) do
+          if parameters["operation"] == "rename"
+            { type: "action:upgrade_request_test", parameters: { "title" => parameters["name"] } }
+          end
+        end,
+      )
+    end
+
+    def saved_node(name, parameters)
+      {
+        id: "#{name}-id",
+        type: "action:upgrade_request_test",
+        typeVersion: "1.0",
+        name:,
+        parameters:,
+      }
+    end
+
+    it "returns the upgraded nodes without saving anything", :aggregate_failures do
+      post "/admin/plugins/discourse-workflows/node-types/upgrades.json",
+           params: {
+             nodes: [
+               saved_node("Rename", { operation: "rename", name: "New title" }),
+               saved_node("Other", { operation: "other" }),
+             ],
+           },
+           as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["nodes"]).to match(
+        [
+          include(
+            "name" => "Rename",
+            "typeVersion" => "2.0",
+            "parameters" => {
+              "title" => "New title",
+            },
+          ),
+          include("name" => "Other", "typeVersion" => "1.0"),
+        ],
+      )
+      expect(response.parsed_body["upgrades"]).to contain_exactly(
+        include(
+          "name" => "Rename",
+          "from" => {
+            "type" => "action:upgrade_request_test",
+            "version" => "1.0",
+          },
+          "to" => {
+            "type" => "action:upgrade_request_test",
+            "version" => "2.0",
+          },
+          "notes" => [],
+        ),
+      )
+      expect(response.parsed_body["skipped"]).to eq(["Other"])
+    end
+
+    it "returns 400 without nodes" do
+      post "/admin/plugins/discourse-workflows/node-types/upgrades.json", params: {}, as: :json
+
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "returns 422 for malformed nodes" do
+      post "/admin/plugins/discourse-workflows/node-types/upgrades.json",
+           params: {
+             nodes: ["not a node"],
+           },
+           as: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "returns 404 for non-admins" do
+      sign_in(Fabricate(:user))
+
+      post "/admin/plugins/discourse-workflows/node-types/upgrades.json",
+           params: {
+             nodes: [saved_node("Rename", { operation: "rename" })],
+           },
+           as: :json
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

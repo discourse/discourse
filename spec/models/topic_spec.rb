@@ -1276,6 +1276,18 @@ RSpec.describe Topic do
               expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
             end
 
+            it "reports the inviter as the actor of the membership event" do
+              events =
+                DiscourseEvent.track_events(:user_added_to_group) do
+                  topic.invite(inviter, invitee.email, [group.id])
+                end
+
+              expect(events).to contain_exactly(
+                event_name: :user_added_to_group,
+                params: [invitee, group, { automatic: false, acting_user: inviter }],
+              )
+            end
+
             describe "when group ids are not given" do
               it "does not invite the user" do
                 expect do
@@ -1902,6 +1914,21 @@ RSpec.describe Topic do
         expect(Topic.where(archetype: Archetype.banner).count).to eq(1)
       end
 
+      it "triggers topic_bannered, and topic_unbannered for the previous banner" do
+        previous_banner = Fabricate(:banner_topic)
+
+        events = DiscourseEvent.track_events { topic.make_banner!(user) }
+
+        banner_events =
+          events.filter { |event| %i[topic_bannered topic_unbannered].include?(event[:event_name]) }
+        expect(banner_events.map { |event| [event[:event_name], event[:params]] }).to eq(
+          [
+            [:topic_unbannered, [previous_banner, { acting_user: user }]],
+            [:topic_bannered, [topic, { acting_user: user }]],
+          ],
+        )
+      end
+
       it "removes any dismissed banner keys" do
         user.user_profile.update_column(:dismissed_banner_key, topic.id)
 
@@ -1912,6 +1939,14 @@ RSpec.describe Topic do
     end
 
     describe "remove_banner!" do
+      it "triggers topic_unbannered with the user" do
+        topic.make_banner!(user)
+
+        event = DiscourseEvent.track(:topic_unbannered) { topic.remove_banner!(user) }
+
+        expect(event[:params]).to eq([topic, { acting_user: user }])
+      end
+
       it "resets the topic archetype" do
         topic.expects(:add_moderator_post)
 
@@ -2105,6 +2140,19 @@ RSpec.describe Topic do
           expect(events.length).to eq(1)
           expect(events.first[:params][0]).to eq(topic)
           expect(events.first[:params][1]).to eq(category)
+          expect(events.first[:params][2]).to eq(acting_user: nil)
+        end
+
+        it "says who moved the topic, but never assumes its owner did" do
+          moderator = Fabricate(:moderator)
+          topic.acting_user = moderator
+
+          events =
+            DiscourseEvent.track_events(:topic_category_changed) do
+              topic.change_category_to_id(new_category.id)
+            end
+
+          expect(events.sole[:params].last).to eq(acting_user: moderator)
         end
 
         describe "user that is watching the new category" do
@@ -3072,10 +3120,16 @@ RSpec.describe Topic do
       expect(topic_embed.deleted_at).not_to eq(nil)
     end
 
-    it "triggers the topic trashed event" do
-      events = DiscourseEvent.track_events(:topic_trashed) { topic.trash! }
+    it "triggers the topic trashed event with the user who trashed it" do
+      events = DiscourseEvent.track_events(:topic_trashed) { topic.trash!(moderator) }
 
-      expect(events.size).to eq(1)
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: moderator }]])
+    end
+
+    it "triggers the topic trashed event without a user when none is given" do
+      event = DiscourseEvent.track(:topic_trashed) { topic.trash! }
+
+      expect(event[:params]).to eq([topic, { acting_user: nil }])
     end
 
     it "does not trigger the topic trashed event when topic is already trashed" do
@@ -3124,12 +3178,20 @@ RSpec.describe Topic do
       expect(topic_embed.deleted_at).to be_nil
     end
 
-    it "triggers the topic recovered event" do
+    it "triggers the topic recovered event with the user who recovered it" do
       topic.trash!
 
-      events = DiscourseEvent.track_events(:topic_recovered) { topic.recover! }
+      events = DiscourseEvent.track_events(:topic_recovered) { topic.recover!(moderator) }
 
-      expect(events.size).to eq(1)
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: moderator }]])
+    end
+
+    it "triggers the topic recovered event without a user when none is given" do
+      topic.trash!
+
+      event = DiscourseEvent.track(:topic_recovered) { topic.recover! }
+
+      expect(event[:params]).to eq([topic, { acting_user: nil }])
     end
 
     it "does not trigger the topic recovered event when topic is already recovered" do
@@ -3821,6 +3883,33 @@ RSpec.describe Topic do
         topic.featured_link = featured_link
         expect(topic.featured_link_root_domain).to eq("discourse.org")
       end
+    end
+  end
+
+  describe "slow mode inherited from the category" do
+    fab!(:slow_category) { Fabricate(:category, default_slow_mode_seconds: 600) }
+
+    it "announces slow mode as the system user when a topic gets it from its category",
+       :aggregate_failures do
+      topic = Fabricate(:topic)
+
+      events =
+        DiscourseEvent.track_events(:topic_slow_mode_set) { topic.update!(category: slow_category) }
+
+      expect(topic.reload.slow_mode_seconds).to eq(600)
+      expect(events.sole[:params]).to eq([topic, nil, { acting_user: Discourse.system_user }])
+    end
+
+    it "announces nothing when the topic already had that interval" do
+      topic = Fabricate(:topic, category: slow_category)
+      other_slow_category = Fabricate(:category, default_slow_mode_seconds: 600)
+
+      events =
+        DiscourseEvent.track_events(:topic_slow_mode_set) do
+          topic.update!(category: other_slow_category)
+        end
+
+      expect(events).to be_empty
     end
   end
 

@@ -143,6 +143,7 @@ after_initialize do
 
               Group.find_by(id: post_policy.add_users_to_group)&.bulk_remove(
                 previously_accepted_users.pluck(:user_id),
+                acting_user: Discourse.system_user,
               )
             end
           end

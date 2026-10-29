@@ -33,10 +33,26 @@ en:
       nodes:
         "action:post_reaction": "React to post"
         "trigger:post_reaction_changed": "Post reaction changed"
+        "action:add_reaction": "Add reaction"
+        "action:remove_reaction": "Remove reaction"
+        "trigger:reaction_added": "Reaction added"
+        "trigger:reaction_changed": "Reaction changed"
+        "trigger:reaction_removed": "Reaction removed"
+      node_search_terms:
+        "action:add_reaction": "react, emoji, post"
+        "action:remove_reaction": "unreact, emoji, post, undo"
+        "trigger:reaction_added": "reacted, emoji, post"
+        "trigger:reaction_changed": "replaced, switched, emoji, post"
+        "trigger:reaction_removed": "unreacted, emoji, post"
       node_descriptions:
         "action:post_reaction": "Add or remove a reaction on a post"
         "trigger:post_reaction_changed": "Fires when a reaction on a post is added, replaced or removed. The user is the author; the actor is whoever reacted."
         "trigger:post_reaction_changed_v1": "Fires when a reaction on a post is added, replaced or removed. The user is whoever reacted, not the author."
+        "action:add_reaction": "React to a post as a user, like the reaction picker"
+        "action:remove_reaction": "Remove a user's reaction from a post, like the reaction picker"
+        "trigger:reaction_added": "Fires when someone reacts to a post that had no reaction from them. The user is the author; the actor is whoever reacted."
+        "trigger:reaction_changed": "Fires when someone switches their reaction on a post to another one. The user is the author; the actor is whoever reacted."
+        "trigger:reaction_removed": "Fires when someone takes back their reaction on a post. The user is the author; the actor is whoever reacted."
       post_reaction:
         operations:
           add: "Add reaction"
@@ -46,6 +62,14 @@ en:
         if_exists_description: "Users can only have one reaction per post"
         if_exists_keep: "Keep their reaction"
         if_exists_replace: "Replace their reaction"
+      post_reacting:
+        post_id: "Post ID"
+        reaction: "Reaction"
+        if_exists: "If the user already reacted"
+        if_exists_description: "Users can only have one reaction per post"
+        if_exists_keep: "Keep their reaction"
+        if_exists_replace: "Replace their reaction"
+        actor_username: "Performed by user"
       post_reaction_changed:
         changes_added: "Added"
         changes_replaced: "Replaced"

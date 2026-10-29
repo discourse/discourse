@@ -160,12 +160,13 @@ class Topic < ActiveRecord::Base
 
     super(trashed_by)
 
-    DiscourseEvent.trigger(:topic_trashed, self) if trigger_event
+    DiscourseEvent.trigger(:topic_trashed, self, acting_user: trashed_by) if trigger_event
 
     topic_embed.trash! if has_topic_embed?
   end
 
-  def recover!(recovered_by = nil)
+  # `announce: false` leaves `:topic_recovered` to callers that still have to update the topic.
+  def recover!(recovered_by = nil, announce: true)
     trigger_event = false
 
     unless deleted_at.nil?
@@ -177,7 +178,9 @@ class Topic < ActiveRecord::Base
     # Note parens are required because superclass doesn't take `recovered_by`
     super()
 
-    DiscourseEvent.trigger(:topic_recovered, self) if trigger_event
+    if trigger_event && announce
+      DiscourseEvent.trigger(:topic_recovered, self, acting_user: recovered_by)
+    end
 
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
       topic_embed.recover!
@@ -452,6 +455,9 @@ class Topic < ActiveRecord::Base
     end
 
     SearchIndexer.index(self)
+
+    trigger_inherited_slow_mode_event if @slow_mode_inherited && saved_change_to_slow_mode_seconds?
+    @slow_mode_inherited = false
   end
 
   after_update do
@@ -1161,7 +1167,8 @@ class Topic < ActiveRecord::Base
 
   cattr_accessor :update_featured_topics
 
-  def changed_to_category(new_category, silent: nil)
+  # `acting_user` defaults to the one set explicitly: `#acting_user` falls back to the topic's owner.
+  def changed_to_category(new_category, silent: nil, acting_user: @acting_user)
     return true if new_category.blank? || Category.exists?(topic_id: id)
 
     if new_category.id == SiteSetting.uncategorized_category_id &&
@@ -1218,7 +1225,7 @@ class Topic < ActiveRecord::Base
           DB.after_commit { TopicTrackingState.publish_category_change(self, old_category) }
         end
 
-        DiscourseEvent.trigger(:topic_category_changed, self, old_category)
+        DiscourseEvent.trigger(:topic_category_changed, self, old_category, acting_user:)
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
@@ -1281,7 +1288,7 @@ class Topic < ActiveRecord::Base
     new_post
   end
 
-  def change_category_to_id(category_id, silent: nil)
+  def change_category_to_id(category_id, silent: nil, acting_user: @acting_user)
     return false if private_message?
 
     new_category_id = category_id.to_i
@@ -1295,7 +1302,7 @@ class Topic < ActiveRecord::Base
 
     reviewables.update_all(category_id: new_category_id)
 
-    changed_to_category(cat, silent: silent)
+    changed_to_category(cat, silent: silent, acting_user:)
   end
 
   def remove_allowed_group(removed_by, name)
@@ -1529,6 +1536,7 @@ class Topic < ActiveRecord::Base
     save
 
     MessageBus.publish("/site/banner", banner)
+    DiscourseEvent.trigger(:topic_bannered, self, acting_user: user)
 
     Jobs.cancel_scheduled_job(:remove_banner, topic_id: id)
     Jobs.enqueue_at(bannered_until, :remove_banner, topic_id: id) if bannered_until
@@ -1541,6 +1549,7 @@ class Topic < ActiveRecord::Base
     save
 
     MessageBus.publish("/site/banner", nil)
+    DiscourseEvent.trigger(:topic_unbannered, self, acting_user: user)
 
     Jobs.cancel_scheduled_job(:remove_banner, topic_id: id)
   end
@@ -1691,6 +1700,25 @@ class Topic < ActiveRecord::Base
   def inherit_slow_mode_from_category
     if category&.default_slow_mode_seconds
       self.slow_mode_seconds = category&.default_slow_mode_seconds
+      @slow_mode_inherited = true
+    end
+  end
+
+  # Taking a category's default changes slow mode like the slow mode service does, so it's announced the same
+  # way, as the system user.
+  def trigger_inherited_slow_mode_event
+    DB.after_commit do
+      if slow_mode_seconds.to_i > 0
+        ends_at = topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])&.execute_at
+        DiscourseEvent.trigger(
+          :topic_slow_mode_set,
+          self,
+          ends_at,
+          acting_user: Discourse.system_user,
+        )
+      else
+        DiscourseEvent.trigger(:topic_slow_mode_cleared, self, acting_user: Discourse.system_user)
+      end
     end
   end
 
@@ -1778,6 +1806,7 @@ class Topic < ActiveRecord::Base
     topic_timer_options.merge!(silent: silent) if silent
     topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
     topic_timer.status_type = status_type
+    topic_timer.acting_user = by_user || Discourse.system_user
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = based_on_last_post.present?
@@ -2369,7 +2398,7 @@ class Topic < ActiveRecord::Base
             target_user.groups.where(automatic: false)
         ).each do |group|
           if guardian.can_edit_group?(group)
-            group.add(target_user)
+            group.add(target_user, acting_user: invited_by)
 
             GroupActionLogger.new(invited_by, group).log_add_user_to_group(target_user)
           end

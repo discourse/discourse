@@ -39,6 +39,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       action:user
       action:send_personal_message
       action:group
+      action:add_user_to_group
       action:ai_agent
       flow:wait
     ]
@@ -95,8 +96,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
 
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
     expect(output_fields_by_type.fetch("trigger:topic_created")).to include(
-      "post.user_id" => "integer",
-      "post.username" => "string",
+      "post.user_id" => "integer|null",
+      "post.username" => "string|null",
       "post.post_number" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",
@@ -107,8 +108,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "user.trust_level" => "integer",
     )
     expect(output_fields_by_type.fetch("trigger:post_created")).to include(
-      "post.user_id" => "integer",
-      "post.username" => "string",
+      "post.user_id" => "integer|null",
+      "post.username" => "string|null",
       "post.post_number" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",
@@ -204,21 +205,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.id" => "integer",
       "post.post_url" => "string",
     )
-    expect(output_contracts_by_type.fetch("action:group")[:variants]).to include(
-      a_hash_including(
-        mode: "replace",
-        display_options: {
-          "show" => {
-            "operation" => %w[add remove],
-          },
-        },
-        fields:
-          a_hash_including(
-            "group.id" => "integer",
-            "group.name" => "string",
-            "user.username" => "string",
-          ),
-      ),
+    expect(output_fields_by_type.fetch("action:add_user_to_group")).to include(
+      "group.id" => "integer",
+      "group.name" => "string",
+      "user.username" => "string",
+      "actor.username" => "string",
+      "changed" => "boolean",
+    )
+    expect(output_contracts_by_type.fetch("action:group")[:variants]).to contain_exactly(
       a_hash_including(
         mode: "replace",
         display_options: {
@@ -301,6 +295,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
     expect(topic_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "get", topic_id: "={{ $json.topic.id }}")),
+      include(parameters: include(operation: "delete", topic_id: "={{ $json.topic.id }}")),
     )
     expect(post_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "create", topic_id: "={{ $json.topic.id }}")),
@@ -339,5 +334,70 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(if_node[:examples].first.dig(:parameters, :conditions)).to contain_exactly(
       include(leftValue: "={{ $json.user.trust_level }}", rightValue: "1"),
     )
+  end
+
+  it "includes examples for hiding and unhiding posts" do
+    result = invoke_tool(%w[action:hide_post action:unhide_post])
+
+    expect(result[:nodes].to_h { |node| [node[:type], node[:examples]] }).to match(
+      "action:hide_post" => [
+        include(parameters: include(post_id: "={{ $json.post.id }}", flag_reason: "spam")),
+      ],
+      "action:unhide_post" => [include(parameters: include(post_id: "={{ $json.post.id }}"))],
+    )
+  end
+
+  it "includes an example for locking posts" do
+    result = invoke_tool(%w[action:lock_post])
+
+    expect(result[:nodes].sole[:examples]).to contain_exactly(
+      include(parameters: include(post_id: "={{ $json.post.id }}")),
+    )
+  end
+
+  it "includes examples penalising the trigger post's author for a duration", :aggregate_failures do
+    result = invoke_tool(%w[action:suspend_user action:silence_user])
+
+    result[:nodes].each do |node|
+      parameters = node[:examples].sole[:parameters]
+      node_class = DiscourseWorkflows::Registry.latest_node_type(node[:type])
+
+      expect(parameters).to include(
+        username: "={{ $json.user.username }}",
+        schedule: "after_duration",
+        post_id: "={{ $json.post.id }}",
+      )
+      expect(node_class.properties.keys).to include(*parameters.keys)
+    end
+    expect(result[:nodes].pluck(:type)).to contain_exactly(
+      "action:suspend_user",
+      "action:silence_user",
+    )
+  end
+
+  it "includes an example adding the trigger post's author to a group" do
+    parameters = invoke_tool(%w[action:add_user_to_group])[:nodes].sole[:examples].sole[:parameters]
+
+    expect(parameters).to include(username: "={{ $json.user.username }}", group_id: 123)
+    expect(DiscourseWorkflows::Nodes::AddUserToGroup::V1.properties.keys).to include(
+      *parameters.keys,
+    )
+  end
+
+  it "includes an example granting the trigger post's author a badge for that post" do
+    parameters = invoke_tool(%w[action:grant_badge])[:nodes].sole[:examples].sole[:parameters]
+
+    expect(parameters).to include(
+      username: "={{ $json.user.username }}",
+      badge_id: 123,
+      post_id: "={{ $json.post.id }}",
+    )
+    expect(DiscourseWorkflows::Nodes::GrantBadge::V1.properties.keys).to include(*parameters.keys)
+  end
+
+  it "leaves the hidden user moderation trigger out, but not its per-change triggers" do
+    result = invoke_tool(%w[trigger:user_moderation_changed trigger:user_suspended])
+
+    expect(result[:nodes].pluck(:type)).to eq(["trigger:user_suspended"])
   end
 end

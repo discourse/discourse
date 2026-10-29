@@ -96,6 +96,95 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
+  describe ".deprecated" do
+    it "needs a superseding version or an upgrade block" do
+      expect { Class.new(described_class) { deprecated(changes: {}) } }.to raise_error(
+        ArgumentError,
+      )
+    end
+
+    it "lists the replacing nodes without exposing the upgrade block" do
+      klass =
+        Class.new(described_class) do
+          description(name: "action:replaced_test")
+          deprecated(replaced_by: "action:replacement_test") { nil }
+        end
+
+      expect(klass.deprecation).to eq(replaced_by: ["action:replacement_test"], changes: {})
+    end
+
+    it "hides the deprecated version from the palette" do
+      v1, v2 =
+        register_versioned_workflow_nodes(
+          "action:palette_deprecation_test",
+          v1_deprecation: {
+            superseded_by: "2.0",
+          },
+        )
+
+      expect(v1).not_to be_palette_visible
+      expect(v2).to be_palette_visible
+    end
+  end
+
+  describe ".upgrade" do
+    it "returns nothing for a version that isn't deprecated" do
+      klass = Class.new(described_class) { description(name: "action:current_test") }
+
+      expect(klass.upgrade({ "title" => "Hello" })).to be_nil
+    end
+
+    it "moves the parameters to the superseding version by default" do
+      v1, _v2 =
+        register_versioned_workflow_nodes(
+          "action:superseded_test",
+          v1_deprecation: {
+            superseded_by: "2.0",
+          },
+        )
+
+      expect(v1.upgrade({ "title" => "Hello" })).to eq(
+        type: "action:superseded_test",
+        version: "2.0",
+        parameters: {
+          "title" => "Hello",
+        },
+      )
+    end
+
+    it "returns what the upgrade block maps the parameters to" do
+      v1, _v2 =
+        register_versioned_workflow_nodes(
+          "action:upgrade_block_test",
+          v1_upgrade: ->(parameters) do
+            { type: "action:log", parameters: { "message" => parameters["title"] } }
+          end,
+        )
+
+      expect(v1.upgrade({ "title" => "Hello" })).to eq(
+        type: "action:log",
+        parameters: {
+          "message" => "Hello",
+        },
+      )
+    end
+
+    it "gives the upgrade block string keys whatever the caller passes" do
+      v1, _v2 =
+        register_versioned_workflow_nodes(
+          "action:upgrade_keys_test",
+          v1_upgrade: ->(parameters) { { type: "action:log", parameters: } },
+        )
+
+      expect(v1.upgrade({ title: "Hello" })).to eq(
+        type: "action:log",
+        parameters: {
+          "title" => "Hello",
+        },
+      )
+    end
+  end
+
   describe ".output_contracts" do
     let(:declared_schema) do
       {
@@ -286,6 +375,37 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
+  describe ".timezone_property" do
+    it "builds an optional timezone property with its own empty label and extra options" do
+      expect(
+        described_class.timezone_property(
+          none: "discourse_workflows.test.timezone_none",
+          display_options: {
+            show: {
+              schedule: ["at_time"],
+            },
+          },
+        ),
+      ).to eq(
+        timezone: {
+          type: :string,
+          required: false,
+          ui: {
+            control: :timezone,
+          },
+          control_options: {
+            none: "discourse_workflows.test.timezone_none",
+          },
+          display_options: {
+            show: {
+              schedule: ["at_time"],
+            },
+          },
+        },
+      )
+    end
+  end
+
   describe ".normalize_ids" do
     it "coerces scalars, arrays, and mixed values to unique integer ids" do
       expect(described_class.normalize_ids(nil)).to eq([])
@@ -354,12 +474,21 @@ RSpec.describe DiscourseWorkflows::NodeType do
         post_recovered
         post_moved
         post_like_changed
+        post_liked
+        post_unliked
+        post_hidden
+        post_unhidden
+        post_locked
+        post_unlocked
       ]
       once_per_topic = %w[
         topic_created
         topic_closed
         topic_published
         topic_timer_changed
+        topic_timer_set
+        topic_timer_cleared
+        topic_timer_completed
         stale_topic
         topic_tag_changed
       ]

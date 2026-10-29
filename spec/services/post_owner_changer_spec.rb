@@ -55,6 +55,25 @@ RSpec.describe PostOwnerChanger do
       expect(p1.user).to eq(user_a)
     end
 
+    it "does not unlike again for a staff new owner who already took back their like" do
+      PostActionCreator.like(editor, p1)
+      PostActionDestroyer.destroy(editor, p1, :like)
+
+      events =
+        DiscourseEvent.track_events(:like_destroyed) do
+          expect {
+            PostOwnerChanger.new(
+              post_ids: [p1.id],
+              topic_id: topic.id,
+              new_owner: editor,
+              acting_user: editor,
+            ).change_owner!
+          }.not_to change { GivenDailyLike.find_for(editor.id, Date.today).pick(:likes_given) }
+        end
+
+      expect(events).to be_empty
+    end
+
     it "changes multiple posts" do
       PostOwnerChanger.new(
         post_ids: [p1.id, p2.id],
@@ -149,6 +168,24 @@ RSpec.describe PostOwnerChanger do
       expect(topic.reload.deleted_at).to eq(nil)
       expect(p1.reload.deleted_at).to eq(nil)
       expect(p1.user).to eq(user_a)
+    end
+
+    it "recovers a topic deleted with its removed author as the acting user" do
+      topic # memoize before the topic is trashed and scoped out of p1.topic
+      PostDestroyer.new(editor, p1).destroy
+      p1.reload.update_columns(user_id: nil)
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostOwnerChanger.new(
+            post_ids: [p1.id],
+            topic_id: topic.id,
+            new_owner: user_a,
+            acting_user: editor,
+          ).change_owner!
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: editor }]])
     end
 
     it "leaves an individually deleted first post deleted when the topic is live" do

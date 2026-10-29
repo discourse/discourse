@@ -7,6 +7,8 @@ describe Jobs::PublishGroupMembershipUpdates do
   fab!(:group)
 
   it "publishes events for added users" do
+    GroupUser.create!(group:, user:)
+
     events =
       DiscourseEvent.track_events do
         job.execute(user_ids: [user.id], group_id: group.id, type: "add")
@@ -14,7 +16,7 @@ describe Jobs::PublishGroupMembershipUpdates do
 
     expect(events).to include(
       event_name: :user_added_to_group,
-      params: [user, group, { automatic: group.automatic }],
+      params: [user, group, { automatic: group.automatic, acting_user: Discourse.system_user }],
     )
   end
 
@@ -24,7 +26,25 @@ describe Jobs::PublishGroupMembershipUpdates do
         job.execute(user_ids: [user.id], group_id: group.id, type: "remove")
       end
 
-    expect(events).to include(event_name: :user_removed_from_group, params: [user, group])
+    expect(events).to include(
+      event_name: :user_removed_from_group,
+      params: [user, group, { acting_user: Discourse.system_user }],
+    )
+  end
+
+  it "skips memberships that changed again since", :aggregate_failures do
+    added_then_removed =
+      DiscourseEvent.track_events(:user_added_to_group) do
+        job.execute(user_ids: [user.id], group_id: group.id, type: "add")
+      end
+    GroupUser.create!(group:, user:)
+    removed_then_added =
+      DiscourseEvent.track_events(:user_removed_from_group) do
+        job.execute(user_ids: [user.id], group_id: group.id, type: "remove")
+      end
+
+    expect(added_then_removed).to be_empty
+    expect(removed_then_added).to be_empty
   end
 
   it "does nothing if the group doesn't exist" do
@@ -33,7 +53,7 @@ describe Jobs::PublishGroupMembershipUpdates do
 
     expect(events).not_to include(
       event_name: :user_added_to_group,
-      params: [user, group, { automatic: group.automatic }],
+      params: [user, group, { automatic: group.automatic, acting_user: Discourse.system_user }],
     )
   end
 
@@ -51,7 +71,7 @@ describe Jobs::PublishGroupMembershipUpdates do
 
     expect(events).not_to include(
       event_name: :user_added_to_group,
-      params: [user, group, { automatic: group.automatic }],
+      params: [user, group, { automatic: group.automatic, acting_user: Discourse.system_user }],
     )
   end
 end

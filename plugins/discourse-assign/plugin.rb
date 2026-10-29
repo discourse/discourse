@@ -29,6 +29,8 @@ after_initialize do
     register_discourse_workflows_node do
       [
         DiscourseWorkflows::Nodes::AssignTopic::V1,
+        DiscourseWorkflows::Nodes::AssignTopic::V2,
+        DiscourseWorkflows::Nodes::UnassignTopic::V1,
         DiscourseWorkflows::Nodes::Assigned::V1,
         DiscourseWorkflows::Nodes::Assigned::V2,
         DiscourseWorkflows::Nodes::Unassigned::V1,
@@ -943,7 +945,7 @@ after_initialize do
     Assignment.deactivate!(topic: topic)
   end
 
-  on(:user_added_to_group) do |user, group, automatic:|
+  on(:user_added_to_group) do |user, group|
     group.assignments.active.find_each do |assignment|
       Jobs.enqueue(:assign_notification, assignment_id: assignment.id, user_id: user.id)
     end

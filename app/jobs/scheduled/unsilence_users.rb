@@ -7,7 +7,15 @@ module Jobs
     def execute(args)
       User
         .where("silenced_till IS NOT NULL AND silenced_till < now()")
-        .find_each { |user| UserSilencer.unsilence(user, Discourse.system_user) }
+        .find_each do |user|
+          # An anonymous shadow's own column is never read (User#silenced_till), so
+          # clearing it must not unsilence the account behind it.
+          if user.main_user_record != user
+            user.update_columns(silenced_till: nil)
+          else
+            UserSilencer.unsilence(user, Discourse.system_user, expired_only: true)
+          end
+        end
     end
   end
 end

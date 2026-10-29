@@ -284,7 +284,7 @@ class Admin::UsersController < Admin::StaffController
     return render_json_error(I18n.t("groups.errors.can_not_modify_automatic")) if group.automatic
     guardian.ensure_can_edit!(group)
 
-    group.add(@user)
+    group.add(@user, acting_user: current_user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
 
     render body: nil
@@ -297,7 +297,7 @@ class Admin::UsersController < Admin::StaffController
     return render_json_error(I18n.t("groups.errors.can_not_modify_automatic")) if group.automatic
     guardian.ensure_can_edit!(group)
 
-    if group.remove(@user)
+    if group.remove(@user, acting_user: current_user)
       GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
     end
 

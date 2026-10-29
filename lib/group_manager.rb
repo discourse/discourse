@@ -5,38 +5,38 @@ class GroupManager
     @group = group
   end
 
-  def add(user_ids, automatic: false)
+  # `owner: true` adds them as owners, so listeners already see them as such.
+  def add(user_ids, automatic: false, acting_user: nil, owner: false)
     return [] if user_ids.blank?
 
-    added_user_ids = bulk_add_transaction(user_ids)
+    added_user_ids = bulk_add_transaction(user_ids, owner:)
     return [] if added_user_ids.blank?
 
     bulk_publish_category_updates(added_user_ids)
 
     User
       .where(id: added_user_ids)
-      .find_each { |user| @group.trigger_user_added_event(user, automatic) }
+      .find_each { |user| @group.trigger_user_added_event(user, automatic, acting_user:) }
 
     added_user_ids
   end
 
-  def remove(user_ids)
+  def remove(user_ids, acting_user: nil)
     return [] if user_ids.blank?
 
-    group_users_to_remove = @group.group_users.where(user_id: user_ids)
-    return [] if group_users_to_remove.empty?
+    removed_group_users = bulk_remove_transaction(user_ids)
+    return [] if removed_group_users.empty?
 
-    webhook_payloads = build_user_removed_webhook_payloads(group_users_to_remove)
-
-    removed_user_ids = group_users_to_remove.pluck(:user_id)
-    bulk_remove_transaction(removed_user_ids)
+    removed_user_ids = removed_group_users.map(&:user_id)
 
     recalculate_trust_level(removed_user_ids)
     bulk_publish_category_updates(removed_user_ids)
     enqueue_pm_notification_cleanup(removed_user_ids)
 
-    User.where(id: removed_user_ids).find_each { |user| @group.trigger_user_removed_event(user) }
-    enqueue_user_removed_webhook_events(webhook_payloads)
+    User
+      .where(id: removed_user_ids)
+      .find_each { |user| @group.trigger_user_removed_event(user, acting_user:) }
+    enqueue_user_removed_webhook_events(removed_group_users)
 
     removed_user_ids
   end
@@ -67,17 +67,18 @@ class GroupManager
 
   private
 
-  def bulk_add_transaction(user_ids)
+  def bulk_add_transaction(user_ids, owner: false)
     added_user_ids = nil
 
     Group.transaction do
       sql = <<~SQL
       INSERT INTO group_users
-        (group_id, user_id, notification_level, created_at, updated_at)
+        (group_id, user_id, notification_level, owner, created_at, updated_at)
       SELECT
         :group_id,
         u.id,
         :notification_level,
+        :owner,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
       FROM users AS u
@@ -97,6 +98,7 @@ class GroupManager
           group_id: @group.id,
           user_ids: user_ids,
           notification_level: @group.default_notification_level,
+          owner:,
         )
 
       return added_user_ids if added_user_ids.blank?
@@ -107,14 +109,27 @@ class GroupManager
     added_user_ids
   end
 
-  def bulk_remove_transaction(removed_user_ids)
+  # Only the rows this DELETE returns were removed by this call: a concurrent
+  # removal of the same member gets nothing back and reports nothing.
+  def bulk_remove_transaction(user_ids)
     Group.transaction do
-      @group.group_users.where(user_id: removed_user_ids).delete_all
+      removed_group_users =
+        DB
+          .query_hash(<<~SQL, group_id: @group.id, user_ids:)
+            DELETE FROM group_users
+            WHERE group_id = :group_id AND user_id IN (:user_ids)
+            RETURNING *
+          SQL
+          .map { |row| GroupUser.instantiate(row) }
 
+      next [] if removed_group_users.empty?
+
+      removed_user_ids = removed_group_users.map(&:user_id)
       remove_primary_and_flair_group(removed_user_ids)
       grant_other_available_title(removed_user_ids)
-
       decrease_group_user_count(removed_user_ids)
+
+      removed_group_users
     end
   end
 
@@ -168,26 +183,15 @@ class GroupManager
       end
   end
 
-  def build_user_removed_webhook_payloads(group_users_relation)
-    return unless WebHook.active_web_hooks(:group_user)
+  def enqueue_user_removed_webhook_events(removed_group_users)
+    return unless WebHook.active_web_hooks(:user_removed_from_group).exists?
 
-    payloads = []
-    group_users_relation.find_each do |group_user|
-      payloads << {
-        id: group_user.id,
-        payload: WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer),
-      }
-    end
-    payloads
-  end
-
-  def enqueue_user_removed_webhook_events(webhook_payloads)
-    webhook_payloads&.each do |webhook_payload|
+    removed_group_users.each do |group_user|
       WebHook.enqueue_hooks(
         :group_user,
         :user_removed_from_group,
-        id: webhook_payload[:id],
-        payload: webhook_payload[:payload],
+        id: group_user.id,
+        payload: WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer),
         group_ids: [@group.id],
       )
     end

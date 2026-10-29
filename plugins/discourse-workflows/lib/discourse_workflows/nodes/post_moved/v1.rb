@@ -8,6 +8,7 @@ module DiscourseWorkflows
           Schema.merge(
             Schema::POST_SCHEMA,
             Schema::TOPIC_LIST_ITEM_SCHEMA,
+            Schema::ACTOR_SCHEMA,
             {
               "$schema" => Schema::DRAFT_URI,
               "type" => "object",
@@ -33,10 +34,11 @@ module DiscourseWorkflows
           },
         )
 
-        def initialize(post, original_topic_id, *)
+        def initialize(post, original_topic_id, _original_post, payload = {})
           super(parameters: {})
           @post = ::Post.find_by(id: post&.id)
           @original_topic_id = original_topic_id
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -49,6 +51,7 @@ module DiscourseWorkflows
             post: serialize_post(@post),
             topic: serialize_topic_list_item(destination_topic),
             original_topic: serialize_topic_list_item(original_topic),
+            actor: serialize_user(@actor),
           }
         end
 

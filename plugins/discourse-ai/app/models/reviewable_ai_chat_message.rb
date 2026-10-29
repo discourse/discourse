@@ -117,11 +117,11 @@ class ReviewableAiChatMessage < Reviewable
   end
 
   def perform_disagree_and_restore(performed_by, args)
-    disagree { chat_message.recover! }
+    disagree(performed_by) { chat_message.recover! }
   end
 
   def perform_disagree(performed_by, args)
-    disagree
+    disagree(performed_by)
   end
 
   def perform_ignore(performed_by, args)
@@ -187,10 +187,10 @@ class ReviewableAiChatMessage < Reviewable
     end
   end
 
-  def disagree
+  def disagree(performed_by)
     yield if block_given?
 
-    UserSilencer.unsilence(chat_message_creator)
+    UserSilencer.unsilence(chat_message_creator, performed_by, reviewable_id: id)
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }

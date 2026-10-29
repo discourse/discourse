@@ -15,6 +15,7 @@ class TopicPublisher
       .change! do
         if @topic.private_message?
           @topic = TopicConverter.new(@topic, @published_by).convert_to_public_topic(@category_id)
+          raise ActiveRecord::RecordInvalid.new(@topic) if @topic.private_message?
         elsif @topic.category_id != @category_id
           revised =
             PostRevisor.new(@topic.first_post, @topic).revise!(
@@ -46,7 +47,7 @@ class TopicPublisher
           op.update_columns(version: 1, public_version: 1, last_version_at: published_at)
         end
 
-        DiscourseEvent.trigger(:topic_published, @topic, published_at)
+        DiscourseEvent.trigger(:topic_published, @topic, published_at, acting_user: @published_by)
       end
 
     Jobs.enqueue(

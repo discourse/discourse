@@ -27,6 +27,7 @@ module Jobs
 
       topic_timer.execute_at =
         (replies.minimum(:created_at) || Time.zone.now) + topic_timer.duration_minutes.minutes
+      topic_timer.acting_user = Discourse.system_user
       topic_timer.save
     end
   end

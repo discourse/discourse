@@ -297,6 +297,18 @@ RSpec.describe WebHook do
       end
     end
 
+    it "enqueues the topic recovered hook once when staff recover a deleted topic" do
+      post = PostCreator.create(user, raw: "post", title: "topic", skip_validations: true)
+      PostDestroyer.new(admin, post).destroy
+      Jobs::EmitWebHookEvent.jobs.clear
+
+      PostDestroyer.new(admin, post.reload).recover
+
+      expect(
+        Jobs::EmitWebHookEvent.jobs.map { |job| job["args"].first["event_name"] },
+      ).to contain_exactly("topic_recovered")
+    end
+
     it "enqueues matching hooks for post events" do
       Fabricate(:web_hook)
 

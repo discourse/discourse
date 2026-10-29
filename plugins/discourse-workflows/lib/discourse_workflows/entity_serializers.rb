@@ -50,6 +50,36 @@ module DiscourseWorkflows
       serialize_record(user, DiscourseWorkflows::UserSerializer, scope: guardian)
     end
 
+    # `attributes` lets a trigger serialize the timer as it was before a change.
+    def serialize_timer(timer, attributes = timer.attributes)
+      attributes
+        .slice(*::TopicTimer::EVENT_ATTRIBUTES)
+        .symbolize_keys
+        .merge(
+          id: timer.id,
+          status_type: ::TopicTimer.types[attributes["status_type"]].to_s,
+          execute_at: attributes["execute_at"].iso8601,
+        )
+    end
+
+    def serialize_badge(badge)
+      {
+        id: badge.id,
+        name: badge.name,
+        description: badge.description.presence,
+        badge_type_id: badge.badge_type_id,
+        icon: badge.icon,
+        image_url: badge.image_url,
+        grant_count: badge.grant_count,
+        system: badge.system?,
+        multiple_grant: badge.multiple_grant?,
+      }
+    end
+
+    def serialize_group(group, guardian: Discourse.system_user.guardian)
+      serialize_record(group, WebHookGroupSerializer, scope: guardian)
+    end
+
     def serialize_basic_group(group)
       { id: group.id, name: group.name, full_name: group.full_name, automatic: group.automatic? }
     end

@@ -27,6 +27,22 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
     expect(group.users).to include(bot_user)
   end
 
+  it "reports the system user as the actor of the membership changes" do
+    agent = Fabricate(:ai_agent)
+    agent.update_column(:user_id, bot_user.id)
+
+    added = DiscourseEvent.track_events(:user_added_to_group) { described_class.sync_all! }
+    stale_user = Fabricate(:user)
+    Group.find_by(name: described_class::GROUP_NAME).add(stale_user)
+    removed = DiscourseEvent.track_events(:user_removed_from_group) { described_class.sync_all! }
+
+    expect(added.map { |event| event[:params].first }).to contain_exactly(bot_user)
+    expect(removed.map { |event| event[:params].first }).to contain_exactly(stale_user)
+    expect((added + removed).map { |event| event[:params].last[:acting_user] }).to all(
+      eq(Discourse.system_user),
+    )
+  end
+
   it "preserves pre-upgrade historical members during a full sync" do
     group =
       Group.find_or_create_by!(name: described_class::GROUP_NAME) { |group| group.automatic = true }

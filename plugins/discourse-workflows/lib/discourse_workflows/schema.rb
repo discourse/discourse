@@ -59,6 +59,7 @@ module DiscourseWorkflows
         "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" },
         "tags": {
           "type": "array",
+          "description": "Missing when tagging is off, or for personal messages the user can't tag",
           "x-optional": true,
           "items": {
             "type": "object",
@@ -102,10 +103,12 @@ module DiscourseWorkflows
         "category_id": { "type": ["integer", "null"] },
         "category_name": { "type": ["string", "null"] },
         "category_slug": { "type": ["string", "null"] },
-        "user_id": { "type": "integer" },
-        "username": { "type": "string" },
+        "user_id": { "type": ["integer", "null"], "description": "Null when the author was deleted" },
+        "username": { "type": ["string", "null"], "description": "Null when the author was deleted" },
         "created_at": { "type": "string", "format": "date-time" },
         "updated_at": { "type": "string", "format": "date-time" },
+        "hidden": { "type": "boolean" },
+        "locked": { "type": "boolean", "description": "Whether only staff can edit the post" },
         "excerpt": { "type": "string" },
         "like_count": { "type": "integer" },
         "reply_count": { "type": "integer" },
@@ -418,6 +421,24 @@ module DiscourseWorkflows
     REVIEWABLE_EVENT_SCHEMA =
       entity("reviewable", REVIEWABLE_PROPERTIES, "Review queue item payload")
 
+    TOPIC_TIMER_PROPERTIES = JSON.parse(<<~JSON).freeze
+      {
+        "id": { "type": "integer" },
+        "status_type": { "type": "string" },
+        "execute_at": { "type": "string", "format": "date-time" },
+        "category_id": { "type": ["integer", "null"] },
+        "user_id": { "type": "integer" },
+        "based_on_last_post": { "type": "boolean" },
+        "duration_minutes": { "type": ["integer", "null"] }
+      }
+    JSON
+
+    TOPIC_TIMER = { "type" => "object", "properties" => TOPIC_TIMER_PROPERTIES }.freeze
+    NULLABLE_TOPIC_TIMER = {
+      "type" => %w[object null],
+      "properties" => TOPIC_TIMER_PROPERTIES,
+    }.freeze
+
     TAG_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "id": { "type": "integer" },
@@ -449,6 +470,7 @@ module DiscourseWorkflows
     BADGE_SCHEMA = entity("badge", BADGE_PROPERTIES, "Badge involved in the grant event")
     BADGE_GRANTED_SCHEMA =
       document(USER_SCHEMA.fetch("properties").merge(BADGE_SCHEMA.fetch("properties")))
+    BADGE_ENTITY_SCHEMA = entity("badge", BADGE_PROPERTIES, "Badge granted or revoked")
 
     class << self
       def normalize(schema)

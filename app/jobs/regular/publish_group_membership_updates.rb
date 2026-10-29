@@ -10,17 +10,20 @@ module Jobs
       return if !group
 
       added_members = args[:type] == Group::AUTO_GROUPS_ADD
+      system_user = Discourse.system_user
 
-      User
-        .human_users
-        .where(id: args[:user_ids])
-        .each do |user|
-          if added_members
-            group.trigger_user_added_event(user, group.automatic?)
-          else
-            group.trigger_user_removed_event(user)
-          end
+      # The membership may have changed again since it was enqueued: only report what still holds.
+      member_ids = group.group_users.where(user_id: args[:user_ids]).select(:user_id)
+      users = User.human_users.where(id: args[:user_ids])
+      users = added_members ? users.where(id: member_ids) : users.where.not(id: member_ids)
+
+      users.each do |user|
+        if added_members
+          group.trigger_user_added_event(user, group.automatic?, acting_user: system_user)
+        else
+          group.trigger_user_removed_event(user, acting_user: system_user)
         end
+      end
     end
   end
 end

@@ -25,7 +25,9 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :user_updated,
-          output_contracts: [{ schema: Schema::USER_UPDATED_EVENT_SCHEMA }],
+          output_contracts: [
+            { schema: Schema.merge(Schema::USER_UPDATED_EVENT_SCHEMA, Schema::ACTOR_SCHEMA) },
+          ],
           properties: {
             changed_fields: {
               type: :multi_options,
@@ -70,10 +72,11 @@ module DiscourseWorkflows
           CHANGED_FIELDS.filter_map { |name, mapped| name if mapped.intersect?(columns) }
         end
 
-        def initialize(user, changed_columns = nil, *)
+        def initialize(user, changed_columns = nil, payload = {})
           super(parameters: {})
           @user = user
           @changed = self.class.changed_names_for(changed_columns)
+          @actor = payload[:acting_user]
         end
 
         def valid?
@@ -92,6 +95,7 @@ module DiscourseWorkflows
                 created_at: @user.created_at&.iso8601,
               ),
             changed: @changed,
+            actor: serialize_user(@actor),
           }
         end
 

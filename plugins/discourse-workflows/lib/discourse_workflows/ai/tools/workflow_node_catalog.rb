@@ -96,6 +96,27 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:add_user_to_group" => [
+            {
+              name: "Add the author of the trigger post to a group",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                group_id: 123,
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:grant_badge" => [
+            {
+              name: "Grant the author of the trigger post a badge for that post",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                badge_id: 123,
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
           "action:user" => [
             {
               name: "Look up a post author",
@@ -124,6 +145,14 @@ module DiscourseWorkflows
               name: "Get trigger topic details",
               parameters: {
                 operation: "get",
+                topic_id: "={{ $json.topic.id }}",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Delete the trigger topic",
+              parameters: {
+                operation: "delete",
                 topic_id: "={{ $json.topic.id }}",
                 actor_username: "system",
               },
@@ -252,12 +281,129 @@ module DiscourseWorkflows
               },
             },
           ],
-          "action:topic_moderation" => [
+          "action:close_topic" => [
+            {
+              name: "Close the trigger topic",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:unlist_topic" => [
             {
               name: "Unlist the trigger topic",
               parameters: {
-                operation: "unlist_topic",
                 topic_id: "={{ $json.topic.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:set_topic_timer" => [
+            {
+              name: "Close the trigger topic 24 hours after its last post",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                timer_type: "close",
+                schedule: "after_last_post",
+                duration: 24,
+                duration_unit: "hours",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:clear_topic_timer" => [
+            {
+              name: "Cancel the trigger topic's close timer",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                timer_type: "close",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:set_slow_mode" => [
+            {
+              name: "Slow the trigger topic down to one post every 10 minutes",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                interval: 10,
+                interval_unit: "minutes",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:like_post" => [
+            {
+              name: "Like the trigger post",
+              parameters: {
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:hide_post" => [
+            {
+              name: "Hide the trigger post as spam",
+              parameters: {
+                post_id: "={{ $json.post.id }}",
+                flag_reason: "spam",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:unhide_post" => [
+            {
+              name: "Unhide the trigger post",
+              parameters: {
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:lock_post" => [
+            {
+              name: "Lock the trigger post against edits",
+              parameters: {
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:suspend_user" => [
+            {
+              name: "Suspend the author of the trigger post for a week",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                schedule: "after_duration",
+                duration: 7,
+                duration_unit: "days",
+                reason: "Repeated rule violations",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:silence_user" => [
+            {
+              name: "Silence the author of the trigger post for a day",
+              parameters: {
+                username: "={{ $json.user.username }}",
+                schedule: "after_duration",
+                duration: 1,
+                duration_unit: "days",
+                reason: "Posting spam",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:convert_to_public_topic" => [
+            {
+              name: "Make the trigger personal message a public topic in a category",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                category_id: 123,
                 actor_username: "system",
               },
             },

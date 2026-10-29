@@ -56,6 +56,8 @@ class AnonymousShadowCreator
           trust_level: 1,
           manual_locked_trust_level: 1,
           approved: true,
+          # Never the main account: nothing may link a shadow to it.
+          created_by: Discourse.system_user,
           approved_at: 1.day.ago,
           created_at: 1.day.ago, # bypass new user restrictions
         )

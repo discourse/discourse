@@ -466,7 +466,8 @@ RSpec.describe UserMerger do
       PostLocker.new(post2, source_user).lock
       post2.trash!(source_user)
 
-      merge_users!
+      events = DiscourseEvent.track_events(:post_locked) { merge_users! }
+      expect(events).to be_empty
       post2.reload
 
       expect(post2.deleted_by).to eq(target_user)
@@ -1261,6 +1262,7 @@ RSpec.describe UserMerger do
           old_username: "alice1",
           new_username: "alice",
           avatar_template: target_user.avatar_template,
+          acting_user_id: nil,
         },
       )
       .once

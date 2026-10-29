@@ -622,6 +622,40 @@ RSpec.describe Admin::UsersController do
         )
       end
 
+      it "reports a suspended user whose penalty history was reset as already suspended" do
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "because I said so",
+            }
+        delete "/admin/users/#{user.id}/penalty_history.json"
+
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "because I said so too",
+            }
+
+        expect(response.status).to eq(409)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("user.already_suspended_without_details"),
+        )
+      end
+
+      it "suspends the user once when their own id is among the other users" do
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "because I said so",
+              other_user_ids: [user.id],
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          UserHistory.where(target_user: user, action: UserHistory.actions[:suspend_user]).count,
+        ).to eq(1)
+      end
+
       context "with webhook" do
         fab!(:user_web_hook)
 
@@ -899,6 +933,26 @@ RSpec.describe Admin::UsersController do
           job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
           expect(job_args["id"]).to eq(user.id)
           expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
+        end
+
+        it "doesn't enqueue it again for a suspension whose end was announced" do
+          freeze_time(Time.zone.now.round)
+          user.update!(suspended_at: 1.day.ago, suspended_till: 1.hour.ago)
+          UserSuspender.expire(
+            user,
+            suspended_at: user.suspended_at,
+            suspended_till: user.suspended_till,
+          )
+
+          expect do put "/admin/users/#{user.id}/unsuspend.json" end.not_to change {
+            Jobs::EmitWebHookEvent.jobs.size
+          }
+
+          expect(response.status).to eq(200)
+          expect(user.reload).to have_attributes(
+            suspended_at: 1.day.ago,
+            suspended_till: 1.hour.ago,
+          )
         end
       end
 
@@ -1186,6 +1240,18 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
       end
 
+      it "reports the admin as the actor of the membership event" do
+        events =
+          DiscourseEvent.track_events(:user_added_to_group) do
+            post "/admin/users/#{user.id}/groups.json", params: { group_id: group.id }
+          end
+
+        expect(events).to contain_exactly(
+          event_name: :user_added_to_group,
+          params: [user, group, { automatic: false, acting_user: admin }],
+        )
+      end
+
       it "returns not-found error when there is no group" do
         group.destroy!
 
@@ -1240,6 +1306,20 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.primary_group).to eq(nil)
+      end
+
+      it "reports the admin as the actor of the membership event" do
+        group = Fabricate(:group, users: [user])
+
+        events =
+          DiscourseEvent.track_events(:user_removed_from_group) do
+            delete "/admin/users/#{user.id}/groups/#{group.id}.json"
+          end
+
+        expect(events).to contain_exactly(
+          event_name: :user_removed_from_group,
+          params: [user, group, { acting_user: admin }],
+        )
       end
 
       it "returns not-found error when there is no group" do
@@ -2319,6 +2399,40 @@ RSpec.describe Admin::UsersController do
               ),
           ),
         )
+      end
+
+      it "reports a silenced user whose penalty history was reset as already silenced" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              silenced_till: 5.hours.from_now,
+              reason: "because I said so",
+            }
+        delete "/admin/users/#{user.id}/penalty_history.json"
+
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              silenced_till: 5.hours.from_now,
+              reason: "because I said so too",
+            }
+
+        expect(response.status).to eq(409)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("user.already_silenced_without_details"),
+        )
+      end
+
+      it "silences the user once when their own id is among the other users" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              silenced_till: 5.hours.from_now,
+              reason: "because I said so",
+              other_user_ids: [user.id],
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          UserHistory.where(target_user: user, action: UserHistory.actions[:silence_user]).count,
+        ).to eq(1)
       end
 
       it "can silence multiple users" do

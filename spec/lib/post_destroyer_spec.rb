@@ -181,6 +181,71 @@ RSpec.describe PostDestroyer do
       }.by(1)
     end
 
+    it "fires topic_recovered once, with the staff member who recovered the topic" do
+      first_post = create_post
+      topic = first_post.topic
+      PostDestroyer.new(moderator, first_post).destroy
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostDestroyer.new(moderator, first_post.reload).recover
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[topic, { acting_user: moderator }]])
+    end
+
+    it "fires topic_recovered once the topic's statistics are up to date" do
+      first_post = create_post
+      topic = first_post.topic
+      create_post(topic:)
+      PostDestroyer.new(moderator, first_post).destroy
+      topic.update_columns(highest_post_number: 0)
+
+      highest_post_number = nil
+      on_recovered = ->(recovered_topic, **) do
+        highest_post_number = recovered_topic.highest_post_number
+      end
+      DiscourseEvent.on(:topic_recovered, &on_recovered)
+      PostDestroyer.new(moderator, first_post.reload).recover
+
+      expect(highest_post_number).to eq(2)
+    ensure
+      DiscourseEvent.off(:topic_recovered, &on_recovered)
+    end
+
+    it "fires topic_recovered with the author when they cancel their own topic deletion" do
+      first_post = create_post
+      author = first_post.user
+      PostDestroyer.new(author, first_post).destroy
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostDestroyer.new(author, first_post.reload).recover
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[first_post.topic, { acting_user: author, from_trash: false }]],
+      )
+    end
+
+    it "fires topic_recovered with the author when their deleted topic stays deleted" do
+      SiteSetting.delete_removed_posts_after = 0
+      first_post = create_post
+      topic = first_post.topic
+      author = first_post.user
+      PostDestroyer.new(author, first_post).destroy
+
+      events =
+        DiscourseEvent.track_events(:topic_recovered) do
+          PostDestroyer.new(author, first_post.reload).recover
+        end
+
+      expect(topic.reload).to be_trashed
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, { acting_user: author, from_trash: false }]],
+      )
+    end
+
     it "creates a staff log entry when recovering a reply" do
       reply = create_post(topic: post.topic)
 
@@ -467,9 +532,10 @@ RSpec.describe PostDestroyer do
       expect(user_stat.reload.topic_count).to eq(1)
 
       called = 0
-      topic_recovered = ->(topic, user) do
+      topic_recovered = ->(topic, acting_user:, from_trash:) do
         expect(topic).to eq(post2.topic)
-        expect(user).to eq(post2.user)
+        expect(acting_user).to eq(post2.user)
+        expect(from_trash).to eq(false)
         called += 1
       end
 

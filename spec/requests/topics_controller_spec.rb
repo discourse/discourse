@@ -7025,6 +7025,17 @@ RSpec.describe TopicsController do
         expect(json["closed"]).to eq(topic.reload.closed)
       end
 
+      it "ignores a duration parameter the timer doesn't take" do
+        post "/t/#{topic.id}/timer.json",
+             params: {
+               time: 24,
+               duration: 5,
+               status_type: TopicTimer.types[1],
+             }
+
+        expect(response.status).to eq(200)
+      end
+
       it "deletes a topic status update" do
         Fabricate(:topic_timer, topic: topic)
 
@@ -7353,6 +7364,23 @@ RSpec.describe TopicsController do
         execute_at = created_timer.execute_at.to_formatted_s(:iso8601)
 
         expect(execute_at).to eq(updated_timestamp)
+      end
+
+      it "returns 400 and changes nothing when enabled_until is in the past" do
+        put "/t/#{topic.id}/slow_mode.json",
+            params: {
+              seconds: "3600",
+              enabled_until: 1.hour.ago.to_formatted_s(:iso8601),
+            }
+
+        expect(response.status).to eq(400)
+        expect(topic.reload.slow_mode_seconds).to eq(0)
+      end
+
+      it "returns 400 when seconds is missing" do
+        put "/t/#{topic.id}/slow_mode.json", params: { enabled_until: timestamp }
+
+        expect(response.status).to eq(400)
       end
     end
 

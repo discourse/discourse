@@ -77,16 +77,25 @@ module DiscourseWorkflows
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "badges"
-            ::Badge
-              .where(enabled: true)
-              .order(:name)
-              .pluck(:id, :name)
-              .select { |_, name| context.matches_filter?(name) }
-              .map { |id, name| { id:, name: } }
+        deprecated(replaced_by: %w[action:grant_badge action:revoke_badge]) do |parameters|
+          badge_parameters = parameters.slice("username", "badge_id", "actor_username")
+          notes = ["discourse_workflows.node_upgrades.badge_output"]
+
+          # An operation set by an expression can't be upgraded automatically.
+          case parameters.fetch("operation", "grant")
+          when "grant"
+            { type: "action:grant_badge", parameters: badge_parameters, notes: }
+          when "revoke"
+            {
+              type: "action:revoke_badge",
+              parameters: badge_parameters,
+              notes: [*notes, "discourse_workflows.node_upgrades.badge_revoke_all_grants"],
+            }
           end
+        end
+
+        def self.load_options_context(context)
+          load_badge_options(context)
         end
 
         def execute(exec_ctx)

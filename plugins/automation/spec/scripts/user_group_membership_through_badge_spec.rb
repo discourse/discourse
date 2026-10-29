@@ -95,6 +95,21 @@ describe "UserGroupMembershipThroughBadge" do
           expect(badge_grants.where(user_id: user.id).exists?).to eq(true)
         end
 
+        it "reports the system user as the actor of the membership event" do
+          events =
+            DiscourseEvent.track_events(:user_added_to_group) do
+              automation.trigger!(
+                "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
+                "user" => user,
+              )
+            end
+
+          expect(events).to contain_exactly(
+            event_name: :user_added_to_group,
+            params: [user, target_group, { automatic: false, acting_user: Discourse.system_user }],
+          )
+        end
+
         it "does nothing if user is an existing group member" do
           target_group.add(user)
           user.reload
@@ -223,6 +238,18 @@ describe "UserGroupMembershipThroughBadge" do
         end.to change { target_group.reload.users.count }.by(-other_users.count)
 
         expect(target_group_memberships.where(user_id: other_users.map(&:id)).exists?).to eq(false)
+      end
+
+      it "reports the system user as the actor of the removals" do
+        events =
+          DiscourseEvent.track_events(:user_removed_from_group) do
+            automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
+          end
+
+        expect(events.map { |event| event[:params].first }).to match_array(other_users)
+        expect(events.map { |event| event[:params].last }).to all(
+          eq(acting_user: Discourse.system_user),
+        )
       end
 
       it "keeps existing members with badge" do

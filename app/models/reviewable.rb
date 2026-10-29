@@ -291,7 +291,7 @@ class Reviewable < ActiveRecord::Base
     Flag.reset_flag_settings! if PostActionType.notify_flag_type_ids.include?(reviewable_score_type)
 
     if reopened && !take_action
-      DiscourseEvent.trigger(:reviewable_transitioned_to, :pending, self)
+      DiscourseEvent.trigger(:reviewable_transitioned_to, :pending, self, acting_user: user)
     else
       DiscourseEvent.trigger(:reviewable_score_updated, self)
     end

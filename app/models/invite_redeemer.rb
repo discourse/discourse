@@ -115,6 +115,7 @@ class InviteRedeemer
     user = User.where(staged: true).with_email(email.strip.downcase).first
     user.unstage! if user
     user ||= User.new
+    user.created_by = user
 
     user.attributes = {
       email: email,
@@ -333,7 +334,7 @@ class InviteRedeemer
       if guardian.can_edit_group?(group)
         invited_user.group_users.create!(group_id: group.id)
         GroupActionLogger.new(invite.invited_by, group).log_add_user_to_group(invited_user)
-        DiscourseEvent.trigger(:user_added_to_group, invited_user, group, automatic: false)
+        group.trigger_user_added_event(invited_user, false, acting_user: invite.invited_by)
       end
     end
   end

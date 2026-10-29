@@ -560,6 +560,20 @@ RSpec.describe UserDestroyer do
         expect(category.topic).to be_present
         expect(category.topic.user_id).to eq(Discourse.system_user.id)
       end
+
+      it "recovers an already deleted category topic as the acting user" do
+        category.topic.trash!(admin)
+
+        events =
+          DiscourseEvent.track_events(:topic_recovered) do
+            UserDestroyer.new(admin).destroy(user, delete_posts: true)
+          end
+
+        expect(events.map { |event| event[:params] }).to eq(
+          [[category.topic, { acting_user: admin }]],
+        )
+        expect(Topic.find(category.topic_id)).to be_present
+      end
     end
 
     describe "Destroying a user with security key" do

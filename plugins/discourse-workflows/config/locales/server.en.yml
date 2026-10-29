@@ -11,6 +11,13 @@ en:
             type_options:
               enum_choices_required: "must include at least one choice for an enum field"
   discourse_workflows:
+    node_upgrades:
+      topic_pin_output: "The output no longer has topic_id, pinned, pinned_globally, pinned_at or banner. Use topic.id, topic.pinned and topic.pinned_globally instead, and topic.archetype, which is banner for the banner topic. Pin topic keeps pinned_until and Make banner keeps bannered_until, and the new changed is false when the topic was already in that state."
+      post_like_output: "The output no longer has post_id. Use post.id instead: post now holds the whole post, including its like_count. actor and changed are unchanged."
+      post_like_username: "The output no longer has username. Use actor.username instead."
+      badge_output: "The output no longer has user_id, username, badge_id or badge_name. Use user.id, user.username, badge.id and badge.name instead. changed is unchanged, and actor is new."
+      badge_revoke_all_grants: "For a badge that can be granted several times, Revoke badge removes every grant the user has (or only the one for post_id), where this node removed one."
+      topic_post_removed: "The output no longer includes the topic's first post. If a later step uses post, add a Topic node with the Get operation to read it."
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
       create_summary: "Save this workflow as an unpublished draft?"
@@ -205,6 +212,61 @@ en:
         banner_not_allowed: "'%{username}' cannot make topic %{topic_id} a banner. Banner topics can only be managed by staff."
         banner_private_message: "Personal messages cannot be made into banner topics."
         banner_restricted_category: "Topics in a restricted category cannot be made into banner topics."
+      topic_timer:
+        invalid_timer_type: "Unknown timer type: %{timer_type}."
+        invalid_schedule: "Unknown schedule: %{schedule}."
+        invalid_duration_unit: "Unknown duration unit: %{duration_unit}."
+        invalid_duration: "'duration' must be a whole number greater than 0 and at most %{max_days} days: '%{value}'."
+        invalid_time: "'%{field}' is not a valid date and time: '%{value}'."
+        time_required: "'execute_at' must be set to schedule the timer at a time."
+        time_in_past: "The timer must run in the future: '%{value}'."
+        after_last_post_not_supported: "Only close timers can be based on the last post."
+        at_time_not_supported: "Deleting replies can only be scheduled after a duration."
+        category_required: "Publishing to a category needs a category."
+        category_not_found: "Category %{category_id} doesn't exist."
+        save_failed: "The timer could not be saved: %{errors}"
+      topic_slow_mode:
+        invalid_interval: "'interval' must be a whole number of at least 1 second and at most %{max_days} days: '%{value}'."
+        invalid_interval_unit: "Unknown interval unit: %{interval_unit}."
+        invalid_time: "'%{field}' is not a valid date and time: '%{value}'."
+        not_allowed: "'%{username}' cannot change slow mode on topic %{topic_id}. Slow mode can only be changed by staff and trust level 4 users."
+        invalid: "Slow mode could not be changed: %{errors}"
+        failed: "Slow mode could not be changed on topic %{topic_id}."
+      post_liking:
+        failed: "The like on post %{post_id} couldn't be changed."
+      badge_action:
+        badge_not_found: "Badge %{badge_id} doesn't exist."
+        grant_not_allowed: "'%{username}' can't grant badges to '%{target}'. Only staff can, and badges must be enabled."
+        revoke_not_allowed: "'%{username}' can't revoke badges from '%{target}'. Only staff can, and badges must be enabled."
+        badge_disabled: "The %{badge} badge is disabled, so it can't be granted."
+        post_not_found: "Post %{post_id} doesn't exist, or the actor can't see it."
+        grant_failed: "The %{badge} badge couldn't be granted to '%{target}'."
+      group_membership_action:
+        group_not_found: "Group %{group_id} doesn't exist."
+        automatic_group: "%{group} is an automatic group, so members can't be added to or removed from it."
+        add_not_allowed: "'%{username}' can't add members to %{group}. Only admins, group owners and moderators allowed to manage groups can."
+        remove_not_allowed: "'%{username}' can't remove members from %{group}. Only admins, group owners and moderators allowed to manage groups can."
+      user_moderation_action:
+        suspend_not_allowed: "'%{username}' can't suspend '%{target}'. Only staff can suspend users, and staff can't be suspended."
+        unsuspend_not_allowed: "'%{username}' can't unsuspend '%{target}'. Only staff can, and only admins can unsuspend staff."
+        silence_not_allowed: "'%{username}' can't silence '%{target}'. Only staff can silence users, and staff can't be silenced."
+        unsilence_not_allowed: "'%{username}' can't unsilence '%{target}'. Only staff can, and only admins can unsilence staff."
+        invalid_schedule: "Unknown schedule: %{schedule}."
+        invalid_duration_unit: "Unknown duration unit: %{duration_unit}."
+        invalid_duration: "'duration' must be a whole number greater than 0 and at most 1000 years: '%{value}'."
+        invalid_time: "'%{field}' is not a valid date and time: '%{value}'."
+        time_required: "'%{field}' must be set to end the penalty at a time."
+        time_in_past: "'%{field}' must be in the future: '%{value}'."
+        post_not_found: "Post %{post_id} doesn't exist."
+        invalid: "'%{username}' couldn't be penalised: %{errors}"
+        failed: "'%{username}' couldn't be penalised."
+      post_hiding:
+        not_allowed: "'%{username}' can't hide or unhide post %{post_id}. Only staff can."
+        unknown_flag_reason: "Unknown flag reason: %{flag_reason}."
+        unhide_failed: "Post %{post_id} couldn't be unhidden: %{errors}"
+      topic_conversion:
+        to_personal_message_failed: "Topic %{topic_id} couldn't be converted to a personal message."
+        to_public_topic_failed: "Personal message %{topic_id} couldn't be converted to a public topic. Check that the topic has the tags the category requires and that the category accepts new topics."
       sort:
         code_missing_return: "Code must contain a return statement."
       summarize:
@@ -337,6 +399,9 @@ en:
           allowed_tables:
             name: "Allowed tables"
             description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+  dashboard:
+    problem:
+      deprecated_workflow_nodes: "These workflows use deprecated nodes. Open each one and upgrade the nodes marked with an arrow before they stop being supported:%{workflows_list}"
   reviewables:
     reasons:
       workflow_flagged_user: "A workflow added this user to the review queue."

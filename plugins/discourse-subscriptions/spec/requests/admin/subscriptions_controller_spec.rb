@@ -110,6 +110,28 @@ RSpec.describe DiscourseSubscriptions::Admin::SubscriptionsController do
         }.by(-1)
       end
 
+      it "reports the admin as the actor of the group removal" do
+        ::Stripe::Subscription.expects(:cancel).returns(
+          plan: {
+            product: "pr_34578",
+            metadata: {
+              group_name: "subscribers",
+            },
+          },
+          customer: "c_123",
+        )
+
+        events =
+          DiscourseEvent.track_events(:user_removed_from_group) do
+            delete "/s/admin/subscriptions/sub_12345.json"
+          end
+
+        expect(events).to contain_exactly(
+          event_name: :user_removed_from_group,
+          params: [user, group, { acting_user: admin }],
+        )
+      end
+
       it "does not remove the user from the group" do
         ::Stripe::Subscription
           .expects(:cancel)

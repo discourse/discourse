@@ -92,6 +92,9 @@ RSpec.describe "Discourse Workflows" do
     editor_page.visit_node(workflow, node_id)
     find(".workflows-deprecation-notice__upgrade").click
 
+    expect(PageObjects::Components::Toasts.new).to have_success(
+      I18n.t("js.discourse_workflows.node_deprecated.upgraded", name: "Post edited"),
+    )
     expect(editor_page).to have_node_configurator
     expect(page).to have_no_css(".workflows-deprecation-notice")
     expect(workflow.reload.nodes.first["typeVersion"]).to eq("2.0")

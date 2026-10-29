@@ -148,7 +148,7 @@ module DiscourseWorkflows
       normalized_nodes_data
         .group_by { |node_data| node_data[:type] }
         .each do |type, nodes|
-          node_type_class = DiscourseWorkflows::Registry.find_node_type(type)
+          node_type_class = DiscourseWorkflows::Registry.latest_node_type(type)
           max_nodes = node_type_class&.max_nodes
           next if max_nodes.blank? || nodes.size <= max_nodes
 
@@ -166,7 +166,7 @@ module DiscourseWorkflows
           version: type_version,
           include_disabled_plugins: true,
         )
-      parameters = split_node_data(node_data, existing: nil)[:parameters]
+      parameters = split_node_data(node_data, existing: nil, type_version:)[:parameters]
 
       if node_type_class.respond_to?(:validate_configuration)
         node_type_class.validate_configuration(parameters, workflow.errors)
@@ -313,12 +313,13 @@ module DiscourseWorkflows
     end
 
     def build_node_hash(node_data, node_id:, existing:)
-      node_data = split_node_data(node_data, existing:)
+      type_version = resolve_type_version(node_data, existing)
+      node_data = split_node_data(node_data, existing:, type_version:)
 
       {
         "id" => existing ? existing["id"] : (node_id.presence || SecureRandom.uuid),
         "type" => node_data[:type],
-        "typeVersion" => resolve_type_version(node_data, existing),
+        "typeVersion" => type_version,
         "name" => node_data[:name],
         "position" => node_data[:position],
         "parameters" => node_data[:parameters],
@@ -328,6 +329,8 @@ module DiscourseWorkflows
     end
 
     def resolve_type_version(node_data, existing)
+      # The stored version belongs to the stored type, so a node whose type changed starts over.
+      existing = nil if existing && existing["type"] != node_data[:type]
       stored_version = existing&.dig("typeVersion").presence
       return upgraded_type_version(node_data, existing) || stored_version if stored_version
 
@@ -337,8 +340,7 @@ module DiscourseWorkflows
 
     def upgraded_type_version(node_data, existing)
       requested_version = node_data[:typeVersion].presence
-      return if requested_version.nil? || existing["type"] != node_data[:type]
-      return if requested_version == existing["typeVersion"]
+      return if requested_version.nil? || requested_version == existing["typeVersion"]
 
       node_type =
         DiscourseWorkflows::Registry.find_node_type(node_data[:type], version: requested_version)
@@ -349,7 +351,7 @@ module DiscourseWorkflows
     end
 
     def implicit_type_version(node_data, existing)
-      if existing && existing["type"] == node_data[:type]
+      if existing
         DiscourseWorkflows::Registry::DEFAULT_VERSION
       else
         DiscourseWorkflows::Registry.latest_version(node_data[:type])
@@ -360,13 +362,14 @@ module DiscourseWorkflows
       @normalized_nodes_data ||= nodes_data.map(&:symbolize_keys)
     end
 
-    def split_node_data(node_data, existing:)
+    def split_node_data(node_data, existing:, type_version:)
       split =
         NodeData.split(
           parameters: node_data[:parameters],
           credentials: node_data[:credentials],
           webhook_id: resolved_webhook_id(node_data, existing: existing),
           node_type: node_data[:type],
+          type_version:,
         )
 
       node_data.merge(
