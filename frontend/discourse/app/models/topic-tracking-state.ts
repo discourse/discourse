@@ -709,7 +709,7 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     const descendants = Category.findById(categoryId)!.descendants.map(
-      (c) => c.id!
+      (c) => c.id
     );
 
     return new Set([categoryId, ...descendants]);
