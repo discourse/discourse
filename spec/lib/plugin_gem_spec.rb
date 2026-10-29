@@ -575,6 +575,24 @@ RSpec.describe PluginGem do
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
   end
 
+  it "fails a plugin's `gem` that needs another version of a gem from a plugin Gemfile" do
+    add_plugin("one", %(gem "alpha"), lock: alpha_lock)
+    boot
+    plugin_rb = File.join(tmp_dir, "plugins", "two", "plugin.rb")
+    FileUtils.mkdir_p(File.dirname(plugin_rb))
+    File.write(plugin_rb, "# name: two\n")
+    load_alpha = ->(version) do
+      PluginGem.load(plugin_rb, "alpha", version, source: "file://#{repo}/", require: false)
+    end
+
+    expect { load_alpha.call("1.0.0") }.to raise_error(
+      Gem::LoadError,
+      "can't activate alpha-1.0.0, already activated alpha-1.1.0",
+    )
+    expect { load_alpha.call("1.1.0") }.not_to raise_error
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
+  end
+
   it "does nothing without a plugin that opts in" do
     add_plugin("one", %(gem "alpha"), lock: nil, opt_in: false)
 
