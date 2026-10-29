@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
-import { assert } from "@ember/debug";
+import { assert, warn } from "@ember/debug";
 import { associateDestroyableChild } from "@ember/destroyable";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -137,6 +138,12 @@ interface DSelectSignature {
     searchIcon?: string;
     noResultsLabel?: string;
     label?: string;
+    /**
+     * Id of a visible caption that names the control, for a field whose caption is already on
+     * the page. It replaces `@label` for assistive technology on every part of the control, and
+     * the held value, or the count of a compact multiple select, is read after it.
+     */
+    labelledBy?: string;
     /**
      * Identity and description for the element that actually carries `role="combobox"`, which
      * differs by variant: the trigger root on `static`, the query input otherwise. Passing them
@@ -473,12 +480,38 @@ export default class DSelect extends Component<DSelectSignature> {
     });
     associateDestroyableChild(this, this.host);
     associateDestroyableChild(this, this.interaction);
+    if (DEBUG && args.labelledBy) {
+      schedule("afterRender", () => {
+        const id = this.args.labelledBy;
+        warn(
+          `DSelect: @labelledBy points at "${id}", which is not in the page, so the control has no name`,
+          !id || !!document.getElementById(id),
+          { id: "discourse.d-select.labelled-by-missing" }
+        );
+      });
+    }
   }
 
   /** The overlay's classes, with a `--kind-<kind>` modifier when the select has a kind. */
   get contentClass(): string {
     const kind = this.engine.kind;
     return kind ? `d-select__content --kind-${kind}` : "d-select__content";
+  }
+
+  /** Stable id for the hidden value read after a `@labelledBy` caption. */
+  get labelledValueId(): string {
+    return `${this.#listboxId}-labelled-value`;
+  }
+
+  /** The caption, followed by the held value when there is one to read. */
+  get labelledByWithValue(): string | undefined {
+    const caption = this.presenter.labelledBy;
+    if (!caption) {
+      return undefined;
+    }
+    return this.presenter.labelledValue
+      ? `${caption} ${this.labelledValueId}`
+      : caption;
   }
 
   /** Stable id for the panel message describing cap-disabled options. */
@@ -593,6 +626,10 @@ export default class DSelect extends Component<DSelectSignature> {
         (if @invalid "true")
       }}
       aria-label={{this.presenter.triggerRootLabel}}
+      aria-labelledby={{if
+        this.presenter.triggerTakesFocus
+        this.labelledByWithValue
+      }}
       aria-readonly={{this.presenter.triggerRootReadonly}}
       {{! TODO (select-kit-replacement-cleanup): Retain legacy root classes during rollout. }}
       class={{dConcatClass "d-select" this.engine.legacyKinds}}
@@ -693,6 +730,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @id={{@id}}
               @invalid={{@invalid}}
               @label={{this.presenter.selectionLabel}}
+              @labelledBy={{this.labelledByWithValue}}
               @listboxId={{this.activeListboxId}}
               @onBlur={{this.interaction.handleTriggerBlur}}
               @onChipFocus={{this.listbox.clearCursor}}
@@ -810,6 +848,7 @@ export default class DSelect extends Component<DSelectSignature> {
             @hideSelectionMarker={{@hideSelected}}
             @hintRole="status"
             @label={{this.presenter.ariaLabelText}}
+            @labelledBy={{this.presenter.labelledBy}}
             @limitId={{this.limitId}}
             @limitMessage={{unless
               this.engine.belowMinChars
@@ -877,6 +916,7 @@ export default class DSelect extends Component<DSelectSignature> {
                     @id={{this.panelInputId}}
                     @invalid={{@invalid}}
                     @label={{this.presenter.ariaLabelText}}
+                    @labelledBy={{this.presenter.labelledBy}}
                     @listboxId={{this.panelListboxId}}
                     @onChipFocus={{this.listbox.clearCursor}}
                     @onEscape={{this.interaction.escapePanel}}
@@ -932,6 +972,7 @@ export default class DSelect extends Component<DSelectSignature> {
                       @engine={{this.engine}}
                       @expanded={{true}}
                       @label={{this.presenter.ariaLabelText}}
+                      @labelledBy={{this.presenter.labelledBy}}
                       @listboxId={{this.panelListboxId}}
                       @onRequestClose={{menuArgs.close}}
                       @placeholder={{this.presenter.searchPlaceholderText}}
@@ -994,6 +1035,11 @@ export default class DSelect extends Component<DSelectSignature> {
         </div>
       </:content>
     </DMenu>
+    {{#if this.labelledByWithValue}}
+      <span hidden id={{this.labelledValueId}}>
+        {{~this.presenter.labelledValue~}}
+      </span>
+    {{/if}}
     {{#if this.presenter.describeHeldLabels}}
       {{#if this.engine.hasValue}}
         <DAsyncContent @asyncData={{this.heldSelection}}>

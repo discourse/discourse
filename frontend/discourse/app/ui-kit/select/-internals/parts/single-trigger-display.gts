@@ -215,6 +215,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           @engine={{@engine}}
           @expanded={{@expanded}}
           @label={{@presenter.ariaLabelText}}
+          @labelledBy={{@presenter.labelledBy}}
           @listboxId={{@listboxId}}
           @onBlur={{@onBlur}}
           @onEdit={{@onEdit}}

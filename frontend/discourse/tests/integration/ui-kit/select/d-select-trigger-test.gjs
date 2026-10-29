@@ -21,6 +21,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { forceMobile } from "discourse/lib/mobile";
 import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -2701,6 +2702,103 @@ module(
       assert.dom(`${TRIGGER} .d-select__chip`).doesNotExist();
       assert.dom(".d-select__chips-more").hasText("2");
       assert.strictEqual(nameOf(find(".d-select")), "Fruit, 2 selected");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (@labelledBy)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(async function () {
+      this.nameOf = await loadAccessibleName();
+    });
+
+    for (const variant of ["button", "static"]) {
+      test(`a ${variant} trigger is named by the caption, then the value`, async function (assert) {
+        const held = tracked(null);
+        await render(
+          <template>
+            <span id="fruit-caption">Fruit</span>
+            <DSelect
+              @items={{ITEMS}}
+              @labelledBy="fruit-caption"
+              @value={{held.value}}
+              @variant={{variant}}
+            />
+          </template>
+        );
+
+        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
+        held.value = 1;
+        await settled();
+        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
+        assert.dom(".d-select").doesNotHaveAttribute("aria-label");
+      });
+    }
+
+    test("a typeahead's input and list are named by the caption", async function (assert) {
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect @items={{ITEMS}} @labelledBy="fruit-caption" />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.strictEqual(this.nameOf(find("[role='combobox']")), "Fruit");
+      assert.strictEqual(this.nameOf(find("[role='listbox']")), "Fruit");
+      assert.dom("[role='combobox']").doesNotHaveAttribute("aria-label");
+      assert.dom("[role='listbox']").doesNotHaveAttribute("aria-label");
+    });
+
+    test("a searchable panel's field is named by the caption", async function (assert) {
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect
+            @items={{ITEMS}}
+            @labelledBy="fruit-caption"
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      assert.strictEqual(this.nameOf(find(".d-select__filter")), "Fruit");
+    });
+
+    test("a compact multiple trigger is named by the caption, then the count", async function (assert) {
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect
+            @items={{ITEMS}}
+            @labelledBy="fruit-caption"
+            @maxVisibleChips={{0}}
+            @multiple={{true}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit 2 selected");
+    });
+
+    test("a caption id missing from the page warns", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+      try {
+        await render(
+          <template>
+            <DSelect @items={{ITEMS}} @labelledBy="no-such-caption" />
+          </template>
+        );
+        assert.true(warn.calledWithMatch("no-such-caption"));
+      } finally {
+        warn.restore();
+      }
     });
   }
 );

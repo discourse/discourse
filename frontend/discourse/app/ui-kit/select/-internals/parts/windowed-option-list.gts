@@ -38,6 +38,8 @@ interface WindowedOptionListSignature {
     multiple?: boolean;
     /** Accessible label for the listbox. */
     label?: string;
+    /** Ids of the elements naming the listbox, used instead of `label`. */
+    labelledBy?: string;
     /** Whether the consumer supplied custom item markup. */
     hasItemBlock: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
@@ -80,7 +82,8 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
       {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
           fetch itself; the frontier skeleton is the sighted counterpart. }}
       aria-busy={{if @engine.serverPending "true" "false"}}
-      aria-label={{or @label (i18n "d_select.label")}}
+      aria-label={{unless @labelledBy (or @label (i18n "d_select.label"))}}
+      aria-labelledby={{@labelledBy}}
       aria-multiselectable={{if @multiple "true"}}
       class="d-select__listbox"
       id={{@listboxId}}

@@ -133,6 +133,8 @@ interface SelectPanelSignature<State> {
     hideSelectionMarker?: boolean;
     /** Accessible name for the option list. */
     label?: string;
+    /** Ids of the elements naming the option list, used instead of `label`. */
+    labelledBy?: string;
     /** Stable id of the rendered listbox. */
     listboxId: string;
     /** Icon marking selected result rows. */
@@ -316,6 +318,7 @@ export default class SelectPanel<State> extends Component<
             @hideSelectionMarker={{@hideSelectionMarker}}
             @items={{items}}
             @label={{@label}}
+            @labelledBy={{@labelledBy}}
             @limitId={{@limitId}}
             @listbox={{@listbox}}
             @listboxId={{@listboxId}}

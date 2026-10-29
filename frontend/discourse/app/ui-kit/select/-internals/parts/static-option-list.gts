@@ -40,6 +40,8 @@ interface StaticOptionListSignature {
     multiple?: boolean;
     /** Accessible label for the listbox. */
     label?: string;
+    /** Ids of the elements naming the listbox, used instead of `label`. */
+    labelledBy?: string;
     /** Whether the consumer supplied custom item markup. */
     hasItemBlock: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
@@ -95,7 +97,8 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
   <template>
     <ul
       aria-busy={{if @engine.serverPending "true" "false"}}
-      aria-label={{or @label (i18n "d_select.label")}}
+      aria-label={{unless @labelledBy (or @label (i18n "d_select.label"))}}
+      aria-labelledby={{@labelledBy}}
       aria-multiselectable="true"
       class="d-select__listbox d-select__options"
       id={{@listboxId}}

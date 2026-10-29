@@ -35,6 +35,8 @@ export interface SelectPresenterArgs extends SelectPresentationOptions {
   retryable?: boolean;
   /** Delay for filter changes. */
   debounce?: boolean | number;
+  /** Id of the caller's visible caption, which names the control instead of `label`. */
+  labelledBy?: string;
 }
 
 /** The filter of a list load context, which `DAsyncContent` hands back untyped. */
@@ -111,6 +113,11 @@ export default class SelectPresenterBase {
   }
 
   /** The combobox/listbox's resolved accessible name, or a default. */
+  /** Id of the caller's visible caption, when it names the control. */
+  get labelledBy(): string | undefined {
+    return this.#getArgs().labelledBy;
+  }
+
   get ariaLabelText(): string {
     return this.#engine.resolvedOptions.label ?? i18n("d_select.label");
   }

@@ -21,6 +21,8 @@ interface ComboboxQueryInputSignature {
     expanded: boolean;
     /** The input's accessible name (`aria-label`). */
     label?: string;
+    /** Ids of the elements naming the input, used instead of `label`. */
+    labelledBy?: string;
     /** The input placeholder. */
     placeholder?: string;
     /** Defaults to the resting display until editing; always shows the engine's filter. */
@@ -233,7 +235,8 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       aria-controls={{this.controlsId}}
       aria-expanded={{if this.isCombobox (if @expanded "true" "false")}}
       aria-haspopup={{if this.isCombobox "listbox"}}
-      aria-label={{@label}}
+      aria-label={{unless @labelledBy @label}}
+      aria-labelledby={{@labelledBy}}
       aria-owns={{this.ownsId}}
       autocomplete="off"
       class="d-select__input"

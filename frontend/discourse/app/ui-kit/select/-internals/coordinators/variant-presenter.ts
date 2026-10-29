@@ -189,7 +189,7 @@ export default class VariantPresenter
    * Multi-select held labels are exposed through a separate description.
    */
   get triggerRootLabel(): string | undefined {
-    if (!this.triggerTakesFocus) {
+    if (!this.triggerTakesFocus || this.labelledBy) {
       return undefined;
     }
     if (this.#getArgs().multiple || !this.#engine.hasValue) {
@@ -365,6 +365,24 @@ export default class VariantPresenter
   }
 
   /** Compact and overflow controls announce the entire held count. */
+  /**
+   * What a caption named by `@labelledBy` is followed by: the held value of a single select, or
+   * the count of a compact multiple one. The caption replaces `label`, so the value the composed
+   * names carry has to be spoken after it.
+   */
+  get labelledValue(): string | undefined {
+    if (this.#getArgs().multiple) {
+      if (this.maxVisibleChips === undefined) {
+        return undefined;
+      }
+      const value = this.#engine.value;
+      return i18n("d_select.selected_count", {
+        count: Array.isArray(value) ? value.length : 0,
+      });
+    }
+    return this.#engine.hasValue ? this.fallbackSelectionLabel : undefined;
+  }
+
   get selectionLabel(): string {
     if (this.#getArgs().multiple && this.maxVisibleChips !== undefined) {
       const value = this.#engine.value;

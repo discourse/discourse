@@ -66,6 +66,8 @@ interface MultiChipsSignature {
     queryDisplay?: "editing" | "always";
     /** The input's accessible name. */
     label: string;
+    /** Ids of the elements naming the input, used instead of `label`. */
+    labelledBy?: string;
     /** The field placeholder. */
     placeholder?: string;
     /** A decorative trailing icon, shown only when the field is a search field. */
@@ -501,6 +503,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           @engine={{@engine}}
           @expanded={{@expanded}}
           @label={{@label}}
+          @labelledBy={{@labelledBy}}
           @listboxId={{@listboxId}}
           @onBlur={{@onBlur}}
           @onEdit={{@onEdit}}
