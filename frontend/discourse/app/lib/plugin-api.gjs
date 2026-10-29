@@ -3263,9 +3263,8 @@ class _PluginApi {
   }
 
   /**
-   * Registers a component to render a whole section in the redesigned admin
-   * dashboard (gated by the `dashboard_improvements` upcoming change). Pair it
-   * with the server-side `register_admin_dashboard_section`: the `id` here must
+   * Registers a component to render a whole section in the admin dashboard.
+   * Pair it with the server-side `register_admin_dashboard_section`: the `id` here must
    * match the one registered there, and the loader block registered there
    * produces the `@data` this component receives.
    *
