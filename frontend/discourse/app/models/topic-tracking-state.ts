@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const -- Preserve the emitted JavaScript in this types-only port. */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { trackedArray, trackedMap } from "@ember/reactive/collections";
@@ -10,40 +11,170 @@ import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
+import type { default as Topic, TopicTag } from "discourse/models/topic";
+import type User from "discourse/models/user";
+import type MessageBusService from "discourse/services/message-bus";
+import type SiteSettingsService from "discourse/services/site-settings";
 
-function isNew(topic) {
+/** Report/message tags carry only ids; list-derived tags may have additional fields. */
+export type TopicTrackingTag = Pick<NonNullable<Topic["tags"]>[number], "id">;
+
+/** Partial, merged state. The map key supplies identity when the payload omits it. */
+export interface TopicTrackingStateEntry {
+  id?: number;
+  topic_id?: number;
+  highest_post_number?: number | null;
+  last_read_post_number?: number | null;
+  notification_level?: number | null;
+  category_id?: number;
+  is_category_topic?: boolean;
+  created_in_new_period?: boolean;
+  is_seen?: boolean;
+  deleted?: boolean;
+  created_at?: string;
+  updated_at?: string;
+  archetype?: string;
+  treat_as_new_topic_start_date?: string;
+  /** List-derived tags can also retain their names and slugs. */
+  tags?: (TopicTrackingTag & Partial<TopicTag>)[] | null;
+  [key: string]: unknown;
+}
+
+/** Reports and list synchronization accept partial rows, but require numeric identity. */
+export interface TopicTrackingStateRow extends TopicTrackingStateEntry {
+  topic_id: number;
+}
+
+/** Channel cursors are absent for missing preload metadata. */
+export type TopicTrackingChannelCursors = Record<string, number>;
+
+export type TopicTrackingMessage =
+  | {
+      topic_id: number;
+      message_type: "new_topic";
+      payload: {
+        last_read_post_number: null;
+        highest_post_number: number;
+        created_at: string;
+        category_id: number;
+        archetype: string;
+        created_in_new_period: boolean;
+        tags?: TopicTrackingTag[];
+      };
+    }
+  | {
+      topic_id: number;
+      message_type: "latest";
+      payload: {
+        bumped_at: string;
+        category_id: number;
+        archetype: string;
+        tags?: TopicTrackingTag[];
+      };
+    }
+  | {
+      topic_id: number;
+      message_type: "unread";
+      payload: {
+        highest_post_number: number;
+        updated_at: string;
+        created_at: string;
+        category_id: number;
+        archetype: string;
+        tags?: TopicTrackingTag[];
+      };
+    }
+  | {
+      topic_id: number;
+      message_type: "read";
+      payload: {
+        last_read_post_number: number | null;
+        notification_level: number | null;
+        highest_post_number: number | null;
+      };
+    }
+  | {
+      topic_id: number;
+      message_type: "muted" | "unmuted" | "delete" | "recover" | "destroy";
+    }
+  | {
+      message_type: "dismiss_new" | "dismiss_new_posts";
+      payload: { topic_ids: number[] };
+    };
+
+/** Predicates receive one partial state, with the tracker as their receiver. */
+export interface TopicTrackingCountOptions {
+  categoryId?: number | null;
+  tagId?: number;
+  noSubcategories?: boolean;
+  customFilterFn?: (
+    this: TopicTrackingState,
+    state: TopicTrackingStateEntry
+  ) => unknown;
+}
+
+export interface TopicTrackingLookupOptions extends Omit<
+  TopicTrackingCountOptions,
+  "categoryId"
+> {
+  type: string;
+  category?: Pick<Category, "id"> | null;
+}
+
+/** Both topic lists and the combined categories page supply this surface. */
+export interface TopicTrackingList {
+  topics?: Topic[];
+  more_topics_url?: string | null;
+}
+
+type TopicTrackingKey =
+  | number
+  | string
+  | Pick<TopicTrackingStateEntry, "id" | "topic_id">;
+type IncomingMessage = {
+  topic_id: number;
+  message_type: string;
+  payload?: TopicTrackingStateEntry;
+};
+
+function isNew(topic: TopicTrackingStateEntry) {
   return (
     !topic.deleted &&
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
-      topic.notification_level >= NotificationLevels.TRACKING) &&
+      topic.notification_level! >= NotificationLevels.TRACKING) &&
     topic.created_in_new_period &&
     isUnseen(topic)
   );
 }
 
-function isUnread(topic) {
+function isUnread(topic: TopicTrackingStateEntry) {
   return (
     !topic.deleted &&
     topic.last_read_post_number !== null &&
-    topic.last_read_post_number < topic.highest_post_number &&
-    topic.notification_level >= NotificationLevels.TRACKING
+    topic.last_read_post_number! < topic.highest_post_number! &&
+    topic.notification_level! >= NotificationLevels.TRACKING
   );
 }
 
-function isNewOrUnread(topic) {
+function isNewOrUnread(topic: TopicTrackingStateEntry) {
   return isUnread(topic) || isNew(topic);
 }
 
-function isUnseen(topic) {
+function isUnseen(topic: TopicTrackingStateEntry) {
   return !topic.is_seen;
 }
 
-function hasMutedTags(topicTagIds, mutedTags, siteSettings) {
+function hasMutedTags(
+  topicTagIds: number[] | undefined,
+  mutedTags: User["muted_tags"],
+  siteSettings: TopicTrackingState["siteSettings"]
+) {
   if (!mutedTags || !topicTagIds) {
     return false;
   }
-  const mutedTagIds = mutedTags.map((t) => t.id);
+  // String-valued legacy preferences have no id; preserve the original property read.
+  const mutedTagIds = mutedTags.map((t) => (t as { id?: number }).id);
   return (
     (siteSettings.remove_muted_tags_from_latest === "always" &&
       topicTagIds.some((tagId) => mutedTagIds.includes(tagId))) ||
@@ -53,23 +184,46 @@ function hasMutedTags(topicTagIds, mutedTags, siteSettings) {
 }
 
 export default class TopicTrackingState extends EmberObject {
-  @service currentUser;
-  @service messageBus;
-  @service siteSettings;
+  @service currentUser!: User | null;
+
+  /** TODO(typescript-pending): the message-bus factory returns any; remove this method view when it publishes subscription types. */
+  @service
+  messageBus!: {
+    [K in keyof ReturnType<typeof MessageBusService.create>]: unknown;
+  } & {
+    subscribe<T>(
+      channel: string,
+      callback: (data: T) => void,
+      lastId: number
+    ): void;
+    unsubscribe<T>(channel: string, callback: (data: T) => void): void;
+  };
+
+  /** TODO(typescript-pending): the settings factory omits setting types; remove this extension when its return declares these keys. */
+  @service
+  siteSettings!: {
+    [K in keyof ReturnType<typeof SiteSettingsService.create>]: unknown;
+  } & {
+    mute_all_categories_by_default: boolean;
+    remove_muted_tags_from_latest: string;
+    desktop_category_page_style: string;
+  };
 
   @tracked messageCount = 0;
   @tracked incomingCount = 0;
-  @tracked newIncoming;
-  @tracked filterCategory;
-  @tracked filterTagName;
-  @tracked filterTagId;
-  @tracked filter;
-  states = trackedMap();
-  stateChangeCallbacks = {};
+
+  /** Undefined until resetTracking or trackIncoming; some mutators assume tracking has started. */
+  @tracked newIncoming?: number[];
+  @tracked filterCategory?: Category;
+  @tracked filterTagName?: string;
+  @tracked filterTagId?: number;
+  @tracked filter?: string;
+  states = trackedMap<string, TopicTrackingStateEntry>();
+  stateChangeCallbacks: Record<string, () => void> = {};
   _trackedTopicLimit = 4000;
 
-  willDestroy() {
-    super.willDestroy(...arguments);
+  willDestroy(...args: Parameters<EmberObject["willDestroy"]>) {
+    super.willDestroy(...args);
 
     this.messageBus.unsubscribe("/latest", this._processChannelPayload);
 
@@ -98,8 +252,6 @@ export default class TopicTrackingState extends EmberObject {
   /**
    * Used to determine whether to show the message at the top of the topic list
    * e.g. "see 1 new or updated topic"
-   *
-   * @method hasIncoming
    */
   get hasIncoming() {
     return this.incomingCount > 0;
@@ -112,10 +264,8 @@ export default class TopicTrackingState extends EmberObject {
    *
    * See app/models/topic_tracking_state.rb for the data payloads published
    * to each of the channels.
-   *
-   * @method establishChannels
    */
-  establishChannels(meta) {
+  establishChannels(meta?: TopicTrackingChannelCursors | null) {
     meta ??= {};
     const messageBusDefaultNewMessageId = -1;
 
@@ -165,7 +315,7 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   @bind
-  onDeleteMessage(msg) {
+  onDeleteMessage(msg: { topic_id: number; message_type: "delete" }) {
     this.modifyStateProp(msg, "deleted", true);
     if (this.newIncoming) {
       this.clearIncoming([msg.topic_id]);
@@ -174,13 +324,13 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   @bind
-  onRecoverMessage(msg) {
+  onRecoverMessage(msg: { topic_id: number; message_type: "recover" }) {
     this.modifyStateProp(msg, "deleted", false);
     this.messageCount++;
   }
 
   @bind
-  onDestroyMessage(msg) {
+  onDestroyMessage(msg: { topic_id: number; message_type: "destroy" }) {
     this.messageCount++;
     const currentRoute = DiscourseURL.router.currentRoute.parent;
 
@@ -192,7 +342,10 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
-  trackMutedOrUnmutedTopic(data) {
+  trackMutedOrUnmutedTopic(data: {
+    topic_id: number;
+    message_type: "muted" | "unmuted";
+  }) {
     let topics, key;
     if (data.message_type === "muted") {
       key = "muted_topics";
@@ -222,11 +375,11 @@ export default class TopicTrackingState extends EmberObject {
     this.currentUser?.set("unmuted_topics", unmutedTopics);
   }
 
-  isMutedTopic(topicId) {
+  isMutedTopic(topicId: number | undefined) {
     return !!this.mutedTopics.find((t) => t.topicId === topicId);
   }
 
-  isUnmutedTopic(topicId) {
+  isUnmutedTopic(topicId: number | undefined) {
     return !!this.unmutedTopics.find((t) => t.topicId === topicId);
   }
 
@@ -236,12 +389,13 @@ export default class TopicTrackingState extends EmberObject {
    *
    * Calls onStateChange callbacks.
    *
-   * @params {Number|String} topicId - The ID of the topic to set last_read_post_number for.
-   * @params {Number} highestSeen - The post number of the topic that should be
-   *                                used for last_read_post_number.
-   * @method updateSeen
+   * @param topicId - The ID of the topic to set last_read_post_number for.
+   * @param highestSeen - The post number to use for last_read_post_number.
    */
-  updateSeen(topicId, highestSeen) {
+  updateSeen(
+    topicId: number | string | null | undefined,
+    highestSeen: number | null | undefined
+  ) {
     if (!topicId || !highestSeen) {
       return;
     }
@@ -262,18 +416,15 @@ export default class TopicTrackingState extends EmberObject {
   /**
    * Used to count incoming topics which will be displayed in a message
    * at the top of the topic list, if hasIncoming is true (which is if
-   * incomingCount > 0).
+   * `incomingCount > 0`).
    *
    * This will do nothing unless resetTracking or trackIncoming has been
-   * called; newIncoming will be null instead of an array. trackIncoming
+   * called; newIncoming will be undefined instead of an array. trackIncoming
    * is called by various topic routes, as is resetTracking.
    *
-   * @method notifyIncoming
-   * @param {{ message_type: string, topic_id: number, payload?: Record<string, unknown> }} data - The data sent by TopicTrackingState to MessageBus
-   *                        which includes the message_type, payload of the topic,
-   *                        and the topic_id.
+   * @param data - The incoming message, including its type, payload, and topic ID.
    */
-  notifyIncoming(data) {
+  notifyIncoming(data: IncomingMessage) {
     if (!this.newIncoming) {
       return;
     }
@@ -297,14 +448,14 @@ export default class TopicTrackingState extends EmberObject {
 
     if (
       this.filterTagId &&
-      !data.payload.tags?.some((t) => t.id === this.filterTagId)
+      !data.payload!.tags?.some((t) => t.id === this.filterTagId)
     ) {
       return;
     }
 
     // always count a new_topic as incoming
     if (
-      ["all", "latest", "new", "unseen"].includes(filter) &&
+      ["all", "latest", "new", "unseen"].includes(filter!) &&
       data.message_type === "new_topic"
     ) {
       this._addIncoming(data.topic_id);
@@ -315,7 +466,7 @@ export default class TopicTrackingState extends EmberObject {
       unreadRecipients.push("new");
     }
     // count an unread topic as incoming
-    if (unreadRecipients.includes(filter) && data.message_type === "unread") {
+    if (unreadRecipients.includes(filter!) && data.message_type === "unread") {
       const old = this.findState(data);
 
       // the highest post number is equal to last read post number here
@@ -353,8 +504,6 @@ export default class TopicTrackingState extends EmberObject {
    * Resets the number of incoming topics to 0 and flushes the new topics
    * from the array. Without calling this or trackIncoming the notifyIncoming
    * method will do nothing.
-   *
-   * @method resetTracking
    */
   resetTracking() {
     this.newIncoming = trackedArray();
@@ -363,13 +512,11 @@ export default class TopicTrackingState extends EmberObject {
 
   /**
    * Removes the given topic IDs from the list of incoming topics.
-   *
-   * @method clearIncoming
    */
-  clearIncoming(topicIds) {
+  clearIncoming(topicIds: number[]) {
     const toRemove = new Set(topicIds);
     this.newIncoming = trackedArray(
-      this.newIncoming.filter((topicId) => !toRemove.has(topicId))
+      this.newIncoming!.filter((topicId) => !toRemove.has(topicId))
     );
     this.incomingCount = this.newIncoming.length;
   }
@@ -381,26 +528,24 @@ export default class TopicTrackingState extends EmberObject {
    * set here is used to determine whether or not to add incoming counts
    * based on message types of incoming MessageBus messages (via establishChannels)
    *
-   * @method trackIncoming
-   * @param {String} filter - Valid values are all, categories, and any topic list
+   * @param filter - Valid values are all, categories, and any topic list
    *                          filters e.g. latest, unread, new. As well as this
    *                          specific category and tag URLs like tag/test/l/latest,
    *                          c/cat/sub-cat/6/l/latest or tags/c/cat/sub-cat/6/test/l/latest.
-   * @param {Object} opts
-   * @param {Number} opts.tagId - The ID of the tag to filter by.
+   * @param opts - Optionally restrict incoming topics to the given tag ID.
    */
-  trackIncoming(filter, { tagId } = {}) {
+  trackIncoming(filter: string, { tagId }: { tagId?: number } = {}) {
     this.newIncoming = trackedArray();
 
     let category, tagName;
 
     if (filter.startsWith("c/") || filter.startsWith("tags/c/")) {
       const categoryId = filter.match(/\/(\d*)\//);
-      category = Category.findById(parseInt(categoryId[1], 10));
+      category = Category.findById(parseInt(categoryId![1], 10));
       const split = filter.split("/");
 
       if (filter.startsWith("tags/c/")) {
-        tagName = split[split.indexOf(categoryId[1]) + 1];
+        tagName = split[split.indexOf(categoryId![1]) + 1];
       }
 
       if (split.length >= 4) {
@@ -424,10 +569,9 @@ export default class TopicTrackingState extends EmberObject {
    *
    * Calls onStateChange callbacks.
    *
-   * @param {Number|String} topicId - The ID of the topic to remove from state.
-   * @method removeTopic
+   * @param topicId - The ID of the topic to remove from state.
    */
-  removeTopic(topicId) {
+  removeTopic(topicId: TopicTrackingKey) {
     if (this.states.delete(this._stateKey(topicId))) {
       this._afterStateChange();
     }
@@ -439,10 +583,9 @@ export default class TopicTrackingState extends EmberObject {
    *
    * Calls onStateChange callbacks.
    *
-   * @param {Array} topicIds - The IDs of the topic to removes from state.
-   * @method removeTopics
+   * @param topicIds - The IDs of the topic to removes from state.
    */
-  removeTopics(topicIds) {
+  removeTopics(topicIds: (number | string)[]) {
     topicIds.forEach((topicId) => this.removeTopic(topicId));
     this.messageCount++;
     this._afterStateChange();
@@ -453,15 +596,14 @@ export default class TopicTrackingState extends EmberObject {
    * if the last_read_post_number or is_seen property does not match what the
    * cached topic has.
    *
-   * @method updateTopics
-   * @param {Array} topics - An array of Topic models.
+   * @param topics - An array of Topic models.
    */
-  updateTopics(topics) {
+  updateTopics(topics: Topic[] | null | undefined) {
     if (isEmpty(topics)) {
       return;
     }
 
-    topics.forEach((topic) => {
+    topics!.forEach((topic) => {
       const state = this.findState(topic.get("id"));
 
       if (!state) {
@@ -479,7 +621,7 @@ export default class TopicTrackingState extends EmberObject {
         let unread;
 
         if (state.last_read_post_number) {
-          unread = postsCount - state.last_read_post_number;
+          unread = postsCount! - state.last_read_post_number;
         } else {
           unread = 0;
         }
@@ -507,18 +649,23 @@ export default class TopicTrackingState extends EmberObject {
    * Any state changes will make a callback to all state change callbacks defined
    * via onStateChange.
    *
-   * @method sync
-   * @param {TopicList} list
-   * @param {String} filter - The filter used for the list e.g. new/unread
-   * @param {Record<string, unknown>} [queryParams] - The query parameters for the list e.g. page
+   * @param filter - The filter used for the list e.g. new/unread
+   * @param queryParams - The query parameters for the list e.g. page
    */
-  sync(list, filter, queryParams) {
+  sync(
+    list: TopicTrackingList | null | undefined,
+    filter: string,
+    queryParams?: object
+  ) {
     if (!list || !list.topics) {
       return;
     }
 
     // make sure any server-side state matches reality in the client side
-    this._fixDelayedServerState(list, filter);
+    this._fixDelayedServerState(
+      list as TopicTrackingList & { topics: Topic[] },
+      filter
+    );
 
     // make sure all the state is up to date with what is accurate
     // from the server
@@ -536,29 +683,32 @@ export default class TopicTrackingState extends EmberObject {
 
     // correct missing states, safeguard in case message bus is corrupt
     if (this._shouldCompensateState(list, filter, queryParams)) {
-      this._correctMissingState(list, filter);
+      this._correctMissingState(
+        list as TopicTrackingList & { topics: Topic[] },
+        filter
+      );
     }
 
     this.messageCount++;
   }
 
-  onStateChange(cb) {
+  onStateChange(cb: () => void) {
     let callbackId = this._generateCallbackId();
     this.stateChangeCallbacks[callbackId] = cb;
     return callbackId;
   }
 
-  offStateChange(callbackId) {
+  offStateChange(callbackId: string) {
     delete this.stateChangeCallbacks[callbackId];
   }
 
-  /** @returns {number[] | Set<number>} */
-  getSubCategoryIds(categoryId) {
+  /** Assumes a category exists for every truthy id. */
+  getSubCategoryIds(categoryId?: number | null): number[] | Set<number> {
     if (!categoryId) {
       return [];
     }
 
-    const descendants = Category.findById(categoryId).descendants.map(
+    const descendants = Category.findById(categoryId)!.descendants.map(
       (c) => c.id
     );
 
@@ -571,14 +721,16 @@ export default class TopicTrackingState extends EmberObject {
     tagId,
     noSubcategories,
     customFilterFn,
+  }: TopicTrackingCountOptions & {
+    type: "new" | "unread" | "new_and_unread" | "unread_and_new";
   }) {
     const subcategoryIds = noSubcategories
       ? new Set([categoryId])
       : this.getSubCategoryIds(categoryId);
 
-    const mutedCategoryIds = this.currentUser?.muted_category_ids?.concat(
-      this.currentUser.indirectly_muted_category_ids
-    );
+    const mutedCategoryIds = (
+      this.currentUser?.muted_category_ids as (number | undefined)[] | undefined
+    )?.concat(this.currentUser!.indirectly_muted_category_ids);
 
     let filterFn;
     switch (type) {
@@ -601,7 +753,10 @@ export default class TopicTrackingState extends EmberObject {
         return false;
       }
 
-      if (categoryId && !subcategoryIds.has(topic.category_id)) {
+      if (
+        categoryId &&
+        !(subcategoryIds as Set<number | undefined>).has(topic.category_id)
+      ) {
         return false;
       }
 
@@ -629,7 +784,12 @@ export default class TopicTrackingState extends EmberObject {
     }).length;
   }
 
-  countNew({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
+  countNew({
+    categoryId,
+    tagId,
+    noSubcategories,
+    customFilterFn,
+  }: TopicTrackingCountOptions = {}) {
     return this.countCategoryByState({
       type: "new",
       categoryId,
@@ -639,7 +799,12 @@ export default class TopicTrackingState extends EmberObject {
     });
   }
 
-  countUnread({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
+  countUnread({
+    categoryId,
+    tagId,
+    noSubcategories,
+    customFilterFn,
+  }: TopicTrackingCountOptions = {}) {
     return this.countCategoryByState({
       type: "unread",
       categoryId,
@@ -654,7 +819,7 @@ export default class TopicTrackingState extends EmberObject {
     tagId,
     noSubcategories,
     customFilterFn,
-  } = {}) {
+  }: TopicTrackingCountOptions = {}) {
     return this.countCategoryByState({
       type: "new_and_unread",
       categoryId,
@@ -668,19 +833,23 @@ export default class TopicTrackingState extends EmberObject {
    * Calls the provided callback for each of the currently tracked topics
    * we have in state.
    *
-   * @method forEachTracked
-   * @param {Function} fn - The callback function to call with the topic,
-   *                        newTopic which is a boolean result of isNew,
-   *                        and unreadTopic which is a boolean result of
-   *                        isUnread.
+   * @param fn - Receives state and classifier results; the new classifier can
+   * return undefined for partial state.
    */
-  forEachTracked(fn, opts = {}) {
+  forEachTracked(
+    fn: (
+      state: TopicTrackingStateEntry,
+      isNew: boolean | undefined,
+      isUnread: boolean
+    ) => void,
+    opts: { includeAll?: boolean } = {}
+  ) {
     this._trackedTopics(opts).forEach((trackedTopic) => {
       fn(trackedTopic.topic, trackedTopic.newTopic, trackedTopic.unreadTopic);
     });
   }
 
-  countCategory(category_id, tagId) {
+  countCategory(category_id: number | null | undefined, tagId?: number) {
     let sum = 0;
     for (let topic of this.states.values()) {
       if (
@@ -690,7 +859,7 @@ export default class TopicTrackingState extends EmberObject {
       ) {
         sum +=
           topic.last_read_post_number === null ||
-          topic.last_read_post_number < topic.highest_post_number
+          topic.last_read_post_number! < topic.highest_post_number!
             ? 1
             : 0;
       }
@@ -698,7 +867,18 @@ export default class TopicTrackingState extends EmberObject {
     return sum;
   }
 
-  lookupCount({ type, category, tagId, noSubcategories, customFilterFn } = {}) {
+  lookupCount(
+    options: TopicTrackingLookupOptions & { type: "new" | "unread" }
+  ): number;
+
+  lookupCount(options?: TopicTrackingLookupOptions): number | undefined;
+  lookupCount({
+    type,
+    category,
+    tagId,
+    noSubcategories,
+    customFilterFn,
+  }: Partial<TopicTrackingLookupOptions> = {}): number | undefined {
     if (type === "latest") {
       let count = this.lookupCount({
         type: "new",
@@ -745,14 +925,15 @@ export default class TopicTrackingState extends EmberObject {
         customFilterFn,
       });
     } else {
-      const categoryName = type.split("/")[1];
+      const categoryName = type!.split("/")[1];
       if (categoryName) {
         return this.countCategory(categoryId, tagId);
       }
     }
   }
 
-  loadStates(data) {
+  /** Stops at the first unchanged row because the existing update uses Array.every. */
+  loadStates(data: TopicTrackingStateRow[] | null | undefined) {
     if (!data || data.length === 0) {
       return;
     }
@@ -766,11 +947,11 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
-  modifyState(topic, data) {
+  modifyState(topic: TopicTrackingKey, data: TopicTrackingStateEntry) {
     this._setState({ topic, data });
   }
 
-  modifyStateProp(topic, prop, data) {
+  modifyStateProp(topic: TopicTrackingKey, prop: string, data: unknown) {
     const state = this.findState(topic);
     if (state) {
       state[prop] = data;
@@ -778,7 +959,7 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
-  findState(topicOrId) {
+  findState(topicOrId: TopicTrackingKey) {
     return this.states.get(this._stateKey(topicOrId));
   }
 
@@ -786,7 +967,15 @@ export default class TopicTrackingState extends EmberObject {
     return Math.random().toString(12).slice(2, 11);
   }
 
-  _setState({ topic, data, skipAfterStateChange }) {
+  _setState({
+    topic,
+    data,
+    skipAfterStateChange,
+  }: {
+    topic: TopicTrackingKey;
+    data: TopicTrackingStateEntry;
+    skipAfterStateChange?: boolean;
+  }) {
     const stateKey = this._stateKey(topic);
     const oldState = this.states.get(stateKey);
 
@@ -803,24 +992,17 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
-  /*
-   * private
-   */
-
-  // fix delayed "new" topics by removing the now seen
-  // topic from the list (for the "new" list) or setting the topic
-  // to "seen" for other lists.
-  //
-  // client side we know they are not new, server side we think they are.
-  // this can happen if the list is cached or the update to the state
-  // for a particular seen topic has not yet reached the server.
-  _fixDelayedServerState(list, filter) {
+  /** Removes seen topics from new lists, or marks them seen, while server state is delayed. */
+  _fixDelayedServerState(
+    list: TopicTrackingList & { topics: Topic[] },
+    filter: string
+  ) {
     for (let index = list.topics.length - 1; index >= 0; index--) {
       const topic = list.topics[index];
       const state = this.findState(topic.id);
       if (
         state &&
-        state.last_read_post_number > 0 &&
+        state.last_read_post_number! > 0 &&
         (topic.last_read_post_number === 0 ||
           !this.currentUser?.unified_new_enabled)
       ) {
@@ -834,16 +1016,14 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
-  // this updates the topic in the state to match the
-  // topic from the list (e.g. updates category, highest read post
-  // number, tags etc.)
+  /** Updates tracked state from the list's category, read position, and tags. */
   @bind
-  _newStateFromListTopic(topic) {
+  _newStateFromListTopic(topic: Topic): TopicTrackingStateRow | undefined {
     const state = this.findState(topic.id) || {};
 
     // make a new copy so we aren't modifying the state object directly while
     // we make changes
-    const newState = { ...state };
+    const newState: TopicTrackingStateEntry = { ...state };
 
     // see ListableTopicSerializer for unread_posts/unseen and other
     // topic property logic
@@ -851,7 +1031,7 @@ export default class TopicTrackingState extends EmberObject {
       newState.last_read_post_number = null;
     } else if (topic.unread_posts) {
       newState.last_read_post_number =
-        topic.highest_post_number - (topic.unread_posts || 0);
+        topic.highest_post_number! - (topic.unread_posts || 0);
     } else {
       // remove the topic if it is no longer unread/new (it has been seen)
       // and if there are too many topics in memory
@@ -879,12 +1059,15 @@ export default class TopicTrackingState extends EmberObject {
       newState.tags = topic.tags;
     }
 
-    return newState;
+    return newState as TopicTrackingStateRow;
   }
 
-  // this stops sync of tracking state when list is filtered, in the past this
-  // would cause the tracking state to become inconsistent.
-  _shouldCompensateState(list, filter, queryParams) {
+  /** Filtered lists cannot establish that missing topics have been read. */
+  _shouldCompensateState(
+    list: TopicTrackingList,
+    filter: string,
+    queryParams?: object
+  ) {
     let shouldCompensate =
       (filter === "new" || filter === "unread") && !list.more_topics_url;
 
@@ -899,11 +1082,12 @@ export default class TopicTrackingState extends EmberObject {
     return shouldCompensate;
   }
 
-  // any state that is not in the provided list must be updated
-  // based on the filter selected so we do not have any incorrect
-  // state in the list
-  _correctMissingState(list, filter) {
-    const ids = {};
+  /** Compensates for missing messages using a complete new or unread list. */
+  _correctMissingState(
+    list: TopicTrackingList & { topics: Topic[] },
+    filter: string
+  ) {
+    const ids: Record<string, boolean> = {};
     list.topics.forEach((topic) => (ids[this._stateKey(topic.id)] = true));
 
     for (let topicKey of this.states.keys()) {
@@ -931,11 +1115,18 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
-  // processes the data sent via messageBus, called by establishChannels
+  /** The implementation view preserves the existing includes-based message dispatch. */
+  _processChannelPayload(data: TopicTrackingMessage): void;
   @bind
-  _processChannelPayload(data) {
+  _processChannelPayload(data: {
+    topic_id?: number;
+    message_type: TopicTrackingMessage["message_type"];
+    payload?: TopicTrackingStateEntry & { topic_ids?: number[] };
+  }) {
     if (["muted", "unmuted"].includes(data.message_type)) {
-      this.trackMutedOrUnmutedTopic(data);
+      this.trackMutedOrUnmutedTopic(
+        data as { topic_id: number; message_type: "muted" | "unmuted" }
+      );
       return;
     }
 
@@ -953,12 +1144,14 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     if (["new_topic", "latest"].includes(data.message_type)) {
-      const mutedCategoryIds = this.currentUser?.muted_category_ids?.concat(
-        this.currentUser?.indirectly_muted_category_ids
-      );
+      const mutedCategoryIds = (
+        this.currentUser?.muted_category_ids as
+          | (number | undefined)[]
+          | undefined
+      )?.concat(this.currentUser?.indirectly_muted_category_ids);
 
       if (
-        mutedCategoryIds?.includes(data.payload.category_id) &&
+        mutedCategoryIds?.includes(data.payload!.category_id) &&
         !this.isUnmutedTopic(data.topic_id)
       ) {
         return;
@@ -968,7 +1161,7 @@ export default class TopicTrackingState extends EmberObject {
     if (["new_topic", "latest"].includes(data.message_type)) {
       if (
         hasMutedTags(
-          data.payload.tags?.map((t) => t.id),
+          data.payload!.tags?.map((t) => t.id),
           this.currentUser?.muted_tags,
           this.siteSettings
         )
@@ -980,36 +1173,37 @@ export default class TopicTrackingState extends EmberObject {
     const old = { ...this.findState(data) };
 
     if (data.message_type === "latest") {
-      this.notifyIncoming(data);
+      this.notifyIncoming(data as IncomingMessage);
     }
 
     if (data.message_type === "dismiss_new") {
-      this._dismissNewTopics(data.payload.topic_ids);
+      this._dismissNewTopics(data.payload!.topic_ids!);
     }
 
     if (data.message_type === "dismiss_new_posts") {
-      this._dismissNewPosts(data.payload.topic_ids);
+      this._dismissNewPosts(data.payload!.topic_ids!);
     }
 
     if (["new_topic", "unread", "read"].includes(data.message_type)) {
-      this.notifyIncoming(data);
+      this.notifyIncoming(data as IncomingMessage);
       if (!deepEqual(old, data.payload)) {
         // The 'unread' and 'read' payloads are deliberately incomplete
         // for efficiency. We rebuild them by using any existing state
         // we have, and then substitute inferred values for last_read_post_number
         // and notification_level. Any errors will be corrected when a
         // topic-list is loaded which includes the topic.
-        let payload = data.payload;
+        let payload = data.payload!;
 
         if (old) {
-          payload = deepMerge(old, data.payload);
+          // TODO(typescript-pending): deepMerge does not preserve argument types; remove when generic.
+          payload = deepMerge(old, data.payload) as TopicTrackingStateEntry;
         }
 
         if (data.message_type === "unread") {
           if (payload.last_read_post_number === undefined) {
             // If we didn't already have state for this topic,
             // we're probably only 1 post behind.
-            payload.last_read_post_number = payload.highest_post_number - 1;
+            payload.last_read_post_number = payload.highest_post_number! - 1;
           }
 
           if (payload.notification_level === undefined) {
@@ -1026,7 +1220,7 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
-  _dismissNewTopics(topicIds) {
+  _dismissNewTopics(topicIds: number[]) {
     topicIds.forEach((topicId) => {
       this.modifyStateProp(topicId, "is_seen", true);
     });
@@ -1034,7 +1228,7 @@ export default class TopicTrackingState extends EmberObject {
     this.messageCount++;
   }
 
-  _dismissNewPosts(topicIds) {
+  _dismissNewPosts(topicIds: number[]) {
     topicIds.forEach((topicId) => {
       const state = this.findState(topicId);
 
@@ -1050,13 +1244,13 @@ export default class TopicTrackingState extends EmberObject {
     this.messageCount++;
   }
 
-  _addIncoming(topicId) {
-    if (!this.newIncoming.includes(topicId)) {
-      this.newIncoming.push(topicId);
+  _addIncoming(topicId: number) {
+    if (!this.newIncoming!.includes(topicId)) {
+      this.newIncoming!.push(topicId);
     }
   }
 
-  _trackedTopics(opts = {}) {
+  _trackedTopics(opts: { includeAll?: boolean } = {}) {
     return Array.from(this.states.values())
       .map((topic) => {
         let newTopic = isNew(topic);
@@ -1068,13 +1262,14 @@ export default class TopicTrackingState extends EmberObject {
       .filter((item) => item != null);
   }
 
-  _stateKey(topicOrId) {
+  /** Any string containing "t" passes through; numeric strings still read topic_id. */
+  _stateKey(topicOrId: TopicTrackingKey) {
     if (typeof topicOrId === "number") {
       return `t${topicOrId}`;
     } else if (typeof topicOrId === "string" && topicOrId.includes("t")) {
       return topicOrId;
     } else {
-      return `t${topicOrId.topic_id}`;
+      return `t${(topicOrId as Pick<TopicTrackingStateEntry, "topic_id">).topic_id}`;
     }
   }
 
@@ -1087,12 +1282,13 @@ export default class TopicTrackingState extends EmberObject {
   }
 }
 
-export function startTracking(tracking) {
+export function startTracking(tracking: TopicTrackingState) {
+  // TODO(typescript-pending): PreloadStore does not type keyed payloads; remove the assertions when it does.
   PreloadStore.getAndRemove("topicTrackingStates").then((data) =>
-    tracking.loadStates(data)
+    tracking.loadStates(data as TopicTrackingStateRow[] | null)
   );
 
   PreloadStore.getAndRemove("topicTrackingStateMeta").then((meta) =>
-    tracking.establishChannels(meta)
+    tracking.establishChannels(meta as TopicTrackingChannelCursors | null)
   );
 }
