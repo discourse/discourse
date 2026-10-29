@@ -53,6 +53,50 @@ construction and assignment in `ForkManager.without_forks`, which shares a lock 
 the actual process fork. Keep queries outside that lock so steps can still read in
 parallel. The adapter spec pauses construction to exercise this window deterministically.
 
+#### Current lifecycle boundaries
+
+The converter's SQLite safety also depends on the scheduler: the run connection is
+created before scheduling, workers open their shards after forking, and the consolidator
+shares the coordinators' mutex. That mutex covers the whole close/fork/reopen batch.
+`Database::Connection` alone does not enforce those boundaries. In particular, opening
+a connection on another thread after a batch's before-fork hooks have run lets the child
+inherit an open SQLite handle. Guarding just construction against the fork syscall is
+insufficient for a resource that must be closed *before* the fork.
+
+SQLite needs a different strategy from PostgreSQL: do not use or call SQLite's close API
+on a connection inherited from the parent. Close it in the parent before forking and
+open worker connections in the worker. See [SQLite's fork guidance](https://www.sqlite.org/howtocorrupt.html#_carrying_an_open_database_connection_across_a_fork_).
+
+Other gaps to address before treating the helpers as a general lifecycle manager:
+
+- An unbatched `ForkManager.fork` failure skips the parent restoration hooks; a SQLite
+  connection closed by its before hook stays closed. The batched path has an `ensure`.
+- Postgres initialization removes its hook if configuration raises after connection
+  creation, but does not explicitly finish that connection.
+- `Importer::DiscourseDB` opens PostgreSQL directly without fork protection. The current
+  importer executes steps sequentially; adding worker forks requires a lifecycle policy.
+- Postgres `discard!` suppresses all `StandardError`s. A failed descriptor redirection
+  must not be assumed to mean the socket was already harmless.
+
+#### Verifying adapters and fork handling
+
+Test the resource's lifetime, including native construction before Ruby assignment,
+configuration failure, close/unregister, and parent restoration on failed forks. Use
+queues or barriers to force interleavings, and cover ordinary forks and batches. Exercise
+real database connections as well as doubles: after child garbage collection, PostgreSQL
+must still answer on the parent's original session; SQLite handles must be closed before
+the process split, and writes through fresh worker connections must preserve integrity.
+
+Every fork spec must reap its child and assert a successful exit status or explicitly
+transport failures back to the parent. An assertion raised only in the child does not
+fail the parent RSpec runner. Existing SQLite connection fork specs lack this check;
+forcing a child assertion to fail still produces a successful parent test exit.
+
+Verify that removing the protection makes each regression test fail. An empty child
+that exits while a PostgreSQL connection remains referenced is not sufficient evidence
+that native cleanup was exercised. Repeated full conversions supplement these tests;
+they do not prove that all lifecycle interleavings are safe.
+
 ### Partitioning large steps
 
 Most steps run in a single worker. A handful are large enough that it's worth
