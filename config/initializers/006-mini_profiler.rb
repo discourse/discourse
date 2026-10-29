@@ -27,7 +27,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   Rack::MiniProfiler.config.storage_instance =
     Rack::MiniProfiler::RedisStore.new(
       connection: DiscourseRedis.new(nil, namespace: false),
-      expires_in: GlobalSetting.mini_profiler_storage_expiry_seconds,
+      expires_in: ENV.fetch("DISCOURSE_MINI_PROFILER_STORAGE_EXPIRY_SECONDS", 4.hours).to_i,
     )
 
   Rack::MiniProfiler.config.snapshot_every_n_requests = GlobalSetting.mini_profiler_snapshots_period
