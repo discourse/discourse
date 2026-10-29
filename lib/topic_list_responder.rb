@@ -43,6 +43,13 @@ module TopicListResponder
 
   private
 
+  def canonical_list_url(path)
+    url = "#{Discourse.base_url_no_prefix}#{path}"
+    page = params[:page]
+    url = "#{url}?page=#{page.to_i}" if TopicQuery.validate?(:page, page) && page.to_i > 0
+    canonical_url(url)
+  end
+
   def localize_topic_list_content(list)
     return if list.topics.blank? || !SiteSetting.content_localization_enabled
     crawl_locale = I18n.locale

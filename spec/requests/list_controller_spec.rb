@@ -1407,6 +1407,19 @@ RSpec.describe ListController do
           expect(response.status).to eq(200)
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
+
+        it "keeps the page number on later pages of a category" do
+          category_url = "#{Discourse.base_url}/c/#{category.slug}/#{category.id}"
+
+          get "/c/#{category.slug}/#{category.id}?page=2&order=views"
+          expect(css_select("link[rel=canonical]").first["href"]).to eq("#{category_url}?page=2")
+
+          get "/c/#{category.slug}/#{category.id}/l/latest?page=2"
+          expect(css_select("link[rel=canonical]").first["href"]).to eq("#{category_url}?page=2")
+
+          get "/c/#{category.slug}/#{category.id}?page=0"
+          expect(css_select("link[rel=canonical]").first["href"]).to eq(category_url)
+        end
       end
 
       context "for category default view" do
