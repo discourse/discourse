@@ -94,6 +94,7 @@ class Admin::UsersController < Admin::StaffController
       on_failed_policy(:can_create_bot) { raise Discourse::InvalidAccess }
       on_failed_policy(:site_not_archived) { raise Discourse::SiteArchived }
       on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
+      on_model_not_found(:bot_id) { |result| raise result.exception }
       on_model_errors(:user) { |user| render_json_error(user) }
       on_model_not_found(:user) do |result|
         raise result.exception if result.exception

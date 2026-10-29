@@ -26,6 +26,9 @@ class User::CreateBot
     validates :trust_level, inclusion: { in: TrustLevel.valid_range }
   end
 
+  # Commit the reservation before the creation transaction can hide it from other requests.
+  model :bot_id, :reserve_bot_id
+
   transaction do
     model :user, :create_bot
     step :log_creation
@@ -45,9 +48,13 @@ class User::CreateBot
     !SiteSetting.site_archived
   end
 
-  def create_bot(params:, guardian:)
+  def reserve_bot_id
+    BotUser.new("core").next_id
+  end
+
+  def create_bot(params:, guardian:, bot_id:)
     User.create(
-      id: BotUser.new("core").next_id,
+      id: bot_id,
       name: params.name,
       username: params.username,
       trust_level: params.trust_level,
