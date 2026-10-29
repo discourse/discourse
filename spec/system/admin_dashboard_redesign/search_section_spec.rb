@@ -8,7 +8,6 @@ describe "Admin Dashboard Redesign | Search section" do
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
   before do
-    SiteSetting.dashboard_improvements = true
     SiteSetting.improved_crawler_detection = true
     AdminDashboardSectionConfiguration.update(
       [

@@ -17,7 +17,7 @@ class AdminDashboardSystem
       version: version,
       storage: storage,
       discourse_updated_at: Discourse.last_commit_date,
-      dashboard_updated_at: AdminDashboardIndexData.fetch_cached_stats["updated_at"],
+      dashboard_updated_at: Time.zone.now.as_json,
     }
   end
 

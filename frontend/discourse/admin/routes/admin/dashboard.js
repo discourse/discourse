@@ -14,11 +14,6 @@ export default class AdminDashboardRoute extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 
-    if (controller.showRedesign) {
-      controller.fetchSections();
-    } else {
-      controller.fetchProblems();
-      controller.fetchDashboard();
-    }
+    controller.fetchSections();
   }
 }

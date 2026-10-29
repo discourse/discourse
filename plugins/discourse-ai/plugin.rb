@@ -50,8 +50,6 @@ register_asset "stylesheets/modules/ai-bot-conversations/docked-composer.scss"
 register_asset "stylesheets/modules/embeddings/common/semantic-related-topics.scss"
 register_asset "stylesheets/modules/embeddings/common/semantic-search.scss"
 
-register_asset "stylesheets/modules/sentiment/common/dashboard.scss"
-
 register_asset "stylesheets/modules/llms/common/ai-llms-editor.scss"
 register_asset "stylesheets/modules/llms/common/ai-secret-selector.scss"
 register_asset "stylesheets/modules/embeddings/common/ai-embedding-editor.scss"

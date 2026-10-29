@@ -9,7 +9,6 @@ describe "Data Explorer | Add query to admin dashboard" do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.dashboard_improvements = true
     SiteSetting.data_explorer_enabled = true
     SiteSetting.data_explorer_ai_queries_enabled = false
     AdminDashboardSectionConfiguration.update(
