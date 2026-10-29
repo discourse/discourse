@@ -8,6 +8,7 @@ class UpcomingChanges::List
   policy :current_user_is_admin
   model :upcoming_changes, optional: true
   step :load_upcoming_change_groups
+  step :load_status_changed_at
   step :sort_changes
   step :update_last_visited
 
@@ -91,6 +92,24 @@ class UpcomingChanges::List
 
       setting[:upcoming_change][:enabled_for] = enabled_for
       setting[:groups] = setting_groups
+    end
+  end
+
+  def load_status_changed_at(upcoming_changes:)
+    status_changed_at =
+      UpcomingChangeEvent
+        .status_changed
+        .where(upcoming_change_name: upcoming_changes.map { |change| change[:setting] })
+        .reorder(nil)
+        .group(:upcoming_change_name)
+        .maximum(:created_at)
+
+    # upcoming_change is the process-global metadata hash, so copy rather than
+    # write per-site data into it
+    upcoming_changes.each do |change|
+      change[:upcoming_change] = change[:upcoming_change].merge(
+        status_changed_at: status_changed_at[change[:setting].to_s],
+      )
     end
   end
 

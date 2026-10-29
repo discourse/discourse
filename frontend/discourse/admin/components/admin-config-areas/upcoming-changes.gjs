@@ -1,16 +1,54 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { array, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 
+// most mature first, as those are closest to being enabled automatically
+const STATUS_ORDER = ["stable", "beta", "alpha", "experimental"];
+
+const DEFAULT_SORT = "recently_updated";
+
+function compareNames(a, b) {
+  return a.humanized_name.localeCompare(b.humanized_name);
+}
+
+function compareStatuses(a, b) {
+  return (
+    STATUS_ORDER.indexOf(a.upcoming_change.status) -
+    STATUS_ORDER.indexOf(b.upcoming_change.status)
+  );
+}
+
+// changes not yet seen by the tracking job have no timestamp, but are the newest
+function compareRecentlyUpdated(a, b) {
+  const aTime = a.upcoming_change.status_changed_at
+    ? Date.parse(a.upcoming_change.status_changed_at)
+    : Infinity;
+  const bTime = b.upcoming_change.status_changed_at
+    ? Date.parse(b.upcoming_change.status_changed_at)
+    : Infinity;
+
+  return aTime === bTime ? 0 : bTime > aTime ? 1 : -1;
+}
+
+const SORTS = {
+  recently_updated: [compareRecentlyUpdated, compareStatuses, compareNames],
+  status: [compareStatuses, compareRecentlyUpdated, compareNames],
+  name: [compareNames],
+};
+
 export default class AdminConfigAreasUpcomingChanges extends Component {
+  @service capabilities;
   @service site;
 
   @cached
@@ -19,6 +57,36 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       change.upcoming_change = trackedObject(change.upcoming_change);
       return trackedObject(change);
     });
+  }
+
+  get sort() {
+    return SORTS[this.args.sort] ? this.args.sort : DEFAULT_SORT;
+  }
+
+  @cached
+  get sortedUpcomingChanges() {
+    const comparators = SORTS[this.sort];
+
+    return [...this.upcomingChanges].sort((a, b) => {
+      for (const compare of comparators) {
+        const result = compare(a, b);
+        if (result !== 0) {
+          return result;
+        }
+      }
+      return 0;
+    });
+  }
+
+  get sortLabel() {
+    return i18n(`admin.upcoming_changes.sort.${this.sort}`);
+  }
+
+  get sortOptions() {
+    return Object.keys(SORTS).map((value) => ({
+      value,
+      label: i18n(`admin.upcoming_changes.sort.${value}`),
+    }));
   }
 
   get staffGroupName() {
@@ -152,6 +220,12 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   @action
+  onSortChange(close, value) {
+    this.args.onSortChange(value === DEFAULT_SORT ? null : value);
+    close();
+  }
+
+  @action
   enabledForChanged(changeSettingName, newEnabledFor) {
     this.upcomingChanges.find(
       (change) => change.setting === changeSettingName
@@ -160,7 +234,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
 
   <template>
     <DFilterControls
-      @array={{this.upcomingChanges}}
+      @array={{this.sortedUpcomingChanges}}
       @dropdownFilterQueryParams={{hash
         status="status"
         type="type"
@@ -184,6 +258,44 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       }}
       @textFilterQueryParam="changeNamesFilter"
     >
+      <:inlineFilters>
+        <DMenu
+          @ariaLabel={{i18n
+            "admin.upcoming_changes.sort.trigger_label"
+            sort=this.sortLabel
+          }}
+          @icon="arrow-down-wide-short"
+          @identifier="upcoming-changes-sort"
+          @label={{if this.capabilities.viewport.sm this.sortLabel}}
+          @modalForMobile={{true}}
+          @placement="bottom-end"
+          @title={{i18n
+            "admin.upcoming_changes.sort.trigger_label"
+            sort=this.sortLabel
+          }}
+          @triggerClass="btn-default upcoming-changes__sort-trigger"
+        >
+          <:content as |menu|>
+            <DDropdownMenu class="upcoming-changes__sort-options" as |dropdown|>
+              <dropdown.subheader>
+                {{i18n "admin.upcoming_changes.sort.label"}}
+              </dropdown.subheader>
+              {{#each this.sortOptions as |option|}}
+                <dropdown.item>
+                  <DButton
+                    aria-current={{if (eq option.value this.sort) "true"}}
+                    class="btn-transparent upcoming-changes__sort-option"
+                    data-sort={{option.value}}
+                    @action={{fn this.onSortChange menu.close option.value}}
+                    @suffixIcon={{if (eq option.value this.sort) "check"}}
+                    @translatedLabel={{option.label}}
+                  />
+                </dropdown.item>
+              {{/each}}
+            </DDropdownMenu>
+          </:content>
+        </DMenu>
+      </:inlineFilters>
       <:content as |upcomingChanges|>
         <table class="d-table upcoming-changes-table">
           <thead class="d-table__header">

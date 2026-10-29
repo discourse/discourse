@@ -6998,6 +6998,12 @@ en:
           impact_role_staff: "Staff"
           impact_role_all_members: "All members"
           impact_role_developers: "Developers"
+        sort:
+          label: "Sort by"
+          trigger_label: "Sort by: %{sort}"
+          recently_updated: "Recently updated"
+          status: "Status"
+          name: "Name"
 
       config:
         about:
