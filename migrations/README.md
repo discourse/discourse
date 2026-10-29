@@ -92,18 +92,22 @@ If child-side discard or another child initialization hook fails, the child exit
 without running worker code or inherited exit handlers. PID checks also reject accidental
 use of inherited connections and streams.
 
-`Database::PostgresStream` is single-pass. Normal `each` iteration passes the consumer's
-block directly to the native stream, without a Fiber switch or ownership check per row.
-Only explicit `next` iteration creates a Fiber. `each` releases its lease and drains pending
-results on exhaustion, early block exit, or an exception. When manually using `next`,
+`Database::PostgresStream` is single-pass. On a fresh stream, `each` uses native block
+iteration without a Fiber switch or ownership check per row. Hash and multi-column array
+streams forward the consumer's block directly; single-column array streams unwrap each
+row to its scalar value. Calling `next` creates a Fiber, which subsequent `each` calls
+continue to use. `each` releases its lease and drains pending results on exhaustion,
+early block exit, or an exception. When manually using `next`,
 call `close` if stopping early. Closing a connection with an active operation raises
 `BusyError`; an abandoned stream must not silently release protection while its query is
 still in progress. The source adapter and importer both use this stream implementation.
 
 #### Testing and enforcing adapter contracts
 
-New drivers must pass the shared `a managed database driver` examples and add tests for
-their native discard or restoration strategy. The lifecycle tests force construction,
+For every new driver, test construction/configuration failure cleanup and its declared
+fork policy. Drivers opting into `:discard` or `:close_reopen` must also pass the shared
+`a managed database driver` examples and test their native discard or restoration
+strategy. A `:forbid` driver must reject forks while open. The lifecycle tests force construction,
 close, and fork interleavings with queues, and exercise failure recovery for ordinary
 forks and batches. Every fork test must reap its child and check its status or transport
 its failure to the parent; assertions raised only in a child do not fail the parent runner.
@@ -154,8 +158,9 @@ represent markdown processing, uploads, or a complete production-site import.
 The initial managed implementation added 8–17% to PostgreSQL stream time and 37% to
 cached SQLite insert time. Mandatory per-row Fiber switching and operation locking were
 removed from these paths. Fork barriers remain around resource lifetime transitions;
-reopenable SQLite operations remain protected. Benchmark results for the revised
-implementation against `b33564c4b9e` (the narrow, proven fork fix) follow below.
+reopenable SQLite operations remain protected. The following snapshot compares
+`81e3b173ad6` against `b33564c4b9e` (the narrow, proven fork fix). It predates the
+`CopyStep` iterator change; that change has a separate comparison below.
 
 Local measurements on Ruby 4.0.9 and pg 1.7.0 over a Unix socket used six alternating
 pairs of measured processes per streaming/converter case and ten pairs for SQLite/COPY.
@@ -174,10 +179,10 @@ verification but exclude Ruby startup.
 
 SQLite and COPY elapsed times were indistinguishable within run-to-run variation; paired
 95% intervals included both improvement and regression. SQLite median CPU was unchanged;
-COPY CPU was 1.890 s versus 1.907 s (+0.9%). These measurements establish parity within
-benchmark precision, not a guarantee for every workload or machine. Re-run them when
-changing these paths, and supplement them with a representative real migration when
-source data is available.
+COPY CPU was 1.890 s versus 1.907 s (+0.9%). The measurements did not resolve a small
+difference in SQLite/COPY throughput; overlapping intervals do not prove equivalent
+performance. Re-run the benchmarks when changing these paths, and supplement them with
+a representative real migration when source data is available.
 
 #### Enumerator hot paths and linting
 
@@ -189,8 +194,9 @@ given can preserve laziness while avoiding `Enumerator::Yielder` dispatch. Prese
 batching, skip markers, progress timing, early-exit cleanup, and return semantics.
 Benchmark the actual consumer: a faster isolated iterator may have little effect on COPY.
 
-The remaining converter chunk Enumerator yields at most eight chunks per allocated fork,
-so replacing it is not a useful per-row optimization. The site-settings source's lazy map
+The remaining converter chunk Enumerator yields once per claimed chunk. Planning requests
+eight chunks per allocated fork for the shared queue; individual workers may claim more
+or fewer. This is not a per-row hot path. The site-settings source's lazy map
 normalizes embedded upload hashes on a small result set. Both remain unchanged. SQLite
 query methods already forward their blocks to the native driver. The generic database
 pipeline benchmark retains its original forwarding wrapper for reproducible comparisons.
@@ -203,8 +209,8 @@ consumer's result and accepts multiple/keyword arguments. Ruby's separate
 extra argument handling; the Ruby `yield` keyword is a different mechanism entirely.
 
 `Migrations/SingleValueYielder` in `migrations/.rubocop.yml` warns about single-value
-calls on a named `Enumerator.new` block parameter. It skips explicitly consumed results,
-multiple arguments, keywords, splats, and shadowed/reassigned parameters. It does **not**
+calls on a named `Enumerator.new` block parameter. It skips recognised explicit uses of
+the return value, multiple arguments, keywords, splats, and shadowed/reassigned parameters. It does **not**
 autocorrect: implicit generator results can still matter through `StopIteration#result`,
 and static analysis cannot prove every receiver or callback contract. Use a local disable
 with an explanation when those semantics are intentional. Ordinary `bin/lint` runs the
@@ -231,9 +237,9 @@ the timer. The standalone harness supplies the host's system-user constant witho
 booting Rails; database operations use real drivers and temporary data. Run the same
 script against each revision's `BUNDLE_GEMFILE` and alternate revision order.
 
-Against `81e3b173ad6`, ten alternating pairs of separate processes (one warmup and one
-measured run each, one million rows) measured 322 ms → 285 ms for row iteration, and
-310 ms → 283 ms of CPU time. The full COPY pipeline measured 2.001 s → 1.986 s elapsed
+Comparing `4a9b287a2da` against `81e3b173ad6`, ten alternating pairs of separate processes
+(one warmup and one measured run each, one million rows) measured 322 ms → 285 ms for
+row iteration and 310 ms → 283 ms of CPU time. The full COPY pipeline measured 2.001 s → 1.986 s elapsed
 and 1.111 s → 1.131 s CPU; paired timing intervals included both improvement and
 regression, so there is **no reliable full-COPY speedup claim**. Same-process exploratory
 runs had suggested a small COPY improvement, but it did not reproduce consistently.
@@ -271,11 +277,11 @@ def items
 end
 ```
 
-The framework does the rest. Before forking, it asks the adapter for the chunk
-boundaries — evenly sized chunks over a numeric key, or a sorted-key scan for a
-text/UUID/composite key. It then forks one worker per chunk; each worker reads
-its `[lower, upper)` slice (that's what `partition_slice` expands to), writes its
-own SQLite shard, and the shards are merged back into the run database.
+The framework does the rest. Before forking, it asks the adapter for chunk boundaries
+over the ordered partition key. The coordinator starts up to its allocated worker budget,
+and workers repeatedly claim chunks from a shared queue. For each chunk, a worker reads
+its `[lower, upper)` slice (that's what `partition_slice` expands to) and writes to its own
+SQLite shard. The completed shards are merged back into the run database.
 
 Two things to get right:
 
