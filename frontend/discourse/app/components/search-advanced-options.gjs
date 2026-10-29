@@ -853,7 +853,7 @@ export default class SearchAdvancedOptions extends Component {
             />
 
             <div class="control-group advanced-search-category">
-              <label class="control-label">
+              <label class="control-label" id="search-in-category-label">
                 {{i18n "search.advanced.in_category.label"}}
               </label>
               <div class="controls">
@@ -865,6 +865,7 @@ export default class SearchAdvancedOptions extends Component {
                     @descriptions={{false}}
                     @emit="ids"
                     @id="search-in-category"
+                    @labelledBy="search-in-category-label"
                     @legacyKind={{array
                       "search-advanced-category-chooser"
                       "category-chooser"

@@ -105,6 +105,7 @@ export default class CategoryControl extends Component {
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-selector"
+            @label={{@field.title}}
             @multiple={{true}}
             @onChange={{this.handleMultiChange}}
             @placeholder={{@placeholder}}
@@ -126,6 +127,7 @@ export default class CategoryControl extends Component {
             class="category-chooser"
             @clearable={{this.clearable}}
             @emit="ids"
+            @label={{@field.title}}
             @onChange={{this.handleChange}}
             @permission="create"
             @value={{if @field.value @field.value null}}

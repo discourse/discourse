@@ -31,6 +31,7 @@ interface DSelectCategorySignature {
     | "clearable"
     | "disabled"
     | "label"
+    | "labelledBy"
     | "id"
     | "describedBy"
     | "invalid"
@@ -381,6 +382,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         exclude=@exclude
       }}
       @label={{if @label @label this.placeholder}}
+      @labelledBy={{@labelledBy}}
       @legacyKind={{this.legacyKind}}
       @load={{if @load @load this.load}}
       @loadContext={{this.loadContext}}

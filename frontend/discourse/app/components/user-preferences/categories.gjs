@@ -21,7 +21,10 @@ const Categories = <template>
     <div
       class="controls tracking-controls tracking-controls__watched-categories"
     >
-      <label>{{dIcon "d-watching"}} {{i18n "user.watched_categories"}}</label>
+      <label id="user-watched-categories-label">
+        {{~dIcon "d-watching"}}
+        {{i18n "user.watched_categories"~}}
+      </label>
       {{#if @canSee}}
         <a class="show-tracking" href={{@model.watchingTopicsPath}}>{{i18n
             "user.tracked_topics_link"
@@ -35,6 +38,7 @@ const Categories = <template>
             @selectedCategories
             @model.watchedCategories
           }}
+          @labelledBy="user-watched-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @model.watchedCategories)}}
           @value={{@model.watchedCategories}}
@@ -54,7 +58,10 @@ const Categories = <template>
     <div
       class="controls tracking-controls tracking-controls__tracked-categories"
     >
-      <label>{{dIcon "d-tracking"}} {{i18n "user.tracked_categories"}}</label>
+      <label id="user-tracked-categories-label">
+        {{~dIcon "d-tracking"}}
+        {{i18n "user.tracked_categories"~}}
+      </label>
       {{#if @canSee}}
         <a class="show-tracking" href={{@model.trackingTopicsPath}}>{{i18n
             "user.tracked_topics_link"
@@ -68,6 +75,7 @@ const Categories = <template>
             @selectedCategories
             @model.trackedCategories
           }}
+          @labelledBy="user-tracked-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @model.trackedCategories)}}
           @value={{@model.trackedCategories}}
@@ -87,8 +95,10 @@ const Categories = <template>
     <div
       class="controls tracking-controls tracking-controls__watched-first-categories"
     >
-      <label>{{dIcon "d-watching-first"}}
-        {{i18n "user.watched_first_post_categories"}}</label>
+      <label id="user-watched-first-post-categories-label">
+        {{~dIcon "d-watching-first"}}
+        {{i18n "user.watched_first_post_categories"~}}
+      </label>
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if @siteSettings.enable_new_select_controls}}
         <DSelectCategory
@@ -97,6 +107,7 @@ const Categories = <template>
             @selectedCategories
             @model.watchedFirstPostCategories
           }}
+          @labelledBy="user-watched-first-post-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @model.watchedFirstPostCategories)}}
           @value={{@model.watchedFirstPostCategories}}
@@ -117,7 +128,10 @@ const Categories = <template>
       <div
         class="controls tracking-controls tracking-controls__regular-categories"
       >
-        <label>{{dIcon "d-regular"}} {{i18n "user.regular_categories"}}</label>
+        <label id="user-regular-categories-label">
+          {{~dIcon "d-regular"}}
+          {{i18n "user.regular_categories"~}}
+        </label>
         {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectCategory
@@ -126,6 +140,7 @@ const Categories = <template>
               @selectedCategories
               @model.regularCategories
             }}
+            @labelledBy="user-regular-categories-label"
             @multiple={{true}}
             @onChange={{fn (mut @model.regularCategories)}}
             @value={{@model.regularCategories}}
@@ -145,7 +160,10 @@ const Categories = <template>
       <div
         class="controls tracking-controls tracking-controls__muted-categories"
       >
-        <label>{{dIcon "d-muted"}} {{i18n "user.muted_categories"}}</label>
+        <label id="user-muted-categories-label">
+          {{~dIcon "d-muted"}}
+          {{i18n "user.muted_categories"~}}
+        </label>
 
         {{#if @canSee}}
           <a class="show-tracking" href={{@model.mutedTopicsPath}}>{{i18n
@@ -161,6 +179,7 @@ const Categories = <template>
               @selectedCategories
               @model.mutedCategories
             }}
+            @labelledBy="user-muted-categories-label"
             @multiple={{true}}
             @onChange={{fn (mut @model.mutedCategories)}}
             @value={{@model.mutedCategories}}

@@ -1,10 +1,19 @@
-import { click, findAll, render } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import SchemaSettingField from "discourse/admin/components/schema-setting/field";
+import SiteSettingComponent from "discourse/admin/components/site-setting";
 import SiteSettingCategoryList from "discourse/admin/components/site-settings/category-list";
+import SiteSetting from "discourse/admin/models/site-setting";
 import BreadCrumbs from "discourse/components/bread-crumbs";
+import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
+import ModalContainer from "discourse/components/modal-container";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import UserPreferencesCategories from "discourse/components/user-preferences/categories";
+import Form from "discourse/form-kit/components/fk/form";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MIGRATED_SELECT_KIT_MODULES } from "discourse/lib/select-kit-modify-class-deprecation";
 import DiscourseURL from "discourse/lib/url";
@@ -408,6 +417,181 @@ module(
         assert.false(
           optionValues().includes("2"),
           "the tracking category is not offered"
+        );
+      });
+    });
+
+    module("names", function (nameHooks) {
+      nameHooks.beforeEach(async function () {
+        this.nameOf = await loadAccessibleName();
+      });
+
+      /** Asserts the picker in `container` is named by the caption found there. */
+      function assertNamedByCaption(assert, nameOf, container, caption) {
+        const control = container.querySelector("[role='combobox']");
+        assert.strictEqual(
+          nameOf(control),
+          container.querySelector(caption).textContent.trim(),
+          container.className
+        );
+      }
+
+      for (const muteAll of [false, true]) {
+        test(`each preferences list is named by its caption (mute all: ${muteAll})`, async function (assert) {
+          this.siteSettings.mute_all_categories_by_default = muteAll;
+          const model = {
+            watchedCategories: [],
+            trackedCategories: [],
+            watchedFirstPostCategories: [],
+            regularCategories: [],
+            mutedCategories: [],
+          };
+          const selected = [];
+          await render(
+            <template>
+              <UserPreferencesCategories
+                @model={{model}}
+                @selectedCategories={{selected}}
+                @siteSettings={{this.siteSettings}}
+              />
+            </template>
+          );
+
+          const lists = findAll(".tracking-controls");
+          assert.strictEqual(lists.length, 4);
+          for (const list of lists) {
+            assertNamedByCaption(assert, this.nameOf, list, "label");
+          }
+        });
+      }
+
+      test("each group list is named by its caption", async function (assert) {
+        const controller = {
+          model: {},
+          selectedCategories: [],
+          siteSettings: this.siteSettings,
+        };
+        await render(
+          <template>
+            <GroupManageCategories @controller={{controller}} />
+          </template>
+        );
+
+        const groups = findAll(".control-group").filter((group) =>
+          group.querySelector(".d-select")
+        );
+        assert.strictEqual(groups.length, 5);
+        for (const group of groups) {
+          assertNamedByCaption(assert, this.nameOf, group, "label");
+        }
+      });
+
+      test("advanced search's category picker is named by its caption", async function (assert) {
+        const noop = () => {};
+        await render(
+          <template>
+            <SearchAdvancedOptions
+              @expandFilters={{true}}
+              @onChangeSearchTerm={{noop}}
+              @searchTerm=""
+            />
+          </template>
+        );
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".advanced-search-category"),
+          ".control-label"
+        );
+      });
+
+      for (const type of ["category", "category_list"]) {
+        test(`a ${type} form field is named by its title`, async function (assert) {
+          const definition = { key: "picked", label: "Picked here", type };
+          await render(
+            <template>
+              <Form as |form|>
+                <SettingDefinitionField
+                  @definition={{definition}}
+                  @form={{form}}
+                />
+              </Form>
+            </template>
+          );
+
+          assertNamedByCaption(
+            assert,
+            this.nameOf,
+            find(".form-kit__field"),
+            ".form-kit__container-title > span"
+          );
+        });
+      }
+
+      test("a category list site setting is named by its heading", async function (assert) {
+        const setting = SiteSetting.create({
+          category: "foo",
+          default: "",
+          description: "",
+          humanized_name: "Picked here",
+          setting: "picked_here",
+          type: "category_list",
+          value: "",
+        });
+        await render(
+          <template><SiteSettingComponent @setting={{setting}} /></template>
+        );
+
+        assert.strictEqual(
+          this.nameOf(find(".setting [role='combobox']")),
+          "Picked here"
+        );
+      });
+
+      test("a categories schema field is named by its label", async function (assert) {
+        const setting = {};
+        const spec = { type: "categories" };
+        const noop = () => {};
+        await render(
+          <template>
+            <SchemaSettingField
+              @label="Picked here"
+              @name="picked"
+              @onValueChange={{noop}}
+              @setting={{setting}}
+              @spec={{spec}}
+            />
+          </template>
+        );
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".schema-field"),
+          ".schema-field__label"
+        );
+      });
+
+      test("the bulk category change is named by its description", async function (assert) {
+        await render(<template><ModalContainer /></template>);
+        getOwner(this)
+          .lookup("service:modal")
+          .show(BulkTopicActions, {
+            model: {
+              action: "update-category",
+              bulkSelectHelper: { selected: [], toggleBulkSelect() {} },
+              description: "Move them here:",
+              title: "Update category",
+            },
+          });
+        await settled();
+
+        assertNamedByCaption(
+          assert,
+          this.nameOf,
+          find(".d-modal"),
+          ".topic-bulk-actions-modal__description"
         );
       });
     });

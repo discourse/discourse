@@ -137,7 +137,9 @@ export default class ChatToTopicSelector extends Component {
             @value={{this.topicTitle}}
           />
 
-          <label>{{i18n "categories.category"}}</label>
+          <label id="new-topic-category-selector-label">
+            {{~i18n "categories.category"~}}
+          </label>
 
           {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
           {{#if this.siteSettings.enable_new_select_controls}}
@@ -145,6 +147,7 @@ export default class ChatToTopicSelector extends Component {
               class="category-chooser small"
               @emit="ids"
               @id="new-topic-category-selector"
+              @labelledBy="new-topic-category-selector-label"
               @onChange={{fn (mut this.categoryId)}}
               @permission="create"
               @value={{this.categoryId}}

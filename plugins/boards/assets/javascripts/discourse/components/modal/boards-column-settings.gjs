@@ -262,6 +262,7 @@ export default class BoardsColumnSettings extends Component {
                           class="category-chooser"
                           @clearable={{true}}
                           @emit="ids"
+                          @label={{field.title}}
                           @onChange={{fn this.onCategoryChange field}}
                           @permission="create"
                           @value={{readonly data.move_to_category_id}}

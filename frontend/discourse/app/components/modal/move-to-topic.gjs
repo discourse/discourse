@@ -420,12 +420,15 @@ export default class MoveToTopic extends Component {
                 </div>
 
                 <div class="control-group">
-                  <label>{{i18n "categories.category"}}</label>
+                  <label id="move-to-new-topic-category-label">
+                    {{~i18n "categories.category"~}}
+                  </label>
                   {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectCategory
                       class="category-chooser small"
                       @emit="ids"
+                      @labelledBy="move-to-new-topic-category-label"
                       @onChange={{fn (mut this.categoryId)}}
                       @permission="create"
                       @value={{this.categoryId}}

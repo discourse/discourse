@@ -223,6 +223,7 @@ export default class HouseAdForm extends Component {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-selector"
+              @label={{field.title}}
               @multiple={{true}}
               @onChange={{field.set}}
               @value={{field.value}}

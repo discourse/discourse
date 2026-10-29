@@ -44,7 +44,7 @@ export default class ConvertToPublicTopic extends Component {
       @title={{i18n "topic.make_public.title"}}
     >
       <:body>
-        <div class="instructions">
+        <div class="instructions" id="make-public-category-label">
           {{i18n "topic.make_public.choose_category"}}
         </div>
         {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
@@ -52,6 +52,7 @@ export default class ConvertToPublicTopic extends Component {
           <DSelectCategory
             class="category-chooser"
             @emit="ids"
+            @labelledBy="make-public-category-label"
             @onChange={{fn (mut this.publicCategoryId)}}
             @permission="create"
             @value={{this.publicCategoryId}}

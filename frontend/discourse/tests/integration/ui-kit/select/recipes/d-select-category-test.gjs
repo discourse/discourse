@@ -197,6 +197,23 @@ module(
     setupRenderingTest(hooks);
 
     module("kind and values", function () {
+      test("a caption on the page names it through @labelledBy", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <span id="category-caption">Destination</span>
+            <DSelectCategory @labelledBy="category-caption" @value={{1001}} />
+          </template>
+        );
+
+        const control = find("[role='combobox']") ?? find(".d-select");
+        assert.true(
+          accessibleName(control).startsWith("Destination"),
+          `named by the caption (${accessibleName(control)})`
+        );
+      });
+
       test("its kind is select-category and its legacy class follows the mode", async function (assert) {
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {

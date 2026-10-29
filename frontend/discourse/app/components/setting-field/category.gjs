@@ -27,6 +27,7 @@ export default class SettingFieldCategory extends Component {
           class="category-chooser"
           @disabled={{@field.disabled}}
           @emit="ids"
+          @label={{@field.title}}
           @onChange={{this.onChange}}
           @permission="create"
           @placeholder={{i18n "category.none"}}

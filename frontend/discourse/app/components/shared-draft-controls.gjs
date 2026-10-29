@@ -68,12 +68,15 @@ export default class SharedDraftControls extends Component {
         {{i18n "shared_drafts.notice"}}
 
         <div class="publish-field">
-          <label>{{i18n "shared_drafts.destination_category"}}</label>
+          <label id="shared-draft-destination-category-label">
+            {{~i18n "shared_drafts.destination_category"~}}
+          </label>
           {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-chooser"
               @emit="ids"
+              @labelledBy="shared-draft-destination-category-label"
               @onChange={{this.updateDestinationCategory}}
               @permission="create"
               @value={{@topic.destination_category_id}}

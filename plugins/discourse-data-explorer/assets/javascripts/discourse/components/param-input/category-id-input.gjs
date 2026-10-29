@@ -24,6 +24,7 @@ export default class CategoryIdInput extends Component {
           class="category-chooser"
           name={{@info.identifier}}
           @emit="ids"
+          @label={{@field.title}}
           @noneLabel={{i18n "category.none"}}
           @onChange={{@field.set}}
           @permission="create"

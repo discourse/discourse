@@ -251,7 +251,7 @@ export default class EditTopicTimerForm extends Component {
 
       {{#if this.publishToCategory}}
         <div class="control-group">
-          <label class="control-label">
+          <label class="control-label" id="topic-timer-category-label">
             {{i18n "topic.topic_status_update.publish_to"}}
           </label>
           {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
@@ -263,6 +263,7 @@ export default class EditTopicTimerForm extends Component {
                 this.excludeCategoryId
                 (array this.excludeCategoryId)
               }}
+              @labelledBy="topic-timer-category-label"
               @onChange={{fn (mut @topicTimer.category_id)}}
               @permission="create"
               @value={{@topicTimer.category_id}}

@@ -511,9 +511,10 @@ export default class BulkTopicActions extends Component {
             </div>
           {{else}}
             {{#if @model.description}}
-              <p class="topic-bulk-actions-modal__description">{{trustHTML
-                  @model.description
-                }}</p>
+              <p
+                class="topic-bulk-actions-modal__description"
+                id="bulk-topic-actions-description"
+              >{{trustHTML @model.description}}</p>
             {{/if}}
 
             {{#if this.isCategoryAction}}
@@ -523,6 +524,10 @@ export default class BulkTopicActions extends Component {
                   <DSelectCategory
                     class="category-chooser"
                     @emit="ids"
+                    @labelledBy={{if
+                      @model.description
+                      "bulk-topic-actions-description"
+                    }}
                     @onChange={{this.onCategoryChange}}
                     @permission="create"
                     @value={{this.categoryId}}

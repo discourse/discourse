@@ -23,8 +23,10 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-watching"}}
-        {{i18n "groups.notifications.watching.title"}}</label>
+      <label id="group-watching-categories-label">
+        {{~dIcon "d-watching"}}
+        {{i18n "groups.notifications.watching.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
@@ -34,6 +36,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.watchingCategories
           }}
+          @labelledBy="group-watching-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.watchingCategories)}}
           @value={{@controller.model.watchingCategories}}
@@ -52,8 +55,10 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-tracking"}}
-        {{i18n "groups.notifications.tracking.title"}}</label>
+      <label id="group-tracking-categories-label">
+        {{~dIcon "d-tracking"}}
+        {{i18n "groups.notifications.tracking.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
@@ -63,6 +68,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.trackingCategories
           }}
+          @labelledBy="group-tracking-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.trackingCategories)}}
           @value={{@controller.model.trackingCategories}}
@@ -81,8 +87,10 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-watching-first"}}
-        {{i18n "groups.notifications.watching_first_post.title"}}</label>
+      <label id="group-watching-first-post-categories-label">
+        {{~dIcon "d-watching-first"}}
+        {{i18n "groups.notifications.watching_first_post.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
@@ -92,6 +100,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.watchingFirstPostCategories
           }}
+          @labelledBy="group-watching-first-post-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.watchingFirstPostCategories)}}
           @value={{@controller.model.watchingFirstPostCategories}}
@@ -112,8 +121,10 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-regular"}}
-        {{i18n "groups.notifications.regular.title"}}</label>
+      <label id="group-regular-categories-label">
+        {{~dIcon "d-regular"}}
+        {{i18n "groups.notifications.regular.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
@@ -123,6 +134,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.regularCategories
           }}
+          @labelledBy="group-regular-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.regularCategories)}}
           @value={{@controller.model.regularCategories}}
@@ -141,8 +153,10 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{dIcon "d-muted"}}
-        {{i18n "groups.notifications.muted.title"}}</label>
+      <label id="group-muted-categories-label">
+        {{~dIcon "d-muted"}}
+        {{i18n "groups.notifications.muted.title"~}}
+      </label>
 
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
@@ -152,6 +166,7 @@ export default <template>
             @controller.selectedCategories
             @controller.model.mutedCategories
           }}
+          @labelledBy="group-muted-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.mutedCategories)}}
           @value={{@controller.model.mutedCategories}}

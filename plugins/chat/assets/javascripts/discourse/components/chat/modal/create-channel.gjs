@@ -327,6 +327,7 @@ export default class ChatModalCreateChannel extends Component {
                 <DSelectCategory
                   class="category-chooser"
                   @emit="ids"
+                  @label={{field.title}}
                   @onChange={{field.set}}
                   @permission="create"
                   @placeholder={{i18n

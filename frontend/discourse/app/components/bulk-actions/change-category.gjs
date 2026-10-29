@@ -25,7 +25,9 @@ export default class ChangeCategory extends Component {
   }
 
   <template>
-    <p>{{i18n "topics.bulk.choose_new_category"}}</p>
+    <p id="bulk-change-category-label">
+      {{~i18n "topics.bulk.choose_new_category"~}}
+    </p>
 
     <p>
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
@@ -33,6 +35,7 @@ export default class ChangeCategory extends Component {
         <DSelectCategory
           class="category-chooser"
           @emit="ids"
+          @labelledBy="bulk-change-category-label"
           @onChange={{fn (mut this.categoryId)}}
           @permission="create"
           @value={{this.categoryId}}

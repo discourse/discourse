@@ -90,7 +90,7 @@ export default <template>
       </div>
 
       <div class="reviewable-filter">
-        <label class="filter-label">
+        <label class="filter-label" id="review-filter-category-label">
           {{i18n "review.filters.category"}}
         </label>
         {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
@@ -99,6 +99,7 @@ export default <template>
             class="category-chooser"
             @clearable={{true}}
             @emit="ids"
+            @labelledBy="review-filter-category-label"
             @onChange={{fn (mut @controller.filterCategoryId)}}
             @permission="create"
             @placeholder={{i18n "review.filters.all_categories"}}
