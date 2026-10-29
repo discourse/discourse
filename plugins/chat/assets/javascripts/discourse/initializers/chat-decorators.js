@@ -1,11 +1,11 @@
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
+import { shouldOpenInNewTab } from "discourse/lib/click-track";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import { samePrefix } from "discourse/lib/get-url";
 import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export default {
@@ -62,7 +62,7 @@ export default {
       id: "transcriptDates",
     });
 
-    api.decorateChatMessage(this.forceLinksToOpenNewTab, {
+    api.decorateChatMessage(this.decorateLinkTargets, {
       id: "linksNewTab",
     });
     api.decorateChatMessage((element) => lightbox(element), {
@@ -131,14 +131,17 @@ export default {
     });
   },
 
-  forceLinksToOpenNewTab(element) {
+  decorateLinkTargets(element) {
     const links = element.querySelectorAll(
       "a:not([target]), a[target]:not([target='_blank'])"
     );
     for (let linkIndex = 0; linkIndex < links.length; linkIndex++) {
       const link = links[linkIndex];
-      if (!DiscourseURL.isInternal(link.href) || !samePrefix(link.href)) {
+      if (shouldOpenInNewTab(link.href)) {
         link.setAttribute("target", "_blank");
+      } else if (!samePrefix(link.href)) {
+        // Same origin but outside the subfolder: the router can't handle it.
+        link.classList.add("raw-link");
       }
     }
   },
