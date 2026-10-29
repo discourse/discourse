@@ -1,14 +1,8 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
-import { removeAccents } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import type { SelectItem } from "discourse/ui-kit/select/select-engine";
 import type { CategoryItem } from "./category-types.ts";
-
-/** Case and accent insensitive category matching. */
-export function normalizeCategoryName(text: string): string {
-  return removeAccents(text.toLowerCase());
-}
 
 /** A row's description: the category's plain-text description, cut to 200 characters. */
 export function categoryDescription(category: Category): string | undefined {
