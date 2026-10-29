@@ -7,17 +7,82 @@ import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
-class ColorSchemes extends LegacyArrayLikeObject {
+/** A palette color as the server sends it. */
+export interface ColorSchemeColorPayload {
+  name: string;
+  hex: string;
+  default_hex: string | null;
+  is_advanced: boolean;
+}
+
+/** `/admin/color_schemes` and `/admin/config/colors/:id` record. */
+export interface ColorSchemePayload {
+  id: number;
+  name: string;
+  is_base: boolean | null;
+  base_scheme_id: number | null;
+  theme_id: number | null;
+  theme_name: string | null;
+  user_selectable: boolean;
+  is_builtin_default: boolean | null;
+  /** Null for a palette with no colors. */
+  is_dark: boolean | null;
+  colors: ColorSchemeColorPayload[];
+}
+
+/** Server metadata is optional: the manager builds id-only instances and copies omit it. */
+export interface ColorSchemeFields {
+  is_base?: boolean | null;
+  is_builtin_default?: boolean | null;
+  is_dark?: boolean | null;
+  theme_id?: number | null;
+  theme_name?: string | null;
+  base_scheme_id?: number | null;
+  can_edit?: boolean;
+  default_light_on_theme?: boolean;
+  default_dark_on_theme?: boolean;
+  saving?: boolean;
+  savingStatus?: string | null;
+  originals: { name: string | undefined; user_selectable: boolean | undefined };
+}
+
+/** `init` turns raw color records into ColorSchemeColor instances. */
+export type ColorSchemeCreateAttrs<M = ColorScheme> = Partial<
+  Omit<M, "colors">
+> & {
+  colors?: (Partial<ColorSchemeColorPayload> | ColorSchemeColor)[];
+};
+
+export interface ColorSchemeSaveOptions {
+  forceSave?: boolean;
+  saveNameOnly?: boolean;
+  enabledOnly?: boolean;
+}
+
+class ColorSchemes extends LegacyArrayLikeObject<ColorScheme> {
   @tracked loading = false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface ColorScheme extends ColorSchemeFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class ColorScheme extends EmberObject {
-  static async findAll() {
+  declare static create: <
+    C extends abstract new (...args: never[]) => EmberObject,
+  >(
+    this: C,
+    attrs?: ColorSchemeCreateAttrs<InstanceType<C>>
+  ) => InstanceType<C>;
+
+  static async findAll(): Promise<ColorSchemes> {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    const all = await ajax("/admin/color_schemes");
+    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
+    const all = (await ajax("/admin/color_schemes")) as ColorSchemePayload[];
 
     all.forEach((colorScheme) => {
-      colorSchemes.push(
+      // The proxy forwards array methods to `content`.
+      (colorSchemes as unknown as ColorScheme[]).push(
         ColorScheme.create({
           id: colorScheme.id,
           name: colorScheme.name,
@@ -34,8 +99,11 @@ export default class ColorScheme extends EmberObject {
     return colorSchemes;
   }
 
-  static async find(id) {
-    const json = await ajax(`/admin/config/colors/${id}`);
+  static async find(id: number | string): Promise<ColorScheme> {
+    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
+    const json = (await ajax(
+      `/admin/config/colors/${id}`
+    )) as ColorSchemePayload;
     return ColorScheme.create({
       id: json.id,
       name: json.name,
@@ -48,15 +116,14 @@ export default class ColorScheme extends EmberObject {
     });
   }
 
-  @tracked name;
-  @tracked user_selectable;
-  @tracked id;
-  @autoTrackedArray colors;
+  @tracked name: string | undefined;
+  @tracked user_selectable: boolean | undefined;
+  @tracked id: number | undefined;
+  @autoTrackedArray colors!: ColorSchemeColor[];
 
-  init() {
-    super.init(...arguments);
+  init(...args: Parameters<EmberObject["init"]>) {
+    super.init(...args);
 
-    /** @type Array */
     const colors = this.colors ?? [];
     this.colors = colors.map((c) => {
       return ColorSchemeColor.create(c);
@@ -65,17 +132,17 @@ export default class ColorScheme extends EmberObject {
   }
 
   @dependentKeyCompat
-  get newRecord() {
+  get newRecord(): boolean {
     return !this.id;
   }
 
   @computed
-  get description() {
+  get description(): string {
     return "" + this.name;
   }
 
   @computed("name", "user_selectable", "colors.@each.changed", "saving")
-  get changed() {
+  get changed(): boolean {
     if (!this.originals) {
       return false;
     }
@@ -93,7 +160,7 @@ export default class ColorScheme extends EmberObject {
   }
 
   @computed("changed")
-  get disableSave() {
+  get disableSave(): boolean {
     if (this.theme_id) {
       return false;
     }
@@ -103,15 +170,15 @@ export default class ColorScheme extends EmberObject {
     );
   }
 
-  startTrackingChanges() {
+  startTrackingChanges(): void {
     this.set("originals", {
       name: this.name,
       user_selectable: this.user_selectable,
     });
   }
 
-  schemeJson() {
-    const buffer = [];
+  schemeJson(): string {
+    const buffer: string[] = [];
     this.colors.forEach((c) => {
       buffer.push(`  "${c.get("name")}": "${c.get("hex")}"`);
     });
@@ -119,7 +186,10 @@ export default class ColorScheme extends EmberObject {
     return [`"${this.name}": {`, buffer.join(",\n"), "}"].join("\n");
   }
 
-  schemeObject() {
+  schemeObject(): {
+    name: string | undefined;
+    light: Record<string, string | null | undefined>;
+  } {
     return {
       name: this.name,
       light: Object.fromEntries(
@@ -131,15 +201,14 @@ export default class ColorScheme extends EmberObject {
   /**
    * @returns a JSON representation of the color scheme.
    */
-  dump() {
+  dump(): string {
     return JSON.stringify(this.schemeObject(), null, 2);
   }
 
-  copy() {
+  copy(): ColorScheme {
     const newScheme = ColorScheme.create({
       name: this.name,
       can_edit: true,
-      /** @type Array */
       colors: [],
     });
     this.colors.forEach((c) => {
@@ -150,14 +219,21 @@ export default class ColorScheme extends EmberObject {
     return newScheme;
   }
 
-  save(opts) {
+  save(opts?: ColorSchemeSaveOptions): Promise<void> | undefined {
     if (!opts?.forceSave && (this.is_base || this.disableSave)) {
       return;
     }
 
     this.setProperties({ savingStatus: i18n("saving"), saving: true });
 
-    const data = {};
+    const data: {
+      name?: string;
+      user_selectable?: boolean;
+      default_light_on_theme?: boolean;
+      default_dark_on_theme?: boolean;
+      base_scheme_id?: number | null;
+      colors?: Pick<ColorSchemeColor, "name" | "hex">[];
+    } = {};
     if (!opts || !opts.enabledOnly) {
       data.name = this.name;
 
@@ -169,7 +245,7 @@ export default class ColorScheme extends EmberObject {
         data.colors = [];
         this.colors.forEach((c) => {
           if (!this.id || c.get("changed")) {
-            data.colors.push(c.getProperties("name", "hex"));
+            data.colors!.push(c.getProperties("name", "hex"));
           }
         });
       }
@@ -180,7 +256,7 @@ export default class ColorScheme extends EmberObject {
       type: this.id ? "PUT" : "POST",
       dataType: "json",
       contentType: "application/json",
-    }).then((result) => {
+    }).then((result: ColorSchemePayload) => {
       if (result.id) {
         this.set("id", result.id);
       }
@@ -198,7 +274,9 @@ export default class ColorScheme extends EmberObject {
     });
   }
 
-  updateUserSelectable(value) {
+  updateUserSelectable(
+    value: boolean
+  ): Promise<ColorSchemePayload> | undefined {
     if (!this.id) {
       return;
     }
@@ -211,7 +289,10 @@ export default class ColorScheme extends EmberObject {
     });
   }
 
-  updateDefaultOnTheme(field, value) {
+  updateDefaultOnTheme(
+    field: "default_light_on_theme" | "default_dark_on_theme",
+    value: boolean
+  ): Promise<ColorSchemePayload> | undefined {
     if (!this.id) {
       return;
     }
@@ -224,8 +305,10 @@ export default class ColorScheme extends EmberObject {
     });
   }
 
-  /** @returns {any} */
-  destroy() {
+  /** Deletes the palette on the server, unlike EmberObject's `destroy`. */
+  destroy(this: never): never;
+  destroy(): Promise<{ success: string }> | undefined;
+  destroy(): Promise<{ success: string }> | undefined {
     if (this.id) {
       return ajax(`/admin/color_schemes/${this.id}`, { type: "DELETE" });
     }
