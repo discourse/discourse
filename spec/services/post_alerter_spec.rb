@@ -1016,7 +1016,7 @@ RSpec.describe PostAlerter do
     context "with topic" do
       fab!(:topic) { Fabricate(:topic, user: alice) }
 
-      %i[watching tracking regular].each do |notification_level|
+      shared_examples "post alerter for notification_level" do |notification_level|
         context "when notification level is '#{notification_level}'" do
           before { set_topic_notification_level(alice, topic, notification_level) }
 
@@ -1026,6 +1026,10 @@ RSpec.describe PostAlerter do
           end
         end
       end
+
+      include_examples "post alerter for notification_level", :watching
+      include_examples "post alerter for notification_level", :tracking
+      include_examples "post alerter for notification_level", :regular
 
       context "when notification level is 'muted'" do
         before { set_topic_notification_level(alice, topic, :muted) }
@@ -1051,7 +1055,7 @@ RSpec.describe PostAlerter do
       end
 
       context "when user is part of conversation" do
-        %i[watching tracking regular].each do |notification_level|
+        shared_examples "post alerter for notification_level (2)" do |notification_level|
           context "when notification level is '#{notification_level}'" do
             before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
@@ -1081,6 +1085,10 @@ RSpec.describe PostAlerter do
             end
           end
         end
+
+        include_examples "post alerter for notification_level (2)", :watching
+        include_examples "post alerter for notification_level (2)", :tracking
+        include_examples "post alerter for notification_level (2)", :regular
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }
@@ -1131,7 +1139,7 @@ RSpec.describe PostAlerter do
       before { some_group.bulk_add([alice.id, carol.id]) }
 
       context "when group is part of conversation" do
-        %i[watching tracking regular].each do |notification_level|
+        shared_examples "post alerter for notification_level (3)" do |notification_level|
           context "when notification level is '#{notification_level}'" do
             before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
@@ -1151,6 +1159,10 @@ RSpec.describe PostAlerter do
             end
           end
         end
+
+        include_examples "post alerter for notification_level (3)", :watching
+        include_examples "post alerter for notification_level (3)", :tracking
+        include_examples "post alerter for notification_level (3)", :regular
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }

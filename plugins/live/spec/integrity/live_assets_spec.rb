@@ -7,34 +7,32 @@
 # the client references must exist in the gem, and the versioned mount must
 # be in place.
 RSpec.describe "discourse_voice_assets integrity" do
-  # Keep in sync with the loaders: subtitles.js, ns-engines.js,
-  # background-blur.js, livekit-session.js.
-  CLIENT_REFERENCED_ASSETS = %w[
-    dfn3/dfn3-worklet.js
-    dfn3/dfn3.wasm
-    dfn3/dfn3-model.bin
-    dtln/dtln-worklet.js
-    dtln/dtln.wasm
-    rnnoise/rnnoise-worklet.js
-    rnnoise/rnnoise.wasm
-    stt/subtitles-worker.js
-    stt/vad.js
-    stt/ort/ort-wasm-simd-threaded.asyncify.js
-    stt/ort/ort-wasm-simd-threaded.asyncify.wasm
-    stt/vad/
-    livekit/livekit-client.js
-    mediapipe/vision_bundle.js
-    mediapipe/selfie_segmenter.tflite
-    mediapipe/wasm/
-  ]
-
-  CLIENT_REFERENCED_ASSETS.each do |file|
+  shared_examples "live assets for file" do |file|
     it "finds #{file} in the gem's vendor tree" do
       path = DiscourseVoiceAssets.vendor_path(file)
       exists = file.end_with?("/") ? File.directory?(path) : File.exist?(path)
       expect(exists).to be(true), "gem asset missing: #{file}"
     end
   end
+
+  # Keep in sync with the loaders: subtitles.js, ns-engines.js,
+  # background-blur.js, livekit-session.js.
+  include_examples "live assets for file", "dfn3/dfn3-worklet.js"
+  include_examples "live assets for file", "dfn3/dfn3.wasm"
+  include_examples "live assets for file", "dfn3/dfn3-model.bin"
+  include_examples "live assets for file", "dtln/dtln-worklet.js"
+  include_examples "live assets for file", "dtln/dtln.wasm"
+  include_examples "live assets for file", "rnnoise/rnnoise-worklet.js"
+  include_examples "live assets for file", "rnnoise/rnnoise.wasm"
+  include_examples "live assets for file", "stt/subtitles-worker.js"
+  include_examples "live assets for file", "stt/vad.js"
+  include_examples "live assets for file", "stt/ort/ort-wasm-simd-threaded.asyncify.js"
+  include_examples "live assets for file", "stt/ort/ort-wasm-simd-threaded.asyncify.wasm"
+  include_examples "live assets for file", "stt/vad/"
+  include_examples "live assets for file", "livekit/livekit-client.js"
+  include_examples "live assets for file", "mediapipe/vision_bundle.js"
+  include_examples "live assets for file", "mediapipe/selfie_segmenter.tflite"
+  include_examples "live assets for file", "mediapipe/wasm/"
 
   it "mounts the gem's vendor tree at the version-stamped public path" do
     link = File.expand_path("../../public/javascripts/#{DiscourseVoiceAssets::VERSION}", __dir__)

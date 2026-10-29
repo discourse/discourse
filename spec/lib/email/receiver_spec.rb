@@ -879,11 +879,7 @@ RSpec.describe Email::Receiver do
         expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
       end
 
-      {
-        "X-Spam-Flag" => :spam_x_spam_flag,
-        "X-Spam-Status" => :spam_x_spam_status,
-        "X-SES-Spam-Verdict" => :spam_x_ses_spam_verdict,
-      }.each do |header, fixture|
+      shared_examples "receiver for header and fixture" do |header, fixture|
         it "enqueues the post and silences the user for #{header}" do
           SiteSetting.email_in_spam_header = header
 
@@ -891,6 +887,11 @@ RSpec.describe Email::Receiver do
           expect(user.reload.silenced?).to be(true)
         end
       end
+
+      include_examples "receiver for header and fixture", ["X-Spam-Flag", :spam_x_spam_flag]
+      include_examples "receiver for header and fixture", ["X-Spam-Status", :spam_x_spam_status]
+      include_examples "receiver for header and fixture",
+                       ["X-SES-Spam-Verdict", :spam_x_ses_spam_verdict]
 
       it "enqueues the post for a failed Authentication-Results header" do
         SiteSetting.email_in_authserv_id = "example.com"

@@ -471,7 +471,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    %w[docx xlsx odt ods].each do |extension|
+    shared_examples "upload encoder for extension" do |extension|
       it "logs #{extension} conversion failures and skips the upload" do
         upload =
           create_doc_upload(contents: "raw #{extension} bytes", filename: "sample.#{extension}")
@@ -491,6 +491,11 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
         expect(encoded).to be_empty
       end
     end
+
+    include_examples "upload encoder for extension", "docx"
+    include_examples "upload encoder for extension", "xlsx"
+    include_examples "upload encoder for extension", "odt"
+    include_examples "upload encoder for extension", "ods"
 
     it "routes .html uploads through the html converter" do
       upload =

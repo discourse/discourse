@@ -130,11 +130,14 @@ RSpec.describe User do
 
       before { SiteSetting.discourse_narrative_bot_ignored_usernames = "discourse|test" }
 
-      %w[discourse test].each do |username|
+      shared_examples "user for username" do |username|
         it "does not start the bot tutorial" do
           expect { user.update!(username: username) }.to_not change { Post.count }
         end
       end
+
+      include_examples "user for username", "discourse"
+      include_examples "user for username", "test"
     end
   end
 

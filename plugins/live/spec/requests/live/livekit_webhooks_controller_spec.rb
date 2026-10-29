@@ -198,7 +198,7 @@ RSpec.describe Live::LivekitWebhooksController do
       expect(Live::Livekit.last_webhook_at).to be_within(5.seconds).of(Time.now)
     end
 
-    %w[participant_left participant_connection_aborted].each do |event_name|
+    shared_examples "livekit webhooks controller for event_name" do |event_name|
       context "with a #{event_name} event" do
         it "expires the participant's presence, keeps their metadata, and broadcasts the change" do
           Live::ParticipantTracker.pin_transport!(room.id, "livekit")
@@ -219,6 +219,9 @@ RSpec.describe Live::LivekitWebhooksController do
         end
       end
     end
+
+    include_examples "livekit webhooks controller for event_name", "participant_left"
+    include_examples "livekit webhooks controller for event_name", "participant_connection_aborted"
 
     context "with a participant_left event" do
       it "leaves presence alone when it was refreshed after the event fired" do

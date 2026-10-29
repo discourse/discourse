@@ -321,7 +321,7 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
-    (Discourse.anonymous_filters - [:categories]).each do |filter|
+    shared_examples "list controller for filter" do |filter|
       context "with #{filter}" do
         it "returns the requested list" do
           get "/#{filter}"
@@ -329,6 +329,10 @@ RSpec.describe ListController do
         end
       end
     end
+
+    include_examples "list controller for filter", :latest
+    include_examples "list controller for filter", :top
+    include_examples "list controller for filter", :hot
 
     it "allows users to filter on a set of topic ids" do
       p = create_post
@@ -1070,13 +1074,20 @@ RSpec.describe ListController do
       expect(response.status).to eq(400)
     end
 
-    TopTopic.periods.each do |period|
+    shared_examples "list controller for period" do |period|
       it "renders #{period} top RSS" do
         get "/top.rss?period=#{period}"
         expect(response.status).to eq(200)
         expect(response.media_type).to eq("application/rss+xml")
       end
     end
+
+    include_examples "list controller for period", :all
+    include_examples "list controller for period", :yearly
+    include_examples "list controller for period", :quarterly
+    include_examples "list controller for period", :monthly
+    include_examples "list controller for period", :weekly
+    include_examples "list controller for period", :daily
 
     describe "RSS feeds ignore current user" do
       fab!(:muted_topic, :topic)

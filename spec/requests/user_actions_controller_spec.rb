@@ -142,12 +142,18 @@ RSpec.describe UserActionsController do
         end
 
         context "when user is anonymous" do
-          UserAction.private_types.each do |action_type|
+          shared_examples "user actions controller for action_type" do |action_type|
             action_name = UserAction.types.key(action_type)
             it "cannot list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 404)
             end
           end
+
+          include_examples "user actions controller for action_type", UserAction.types[:was_liked]
+          include_examples "user actions controller for action_type", UserAction.types[:response]
+          include_examples "user actions controller for action_type", UserAction.types[:mention]
+          include_examples "user actions controller for action_type", UserAction.types[:quote]
+          include_examples "user actions controller for action_type", UserAction.types[:edit]
         end
 
         context "when user is logged in" do
@@ -155,12 +161,20 @@ RSpec.describe UserActionsController do
 
           before { sign_in(user) }
 
-          UserAction.private_types.each do |action_type|
+          shared_examples "user actions controller for action_type (2)" do |action_type|
             action_name = UserAction.types.key(action_type)
             it "cannot list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 404)
             end
           end
+
+          include_examples "user actions controller for action_type (2)",
+                           UserAction.types[:was_liked]
+          include_examples "user actions controller for action_type (2)",
+                           UserAction.types[:response]
+          include_examples "user actions controller for action_type (2)", UserAction.types[:mention]
+          include_examples "user actions controller for action_type (2)", UserAction.types[:quote]
+          include_examples "user actions controller for action_type (2)", UserAction.types[:edit]
         end
 
         context "when user is a moderator" do
@@ -168,12 +182,20 @@ RSpec.describe UserActionsController do
 
           before { sign_in(moderator) }
 
-          UserAction.private_types.each do |action_type|
+          shared_examples "user actions controller for action_type (3)" do |action_type|
             action_name = UserAction.types.key(action_type)
             it "cannot list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 404)
             end
           end
+
+          include_examples "user actions controller for action_type (3)",
+                           UserAction.types[:was_liked]
+          include_examples "user actions controller for action_type (3)",
+                           UserAction.types[:response]
+          include_examples "user actions controller for action_type (3)", UserAction.types[:mention]
+          include_examples "user actions controller for action_type (3)", UserAction.types[:quote]
+          include_examples "user actions controller for action_type (3)", UserAction.types[:edit]
         end
 
         context "when user is an admin" do
@@ -181,12 +203,20 @@ RSpec.describe UserActionsController do
 
           before { sign_in(admin) }
 
-          UserAction.private_types.each do |action_type|
+          shared_examples "user actions controller for action_type (4)" do |action_type|
             action_name = UserAction.types.key(action_type)
             it "can list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 200)
             end
           end
+
+          include_examples "user actions controller for action_type (4)",
+                           UserAction.types[:was_liked]
+          include_examples "user actions controller for action_type (4)",
+                           UserAction.types[:response]
+          include_examples "user actions controller for action_type (4)", UserAction.types[:mention]
+          include_examples "user actions controller for action_type (4)", UserAction.types[:quote]
+          include_examples "user actions controller for action_type (4)", UserAction.types[:edit]
         end
 
         def list_and_check(action_type, expected_response)
@@ -205,7 +235,7 @@ RSpec.describe UserActionsController do
         let(:offset) { "0" }
         let(:limit) { "10" }
 
-        %i[filter username offset limit].each do |parameter|
+        shared_examples "user actions controller for parameter" do |parameter|
           context "when providing bad data for '#{parameter}'" do
             let(parameter) { { bad: "data" } }
 
@@ -215,6 +245,11 @@ RSpec.describe UserActionsController do
             end
           end
         end
+
+        include_examples "user actions controller for parameter", :filter
+        include_examples "user actions controller for parameter", :username
+        include_examples "user actions controller for parameter", :offset
+        include_examples "user actions controller for parameter", :limit
       end
     end
   end

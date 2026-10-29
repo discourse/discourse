@@ -66,7 +66,7 @@ describe BackupRestore::Creator do
       extracted
     end
 
-    [1, 4].each do |concurrency|
+    shared_examples "creator for concurrency" do |concurrency|
       it "downloads files with GET requests and no HEAD requests with #{concurrency} workers" do
         GlobalSetting.stubs(:backup_s3_download_concurrency).returns(concurrency)
         2.times do |index|
@@ -339,6 +339,9 @@ describe BackupRestore::Creator do
         end
       end
     end
+
+    include_examples "creator for concurrency", 1
+    include_examples "creator for concurrency", 4
   end
 
   describe "#create_archive" do
@@ -360,7 +363,7 @@ describe BackupRestore::Creator do
       end
     end
 
-    [true, false].each do |include_thumbnails|
+    shared_examples "creator for include_thumbnails" do |include_thumbnails|
       it "creates a compatible gzip archive with thumbnails #{include_thumbnails}" do
         Rails.stubs(:public_path).returns(Pathname.new(@directory))
         SiteSetting.include_thumbnails_in_backups = include_thumbnails
@@ -398,6 +401,9 @@ describe BackupRestore::Creator do
         expect(File.read(File.join(@local_uploads, "file.txt"))).to eq("local upload")
       end
     end
+
+    include_examples "creator for include_thumbnails", true
+    include_examples "creator for include_thumbnails", false
 
     it "skips dangling symlinks and still produces a readable backup" do
       File.symlink("missing", File.join(@local_uploads, "dangling"))
@@ -482,7 +488,7 @@ describe BackupRestore::Creator do
       expect(File.exist?(@staging)).to eq(false)
     end
 
-    [RuntimeError, SystemExit].each do |error|
+    shared_examples "creator for error" do |error|
       it "removes the partial archive and waits for gzip when interrupted by #{error}" do
         creator.stubs(:add_local_uploads_to_archive).raises(error)
         expect { creator.send(:create_archive) }.to raise_error(error)
@@ -491,6 +497,9 @@ describe BackupRestore::Creator do
         expect($?.success?).to eq(true)
       end
     end
+
+    include_examples "creator for error", RuntimeError
+    include_examples "creator for error", SystemExit
 
     it "does not publish an archive when gzip fails" do
       SiteSetting.stubs(:backup_gzip_compression_level_for_uploads).returns("invalid")

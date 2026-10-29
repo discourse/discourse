@@ -41,19 +41,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # a Unicode punctuation/symbol (`isPunctChar`), and a zero-width space. The
     # cases below are verified against PrettyText in `emoji_parity_spec.rb`; kept
     # here as fixtures so the fast suite pins each one.
-    [
-      ["no-break space", "a\u00A0:parrot: b"],
-      ["ideographic space", "a\u3000:parrot: b"],
-      ["superscript two", "²:parrot: b"],
-      ["vulgar half", "½:parrot: b"],
-      ["soft hyphen", "a\u00AD:parrot: b"],
-      ["escaping backslash", "a\\:parrot: b"],
-    ].each do |label, raw|
+    shared_examples "custom emoji for label and raw" do |label, raw|
       it "leaves a shortcode after a #{label} literal, like core" do
         expect(extract(raw)).to eq(raw)
         expect(buffer.emojis).to be_empty
       end
     end
+
+    include_examples "custom emoji for label and raw", ["no-break space", "a\u00A0:parrot: b"]
+    include_examples "custom emoji for label and raw", ["ideographic space", "a\u3000:parrot: b"]
+    include_examples "custom emoji for label and raw", ["superscript two", "²:parrot: b"]
+    include_examples "custom emoji for label and raw", ["vulgar half", "½:parrot: b"]
+    include_examples "custom emoji for label and raw", ["soft hyphen", "a\u00AD:parrot: b"]
+    include_examples "custom emoji for label and raw", ["escaping backslash", "a\\:parrot: b"]
 
     it "defers a shortcode after a zero-width space, like core" do
       extract("a\u200B:parrot: b")

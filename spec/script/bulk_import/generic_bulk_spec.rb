@@ -516,7 +516,7 @@ if generic_import_dependencies_available
         expect(UserCustomField.where(name: "user_notes_count")).to be_empty
       end
 
-      [false, true].each do |merge_import|
+      shared_examples "generic bulk for merge_import" do |merge_import|
         it "preserves existing notes and counts in #{merge_import ? "merge" : "ordinary"} imports" do
           allow(importer).to receive(:delta_import?).and_return(false)
           existing = [stored_note("Existing")]
@@ -535,6 +535,9 @@ if generic_import_dependencies_available
           ).to eq("1")
         end
       end
+
+      include_examples "generic bulk for merge_import", false
+      include_examples "generic bulk for merge_import", true
     end
 
     describe "#import_category_topic_voting" do

@@ -113,7 +113,7 @@ RSpec.describe DiscourseLogstashLogger do
         expect(parsed["exception.message"]).to eq("some error message\n\nsomething else")
       end
 
-      described_class::ALLOWED_HEADERS_FROM_ENV.each do |header|
+      shared_examples "discourse logstash logger for header" do |header|
         it "includes `#{header}` from `env` keyword argument in the logged JSON string" do
           logger.add(
             Logger::ERROR,
@@ -130,6 +130,14 @@ RSpec.describe DiscourseLogstashLogger do
           expect(parsed["request.headers.#{header.downcase}"]).to eq("header")
         end
       end
+
+      include_examples "discourse logstash logger for header", "REQUEST_URI"
+      include_examples "discourse logstash logger for header", "REQUEST_METHOD"
+      include_examples "discourse logstash logger for header", "HTTP_HOST"
+      include_examples "discourse logstash logger for header", "HTTP_USER_AGENT"
+      include_examples "discourse logstash logger for header", "HTTP_ACCEPT"
+      include_examples "discourse logstash logger for header", "HTTP_REFERER"
+      include_examples "discourse logstash logger for header", "HTTP_X_FORWARDED_FOR"
 
       it "does not include keys from `env` keyword argument in the logged JSOn string which are not in the allow list" do
         logger.add(

@@ -138,7 +138,7 @@ RSpec.describe NotificationEmailer do
     end
   end
 
-  [true, false].each do |no_delay|
+  shared_examples "notification emailer for no_delay" do |no_delay|
     context "with user_mentioned" do
       let(:no_delay) { no_delay }
       let(:type) { :user_mentioned }
@@ -256,6 +256,9 @@ RSpec.describe NotificationEmailer do
       include_examples "enqueue_public"
     end
   end
+
+  include_examples "notification emailer for no_delay", true
+  include_examples "notification emailer for no_delay", false
 
   it "has translations for each sendable notification type" do
     notification =

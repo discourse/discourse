@@ -32,20 +32,32 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_name: "how-to-fix-it", target_suffix: "/?page=2")
     end
 
-    {
-      "a topic with a slug and id" => ["/t/slug/18978/", { target_id: 18_978 }],
-      "a category by id" => ["/c/support/6/", { target_id: 6 }],
-      "a category by slug path" => ["/c/support/billing/", { target_name: "support:billing" }],
-      "a badge" => ["/badges/9/great/", { target_id: 9 }],
-      "a category+tag route" => ["/tags/c/food/wine/", { target_tag_path: "wine" }],
-      "a tag intersection" => ["/tags/intersection/food/wine/", { target_tag_path: "food/wine" }],
-    }.each do |label, (path, fields)|
+    shared_examples "internal links route tails for label and path and fields" do |label, (path, fields)|
       it "keeps a trailing slash out of the route for #{label}" do
         link, = link_for("[x](#{path})")
 
         expect(link).to include(**fields, target_suffix: "/")
       end
     end
+
+    include_examples "internal links route tails for label and path and fields",
+                     ["a topic with a slug and id", ["/t/slug/18978/", { target_id: 18_978 }]]
+    include_examples "internal links route tails for label and path and fields",
+                     ["a category by id", ["/c/support/6/", { target_id: 6 }]]
+    include_examples "internal links route tails for label and path and fields",
+                     [
+                       "a category by slug path",
+                       ["/c/support/billing/", { target_name: "support:billing" }],
+                     ]
+    include_examples "internal links route tails for label and path and fields",
+                     ["a badge", ["/badges/9/great/", { target_id: 9 }]]
+    include_examples "internal links route tails for label and path and fields",
+                     ["a category+tag route", ["/tags/c/food/wine/", { target_tag_path: "wine" }]]
+    include_examples "internal links route tails for label and path and fields",
+                     [
+                       "a tag intersection",
+                       ["/tags/intersection/food/wine/", { target_tag_path: "food/wine" }],
+                     ]
 
     # A digit run that overflows an id is still the numeric-title ambiguity, so
     # a trailing slash must not turn it into a slug-only link.
@@ -57,11 +69,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
     end
 
-    {
-      "a `.json` topic link" => ["/t/some-slug/18978.json", 18_978, ".json"],
-      "an `.rss` topic link" => ["/t/some-slug/233865.rss", 233_865, ".rss"],
-      "a `.json` id-only topic link" => ["/t/18978.json", 18_978, ".json"],
-    }.each do |label, (path, id, suffix)|
+    shared_examples "internal links route tails for label and path and id and suffix" do |label, (path, id, suffix)|
       it "reads #{label}, keeping the format in the suffix" do
         link, = link_for("[x](#{path})")
 
@@ -72,6 +80,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         )
       end
     end
+
+    include_examples "internal links route tails for label and path and id and suffix",
+                     ["a `.json` topic link", ["/t/some-slug/18978.json", 18_978, ".json"]]
+    include_examples "internal links route tails for label and path and id and suffix",
+                     ["an `.rss` topic link", ["/t/some-slug/233865.rss", 233_865, ".rss"]]
+    include_examples "internal links route tails for label and path and id and suffix",
+                     ["a `.json` id-only topic link", ["/t/18978.json", 18_978, ".json"]]
 
     it "reads a `.json` post link" do
       link, = link_for("[x](/p/55.json)")

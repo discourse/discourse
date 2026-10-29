@@ -28,7 +28,7 @@ describe "Reordering surfaces" do
     sign_in(admin)
   end
 
-  [false, true].each do |enabled|
+  shared_examples "reordering screenshots for enabled" do |enabled|
     suffix = enabled ? "on" : "off"
 
     context "with the change #{suffix}" do
@@ -126,4 +126,7 @@ describe "Reordering surfaces" do
       end
     end
   end
+
+  include_examples "reordering screenshots for enabled", false
+  include_examples "reordering screenshots for enabled", true
 end

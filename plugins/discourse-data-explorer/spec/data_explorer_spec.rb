@@ -170,7 +170,7 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["is_null"]).to eq(false)
     end
 
-    %w[text date datetime time boolean user_id int_list string_list].each do |type|
+    shared_examples "data explorer for type" do |type|
       it "uses an untyped NULL for a missing #{type} parameter" do
         query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
               -- [params]
@@ -184,6 +184,15 @@ describe DiscourseDataExplorer::DataExplorer do
         expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
       end
     end
+
+    include_examples "data explorer for type", "text"
+    include_examples "data explorer for type", "date"
+    include_examples "data explorer for type", "datetime"
+    include_examples "data explorer for type", "time"
+    include_examples "data explorer for type", "boolean"
+    include_examples "data explorer for type", "user_id"
+    include_examples "data explorer for type", "int_list"
+    include_examples "data explorer for type", "string_list"
 
     it "lets each occurrence of a null parameter infer its own type" do
       query = DiscourseDataExplorer::Query.create!(name: "null inference", sql: <<~SQL)

@@ -4,7 +4,7 @@ require "stylesheet/compiler"
 
 RSpec.describe Stylesheet::Compiler do
   describe "compilation" do
-    Dir["#{Rails.root.join("app/assets/stylesheets/*.scss")}"].each do |path|
+    shared_examples "compiler for path" do |path|
       path = File.basename(path, ".scss")
 
       # mobile and desktop scss files are intentionally empty stubs
@@ -15,6 +15,22 @@ RSpec.describe Stylesheet::Compiler do
         expect(css.length).to be > 500
       end
     end
+
+    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/admin.scss").to_s
+    include_examples "compiler for path",
+                     Rails.root.join("app/assets/stylesheets/admin_rtl.scss").to_s
+    include_examples "compiler for path",
+                     Rails.root.join("app/assets/stylesheets/color_definitions.scss").to_s
+    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/common.scss").to_s
+    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/embed.scss").to_s
+    include_examples "compiler for path",
+                     Rails.root.join("app/assets/stylesheets/publish.scss").to_s
+    include_examples "compiler for path",
+                     Rails.root.join("app/assets/stylesheets/qunit-custom.scss").to_s
+    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/wcag.scss").to_s
+    include_examples "compiler for path", Rails.root.join("app/assets/stylesheets/wizard.scss").to_s
+    include_examples "compiler for path",
+                     Rails.root.join("app/assets/stylesheets/wizard_rtl.scss").to_s
   end
 
   context "with a theme" do

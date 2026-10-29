@@ -231,16 +231,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
   describe "linkage column coverage" do
     idb = Migrations::Database::IntermediateDB
 
-    {
-      quote: [:quotes, idb::EmbedQuote],
-      link: [:links, idb::EmbedLink],
-      mention: [:mentions, idb::EmbedMention],
-      hashtag: [:hashtags, idb::EmbedHashtag],
-      emoji: [:emojis, idb::EmbedEmoji],
-      poll: [:polls, idb::EmbedPoll],
-      event: [:events, idb::EmbedEvent],
-      upload: [:uploads, idb::EmbedUpload],
-    }.each do |recorder, (collection, model)|
+    shared_examples "embed buffer for recorder and collection and model" do |recorder, (collection, model)|
       it "records every #{model.name.split("::").last} column" do
         buffer.public_send(recorder)
         descriptor = buffer.public_send(collection).last
@@ -249,6 +240,23 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
         expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
       end
     end
+
+    include_examples "embed buffer for recorder and collection and model",
+                     [:quote, [:quotes, idb::EmbedQuote]]
+    include_examples "embed buffer for recorder and collection and model",
+                     [:link, [:links, idb::EmbedLink]]
+    include_examples "embed buffer for recorder and collection and model",
+                     [:mention, [:mentions, idb::EmbedMention]]
+    include_examples "embed buffer for recorder and collection and model",
+                     [:hashtag, [:hashtags, idb::EmbedHashtag]]
+    include_examples "embed buffer for recorder and collection and model",
+                     [:emoji, [:emojis, idb::EmbedEmoji]]
+    include_examples "embed buffer for recorder and collection and model",
+                     [:poll, [:polls, idb::EmbedPoll]]
+    include_examples "embed buffer for recorder and collection and model",
+                     [:event, [:events, idb::EmbedEvent]]
+    include_examples "embed buffer for recorder and collection and model",
+                     [:upload, [:uploads, idb::EmbedUpload]]
   end
 
   describe "#write_for" do

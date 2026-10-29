@@ -23,7 +23,7 @@ RSpec.describe Admin::OnboardingEventsController do
         expect(log.subject).to eq("select_theme")
       end
 
-      UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS.each do |option|
+      shared_examples "onboarding events controller for option" do |option|
         it "logs the selected #{option} option with readable details" do
           post "/admin/onboarding/events.json",
                params: {
@@ -46,6 +46,11 @@ RSpec.describe Admin::OnboardingEventsController do
           )
         end
       end
+
+      include_examples "onboarding events controller for option", "plan_categories"
+      include_examples "onboarding events controller for option", "plan_invites"
+      include_examples "onboarding events controller for option", "introduce_yourself"
+      include_examples "onboarding events controller for option", "write_your_own"
 
       it "still logs posting completed outside the suggested options" do
         post "/admin/onboarding/events.json",

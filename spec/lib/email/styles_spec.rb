@@ -58,7 +58,7 @@ RSpec.describe Email::Styles do
   end
 
   describe "custom formatter" do
-    ["a:visited", "a:hover", "a["].each do |selector|
+    shared_examples "styles for selector" do |selector|
       it "skips #{selector} while applying supported custom selectors" do
         SiteSetting.email_custom_css_compiled = <<~CSS
           p { color: red; }
@@ -76,6 +76,10 @@ RSpec.describe Email::Styles do
         expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
       end
     end
+
+    include_examples "styles for selector", "a:visited"
+    include_examples "styles for selector", "a:hover"
+    include_examples "styles for selector", "a["
   end
 
   describe "html template formatter" do

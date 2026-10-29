@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Name::ResourceScope do
-  [
-    JsonApiKit::Name::Field,
-    JsonApiKit::Name::Sort,
-    JsonApiKit::Name::Filter,
-    JsonApiKit::Name::Anchor,
-    JsonApiKit::Name::Relationship,
-  ].each do |kind|
+  shared_examples "resource scope for kind" do |kind|
     describe kind do
       let(:name) { kind.new(value: "posted_at", type: "discussion_threads") }
 
@@ -28,4 +22,10 @@ RSpec.describe JsonApiKit::Name::ResourceScope do
       end
     end
   end
+
+  include_examples "resource scope for kind", JsonApiKit::Name::Field
+  include_examples "resource scope for kind", JsonApiKit::Name::Sort
+  include_examples "resource scope for kind", JsonApiKit::Name::Filter
+  include_examples "resource scope for kind", JsonApiKit::Name::Anchor
+  include_examples "resource scope for kind", JsonApiKit::Name::Relationship
 end

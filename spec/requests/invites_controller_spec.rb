@@ -71,7 +71,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    %i[enable_local_logins enable_local_logins_via_email].each do |setting|
+    shared_examples "invites controller for setting" do |setting|
       it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
         SiteSetting.enable_local_logins_via_code = true
         SiteSetting.public_send("#{setting}=", false)
@@ -87,6 +87,9 @@ RSpec.describe InvitesController do
         end
       end
     end
+
+    include_examples "invites controller for setting", :enable_local_logins
+    include_examples "invites controller for setting", :enable_local_logins_via_email
 
     context "when email data is present in authentication data" do
       before { server_session[:authentication] = { email: invite.email } }

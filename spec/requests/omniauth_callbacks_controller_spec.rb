@@ -123,13 +123,18 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.body).to include(I18n.t("login.omniauth_error.generic_without_provider"))
       end
 
-      Users::OmniauthCallbacksController::ALLOWED_FAILURE_ERRORS.each_key do |error|
+      shared_examples "omniauth callbacks controller for error" do |error|
         it "supports specific '#{error}' messages" do
           get "/auth/failure", params: { message: error }
           expect(response.status).to eq(200)
           expect(flash[:error]).to include(I18n.t("login.omniauth_error.#{error}"))
         end
       end
+
+      include_examples "omniauth callbacks controller for error", "csrf_detected"
+      include_examples "omniauth callbacks controller for error", "request_error"
+      include_examples "omniauth callbacks controller for error", "invalid_iat"
+      include_examples "omniauth callbacks controller for error", "unauthorized"
 
       it "falls back to generic error when the specific error doesn't exist" do
         get "/auth/failure", params: { message: "foo_bar" }

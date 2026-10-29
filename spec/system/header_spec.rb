@@ -143,7 +143,7 @@ RSpec.describe "Glimmer Header" do
     expect(header.active_element_id).to eq("user-menu-button-profile")
   end
 
-  [[], [Notification.types[:liked]]].each do |types|
+  shared_examples "header for types" do |types|
     it "navigates the reduced menu with #{types.length} available notification types" do
       types.each { |type| Fabricate(:notification, user: current_user, notification_type: type) }
       sign_in(current_user)
@@ -166,6 +166,9 @@ RSpec.describe "Glimmer Header" do
       expect(user_menu).to have_selected_tab("bookmarks")
     end
   end
+
+  include_examples "header for types", []
+  include_examples "header for types", [Notification.types[:liked]]
 
   it "prioritizes new personal messages bubble over unseen reviewables and regular notifications bubbles" do
     Fabricate(:private_message_notification, user: current_user)

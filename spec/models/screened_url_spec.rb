@@ -29,7 +29,7 @@ RSpec.describe ScreenedUrl do
 
     let(:record) { described_class.new(params) }
 
-    %w[http:// HTTP:// https:// HTTPS://].each do |prefix|
+    shared_examples "screened url for prefix" do |prefix|
       context "with #{prefix} prefix" do
         let(:params) { valid_params.merge(url: url.gsub("http://", prefix)) }
 
@@ -38,6 +38,11 @@ RSpec.describe ScreenedUrl do
         end
       end
     end
+
+    include_examples "screened url for prefix", "http://"
+    include_examples "screened url for prefix", "HTTP://"
+    include_examples "screened url for prefix", "https://"
+    include_examples "screened url for prefix", "HTTPS://"
 
     context "with a trailing slash" do
       let(:params) { valid_params.merge(url: "silverbullet.in/") }

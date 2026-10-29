@@ -23,7 +23,7 @@ describe "Admin House Ad" do
       expect(page).to have_no_css(".alert-error")
     end
 
-    [false, true].each do |lazy_load_categories|
+    shared_examples "admin house ad for lazy_load_categories" do |lazy_load_categories|
       it "lets an admin search for a category and save it with lazy loading #{lazy_load_categories ? "enabled" : "disabled"}" do
         SiteSetting.lazy_load_categories_groups =
           lazy_load_categories ? Group::AUTO_GROUPS[:admins].to_s : ""
@@ -51,6 +51,9 @@ describe "Admin House Ad" do
         expect(house_ads_page).to have_selected_category(another_category)
       end
     end
+
+    include_examples "admin house ad for lazy_load_categories", false
+    include_examples "admin house ad for lazy_load_categories", true
 
     it "supports the full house ad lifecycle" do
       house_ads_page.visit_page

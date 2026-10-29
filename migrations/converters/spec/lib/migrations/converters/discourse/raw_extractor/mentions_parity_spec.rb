@@ -85,19 +85,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       slug && CGI.unescape(slug)
     end
 
-    [
-      ["john.doe", "hi @john.doe there", "john.doe"], # interior dot
-      ["john", "thanks @john.", "john"], # trailing dot dropped
-      ["j-d", "cc @j-d please", "j-d"], # interior dash
-      ["user", "ping @user_ here", "user"], # trailing underscore dropped
-      ["café", "cc @café here", "café"], # multibyte
-    ].each do |username, raw, expected|
+    shared_examples "mentions parity for username and raw and expected" do |username, raw, expected|
       it "reads #{raw.inspect} the same name core links" do
         Fabricate(:user, username:)
         expect(extracted_name(raw, username)).to eq(expected)
         expect(cooked_link(raw)).to eq(expected)
       end
     end
+
+    # interior dot
+    include_examples "mentions parity for username and raw and expected",
+                     ["john.doe", "hi @john.doe there", "john.doe"]
+    # trailing dot dropped
+    include_examples "mentions parity for username and raw and expected",
+                     ["john", "thanks @john.", "john"]
+    # interior dash
+    include_examples "mentions parity for username and raw and expected",
+                     ["j-d", "cc @j-d please", "j-d"]
+    # trailing underscore dropped
+    include_examples "mentions parity for username and raw and expected",
+                     ["user", "ping @user_ here", "user"]
+    # multibyte
+    include_examples "mentions parity for username and raw and expected",
+                     ["café", "cc @café here", "café"]
   end
 
   # The one deliberate divergence: core's name regex caps a username at 60

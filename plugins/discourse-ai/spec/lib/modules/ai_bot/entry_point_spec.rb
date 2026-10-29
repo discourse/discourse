@@ -8,7 +8,7 @@ describe DiscourseAi::AiBot::EntryPoint do
         SiteSetting.ai_bot_enabled = false
       end
 
-      %i[discourse_ai_enabled ai_bot_enabled].each do |first_setting|
+      shared_examples "entry point for first_setting" do |first_setting|
         it "provisions users only after enabling both settings, starting with #{first_setting}" do
           agent = Fabricate(:ai_agent)
           second_setting =
@@ -30,6 +30,9 @@ describe DiscourseAi::AiBot::EntryPoint do
           expect(agent.reload.user).to eq(user)
         end
       end
+
+      include_examples "entry point for first_setting", :discourse_ai_enabled
+      include_examples "entry point for first_setting", :ai_bot_enabled
 
       it "leaves users unprovisioned on unrelated changes and disablement" do
         SiteSetting.discourse_ai_enabled = true

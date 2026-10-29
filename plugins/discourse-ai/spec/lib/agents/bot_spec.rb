@@ -355,7 +355,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       let(:agent_class) { agent_record.class_instance }
 
-      %i[text tools final].each do |mode|
+      shared_examples "bot for mode" do |mode|
         it "prepares tight-window #{mode} calls with their admitted output instead of the model ceiling" do
           gpt_4.update!(max_prompt_tokens: 16_000, max_output_tokens: 12_000)
           agent_record.update!(
@@ -401,6 +401,10 @@ RSpec.describe DiscourseAi::Agents::Bot do
           end
         end
       end
+
+      include_examples "bot for mode", :text
+      include_examples "bot for mode", :tools
+      include_examples "bot for mode", :final
 
       it "starts fresh work for a second root reply while retaining the actual usage tracker" do
         agent_record.update!(max_turn_tokens: 4000, tools: [])

@@ -18,13 +18,26 @@ RSpec.describe "markdown extraction round trip" do
   let(:fixtures) { ExtractionRoundTrip.round_trip_bodies }
 
   describe "resolution with nothing mapped" do
-    ExtractionRoundTrip.round_trip_bodies.each_key do |name|
+    shared_examples "extraction round trip for name" do |name|
       it "restores the #{name.tr("_", " ")} body, rewriting only source-site origins" do
         outcome = round_trip(fixtures.slice(name))
 
         expect(outcome.resolved[name]).to eq(outcome.expected[name])
       end
     end
+
+    include_examples "extraction round trip for name", "code"
+    include_examples "extraction round trip for name", "emoji"
+    include_examples "extraction round trip for name", "entities"
+    include_examples "extraction round trip for name", "hashtags"
+    include_examples "extraction round trip for name", "links"
+    include_examples "extraction round trip for name", "mentions"
+    include_examples "extraction round trip for name", "mixed"
+    include_examples "extraction round trip for name", "multiline_label"
+    include_examples "extraction round trip for name", "quotes"
+    include_examples "extraction round trip for name", "references"
+    include_examples "extraction round trip for name", "uploads"
+    include_examples "extraction round trip for name", "mixed_crlf"
 
     # Every construct the fixtures carry must survive the scanner intact;
     # otherwise the round trip above would be checking verbatim passthrough.

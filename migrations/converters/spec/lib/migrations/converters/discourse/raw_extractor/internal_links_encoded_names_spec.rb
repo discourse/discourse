@@ -129,11 +129,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # Bytes that decode to no valid UTF-8 name no record, and a `%2F` would
     # invent path structure the author never wrote — both refuse rather than
     # rewrite a coordinate-shaped path onto the destination.
-    {
-      "invalid UTF-8 bytes" => "/u/%FF%FE",
-      "an encoded slash" => "/u/a%2Fb",
-      "an encoded newline" => "/g/te%0Aam",
-    }.each do |label, path|
+    shared_examples "internal links encoded names for label and path" do |label, path|
       it "refuses a name holding #{label}" do
         raw = "see https://forum.example.com#{path} there"
 
@@ -142,6 +138,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
       end
     end
+
+    include_examples "internal links encoded names for label and path",
+                     ["invalid UTF-8 bytes", "/u/%FF%FE"]
+    include_examples "internal links encoded names for label and path",
+                     ["an encoded slash", "/u/a%2Fb"]
+    include_examples "internal links encoded names for label and path",
+                     ["an encoded newline", "/g/te%0Aam"]
 
     it "still refuses a name holding a character no route grammar admits" do
       raw = "[x](/u/bob!!!)"

@@ -123,7 +123,7 @@ RSpec.describe "spam rules for users" do
       end
     end
 
-    [[:user, trust_level: TrustLevel[2]], [:admin], [:moderator]].each do |spammer_args|
+    shared_examples "spam rules for spammer_args" do |spammer_args|
       context "if spammer is trusted #{spammer_args[0]}" do
         let!(:spammer) { Fabricate(*spammer_args) }
         let!(:spam_post) { Fabricate(:post, user: spammer) }
@@ -137,5 +137,9 @@ RSpec.describe "spam rules for users" do
         end
       end
     end
+
+    include_examples "spam rules for spammer_args", [:user, trust_level: TrustLevel[2]]
+    include_examples "spam rules for spammer_args", [:admin]
+    include_examples "spam rules for spammer_args", [:moderator]
   end
 end

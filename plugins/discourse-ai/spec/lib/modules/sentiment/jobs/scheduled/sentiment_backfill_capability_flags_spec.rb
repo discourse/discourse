@@ -14,7 +14,7 @@ RSpec.describe Jobs::SentimentBackfill do
     SiteSetting.ai_sentiment_emotion_decision_model = decision_model.id
   end
 
-  [[false, false], [true, false], [false, true], [true, true]].each do |sentiment, emotion|
+  shared_examples "sentiment backfill capability flags for sentiment and emotion" do |sentiment, emotion|
     it "backfills only enabled decisions with sentiment=#{sentiment} and emotion=#{emotion}" do
       SiteSetting.ai_sentiment_enabled = sentiment
       SiteSetting.ai_sentiment_emotion_enabled = emotion
@@ -33,4 +33,9 @@ RSpec.describe Jobs::SentimentBackfill do
       )
     end
   end
+
+  include_examples "sentiment backfill capability flags for sentiment and emotion", [false, false]
+  include_examples "sentiment backfill capability flags for sentiment and emotion", [true, false]
+  include_examples "sentiment backfill capability flags for sentiment and emotion", [false, true]
+  include_examples "sentiment backfill capability flags for sentiment and emotion", [true, true]
 end

@@ -1190,60 +1190,76 @@ RSpec.describe User do
     context "when Unicode usernames are disabled" do
       before { SiteSetting.unicode_usernames = false }
 
-      %w[
-        first.last
-        first
-        first-last
-        _name
-        first_last
-        mc.hammer_nose
-        UPPERCASE
-        sgif
-      ].each do |username|
+      shared_examples "user for username" do |username|
         it "allows #{username}" do
           assert_good(username)
         end
       end
 
-      %w[
-        traildot.
-        has\ space
-        double__underscore
-        with%symbol
-        Exclamation!
-        @twitter
-        my@email.com
-        .tester
-        sa$sy
-        sam.json
-        sam.xml
-        sam.html
-        sam.htm
-        sam.js
-        sam.woff
-        sam.Png
-        sam.gif
-      ].each do |username|
+      include_examples "user for username", "first.last"
+      include_examples "user for username", "first"
+      include_examples "user for username", "first-last"
+      include_examples "user for username", "_name"
+      include_examples "user for username", "first_last"
+      include_examples "user for username", "mc.hammer_nose"
+      include_examples "user for username", "UPPERCASE"
+      include_examples "user for username", "sgif"
+
+      shared_examples "user for username (2)" do |username|
         it "disallows #{username}" do
           assert_bad(username)
         end
       end
+
+      include_examples "user for username (2)", "traildot."
+      include_examples "user for username (2)", "has space"
+      include_examples "user for username (2)", "double__underscore"
+      include_examples "user for username (2)", "with%symbol"
+      include_examples "user for username (2)", "Exclamation!"
+      include_examples "user for username (2)", "@twitter"
+      include_examples "user for username (2)", "my@email.com"
+      include_examples "user for username (2)", ".tester"
+      include_examples "user for username (2)", "sa$sy"
+      include_examples "user for username (2)", "sam.json"
+      include_examples "user for username (2)", "sam.xml"
+      include_examples "user for username (2)", "sam.html"
+      include_examples "user for username (2)", "sam.htm"
+      include_examples "user for username (2)", "sam.js"
+      include_examples "user for username (2)", "sam.woff"
+      include_examples "user for username (2)", "sam.Png"
+      include_examples "user for username (2)", "sam.gif"
     end
 
     context "when Unicode usernames are enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      %w[Джофрэй Джо.фрэй Джофр-эй Д.жофрэй 乔夫雷 乔夫_雷 _乔夫雷].each do |username|
+      shared_examples "user for username (3)" do |username|
         it "allows #{username}" do
           assert_good(username)
         end
       end
 
-      %w[.Джофрэй Джофрэй. Джо\ фрэй Джоф__рэй 乔夫雷.js 乔夫雷. 乔夫%雷].each do |username|
+      include_examples "user for username (3)", "Джофрэй"
+      include_examples "user for username (3)", "Джо.фрэй"
+      include_examples "user for username (3)", "Джофр-эй"
+      include_examples "user for username (3)", "Д.жофрэй"
+      include_examples "user for username (3)", "乔夫雷"
+      include_examples "user for username (3)", "乔夫_雷"
+      include_examples "user for username (3)", "_乔夫雷"
+
+      shared_examples "user for username (4)" do |username|
         it "disallows #{username}" do
           assert_bad(username)
         end
       end
+
+      include_examples "user for username (4)", ".Джофрэй"
+      include_examples "user for username (4)", "Джофрэй."
+      include_examples "user for username (4)", "Джо фрэй"
+      include_examples "user for username (4)", "Джоф__рэй"
+      include_examples "user for username (4)", "乔夫雷.js"
+      include_examples "user for username (4)", "乔夫雷."
+      include_examples "user for username (4)", "乔夫%雷"
     end
   end
 
@@ -3859,11 +3875,7 @@ RSpec.describe User do
   end
 
   describe "#username_equals_to?" do
-    [
-      ["returns true for equal usernames", "john", "john", true],
-      ["returns false for different usernames", "john", "bill", false],
-      ["considers usernames that are different only in case as equal", "john", "JoHN", true],
-    ].each do |testcase_name, current_username, another_username, is_equal|
+    shared_examples "user for testcase_name and current_username and another_username and is_equal" do |testcase_name, current_username, another_username, is_equal|
       it "#{testcase_name}" do
         user = Fabricate(:user, username: current_username)
         result = user.username_equals_to?(another_username)
@@ -3871,6 +3883,18 @@ RSpec.describe User do
         expect(result).to be(is_equal)
       end
     end
+
+    include_examples "user for testcase_name and current_username and another_username and is_equal",
+                     ["returns true for equal usernames", "john", "john", true]
+    include_examples "user for testcase_name and current_username and another_username and is_equal",
+                     ["returns false for different usernames", "john", "bill", false]
+    include_examples "user for testcase_name and current_username and another_username and is_equal",
+                     [
+                       "considers usernames that are different only in case as equal",
+                       "john",
+                       "JoHN",
+                       true,
+                     ]
 
     it "considers usernames that are equal after unicode normalization as equal" do
       SiteSetting.unicode_usernames = true

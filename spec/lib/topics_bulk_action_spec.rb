@@ -160,7 +160,7 @@ RSpec.describe TopicsBulkAction do
     fab!(:group) { Fabricate(:group).tap { |group| group.add(user) } }
     fab!(:private_message) { Fabricate(:private_message_topic, user: user, recipient: other_user) }
 
-    %w[archive_messages move_messages_to_inbox].each do |operation|
+    shared_examples "topics bulk action for operation" do |operation|
       it "rejects #{operation} when the selected group is not a message recipient" do
         topic_ids =
           TopicsBulkAction.new(
@@ -173,6 +173,9 @@ RSpec.describe TopicsBulkAction do
         expect(topic_ids).to be_empty
       end
     end
+
+    include_examples "topics bulk action for operation", "archive_messages"
+    include_examples "topics bulk action for operation", "move_messages_to_inbox"
   end
 
   describe "change_category" do
@@ -565,7 +568,7 @@ RSpec.describe TopicsBulkAction do
       expect(TopicUser.get(topic, topic.user)).to be_blank
     end
 
-    ["", nil, :missing].each do |invalid_value|
+    shared_examples "topics bulk action for invalid_value" do |invalid_value|
       it "raises error when notification_level_id is #{invalid_value.inspect}" do
         options = { type: "change_notification_level" }
         options[:notification_level_id] = invalid_value unless invalid_value == :missing
@@ -575,9 +578,13 @@ RSpec.describe TopicsBulkAction do
         end.to raise_error(Discourse::InvalidParameters, /notification_level_id/)
       end
     end
+
+    include_examples "topics bulk action for invalid_value", ""
+    include_examples "topics bulk action for invalid_value", nil
+    include_examples "topics bulk action for invalid_value", :missing
   end
 
-  %w[close archive unlist].each do |action|
+  shared_examples "topics bulk action for action" do |action|
     describe action do
       it "#{action}s topic when user can moderate" do
         Guardian.any_instance.expects(:can_moderate?).returns(true)
@@ -615,6 +622,10 @@ RSpec.describe TopicsBulkAction do
       end
     end
   end
+
+  include_examples "topics bulk action for action", "close"
+  include_examples "topics bulk action for action", "archive"
+  include_examples "topics bulk action for action", "unlist"
 
   describe "reset_bump_dates" do
     it "resets bump date when user can update" do

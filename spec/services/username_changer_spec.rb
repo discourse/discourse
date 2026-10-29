@@ -791,30 +791,48 @@ RSpec.describe UsernameChanger do
   end
 
   describe "#override" do
-    common_test_cases = [
-      ["overrides the username if a new name is different", "john", "bill", "bill", false],
-      ["does not change the username if a new name is the same", "john", "john", "john", false],
-      ["overrides the username if a new name has different case", "john", "JoHN", "JoHN", false],
-    ]
-
     context "when unicode_usernames is off" do
       before { SiteSetting.unicode_usernames = false }
 
-      [
-        *common_test_cases,
-        [
-          "does not change the username if a new name after unicode normalization is the same",
-          "john",
-          "john¥¥",
-          "john",
-        ],
-      ].each do |testcase_name, current, new, overrode|
+      shared_examples "username changer for testcase_name and current and new and overrode" do |testcase_name, current, new, overrode|
         it "#{testcase_name}" do
           user = Fabricate(:user, username: current)
           UsernameChanger.override(user, new)
           expect(user.username).to eq(overrode)
         end
       end
+
+      include_examples "username changer for testcase_name and current and new and overrode",
+                       [
+                         "overrides the username if a new name is different",
+                         "john",
+                         "bill",
+                         "bill",
+                         false,
+                       ]
+      include_examples "username changer for testcase_name and current and new and overrode",
+                       [
+                         "does not change the username if a new name is the same",
+                         "john",
+                         "john",
+                         "john",
+                         false,
+                       ]
+      include_examples "username changer for testcase_name and current and new and overrode",
+                       [
+                         "overrides the username if a new name has different case",
+                         "john",
+                         "JoHN",
+                         "JoHN",
+                         false,
+                       ]
+      include_examples "username changer for testcase_name and current and new and overrode",
+                       [
+                         "does not change the username if a new name after unicode normalization is the same",
+                         "john",
+                         "john¥¥",
+                         "john",
+                       ]
 
       it "overrides the username with username suggestions in case the username is already taken" do
         user = Fabricate(:user, username: "bill")
@@ -829,21 +847,45 @@ RSpec.describe UsernameChanger do
     context "when unicode_usernames is on" do
       before { SiteSetting.unicode_usernames = true }
 
-      [
-        *common_test_cases,
-        [
-          "overrides the username if a new name after unicode normalization is different only in case",
-          "lo\u0308we",
-          "L\u00F6wee",
-          "L\u00F6wee",
-        ],
-      ].each do |testcase_name, current, new, overrode|
+      shared_examples "username changer for testcase_name and current and new and overrode (2)" do |testcase_name, current, new, overrode|
         it "#{testcase_name}" do
           user = Fabricate(:user, username: current)
           UsernameChanger.override(user, new)
           expect(user.username).to eq(overrode)
         end
       end
+
+      include_examples "username changer for testcase_name and current and new and overrode (2)",
+                       [
+                         "overrides the username if a new name is different",
+                         "john",
+                         "bill",
+                         "bill",
+                         false,
+                       ]
+      include_examples "username changer for testcase_name and current and new and overrode (2)",
+                       [
+                         "does not change the username if a new name is the same",
+                         "john",
+                         "john",
+                         "john",
+                         false,
+                       ]
+      include_examples "username changer for testcase_name and current and new and overrode (2)",
+                       [
+                         "overrides the username if a new name has different case",
+                         "john",
+                         "JoHN",
+                         "JoHN",
+                         false,
+                       ]
+      include_examples "username changer for testcase_name and current and new and overrode (2)",
+                       [
+                         "overrides the username if a new name after unicode normalization is different only in case",
+                         "löwe",
+                         "Löwee",
+                         "Löwee",
+                       ]
     end
   end
 end

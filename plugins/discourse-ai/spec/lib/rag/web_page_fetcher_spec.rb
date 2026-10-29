@@ -134,7 +134,7 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
     ).to have_been_made.once
   end
 
-  %w[text/plain text/markdown].each do |content_type|
+  shared_examples "web page fetcher for content_type" do |content_type|
     it "decodes binary #{content_type} responses as UTF-8 and replaces invalid bytes" do
       url = "https://example.com/docs"
       stub_request(:get, url).to_return(
@@ -151,6 +151,9 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
       expect(result[:text]).to eq("Knowledge — café\nTruncated: �")
     end
   end
+
+  include_examples "web page fetcher for content_type", "text/plain"
+  include_examples "web page fetcher for content_type", "text/markdown"
 
   it "preserves UTF-8 characters split across binary response chunks" do
     url = "https://example.com/docs"

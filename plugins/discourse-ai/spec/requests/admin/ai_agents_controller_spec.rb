@@ -1212,7 +1212,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       }
     end
 
-    [false, true].each do |bot_enabled|
+    shared_examples "ai agents controller for bot_enabled" do |bot_enabled|
       it "imports a conversational agent with automatic provisioning #{bot_enabled ? "enabled" : "disabled"}" do
         SiteSetting.ai_bot_enabled = bot_enabled
 
@@ -1228,6 +1228,9 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
         expect(agent.user.present?).to eq(bot_enabled)
       end
     end
+
+    include_examples "ai agents controller for bot_enabled", false
+    include_examples "ai agents controller for bot_enabled", true
 
     it "imports a new agent successfully" do
       expect {

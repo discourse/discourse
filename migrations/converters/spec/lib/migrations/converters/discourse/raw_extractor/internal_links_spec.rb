@@ -89,15 +89,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # A destination can carry a title, padding, or angle brackets and still be a
     # link core resolves. Missing those left such a link pointing at the source
     # site after the migration. Each of these cooks to href="/t/slug/5".
-    {
-      "a title" => %([t](/t/slug/5 "title")),
-      "a single-quoted title" => "[t](/t/slug/5 'title')",
-      "a parenthesized title" => "[t](/t/slug/5 (title))",
-      "padding" => "[t](  /t/slug/5  )",
-      "angle brackets" => "[t](</t/slug/5>)",
-      "angle brackets and a title" => %([t](</t/slug/5> "ti")),
-      "an absolute URL and a title" => %([t](https://forum.example.com/t/slug/5 "ti")),
-    }.each do |label, raw|
+    shared_examples "internal links for label and raw" do |label, raw|
       it "defers a topic link written with #{label}" do
         link, = link_for(raw)
 
@@ -105,13 +97,31 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
     end
 
+    include_examples "internal links for label and raw", ["a title", "[t](/t/slug/5 \"title\")"]
+    include_examples "internal links for label and raw",
+                     ["a single-quoted title", "[t](/t/slug/5 'title')"]
+    include_examples "internal links for label and raw",
+                     ["a parenthesized title", "[t](/t/slug/5 (title))"]
+    include_examples "internal links for label and raw", ["padding", "[t](  /t/slug/5  )"]
+    include_examples "internal links for label and raw", ["angle brackets", "[t](</t/slug/5>)"]
+    include_examples "internal links for label and raw",
+                     ["angle brackets and a title", "[t](</t/slug/5> \"ti\")"]
+    include_examples "internal links for label and raw",
+                     [
+                       "an absolute URL and a title",
+                       "[t](https://forum.example.com/t/slug/5 \"ti\")",
+                     ]
+
     # Core builds no link for either of these, so neither may be rewritten.
-    ["[t](/t/slug/5 not-a-title)", %([t](/t/slug/5 "unclosed))].each do |raw|
+    shared_examples "internal links for raw" do |raw|
       it "leaves #{raw} literal, since core makes no link of it" do
         expect(extract(raw)).to eq(raw)
         expect(buffer.links).to be_empty
       end
     end
+
+    include_examples "internal links for raw", "[t](/t/slug/5 not-a-title)"
+    include_examples "internal links for raw", "[t](/t/slug/5 \"unclosed)"
 
     it "defers the id-only topic form" do
       link, = link_for("[x](/t/123)")
@@ -211,18 +221,25 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # Categories nest three deep, so the slug path has to survive a third level
     # with the tab tail still coming off it.
-    {
-      "no tail" => ["/c/gp/parent/child", "gp:parent:child", nil],
-      "a filter tail" => %w[/c/gp/parent/child/l/latest gp:parent:child /l/latest],
-      "a period tail" => %w[/c/gp/parent/child/l/top/weekly gp:parent:child /l/top/weekly],
-      "a /none tail" => %w[/c/gp/parent/child/none gp:parent:child /none],
-    }.each do |label, (path, name, suffix)|
+    shared_examples "internal links for label and path and name and suffix" do |label, (path, name, suffix)|
       it "reads a three-level category slug path with #{label}" do
         link, = link_for("[x](#{path})")
 
         expect(link).to include(target_name: name, target_id: nil, target_suffix: suffix)
       end
     end
+
+    include_examples "internal links for label and path and name and suffix",
+                     ["no tail", ["/c/gp/parent/child", "gp:parent:child", nil]]
+    include_examples "internal links for label and path and name and suffix",
+                     ["a filter tail", %w[/c/gp/parent/child/l/latest gp:parent:child /l/latest]]
+    include_examples "internal links for label and path and name and suffix",
+                     [
+                       "a period tail",
+                       %w[/c/gp/parent/child/l/top/weekly gp:parent:child /l/top/weekly],
+                     ]
+    include_examples "internal links for label and path and name and suffix",
+                     ["a /none tail", %w[/c/gp/parent/child/none gp:parent:child /none]]
 
     it "reads a three-level category by id, with the tail in the suffix" do
       link, = link_for("[x](/c/gp/parent/child/6/l/latest)")
@@ -232,11 +249,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # A tag name is a single segment, so anything after it is already suffix —
     # the tab tails that needed guarding on the category routes cost nothing here.
-    {
-      "a filter tail" => %w[/tag/release/l/latest /l/latest],
-      "a period tail" => %w[/tags/release/l/top/weekly /l/top/weekly],
-      "a /none tail" => %w[/tag/release/none /none],
-    }.each do |label, (path, suffix)|
+    shared_examples "internal links for label and path and suffix" do |label, (path, suffix)|
       it "keeps #{label} out of a tag name" do
         link, = link_for("[x](#{path})")
 
@@ -247,6 +260,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         )
       end
     end
+
+    include_examples "internal links for label and path and suffix",
+                     ["a filter tail", %w[/tag/release/l/latest /l/latest]]
+    include_examples "internal links for label and path and suffix",
+                     ["a period tail", %w[/tags/release/l/top/weekly /l/top/weekly]]
+    include_examples "internal links for label and path and suffix",
+                     ["a /none tail", %w[/tag/release/none /none]]
 
     it "keeps a filter tail out of a slugless category link" do
       link, = link_for("[x](/c/6/l/latest)")
@@ -297,14 +317,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # `Category.find_by_slug_path_with_id` sees the glob. The id-less form has to
     # stop there too, or the tab name folds into the slug and names no category.
     describe "filter tails on the legacy id-less form" do
-      {
-        "/c/support/l/latest" => %w[support /l/latest],
-        "/c/support/l/top/weekly" => %w[support /l/top/weekly],
-        "/c/parent/child/l/hot" => %w[parent:child /l/hot],
-        "/c/support/none" => %w[support /none],
-        "/c/support/all" => %w[support /all],
-        "/c/support/subcategories" => %w[support /subcategories],
-      }.each do |url, (name, suffix)|
+      shared_examples "internal links for url and name and suffix" do |url, (name, suffix)|
         it "reads #{url} as #{name.inspect} with the tail in the suffix" do
           link, = link_for("[x](#{url})")
 
@@ -316,6 +329,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           )
         end
       end
+
+      include_examples "internal links for url and name and suffix",
+                       ["/c/support/l/latest", %w[support /l/latest]]
+      include_examples "internal links for url and name and suffix",
+                       ["/c/support/l/top/weekly", %w[support /l/top/weekly]]
+      include_examples "internal links for url and name and suffix",
+                       ["/c/parent/child/l/hot", %w[parent:child /l/hot]]
+      include_examples "internal links for url and name and suffix",
+                       ["/c/support/none", %w[support /none]]
+      include_examples "internal links for url and name and suffix",
+                       ["/c/support/all", %w[support /all]]
+      include_examples "internal links for url and name and suffix",
+                       ["/c/support/subcategories", %w[support /subcategories]]
 
       # Only `/l/<filter>` is a tab; a bare segment that happens to spell a filter
       # is an ordinary subcategory slug, so it stays part of the path.
@@ -465,7 +491,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # linkify-it reads the scheme case-insensitively, so core links these too;
     # older forums carried over uppercase schemes.
-    %w[HTTPS Https HTTP hTTp].each do |scheme|
+    shared_examples "internal links for scheme" do |scheme|
       it "recognizes a bare link with a #{scheme} scheme" do
         link, = link_for("read #{scheme}://forum.example.com/t/slug/99 now")
 
@@ -482,6 +508,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 99)
       end
     end
+
+    include_examples "internal links for scheme", "HTTPS"
+    include_examples "internal links for scheme", "Https"
+    include_examples "internal links for scheme", "HTTP"
+    include_examples "internal links for scheme", "hTTp"
 
     it "recognizes an uppercase scheme with an uppercase host" do
       link, = link_for("read HTTPS://FORUM.EXAMPLE.COM/t/slug/99 now")

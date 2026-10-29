@@ -55,23 +55,31 @@ RSpec.describe Onebox::Matcher do
     end
 
     describe "with a allowlisted port/scheme" do
-      %w[http://example.com https://example.com http://example.com:80 //example.com].each do |url|
+      shared_examples "matcher for url" do |url|
         it "finds an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url, opts)
           matcher.stubs(:ordered_engines).returns([TestEngine])
           expect(matcher.oneboxed).not_to be_nil
         end
       end
+
+      include_examples "matcher for url", "http://example.com"
+      include_examples "matcher for url", "https://example.com"
+      include_examples "matcher for url", "http://example.com:80"
+      include_examples "matcher for url", "//example.com"
     end
 
     describe "without a allowlisted port/scheme" do
-      %w[http://example.com:21 ftp://example.com].each do |url|
+      shared_examples "matcher for url (2)" do |url|
         it "doesn't find an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url, opts)
           matcher.stubs(:ordered_engines).returns([TestEngine])
           expect(matcher.oneboxed).to be_nil
         end
       end
+
+      include_examples "matcher for url (2)", "http://example.com:21"
+      include_examples "matcher for url (2)", "ftp://example.com"
     end
 
     describe "with restricted iframe domains" do

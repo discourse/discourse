@@ -4,22 +4,7 @@ RSpec.describe DiscourseAi::Completions::DocumentEncoder do
   before { enable_current_plugin }
 
   describe ".attachment_type_for" do
-    {
-      "pdf" => "pdf",
-      "docx" => "docx",
-      "doc" => "doc",
-      "xlsx" => "xlsx",
-      "xls" => "xls",
-      "odt" => "odt",
-      "ods" => "ods",
-      "csv" => "csv",
-      "txt" => "txt",
-      "rtf" => "rtf",
-      "html" => "html",
-      "htm" => "html",
-      "md" => "md",
-      "markdown" => "md",
-    }.each do |extension, expected|
+    shared_examples "document encoder for extension and expected" do |extension, expected|
       it "maps .#{extension} to #{expected}" do
         mime = MiniMime.lookup_by_filename("sample.#{extension}")&.content_type.to_s
 
@@ -27,6 +12,21 @@ RSpec.describe DiscourseAi::Completions::DocumentEncoder do
         expect(described_class.attachment_type_for(".#{extension.upcase}", mime)).to eq(expected)
       end
     end
+
+    include_examples "document encoder for extension and expected", %w[pdf pdf]
+    include_examples "document encoder for extension and expected", %w[docx docx]
+    include_examples "document encoder for extension and expected", %w[doc doc]
+    include_examples "document encoder for extension and expected", %w[xlsx xlsx]
+    include_examples "document encoder for extension and expected", %w[xls xls]
+    include_examples "document encoder for extension and expected", %w[odt odt]
+    include_examples "document encoder for extension and expected", %w[ods ods]
+    include_examples "document encoder for extension and expected", %w[csv csv]
+    include_examples "document encoder for extension and expected", %w[txt txt]
+    include_examples "document encoder for extension and expected", %w[rtf rtf]
+    include_examples "document encoder for extension and expected", %w[html html]
+    include_examples "document encoder for extension and expected", %w[htm html]
+    include_examples "document encoder for extension and expected", %w[md md]
+    include_examples "document encoder for extension and expected", %w[markdown md]
 
     it "falls back to the mime type when the extension is unknown" do
       expect(described_class.attachment_type_for("", "application/pdf")).to eq("pdf")

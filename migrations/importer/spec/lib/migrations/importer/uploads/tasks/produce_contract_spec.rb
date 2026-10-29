@@ -6,11 +6,7 @@
 # and optimizer paths are not exercised on every run — so check the method
 # signatures directly.
 RSpec.describe Migrations::Importer::Uploads::Pipeline do
-  [
-    Migrations::Importer::Uploads::Tasks::Uploader,
-    Migrations::Importer::Uploads::Tasks::Optimizer,
-    Migrations::Importer::Uploads::Tasks::Fixer,
-  ].each do |task_class|
+  shared_examples "produce contract for task_class" do |task_class|
     it "#{task_class.name.demodulize} accepts the pipeline's produce keywords" do
       parameters = task_class.instance_method(:produce).parameters
       accepted = parameters.filter_map { |type, name| name if %i[keyreq key].include?(type) }
@@ -24,4 +20,9 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
       expect(has_keyrest || (%i[emit_work emit_result] - accepted).empty?).to be(true)
     end
   end
+
+  include_examples "produce contract for task_class", Migrations::Importer::Uploads::Tasks::Uploader
+  include_examples "produce contract for task_class",
+                   Migrations::Importer::Uploads::Tasks::Optimizer
+  include_examples "produce contract for task_class", Migrations::Importer::Uploads::Tasks::Fixer
 end

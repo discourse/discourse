@@ -260,22 +260,22 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
     let(:internal_link_hosts) { { source_host => nil } }
 
-    [
-      "[link](https://external.com/@bob)",
-      "see https://external.com/x/@bob now",
-      "<https://external.com/@bob>",
-      "https://external.com/?a=1&t=@bob",
-      "[hi @bob](https://external.com/)",
-      "![alt @bob](https://external.com/p.png)",
-      "//external.com/@bob",
-      # `_` is a linkify boundary, so core links this one too.
-      "x_https://external.com/@bob",
-    ].each do |raw|
+    shared_examples "extraction for raw" do |raw|
       it "leaves a mention inside #{raw} alone" do
         expect(extract(raw)).to eq(raw)
         expect(buffer.mentions).to be_empty
       end
     end
+
+    include_examples "extraction for raw", "[link](https://external.com/@bob)"
+    include_examples "extraction for raw", "see https://external.com/x/@bob now"
+    include_examples "extraction for raw", "<https://external.com/@bob>"
+    include_examples "extraction for raw", "https://external.com/?a=1&t=@bob"
+    include_examples "extraction for raw", "[hi @bob](https://external.com/)"
+    include_examples "extraction for raw", "![alt @bob](https://external.com/p.png)"
+    include_examples "extraction for raw", "//external.com/@bob"
+    # `_` is a linkify boundary, so core links this one too.
+    include_examples "extraction for raw", "x_https://external.com/@bob"
 
     it "leaves a hashtag inside a link alone" do
       raw = "see https://external.com/x/#general now"
@@ -286,27 +286,27 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # A destination may be followed by a title, and padded, and wrapped in angle
     # brackets. Core cooks all of these as links, so nothing inside them counts.
-    [
-      %([x](https://external.com/@bob "title")),
-      "[x](https://external.com/@bob 'title')",
-      "[x](https://external.com/@bob (title))",
-      %([x](<https://external.com/@bob> "title")),
-      "[x](https://external.com/@bob   )",
-      "[x](   https://external.com/@bob   )",
-      %([x](https://external.com/@bob\n"title")),
-      %(![a](https://external.com/@bob/p.png "t")),
-      # The title itself is an attribute, never text.
-      %([x](/some/path "@bob title")),
-      # Malformed enough that core builds no markdown link — but then linkify
-      # takes the destination, so the mention is still inside a link.
-      %([x](https://external.com/@bob "unclosed)),
-      %([x](https://external.com/@bob extra "t")),
-    ].each do |raw|
+    shared_examples "extraction for raw (2)" do |raw|
       it "leaves a mention alone in #{raw.inspect}" do
         expect(extract(raw)).to eq(raw)
         expect(buffer.mentions).to be_empty
       end
     end
+
+    include_examples "extraction for raw (2)", "[x](https://external.com/@bob \"title\")"
+    include_examples "extraction for raw (2)", "[x](https://external.com/@bob 'title')"
+    include_examples "extraction for raw (2)", "[x](https://external.com/@bob (title))"
+    include_examples "extraction for raw (2)", "[x](<https://external.com/@bob> \"title\")"
+    include_examples "extraction for raw (2)", "[x](https://external.com/@bob   )"
+    include_examples "extraction for raw (2)", "[x](   https://external.com/@bob   )"
+    include_examples "extraction for raw (2)", "[x](https://external.com/@bob\n\"title\")"
+    include_examples "extraction for raw (2)", "![a](https://external.com/@bob/p.png \"t\")"
+    # The title itself is an attribute, never text.
+    include_examples "extraction for raw (2)", "[x](/some/path \"@bob title\")"
+    # Malformed enough that core builds no markdown link — but then linkify
+    # takes the destination, so the mention is still inside a link.
+    include_examples "extraction for raw (2)", "[x](https://external.com/@bob \"unclosed)"
+    include_examples "extraction for raw (2)", "[x](https://external.com/@bob extra \"t\")"
 
     # Core builds no link here and does not linkify anything, so the mention is
     # ordinary text and must still be deferred.

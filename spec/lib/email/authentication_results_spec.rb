@@ -196,27 +196,40 @@ RSpec.describe Email::AuthenticationResults do
   describe "#verdict and #action" do
     before { SiteSetting.email_in_authserv_id = "valid.com" }
 
-    {
-      "" => %i[gray accept],
-      "valid.com; dmarc=pass" => %i[pass accept],
-      "valid.com; dmarc=fail" => %i[fail enqueue],
-      "valid.com; DMARC=Fail" => %i[fail enqueue],
-      "valid.com; dmarc=error" => %i[gray accept],
-      "valid.com; none" => %i[gray accept],
-      "valid.com 1; NONE (no checks run)" => %i[gray accept],
-      "valid.com; none (a=b; dmarc=fail)" => %i[gray accept],
-      "valid.com; none; dmarc=fail" => %i[fail enqueue],
-      ["valid.com; dmarc=pass", "invalid.com; dmarc=fail"] => %i[pass accept],
-      ["valid.com; dmarc=fail", "valid.com; dmarc=pass"] => %i[fail enqueue],
-      ["valid.com; dmarc=fail", "valid.com; none"] => %i[fail enqueue],
-      ["valid.com; dmarc=foobar", "valid.com; dmarc=pass"] => %i[pass accept],
-    }.each do |headers, (verdict, action)|
+    shared_examples "authentication results for headers and verdict and action" do |headers, (verdict, action)|
       it "is #{verdict} and #{action}s #{headers.inspect}" do
         results = described_class.new(headers)
         expect(results.verdict).to eq(verdict)
         expect(results.action).to eq(action)
       end
     end
+
+    include_examples "authentication results for headers and verdict and action",
+                     ["", %i[gray accept]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com; dmarc=pass", %i[pass accept]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com; dmarc=fail", %i[fail enqueue]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com; DMARC=Fail", %i[fail enqueue]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com; dmarc=error", %i[gray accept]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com; none", %i[gray accept]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com 1; NONE (no checks run)", %i[gray accept]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com; none (a=b; dmarc=fail)", %i[gray accept]]
+    include_examples "authentication results for headers and verdict and action",
+                     ["valid.com; none; dmarc=fail", %i[fail enqueue]]
+    include_examples "authentication results for headers and verdict and action",
+                     [["valid.com; dmarc=pass", "invalid.com; dmarc=fail"], %i[pass accept]]
+    include_examples "authentication results for headers and verdict and action",
+                     [["valid.com; dmarc=fail", "valid.com; dmarc=pass"], %i[fail enqueue]]
+    include_examples "authentication results for headers and verdict and action",
+                     [["valid.com; dmarc=fail", "valid.com; none"], %i[fail enqueue]]
+    include_examples "authentication results for headers and verdict and action",
+                     [["valid.com; dmarc=foobar", "valid.com; dmarc=pass"], %i[pass accept]]
 
     it "is gray without a configured authserv-id" do
       SiteSetting.email_in_authserv_id = ""

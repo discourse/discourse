@@ -206,7 +206,7 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
     fab!(:post)
     fab!(:admin)
 
-    [[false, false], [true, false], [false, true], [true, true]].each do |sentiment, emotion|
+    shared_examples "entry point for sentiment and emotion" do |sentiment, emotion|
       it "gates edited-post jobs and report visibility with sentiment=#{sentiment} and emotion=#{emotion}" do
         SiteSetting.ai_sentiment_enabled = sentiment
         SiteSetting.ai_sentiment_emotion_enabled = emotion
@@ -221,6 +221,11 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
         expect(serializer.can_see_sentiment_reports).to eq(sentiment || emotion)
       end
     end
+
+    include_examples "entry point for sentiment and emotion", [false, false]
+    include_examples "entry point for sentiment and emotion", [true, false]
+    include_examples "entry point for sentiment and emotion", [false, true]
+    include_examples "entry point for sentiment and emotion", [true, true]
 
     it "keeps report visibility off without stored results even when emotion is enabled" do
       SiteSetting.ai_sentiment_emotion_enabled = true

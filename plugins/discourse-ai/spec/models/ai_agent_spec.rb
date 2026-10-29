@@ -59,7 +59,7 @@ RSpec.describe AiAgent do
       expect(system_user.reload).to be_active
     end
 
-    %i[admin moderator].each do |role|
+    shared_examples "ai agent for role" do |role|
       it "preserves activation of a bot with the #{role} role" do
         bot = agent.create_user!
         bot.update!(role => true)
@@ -76,6 +76,9 @@ RSpec.describe AiAgent do
         expect(bot.reload).to be_active
       end
     end
+
+    include_examples "ai agent for role", :admin
+    include_examples "ai agent for role", :moderator
 
     it "synchronizes both accounts when reassigned by user ID" do
       bot = agent.create_user!
@@ -573,21 +576,25 @@ RSpec.describe AiAgent do
   end
 
   describe ".ensure_users!" do
-    [false, true].product([false, true])
-      .each do |ai_enabled, bot_enabled|
-        it "only provisions automatically with both settings enabled (AI: #{ai_enabled}, bot: #{bot_enabled})" do
-          SiteSetting.discourse_ai_enabled = ai_enabled
-          SiteSetting.ai_bot_enabled = bot_enabled
-          agent = Fabricate(:ai_agent)
-          provisioning_enabled = ai_enabled && bot_enabled
+    shared_examples "ai agent for ai_enabled and bot_enabled" do |ai_enabled, bot_enabled|
+      it "only provisions automatically with both settings enabled (AI: #{ai_enabled}, bot: #{bot_enabled})" do
+        SiteSetting.discourse_ai_enabled = ai_enabled
+        SiteSetting.ai_bot_enabled = bot_enabled
+        agent = Fabricate(:ai_agent)
+        provisioning_enabled = ai_enabled && bot_enabled
 
-          expect(agent.needs_user?).to eq(provisioning_enabled)
-          expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
-            provisioning_enabled ? 1 : 0,
-          )
-          expect(agent.reload.user.present?).to eq(provisioning_enabled)
-        end
+        expect(agent.needs_user?).to eq(provisioning_enabled)
+        expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
+          provisioning_enabled ? 1 : 0,
+        )
+        expect(agent.reload.user.present?).to eq(provisioning_enabled)
       end
+    end
+
+    include_examples "ai agent for ai_enabled and bot_enabled", [false, false]
+    include_examples "ai agent for ai_enabled and bot_enabled", [false, true]
+    include_examples "ai agent for ai_enabled and bot_enabled", [true, false]
+    include_examples "ai agent for ai_enabled and bot_enabled", [true, true]
 
     it "preserves existing users when automatic provisioning is disabled" do
       agent = Fabricate(:ai_agent)

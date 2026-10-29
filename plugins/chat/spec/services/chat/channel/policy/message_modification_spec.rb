@@ -31,7 +31,7 @@ RSpec.describe Chat::Channel::Policy::MessageModification do
   describe "#reason" do
     subject(:reason) { policy.reason }
 
-    %w[closed read_only archived].each do |status|
+    shared_examples "message modification for status" do |status|
       context "when the channel is #{status}" do
         before { chat_channel.update!(status:) }
 
@@ -40,5 +40,9 @@ RSpec.describe Chat::Channel::Policy::MessageModification do
         end
       end
     end
+
+    include_examples "message modification for status", "closed"
+    include_examples "message modification for status", "read_only"
+    include_examples "message modification for status", "archived"
   end
 end

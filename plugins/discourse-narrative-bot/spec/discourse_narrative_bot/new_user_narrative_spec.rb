@@ -760,7 +760,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      ["**bold**", "__italic__", "[b]bold[/b]", "[i]italic[/i]"].each do |raw|
+      shared_examples "new user narrative for raw" do |raw|
         it "acknowledges the formatting and starts the quoting tutorial" do
           post.update!(raw: raw)
 
@@ -778,6 +778,11 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
         end
       end
+
+      include_examples "new user narrative for raw", "**bold**"
+      include_examples "new user narrative for raw", "__italic__"
+      include_examples "new user narrative for raw", "[b]bold[/b]"
+      include_examples "new user narrative for raw", "[i]italic[/i]"
     end
 
     describe "quote tutorial" do

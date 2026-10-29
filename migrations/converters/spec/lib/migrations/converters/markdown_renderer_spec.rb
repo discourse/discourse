@@ -128,20 +128,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     # (deferrable) label and the fence lands as a sibling block in the raw. Only
     # code that is inline to begin with (`[tt]`, or a Code node with no `block`
     # flag) can stay in a label; the unit test further down covers that.
-    {
-      "single-line, with a language" => [
-        "[url=https://example.com][code=ruby]x = 1[/code][/url]",
-        "```ruby\nx = 1\n```",
-      ],
-      "single-line, no language" => [
-        "[url=https://example.com][code]x = 1[/code][/url]",
-        "```\nx = 1\n```",
-      ],
-      "multi-line" => [
-        "[url=https://example.com][code=ruby]a\nb[/code][/url]",
-        "```ruby\na\nb\n```",
-      ],
-    }.each do |label, (bbcode, fence)|
+    shared_examples "markdown renderer for label and bbcode and fence" do |label, (bbcode, fence)|
       it "hoists #{label} code out of a link label instead of deferring it into text" do
         raw = link_renderer.to_markdown(bbcode)
 
@@ -152,6 +139,28 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
         expect(raw).to include(fence)
       end
     end
+
+    include_examples "markdown renderer for label and bbcode and fence",
+                     [
+                       "single-line, with a language",
+                       [
+                         "[url=https://example.com][code=ruby]x = 1[/code][/url]",
+                         "```ruby\nx = 1\n```",
+                       ],
+                     ]
+    include_examples "markdown renderer for label and bbcode and fence",
+                     [
+                       "single-line, no language",
+                       ["[url=https://example.com][code]x = 1[/code][/url]", "```\nx = 1\n```"],
+                     ]
+    include_examples "markdown renderer for label and bbcode and fence",
+                     [
+                       "multi-line",
+                       [
+                         "[url=https://example.com][code=ruby]a\nb[/code][/url]",
+                         "```ruby\na\nb\n```",
+                       ],
+                     ]
 
     it "defers a link whose quote label the normalizer hoisted out" do
       # Markbridge's normalizer pulls the quote out of the link before we

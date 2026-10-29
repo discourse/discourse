@@ -2,21 +2,7 @@
 
 RSpec.describe Onebox::Engine::StackExchangeOnebox do
   describe "domains" do
-    %w[
-      stackoverflow.com
-      meta.stackoverflow.com
-      superuser.com
-      meta.superuser.com
-      serverfault.com
-      meta.serverfault.com
-      askubuntu.com
-      meta.askubuntu.com
-      mathoverflow.net
-      meta.mathoverflow.net
-      money.stackexchange.com
-      meta.money.stackexchange.com
-      stackapps.com
-    ].each do |domain|
+    shared_examples "stack exchange onebox for domain" do |domain|
       it "matches question with short URL on #{domain}" do
         expect(described_class === URI("http://#{domain}/q/55495")).to eq(true)
       end
@@ -38,6 +24,20 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
       end
     end
 
+    include_examples "stack exchange onebox for domain", "stackoverflow.com"
+    include_examples "stack exchange onebox for domain", "meta.stackoverflow.com"
+    include_examples "stack exchange onebox for domain", "superuser.com"
+    include_examples "stack exchange onebox for domain", "meta.superuser.com"
+    include_examples "stack exchange onebox for domain", "serverfault.com"
+    include_examples "stack exchange onebox for domain", "meta.serverfault.com"
+    include_examples "stack exchange onebox for domain", "askubuntu.com"
+    include_examples "stack exchange onebox for domain", "meta.askubuntu.com"
+    include_examples "stack exchange onebox for domain", "mathoverflow.net"
+    include_examples "stack exchange onebox for domain", "meta.mathoverflow.net"
+    include_examples "stack exchange onebox for domain", "money.stackexchange.com"
+    include_examples "stack exchange onebox for domain", "meta.money.stackexchange.com"
+    include_examples "stack exchange onebox for domain", "stackapps.com"
+
     it "doesn't match question on example.com" do
       expect(described_class === URI("http://example.com/q/4711")).to eq(false)
     end
@@ -47,11 +47,7 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  {
-    "long URL" =>
-      "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code",
-    "short URL" => "http://stackoverflow.com/q/17992553",
-  }.each do |name, url|
+  shared_examples "stack exchange onebox for name and url" do |name, url|
     describe "question with #{name}" do
       before do
         @link = url
@@ -81,11 +77,15 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  {
-    "long URL" =>
-      "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906",
-    "short URL" => "http://stackoverflow.com/a/17992906",
-  }.each do |name, url|
+  include_examples "stack exchange onebox for name and url",
+                   [
+                     "long URL",
+                     "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code",
+                   ]
+  include_examples "stack exchange onebox for name and url",
+                   ["short URL", "http://stackoverflow.com/q/17992553"]
+
+  shared_examples "stack exchange onebox for name and url (2)" do |name, url|
     describe "answer with #{name}" do
       before do
         @link = url
@@ -114,4 +114,12 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
       end
     end
   end
+
+  include_examples "stack exchange onebox for name and url (2)",
+                   [
+                     "long URL",
+                     "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906",
+                   ]
+  include_examples "stack exchange onebox for name and url (2)",
+                   ["short URL", "http://stackoverflow.com/a/17992906"]
 end

@@ -196,7 +196,7 @@ RSpec.describe PostActionsController do
 
       before { sign_in(Fabricate(:user, refresh_auto_groups: true)) }
 
-      [true, "true"].each do |value|
+      shared_examples "post actions controller for value" do |value|
         it "forbids sending warnings when the is_warning query param is #{value.inspect}" do
           SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
 
@@ -213,7 +213,10 @@ RSpec.describe PostActionsController do
         end
       end
 
-      [false, "false"].each do |value|
+      include_examples "post actions controller for value", true
+      include_examples "post actions controller for value", "true"
+
+      shared_examples "post actions controller for value (2)" do |value|
         it "allows notifying a user when the is_warning query param is #{value.inspect}" do
           SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
 
@@ -239,6 +242,9 @@ RSpec.describe PostActionsController do
           expect(post_action.related_post.topic.is_official_warning?).to eq(false)
         end
       end
+
+      include_examples "post actions controller for value (2)", false
+      include_examples "post actions controller for value (2)", "false"
     end
 
     describe "as a moderator" do

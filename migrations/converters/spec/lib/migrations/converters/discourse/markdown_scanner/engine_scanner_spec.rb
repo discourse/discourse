@@ -279,11 +279,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # cooks `\\@bob` as a mention. A counter that read the escape as a
     # rejection counted one occurrence too few here and handed the token to the
     # code-span look-alike — the post came back with its code span rewritten.
-    [
-      ["mention", "\\@bob", "`@bob`", :mentions, "bob"],
-      ["hashtag", "\\#support", "`#support`", :hashtags, "support"],
-      ["custom emoji", "\\:parrot:", "`:parrot:`", :emojis, "parrot"],
-    ].each do |kind, escaped, shielded, rows, name|
+    shared_examples "engine scanner for kind and escaped and shielded and rows and name" do |kind, escaped, shielded, rows, name|
       it "rewrites an escaped #{kind} and leaves the code-span copy alone" do
         output = extract("#{escaped} and #{shielded}")
 
@@ -293,6 +289,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         expect(refusals).to be_empty
       end
     end
+
+    include_examples "engine scanner for kind and escaped and shielded and rows and name",
+                     ["mention", "\\@bob", "`@bob`", :mentions, "bob"]
+    include_examples "engine scanner for kind and escaped and shielded and rows and name",
+                     ["hashtag", "\\#support", "`#support`", :hashtags, "support"]
+    include_examples "engine scanner for kind and escaped and shielded and rows and name",
+                     ["custom emoji", "\\:parrot:", "`:parrot:`", :emojis, "parrot"]
 
     it "rewrites a shortcode the author upper-cased and leaves the code-span copy alone" do
       # Core lowercases a shortcode before it looks a custom emoji up, so

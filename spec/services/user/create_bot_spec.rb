@@ -295,13 +295,7 @@ RSpec.describe User::CreateBot do
       expect(ordinary_user.errors[:primary_email]).to include(I18n.t("user.email.not_allowed"))
     end
 
-    {
-      "invalid characters" => "invalid!username",
-      "a reserved username" => "reserved_helper",
-      "an existing route" => "admin",
-      "a username shorter than the site minimum" => "bot",
-      "a username longer than the site maximum" => "x" * 21,
-    }.each do |description, username|
+    shared_examples "create bot for description and username" do |description, username|
       it "rejects #{description} without creating a user or audit entry" do
         SiteSetting.reserved_usernames = "reserved_helper"
         SiteSetting.min_username_length = 4
@@ -313,6 +307,16 @@ RSpec.describe User::CreateBot do
         expect(result.user.errors[:username]).to be_present
       end
     end
+
+    include_examples "create bot for description and username",
+                     ["invalid characters", "invalid!username"]
+    include_examples "create bot for description and username",
+                     ["a reserved username", "reserved_helper"]
+    include_examples "create bot for description and username", ["an existing route", "admin"]
+    include_examples "create bot for description and username",
+                     ["a username shorter than the site minimum", "bot"]
+    include_examples "create bot for description and username",
+                     ["a username longer than the site maximum", "x" * 21]
 
     it "rejects a case-insensitive duplicate username without creating a user or audit entry" do
       Fabricate(:user, username: params[:username].upcase)
@@ -369,7 +373,7 @@ RSpec.describe User::CreateBot, ".call" do
     PluginStoreRow.insert_all!(@saved_floors) if @saved_floors.present?
   end
 
-  [nil, -5000].each do |floor|
+  shared_examples "create bot for floor" do |floor|
     context "with concurrent creation and #{floor ? "an existing" : "no"} allocation floor" do
       it "creates distinct bots while another creation transaction is still open" do
         PluginStore.set("core", BotUser::FLOOR_KEY, floor) if floor
@@ -439,4 +443,7 @@ RSpec.describe User::CreateBot, ".call" do
       end
     end
   end
+
+  include_examples "create bot for floor", nil
+  include_examples "create bot for floor", -5000
 end

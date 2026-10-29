@@ -65,16 +65,22 @@ RSpec.describe AdminUserIndexQuery do
   end
 
   describe "no users with trust level" do
-    TrustLevel.levels.each do |key, value|
+    shared_examples "admin user index query for key and value" do |key, value|
       it "#{key} returns no records" do
         query = ::AdminUserIndexQuery.new(query: key.to_s)
         expect(real_users(query)).to eq([])
       end
     end
+
+    include_examples "admin user index query for key and value", [:newuser, 0]
+    include_examples "admin user index query for key and value", [:basic, 1]
+    include_examples "admin user index query for key and value", [:member, 2]
+    include_examples "admin user index query for key and value", [:regular, 3]
+    include_examples "admin user index query for key and value", [:leader, 4]
   end
 
   describe "users with trust level" do
-    TrustLevel.levels.each do |key, value|
+    shared_examples "admin user index query for key and value (2)" do |key, value|
       it "finds user with trust #{key}" do
         user = Fabricate(:user, trust_level: value)
 
@@ -85,6 +91,12 @@ RSpec.describe AdminUserIndexQuery do
         expect(real_users(query).to_a).to eq([user])
       end
     end
+
+    include_examples "admin user index query for key and value (2)", [:newuser, 0]
+    include_examples "admin user index query for key and value (2)", [:basic, 1]
+    include_examples "admin user index query for key and value (2)", [:member, 2]
+    include_examples "admin user index query for key and value (2)", [:regular, 3]
+    include_examples "admin user index query for key and value (2)", [:leader, 4]
   end
 
   describe "with a pending user" do

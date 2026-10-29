@@ -14,7 +14,7 @@ RSpec.describe UserAvatarsController do
       )
     end
 
-    %i[auth_overrides_avatar discourse_connect_overrides_avatar].each do |setting|
+    shared_examples "user avatars controller for setting" do |setting|
       it "rejects refreshing the selected Gravatar when #{setting} is enabled" do
         SiteSetting.public_send("#{setting}=", true)
 
@@ -24,6 +24,9 @@ RSpec.describe UserAvatarsController do
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
       end
     end
+
+    include_examples "user avatars controller for setting", :auth_overrides_avatar
+    include_examples "user avatars controller for setting", :discourse_connect_overrides_avatar
   end
 
   describe "#show_proxy_letter" do

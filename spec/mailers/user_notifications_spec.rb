@@ -2070,7 +2070,7 @@ RSpec.describe UserNotifications do
     fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2], name: "Message Inviter") }
     fab!(:invitee, :user)
 
-    %i[private_message topic].each do |destination|
+    shared_examples "user notifications for destination" do |destination|
       it "identifies the inviter when another user started the #{destination}" do
         SiteSetting.enable_names = true
         SiteSetting.display_name_on_email_from = true
@@ -2097,13 +2097,16 @@ RSpec.describe UserNotifications do
         expect(mail[:from].display_names).to eq([inviter.name])
       end
     end
+
+    include_examples "user notifications for destination", :private_message
+    include_examples "user notifications for destination", :topic
   end
 
   describe "invitation email titles" do
     fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
     fab!(:invitee, :user)
 
-    %i[private_message topic].each do |destination|
+    shared_examples "user notifications for destination (2)" do |destination|
       it "renders HTML in a #{destination} title as text" do
         post =
           if destination == :private_message
@@ -2132,6 +2135,9 @@ RSpec.describe UserNotifications do
         expect(html.css("a").map { |link| link["href"] }).to include(post.topic.url)
       end
     end
+
+    include_examples "user notifications for destination (2)", :private_message
+    include_examples "user notifications for destination (2)", :topic
   end
 
   describe "user invited to a private message" do
@@ -2321,16 +2327,7 @@ RSpec.describe UserNotifications do
     context "when user locale is allowed" do
       before { SiteSetting.allow_user_locale = true }
 
-      %w[
-        signup
-        signup_after_approval
-        confirm_old_email
-        notify_old_email
-        confirm_new_email
-        forgot_password
-        admin_login
-        account_created
-      ].each do |mail_type|
+      shared_examples "user notifications for mail_type" do |mail_type|
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
@@ -2340,21 +2337,21 @@ RSpec.describe UserNotifications do
           end
         end
       end
+
+      include_examples "user notifications for mail_type", "signup"
+      include_examples "user notifications for mail_type", "signup_after_approval"
+      include_examples "user notifications for mail_type", "confirm_old_email"
+      include_examples "user notifications for mail_type", "notify_old_email"
+      include_examples "user notifications for mail_type", "confirm_new_email"
+      include_examples "user notifications for mail_type", "forgot_password"
+      include_examples "user notifications for mail_type", "admin_login"
+      include_examples "user notifications for mail_type", "account_created"
     end
 
     context "when user locale is not allowed" do
       before { SiteSetting.allow_user_locale = false }
 
-      %w[
-        signup
-        signup_after_approval
-        notify_old_email
-        confirm_old_email
-        confirm_new_email
-        forgot_password
-        admin_login
-        account_created
-      ].each do |mail_type|
+      shared_examples "user notifications for mail_type (2)" do |mail_type|
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
@@ -2364,6 +2361,15 @@ RSpec.describe UserNotifications do
           end
         end
       end
+
+      include_examples "user notifications for mail_type (2)", "signup"
+      include_examples "user notifications for mail_type (2)", "signup_after_approval"
+      include_examples "user notifications for mail_type (2)", "notify_old_email"
+      include_examples "user notifications for mail_type (2)", "confirm_old_email"
+      include_examples "user notifications for mail_type (2)", "confirm_new_email"
+      include_examples "user notifications for mail_type (2)", "forgot_password"
+      include_examples "user notifications for mail_type (2)", "admin_login"
+      include_examples "user notifications for mail_type (2)", "account_created"
     end
   end
 
@@ -2817,29 +2823,33 @@ RSpec.describe UserNotifications do
     end
 
     describe "notification email templates" do
-      %w[
-        user_replied
-        user_replied_pm
-        user_quoted
-        user_mentioned
-        user_mentioned_pm
-        user_posted
-        user_posted_pm
-      ].each do |template_key|
+      shared_examples "user notifications for template_key" do |template_key|
         it "has improved version for #{template_key}" do
           assert_improved_template_format(template_key)
         end
       end
+
+      include_examples "user notifications for template_key", "user_replied"
+      include_examples "user notifications for template_key", "user_replied_pm"
+      include_examples "user notifications for template_key", "user_quoted"
+      include_examples "user notifications for template_key", "user_mentioned"
+      include_examples "user notifications for template_key", "user_mentioned_pm"
+      include_examples "user notifications for template_key", "user_posted"
+      include_examples "user notifications for template_key", "user_posted_pm"
     end
 
     describe "account-related email templates" do
-      %w[account_exists account_suspended account_silenced].each do |template_key|
+      shared_examples "user notifications for template_key (2)" do |template_key|
         it "has improved version for #{template_key} without email_prefix" do
           improved = I18n.t("user_notifications.#{template_key}.subject_template_improved")
 
           expect(improved).not_to include("%{email_prefix}")
         end
       end
+
+      include_examples "user notifications for template_key (2)", "account_exists"
+      include_examples "user notifications for template_key (2)", "account_suspended"
+      include_examples "user notifications for template_key (2)", "account_silenced"
     end
   end
 end

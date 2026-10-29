@@ -18,7 +18,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     DiscourseAi::Utils::DnsSrv.stubs(:lookup).raises(RuntimeError, "Unexpected SRV lookup")
   end
 
-  %w[classification_model agent decision_model].each do |backend|
+  shared_examples "capability flags for backend" do |backend|
     describe "independent enable flags with #{backend}" do
       before do
         SiteSetting.ai_sentiment_sentiment_classification_strategy = backend
@@ -40,7 +40,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
             .to_json
       end
 
-      [[false, false], [true, false], [false, true], [true, true]].each do |sentiment, emotion|
+      shared_examples "capability flags for sentiment and emotion" do |sentiment, emotion|
         it "runs only enabled capabilities with sentiment=#{sentiment} and emotion=#{emotion}" do
           SiteSetting.ai_sentiment_enabled = sentiment
           SiteSetting.ai_sentiment_emotion_enabled = emotion
@@ -76,8 +76,17 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
           expect(described_class.backfill_query).to be_empty
         end
       end
+
+      include_examples "capability flags for sentiment and emotion", [false, false]
+      include_examples "capability flags for sentiment and emotion", [true, false]
+      include_examples "capability flags for sentiment and emotion", [false, true]
+      include_examples "capability flags for sentiment and emotion", [true, true]
     end
   end
+
+  include_examples "capability flags for backend", "classification_model"
+  include_examples "capability flags for backend", "agent"
+  include_examples "capability flags for backend", "decision_model"
 
   describe "dedicated capability attribution" do
     before do

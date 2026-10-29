@@ -23,7 +23,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     SiteSetting.ai_sentiment_sentiment_agent = agent.id
   end
 
-  %i[classify! bulk_classify!].each do |operation|
+  shared_examples "input preparation for operation" do |operation|
     describe "##{operation} input budgets" do
       def classify_post(operation)
         target = operation == :classify! ? post : Post.where(id: post.id)
@@ -117,4 +117,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       end
     end
   end
+
+  include_examples "input preparation for operation", :classify!
+  include_examples "input preparation for operation", :bulk_classify!
 end

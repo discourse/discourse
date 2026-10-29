@@ -408,36 +408,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       expect(Jobs::DiscourseWorkflows::RunWorkflowCall.jobs).to be_empty
     end
 
-    [
-      [
-        "flow wait",
-        "flow:wait",
-        { "resume" => "time_interval", "wait_amount" => 1, "wait_unit" => "seconds" },
-      ],
-      ["webhook wait", "flow:wait", { "resume" => "webhook" }],
-      [
-        "form wait",
-        "action:form",
-        {
-          "form_title" => "Approval",
-          "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
-        },
-      ],
-      [
-        "modal wait",
-        "action:modal",
-        lambda do
-          {
-            "target_user" => admin.username,
-            "title" => "Approve?",
-            "body" => "Choose an option",
-            "buttons" => {
-              "values" => [{ "label" => "Approve", "value" => "approve", "style" => "primary" }],
-            },
-          }
-        end,
-      ],
-    ].each do |label, wait_type, wait_configuration|
+    shared_examples "workflow call for label and wait_type and wait_configuration" do |label, wait_type, wait_configuration|
       it "keeps the parent waiting while a child #{label} is waiting" do
         allow(MessageBus).to receive(:publish)
         resolved_wait_configuration =
@@ -474,6 +445,45 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
         )
       end
     end
+
+    include_examples "workflow call for label and wait_type and wait_configuration",
+                     [
+                       "flow wait",
+                       "flow:wait",
+                       {
+                         "resume" => "time_interval",
+                         "wait_amount" => 1,
+                         "wait_unit" => "seconds",
+                       },
+                     ]
+    include_examples "workflow call for label and wait_type and wait_configuration",
+                     ["webhook wait", "flow:wait", { "resume" => "webhook" }]
+    include_examples "workflow call for label and wait_type and wait_configuration",
+                     [
+                       "form wait",
+                       "action:form",
+                       {
+                         "form_title" => "Approval",
+                         "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
+                       },
+                     ]
+    include_examples "workflow call for label and wait_type and wait_configuration",
+                     [
+                       "modal wait",
+                       "action:modal",
+                       lambda do
+                         {
+                           "target_user" => admin.username,
+                           "title" => "Approve?",
+                           "body" => "Choose an option",
+                           "buttons" => {
+                             "values" => [
+                               { "label" => "Approve", "value" => "approve", "style" => "primary" },
+                             ],
+                           },
+                         }
+                       end,
+                     ]
 
     it "keeps $execution.called_by available to child nodes after the child waits and resumes" do
       target =

@@ -149,12 +149,16 @@ RSpec.describe TopicTimer, type: :model do
     end
 
     describe "#public_type" do
-      %i[close open delete].each do |public_type|
+      shared_examples "topic timer for public_type" do |public_type|
         it "is true for #{public_type}" do
           timer = Fabricate(:topic_timer, status_type: described_class.types[public_type])
           expect(timer.public_type).to eq(true)
         end
       end
+
+      include_examples "topic timer for public_type", :close
+      include_examples "topic timer for public_type", :open
+      include_examples "topic timer for public_type", :delete
 
       it "is true for publish_to_category" do
         timer =
@@ -166,12 +170,15 @@ RSpec.describe TopicTimer, type: :model do
         expect(timer.public_type).to eq(true)
       end
 
-      described_class.private_types.keys.each do |private_type|
+      shared_examples "topic timer for private_type" do |private_type|
         it "is false for #{private_type}" do
           timer = Fabricate(:topic_timer, status_type: described_class.types[private_type])
           expect(timer.public_type).to be_falsey
         end
       end
+
+      include_examples "topic timer for private_type", :reminder
+      include_examples "topic timer for private_type", :clear_slow_mode
     end
   end
 

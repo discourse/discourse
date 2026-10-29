@@ -547,13 +547,7 @@ RSpec.describe UploadsController do
         expect(response.headers["X-Content-Type-Options"]).to eq("nosniff")
       end
 
-      {
-        "document.pdf" => "inline",
-        "clip.mp4" => "inline",
-        "page.html" => "attachment",
-        "data.xml" => "attachment",
-        "image.svg" => "attachment",
-      }.each do |filename, disposition|
+      shared_examples "uploads controller for filename and disposition" do |filename, disposition|
         it "serves #{filename} with #{disposition} disposition and the sandbox CSP" do
           extension = File.extname(filename).delete_prefix(".")
           SiteSetting.authorized_extensions = "#{extension}|png"
@@ -567,6 +561,12 @@ RSpec.describe UploadsController do
           expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
         end
       end
+
+      include_examples "uploads controller for filename and disposition", %w[document.pdf inline]
+      include_examples "uploads controller for filename and disposition", %w[clip.mp4 inline]
+      include_examples "uploads controller for filename and disposition", %w[page.html attachment]
+      include_examples "uploads controller for filename and disposition", %w[data.xml attachment]
+      include_examples "uploads controller for filename and disposition", %w[image.svg attachment]
 
       it "forces an attachment download with a sandbox CSP when the dl param is given" do
         get "#{image_upload.short_path}?dl=1"

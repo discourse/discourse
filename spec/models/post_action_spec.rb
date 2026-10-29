@@ -778,15 +778,18 @@ RSpec.describe PostAction do
     end
   end
 
-  # flags are already being tested
-  all_types_except_flags =
-    PostActionType.types.except(*PostActionType.flag_types_without_additional_message.keys)
-  all_types_except_flags.values.each do |action|
+  shared_examples "post action for action" do |action|
     it "prevents user to act twice at the same time" do
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
     end
   end
+
+  # flags are already being tested
+  include_examples "post action for action", PostActionType.types[:like]
+  include_examples "post action for action", PostActionType.types[:notify_user]
+  include_examples "post action for action", PostActionType.types[:illegal]
+  include_examples "post action for action", PostActionType.types[:notify_moderators]
 
   describe "messages" do
     it "does not create a message when there is no message" do
@@ -815,7 +818,7 @@ RSpec.describe PostAction do
       flag_without_message.destroy!
     end
 
-    %i[notify_moderators notify_user spam].each do |post_action_type|
+    shared_examples "post action for post_action_type" do |post_action_type|
       it "creates a message for #{post_action_type}" do
         result =
           PostActionCreator.new(
@@ -828,6 +831,10 @@ RSpec.describe PostAction do
         expect(result.post_action.related_post_id).to be_present
       end
     end
+
+    include_examples "post action for post_action_type", :notify_moderators
+    include_examples "post action for post_action_type", :notify_user
+    include_examples "post action for post_action_type", :spam
 
     it "creates a message for custom flags when message is required" do
       flag_with_message =
@@ -906,7 +913,7 @@ RSpec.describe PostAction do
       expect(user_notifications.last.topic).to eq(topic)
     end
 
-    %i[agree_and_keep disagree ignore_and_do_nothing].each do |disposition|
+    shared_examples "post action for disposition" do |disposition|
       it "bumps the topic when performing #{disposition}" do
         SiteSetting.auto_respond_to_flag_actions = true
         user = Fabricate(:user, refresh_auto_groups: true)
@@ -922,6 +929,10 @@ RSpec.describe PostAction do
         expect(topic.reload.bumped_at).to be > original_bumped_at
       end
     end
+
+    include_examples "post action for disposition", :agree_and_keep
+    include_examples "post action for disposition", :disagree
+    include_examples "post action for disposition", :ignore_and_do_nothing
 
     it "does not add a moderator post to the notify_user PM topic when an unrelated flag is agreed" do
       user = Fabricate(:user, refresh_auto_groups: true)

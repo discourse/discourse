@@ -71,7 +71,7 @@ describe Jobs::PostSentimentAnalysis do
       )
     end
 
-    [[true, false], [false, true]].each do |sentiment, emotion|
+    shared_examples "post sentiment analysis for sentiment and emotion" do |sentiment, emotion|
       it "processes only enabled decisions with sentiment=#{sentiment} and emotion=#{emotion}" do
         model = Fabricate(:decision_model)
         SiteSetting.ai_sentiment_enabled = sentiment
@@ -97,6 +97,9 @@ describe Jobs::PostSentimentAnalysis do
         )
       end
     end
+
+    include_examples "post sentiment analysis for sentiment and emotion", [true, false]
+    include_examples "post sentiment analysis for sentiment and emotion", [false, true]
 
     it "successfully classifies the post" do
       expected_analysis = DiscourseAi::Sentiment::PostClassification.new.classifiers.length

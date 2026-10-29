@@ -43,12 +43,7 @@ RSpec.describe TextSentinel do
   end
 
   describe "body_sentinel" do
-    [
-      "evil trout is evil",
-      "去年十社會警告",
-      "P.S. Пробирочка очень толковая и весьма умная, так что не обнимайтесь.",
-      "Look: 去年十社會警告",
-    ].each do |valid_body|
+    shared_examples "text sentinel for valid_body" do |valid_body|
       it "handles a valid body in a private message" do
         expect(TextSentinel.body_sentinel(valid_body, private_message: true)).to be_valid
       end
@@ -57,6 +52,12 @@ RSpec.describe TextSentinel do
         expect(TextSentinel.body_sentinel(valid_body, private_message: false)).to be_valid
       end
     end
+
+    include_examples "text sentinel for valid_body", "evil trout is evil"
+    include_examples "text sentinel for valid_body", "去年十社會警告"
+    include_examples "text sentinel for valid_body",
+                     "P.S. Пробирочка очень толковая и весьма умная, так что не обнимайтесь."
+    include_examples "text sentinel for valid_body", "Look: 去年十社會警告"
 
     it "uses a sensible min entropy value when min body length is less than min entropy" do
       SiteSetting.min_post_length = 3

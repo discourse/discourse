@@ -659,11 +659,7 @@ TEXT
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
     end
 
-    %w[
-      config/locales/client.foo_BAR.yml
-      config/locales/server.foo_BAR.yml
-      lib/javascripts/locale/moment_js/foo_BAR.js
-    ].each do |path|
+    shared_examples "instance for path" do |path|
       it "does not register a new locale when #{path} is missing" do
         path = "#{plugin_path}/#{path}"
         File.stubs("exist?").returns(false)
@@ -674,6 +670,10 @@ TEXT
         expect(DiscoursePluginRegistry.locales.count).to eq(0)
       end
     end
+
+    include_examples "instance for path", "config/locales/client.foo_BAR.yml"
+    include_examples "instance for path", "config/locales/server.foo_BAR.yml"
+    include_examples "instance for path", "lib/javascripts/locale/moment_js/foo_BAR.js"
   end
 
   describe "#register_reviewable_type" do

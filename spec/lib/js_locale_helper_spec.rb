@@ -35,7 +35,7 @@ RSpec.describe JsLocaleHelper do
       )
     end
 
-    { "ar" => "ar", "fa_IR" => "fa" }.each do |locale, moment_locale|
+    shared_examples "js locale helper for locale and moment_locale" do |locale, moment_locale|
       it "formats dates with ASCII digits for #{locale}" do
         v8_ctx.eval(File.read(VendoredAssets.path("moment/moment.js")))
         v8_ctx.eval("moment.tz = {};")
@@ -46,9 +46,12 @@ RSpec.describe JsLocaleHelper do
         expect(v8_ctx.eval('moment("2026-05-01").format("YYYY-MM-DD")')).to eq("2026-05-01")
       end
     end
+
+    include_examples "js locale helper for locale and moment_locale", %w[ar ar]
+    include_examples "js locale helper for locale and moment_locale", %w[fa_IR fa]
   end
 
-  LocaleSiteSetting.values.each do |locale|
+  shared_examples "js locale helper for locale" do |locale|
     it "generates valid JS for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
       v8_ctx.eval(js)
@@ -68,6 +71,105 @@ RSpec.describe JsLocaleHelper do
       expect(described_class.output_MF(locale[:value])).not_to match(/Failed to compile/)
     end
   end
+
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ar" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "be" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "bg" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "bs_BA" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ca" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "cs" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "da" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "de" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "el" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "en" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "en_GB" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "es" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "et" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "fa_IR" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "fi" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "fr" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "gl" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "he" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "hr" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "hu" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "hy" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "id" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "it" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ja" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ko" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "lt" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "lv" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "nb_NO" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "nl" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "pl_PL" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "pt" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "pt_BR" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ro" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ru" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "sk" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "sl" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "sq" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "sr" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "sv" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "sw" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "te" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "th" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "tr_TR" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ug" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "uk" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "ur" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "vi" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "zh_CN" }
+  include_examples "js locale helper for locale",
+                   LocaleSiteSetting.values.find { it[:value] == "zh_TW" }
 
   describe ".output_client_overrides" do
     subject(:client_overrides) { described_class.output_client_overrides("en") }

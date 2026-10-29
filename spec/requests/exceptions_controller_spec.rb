@@ -45,12 +45,7 @@ RSpec.describe ExceptionsController do
         Theme.find_default.update!(color_scheme_id:, dark_color_scheme_id:)
       end
 
-      {
-        nil => "(prefers-color-scheme: dark)",
-        "auto" => "(prefers-color-scheme: dark)",
-        "light" => "none",
-        "dark" => "all",
-      }.each do |cookie, media|
+      shared_examples "exceptions controller for cookie and media" do |cookie, media|
         it "uses media=#{media.inspect} when forced_color_mode is #{cookie.inspect}" do
           cookies[:forced_color_mode] = cookie
 
@@ -59,6 +54,13 @@ RSpec.describe ExceptionsController do
           expect(response.body).to have_tag("source", with: { media: })
         end
       end
+
+      include_examples "exceptions controller for cookie and media",
+                       [nil, "(prefers-color-scheme: dark)"]
+      include_examples "exceptions controller for cookie and media",
+                       ["auto", "(prefers-color-scheme: dark)"]
+      include_examples "exceptions controller for cookie and media", %w[light none]
+      include_examples "exceptions controller for cookie and media", %w[dark all]
     end
   end
 end

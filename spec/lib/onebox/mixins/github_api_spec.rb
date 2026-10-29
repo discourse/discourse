@@ -143,14 +143,7 @@ RSpec.describe Onebox::Mixins::GithubApi do
       )
     end
 
-    [
-      ["pull request", Onebox::Engine::GithubPullRequestOnebox, "https://github.com/d/d/pull/1"],
-      ["commit", Onebox::Engine::GithubCommitOnebox, "https://github.com/d/d/commit/#{"a" * 40}"],
-      ["issue", Onebox::Engine::GithubIssueOnebox, "https://github.com/d/d/issues/1"],
-      ["repo", Onebox::Engine::GithubRepoOnebox, "https://github.com/d/d"],
-      ["actions", Onebox::Engine::GithubActionsOnebox, "https://github.com/d/d/actions/runs/1"],
-      ["gist", Onebox::Engine::GithubGistOnebox, "https://gist.github.com/d/abc123def456"],
-    ].each do |name, klass, link|
+    shared_examples "github api for name and klass and link" do |name, klass, link|
       it "records a backoff when the #{name} engine is rate-limited" do
         begin
           klass.new(link).to_html
@@ -162,6 +155,35 @@ RSpec.describe Onebox::Mixins::GithubApi do
         ).to be_present
       end
     end
+
+    include_examples "github api for name and klass and link",
+                     [
+                       "pull request",
+                       Onebox::Engine::GithubPullRequestOnebox,
+                       "https://github.com/d/d/pull/1",
+                     ]
+    include_examples "github api for name and klass and link",
+                     [
+                       "commit",
+                       Onebox::Engine::GithubCommitOnebox,
+                       "https://github.com/d/d/commit/#{"a" * 40}",
+                     ]
+    include_examples "github api for name and klass and link",
+                     ["issue", Onebox::Engine::GithubIssueOnebox, "https://github.com/d/d/issues/1"]
+    include_examples "github api for name and klass and link",
+                     ["repo", Onebox::Engine::GithubRepoOnebox, "https://github.com/d/d"]
+    include_examples "github api for name and klass and link",
+                     [
+                       "actions",
+                       Onebox::Engine::GithubActionsOnebox,
+                       "https://github.com/d/d/actions/runs/1",
+                     ]
+    include_examples "github api for name and klass and link",
+                     [
+                       "gist",
+                       Onebox::Engine::GithubGistOnebox,
+                       "https://gist.github.com/d/abc123def456",
+                     ]
   end
 
   context "when a default access token is configured" do

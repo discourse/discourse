@@ -554,7 +554,7 @@ RSpec.describe CategoriesController do
     context "when a moderator evaluates public permissions" do
       fab!(:moderator)
 
-      [false, true].each do |granular_permissions|
+      shared_examples "categories controller for granular_permissions" do |granular_permissions|
         it "retains access with granular pseudogroup behavior #{granular_permissions}" do
           SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
           sign_in(moderator)
@@ -576,6 +576,9 @@ RSpec.describe CategoriesController do
           )
         end
       end
+
+      include_examples "categories controller for granular_permissions", false
+      include_examples "categories controller for granular_permissions", true
     end
 
     context "when logged in" do

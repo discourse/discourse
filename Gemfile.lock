@@ -4,6 +4,21 @@ GIT
   specs:
     raindrops (0.20.1)
 
+GIT
+  remote: https://github.com/discourse/rubocop-discourse
+  revision: fd5f84e0c8241221a9d566cb1ee59e85976bf650
+  ref: fd5f84e0c8241221a9d566cb1ee59e85976bf650
+  specs:
+    rubocop-discourse (3.21.0)
+      activesupport (>= 6.1)
+      lint_roller (>= 1.1.0)
+      rubocop-capybara (>= 2.23.0)
+      rubocop-discourse-base (>= 1.0.0)
+      rubocop-factory_bot (>= 2.27.0)
+      rubocop-rails (>= 2.30.3)
+      rubocop-rspec (>= 3.0.1)
+      rubocop-rspec_rails (>= 2.31.0)
+
 PATH
   remote: migrations/converters
   specs:
@@ -643,15 +658,6 @@ GEM
     rubocop-capybara (3.0.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.81)
-    rubocop-discourse (3.20.0)
-      activesupport (>= 6.1)
-      lint_roller (>= 1.1.0)
-      rubocop-capybara (>= 2.23.0)
-      rubocop-discourse-base (>= 1.0.0)
-      rubocop-factory_bot (>= 2.27.0)
-      rubocop-rails (>= 2.30.3)
-      rubocop-rspec (>= 3.0.1)
-      rubocop-rspec_rails (>= 2.31.0)
     rubocop-discourse-base (1.0.0)
       rubocop (>= 1.80.0)
     rubocop-factory_bot (2.28.0)
@@ -956,7 +962,7 @@ DEPENDENCIES
   rss
   rswag-specs
   rtlcss
-  rubocop-discourse
+  rubocop-discourse!
   ruby-lsp
   ruby-lsp-rails
   ruby-lsp-rspec
@@ -1252,7 +1258,7 @@ CHECKSUMS
   rubocop (1.92.0) sha256=2af68041fb2e70bd9321d0479b49fad07f8008a3d0758c83347b4917128c56e0
   rubocop-ast (1.50.0) sha256=b9ca88300da0803ee222ad20cdb30494c0a784eed06fdc35d254b06d662788db
   rubocop-capybara (3.0.0) sha256=7a64655238acda7f8f3c87e37ac825a64c615a79c17c253f1a28270dc3768c4b
-  rubocop-discourse (3.20.0) sha256=47086bcf9b937e469398e82615fc4a6b86bd40df73bf85611a9109a83a1e9c70
+  rubocop-discourse (3.21.0)
   rubocop-discourse-base (1.0.0) sha256=a4121f0f2a8e32c3259fee22106af9fd35372cbeac14b0c69673bdee79b472b7
   rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
   rubocop-rails (2.38.0) sha256=6e2b7c532efa95e3050371bec20b8f5b025662acead8bc70ee31f0e3e6fa2f06

@@ -45,47 +45,52 @@ RSpec.describe "i18n integrity checks" do
       end
   end
 
-  Dir["#{Rails.root.join("config/locales/{client,server}.*.yml")}"].each do |path|
-    it "does not contain invalid interpolation keys for '#{path}'" do
-      matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
-      matches.flatten!
-      matches.compact!
-      matches.uniq!
-      expect(matches).to eq([])
+  it "has valid interpolation keys in every locale file", :aggregate_failures do
+    Dir["#{Rails.root.join("config/locales/{client,server}.*.yml")}"].each do |path|
+      aggregate_failures(path) do
+        matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
+        matches.flatten!
+        matches.compact!
+        matches.uniq!
+        expect(matches).to eq([])
+      end
     end
   end
 
-  Dir["#{Rails.root.join("config/locales/client.*.yml")}"].each do |path|
-    it "has valid client YAML for '#{path}'" do
-      yaml = load_yaml(path)
-      locale = extract_locale(path)
+  it "has valid client YAML for every locale", :aggregate_failures do
+    Dir["#{Rails.root.join("config/locales/client.*.yml")}"].each do |path|
+      aggregate_failures(path) do
+        yaml = load_yaml(path)
+        locale = extract_locale(path)
 
-      expect(yaml.keys).to eq([locale])
+        expect(yaml.keys).to eq([locale])
 
-      expect(yaml[locale]["js"]).to be
-      expect(yaml[locale]["admin_js"]).to be unless LocaleSiteSetting.fallback_locale(locale)
-      expect(yaml[locale]["wizard_js"]).to be if locale == "en"
+        expect(yaml[locale]["js"]).to be
+        expect(yaml[locale]["admin_js"]).to be unless LocaleSiteSetting.fallback_locale(locale)
+        expect(yaml[locale]["wizard_js"]).to be if locale == "en"
+      end
     end
   end
 
-  Dir["#{Rails.root.join("**/locale*/*.en.yml")}"].each do |english_path|
-    english_yaml = load_yaml(english_path)["en"]
-
-    context(english_path) do
-      it "has no duplicate keys" do
+  it "has no duplicate keys in any English locale file", :aggregate_failures do
+    Dir["#{Rails.root.join("**/locale*/*.en.yml")}"].each do |english_path|
+      aggregate_failures(english_path) do
         english_duplicates = DuplicateKeyFinder.new.find_duplicates(english_path)
         expect(english_duplicates).to be_empty
       end
     end
+  end
 
-    Dir[english_path.sub(".en.yml", ".*.yml")].each do |path|
-      next if path[".en.yml"]
+  it "has compatible YAML in every translated locale file", :aggregate_failures do
+    Dir["#{Rails.root.join("**/locale*/*.en.yml")}"].each do |english_path|
+      english_yaml = load_yaml(english_path)["en"]
 
-      context(path) do
-        locale = extract_locale(path)
-        yaml = load_yaml(path)
+      Dir[english_path.sub(".en.yml", ".*.yml")].each do |path|
+        next if path[".en.yml"]
 
-        it "has valid translation YAML", :aggregate_failures do
+        aggregate_failures(path) do
+          locale = extract_locale(path)
+          yaml = load_yaml(path)
           duplicates = DuplicateKeyFinder.new.find_duplicates(path)
           expect(duplicates).to be_empty
           expect(yaml.keys).to eq([locale])

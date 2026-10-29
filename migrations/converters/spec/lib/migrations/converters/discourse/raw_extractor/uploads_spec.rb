@@ -132,10 +132,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # the destination's metadata and the rest is dropped. The size group must not
     # reach past the line end, or a parenthesized line of the author's own text
     # disappears from the post.
-    {
-      "the next line" => "\n(this may take a while)",
-      "a line after a blank one" => "\n\n(a caption)",
-    }.each do |label, tail|
+    shared_examples "uploads for label and tail" do |label, tail|
       it "leaves #{label} alone after an attachment" do
         result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)#{tail}")
 
@@ -143,6 +140,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         expect(result).to eq("#{buffer.uploads.first[:placeholder]}#{tail}")
       end
     end
+
+    include_examples "uploads for label and tail", ["the next line", "\n(this may take a while)"]
+    include_examples "uploads for label and tail", ["a line after a blank one", "\n\n(a caption)"]
 
     it "records the verbatim source as original_markdown for an upload:// reference" do
       extract("![alt](upload://abc123.png)")
@@ -310,7 +310,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     # linkify-it reads the scheme case-insensitively, so core links these too.
-    %w[HTTPS Https HTTP].each do |scheme|
+    shared_examples "uploads for scheme" do |scheme|
       it "recognizes an upload URL with a #{scheme} scheme" do
         url = "#{scheme}://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
         extract("![x](#{url})")
@@ -325,6 +325,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         expect(buffer.uploads.first[:upload_id]).to eq(sha1)
       end
     end
+
+    include_examples "uploads for scheme", "HTTPS"
+    include_examples "uploads for scheme", "Https"
+    include_examples "uploads for scheme", "HTTP"
 
     it "keeps a bare URL's trailing sentence punctuation out of the match" do
       url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"

@@ -17,7 +17,7 @@ describe "Patreon Oauth2" do
   end
 
   shared_examples "patreon oauth" do
-    [false, nil].each do |verified|
+    shared_examples "patreon auth for verified" do |verified|
       it "does not sign in a synced patron when email verification is #{verified.inspect}" do
         group = Fabricate(:group)
         Patreon.set("filters", group.id.to_s => ["0"])
@@ -84,6 +84,9 @@ describe "Patreon Oauth2" do
         expect(UserAssociatedAccount.where(user_id: user1.id, provider_name: "patreon")).to be_empty
       end
     end
+
+    include_examples "patreon auth for verified", false
+    include_examples "patreon auth for verified", nil
 
     it "signs in the user if the email from patreon is verified" do
       post "/auth/patreon"

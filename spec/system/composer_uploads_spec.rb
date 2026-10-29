@@ -180,7 +180,7 @@ describe "Uploading files in the composer" do
   context "when multiple images are uploaded" do
     before { SiteSetting.enable_auto_grid_images = true }
 
-    %w[en fr de].each do |locale|
+    shared_examples "composer uploads for locale" do |locale|
       before { SiteSetting.default_locale = locale }
 
       context "when the locale is #{locale}" do
@@ -200,6 +200,10 @@ describe "Uploading files in the composer" do
         end
       end
     end
+
+    include_examples "composer uploads for locale", "en"
+    include_examples "composer uploads for locale", "fr"
+    include_examples "composer uploads for locale", "de"
 
     it "does not wrap [grid] tags on less than 3 images" do
       visit "/new-topic"

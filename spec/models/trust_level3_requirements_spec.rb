@@ -624,12 +624,15 @@ RSpec.describe TrustLevel3Requirements do
       expect(tl3_requirements.requirements_lost?).to eq(true)
     end
 
-    [3, 4].each do |default_tl|
+    shared_examples "trust level3 requirements for default_tl" do |default_tl|
       it "is not lost if default_trust_level is #{default_tl}" do
         SiteSetting.default_trust_level = default_tl
         tl3_requirements.stubs(:days_visited).returns(1)
         expect(tl3_requirements.requirements_lost?).to eq(false)
       end
     end
+
+    include_examples "trust level3 requirements for default_tl", 3
+    include_examples "trust level3 requirements for default_tl", 4
   end
 end

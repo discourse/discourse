@@ -791,7 +791,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(http).to have_received(:request).once
       end
 
-      ["", "Visible prefix "].each do |prefix|
+      shared_examples "llm for prefix" do |prefix|
         it "settles #{prefix.present? ? "visible and buffered" : "buffered"} tool output on failure instead of retrying generated work" do
           model.update!(provider_params: { disable_native_tools: true })
           partial = "#{prefix}<function_calls><invoke><tool_name>read</tool_name>"
@@ -824,6 +824,9 @@ RSpec.describe DiscourseAi::Completions::Llm do
           expect(http).to have_received(:request).once
         end
       end
+
+      include_examples "llm for prefix", ""
+      include_examples "llm for prefix", "Visible prefix "
 
       it "retries rate limits three times" do
         request =

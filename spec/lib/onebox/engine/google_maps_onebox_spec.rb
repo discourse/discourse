@@ -77,7 +77,7 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
 
   include_context "an engine", urltype: :short
 
-  URLS.each do |kind, t|
+  shared_examples "google maps onebox for kind and t" do |kind, t|
     it "processes #{kind} url correctly", urltype: kind do
       expect(onebox.url).to eq t[:expect]
       expect(onebox.streetview?).to t[:streetview] ? be_truthy : be_falsey
@@ -85,4 +85,12 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
       expect(onebox.placeholder_html).to include("placeholder-icon map")
     end
   end
+
+  include_examples "google maps onebox for kind and t", [:short, URLS.fetch(:short)]
+  include_examples "google maps onebox for kind and t", [:long, URLS.fetch(:long)]
+  include_examples "google maps onebox for kind and t", [:canonical, URLS.fetch(:canonical)]
+  include_examples "google maps onebox for kind and t", [:custom, URLS.fetch(:custom)]
+  include_examples "google maps onebox for kind and t", [:streetview, URLS.fetch(:streetview)]
+  include_examples "google maps onebox for kind and t", [:unresolveable, URLS.fetch(:unresolveable)]
+  include_examples "google maps onebox for kind and t", [:satellite, URLS.fetch(:satellite)]
 end

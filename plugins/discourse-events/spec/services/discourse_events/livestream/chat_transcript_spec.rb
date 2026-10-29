@@ -90,7 +90,7 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
       end
       let(:opening_tag) { "[chat][wrap=x]" }
 
-      %w[[chat] [CHAT\ quote="bob;1;2026-10-08T19:00:00Z"] [wrap] [wrap=other]].each do |tag|
+      shared_examples "chat transcript for tag" do |tag|
         context "with #{tag}" do
           let(:opening_tag) { tag }
 
@@ -103,6 +103,11 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
           end
         end
       end
+
+      include_examples "chat transcript for tag", "[chat]"
+      include_examples "chat transcript for tag", "[CHAT quote=\"bob;1;2026-10-08T19:00:00Z\"]"
+      include_examples "chat transcript for tag", "[wrap]"
+      include_examples "chat transcript for tag", "[wrap=other]"
 
       it "escapes each opening tag once however many renders fitting takes" do
         expect(transcript.raw).to include("\\[chat]", "\\[wrap=x]")

@@ -37,15 +37,7 @@ RSpec.describe TranslationOverride do
         end
 
         context "when custom interpolation keys are included" do
-          %w[
-            user_notifications.user_did_something
-            user_notifications.only_reply_by_email
-            user_notifications.only_reply_by_email_pm
-            user_notifications.reply_by_email
-            user_notifications.reply_by_email_pm
-            user_notifications.visit_link_to_respond
-            user_notifications.visit_link_to_respond_pm
-          ].each do |i18n_key|
+          shared_examples "translation override for i18n_key" do |i18n_key|
             it "validates keys for #{i18n_key}" do
               interpolation_key_names =
                 described_class.custom_interpolation_keys("user_notifications.user_")
@@ -69,6 +61,20 @@ RSpec.describe TranslationOverride do
               )
             end
           end
+
+          include_examples "translation override for i18n_key",
+                           "user_notifications.user_did_something"
+          include_examples "translation override for i18n_key",
+                           "user_notifications.only_reply_by_email"
+          include_examples "translation override for i18n_key",
+                           "user_notifications.only_reply_by_email_pm"
+          include_examples "translation override for i18n_key", "user_notifications.reply_by_email"
+          include_examples "translation override for i18n_key",
+                           "user_notifications.reply_by_email_pm"
+          include_examples "translation override for i18n_key",
+                           "user_notifications.visit_link_to_respond"
+          include_examples "translation override for i18n_key",
+                           "user_notifications.visit_link_to_respond_pm"
 
           it "validates keys reserved for user_notifications" do
             I18n.backend.store_translations(:en, "not_a_notification" => "Test %{key1}")

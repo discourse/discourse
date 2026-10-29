@@ -165,7 +165,7 @@ RSpec.describe Admin::Config::DesignWizardController do
       expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
     end
 
-    %w[chat categories].each do |original_homepage|
+    shared_examples "design wizard controller for original_homepage" do |original_homepage|
       it "restores the original #{original_homepage} homepage and channel settings after a preview" do
         SiteSetting.default_homepage = original_homepage
         SiteSetting.chat_homepage_channel = other_channel.id
@@ -187,6 +187,9 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
       end
     end
+
+    include_examples "design wizard controller for original_homepage", "chat"
+    include_examples "design wizard controller for original_homepage", "categories"
 
     it "rejects settings that are not registered homepage settings" do
       put "/admin/config/design-wizard.json",

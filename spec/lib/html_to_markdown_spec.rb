@@ -231,11 +231,18 @@ RSpec.describe HtmlToMarkdown do
     ).to eq("![|200x100](https://www.discourse.org/logo.svg)")
   end
 
-  (1..6).each do |n|
+  shared_examples "html to markdown for n" do |n|
     it "converts <h#{n}>" do
       expect(html_to_markdown("<h#{n}>Header #{n}</h#{n}>")).to eq("#" * n + " Header #{n}")
     end
   end
+
+  include_examples "html to markdown for n", 1
+  include_examples "html to markdown for n", 2
+  include_examples "html to markdown for n", 3
+  include_examples "html to markdown for n", 4
+  include_examples "html to markdown for n", 5
+  include_examples "html to markdown for n", 6
 
   it "converts <br>" do
     expect(html_to_markdown("Before<br>Inside<br>After")).to eq("Before\nInside\nAfter")
@@ -260,7 +267,7 @@ RSpec.describe HtmlToMarkdown do
   end
 
   describe "when HTML is used within Markdown" do
-    HtmlToMarkdown::ALLOWED.each do |tag|
+    shared_examples "html to markdown for tag" do |tag|
       it "keeps mandatory HTML entities in text of <#{tag}>" do
         expect(html_to_markdown("<#{tag}>Less than: &lt;</#{tag}>")).to eq(
           "<#{tag}>Less than: &lt;</#{tag}>",
@@ -286,6 +293,18 @@ RSpec.describe HtmlToMarkdown do
         )
       end
     end
+
+    include_examples "html to markdown for tag", "kbd"
+    include_examples "html to markdown for tag", "del"
+    include_examples "html to markdown for tag", "ins"
+    include_examples "html to markdown for tag", "small"
+    include_examples "html to markdown for tag", "big"
+    include_examples "html to markdown for tag", "sub"
+    include_examples "html to markdown for tag", "sup"
+    include_examples "html to markdown for tag", "dl"
+    include_examples "html to markdown for tag", "dd"
+    include_examples "html to markdown for tag", "dt"
+    include_examples "html to markdown for tag", "mark"
   end
 
   it "supports <ins>" do

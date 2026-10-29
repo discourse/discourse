@@ -5,6 +5,9 @@ inherit_mode:
   merge:
     - Exclude
 
+AllCops:
+  TargetRubyVersion: "3.4"
+
 Layout/EmptyLineBetweenDefs:
   Enabled: true
 
@@ -13,6 +16,9 @@ Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
   Enabled: false
 
 Discourse/NoResetColumnInformationInMigrations:
+  Enabled: true
+
+Discourse/NoIterationOverRSpecDefinitions:
   Enabled: true
 
 Discourse/Plugins/CallRequiresPlugin:

@@ -3996,7 +3996,7 @@ RSpec.describe TopicsController do
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected, request_json:|
-        expected.each do |key, value|
+        shared_examples "a topic status response" do |key, value|
           it "returns #{value} for #{key}" do
             slug = key == :nonexistent ? "garbage-slug" : send(key.to_s).slug
             topic_id = key == :nonexistent ? nonexistent_topic_id : send(key.to_s).id
@@ -4005,6 +4005,21 @@ RSpec.describe TopicsController do
             expect(response.status).to eq(value)
           end
         end
+
+        include_examples "a topic status response", :normal_topic, expected.fetch(:normal_topic)
+        include_examples "a topic status response", :secure_topic, expected.fetch(:secure_topic)
+        include_examples "a topic status response", :private_topic, expected.fetch(:private_topic)
+        include_examples "a topic status response", :deleted_topic, expected.fetch(:deleted_topic)
+        include_examples "a topic status response",
+                         :deleted_secure_topic,
+                         expected.fetch(:deleted_secure_topic)
+        include_examples "a topic status response",
+                         :deleted_private_topic,
+                         expected.fetch(:deleted_private_topic)
+        include_examples "a topic status response", :nonexistent, expected.fetch(:nonexistent)
+        include_examples "a topic status response",
+                         :secure_accessible_topic,
+                         expected.fetch(:secure_accessible_topic)
 
         expected_slug_response = expected[:secure_topic] == 200 ? 301 : expected[:secure_topic]
         it "returns a #{expected_slug_response} for a secure topic requested by slug" do
@@ -8134,13 +8149,15 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
       end
 
-      [:user].each do |user|
+      shared_examples "topics controller for user" do |user|
         it "denies access for #{user}" do
           sign_in(Fabricate(user))
           put "/t/#{topic.id}/reset-bump-date.json"
           expect(response.status).to eq(403)
         end
       end
+
+      include_examples "topics controller for user", :user
 
       it "returns an error for a missing topic" do
         max_id = Topic.maximum(:id)
@@ -8157,7 +8174,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    %i[admin moderator trust_level_4].each do |user|
+    shared_examples "topics controller for user (2)" do |user|
       it "resets bumped_at as #{user}" do
         sign_in(public_send(user))
         topic.update!(bumped_at: 1.hour.ago)
@@ -8169,6 +8186,10 @@ RSpec.describe TopicsController do
         expect(topic.reload.bumped_at).to eq_time(timestamp)
       end
     end
+
+    include_examples "topics controller for user (2)", :admin
+    include_examples "topics controller for user (2)", :moderator
+    include_examples "topics controller for user (2)", :trust_level_4
 
     context "with a post_id parameter" do
       before { sign_in(admin) }

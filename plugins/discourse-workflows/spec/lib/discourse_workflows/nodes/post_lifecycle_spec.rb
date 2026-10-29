@@ -60,7 +60,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
     end
 
     context "with V2" do
-      %w[PostDestroyed PostRecovered].each do |node|
+      shared_examples "post lifecycle for node" do |node|
         context "with #{node}" do
           let(:klass) { "DiscourseWorkflows::Nodes::#{node}::V2".constantize }
 
@@ -73,6 +73,9 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
           end
         end
       end
+
+      include_examples "post lifecycle for node", "PostDestroyed"
+      include_examples "post lifecycle for node", "PostRecovered"
     end
 
     it "keeps topic-derived post fields when the topic went down with the post",

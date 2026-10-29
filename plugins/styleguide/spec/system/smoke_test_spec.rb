@@ -230,22 +230,74 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(styleguide).to have_no_color_selector
   end
 
-  # uses the sections hash to generate a test for each page and check if it renders correctly
+  # uses the sections hash to check the expected heading on each page
   context "when testing the available pages" do
     before do
       SiteSetting.styleguide_enabled = true
       sign_in(admin)
     end
 
-    sections.each do |section, items|
-      items.each do |item|
-        it "renders the #{section}: #{item[:title]} page correctly" do
-          visit "/styleguide/#{item[:href]}"
+    shared_examples "a rendered styleguide page" do |section, href|
+      item = sections.fetch(section).find { |candidate| candidate[:href] == href }
+      it "renders the #{section}: #{item[:title]} page correctly" do
+        visit "/styleguide/#{item[:href]}"
 
-          expect(styleguide).to have_heading(item[:title])
-        end
+        expect(styleguide).to have_heading(item[:title])
       end
     end
+
+    include_examples "a rendered styleguide page", "syntax", "/syntax/bem"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/typography"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/font-scale"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/buttons"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/colors"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/icons"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/forms"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/spinners"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/otp"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/date-time-inputs"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/dropdowns"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/topic-link"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/segmented-control"
+    include_examples "a rendered styleguide page", "atoms", "/atoms/shortcut"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/bread-crumbs"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/categories"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/char-counter"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/combo-button"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/context-menu"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/empty-state"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/menus"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/navigation-bar"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/navigation-stacked"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/post-menu"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/reorderable-list"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/roving-focus"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/signup-cta"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/multi-select"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/toasts"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/dialog"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/drag-and-drop"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/tooltips"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/topic-list-item"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/topic-notifications"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/topic-timer-info"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/virtual-list"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/tabs"
+    include_examples "a rendered styleguide page", "molecules", "/molecules/overflow-controls"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/post"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/post-list"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/post-oneboxes"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/topic-map"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/topic-footer-buttons"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/topic-list"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/basic-topic-list"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/categories-list"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/chat"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/docked-composer"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/modal"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/navigation"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/site-header"
+    include_examples "a rendered styleguide page", "organisms", "/organisms/more-topics"
   end
 
   context "when the styleguide is enabled for everyone" do

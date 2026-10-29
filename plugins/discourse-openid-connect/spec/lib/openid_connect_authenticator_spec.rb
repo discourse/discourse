@@ -45,13 +45,7 @@ describe OpenIDConnectAuthenticator do
   context "when the fallback is true and email_verified is supplied" do
     before { SiteSetting.openid_connect_email_verified_claim_fallback = true }
 
-    {
-      true => true,
-      "true" => true,
-      "True" => true,
-      false => false,
-      "false" => false,
-    }.each do |claim, verified|
+    shared_examples "openid connect authenticator for claim and verified" do |claim, verified|
       it "uses the supplied #{claim.inspect} value instead of the fallback" do
         hash[:extra][:raw_info][:email_verified] = claim
         result = authenticator.after_authenticate(hash)
@@ -60,6 +54,12 @@ describe OpenIDConnectAuthenticator do
         expect(result.user).to eq(verified ? user : nil)
       end
     end
+
+    include_examples "openid connect authenticator for claim and verified", [true, true]
+    include_examples "openid connect authenticator for claim and verified", ["true", true]
+    include_examples "openid connect authenticator for claim and verified", ["True", true]
+    include_examples "openid connect authenticator for claim and verified", [false, false]
+    include_examples "openid connect authenticator for claim and verified", ["false", false]
   end
 
   context "when email_verified is true" do
