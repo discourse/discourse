@@ -207,20 +207,54 @@ module(
         );
       });
 
-      test("the top level lists the categories the page passes", async function (assert) {
-        const categories = this.categories.filter((c) => c.id !== 3);
+      test("a subcategory drop leaves out categories muted through their parent", async function (assert) {
+        this.owner
+          .lookup("service:current-user")
+          .set("indirectly_muted_category_ids", [28]);
+        const category = Category.findById(7);
         await render(
-          <template><BreadCrumbs @categories={{categories}} /></template>
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
         );
-        await click(`${TOP}.d-select, ${TOP} .d-select`);
+        await click(`${SUB}.d-select, ${SUB} .d-select`);
 
         assert.true(
-          optionValues().includes("1"),
-          "a passed category is listed"
+          optionValues().includes("27"),
+          "an unmuted child is listed"
         );
-        assert.false(
-          optionValues().includes("3"),
-          "a category the page left out is not"
+        assert.false(optionValues().includes("28"), "a muted child is not");
+      });
+
+      test("a lazy subcategory drop asks the server to leave out muted categories", async function (assert) {
+        Site.current().set("lazy_load_categories", true);
+        const requests = [];
+        pretender.post("/categories/search", (request) => {
+          requests.push(new URLSearchParams(request.requestBody));
+          return response({
+            categories: [],
+            ancestors: [],
+            categories_count: 0,
+          });
+        });
+        const category = Category.findById(7);
+        await render(
+          <template>
+            <BreadCrumbs
+              @categories={{this.categories}}
+              @category={{category}}
+            />
+          </template>
+        );
+        await click(`${SUB}.d-select, ${SUB} .d-select`);
+
+        assert.strictEqual(requests.at(-1)?.get("parent_category_id"), "7");
+        assert.strictEqual(
+          requests.at(-1)?.get("reject_indirectly_muted"),
+          "true"
         );
       });
     });

@@ -64,16 +64,10 @@ function filterInput() {
   return find(".d-select__input, .d-select__panel .d-select__filter");
 }
 
-/** The level lists bread-crumbs builds from the site, in its order. */
+/** The top level as the site lists it, in its order. */
 function topLevel() {
   return Site.current().categoriesList.filter(
     (category) => !category.parent_category_id
-  );
-}
-
-function childrenOf(id) {
-  return Site.current().categoriesList.filter(
-    (category) => category.parent_category_id === id
   );
 }
 
@@ -96,11 +90,8 @@ module(
             );
           })
         );
-        const items = topLevel();
 
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
 
         assert.dom(".d-select").hasClass("category-drop");
         await select().open();
@@ -110,11 +101,7 @@ module(
       });
 
       test("the caret points right while closed and down while open", async function (assert) {
-        const items = topLevel();
-
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
 
         assert.dom(".d-select__caret").hasClass("d-icon-angle-right");
         await select().open();
@@ -131,11 +118,8 @@ module(
             );
           })
         );
-        const items = topLevel();
 
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
 
         assert.dom(".d-select__caret").hasClass("d-icon-chevron-right");
         await select().open();
@@ -143,19 +127,15 @@ module(
       });
 
       test("with no value it names the level", async function (assert) {
-        const top = topLevel();
         const parent = Category.findById(2);
-        const children = childrenOf(2);
 
         await render(
           <template>
-            <div class="top"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="top"><DSelectCategoryFilter /></div>
             <div class="sub"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
               /></div>
             <div class="none"><DSelectCategoryFilter
-                @items={{children}}
                 @noSubcategories={{true}}
                 @parentCategory={{parent}}
               /></div>
@@ -174,19 +154,15 @@ module(
       });
 
       test("an empty level is named for what it filters and shows the level as its placeholder", async function (assert) {
-        const top = topLevel();
         const parent = Category.findById(2);
-        const children = childrenOf(2);
 
         await render(
           <template>
-            <div class="top"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="top"><DSelectCategoryFilter /></div>
             <div class="sub"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
               /></div>
             <div class="all"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
                 @value={{ALL_CATEGORIES_ID}}
               /></div>
@@ -209,18 +185,15 @@ module(
 
       test("a held filter follows the level's name", async function (assert) {
         const parent = Category.findById(2);
-        const children = childrenOf(2);
         const value = Category.findById(26);
 
         await render(
           <template>
             <div class="held"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
                 @value={{value}}
               /></div>
             <div class="none"><DSelectCategoryFilter
-                @items={{children}}
                 @noSubcategories={{true}}
                 @parentCategory={{parent}}
               /></div>
@@ -254,18 +227,14 @@ module(
             );
           })
         );
-        const top = topLevel();
         const parent = Category.findById(2);
-        const children = childrenOf(2);
 
         await render(
           <template>
             <div class="top"><DSelectCategoryFilter
-                @items={{top}}
                 @placeholder="any category"
               /></div>
             <div class="sub"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
               /></div>
           </template>
@@ -280,15 +249,12 @@ module(
       });
 
       test("adjacent levels have distinct accessible names", async function (assert) {
-        const top = topLevel();
         const parent = Category.findById(2);
-        const children = childrenOf(2);
 
         await render(
           <template>
-            <div class="top"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="top"><DSelectCategoryFilter /></div>
             <div class="sub"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
               /></div>
           </template>
@@ -313,21 +279,17 @@ module(
       });
 
       test("marks the trigger while a category narrows the list", async function (assert) {
-        const top = topLevel();
         const parent = Category.findById(2);
-        const children = childrenOf(2);
         const value = Category.findById(26);
 
         await render(
           <template>
-            <div class="all"><DSelectCategoryFilter @items={{top}} /></div>
+            <div class="all"><DSelectCategoryFilter /></div>
             <div class="held"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
                 @value={{value}}
               /></div>
             <div class="none"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
                 @value={{NO_CATEGORIES_ID}}
               /></div>
@@ -341,13 +303,11 @@ module(
 
       test("the held category shows its own badge", async function (assert) {
         const parent = Category.findById(2);
-        const children = childrenOf(2);
         const value = Category.findById(26);
 
         await render(
           <template>
             <DSelectCategoryFilter
-              @items={{children}}
               @parentCategory={{parent}}
               @value={{value}}
             />
@@ -365,13 +325,11 @@ module(
     });
 
     module("browsing", function () {
-      test("lists the caller's level in its order, without shortcuts when nothing is held", async function (assert) {
+      test("lists the top level in the site's order, without shortcuts when nothing is held", async function (assert) {
         this.siteSettings.allow_uncategorized_topics = true;
         const items = topLevel();
 
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
 
         assert.deepEqual(
@@ -384,11 +342,8 @@ module(
 
       test("uncategorized follows the site setting", async function (assert) {
         this.siteSettings.allow_uncategorized_topics = false;
-        const items = topLevel();
 
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
 
         assert.dom(optionFor(17)).doesNotExist();
@@ -399,9 +354,7 @@ module(
         const value = items[0];
 
         await render(
-          <template>
-            <DSelectCategoryFilter @items={{items}} @value={{value}} />
-          </template>
+          <template><DSelectCategoryFilter @value={{value}} /></template>
         );
         await select().open();
 
@@ -413,17 +366,14 @@ module(
 
       test("a subcategory level offers no subcategories, and both shortcuts once one is held", async function (assert) {
         const parent = Category.findById(2);
-        const children = childrenOf(2);
         const held = Category.findById(26);
 
         await render(
           <template>
             <div class="empty"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
               /></div>
             <div class="held"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
                 @value={{held}}
               /></div>
@@ -446,17 +396,14 @@ module(
 
       test("a held no-subcategories filter offers only to remove the filter", async function (assert) {
         const parent = Category.findById(2);
-        const children = childrenOf(2);
 
         await render(
           <template>
             <div class="flag"><DSelectCategoryFilter
-                @items={{children}}
                 @noSubcategories={{true}}
                 @parentCategory={{parent}}
               /></div>
             <div class="value"><DSelectCategoryFilter
-                @items={{children}}
                 @parentCategory={{parent}}
                 @value={{NO_CATEGORIES_ID}}
               /></div>
@@ -514,11 +461,7 @@ module(
 
         await render(
           <template>
-            <DSelectCategoryFilter
-              @editing={{true}}
-              @items={{items}}
-              @value={{value}}
-            />
+            <DSelectCategoryFilter @editing={{true}} @value={{value}} />
           </template>
         );
         await select().open();
@@ -528,14 +471,10 @@ module(
 
       test("subcategory rows hide their parent", async function (assert) {
         const parent = Category.findById(2);
-        const children = childrenOf(2);
 
         await render(
           <template>
-            <DSelectCategoryFilter
-              @items={{children}}
-              @parentCategory={{parent}}
-            />
+            <DSelectCategoryFilter @parentCategory={{parent}} />
           </template>
         );
         await select().open();
@@ -549,14 +488,11 @@ module(
       });
 
       test("topic counts can include subcategories", async function (assert) {
-        const items = topLevel();
-
         await render(
           <template>
-            <div class="own"><DSelectCategoryFilter @items={{items}} /></div>
+            <div class="own"><DSelectCategoryFilter /></div>
             <div class="all"><DSelectCategoryFilter
                 @countSubcategories={{true}}
-                @items={{items}}
               /></div>
           </template>
         );
@@ -577,9 +513,7 @@ module(
         set(this.currentUser, "moderator", false);
         set(this.currentUser, "admin", false);
         set(this.currentUser, "trust_level", 0);
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
         assert
           .dom(".d-select__option-description", optionFor(id))
@@ -587,9 +521,7 @@ module(
         await select().close();
 
         set(this.currentUser, "trust_level", 1);
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
         assert
           .dom(".d-select__option-description", optionFor(id))
@@ -599,13 +531,60 @@ module(
         set(this.currentUser, "trust_level", 0);
         set(this.currentUser, "moderator", true);
         set(this.currentUser, "staff", true);
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
         assert
           .dom(".d-select__option-description", optionFor(id))
           .doesNotExist("staff do not");
+      });
+    });
+
+    module("muted categories", function () {
+      test("a level leaves out categories muted through their parent", async function (assert) {
+        this.owner
+          .lookup("service:current-user")
+          .set("indirectly_muted_category_ids", [28]);
+        const parent = Category.findById(7);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter @parentCategory={{parent}} />
+          </template>
+        );
+        await select().open();
+
+        assert.dom(optionFor(28)).doesNotExist("muted through its parent");
+        assert.dom(optionFor(27)).exists("its sibling stays");
+      });
+
+      test("a category muted directly stays listed", async function (assert) {
+        const currentUser = this.owner.lookup("service:current-user");
+        currentUser.set("muted_category_ids", [28]);
+        currentUser.set("indirectly_muted_category_ids", []);
+        const parent = Category.findById(7);
+
+        await render(
+          <template>
+            <DSelectCategoryFilter @parentCategory={{parent}} />
+          </template>
+        );
+        await select().open();
+
+        assert.dom(optionFor(28)).exists();
+      });
+
+      test("a search leaves out categories muted through their parent", async function (assert) {
+        this.owner
+          .lookup("service:current-user")
+          .set("indirectly_muted_category_ids", [28]);
+
+        await render(<template><DSelectCategoryFilter /></template>);
+        await select().open();
+        await select().search("hack");
+        assert.deepEqual(optionValues(), [], "the muted match is left out");
+
+        await select().search("translations");
+        assert.deepEqual(optionValues(), ["27"], "other matches stay");
       });
     });
 
@@ -622,13 +601,11 @@ module(
         ]);
         const onChange = sinon.spy();
         const parent = Category.findById(2);
-        const children = childrenOf(2);
         const held = Category.findById(26);
 
         await render(
           <template>
             <DSelectCategoryFilter
-              @items={{children}}
               @onChange={{onChange}}
               @parentCategory={{parent}}
               @value={{held}}
@@ -675,9 +652,7 @@ module(
         const value = items[0];
 
         await render(
-          <template>
-            <DSelectCategoryFilter @items={{items}} @value={{value}} />
-          </template>
+          <template><DSelectCategoryFilter @value={{value}} /></template>
         );
         await select().open();
         await select().search("docs");
@@ -699,11 +674,8 @@ module(
           requests.push(request);
           return response({ categories: [], ancestors: [] });
         });
-        const items = topLevel();
 
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
         await select().search("qa");
         assert.deepEqual(optionValues(), [], "a slug alone does not match");
@@ -722,11 +694,8 @@ module(
             permission: 1,
           }))
         );
-        const items = topLevel();
 
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
         await select().search("zebra");
 
@@ -735,14 +704,10 @@ module(
 
       test("below the top level a search keeps to the parent's direct children", async function (assert) {
         const parent = Category.findById(7);
-        const children = childrenOf(7);
 
         await render(
           <template>
-            <DSelectCategoryFilter
-              @items={{children}}
-              @parentCategory={{parent}}
-            />
+            <DSelectCategoryFilter @parentCategory={{parent}} />
           </template>
         );
         await select().open();
@@ -754,12 +719,9 @@ module(
 
       test("a keyboard pick on a typed match commits without waiting", async function (assert) {
         const onChange = sinon.spy();
-        const items = topLevel();
 
         await render(
-          <template>
-            <DSelectCategoryFilter @items={{items}} @onChange={{onChange}} />
-          </template>
+          <template><DSelectCategoryFilter @onChange={{onChange}} /></template>
         );
         await select().open();
         await select().search("bug");
@@ -822,22 +784,44 @@ module(
         assert.strictEqual(requests.at(-1).get("parent_category_id"), "2");
       });
 
-      test("a lazy level ignores the caller's items, so new ones never reload it", async function (assert) {
+      test("browsing and searching ask the server to leave out indirectly muted categories", async function (assert) {
         const requests = stubLevel(3);
-        const state = new (class {
-          @tracked items = [Category.findById(1)];
-        })();
 
-        await render(
-          <template><DSelectCategoryFilter @items={{state.items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await select().open();
         await settled();
-        // The breadcrumbs' level grows as the response adds categories to the site.
-        state.items = [...state.items, Category.findById(2)];
-        await settled();
+        assert.strictEqual(
+          requests.at(-1).get("reject_indirectly_muted"),
+          "true",
+          "browsing"
+        );
 
-        assert.strictEqual(requests.length, 1);
+        await select().search("remote");
+        await settled();
+        assert.strictEqual(
+          requests.at(-1).get("reject_indirectly_muted"),
+          "true",
+          "searching"
+        );
+      });
+
+      test("changing the mutes reloads an open level, and an equal list does not", async function (assert) {
+        const currentUser = this.owner.lookup("service:current-user");
+        currentUser.set("indirectly_muted_category_ids", [28]);
+        const requests = stubLevel(3);
+
+        await render(<template><DSelectCategoryFilter /></template>);
+        await select().open();
+        await settled();
+        const opened = requests.length;
+
+        currentUser.set("indirectly_muted_category_ids", [28]);
+        await settled();
+        assert.strictEqual(requests.length, opened, "the same mutes");
+
+        currentUser.set("indirectly_muted_category_ids", [28, 27]);
+        await settled();
+        assert.strictEqual(requests.length, opened + 1, "a new mute");
       });
 
       test("browsing lists the level in the preloaded order", async function (assert) {
@@ -893,11 +877,9 @@ module(
       test("filter badges omit ancestors on held and listed children", async function (assert) {
         const parent = Category.findById(2);
         const value = Category.findById(26);
-        const items = [value];
         await render(
           <template>
             <DSelectCategoryFilter
-              @items={{items}}
               @parentCategory={{parent}}
               @value={{value}}
             />
@@ -1003,10 +985,7 @@ module(
         this.owner.register("service:current-user", null, {
           instantiate: false,
         });
-        const items = [Category.findById(1)];
-        await render(
-          <template><DSelectCategoryFilter @items={{items}} /></template>
-        );
+        await render(<template><DSelectCategoryFilter /></template>);
         await dSelect().open();
         assert
           .dom("[role='option'] .d-select__option-description")
@@ -1041,9 +1020,7 @@ module(
         enableVirtualization();
         try {
           const categories = setPagedCategories();
-          await render(
-            <template><DSelectCategoryFilter @items={{categories}} /></template>
-          );
+          await render(<template><DSelectCategoryFilter /></template>);
           await dSelect().open();
           assert.true(
             optionValues().length < categories.length,

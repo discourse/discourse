@@ -89,6 +89,27 @@ describe "Category pickers with the new select controls" do
         expect(page).to have_no_css(".d-select__footer")
       end
 
+      it "leaves out subcategories muted through their parent" do
+        peppers = Fabricate(:category, name: "Peppers", parent_category: gardening)
+        CategoryUser.create!(
+          user: admin,
+          category: gardening,
+          notification_level: CategoryUser.notification_levels[:muted],
+        )
+        CategoryUser.create!(
+          user: admin,
+          category: peppers,
+          notification_level: CategoryUser.notification_levels[:regular],
+        )
+        sign_in(admin)
+        visit gardening.url
+
+        subcategories = picker(".category-breadcrumb__subcategory-selector")
+        subcategories.open
+        expect(subcategories).to have_option_value(peppers.id)
+        expect(subcategories).to have_no_option_value(tomatoes.id)
+      end
+
       it "searches every category from the top level" do
         sign_in(admin)
         visit "/latest"

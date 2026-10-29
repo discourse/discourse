@@ -3,7 +3,6 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Category from "discourse/models/category";
-import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import DSelect from "discourse/ui-kit/select/d-select";
 import type {
@@ -40,8 +39,6 @@ interface DSelectCategoryFilterSignature {
       | null;
     /** Parent whose direct children are being browsed. */
     parentCategory?: Category;
-    /** The level a preloaded site browses, in the caller's order. Searches and lazy sites use the model. */
-    items?: readonly Category[];
     /** Owns rows, order and paging in place of the model's search. */
     load?: SelectSignature["Args"]["load"];
     /** Holds the no-subcategories filter while no category is held. */
@@ -78,7 +75,6 @@ interface DSelectCategoryFilterSignature {
 /** Narrows a topic list by category, leaving navigation to its caller. */
 export default class DSelectCategoryFilter extends Component<DSelectCategoryFilterSignature> {
   @service declare currentUser: User | null;
-  @service declare site: Site;
   @service declare siteSettings: CategorySettings;
 
   get label() {
@@ -141,18 +137,21 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     );
   }
 
-  /** Lazy levels list in the order a preloaded site's `categoriesList` keeps. */
+  /** Levels list in the order the site's `categoriesList` keeps. */
   get #treeOrder(): "topics" | "position" {
     return this.siteSettings.fixed_category_positions ? "position" : "topics";
   }
 
-  /** Every input of the load; `categories` reloads an open list when the site gains one. */
+  /**
+   * Every input of the load; `categories` reloads an open list when the site gains one, and
+   * `muted` when the user's mutes change.
+   */
   get loadContext() {
     return {
       parentCategory: this.args.parentCategory,
-      // Only a preloaded site browses `@items`. A lazy response adds categories to the site,
-      // which grows the caller's level, and must not reload the list it just filled.
-      items: this.site.lazy_load_categories ? undefined : this.args.items,
+      muted: this.currentUser?.get("indirectly_muted_category_ids") as
+        | number[]
+        | undefined,
       uncategorized: this.#uncategorized,
       descriptions: this.#descriptions,
       categories: Category.localSearchCategories(),
@@ -160,7 +159,10 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     };
   }
 
-  /** A preloaded level browses the caller's `@items`; searches and lazy levels use the shared search. */
+  /**
+   * Browses and searches through the shared category search. It leaves out what the user mutes
+   * only through a parent, the set the navigation drops from its own category list.
+   */
   @action
   load(
     query: string,
@@ -169,16 +171,10 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (this.args.load) {
       return this.args.load(query, opts);
     }
-    if (!query && !this.site.lazy_load_categories) {
-      return (this.args.items ?? [])
-        .filter(
-          (category) => this.#uncategorized || !category.isUncategorizedCategory
-        )
-        .map((category) => categoryItem(category, this.#descriptions));
-    }
     const search = Category.searchCategories(query, {
       includeAncestors: true,
       includeUncategorized: this.#uncategorized,
+      rejectIndirectlyMuted: true,
       page: opts.page,
       // Browsing keeps to the level; a search at the top spans the site.
       parentCategoryId:

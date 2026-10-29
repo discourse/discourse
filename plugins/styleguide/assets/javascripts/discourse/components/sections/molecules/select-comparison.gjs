@@ -518,7 +518,6 @@ export default class SelectComparison extends Component {
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
             <DSelectCategoryFilter
-              @items={{this.topLevelCategories}}
               @onChange={{this.newCategoryFilter.update}}
               @value={{this.newCategoryFilter.value}}
             />
