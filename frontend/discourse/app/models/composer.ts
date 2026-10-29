@@ -7,6 +7,7 @@ import { isHTMLSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
+import type DialogService from "discourse/dialog-holder/services/dialog";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
@@ -20,15 +21,143 @@ import {
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
-import RestModel from "discourse/models/rest";
+import type Post from "discourse/models/post";
+import RestModel, {
+  type RestModelAttrs,
+  type RestModelClass,
+  type RestModelSaveResult,
+  type RestPayload,
+} from "discourse/models/rest";
 import Site from "discourse/models/site";
-import Topic from "discourse/models/topic";
+import Topic, { type TopicBasicUser } from "discourse/models/topic";
 import User from "discourse/models/user";
+import type AppEventsService from "discourse/services/app-events";
 import { i18n } from "discourse-i18n";
 
-let _customizations = [];
+/** Plugins may supply additional customization names and arbitrary transformed values. */
+export type ComposerCustomizations = Record<
+  string,
+  (composer: Composer) => unknown
+>;
 
-export function registerCustomizationCallback(cb) {
+export type ComposerState =
+  | "closed"
+  | "saving"
+  | "open"
+  | "draft"
+  | "fullscreen";
+export type ComposerTags = (
+  | string
+  | { id?: number; name: string; slug?: string; isNew?: boolean }
+)[];
+export type ComposerReplyToUser = {
+  id?: number;
+  username: string;
+  name?: string | null;
+  avatar_template: string;
+};
+export type ComposerImageSizes = Record<
+  string,
+  { width: number; height: number }
+>;
+/** Both plain plugin metadata and EmberObject metadata are serialized by enumerable key. */
+export type ComposerMetaData = Record<string, unknown> | EmberObject;
+export interface ComposerSaveOptions {
+  imageSizes?: ComposerImageSizes;
+  editReason?: string | null;
+}
+
+/** Runtime-assigned data; plugins augment this interface with their own fields. */
+export interface ComposerFields {
+  action?: string;
+  draftKey?: string;
+  draftSequence?: number;
+  targetRecipients?: string;
+  title?: string | null;
+  tags?: ComposerTags;
+  originalText?: string | null;
+  originalTitle?: string | null;
+  originalTags?: ComposerTags | null;
+  featuredLink?: string | null;
+  metaData?: ComposerMetaData | null;
+  adminOnboardingTopicOption?: string | null;
+  typingTime?: number;
+  composerTotalOpened?: number;
+  composerOpened?: Date | null;
+  loading?: boolean;
+  disableDrafts?: boolean;
+  editConflict?: boolean;
+  editReason?: string | null;
+  stagedPost?: Post | false;
+  createdPost?: Post;
+  draftStatus?: string | null;
+  draftConflictUser?: TopicBasicUser | null;
+  isWarning?: boolean;
+  hasTargetGroups?: boolean;
+  warningsDisabled?: boolean;
+  formTemplateId?: number;
+  composerHeight?: string | number;
+  _hasTopicTemplates?: boolean;
+}
+
+/** Draft restoration and plugins may pass additional serialized keys unchanged. */
+export interface ComposerOpenOptions {
+  action?: string;
+  draftKey?: string;
+  draftSequence?: number | null;
+  composerState?: ComposerState;
+  /** The post being edited or replied to. */
+  post?: Post | null;
+  /** The topic being edited or replied to. */
+  topic?: Topic | null;
+  postId?: number;
+  /** Establishes both reply text and its baseline when replying from a quote. */
+  quote?: string;
+  reply?: string | null;
+  title?: string | null;
+  recipients?: string;
+  /** Deprecated in favor of recipients. */
+  usernames?: string;
+  composerTime?: number;
+  typingTime?: number;
+  whisper?: boolean;
+  noBump?: boolean;
+  /** A site archetype, such as regular or private_message. */
+  archetypeId?: string;
+  metaData?: ComposerMetaData | null;
+  categoryId?: number | null;
+  topicCategoryId?: number | null | false;
+  readOnlyCategoryId?: number | null;
+  destinationCategoryId?: number;
+  tags?: ComposerTags;
+  originalText?: string | null;
+  originalTitle?: string | null;
+  originalTags?: ComposerTags | null;
+  /** These draft keys are not the camelCase baselines read by _open. */
+  original_text?: string | null;
+  original_title?: string | null;
+  original_tags?: ComposerTags | null;
+  adminOnboardingTopicOption?: string | null;
+  reply_to_post_number?: number | null;
+  reply_to_user?: ComposerReplyToUser | null;
+  [key: string]: unknown;
+}
+
+/** TODO(typescript-pending): Archetype field forwarders omit id; remove when Archetype declares its fields. */
+type ComposerArchetype = NonNullable<Site["archetypes"]>[number] & {
+  id: string;
+};
+/** TODO(typescript-pending): TopicDetails field forwarders omit edit permissions; remove when TopicDetails declares them. */
+type ComposerTopicDetails = Topic["details"] & {
+  can_edit?: boolean;
+  can_edit_tags?: boolean;
+};
+
+type TextOptions = { block?: boolean; space?: boolean; new_line?: boolean };
+
+let _customizations: ComposerCustomizations[] = [];
+
+export function registerCustomizationCallback(cb: ComposerCustomizations) {
   _customizations.push(cb);
 }
 
@@ -36,19 +165,19 @@ export function resetComposerCustomizations() {
   _customizations = [];
 }
 
-// The actions the composer can take
-export const CREATE_TOPIC = "createTopic",
-  CREATE_SHARED_DRAFT = "createSharedDraft",
-  EDIT_SHARED_DRAFT = "editSharedDraft",
-  PRIVATE_MESSAGE = "privateMessage",
-  REPLY = "reply",
-  EDIT = "edit",
-  NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
-  NEW_TOPIC_KEY = "new_topic",
-  EDIT_TOPIC_KEY = "topic_",
-  ADD_TRANSLATION = "add_translation";
+/** The actions the composer can take. */
+export const CREATE_TOPIC = "createTopic" as const,
+  CREATE_SHARED_DRAFT = "createSharedDraft" as const,
+  EDIT_SHARED_DRAFT = "editSharedDraft" as const,
+  PRIVATE_MESSAGE = "privateMessage" as const,
+  REPLY = "reply" as const,
+  EDIT = "edit" as const,
+  NEW_PRIVATE_MESSAGE_KEY = "new_private_message" as const,
+  NEW_TOPIC_KEY = "new_topic" as const,
+  EDIT_TOPIC_KEY = "topic_" as const,
+  ADD_TRANSLATION = "add_translation" as const;
 
-function isEdit(action) {
+function isEdit(action: string | undefined) {
   return action === EDIT || action === EDIT_SHARED_DRAFT;
 }
 
@@ -58,7 +187,7 @@ const CLOSED = "closed",
   DRAFT = "draft",
   FULLSCREEN = "fullscreen",
   // When creating, these fields are moved into the post model from the composer model
-  _create_serializer = {
+  _create_serializer: Record<string, string> = {
     raw: "reply",
     title: "title",
     unlist_topic: "unlistTopic",
@@ -78,13 +207,13 @@ const CLOSED = "closed",
     draft_key: "draftKey",
     locale: "locale",
   },
-  _update_serializer = {
+  _update_serializer: Record<string, string> = {
     raw: "reply",
     topic_id: "topic.id",
     original_text: "originalText",
     locale: "locale",
   },
-  _edit_topic_serializer = {
+  _edit_topic_serializer: Record<string, string> = {
     title: "topic.title",
     categoryId: "topic.category.id",
     tags: "topic.tags",
@@ -93,7 +222,7 @@ const CLOSED = "closed",
     original_tags: "originalTags",
     locale: "locale",
   },
-  _draft_serializer = {
+  _draft_serializer: Record<string, string> = {
     reply: "reply",
     action: "action",
     title: "title",
@@ -114,10 +243,10 @@ const CLOSED = "closed",
     reply_to_post_number: "reply_to_post_number",
     reply_to_user: "reply_to_user",
   },
-  _add_draft_fields = {},
+  _add_draft_fields: Record<string, string> = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
 
-export const SAVE_LABELS = {
+export const SAVE_LABELS: Record<string, string> = {
   [EDIT]: "composer.save_edit",
   [REPLY]: "composer.reply",
   [CREATE_TOPIC]: "composer.create_topic",
@@ -127,7 +256,7 @@ export const SAVE_LABELS = {
   [ADD_TRANSLATION]: "composer.translations.save",
 };
 
-export const SAVE_ICONS = {
+export const SAVE_ICONS: Record<string, string> = {
   [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
@@ -136,50 +265,55 @@ export const SAVE_ICONS = {
   [CREATE_SHARED_DRAFT]: "far-clipboard",
 };
 
+/** Declares assigned data without emitting own properties. */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export default interface Composer extends ComposerFields {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class Composer extends RestModel {
   // The status the compose view can have
-  static CLOSED = CLOSED;
-  static SAVING = SAVING;
-  static OPEN = OPEN;
-  static DRAFT = DRAFT;
-  static FULLSCREEN = FULLSCREEN;
+  static CLOSED: typeof CLOSED = CLOSED;
+  static SAVING: typeof SAVING = SAVING;
+  static OPEN: typeof OPEN = OPEN;
+  static DRAFT: typeof DRAFT = DRAFT;
+  static FULLSCREEN: typeof FULLSCREEN = FULLSCREEN;
 
   // The actions the composer can take
-  static CREATE_TOPIC = CREATE_TOPIC;
-  static CREATE_SHARED_DRAFT = CREATE_SHARED_DRAFT;
-  static EDIT_SHARED_DRAFT = EDIT_SHARED_DRAFT;
-  static PRIVATE_MESSAGE = PRIVATE_MESSAGE;
-  static REPLY = REPLY;
-  static EDIT = EDIT;
-  static ADD_TRANSLATION = ADD_TRANSLATION;
+  static CREATE_TOPIC: typeof CREATE_TOPIC = CREATE_TOPIC;
+  static CREATE_SHARED_DRAFT: typeof CREATE_SHARED_DRAFT = CREATE_SHARED_DRAFT;
+  static EDIT_SHARED_DRAFT: typeof EDIT_SHARED_DRAFT = EDIT_SHARED_DRAFT;
+  static PRIVATE_MESSAGE: typeof PRIVATE_MESSAGE = PRIVATE_MESSAGE;
+  static REPLY: typeof REPLY = REPLY;
+  static EDIT: typeof EDIT = EDIT;
+  static ADD_TRANSLATION: typeof ADD_TRANSLATION = ADD_TRANSLATION;
 
   // Draft key
-  static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
-  static NEW_TOPIC_KEY = NEW_TOPIC_KEY;
-  static EDIT_TOPIC_KEY = EDIT_TOPIC_KEY;
+  static NEW_PRIVATE_MESSAGE_KEY: typeof NEW_PRIVATE_MESSAGE_KEY =
+    NEW_PRIVATE_MESSAGE_KEY;
+  static NEW_TOPIC_KEY: typeof NEW_TOPIC_KEY = NEW_TOPIC_KEY;
+  static EDIT_TOPIC_KEY: typeof EDIT_TOPIC_KEY = EDIT_TOPIC_KEY;
 
-  // TODO: Replace with injection
-  /**
-   * @template {import("discourse/models/rest").RestModelClass} C
-   * @this {C}
-   * @param {import("discourse/models/rest").RestModelAttrs<InstanceType<C>>} [args]
-   * @returns {InstanceType<C>}
-   */
-  static create(args) {
+  /** TODO: Replace with injection. */
+  static override create<C extends RestModelClass>(
+    this: C,
+    args?: RestModelAttrs<InstanceType<C>>
+  ): InstanceType<C>;
+
+  static override create(args?: RestPayload) {
     args = args || {};
     args.user = args.user || User.current();
     args.site = args.site || Site.current();
     return super.create(args);
   }
 
-  static serializeToTopic(fieldName, property) {
+  static serializeToTopic(fieldName: string, property?: string) {
     if (!property) {
       property = fieldName;
     }
     _edit_topic_serializer[fieldName] = property;
   }
 
-  static serializeOnCreate(fieldName, property) {
+  static serializeOnCreate(fieldName: string, property?: string) {
     if (!property) {
       property = fieldName;
     }
@@ -190,7 +324,7 @@ export default class Composer extends RestModel {
     return Object.keys(_create_serializer);
   }
 
-  static serializeOnUpdate(fieldName, property) {
+  static serializeOnUpdate(fieldName: string, property?: string) {
     if (!property) {
       property = fieldName;
     }
@@ -201,7 +335,7 @@ export default class Composer extends RestModel {
     return Object.keys(_update_serializer);
   }
 
-  static serializeToDraft(fieldName, property) {
+  static serializeToDraft(fieldName: string, property?: string) {
     if (!property) {
       property = fieldName;
     }
@@ -213,52 +347,55 @@ export default class Composer extends RestModel {
     return Object.keys(_draft_serializer);
   }
 
-  static isEditDraft(draft) {
+  static isEditDraft(draft?: { action?: string; postId?: number } | null) {
     return isEdit(draft?.action) && !!draft.postId;
   }
 
-  @service dialog;
-  @service siteSettings;
-  @service currentUser;
+  @service dialog!: DialogService;
+  @service declare siteSettings: RestModel["siteSettings"];
+  @service currentUser!: User | null;
 
-  @tracked topic;
-  @tracked post;
-  @tracked reply;
-  @tracked whisper;
+  @tracked topic: Topic | null | undefined;
+  @tracked post?: Post | null;
 
-  /** @type {number | null} */
-  @tracked reply_to_post_number = null;
+  @tracked reply: string | null | undefined;
+  @tracked whisper: boolean | undefined;
+  @tracked reply_to_post_number: number | null = null;
+  @tracked reply_to_user: ComposerReplyToUser | null = null;
 
-  /** @type {{ id?: number, username: string, name?: string | null, avatar_template: string } | null} */
-  @tracked reply_to_user = null;
+  /** Reads injected settings during construction, before create attributes are assigned. */
   @tracked
-  locale = this.siteSettings.content_localization_enabled
+  locale: string | null | undefined = (this as Composer).siteSettings
+    .content_localization_enabled
     ? this.post?.locale
     : null;
 
   @tracked unlistTopic = false;
-  noBump = false;
+  declare appEvents: AppEventsService;
+
+  /** TODO(typescript-pending): MessageBusService.create returns any; use its clientId contract when the factory is typed. */
+  declare messageBus: { clientId: string };
+  noBump: boolean | undefined = false;
   draftSaving = false;
   draftForceSave = false;
   showFullScreenExitPrompt = false;
 
-  /** @type {number | null} */
-  @tracked _categoryId = null;
+  @tracked _categoryId: number | null = null;
 
-  @tracked _archetypesOverride;
+  @tracked _archetypesOverride: ComposerArchetype[] | undefined;
 
-  @tracked _user;
+  @tracked _user!: User | null;
 
-  @tracked _composeState;
+  @tracked _composeState: ComposerState | undefined;
 
-  @tracked _archetypeId;
+  @tracked _archetypeId: string | undefined;
 
   @dependentKeyCompat
   get composeState() {
     return this._composeState;
   }
 
-  set composeState(value) {
+  set composeState(value: ComposerState | undefined) {
     if (value === this._composeState) {
       return;
     }
@@ -271,7 +408,7 @@ export default class Composer extends RestModel {
     return this._archetypeId;
   }
 
-  set archetypeId(value) {
+  set archetypeId(value: string | undefined) {
     if (value === this._archetypeId) {
       return;
     }
@@ -286,31 +423,29 @@ export default class Composer extends RestModel {
     });
   }
 
-  set user(value) {
+  set user(value: User | null) {
     this._user = value;
   }
 
   @computed("site.archetypes")
-  get archetypes() {
+  get archetypes(): ComposerArchetype[] | undefined {
     if (this._archetypesOverride !== undefined) {
       return this._archetypesOverride;
     }
-    return this.site?.archetypes;
+    return this.site?.archetypes as ComposerArchetype[] | undefined;
   }
 
-  set archetypes(value) {
+  set archetypes(value: ComposerArchetype[] | undefined) {
     this._archetypesOverride = value;
   }
 
   @dependentKeyCompat
-  get categoryId() {
+  get categoryId(): number | null {
     return this._categoryId;
   }
 
-  // We wrap categoryId this way so we can fire `applyTopicTemplate` with
-  // the previous value as well as the new value
-  /** @param {number | null | undefined} categoryId */
-  set categoryId(categoryId) {
+  /** Applies topic templates with both the previous and new category. */
+  set categoryId(categoryId: number | null | undefined) {
     const oldCategoryId = this._categoryId;
 
     if (this.privateMessage) {
@@ -318,7 +453,8 @@ export default class Composer extends RestModel {
     } else if (isEmpty(categoryId)) {
       // Check if there is a default composer category to set
       const defaultComposerCategoryId = parseInt(
-        this.siteSettings.default_composer_category,
+        // TODO(typescript-pending): settings values remain unknown until SiteSettingsService types its factory result.
+        this.siteSettings.default_composer_category as string,
         10
       );
       categoryId =
@@ -326,7 +462,8 @@ export default class Composer extends RestModel {
           ? defaultComposerCategoryId
           : null;
     }
-    this._categoryId = categoryId;
+    // isEmpty handles undefined at runtime; Ember's predicate does not narrow its type.
+    this._categoryId = categoryId!;
 
     if (oldCategoryId !== categoryId) {
       const applyTemplate = () => {
@@ -335,7 +472,7 @@ export default class Composer extends RestModel {
       };
 
       if (this.site.lazy_load_categories) {
-        Category.asyncFindById(categoryId).then(applyTemplate);
+        Category.asyncFindById(categoryId!).then(applyTemplate);
       } else {
         applyTemplate();
       }
@@ -469,7 +606,10 @@ export default class Composer extends RestModel {
 
   @computed("editingPost", "topic.details.can_edit")
   get disableTitleInput() {
-    return this.editingPost && !this.topic?.details?.can_edit;
+    return (
+      this.editingPost &&
+      !(this.topic?.details as ComposerTopicDetails | undefined)?.can_edit
+    );
   }
 
   @computed("privateMessage", "archetype.hasOptions")
@@ -494,14 +634,16 @@ export default class Composer extends RestModel {
     const oldOpen = this.composerOpened;
 
     if (oldOpen) {
-      total += new Date() - oldOpen;
+      // Date subtraction uses numeric coercion without changing the stored Date.
+      total +=
+        (new Date() as unknown as number) - (oldOpen as unknown as number);
     }
 
     return total;
   }
 
-  get composerVersion() {
-    if (this.currentUser.useRichEditor) {
+  get composerVersion(): 1 | 2 {
+    if (this.currentUser!.useRichEditor) {
       return 2;
     }
 
@@ -510,7 +652,7 @@ export default class Composer extends RestModel {
 
   @computed("archetypeId")
   get archetype() {
-    return this.archetypes.find(
+    return this.archetypes!.find(
       (archetype) => archetype.id === this.archetypeId
     );
   }
@@ -538,7 +680,7 @@ export default class Composer extends RestModel {
     if (
       !this.categoryId &&
       categoryIds &&
-      (categoryIds.includes(this.site.uncategorized_category_id) ||
+      (categoryIds.includes(this.site.uncategorized_category_id!) ||
         !this.siteSettings.allow_uncategorized_topics)
     ) {
       return true;
@@ -546,7 +688,7 @@ export default class Composer extends RestModel {
     return (
       categoryIds === undefined ||
       !categoryIds.length ||
-      categoryIds.includes(this.categoryId)
+      categoryIds.includes(this.categoryId!)
     );
   }
 
@@ -570,17 +712,14 @@ export default class Composer extends RestModel {
 
   @computed("action", "post", "topic", "topic.title", "reply_to_user")
   get replyOptions() {
-    /**
-     * @type {{
-     *   userLink: { href: string, anchor: string } | null,
-     *   topicLink: { href: string, anchor: string } | null,
-     *   postLink: { href: string, anchor: string } | null,
-     *   userAvatar: string | null,
-     *   originalUser: { username: string, avatar: string } | null,
-     *   label?: string,
-     * }}
-     */
-    const options = {
+    const options: {
+      userLink: { href: string; anchor: string } | null;
+      topicLink: { href: string; anchor: string } | null;
+      postLink: { href: string; anchor: string } | null;
+      userAvatar: string | null;
+      originalUser: { username: string; avatar: string } | null;
+      label?: string;
+    } = {
       userLink: null,
       topicLink: null,
       postLink: null,
@@ -644,7 +783,10 @@ export default class Composer extends RestModel {
   }
 
   @computed("targetRecipients")
-  get targetRecipientsArray() {
+  get targetRecipientsArray(): {
+    type: "group" | "email" | "user";
+    name: string;
+  }[] {
     const recipients = this.targetRecipients
       ? this.targetRecipients.split(",")
       : [];
@@ -661,6 +803,7 @@ export default class Composer extends RestModel {
     });
   }
 
+  /** The PM branch preserves an absent or empty recipients value. */
   @computed(
     "loading",
     "canEditTitle",
@@ -709,7 +852,7 @@ export default class Composer extends RestModel {
       // user should modify topic template
       const category = this.category;
       if (category && category.topic_template) {
-        if (this.reply.trim() === category.topic_template.trim()) {
+        if (this.reply!.trim() === category.topic_template.trim()) {
           this.dialog.alert(i18n("composer.error.topic_template_not_modified"));
           return true;
         }
@@ -737,13 +880,15 @@ export default class Composer extends RestModel {
 
   @computed("minimumTitleLength", "titleLength", "post.static_doc")
   get titleLengthValid() {
-    if (this.user.admin && this.post?.static_doc && this.titleLength > 0) {
+    if (this.user!.admin && this.post?.static_doc && this.titleLength > 0) {
       return true;
     }
     if (this.titleLength < this.minimumTitleLength) {
       return false;
     }
-    return this.titleLength <= this.siteSettings.max_topic_title_length;
+    return (
+      this.titleLength <= (this.siteSettings.max_topic_title_length as number)
+    );
   }
 
   @computed("metaData")
@@ -756,12 +901,13 @@ export default class Composer extends RestModel {
     return this.minimumTitleLength - this.titleLength;
   }
 
+  /** TODO(typescript-pending): numeric settings casts can go when SiteSettingsService types its factory result. */
   @computed("privateMessage")
   get minimumTitleLength() {
     if (this.privateMessage) {
-      return this.siteSettings.min_personal_message_title_length;
+      return this.siteSettings.min_personal_message_title_length as number;
     } else {
-      return this.siteSettings.min_topic_title_length;
+      return this.siteSettings.min_topic_title_length as number;
     }
   }
 
@@ -783,12 +929,12 @@ export default class Composer extends RestModel {
     if (this.topic?.pm_with_non_human_user) {
       length = 1;
     } else if (this.privateMessage) {
-      length = this.siteSettings.min_personal_message_post_length;
+      length = this.siteSettings.min_personal_message_post_length as number;
     } else if (this.topicFirstPost) {
       // first post (topic body)
-      length = this.siteSettings.min_first_post_length;
+      length = this.siteSettings.min_first_post_length as number;
     } else {
-      length = this.siteSettings.min_post_length;
+      length = this.siteSettings.min_post_length as number;
     }
 
     return applyValueTransformer("composer-minimum-post-length", length, {
@@ -925,7 +1071,11 @@ export default class Composer extends RestModel {
     } else {
       if (oldOpen) {
         const oldTotal = this.composerTotalOpened || 0;
-        this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
+        this.set(
+          "composerTotalOpened",
+          oldTotal +
+            ((new Date() as unknown as number) - (oldOpen as unknown as number))
+        );
       }
       this.set("composerOpened", null);
       elem.classList.remove("composer-open");
@@ -936,7 +1086,7 @@ export default class Composer extends RestModel {
   typing() {
     throttle(
       this,
-      function () {
+      function (this: Composer) {
         const typingTime = this.typingTime || 0;
         this.set("typingTime", typingTime + 100);
       },
@@ -945,7 +1095,7 @@ export default class Composer extends RestModel {
     );
   }
 
-  appendText(text, position, opts) {
+  appendText(text: string, position?: number | null, opts?: TextOptions) {
     const reply = this.reply || "";
     position = typeof position === "number" ? position : reply.length;
 
@@ -995,7 +1145,7 @@ export default class Composer extends RestModel {
     return before.length + text.length;
   }
 
-  prependText(text, opts) {
+  prependText(text: string, opts?: TextOptions) {
     const reply = this.reply || "";
 
     if (opts && opts.new_line && reply.length > 0) {
@@ -1005,7 +1155,10 @@ export default class Composer extends RestModel {
     this.set("reply", text + reply);
   }
 
-  applyTopicTemplate(oldCategoryId, categoryId) {
+  applyTopicTemplate(
+    oldCategoryId: number | null | undefined,
+    categoryId: number | null | undefined
+  ) {
     applyBehaviorTransformer(
       "composer-apply-topic-template",
       () => {
@@ -1037,31 +1190,8 @@ export default class Composer extends RestModel {
     );
   }
 
-  /**
-   Open a composer
-
-   @method open
-   @param {Object} opts
-   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
-   @param {String} opts.draftKey
-   @param {String} opts.draftSequence
-   @param {Post} [opts.post] The post we're replying to, if present
-   @param {Topic} [opts.topic] The topic we're replying to, if present
-   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-   @param {String} [opts.reply]
-   @param {String} [opts.recipients]
-   @param {Number} [opts.composerTime]
-   @param {Number} [opts.typingTime]
-   @param {Boolean} [opts.whisper]
-   @param {Boolean} [opts.noBump]
-   @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
-   @param {Record<string, unknown>} [opts.metaData]
-   @param {Number} [opts.categoryId]
-   @param {Number} [opts.postId]
-   @param {Number} [opts.destinationCategoryId]
-   @param {String} [opts.title]
-   **/
-  open(opts) {
+  /** Opens a composer; plugins may override this method or transform its behavior. */
+  open(opts?: ComposerOpenOptions | null) {
     if (!opts) {
       opts = {};
     }
@@ -1072,12 +1202,18 @@ export default class Composer extends RestModel {
     });
   }
 
-  // Overwrite to implement custom logic
+  /** Override to run asynchronous logic before saving. */
   beforeSave() {
     return Promise.resolve();
   }
 
-  save(opts) {
+  /** Keeps the override assignable to RestModel while exposing the composer save result. */
+  save(this: never, ...args: never[]): never;
+  save(
+    opts: ComposerSaveOptions
+  ): Promise<RestModelSaveResult<Post> | undefined>;
+
+  save(opts: ComposerSaveOptions) {
     return this.beforeSave().then(() => {
       if (!this.cantSubmitPost) {
         // change category may result in some effect for topic featured link
@@ -1111,25 +1247,28 @@ export default class Composer extends RestModel {
     });
   }
 
-  setReplyTo(postNumber, user) {
+  setReplyTo(
+    postNumber: number | null | undefined,
+    user: ComposerReplyToUser | null | undefined
+  ) {
     this.setProperties({
       reply_to_post_number: postNumber ?? null,
       reply_to_user: postNumber ? (user ?? null) : null,
     });
   }
 
-  editPost(opts) {
+  editPost(opts: ComposerSaveOptions) {
     this.set("composeState", SAVING);
 
-    const post = this.post;
+    const post = this.post!;
     const oldCooked = post.cooked;
-    let promise = Promise.resolve();
+    let promise: Promise<unknown> = Promise.resolve();
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {
-      const topic = this.topic;
+      const topic = this.topic!;
 
-      if (topic.details.can_edit) {
+      if ((topic.details as ComposerTopicDetails).can_edit) {
         const topicProps = this.getProperties(
           Object.keys(_edit_topic_serializer)
         );
@@ -1149,17 +1288,20 @@ export default class Composer extends RestModel {
         if (this.action === EDIT_SHARED_DRAFT) {
           const destinationCategoryId = topicProps.categoryId;
           promise = promise.then(() =>
-            topic.updateDestinationCategory(destinationCategoryId)
+            topic.updateDestinationCategory(
+              destinationCategoryId as number | null
+            )
           );
           topicProps.categoryId = topic.get("category.id");
         }
         promise = promise.then(() => Topic.update(topic, topicProps));
-      } else if (topic.details.can_edit_tags) {
+      } else if ((topic.details as ComposerTopicDetails).can_edit_tags) {
         promise = promise.then(() => topic.updateTags(this.tags));
       }
     }
 
-    let props = {
+    // eslint-disable-next-line prefer-const
+    let props: RestPayload = {
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
     };
@@ -1179,13 +1321,15 @@ export default class Composer extends RestModel {
       delete props.original_tags;
     }
 
-    const rollback = throwAjaxError((error) => {
-      post.setProperties({ cooked: oldCooked });
-      this.set("composeState", OPEN);
-      if (error.jqXHR && error.jqXHR.status === 409) {
-        this.set("editConflict", true);
+    const rollback = throwAjaxError(
+      (error: { jqXHR?: { status?: number } }) => {
+        post.setProperties({ cooked: oldCooked });
+        this.set("composeState", OPEN);
+        if (error.jqXHR && error.jqXHR.status === 409) {
+          this.set("editConflict", true);
+        }
       }
-    });
+    );
 
     const cooked = this.getCookedHtml();
     post.setProperties({ cooked, staged: true });
@@ -1211,7 +1355,13 @@ export default class Composer extends RestModel {
       });
   }
 
-  serialize(serializer, dest) {
+  serialize(
+    serializer: Record<string, string>,
+    dest?: RestPayload
+  ): RestPayload;
+
+  serialize<T extends object>(serializer: Record<string, string>, dest: T): T;
+  serialize(serializer: Record<string, string>, dest?: object) {
     dest = dest || {};
     Object.keys(serializer).forEach((f) => {
       let val = this.get(serializer[f]);
@@ -1225,16 +1375,19 @@ export default class Composer extends RestModel {
     return dest;
   }
 
-  async createPost(opts) {
+  async createPost(opts: ComposerSaveOptions) {
     if (CREATE_TOPIC === this.action || PRIVATE_MESSAGE === this.action) {
       this.set("topic", null);
     }
 
     const post = this.post;
     const topic = this.topic;
-    const user = this.user;
-    const postStream = this.get("topic.postStream");
-    const postTypes = this.site.post_types;
+    // Saving requires an authenticated author, although a closed composer may have none.
+    const user = this.user!;
+    const postStream = this.get("topic.postStream") as
+      | Topic["postStream"]
+      | undefined;
+    const postTypes = this.site.post_types!;
     const postType = this.whisper ? postTypes.whisper : postTypes.regular;
 
     // Build the post object
@@ -1301,7 +1454,11 @@ export default class Composer extends RestModel {
     });
 
     try {
-      const result = await createdPost.save();
+      // TODO(typescript-pending): PostAdapter supplies these save members; remove when the adapter's result is typed.
+      const result = (await createdPost.save()) as RestModelSaveResult<Post> & {
+        responseJson: RestPayload & { action: string; post?: RestPayload };
+        target: Post;
+      };
       let saving = true;
 
       if (result.responseJson.action === "enqueued") {
@@ -1319,7 +1476,7 @@ export default class Composer extends RestModel {
       if (topic) {
         // It's no longer a new post
         topic.set("draft_sequence", result.target.draft_sequence);
-        postStream.commitPost(createdPost);
+        postStream!.commitPost(createdPost);
         addedToStream = true;
       } else {
         // We created a new topic, let's show it.
@@ -1327,7 +1484,9 @@ export default class Composer extends RestModel {
         saving = false;
 
         // Update topic_count for the category
-        const postCategoryId = parseInt(createdPost.category, 10) || 1;
+        // The serializer stores the category ID here; parseInt performs the existing numeric coercion.
+        const postCategoryId =
+          parseInt(createdPost.category as unknown as string, 10) || 1;
         const category = Category.findById(postCategoryId);
 
         category?.incrementProperty("topic_count");
@@ -1353,7 +1512,7 @@ export default class Composer extends RestModel {
       if (postStream) {
         postStream.undoPost(createdPost);
 
-        post?.set("reply_count", post.reply_count - 1);
+        post?.set("reply_count", post.reply_count! - 1);
       }
 
       next(() => this.set("composeState", OPEN));
@@ -1389,80 +1548,100 @@ export default class Composer extends RestModel {
     this.set("draftSaving", true);
 
     const draftSequence = this.draftSequence;
-    this.set("draftSequence", this.draftSequence + 1);
+    this.set("draftSequence", this.draftSequence! + 1);
 
-    return Draft.save(
-      this.draftKey,
-      draftSequence,
-      this.serializeDraftData(),
-      this.messageBus.clientId,
-      { forceSave: this.draftForceSave }
-    )
-      .then((result) => {
-        if ("draft_sequence" in result) {
-          this.set("draftSequence", result.draft_sequence);
-        }
-        if (result.conflict_user) {
-          this.setProperties({
-            draftStatus: i18n("composer.edit_conflict"),
-            draftConflictUser: result.conflict_user,
-          });
-        } else {
-          this.setProperties({
-            draftStatus: null,
-            draftConflictUser: null,
-            draftForceSave: false,
-          });
-        }
-
-        return result;
-      })
-      .catch((e) => {
-        let draftStatus;
-        const xhr = e && e.jqXHR;
-
-        if (
-          xhr &&
-          xhr.status === 409 &&
-          xhr.responseJSON &&
-          xhr.responseJSON.errors &&
-          xhr.responseJSON.errors.length
-        ) {
-          const json = e.jqXHR.responseJSON;
-          draftStatus = json.errors[0];
-
-          if (json.extras?.description) {
-            this.dialog.alert({
-              message: json.extras.description,
-              buttons: [
-                {
-                  label: i18n("composer.reload"),
-                  class: "btn-primary",
-                  action: () => window.location.reload(),
-                },
-                {
-                  label: i18n("composer.ignore"),
-                  class: "btn-default",
-                  action: () => this.set("draftForceSave", true),
-                },
-              ],
+    return (
+      Draft.save(
+        this.draftKey!,
+        draftSequence!,
+        this.serializeDraftData(),
+        this.messageBus.clientId,
+        { forceSave: this.draftForceSave }
+      )
+        .then((result) => {
+          if ("draft_sequence" in result) {
+            this.set("draftSequence", result.draft_sequence);
+          }
+          if (result.conflict_user) {
+            this.setProperties({
+              draftStatus: i18n("composer.edit_conflict"),
+              draftConflictUser: result.conflict_user,
+            });
+          } else {
+            this.setProperties({
+              draftStatus: null,
+              draftConflictUser: null,
+              draftForceSave: false,
             });
           }
-        }
-        this.setProperties({
-          draftStatus: draftStatus || i18n("composer.drafts_offline"),
-          draftConflictUser: null,
-        });
-      })
-      .finally(() => {
-        this.set("draftSaving", false);
-      });
+
+          return result;
+        })
+        // TODO(typescript-pending): ajax rejection values have no typed envelope; use its error contract when ajax is typed.
+        .catch(
+          (
+            e:
+              | {
+                  jqXHR?: {
+                    status?: number;
+                    responseJSON?: {
+                      errors?: string[];
+                      extras?: { description?: string };
+                    };
+                  };
+                }
+              | null
+              | undefined
+          ) => {
+            let draftStatus;
+            const xhr = e && e.jqXHR;
+
+            if (
+              xhr &&
+              xhr.status === 409 &&
+              xhr.responseJSON &&
+              xhr.responseJSON.errors &&
+              xhr.responseJSON.errors.length
+            ) {
+              const json = e!.jqXHR!.responseJSON!;
+              draftStatus = json.errors![0];
+
+              if (json.extras?.description) {
+                this.dialog.alert({
+                  message: json.extras.description,
+                  buttons: [
+                    {
+                      label: i18n("composer.reload"),
+                      class: "btn-primary",
+                      action: () => window.location.reload(),
+                    },
+                    {
+                      label: i18n("composer.ignore"),
+                      class: "btn-default",
+                      action: () => this.set("draftForceSave", true),
+                    },
+                  ],
+                });
+              }
+            }
+            this.setProperties({
+              draftStatus: draftStatus || i18n("composer.drafts_offline"),
+              draftConflictUser: null,
+            });
+          }
+        )
+        .finally(() => {
+          this.set("draftSaving", false);
+        })
+    );
   }
 
-  customizationFor(type) {
+  customizationFor(type: string) {
     for (let i = 0; i < _customizations.length; i++) {
+      // eslint-disable-next-line prefer-const
       let cb = _customizations[i][type];
       if (cb) {
+        // eslint-disable-next-line prefer-const
         let result = cb(this);
         if (result) {
           return result;
@@ -1476,8 +1655,8 @@ export default class Composer extends RestModel {
     this.set("archetypeId", this.site.default_archetype);
   }
 
-  _open(opts) {
-    let promise = Promise.resolve();
+  _open(opts: ComposerOpenOptions) {
+    let promise: Promise<unknown> = Promise.resolve();
 
     this.set("loading", true);
 
@@ -1528,7 +1707,7 @@ export default class Composer extends RestModel {
       this.setProperties({
         post: opts.post,
         whisper:
-          opts.whisper ?? opts.post.post_type === this.site.post_types.whisper,
+          opts.whisper ?? opts.post.post_type === this.site.post_types!.whisper,
       });
 
       if (!this.topic) {
@@ -1538,9 +1717,9 @@ export default class Composer extends RestModel {
           // handles the edge cases where the topic model is not loaded in the post model and the store does not have a
           // topic for the post, e.g., make a post then edit right away, edit a post outside the post stream, etc.
           promise = promise.then(async () => {
-            const data = await Topic.find(opts.post.topic_id, {});
+            const data = await Topic.find(opts.post!.topic_id!, {});
             const topic = this.store.createRecord("topic", data);
-            this.post.set("topic", topic);
+            this.post!.set("topic", topic);
             this.set("topic", topic);
           });
         }
@@ -1588,7 +1767,7 @@ export default class Composer extends RestModel {
     if (isEdit(opts.action) && this.post) {
       const topicProps = this.serialize(_edit_topic_serializer);
       topicProps.loading = true;
-      topicProps.tags = this.topic.tags;
+      topicProps.tags = this.topic!.tags;
 
       // When editing a shared draft, use its category
       if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {
@@ -1597,7 +1776,8 @@ export default class Composer extends RestModel {
       this.setProperties(topicProps);
 
       promise = promise.then(async () => {
-        const post = await this.store.find("post", opts.post.id);
+        // Legacy postId loading does not populate opts.post; preserve that edit-path assumption.
+        const post = await this.store.find("post", opts.post!.id);
         // When a draft is being restored, `opts` already carries the
         // composer's saved `reply_to_*` state (see `_draft_serializer`).
         // Prefer those values so pending reply-target changes survive a
@@ -1628,14 +1808,14 @@ export default class Composer extends RestModel {
           post,
           reply: post.raw,
           originalText: post.raw,
-          originalTitle: this.topic.title,
+          originalTitle: this.topic!.title,
           reply_to_post_number: replyToPostNumber,
           reply_to_user: replyToUser,
         });
 
         if (post.post_number === 1 && this.canEditTitle) {
           this.setProperties({
-            originalTags: this.topic.tags,
+            originalTags: this.topic!.tags,
           });
         }
 
