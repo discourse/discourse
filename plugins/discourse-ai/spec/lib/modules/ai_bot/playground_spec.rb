@@ -1390,7 +1390,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "preserves the conversation model for a per-turn legacy model mention" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       agent.update!(allow_topic_mentions: true)
       topic = Fabricate(:topic, user: admin)
