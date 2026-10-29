@@ -757,12 +757,13 @@ for the engine to window, so typing never waits for the input delay; a lazy site
 are special rows. Held ids resolve through `Category.asyncFindByIds`, and a family's footer walks
 the tree through `Category.asyncFindDescendants`.
 
-The drop browses its caller's `@items` on a preloaded site, so the page decides what a level
-shows. Searches, and every request on a lazy site, go through `Category.searchCategories`: a
-search spans the whole site at the top level, or the parent's direct children below it, and
-ranks the server's way. A lazy level browses in the order a preloaded site lists it (by topic
-count, or by position when `fixed_category_positions` is on) and pages as the list scrolls, so
-every category is reachable.
+The drop browses and searches through `Category.searchCategories` on every site. A search spans
+the whole site at the top level, or the parent's direct children below it, and ranks the
+server's way. Browsing lists a level in the site's order (by topic count, or by position when
+`fixed_category_positions` is on), and a lazy level pages as the list scrolls, so every category
+is reachable. Both leave out the categories the user mutes only through a parent
+(`rejectIndirectlyMuted`), the set the navigation drops from its own list; a category muted
+directly stays.
 
 Until cleanup, `DSelectCategory` defaults `@legacyKind` to `category-chooser` (single) or
 `category-selector` (multiple), and the filter to `category-drop`. Call sites that replaced other

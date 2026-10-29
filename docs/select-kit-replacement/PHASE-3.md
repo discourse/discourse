@@ -60,6 +60,13 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       no longer match on preloaded sites. Lazy levels browse in the preloaded order and page
       as the list scrolls; the 15-row cap, its "+ N more" count and the "view all" link are
       gone.
+    - ☑ The breadcrumb drop leaves out indirectly muted categories when browsing and searching,
+      on every site (2026-10-29), and no longer takes `@items`. The server filters with
+      `CategoryUser.indirectly_muted_condition`, which checks each row's own level and its
+      parent's, so its cost follows the rows it filters: about 3 to 24 ms at 50k categories.
+    - ☐ `CurrentUserSerializer#indirectly_muted_category_ids` runs the full mute query on each
+      serialization: 260 to 330 ms at 50k categories with a seeded `category_users` table. It
+      could use the per-row condition, or be cached.
     - ☐ `dCategoryBadge` with `ancestors` and `hasSubcategories` draws "+ Subcategories" after
       every ancestor (`ui-kit/helpers/d-category-link.js`), as select-kit's `category-row` did.
       The family footer draws without ancestors, so it is not affected.

@@ -348,7 +348,7 @@ customization ports are done.
   | `.select-kit-row[data-value="all-categories"]`, `[data-value="no-categories"]` | `.d-select__option` with the same `data-value` |
   | `.plus-subcategories` | The same class, inside the family footer `.d-select__option.--action-footer[data-value^="category-descendants-"]` |
   | `.selected-choice-category` | `.d-select__chip` |
-  | `.category-drop-footer` | The same class, inside `.d-select__footer`; the breadcrumbs render it |
+  | `.category-drop-footer` | No equivalent: the new drop has no footer |
 
 ## Behaviour changes to compare by hand
 
@@ -370,6 +370,10 @@ Open items need a decision after manual testing; the rest are intended but still
   most five results in local mode and also matches slugs; the new filter lists every match through
   the shared search, ranked the server's way, on both kinds of site. A category whose slug alone
   matched is no longer offered.
+- [ ] **The breadcrumb drop leaves out muted subcategories everywhere.** Both drops hid a
+  category muted only through its parent while browsing a preloaded site, because the navigation
+  filtered the list it passed. The legacy drop still listed it in searches and on lazy sites; the
+  new one leaves it out everywhere. A category muted directly stays listed in both.
 - [ ] **Lazy loading pages instead of stopping.** The legacy chooser and selector make one search
   request and show its first 25 rows; the new ones keep paging as you scroll. The legacy
   breadcrumb drop showed 15 rows with "+N more · view all" for a long level; the new one pages
@@ -413,9 +417,9 @@ keep emitting category records, and their blocked categories become `@exclude` i
 list's own held categories. Empty-value text is a translated
 `@placeholder`; a field keeps a selectable none row only where the legacy chooser inserted one.
 
-Breadcrumb levels use `DSelectCategoryFilter` with the page's per-level category list. The caller
-routes category and shortcut picks, keeps the tag and the editing tab, and its footer links close
-the list. Each new-control level is keyed by its parent id, because lazy loading can replace the
+Breadcrumb levels use `DSelectCategoryFilter`, which reads each level through the shared search;
+the `@categories` a page passes to `BreadCrumbs` only shapes the legacy drop. The caller routes
+category and shortcut picks, and keeps the tag and the editing tab. Each new-control level is keyed by its parent id, because lazy loading can replace the
 records backing a level while its list is open.
 
 The parent-category field drops its caret icon options and the report category filter drops
