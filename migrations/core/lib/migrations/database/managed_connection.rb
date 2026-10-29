@@ -28,7 +28,7 @@ module Migrations
         unless %i[forbid discard close_reopen].include?(@policy)
           raise ArgumentError, "Unknown fork policy: #{@policy.inspect}"
         end
-        @quiesce = @policy == :close_reopen || (driver.respond_to?(:quiesce?) && driver.quiesce?)
+        @quiesce = @policy == :close_reopen
         @pid = Process.pid
         @mutex = Mutex.new
         @depth = 0
@@ -106,6 +106,24 @@ module Migrations
         @depth = 0
       end
 
+      # Streams reserve the protocol once, including between calls to #next.
+      def checkout(owner)
+        @mutex.synchronize do
+          check_owner!
+          raise UnavailableError, "Database connection is #{@state}" unless @state == :open
+          if @depth > 0 && @lease_owner != owner
+            raise BusyError, "Database connection already has an active operation"
+          end
+          @lease_owner = owner
+          @depth += 1
+          @native
+        end
+      end
+
+      def checkin
+        @mutex.synchronize { @depth -= 1 }
+      end
+
       private
 
       def open!
@@ -126,20 +144,11 @@ module Migrations
       end
 
       def with_lease
-        owner = @quiesce ? Thread.current : Fiber.current
-        @mutex.synchronize do
-          check_owner!
-          raise UnavailableError, "Database connection is #{@state}" unless @state == :open
-          if @depth > 0 && @lease_owner != owner
-            raise BusyError, "Database connection already has an active operation"
-          end
-          @lease_owner = owner
-          @depth += 1
-        end
+        native = checkout(@quiesce ? Thread.current : Fiber.current)
         begin
-          yield @native
+          yield native
         ensure
-          @mutex.synchronize { @depth -= 1 }
+          checkin
         end
       end
 

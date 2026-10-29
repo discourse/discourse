@@ -6,6 +6,15 @@ module Migrations
       TRANSACTION_BATCH_SIZE = 1000
       PREPARED_STATEMENT_CACHE_SIZE = 32
 
+      # Only the parent's reopenable database can be suspended during an insert.
+      # Worker shards forbid forks, so their hot path needs no per-row dispatch.
+      module ReopenableInserts
+        def insert(sql, parameters = [])
+          @connection.with { super }
+        end
+      end
+      private_constant :ReopenableInserts
+
       def self.open_database(**options)
         new(**options)
       end
@@ -18,6 +27,7 @@ module Migrations
         transaction_batch_size: TRANSACTION_BATCH_SIZE,
         reopenable: false
       )
+        extend ReopenableInserts if reopenable
         @path = File.expand_path(path, Migrations.root_path)
         @transaction_batch_size = transaction_batch_size
         @statement_counter = 0
@@ -51,12 +61,10 @@ module Migrations
       end
 
       def insert(sql, parameters = [])
-        @connection.with do |db|
-          begin_transaction if @statement_counter == 0
-          stmt = @statement_cache.getset(sql) { db.prepare(sql) }
-          stmt.execute(parameters)
-          commit_transaction if (@statement_counter += 1) >= @transaction_batch_size
-        end
+        begin_transaction if @statement_counter == 0
+        stmt = @statement_cache.getset(sql) { @connection.with { |db| db.prepare(sql) } }
+        stmt.execute(parameters)
+        commit_transaction if (@statement_counter += 1) >= @transaction_batch_size
         nil
       end
 

@@ -28,6 +28,28 @@ RSpec.describe Migrations::Importer::DiscourseDB, :postgres do
     expect(database.query_array("SELECT 42").to_a).to eq([42])
   end
 
+  it "streams SQLite rows into COPY while writing mappings between batches" do
+    database.query_array("CREATE TEMP TABLE lifecycle_records (id bigint PRIMARY KEY)").to_a
+    Dir.mktmpdir do |directory|
+      sqlite = Migrations::Database::Connection.new(path: File.join(directory, "records.db"))
+      sqlite.execute("CREATE TABLE source (id INTEGER)")
+      sqlite.execute("CREATE TABLE mappings (id INTEGER)")
+      2001.times { |id| sqlite.insert("INSERT INTO source VALUES (?)", [id]) }
+      sqlite.commit_transaction
+      rows =
+        Enumerator.new { |yielder| sqlite.query("SELECT id FROM source") { |row| yielder << row } }
+
+      database.copy_data("lifecycle_records", [:id], rows) do |inserted, _skipped|
+        inserted.each { |row| sqlite.insert("INSERT INTO mappings VALUES (?)", [row[:id]]) }
+      end
+
+      expect(sqlite.count("SELECT COUNT(*) FROM mappings")).to eq(2001)
+      expect(database.query_array("SELECT COUNT(*) FROM lifecycle_records").to_a).to eq([2001])
+    ensure
+      sqlite&.close
+    end
+  end
+
   it "loads single-value and multiple-value mappings in one pass" do
     shared = Migrations::Importer::SharedData.new(database)
     expect(shared.load_mapping("SELECT id, id + 1 FROM generate_series(1, 2) AS rows(id)")).to eq(

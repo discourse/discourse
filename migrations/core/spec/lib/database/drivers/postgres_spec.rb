@@ -86,6 +86,23 @@ RSpec.describe Migrations::Database::Drivers::Postgres, :postgres do
     connection&.close
   end
 
+  it "yields directly in the caller's fiber while reserving the query's connection" do
+    connection = Migrations::Database::ManagedConnection.open(driver)
+    stream = Migrations::Database::PostgresStream.new(connection, "SELECT 42", [])
+    caller = Fiber.current
+    stream.each do |row|
+      expect(Fiber.current).to equal(caller)
+      expect(row.values).to eq([42])
+      expect { read_value.call(connection) }.to raise_error(
+        Migrations::Database::ManagedConnection::BusyError,
+      )
+    end
+    expect(read_value.call(connection)).to eq(42)
+  ensure
+    stream&.close
+    connection&.close
+  end
+
   it "fails the worker immediately if socket redirection fails" do
     connection = Migrations::Database::ManagedConnection.open(driver)
     socket = connection.with(&:socket_io)
