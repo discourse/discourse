@@ -1040,6 +1040,38 @@ acceptance("Poll results", function (needs) {
     );
   });
 
+  test("coalesces overlapping refreshes and fetches the final state", async function (assert) {
+    await visit("/t/load-more-poll-voters/134");
+    const controller = this.owner.lookup("controller:topic");
+    const post = controller.model.postStream.findLoadedPost(156);
+    const polls = post.polls;
+    let fetches = 0;
+    pretender.get(
+      "/posts/156.json",
+      () =>
+        response({
+          polls: polls.map((poll) => ({ ...poll, voters: ++fetches })),
+        }),
+      50
+    );
+
+    const refresh = controller._onPollMessage({ post_id: 156 });
+    for (let i = 0; i < 10; i++) {
+      await controller._onPollMessage({ post_id: 156 });
+    }
+    await refresh;
+
+    assert.strictEqual(fetches, 2, "one active fetch and one trailing refresh");
+    assert.strictEqual(
+      post.polls[0].voters,
+      2,
+      "the trailing response supplies the final state"
+    );
+
+    await controller._onPollMessage({ post_id: 156 });
+    assert.strictEqual(fetches, 3, "later invalidations still refresh");
+  });
+
   test("ignores invalidations for unloaded posts", async function (assert) {
     await visit("/t/load-more-poll-voters/134");
     let fetches = 0;

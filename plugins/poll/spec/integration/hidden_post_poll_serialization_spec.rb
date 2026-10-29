@@ -108,6 +108,51 @@ RSpec.describe "DiscoursePoll hidden post serialization", type: :request do
     end
   end
 
+  describe "poll mutation rate limits" do
+    before do
+      poll_post.unhide!
+      sign_in(author)
+      RateLimiter.enable
+      20.times { RateLimiter.new(author, "poll-mutations", 20, 1.minute).performed! }
+    end
+
+    it "rate limits votes" do
+      put "/polls/vote.json",
+          params: {
+            post_id: poll_post.id,
+            poll_name: "poll",
+            options: [poll_post.polls.first.poll_options.first.digest],
+          }
+
+      expect(response.status).to eq(429)
+    end
+
+    it "shares the limit with vote removals" do
+      delete "/polls/vote.json", params: { post_id: poll_post.id, poll_name: "poll" }
+
+      expect(response.status).to eq(429)
+    end
+
+    it "shares the limit with status changes" do
+      put "/polls/toggle_status.json",
+          params: {
+            post_id: poll_post.id,
+            poll_name: "poll",
+            status: "closed",
+          }
+
+      expect(response.status).to eq(429)
+    end
+
+    it "allows mutations again after the rate-limit window" do
+      freeze_time 1.minute.from_now + 1.second
+
+      delete "/polls/vote.json", params: { post_id: poll_post.id, poll_name: "poll" }
+
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "poll broadcasts" do
     def poll_messages(&block)
       MessageBus.track_publish("/polls/#{topic.id}", &block)

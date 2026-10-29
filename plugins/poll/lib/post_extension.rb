@@ -9,7 +9,7 @@ module DiscoursePoll
       return if hidden?
 
       # Retained messages must not contain content whose visibility can change.
-      publish_message!("/polls/#{topic_id}", post_id: id)
+      DB.after_commit { publish_message!("/polls/#{topic_id}", post_id: id) }
     end
 
     prepended do

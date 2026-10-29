@@ -86,19 +86,31 @@ function initializePolls(api) {
             return;
           }
 
+          const refreshes = (this._pollRefreshes ||= new WeakMap());
+          if (refreshes.has(post)) {
+            refreshes.set(post, true);
+            return;
+          }
+
           try {
-            // Fetch with current permissions instead of trusting retained content.
-            const refreshed = await ajax(`/posts/${post.id}.json`);
-            if (
-              !this.isDestroying &&
-              !this.isDestroyed &&
-              this.get("model.postStream") === postStream &&
-              postStream.findLoadedPost(post.id) === post
-            ) {
+            do {
+              refreshes.set(post, false);
+              // Fetch with current permissions instead of trusting retained content.
+              const refreshed = await ajax(`/posts/${post.id}.json`);
+              if (
+                this.isDestroying ||
+                this.isDestroyed ||
+                this.get("model.postStream") !== postStream ||
+                postStream.findLoadedPost(post.id) !== post
+              ) {
+                return;
+              }
               post.polls = refreshed.polls || [];
-            }
+            } while (refreshes.get(post));
           } catch {
             // The post may have been hidden, deleted, or made inaccessible.
+          } finally {
+            refreshes.delete(post);
           }
         }
       }
