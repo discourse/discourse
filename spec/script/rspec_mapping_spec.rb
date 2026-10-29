@@ -564,7 +564,7 @@ RSpec.describe Crystalball do
     end
   end
 
-  it "runs whole affected workers without moving mandatory specs into skipped slots" do
+  it "preserves worker assignments and predictions when selecting or auditing" do
     Dir.mktmpdir do |directory|
       FileUtils.mkdir_p("#{directory}/lib")
       FileUtils.mkdir_p("#{directory}/spec")
@@ -591,56 +591,83 @@ RSpec.describe Crystalball do
             end
           end
         RUBY
-      File.write(
-        "#{directory}/tmp/turbo_rspec_runtime.log",
-        files.each_with_index.map { |path, index| "#{path}:#{6 - index}\n" }.join,
-      )
-      File.write(
-        "#{directory}/selection.json",
-        JSON.generate(specs: files.first(2), cohort_specs: [files.second], full_multisite: true),
-      )
-
-      output, status =
-        Open3.capture2e(
-          {
-            "BUNDLE_GEMFILE" => Rails.root.join("Gemfile").to_s,
-            "PARALLEL_TEST_PROCESSORS" => "3",
-            "DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS" => nil,
-            "COLLECT_RSPEC_MAPPING" => nil,
-            "RSPEC_SELECTION_AUDIT" => nil,
-            "RUBYOPT" => nil,
-            "SPEC_OPTS" => "--options /dev/null --require #{directory}/child.rb",
-          },
-          "ruby",
-          Rails.root.join("bin/turbo_rspec").to_s,
-          "--use-runtime-info",
-          "--selection",
-          "selection.json",
-          "--execution-plan",
-          "execution.json",
-          *files,
-          chdir: directory,
+      runtime = files.each_with_index.map { |path, index| "#{path}:#{6 - index}\n" }.join
+      [false, true].each do |audit|
+        File.write("#{directory}/tmp/turbo_rspec_runtime.log", runtime)
+        File.write(
+          "#{directory}/selection.json",
+          JSON.generate(
+            specs: files.first(2),
+            cohort_specs: [files.second],
+            full_multisite: true,
+            audit:,
+          ),
         )
+        Dir["#{directory}/seen-*"].each { |path| File.delete(path) }
 
-      expect(status.success?).to eq(true), output
-      execution = JSON.parse(File.read("#{directory}/execution.json"))
-      expect(execution.fetch("workers").transform_values(&:sort)).to eq(
-        "1" => [files.first],
-        "2" => [files.second, files.fifth],
-        "multisite" => files,
-      )
-      expect(execution.fetch("predicted_regular_specs")).to contain_exactly(
-        files.first,
-        files.second,
-        files.fifth,
-      )
-      expect(execution.fetch("predicted_multisite_specs")).to eq(files)
-      expect(Dir["#{directory}/seen-*"].map { |path| File.basename(path) }).to contain_exactly(
-        "seen-1-a_spec.rb",
-        "seen-2-b_spec.rb",
-        "seen-2-e_spec.rb",
-        *files.map { |path| "seen-multisite-#{File.basename(path)}" },
-      )
+        output, status =
+          Open3.capture2e(
+            {
+              "BUNDLE_GEMFILE" => Rails.root.join("Gemfile").to_s,
+              "PARALLEL_TEST_PROCESSORS" => "3",
+              "TEST_ENV_NUMBER" => nil,
+              "RAILS_DB" => nil,
+              "DISCOURSE_REDIS_PORT" => nil,
+              "DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS" => nil,
+              "COLLECT_RSPEC_MAPPING" => nil,
+              "RSPEC_SELECTION_AUDIT" => nil,
+              "RUBYOPT" => nil,
+              "SPEC_OPTS" => "--options /dev/null --require #{directory}/child.rb",
+            },
+            "ruby",
+            Rails.root.join("bin/turbo_rspec").to_s,
+            "--use-runtime-info",
+            "--selection",
+            "selection.json",
+            "--execution-plan",
+            "execution.json",
+            *files,
+            chdir: directory,
+          )
+
+        expect(status.success?).to eq(true), output
+        execution = JSON.parse(File.read("#{directory}/execution.json"))
+        expected_workers =
+          if audit
+            {
+              "1" => [files.first, files.last],
+              "2" => [files.second, files.fifth],
+              "3" => [files.third, files.fourth],
+              "multisite" => files,
+            }
+          else
+            { "1" => [files.first], "2" => [files.second, files.fifth], "multisite" => files }
+          end
+        expect(execution.fetch("workers").transform_values(&:sort)).to eq(expected_workers)
+        expect(execution.fetch("predicted_regular_specs")).to contain_exactly(
+          files.first,
+          files.second,
+          files.fifth,
+        )
+        expect(execution.fetch("predicted_multisite_specs")).to eq(files)
+        expected_regular =
+          if audit
+            %w[
+              seen-1-a_spec.rb
+              seen-1-f_spec.rb
+              seen-2-b_spec.rb
+              seen-2-e_spec.rb
+              seen-3-c_spec.rb
+              seen-3-d_spec.rb
+            ]
+          else
+            %w[seen-1-a_spec.rb seen-2-b_spec.rb seen-2-e_spec.rb]
+          end
+        expect(Dir["#{directory}/seen-*"].map { |path| File.basename(path) }).to contain_exactly(
+          *expected_regular,
+          *files.map { |path| "seen-multisite-#{File.basename(path)}" },
+        )
+      end
     end
   end
 end
