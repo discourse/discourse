@@ -7,6 +7,8 @@
 ru:
   js:
     dsa_notice:
+      choice_title: "Это незаконный контент"
+      go_back: "Назад"
       title: "Сообщите о незаконном контенте"
       email: "Адрес электронной почты"
     user_api_key:
@@ -53,6 +55,7 @@ ru:
     access_control:
       manage:
         access_permission_editor: "Редактор"
+        access_permission_owner: "Владелец"
         access_permission_remove: "Отозвать"
     carousel:
       go_to_slide: "Перейти к слайду %{index}"
@@ -8625,7 +8628,7 @@ ru:
         silenced_by: "Кем заморожен"
         silence_modal_title: "Заморозка пользователя"
         silence_duration: "Как долго пользователь будет заморожен?"
-        silence_reason_label: "Почему вы блокируете пользователя?"
+        silence_reason_title: "Причина заморозки"
         silence_reason_placeholder: "Причина заморозки"
         silence_message: "Сообщение на электронную почту"
         silence_message_placeholder: "(оставьте незаполненным, если необходимо отправить стандартное сообщение)"

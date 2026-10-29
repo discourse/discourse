@@ -328,8 +328,24 @@ module DiscourseWorkflows
     end
 
     def resolve_type_version(node_data, existing)
-      existing&.dig("typeVersion").presence || node_data[:typeVersion].presence ||
-        implicit_type_version(node_data, existing) || DiscourseWorkflows::Registry::DEFAULT_VERSION
+      stored_version = existing&.dig("typeVersion").presence
+      return upgraded_type_version(node_data, existing) || stored_version if stored_version
+
+      node_data[:typeVersion].presence || implicit_type_version(node_data, existing) ||
+        DiscourseWorkflows::Registry::DEFAULT_VERSION
+    end
+
+    def upgraded_type_version(node_data, existing)
+      requested_version = node_data[:typeVersion].presence
+      return if requested_version.nil? || existing["type"] != node_data[:type]
+      return if requested_version == existing["typeVersion"]
+
+      node_type =
+        DiscourseWorkflows::Registry.find_node_type(node_data[:type], version: requested_version)
+      return if node_type.nil? || node_type.deprecated?
+      return if Gem::Version.new(requested_version) <= Gem::Version.new(existing["typeVersion"])
+
+      requested_version
     end
 
     def implicit_type_version(node_data, existing)

@@ -4502,6 +4502,8 @@ fi:
       truncated_file: "Tämä tiedosto on lyhennetty."
       show_original: "näytä alkuperäinen"
     github:
+      header:
+        success: "Onnistui"
       binary_file: "Tämä tiedosto on binaarinen."
       truncated_file: "Tämä tiedosto on lyhennetty."
       show_original: "näytä alkuperäinen"
@@ -4515,10 +4517,11 @@ fi:
       review_by: "Tarkistanut"
       pr_summary: "%{commits} solmua muutti %{changed_files} tiedostoa %{additions} lisäyksellä ja %{deletions} poistolla"
       no_description: "Auta tietovaraston %{repo} kehityksessä luomalla tili GitHubissa."
-      status_date:
-        open: "avattu"
-        approved: "hyväksytty"
-        closed: "suljettu"
+      pr_status:
+        draft: "Luonnos"
+        open: "Avoinna"
+        approved: "Hyväksytty"
+        closed: "Suljettu"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'

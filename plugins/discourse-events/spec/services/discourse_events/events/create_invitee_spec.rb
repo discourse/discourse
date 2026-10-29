@@ -118,6 +118,15 @@ RSpec.describe(DiscourseEvents::Events::CreateInvitee) do
 
       it { is_expected.to run_successfully }
 
+      it "publishes the staff member as the acting user" do
+        event =
+          DiscourseEvent
+            .track_events(:discourse_calendar_post_event_invitee_status_changed) { result }
+            .first
+
+        expect(event[:params].last).to eq(acting_user: admin)
+      end
+
       it "creates the invitee for the other user" do
         expect { result }.to change { DiscourseEvents::Events::Invitee.count }.by(1)
         expect(result[:invitee]).to have_attributes(

@@ -61,13 +61,14 @@ ug:
         status: "ھالەت"
       models:
         event:
-          expired: "ۋاقتى توشتى"
           closed: "تاقالدى"
           status:
             public:
               title: "ئاممىۋى"
             private:
               title: "شەخسىي"
+      recording_modal:
+        save: "ساقلا"
       composer:
         url_placeholder: "تور ئادرېسى قوش"
         reminder:

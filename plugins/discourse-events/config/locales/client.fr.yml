@@ -351,6 +351,8 @@ fr:
         topic_id: "ID du sujet"
     discourse_post_event:
       new_event: "Nouvel événement"
+      onebox:
+        all_day: "Toute la journée"
       notifications:
         before_event_reminder: "Un événement est sur le point de commencer"
         after_event_reminder: "Un événement est terminé"
@@ -454,7 +456,6 @@ fr:
               one: "%{count} utilisateur est invité"
               other: "%{count} utilisateurs sont invités"
         event:
-          expired: "Expiré"
           closed: "Fermé"
           full: "Complet"
           status:
@@ -467,6 +468,8 @@ fr:
             private:
               title: "Privé"
               description: "Un événement privé ne peut être rejoint que par les utilisateurs invités."
+      recording_modal:
+        save: "Enregistrer"
       composer:
         name_placeholder: "Nom de l'événement"
         end_date_placeholder: "Date de fin"

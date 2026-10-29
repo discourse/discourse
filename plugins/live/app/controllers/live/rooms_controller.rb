@@ -11,6 +11,10 @@ module Live
     SIGNAL_EVENTS_PER_USER_PER_MINUTE = 5_000
     SIGNAL_EVENTS_PER_ROOM_PER_MINUTE = 100_000
 
+    # Generous enough for a burst of applause, low enough that one user can't
+    # flood every participant's MessageBus.
+    REACTIONS_PER_USER = 15 # per 10 seconds
+
     STATE_FIELDS = %i[muted deafened video screen watching transcribing]
 
     # Anonymous visitors may browse the directory; the guardian still limits the
@@ -40,6 +44,7 @@ module Live
                     stop_recording
                     request_to_speak
                     withdraw_request_to_speak
+                    reaction
                   ]
 
     def index
@@ -117,7 +122,7 @@ module Live
     end
 
     def destroy
-      guardian.ensure_can_manage_live_room!(@room)
+      guardian.ensure_can_delete_live_room!(@room)
       # Built before the destroy so the broadcast still targets the members
       # whose memberships the destroy cascades away.
       broadcaster = Live::DirectoryBroadcaster.new(@room, :destroyed)
@@ -626,6 +631,21 @@ module Live
         Live::RoomBroadcaster.publish_hand_raise(@room, target_id, raised: false, reason: reason)
         Live::RoomBroadcaster.publish_participants(@room)
       end
+
+      head :no_content
+    end
+
+    def reaction
+      guardian.ensure_can_join_live_room!(@room)
+      ensure_participant_session!
+
+      # Before validation, which may look the emoji up in shared caches.
+      RateLimiter.new(current_user, "live-reactions", REACTIONS_PER_USER, 10.seconds).performed!
+
+      emoji = params.require(:emoji)
+      raise Discourse::InvalidParameters.new(:emoji) if !Live::Reactions.valid?(emoji)
+
+      Live::RoomBroadcaster.publish_reaction(@room, current_user, emoji)
 
       head :no_content
     end

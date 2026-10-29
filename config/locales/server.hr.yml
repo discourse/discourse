@@ -2800,10 +2800,14 @@ hr:
     google_meet:
       meeting_code: "Šifra:"
     github:
+      header:
+        success: "Uspjeh"
       closed: "zatvoreno"
-      status_date:
-        approved: "odobrio/la"
-        closed: "zatvoreno"
+      pr_status:
+        draft: "Skica"
+        open: "Otvori"
+        approved: "Odobrio/la"
+        closed: "🔐"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'

@@ -94,8 +94,17 @@ module Jobs
         return
       end
       return if !active_request?(user, args[:request_id])
-      ask_log.candidate_post_ids =
-        retrieval_result.synthesis_candidates.pluck("post_id").compact if ask_log
+      # passages include the answers added to a candidate, not only its matched post
+      if ask_log
+        ask_log.candidate_post_ids =
+          retrieval_result
+            .synthesis_candidates
+            .flat_map do |candidate|
+              [candidate["post_id"], *Array(candidate["passages"]).pluck("post_id")]
+            end
+            .compact
+            .uniq
+      end
       base = base.merge(scope_fallback: true) if retrieval_result.scope_fallback
       if retrieval_result.synthesis_candidates.empty?
         ask_log.ask_outcome = :no_answer if ask_log

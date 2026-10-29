@@ -7,6 +7,8 @@
 de:
   js:
     dsa_notice:
+      choice_title: "Es ist rechtswidrig"
+      go_back: "Zurück"
       title: "Illegale Inhalte melden"
       email: "E-Mail-Adresse"
       resend_email_code: "Code erneut senden"
@@ -59,6 +61,7 @@ de:
       manage:
         access_permission_editor: "Bearbeiter"
         access_permission_editor_description: "Kann Inhalte für diese Entität erstellen und bearbeiten"
+        access_permission_owner: "Eigentümer"
         access_permission_viewer: "Lesezugriff"
         access_permission_viewer_description: "Kann Inhalte zu dieser Entität anzeigen"
         access_permission_remove: "Entfernen"
@@ -8925,7 +8928,7 @@ de:
         silenced_by: "Stummgeschaltet von"
         silence_modal_title: "Benutzer stummschalten"
         silence_duration: "Wie lange wird der Benutzer stummgeschaltet?"
-        silence_reason_label: "Warum schaltest du diesen Benutzer stumm?"
+        silence_reason_title: "Grund der Stummschaltung"
         silence_reason_placeholder: "Grund der Stummschaltung"
         silence_message: "E-Mail-Nachricht"
         silence_message_placeholder: "(leer lassen, um Standardnachricht zu schicken)"

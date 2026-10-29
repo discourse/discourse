@@ -198,20 +198,20 @@ RSpec.describe Migrations::Importer::UsernameFinder, :rails do
       end
 
       it "truncates at grapheme boundaries for multi-byte characters" do
-        # 94 characters, 67 grapheme clusters
+        # 94 characters, 62 grapheme clusters
         long_name =
           "बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्य_अभियंता_सर्वोच्च_कमांडर_महोदय_जी"
 
-        # 60 characters, 43 grapheme clusters
+        # 58 characters, 40 grapheme clusters ("ख्य" is a single cluster since Unicode 15.1)
         username = finder.find_available_name(long_name)
-        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्")
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मु")
 
-        # 60 characters, 42 original grapheme clusters plus suffix
+        # 60 characters, 40 original grapheme clusters plus suffix
         username = finder.find_available_name(long_name)
         expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मु_1")
         8.times { finder.find_available_name(long_name) }
 
-        # 58 characters, 41 original grapheme clusters plus suffix
+        # 57 characters, 38 original grapheme clusters plus suffix
         username = finder.find_available_name(long_name)
         expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_1")
       end

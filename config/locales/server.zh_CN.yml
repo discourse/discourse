@@ -456,6 +456,7 @@ zh_CN:
         unsubscribe_not_allowed: "当不允许此用户通过电子邮件退订时，就会发生这种情况。"
         email_not_allowed: "当电子邮件地址不在许可名单中或位于屏蔽名单中时，就会发生这种情况。"
         email_alias_not_allowed: "当发件人地址是已注册到某个帐户的地址的别名时，就会发生这种情况，而规范化的电子邮件必须是唯一的。"
+        site_archived_error: "当网站处于存档模式时会发生这种情况。"
       unrecognized_error: "无法识别的错误"
     secure_uploads_placeholder: "已编辑：此网站已启用安全上传，请访问话题或点击“查看媒体”以查看附加的上传。"
     view_redacted_media: "查看媒体"
@@ -777,6 +778,7 @@ zh_CN:
       default_notification_level_users_limit:
         other: "无法为大于 %{count} 个用户的群组设置默认通知级别。错误的群组：%{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任级别。"
+      flair_upload_not_owned: "你只能使用自己上传的图片作为群组徽章。"
       can_not_modify_automatic: "您不能修改自动生成的群组"
       member_already_exist:
         other: "以下用户已是此群组的成员：%{username}"
@@ -1948,6 +1950,7 @@ zh_CN:
     unavailable: "无法生成随机用户名。请检查网站设置中的随机用户名词库。"
   site_settings:
     dsa_notice_group: "启用 {{setting:dsa_reporting_enabled}} 后，群组将收到非法内容通知。成员可以阅读通知和举报人联系方式。默认通知发送给管理员，如果所选群组不存在或为空，管理员也会收到通知。"
+    dsa_moderation_appeal_email: "用户可以通过发送电子邮件至此地址对审核决定提出申诉。留空则不包含申诉说明。需要启用 {{setting:dsa_reporting_enabled}} 功能。"
     dsa_community_rules: "启用 {{setting:dsa_reporting_enabled}} 后，即可使用社区规则进行 DSA 分类。每条规则都需要一个准确的合同参考（最多 500 个字符）和一个解释（最多 2000 个字符）。留空则禁用分类。"
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -2848,6 +2851,7 @@ zh_CN:
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
+    enable_user_menu_mentions_tab: "在用户菜单中添加“提及”选项卡，将直接 @username 提及与回复和群组提及分开显示。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     about_page_hidden_groups: "不要在 /about 页面上显示同时也是这些特定群组成员的管理员或版主。"
     about_page_extra_groups: "显示在“关于”页面版主下方的群组。"
@@ -3583,6 +3587,7 @@ zh_CN:
         other: "%{mentions} 条目是在超过 %{count} 小时以前提交的。[请审核](%{base_url}/review)。"
     private_topic_title: "话题 #%{id}"
     contents_hidden: "请访问帖子以查看内容。"
+    moderation_appeal_instructions: "如需对该决定提出上诉，请联系 %{email}"
     post_hidden:
       title: "帖子被隐藏"
       preview: "由于社区成员的举报，帖子已被隐藏。"
@@ -4133,6 +4138,14 @@ zh_CN:
         您试图给超过 %{max_recipients_count} 人发送电子邮件，我们的系统自动将您的电子邮件标记为垃圾邮件。
 
         如果您认为这是一个错误，请[联系管理人员](%{base_url}/about)。
+    email_reject_site_archived:
+      title: "电子邮件拒绝网站已存档"
+      subject_template: "[%{email_prefix}] 电子邮件问题 -- 网站已存档"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 -- 网站已存档"
+      text_body_template: |
+        抱歉，您发送至 %{destination} 的电子邮件（标题为 %{former_title}）未能成功送达。
+
+        本网站已存档，不再接受新帖。
     email_error_notification:
       title: "电子邮件错误通知"
       subject_template: "[%{email_prefix}] 电子邮件问题 - POP 身份验证错误"
@@ -5498,6 +5511,7 @@ zh_CN:
     graph_title: "搜索计数"
   onebox:
     discourse:
+      event_all_day: "全天"
       user_joined_community: "%{date}加入"
     google_meet:
       title: "Google Meet 会议"
@@ -5508,6 +5522,23 @@ zh_CN:
       truncated_file: "此文件已被截断。"
       show_original: "显示原始文件"
     github:
+      header:
+        repository: "仓库"
+        folder: "文件夹"
+        file: "文件"
+        binary_file: "二进制文件"
+        gist: "Gist"
+        open_issue: "未解决的问题"
+        closed_issue: "已关闭的问题"
+        commit: "提交"
+        comment: "评论"
+        review: "审核评论"
+        pull_request: "拉取请求"
+        success: "成功"
+        failure: "失败"
+        pending: "进行中"
+        unknown: "未知或已排队"
+        check_run: "检查运行"
       binary_file: "此文件是二进制文件。"
       truncated_file: "此文件已被截断。"
       show_original: "显示原始文件"
@@ -5521,17 +5552,9 @@ zh_CN:
       review_by: "审查者"
       pr_summary: "%{commits} 提交了更改的 %{changed_files} 文件，其中包含 %{additions} 项增加和 %{deletions} 项删除"
       no_description: "通过在 GitHub 上创建帐户来为 %{repo} 开发做出贡献。"
-      pr_title:
-        default: "拉取请求"
-        draft: "草稿拉取请求"
-        open: "打开拉取请求"
-        approved: "已批准的拉取请求"
-        changes_requested: "已请求更改"
-        merged: "已合并的拉取请求"
-        closed: "已关闭的拉取请求"
-      status_date:
-        open: "已打开"
+      pr_status:
         draft: "草稿"
+        open: "已打开"
         approved: "已批准"
         changes_requested: "已请求更改"
         merged: "已合并"

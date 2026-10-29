@@ -110,7 +110,10 @@ class DiscourseVipsWorker
     end
 
     def sandbox_rlimits(defaults:)
-      defaults.merge(@rlimits)
+      limits = defaults.merge(@rlimits)
+      # macOS rejects finite address-space limits with EINVAL.
+      limits.delete(:memory_bytes) if RUBY_PLATFORM.include?("darwin")
+      limits
     end
 
     def self.version

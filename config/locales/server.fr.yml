@@ -5375,6 +5375,7 @@ fr:
     graph_title: "Nombre de recherches"
   onebox:
     discourse:
+      event_all_day: "Toute la journée"
       user_joined_community: "S'est inscrit(e) le %{date}"
     google_meet:
       title: "Réunion Google Meet"
@@ -5385,6 +5386,10 @@ fr:
       truncated_file: "Ce fichier a été tronqué."
       show_original: "afficher l'original"
     github:
+      header:
+        file: "Fichier"
+        success: "Succès"
+        pending: "En cours"
       binary_file: "Ce fichier est binaire."
       truncated_file: "Ce fichier a été tronqué."
       show_original: "afficher l'original"
@@ -5398,21 +5403,12 @@ fr:
       review_by: "Révision par"
       pr_summary: "%{commits} validations ont modifié %{changed_files} fichiers avec %{additions} ajouts et %{deletions} suppressions"
       no_description: "Contribuez au développement de %{repo} en créant un compte sur GitHub."
-      pr_title:
-        default: "Demande de tirage"
-        draft: "Brouillon de demande de tirage"
-        open: "Demande de tirage ouverte"
-        approved: "Demande de tirage approuvée"
-        changes_requested: "Modifications demandées"
-        merged: "Demande de tirage fusionnée"
-        closed: "Demande de tirage fermée"
-      status_date:
-        open: "ouvert"
-        draft: "créée comme brouillon"
-        approved: "approuvé "
-        changes_requested: "modifications demandées"
-        merged: "fusionnée"
-        closed: "fermé"
+      pr_status:
+        draft: "Brouillon"
+        open: "Ouvert"
+        approved: "Approuvé"
+        merged: "Fusionnée"
+        closed: "Fermé"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'

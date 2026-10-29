@@ -800,6 +800,32 @@ table.group-reports {
 }
 
 .recent-queries {
+  .d-table__header-cell {
+    // DTableHeaderToggle carries directory-table header styles that don't suit d-table
+    .directory-table__column-header.sortable {
+      display: inline-flex;
+      justify-content: flex-start;
+      padding: 0;
+      border-bottom: none;
+      color: inherit;
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+      }
+
+      .header-contents {
+        text-align: left;
+      }
+    }
+
+    &.query-created-by,
+    &.query-group-names,
+    &.query-created-at {
+      width: 12.5%;
+    }
+  }
+
   .d-table__row.query-row {
     .d-table__overview-link {
       @include viewport.until(md) {

@@ -48,6 +48,7 @@ module DiscourseAi
           - Return related_count sources when that many candidates are useful.
           - Do not include an unrelated source merely to reach the limit.
           - Prefer authoritative guides and direct answers over discussions that only repeat the question.
+          - A passage marked answer is the topic's accepted solution when its candidate is solved, and otherwise its best reply, judged by likes, such as one the topic author liked or the author's own follow-up. Prefer answer passages as evidence for how to fix or do something, accepted solutions most, and only call an answer the solution when its candidate is solved.
           - Topic authors, staff, and documentation categories are useful signals. Treat likes as a weak signal only.
           - Consider freshness only for time-sensitive questions.
 

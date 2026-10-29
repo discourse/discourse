@@ -50,13 +50,14 @@ gl:
         status: "Estado"
       models:
         event:
-          expired: "Caducou"
           closed: "Pechado"
           status:
             public:
               title: "Pública"
             private:
               title: "Privada"
+      recording_modal:
+        save: "Gardar"
       composer:
         url_placeholder: "Engadir URL"
         reminder:

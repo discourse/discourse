@@ -316,6 +316,11 @@ RSpec.describe Emoji do
       expect(emoji.group).to eq("flags")
     end
 
+    it "flags emojis that have an animation" do
+      expect(Emoji.create_from_db_item("name" => "wink").animated).to eq(true)
+      expect(Emoji.create_from_db_item("name" => "abacus").animated).to eq(false)
+    end
+
     it "returns nil when group is unknown" do
       expect(Emoji.create_from_db_item("name" => "white_hair")).to be_nil
     end

@@ -13,11 +13,18 @@ en:
         title: "Live rooms"
         create: "Create room"
         empty: "No live rooms yet."
+      reactions:
+        title: "Send a reaction"
+        rate_limited: "You're sending reactions too quickly. Try again in a moment."
+        more: "React with any emoji"
       room:
         join: "Join live room"
         leave: "Leave room"
         info: "Room info"
         edit: "Edit room"
+        delete: "Delete room"
+        delete_confirm: "Are you sure you want to delete '%{name}'? Everyone in it will be disconnected and its members removed."
+        deleted: "Room deleted."
         copy_link: "Copy link"
         link_copied: "Link copied to clipboard"
         menu_title: "Room options"
@@ -41,7 +48,7 @@ en:
         type_stage_hint: "Participants join as listeners. Moderators can promote listeners to speakers."
         listeners_cannot_unmute: "Only speakers can unmute in this room."
         open_page: "Show full room view"
-        widget_mode: "Widget view"
+        widget_mode: "Picture-in-picture"
         settings: "Call settings"
         more: "More options"
         audio_options: "Audio options"
@@ -57,12 +64,15 @@ en:
         recording_stopped_toast: "The recording has stopped."
       room_page:
         empty: "No one is here yet — join to get things started."
+        participant_count:
+          one: "%{count} in room"
+          other: "%{count} in room"
       widget:
         title: "Active live room: %{room}"
         open_chat: "Open room chat"
-        expand: "Expand call widget"
-        hide: "Hide call widget"
-        show: "Show call widget"
+        expand: "Expand picture-in-picture"
+        hide: "Hide picture-in-picture"
+        show: "Show picture-in-picture"
         overflow_tile:
           one: "Show %{count} more participant"
           other: "Show %{count} more participants"
@@ -71,6 +81,7 @@ en:
         title: "Chat"
         open: "Open chat"
         close: "Close chat"
+        unavailable_title: "Zoinks!"
         unavailable: "Chat is unavailable right now."
         empty_title: "No chat yet"
         empty_body: "Send a message to get the conversation started."
@@ -202,6 +213,7 @@ en:
         draft_topic: "Open transcript draft"
         stop_and_open: "Stop recording and open draft"
         draft_title: "Call transcript: %{room}"
+        reaction_count: "%{emoji} ×%{count}"
         source_label: "Call transcript"
         unknown_speaker: "unknown speaker"
       stage:

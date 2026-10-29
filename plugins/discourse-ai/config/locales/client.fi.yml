@@ -200,6 +200,7 @@ fi:
         no_llm: "LLM:ää ei ole valittu"
         no_agent: "Ei asetettu"
         no_groups: "Ei valittu"
+        classification_model: "Malli:"
         edit: "Asetukset"
         expand_list:
           one: "(%{count} muuta)"
@@ -216,6 +217,13 @@ fi:
           no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."
           reset: "Palauta"
         no_automations: "Automaatioita ei ole vielä"
+        sentiment:
+          sentiment: "Sävy"
+          emotion: "Tunne"
+          enabled: "Käytössä"
+          setting_groups:
+            sentiment: "Sävy"
+            emotion: "Tunne"
         summarization:
           name: "Yhteenvedot"
           description: "Tarjoaa yhteenvetopainikkeen, jonka avulla kävijät voivat tehdä yhteenvetoja aiheita"

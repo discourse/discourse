@@ -1,6 +1,9 @@
 en:
   js:
     dsa_notice:
+      choice_title: "It's Illegal"
+      choice_description: "Submit a detailed report explaining why this content is illegal."
+      go_back: "Go back"
       title: "Report illegal content"
       content_url: "Exact URL of the content"
       explanation: "Why do you believe this content is illegal?"
@@ -8,7 +11,7 @@ en:
       name: "Full name or organization name"
       email: "Email address"
       declaration_section: "Declaration"
-      declaration: "I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
+      declaration: "I honestly believe that the facts and claims in this report are true and complete"
       submit: "Submit report"
       get_email_code: "Get email code"
       resend_email_code: "Resend code"
@@ -5518,7 +5521,7 @@ en:
     category:
       none: "(no category)"
       all: "All categories"
-      choose: "Category&hellip;"
+      choose: "Category…"
       edit: "Edit"
       edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
@@ -9735,6 +9738,7 @@ en:
             change_access_control_list_permissions: "change access control list permissions"
             add_access_control_list_owner: "add access control list owner"
             remove_access_control_list_owner: "remove access control list owner"
+            assume_access_control_ownership: "assume access control ownership"
             admin_onboarding_step_completed: "complete admin onboarding step"
             admin_onboarding_completed: "complete admin onboarding"
             admin_onboarding_dismissed: "dismiss admin onboarding"
@@ -10083,7 +10087,9 @@ en:
         silenced_by: "Silenced By"
         silence_modal_title: "Silence User"
         silence_duration: "How long will the user be silenced for?"
-        silence_reason_label: "Why are you silencing this user?"
+        silence_reason_label: "Why are you silencing? This text <b>will be visible to everyone</b> on this user's profile page. Keep it short."
+        silence_reason_hidden_label: "Why are you silencing? This text will only be visible to staff and this user. Keep it short."
+        silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
         silence_message: "Email Message"
         silence_message_placeholder: "(leave blank to send default message)"

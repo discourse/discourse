@@ -24,6 +24,7 @@ gl:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Propietario"
         access_permission_remove: "Retirar"
     number:
       format:
@@ -4777,7 +4778,6 @@ gl:
         silenced_by: "Silenciado por"
         silence_modal_title: "Silenciar o usuario"
         silence_duration: "Canto tempo estará silenciado o usuario?"
-        silence_reason_label: "Por que silencia este usuario?"
         silence_reason_placeholder: "Razón do silencio"
         silence_message: "Mensaxe de correo"
         silence_message_placeholder: "(deixar baleiro para enviar mensaxe predeterminada)"

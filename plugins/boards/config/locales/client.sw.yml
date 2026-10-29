@@ -29,7 +29,9 @@ sw:
           other: "%{count} majibu"
         assign: "Kabidhi"
         unassign: "Haijakabithiwa"
-        created_by: "Imetengenezwa na"
+        owners:
+          one: "Mmiliki"
+          other: "Wamiliki"
       manage:
         name: "Jina"
         constraint_categories: "Kategoria"

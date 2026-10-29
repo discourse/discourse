@@ -353,6 +353,9 @@ module DiscourseAi
             .where(id: candidates.pluck("post_id").compact)
             .includes(:user, topic: [{ category: :parent_category }, :tags])
             .index_by(&:id)
+        topic_ids = posts.values.map(&:topic_id).uniq
+        accepted_answers = accepted_answers_by_topic_id(topic_ids)
+        endorsed_replies = endorsed_replies_by_topic_id(topic_ids - accepted_answers.keys)
         hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
 
         candidates.filter_map do |candidate|
@@ -370,17 +373,136 @@ module DiscourseAi
               excerpt: plain_text(candidate["excerpt"]),
             ).stringify_keys
 
-          candidate.merge(
-            search_metadata,
-            "category_id" => topic.category_id,
-            "username" => post.user&.username,
-            "name" => SiteSetting.enable_names? ? post.user&.name : nil,
-            "avatar_template" => post.user&.avatar_template,
-            "author_is_staff" => post.user&.staff? || false,
-            "is_topic_op" => post.post_number == 1,
-            "topic_bumped_at" => topic.bumped_at&.iso8601,
-          )
+          candidate =
+            candidate.merge(
+              search_metadata,
+              "category_id" => topic.category_id,
+              "username" => post.user&.username,
+              "name" => SiteSetting.enable_names? ? post.user&.name : nil,
+              "avatar_template" => post.user&.avatar_template,
+              "author_is_staff" => post.user&.staff? || false,
+              "is_topic_op" => post.post_number == 1,
+              "topic_bumped_at" => topic.bumped_at&.iso8601,
+            )
+          if (answers = accepted_answers[topic.id])
+            with_answers(candidate, answers).merge("solved" => true)
+          elsif (replies = endorsed_replies[topic.id])
+            with_answers(candidate, replies)
+          else
+            candidate
+          end
         end
+      end
+
+      def accepted_answers_by_topic_id(topic_ids)
+        return {} if !defined?(DiscourseSolved) || !SiteSetting.solved_enabled || topic_ids.empty?
+
+        guardian = Guardian.new(@user)
+        Post
+          .where(
+            id:
+              DiscourseSolved::TopicAnswer
+                .joins(:solved_topic)
+                .where(discourse_solved_solved_topics: { topic_id: topic_ids })
+                .select(:answer_post_id),
+            post_type: Post.types[:regular],
+            hidden: false,
+          )
+          .includes(:topic)
+          .select { |post| guardian.can_see_post?(post) }
+          .group_by(&:topic_id)
+      end
+
+      # The best answer an unsolved topic has is a reply its author liked, the
+      # author's own liked follow-up after others replied, or a reply a member of
+      # the groups the site trusts liked, in that order. One per topic.
+      def endorsed_replies_by_topic_id(topic_ids)
+        group_ids = SiteSetting.ai_ask_ai_endorsed_reply_groups_map
+        return {} if group_ids.empty? || topic_ids.empty?
+
+        params = {
+          topic_ids:,
+          group_ids:,
+          # every like comes from a logged-in user
+          any_liker:
+            group_ids.intersect?(
+              [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]],
+            ),
+          like: PostActionType::LIKE_POST_ACTION_ID,
+          regular: Post.types[:regular],
+        }
+        post_ids = DB.query_single(<<~SQL, **params)
+          SELECT post_id
+          FROM (
+            SELECT
+              posts.id AS post_id,
+              ROW_NUMBER() OVER (
+                PARTITION BY posts.topic_id
+                ORDER BY
+                  BOOL_OR(post_actions.user_id = topics.user_id) DESC,
+                  posts.user_id = topics.user_id DESC,
+                  posts.like_count DESC,
+                  posts.post_number
+              ) AS rank
+            FROM posts
+            JOIN topics ON topics.id = posts.topic_id
+            JOIN post_actions
+              ON post_actions.post_id = posts.id
+              AND post_actions.post_action_type_id = :like
+              AND post_actions.deleted_at IS NULL
+            WHERE posts.topic_id IN (:topic_ids)
+              AND posts.post_number > 1
+              AND posts.post_type = :regular
+              AND NOT posts.hidden
+              AND posts.deleted_at IS NULL
+              AND (
+                post_actions.user_id = topics.user_id
+                OR :any_liker
+                OR post_actions.user_id IN (
+                  SELECT user_id FROM group_users WHERE group_id IN (:group_ids)
+                )
+                OR (
+                  posts.user_id = topics.user_id
+                  AND EXISTS (
+                    SELECT 1
+                    FROM posts earlier
+                    WHERE earlier.topic_id = posts.topic_id
+                      AND earlier.post_number BETWEEN 2 AND posts.post_number - 1
+                      AND earlier.user_id <> topics.user_id
+                      AND earlier.post_type = :regular
+                      AND earlier.deleted_at IS NULL
+                  )
+                )
+              )
+            GROUP BY posts.id, topics.id
+          ) endorsed
+          WHERE rank = 1
+        SQL
+        return {} if post_ids.empty?
+
+        guardian = Guardian.new(@user)
+        Post
+          .where(id: post_ids)
+          .includes(:topic)
+          .select { |post| guardian.can_see_post?(post) }
+          .group_by(&:topic_id)
+      end
+
+      # Retrieval mostly matches the question in a topic's first post, so an
+      # answer would rarely reach the model unless it is added.
+      def with_answers(candidate, answers)
+        passages = Array(candidate["passages"]).dup
+        answers.each do |answer|
+          if (index = passages.index { |passage| passage["post_id"] == answer.id })
+            passages[index] = passages[index].merge("answer" => true)
+          else
+            passages << passage_from_source(source_from_post(answer, excerpt: answer.cooked)).merge(
+              "answer" => true,
+            )
+          end
+        end
+
+        candidate.merge("passages" => passages)
       end
 
       def plain_text(value)

@@ -6,6 +6,9 @@
 
 sv:
   js:
+    dsa_notice:
+      choice_title: "Det är olagligt"
+      go_back: "Gå tillbaka"
     user_api_key:
       authorize: "Godkänn"
       deny: "Avbryt"
@@ -30,6 +33,7 @@ sv:
     access_control:
       manage:
         access_permission_editor: "Redigerare"
+        access_permission_owner: "Ägare"
         access_permission_remove: "Ta bort"
     carousel:
       go_to_slide: "Gå till bild %{index}"
@@ -6032,7 +6036,6 @@ sv:
         silenced_by: "Tystad av"
         silence_modal_title: "Tysta användaren"
         silence_duration: "Hur länge ska användaren vara tystad?"
-        silence_reason_label: "Varför tystar du den här användaren?"
         silence_reason_placeholder: "Anledning till att tysta"
         silence_message: "E-postmeddelande"
         silence_message_placeholder: "(lämna tomt för att skicka standardmeddelande)"

@@ -76,6 +76,26 @@ RSpec.describe SiteController do
         [public_category_tag.name, public_category_tag.description],
       )
     end
+
+    it "localizes extensionless requests from clients classified as crawlers" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_param = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+      SiteSetting.content_localization_supported_locales = "ja"
+
+      get "/site",
+          headers: {
+            "HTTP_USER_AGENT" => "curl/8.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_LANGUAGE" => "ja",
+          }
+
+      spam = response.parsed_body["post_action_types"].find { |type| type["name_key"] == "spam" }
+      expect(spam["name"]).to eq(I18n.t("post_action_types.spam.title", locale: :ja))
+      expect(spam["name"]).not_to eq(I18n.t("post_action_types.spam.title", locale: :en))
+    end
   end
 
   describe "#basic_info" do

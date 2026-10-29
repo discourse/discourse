@@ -72,6 +72,8 @@ sr:
         filters:
           all: "Sve"
           reset: "Reset"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraži"
         admin_dashboard:

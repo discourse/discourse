@@ -34,6 +34,12 @@ module DiscourseWorkflows
           "offset" => 0,
         }.freeze
         MAX_LIMIT = 800
+        REPLY_TO_POST_JOIN = <<~SQL
+          LEFT JOIN posts reply_posts
+            ON reply_posts.topic_id = posts.topic_id
+            AND reply_posts.post_number = posts.reply_to_post_number
+            AND reply_posts.deleted_at IS NULL
+        SQL
 
         def self.list_string_property(control: nil, hidden: false)
           property = {
@@ -378,7 +384,7 @@ module DiscourseWorkflows
 
           {
             post:
-              exec_ctx.serialize_post(
+              serialize_post(
                 post,
                 guardian: actor.guardian,
                 include_raw: true,
@@ -393,7 +399,7 @@ module DiscourseWorkflows
 
           {
             post:
-              exec_ctx.serialize_post(
+              serialize_post(
                 post,
                 guardian: editor.guardian,
                 include_raw: true,
@@ -406,14 +412,14 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           post = exec_ctx.destroy_post(user: actor, post_id: config["post_id"])
 
-          { post: exec_ctx.serialize_post(post, guardian: actor.guardian) }
+          { post: serialize_post(post, guardian: actor.guardian) }
         end
 
         def recover_post(exec_ctx, config, item_index)
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           post = exec_ctx.recover_post(user: actor, post_id: config["post_id"])
 
-          { post: exec_ctx.serialize_post(post, guardian: actor.guardian) }
+          { post: serialize_post(post, guardian: actor.guardian) }
         end
 
         def get_post(exec_ctx, config, item_index)
@@ -421,15 +427,15 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
 
-          { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
+          { post: serialized_post(post, guardian: actor.guardian, config: config) }
         end
 
         def list_posts(exec_ctx, config, item_index)
-          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = exec_ctx.actor_from_parameter("actor_username", item_index).guardian
           limit = bounded_integer(config["limit"], default: DEFAULT_LIMIT, min: 1, max: MAX_LIMIT)
           offset = bounded_integer(config["offset"], default: 0, min: 0)
           query = query_from_config(config)
-          filter = PostsFilter.new(query, guardian: actor.guardian, limit: limit, offset: offset)
+          filter = PostsFilter.new(query, guardian:, limit: limit, offset: offset)
 
           if filter.invalid_filters.present?
             raise_node_error!(
@@ -440,15 +446,18 @@ module DiscourseWorkflows
             )
           end
 
-          posts = filter.search.includes(:user, topic: %i[category tags])
-          posts.map do |post|
-            { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
-          end
+          posts =
+            filter
+              .search
+              .joins(REPLY_TO_POST_JOIN)
+              .select("posts.*, reply_posts.id AS reply_to_post_id")
+              .preload(:user, :reply_to_user, :uploads, topic: %i[category tags])
+          posts.map { |post| { post: serialized_post(post, guardian:, config:) } }
         end
 
-        def serialized_post(exec_ctx, post, guardian:, config:)
+        def serialized_post(post, guardian:, config:)
           data =
-            exec_ctx.serialize_post(
+            serialize_post(
               post,
               guardian: guardian,
               include_raw: config["include_raw"],

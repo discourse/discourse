@@ -7,6 +7,8 @@
 ja:
   js:
     dsa_notice:
+      choice_title: "違法です"
+      go_back: "戻る"
       title: "違法コンテンツの報告"
       email: "メールアドレス"
     user_api_key:
@@ -33,6 +35,7 @@ ja:
     access_control:
       manage:
         access_permission_editor: "編集者"
+        access_permission_owner: "オーナー"
         access_permission_remove: "削除"
     carousel:
       go_to_slide: "スライド %{index} に移動"
@@ -7563,7 +7566,7 @@ ja:
         silenced_by: "投稿禁止設定者:"
         silence_modal_title: "ユーザーを投稿禁止"
         silence_duration: "ユーザーをどれくらいの期間、投稿禁止にしますか？"
-        silence_reason_label: "このユーザーの投稿を禁止する理由を説明してください。"
+        silence_reason_title: "投稿禁止の理由"
         silence_reason_placeholder: "投稿禁止の理由"
         silence_message: "メールメッセージ"
         silence_message_placeholder: "(デフォルトのメッセージを送信する場合は空白のままにします)"

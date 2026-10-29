@@ -186,7 +186,7 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def publish_solution(post:, topic:, guardian:)
-    DiscourseEvent.trigger(:accepted_solution, post)
+    DiscourseEvent.trigger(:accepted_solution, post, acting_user: guardian.user)
     MessageBus.publish(
       "/topic/#{topic.id}",
       {

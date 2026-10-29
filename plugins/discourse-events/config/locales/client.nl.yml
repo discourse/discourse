@@ -436,7 +436,6 @@ nl:
               one: "%{count} gebruiker uitgenodigd"
               other: "%{count} gebruikers uitgenodigd"
         event:
-          expired: "Verlopen"
           closed: "Gesloten"
           full: "Vol"
           status:
@@ -449,6 +448,8 @@ nl:
             private:
               title: "Privé"
               description: "Alleen uitgenodigde gebruikers kunnen deelnemen aan een privé-evenement."
+      recording_modal:
+        save: "Opslaan"
       composer:
         name_placeholder: "Evenementnaam"
         location_or_url_placeholder: "Locatie of URL toevoegen"

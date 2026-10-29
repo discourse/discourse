@@ -67,7 +67,7 @@ class GroupsController < ApplicationController
       group = find_group_for_show
 
       format.html do
-        @title = group.full_name.present? ? group.full_name.capitalize : group.name
+        @title = group.full_name.presence || group.name
         @full_title = "#{@title} - #{SiteSetting.title}"
         @description_meta = group.bio_summary || @title
         render :show

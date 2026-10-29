@@ -127,13 +127,14 @@ ko:
           status:
             interested: "관심"
         event:
-          expired: "만료됨"
           closed: "닫힘"
           status:
             public:
               title: "공개"
             private:
               title: "비공개"
+      recording_modal:
+        save: "저장"
       composer:
         name_placeholder: "이벤트 이름"
         url_placeholder: "URL 추가"

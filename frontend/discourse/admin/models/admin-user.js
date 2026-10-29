@@ -399,6 +399,18 @@ export default class AdminUser extends User {
     });
   }
 
+  /**
+   * The unreachable overload preserves the inherited framework destruction contract.
+   *
+   * @overload
+   * @param {never} this
+   * @returns {never}
+   */
+  /**
+   * @overload
+   * @param {Record<string, unknown>} formData
+   * @returns {Promise<unknown>}
+   */
   destroy(formData) {
     return ajax(`/admin/users/${this.id}.json`, {
       type: "DELETE",

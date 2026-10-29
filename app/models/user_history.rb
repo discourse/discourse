@@ -187,7 +187,8 @@ class UserHistory < ActiveRecord::Base
         create_group: 132,
         add_access_control_list_owner: 133,
         remove_access_control_list_owner: 134,
-        create_bot: 135,
+        assume_access_control_ownership: 135,
+        create_bot: 136,
       )
   end
 
@@ -327,6 +328,7 @@ class UserHistory < ActiveRecord::Base
       create_group
       add_access_control_list_owner
       remove_access_control_list_owner
+      assume_access_control_ownership
     ]
   end
 

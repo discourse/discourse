@@ -436,7 +436,6 @@ es:
               one: "%{count} usuario invitado"
               other: "%{count} usuarios invitados"
         event:
-          expired: "Caducado"
           closed: "Cerrado"
           full: "Completo"
           status:
@@ -449,6 +448,8 @@ es:
             private:
               title: "Privado"
               description: "Solo los usuarios invitados pueden unirse a un evento privado."
+      recording_modal:
+        save: "Guardar"
       composer:
         name_placeholder: "Nombre del evento"
         location_or_url_placeholder: "Añadir ubicación o URL"

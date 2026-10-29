@@ -5217,6 +5217,7 @@ zh_TW:
     graph_title: "搜尋計數"
   onebox:
     discourse:
+      event_all_day: "全天"
       user_joined_community: "%{date}加入"
     google_meet:
       title: "Google Meet 會議"
@@ -5227,6 +5228,10 @@ zh_TW:
       truncated_file: "此檔案已被截斷。"
       show_original: "顯示原始內容"
     github:
+      header:
+        file: "檔案"
+        success: "成功"
+        pending: "處理中"
       binary_file: "此文件是二進制文件。"
       truncated_file: "此檔案已被截斷。"
       show_original: "顯示原始內容"
@@ -5240,20 +5245,11 @@ zh_TW:
       review_by: "審查者"
       pr_summary: "%{commits} 提交了更改的 %{changed_files} 文件，其中包含 %{additions} 項增加和 %{deletions} 項刪除"
       no_description: "通過在 GitHub 上創建帳號來為 %{repo} 開發做出貢獻。"
-      pr_title:
-        default: "拉取請求"
-        draft: "草稿拉取請求"
-        open: "打開拉取請求"
-        approved: "已批準的拉取請求"
-        changes_requested: "已請求更改"
-        merged: "已合并的拉取請求"
-        closed: "已關閉的拉取請求"
-      status_date:
-        open: "已開啟"
+      pr_status:
         draft: "草稿"
+        open: "開放"
         approved: "已批準"
-        changes_requested: "已請求更改"
-        merged: "已合并"
+        merged: "已合併"
         closed: "已關閉"
   discourse_push_notifications:
     popup:

@@ -7,6 +7,8 @@
 he:
   js:
     dsa_notice:
+      choice_title: "זה לא חוקי"
+      go_back: "חזרה"
       title: "דיווח על תוכן לא חוקי"
       email: "כתובת דוא״ל"
     mcp_oauth_client_id_metadata_policy:
@@ -52,6 +54,7 @@ he:
     access_control:
       manage:
         access_permission_editor: "עורכים"
+        access_permission_owner: "בעלות"
         access_permission_remove: "הסרה"
         add_group: "הוספת משתמש או קבוצה"
         mandatory: "חובה"
@@ -8405,7 +8408,7 @@ he:
         silenced_by: "הושתק על ידי"
         silence_modal_title: "השתקת משתמש"
         silence_duration: "למשך כמה זמן יושתק המשתמש?"
-        silence_reason_label: "למה בחרת להשתיק את המשתמש הזה?"
+        silence_reason_title: "סיבת השתקה"
         silence_reason_placeholder: "סיבת השתקה"
         silence_message: "הודעה בדוא״ל"
         silence_message_placeholder: "(להשאיר ריק כדי לשלוח את הודעת בררת המחדל)"

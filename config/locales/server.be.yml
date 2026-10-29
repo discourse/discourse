@@ -2326,10 +2326,12 @@ be:
     graph_title: "пошук граф"
   onebox:
     github:
+      header:
+        success: "Поспех"
       closed: "закрыта"
-      status_date:
-        approved: "ухвалена"
-        closed: "закрыта"
+      pr_status:
+        approved: "Ухвалены"
+        closed: "Закрыта"
   discourse_push_notifications:
     popup:
       mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'

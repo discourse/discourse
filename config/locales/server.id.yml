@@ -1564,10 +1564,14 @@ id:
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Sukses"
       closed: "tertutup"
-      status_date:
-        approved: "disetujui"
-        closed: "tertutup"
+      pr_status:
+        draft: "Konsep"
+        open: "Buka"
+        approved: "Disetujui"
+        closed: "Tertutup"
   staff_action_logs:
     unknown: "tidak diketahui"
   reviewables:

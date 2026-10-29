@@ -6,6 +6,8 @@
 
 te:
   js:
+    dsa_notice:
+      choice_title: "ఇది చట్టవిరుద్ధం"
     user_api_key:
       authorize: "అధికారం ఇవ్వండి"
       deny: "రద్దుచేయండి"
@@ -21,6 +23,7 @@ te:
     access_control:
       manage:
         access_permission_editor: "ఎడిటరు"
+        access_permission_owner: "యజమాని"
         access_permission_remove: "తొలగించు"
     number:
       format:
@@ -5905,7 +5908,6 @@ te:
         silenced_by: "చేత నిశ్శబ్దం చేయబడింది"
         silence_modal_title: "సభ్యుని నిశ్శబ్దం చేయండి"
         silence_duration: "సభ్యుడు ఎంతకాలం నిశ్శబ్దం చేయబడతారు?"
-        silence_reason_label: "మీరు ఈ సభ్యుని ఎందుకు నిశ్శబ్దం చేస్తున్నారు?"
         silence_reason_placeholder: "నిశ్శబ్దం కారణం"
         silence_message: "ఇమెయిల్ సందేశం"
         silence_message_placeholder: "(డిఫాల్ట్ సందేశాన్ని పంపడానికి ఖాళీగా ఉంచండి)"

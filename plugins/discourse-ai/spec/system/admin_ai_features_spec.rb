@@ -153,6 +153,91 @@ RSpec.describe "Admin AI features configuration" do
     expect(field.component).to have_content("Test LLM Beta")
   end
 
+  it "lets admins discover mixed sentiment backends without workflows" do
+    decision_model = Fabricate(:decision_model)
+    SiteSetting.enable_discourse_workflows = false
+    SiteSetting.ai_sentiment_enabled = true
+    SiteSetting.ai_sentiment_emotion_enabled = true
+    SiteSetting.ai_sentiment_sentiment_classification_strategy = "decision_model"
+    SiteSetting.ai_sentiment_sentiment_decision_model = decision_model.id
+    SiteSetting.ai_sentiment_emotion_classification_strategy = "agent"
+    SiteSetting.ai_sentiment_emotion_agent = summarization_agent.id
+
+    ai_features_page.visit
+    ai_features_page.toggle_enabled
+
+    expect(ai_features_page).to have_feature_decision_model("sentiment", decision_model)
+    expect(ai_features_page).to have_feature_agent("emotion", summarization_agent.name)
+    expect(ai_features_page).to have_no_feature_groups("sentiment")
+    expect(ai_features_page).to have_no_feature_groups("emotion")
+  end
+
+  it "lets admins switch sentiment backends before saving and retain their selections" do
+    decision_model = Fabricate(:decision_model)
+    SiteSetting.ai_sentiment_sentiment_decision_model = decision_model.id
+    SiteSetting.ai_sentiment_emotion_decision_model = decision_model.id
+    SiteSetting.ai_sentiment_sentiment_agent = summarization_agent.id
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::SENTIMENT_ID}/edit",
+    )
+
+    expect(form.field("ai_sentiment_enabled")).to be_unchecked
+    expect(form.field("ai_sentiment_emotion_enabled")).to be_unchecked
+    expect(form).to have_no_field_with_name("ai_sentiment_sentiment_classification_strategy")
+    form.field("ai_sentiment_enabled").check
+    expect(form.field("ai_sentiment_emotion_enabled")).to be_unchecked
+    expect(form).to have_no_field_with_name("ai_sentiment_emotion_classification_strategy")
+    expect(ai_features_page).to have_dedicated_configuration_link
+    expect(form).to have_no_field_with_name("ai_sentiment_sentiment_agent")
+    expect(form).to have_no_field_with_name("ai_sentiment_sentiment_decision_model")
+    expect(form).to have_no_field_with_name("ai_sentiment_model_configs")
+    expect(form.field("ai_sentiment_backfill_maximum_posts_per_hour")).to have_value("240")
+    expect(form.field("ai_sentiment_backfill_post_max_age_days")).to have_value("60")
+    form.field("ai_sentiment_backfill_maximum_posts_per_hour").fill_in("120")
+    form.field("ai_sentiment_backfill_post_max_age_days").fill_in("0")
+
+    form.field("ai_sentiment_sentiment_classification_strategy").select("agent")
+    expect(form.field("ai_sentiment_sentiment_agent")).to have_value(summarization_agent.id.to_s)
+    expect(form).to have_no_field_with_name("ai_sentiment_sentiment_decision_model")
+
+    form.field("ai_sentiment_sentiment_classification_strategy").select("decision_model")
+    expect(form).to have_no_field_with_name("ai_sentiment_sentiment_agent")
+    expect(form.field("ai_sentiment_sentiment_decision_model")).to have_value(
+      decision_model.id.to_s,
+    )
+    form.submit
+    expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
+
+    page.refresh
+    expect(form.field("ai_sentiment_enabled")).to be_checked
+    expect(form.field("ai_sentiment_emotion_enabled")).to be_unchecked
+    expect(form).to have_no_field_with_name("ai_sentiment_emotion_classification_strategy")
+    expect(form.field("ai_sentiment_backfill_maximum_posts_per_hour")).to have_value("120")
+    expect(form.field("ai_sentiment_backfill_post_max_age_days")).to have_value("0")
+    expect(form.field("ai_sentiment_sentiment_classification_strategy")).to have_value(
+      "decision_model",
+    )
+    expect(form.field("ai_sentiment_sentiment_decision_model")).to have_value(
+      decision_model.id.to_s,
+    )
+
+    form.field("ai_sentiment_sentiment_classification_strategy").select("agent")
+    expect(form.field("ai_sentiment_sentiment_agent")).to have_value(summarization_agent.id.to_s)
+
+    form.field("ai_sentiment_enabled").uncheck
+    form.field("ai_sentiment_emotion_enabled").check
+    form.field("ai_sentiment_emotion_classification_strategy").select("decision_model")
+    form.submit
+    expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
+
+    page.refresh
+    expect(form.field("ai_sentiment_enabled")).to be_unchecked
+    expect(form.field("ai_sentiment_emotion_enabled")).to be_checked
+    expect(form).to have_no_field_with_name("ai_sentiment_sentiment_classification_strategy")
+    expect(form.field("ai_sentiment_emotion_decision_model")).to have_value(decision_model.id.to_s)
+  end
+
   context "with external AI features" do
     let(:fake_plugin) do
       plugin = Plugin::Instance.new

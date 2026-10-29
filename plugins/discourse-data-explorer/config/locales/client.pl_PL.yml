@@ -33,6 +33,7 @@ pl_PL:
       view_query: "Widok"
       queries: "Zapytania"
       back_to_queries: "Powrót do zapytań"
+      query_details: "Szczegóły zapytania"
       query_created: "Zapytanie utworzone!"
       mode:
         label: "Tryb tworzenia zapytań"
@@ -62,7 +63,6 @@ pl_PL:
         save_query: "Zapisz zapytanie"
         write_manually: "Napisz SQL ręcznie"
         sql_label: "SQL"
-        optional: "opcjonalne"
       import:
         label: "Importuj zapytanie"
         unparseable_json: "Nieprzetwarzalny plik JSON."
@@ -138,7 +138,7 @@ pl_PL:
         few: "Wyświetlanie %{count} najlepszych wyników."
         many: "Wyświetlanie %{count} najlepszych wyników."
         other: "Wyświetlanie %{count} najlepszych wyników."
-      query_name: "Zapytanie"
+      name: "Nazwa"
       query_groups: "Grupy"
       query_tags: "Tagi"
       automatic_tag_mandatory: "Tag ten jest dodawany automatycznie i nie można go usunąć."

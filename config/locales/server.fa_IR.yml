@@ -2853,9 +2853,13 @@ fa_IR:
     google_meet:
       meeting_code: "کد:"
     github:
+      header:
+        success: "موفقیت"
       closed: "بسته"
-      status_date:
-        approved: "تایید شده"
+      pr_status:
+        draft: "درفت"
+        open: "باز"
+        approved: "پذیرفته شده"
         closed: "بسته شده"
   discourse_push_notifications:
     popup:

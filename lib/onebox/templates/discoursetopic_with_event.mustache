@@ -1,0 +1,55 @@
+<div class="{{event_onebox_classes}}"
+     data-event-all-day="{{event_all_day}}"
+     data-event-ends-at="{{event_ends_at}}"
+     data-event-starts-at="{{event_starts_at}}"
+     data-event-timezone="{{event_timezone}}">
+  <div class="discourse-event-onebox__media">
+    {{#image}}<img src="{{image}}" class="thumbnail discourse-event-onebox__image" alt=""/>{{/image}}
+    <time class="discourse-event-onebox__date" datetime="{{event_starts_at}}">
+      <span class="discourse-event-onebox__month">{{event_date_month}}</span>
+      <span class="discourse-event-onebox__day">{{event_date_day}}</span>
+    </time>
+  </div>
+
+  <div class="discourse-event-onebox__content">
+    <div class="title-wrapper">
+      <h3><a href="{{link}}" target="_blank" rel="noopener">{{title}}</a></h3>
+      {{#render_category_block?}}
+      <div class="topic-category">
+        {{#categories}}
+          <span class="badge-wrapper bullet">
+            <span class="badge-category-bg" style="background-color: #{{color}};"></span>
+            <span class="badge-category clear-badge">
+              <span class="category-name">{{name}}</span>
+            </span>
+          </span>
+        {{/categories}}
+        {{#render_tags?}}
+        <div class="topic-header-extra">
+          <div class="list-tags">
+            <div class="discourse-tags">
+              <svg class="fa d-icon d-icon-tag svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#tag" /></svg>
+              {{#article_tags}}
+                <span class="discourse-tag simple">{{.}}</span>
+              {{/article_tags}}
+            </div>
+          </div>
+        </div>
+        {{/render_tags?}}
+      </div>
+      {{/render_category_block?}}
+    </div>
+
+    <div class="discourse-event-onebox__time">
+      <svg class="fa d-icon d-icon-clock svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg>
+      <span class="discourse-event-onebox__time-text">{{event_time}}</span>
+    </div>
+
+    {{#description}}
+      <div class="discourse-event-onebox__description">
+        <svg class="fa d-icon d-icon-file-lines svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#file-lines" /></svg>
+        <p>{{description}}</p>
+      </div>
+    {{/description}}
+  </div>
+</div>

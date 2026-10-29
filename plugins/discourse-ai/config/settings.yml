@@ -21,6 +21,11 @@ discourse_ai:
   ai_sentiment_enabled:
     default: false
     client: true
+    area: "ai-features/sentiment"
+  ai_sentiment_emotion_enabled:
+    default: false
+    client: true
+    area: "ai-features/sentiment"
   ai_sentiment_model_configs:
     default: ""
     secret: true
@@ -31,28 +36,79 @@ discourse_ai:
     choices:
       - classification_model
       - agent
+      - decision_model
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+    depends_behavior: "hidden"
   ai_sentiment_sentiment_agent:
     default: "-36"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+      - ai_sentiment_sentiment_classification_strategy
+    depends_on_values:
+      ai_sentiment_sentiment_classification_strategy:
+        - agent
+    depends_behavior: "hidden"
+  ai_sentiment_sentiment_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_enabled
+      - ai_sentiment_sentiment_classification_strategy
+    depends_on_values:
+      ai_sentiment_sentiment_classification_strategy:
+        - decision_model
+    depends_behavior: "hidden"
   ai_sentiment_emotion_classification_strategy:
     default: "classification_model"
     type: enum
     choices:
       - classification_model
       - agent
+      - decision_model
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+    depends_behavior: "hidden"
   ai_sentiment_emotion_agent:
     default: "-37"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+      - ai_sentiment_emotion_classification_strategy
+    depends_on_values:
+      ai_sentiment_emotion_classification_strategy:
+        - agent
+    depends_behavior: "hidden"
+  ai_sentiment_emotion_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/sentiment"
+    depends_on:
+      - ai_sentiment_emotion_enabled
+      - ai_sentiment_emotion_classification_strategy
+    depends_on_values:
+      ai_sentiment_emotion_classification_strategy:
+        - decision_model
+    depends_behavior: "hidden"
   ai_sentiment_backfill_maximum_posts_per_hour:
-    default: 2500
+    default: 240
     min: 0
     max: 10000
-    hidden: true
+    area: "ai-features/sentiment"
   ai_sentiment_backfill_post_max_age_days:
     default: 60
-    hidden: true
+    min: 0
+    area: "ai-features/sentiment"
 
   ai_openai_embeddings_url:
     hidden: true
@@ -544,6 +600,12 @@ discourse_ai:
   ai_ask_ai_search_max_age_days:
     default: 0
     min: 0
+    area: "ai-features/search"
+  ai_ask_ai_endorsed_reply_groups:
+    type: group_list
+    list_type: compact
+    default: "3" # 3: @staff
+    allow_any: false
     area: "ai-features/search"
   ai_ask_ai_external_sources:
     type: list

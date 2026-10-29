@@ -271,7 +271,6 @@ nl:
         none: "Geen"
       features:
         short_title: "Functies"
-        description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke agenten en LLM's en de toegang kan per groep worden beheerd."
         back: "Terug naar AI-functies"
         settings_save_error: "Sommige instellingen kunnen niet worden opgeslagen."
         disabled: "(uitgeschakeld)"
@@ -285,6 +284,7 @@ nl:
         no_llm: "Geen LLM geselecteerd"
         no_agent: "Niet ingesteld"
         no_groups: "Geen"
+        classification_model: "Model:"
         edit: "Instellingen"
         expand_list:
           one: "(Nog %{count})"
@@ -303,10 +303,17 @@ nl:
           enabled: "Ingeschakeld"
         filters:
           all: "Alles"
-          text: "Zoek naar functies, agenten, LLM's of groepen..."
           no_results: "Geen functies gevonden die aan je filters voldoen."
           reset: "Resetten"
         no_automations: "Er zijn nog geen automatiseringen"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Emotie"
+          enabled: "Ingeschakeld"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emotie"
         summarization:
           name: "Samenvattingen"
           description: "Maakt een samenvattingsknop beschikbaar waarmee bezoekers topics kunnen samenvatten"

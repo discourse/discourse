@@ -1,3 +1,72 @@
+@use "lib/viewport";
+
 .dsa-notice {
   padding-block-end: var(--space-6);
+
+  &__form {
+    max-inline-size: var(--form-kit-max-input);
+  }
+}
+
+.dsa-notice-modal {
+  --modal-max-width: 45rem;
+
+  .d-modal__container {
+    width: 45rem;
+  }
+
+  .d-modal__body {
+    display: flex;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .dsa-notice,
+  .dsa-notice__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    max-inline-size: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .dsa-notice__fields,
+  .dsa-notice__confirmation,
+  .dsa-notice__actions {
+    box-sizing: border-box;
+  }
+
+  .dsa-notice__fields,
+  .dsa-notice__confirmation {
+    overflow-y: auto;
+    padding: var(--space-6);
+    min-height: 0;
+  }
+
+  .dsa-notice__form > .form-kit__errors-summary {
+    align-self: stretch;
+    flex-shrink: 0;
+    width: auto;
+    max-block-size: 50%;
+    overflow-y: auto;
+    margin: var(--space-6) var(--space-6) 0;
+  }
+
+  .dsa-notice__actions {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding: var(--space-4) var(--space-6);
+    border-top: 1px solid var(--primary-low);
+  }
+
+  @include viewport.until(sm) {
+    .d-modal__container {
+      width: 100%;
+      height: calc(var(--composer-vh, 1dvh) * 100);
+      max-height: calc(var(--composer-vh, 1dvh) * 100);
+      border-radius: 0;
+    }
+  }
 }

@@ -59,6 +59,7 @@ export default class DesignWizardService extends Service {
   @tracked bodyFont;
   @tracked headingFont;
   @tracked homepage;
+  @tracked homepageSettings;
   @tracked categoryPageStyle;
   @tracked welcomeBanner;
   @tracked welcomeBannerLocation;
@@ -82,11 +83,31 @@ export default class DesignWizardService extends Service {
   #starting = false;
   #startFailed = false;
   #originalSiteSettings;
+  #originalHomepageSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
 
   get selectedTheme() {
     return this.data?.themes.find((theme) => theme.id === this.themeId);
+  }
+
+  get additionalHomepages() {
+    return this.data?.additional_homepages ?? [];
+  }
+
+  get supportsWelcomeBanner() {
+    return this.selectedTheme?.supports_welcome_banner !== false;
+  }
+
+  get supportsSearch() {
+    return this.selectedTheme?.supports_search !== false;
+  }
+
+  get #supportedHomepages() {
+    return [
+      ...SUPPORTED_HOMEPAGES,
+      ...this.additionalHomepages.map(({ id }) => id),
+    ];
   }
 
   get pairs() {
@@ -112,8 +133,7 @@ export default class DesignWizardService extends Service {
       : (pair.light ?? pair.dark);
   }
 
-  // the endpoint only accepts core themes, so a site whose default theme the
-  // wizard cannot express is not offered a way back to it
+  // Only themes offered by the wizard can be restored through its endpoint.
   get canRevert() {
     return (
       this.source === SOURCE_ADMIN && this.progressSaved && !!this.#snapshot
@@ -135,11 +155,18 @@ export default class DesignWizardService extends Service {
       base_font: this.bodyFont,
       heading_font: this.headingFont,
       homepage: this.homepage,
+      homepage_settings: this.homepageSettings,
       category_page_style:
         this.homepage === "categories" ? this.categoryPageStyle : null,
-      enable_welcome_banner: this.welcomeBanner,
-      welcome_banner_location: this.welcomeBannerLocation,
-      search_experience: this.searchExperience,
+      ...(this.supportsWelcomeBanner
+        ? {
+            enable_welcome_banner: this.welcomeBanner,
+            welcome_banner_location: this.welcomeBannerLocation,
+          }
+        : {}),
+      ...(this.supportsSearch
+        ? { search_experience: this.searchExperience }
+        : {}),
     };
   }
 
@@ -286,13 +313,37 @@ export default class DesignWizardService extends Service {
     this.showIntro = false;
   }
 
-  selectTheme(themeId) {
+  async selectTheme(themeId) {
     if (themeId === this.themeId || this.applyingTheme) {
       return;
     }
 
     this.applyingTheme = true;
+    const previousThemeId = this.themeId;
+    const theme = this.data.themes.find(
+      (candidate) => candidate.id === themeId
+    );
     this.themeId = themeId;
+
+    if (theme?.remote_url) {
+      try {
+        const result = await ajax("/admin/themes/import", {
+          type: "POST",
+          data: { remote: theme.remote_url },
+        });
+        if (!this.active) {
+          this.applyingTheme = false;
+          return;
+        }
+        themeId = result.theme.id;
+        this.themeId = themeId;
+      } catch (error) {
+        this.themeId = previousThemeId;
+        this.applyingTheme = false;
+        popupAjaxError(error);
+        return;
+      }
+    }
     // these are resolved per theme, so let the reloaded page re-seed them from
     // the theme being previewed rather than carrying the old theme's values
     this.welcomeBanner = undefined;
@@ -349,17 +400,23 @@ export default class DesignWizardService extends Service {
 
   selectHomepage(homepage) {
     this.homepage = homepage;
+    const additionalHomepage = this.additionalHomepages.find(
+      ({ id }) => id === homepage
+    );
+    this.homepageSettings = {
+      ...this.#originalHomepageSettings,
+      ...additionalHomepage?.settings,
+    };
     if (homepage === "categories") {
       this.categoryPageStyle = "categories_boxes";
       this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
     }
     this.#persistState();
 
-    // the page behind the sheet is the preview: show the chosen homepage.
-    // Explicit routes, because "/" resolves to the currently saved default
-    // homepage, and a router transition (unlike DiscourseURL.routeTo) can
-    // never escalate to a full page load, which would dismiss the sheet
-    this.router.transitionTo(`discovery.${homepage}`);
+    // An explicit destination previews unsaved choices without reloading the wizard.
+    this.router.transitionTo(
+      additionalHomepage?.path ?? `discovery.${homepage}`
+    );
   }
 
   selectCategoryPageStyle(value) {
@@ -529,6 +586,7 @@ export default class DesignWizardService extends Service {
     this.showIntro = false;
     this.#snapshot = undefined;
     this.#originalSiteSettings = undefined;
+    this.#originalHomepageSettings = undefined;
   }
 
   // captured before anything is previewed or saved, from the values the server
@@ -550,13 +608,20 @@ export default class DesignWizardService extends Service {
       heading_font: this.data.heading_font,
       // a homepage the wizard cannot express is left alone rather than replaced
       // with the one it fell back to
-      homepage: SUPPORTED_HOMEPAGES.includes(this.data.homepage)
+      homepage: this.#supportedHomepages.includes(this.data.homepage)
         ? this.data.homepage
         : null,
+      homepage_settings: this.data.homepage_settings,
       category_page_style: settings.desktop_category_page_style,
-      enable_welcome_banner: settings.enable_welcome_banner,
       welcome_banner_location: settings.welcome_banner_location,
-      search_experience: settings.search_experience,
+      ...(currentTheme.supports_welcome_banner !== false
+        ? {
+            enable_welcome_banner: settings.enable_welcome_banner,
+          }
+        : {}),
+      ...(currentTheme.supports_search !== false
+        ? { search_experience: settings.search_experience }
+        : {}),
     };
   }
 
@@ -577,6 +642,8 @@ export default class DesignWizardService extends Service {
     this.headingFont = this.data.heading_font;
     this.colorMode = renderedColorMode();
     this.homepage = this.#supportedHomepage(this.data.homepage);
+    this.#originalHomepageSettings = this.data.homepage_settings ?? {};
+    this.homepageSettings = this.#originalHomepageSettings;
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
     this.welcomeBanner = this.siteSettings.enable_welcome_banner;
     this.welcomeBannerLocation = this.siteSettings.welcome_banner_location;
@@ -589,6 +656,11 @@ export default class DesignWizardService extends Service {
     this.returnUrl = stored.returnUrl;
     this.progressSaved = stored.progressSaved ?? false;
     this.#snapshot = stored.snapshot;
+    this.#originalHomepageSettings =
+      stored.originalHomepageSettings ??
+      stored.snapshot?.homepage_settings ??
+      this.data.homepage_settings ??
+      {};
     // the intro is only ever shown once, before the first selection
     this.showIntro = false;
     this.themeId = stored.themeId;
@@ -599,6 +671,8 @@ export default class DesignWizardService extends Service {
     this.headingFont = stored.headingFont;
     this.homepage =
       stored.homepage ?? this.#supportedHomepage(this.data.homepage);
+    this.homepageSettings =
+      stored.homepageSettings ?? this.data.homepage_settings ?? {};
     this.categoryPageStyle =
       stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
     this.welcomeBanner =
@@ -623,6 +697,8 @@ export default class DesignWizardService extends Service {
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
         homepage: this.homepage,
+        homepageSettings: this.homepageSettings,
+        originalHomepageSettings: this.#originalHomepageSettings,
         categoryPageStyle: this.categoryPageStyle,
         welcomeBanner: this.welcomeBanner,
         welcomeBannerLocation: this.welcomeBannerLocation,
@@ -641,9 +717,13 @@ export default class DesignWizardService extends Service {
     if (this.homepage === "categories") {
       this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
     }
-    this.siteSettings.enable_welcome_banner = this.welcomeBanner;
-    this.siteSettings.welcome_banner_location = this.welcomeBannerLocation;
-    this.siteSettings.search_experience = this.searchExperience;
+    if (this.supportsWelcomeBanner) {
+      this.siteSettings.enable_welcome_banner = this.welcomeBanner;
+      this.siteSettings.welcome_banner_location = this.welcomeBannerLocation;
+    }
+    if (this.supportsSearch) {
+      this.siteSettings.search_experience = this.searchExperience;
+    }
   }
 
   #refreshCategoriesPage() {
@@ -659,7 +739,7 @@ export default class DesignWizardService extends Service {
   }
 
   #supportedHomepage(homepage) {
-    return SUPPORTED_HOMEPAGES.includes(homepage) ? homepage : "latest";
+    return this.#supportedHomepages.includes(homepage) ? homepage : "latest";
   }
 
   #currentPairKey(theme) {

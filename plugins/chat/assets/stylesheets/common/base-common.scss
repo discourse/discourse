@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --message-left-width: 42px;
   --full-page-border-radius: 12px;
@@ -209,6 +211,7 @@ body.has-full-page-chat {
 }
 
 .full-page-chat {
+  --chat-content-offset: var(--admin-onboarding-banner-height, 0px);
   display: grid;
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
   background: var(--d-content-background);
@@ -222,6 +225,39 @@ body.has-full-page-chat {
   .chat-messages-scroller {
     box-sizing: border-box;
     height: 100%;
+  }
+}
+
+// a zero-height region right above the message list: whatever it holds flows
+// in normal order below the status, filter and pinned bars, and overflows
+// downward over the list, which keeps its full height underneath
+.chat-channel__overlays {
+  position: relative;
+
+  // what the notices stacked at before they moved in here
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 0px;
+  min-height: 0;
+
+  .admin-onboarding-banner {
+    padding: var(--space-4) var(--space-6);
+    pointer-events: none;
+
+    @include viewport.until(sm) {
+      padding: var(--space-2);
+    }
+  }
+
+  .admin-onboarding-banner__wrap {
+    pointer-events: auto;
+    background: var(--secondary);
+    transition: box-shadow 150ms ease;
+  }
+
+  &.--over-content .admin-onboarding-banner__wrap {
+    box-shadow: var(--shadow-card);
   }
 }
 

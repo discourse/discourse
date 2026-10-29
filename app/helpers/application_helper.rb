@@ -129,7 +129,11 @@ module ApplicationHelper
   end
 
   def script_asset_path(script)
-    path = ActionController::Base.helpers.asset_path("#{script}.js")
+    asset_cdn_path("#{script}.js", brotli: true)
+  end
+
+  def asset_cdn_path(logical_path, brotli: false)
+    path = ActionController::Base.helpers.asset_path(logical_path)
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       resolved_s3_asset_cdn_url =
@@ -151,7 +155,7 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      path = path.sub("/assets/js/", "/assets/br/") if is_brotli_req?
+      path = path.sub("/assets/js/", "/assets/br/") if brotli && is_brotli_req?
     end
 
     path

@@ -200,6 +200,7 @@ sk:
         no_llm: "Nie je vybraný žiadny LLM"
         no_agent: "Nie je nastavené"
         no_groups: "Žiadny"
+        classification_model: "Model:"
         edit: "Nastavení"
         expand_list:
           one: "(%{count} ďalší)"
@@ -217,6 +218,13 @@ sk:
           all: "Všetky"
           no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."
           reset: "Resetovať"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Emócia"
+          enabled: "Povolené"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emócia"
         summarization:
           name: "Súhrny"
           description: "Sprístupňuje tlačidlo na zhrnutie, ktoré umožňuje návštevníkom zhrnúť témy"

@@ -24,7 +24,6 @@ $live-widget-z: z("header") + 1;
   // a content-driven box would chase its own layout.
   height: min(21rem, 60vh);
   padding: var(--space-3);
-  border: 1px solid var(--primary-low);
   border-radius: 0.75rem;
   background: var(--secondary);
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 20%);
@@ -237,57 +236,26 @@ html.discourse-touch .live-call-widget {
 }
 
 .live-room-page {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-
-  // A definite height (not just a floor) so the flex chain below actually
-  // constrains: without it a transiently oversized video tile stretches the
-  // whole page and pushes the control bar below the fold.
-  height: calc(100dvh - var(--header-offset, 4em) - 6em);
-
-  &__title-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75em;
-    min-width: 0;
-  }
-
-  &__title {
-    margin: 0;
-  }
-
-  &__description {
-    margin: 0;
-    color: var(--primary-high);
-    overflow-wrap: anywhere;
-  }
-
-  // The video column and the chat sidebar sit side by side; the column flexes
-  // and the sidebar takes a fixed width. min-height: 0 lets the grid and the
-  // chat message list scroll instead of pushing the page taller.
-  &__body {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    gap: var(--space-4);
-  }
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  height: calc(100dvh - var(--main-outlet-offset, 4em));
+  min-height: 0;
+  border-right: 1px solid var(--content-border-color);
 
   &__main {
-    flex: 1;
     min-width: 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
   }
 
-  &__sidebar {
-    flex: 0 0 22rem;
+  .chat-side-panel {
     width: 22rem;
+    min-width: 0;
     min-height: 0;
     display: flex;
     overflow: hidden;
+    border-inline-start: 1px solid var(--content-border-color);
 
     // Animating the width (not just fading in place) makes the whole layout
     // ease — the video column and controls resize smoothly instead of
@@ -311,21 +279,18 @@ html.discourse-touch .live-call-widget {
     }
   }
 
-  &__chat-toggle {
-    &.--active {
-      color: var(--tertiary);
-    }
-  }
-
   // Meet-style column: the video grid fills the space with tiles centered,
   // and the control bar sits on the bottom row, level with the chat panel's
   // composer next door.
   &__stage {
+    position: relative;
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    row-gap: 0.75em;
+    row-gap: var(--space-3);
+    margin: var(--space-2);
+    margin-block-end: var(--space-4);
   }
 
   &__presentation {
@@ -380,18 +345,18 @@ html.discourse-touch .live-call-widget {
     flex: 1;
     min-height: 0;
 
-    // The tile height is computed from this element's measured size, so its
+    // The tile size is computed from this element's measured size, so its
     // own size must never derive from the tiles: after exiting fullscreen the
     // still-huge tiles would inflate the grid (the page only has a
     // min-height), the remeasure would see that inflated box, and the layout
     // would lock there instead of shrinking back.
     contain: size;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-    align-content: center;
     align-items: center;
     justify-content: center;
+
+    // Read by the layout as the spacing between tiles.
+    gap: 0.5em;
 
     // While the sidebar animates, tiles rewrap faster than their height
     // recomputes — clip the transient overflow so it can't spill over the
@@ -401,11 +366,74 @@ html.discourse-touch .live-call-widget {
     &:fullscreen {
       background: #000;
       padding: 0.5em;
+
+      .live-video-tile__menu {
+        display: none;
+      }
+    }
+  }
+
+  // Uniform tiles sized by computeRoomGrid; the line width cap makes flex
+  // wrapping break at the solved column count and centers a partial last row.
+  &__tiles {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: inherit;
+    width: var(--live-grid-line-width, 100%);
+    max-width: 100%;
+    max-height: 100%;
+
+    .live-video-tile {
+      width: var(--live-tile-width, auto);
+      transition:
+        width 0.2s ease-out,
+        height 0.2s ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    // Cropping would cut a portrait feed down to a face-height strip.
+    .live-video-tile.--portrait .live-video-tile__video {
+      object-fit: contain;
+      background: var(--primary-very-high);
+    }
+  }
+
+  // Self view in a one-to-one call. Sized by its own feed's aspect (set
+  // inline by the tile), not by the grid's tile size. Scoped to the grid to
+  // outrank the base tile rules.
+  &__grid &__pip {
+    position: absolute;
+    inset-block-end: var(--space-3);
+    inset-inline-end: var(--space-3);
+    z-index: 1;
+    width: clamp(10rem, 18%, 17.5rem);
+    height: auto;
+    max-height: 40%;
+    box-shadow: 0 0.35rem 1.25rem rgb(0 0 0 / 35%);
+    transition: none;
+
+    // A portrait feed sized by width would blow past the height cap, so size
+    // it by height and let the inline aspect-ratio set the width.
+    &.--portrait {
+      width: auto;
+      height: min(40%, 20rem);
+    }
+
+    // Any remaining mismatch between the capped box and the feed letterboxes
+    // rather than cropping your own camera.
+    .live-video-tile__video {
+      object-fit: contain;
+      background: var(--primary-very-high);
     }
   }
 
   // Top-left so it never collides with the per-tile fullscreen buttons
-  // (top-right). Visible in fullscreen too, since it lives inside the grid.
+  // (top-right).
   &__fullscreen {
     position: absolute;
     inset-block-start: 0.35em;
@@ -454,6 +482,102 @@ html.discourse-touch .live-call-widget {
       color: var(--tertiary);
     }
   }
+}
+
+.live-room-header {
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    height: var(--chat-header-offset, 45px);
+    white-space: nowrap;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    margin: 0;
+    font-size: var(--font-0);
+    font-weight: 700;
+  }
+
+  &__info-trigger {
+    gap: var(--space-2);
+    min-width: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--primary);
+
+    &:hover,
+    &:focus-visible {
+      background: none;
+      color: var(--primary);
+
+      .discourse-no-touch & {
+        background: none;
+        color: var(--primary);
+      }
+    }
+
+    .d-button-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__participants {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    white-space: nowrap;
+  }
+
+  &__icon {
+    position: relative;
+    font-size: var(--font-up-1);
+    color: var(--primary-medium);
+    line-height: 1;
+  }
+
+  &__restricted-icon {
+    position: absolute;
+    top: -20%;
+    right: -30%;
+    width: 40%;
+    height: 40%;
+    padding: 2px 2px 3px;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    color: var(--primary-high);
+  }
+
+  &__fallback {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 0.67em;
+    border-block-end: 1px solid var(--content-border-color);
+    background: var(--secondary);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    height: var(--chat-header-offset, 45px);
+    margin-inline-start: auto;
+  }
+}
+
+body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
+  gap: 0;
+}
+
+#main-outlet:has(.live-room-header) {
+  padding-top: 0;
 }
 
 // Split "combo" button (mic/camera) shared by LiveCallControls in both the
@@ -539,6 +663,135 @@ html.discourse-touch .live-call-widget {
 
     &::after {
       content: ":";
+    }
+  }
+
+  // Portaled into the fullscreen grid or tile, clear of the tile name bar.
+  &.--fullscreen {
+    position: absolute;
+    inset-block-end: 3em;
+    inset-inline: 0;
+    margin-inline: auto;
+    height: auto;
+    font-size: var(--font-up-2);
+  }
+}
+
+// Each item spans the overlay's full height with its content pinned to the
+// bottom, so a percentage translate rises relative to the overlay — keeping
+// the animation on the compositor regardless of how tall the stage is.
+.live-reactions {
+  position: absolute;
+  inset: 0 0 var(--live-reactions-bottom, 4rem);
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+
+  .live-call-widget & {
+    --live-reactions-bottom: 3.5rem;
+  }
+
+  &__item {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: var(--live-reaction-offset, 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    row-gap: 0.15rem;
+    animation: live-reaction-float 4s ease-out forwards;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation-name: live-reaction-fade;
+    }
+  }
+
+  // Outranks the core img.emoji sizing.
+  &__emoji.emoji {
+    width: 2.25rem;
+    height: 2.25rem;
+
+    .live-call-widget & {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &__username {
+    max-width: 8rem;
+    padding: 0 0.4em;
+    overflow: hidden;
+    border-radius: var(--d-border-radius);
+    background: rgb(0 0 0 / 55%);
+    color: #fff;
+    font-size: var(--font-down-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@keyframes live-reaction-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate(-50%, -8%) scale(1);
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(1);
+  }
+}
+
+@keyframes live-reaction-fade {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+
+  15%,
+  75% {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+.live-reaction-picker {
+  display: grid;
+  grid-template-columns: repeat(var(--live-reaction-columns, 7), auto);
+  gap: var(--space-1);
+  padding: var(--space-1);
+
+  &__emoji,
+  &__more {
+    padding: var(--space-1);
+  }
+
+  &__more .d-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  &__emoji {
+    .emoji {
+      width: 1.75rem;
+      height: 1.75rem;
+      transition: transform 0.1s ease-out;
+    }
+
+    &:hover .emoji,
+    &:focus-visible .emoji {
+      transform: scale(1.2);
     }
   }
 }
@@ -649,12 +902,11 @@ html.discourse-touch .live-call-widget {
     padding-block-end: 1px;
   }
 
-  .live-room-page__sidebar {
+  .live-room-page .chat-side-panel {
     position: fixed;
-    inset-block: var(--header-offset, 4em) 0;
+    inset-block: var(--main-outlet-offset, 4em) 0;
     inset-inline: 0;
     z-index: 1050;
-    flex: none;
     width: auto;
     background: var(--secondary);
     animation-name: live-drawer-in;
@@ -673,10 +925,10 @@ html.discourse-touch .live-call-widget {
   position: relative;
   flex: 0 0 auto;
 
-  // Rows share a height (computed per layout, published as
-  // --live-tile-height); each tile sets its own aspect-ratio inline from
-  // its measured video, so portrait and landscape feeds coexist without
-  // cropping. The fallback height covers first paint before measurement.
+  // Grids publish a uniform --live-tile-height (and width). Each tile also
+  // sets its own aspect-ratio inline from its measured video, which sizes it
+  // wherever only one dimension is given. The fallback height covers first
+  // paint before measurement.
   height: var(--live-tile-height, 12em);
 
   // The computed height always lags the layout by a beat (resize observer →
@@ -711,6 +963,10 @@ html.discourse-touch .live-call-widget {
   &:fullscreen {
     border-radius: 0;
     background: #000;
+  }
+
+  &:fullscreen &__menu {
+    display: none;
   }
 
   &:fullscreen &__video {
@@ -814,13 +1070,11 @@ html.discourse-touch .live-call-widget {
 
 @keyframes live-sidebar-in {
   from {
-    flex-basis: 0;
     width: 0;
     opacity: 0;
   }
 
   to {
-    flex-basis: 22rem;
     width: 22rem;
     opacity: 1;
   }
@@ -828,13 +1082,11 @@ html.discourse-touch .live-call-widget {
 
 @keyframes live-sidebar-out {
   from {
-    flex-basis: 22rem;
     width: 22rem;
     opacity: 1;
   }
 
   to {
-    flex-basis: 0;
     width: 0;
     opacity: 0;
   }

@@ -77,6 +77,35 @@ describe DiscourseAi::Discoveries::Synthesis do
     )
   end
 
+  it "flags a solved candidate and its answer passage" do
+    candidate = {
+      "source_ref" => "source_1",
+      "title" => "Robot stuck",
+      "url" => "/t/robot-stuck/1/1",
+      "solved" => true,
+      "passages" => [
+        { "post_number" => 1, "excerpt" => "My robot is stuck." },
+        { "post_number" => 4, "excerpt" => "Restart it.", "answer" => true },
+      ],
+    }
+
+    supplied_candidates =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ answerable: false, source_refs: [], title: "", answer: "" }],
+      ) do |_, _, prompts|
+        synthesis.call(query: "robot stuck", candidates: [candidate])
+        JSON.parse(prompts.first.messages.last[:content]).fetch("candidates")
+      end
+
+    expect(supplied_candidates.first).to include(
+      "solved" => true,
+      "passages" => [
+        { "post_number" => 1, "excerpt" => "My robot is stuck." },
+        { "post_number" => 4, "excerpt" => "Restart it.", "answer" => true },
+      ],
+    )
+  end
+
   it "sends an external candidate's publish date as a day and its link unchanged" do
     candidate = {
       "source_ref" => "source_1",

@@ -63,6 +63,98 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
     )
   end
 
+  it "uses the current agent default after the conversation model is deleted" do
+    topic = Fabricate(:private_message_topic, user:, recipient: agent.user)
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = first_model.id
+    topic.save_custom_fields
+    agent.update!(default_llm: second_model)
+    first_model.destroy!
+    SiteSetting.ai_bot_enabled_llms = ""
+
+    route = described_class.resolve(authorization_user: user, modality: :personal_message, topic:)
+
+    expect(route.model).to eq(second_model)
+    expect(route.model_source).to eq(:agent_default)
+  end
+
+  it "uses the current agent default when the client echoes a deleted conversation model" do
+    topic = Fabricate(:private_message_topic, user:, recipient: agent.user)
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = first_model.id
+    topic.save_custom_fields
+    agent.update!(default_llm: second_model)
+    first_model.destroy!
+
+    route =
+      described_class.resolve(
+        authorization_user: user,
+        modality: :personal_message,
+        topic:,
+        llm_model_id: first_model.id,
+      )
+
+    expect(route.model).to eq(second_model)
+    expect(route.model_source).to eq(:agent_default)
+  end
+
+  it "uses the current site default when the deleted conversation model has no agent replacement" do
+    topic = Fabricate(:private_message_topic, user:, recipient: agent.user)
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = first_model.id
+    topic.save_custom_fields
+    agent.update!(default_llm: nil)
+    site_default = assign_fake_provider_to(:ai_default_llm_model)
+    first_model.destroy!
+
+    route = described_class.resolve(authorization_user: user, modality: :personal_message, topic:)
+
+    expect(route.model).to eq(site_default)
+    expect(route.model_source).to eq(:site_default)
+  end
+
+  it "rejects an explicit deleted model rather than silently using the agent default" do
+    topic = Fabricate(:private_message_topic, user:, recipient: agent.user)
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = first_model.id
+    topic.save_custom_fields
+    second_model.destroy!
+
+    expect do
+      described_class.resolve(
+        authorization_user: user,
+        modality: :personal_message,
+        topic:,
+        llm_model_id: second_model.id,
+      )
+    end.to raise_error(
+      described_class::Error,
+      I18n.t("discourse_ai.ai_bot.errors.model_unavailable"),
+    )
+  end
+
+  it "preserves a deleted snapshot model failure even when it matches the conversation model" do
+    topic = Fabricate(:private_message_topic, user:, recipient: agent.user)
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = first_model.id
+    topic.save_custom_fields
+    agent.update!(default_llm: second_model)
+    first_model.destroy!
+
+    expect do
+      described_class.resolve(
+        authorization_user: user,
+        modality: :personal_message,
+        topic:,
+        llm_model_id: first_model.id,
+        selection_source: :snapshot,
+      )
+    end.to raise_error(
+      described_class::Error,
+      I18n.t("discourse_ai.ai_bot.errors.model_unavailable"),
+    )
+  end
+
   it "ignores a zero model provenance value during legacy resolution" do
     topic = Fabricate(:private_message_topic, user: user, recipient: agent.user)
     topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
@@ -92,6 +184,39 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
         modality: :personal_message,
         agent_id: agent.id,
         llm_model_id: second_model.id,
+      )
+    end.to raise_error(
+      described_class::Error,
+      I18n.t("discourse_ai.ai_bot.errors.model_conflicts_with_agent"),
+    )
+  end
+
+  it "uses the current forced model when the client echoes a deleted conversation model" do
+    topic = Fabricate(:private_message_topic, user:, recipient: agent.user)
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+    topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = first_model.id
+    topic.save_custom_fields
+    agent.update!(default_llm: second_model, force_default_llm: true)
+    first_model.destroy!
+
+    route =
+      described_class.resolve(
+        authorization_user: user,
+        modality: :personal_message,
+        topic:,
+        llm_model_id: first_model.id,
+      )
+
+    expect(route.model).to eq(second_model)
+    expect(route.model_source).to eq(:forced)
+
+    expect do
+      described_class.resolve(
+        authorization_user: user,
+        modality: :personal_message,
+        topic:,
+        llm_model_id: first_model.id,
+        selection_source: :snapshot,
       )
     end.to raise_error(
       described_class::Error,

@@ -20,6 +20,7 @@ et:
         failed: "ebaõnnestunud"
     access_control:
       manage:
+        access_permission_owner: "Omanik"
         access_permission_remove: "Eemalda"
     number:
       format:

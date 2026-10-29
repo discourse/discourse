@@ -27,6 +27,143 @@ describe "Crawler hreflang tags" do
       expect(response.body).to include("?#{Discourse::LOCALE_PARAM}=ja")
     end
 
+    it "points the default locale's hreflang to the plain URL" do
+      get "/t/#{post.topic.slug}/#{post.topic.id}",
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      expect(response.body).to include(
+        %(<link rel="alternate" href="#{post.topic.url}" hreflang="en" />),
+      )
+      expect(response.body).not_to include("?#{Discourse::LOCALE_PARAM}=en")
+    end
+
+    it "includes the default locale's hreflang when the default locale isn't a supported locale" do
+      SiteSetting.content_localization_supported_locales = "ja|es"
+
+      get "/t/#{post.topic.slug}/#{post.topic.id}",
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      expect(response.body).to include(
+        %(<link rel="alternate" href="#{post.topic.url}" hreflang="en" />),
+      )
+    end
+
+    it "canonicalizes topic and list pages to the plain URL when ?tl= is the default locale" do
+      get "/t/#{post.topic.slug}/#{post.topic.id}?#{Discourse::LOCALE_PARAM}=en",
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      expect(response.body).to match(
+        %r{<link rel="canonical" href="#{Regexp.escape(post.topic.url)}"\s*/?>},
+      )
+
+      get "/latest?#{Discourse::LOCALE_PARAM}=en",
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      expect(response.body).to match(
+        %r{<link rel="canonical" href="#{Regexp.escape(Discourse.base_url)}/latest"\s*/?>},
+      )
+    end
+
+    context "when the plain URL may not serve the default locale" do
+      let(:topic_path) { "/t/#{post.topic.slug}/#{post.topic.id}" }
+
+      def expect_default_locale_param_urls
+        expect(response.body).to include(
+          %(<link rel="alternate" href="#{post.topic.url}?#{Discourse::LOCALE_PARAM}=en" hreflang="en" />),
+        )
+        expect(response.body).not_to include(
+          %(<link rel="alternate" href="#{post.topic.url}" hreflang="en" />),
+        )
+
+        get "#{topic_path}?#{Discourse::LOCALE_PARAM}=en", headers: request_headers
+
+        expect(response.body).to include(
+          %(<link rel="canonical" href="#{post.topic.url}?#{Discourse::LOCALE_PARAM}=en">),
+        )
+      end
+
+      context "with a crawler whose Accept-Language picks another locale" do
+        let(:request_headers) do
+          {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            "Accept-Language" => "ja",
+          }
+        end
+
+        before { SiteSetting.set_locale_from_accept_language_header = true }
+
+        it "keeps the default locale's locale param URL" do
+          get topic_path, headers: request_headers
+
+          expect(response.body).to include('<html lang="ja"')
+          expect_default_locale_param_urls
+        end
+      end
+
+      context "with a crawler whose language switcher cookie picks another locale" do
+        let(:request_headers) do
+          {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            "Cookie" => "locale=ja",
+          }
+        end
+
+        before { SiteSetting.content_localization_language_switcher = "all" }
+
+        it "keeps the default locale's locale param URL" do
+          get topic_path, headers: request_headers
+
+          expect(response.body).to include('<html lang="ja"')
+          expect_default_locale_param_urls
+        end
+      end
+
+      context "when set_locale_from_cookie is enabled" do
+        let(:request_headers) do
+          { "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
+        end
+
+        before { SiteSetting.set_locale_from_cookie = true }
+
+        it "keeps the default locale's locale param URL" do
+          get topic_path, headers: request_headers
+
+          expect_default_locale_param_urls
+        end
+
+        it "doesn't add the default locale when it isn't a supported locale" do
+          SiteSetting.content_localization_supported_locales = "ja|es"
+
+          get topic_path, headers: request_headers
+
+          expect(response.body).to include('hreflang="ja"')
+          expect(response.body).not_to include('hreflang="en"')
+        end
+      end
+
+      context "with a signed-in user" do
+        let(:request_headers) do
+          { "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
+        end
+
+        before { sign_in(user) }
+
+        it "keeps the default locale's locale param URL" do
+          get topic_path, headers: request_headers
+
+          expect_default_locale_param_urls
+        end
+      end
+    end
+
     it "uses hyphens instead of underscores in hreflang attribute for region-qualified locales" do
       SiteSetting.content_localization_supported_locales = "en|pt_BR|zh_CN"
 
@@ -145,6 +282,88 @@ describe "Crawler hreflang tags" do
           %r{<link rel="canonical" href="#{Regexp.escape(Discourse.base_url)}/t/#{post.topic.slug}/#{post.topic.id}"\s*/?>},
         )
       end
+    end
+
+    context "when viewing a later page of a topic" do
+      fab!(:replies) { Fabricate.times(25, :post, topic: post.topic, user:) }
+
+      let(:topic_url) { "#{Discourse.base_url}/t/#{post.topic.slug}/#{post.topic.id}" }
+
+      def hreflang_links
+        Nokogiri
+          .HTML5(response.body)
+          .css("link[rel='alternate'][hreflang]")
+          .map { |link| [link["hreflang"], link["href"]] }
+      end
+
+      it "points each language alternate to the same page" do
+        get "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=ja",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        expect(hreflang_links).to contain_exactly(
+          ["x-default", "#{topic_url}?page=2"],
+          ["en", "#{topic_url}?page=2"],
+          ["ja", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=ja"],
+          ["es", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=es"],
+        )
+      end
+
+      it "keeps the page in the default locale's locale param URL when the plain URL may not serve the default locale" do
+        SiteSetting.set_locale_from_cookie = true
+
+        get "#{topic_url}?page=2",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        expect(hreflang_links).to include(
+          ["x-default", "#{topic_url}?page=2"],
+          ["en", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=en"],
+        )
+      end
+
+      it "points the alternates of a reply link to the page that holds the reply" do
+        get "#{topic_url}/#{replies.last.post_number}",
+            headers: {
+              "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+            }
+
+        expect(hreflang_links).to include(
+          ["x-default", "#{topic_url}?page=2"],
+          ["ja", "#{topic_url}?page=2&#{Discourse::LOCALE_PARAM}=ja"],
+        )
+      end
+    end
+
+    it "includes the subfolder once in language alternates" do
+      set_subfolder "/forum"
+
+      get "/t/#{post.topic.slug}/#{post.topic.id}",
+          env: {
+            "SCRIPT_NAME" => "/forum",
+          },
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      expect(response.body).to include(
+        %(<link rel="alternate" href="#{Discourse.base_url_no_prefix}/forum/t/#{post.topic.slug}/#{post.topic.id}" hreflang="x-default" />),
+      )
+    end
+
+    it "keeps language alternates on the forum when the topic canonicalizes to an embedding page on the same host" do
+      SiteSetting.embed_set_canonical_url = true
+      topic_embed = Fabricate(:topic_embed, post:, embed_url: "#{Discourse.base_url}/blog/article")
+      topic_url = "#{Discourse.base_url}/t/#{post.topic.slug}/#{post.topic.id}"
+
+      get topic_url, headers: { "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
+
+      expect(response.body).to include(
+        %(<link rel="alternate" href="#{topic_url}?#{Discourse::LOCALE_PARAM}=ja" hreflang="ja" />),
+      )
+      expect(response.body).not_to include("#{topic_embed.embed_url}?#{Discourse::LOCALE_PARAM}=")
     end
 
     it "does not append ?tl= to canonical for non-crawler requests" do

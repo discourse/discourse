@@ -73,6 +73,8 @@ et:
         filters:
           all: "Kõik"
           reset: "Nulli"
+        sentiment:
+          enabled: "Sisse lülitatud"
         search:
           name: "Otsi"
         image_caption:

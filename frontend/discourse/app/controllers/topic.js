@@ -1422,7 +1422,7 @@ export default class TopicController extends Controller {
 
     // optimistic update
     topic.setProperties({
-      pinned_at: value ? moment() : null,
+      pinned_at: value ? moment().toISOString() : null,
       pinned_globally: false,
       pinned_until: value ? until : null,
     });
@@ -1437,7 +1437,7 @@ export default class TopicController extends Controller {
 
     // optimistic update
     topic.setProperties({
-      pinned_at: moment(),
+      pinned_at: moment().toISOString(),
       pinned_globally: true,
       pinned_until: until,
     });

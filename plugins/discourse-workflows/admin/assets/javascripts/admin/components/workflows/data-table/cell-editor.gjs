@@ -11,6 +11,8 @@ export default class CellEditor extends Component {
   @tracked isEditing = false;
   @tracked editValue = "";
 
+  #initialValue;
+
   get columnType() {
     return this.args.column.type;
   }
@@ -62,6 +64,7 @@ export default class CellEditor extends Component {
     } else {
       this.editValue = String(this.args.value);
     }
+    this.#initialValue = this.isNull ? null : this.editValue;
     this.isEditing = true;
   }
 
@@ -76,7 +79,16 @@ export default class CellEditor extends Component {
 
   @action
   save() {
+    if (!this.isEditing) {
+      return;
+    }
+
     this.isEditing = false;
+
+    if (this.editValue === this.#initialValue) {
+      return;
+    }
+
     this.args.onSave(this.args.column.name, this.editValue);
   }
 

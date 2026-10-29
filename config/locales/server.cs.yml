@@ -4349,13 +4349,18 @@ cs:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
     github:
+      header:
+        file: "Soubor"
+        success: "Úspěch"
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
       closed: "uzavřeno"
-      status_date:
-        approved: "schválen"
-        merged: "sloučeno"
-        closed: "zavřeno"
+      pr_status:
+        draft: "Koncept"
+        open: "Otevřeno"
+        approved: "Schválen"
+        merged: "Sloučeno"
+        closed: "Zavřeno"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'

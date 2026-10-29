@@ -410,6 +410,11 @@ export default class Group extends RestModel {
     return { ...attrs, ...extraSavePropertiesFor("group", this) };
   }
 
+  /**
+   * Creates the group on the server.
+   *
+   * @returns {Promise<object>} The created group, as the server serializes it.
+   */
   async create() {
     await applyModelCallbacks("group", "beforeCreate", this);
 
@@ -426,6 +431,7 @@ export default class Group extends RestModel {
 
     await this.reloadMembers();
     await applyModelCallbacks("group", "afterCreate", this, response);
+    return response.basic_group;
   }
 
   async save(opts = {}) {

@@ -80,6 +80,60 @@ RSpec.describe "Post event workflow triggers" do
         Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.first["args"].first["trigger_data"]
       expect(trigger_data["participation"]).to include("removed" => true, "status" => nil)
     end
+
+    it "enqueues for each invitee whose status a bulk invite sets" do
+      event.update!(status: DiscourseEvents::Events::Event.statuses[:public])
+      newcomer = Fabricate(:user)
+      DiscourseEvents::Events::Invitee.create_attendance!(attendee.id, event.id, :interested)
+      workflow = publish_workflow("trigger-all", "trigger:event_participation_changed")
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+
+      Jobs::DiscoursePostEventBulkInvite.new.execute(
+        event_id: event.id,
+        current_user_id: admin.id,
+        invitees: [
+          { "identifier" => attendee.username, "attendance" => "going" },
+          { "identifier" => newcomer.username, "attendance" => "not_going" },
+        ],
+      )
+
+      expect(enqueued_workflow_ids("trigger-all")).to eq([workflow.id, workflow.id])
+
+      participations =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+          job["args"].first["trigger_data"].slice("user", "participation", "actor")
+        end
+      expect(participations).to contain_exactly(
+        a_hash_including(
+          "user" => a_hash_including("id" => attendee.id),
+          "participation" =>
+            a_hash_including("status" => "going", "previous_status" => "interested"),
+          "actor" => a_hash_including("id" => admin.id),
+        ),
+        a_hash_including(
+          "user" => a_hash_including("id" => newcomer.id),
+          "participation" => a_hash_including("status" => "not_going", "previous_status" => nil),
+          "actor" => a_hash_including("id" => admin.id),
+        ),
+      )
+    end
+
+    it "does not enqueue when a bulk invite leaves the status unchanged" do
+      event.update!(status: DiscourseEvents::Events::Event.statuses[:public])
+      DiscourseEvents::Events::Invitee.create_attendance!(attendee.id, event.id, :going).update!(
+        notified: true,
+      )
+      publish_workflow("trigger-all", "trigger:event_participation_changed")
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+
+      Jobs::DiscoursePostEventBulkInvite.new.execute(
+        event_id: event.id,
+        current_user_id: admin.id,
+        invitees: [{ "identifier" => attendee.username, "attendance" => "going" }],
+      )
+
+      expect(enqueued_workflow_ids("trigger-all")).to be_empty
+    end
   end
 
   describe "trigger:event_ended" do
