@@ -882,9 +882,9 @@ RSpec.describe UsernameChanger do
       include_examples "username changer for testcase_name and current and new and overrode (2)",
                        [
                          "overrides the username if a new name after unicode normalization is different only in case",
-                         "löwe",
-                         "Löwee",
-                         "Löwee",
+                         "lo\u0308we",
+                         "L\u00F6wee",
+                         "L\u00F6wee",
                        ]
     end
   end
