@@ -866,16 +866,12 @@ class UserNotifications < ActionMailer::Base
           .cook(message, sanitize: false)
           .gsub("%{topic_title}") { ERB::Util.html_escape(topic_title_text) }
           .html_safe
-      # Customized bodies cook %{message} again in Email::Renderer. Escape
-      # punctuation before HTML encoding so its entity decoding cannot restore
-      # Markdown or HTML structure from the title.
+      # Customized bodies cook both %{message} and %{topic_title} as Markdown.
+      # Keep the subject unchanged, but use the same escaped title in both body values.
       if translation_override_exists
-        topic_title_text =
-          ERB::Util.html_escape(
-            topic_title_text.gsub(/[!"\#$%&'()*+,\-.\/:;<=>?@\[\]\\^_`{|}~]/) do |char|
-              "\\#{char}"
-            end,
-          )
+        body_topic_title =
+          topic_title_text.gsub(/[!"\#$%&'()*+,\-.\/:;<=>?@\[\]\\^_`{|}~]/) { |char| "\\#{char}" }
+        topic_title_text = ERB::Util.html_escape(body_topic_title)
       end
       message = message.gsub("%{topic_title}") { topic_title_text }
     else
@@ -954,6 +950,7 @@ class UserNotifications < ActionMailer::Base
       locale: locale,
     }
 
+    email_opts[:body_topic_title] = body_topic_title if body_topic_title
     email_opts[:recipient_user] = user
     email_opts[:html_override] = html unless translation_override_exists
 

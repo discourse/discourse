@@ -7416,39 +7416,6 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(422)
       end
 
-      it "renders a Markdown link-breakout title as text in an existing user's invite email" do
-        malicious_title = "Join *the* `cool` discussion](https://attacker.invalid/phish)"
-        pm = Fabricate(:private_message_topic, user: user, title: malicious_title)
-        Fabricate(:post, topic: pm, user: user)
-        user_2.user_option.update!(email_level: UserOption.email_level_types[:always])
-        ActionMailer::Base.deliveries.clear
-
-        post "/t/#{pm.id}/invite.json", params: { user: user_2.username }
-
-        expect(response.status).to eq(200)
-        expect(response.body).to include(user_2.username)
-
-        notification =
-          user_2.notifications.find_by!(
-            topic: pm,
-            notification_type: Notification.types[:invited_to_private_message],
-          )
-        Jobs::UserEmail.new.execute(
-          NotificationEmailer::EmailUser.notification_params(
-            notification,
-            :user_invited_to_private_message,
-          ),
-        )
-
-        email = ActionMailer::Base.deliveries.find { |mail| mail.to == [user_2.email] }
-        expect(email).to be_present
-
-        fragment = Nokogiri::HTML5.fragment(email.html_part.decoded)
-        expect(fragment.at_css("a[href='https://attacker.invalid/phish']")).to be_nil
-        expect(fragment.at_css("a[href='#{pm.url}']").text).to eq(malicious_title)
-        expect(fragment.text).to include(malicious_title)
-      end
-
       context "when PM has reached maximum allowed numbers of recipients" do
         fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 

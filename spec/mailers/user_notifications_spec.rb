@@ -1983,6 +1983,53 @@ RSpec.describe UserNotifications do
         expects_build_with(has_entry(:include_respond_instructions, false))
       end
 
+      if invitation
+        {
+          "the default body" => nil,
+          "a customized message" => "%{message}",
+          "a customized title and message" => "%{topic_title}\n\n%{message}",
+        }.each do |description, custom_body|
+          context "with #{description}" do
+            before do
+              if custom_body
+                TranslationOverride.upsert!(
+                  SiteSetting.default_locale,
+                  "#{mail_template}.text_body_template",
+                  custom_body,
+                )
+                TranslationOverride.upsert!(
+                  SiteSetting.default_locale,
+                  "#{mail_template}.subject_template",
+                  "Invitation: %{topic_title}",
+                )
+              end
+            end
+
+            it "preserves the literal title and invitation link without changing the subject" do
+              title = 'Planning *notes* `draft` [agenda] (updated) \ & <details>'
+              post.topic.update!(title: title)
+              notification.data_hash[:topic_title] = title
+              mail =
+                UserNotifications.public_send(
+                  mail_type,
+                  user,
+                  notification_type: notification_type,
+                  notification_data_hash: notification.data_hash,
+                  post: post,
+                )
+              html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
+
+              expect(mail.subject).to include(title)
+              expect(html.css("a[href='#{post.topic.url}']").map(&:text)).to include(title)
+              expect(html.css("em, code, details")).to be_empty
+              expect(html.text.scan(title).size).to eq(
+                custom_body&.include?("%{topic_title}") ? 2 : 1,
+              )
+            end
+          end
+        end
+      end
+
       context "when customized" do
         let(:custom_body) do
           body = +<<~BODY
@@ -2003,26 +2050,6 @@ RSpec.describe UserNotifications do
             "#{mail_template}.text_body_template",
             custom_body,
           )
-        end
-
-        if invitation
-          it "renders invitation titles literally when the message is cooked again" do
-            title = 'Planning *notes* `draft` [agenda] (updated) \\ & <details>'
-            post.topic.update!(title: title)
-            notification.data_hash[:topic_title] = title
-            mail =
-              UserNotifications.public_send(
-                mail_type,
-                user,
-                notification_type: notification_type,
-                notification_data_hash: notification.data_hash,
-                post: post,
-              )
-            html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
-
-            expect(html.text).to include("You are now officially notified.")
-            expect(html.css("a[href='#{post.topic.url}']").map(&:text)).to include(title)
-          end
         end
 
         it "does not use the default html_override" do
