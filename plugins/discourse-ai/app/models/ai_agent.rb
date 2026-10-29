@@ -573,7 +573,7 @@ class AiAgent < ActiveRecord::Base
         active: enabled?,
         approved: true,
         trust_level: TrustLevel[4],
-        id: DiscourseAi::BotUser.next_id,
+        id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id,
       )
     user.save!(validate: false)
 

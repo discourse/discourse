@@ -92,20 +92,7 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
-  reloadable_patch do
-    # Account references reserve IDs even while the feature is disabled.
-    ::BotUser.define_singleton_method(:claimed_id) do
-      DB.query_single(<<~SQL, ::BotUser::FIRST_ID).first
-        SELECT LEAST(
-          (SELECT min(id) FROM users),
-          (SELECT min(user_id) FROM ai_agents),
-          (SELECT min(user_id) FROM llm_models),
-          ?
-        )
-      SQL
-    end
-    ::BotUser.private_class_method(:claimed_id)
-  end
+  reloadable_patch { ::BotUser.prepend DiscourseAi::BotUserExtensions }
 
   add_to_serializer(
     :admin_user_list,

@@ -79,7 +79,8 @@ RSpec.describe AiAgent do
 
     it "synchronizes both accounts when reassigned by user ID" do
       bot = agent.create_user!
-      replacement = Fabricate(:user, id: DiscourseAi::BotUser.next_id, active: false)
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
       expect(agent.user).to eq(bot)
 
       agent.update!(user_id: replacement.id)
@@ -91,7 +92,8 @@ RSpec.describe AiAgent do
     it "keeps the previous bot active on reassignment while another linked agent is enabled" do
       bot = agent.create_user!
       Fabricate(:ai_agent, user: bot)
-      replacement = Fabricate(:user, id: DiscourseAi::BotUser.next_id, active: false)
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
 
       agent.update!(user_id: replacement.id)
 
@@ -164,7 +166,8 @@ RSpec.describe AiAgent do
 
     it "synchronizes only the current bot on destroy after reassignment" do
       bot = agent.create_user!
-      replacement = Fabricate(:user, id: DiscourseAi::BotUser.next_id, active: false)
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
       agent.update!(user_id: replacement.id)
       bot.reload.update!(active: true)
 
@@ -176,7 +179,8 @@ RSpec.describe AiAgent do
 
     it "preserves both accounts' activation when reassignment fails validation" do
       bot = agent.create_user!
-      replacement = Fabricate(:user, id: DiscourseAi::BotUser.next_id, active: false)
+      replacement =
+        Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id, active: false)
 
       expect(agent.update(user_id: replacement.id, name: "")).to eq(false)
 
@@ -652,7 +656,7 @@ RSpec.describe AiAgent do
     expect(user.username).to eq("test_bot")
     expect(user.name).to eq("Test")
     expect(user.bot?).to be(true)
-    expect(user.id).to be < DiscourseAi::BotUser::FIRST_ID
+    expect(user.id).to be < ::BotUser::FIRST_ID
   end
 
   it "does not recycle an id another agent still points at" do
@@ -660,7 +664,7 @@ RSpec.describe AiAgent do
     stale_user = other.create_user!
     stale_user.destroy!
     other.update_columns(user_id: stale_user.id)
-    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, ::BotUser::FLOOR_KEY)
 
     user = basic_agent.create_user!
 
@@ -669,7 +673,7 @@ RSpec.describe AiAgent do
 
   it "does not recycle an id an llm model still points at" do
     llm_model.update_columns(user_id: -5000)
-    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, ::BotUser::FLOOR_KEY)
 
     user = basic_agent.create_user!
 

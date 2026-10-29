@@ -1361,7 +1361,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "normalizes a public legacy model mention to the topic agent" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       toggle_enabled_bots(bots: [claude_2])
       agent.update!(allow_topic_mentions: true)
@@ -1390,7 +1390,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "normalizes a reply to a public legacy model post to the topic agent" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       toggle_enabled_bots(bots: [claude_2])
       agent.update!(allow_topic_mentions: true)
@@ -1417,7 +1417,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "reports an unavailable public legacy model mention through the topic agent" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       toggle_enabled_bots(bots: [opus_model])
       agent.update!(allow_topic_mentions: true)
@@ -2430,9 +2430,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
 
   describe ".legacy_recipient_for" do
     it "rejects an ambiguous conversation when the preferred bot is no longer a participant" do
-      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
-      second_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
-      former_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      first_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
+      second_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
+      former_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, first_model_user.id)
       opus_model.update_column(:user_id, second_model_user.id)
       Fabricate(:llm_model).update_column(:user_id, former_model_user.id)
@@ -2448,8 +2448,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "continues a legacy conversation with its preferred model recipient" do
-      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
-      preferred_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      first_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
+      preferred_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, first_model_user.id)
       opus_model.update_column(:user_id, preferred_model_user.id)
       toggle_enabled_bots(bots: [claude_2, opus_model])
@@ -2776,7 +2776,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "preserves the existing author when retrying a historical reply" do
-      historical_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      historical_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       historical_model = Fabricate(:llm_model)
       historical_model.update_column(:user_id, historical_user.id)
       historical_reply =

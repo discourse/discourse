@@ -163,7 +163,7 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
   end
 
   it "treats a request-supplied legacy model recipient as a selectable model request" do
-    legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+    legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
     second_model.update_column(:user_id, legacy_user.id)
 
     route =
@@ -191,7 +191,7 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
   end
 
   it "keeps legacy model selection independent from a deactivated recipient account" do
-    legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+    legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
     second_model.update_column(:user_id, legacy_user.id)
     other_agent = Fabricate(:ai_agent, user: legacy_user)
     other_agent.update!(enabled: false)

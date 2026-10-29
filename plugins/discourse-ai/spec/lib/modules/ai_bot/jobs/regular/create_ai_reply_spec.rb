@@ -138,7 +138,7 @@ RSpec.describe Jobs::CreateAiReply do
     end
 
     it "does not use a captured legacy model user to author a failure" do
-      legacy_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       gpt_35_bot.update_column(:user_id, legacy_model_user.id)
       agent.update!(enabled: false)
 

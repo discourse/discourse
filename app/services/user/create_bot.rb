@@ -47,7 +47,7 @@ class User::CreateBot
 
   def create_bot(params:, guardian:)
     User.create(
-      id: BotUser.next_id,
+      id: BotUser.new("core").next_id,
       name: params.name,
       username: params.username,
       trust_level: params.trust_level,
