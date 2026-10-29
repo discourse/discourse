@@ -13,37 +13,41 @@ module DiscourseWorkflows
         end
     end
 
-    # The rate limit counts workflow runs, since one pause can fire several workflows.
+    # Returns false when the rate limit ran out before every matching trigger fired. It counts
+    # workflow runs, since one pause can fire several workflows.
     def self.call(published_triggers, snapshot, claim_scope)
       trigger_class = Nodes::ComposerPaused::V1
       rate_limiter = ComposerPausedClaims.rate_limiter(snapshot.user)
 
-      published_triggers.each do |published_trigger|
-        break if !rate_limiter.can_perform?
-
+      published_triggers.all? do |published_trigger|
         parameters = NodeData.parameters(published_trigger.trigger_node)
-        next if !trigger_class.matches_snapshot?(parameters, snapshot)
+        next true if !trigger_class.matches_snapshot?(parameters, snapshot)
 
         phrases = trigger_class.phrases(parameters)
         if phrases.any?
           unclaimed = ComposerPausedClaims.unclaimed(claim_scope, published_trigger, phrases)
           phrases = trigger_class.matched_phrases(unclaimed, snapshot.own_text)
-          next if phrases.empty?
+          next true if phrases.empty?
         end
 
+        next false if !rate_limiter.can_perform?
+
         phrases = ComposerPausedClaims.claim(claim_scope, published_trigger, phrases)
-        next if phrases.nil? || !rate_limiter.performed!(raise_error: false)
+        next true if phrases.nil?
+        next false if !rate_limiter.performed!(raise_error: false)
 
         TriggerDispatcher.enqueue(
           published_trigger,
           trigger_data: trigger_class.new(snapshot, phrases).output,
           user_id: snapshot.user.id,
         )
+        true
       rescue => e
         Rails.logger.error(
           "discourse-workflows: trigger:composer_paused failed " \
             "for workflow #{published_trigger.workflow_id}: #{e.message}",
         )
+        true
       end
     end
   end

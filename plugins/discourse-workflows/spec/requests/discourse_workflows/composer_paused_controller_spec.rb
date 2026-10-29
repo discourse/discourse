@@ -57,6 +57,25 @@ RSpec.describe DiscourseWorkflows::ComposerPausedController do
         expect(response).to have_http_status(:no_content)
       end
 
+      it "returns 429 when the rate limit runs out before every workflow fired" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:composer_paused", configuration: {}
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+        DiscourseWorkflows::WorkflowDependency.clear_cache!
+
+        RateLimiter.enable
+        stub_const(DiscourseWorkflows::ComposerPausedClaims, "RATE_LIMIT", 1) do
+          expect {
+            post "/discourse-workflows/trigger-composer-paused.json", params: params
+          }.to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }.by(1)
+        end
+
+        expect(response).to have_http_status(:too_many_requests)
+        expect(response.parsed_body.dig("extras", "wait_seconds")).to be_present
+      end
+
       it "is rate limited" do
         RateLimiter.enable
         stub_const(DiscourseWorkflows::ComposerPausedClaims, "RATE_LIMIT", 1) do

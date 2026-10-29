@@ -137,11 +137,19 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerComposerPaused do
         ).to contain_exactly(workflow.id, other_workflow.id)
       end
 
-      it "counts each run against the rate limit" do
+      it "fails when the rate limit runs out, and fires the rest once it allows" do
         RateLimiter.enable
-        stub_const(DiscourseWorkflows::ComposerPausedClaims, "RATE_LIMIT", 1) { result }
-
+        stub_const(DiscourseWorkflows::ComposerPausedClaims, "RATE_LIMIT", 1) do
+          expect(result).to fail_a_step(:fire_triggers)
+        end
         expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(1)
+
+        expect(described_class.call(params:, **dependencies)).to run_successfully
+        expect(
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+            job["args"].first["workflow_id"]
+          end,
+        ).to contain_exactly(workflow.id, other_workflow.id)
       end
     end
 

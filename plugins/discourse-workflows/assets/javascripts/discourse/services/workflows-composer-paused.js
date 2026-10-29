@@ -223,20 +223,19 @@ export default class WorkflowsComposerPaused extends Service {
       return;
     }
 
-    // The server checks every trigger on each request, so those without phrases restart their
-    // interval together.
-    noPhraseStates.forEach((state) => {
-      state.text = text;
-      state.firedAt = now;
-    });
-
-    // A phrase only counts as fired once the server answered, so it can fire again after an
+    // A trigger only counts as fired once the server answered, so it can fire again after an
     // error. A nudge is best effort, so an error must never interrupt writing.
     try {
       await this.#post(composer, draft, action);
       newMatches.forEach(({ state, sources }) =>
         sources.forEach((source) => state.matched.add(source))
       );
+      // The server checks every trigger on each request, so those without phrases restart their
+      // interval together.
+      noPhraseStates.forEach((state) => {
+        state.text = text;
+        state.firedAt = now;
+      });
     } catch (error) {
       this.#retryAt = Date.now() + retryDelayMs(error);
     }

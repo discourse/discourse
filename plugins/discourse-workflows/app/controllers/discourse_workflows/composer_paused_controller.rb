@@ -16,6 +16,7 @@ module DiscourseWorkflows
             status: :bad_request,
           )
         end
+        on_failed_step(:fire_triggers) { rate_limited! }
       end
     end
 
@@ -23,10 +24,13 @@ module DiscourseWorkflows
 
     # Only fired workflows count against the limit, so this turns away users who have none left.
     def check_rate_limit
-      rate_limiter = ComposerPausedClaims.rate_limiter(current_user)
-      if !rate_limiter.can_perform?
-        raise RateLimiter::LimitExceeded.new(rate_limiter.seconds_to_wait)
-      end
+      rate_limited! if !ComposerPausedClaims.rate_limiter(current_user).can_perform?
+    end
+
+    def rate_limited!
+      raise RateLimiter::LimitExceeded.new(
+              ComposerPausedClaims.rate_limiter(current_user).seconds_to_wait,
+            )
     end
   end
 end

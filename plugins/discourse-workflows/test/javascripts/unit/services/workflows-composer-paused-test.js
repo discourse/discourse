@@ -308,6 +308,23 @@ module(
       }
     });
 
+    test("a trigger without phrases retries the same text after a failed request", async function (assert) {
+      const clock = sinon.useFakeTimers({ now: 1000, toFake: ["Date"] });
+      this.setTriggers([trigger()]);
+      const composer = this.openDraft();
+
+      try {
+        this.statuses = [500];
+        await this.pause(composer, "Hello");
+        clock.tick(15000);
+        await this.pause(composer, "Hello");
+
+        assert.deepEqual(this.sent(), ["Hello", "Hello"]);
+      } finally {
+        clock.restore();
+      }
+    });
+
     test("triggers without phrases share one interval", async function (assert) {
       const clock = sinon.useFakeTimers({ now: 1000, toFake: ["Date"] });
       this.setTriggers([

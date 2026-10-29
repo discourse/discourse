@@ -61,11 +61,15 @@ module DiscourseWorkflows
     # The browser only asks after a match, but it is never trusted to have matched. Reopening the
     # composer starts a new session, so its phrases can fire again.
     def fire_triggers(params:, snapshot:, guardian:)
-      ComposerPausedDispatch.call(
-        ComposerPausedDispatch.published_triggers(Nodes::ComposerPaused::V1::PAUSE),
-        snapshot,
-        "session:#{guardian.user.id}:#{params.draft_key}:#{params.session_id}",
-      )
+      fired_all =
+        ComposerPausedDispatch.call(
+          ComposerPausedDispatch.published_triggers(Nodes::ComposerPaused::V1::PAUSE),
+          snapshot,
+          "session:#{guardian.user.id}:#{params.draft_key}:#{params.session_id}",
+        )
+
+      # The browser asks again later for what didn't fire, and claims keep the rest from firing twice.
+      fail!("rate limited") if !fired_all
     end
   end
 end
