@@ -43,6 +43,10 @@ module PageObjects
         find(".perform-penalize").click
       end
 
+      def has_email_message_placeholder?(text)
+        modal.has_css?("textarea.suspend-message[placeholder='#{text}']")
+      end
+
       def has_error_message?(message)
         expect(find("#modal-alert").text).to eq(message)
       end

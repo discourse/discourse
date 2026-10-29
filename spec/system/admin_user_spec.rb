@@ -221,6 +221,14 @@ describe "Admin User Page" do
     end
 
     describe "the suspend user modal" do
+      it "explains that the optional message is included in the email" do
+        admin_user_page.click_suspend_button
+
+        expect(suspend_user_modal).to have_email_message_placeholder(
+          "Optionally, provide more information about this action and it will be included in the email sent to the suspended user.",
+        )
+      end
+
       it "displays the list of users who share the same IP but are not mods or admins" do
         admin_user_page.click_suspend_button
 
@@ -263,6 +271,14 @@ describe "Admin User Page" do
     end
 
     describe "the silence user modal" do
+      it "explains that the optional message is included in the email" do
+        admin_user_page.click_silence_button
+
+        expect(silence_user_modal).to have_email_message_placeholder(
+          "Optionally, provide more information about this action and it will be included in the email sent to the silenced user.",
+        )
+      end
+
       it "displays the list of users who share the same IP but are not mods or admins" do
         admin_user_page.click_silence_button
 
