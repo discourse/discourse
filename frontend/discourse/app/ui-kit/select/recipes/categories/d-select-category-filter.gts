@@ -146,6 +146,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     return this.siteSettings.fixed_category_positions ? "position" : "topics";
   }
 
+  /** Every input of the load; `categories` reloads an open list when the site gains one. */
   get loadContext() {
     return {
       parentCategory: this.args.parentCategory,
@@ -157,6 +158,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     };
   }
 
+  /** A preloaded level browses the caller's `@items`; searches and lazy levels use the shared search. */
   @action
   load(
     query: string,
@@ -189,11 +191,13 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     }));
   }
 
+  /** Shortcuts lead the level while browsing and are left out of searches. */
   @action
   specialItems(snapshot: SelectSnapshot) {
     return this.#shortcuts(snapshot.filter);
   }
 
+  /** Emits the site's category, the caller's unloaded row, or a shortcut id. */
   @action
   onChange(id: SelectValue, item: SelectItem | SelectItem[] | null) {
     if (id === ALL_CATEGORIES_ID || id === NO_CATEGORIES_ID) {

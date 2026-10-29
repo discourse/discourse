@@ -297,8 +297,10 @@ customization ports are done.
   Requested 2026-10-23.
   - Categories, 2026-10-26: the filter keeps select-kit's lowercase strings (`categories`,
     `subcategories`, `no subcategories`, `remove filter`, `view all`), as the tag filter does, so
-    the navigation bar reads the same in both modes. Its level name has no override yet (the gap
-    in `PATCH-MATRIX.md`). The family footer's names, "%{category} and all subcategories"
+    the navigation bar reads the same in both modes. The level name is the empty level's
+    placeholder, overridable with `@placeholder` or a customization's `placeholder`, and the drop
+    is named by `categories.filter_by_categories_label` / `filter_by_subcategories_label`
+    ("Filter by: categories", 2026-10-28). The family footer's names, "%{category} and all subcategories"
     (`category.select_with_subcategories`) and "%{category} (%{count} topics) and all
     subcategories" (`category.select_with_subcategories_count`), are placeholder strings, so
     translations can reorder them.
@@ -364,12 +366,19 @@ Open items need a decision after manual testing; the rest are intended but still
   the legacy chooser shows an empty header. The new one shows "Choose a category…". The composer
   fills in the default category itself, so the blank state only showed briefly or outside the
   composer.
-- [ ] **Breadcrumb search is not capped at 5.** The legacy drop shows at most five results in
-  local mode; the new filter lists every match, ranked top level first, then prefix before
-  substring.
+- [ ] **Breadcrumb search is not capped at 5 and matches names only.** The legacy drop shows at
+  most five results in local mode and also matches slugs; the new filter lists every match through
+  the shared search, ranked the server's way, on both kinds of site. A category whose slug alone
+  matched is no longer offered.
 - [ ] **Lazy loading pages instead of stopping.** The legacy chooser and selector make one search
-  request and show its first 25 rows; the new ones keep paging as you scroll. The breadcrumb drop still shows 15 with
-  "+N more" for a long level.
+  request and show its first 25 rows; the new ones keep paging as you scroll. The legacy
+  breadcrumb drop showed 15 rows with "+N more · view all" for a long level; the new one pages
+  through the whole level in the preloaded order, with no count and no link to the categories
+  page.
+- [ ] **The breadcrumb drop names what it filters.** An empty level shows the level name as a
+  placeholder and is named "Filter by: categories" / "Filter by: subcategories"; with a pick it
+  reads "Filter by: subcategories, Rock", where select-kit read "Filter by: Rock". A held "no
+  subcategories" filter offers "remove filter".
 - [ ] **"+ Subcategories" includes every level.** In lazy mode the legacy row missed
   grandchildren; the new one adds the whole tree, minus excluded categories.
 - [ ] **"+ Subcategories" follows each family.** The legacy selector offered the row only when

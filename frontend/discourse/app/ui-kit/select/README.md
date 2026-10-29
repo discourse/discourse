@@ -739,13 +739,13 @@ The category family has two recipes:
     descendant the list could offer.
 - **`DSelectCategoryFilter`** (kind `select-category-filter`) narrows a topic list, one level at
   a time. Its value is a category, `ALL_CATEGORIES_ID` or `NO_CATEGORIES_ID` (exported by the
-  module), and `@parentCategory` names the level. `@items` is the caller's list for the level, so
-  the page decides what the level shows. A search covers the whole site at the top level, or the
-  parent's direct children below it. It ranks through `Category.search` (prefix, then substring
-  and slug matches, restricted categories last), with top-level categories first. The filter
-  never navigates; the call site routes the pick. A long lazy level shows 15 rows, and the
-  `:footer` block receives the number left out and the parent, so the caller can link to the
-  rest.
+  module), and `@parentCategory` names the level. An empty level, or `ALL_CATEGORIES_ID` ("remove
+  filter"), holds nothing and shows the level's name ("categories", "subcategories") as its
+  placeholder, which `@placeholder` or a customization's `placeholder` replaces. The drop is named
+  "Filter by: categories" or "Filter by: subcategories", and a held filter follows that name.
+  `@noSubcategories` holds `NO_CATEGORIES_ID`, which then offers "remove filter" in its place.
+  The filter never navigates; the call site routes the pick. The breadcrumbs pass the identifier
+  `breadcrumb-category`.
 
 The picker has one loader, `Category.searchCategories`, which answers from the site without a
 request when every category is loaded and asks `/categories/search` otherwise. Both answers use
@@ -757,9 +757,12 @@ for the engine to window, so typing never waits for the input delay; a lazy site
 are special rows. Held ids resolve through `Category.asyncFindByIds`, and a family's footer walks
 the tree through `Category.asyncFindDescendants`.
 
-The drop answers from its caller's `@items` while browsing and from `Category.search`'s ranking
-while searching on a preloaded site, and pages `Category.asyncSearch` on a lazy one (ignoring
-`@items`).
+The drop browses its caller's `@items` on a preloaded site, so the page decides what a level
+shows. Searches, and every request on a lazy site, go through `Category.searchCategories`: a
+search spans the whole site at the top level, or the parent's direct children below it, and
+ranks the server's way. A lazy level browses in the order a preloaded site lists it (by topic
+count, or by position when `fixed_category_positions` is on) and pages as the list scrolls, so
+every category is reachable.
 
 Until cleanup, `DSelectCategory` defaults `@legacyKind` to `category-chooser` (single) or
 `category-selector` (multiple), and the filter to `category-drop`. Call sites that replaced other

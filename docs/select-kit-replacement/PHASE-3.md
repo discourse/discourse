@@ -20,9 +20,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ **Call sites, the AI category suggestion and SCSS.**
   - ☑ **Recipe follow-ups:** multiple pickers keep the select's own empty text, the drop marks an
     active filter with `--filtering`, and chooser rows show topic counts.
-  - ☐ **Awaiting a decision:** the drop holds its level name as a value, so its accessible name
-    repeats it ("subcategories, subcategories") and no `placeholder` route exists for an empty
-    level; the tag drop shares the pattern.
+  - ☑ **The drop's empty level (2026-10-28):** an empty level holds nothing and shows the level
+    name as its placeholder, overridable by `@placeholder` or a customization; the drop is named
+    "Filter by: categories" / "Filter by: subcategories" and no longer repeats the level. A held
+    "no subcategories" filter offers "remove filter". The breadcrumbs pass `breadcrumb-category`.
+    Still open: the tag drop shares the old pattern, and the breadcrumbs' tag drops have no
+    identifier (tag rework).
   - ☑ **Recipe rework (2026-10-27):** the recipes stopped re-implementing what the engine, the
     `Category` model and ui-kit helpers already do. Paging, sizing and de-duplication are the
     engine's; lazy pages come from `Category.asyncSearch` (now with `only_postable`), held ids from
@@ -53,8 +56,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☐ **Follow-ups from the category cycle (2026-10-28):**
     - ☐ `SelectTagBase`'s `value` getter shadows `@value`, as `DSelectCategory`'s did before it
       became `selectedIds`.
-    - ☐ The breadcrumb drop still has a preloaded branch and a lazy branch. Its preloaded search
-      ranks through `Category.search` (slug matches too), which the shared search does not do.
+    - ☑ The breadcrumb drop searches through `Category.searchCategories` (2026-10-28), so slugs
+      no longer match on preloaded sites. Lazy levels browse in the preloaded order and page
+      as the list scrolls; the 15-row cap, its "+ N more" count and the "view all" link are
+      gone.
     - ☐ `dCategoryBadge` with `ancestors` and `hasSubcategories` draws "+ Subcategories" after
       every ancestor (`ui-kit/helpers/d-category-link.js`), as select-kit's `category-row` did.
       The family footer draws without ancestors, so it is not affected.
