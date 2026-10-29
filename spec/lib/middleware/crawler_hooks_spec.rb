@@ -418,6 +418,52 @@ describe Middleware::CrawlerHooks do
       expect(transformed).to include("href=\"/secure-media-uploads/original/1X/ghi.pdf\"")
     end
 
+    it "appends the locale param to pagination link tags but not to canonical or alternate ones" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      html = [
+        "<html><head>" \
+          "<link rel=\"prev\" href=\"/t/topic-slug/123\">" \
+          "<link rel=\"next\" href=\"#{Discourse.base_url}/t/topic-slug/123?page=3\">" \
+          "<link rel=\"canonical\" href=\"/t/topic-slug/123?page=2\">" \
+          "<link rel=\"alternate\" href=\"/t/topic-slug/123?page=2\" hreflang=\"x-default\">" \
+          "</head><body></body></html>",
+      ]
+      def html.body
+        join("")
+      end
+
+      test_env =
+        Rack::MockRequest.env_for(
+          "https://discourse.site/t/topic-slug/123?page=2",
+          params: {
+            Discourse::LOCALE_PARAM => "fr",
+          },
+        )
+      request = Rack::Request.new(test_env)
+
+      middleware_instance =
+        Middleware::CrawlerHooks.new(
+          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+        )
+
+      transformed_response =
+        middleware_instance.send(:transform_response, request: request, response: html)
+
+      links =
+        Nokogiri::HTML5
+          .parse(transformed_response.first)
+          .css("link")
+          .map { |link| [link["rel"], link["href"]] }
+      expect(links).to contain_exactly(
+        ["prev", "/t/topic-slug/123?#{Discourse::LOCALE_PARAM}=fr"],
+        ["next", "#{Discourse.base_url}/t/topic-slug/123?page=3&#{Discourse::LOCALE_PARAM}=fr"],
+        %w[canonical /t/topic-slug/123?page=2],
+        %w[alternate /t/topic-slug/123?page=2],
+      )
+    end
+
     it "modifies external links that start with the base URL" do
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_crawler_param = true
