@@ -404,6 +404,9 @@ Open items need a decision after manual testing; the rest are intended but still
 - [ ] **Read-only categories are listed at the top.** The legacy eager chooser kept the
   composer's read-only category in its sorted place; it is now a disabled row above the list in
   both modes, as it already was on lazy sites.
+- [ ] **Pickers are named by their caption.** Select-kit left the caption beside a picker
+  unassociated. Category pickers with a caption are now named by it; on mobile the modal is still
+  named by `@label` alone.
 - [ ] **Reopening the chooser cancels a pending pick.** A row that picks asynchronously (a
   suggestion request, for example) is cancelled when the list reopens, by a later pick, or when
   the control goes away. The legacy chooser applied the result unless the value had changed.
@@ -421,6 +424,11 @@ Breadcrumb levels use `DSelectCategoryFilter`, which reads each level through th
 the `@categories` a page passes to `BreadCrumbs` only shapes the legacy drop. The caller routes
 category and shortcut picks, and keeps the tag and the editing tab. Each new-control level is keyed by its parent id, because lazy loading can replace the
 records backing a level while its list is open.
+
+A call site whose caption has an id passes it as `@labelledBy`. FormKit custom fields pass
+`@label={{field.title}}`, and the site setting and schema field controls receive their caption's
+text as `@label`: the setting heading also holds a history link, and the schema label has no id.
+Pickers with no caption keep their placeholder as their name.
 
 The parent-category field drops its caret icon options and the report category filter drops
 `filterable`; the recipe has no arguments for them.

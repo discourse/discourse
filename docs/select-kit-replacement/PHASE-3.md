@@ -45,14 +45,24 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       "%{category} (%{count} topics) and all subcategories" with its position, at the first
       and second level; the drawn count and "+ Subcategories" are not read again, and adding
       a family announces "N added".
-    - ☐ Not yet heard: the read-only row itself. Opening the composer chooser with ArrowDown made
-      the second row active and read nothing for it; the breadcrumb drop, opened with Enter, read
-      its active row.
-    - ☐ Most migrated call sites leave their visible label unassociated, so pickers read as
-      "Options" (tags too; select-kit had the same gap).
-    - ☐ Emoji-style category badges read the emoji's short name ("card_file_box Uncategorized"),
-      as select-kit rows did.
-    - ☐ The mobile panel's search field has no side gutter, for every DSelect.
+    - ☑ Heard (2026-10-29): the composer's read-only row reads "<name> read-only This category is
+      read-only so you cannot choose it for this topic dimmed (1 of 65)". ArrowDown opens on the
+      first row that can be picked, so the read-only row is heard only when the cursor moves
+      onto it.
+    - ☑ Category pickers with a caption are named by it (2026-10-29). `@labelledBy` points at a
+      caption that has an id; FormKit fields, site settings and schema fields pass their
+      caption's text as `@label`. Still open:
+      - ☐ Tag pickers.
+      - ☐ The mobile modal is named by `@label` only, because float-kit's menu modal takes no
+        `aria-labelledby`. A picker named through `@labelledBy` reads "Options" there.
+      - ☐ Pickers with no caption take their name from the placeholder: the composer and topic
+        edit read "Category…", report and dashboard filters "All categories". A single picker
+        holding a value reads "All categories, <name>". A multiple picker with no placeholder
+        reads "Options": the dashboard's activity by category, and the translations scope in a
+        plugin.
+    - ☑ Emoji-style category badges draw the emoji as decoration (2026-10-29); VoiceOver reads
+      the name alone.
+    - ☑ The mobile panel's search field lines up with the rows' content (2026-10-29).
   - ☐ **Follow-ups from the category cycle (2026-10-28):**
     - ☐ `SelectTagBase`'s `value` getter shadows `@value`, as `DSelectCategory`'s did before it
       became `selectedIds`.
@@ -64,23 +74,16 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       on every site (2026-10-29), and no longer takes `@items`. The server filters with
       `CategoryUser.indirectly_muted_condition`, which checks each row's own level and its
       parent's, so its cost follows the rows it filters: about 3 to 24 ms at 50k categories.
-    - ☐ `CurrentUserSerializer#indirectly_muted_category_ids` runs the full mute query on each
-      serialization: 260 to 330 ms at 50k categories with a seeded `category_users` table. It
-      could use the per-row condition, or be cached.
-    - ☐ `dCategoryBadge` with `ancestors` and `hasSubcategories` draws "+ Subcategories" after
-      every ancestor (`ui-kit/helpers/d-category-link.js`), as select-kit's `category-row` did.
-      The family footer draws without ancestors, so it is not affected.
-    - ☐ **Engine: a lazy breadcrumb level asks for page 1 twice.**
-      - The first response adds the level's categories to the site. That rebuilds the
-        breadcrumb objects and dirties every argument of the drop.
-      - The list re-renders and aborts the request that is still settling, and `PagedSource`'s
-        retry rule sends it again.
-      - It was hidden while the lazy search was cached; browse requests with `tree_order` are
-        not cached.
-      - Fix in the engine: a re-render must not abort a load whose inputs are unchanged.
-      - To reproduce, render `BreadCrumbs` on a lazy site with a response that returns the
-        children and their parent as an ancestor, then count `/categories/search` requests on
-        opening the subcategory drop.
+    - ☑ `CurrentUserSerializer#indirectly_muted_category_ids` lists through the per-row
+      condition (2026-10-29): 1 to 16 ms at 50k categories, down from about 240 ms.
+    - ☑ `dCategoryBadge` draws "+ Subcategories" after the category alone, not after each
+      ancestor (2026-10-29).
+    - ☑ **Engine: a lazy breadcrumb level asked for page 1 twice** (fixed 2026-10-29).
+      - The check that a select has one source resolved its options inside the list's load, so
+        the load depended on every presentation argument and on the recipe's context.
+      - The first response added the level's categories to the site and changed the drop's
+        arguments, so the load re-ran and cancelled the page still in flight.
+      - The check's reads are now untracked, so only the load context reloads a list.
     - ☐ **Float-kit: a closing menu takes focus back from a menu opened after it.**
       - `DMenuInstance.close` (`float-kit/lib/d-menu-instance.ts`) waits for the closing
         animation, then focuses the trigger whenever the caller asked for it, as Escape does. It
