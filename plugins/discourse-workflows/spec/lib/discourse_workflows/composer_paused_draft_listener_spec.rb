@@ -155,6 +155,92 @@ RSpec.describe DiscourseWorkflows::ComposerPausedDraftListener do
     expect(enqueued_trigger_data.size).to eq(1)
   end
 
+  it "doesn't queue a scan while the user is rate limited" do
+    RateLimiter.enable
+    stub_const(DiscourseWorkflows::ComposerPausedClaims, "RATE_LIMIT", 1) do
+      save_draft("Magic words", draft_key: "new_topic_1")
+      allow(Scheduler::Defer).to receive(:later)
+
+      save_draft("Magic words", draft_key: "new_topic_2")
+    end
+
+    expect(Scheduler::Defer).not_to have_received(:later)
+  end
+
+  context "when scans run in the background" do
+    let(:scans) { [] }
+
+    def stub_scans(&handler)
+      allow(Scheduler::Defer).to receive(
+        :later,
+      ).and_wrap_original do |original, desc, *args, **kwargs, &block|
+        if desc == "discourse_workflows_composer_paused"
+          handler.call(block)
+        else
+          original.call(desc, *args, **kwargs, &block)
+        end
+      end
+    end
+
+    before { stub_scans { |scan| scans << scan } }
+    after { scans.each(&:call) }
+
+    it "queues one scan per draft, which reads the newest autosave" do
+      save_draft("Hello")
+      save_draft("Magic words")
+      save_draft("Hello", draft_key: "topic_#{topic.id}", action: "reply")
+
+      expect(scans.size).to eq(2)
+      expect(Scheduler::Defer).to have_received(:later).with(
+        "discourse_workflows_composer_paused",
+        current_user: user.id,
+        force: false,
+      ).twice
+
+      scans.shift.call
+      expect(enqueued_trigger_data.map { |data| data.dig("composer", "matched_phrases") }).to eq(
+        [["Magic words"]],
+      )
+
+      save_draft("Magic words, food stand")
+      expect(scans.size).to eq(2)
+    end
+
+    it "drops the scan when the queue is full" do
+      stub_scans { raise WorkQueue::WorkQueueFull }
+      save_draft("Magic words")
+
+      stub_scans { |scan| scans << scan }
+      save_draft("Magic words")
+
+      expect(scans.size).to eq(1)
+    end
+
+    it "lets the next autosave queue a scan when queueing fails" do
+      stub_scans { raise ThreadError }
+      save_draft("Magic words")
+
+      stub_scans { |scan| scans << scan }
+      save_draft("Magic words")
+
+      expect(scans.size).to eq(1)
+    end
+  end
+
+  it "doesn't match the phrases that already fired" do
+    save_draft("Magic words")
+    allow(DiscourseWorkflows::Nodes::ComposerPaused::V1).to receive(
+      :matched_phrases,
+    ).and_call_original
+
+    save_draft("Magic words, food stand")
+
+    expect(DiscourseWorkflows::Nodes::ComposerPaused::V1).to have_received(:matched_phrases).with(
+      ["food stand"],
+      "Magic words, food stand",
+    )
+  end
+
   it "skips users outside the trigger's groups before matching" do
     configuration["group_ids"] = [Fabricate(:group).id]
     update_workflow_node(workflow, "trigger-1") { |node| node.merge("parameters" => configuration) }

@@ -12,9 +12,7 @@ module DiscourseWorkflows
     # Returns the phrases that haven't fired yet in this scope ([] for a trigger without
     # phrases), or nil when there is nothing new to fire.
     def self.claim(scope, published_trigger, phrases)
-      key =
-        "discourse_workflows:composer_paused:#{scope}:" \
-          "#{published_trigger.workflow_id}:#{published_trigger.trigger_node_id}"
+      key = key(scope, published_trigger)
 
       if phrases.empty?
         [] if Discourse.redis.set(key, "1", ex: NO_PHRASES_INTERVAL.to_i, nx: true)
@@ -23,6 +21,11 @@ module DiscourseWorkflows
         Discourse.redis.expire(key, PHRASES_TTL.to_i)
         fresh.presence
       end
+    end
+
+    # Lets callers skip matching the phrases that already fired.
+    def self.unclaimed(scope, published_trigger, phrases)
+      phrases - Discourse.redis.smembers(key(scope, published_trigger))
     end
 
     def self.rate_limiter(user)
@@ -34,5 +37,12 @@ module DiscourseWorkflows
         apply_limit_to_staff: true,
       )
     end
+
+    def self.key(scope, published_trigger)
+      "discourse_workflows:composer_paused:#{scope}:" \
+        "#{published_trigger.workflow_id}:#{published_trigger.trigger_node_id}"
+    end
+
+    private_class_method :key
   end
 end

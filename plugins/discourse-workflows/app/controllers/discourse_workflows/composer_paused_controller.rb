@@ -16,21 +16,17 @@ module DiscourseWorkflows
             status: :bad_request,
           )
         end
-        on_model_not_found(:published_trigger) { raise Discourse::NotFound }
-        on_failed_policy(:can_fire_trigger) { raise Discourse::InvalidAccess }
-        on_failed_policy(:matches_phrases) do
-          render(json: failed_json, status: :unprocessable_entity)
-        end
-        on_failed_policy(:has_new_phrases) do
-          render(json: failed_json, status: :unprocessable_entity)
-        end
       end
     end
 
     private
 
+    # Only fired workflows count against the limit, so this turns away users who have none left.
     def check_rate_limit
-      ComposerPausedClaims.rate_limiter(current_user).performed!
+      rate_limiter = ComposerPausedClaims.rate_limiter(current_user)
+      if !rate_limiter.can_perform?
+        raise RateLimiter::LimitExceeded.new(rate_limiter.seconds_to_wait)
+      end
     end
   end
 end

@@ -17,8 +17,6 @@ RSpec.describe DiscourseWorkflows::ComposerPausedController do
 
   let(:params) do
     {
-      workflow_id: workflow.id,
-      trigger_node_id: "trigger-1",
       draft_key: "new_topic",
       session_id: "session-1",
       composer_action: "create_topic",
@@ -50,32 +48,13 @@ RSpec.describe DiscourseWorkflows::ComposerPausedController do
         expect(response).to have_http_status(:bad_request)
       end
 
-      it "returns 404 when the trigger does not exist" do
-        post "/discourse-workflows/trigger-composer-paused.json",
-             params: params.merge(trigger_node_id: "nonexistent")
+      it "returns 204 without firing when nothing matches" do
+        expect {
+          post "/discourse-workflows/trigger-composer-paused.json",
+               params: params.merge(raw: "Nothing to see")
+        }.not_to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }
 
-        expect(response).to have_http_status(:not_found)
-      end
-
-      it "returns 403 when the user can't fire the trigger" do
-        post "/discourse-workflows/trigger-composer-paused.json",
-             params: params.merge(composer_action: "reply", topic_id: -1)
-
-        expect(response).to have_http_status(:forbidden)
-      end
-
-      it "returns 422 when no phrase matches" do
-        post "/discourse-workflows/trigger-composer-paused.json",
-             params: params.merge(raw: "Nothing to see")
-
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it "returns 422 when the phrases already fired in this session" do
-        post "/discourse-workflows/trigger-composer-paused.json", params: params
-        post "/discourse-workflows/trigger-composer-paused.json", params: params
-
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:no_content)
       end
 
       it "is rate limited" do

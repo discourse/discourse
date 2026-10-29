@@ -195,8 +195,8 @@ module DiscourseWorkflows
           nil
         end
 
-        def self.matched_phrases(parameters, text)
-          phrases(parameters).select { |phrase| phrase_regexp(phrase)&.match?(text) }
+        def self.matched_phrases(phrases, text)
+          phrases.select { |phrase| phrase_regexp(phrase)&.match?(text) }
         end
 
         def self.composer_actions(parameters)

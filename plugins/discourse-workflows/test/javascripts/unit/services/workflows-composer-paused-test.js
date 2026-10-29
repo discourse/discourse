@@ -1,4 +1,4 @@
-import { settled } from "@ember/test-helpers";
+import { settled, waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -42,7 +42,8 @@ module(
         "/discourse-workflows/trigger-composer-paused",
         (request) => {
           this.requests.push(parsePostData(request.requestBody));
-          return response(this.statuses.shift() ?? 204, "");
+          const [status, body] = [this.statuses.shift() ?? 204].flat();
+          return response(status, body ?? "");
         }
       );
 
@@ -68,8 +69,7 @@ module(
         await settled();
       };
 
-      this.fired = () =>
-        this.requests.map((request) => `${request.workflow_id}:${request.raw}`);
+      this.sent = () => this.requests.map((request) => request.raw);
     });
 
     test("each phrase fires once per draft", async function (assert) {
@@ -81,12 +81,10 @@ module(
       const composer = this.openDraft({ title: "Lunch review" });
 
       await this.pause(composer, "Some MAGIC WORDS");
-      assert.deepEqual(this.fired(), ["1:Some MAGIC WORDS"], "ignores case");
+      assert.deepEqual(this.sent(), ["Some MAGIC WORDS"], "ignores case");
       assert.propContains(
         this.requests[0],
         {
-          workflow_id: "1",
-          trigger_node_id: "trigger-1",
           draft_key: "new_topic",
           composer_action: "create_topic",
           title: "Lunch review",
@@ -175,27 +173,90 @@ module(
       assert.strictEqual(this.requests[0].reply_to_post_number, "3");
     });
 
-    test("a phrase fires again only when the request failed", async function (assert) {
+    test("a pause sends one request for all the triggers it matched", async function (assert) {
+      this.setTriggers([
+        trigger({ workflow_id: 1, patterns: [pattern("Magic words")] }),
+        trigger({ workflow_id: 2, patterns: [pattern("food stand")] }),
+        trigger({ workflow_id: 3 }),
+      ]);
+
+      await this.pause(this.openDraft(), "Magic words at the food stand");
+
+      assert.deepEqual(this.sent(), ["Magic words at the food stand"]);
+    });
+
+    test("pauses during a request are folded into one check of the latest draft", async function (assert) {
       this.setTriggers([
         trigger({
           patterns: [pattern("Magic words"), pattern("food stand")],
         }),
       ]);
+      const held = [];
+      pretender.post(
+        "/discourse-workflows/trigger-composer-paused",
+        (request) => {
+          this.requests.push(parsePostData(request.requestBody));
+          held.push(request);
+          return response(204, "");
+        },
+        true
+      );
       const composer = this.openDraft();
 
-      this.statuses = [500];
-      await this.pause(composer, "Magic words");
-      await this.pause(composer, "Magic words!");
-      assert.strictEqual(this.requests.length, 2, "retries after an error");
+      composer.set("reply", "Magic words");
+      this.service.typingPaused(composer);
+      await waitUntil(() => held.length === 1);
 
-      this.statuses = [422];
-      await this.pause(composer, "Magic words! food stand");
-      await this.pause(composer, "Magic words! food stand!");
-      assert.strictEqual(
-        this.requests.length,
-        3,
-        "doesn't retry what the server declined"
-      );
+      composer.set("reply", "Magic words. food");
+      this.service.typingPaused(composer);
+      composer.set("reply", "Magic words. food stand");
+      this.service.typingPaused(composer);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      assert.strictEqual(this.requests.length, 1, "waits for the request");
+
+      pretender.resolve(held[0]);
+      await waitUntil(() => held.length === 2);
+      pretender.resolve(held[1]);
+      await settled();
+
+      assert.deepEqual(this.sent(), ["Magic words", "Magic words. food stand"]);
+    });
+
+    test("a failed request is retried after a wait", async function (assert) {
+      const clock = sinon.useFakeTimers({ now: 1000, toFake: ["Date"] });
+      this.setTriggers([trigger({ patterns: [pattern("Magic words")] })]);
+      const composer = this.openDraft();
+
+      try {
+        this.statuses = [500];
+        await this.pause(composer, "Magic words");
+        await this.pause(composer, "Magic words!");
+        assert.strictEqual(this.requests.length, 1, "waits after an error");
+
+        clock.tick(15000);
+        this.statuses = [[429, { extras: { wait_seconds: 30 } }]];
+        await this.pause(composer, "Magic words!");
+        assert.strictEqual(this.requests.length, 2, "then asks again");
+
+        clock.tick(15000);
+        await this.pause(composer, "Magic words!");
+        assert.strictEqual(
+          this.requests.length,
+          2,
+          "waits as long as the rate limit says"
+        );
+
+        clock.tick(15000);
+        await this.pause(composer, "Magic words!");
+        await this.pause(composer, "Magic words!!");
+        assert.strictEqual(
+          this.requests.length,
+          3,
+          "a phrase the server answered for doesn't fire again"
+        );
+      } finally {
+        clock.restore();
+      }
     });
 
     test("the title counts, quotes don't", async function (assert) {
@@ -247,6 +308,49 @@ module(
       }
     });
 
+    test("triggers without phrases share one interval", async function (assert) {
+      const clock = sinon.useFakeTimers({ now: 1000, toFake: ["Date"] });
+      this.setTriggers([
+        trigger({ workflow_id: 1 }),
+        trigger({
+          workflow_id: 2,
+          category_ids: [26],
+          include_subcategories: false,
+        }),
+      ]);
+      const composer = this.openDraft({ categoryId: 2 });
+
+      try {
+        await this.pause(composer, "Hello");
+        clock.tick(5000);
+        composer.set("categoryId", 26);
+        await this.pause(composer, "Hello there");
+        assert.strictEqual(
+          this.requests.length,
+          2,
+          "a newly applying trigger fires"
+        );
+
+        clock.tick(10000);
+        await this.pause(composer, "Hello there again");
+        assert.strictEqual(
+          this.requests.length,
+          2,
+          "the first trigger waits with the second"
+        );
+
+        clock.tick(5000);
+        await this.pause(composer, "Hello there once more");
+        assert.strictEqual(
+          this.requests.length,
+          3,
+          "then both fire in one request"
+        );
+      } finally {
+        clock.restore();
+      }
+    });
+
     test("only open new topics and replies fire", async function (assert) {
       this.setTriggers([trigger({ patterns: [pattern("Magic words")] })]);
 
@@ -279,23 +383,34 @@ module(
     test("composer actions and categories filter triggers", async function (assert) {
       this.setTriggers([
         trigger({ workflow_id: 1, composer_actions: ["reply"] }),
-        trigger({ workflow_id: 2, category_ids: [2] }),
         trigger({
-          workflow_id: 3,
+          workflow_id: 2,
           category_ids: [2],
           include_subcategories: false,
         }),
+        trigger({
+          workflow_id: 3,
+          category_ids: [2],
+          patterns: [pattern("Magic words")],
+        }),
       ]);
 
-      await this.pause(this.openDraft({ categoryId: 26 }), "In a subcategory");
-      assert.deepEqual(this.fired(), ["2:In a subcategory"]);
+      await this.pause(this.openDraft({ categoryId: 26 }), "Hello");
+      assert.deepEqual(this.sent(), [], "no trigger applies");
 
-      await this.pause(this.openDraft({ categoryId: 2 }), "In the parent");
-      assert.deepEqual(this.fired(), [
-        "2:In a subcategory",
-        "2:In the parent",
-        "3:In the parent",
-      ]);
+      await this.pause(this.openDraft({ categoryId: 26 }), "Magic words");
+      assert.deepEqual(
+        this.sent(),
+        ["Magic words"],
+        "a phrase matches in a subcategory"
+      );
+
+      await this.pause(this.openDraft({ categoryId: 2 }), "Hello");
+      assert.deepEqual(
+        this.sent(),
+        ["Magic words", "Hello"],
+        "a category without its subcategories matches"
+      );
     });
 
     test("phrases the browser can't compile are skipped", async function (assert) {

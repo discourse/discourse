@@ -63,14 +63,16 @@ RSpec.describe DiscourseWorkflows::Nodes::ComposerPaused::V1 do
   end
 
   describe ".matched_phrases" do
-    let(:parameters) { { "phrases" => ["Magic words", "bad food*", " food stand "] } }
+    let(:phrases) do
+      described_class.phrases("phrases" => ["Magic words", "bad food*", " food stand "])
+    end
 
     it "matches whole phrases ignoring case, with watched word wildcards" do
       expect(
-        described_class.matched_phrases(parameters, "Some MAGIC WORDS and bad foods"),
+        described_class.matched_phrases(phrases, "Some MAGIC WORDS and bad foods"),
       ).to contain_exactly("Magic words", "bad food*")
-      expect(described_class.matched_phrases(parameters, "food stands")).to be_empty
-      expect(described_class.matched_phrases(parameters, "food stand")).to eq(["food stand"])
+      expect(described_class.matched_phrases(phrases, "food stands")).to be_empty
+      expect(described_class.matched_phrases(phrases, "food stand")).to eq(["food stand"])
     end
   end
 

@@ -2,6 +2,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
 import { CREATE_TOPIC, REPLY } from "discourse/models/composer";
+import PhraseMatcher from "../lib/phrase-matcher.js";
 
 // Without phrases, a trigger fires on pauses at most this often.
 const NO_PHRASES_INTERVAL_MS = 15000;
@@ -12,8 +13,8 @@ const BLOCKQUOTE_LINE_REGEXP = /^[ \t]*>.*$/gm;
 const HTML_COMMENT_START = "<!--";
 const HTML_COMMENT_END = "-->";
 const COMPOSER_ACTIONS = { [CREATE_TOPIC]: "create_topic", [REPLY]: "reply" };
-// The server declined these phrases, so asking again won't change the answer.
-const DECLINED_STATUS = 422;
+// For failed requests that don't say how long to wait.
+const RETRY_AFTER_ERROR_MS = 15000;
 
 function stripHtmlComments(text) {
   const parts = [];
@@ -75,15 +76,23 @@ export function ownText({ title, reply }) {
   return [title, body].filter(Boolean).join("\n");
 }
 
-function compile(patterns) {
-  return patterns.flatMap((source) => {
-    try {
-      return [{ source, regexp: new RegExp(source, "iu") }];
-    } catch {
-      // Regular expression phrases may use syntax only the server supports.
-      return [];
-    }
-  });
+function composerAction(composer) {
+  const action = COMPOSER_ACTIONS[composer?.action];
+
+  // A restored reply loads its target post after opening.
+  if (
+    action &&
+    composer.viewOpenOrFullscreen &&
+    !composer.privateMessage &&
+    !composer.loading
+  ) {
+    return action;
+  }
+}
+
+function retryDelayMs(error) {
+  const waitSeconds = error?.jqXHR?.responseJSON?.extras?.wait_seconds;
+  return waitSeconds ? waitSeconds * 1000 : RETRY_AFTER_ERROR_MS;
 }
 
 function matchesCategory(trigger, categoryId) {
@@ -116,22 +125,41 @@ export default class WorkflowsComposerPaused extends Service {
   @service siteSettings;
   @service workflowsComposerSession;
 
+  #checking = false;
+  #matcher = new PhraseMatcher();
+  #nextComposer = null;
+  #retryAt = 0;
   #sessions = new WeakMap();
-  #triggers = (this.site.composer_paused_workflows || []).map((trigger) => ({
-    ...trigger,
-    hasPhrases: trigger.patterns.length > 0,
-    regexps: compile(trigger.patterns),
-  }));
+  #triggers = this.site.composer_paused_workflows || [];
 
-  typingPaused(composer) {
-    const action = COMPOSER_ACTIONS[composer?.action];
-    // A restored reply loads its target post after opening.
-    if (
-      !action ||
-      !composer.viewOpenOrFullscreen ||
-      composer.privateMessage ||
-      composer.loading
-    ) {
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#matcher.destroy();
+  }
+
+  // Pauses that come in during a check are folded into one check of the latest draft, so there
+  // is at most one request in flight.
+  async typingPaused(composer) {
+    this.#nextComposer = composer;
+    if (this.#checking) {
+      return;
+    }
+
+    this.#checking = true;
+    try {
+      while (this.#nextComposer) {
+        const next = this.#nextComposer;
+        this.#nextComposer = null;
+        await this.#check(next);
+      }
+    } finally {
+      this.#checking = false;
+    }
+  }
+
+  async #check(composer) {
+    const action = composerAction(composer);
+    if (!action || Date.now() < this.#retryAt) {
       return;
     }
 
@@ -142,49 +170,79 @@ export default class WorkflowsComposerPaused extends Service {
     };
     const text = ownText(draft);
     const categoryId = composer.topic?.category_id ?? composer.categoryId;
+    const sessionId = this.workflowsComposerSession.idFor(composer);
+    const triggers = this.#triggers
+      .filter(
+        (trigger) =>
+          trigger.composer_actions.includes(action) &&
+          matchesCategory(trigger, categoryId)
+      )
+      .map((trigger) => ({
+        trigger,
+        state: this.#stateFor(composer, trigger),
+      }));
 
-    for (const trigger of this.#triggers) {
-      if (
-        !trigger.composer_actions.includes(action) ||
-        !matchesCategory(trigger, categoryId)
-      ) {
+    const unmatched = new Set(
+      triggers.flatMap(({ trigger, state }) =>
+        trigger.patterns.filter((source) => !state.matched.has(source))
+      )
+    );
+    const matched = await this.#matcher.match(text, [...unmatched]);
+
+    // The composer may have closed or reopened while matching.
+    if (
+      composerAction(composer) !== action ||
+      this.workflowsComposerSession.idFor(composer) !== sessionId
+    ) {
+      return;
+    }
+
+    const now = Date.now();
+    const newMatches = [];
+    const noPhraseStates = [];
+
+    for (const { trigger, state } of triggers) {
+      if (!trigger.patterns.length) {
+        noPhraseStates.push(state);
         continue;
       }
 
-      const sources = this.#newMatches(composer, trigger, text);
-      if (sources) {
-        this.#fire(composer, draft, trigger, action, sources);
+      const sources = trigger.patterns.filter(
+        (source) => matched.has(source) && !state.matched.has(source)
+      );
+      if (sources.length) {
+        newMatches.push({ state, sources });
       }
+    }
+
+    const noPhrasesDue = noPhraseStates.some(
+      (state) =>
+        text !== state.text && now - state.firedAt >= NO_PHRASES_INTERVAL_MS
+    );
+    if (!newMatches.length && !noPhrasesDue) {
+      return;
+    }
+
+    // The server checks every trigger on each request, so those without phrases restart their
+    // interval together.
+    noPhraseStates.forEach((state) => {
+      state.text = text;
+      state.firedAt = now;
+    });
+
+    // A phrase only counts as fired once the server answered, so it can fire again after an
+    // error. A nudge is best effort, so an error must never interrupt writing.
+    try {
+      await this.#post(composer, draft, action);
+      newMatches.forEach(({ state, sources }) =>
+        sources.forEach((source) => state.matched.add(source))
+      );
+    } catch (error) {
+      this.#retryAt = Date.now() + retryDelayMs(error);
     }
   }
 
   // State lives in the composer session, so reopening the composer starts over.
-  // Returns the newly matched patterns, or null when there is nothing to send.
-  #newMatches(composer, trigger, text) {
-    const state = this.#stateFor(composer, trigger);
-
-    if (trigger.hasPhrases) {
-      const sources = trigger.regexps
-        .filter(
-          ({ source, regexp }) =>
-            !state.matched.has(source) &&
-            !state.pending.has(source) &&
-            regexp.test(text)
-        )
-        .map(({ source }) => source);
-      return sources.length ? sources : null;
-    }
-
-    const now = Date.now();
-    if (text === state.text || now - state.firedAt < NO_PHRASES_INTERVAL_MS) {
-      return null;
-    }
-
-    state.text = text;
-    state.firedAt = now;
-    return [];
-  }
-
   #stateFor(composer, trigger) {
     const sessionId = this.workflowsComposerSession.idFor(composer);
     let session = this.#sessions.get(composer);
@@ -197,7 +255,6 @@ export default class WorkflowsComposerPaused extends Service {
     if (!session.states.has(key)) {
       session.states.set(key, {
         matched: new Set(),
-        pending: new Set(),
         text: null,
         firedAt: -Infinity,
       });
@@ -205,31 +262,10 @@ export default class WorkflowsComposerPaused extends Service {
     return session.states.get(key);
   }
 
-  // A phrase only counts as fired once the server answered, so a failed
-  // request can try again on the next pause.
-  async #fire(composer, draft, trigger, action, sources) {
-    const state = this.#stateFor(composer, trigger);
-    sources.forEach((source) => state.pending.add(source));
-
-    try {
-      await this.#post(composer, draft, trigger, action);
-      sources.forEach((source) => state.matched.add(source));
-    } catch (error) {
-      if (error?.jqXHR?.status === DECLINED_STATUS) {
-        sources.forEach((source) => state.matched.add(source));
-      }
-      // A nudge is best effort; an error must never interrupt writing.
-    } finally {
-      sources.forEach((source) => state.pending.delete(source));
-    }
-  }
-
-  #post(composer, draft, trigger, action) {
+  #post(composer, draft, action) {
     return ajax("/discourse-workflows/trigger-composer-paused", {
       type: "POST",
       data: {
-        workflow_id: trigger.workflow_id,
-        trigger_node_id: trigger.trigger_node_id,
         draft_key: composer.draftKey,
         session_id: this.workflowsComposerSession.idFor(composer),
         composer_action: action,
