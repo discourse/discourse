@@ -5,8 +5,6 @@ module ::Blog
     include HasPostUploadReferences
 
     self.table_name = "blog_reviews"
-    # TODO(03-2027): Remove once the post-deploy column drop has been promoted.
-    self.ignored_columns += %i[token_digest]
     TOKEN_FORMAT = /\A[A-Za-z0-9_-]{43}\z/
 
     belongs_to :topic

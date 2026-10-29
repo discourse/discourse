@@ -275,7 +275,7 @@ plugins:
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
   boards: b1410e9ce903ab8c722282afd4cf5b9f
-  blog: '6c0d00988b72f923405b233d85c5daa1'
+  blog: 'f6e06ba7d5ee1897dc70e295096cd65b'
   chat: dfdf8b56a5fcd06326c693011990c36a
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
