@@ -218,17 +218,14 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       return [];
     }
     const shortcuts: CategoryItem[] = [];
-    if (
-      this.args.value &&
-      this.args.value !== ALL_CATEGORIES_ID &&
-      !this.args.editing
-    ) {
+    const held = this.selection?.id;
+    if (held !== undefined && !this.args.editing) {
       shortcuts.push({
         id: ALL_CATEGORIES_ID,
         name: i18n("categories.remove_filter"),
       });
     }
-    if (this.args.parentCategory) {
+    if (this.args.parentCategory && held !== NO_CATEGORIES_ID) {
       shortcuts.push({
         id: NO_CATEGORIES_ID,
         name: i18n("categories.no_subcategories"),

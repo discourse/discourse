@@ -444,6 +444,38 @@ module(
         ]);
       });
 
+      test("a held no-subcategories filter offers only to remove the filter", async function (assert) {
+        const parent = Category.findById(2);
+        const children = childrenOf(2);
+
+        await render(
+          <template>
+            <div class="flag"><DSelectCategoryFilter
+                @items={{children}}
+                @noSubcategories={{true}}
+                @parentCategory={{parent}}
+              /></div>
+            <div class="value"><DSelectCategoryFilter
+                @items={{children}}
+                @parentCategory={{parent}}
+                @value={{NO_CATEGORIES_ID}}
+              /></div>
+          </template>
+        );
+
+        for (const scope of [".flag", ".value"]) {
+          await select(scope).open();
+          assert.strictEqual(optionValues()[0], ALL_CATEGORIES_ID, scope);
+          assert
+            .dom(optionFor(ALL_CATEGORIES_ID))
+            .includesText(i18n("categories.remove_filter"));
+          assert
+            .dom(optionFor(NO_CATEGORIES_ID))
+            .doesNotExist(`${scope} does not offer the held filter again`);
+          await select(scope).close();
+        }
+      });
+
       test("toggling editing updates the shortcuts without reloading the level", async function (assert) {
         const items = topLevel();
         const value = items[0];
