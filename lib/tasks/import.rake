@@ -11,6 +11,8 @@ task "import:ensure_consistency" => :environment do
   insert_post_replies
   insert_topic_users
   insert_topic_views
+  insert_quoted_posts
+  insert_topic_links
   insert_user_actions
   insert_user_options
   insert_user_profiles
@@ -96,7 +98,181 @@ def insert_topic_views
   SQL
 end
 
-def insert_user_actions
+def insert_quoted_posts(batch_size = 100_000)
+  log "Inserting quoted posts..."
+
+  max_id = DB.query_single("SELECT COALESCE(MAX(id), 0) FROM posts").first
+  inserted = 0
+
+  (0..max_id).step(batch_size) do |from|
+    to = from + batch_size
+
+    inserted += DB.exec(<<~'SQL', from: from, to: to)
+      INSERT INTO quoted_posts (post_id, quoted_post_id, created_at, updated_at)
+      SELECT DISTINCT p.id, quoted.id, p.created_at, p.created_at
+      FROM posts p
+           CROSS JOIN LATERAL
+             regexp_matches(p.cooked, '<aside class="quote[^>]*>', 'g') AS tag(html)
+           CROSS JOIN LATERAL (
+             SELECT (regexp_match(tag.html[1], '\sdata-topic="(\d+)"'))[1]::int AS topic_id,
+                    (regexp_match(tag.html[1], '\sdata-post="(\d+)"'))[1]::int  AS post_number
+           ) AS quote_ref
+           JOIN posts quoted ON quoted.topic_id    = quote_ref.topic_id
+                            AND quoted.post_number = quote_ref.post_number
+      WHERE p.id >= :from AND p.id < :to
+        AND p.cooked LIKE '%<aside class="quote%'
+        AND p.deleted_at IS NULL
+        AND quoted.id <> p.id
+      ON CONFLICT (post_id, quoted_post_id) DO NOTHING
+    SQL
+
+    log "  scanned #{[to, max_id].min}/#{max_id} posts, #{inserted} quotes inserted"
+  end
+
+  DB.exec "ANALYZE quoted_posts"
+
+  log "Updating reply_quoted flag on posts..."
+
+  updated = DB.exec(<<~'SQL')
+    UPDATE posts
+    SET reply_quoted = true
+    FROM quoted_posts qp
+         JOIN posts parent ON parent.id = qp.quoted_post_id
+    WHERE qp.post_id = posts.id
+      AND posts.reply_to_post_number IS NOT NULL
+      AND parent.topic_id    = posts.topic_id
+      AND parent.post_number = posts.reply_to_post_number
+      AND posts.reply_quoted IS NOT TRUE
+  SQL
+
+  log "  flagged #{updated} posts as reply_quoted"
+end
+
+def insert_topic_links(batch_size = 100_000)
+  log "Inserting topic links..."
+
+  esc = ->(s) { s.gsub(/([\\.^$|()\[\]{}*+?])/) { "\\#{$1}" } }
+  prefixes = [Discourse.base_url, Discourse.base_path].reject(&:blank?).uniq.map(&esc)
+
+  href_re = 'href="(?:' + prefixes.join("|") + ')?/t/([^"?#]+)'
+
+  DB.exec(<<~'SQL')
+    CREATE OR REPLACE FUNCTION pg_temp.strip_quote_asides(html text)
+    RETURNS text AS $fn$
+    DECLARE prev text; cur text := html;
+    BEGIN
+      IF cur IS NULL OR position('<aside class="quote' in cur) = 0 THEN
+        RETURN cur;
+      END IF;
+      LOOP
+        prev := cur;
+        cur := regexp_replace(cur, '<aside class="quote(?:(?!<aside).)*?</aside>', '', 'g');
+        EXIT WHEN cur = prev;
+      END LOOP;
+      RETURN cur;
+    END
+    $fn$ LANGUAGE plpgsql IMMUTABLE;
+  SQL
+
+  max_id = DB.query_single("SELECT COALESCE(MAX(id), 0) FROM posts").first
+  inserted = 0
+
+  (0..max_id).step(batch_size) do |from|
+    to = from + batch_size
+
+    inserted +=
+      DB.exec(
+        <<~'SQL',
+        INSERT INTO topic_links (topic_id, post_id, user_id, url, domain, internal,
+                                 reflection, link_topic_id, link_post_id, quote,
+                                 created_at, updated_at)
+        SELECT DISTINCT
+               p.topic_id, p.id, p.user_id,
+               :base_url::text || '/t/' || COALESCE(NULLIF(t2.slug, ''), 'topic') || '/' || t2.id
+                 || CASE WHEN ref.post_number > 1 THEN '/' || ref.post_number ELSE '' END,
+               :host::text, true, false, t2.id, target.id, false, p.created_at, p.created_at
+        FROM posts p
+             CROSS JOIN LATERAL
+               regexp_matches(pg_temp.strip_quote_asides(p.cooked), :href_re::text, 'g') AS link(c)
+             CROSS JOIN LATERAL (
+               SELECT string_to_array(trim(trailing '/' from link.c[1]), '/') AS seg
+             ) AS parts
+             CROSS JOIN LATERAL (
+               SELECT CASE WHEN parts.seg[1] ~ '^[0-9]+$' THEN parts.seg[1] ELSE parts.seg[2] END AS t_txt,
+                      CASE WHEN parts.seg[1] ~ '^[0-9]+$' THEN parts.seg[2] ELSE parts.seg[3] END AS p_txt
+             ) AS raw
+             CROSS JOIN LATERAL (
+               SELECT CASE WHEN raw.t_txt ~ '^[0-9]+$' THEN raw.t_txt::int END        AS topic_id,
+                      CASE WHEN raw.p_txt ~ '^[0-9]+$' THEN raw.p_txt::int ELSE 1 END AS post_number
+             ) AS ref
+             JOIN topics t2 ON t2.id = ref.topic_id
+             LEFT JOIN posts target ON target.topic_id    = t2.id
+                                   AND target.post_number = ref.post_number
+                                   AND target.deleted_at IS NULL
+        WHERE p.id >= :from AND p.id < :to
+          AND p.cooked LIKE '%href=%'
+          AND p.deleted_at IS NULL
+          AND p.post_type NOT IN (:small_action, :whisper)
+          AND t2.id <> p.topic_id
+          AND t2.deleted_at IS NULL
+        ON CONFLICT (topic_id, post_id, url) DO NOTHING
+      SQL
+        from: from,
+        to: to,
+        href_re: href_re,
+        base_url: Discourse.base_url,
+        host: Discourse.current_hostname,
+        small_action: Post.types[:small_action],
+        whisper: Post.types[:whisper],
+      )
+
+    log "  scanned #{[to, max_id].min}/#{max_id} posts, #{inserted} links inserted"
+  end
+
+  DB.exec "ANALYZE topic_links"
+
+  log "Inserting reflections of topic links..."
+
+  reflected =
+    DB.exec(
+      <<~'SQL',
+      INSERT INTO topic_links (topic_id, post_id, user_id, url, domain, reflection, internal,
+                               link_topic_id, link_post_id, quote, created_at, updated_at)
+      SELECT DISTINCT
+             tl.link_topic_id, tl.link_post_id, tl.user_id,
+             :base_url::text || '/t/' || COALESCE(NULLIF(t.slug, ''), 'topic') || '/' || t.id
+               || CASE WHEN p.post_number > 1 THEN '/' || p.post_number ELSE '' END,
+             :host::text, true, true, tl.topic_id, tl.post_id, false, tl.created_at, tl.created_at
+      FROM topic_links tl
+           JOIN posts p  ON p.id = tl.post_id AND p.deleted_at IS NULL
+           JOIN topics t ON t.id = tl.topic_id
+           JOIN topics target_topic ON target_topic.id = tl.link_topic_id
+           LEFT JOIN categories source_category ON source_category.id = t.category_id
+           LEFT JOIN categories target_category ON target_category.id = target_topic.category_id
+      WHERE tl.reflection IS NOT TRUE
+        AND tl.internal IS TRUE
+        AND tl.link_topic_id IS NOT NULL
+        AND tl.link_post_id IS NOT NULL
+        AND p.post_type NOT IN (:small_action, :whisper)
+        AND t.archetype <> 'private_message'
+        AND t.visible
+        AND t.deleted_at IS NULL
+        AND NOT COALESCE(source_category.read_restricted, false)
+        AND target_topic.archetype <> 'private_message'
+        AND target_topic.deleted_at IS NULL
+        AND NOT COALESCE(target_category.read_restricted, false)
+      ON CONFLICT (topic_id, post_id, url) DO NOTHING
+    SQL
+      base_url: Discourse.base_url,
+      host: Discourse.current_hostname,
+      small_action: Post.types[:small_action],
+      whisper: Post.types[:whisper],
+    )
+
+  log "  #{reflected} reflections inserted"
+end
+
+def insert_user_actions(batch_size = 100_000)
   log "Inserting user actions for LIKE = 1..."
 
   DB.exec <<~SQL
@@ -167,6 +343,160 @@ def insert_user_actions
             AND p2.user_id <> p.user_id
     ON CONFLICT DO NOTHING
   SQL
+
+  DB.exec(<<~'SQL')
+    CREATE OR REPLACE FUNCTION pg_temp.strip_excluded(html text)
+    RETURNS text AS $fn$
+    DECLARE prev text; cur text := html;
+    BEGIN
+      IF cur IS NULL THEN RETURN NULL; END IF;
+      IF position('<aside' in cur) = 0 AND position('<details' in cur) = 0 THEN
+        RETURN cur;
+      END IF;
+      LOOP
+        prev := cur;
+        cur := regexp_replace(cur, '<aside class="quote(?:(?!<aside).)*?</aside>', '', 'g');
+        cur := regexp_replace(cur, '<aside class="onebox(?:(?!<aside).)*?</aside>', '', 'g');
+        cur := regexp_replace(cur, '<details class="elided(?:(?!<details).)*?</details>', '', 'g');
+        EXIT WHEN cur = prev;
+      END LOOP;
+      RETURN cur;
+    END
+    $fn$ LANGUAGE plpgsql IMMUTABLE;
+  SQL
+
+  mention_tag_re = '<a [^>]*class="mention"[^>]*>'
+  mention_href_re = 'href="[^"]*/u(?:sers)?/([^"/?#]+)"'
+
+  common = {
+    small_action: Post.types[:small_action],
+    whisper: Post.types[:whisper],
+    mention: UserAction::MENTION,
+    response: UserAction::RESPONSE,
+    quote: UserAction::QUOTE,
+    linked: UserAction::LINKED,
+  }
+
+  log "Inserting user actions for MENTION..."
+
+  max_id = DB.query_single("SELECT COALESCE(MAX(id), 0) FROM posts").first
+  mentions = 0
+
+  (0..max_id).step(batch_size) do |from|
+    to = from + batch_size
+
+    mentions +=
+      DB.exec(
+        <<~'SQL',
+        INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id,
+                                  acting_user_id, created_at, updated_at)
+        SELECT DISTINCT :mention::int, u.id, p.topic_id, p.id, p.user_id, p.created_at, p.created_at
+        FROM posts p
+             JOIN topics t ON t.id = p.topic_id
+             LEFT JOIN categories c ON c.id = t.category_id
+             CROSS JOIN LATERAL
+               regexp_matches(pg_temp.strip_excluded(p.cooked), :tag_re::text, 'g') AS m(tag)
+             CROSS JOIN LATERAL (
+               SELECT (regexp_match(m.tag[1], :href_re::text))[1] AS username
+             ) AS ref
+             JOIN users u ON u.username_lower = lower(ref.username)
+        WHERE p.id >= :from AND p.id < :to
+          AND p.cooked LIKE '%class="mention"%'
+          AND p.deleted_at IS NULL
+          AND p.post_type NOT IN (:small_action, :whisper)
+          AND t.deleted_at IS NULL
+          AND t.archetype <> 'private_message'
+          AND t.visible
+          AND NOT COALESCE(c.read_restricted, false)
+          AND u.id > 0
+          AND u.id <> p.user_id
+        ON CONFLICT (action_type, user_id, target_topic_id, target_post_id, acting_user_id)
+        DO NOTHING
+      SQL
+        **common,
+        from: from,
+        to: to,
+        tag_re: mention_tag_re,
+        href_re: mention_href_re,
+      )
+
+    log "  scanned #{[to, max_id].min}/#{max_id} posts, #{mentions} mentions inserted"
+  end
+
+  DB.exec "ANALYZE user_actions"
+
+  log "Inserting user actions for QUOTE..."
+
+  quotes = DB.exec(<<~'SQL', **common)
+      INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id,
+                                acting_user_id, created_at, updated_at)
+      SELECT DISTINCT :quote::int, quoted.user_id, p.topic_id, p.id, p.user_id, p.created_at, p.created_at
+      FROM quoted_posts qp
+           JOIN posts p ON p.id = qp.post_id
+           JOIN posts quoted ON quoted.id = qp.quoted_post_id
+           JOIN topics t ON t.id = p.topic_id
+           LEFT JOIN categories c ON c.id = t.category_id
+      WHERE p.deleted_at IS NULL
+        AND p.post_type NOT IN (:small_action, :whisper)
+        AND t.deleted_at IS NULL
+        AND t.archetype <> 'private_message'
+        AND t.visible
+        AND NOT COALESCE(c.read_restricted, false)
+        AND quoted.user_id > 0
+        AND quoted.user_id <> p.user_id
+        -- core notifies a user once per post: mention > reply > quote > linked
+        AND NOT EXISTS (
+          SELECT 1 FROM user_actions ua
+          WHERE ua.target_post_id = p.id
+            AND ua.user_id = quoted.user_id
+            AND ua.action_type IN (:mention, :response)
+        )
+      ON CONFLICT (action_type, user_id, target_topic_id, target_post_id, acting_user_id)
+      DO NOTHING
+    SQL
+  log "  #{quotes} quote actions inserted"
+
+  DB.exec "ANALYZE user_actions"
+
+  log "Inserting user actions for LINKED..."
+
+  linked = DB.exec(<<~'SQL', **common)
+      INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id,
+                                acting_user_id, created_at, updated_at)
+      SELECT DISTINCT :linked::int, lu.user_id, p.topic_id, p.id, p.user_id, p.created_at, p.created_at
+      FROM topic_links tl
+           JOIN posts p ON p.id = tl.post_id
+           JOIN topics t ON t.id = p.topic_id
+           LEFT JOIN categories c ON c.id = t.category_id
+           LEFT JOIN posts target ON target.id = tl.link_post_id
+                                 AND target.deleted_at IS NULL
+           -- core falls back to the linked topic's first post when link_post is absent
+           LEFT JOIN posts fp ON fp.topic_id = tl.link_topic_id
+                             AND fp.post_number = 1
+                             AND fp.deleted_at IS NULL
+           CROSS JOIN LATERAL (
+             SELECT COALESCE(target.user_id, fp.user_id) AS user_id
+           ) AS lu
+      WHERE tl.reflection IS NOT TRUE
+        AND tl.internal IS TRUE
+        AND p.deleted_at IS NULL
+        AND p.post_type NOT IN (:small_action, :whisper)
+        AND t.deleted_at IS NULL
+        AND t.archetype <> 'private_message'
+        AND NOT COALESCE(c.read_restricted, false)
+        AND lu.user_id > 0
+        AND lu.user_id <> p.user_id
+        AND NOT EXISTS (
+          SELECT 1 FROM user_actions ua
+          WHERE ua.target_post_id = p.id
+            AND ua.user_id = lu.user_id
+            AND ua.action_type IN (:mention, :response, :quote)
+        )
+      ON CONFLICT (action_type, user_id, target_topic_id, target_post_id, acting_user_id)
+      DO NOTHING
+    SQL
+
+  log "  #{linked} linked actions inserted"
 
   # TODO:
   #  - NEW_PRIVATE_MESSAGE
