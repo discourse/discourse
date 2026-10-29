@@ -17,6 +17,8 @@ use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
 exclude_patterns = []
+selection = nil
+execution_plan_path = nil
 
 OptionParser
   .new do |opts|
@@ -58,6 +60,14 @@ OptionParser
     ) { retry_and_log_flaky_tests = true }
 
     opts.on("--seed SEED", "The seed for the random order") { |s| seed = s.to_i }
+
+    opts.on("--selection PATH", "Read the validated CI selection") do |path|
+      selection = JSON.parse(File.read(path))
+    end
+
+    opts.on("--execution-plan PATH", "Record assigned and predicted workers") do |path|
+      execution_plan_path = path
+    end
 
     opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
       use_runtime_info = true
@@ -111,7 +121,9 @@ if formatters.any? { |formatter| formatter[:name] == "RspecPerformanceFormatter"
 end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
-if files.size > 5
+if selection
+  puts "Planning turbo_rspec from #{files.size} files"
+elsif files.size > 5
   puts "Running turbo_rspec on #{files.size} files"
 else
   puts "Running turbo_rspec on: #{files.join(", ")}"
@@ -129,6 +141,8 @@ success =
     profile:,
     profile_print_slowest_examples_count:,
     retry_and_log_flaky_tests:,
+    selection:,
+    execution_plan_path:,
   )
 
 if success

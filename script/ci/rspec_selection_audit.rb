@@ -8,7 +8,9 @@ class RspecSelectionAudit
   RSpec::Core::Formatters.register self, :example_failed, :dump_summary, :close
 
   def initialize(_output)
-    @selected = JSON.parse(File.read("tmp/rspec-mapping/selection.json")).fetch("specs")
+    execution = JSON.parse(File.read("tmp/rspec-mapping/execution.json"))
+    role = ENV.key?("TEST_ENV_NUMBER") ? "regular" : "multisite"
+    @selected = execution.fetch("predicted_#{role}_specs")
     @failures = []
     @omitted_failures = []
   end

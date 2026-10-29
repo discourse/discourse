@@ -38,7 +38,16 @@ class RspecSelectionLabRecorder
     FileUtils.mkdir_p(directory)
     File.write(
       "#{directory}/#{Process.pid}.json",
-      JSON.generate(examples: @examples, errors: @errors, seed: RSpec.configuration.seed),
+      JSON.generate(
+        examples: @examples,
+        errors: @errors,
+        seed: RSpec.configuration.seed,
+        identity: ENV.fetch("TEST_ENV_NUMBER", "multisite"),
+        files:
+          RSpec.configuration.files_to_run.map do |path|
+            path.delete_prefix("#{Dir.pwd}/").delete_prefix("./")
+          end,
+      ),
     )
   end
 end

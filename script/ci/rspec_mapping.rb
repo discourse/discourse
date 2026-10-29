@@ -86,7 +86,7 @@ RSpec.configure do |config|
     File.write(
       "#{directory}/worker-#{Process.pid}.json",
       JSON.generate(
-        version: 3,
+        version: 4,
         revision: ENV.fetch("GITHUB_SHA"),
         complete:
           completed_groups == expected_groups && !RSpec.world.non_example_failure &&

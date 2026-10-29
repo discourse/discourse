@@ -48,7 +48,7 @@ archives the merged mapping and calls the real `prepare` function, using local
 artifact bytes and simulated Actions metadata. Git comparisons and fetches use
 the disposable repositories. No GitHub credentials or requests are needed.
 
-The 65 scenarios cover helper regressions, native accessor caches, delegated cache producers, new plugin locales, model validation, controller responses,
+The default run includes 65 general scenarios and five focused worker context cases. The general scenarios cover helper regressions, native accessor caches, delegated cache producers, new plugin locales, model validation, controller responses,
 scheduled jobs, template rendering, simultaneous changes, changed and
 new specs, spec renames and deletions, source renames, shared support, fabricators,
 routes, locales, dependencies, bundles, views, database structure, CI configuration,
@@ -63,9 +63,23 @@ a new model file found through a directory scan and a changed JSON file read
 by Ruby. JavaScript probes exercise a direct Ruby read, a boot read and the
 compiled server bundle. These are ordinary scenarios. Any omitted failure makes the report
 fail, even if the gap is a known limitation.
-A negative control deliberately removes one spec's dependencies and detaches it from the worker orders. An audit
+A negative control deliberately discards affected worker candidates from the prediction. An audit
 control checks that a full sampled run reports those omitted failures. The harness
 must detect omitted failures for that control to pass.
+
+The worker context cases share one disposable source checkout, retaining each
+case revision as a Git commit. They change ordering, reassign workers and introduce new or
+changed specs that expose failures in a neighbouring test. Each compares the
+actual full and selected runner, preserves worker identities and file assignments,
+and must expose an omission when its selection is deliberately weakened. A deleted setup file case checks multisite selection when no regular candidates remain. The
+reassignment audit also checks that full multisite selection cannot hide a regular
+worker omission. Run just these cases with:
+
+```sh
+python3 script/ci/rspec_selection_lab/cohort_cases.py \
+  --directory /experiment/harness/cohorts-001
+```
+
 
 `report.json` contains selected files, example failure identifiers, worker seeds,
 exit codes, elapsed time and CPU time. Every worker writes structured results.
@@ -85,8 +99,9 @@ three PR runs per main push. This is a workload model, not measured production
 traffic. Sampled audits in the matrix are explicit scenarios.
 It includes mapping merge, artifact
 packaging and selection. The negative control and experiment setup are excluded.
-Runtime timing history is restored and worker seed 123 is enforced before
-each comparison. Execution order alternates, but application and filesystem
+The mapping input timing history is restored and worker seed 123 is enforced before
+each general comparison. Focused cases deliberately override that history and use
+different seeds to exercise ordering and assignment changes. Execution order alternates, but application and filesystem
 caches are not controlled. A single
 bounded run cannot establish production savings or a missed regression rate.
 Local artifact transport does not measure GitHub service latency or permissions.

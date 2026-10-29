@@ -14,8 +14,10 @@ const inventory = [
   "spec/models/post_spec.rb",
 ];
 const mapping = {
-  version: 3,
-  worker_spec_order: inventory.map((spec) => [spec]),
+  version: 4,
+  grouping_runtime_log: null,
+  worker_specs: inventory.map((spec) => [spec]),
+  empty_specs: [],
   shared_files: [],
   source_checks: Object.fromEntries(
     [
@@ -198,6 +200,7 @@ test("restores a trusted mapping and includes changes since its commit", async (
     );
     const head = runGit("rev-parse", "HEAD");
     runGit("remote", "add", "origin", directory);
+    const groupingHistory = "spec/lib/url_helper_spec.rb:10\n";
     const archive = execFileSync(
       "python3",
       [
@@ -205,7 +208,11 @@ test("restores a trusted mapping and includes changes since its commit", async (
         "import io,json,sys,zipfile; b=io.BytesIO(); z=zipfile.ZipFile(b,'w'); z.writestr('mapping.json',sys.stdin.read()); z.close(); sys.stdout.buffer.write(b.getvalue())",
       ],
       {
-        input: JSON.stringify({ ...mapping, revision: baseline }),
+        input: JSON.stringify({
+          ...mapping,
+          revision: baseline,
+          grouping_runtime_log: groupingHistory,
+        }),
       }
     );
     const context = {
@@ -271,7 +278,13 @@ test("restores a trusted mapping and includes changes since its commit", async (
       },
     };
 
+    fs.mkdirSync("tmp", { recursive: true });
+    fs.writeFileSync("tmp/turbo_rspec_runtime.log", "newer cache data\n");
     await prepare({ github, context, core });
+    assert.equal(
+      fs.readFileSync("tmp/turbo_rspec_runtime.log", "utf8"),
+      groupingHistory
+    );
 
     const result = JSON.parse(
       fs.readFileSync("tmp/rspec-mapping/selection.json")
@@ -334,11 +347,13 @@ test("restores a trusted mapping and includes changes since its commit", async (
       JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).reason,
       "Full execution configured"
     );
-    await prepare({ github, context, core, auditPercent: 101 });
-    assert.equal(
-      JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).reason,
-      "Full execution configured"
-    );
+    for (const invalid of [101, " ", "1e2"]) {
+      await prepare({ github, context, core, auditPercent: invalid });
+      assert.equal(
+        JSON.parse(fs.readFileSync("tmp/rspec-mapping/selection.json")).reason,
+        "Full execution configured"
+      );
+    }
     github.rest.actions.listArtifactsForRepo = originalList;
 
     producer.event = "pull_request";
@@ -382,7 +397,7 @@ test("retains backend integrity checks for frontend changes", () => {
     mapping: {
       ...mapping,
       dependencies: { ...mapping.dependencies, [integrity]: [] },
-      worker_spec_order: [...mapping.worker_spec_order, [integrity]],
+      worker_specs: [...mapping.worker_specs, [integrity]],
     },
     revision,
     inventory: [...inventory, integrity],
@@ -447,7 +462,7 @@ test("selects locale integrity through its mapped dependencies", () => {
   const localeSpec = "spec/integrity/i18n_spec.rb";
   const fixture = {
     ...mapping,
-    worker_spec_order: [...mapping.worker_spec_order, [localeSpec]],
+    worker_specs: [...mapping.worker_specs, [localeSpec]],
     dependencies: { ...mapping.dependencies, [localeSpec]: ["lib/slug.rb"] },
   };
   const files = [...inventory, localeSpec];
@@ -471,10 +486,10 @@ test("selects locale integrity through its mapped dependencies", () => {
   );
 });
 
-test("includes later cache consumers in an affected worker without selecting earlier or unrelated specs", () => {
+test("includes complete historical worker cohorts regardless of execution order", () => {
   const fixture = {
     ...mapping,
-    worker_spec_order: [
+    worker_specs: [
       [inventory[3], inventory[1], inventory[0], inventory[3]],
       [inventory[2]],
     ],
@@ -486,14 +501,15 @@ test("includes later cache consumers in an affected worker without selecting ear
     changed: ["lib/url_helper.rb"],
   });
   assert.equal(result.mode, "subset");
-  assert.deepEqual(result.specs, [inventory[0], inventory[2], inventory[3]]);
+  assert.deepEqual(result.specs, inventory);
+  assert.deepEqual(result.cohort_specs, inventory);
 });
 
-test("rejects mappings without complete worker ordering", () => {
+test("rejects mappings without complete worker cohorts", () => {
   for (const fixture of [
     { ...mapping, version: 2 },
-    { ...mapping, worker_spec_order: [] },
-    { ...mapping, worker_spec_order: null },
+    { ...mapping, worker_specs: [] },
+    { ...mapping, worker_specs: null },
   ]) {
     assert.equal(
       select({
@@ -521,4 +537,36 @@ test("new and existing locale files require a full run", () => {
       );
     }
   }
+});
+
+test("new and changed specs seed cohorts while known empty specs stay required", () => {
+  const empty = "spec/lib/empty_spec.rb";
+  const added = "spec/lib/new_spec.rb";
+  const fixture = { ...mapping, empty_specs: [empty] };
+  const result = select({
+    mapping: fixture,
+    revision,
+    inventory: [...inventory, empty, added],
+    changed: [inventory[1]],
+  });
+  assert.deepEqual(result.cohort_specs, [inventory[1], added]);
+  assert.deepEqual(result.specs, [inventory[1], empty, added]);
+});
+
+test("a deleted setup file still selects the multisite process", () => {
+  const empty = "spec/lib/setup_spec.rb";
+  const fixture = {
+    ...mapping,
+    empty_specs: [empty],
+    worker_specs: [...mapping.worker_specs, [empty]],
+  };
+  const result = select({
+    mapping: fixture,
+    revision,
+    inventory,
+    changed: [empty],
+  });
+  assert.deepEqual(result.specs, []);
+  assert.deepEqual(result.cohort_specs, []);
+  assert.equal(result.full_multisite, true);
 });

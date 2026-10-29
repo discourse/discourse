@@ -101,7 +101,7 @@ RSpec.describe Crystalball do
     end
   end
 
-  it "passes a selected list to the runner and skips an empty selection" do
+  it "passes a selection plan to the runner and skips an empty selection" do
     Dir.mktmpdir do |directory|
       FileUtils.mkdir_p("#{directory}/tmp/rspec-mapping")
       FileUtils.mkdir_p("#{directory}/spec/views")
@@ -111,6 +111,7 @@ RSpec.describe Crystalball do
         #!/usr/bin/env ruby
         require "json"
         File.write("arguments.json", JSON.generate(ARGV))
+        File.write("tmp/rspec-mapping/execution.json", JSON.generate(revision: ENV["GITHUB_SHA"], workers: { "1" => ["spec/views/example.html.erb_spec.rb"] }, predicted_regular_specs: ["spec/views/example.html.erb_spec.rb"], predicted_multisite_specs: []))
       RUBY
       FileUtils.chmod("+x", "#{directory}/bin/turbo_rspec")
       selection_path = "#{directory}/tmp/rspec-mapping/selection.json"
@@ -121,6 +122,8 @@ RSpec.describe Crystalball do
         mode: "subset",
         revision: revision,
         specs: ["spec/views/example.html.erb_spec.rb"],
+        cohort_specs: [],
+        full_multisite: false,
       }
       File.write(selection_path, JSON.generate(selection))
 
@@ -140,11 +143,18 @@ RSpec.describe Crystalball do
 
       expect(status.success?).to eq(true), output
       expect(JSON.parse(File.read("#{directory}/arguments.json"))).to eq(
-        %w[--use-runtime-info --format=progress spec/views/example.html.erb_spec.rb],
+        %w[
+          --use-runtime-info
+          --format=progress
+          --execution-plan
+          tmp/rspec-mapping/execution.json
+          --selection
+          tmp/rspec-mapping/selection.json
+        ],
       )
 
       File.delete("#{directory}/arguments.json")
-      File.write(selection_path, JSON.generate(selection.merge(specs: [])))
+      File.write(selection_path, JSON.generate(selection.merge(specs: [], cohort_specs: [])))
 
       output, status =
         Open3.capture2e(
@@ -169,7 +179,10 @@ RSpec.describe Crystalball do
     Dir.mktmpdir do |directory|
       FileUtils.mkdir_p("#{directory}/tmp/rspec-mapping")
       FileUtils.mkdir_p("#{directory}/spec")
-      File.write("#{directory}/tmp/rspec-mapping/selection.json", JSON.generate(specs: []))
+      File.write(
+        "#{directory}/tmp/rspec-mapping/execution.json",
+        JSON.generate(predicted_regular_specs: [], predicted_multisite_specs: []),
+      )
       File.write("#{directory}/spec/example_spec.rb", <<~RUBY)
         RSpec.describe "shared setup failure" do
           before(:context) { raise "regression" }
@@ -202,8 +215,11 @@ RSpec.describe Crystalball do
       FileUtils.mkdir_p("#{directory}/tmp/rspec-mapping")
       FileUtils.mkdir_p("#{directory}/spec/support")
       File.write(
-        "#{directory}/tmp/rspec-mapping/selection.json",
-        JSON.generate(specs: ["spec/example_spec.rb"]),
+        "#{directory}/tmp/rspec-mapping/execution.json",
+        JSON.generate(
+          predicted_regular_specs: ["spec/example_spec.rb"],
+          predicted_multisite_specs: ["spec/example_spec.rb"],
+        ),
       )
       File.write("#{directory}/spec/support/shared.rb", <<~RUBY)
         RSpec.shared_examples "a regression" do
@@ -305,8 +321,14 @@ RSpec.describe Crystalball do
         )
       expect(status.success?).to eq(true), output
       File.write(
-        "#{directory}/tmp/rspec-mapping/collection.json",
-        JSON.generate(revision: "a" * 40, workers: { multisite: paths.values }),
+        "#{directory}/tmp/rspec-mapping/execution.json",
+        JSON.generate(
+          revision: "a" * 40,
+          grouping_runtime_log: nil,
+          workers: {
+            multisite: paths.values,
+          },
+        ),
       )
       output, status =
         Open3.capture2e(
@@ -325,7 +347,7 @@ RSpec.describe Crystalball do
         "lib/loader.rb",
         "lib/producer.rb",
       )
-      expect(mapping["worker_spec_order"]).to eq([[paths[:second], paths[:first], paths[:second]]])
+      expect(mapping["worker_specs"]).to eq([[paths[:second], paths[:first]]])
       expect(mapping["dependencies"][paths[:second]]).not_to include("lib/producer.rb")
       loader = "#{directory}/lib/producer.rb"
       File.write(loader, File.read(loader).sub('"second" => "good"', '"second" => "broken"'))
@@ -388,7 +410,7 @@ RSpec.describe Crystalball do
       FileUtils.mkdir_p(output_directory)
       revision = "a" * 40
       worker = {
-        version: 3,
+        version: 4,
         revision: revision,
         complete: true,
         spec_order: ["spec/example_spec.rb"],
@@ -400,9 +422,10 @@ RSpec.describe Crystalball do
         shared_globs: ["frontend/pretty-text/**/*.js"],
       }
       File.write(
-        "#{output_directory}/collection.json",
+        "#{output_directory}/execution.json",
         JSON.generate(
           revision:,
+          grouping_runtime_log: nil,
           workers: {
             first: ["spec/example_spec.rb"],
             second: ["spec/example_spec.rb"],

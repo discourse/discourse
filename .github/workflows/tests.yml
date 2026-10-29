@@ -324,6 +324,7 @@ jobs:
           path: |
             tmp/rspec-mapping/run.json
             tmp/rspec-mapping/selection.json
+            tmp/rspec-mapping/execution.json
           if-no-files-found: ignore
           retention-days: 14
 

@@ -78,7 +78,7 @@ def git(workspace, *arguments):
     return subprocess.check_output(["git", "-C", str(workspace), "-c", "user.name=RSpec lab", "-c", "user.email=rspec-lab@example.invalid", "-c", "commit.gpgsign=false", "-c", "core.hooksPath=/dev/null", *arguments], text=True, timeout=180).strip()
 
 
-def snapshot(source, workspace, *, all_specs, ci_bootstrap):
+def snapshot(source, workspace, *, all_specs, ci_bootstrap, include_probes=True):
     workspace.mkdir()
     archive = workspace.parent / "source.tar"
     with archive.open("wb") as output:
@@ -114,7 +114,8 @@ def snapshot(source, workspace, *, all_specs, ci_bootstrap):
     if uploads.exists():
         shutil.copytree(uploads, workspace / "public/uploads", dirs_exist_ok=True)
     (workspace / "log").mkdir(exist_ok=True)
-    extra_scenarios.setup(workspace)
+    if include_probes:
+        extra_scenarios.setup(workspace)
     git(workspace, "init", "-q")
     git(workspace, "add", ".")
     git(workspace, "commit", "-qm", "Local experiment baseline")
@@ -148,9 +149,10 @@ def break_helper(workspace):
     replace(workspace, "lib/url_helper.rb", "  def self.normalized_encode(uri)\n", '  def self.normalized_encode(uri)\n    return "https://broken.invalid"\n')
 
 
-def run_tests(workspace, directory, *, revision, collect, timeout_seconds, timing, guard_error=None, processors=2):
+def run_tests(workspace, directory, *, revision, collect, timeout_seconds, timing, guard_error=None, processors=2, seed=123):
     directory.mkdir()
     history = workspace / "tmp/turbo_rspec_runtime.log"
+    history.parent.mkdir(parents=True, exist_ok=True)
     if timing is not None:
         history.write_bytes(timing)
     else:
@@ -159,7 +161,7 @@ def run_tests(workspace, directory, *, revision, collect, timeout_seconds, timin
                RSPEC_MAPPING_DIRECTORY=str(workspace / "tmp/rspec-mapping"),
                RSPEC_LAB_RESULTS=str(directory / "examples"), PARALLEL_TEST_PROCESSORS=str(processors),
                DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS="0",
-               SPEC_OPTS=f"--require {workspace}/script/ci/rspec_selection_lab/record.rb --seed 123")
+               SPEC_OPTS=f"--require {workspace}/script/ci/rspec_selection_lab/record.rb --seed {seed}")
     if os.environ.get("RUBY_ALLOCATOR"):
         env["LD_PRELOAD"] = os.environ["RUBY_ALLOCATOR"]
     result = execute(["ruby", "script/ci/rspec_selection.rb", "run"], cwd=workspace, log=directory / "run.log", env=env, timeout_seconds=timeout_seconds)
@@ -172,7 +174,7 @@ def run_tests(workspace, directory, *, revision, collect, timeout_seconds, timin
     records = [json.loads(path.read_text()) for path in (directory / "examples").glob("*.json")]
     if not records or any(record["errors"] != 0 for record in records) or result["exit"] not in (0, 1):
         raise RuntimeError(f"Test infrastructure failed, inspect {directory}/run.log")
-    if any(record["seed"] != 123 for record in records):
+    if any(record["seed"] != seed for record in records):
         raise RuntimeError(f"Test seed differs from the comparison seed: {directory}")
     examples = {example["id"]: example["status"] for record in records for example in record["examples"]}
     if not examples:
@@ -180,16 +182,18 @@ def run_tests(workspace, directory, *, revision, collect, timeout_seconds, timin
     failures = sorted(identity for identity, status in examples.items() if status == "failed")
     if (result["exit"] == 0) != (len(failures) == 0):
         raise RuntimeError(f"Test exit does not match recorded failures: {directory}")
-    log_text = (directory / "run.log").read_text()
-    file_count = re.search(r"Running turbo_rspec on (\d+) files", log_text)
-    explicit = re.search(r"^Running turbo_rspec on: (.+)$", log_text, re.MULTILINE)
-    if not file_count and not explicit:
-        raise RuntimeError(f"Turbo did not report its files: {directory}")
-    explicit_specs = explicit[1].split(", ") if explicit else None
     consumer = json.loads((workspace / "tmp/rspec-mapping/run.json").read_text())
+    execution = json.loads((workspace / "tmp/rspec-mapping/execution.json").read_text())
+    if {record["identity"] for record in records} != set(execution["workers"]):
+        raise RuntimeError(f"Actual worker identities differ from the execution plan: {directory}")
+    for record in records:
+        if sorted(record["files"]) != sorted(execution["workers"][record["identity"]]):
+            raise RuntimeError(f"Actual assigned files differ from the execution plan: {directory}")
+    regular = sorted({path for identity, paths in execution["workers"].items() if identity != "multisite" for path in paths})
     result["consumer"] = consumer
+    result["execution"] = execution
     result.update(examples=len(examples), failures=failures, seeds=[record["seed"] for record in records],
-                  executed_files=int(file_count[1]) if file_count else len(explicit_specs), explicit_specs=explicit_specs)
+                  executed_files=len(regular), explicit_specs=regular)
     (directory / "measurement.json").write_text(json.dumps(result, indent=2))
     return result
 
@@ -283,7 +287,8 @@ def main():
         packaging_worker_cpu = packaged_usage.ru_utime + packaged_usage.ru_stime - packaging_usage.ru_utime - packaging_usage.ru_stime
         packaging = {"wall_seconds": time.monotonic() - packaging_started,
                      "cpu_seconds": packaging_container_after - packaging_container_before if packaging_container_before is not None and packaging_container_after is not None else packaging_worker_cpu}
-        timing = (workspace / "tmp/turbo_rspec_runtime.log").read_bytes()
+        grouping_history = json.loads((mapping_directory / "mapping.json").read_text())["grouping_runtime_log"]
+        timing = grouping_history.encode() if grouping_history is not None else None
         report = {"scope": "all core backend specs plus dependency probes" if args.all_specs else "bounded core sample plus dependency probes",
                   "processors": args.processors, "allocated_processors": allocated_processors(), "ci_eager_loading": True, "ci_bootstrap": args.ci_bootstrap, "common_setup": setup,
                   "transport": "local artifact bytes and simulated Actions metadata, no GitHub requests",
@@ -341,15 +346,11 @@ def main():
             if name == "corrupt_mapping":
                 input_archive = directory / "corrupt.zip"
                 input_archive.write_bytes(b"not a zip file")
-            if name in ["lost_dependency_control", "audit_miss_control", "missing_spec_entry", "invalid_schema", "revision_mismatch", "missing_zip_member"]:
+            if name in ["missing_spec_entry", "invalid_schema", "revision_mismatch", "missing_zip_member"]:
                 input_archive = directory / "incomplete.zip"
                 with zipfile.ZipFile(archive) as baseline_archive:
                     mapping = json.loads(baseline_archive.read("mapping.json"))
-                if name in ["lost_dependency_control", "audit_miss_control"]:
-                    omitted_spec = "spec/lib/url_helper_spec.rb"
-                    mapping["dependencies"][omitted_spec] = []
-                    mapping["worker_spec_order"] = [[spec for spec in order if spec != omitted_spec] for order in mapping["worker_spec_order"]] + [[omitted_spec]]
-                elif name == "missing_spec_entry":
+                if name == "missing_spec_entry":
                     del mapping["dependencies"]["spec/lib/url_helper_spec.rb"]
                 elif name == "invalid_schema":
                     mapping["version"] = 999
@@ -383,6 +384,10 @@ def main():
                 raise RuntimeError(f"Preparation failed: {directory}")
             selection_path = mapping_directory / "selection.json"
             plan = json.loads(selection_path.read_text())
+            if name in ["lost_dependency_control", "audit_miss_control"]:
+                plan["cohort_specs"] = []
+                plan["specs"] = [spec for spec in plan["specs"] if spec.startswith("spec/integrity/") and spec != "spec/integrity/i18n_spec.rb"]
+                selection_path.write_text(json.dumps(plan))
             selection = selection_path.read_bytes()
             (directory / "selection.json").write_bytes(selection)
             results = {}
@@ -410,10 +415,10 @@ def main():
                 raise RuntimeError(f"Unexpected selection mode for {name}: expected {expected_mode}, received {plan}")
             inventory_size = len([path for path in workspace.glob("spec/**/*_spec.rb") if not str(path.relative_to(workspace)).startswith("spec/system/")])
             full_files = 0 if name == "pending_migration" else inventory_size
-            selected_files = full_files if expected_execution_mode == "full" else len(plan["specs"])
+            selected_files = full_files if expected_execution_mode == "full" else len(results["selected"]["execution"]["predicted_regular_specs"])
             if results["full"]["executed_files"] != full_files or results["selected"]["executed_files"] != selected_files:
                 raise RuntimeError(f"Wrapper executed an unexpected file count: {directory}")
-            if expected_execution_mode == "subset" and results["selected"]["explicit_specs"] is not None and results["selected"]["explicit_specs"] != plan["specs"]:
+            if expected_execution_mode == "subset" and results["selected"]["explicit_specs"] != sorted(results["selected"]["execution"]["predicted_regular_specs"]):
                 raise RuntimeError(f"Turbo received different specs than selected: {directory}")
             passed = not missed and not extra and plan["mode"] == expected_mode and bool(results["full"]["failures"]) == expected_failures
             if name == "lost_dependency_control":
@@ -430,7 +435,7 @@ def main():
                       "full": results["full"], "selected": results["selected"], "missed": missed, "extra": extra}
             report["scenarios"].append(record)
             (root / "report.json").write_text(json.dumps(report, indent=2))
-            print(json.dumps({"scenario": name, "passed": passed, "mode": plan["mode"], "selected_files": len(plan.get("specs", [])) if plan["mode"] == "subset" else "all", "missed": len(missed)}), flush=True)
+            print(json.dumps({"scenario": name, "passed": passed, "prediction": plan["mode"], "execution": results["selected"].get("consumer", {}).get("mode", "preflight blocked"), "selected_files": results["selected"].get("consumer", {}).get("selected_files", 0), "missed": len(missed)}), flush=True)
         positive_cases = [case for case in report["scenarios"] if not case["negative_control"]]
         main_runs = len(positive_cases) / args.pr_runs_per_main
         setup_cpu = sum(item["cpu_seconds"] for item in setup)
@@ -450,7 +455,13 @@ def main():
         report["compute"]["selection_allocated_cpu_seconds"] = report["compute"]["selection_wall_seconds"] * report["allocated_processors"]
         report["compute"]["allocated_saving_percent"] = 100 * (1 - report["compute"]["selection_wall_seconds"] / report["compute"]["baseline_wall_seconds"])
         report["compute"]["cpu_scope"] = plain["cpu_scope"]
-        report["passed"] = all(case["passed"] for case in report["scenarios"])
+        context_passed = True
+        if not args.scenario:
+            focused = execute([sys.executable, str(source / "script/ci/rspec_selection_lab/cohort_cases.py"), "--source", str(source), "--directory", str(root / "worker-context")], cwd=source, log=root / "worker-context.log", env=dict(os.environ), timeout_seconds=max(args.timeout_seconds, 600))
+            context_report = json.loads((root / "worker-context/report.json").read_text())
+            context_passed = focused["exit"] == 0 and context_report["passed"]
+            report["worker_context"] = context_report
+        report["passed"] = all(case["passed"] for case in report["scenarios"]) and context_passed
         (root / "report.json").write_text(json.dumps(report, indent=2))
         print(json.dumps({"passed": report["passed"], "compute": report["compute"], "report": str(root / "report.json")}), flush=True)
         restore_modules()

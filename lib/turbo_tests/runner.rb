@@ -37,6 +37,8 @@ module TurboTests
         seed: seed,
         profile: opts[:profile],
         retry_and_log_flaky_tests: retry_and_log_flaky_tests,
+        selection: opts[:selection],
+        execution_plan_path: opts[:execution_plan_path],
       ).run
     end
 
@@ -49,6 +51,8 @@ module TurboTests
       @seed = opts[:seed]
       @profile = opts[:profile]
       @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
+      @selection = opts[:selection]
+      @execution_plan_path = opts[:execution_plan_path]
       @failure_count = 0
 
       @messages = Queue.new
@@ -64,8 +68,48 @@ module TurboTests
       group_opts = {}
       group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
+      grouping_runtime_log =
+        (
+          if @execution_plan_path && @use_runtime_info && File.file?("tmp/turbo_rspec_runtime.log")
+            File.read("tmp/turbo_rspec_runtime.log")
+          else
+            nil
+          end
+        )
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
+
+      predicted_groups = tests_in_groups
+      predicted_multisite_specs = @files
+      if @selection
+        cohorts = @selection.fetch("cohort_specs")
+        required = @selection.fetch("specs")
+        predicted_groups =
+          tests_in_groups.map { |group| group.intersect?(cohorts) ? group : group & required }
+        predicted_multisite_specs = @selection.fetch("full_multisite") ? @files : @files & required
+        tests_in_groups = predicted_groups unless @selection["audit"] == true
+      end
+      multisite_specs =
+        @selection && @selection["audit"] != true ? predicted_multisite_specs : @files
+      if @selection
+        puts "Predicted RSpec files: #{predicted_groups.flatten.size} regular, #{predicted_multisite_specs.size} multisite"
+      end
+      if @execution_plan_path
+        workers = { "multisite" => multisite_specs }
+        tests_in_groups.each_with_index do |files, index|
+          workers[(index + 1).to_s] = files unless files.empty?
+        end
+        File.write(
+          @execution_plan_path,
+          JSON.generate(
+            revision: ENV["GITHUB_SHA"],
+            grouping_runtime_log: grouping_runtime_log,
+            workers: workers.reject { |_, files| files.empty? },
+            predicted_regular_specs: predicted_groups.flatten,
+            predicted_multisite_specs: predicted_multisite_specs,
+          ),
+        )
+      end
 
       setup_tmp_dir
 
@@ -73,7 +117,7 @@ module TurboTests
 
       subprocess_opts = { record_runtime: @use_runtime_info }
 
-      start_multisite_subprocess(@files, **subprocess_opts)
+      start_multisite_subprocess(multisite_specs, **subprocess_opts)
 
       tests_in_groups.each_with_index do |tests, process_id|
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)

@@ -26,12 +26,20 @@ function containerCpuSeconds() {
 function select({ mapping, revision, inventory, changed, structural = [] }) {
   const full = (reason) => ({ mode: "full", revision, reason });
   if (
-    mapping.version !== 3 ||
-    !Array.isArray(mapping.worker_spec_order) ||
-    !mapping.worker_spec_order.every(
+    mapping.version !== 4 ||
+    !Array.isArray(mapping.worker_specs) ||
+    !mapping.worker_specs.every(
       (order) =>
         Array.isArray(order) && order.every((spec) => typeof spec === "string")
     ) ||
+    !Object.hasOwn(mapping, "grouping_runtime_log") ||
+    !(
+      mapping.grouping_runtime_log === null ||
+      (typeof mapping.grouping_runtime_log === "string" &&
+        Buffer.byteLength(mapping.grouping_runtime_log) <= 2_000_000)
+    ) ||
+    !Array.isArray(mapping.empty_specs) ||
+    !mapping.empty_specs.every((spec) => typeof spec === "string") ||
     !Array.isArray(mapping.shared_files) ||
     !mapping.shared_files.every((file) => typeof file === "string") ||
     !Array.isArray(mapping.shared_globs) ||
@@ -73,31 +81,38 @@ function select({ mapping, revision, inventory, changed, structural = [] }) {
     }
   }
 
-  const orderedSpecs = new Set(
-    mapping.worker_spec_order.flat().map((spec) => spec.replace(/^\.\//, ""))
+  for (const spec of changed) {
+    if (spec.startsWith("spec/") && spec.endsWith("_spec.rb")) {
+      directlyAffected.add(spec);
+    }
+  }
+  const cohorts = mapping.worker_specs.map((cohort) =>
+    cohort.map((spec) => spec.replace(/^\.\//, ""))
   );
+  const recordedSpecs = new Set(cohorts.flat());
   if (
     Object.keys(mapping.dependencies).some(
-      (spec) => !orderedSpecs.has(spec.replace(/^\.\//, ""))
+      (spec) => !recordedSpecs.has(spec.replace(/^\.\//, ""))
     )
   ) {
-    return full("Incomplete worker order");
+    return full("Incomplete worker cohorts");
   }
-  for (const order of mapping.worker_spec_order) {
-    const normalized = order.map((spec) => spec.replace(/^\.\//, ""));
-    const firstAffected = normalized.findIndex((spec) =>
-      directlyAffected.has(spec)
-    );
-    if (firstAffected !== -1) {
-      normalized.slice(firstAffected).forEach((spec) => selected.add(spec));
+  const cohortSpecs = new Set(directlyAffected);
+  for (const cohort of cohorts) {
+    if (cohort.some((spec) => directlyAffected.has(spec))) {
+      cohort.forEach((spec) => cohortSpecs.add(spec));
     }
   }
-
   for (const spec of inventory) {
-    if (!Object.hasOwn(mapping.dependencies, spec) || changedPaths.has(spec)) {
-      selected.add(spec);
+    if (!Object.hasOwn(mapping.dependencies, spec)) {
+      if (mapping.empty_specs.includes(spec)) {
+        selected.add(spec);
+      } else {
+        cohortSpecs.add(spec);
+      }
     }
   }
+  cohortSpecs.forEach((spec) => selected.add(spec));
 
   const sourceChecks = {};
   for (const path of changed) {
@@ -145,6 +160,8 @@ function select({ mapping, revision, inventory, changed, structural = [] }) {
     mapping_revision: mapping.revision,
     source_checks: sourceChecks,
     specs: inventory.filter((spec) => selected.has(spec)),
+    cohort_specs: inventory.filter((spec) => cohortSpecs.has(spec)),
+    full_multisite: cohortSpecs.size > 0,
   };
 }
 
@@ -153,9 +170,14 @@ async function prepare({
   context,
   core,
   mode = process.env.RSPEC_SELECTION_MODE || "select",
-  auditPercent = Number(process.env.RSPEC_SELECTION_AUDIT_PERCENT ?? 10),
+  auditPercent = process.env.RSPEC_SELECTION_AUDIT_PERCENT ?? 10,
 }) {
   const started = Date.now();
+  if (typeof auditPercent === "string") {
+    auditPercent = /^\d+$/.test(auditPercent)
+      ? Number(auditPercent)
+      : Number.NaN;
+  }
   const containerBefore = containerCpuSeconds();
   const revision = context.sha;
   const configuredFull =
@@ -291,6 +313,16 @@ async function prepare({
                 .filter(Boolean)
             ),
           });
+          if (selection.mode === "subset") {
+            if (mapping.grouping_runtime_log === null) {
+              fs.rmSync("tmp/turbo_rspec_runtime.log", { force: true });
+            } else {
+              fs.writeFileSync(
+                "tmp/turbo_rspec_runtime.log",
+                mapping.grouping_runtime_log
+              );
+            }
+          }
           break;
         } catch (error) {
           selection.reason = `Mapping unavailable: ${error.message.slice(0, 500)}`;
@@ -328,7 +360,7 @@ async function prepare({
   core.info(JSON.stringify(selection));
   await core.summary
     .addRaw(
-      `Core backend RSpec: ${selection.mode}. ${selection.specs?.length ?? "All"} spec files. Selection took ${selection.selection_seconds.toFixed(2)} seconds.`
+      `Core backend RSpec prediction: ${selection.mode}. ${selection.specs?.length ?? "All"} candidate files. Preparation took ${selection.selection_seconds.toFixed(2)} seconds.`
     )
     .write();
 }
