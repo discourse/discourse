@@ -1954,6 +1954,17 @@ RSpec.describe Search do
           expect(I18n.with_locale(:fr) { Search.execute("patisserie").tags }).to eq([pastry])
         end
 
+        it "finds tags by a localized name with a Turkish dotted capital I when search_ignore_accents is disabled" do
+          SiteSetting.search_ignore_accents = false
+          SiteSetting.force_lowercase_tags = false
+          Fabricate(:tag_localization, tag: pastry, locale: "fr", name: "İletişim")
+
+          I18n.with_locale(:fr) do
+            expect(Search.execute("İletişim").tags).to eq([pastry])
+            expect(Search.execute("iletişim").tags).to eq([pastry])
+          end
+        end
+
         it "finds tags by a regional localization in the same language as the current locale" do
           Fabricate(:tag_localization, tag: pastry, locale: "pt_BR", name: "confeitaria")
 
@@ -1969,6 +1980,16 @@ RSpec.describe Search do
 
           SiteSetting.content_localization_use_default_locale_when_unsupported = false
           expect(I18n.with_locale(:de) { Search.execute("lightbulb").tags }).to be_empty
+        end
+
+        it "finds tags by a renamed localization and no longer by its previous name" do
+          localization = Fabricate(:tag_localization, tag: pastry, locale: "fr", name: "pâtisserie")
+          localization.update!(name: "viennoiserie")
+
+          I18n.with_locale(:fr) do
+            expect(Search.execute("viennoiserie").tags).to eq([pastry])
+            expect(Search.execute("pâtisserie").tags).to be_empty
+          end
         end
 
         it "finds hidden tags by their localized name only for users who can see them" do

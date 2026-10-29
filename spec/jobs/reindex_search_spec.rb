@@ -13,7 +13,7 @@ RSpec.describe Jobs::ReindexSearch do
   # This works since test db has a small record less than limit.
   # Didn't check `topic` because topic doesn't have posts in fabrication
   # thus no search data
-  %w[post category user].each do |m|
+  %w[post category user tag_localization].each do |m|
     it "rebuilds `#{m}` when default_locale changes" do
       SiteSetting.default_locale = "en"
       model = Fabricate(m.to_sym)
@@ -91,6 +91,39 @@ RSpec.describe Jobs::ReindexSearch do
       job.rebuild_posts(indexer: FakeIndexer)
 
       expect(FakeIndexer.posts).to contain_exactly(post)
+    end
+  end
+
+  describe "tag localizations" do
+    fab!(:tag)
+
+    it "indexes localizations whose search data is missing or outdated" do
+      missing = Fabricate(:tag_localization, tag:, locale: "fr", name: "pâtisserie")
+      outdated = Fabricate(:tag_localization, tag:, locale: "de", name: "gebäck")
+      current = Fabricate(:tag_localization, tag:, locale: "es", name: "pastelería")
+      TagLocalizationSearchData.where(tag_localization_id: missing.id).delete_all
+      TagLocalizationSearchData.where(tag_localization_id: outdated.id).update_all(version: 0)
+      current.tag_localization_search_data.update!(raw_data: "sentinel")
+
+      job.rebuild_tag_localizations
+
+      expect(missing.reload.tag_localization_search_data.version).to eq(
+        SearchIndexer::TAG_LOCALIZATION_INDEX_VERSION,
+      )
+      expect(outdated.reload.tag_localization_search_data.version).to eq(
+        SearchIndexer::TAG_LOCALIZATION_INDEX_VERSION,
+      )
+      expect(current.reload.tag_localization_search_data.raw_data).to eq("sentinel")
+    end
+
+    it "removes search data of deleted localizations and keeps the rest" do
+      deleted = Fabricate(:tag_localization, tag:, locale: "fr", name: "pâtisserie")
+      kept = Fabricate(:tag_localization, tag:, locale: "de", name: "gebäck")
+      TagLocalization.where(id: deleted.id).delete_all
+
+      job.execute({})
+
+      expect(TagLocalizationSearchData.pluck(:tag_localization_id)).to eq([kept.id])
     end
   end
 

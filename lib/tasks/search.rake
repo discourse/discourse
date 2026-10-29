@@ -43,6 +43,14 @@ def reindex_search(db = RailsMultisite::ConnectionManagement.current_db)
   end
 
   puts
+  puts "Tag localizations"
+
+  TagLocalization.find_each do |l|
+    SearchIndexer.index(l, force: true)
+    putc "."
+  end
+
+  puts
 end
 
 def reindex_search_all_sites

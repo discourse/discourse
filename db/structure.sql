@@ -11036,6 +11036,38 @@ ALTER SEQUENCE public.tag_groups_id_seq OWNED BY public.tag_groups.id;
 
 
 --
+-- Name: tag_localization_search_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tag_localization_search_data (
+    tag_localization_id bigint NOT NULL,
+    search_data tsvector,
+    raw_data text,
+    locale text,
+    version integer DEFAULT 0
+);
+
+
+--
+-- Name: tag_localization_search_data_tag_localization_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tag_localization_search_data_tag_localization_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tag_localization_search_data_tag_localization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tag_localization_search_data_tag_localization_id_seq OWNED BY public.tag_localization_search_data.tag_localization_id;
+
+
+--
 -- Name: tag_localizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -16080,6 +16112,13 @@ ALTER TABLE ONLY public.tag_groups ALTER COLUMN id SET DEFAULT nextval('public.t
 
 
 --
+-- Name: tag_localization_search_data tag_localization_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tag_localization_search_data ALTER COLUMN tag_localization_id SET DEFAULT nextval('public.tag_localization_search_data_tag_localization_id_seq'::regclass);
+
+
+--
 -- Name: tag_localizations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18962,6 +19001,14 @@ ALTER TABLE ONLY public.tag_groups
 
 
 --
+-- Name: tag_localization_search_data tag_localization_search_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tag_localization_search_data
+    ADD CONSTRAINT tag_localization_search_data_pkey PRIMARY KEY (tag_localization_id);
+
+
+--
 -- Name: tag_localizations tag_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -20602,6 +20649,13 @@ CREATE INDEX idx_search_post ON public.post_search_data USING gin (search_data);
 --
 
 CREATE INDEX idx_search_tag ON public.tag_search_data USING gin (search_data);
+
+
+--
+-- Name: idx_search_tag_localization; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_search_tag_localization ON public.tag_localization_search_data USING gin (search_data);
 
 
 --
@@ -26166,6 +26220,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261029202006'),
 ('20261029021723'),
 ('20261021180718'),
 ('20261021180714'),
