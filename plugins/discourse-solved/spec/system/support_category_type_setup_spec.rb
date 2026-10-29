@@ -6,7 +6,7 @@ RSpec.describe "Support Category Type Setup" do
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
-  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 

@@ -5,7 +5,7 @@ describe "Admin chat homepage channel setting" do
   fab!(:channel_1) { Fabricate(:category_channel, name: "General") }
 
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
-  let(:changes_banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:changes_banner) { PageObjects::Components::DFloatingControlBar.new }
 
   before do
     chat_system_bootstrap

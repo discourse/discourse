@@ -864,7 +864,7 @@ describe "Content Localization" do
 
   context "for site settings" do
     let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
-    let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+    let(:banner) { PageObjects::Components::DFloatingControlBar.new }
 
     it "does not allow more than the maximum number of locales" do
       SiteSetting.content_localization_supported_locales = "en|ja"

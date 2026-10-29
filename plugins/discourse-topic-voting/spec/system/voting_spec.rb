@@ -17,7 +17,7 @@ RSpec.describe "Topic voting" do
   fab!(:post2) { Fabricate(:post, topic: topic2) }
 
   let(:category_page) { PageObjects::Pages::Category.new }
-  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:user_page) { PageObjects::Pages::User.new }
   let(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
