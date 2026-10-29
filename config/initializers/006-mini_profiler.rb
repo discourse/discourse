@@ -21,7 +21,6 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   #   raw_connection means results are not namespaced
   #
   # namespacing gets complex, cause mini profiler is in the rack chain way before multisite
-  #
   Rack::MiniProfiler.config.storage_instance =
     Rack::MiniProfiler::RedisStore.new(
       connection: DiscourseRedis.new(nil, namespace: false),
