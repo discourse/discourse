@@ -1140,7 +1140,10 @@ class Search
       end
       localized_category_ids =
         localizations.where(
-          "to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("LOWER(category_localizations.name)")}) @@ #{ts_query}",
+          id:
+            CategoryLocalizationSearchData.where("search_data @@ #{ts_query}").select(
+              :category_localization_id,
+            ),
         ).select(:category_id)
       matching_categories = matching_categories.or(categories.where(id: localized_category_ids))
     end

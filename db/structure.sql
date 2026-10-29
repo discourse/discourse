@@ -2789,6 +2789,38 @@ ALTER SEQUENCE public.category_groups_id_seq OWNED BY public.category_groups.id;
 
 
 --
+-- Name: category_localization_search_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.category_localization_search_data (
+    category_localization_id bigint NOT NULL,
+    search_data tsvector,
+    raw_data text,
+    locale text,
+    version integer DEFAULT 0
+);
+
+
+--
+-- Name: category_localization_search_data_category_localization_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.category_localization_search_data_category_localization_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_localization_search_data_category_localization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.category_localization_search_data_category_localization_id_seq OWNED BY public.category_localization_search_data.category_localization_id;
+
+
+--
 -- Name: category_localizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14505,6 +14537,13 @@ ALTER TABLE ONLY public.category_groups ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: category_localization_search_data category_localization_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_localization_search_data ALTER COLUMN category_localization_id SET DEFAULT nextval('public.category_localization_search_data_category_localization_id_seq'::regclass);
+
+
+--
 -- Name: category_localizations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17119,6 +17158,14 @@ ALTER TABLE ONLY public.category_form_templates
 
 ALTER TABLE ONLY public.category_groups
     ADD CONSTRAINT category_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_localization_search_data category_localization_search_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_localization_search_data
+    ADD CONSTRAINT category_localization_search_data_pkey PRIMARY KEY (category_localization_id);
 
 
 --
@@ -20581,6 +20628,13 @@ CREATE INDEX idx_rss_polling_poll_attempts_on_feed_created_id_desc ON public.dis
 --
 
 CREATE INDEX idx_search_category ON public.category_search_data USING gin (search_data);
+
+
+--
+-- Name: idx_search_category_localization; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_search_category_localization ON public.category_localization_search_data USING gin (search_data);
 
 
 --
@@ -26166,6 +26220,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261029204441'),
 ('20261029021723'),
 ('20261021180718'),
 ('20261021180714'),
