@@ -17,6 +17,8 @@ import {
 } from "discourse/tests/helpers/rich-editor-helper";
 import { i18n } from "discourse-i18n";
 
+const IMAGE = "img:not(.ProseMirror-separator)";
+
 // Dragging an image exposes it as a file, as the browser does.
 function dragEvent(type, target) {
   const dataTransfer = new DataTransfer();
@@ -56,11 +58,11 @@ module(
       testRenderedMarkdown(
         "![alt text](https://example.com/image.jpg)",
         (assert) => {
-          assert.dom("img").exists("Image should exist");
+          assert.dom(IMAGE).exists("Image should exist");
           assert
-            .dom("img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image.jpg");
-          assert.dom("img").hasAttribute("alt", "alt text");
+          assert.dom(IMAGE).hasAttribute("alt", "alt text");
         }
       )
     );
@@ -70,12 +72,12 @@ module(
       testRenderedMarkdown(
         '![alt text](https://example.com/image.jpg "title")',
         (assert) => {
-          assert.dom("img").exists("Image should exist");
+          assert.dom(IMAGE).exists("Image should exist");
           assert
-            .dom("img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image.jpg");
-          assert.dom("img").hasAttribute("alt", "alt text");
-          assert.dom("img").hasAttribute("title", "title");
+          assert.dom(IMAGE).hasAttribute("alt", "alt text");
+          assert.dom(IMAGE).hasAttribute("title", "title");
         }
       )
     );
@@ -85,14 +87,14 @@ module(
       testRenderedMarkdown(
         '![alt text|100x200](https://example.com/image.jpg "title")',
         (assert) => {
-          assert.dom("img").exists("Image should exist");
+          assert.dom(IMAGE).exists("Image should exist");
           assert
-            .dom("img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image.jpg");
-          assert.dom("img").hasAttribute("alt", "alt text");
-          assert.dom("img").hasAttribute("title", "title");
-          assert.dom("img").hasAttribute("width", "100");
-          assert.dom("img").hasAttribute("height", "200");
+          assert.dom(IMAGE).hasAttribute("alt", "alt text");
+          assert.dom(IMAGE).hasAttribute("title", "title");
+          assert.dom(IMAGE).hasAttribute("width", "100");
+          assert.dom(IMAGE).hasAttribute("height", "200");
         }
       )
     );
@@ -102,17 +104,17 @@ module(
       testRenderedMarkdown(
         "![alt text|100x200, 50%](https://example.com/image.jpg)",
         (assert) => {
-          assert.dom("img").exists("Image should exist");
+          assert.dom(IMAGE).exists("Image should exist");
           assert
-            .dom("img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image.jpg");
-          assert.dom("img").hasAttribute("alt", "alt text");
-          assert.dom("img").hasAttribute("width", "100");
-          assert.dom("img").hasAttribute("height", "200");
-          assert.dom("img").hasAttribute("data-scale", "50");
+          assert.dom(IMAGE).hasAttribute("alt", "alt text");
+          assert.dom(IMAGE).hasAttribute("width", "100");
+          assert.dom(IMAGE).hasAttribute("height", "200");
+          assert.dom(IMAGE).hasAttribute("data-scale", "50");
 
           // Check style attribute directly
-          const img = document.querySelector("img");
+          const img = document.querySelector(IMAGE);
           assert.strictEqual(
             img.style.width,
             "50px",
@@ -127,18 +129,18 @@ module(
       testRenderedMarkdown(
         "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
         (assert) => {
-          assert.dom("img").exists("Image should exist");
+          assert.dom(IMAGE).exists("Image should exist");
           assert
-            .dom("img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image.jpg");
-          assert.dom("img").hasAttribute("alt", "alt text");
-          assert.dom("img").hasAttribute("width", "100");
-          assert.dom("img").hasAttribute("height", "200");
-          assert.dom("img").hasAttribute("data-scale", "50");
-          assert.dom("img").hasAttribute("data-thumbnail", "true");
+          assert.dom(IMAGE).hasAttribute("alt", "alt text");
+          assert.dom(IMAGE).hasAttribute("width", "100");
+          assert.dom(IMAGE).hasAttribute("height", "200");
+          assert.dom(IMAGE).hasAttribute("data-scale", "50");
+          assert.dom(IMAGE).hasAttribute("data-thumbnail", "true");
 
           // Check style attribute directly
-          const img = document.querySelector("img");
+          const img = document.querySelector(IMAGE);
           assert.strictEqual(
             img.style.width,
             "50px",
@@ -153,11 +155,11 @@ module(
       testRenderedMarkdown(
         "![alt text](https://example.com/image\\(1\\).jpg)",
         (assert) => {
-          assert.dom("img").exists("Image should exist");
+          assert.dom(IMAGE).exists("Image should exist");
           assert
-            .dom("img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image(1).jpg");
-          assert.dom("img").hasAttribute("alt", "alt text");
+          assert.dom(IMAGE).hasAttribute("alt", "alt text");
         }
       )
     );
@@ -628,7 +630,7 @@ module(
       await testRenderedMarkdown(
         "![_test_file_|100x100](upload://hash)",
         (a) => {
-          a.dom("img").hasAttribute("alt", "_test_file_");
+          a.dom(IMAGE).hasAttribute("alt", "_test_file_");
         }
       ).call(this, assert);
     });
@@ -640,7 +642,7 @@ module(
         assert,
         "![alt text](https://example.com/image.jpg)"
       );
-      const image = view.dom.querySelector("img");
+      const image = view.dom.querySelector(IMAGE);
       let reachedUploadTarget = false;
       view.dom.parentElement.addEventListener(
         "drop",
@@ -668,7 +670,7 @@ module(
         () => (reachedUploadTarget = true)
       );
 
-      dragEvent("drop", view.dom.querySelector("img"));
+      dragEvent("drop", view.dom.querySelector(IMAGE));
       assert.true(reachedUploadTarget, "the drop reaches the uploader");
     });
   }
