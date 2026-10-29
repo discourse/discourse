@@ -171,6 +171,11 @@ Discourse::Application.routes.draw do
       end
       resources :groups, only: [:destroy], constraints: AdminConstraint.new
 
+      get "users/bots/new" => "users#new_bot"
+      get "users/bots/username_suggestion" => "users#bot_username_suggestion",
+          :constraints => AdminConstraint.new
+      post "users/bots" => "users#create_bot", :constraints => AdminConstraint.new
+
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
           get "list" => "users#index"

@@ -197,6 +197,11 @@ export default function () {
       }
     );
 
+    this.route("adminBotsNew", {
+      path: "/users/bots/new",
+      resetNamespace: true,
+    });
+
     this.route(
       "adminUsers",
       { path: "/users", resetNamespace: true },

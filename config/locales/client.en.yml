@@ -1808,6 +1808,7 @@ en:
 
     user:
       said: "%{username}:"
+      bot_account: "Automated account"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
       mute: "Mute"
@@ -9609,6 +9610,7 @@ en:
             permanently_delete_post_revisions: "permanently delete post revisions"
             mcp_client_updated: "update MCP OAuth client"
             delete_user: "delete user"
+            create_bot: "Create bot"
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
@@ -10005,6 +10007,7 @@ en:
           suspended: "Suspended"
           silenced: "Silenced"
           staged: "Staged"
+          bots: "Bots"
         activation_filter:
           label: "Activation status"
           all: "All users"
@@ -10015,6 +10018,24 @@ en:
           bot: "Bot accounts"
           all: "All accounts"
         approved: "Approved?"
+        source: "Source"
+        bots:
+          new: "New bot"
+          new_options:
+            bot:
+              label: "General-purpose bot"
+              description: "An account for integrations, webhooks, or automated posting through the API."
+          back: "Back to bots"
+          help: "Bots are user accounts that can't log in, for integrations and automated posting."
+          generate_api_key: "Generate API key"
+          generate_api_key_description: "Only needed for external services that act as this bot. Discourse plugins don't need one."
+          scope_mode_description: "The key only has this bot's permissions."
+          name: "Name"
+          username: "Username"
+          trust_level: "Trust level"
+          create: "Create bot"
+          created: "Bot @%{username} created."
+          created_by: "Created by @%{username}"
         titles:
           active: "Active users"
           new: "New users"
@@ -10030,6 +10051,7 @@ en:
           silenced: "Silenced users"
           suspended: "Suspended users"
           staged: "Staged users"
+          bots: "Bots"
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"
@@ -10042,6 +10064,8 @@ en:
           text: "Delete associated accounts"
 
       user:
+        account_type: "Account type"
+        bot: "Bot"
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
         suspend_duration: "Suspend user until:"
@@ -10152,10 +10176,10 @@ en:
         like_count: Likes Given / Received
         last_100_days: "in the last 100 days"
         private_topics_count: Personal Messages
-        posts_read_count: Posts Read
-        post_count: Posts Created
+        posts_read_count: Posts read
+        post_count: Posts created
         second_factor_enabled: Two-Factor Authentication Enabled
-        topics_entered: Topics Viewed
+        topics_entered: Topics viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         warnings_received_count: Warnings Received
