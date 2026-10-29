@@ -45,6 +45,8 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerComposerPaused do
     end
     let(:dependencies) { { guardian: user.guardian } }
 
+    before { DiscourseWorkflows::WorkflowDependency.clear_cache! }
+
     context "when contract is invalid" do
       let(:params) { super().except(:draft_key) }
 
@@ -150,6 +152,28 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerComposerPaused do
             job["args"].first["workflow_id"]
           end,
         ).to contain_exactly(workflow.id, other_workflow.id)
+      end
+    end
+
+    context "when the run can't be recorded" do
+      before do
+        allow_any_instance_of(RateLimiter).to receive(:performed!).and_return(false)
+        described_class.call(params:, **dependencies)
+      end
+
+      it "gives the phrase back, so it fires later" do
+        expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+
+        allow_any_instance_of(RateLimiter).to receive(:performed!).and_call_original
+        result
+
+        expect(
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.sole["args"].first["trigger_data"][
+            "composer"
+          ][
+            "matched_phrases"
+          ],
+        ).to eq(["food stand"])
       end
     end
 

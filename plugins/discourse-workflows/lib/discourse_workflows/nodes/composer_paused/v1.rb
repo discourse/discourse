@@ -190,6 +190,9 @@ module DiscourseWorkflows
 
         def self.compile_phrase(phrase)
           regexp = Regexp.new(WordWatcher.word_to_regexp(phrase), Regexp::IGNORECASE)
+          # Anyone can send draft text, so a phrase that may backtrack could tie up the server.
+          return if !Regexp.linear_time?(regexp)
+
           regexp if MATCH_ANYTHING_SAMPLES.none? { |sample| regexp.match?(sample) }
         rescue RegexpError
           nil

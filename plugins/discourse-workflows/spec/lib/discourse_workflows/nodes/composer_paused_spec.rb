@@ -98,6 +98,15 @@ RSpec.describe DiscourseWorkflows::Nodes::ComposerPaused::V1 do
       expect(errors_for(['\d{4}'])).to be_empty
     end
 
+    it "rejects regular expressions that could take too long to match" do
+      SiteSetting.watched_words_regular_expressions = true
+
+      expect(errors_for(['(a+)+\1'])).to eq(
+        [I18n.t("discourse_workflows.errors.composer_paused.invalid_phrase", phrase: '(a+)+\1')],
+      )
+      expect(described_class.patterns("phrases" => ['(a+)+\1'])).to be_empty
+    end
+
     it "rejects too many or too long phrases" do
       expect(errors_for(Array.new(described_class::MAX_PHRASES + 1) { |i| "phrase #{i}" })).to eq(
         [

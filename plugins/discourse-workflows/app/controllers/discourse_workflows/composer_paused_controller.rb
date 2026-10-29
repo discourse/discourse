@@ -22,8 +22,9 @@ module DiscourseWorkflows
 
     private
 
-    # Only fired workflows count against the limit, so this turns away users who have none left.
+    # The run limit only counts fired workflows, so this just turns away users who have none left.
     def check_rate_limit
+      ComposerPausedClaims.attempt_rate_limiter(current_user).performed!
       rate_limited! if !ComposerPausedClaims.rate_limiter(current_user).can_perform?
     end
 

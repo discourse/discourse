@@ -8,6 +8,7 @@ module DiscourseWorkflows
     NO_PHRASES_INTERVAL = 15.seconds
     RATE_LIMIT = 20
     RATE_PERIOD = 1.minute
+    ATTEMPT_LIMIT = 60
 
     # Returns the phrases that haven't fired yet in this scope ([] for a trigger without
     # phrases), or nil when there is nothing new to fire.
@@ -23,6 +24,12 @@ module DiscourseWorkflows
       end
     end
 
+    # Gives back a claim whose workflow didn't fire, so it can fire later.
+    def self.release(scope, published_trigger, phrases)
+      key = key(scope, published_trigger)
+      phrases.empty? ? Discourse.redis.del(key) : Discourse.redis.srem(key, phrases)
+    end
+
     # Lets callers skip matching the phrases that already fired.
     def self.unclaimed(scope, published_trigger, phrases)
       phrases - Discourse.redis.smembers(key(scope, published_trigger))
@@ -33,6 +40,17 @@ module DiscourseWorkflows
         user,
         "workflow_composer_paused",
         RATE_LIMIT,
+        RATE_PERIOD.to_i,
+        apply_limit_to_staff: true,
+      )
+    end
+
+    # Every request costs a scan, while the run limit only counts workflows that fired.
+    def self.attempt_rate_limiter(user)
+      RateLimiter.new(
+        user,
+        "workflow_composer_paused_attempt",
+        ATTEMPT_LIMIT,
         RATE_PERIOD.to_i,
         apply_limit_to_staff: true,
       )

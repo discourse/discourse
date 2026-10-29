@@ -34,7 +34,11 @@ module DiscourseWorkflows
 
         phrases = ComposerPausedClaims.claim(claim_scope, published_trigger, phrases)
         next true if phrases.nil?
-        next false if !rate_limiter.performed!(raise_error: false)
+
+        if !rate_limiter.performed!(raise_error: false)
+          ComposerPausedClaims.release(claim_scope, published_trigger, phrases)
+          next false
+        end
 
         TriggerDispatcher.enqueue(
           published_trigger,
