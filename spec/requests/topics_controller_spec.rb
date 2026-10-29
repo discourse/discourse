@@ -2409,6 +2409,13 @@ RSpec.describe TopicsController do
         expect(topic.archetype).to eq(Archetype.default)
       end
 
+      it "does not allow changing archetype to an unregistered one" do
+        put "/t/#{topic.id}.json", params: { archetype: "unknown" }
+
+        expect(response.status).to eq(422)
+        expect(topic.reload.archetype).to eq(Archetype.default)
+      end
+
       it "does not allow a regular user to convert a private message to a public topic" do
         private_message = Fabricate(:private_message_topic, user: user, recipient: user_2)
         Fabricate(:post, topic: private_message, user: user)
