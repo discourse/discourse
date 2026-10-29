@@ -2559,7 +2559,6 @@ ca:
     category:
       none: "(sense categoria)"
       all: "Totes les categories"
-      choose: "Categoria&hellip;"
       edit: "Edita"
       edit_dialog_title: "Edita: %{categoryName}"
       view: "Mostra temes per categories"
@@ -4302,6 +4301,10 @@ ca:
         activation_filter:
           activated: "Activat"
         approved: "Aprovat?"
+        source: "Origen"
+        bots:
+          name: "Nom"
+          username: "Nom d'usuari "
         titles:
           pending: "Usuaris pendents de revisar"
           newuser: "Usuaris amb nivell de confiança 0 (nouvinguts)"

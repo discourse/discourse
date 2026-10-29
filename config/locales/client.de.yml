@@ -4922,7 +4922,6 @@ de:
     category:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
-      choose: "Kategorie &hellip;"
       edit: "Bearbeiten"
       edit_title: "Diese Kategorie bearbeiten"
       edit_dialog_title: "Bearbeiten: %{categoryName}"
@@ -8881,6 +8880,11 @@ de:
           activated: "Aktiviert"
           not_activated: "Nicht aktiviert"
         approved: "Genehmigt?"
+        source: "Quelle"
+        bots:
+          name: "Name"
+          username: "Benutzername"
+          trust_level: "Vertrauensstufe"
         titles:
           active: "Aktive Benutzer"
           new: "Neue Benutzer"
@@ -8907,6 +8911,7 @@ de:
           title: "Alle verknüpften Konten für diesen Benutzer löschen"
           text: "Verknüpfte Konten löschen"
       user:
+        bot: "Bot"
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schiefgegangen %{error}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schiefgegangen %{error}"
         suspend_duration: "Benutzer sperren bis:"

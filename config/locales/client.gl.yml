@@ -2822,7 +2822,6 @@ gl:
     category:
       none: "(sen categoría)"
       all: "Todas as categorías"
-      choose: "Categoría&hellip;"
       edit: "Editar"
       edit_dialog_title: "Editar: %{categoryName}"
       view: "Ver os temas na categoría"
@@ -4743,6 +4742,10 @@ gl:
         activation_filter:
           activated: "Activado"
         approved: "Aprobado?"
+        source: "Fonte"
+        bots:
+          name: "Nome"
+          username: "Nome de usuario"
         titles:
           pending: "Usuarios pendentes de revisión"
           newuser: "Usuarios cun nivel de confianza 0 (novo usuario)"

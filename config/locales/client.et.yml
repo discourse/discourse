@@ -2255,7 +2255,6 @@ et:
     category:
       none: "(kategooria puudub)"
       all: "Kõik kategooriad"
-      choose: "Kategooria&hellip;"
       edit: "Muuda"
       edit_dialog_title: "Muuda: %{categoryName}"
       view: "Vaata teemasid kategoorias"
@@ -3754,6 +3753,9 @@ et:
         activation_filter:
           activated: "Aktiveeritud"
         approved: "Heakskiidetud?"
+        bots:
+          name: "Nimi"
+          username: "Kasutajanimi"
         titles:
           active: "Aktiivsed kasutajad"
           pending: "Kasutajad kontrolli ootel"

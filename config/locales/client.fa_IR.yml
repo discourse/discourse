@@ -3879,7 +3879,6 @@ fa_IR:
     category:
       none: "«بدون دسته‌بندی»"
       all: "همه‌ی دسته‌بندی‌ها"
-      choose: "دسته بندی&hellip;"
       edit: "ویرایش"
       edit_title: "ویرایش این دسته‌بندی"
       edit_dialog_title: "ویرایش: %{categoryName}"
@@ -6738,6 +6737,11 @@ fa_IR:
           all: "همه کاربران"
           activated: "فعال شد"
         approved: "تایید شده ؟"
+        source: "منبع"
+        bots:
+          name: "نام"
+          username: "نام‌کاربری"
+          trust_level: "سطح اعتماد"
         titles:
           active: "کاربران فعال"
           new: "کاربران جدید"

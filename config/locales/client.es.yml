@@ -4509,7 +4509,6 @@ es:
     category:
       none: "(sin categoría)"
       all: "Todas las categorías"
-      choose: "Categoría&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoría"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -8091,6 +8090,11 @@ es:
           all: "Todos los usuarios"
           activated: "Activados"
         approved: "¿Aprobado/s?"
+        source: "Fuente"
+        bots:
+          name: "Nombre"
+          username: "Nombre de usuario"
+          trust_level: "Nivel de confianza"
         titles:
           active: "Usuarios activos"
           new: "Nuevos usuarios"
@@ -8117,6 +8121,7 @@ es:
           title: "Eliminar todas las cuentas asociadas a este usuario"
           text: "Eliminar cuentas asociadas"
       user:
+        bot: "Bot"
         suspend_failed: "Algo salió mal al suspender a este usuario %{error}"
         unsuspend_failed: "Algo salió mal al desbloquear a este usuario %{error}"
         suspend_duration: "Suspender al usuario hasta:"

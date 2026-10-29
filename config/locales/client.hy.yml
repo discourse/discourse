@@ -3206,7 +3206,6 @@ hy:
     category:
       none: "(կատեգորիա չկա)"
       all: "Բոլոր կատեգորիաները"
-      choose: "Կատեգորիա&hellip;"
       edit: "Խմբագրել"
       edit_dialog_title: "Խմբագրել՝ %{categoryName}"
       view: "Դիտել Կատեգորիայի Թեմաները"
@@ -5058,6 +5057,10 @@ hy:
         activation_filter:
           activated: "Ակտիվացված"
         approved: "Հաստատվա՞ծ"
+        source: "Աղբյուր"
+        bots:
+          name: "Անուն"
+          username: "Օգտանուն"
         titles:
           active: "Ակտիվ օգտատերեր"
           pending: "Վերանայման Սպասող Օգտատերեր"

@@ -5693,7 +5693,6 @@ lt:
     category:
       none: "(be kategorijos)"
       all: "Visos kategorijos"
-      choose: "Kategorija&hellip;"
       edit: "Redaguoti"
       edit_title: "Redaguoti šią kategoriją"
       edit_dialog_title: "Redaguoti: %{categoryName}"
@@ -8505,6 +8504,11 @@ lt:
           bot: "Botų paskyros"
           all: "Visos paskyros"
         approved: "Patvirtinta?"
+        source: "Šaltinis"
+        bots:
+          name: "Vardas"
+          username: "Naudotojo vardas"
+          trust_level: "Patikimumo lygis"
         titles:
           pending: "Vartotojai laukiantys patvirtinimo"
           newuser: "Vartotojai su 0 pasitikėjimo lygiu (Naujas vartotojas)"

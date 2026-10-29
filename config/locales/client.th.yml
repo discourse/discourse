@@ -3428,6 +3428,9 @@ th:
         activation_filter:
           activated: "เปิดใช้งานแล้ว"
         approved: "ยืนยันหรือไม่"
+        bots:
+          name: "ชื่อ"
+          username: "ชื่อผู้ใช้"
         titles:
           pending: "ผู้ใช้งานที่รอการยืนยัน"
           newuser: "ผู้ใช้ที่ระดับความไว้ใจ 0 (ผู้ใช้ใหม่)"

@@ -3457,7 +3457,6 @@ te:
     category:
       none: "(ఏ వర్గం లేదు)"
       all: "అన్ని వర్గాలు"
-      choose: "వర్గం&hellip;"
       edit: "సవరించండి"
       edit_title: "ఈ వర్గాన్ని సవరించండి"
       edit_dialog_title: "సవరించండి: %{categoryName}"
@@ -5869,6 +5868,11 @@ te:
         activation_filter:
           activated: "యాక్టివేట్ చేయబడిన వారు"
         approved: "అంగీకరించు"
+        source: "మూలం URL"
+        bots:
+          name: "పేరు"
+          username: "సభ్యనామం"
+          trust_level: "విశ్వసనీయ స్థాయి"
         titles:
           active: "క్రియాశీల సభ్యులు"
           pending: "రివ్యూ పెండింగులో ఉన్న సభ్యులు"

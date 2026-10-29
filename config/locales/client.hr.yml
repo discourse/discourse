@@ -4347,7 +4347,6 @@ hr:
     category:
       none: "(nema kategorije)"
       all: "Sve kategorije"
-      choose: "Kategorija&hellip;"
       edit: "Izmijeni"
       edit_title: "Uredite ovu kategoriju"
       edit_dialog_title: "Uredi: %{categoryName}"
@@ -7162,6 +7161,10 @@ hr:
           all: "Svi korisnici"
           activated: "Aktivirano"
         approved: "Potvrđeni?"
+        source: "Izvor"
+        bots:
+          name: "Ime"
+          username: "Korisničko ime"
         titles:
           active: "Aktivni korisnici"
           new: "Novi korisnici"

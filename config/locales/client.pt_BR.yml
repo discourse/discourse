@@ -4489,7 +4489,6 @@ pt_BR:
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "Categoria&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -8057,6 +8056,11 @@ pt_BR:
           all: "Todos(as) os(as) usuários(as)"
           activated: "Ativado(a)"
         approved: "Aprovado(a)?"
+        source: "Origem"
+        bots:
+          name: "Nome"
+          username: "Nome de usuário(a)"
+          trust_level: "Nível de confiança"
         titles:
           active: "Usuários(as) ativos(as)"
           new: "Usuários(as) novos(as)"
@@ -8083,6 +8087,7 @@ pt_BR:
           title: "Excluir todas as contas associadas para este(a) usuário(a)"
           text: "Excluir contas associadas"
       user:
+        bot: "Bot"
         suspend_failed: "Algo deu errado ao suspender este(a) usuário(a) %{error}"
         unsuspend_failed: "Algo deu errado ao reativar este(a) usuário(a) %{error}"
         suspend_duration: "Suspender usuário até:"

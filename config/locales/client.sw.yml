@@ -3391,6 +3391,9 @@ sw:
           silenced: "Amenyamazishwa"
           staged: "Sehemu ya kujaribu"
         approved: "Wamekubaliwa?"
+        bots:
+          name: "Jina"
+          username: "Jina la mtumiaji"
         titles:
           pending: "Ukaguzi wa watuamiaji ambao hawajapitishwa"
           newuser: "Watumiaji wenye Kiwango 0 cha Uaminifu (Mtumiaji Mpya)"
