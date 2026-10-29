@@ -5,18 +5,31 @@ import {
 } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { exposeExtraAttributes } from "discourse/data/extra-attributes";
-import WarpRestModel from "discourse/data/warp-rest-model";
+import WarpRestModel, {
+  type WarpResource,
+  type WarpRestModelCtor,
+} from "discourse/data/warp-rest-model";
 import {
   applyModelCallbacks,
   applyRegisteredFields,
   extraSavePropertiesFor,
   modelNameFor,
 } from "discourse/lib/model-extensions";
+import type StoreService from "discourse/services/store";
+
+// What the legacy adapter pipeline resolves `update` / `createRecord` with.
+type LegacySaveResult = {
+  payload?: Record<string, unknown>;
+  responseJson?: Record<string, unknown>;
+  target?: RestCompatModel;
+};
+
+type CallbackKind = "Create" | "Update" | "Destroy";
 
 // Attrs bags handed to `create`, as opposed to cached records. Tracked by
 // identity because the two are indistinguishable by shape, and reading an
 // undeclared field off a cached record throws rather than returning undefined.
-const draftResources = new WeakSet();
+const draftResources = new WeakSet<object>();
 
 // Bridges Discourse's legacy `Store` + `RestModel` callsites to WarpRestModel.
 // Drop this layer (extend WarpRestModel directly) once a model's callers no
@@ -25,7 +38,7 @@ const draftResources = new WeakSet();
 export default class RestCompatModel extends WarpRestModel {
   // Identity by default; legacy `service:store._hydrate` calls this on cache
   // updates. Subclasses can override to massage JSON before it lands.
-  static munge(json) {
+  static munge(json: unknown): unknown {
     return json;
   }
 
@@ -33,7 +46,15 @@ export default class RestCompatModel extends WarpRestModel {
   // — Glimmer templates rerender when callers do `bookmark.set("name", ...)`,
   // matching the old EmberObject behavior. Cached LegacyMode records have
   // their own signal-based reactivity.
-  static create(attrs = {}) {
+  static create<T extends RestCompatModel>(
+    this: WarpRestModelCtor<T>,
+    attrs: {
+      store?: StoreService;
+      __type?: string;
+      __state?: string;
+      [key: string]: unknown;
+    } = {}
+  ): T {
     // Re-wrapping an existing instance was a harmless copy under EmberObject;
     // the wrapper's attrs now live in a private resource, so a spread would
     // drop them all. Hand the instance back instead.
@@ -41,7 +62,7 @@ export default class RestCompatModel extends WarpRestModel {
       return attrs;
     }
 
-    const resource = trackedObject({ ...attrs });
+    const resource: WarpResource = trackedObject({ ...attrs });
     draftResources.add(resource);
     const wrapper = new this(resource);
     wrapper.store = attrs.store;
@@ -55,20 +76,22 @@ export default class RestCompatModel extends WarpRestModel {
 
   @tracked isSaving = false;
 
+  declare ["constructor"]: typeof RestCompatModel;
+
   // Subclasses override (e.g. `TagNotification` uses `"name"`).
-  primaryKey = "id";
+  primaryKey: string = "id";
 
   // `Store._build` stamps these onto the raw attrs. They are legacy bookkeeping
   // rather than schema fields, so — as in `RestModel` — they belong to the
   // wrapper. Reading them back through `__resource` works only while it is the
   // draft attrs bag: once the wrapper adopts a cached record, LegacyMode throws
   // on every field the schema doesn't declare, and `save()` reads `isNew`.
-  store;
-  __type;
-  @tracked __state;
+  store: StoreService | undefined;
+  __type: string | undefined;
+  @tracked __state: string | undefined;
 
-  constructor() {
-    super(...arguments);
+  constructor(...args: ConstructorParameters<typeof WarpRestModel>) {
+    super(...args);
 
     // Defines plugin-registered fields (see `addModelField`) as tracked
     // properties on the wrapper. Plugin fields are outside the schema, so they
@@ -85,9 +108,9 @@ export default class RestCompatModel extends WarpRestModel {
     // Reads `__ownResource`, not `__resource`: subclasses override the latter to
     // resolve the resource from their own fields, which aren't initialized yet
     // during `super()`.
-    applyRegisteredFields(this, (name) => {
+    applyRegisteredFields(this, (name: string) => {
       const resource = this.__ownResource;
-      const value = draftResources.has(resource)
+      const value = draftResources.has(resource as object)
         ? resource?.[name]
         : this[name];
       if (value !== undefined) {
@@ -102,48 +125,50 @@ export default class RestCompatModel extends WarpRestModel {
 
   // True until `save()` / `updateFromJson()` swaps in the cached record —
   // `_adoptResource` replaces the draft attrs bag, which is never in the set.
-  get __isLocalDraft() {
-    return draftResources.has(this.__ownResource);
+  get __isLocalDraft(): boolean {
+    return draftResources.has(this.__ownResource as object);
   }
 
   // Both "topicDetails" and "topic-details" resolve, and the plugin API keys
   // its registrations by whichever spelling was used. `constructor.type` would
   // apply a plugin's fields but silently drop its callbacks and save properties.
-  get #modelName() {
+  get #modelName(): string | undefined {
     return modelNameFor(this);
   }
 
-  get isNew() {
+  get isNew(): boolean {
     return this.__state === "new";
   }
 
-  get isCreated() {
+  get isCreated(): boolean {
     return this.__state === "created";
   }
 
-  get(path) {
+  get(path: unknown): unknown {
     if (typeof path !== "string") {
       return undefined;
     }
     return emberGet(this, path);
   }
 
-  set(key, value) {
+  set<V>(key: string, value: V): V {
     // Drafts: mutate the attrs bag directly. Cached records: route through
     // the prototype setter, which writes to the record's own field.
     if (this.__isLocalDraft) {
-      this.__resource[key] = value;
+      this.__resource![key] = value;
       return value;
     }
     this[key] = value;
     return value;
   }
 
-  getProperties(...keys) {
+  getProperties(...keys: string[]): Record<string, unknown> {
     return emberGetProperties(this, ...keys);
   }
 
-  setProperties(hash) {
+  setProperties<H extends Record<string, unknown> | null | undefined>(
+    hash: H
+  ): H {
     if (!hash) {
       return hash;
     }
@@ -155,15 +180,17 @@ export default class RestCompatModel extends WarpRestModel {
 
   // Subclass hooks from `RestModel`. Fired by the legacy save path only — new
   // code on the WarpDrive path uses `addModelCallback`.
-  beforeCreate() {}
-  afterCreate() {}
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  beforeCreate(_props?: Record<string, unknown>): void {}
+  afterCreate(_res?: LegacySaveResult): void {}
 
-  beforeUpdate() {}
-  afterUpdate() {}
+  beforeUpdate(_props?: Record<string, unknown>): void {}
+  afterUpdate(_res?: LegacySaveResult): void {}
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   // Legacy `RestModel#save`. Goes through the WarpDrive path when the subclass
   // defines `static builders.save`; the legacy adapter pipeline otherwise.
-  async save(data) {
+  async save(data?: Record<string, unknown>): Promise<unknown> {
     if (!this.constructor.builders?.save) {
       return this.isNew ? this._saveNew(data) : this.update(data);
     }
@@ -174,17 +201,19 @@ export default class RestCompatModel extends WarpRestModel {
     );
   }
 
-  async update(props) {
+  async update(props?: Record<string, unknown>): Promise<LegacySaveResult> {
     props = this.#withSaveProperties(props);
     return this.#withSaving(() => {
       this.beforeUpdate(props);
       return this.#withCallbacks("Update", props, async () => {
-        const res = await this.store.update(
+        const res: LegacySaveResult = await this.store!.update(
           this.__type,
           this[this.primaryKey],
           props
         );
-        const payload = this.constructor.munge(res.payload || res.responseJson);
+        const payload = this.constructor.munge(
+          res.payload || res.responseJson
+        ) as Record<string, unknown> | undefined;
         if (payload && payload.success !== "OK") {
           this.setProperties(payload);
         }
@@ -195,20 +224,24 @@ export default class RestCompatModel extends WarpRestModel {
     });
   }
 
-  destroyRecord() {
+  destroyRecord(): Promise<unknown> {
     return this.#withCallbacks("Destroy", undefined, () =>
-      this.store.destroyRecord(this.__type, this)
+      this.store!.destroyRecord(this.__type, this)
     );
   }
 
   // `WarpRestModel#destroy` (builder-driven delete), wrapped with callbacks.
-  async destroy() {
+  async destroy(): Promise<void> {
     await this.#withCallbacks("Destroy", undefined, () => super.destroy());
   }
 
   // Runs `fn` between the registered `addModelCallback` before/after callbacks
   // for `kind` ("Create" | "Update" | "Destroy").
-  async #withCallbacks(kind, props, fn) {
+  async #withCallbacks<R>(
+    kind: CallbackKind,
+    props: Record<string, unknown> | undefined,
+    fn: () => Promise<R>
+  ): Promise<R> {
     const modelName = this.#modelName;
     await applyModelCallbacks(modelName, `before${kind}`, this, props);
     const res = await fn();
@@ -218,12 +251,14 @@ export default class RestCompatModel extends WarpRestModel {
 
   // Merges plugin-registered save properties (see `addModelSaveProperty`) into
   // the outgoing payload.
-  #withSaveProperties(data) {
+  #withSaveProperties(
+    data: Record<string, unknown> | undefined
+  ): Record<string, unknown> | undefined {
     const extras = extraSavePropertiesFor(this.#modelName, this);
     return Object.keys(extras).length ? { ...data, ...extras } : data;
   }
 
-  async #withSaving(fn) {
+  async #withSaving<R>(fn: () => Promise<R>): Promise<R> {
     if (this.isSaving) {
       return Promise.reject(new Error("model is already saving"));
     }
@@ -235,15 +270,21 @@ export default class RestCompatModel extends WarpRestModel {
     }
   }
 
-  async _saveNew(props) {
+  async _saveNew(props?: Record<string, unknown>): Promise<LegacySaveResult> {
     props = this.#withSaveProperties(props);
     return this.#withSaving(() => {
       this.beforeCreate(props);
       return this.#withCallbacks("Create", props, async () => {
-        const adapter = this.store.adapterFor(this.__type);
-        const res = await adapter.createRecord(this.store, this.__type, props);
+        const adapter = this.store!.adapterFor(this.__type);
+        const res: LegacySaveResult = await adapter.createRecord(
+          this.store,
+          this.__type,
+          props
+        );
         if (res.payload) {
-          this.setProperties(this.constructor.munge(res.payload));
+          this.setProperties(
+            this.constructor.munge(res.payload) as Record<string, unknown>
+          );
           this.__state = "created";
         }
         res.target = this;
