@@ -56,8 +56,8 @@ module DiscourseWorkflows
       )
     end
 
-    # A reply's draft keeps its target as `postId`; its `reply_to_post_number` only changes
-    # when a post is edited.
+    # A reply targets the post it was opened from, saved as `postId`. The composer only lets an
+    # edit change `reply_to_post_number`, so a reply's draft always has it empty.
     def self.reply_target_post_number(topic, post_id)
       post_id = Integer(post_id, exception: false)
       topic.posts.where(id: post_id).pick(:post_number) if post_id
