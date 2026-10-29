@@ -10,6 +10,7 @@ class ThemeSettingsSerializer < ApplicationSerializer
              :valid_values,
              :list_type,
              :disallowed_groups,
+             :mandatory_values,
              :resolve_group_membership,
              :textarea,
              :json_schema,
@@ -83,6 +84,14 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def include_disallowed_groups?
     object.disallowed_groups.present?
+  end
+
+  def mandatory_values
+    object.mandatory_values
+  end
+
+  def include_mandatory_values?
+    object.mandatory_values.present?
   end
 
   def textarea

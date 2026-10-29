@@ -2,17 +2,17 @@
 
 class ThemeSettingsManager::List < ThemeSettingsManager
   def value
-    alias_everyone_to_logged_in_users(super)
+    alias_everyone_to_logged_in_users(normalized(super))
   end
 
   def default_value
-    alias_everyone_to_logged_in_users(super)
+    alias_everyone_to_logged_in_users(normalized(super))
   end
 
   def value_for_editing
     return super if list_type != "group"
 
-    configured_value
+    normalized(configured_value)
   end
 
   def list_type
@@ -24,15 +24,19 @@ class ThemeSettingsManager::List < ThemeSettingsManager
   end
 
   def value=(new_value)
-    if list_type == "group" && disallowed_groups.present?
-      disallowed_ids = disallowed_groups.to_s.split("|")
-      new_value = new_value.to_s.split("|").reject { |id| disallowed_ids.include?(id) }.join("|")
-    end
+    new_value = constraints.normalize!(new_value, name:) if list_type == "group" && constraints
 
     super
   end
 
   private
+
+  # Rules are declared against stored ids, so they have to run before the display
+  # alias below. Aliasing first would turn a stored 0 into 5, and a rule that
+  # disallows 0 would never match it again.
+  def normalized(value)
+    list_type == "group" && constraints ? constraints.normalize(value) : value
+  end
 
   def alias_everyone_to_logged_in_users(value)
     if list_type != "group" || !SiteSetting.granular_anonymous_and_logged_in_groups_permissions

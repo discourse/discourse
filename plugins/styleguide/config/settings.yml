@@ -5,10 +5,11 @@ plugins:
     default: true
     hidden: true
   styleguide_allowed_groups:
-    default: "1" # auto group admins
+    default: "admins"
     type: group_list
     client: false
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
+    constraints:
+      at_least_one: true
     area: "group_permissions"
