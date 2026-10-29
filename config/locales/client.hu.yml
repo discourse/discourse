@@ -4403,7 +4403,7 @@ hu:
     category:
       none: "(nincs kategória)"
       all: "Összes kategória"
-      choose: "Kategória&hellip;"
+      choose: "Kategória…"
       edit: "Szerkesztés"
       edit_title: "Kategória szerkesztése"
       edit_dialog_title: "Szerkesztés: %{categoryName}"

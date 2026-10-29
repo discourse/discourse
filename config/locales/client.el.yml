@@ -4571,7 +4571,7 @@ el:
     category:
       none: "(χωρίς κατηγορία)"
       all: "Όλες οι κατηγορίες"
-      choose: "Κατηγορία&hellip;"
+      choose: "Κατηγορία…"
       edit: "Επεξεργασία"
       edit_title: "Επεξεργασία αυτής της κατηγορίας"
       edit_dialog_title: "Επεξεργασία: %{categoryName}"

@@ -3555,7 +3555,7 @@ sv:
     category:
       none: "(ingen kategori)"
       all: "Alla kategorier"
-      choose: "Kategori&hellip;"
+      choose: "Kategori…"
       edit: "Redigera"
       edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"

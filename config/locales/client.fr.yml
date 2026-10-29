@@ -4886,7 +4886,7 @@ fr:
     category:
       none: "(aucune catégorie)"
       all: "Toutes les catégories"
-      choose: "Catégorie&hellip;"
+      choose: "Catégorie…"
       edit: "Modifier"
       edit_title: "Modifier cette catégorie"
       edit_dialog_title: "Modifier : %{categoryName}"

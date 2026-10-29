@@ -3455,7 +3455,7 @@ te:
     category:
       none: "(ఏ వర్గం లేదు)"
       all: "అన్ని వర్గాలు"
-      choose: "వర్గం&hellip;"
+      choose: "వర్గం…"
       edit: "సవరించండి"
       edit_title: "ఈ వర్గాన్ని సవరించండి"
       edit_dialog_title: "సవరించండి: %{categoryName}"

@@ -4094,7 +4094,7 @@ ja:
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
-      choose: "カテゴリ&hellip;"
+      choose: "カテゴリ…"
       edit: "編集"
       edit_title: "このカテゴリの編集"
       edit_dialog_title: "編集: %{categoryName}"

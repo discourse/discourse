@@ -3659,7 +3659,7 @@ nb_NO:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "Kategori&hellip;"
+      choose: "Kategori…"
       edit: "Rediger"
       edit_title: "Rediger denne kategorien"
       edit_dialog_title: "Rediger: %{categoryName}"

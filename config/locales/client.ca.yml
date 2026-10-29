@@ -2559,7 +2559,7 @@ ca:
     category:
       none: "(sense categoria)"
       all: "Totes les categories"
-      choose: "Categoria&hellip;"
+      choose: "Categoria…"
       edit: "Edita"
       edit_dialog_title: "Edita: %{categoryName}"
       view: "Mostra temes per categories"

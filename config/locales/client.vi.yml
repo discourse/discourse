@@ -4131,7 +4131,7 @@ vi:
     category:
       none: "(chưa có chuyên mục)"
       all: "Tất cả chuyên mục"
-      choose: "Chuyênmục&hellip;"
+      choose: "Chuyênmục…"
       edit: "Sửa"
       edit_title: "Sửa chuyên mục này"
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"

@@ -3136,7 +3136,7 @@ ko:
     category:
       none: "(카테고리 없음)"
       all: "모든 카테고리"
-      choose: "카테고리&hellip;"
+      choose: "카테고리…"
       edit: "수정"
       edit_title: "이 카테고리 편집"
       edit_dialog_title: "편집 : %{categoryName}"

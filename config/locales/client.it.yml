@@ -4125,7 +4125,7 @@ it:
     category:
       none: "(nessuna categoria)"
       all: "Tutte le categorie"
-      choose: "Categoria&hellip;"
+      choose: "Categoria…"
       edit: "Modifica"
       edit_title: "Modifica questa categoria"
       edit_dialog_title: "Modifica: %{categoryName}"

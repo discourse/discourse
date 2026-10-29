@@ -4818,7 +4818,7 @@ zh_TW:
     category:
       none: "( 無分類 )"
       all: "所有分類"
-      choose: "選擇一個分類&hellip;"
+      choose: "選擇一個分類…"
       edit: "編輯"
       edit_title: "編輯此類別"
       edit_dialog_title: "編輯：%{categoryName}"

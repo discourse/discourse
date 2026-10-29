@@ -4744,7 +4744,7 @@ he:
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
-      choose: "קטגוריה&hellip;"
+      choose: "קטגוריה…"
       edit: "עריכה"
       edit_title: "עריכת הקטגוריה הזאת"
       edit_dialog_title: "עריכה: %{categoryName}"

@@ -2255,7 +2255,7 @@ et:
     category:
       none: "(kategooria puudub)"
       all: "Kõik kategooriad"
-      choose: "Kategooria&hellip;"
+      choose: "Kategooria…"
       edit: "Muuda"
       edit_dialog_title: "Muuda: %{categoryName}"
       view: "Vaata teemasid kategoorias"

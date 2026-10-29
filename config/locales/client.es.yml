@@ -4507,7 +4507,7 @@ es:
     category:
       none: "(sin categoría)"
       all: "Todas las categorías"
-      choose: "Categoría&hellip;"
+      choose: "Categoría…"
       edit: "Editar"
       edit_title: "Editar esta categoría"
       edit_dialog_title: "Editar: %{categoryName}"

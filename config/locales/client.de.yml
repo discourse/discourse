@@ -4920,7 +4920,7 @@ de:
     category:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
-      choose: "Kategorie &hellip;"
+      choose: "Kategorie …"
       edit: "Bearbeiten"
       edit_title: "Diese Kategorie bearbeiten"
       edit_dialog_title: "Bearbeiten: %{categoryName}"

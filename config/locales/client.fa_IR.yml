@@ -3878,7 +3878,7 @@ fa_IR:
     category:
       none: "«بدون دسته‌بندی»"
       all: "همه‌ی دسته‌بندی‌ها"
-      choose: "دسته بندی&hellip;"
+      choose: "دسته بندی…"
       edit: "ویرایش"
       edit_title: "ویرایش این دسته‌بندی"
       edit_dialog_title: "ویرایش: %{categoryName}"
