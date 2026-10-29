@@ -179,6 +179,67 @@ benchmark precision, not a guarantee for every workload or machine. Re-run them 
 changing these paths, and supplement them with a representative real migration when
 source data is available.
 
+#### Enumerator hot paths and linting
+
+When a block-based iterator already yields the required values, pass the consumer's
+block through (`stream_each(&block)`) instead of forwarding every row through
+`Enumerator.new { |output| ... output << row }`. If row transformation is required,
+a method that uses Ruby's `yield` and returns `enum_for(__method__)` when no block is
+given can preserve laziness while avoiding `Enumerator::Yielder` dispatch. Preserve
+batching, skip markers, progress timing, early-exit cleanup, and return semantics.
+Benchmark the actual consumer: a faster isolated iterator may have little effect on COPY.
+
+The remaining converter chunk Enumerator yields at most eight chunks per allocated fork,
+so replacing it is not a useful per-row optimization. The site-settings source's lazy map
+normalizes embedded upload hashes on a small result set. Both remain unchanged. SQLite
+query methods already forward their blocks to the native driver. The generic database
+pipeline benchmark retains its original forwarding wrapper for reproducible comparisons.
+
+For an actual `Enumerator::Yielder`, prefer `output << row` to `output.yield(row)` when
+yielding one positional value and ignoring the consumer's return value. These are not
+interchangeable aliases: `<<` returns the Yielder, whereas the `yield` method returns the
+consumer's result and accepts multiple/keyword arguments. Ruby's separate
+[implementations](https://github.com/ruby/ruby/blob/master/enumerator.c) explain the
+extra argument handling; the Ruby `yield` keyword is a different mechanism entirely.
+
+`Migrations/SingleValueYielder` in `migrations/.rubocop.yml` warns about single-value
+calls on a named `Enumerator.new` block parameter. It skips explicitly consumed results,
+multiple arguments, keywords, splats, and shadowed/reassigned parameters. It does **not**
+autocorrect: implicit generator results can still matter through `StopIteration#result`,
+and static analysis cannot prove every receiver or callback contract. Use a local disable
+with an explanation when those semantics are intentional. Ordinary `bin/lint` runs the
+rule for migrations files.
+
+The [Yielder benchmark](tooling/benchmarks/yielder.rb) compares literal `<<` and `.yield`
+calls with alternating order and reports allocations as well as elapsed time. On Ruby
+4.0.9, ten measured pairs after warmup for two million values gave 88 ms for `<<` versus
+139 ms for `.yield` (1.57× as long); `.yield` allocated about one extra object per value.
+This ratio is runtime- and workload-dependent.
+
+The [COPY row benchmark](tooling/benchmarks/copy_rows.rb) exercises the actual `CopyStep`:
+
+```bash
+BUNDLE_WITH=migrations ROWS=1000000 ROUNDS=7 bundle exec ruby migrations/tooling/benchmarks/copy_rows.rb rows
+BUNDLE_WITH=migrations PGHOST=/var/run/postgresql PGDATABASE=discourse_development \
+  ROWS=1000000 ROUNDS=7 bundle exec ruby migrations/tooling/benchmarks/copy_rows.rb copy
+```
+
+The `rows` mode isolates SQLite reading, transformation, and 1,000-row slicing, with
+progress reporting disabled. The `copy` mode also runs normal progress accounting, real
+PostgreSQL COPY, and SQLite mapping writes. Setup/truncation and verification are outside
+the timer. The standalone harness supplies the host's system-user constant without
+booting Rails; database operations use real drivers and temporary data. Run the same
+script against each revision's `BUNDLE_GEMFILE` and alternate revision order.
+
+Against `81e3b173ad6`, ten alternating pairs of separate processes (one warmup and one
+measured run each, one million rows) measured 322 ms → 285 ms for row iteration, and
+310 ms → 283 ms of CPU time. The full COPY pipeline measured 2.001 s → 1.986 s elapsed
+and 1.111 s → 1.131 s CPU; paired timing intervals included both improvement and
+regression, so there is **no reliable full-COPY speedup claim**. Same-process exploratory
+runs had suggested a small COPY improvement, but it did not reproduce consistently.
+The retained change removes row-forwarding overhead while preserving the existing
+streaming contract; the benefit depends on how much time the consumer spends elsewhere.
+
 ### Partitioning large steps
 
 Most steps run in a single worker. A handful are large enough that it's worth

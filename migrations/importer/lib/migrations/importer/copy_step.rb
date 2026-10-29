@@ -106,23 +106,22 @@ module Migrations
       end
 
       def fetch_rows
+        return enum_for(__method__) unless block_given?
+
         skip_row_marker = DiscourseDB::SKIP_ROW_MARKER
+        query, parameters = self.class.rows_query
 
-        Enumerator.new do |enumerator|
-          query, parameters = self.class.rows_query
-
-          @intermediate_db.query(query, *parameters) do |row|
-            if (transformed_row = transform_row(row))
-              enumerator << transformed_row
-              @stats.reset
-            else
-              row[skip_row_marker] = true
-              enumerator << row
-              @stats.reset(skip_count: 1)
-            end
-
-            update_progressbar
+        @intermediate_db.query(query, *parameters) do |row|
+          if (transformed_row = transform_row(row))
+            yield transformed_row
+            @stats.reset
+          else
+            row[skip_row_marker] = true
+            yield row
+            @stats.reset(skip_count: 1)
           end
+
+          update_progressbar
         end
       end
 
