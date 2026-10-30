@@ -7,10 +7,11 @@ RSpec.describe "Message notifications - mobile", mobile: true do
   let!(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
   let!(:channels_index_page) { PageObjects::Components::Chat::ChannelsIndex.new }
 
-  before do
-    SiteSetting.navigation_menu = "sidebar"
-    chat_system_bootstrap
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
   end
+
+  before { chat_system_bootstrap }
 
   def create_message(chat_channel, message: nil, user: Fabricate(:user))
     Fabricate(:chat_message_with_service, chat_channel:, message:, user:)

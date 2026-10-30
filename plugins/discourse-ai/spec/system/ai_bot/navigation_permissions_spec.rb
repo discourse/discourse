@@ -16,13 +16,16 @@ describe "AI bot navigation permissions" do
 
   let(:navigation) { PageObjects::Components::AiBotNavigation.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     enable_current_plugin
     toggle_enabled_bots(bots: [llm_model])
     SiteSetting.ai_bot_allowed_groups = group.id.to_s
     SiteSetting.ai_bot_add_to_community_section = true
     SiteSetting.ai_bot_add_to_header = true
-    SiteSetting.navigation_menu = "sidebar"
     group.add(user)
     sign_in(user)
   end

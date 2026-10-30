@@ -11,8 +11,11 @@ RSpec.describe "Separate sidebar mode" do
   fab!(:channel_1, :chat_channel)
   fab!(:channel_2, :chat_channel)
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
-    SiteSetting.navigation_menu = "sidebar"
     channel_1.add(current_user)
     channel_2.add(current_user)
     chat_system_bootstrap

@@ -174,7 +174,7 @@ RSpec.describe "Editing Sidebar Community Section" do
   end
 
   it "lets administrators edit the section from the header dropdown" do
-    SiteSetting.navigation_menu = "header dropdown"
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
 
     sign_in(admin)
 

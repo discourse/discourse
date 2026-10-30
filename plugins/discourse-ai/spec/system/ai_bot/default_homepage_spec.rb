@@ -11,13 +11,16 @@ RSpec.describe "AI Bot - Conversations as the default homepage" do
   fab!(:group)
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
     toggle_enabled_bots(bots: [gpt_4])
     SiteSetting.ai_bot_allowed_groups = group.id.to_s
     SiteSetting.ai_bot_add_to_header = true
-    SiteSetting.navigation_menu = "sidebar"
     SiteSetting.top_menu = "hot|latest|new|categories"
     SiteSetting.default_homepage = "ai-conversations"
     group.add(user)

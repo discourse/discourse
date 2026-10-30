@@ -49,7 +49,7 @@ RSpec.describe "Anonymous public chat channels" do
   end
 
   it "lets visitors open public chat channels from the sidebar drawer" do
-    SiteSetting.navigation_menu = "sidebar"
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
 
     visit("/")
     chat_page.prefers_drawer
@@ -66,7 +66,7 @@ RSpec.describe "Anonymous public chat channels" do
   end
 
   it "keeps the forum navigation visible when visitors open full-page chat" do
-    SiteSetting.navigation_menu = "sidebar"
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
 
     visit("/")
     expect(sidebar).to have_section("community")
@@ -79,7 +79,7 @@ RSpec.describe "Anonymous public chat channels" do
   end
 
   it "uses the site's separate sidebar mode for visitors" do
-    SiteSetting.navigation_menu = "sidebar"
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
     SiteSetting.chat_separate_sidebar_mode = "always"
 
     visit("/")

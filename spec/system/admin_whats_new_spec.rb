@@ -6,10 +6,11 @@ describe "Admin What's New Page" do
 
   fab!(:admin)
 
-  before do
-    SiteSetting.navigation_menu = "sidebar"
-    sign_in(admin)
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
   end
+
+  before { sign_in(admin) }
 
   def set_new_features_response_json(payload)
     UpcomingChanges.stubs(:permanent_upcoming_changes).returns([])

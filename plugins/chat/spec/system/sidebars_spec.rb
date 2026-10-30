@@ -10,10 +10,13 @@ RSpec.describe "Navigation" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
+  end
+
   before do
     chat_system_bootstrap(user, [category_channel, category_channel_2])
     sign_in(user)
-    SiteSetting.navigation_menu = "header dropdown"
   end
 
   it "uses chat (not core) sidebar" do
@@ -24,7 +27,9 @@ RSpec.describe "Navigation" do
   end
 
   context "when sidebar is enabled as the navigation menu" do
-    before { SiteSetting.navigation_menu = "sidebar" }
+    fab!(:sidebar_navigation_menu) do
+      Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+    end
 
     it "uses core sidebar" do
       visit("/chat")

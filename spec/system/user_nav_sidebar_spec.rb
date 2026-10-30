@@ -11,8 +11,11 @@ RSpec.describe "User nav sidebar" do
   let(:panel) { "#d-sidebar .sidebar-sections.user-nav-panel" }
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
-    SiteSetting.navigation_menu = "sidebar"
     SiteSetting.sidebar_user_navigation = true
     group.add(current_user)
     sign_in(current_user) unless RSpec.current_example.metadata[:anonymous]
