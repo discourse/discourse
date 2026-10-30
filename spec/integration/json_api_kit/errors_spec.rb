@@ -653,8 +653,8 @@ RSpec.describe "a refused request" do
         expect(document).to eq(
           errors: [
             refusal(
-              title: "No row for the anchor",
-              detail: "No record has id \"not a number\".",
+              title: "No record matches the anchor",
+              detail: "No record matches anchor id=\"not a number\".",
               parameter: "page[anchor][id]",
             ),
           ],
@@ -669,8 +669,8 @@ RSpec.describe "a refused request" do
         expect(document).to eq(
           errors: [
             refusal(
-              title: "No row for the anchor",
-              detail: "No record has id -1.",
+              title: "No record matches the anchor",
+              detail: "No record matches anchor id=-1.",
               parameter: "page[anchor][id]",
             ),
           ],
@@ -734,7 +734,7 @@ RSpec.describe "a refused request" do
 
       it "raises a split order error" do
         expect { document }.to raise_error(
-          JsonApiKit::Pagination::PagePerOwner::SplitOrder,
+          JsonApiKit::Adapters::ActiveRecord::Pagination::PagePerOwner::SplitOrder,
           /edited_at/,
         )
       end
