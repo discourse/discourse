@@ -1,32 +1,12 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import ChannelInfoNav from "./channel-info-nav.gjs";
 
 export default class ChatRoutesChannelInfo extends Component {
   @service chatChannelInfoRouteOriginManager;
-  @service modal;
-  @service chatGuardian;
-
-  get canEditChannel() {
-    return (
-      this.chatGuardian.canEditChatChannel() &&
-      (this.args.channel.isCategoryChannel ||
-        (this.args.channel.isDirectMessageChannel &&
-          this.args.channel.chatable.group))
-    );
-  }
-
-  @action
-  editChannelTitle() {
-    return this.modal.show(ChatModalEditChannelName, {
-      model: this.args.channel,
-    });
-  }
 
   <template>
     <div class="c-routes --channel-info">
