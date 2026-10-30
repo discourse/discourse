@@ -10,6 +10,7 @@ import { setupRichEditor } from "discourse/tests/helpers/rich-editor-helper";
 // Mocked by create-pretender for both /inline-onebox and /onebox.
 const URL = "http://www.example.com/has-title.html";
 const OTHER_URL = "http://www.example.com/no-title.html";
+const ONEBOX_SCAN_WAIT_MS = 300;
 
 function lastParagraphStart(doc) {
   let pos = null;
@@ -19,6 +20,10 @@ function lastParagraphStart(doc) {
     }
   });
   return pos;
+}
+
+function waitForOneboxScan() {
+  return new Promise((resolve) => setTimeout(resolve, ONEBOX_SCAN_WAIT_MS));
 }
 
 function moveCursorTo(view, pos) {
@@ -153,6 +158,40 @@ module(
       assert.dom(".onebox-wrapper").doesNotExist();
       assert.strictEqual(editor.value, `a\n\n<${URL}>`);
       assert.strictEqual(toasts.activeToasts.length, 1);
+    });
+
+    test("renders an inline onebox when the cursor moves while it loads", async function (assert) {
+      const { promise: gate, resolve: release } = Promise.withResolvers();
+      pretender.get("/inline-onebox", async (request) => {
+        await gate;
+        return [
+          200,
+          { "Content-Type": "application/json" },
+          {
+            "inline-oneboxes": request.queryParams.urls.map((url) => ({
+              url,
+              title: "Loaded title",
+            })),
+          },
+        ];
+      });
+
+      const url = "http://www.example.com/loads-slowly.html";
+      const [editor] = await setupRichEditor(assert, "see x here\n\nb");
+      const { view } = editor;
+
+      const tr = view.state.tr.insertText(url, 5, 6);
+      tr.setSelection(TextSelection.atEnd(tr.doc));
+      view.dispatch(tr);
+      await waitForOneboxScan();
+
+      moveCursorTo(view, 2);
+      await waitForOneboxScan();
+
+      release();
+      await settled();
+
+      assert.dom("a.inline-onebox").hasText("Loaded title");
     });
 
     test("saves an inline onebox URL unescaped", async function (assert) {
