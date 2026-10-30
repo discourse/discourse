@@ -20,7 +20,7 @@ const Test = <template>
   <DSelectTagGroup @texts={{texts}} />
   <DSelectTagFilter @multiple={{true}} @texts={{texts}} />
 
-  {{! @glint-expect-error - only a recipe built on the tag field adds its texts }}
+  {{! @glint-expect-error - a call site sets texts, not a recipe layer }}
   <DSelectTag @kindTexts={{texts}} />
 </template>;
 

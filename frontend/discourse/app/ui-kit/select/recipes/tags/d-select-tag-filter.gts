@@ -15,14 +15,14 @@ import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import {
-  type SelectTagTextKey,
-  TAG_TEXTS,
-} from "discourse/ui-kit/select/recipes/tags/-internals/select-tag-base";
-import {
   tagItemName,
   TagOption,
   TagSelection,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
+import {
+  type SelectTagTextKey,
+  TAG_TEXTS,
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-texts";
 import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import {
   renderSelectText,
