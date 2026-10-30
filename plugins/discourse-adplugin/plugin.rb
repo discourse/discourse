@@ -8,6 +8,7 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-adplugin
 
 register_asset "stylesheets/adplugin.scss"
+register_asset "stylesheets/admin/dfp-category-settings.scss", :admin
 register_svg_icon "rectangle-ad"
 
 add_admin_route "admin.adplugin.house_ads.title", "discourse-adplugin", use_new_show_route: true
@@ -24,12 +25,15 @@ require_relative "lib/ad_plugin/ad_type"
 after_initialize do
   require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
   require_relative "app/controllers/ad_plugin/house_ads_controller"
+  require_relative "app/controllers/ad_plugin/dfp_category_settings_controller"
   require_relative "app/controllers/adstxt_controller"
   require_relative "app/controllers/ad_plugin/ad_impressions_controller"
   require_relative "app/serializers/ad_plugin/house_ad_serializer"
+  require_relative "app/serializers/ad_plugin/dfp_category_setting_serializer"
 
   require_relative "app/models/ad_plugin/house_ad_setting"
   require_relative "app/models/ad_plugin/house_ad"
+  require_relative "app/models/ad_plugin/dfp_category_setting"
   require_relative "app/models/ad_plugin/ad_impression"
   require_relative "app/models/concerns/reports/ad_plugin"
   require_relative "lib/adplugin/guardian_extensions"
@@ -45,6 +49,7 @@ after_initialize do
     post "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
     patch "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
     post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
+    get "/ad_plugin/dfp_category_settings" => "ad_plugin/dfp_category_settings#map"
 
     mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
 
@@ -56,7 +61,15 @@ after_initialize do
       delete "/house-ads/:id" => "ad_plugin/house_ads#destroy", :format => false
       post "/house-ads" => "ad_plugin/house_ads#create", :format => false
       put "/house-settings/:id" => "ad_plugin/house_ad_settings#update", :format => false
+
+      get "/dfp-settings" => "ad_plugin/dfp_category_settings#index", :format => false
+      get "/dfp-settings/new" => "ad_plugin/dfp_category_settings#index", :format => false
+      get "/dfp-settings/:id/edit" => "ad_plugin/dfp_category_settings#index", :format => false
     end
+  end
+
+  add_to_serializer :site, :dfp_category_settings do
+    AdPlugin::DfpCategorySetting.site_settings_for(scope)
   end
 
   add_to_serializer :site, :house_creatives do

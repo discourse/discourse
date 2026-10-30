@@ -217,6 +217,40 @@ ALTER SEQUENCE public.access_control_lists_id_seq OWNED BY public.access_control
 
 
 --
+-- Name: ad_plugin_dfp_category_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ad_plugin_dfp_category_settings (
+    id bigint NOT NULL,
+    category_id integer NOT NULL,
+    gam_adunit character varying,
+    gam_keywords character varying,
+    gtm_taxonomy character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ad_plugin_dfp_category_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ad_plugin_dfp_category_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ad_plugin_dfp_category_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ad_plugin_dfp_category_settings_id_seq OWNED BY public.ad_plugin_dfp_category_settings.id;
+
+
+--
 -- Name: ad_plugin_house_ads; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14106,6 +14140,13 @@ ALTER TABLE ONLY public.access_control_lists ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: ad_plugin_dfp_category_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ad_plugin_dfp_category_settings ALTER COLUMN id SET DEFAULT nextval('public.ad_plugin_dfp_category_settings_id_seq'::regclass);
+
+
+--
 -- Name: ad_plugin_house_ads id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16631,6 +16672,14 @@ ALTER TABLE ONLY public.web_hooks ALTER COLUMN id SET DEFAULT nextval('public.we
 
 ALTER TABLE ONLY public.access_control_lists
     ADD CONSTRAINT access_control_lists_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ad_plugin_dfp_category_settings ad_plugin_dfp_category_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ad_plugin_dfp_category_settings
+    ADD CONSTRAINT ad_plugin_dfp_category_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -20819,6 +20868,13 @@ CREATE UNIQUE INDEX idx_web_hook_event_types_hooks_on_ids ON public.web_hook_eve
 --
 
 CREATE INDEX idxtopicslug ON public.topics USING btree (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL));
+
+
+--
+-- Name: index_ad_plugin_dfp_category_settings_on_category_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ad_plugin_dfp_category_settings_on_category_id ON public.ad_plugin_dfp_category_settings USING btree (category_id);
 
 
 --
@@ -26229,6 +26285,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260918062145'),
 ('20260918061735'),
 ('20260917145657'),
+('20260917145535'),
 ('20260916113851'),
 ('20260916113806'),
 ('20260915204557'),

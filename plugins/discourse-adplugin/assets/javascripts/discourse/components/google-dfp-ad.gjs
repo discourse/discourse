@@ -5,6 +5,7 @@ import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component.js";
@@ -158,6 +159,93 @@ function getWidthAndHeight(placement, settings, isMobile) {
   }
 }
 
+/**
+ * Applies a category's per-category GAM settings over a resolved config.
+ *
+ * A category can define `gam_adunit` (full GPT ad unit path) and `gam_keywords`
+ * (comma separated) in the plugin dashboard. Values override the configured
+ * `dfp_*` settings and are themselves overridable through the `dfp-ad-config`
+ * value transformer.
+ */
+export function applyCategoryConfig(config, categoryConfig) {
+  const fields = categoryConfig || {};
+  const gamAdUnit = fields.gam_adunit;
+  const gamKeywords = fields.gam_keywords;
+
+  if (!gamAdUnit && !gamKeywords) {
+    return config;
+  }
+
+  const nextConfig = { ...config, targeting: { ...config.targeting } };
+
+  if (gamAdUnit) {
+    nextConfig.adUnitPath = gamAdUnit;
+  }
+
+  if (gamKeywords) {
+    nextConfig.targeting.gam_keywords = gamKeywords
+      .split(",")
+      .map((keyword) => keyword.trim());
+  }
+
+  return nextConfig;
+}
+
+/**
+ * Resolves the ad unit path and targeting for a placement.
+ *
+ * Resolution happens in order: the configured `dfp_*` settings, then the
+ * per-category `gam_adunit`/`gam_keywords` from the plugin dashboard
+ * (`context.categoryConfig`), then any `dfp-ad-config` value transformer
+ * registered by a theme component or plugin. `adUnitPath` is the full GPT ad
+ * unit (e.g. `/6355419/Travel`).
+ */
+export function dfpConfig(placement, settings, isMobile, context) {
+  const config = isMobile
+    ? MOBILE_SETTINGS[placement]
+    : DESKTOP_SETTINGS[placement];
+  const publisherId = isMobile
+    ? settings.dfp_publisher_id_mobile || settings.dfp_publisher_id
+    : settings.dfp_publisher_id;
+
+  const settingsConfig = {
+    adUnitPath: `/${publisherId}/${settings[config.code]}`,
+    targeting: custom_targeting(
+      keyParse(settings[config.targeting_keys]),
+      keyParse(settings[config.targeting_values])
+    ),
+  };
+
+  const resolved = applyCategoryConfig(settingsConfig, context.categoryConfig);
+
+  let overrides = {};
+  try {
+    overrides =
+      applyValueTransformer("dfp-ad-config", resolved, {
+        placement,
+        ...context,
+      }) || {};
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      "[discourse-adplugin] dfp-ad-config transformer failed",
+      error
+    );
+  }
+
+  const targeting = {
+    ...resolved.targeting,
+    ...(overrides.targeting || {}),
+  };
+
+  targeting["discourse-category"] = context.categorySlug || "0";
+
+  return {
+    adUnitPath: overrides.adUnitPath || resolved.adUnitPath,
+    targeting,
+  };
+}
+
 function defineSlot(
   divId,
   placement,
@@ -165,46 +253,25 @@ function defineSlot(
   isMobile,
   width,
   height,
-  categoryTarget
+  context
 ) {
-  if (!settings.dfp_publisher_id) {
-    return;
-  }
-
-  if (ads[divId]) {
+  if (!settings.dfp_publisher_id || ads[divId]) {
     return ads[divId];
   }
 
-  let ad, config, publisherId;
+  const config = dfpConfig(placement, settings, isMobile, context);
 
-  if (isMobile) {
-    publisherId = settings.dfp_publisher_id_mobile || settings.dfp_publisher_id;
-    config = MOBILE_SETTINGS[placement];
-  } else {
-    publisherId = settings.dfp_publisher_id;
-    config = DESKTOP_SETTINGS[placement];
-  }
-
-  ad = window.googletag.defineSlot(
-    "/" + publisherId + "/" + settings[config.code],
+  const ad = window.googletag.defineSlot(
+    config.adUnitPath,
     [width, height],
     divId
   );
 
-  const targeting = custom_targeting(
-    keyParse(settings[config.targeting_keys]),
-    keyParse(settings[config.targeting_values])
-  );
-
-  if (categoryTarget) {
-    targeting["discourse-category"] = categoryTarget;
-  }
-
-  ad.setConfig({ targeting });
+  ad.setConfig({ targeting: config.targeting });
 
   ad.addService(window.googletag.pubads());
 
-  ads[divId] = { ad, width, height };
+  ads[divId] = { ad, width, height, adUnitPath: config.adUnitPath };
   return ads[divId];
 }
 
@@ -388,27 +455,58 @@ export default class GoogleDfpAd extends AdComponent {
 
   @on("didUpdate")
   updated() {
+    if (!this.get("showAd") || !this.get("loadedGoogletag")) {
+      return;
+    }
+
+    // A prior instance can be torn down by route churn before it defines its
+    // slot; a still-mounted component defines it here so the ad is not lost.
+    if (!ads[this.get("divId")]?.ad) {
+      this.#defineSlot();
+      return;
+    }
+
     if (!this.shouldRefreshAd()) {
       return;
     }
 
-    let slot = ads[this.get("divId")];
-    if (!(slot && slot.ad)) {
-      return;
-    }
+    const slot = ads[this.get("divId")];
+    const config = dfpConfig(
+      this.get("placement"),
+      this.siteSettings,
+      this.site.mobileView,
+      this.#buildDfpContext()
+    );
 
-    let ad = slot.ad,
-      categorySlug = this.get("currentCategorySlug");
+    this.set("lastAdRefresh", new Date());
 
-    if (this.get("loadedGoogletag")) {
-      this.set("lastAdRefresh", new Date());
-      window.googletag.cmd.push(() => {
-        ad.setConfig({
-          targeting: { "discourse-category": categorySlug || "0" },
-        });
-        window.googletag.pubads().refresh([ad]);
-      });
-    }
+    window.googletag.cmd.push(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      if (config.adUnitPath !== slot.adUnitPath) {
+        destroySlot(this.get("divId"));
+        const redefined = defineSlot(
+          this.get("divId"),
+          this.get("placement"),
+          this.siteSettings,
+          this.site.mobileView,
+          slot.width,
+          slot.height,
+          this.#buildDfpContext()
+        );
+        window.googletag.display(this.get("divId"));
+        window.googletag.pubads().refresh([redefined.ad]);
+      } else {
+        // setConfig merges into existing slot targeting, so keys omitted from
+        // the new config (e.g. gam_keywords dropped when a category stops
+        // overriding them) would linger. Clear first for replace semantics.
+        slot.ad.clearTargeting();
+        slot.ad.setConfig({ targeting: config.targeting });
+        window.googletag.pubads().refresh([slot.ad]);
+      }
+    });
   }
 
   buildImpressionPayload() {
@@ -434,6 +532,47 @@ export default class GoogleDfpAd extends AdComponent {
     destroySlot(this.get("divId"));
   }
 
+  #buildDfpContext() {
+    return {
+      categorySlug: this.currentCategorySlug || null,
+      categoryPath: this.currentCategoryPath,
+      categoryId: this.currentCategoryId,
+      routeName: this.currentRouteName,
+      categoryConfig: this.currentCategoryDfpConfig || {},
+    };
+  }
+
+  #defineSlot() {
+    if (this.isDestroying || this.isDestroyed || !this.get("showAd")) {
+      return;
+    }
+
+    this.set("loadedGoogletag", true);
+    this.set("lastAdRefresh", new Date());
+
+    window.googletag.cmd.push(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const slot = defineSlot(
+        this.get("divId"),
+        this.get("placement"),
+        this.siteSettings,
+        this.site.mobileView,
+        this.get("width"),
+        this.get("height"),
+        this.#buildDfpContext()
+      );
+      if (slot && slot.ad) {
+        // Display has to be called before refresh
+        // and after the slot div is in the page.
+        window.googletag.display(this.get("divId"));
+        window.googletag.pubads().refresh([slot.ad]);
+      }
+    });
+  }
+
   @on("didInsertElement")
   _initGoogleDFP() {
     if (isTesting()) {
@@ -444,28 +583,7 @@ export default class GoogleDfpAd extends AdComponent {
       return;
     }
 
-    loadGoogle().then(() => {
-      this.set("loadedGoogletag", true);
-      this.set("lastAdRefresh", new Date());
-
-      window.googletag.cmd.push(() => {
-        let slot = defineSlot(
-          this.get("divId"),
-          this.get("placement"),
-          this.siteSettings,
-          this.site.mobileView,
-          this.get("width"),
-          this.get("height"),
-          this.get("currentCategorySlug") || "0"
-        );
-        if (slot && slot.ad) {
-          // Display has to be called before refresh
-          // and after the slot div is in the page.
-          window.googletag.display(this.get("divId"));
-          window.googletag.pubads().refresh([slot.ad]);
-        }
-      });
-    });
+    loadGoogle().then(() => this.#defineSlot());
   }
 
   <template>
