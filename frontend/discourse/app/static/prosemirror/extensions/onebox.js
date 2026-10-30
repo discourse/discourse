@@ -35,6 +35,10 @@ export function oneboxTypeAtPos(doc, pos) {
     : "inline";
 }
 
+function isNestedDoc(doc) {
+  return doc.type !== doc.type.schema.topNodeType;
+}
+
 const oneboxSlotsCache = new WeakMap();
 
 function oneboxSlots(doc) {
@@ -168,6 +172,10 @@ const extension = {
     // `forceUrl` bypasses selection/topLevel/failed checks for that URL.
     function scanForOneboxLinks(doc, decoSet, tr, forceUrl) {
       const decorations = [];
+      if (isNestedDoc(doc)) {
+        return decorations;
+      }
+
       const pastLimit = oneboxesPastLimit(doc, maxOneboxes());
       doc.descendants((node, pos) => {
         const link = node.marks.find((mark) => mark.type.name === "link");
@@ -518,7 +526,7 @@ const extension = {
         const docChanged = transactions.some((tr) => tr.docChanged);
         const selectionChanged = !prevState.selection.eq(state.selection);
 
-        if (!docChanged && !selectionChanged) {
+        if ((!docChanged && !selectionChanged) || isNestedDoc(state.doc)) {
           return;
         }
 
