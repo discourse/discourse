@@ -11,6 +11,27 @@ RSpec.describe JsonApiKit::Adapters::ActiveRecord::Schema do
     end
   end
 
+  describe "#identifier_type" do
+    it "uses the model's primary-key type" do
+      expect(schema.identifier_type).to equal(Topic.type_for_attribute("id"))
+    end
+
+    context "when the primary key uses a UUID" do
+      subject(:schema) { described_class.new(model) }
+
+      let(:model) do
+        Class.new(Topic) do
+          self.primary_key = "public_id"
+          attribute :public_id, :uuid
+        end
+      end
+
+      it "uses the declared identifier type" do
+        expect(schema.identifier_type).to equal(model.type_for_attribute("public_id"))
+      end
+    end
+  end
+
   describe "#column" do
     it "returns the column the model holds under that name" do
       expect(schema.column("title")).to eq(:title)

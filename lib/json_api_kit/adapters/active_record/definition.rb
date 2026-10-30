@@ -14,6 +14,8 @@ module JsonApiKit
 
         def schema = @schema ||= Schema.new(model)
 
+        delegate :identifier_type, to: :schema
+
         def order(ordering) = Pagination::Order.new(sorts.keyset(ordering), type:)
 
         def sort_key(name, direction:, **options)
