@@ -200,13 +200,15 @@ class Theme < ActiveRecord::Base
   end
 
   def update_child_components
-    if !component? && child_components.present? && !skip_child_components_update
-      child_components.each do |url|
-        url = ThemeStore::GitImporter.new(url.strip).url
-        theme = RemoteTheme.find_by(remote_url: url)&.theme
-        theme ||= RemoteTheme.import_theme(url, user)
-        child_themes << theme
-      end
+    return if component? || child_components.blank? || skip_child_components_update
+
+    linked_urls = child_themes.joins(:remote_theme).pluck("remote_themes.remote_url").to_set
+    child_components.each do |url|
+      url = ThemeStore::GitImporter.new(url.strip).url
+      next if linked_urls.include?(url)
+      theme = RemoteTheme.find_by(remote_url: url)&.theme
+      theme ||= RemoteTheme.import_theme(url, user)
+      child_themes << theme
     end
   end
 

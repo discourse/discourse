@@ -810,6 +810,72 @@ RSpec.describe RemoteTheme do
     end
   end
 
+  describe ".update_zipped_theme" do
+    fab!(:theme)
+
+    let(:listed_url) { "https://github.com/discourse/listed.git" }
+    let(:unlisted_url) { "https://github.com/discourse/unlisted.git" }
+    let!(:listed_component) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme: Fabricate(:remote_theme, remote_url: listed_url),
+      )
+    end
+    let!(:unlisted_component) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme: Fabricate(:remote_theme, remote_url: unlisted_url),
+      )
+    end
+    let(:new_repo) { setup_git_repo("about.json" => { name: "New", component: true }.to_json) }
+    let(:new_url) { MockGitImporter.register("https://github.com/discourse/new.git", new_repo) }
+    let(:bundle_dir) { Dir.mktmpdir }
+
+    around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+    before { theme.update!(child_theme_ids: [listed_component.id, unlisted_component.id]) }
+
+    after { FileUtils.rm_rf([new_repo, bundle_dir]) }
+
+    def upload(update_components:)
+      FileUtils.mkdir_p("#{bundle_dir}/bundle")
+      File.write(
+        "#{bundle_dir}/bundle/about.json",
+        { name: theme.name, components: [listed_url, new_url] }.to_json,
+      )
+      zip = Compression::Zip.new.compress(bundle_dir, "bundle")
+
+      RemoteTheme.update_zipped_theme(zip, "bundle.zip", theme_id: theme.id, update_components:)
+    end
+
+    it "links the new components when adding without reimporting the linked ones" do
+      expect { upload(update_components: "add") }.to change { Theme.count }.by(1)
+
+      expect(theme.reload.child_themes.map(&:name)).to contain_exactly(
+        listed_component.name,
+        unlisted_component.name,
+        "New",
+      )
+    end
+
+    it "unlinks the components that are no longer listed from this theme only when syncing" do
+      other_theme = Fabricate(:theme, child_theme_ids: [unlisted_component.id])
+
+      upload(update_components: "sync")
+
+      expect(theme.reload.child_themes.map(&:name)).to contain_exactly(listed_component.name, "New")
+      expect(other_theme.reload.child_themes).to contain_exactly(unlisted_component)
+    end
+
+    it "leaves the linked components untouched when components are set to none" do
+      expect { upload(update_components: "none") }.not_to change { Theme.count }
+
+      expect(theme.reload.child_themes).to contain_exactly(listed_component, unlisted_component)
+    end
+  end
+
   describe ".import_theme_from_directory" do
     let(:theme_dir) { "#{Rails.root.join("spec/fixtures/themes/discourse-test-theme")}" }
 

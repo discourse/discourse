@@ -126,14 +126,13 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     theme.component = theme_info["component"].to_s == "true"
-    theme.child_components = child_components = theme_info["components"].presence || []
+    theme.child_components = theme_info["components"].presence || []
     theme.skip_child_components_update = true if update_components == "none"
+    update_children = existing && update_components.present? && update_components != "none"
 
     remote_theme = new
     remote_theme.theme = theme
     remote_theme.remote_url = ""
-
-    do_update_child_components = false
 
     theme.transaction do
       remote_theme.update_from_remote(
@@ -145,28 +144,17 @@ class RemoteTheme < ActiveRecord::Base
         before_save: before_save,
       )
 
-      if existing && update_components.present? && update_components != "none"
-        child_components = child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
-
-        if update_components == "sync"
-          ChildTheme
-            .joins(child_theme: :remote_theme)
-            .where.not(remote_themes: { remote_url: child_components })
-            .delete_all
-        end
-
-        child_components -=
-          theme
-            .child_themes
-            .joins(:remote_theme)
-            .where("remote_themes.remote_url IN (?)", child_components)
-            .pluck("remote_themes.remote_url")
-        theme.child_components = child_components
-        do_update_child_components = true
+      if existing && update_components == "sync"
+        child_urls = theme.child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+        ChildTheme
+          .where(parent_theme_id: theme.id)
+          .joins(child_theme: :remote_theme)
+          .where.not(remote_themes: { remote_url: child_urls })
+          .delete_all
       end
     end
 
-    theme.update_child_components if do_update_child_components
+    theme.update_child_components if update_children
     theme
   ensure
     begin
