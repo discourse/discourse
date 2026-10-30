@@ -35,7 +35,7 @@ module PageObjects
 
       def fill_composer(input)
         find(".chat-channel .chat-composer__input").click # makes helper more reliable by ensuring focus is not lost
-        find(".chat-channel .chat-composer__input").fill_in(with: input)
+        composer.fill_in(with: input)
       end
 
       def click_composer

@@ -5,7 +5,6 @@ import { i18n } from "discourse-i18n";
 import ChatComposer from "../../chat-composer.gjs";
 
 export default class ChatComposerChannel extends ChatComposer {
-  // eslint-disable-next-line discourse/no-unused-services
   @service("chat-channel-composer") composer; // used in the parent class
   // eslint-disable-next-line discourse/no-unused-services
   @service("chat-channel-pane") pane; // used in the parent class
@@ -70,14 +69,14 @@ export default class ChatComposerChannel extends ChatComposer {
   }
 
   handleEscape(event) {
-    event.stopPropagation();
+    event?.stopPropagation();
 
     if (this.draft?.inReplyTo) {
       this.draft.inReplyTo = null;
     } else if (this.draft?.editing) {
       this.args.channel.resetDraft(this.currentUser);
     } else {
-      event.target.blur();
+      this.composer.blur();
     }
   }
 
