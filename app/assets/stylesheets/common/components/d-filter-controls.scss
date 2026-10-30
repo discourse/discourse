@@ -39,6 +39,8 @@
 
   &__dropdown {
     flex: 1 1 auto;
+    height: auto;
+    min-height: 2.25em;
 
     &.--active {
       border-color: var(--tertiary);
