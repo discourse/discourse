@@ -65,7 +65,7 @@ interface DSelectTagGroupSignature {
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
-/** Searches tag groups, excluding held names from the results. */
+/** Searches tag groups; held groups stay listed, marked selected. */
 export default class DSelectTagGroup extends Component<DSelectTagGroupSignature> {
   /** TODO(typescript-pending): Remove the extension when the settings factory exposes runtime keys. */
   @service
@@ -93,10 +93,6 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
 
   get legacyKind() {
     return this.args.legacyKind ?? ["tag-group-chooser", "tag-chooser"];
-  }
-
-  get loadContext() {
-    return { held: this.#value.join("|") };
   }
 
   get sourceLoad() {
@@ -133,13 +129,10 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
 
   @action
   async _load(filter: string, opts: SelectLoadOptions) {
-    const groups = await searchTagGroups(filter, {
+    return await searchTagGroups(filter, {
       signal: opts.signal,
       siteSettings: this.siteSettings,
     });
-    return this.args.multiple
-      ? groups.filter((group) => !this.#value.includes(group.name))
-      : groups;
   }
 
   <template>
@@ -161,7 +154,6 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @labelField="name"
       @legacyKind={{this.legacyKind}}
       @load={{this.sourceLoad}}
-      @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}

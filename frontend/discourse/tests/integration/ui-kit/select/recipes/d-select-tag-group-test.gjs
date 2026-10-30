@@ -110,6 +110,25 @@ module(
         assert.deepEqual(onChange.lastCall.args[0], ["Area", "Kind"]);
       });
 
+      test("a held group stays listed, marked selected", async function (assert) {
+        const held = ["Area"];
+
+        await render(
+          <template>
+            <DSelectTagGroup @multiple={{true}} @value={{held}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        const area = optionNamed("Area");
+        assert.notStrictEqual(area, undefined, "the held group is listed");
+        assert.strictEqual(area?.getAttribute("aria-selected"), "true");
+        assert.strictEqual(
+          optionNamed("Kind").getAttribute("aria-selected"),
+          "false"
+        );
+      });
+
       test("single mode emits one name", async function (assert) {
         const onChange = sinon.spy();
 

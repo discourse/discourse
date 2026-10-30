@@ -447,6 +447,8 @@ Open items need a decision after manual testing; the rest are intended but still
 - [ ] **Sorting alphabetically keeps an exact match first.** With `tags_sort_alphabetically` on,
   the client re-sorted the server's results by name, so typing "rock" could list "alpha-rock"
   above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.
+- [ ] **Held tag groups stay listed.** The legacy tag group chooser left held groups out of its
+  results; the new picker lists them, marked selected, as every DSelect does.
 
 **Texts** (recorded 2026-10-30)
 

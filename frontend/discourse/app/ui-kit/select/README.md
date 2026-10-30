@@ -862,7 +862,7 @@ The tag family has three recipes, split by what the pick is for:
   otherwise change the page. The breadcrumbs pass `breadcrumb-tag` and
   `breadcrumb-tag-intersection`.
 - **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name, one unless
-  `@multiple={{true}}`.
+  `@multiple={{true}}`. Held groups stay listed, marked selected.
 
 Without an `ariaLabel` text or `@ariaLabelledBy`, a tag picker is named "Tag", or "Tags" when it
 can hold more than one (a site limit of one counts), and a group picker "Tag group" or "Tag
