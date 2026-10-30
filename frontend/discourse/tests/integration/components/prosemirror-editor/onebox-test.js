@@ -1,8 +1,9 @@
 import { click, settled } from "@ember/test-helpers";
 import { setLocalCache } from "pretty-text/oneboxer-cache";
-import { NodeSelection, TextSelection } from "prosemirror-state";
+import { EditorState, NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { buildEngine } from "discourse/static/markdown-it";
+import { oneboxPluginKey } from "discourse/static/prosemirror/extensions/onebox";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { setupRichEditor } from "discourse/tests/helpers/rich-editor-helper";
@@ -221,6 +222,21 @@ module(
       const [editor] = await setupRichEditor(assert, `see [${OTHER_URL}] here`);
 
       assert.strictEqual(editor.value, `see \\[${OTHER_URL}] here`);
+    });
+
+    test("ignores nested editor states", async function (assert) {
+      const [editor] = await setupRichEditor(assert, `> ${URL}\n>\n> b`);
+      const { view } = editor;
+
+      const inner = EditorState.create({
+        doc: view.state.doc.firstChild,
+        plugins: view.state.plugins,
+      });
+      const tr = inner.tr.insertText("c", inner.doc.content.size - 1);
+      tr.setSelection(TextSelection.atEnd(tr.doc));
+      const { state } = inner.applyTransaction(tr);
+
+      assert.strictEqual(oneboxPluginKey.getState(state).find().length, 0);
     });
 
     test("holds a lone link inline while the cursor is on its line", async function (assert) {
