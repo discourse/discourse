@@ -194,6 +194,33 @@ RSpec.describe ThemesInstallTask do
 
       after { FileUtils.rm_rf(repo) }
 
+      it "finishes the installation with its child components" do
+        child_repo = setup_git_repo("about.json" => { name: "Child", component: true }.to_json)
+        MockGitImporter.register(child_url, child_repo)
+
+        _log, counts = ThemesInstallTask.install({ private_theme: url })
+
+        expect(counts).to include(updated: 1, errors: 0)
+        expect(placeholder.reload.child_themes.map(&:name)).to contain_exactly("Child")
+      ensure
+        FileUtils.rm_rf(child_repo)
+      end
+
+      it "logs the child components it couldn't install" do
+        private_child_url = "https://github.com/discourse/private-child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [private_child_url] }.to_json,
+        )
+
+        log, counts = ThemesInstallTask.install({ private_theme: url })
+
+        expect(counts).to include(updated: 1, errors: 0)
+        expect(log).to include(
+          "private_theme: couldn't install component #{private_child_url}: #{I18n.t("themes.import_error.git")}",
+        )
+      end
+
       it "counts a theme that can't be saved as an error and carries on" do
         add_to_git_repo(
           repo,

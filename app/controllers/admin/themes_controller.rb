@@ -211,10 +211,11 @@ class Admin::ThemesController < Admin::AdminController
     @theme.remote_theme.update_remote_version if params[:theme][:remote_check]
 
     if params[:theme][:remote_update]
-      @theme.remote_theme.update_from_remote(
-        raise_if_theme_save_fails: false,
-        raise_on_import_error: true,
-      )
+      skipped_components =
+        @theme
+          .remote_theme
+          .update_from_remote(raise_if_theme_save_fails: false, raise_on_import_error: true)
+          .skipped_child_components
     else
       @theme.save
     end
@@ -231,7 +232,7 @@ class Admin::ThemesController < Admin::AdminController
         log_theme_component_disabled if disables_component
         log_theme_component_enabled if enables_component
 
-        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :ok }
+        format.json { render json: theme_json(@theme, skipped_components:), status: :ok }
       else
         format.json do
           error = @theme.errors.full_messages.join(", ").presence
@@ -242,9 +243,7 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
     end
-  rescue RemoteTheme::ImportError => e
-    render_json_error e.message
-  rescue Theme::SettingsMigrationError => e
+  rescue RemoteTheme::ImportError, Theme::SettingsMigrationError => e
     render_json_error e.message
   end
 
@@ -409,7 +408,8 @@ class Admin::ThemesController < Admin::AdminController
       end
 
       log_theme_change(nil, theme.reload)
-      render json: serialize_data(theme, ThemeSerializer), status: :ok
+      render json: theme_json(theme, skipped_components: remote_theme.skipped_child_components),
+             status: :ok
     rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid, Theme::SettingsMigrationError => e
       remote_theme.reload
       render_json_error e.message
@@ -417,6 +417,12 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   private
+
+  def theme_json(theme, skipped_components:)
+    json = serialize_data(theme, ThemeSerializer)
+    json[:skipped_components] = skipped_components if skipped_components.present?
+    json
+  end
 
   def create_remote_theme_placeholder(remote, branch:, private_key:)
     Theme.transaction do
