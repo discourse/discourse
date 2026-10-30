@@ -3205,6 +3205,9 @@ security:
   use_admin_ip_allowlist:
     default: false
     client: true
+  log_out_sessions_on_blocked_ips:
+    default: false
+    hidden: true
   blocked_ip_blocks:
     default: ""
     type: list

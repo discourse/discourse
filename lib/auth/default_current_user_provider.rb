@@ -225,6 +225,7 @@ class Auth::DefaultCurrentUserProvider
       ip = request.ip
       user_id = current_user.id
       old_ip = current_user.ip_address
+      cookie_session = @user_token.present? && !@env[API_KEY_ENV] && !@env[USER_API_KEY_ENV]
 
       Scheduler::Defer.later "Updating Last Seen" do
         if User.should_update_last_seen?(user_id)
@@ -232,7 +233,7 @@ class Auth::DefaultCurrentUserProvider
             u.update_last_seen!(Time.zone.now, force: true)
           end
         end
-        User.update_ip_address!(user_id, new_ip: ip, old_ip: old_ip)
+        User.update_ip_address!(user_id, new_ip: ip, old_ip: old_ip, cookie_session:)
       end
     end
 
