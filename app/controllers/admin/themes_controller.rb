@@ -426,6 +426,8 @@ class Admin::ThemesController < Admin::AdminController
       Theme.create!(
         user_id: theme_user&.id || -1,
         name: remote.gsub(/\.git\z/, "").split("/").last,
+        # The repository can't be read yet, so the admin's choice is the only hint for the type
+        component: params[:component].to_s == "true",
         remote_theme: remote_theme,
       )
     end

@@ -89,6 +89,15 @@
   }
 }
 
+.install-theme-content__placeholder-type {
+  margin-top: 1em;
+}
+
+.install-theme-content__placeholder-type-tip {
+  margin-top: 0.25em;
+  color: var(--primary-medium);
+}
+
 .popular-theme-items {
   min-height: 60vh;
   overflow: auto;

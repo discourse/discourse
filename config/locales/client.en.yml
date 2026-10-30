@@ -9243,6 +9243,7 @@ en:
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
           create_placeholder: "Create placeholder"
+          placeholder_type_tip: "Once the installation is finished, the type from the repository's about.json is used."
           about_theme: "About"
           license: "License"
           version: "Version:"
