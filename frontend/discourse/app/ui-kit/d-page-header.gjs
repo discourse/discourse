@@ -22,24 +22,38 @@ import { i18n } from "discourse-i18n";
 const HEADLESS_ACTIONS = ["new", "edit"];
 
 export default class DPageHeader extends Component {
+  @service pageHeader;
   @service site;
   @service router;
 
   @tracked shouldDisplay = true;
 
+  tabActionsElement = Object.assign(document.createElement("div"), {
+    className: "d-nav-submenu__actions",
+  });
+
   constructor() {
     super(...arguments);
     this.router.on("routeDidChange", this, this.#checkIfShouldDisplay);
     this.#checkIfShouldDisplay();
+    this.pageHeader.current = this;
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.router.off("routeDidChange", this, this.#checkIfShouldDisplay);
+
+    if (this.pageHeader.current === this) {
+      this.pageHeader.current = null;
+    }
   }
 
   get shouldCollapseActionsOnMobile() {
     return this.site.mobileView && this.args.collapseActionsOnMobile !== false;
+  }
+
+  get showsTabs() {
+    return this.shouldDisplay && !this.args.hideTabs;
   }
 
   @bind
@@ -162,6 +176,7 @@ export default class DPageHeader extends Component {
             <DHorizontalOverflowNav class="d-nav-submenu__tabs">
               {{yield to="tabs"}}
             </DHorizontalOverflowNav>
+            {{this.tabActionsElement}}
           </div>
         {{/unless}}
       </div>

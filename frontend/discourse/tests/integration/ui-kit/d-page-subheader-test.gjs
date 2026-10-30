@@ -2,6 +2,8 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
@@ -112,6 +114,67 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
 
     await click(".edit-groupings-btn");
     assert.true(actionCalled);
+  });
+  test("@actionsPlacement='tabs' renders actions in the header tabs row", async function (assert) {
+    await render(
+      <template>
+        <DPageHeader @titleLabel="Header">
+          <:tabs>
+            <DNavItem @label="admin.badges.title" @route="adminBadges" />
+          </:tabs>
+        </DPageHeader>
+        <DPageSubheader @actionsPlacement="tabs" @titleLabel="Subheader">
+          <:actions as |actions|>
+            <actions.Primary class="new-badge" @label="admin.badges.new" />
+          </:actions>
+        </DPageSubheader>
+      </template>
+    );
+
+    assert
+      .dom(".d-nav-submenu .d-nav-submenu__actions .new-badge")
+      .exists("actions render next to the tabs");
+    assert
+      .dom(".d-page-subheader")
+      .doesNotExist("the subheader is not rendered");
+  });
+
+  test("@actionsPlacement='tabs' falls back when the header hides its tabs", async function (assert) {
+    await render(
+      <template>
+        <DPageHeader @hideTabs={{true}} @titleLabel="Header" />
+        <DPageSubheader @actionsPlacement="tabs" @titleLabel="Subheader">
+          <:actions as |actions|>
+            <actions.Primary class="new-badge" @label="admin.badges.new" />
+          </:actions>
+        </DPageSubheader>
+      </template>
+    );
+
+    assert.dom(".d-page-subheader__title").hasText("Subheader");
+    assert.dom(".d-page-subheader__actions .new-badge").exists();
+  });
+
+  test("@actionsPlacement='tabs' keeps the description", async function (assert) {
+    await render(
+      <template>
+        <DPageHeader @titleLabel="Header" />
+        <DPageSubheader
+          @actionsPlacement="tabs"
+          @descriptionLabel={{i18n "admin.badges.description"}}
+          @titleLabel="Subheader"
+        >
+          <:actions as |actions|>
+            <actions.Primary class="new-badge" @label="admin.badges.new" />
+          </:actions>
+        </DPageSubheader>
+      </template>
+    );
+
+    assert.dom(".d-page-subheader__title").doesNotExist();
+    assert
+      .dom(".d-page-subheader__description")
+      .hasText(i18n("admin.badges.description"));
   });
 });
 

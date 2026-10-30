@@ -113,7 +113,7 @@ acceptance("New Query", function (needs) {
   test("renders the manual create form and transitions on submit", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
-    await click(".d-page-subheader .btn-primary");
+    await click(".new-query-btn");
     assert.strictEqual(
       currentURL(),
       "/admin/plugins/discourse-data-explorer/queries/new"
