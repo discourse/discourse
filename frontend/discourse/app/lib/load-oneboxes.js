@@ -1,5 +1,5 @@
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
-import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
+import { load } from "pretty-text/oneboxer";
 
 export function loadOneboxes(
   container,
@@ -17,9 +17,7 @@ export function loadOneboxes(
   // Oneboxes = `a.onebox` -> `a.onebox-loading` -> `aside.onebox`
   // Inline Oneboxes = `a.inline-onebox-loading` -> `a.inline-onebox`
 
-  let loadedOneboxes = container.querySelectorAll(
-    `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.inline-onebox`
-  ).length;
+  let loadedOneboxes = 0;
 
   container
     .querySelectorAll("a.onebox, a.inline-onebox-loading")
