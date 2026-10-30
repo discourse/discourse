@@ -126,6 +126,19 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
+      - name: Install latest Valkey
+        run: |
+          version=$(curl -fsSL -H "Authorization: Bearer ${{ github.token }}" https://api.github.com/repos/valkey-io/valkey/releases/latest | ruby -rjson -e 'puts JSON.parse($stdin.read)["tag_name"]')
+          tarball="valkey-${version}-noble-$(uname -m | sed 's/aarch64/arm64/').tar.gz"
+          cd /tmp
+          curl -fsSLO "https://download.valkey.io/releases/${tarball}"
+          curl -fsSL "https://download.valkey.io/releases/${tarball}.sha256" | sha256sum -c -
+          tar -xzf "$tarball"
+          for bin in server cli; do
+            ln -sf "/tmp/${tarball%.tar.gz}/bin/valkey-${bin}" "/usr/bin/redis-${bin}"
+          done
+          redis-server --version
+
       - name: Start redis
         run: redis-server /etc/redis/redis.conf --daemonize yes --logfile ""
 
