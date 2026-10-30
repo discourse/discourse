@@ -29,6 +29,15 @@ RSpec.describe JsonApiKit::Request::Body::Location do
       expect(location.value).to eq("topics")
     end
 
+    context "when the path crosses an array" do
+      let(:document) { { "data" => [{ "id" => "12" }] } }
+      let(:path) { ["data", 0, "id"] }
+
+      it "reads the indexed member" do
+        expect(location.value).to eq("12")
+      end
+    end
+
     context "when a parent is a scalar" do
       let(:document) { { "data" => false } }
 
@@ -55,6 +64,20 @@ RSpec.describe JsonApiKit::Request::Body::Location do
 
     context "when a parent is omitted" do
       let(:document) { {} }
+
+      it { is_expected.not_to be_supplied }
+    end
+
+    context "when an array element is null" do
+      let(:document) { { "data" => [nil] } }
+      let(:path) { ["data", 0] }
+
+      it { is_expected.to be_supplied }
+    end
+
+    context "when an array index is negative" do
+      let(:document) { { "data" => ["12"] } }
+      let(:path) { ["data", -1] }
 
       it { is_expected.not_to be_supplied }
     end
@@ -88,6 +111,15 @@ RSpec.describe JsonApiKit::Request::Body::Location do
       end
     end
 
+    context "when an array index is outside the submitted linkage" do
+      let(:document) { { "data" => [{ "id" => "12" }] } }
+      let(:path) { ["data", 1, "id"] }
+
+      it "locates the array" do
+        expect(location.nearest_existing.pointer).to eq("/data")
+      end
+    end
+
     context "when data is omitted" do
       let(:document) { {} }
 
@@ -100,6 +132,14 @@ RSpec.describe JsonApiKit::Request::Body::Location do
   describe "#pointer" do
     it "encodes the member path" do
       expect(location.pointer).to eq("/data/type")
+    end
+
+    context "when the path contains an array index" do
+      let(:path) { ["data", 0, "id"] }
+
+      it "encodes the index" do
+        expect(location.pointer).to eq("/data/0/id")
+      end
     end
 
     context "when member names contain pointer characters" do

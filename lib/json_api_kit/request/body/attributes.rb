@@ -34,8 +34,11 @@ module JsonApiKit
         end
 
         def location_for(parameter)
-          return Location.new(document, %w[data]) if parameter == :base
-          locations_for(parameter.to_s.split(/[.\[]/, 2).first).sole
+          ParameterPath
+            .for(parameter)
+            .then do |path|
+              path.base? ? Location.new(document, %w[data]) : locations_for(path.name).sole
+            end
         rescue Enumerable::SoleItemExpectedError
           Location.new(document, %w[data attributes])
         end

@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module JsonApiKitPatchSpec
+  class UserResource < JsonApiKit::Resource
+    model User
+    type :users
+
+    attribute :username
+  end
+
   class GroupResource < JsonApiKit::Resource
     model Group
     type :groups
@@ -8,6 +15,9 @@ module JsonApiKitPatchSpec
     attribute :name, :string, writable: true
     attribute :full_name, :string, writable: true
     attribute :bio_raw, :string, writable: true
+
+    has_many :users, resource: UserResource, writable: true
+    has_one :smtp_updated_by, resource: UserResource, writable: true
   end
 
   class UpdateGroup
@@ -18,9 +28,19 @@ module JsonApiKitPatchSpec
 
     params(from_resource: GroupResource, default_values_from: :group) do
       validates :name, presence: true
+      validates :smtp_updated_by_id, numericality: { greater_than: 0 }, allow_nil: true
     end
 
-    step :update_group
+    only_if(:users_provided?) do
+      model :users, optional: true
+      policy :can_assign_users
+    end
+
+    transaction do
+      step :update_group
+      only_if(:users_provided?) { step :replace_users }
+      only_if(:smtp_updated_by_provided?) { step :replace_smtp_updated_by }
+    end
 
     private
 
@@ -33,7 +53,27 @@ module JsonApiKitPatchSpec
     end
 
     def update_group(group:, params:)
-      group.update!(**params)
+      group.update!(**params.slice(:name, :full_name, :bio_raw))
+    end
+
+    def users_provided?(params:) = params.users_provided?
+
+    def smtp_updated_by_provided?(params:) = params.smtp_updated_by_provided?
+
+    def fetch_users(params:)
+      User.find(params.user_ids)
+    end
+
+    def can_assign_users(users:)
+      users.all?(&:human?)
+    end
+
+    def replace_users(group:, users:)
+      group.update!(users:)
+    end
+
+    def replace_smtp_updated_by(group:, params:)
+      group.update!(smtp_updated_by_id: params.smtp_updated_by_id)
     end
   end
 
@@ -47,7 +87,9 @@ module JsonApiKitPatchSpec
         on_success { |group:| render_document(group) }
         on_failed_contract { |contract| render_validation_errors(contract.errors) }
         on_failed_policy(:can_update_group) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_assign_users) { raise Discourse::InvalidAccess }
         on_model_not_found(:group) { raise Discourse::NotFound }
+        on_model_not_found(:users) { raise Discourse::NotFound }
       end
     end
   end
@@ -57,8 +99,11 @@ module JsonApiKitPatchSpec
     description "Teams become groups with names and biographies."
 
     renamed_type from: :teams, to: :groups
+    renamed_type from: :people, to: :users
 
     resource :groups do
+      renamed_relationship from: :members, to: :users
+      renamed_relationship from: :editor, to: :smtp_updated_by
       renamed_attribute from: :label,
                         to: :name,
                         up: ->(label) { label&.strip },
@@ -190,6 +235,220 @@ RSpec.describe JsonApiKitPatchSpec::GroupsController, type: :request do
         expect { update_group }.not_to change { other_group.reload.attributes }
         expect(group.reload.name).to eq("updated_group")
         expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "when the group has existing relationships" do
+      fab!(:previous_user, :user)
+      fab!(:replacement_user, :user)
+
+      let(:primary) { super().merge("relationships" => relationships) }
+      let(:relationships) do
+        {
+          "users" => {
+            "data" => [identifier],
+          },
+          "smtpUpdatedBy" => {
+            "data" => editor_identifier,
+          },
+        }
+      end
+      let(:identifier) { { "type" => "users", "id" => replacement_user.id.to_s } }
+      let(:editor_identifier) { identifier.merge("id" => admin.id.to_s) }
+
+      before { group.update!(users: [previous_user], smtp_updated_by: previous_user) }
+
+      it "replaces both relationships", :aggregate_failures do
+        update_group
+
+        expect(response).to have_http_status(:ok)
+        expect(group.reload.user_ids).to contain_exactly(replacement_user.id)
+        expect(group.smtp_updated_by_id).to eq(admin.id)
+      end
+
+      context "when the client clears the relationships" do
+        let(:relationships) do
+          { "users" => { "data" => [] }, "smtpUpdatedBy" => { "data" => nil } }
+        end
+
+        it "clears both relationships", :aggregate_failures do
+          update_group
+
+          expect(response).to have_http_status(:ok)
+          expect(group.reload.user_ids).to be_empty
+          expect(group.smtp_updated_by_id).to be_nil
+        end
+      end
+
+      context "when relationships are omitted" do
+        let(:primary) { super().except("relationships") }
+
+        it "preserves both relationships", :aggregate_failures do
+          update_group
+
+          expect(response).to have_http_status(:ok)
+          expect(group.reload.user_ids).to contain_exactly(previous_user.id)
+          expect(group.smtp_updated_by_id).to eq(previous_user.id)
+        end
+      end
+
+      context "when only the to-many relationship is supplied" do
+        let(:primary) { super().except("attributes") }
+        let(:relationships) { super().except("smtpUpdatedBy") }
+
+        it "updates only the supplied relationship", :aggregate_failures do
+          expect { update_group }.not_to change { group.reload.name }
+
+          expect(response).to have_http_status(:ok)
+          expect(group.user_ids).to contain_exactly(replacement_user.id)
+          expect(group.smtp_updated_by_id).to eq(previous_user.id)
+        end
+      end
+
+      context "when a to-one identifier casts to nil" do
+        let(:editor_identifier) { super().merge("id" => "") }
+
+        it "rejects the identifier without changing the resource", :aggregate_failures do
+          expect { update_group }.not_to change { group.reload.attributes }
+          expect(group.user_ids).to contain_exactly(previous_user.id)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(parsed_body.fetch("errors")).to contain_exactly(
+            a_hash_including(
+              "status" => "422",
+              "source" => {
+                "pointer" => "/data/relationships/smtpUpdatedBy/data",
+              },
+            ),
+          )
+        end
+      end
+
+      context "when a to-many identifier casts to nil" do
+        let(:relationships) do
+          super().merge("users" => { "data" => [identifier, identifier.merge("id" => "")] })
+        end
+
+        it "reports the invalid identifier without changing the resource", :aggregate_failures do
+          expect { update_group }.not_to change { group.reload.attributes }
+          expect(group.user_ids).to contain_exactly(previous_user.id)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(parsed_body.fetch("errors")).to contain_exactly(
+            a_hash_including(
+              "status" => "422",
+              "source" => {
+                "pointer" => "/data/relationships/users/data/1/id",
+              },
+            ),
+          )
+        end
+      end
+
+      context "when the actor cannot update groups" do
+        let(:actor) { previous_user }
+
+        it "preserves the attributes and relationships", :aggregate_failures do
+          expect { update_group }.not_to change { group.reload.attributes }
+
+          expect(response).to have_http_status(:forbidden)
+          expect(group.user_ids).to contain_exactly(previous_user.id)
+          expect(parsed_body.fetch("errors")).to contain_exactly(
+            a_hash_including("status" => "403", "title" => "Forbidden"),
+          )
+        end
+      end
+
+      context "when a related user is not permitted" do
+        fab!(:bot)
+
+        let(:relationships) do
+          { "users" => { "data" => [{ "type" => "users", "id" => bot.id.to_s }] } }
+        end
+
+        it "preserves the attributes and relationships", :aggregate_failures do
+          expect { update_group }.not_to change { group.reload.attributes }
+          expect(response).to have_http_status(:forbidden)
+          expect(group.user_ids).to contain_exactly(previous_user.id)
+        end
+      end
+
+      context "when a related user does not exist" do
+        let(:relationships) do
+          { "users" => { "data" => [{ "type" => "users", "id" => User.maximum(:id).next.to_s }] } }
+        end
+
+        it "preserves the attributes and relationships", :aggregate_failures do
+          expect { update_group }.not_to change { group.reload.attributes }
+          expect(response).to have_http_status(:not_found)
+          expect(group.user_ids).to contain_exactly(previous_user.id)
+        end
+      end
+
+      context "when the client uses an older version" do
+        let(:version) { JsonApiKit::Timeline::FIRST_RELEASE.to_s }
+        let(:type) { "teams" }
+        let(:attributes) { { "label" => "updated_group" } }
+        let(:identifier) { super().merge("type" => "people") }
+        let(:relationships) do
+          { "members" => { "data" => [identifier] }, "editor" => { "data" => editor_identifier } }
+        end
+
+        it "resolves the relationship and identifier types", :aggregate_failures do
+          update_group
+
+          expect(response).to have_http_status(:ok)
+          expect(group.reload.user_ids).to contain_exactly(replacement_user.id)
+          expect(group.smtp_updated_by_id).to eq(admin.id)
+        end
+
+        context "when the client supplies the current relationship name" do
+          let(:relationships) do
+            super().except("members").merge("users" => { "data" => [identifier] })
+          end
+
+          it "rejects the name before updating the group", :aggregate_failures do
+            expect { update_group }.not_to change { group.reload.attributes }
+            expect(response).to have_http_status(:bad_request)
+            expect(parsed_body.fetch("errors")).to contain_exactly(
+              a_hash_including("source" => { "pointer" => "/data/relationships/users" }),
+            )
+          end
+        end
+
+        context "when the client supplies the current identifier type" do
+          let(:relationships) do
+            { "members" => { "data" => [identifier.merge("type" => "users")] } }
+          end
+
+          it "rejects the type before updating the group", :aggregate_failures do
+            expect { update_group }.not_to change { group.reload.attributes }
+            expect(response).to have_http_status(:conflict)
+            expect(parsed_body.fetch("errors")).to contain_exactly(
+              a_hash_including(
+                "source" => {
+                  "pointer" => "/data/relationships/members/data/0/type",
+                },
+              ),
+            )
+          end
+        end
+
+        context "when the contract rejects an identifier" do
+          let(:editor_identifier) { super().merge("id" => "-1") }
+
+          it "reports the original relationship", :aggregate_failures do
+            expect { update_group }.not_to change { group.reload.attributes }
+            expect(group.user_ids).to contain_exactly(previous_user.id)
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(parsed_body.fetch("errors")).to contain_exactly(
+              a_hash_including(
+                "status" => "422",
+                "source" => {
+                  "pointer" => "/data/relationships/editor/data",
+                },
+              ),
+            )
+          end
+        end
       end
     end
 
@@ -410,20 +669,6 @@ RSpec.describe JsonApiKitPatchSpec::GroupsController, type: :request do
         expect(JsonApiKit::MediaType.new(response.media_type)).to be_json_api
         expect(parsed_body.fetch("errors")).to contain_exactly(
           a_hash_including("status" => "404", "title" => "No such record"),
-        )
-      end
-    end
-
-    context "when the actor cannot update groups" do
-      fab!(:user)
-
-      let(:actor) { user }
-
-      it "preserves the service policy", :aggregate_failures do
-        expect { update_group }.not_to change { group.reload.attributes }
-        expect(response).to have_http_status(:forbidden)
-        expect(parsed_body.fetch("errors")).to contain_exactly(
-          a_hash_including("status" => "403", "title" => "Forbidden"),
         )
       end
     end

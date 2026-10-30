@@ -21,6 +21,8 @@ module JsonApiKit
 
         def primary_key = model.primary_key.to_sym
 
+        def identifier_type = model.type_for_attribute(primary_key.to_s)
+
         def column(name)
           return unless columns.key?(name.to_s)
           name.to_sym

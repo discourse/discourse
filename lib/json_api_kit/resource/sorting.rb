@@ -28,7 +28,7 @@ module JsonApiKit
       class_methods do
         include Ordering
 
-        def order(ordering) = adapter.order(self, ordering)
+        delegate :order, to: :adapter_definition
 
         def sort(name, **options)
           self.declared_sorts = declared_sorts + [Declarations::Sort.new(name, **options)]

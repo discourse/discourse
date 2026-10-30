@@ -332,14 +332,14 @@ This matcher expects the service to succeed.
 - _name_: the name of the contract, in the case there is more than one. Defaults to `default`.
 - _default_values_from_: name of a model to use to pre-fill the contract values. This is useful when you want some values of a model to be updated through a contract while applying other default values. A real-world example is available in the [`Chat::UpdateChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/update_channel.rb#L39) service.
 - _base_class_: the base class to use for the contract. This is particularly useful for reusing an existing contract (for example, you could have very similar contracts between a `Create` and a `Update` service). Defaults to `Service::ContractBase`.
-- _from_resource_: a resource whose writable attribute names and ActiveModel types are imported into the contract.
-- _only_: writable attribute names to import. Accepts strings or symbols. An empty array imports no attributes.
-- _except_: writable attribute names to exclude from the import. Accepts strings or symbols.
+- _from_resource_: a resource whose writable attributes and relationships define the contract parameters.
+- _only_: parameter names to import. Accepts strings or symbols. An empty array imports nothing.
+- _except_: parameter names to exclude from the import. Accepts strings or symbols.
 - _block_: the block containing all the validations, attribute definitions, etc.
 
 This step declares the use of a contract to validate input parameters. Parameters provided to the service will be passed to the contract if their name matches the attributes defined in the contract.
 
-With `from_resource`, all writable attributes are imported by default. Use `only:` or `except:` to select the attributes for an action:
+With `from_resource`, all writable attributes and relationships are imported by default. Use `only:` or `except:` to select the fields for an action:
 
 ```ruby
 params(from_resource: TopicResource, only: %i[title]) do
@@ -350,7 +350,19 @@ end
 
 Imports run before the block. Explicit attribute declarations override imported types through normal ActiveModel behavior. A declaration that omits the type preserves the imported type. Selection applies only to imports, so the block can declare additional parameters or declare an excluded attribute explicitly.
 
-Selection options require `from_resource:` and cannot be combined. Unknown or read-only selection names raise an error when the service is defined. Imports include only names and types.
+Selection options require `from_resource:` and cannot be combined. Unknown or read-only selection names raise an error when the service is defined. Two imported fields cannot map to the same parameter.
+
+Writable `has_one :user` and `has_many :groups` relationships import `user_id` and `group_ids`. Use those names in `only:` or `except:`:
+
+```ruby
+params(from_resource: TopicResource, only: %i[user_id group_ids])
+```
+
+The contract also defines `user_provided?` and `groups_provided?`. These use [`provided?`](#supplied-parameters) to check whether `user_id` or `group_ids` was supplied.
+
+ID types come from the related resource's adapter, including the type of each array element. A supplied ID that casts to `nil` is invalid unless the caller supplied `nil` explicitly. ID arrays reject `nil` elements.
+
+The service must still check that related records exist, authorize access, and update the associations.
 
 With `default_values_from`, nested hashes are merged recursively. Supplied values override model values, including `nil`, `false`, and `0`. An empty hash keeps the defaults at that level. A supplied array replaces the whole model array; an empty array clears it.
 
@@ -651,6 +663,12 @@ Here, all the API from `ActiveModel` is available. In this example, we define we
 > Rails ships with cast types for [`big_integer`](https://api.rubyonrails.org/classes/ActiveModel/Type/BigInteger.html), [`binary`](https://api.rubyonrails.org/classes/ActiveModel/Type/Binary.html), [`boolean`](https://api.rubyonrails.org/classes/ActiveModel/Type/Boolean.html), [`date`](https://api.rubyonrails.org/classes/ActiveModel/Type/Date.html), [`datetime`](https://api.rubyonrails.org/classes/ActiveModel/Type/DateTime.html), [`decimal`](https://api.rubyonrails.org/classes/ActiveModel/Type/Decimal.html), [`float`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/Float.html), [`immutable_string`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/ImmutableString.html), [`integer`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/Integer.html), [`string`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/String.html) and [`time`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/Time.html).
 > Custom cast types can be defined, we ship two: [`array`](https://github.com/discourse/discourse/blob/main/lib/active_support_type_extensions/array.rb) and [`symbol`](https://github.com/discourse/discourse/blob/main/lib/active_support_type_extensions/symbol.rb).
 
+Use `element_type:` to set the ActiveModel type for array elements. This preserves string IDs such as `"0012"`, which otherwise become integers:
+
+```ruby
+attribute :external_ids, :array, element_type: ActiveModel::Type.lookup(:string)
+```
+
 > 🙅 Don’t define attributes if you don’t transform them or validate them. The primary purpose of a contract is to validate data, it can also be used to cast or massage data before using it (usually a contract does both).
 
 Then, we define validations, exactly like you would in an `ActiveRecord` model. Here, we’re checking for `id` and `username` not being blank and that `username` respects an expected format.
@@ -663,6 +681,14 @@ Some methods have been added to the contract object to make your life a bit easi
 
 - `#slice` and `#merge` are available.
 - `#to_hash` has been implemented, so the contract object will be automatically cast as a hash by Ruby depending on the context. For example, with an ActiveRecord model, you can do this: `user.update(**params)`.
+
+### Supplied parameters
+
+Use `params.provided?(:user_id)` to check whether the caller supplied a declared parameter. It accepts string or symbol names. `nil`, `false`, `[]`, and `{}` count as supplied values.
+
+`params.provided?(:user_id)` stays false when `user_id` is omitted, even if a declaration or model default fills it. Coercion and later assignments don't change the result.
+
+Inside nested contracts, keys added by `default_values_from:` also count as provided.
 
 ### Nested attributes
 
