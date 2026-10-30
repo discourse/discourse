@@ -90,17 +90,21 @@ class RemoteTheme < ActiveRecord::Base
   # no longer lists, which changes where their code runs. When an import
   # runs for someone, every existing component it would include or drop has
   # to be editable by them.
+  # The archive may have just changed whether the theme is a component, so
+  # removals go by the links the theme has now: syncing drops them either way.
   def self.ensure_can_change_components!(guardian, theme, component_urls, update_components:)
-    return if guardian.nil? || theme.component?
+    return if guardian.nil?
 
     urls = component_urls.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+    # components are only included in themes
+    adds_components = !theme.component?
     if theme.new_record?
-      return if update_components == "none"
+      return if update_components == "none" || !adds_components
       added_ids = component_ids_for(urls)
       removed_ids = []
     else
       return if update_components.blank? || update_components == "none"
-      added_ids = component_ids_for(urls) - theme.child_theme_ids
+      added_ids = adds_components ? component_ids_for(urls) - theme.child_theme_ids : []
       removed_ids =
         if update_components == "sync"
           theme
