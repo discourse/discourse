@@ -26,6 +26,7 @@ acceptance("Composer - Reply target picker", function (needs) {
         locale: null,
       })
     );
+    server.get("/t/280/excerpts.json", () => helper.response([]));
   });
 
   async function openEditForReplyPost() {
@@ -52,5 +53,12 @@ acceptance("Composer - Reply target picker", function (needs) {
     assert
       .dom("[data-name='change-reply-to']")
       .exists("the menu item is available for editors");
+
+    await click("[data-name='change-reply-to']");
+
+    assert
+      .dom(".change-reply-to-modal .timeline-footer-controls")
+      .exists()
+      .isNotVisible();
   });
 });
