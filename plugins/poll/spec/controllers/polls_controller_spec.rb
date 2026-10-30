@@ -33,6 +33,31 @@ RSpec.describe DiscoursePoll::PollsController do
 
   before { Group.refresh_automatic_groups! }
 
+  describe "post authorization" do
+    [
+      %i[put vote],
+      %i[delete remove_vote],
+      %i[put toggle_status],
+      %i[get voters],
+      %i[get grouped_poll_results],
+    ].each do |method, action|
+      it "checks post visibility before #{action}, regardless of topic access" do
+        Guardian.any_instance.stubs(:can_see_topic?).returns(false)
+        Guardian.any_instance.expects(:ensure_can_see!).with(poll).raises(Discourse::InvalidAccess)
+
+        public_send(method, action, params: { post_id: poll.id }, format: :json)
+
+        expect(response.status).to eq(403)
+      end
+
+      it "rejects a missing post before #{action}" do
+        public_send(method, action, params: { post_id: -1 }, format: :json)
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe "#vote" do
     it "works" do
       channel = "/polls/#{poll.topic_id}"
@@ -218,9 +243,7 @@ RSpec.describe DiscoursePoll::PollsController do
 
       put :vote, params: { post_id: poll.id, poll_name: "poll", options: ["A"] }, format: :json
 
-      expect(response.status).not_to eq(200)
-      json = response.parsed_body
-      expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
+      expect(response.status).to eq(404)
     end
 
     it "ensures user can post in topic" do
@@ -358,9 +381,7 @@ RSpec.describe DiscoursePoll::PollsController do
           },
           format: :json
 
-      expect(response.status).not_to eq(200)
-      json = response.parsed_body
-      expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
+      expect(response.status).to eq(404)
     end
   end
 
