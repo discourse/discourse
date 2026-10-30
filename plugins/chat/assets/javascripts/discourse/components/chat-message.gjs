@@ -254,10 +254,9 @@ export default class ChatMessage extends Component {
 
   get hideReplyToInfo() {
     return (
-      this.threadContext ||
+      (!this.threadContext && this.threadingEnabled) ||
       this.args.message?.inReplyTo?.id ===
-        this.args.message?.previousMessage?.id ||
-      this.threadingEnabled
+        this.args.message?.previousMessage?.id
     );
   }
 
@@ -734,7 +733,10 @@ export default class ChatMessage extends Component {
           {{else}}
             <div class="chat-message">
               {{#unless this.hideReplyToInfo}}
-                <ChatMessageInReplyToIndicator @message={{@message}} />
+                <ChatMessageInReplyToIndicator
+                  @context={{@context}}
+                  @message={{@message}}
+                />
               {{/unless}}
 
               {{#if this.hideUserInfo}}

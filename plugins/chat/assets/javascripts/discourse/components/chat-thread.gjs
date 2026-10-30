@@ -525,7 +525,7 @@ export default class ChatThread extends Component {
         this.args.thread.channel.id,
         {
           message: message.message,
-          in_reply_to_id: null,
+          in_reply_to_id: message.inReplyTo?.id ?? null,
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.id,

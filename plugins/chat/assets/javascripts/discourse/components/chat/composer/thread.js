@@ -68,6 +68,12 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   handleEscape(event) {
+    if (this.draft?.inReplyTo) {
+      event.stopPropagation();
+      this.draft.inReplyTo = null;
+      return;
+    }
+
     if (this.draft.editing) {
       event.stopPropagation();
       this.args.thread.draft = ChatMessage.createDraftMessage(
