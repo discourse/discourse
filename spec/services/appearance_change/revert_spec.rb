@@ -53,7 +53,8 @@ RSpec.describe AppearanceChange::Revert do
     end
 
     context "when there is nothing to switch back to" do
-      before { appearance_change.reload.update!(previous_state: {}) }
+      # without fonts, its palettes alone make it live
+      before { appearance_change.reload.update!(previous_state: {}, site_settings: {}) }
 
       it { is_expected.to fail_to_find_a_model(:previous_state) }
     end
@@ -68,6 +69,15 @@ RSpec.describe AppearanceChange::Revert do
       before { SiteSetting.stubs(:shadowed_settings).returns(Set[:base_font]) }
 
       it { is_expected.to fail_a_step(:restore_site_settings) }
+
+      it "keeps the change live with what it replaced, so switching back can be tried again" do
+        expect { result }.not_to change { appearance_change.reload.previous_state }
+        expect(theme.reload).to have_attributes(
+          color_scheme_id: appearance_change.light_color_scheme_id,
+          dark_color_scheme_id: appearance_change.dark_color_scheme_id,
+        )
+        expect(appearance_change).to be_applied
+      end
     end
 
     context "when everything's ok" do

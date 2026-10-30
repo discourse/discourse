@@ -38,12 +38,7 @@ RSpec.describe AppearanceChange::Activate do
     end
 
     context "when the change is already live" do
-      before do
-        theme.update!(
-          color_scheme: appearance_change.light_color_scheme,
-          dark_color_scheme: appearance_change.dark_color_scheme,
-        )
-      end
+      before { described_class.call(params:, **dependencies) }
 
       it { is_expected.to fail_a_policy(:not_applied) }
     end
