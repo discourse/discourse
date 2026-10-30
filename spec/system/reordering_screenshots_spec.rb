@@ -25,7 +25,7 @@ describe "Reordering surfaces" do
 
   before { sign_in(admin) }
 
-  [false, true].each do |enabled|
+  shared_examples "reordering screenshots with the selected interface" do |enabled|
     suffix = enabled ? "on" : "off"
 
     context "with the change #{suffix}" do
@@ -123,4 +123,7 @@ describe "Reordering surfaces" do
       end
     end
   end
+
+  it_behaves_like "reordering screenshots with the selected interface", false
+  it_behaves_like "reordering screenshots with the selected interface", true
 end

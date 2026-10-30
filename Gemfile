@@ -147,7 +147,10 @@ group :test, :development do
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers", require: false
   gem "debug", ">= 1.0.0", require: "debug/prelude"
-  gem "rubocop-discourse", require: false
+  gem "rubocop-discourse",
+      git: "https://github.com/discourse/rubocop-discourse",
+      ref: "fd5f84e0c8241221a9d566cb1ee59e85976bf650",
+      require: false
   gem "parallel_tests", require: false
 
   gem "rswag-specs", require: false

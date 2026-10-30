@@ -14,23 +14,67 @@ RSpec.describe Jobs::SentimentBackfill do
     SiteSetting.ai_sentiment_emotion_decision_model = decision_model.id
   end
 
-  [[false, false], [true, false], [false, true], [true, true]].each do |sentiment, emotion|
-    it "backfills only enabled decisions with sentiment=#{sentiment} and emotion=#{emotion}" do
-      SiteSetting.ai_sentiment_enabled = sentiment
-      SiteSetting.ai_sentiment_emotion_enabled = emotion
-      enabled_types = []
-      enabled_types << "sentiment" if sentiment
-      enabled_types << "emotion" if emotion
+  it "backfills only enabled decisions with sentiment=false and emotion=false" do
+    SiteSetting.ai_sentiment_enabled = false
+    SiteSetting.ai_sentiment_emotion_enabled = false
+    enabled_types = []
 
-      DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
-        job.execute({})
-        job.execute({})
+    DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
+      job.execute({})
+      job.execute({})
 
-        expect(canned.calls.map { |call| call[:feature_name] }).to match_array(enabled_types)
-      end
-      expect(ClassificationResult.where(target: post).pluck(:model_used)).to match_array(
-        enabled_types.map { |type| "discourse-ai/#{type}-decision" },
-      )
+      expect(canned.calls.map { |call| call[:feature_name] }).to match_array(enabled_types)
     end
+    expect(ClassificationResult.where(target: post).pluck(:model_used)).to match_array(
+      enabled_types.map { |type| "discourse-ai/#{type}-decision" },
+    )
+  end
+
+  it "backfills only enabled decisions with sentiment=true and emotion=false" do
+    SiteSetting.ai_sentiment_enabled = true
+    SiteSetting.ai_sentiment_emotion_enabled = false
+    enabled_types = %w[sentiment]
+
+    DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
+      job.execute({})
+      job.execute({})
+
+      expect(canned.calls.map { |call| call[:feature_name] }).to match_array(enabled_types)
+    end
+    expect(ClassificationResult.where(target: post).pluck(:model_used)).to match_array(
+      enabled_types.map { |type| "discourse-ai/#{type}-decision" },
+    )
+  end
+
+  it "backfills only enabled decisions with sentiment=false and emotion=true" do
+    SiteSetting.ai_sentiment_enabled = false
+    SiteSetting.ai_sentiment_emotion_enabled = true
+    enabled_types = %w[emotion]
+
+    DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
+      job.execute({})
+      job.execute({})
+
+      expect(canned.calls.map { |call| call[:feature_name] }).to match_array(enabled_types)
+    end
+    expect(ClassificationResult.where(target: post).pluck(:model_used)).to match_array(
+      enabled_types.map { |type| "discourse-ai/#{type}-decision" },
+    )
+  end
+
+  it "backfills only enabled decisions with sentiment=true and emotion=true" do
+    SiteSetting.ai_sentiment_enabled = true
+    SiteSetting.ai_sentiment_emotion_enabled = true
+    enabled_types = %w[sentiment emotion]
+
+    DiscourseAi::Decisions.with_canned_answers(sentiment: "positive", emotion: "joy") do |canned|
+      job.execute({})
+      job.execute({})
+
+      expect(canned.calls.map { |call| call[:feature_name] }).to match_array(enabled_types)
+    end
+    expect(ClassificationResult.where(target: post).pluck(:model_used)).to match_array(
+      enabled_types.map { |type| "discourse-ai/#{type}-decision" },
+    )
   end
 end

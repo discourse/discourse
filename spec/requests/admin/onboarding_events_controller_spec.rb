@@ -23,28 +23,94 @@ RSpec.describe Admin::OnboardingEventsController do
         expect(log.subject).to eq("select_theme")
       end
 
-      UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS.each do |option|
-        it "logs the selected #{option} option with readable details" do
-          post "/admin/onboarding/events.json",
-               params: {
-                 event: "step_completed",
-                 step: "start_posting",
-                 topic_option: option,
-               }
+      it "logs the selected plan_categories option with readable details" do
+        post "/admin/onboarding/events.json",
+             params: {
+               event: "step_completed",
+               step: "start_posting",
+               topic_option: "plan_categories",
+             }
 
-          expect(response.status).to eq(204)
-          log = UserHistory.last
-          expect(log.subject).to eq("start_posting")
-          expect(log.new_value).to eq(option)
-          expect(log.details).to eq(
-            I18n.t(
-              "staff_action_logs.admin_onboarding_topic_option",
-              option:
-                I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.title"),
-              option_id: option,
-            ),
-          )
-        end
+        expect(response.status).to eq(204)
+        log = UserHistory.last
+        expect(log.subject).to eq("start_posting")
+        expect(log.new_value).to eq("plan_categories")
+        expect(log.details).to eq(
+          I18n.t(
+            "staff_action_logs.admin_onboarding_topic_option",
+            option:
+              I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_categories.title"),
+            option_id: "plan_categories",
+          ),
+        )
+      end
+
+      it "logs the selected plan_invites option with readable details" do
+        post "/admin/onboarding/events.json",
+             params: {
+               event: "step_completed",
+               step: "start_posting",
+               topic_option: "plan_invites",
+             }
+
+        expect(response.status).to eq(204)
+        log = UserHistory.last
+        expect(log.subject).to eq("start_posting")
+        expect(log.new_value).to eq("plan_invites")
+        expect(log.details).to eq(
+          I18n.t(
+            "staff_action_logs.admin_onboarding_topic_option",
+            option:
+              I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.title"),
+            option_id: "plan_invites",
+          ),
+        )
+      end
+
+      it "logs the selected introduce_yourself option with readable details" do
+        post "/admin/onboarding/events.json",
+             params: {
+               event: "step_completed",
+               step: "start_posting",
+               topic_option: "introduce_yourself",
+             }
+
+        expect(response.status).to eq(204)
+        log = UserHistory.last
+        expect(log.subject).to eq("start_posting")
+        expect(log.new_value).to eq("introduce_yourself")
+        expect(log.details).to eq(
+          I18n.t(
+            "staff_action_logs.admin_onboarding_topic_option",
+            option:
+              I18n.t(
+                "js.admin_onboarding_banner.start_posting.icebreakers.introduce_yourself.title",
+              ),
+            option_id: "introduce_yourself",
+          ),
+        )
+      end
+
+      it "logs the selected write_your_own option with readable details" do
+        post "/admin/onboarding/events.json",
+             params: {
+               event: "step_completed",
+               step: "start_posting",
+               topic_option: "write_your_own",
+             }
+
+        expect(response.status).to eq(204)
+        log = UserHistory.last
+        expect(log.subject).to eq("start_posting")
+        expect(log.new_value).to eq("write_your_own")
+        expect(log.details).to eq(
+          I18n.t(
+            "staff_action_logs.admin_onboarding_topic_option",
+            option:
+              I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.write_your_own.title"),
+            option_id: "write_your_own",
+          ),
+        )
       end
 
       it "still logs posting completed outside the suggested options" do

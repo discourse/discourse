@@ -123,12 +123,28 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.body).to include(I18n.t("login.omniauth_error.generic_without_provider"))
       end
 
-      Users::OmniauthCallbacksController::ALLOWED_FAILURE_ERRORS.each_key do |error|
-        it "supports specific '#{error}' messages" do
-          get "/auth/failure", params: { message: error }
-          expect(response.status).to eq(200)
-          expect(flash[:error]).to include(I18n.t("login.omniauth_error.#{error}"))
-        end
+      it "supports specific 'csrf_detected' messages" do
+        get "/auth/failure", params: { message: "csrf_detected" }
+        expect(response.status).to eq(200)
+        expect(flash[:error]).to include(I18n.t("login.omniauth_error.csrf_detected"))
+      end
+
+      it "supports specific 'request_error' messages" do
+        get "/auth/failure", params: { message: "request_error" }
+        expect(response.status).to eq(200)
+        expect(flash[:error]).to include(I18n.t("login.omniauth_error.request_error"))
+      end
+
+      it "supports specific 'invalid_iat' messages" do
+        get "/auth/failure", params: { message: "invalid_iat" }
+        expect(response.status).to eq(200)
+        expect(flash[:error]).to include(I18n.t("login.omniauth_error.invalid_iat"))
+      end
+
+      it "supports specific 'unauthorized' messages" do
+        get "/auth/failure", params: { message: "unauthorized" }
+        expect(response.status).to eq(200)
+        expect(flash[:error]).to include(I18n.t("login.omniauth_error.unauthorized"))
       end
 
       it "falls back to generic error when the specific error doesn't exist" do

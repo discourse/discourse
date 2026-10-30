@@ -9,31 +9,100 @@
 RSpec.describe "discourse_voice_assets integrity" do
   # Keep in sync with the loaders: subtitles.js, ns-engines.js,
   # background-blur.js, livekit-session.js.
-  CLIENT_REFERENCED_ASSETS = %w[
-    dfn3/dfn3-worklet.js
-    dfn3/dfn3.wasm
-    dfn3/dfn3-model.bin
-    dtln/dtln-worklet.js
-    dtln/dtln.wasm
-    rnnoise/rnnoise-worklet.js
-    rnnoise/rnnoise.wasm
-    stt/subtitles-worker.js
-    stt/vad.js
-    stt/ort/ort-wasm-simd-threaded.asyncify.js
-    stt/ort/ort-wasm-simd-threaded.asyncify.wasm
-    stt/vad/
-    livekit/livekit-client.js
-    mediapipe/vision_bundle.js
-    mediapipe/selfie_segmenter.tflite
-    mediapipe/wasm/
-  ]
+  it "finds dfn3/dfn3-worklet.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("dfn3/dfn3-worklet.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: dfn3/dfn3-worklet.js"
+  end
 
-  CLIENT_REFERENCED_ASSETS.each do |file|
-    it "finds #{file} in the gem's vendor tree" do
-      path = DiscourseVoiceAssets.vendor_path(file)
-      exists = file.end_with?("/") ? File.directory?(path) : File.exist?(path)
-      expect(exists).to be(true), "gem asset missing: #{file}"
-    end
+  it "finds dfn3/dfn3.wasm in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("dfn3/dfn3.wasm")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: dfn3/dfn3.wasm"
+  end
+
+  it "finds dfn3/dfn3-model.bin in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("dfn3/dfn3-model.bin")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: dfn3/dfn3-model.bin"
+  end
+
+  it "finds dtln/dtln-worklet.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("dtln/dtln-worklet.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: dtln/dtln-worklet.js"
+  end
+
+  it "finds dtln/dtln.wasm in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("dtln/dtln.wasm")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: dtln/dtln.wasm"
+  end
+
+  it "finds rnnoise/rnnoise-worklet.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("rnnoise/rnnoise-worklet.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: rnnoise/rnnoise-worklet.js"
+  end
+
+  it "finds rnnoise/rnnoise.wasm in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("rnnoise/rnnoise.wasm")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: rnnoise/rnnoise.wasm"
+  end
+
+  it "finds stt/subtitles-worker.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("stt/subtitles-worker.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: stt/subtitles-worker.js"
+  end
+
+  it "finds stt/vad.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("stt/vad.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: stt/vad.js"
+  end
+
+  it "finds stt/ort/ort-wasm-simd-threaded.asyncify.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("stt/ort/ort-wasm-simd-threaded.asyncify.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: stt/ort/ort-wasm-simd-threaded.asyncify.js"
+  end
+
+  it "finds stt/ort/ort-wasm-simd-threaded.asyncify.wasm in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("stt/ort/ort-wasm-simd-threaded.asyncify.wasm")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: stt/ort/ort-wasm-simd-threaded.asyncify.wasm"
+  end
+
+  it "finds stt/vad/ in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("stt/vad/")
+    exists = File.directory?(path)
+    expect(exists).to be(true), "gem asset missing: stt/vad/"
+  end
+
+  it "finds livekit/livekit-client.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("livekit/livekit-client.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: livekit/livekit-client.js"
+  end
+
+  it "finds mediapipe/vision_bundle.js in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("mediapipe/vision_bundle.js")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: mediapipe/vision_bundle.js"
+  end
+
+  it "finds mediapipe/selfie_segmenter.tflite in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("mediapipe/selfie_segmenter.tflite")
+    exists = File.exist?(path)
+    expect(exists).to be(true), "gem asset missing: mediapipe/selfie_segmenter.tflite"
+  end
+
+  it "finds mediapipe/wasm/ in the gem's vendor tree" do
+    path = DiscourseVoiceAssets.vendor_path("mediapipe/wasm/")
+    exists = File.directory?(path)
+    expect(exists).to be(true), "gem asset missing: mediapipe/wasm/"
   end
 
   it "mounts the gem's vendor tree at the version-stamped public path" do

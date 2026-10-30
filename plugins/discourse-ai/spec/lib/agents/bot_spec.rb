@@ -194,6 +194,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       (DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1).times do
         expect(state.reserve_completion).to eq(true)
       end
+
       context =
         DiscourseAi::Agents::BotContext.new(
           user: user,
@@ -355,7 +356,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       let(:agent_class) { agent_record.class_instance }
 
-      %i[text tools final].each do |mode|
+      shared_examples "admitted output within a tight context window" do |mode|
         it "prepares tight-window #{mode} calls with their admitted output instead of the model ceiling" do
           gpt_4.update!(max_prompt_tokens: 16_000, max_output_tokens: 12_000)
           agent_record.update!(
@@ -401,6 +402,10 @@ RSpec.describe DiscourseAi::Agents::Bot do
           end
         end
       end
+
+      it_behaves_like "admitted output within a tight context window", :text
+      it_behaves_like "admitted output within a tight context window", :tools
+      it_behaves_like "admitted output within a tight context window", :final
 
       it "starts fresh work for a second root reply while retaining the actual usage tracker" do
         agent_record.update!(max_turn_tokens: 4000, tools: [])

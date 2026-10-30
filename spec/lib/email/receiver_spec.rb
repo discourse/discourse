@@ -879,17 +879,25 @@ RSpec.describe Email::Receiver do
         expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
       end
 
-      {
-        "X-Spam-Flag" => :spam_x_spam_flag,
-        "X-Spam-Status" => :spam_x_spam_status,
-        "X-SES-Spam-Verdict" => :spam_x_ses_spam_verdict,
-      }.each do |header, fixture|
-        it "enqueues the post and silences the user for #{header}" do
-          SiteSetting.email_in_spam_header = header
+      it "enqueues the post and silences the user for X-Spam-Flag" do
+        SiteSetting.email_in_spam_header = "X-Spam-Flag"
 
-          expect { process(fixture) }.to change { ReviewableQueuedPost.count }.by(1)
-          expect(user.reload.silenced?).to be(true)
-        end
+        expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
+        expect(user.reload.silenced?).to be(true)
+      end
+
+      it "enqueues the post and silences the user for X-Spam-Status" do
+        SiteSetting.email_in_spam_header = "X-Spam-Status"
+
+        expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
+        expect(user.reload.silenced?).to be(true)
+      end
+
+      it "enqueues the post and silences the user for X-SES-Spam-Verdict" do
+        SiteSetting.email_in_spam_header = "X-SES-Spam-Verdict"
+
+        expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
+        expect(user.reload.silenced?).to be(true)
       end
 
       it "enqueues the post for a failed Authentication-Results header" do

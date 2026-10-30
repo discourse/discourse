@@ -3264,17 +3264,15 @@ RSpec.describe PostsController do
       context "with users" do
         fab!(:topic)
 
-        [:user].each do |user|
-          it "returns an error for #{user}" do
-            sign_in(Fabricate(user))
-            post "/posts.json",
-                 params: {
-                   raw: "this is the test content",
-                   topic_id: topic.id,
-                   no_bump: true,
-                 }
-            expect(response.status).to eq(400)
-          end
+        it "returns an error for user" do
+          sign_in(Fabricate(:user))
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 topic_id: topic.id,
+                 no_bump: true,
+               }
+          expect(response.status).to eq(400)
         end
       end
     end

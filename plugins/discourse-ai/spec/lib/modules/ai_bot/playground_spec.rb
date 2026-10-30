@@ -481,7 +481,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(thinking["message"]).to eq("Web search: OpenAI news")
     end
 
-    [nil, "setCustomRaw", "streamCustomRaw"].each do |custom_output|
+    shared_examples "reporting tool script errors to the model" do |custom_output|
       it "returns script errors to the model #{custom_output ? "after #{custom_output}" : "without custom output"}" do
         custom_tool.update!(script: <<~JS)
           function invoke() {
@@ -510,6 +510,10 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         )
       end
     end
+
+    it_behaves_like "reporting tool script errors to the model", nil
+    it_behaves_like "reporting tool script errors to the model", "setCustomRaw"
+    it_behaves_like "reporting tool script errors to the model", "streamCustomRaw"
 
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)

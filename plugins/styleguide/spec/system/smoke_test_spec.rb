@@ -230,22 +230,125 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(styleguide).to have_no_color_selector
   end
 
-  # uses the sections hash to generate a test for each page and check if it renders correctly
+  # uses the sections hash to check the expected heading on each page
   context "when testing the available pages" do
     before do
       SiteSetting.styleguide_enabled = true
       sign_in(admin)
     end
 
-    sections.each do |section, items|
-      items.each do |item|
-        it "renders the #{section}: #{item[:title]} page correctly" do
-          visit "/styleguide/#{item[:href]}"
+    shared_examples "a rendered styleguide page" do |href|
+      it "renders the #{href} page correctly" do
+        item = sections.fetch(href.split("/")[1]).find { |candidate| candidate[:href] == href }
+        visit "/styleguide/#{item[:href]}"
 
-          expect(styleguide).to have_heading(item[:title])
-        end
+        expect(styleguide).to have_heading(item[:title])
       end
     end
+
+    it_behaves_like "a rendered styleguide page", "/syntax/bem"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/typography"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/font-scale"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/buttons"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/colors"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/icons"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/forms"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/spinners"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/otp"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/date-time-inputs"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/dropdowns"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/topic-link"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/segmented-control"
+
+    it_behaves_like "a rendered styleguide page", "/atoms/shortcut"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/bread-crumbs"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/categories"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/char-counter"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/combo-button"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/context-menu"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/empty-state"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/menus"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/navigation-bar"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/navigation-stacked"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/post-menu"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/reorderable-list"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/roving-focus"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/signup-cta"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/multi-select"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/toasts"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/dialog"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/drag-and-drop"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/tooltips"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/topic-list-item"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/topic-notifications"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/topic-timer-info"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/virtual-list"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/tabs"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/overflow-controls"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/post"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/post-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/post-oneboxes"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/topic-map"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/topic-footer-buttons"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/topic-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/basic-topic-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/categories-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/chat"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/docked-composer"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/modal"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/navigation"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/site-header"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/more-topics"
   end
 
   context "when the styleguide is enabled for everyone" do

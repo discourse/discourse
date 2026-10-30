@@ -4033,14 +4033,68 @@ RSpec.describe TopicsController do
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected, request_json:|
-        expected.each do |key, value|
-          it "returns #{value} for #{key}" do
-            slug = key == :nonexistent ? "garbage-slug" : send(key.to_s).slug
-            topic_id = key == :nonexistent ? nonexistent_topic_id : send(key.to_s).id
-            format = request_json ? ".json" : ""
-            get "/t/#{slug}/#{topic_id}#{format}"
-            expect(response.status).to eq(value)
-          end
+        it "returns #{expected.fetch(:normal_topic)} for normal_topic" do
+          slug = normal_topic.slug
+          topic_id = normal_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:normal_topic))
+        end
+
+        it "returns #{expected.fetch(:secure_topic)} for secure_topic" do
+          slug = secure_topic.slug
+          topic_id = secure_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:secure_topic))
+        end
+
+        it "returns #{expected.fetch(:private_topic)} for private_topic" do
+          slug = private_topic.slug
+          topic_id = private_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:private_topic))
+        end
+
+        it "returns #{expected.fetch(:deleted_topic)} for deleted_topic" do
+          slug = deleted_topic.slug
+          topic_id = deleted_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:deleted_topic))
+        end
+
+        it "returns #{expected.fetch(:deleted_secure_topic)} for deleted_secure_topic" do
+          slug = deleted_secure_topic.slug
+          topic_id = deleted_secure_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:deleted_secure_topic))
+        end
+
+        it "returns #{expected.fetch(:deleted_private_topic)} for deleted_private_topic" do
+          slug = deleted_private_topic.slug
+          topic_id = deleted_private_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:deleted_private_topic))
+        end
+
+        it "returns #{expected.fetch(:nonexistent)} for nonexistent" do
+          slug = "garbage-slug"
+          topic_id = nonexistent_topic_id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:nonexistent))
+        end
+
+        it "returns #{expected.fetch(:secure_accessible_topic)} for secure_accessible_topic" do
+          slug = secure_accessible_topic.slug
+          topic_id = secure_accessible_topic.id
+          format = request_json ? ".json" : ""
+          get "/t/#{slug}/#{topic_id}#{format}"
+          expect(response.status).to eq(expected.fetch(:secure_accessible_topic))
         end
 
         expected_slug_response = expected[:secure_topic] == 200 ? 301 : expected[:secure_topic]
@@ -8171,12 +8225,10 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
       end
 
-      [:user].each do |user|
-        it "denies access for #{user}" do
-          sign_in(Fabricate(user))
-          put "/t/#{topic.id}/reset-bump-date.json"
-          expect(response.status).to eq(403)
-        end
+      it "denies access for user" do
+        sign_in(Fabricate(:user))
+        put "/t/#{topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(403)
       end
 
       it "returns an error for a missing topic" do
@@ -8194,17 +8246,37 @@ RSpec.describe TopicsController do
       end
     end
 
-    %i[admin moderator trust_level_4].each do |user|
-      it "resets bumped_at as #{user}" do
-        sign_in(public_send(user))
-        topic.update!(bumped_at: 1.hour.ago)
-        timestamp = 1.day.ago
-        Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
+    it "resets bumped_at as admin" do
+      sign_in(public_send(:admin))
+      topic.update!(bumped_at: 1.hour.ago)
+      timestamp = 1.day.ago
+      Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
 
-        put "/t/#{topic.id}/reset-bump-date.json"
-        expect(response.status).to eq(200)
-        expect(topic.reload.bumped_at).to eq_time(timestamp)
-      end
+      put "/t/#{topic.id}/reset-bump-date.json"
+      expect(response.status).to eq(200)
+      expect(topic.reload.bumped_at).to eq_time(timestamp)
+    end
+
+    it "resets bumped_at as moderator" do
+      sign_in(public_send(:moderator))
+      topic.update!(bumped_at: 1.hour.ago)
+      timestamp = 1.day.ago
+      Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
+
+      put "/t/#{topic.id}/reset-bump-date.json"
+      expect(response.status).to eq(200)
+      expect(topic.reload.bumped_at).to eq_time(timestamp)
+    end
+
+    it "resets bumped_at as trust_level_4" do
+      sign_in(public_send(:trust_level_4))
+      topic.update!(bumped_at: 1.hour.ago)
+      timestamp = 1.day.ago
+      Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
+
+      put "/t/#{topic.id}/reset-bump-date.json"
+      expect(response.status).to eq(200)
+      expect(topic.reload.bumped_at).to eq_time(timestamp)
     end
 
     context "with a post_id parameter" do

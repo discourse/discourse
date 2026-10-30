@@ -779,13 +779,38 @@ RSpec.describe PostAction do
   end
 
   # flags are already being tested
-  all_types_except_flags =
-    PostActionType.types.except(*PostActionType.flag_types_without_additional_message.keys)
-  all_types_except_flags.values.each do |action|
-    it "prevents user to act twice at the same time" do
-      expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
-      expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
-    end
+  it "prevents concurrent duplicate like actions" do
+    expect(
+      PostActionCreator.new(eviltrout, post, PostActionType.types[:like]).perform,
+    ).to be_success
+    expect(PostActionCreator.new(eviltrout, post, PostActionType.types[:like]).perform).to be_failed
+  end
+
+  it "prevents concurrent duplicate notify_user actions" do
+    expect(
+      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_user]).perform,
+    ).to be_success
+    expect(
+      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_user]).perform,
+    ).to be_failed
+  end
+
+  it "prevents concurrent duplicate illegal actions" do
+    expect(
+      PostActionCreator.new(eviltrout, post, PostActionType.types[:illegal]).perform,
+    ).to be_success
+    expect(
+      PostActionCreator.new(eviltrout, post, PostActionType.types[:illegal]).perform,
+    ).to be_failed
+  end
+
+  it "prevents concurrent duplicate notify_moderators actions" do
+    expect(
+      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_moderators]).perform,
+    ).to be_success
+    expect(
+      PostActionCreator.new(eviltrout, post, PostActionType.types[:notify_moderators]).perform,
+    ).to be_failed
   end
 
   describe "messages" do
@@ -815,18 +840,40 @@ RSpec.describe PostAction do
       flag_without_message.destroy!
     end
 
-    %i[notify_moderators notify_user spam].each do |post_action_type|
-      it "creates a message for #{post_action_type}" do
-        result =
-          PostActionCreator.new(
-            Discourse.system_user,
-            post,
-            PostActionType.types[post_action_type],
-            message: "WAT",
-          ).perform
-        expect(result).to be_success
-        expect(result.post_action.related_post_id).to be_present
-      end
+    it "creates a message for notify_moderators" do
+      result =
+        PostActionCreator.new(
+          Discourse.system_user,
+          post,
+          PostActionType.types[:notify_moderators],
+          message: "WAT",
+        ).perform
+      expect(result).to be_success
+      expect(result.post_action.related_post_id).to be_present
+    end
+
+    it "creates a message for notify_user" do
+      result =
+        PostActionCreator.new(
+          Discourse.system_user,
+          post,
+          PostActionType.types[:notify_user],
+          message: "WAT",
+        ).perform
+      expect(result).to be_success
+      expect(result.post_action.related_post_id).to be_present
+    end
+
+    it "creates a message for spam" do
+      result =
+        PostActionCreator.new(
+          Discourse.system_user,
+          post,
+          PostActionType.types[:spam],
+          message: "WAT",
+        ).perform
+      expect(result).to be_success
+      expect(result.post_action.related_post_id).to be_present
     end
 
     it "creates a message for custom flags when message is required" do
@@ -906,21 +953,49 @@ RSpec.describe PostAction do
       expect(user_notifications.last.topic).to eq(topic)
     end
 
-    %i[agree_and_keep disagree ignore_and_do_nothing].each do |disposition|
-      it "bumps the topic when performing #{disposition}" do
-        SiteSetting.auto_respond_to_flag_actions = true
-        user = Fabricate(:user, refresh_auto_groups: true)
-        result = PostActionCreator.create(user, post, :spam, message: "WAT")
-        topic = result.post_action.related_post.topic
+    it "bumps the topic when performing agree_and_keep" do
+      SiteSetting.auto_respond_to_flag_actions = true
+      user = Fabricate(:user, refresh_auto_groups: true)
+      result = PostActionCreator.create(user, post, :spam, message: "WAT")
+      topic = result.post_action.related_post.topic
 
-        original_bumped_at = topic.reload.bumped_at
+      original_bumped_at = topic.reload.bumped_at
 
-        freeze_time 1.hour.from_now
+      freeze_time 1.hour.from_now
 
-        result.reviewable.perform(admin, disposition)
+      result.reviewable.perform(admin, :agree_and_keep)
 
-        expect(topic.reload.bumped_at).to be > original_bumped_at
-      end
+      expect(topic.reload.bumped_at).to be > original_bumped_at
+    end
+
+    it "bumps the topic when performing disagree" do
+      SiteSetting.auto_respond_to_flag_actions = true
+      user = Fabricate(:user, refresh_auto_groups: true)
+      result = PostActionCreator.create(user, post, :spam, message: "WAT")
+      topic = result.post_action.related_post.topic
+
+      original_bumped_at = topic.reload.bumped_at
+
+      freeze_time 1.hour.from_now
+
+      result.reviewable.perform(admin, :disagree)
+
+      expect(topic.reload.bumped_at).to be > original_bumped_at
+    end
+
+    it "bumps the topic when performing ignore_and_do_nothing" do
+      SiteSetting.auto_respond_to_flag_actions = true
+      user = Fabricate(:user, refresh_auto_groups: true)
+      result = PostActionCreator.create(user, post, :spam, message: "WAT")
+      topic = result.post_action.related_post.topic
+
+      original_bumped_at = topic.reload.bumped_at
+
+      freeze_time 1.hour.from_now
+
+      result.reviewable.perform(admin, :ignore_and_do_nothing)
+
+      expect(topic.reload.bumped_at).to be > original_bumped_at
     end
 
     it "does not add a moderator post to the notify_user PM topic when an unrelated flag is agreed" do

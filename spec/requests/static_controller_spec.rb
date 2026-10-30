@@ -196,10 +196,7 @@ RSpec.describe StaticController do
       end
     end
 
-    [
-      ["tos", :tos_url, I18n.t("js.tos")],
-      ["privacy", :privacy_policy_url, I18n.t("js.privacy")],
-    ].each do |id, setting_name, text|
+    shared_examples "a configured static information page" do |id:, setting_name:, text:|
       context "with #{id}" do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
@@ -221,6 +218,15 @@ RSpec.describe StaticController do
         end
       end
     end
+
+    it_behaves_like "a configured static information page",
+                    id: "tos",
+                    setting_name: :tos_url,
+                    text: I18n.t("js.tos")
+    it_behaves_like "a configured static information page",
+                    id: "privacy",
+                    setting_name: :privacy_policy_url,
+                    text: I18n.t("js.privacy")
 
     it "renders the localized guidelines post" do
       SiteSetting.content_localization_enabled = true
@@ -310,11 +316,24 @@ RSpec.describe StaticController do
     context "when login_required is enabled" do
       before { SiteSetting.login_required = true }
 
-      %w[faq guidelines rules conduct].each do |page_name|
-        it "#{page_name} page redirects to login page for anon" do
-          get "/#{page_name}"
-          expect(response).to redirect_to "/login"
-        end
+      it "faq page redirects to login page for anon" do
+        get "/faq"
+        expect(response).to redirect_to "/login"
+      end
+
+      it "guidelines page redirects to login page for anon" do
+        get "/guidelines"
+        expect(response).to redirect_to "/login"
+      end
+
+      it "rules page redirects to login page for anon" do
+        get "/rules"
+        expect(response).to redirect_to "/login"
+      end
+
+      it "conduct page redirects to login page for anon" do
+        get "/conduct"
+        expect(response).to redirect_to "/login"
       end
 
       it "guidelines page loads for logged in user" do
@@ -326,14 +345,28 @@ RSpec.describe StaticController do
         expect(response.body).to include(I18n.t("js.guidelines"))
       end
 
-      %w[faq rules conduct].each do |page_name|
-        it "#{page_name} page redirects to guidelines for logged in user" do
-          sign_in(Fabricate(:user))
+      it "faq page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
 
-          get "/#{page_name}"
+        get "/faq"
 
-          expect(response).to redirect_to("/guidelines")
-        end
+        expect(response).to redirect_to("/guidelines")
+      end
+
+      it "rules page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/rules"
+
+        expect(response).to redirect_to("/guidelines")
+      end
+
+      it "conduct page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/conduct"
+
+        expect(response).to redirect_to("/guidelines")
       end
     end
 

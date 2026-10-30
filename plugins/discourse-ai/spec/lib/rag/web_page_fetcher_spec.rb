@@ -134,22 +134,36 @@ RSpec.describe DiscourseAi::Rag::WebPageFetcher do
     ).to have_been_made.once
   end
 
-  %w[text/plain text/markdown].each do |content_type|
-    it "decodes binary #{content_type} responses as UTF-8 and replaces invalid bytes" do
-      url = "https://example.com/docs"
-      stub_request(:get, url).to_return(
-        status: 200,
-        headers: {
-          "Content-Type" => "#{content_type}; charset=utf-8",
-        },
-        body: "Knowledge — café\nTruncated: \xE2".b,
-      )
+  it "decodes binary text/plain responses as UTF-8 and replaces invalid bytes" do
+    url = "https://example.com/docs"
+    stub_request(:get, url).to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "text/plain; charset=utf-8",
+      },
+      body: "Knowledge — café\nTruncated: \xE2".b,
+    )
 
-      result = described_class.fetch(url: url)
+    result = described_class.fetch(url: url)
 
-      expect(result[:text].encoding).to eq(Encoding::UTF_8)
-      expect(result[:text]).to eq("Knowledge — café\nTruncated: �")
-    end
+    expect(result[:text].encoding).to eq(Encoding::UTF_8)
+    expect(result[:text]).to eq("Knowledge — café\nTruncated: �")
+  end
+
+  it "decodes binary text/markdown responses as UTF-8 and replaces invalid bytes" do
+    url = "https://example.com/docs"
+    stub_request(:get, url).to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "text/markdown; charset=utf-8",
+      },
+      body: "Knowledge — café\nTruncated: \xE2".b,
+    )
+
+    result = described_class.fetch(url: url)
+
+    expect(result[:text].encoding).to eq(Encoding::UTF_8)
+    expect(result[:text]).to eq("Knowledge — café\nTruncated: �")
   end
 
   it "preserves UTF-8 characters split across binary response chunks" do

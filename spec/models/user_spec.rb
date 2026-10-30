@@ -1190,59 +1190,164 @@ RSpec.describe User do
     context "when Unicode usernames are disabled" do
       before { SiteSetting.unicode_usernames = false }
 
-      %w[
-        first.last
-        first
-        first-last
-        _name
-        first_last
-        mc.hammer_nose
-        UPPERCASE
-        sgif
-      ].each do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows first.last" do
+        assert_good("first.last")
       end
 
-      %w[
-        traildot.
-        has\ space
-        double__underscore
-        with%symbol
-        Exclamation!
-        @twitter
-        my@email.com
-        .tester
-        sa$sy
-        sam.json
-        sam.xml
-        sam.html
-        sam.htm
-        sam.js
-        sam.woff
-        sam.Png
-        sam.gif
-      ].each do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows first" do
+        assert_good("first")
+      end
+
+      it "allows first-last" do
+        assert_good("first-last")
+      end
+
+      it "allows _name" do
+        assert_good("_name")
+      end
+
+      it "allows first_last" do
+        assert_good("first_last")
+      end
+
+      it "allows mc.hammer_nose" do
+        assert_good("mc.hammer_nose")
+      end
+
+      it "allows UPPERCASE" do
+        assert_good("UPPERCASE")
+      end
+
+      it "allows sgif" do
+        assert_good("sgif")
+      end
+
+      it "disallows traildot." do
+        assert_bad("traildot.")
+      end
+
+      it "disallows has space" do
+        assert_bad("has space")
+      end
+
+      it "disallows double__underscore" do
+        assert_bad("double__underscore")
+      end
+
+      it "disallows with%symbol" do
+        assert_bad("with%symbol")
+      end
+
+      it "disallows Exclamation!" do
+        assert_bad("Exclamation!")
+      end
+
+      it "disallows @twitter" do
+        assert_bad("@twitter")
+      end
+
+      it "disallows my@email.com" do
+        assert_bad("my@email.com")
+      end
+
+      it "disallows .tester" do
+        assert_bad(".tester")
+      end
+
+      it "disallows sa$sy" do
+        assert_bad("sa$sy")
+      end
+
+      it "disallows sam.json" do
+        assert_bad("sam.json")
+      end
+
+      it "disallows sam.xml" do
+        assert_bad("sam.xml")
+      end
+
+      it "disallows sam.html" do
+        assert_bad("sam.html")
+      end
+
+      it "disallows sam.htm" do
+        assert_bad("sam.htm")
+      end
+
+      it "disallows sam.js" do
+        assert_bad("sam.js")
+      end
+
+      it "disallows sam.woff" do
+        assert_bad("sam.woff")
+      end
+
+      it "disallows sam.Png" do
+        assert_bad("sam.Png")
+      end
+
+      it "disallows sam.gif" do
+        assert_bad("sam.gif")
       end
     end
 
     context "when Unicode usernames are enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      %w[Джофрэй Джо.фрэй Джофр-эй Д.жофрэй 乔夫雷 乔夫_雷 _乔夫雷].each do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows Джофрэй" do
+        assert_good("Джофрэй")
       end
 
-      %w[.Джофрэй Джофрэй. Джо\ фрэй Джоф__рэй 乔夫雷.js 乔夫雷. 乔夫%雷].each do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows Джо.фрэй" do
+        assert_good("Джо.фрэй")
+      end
+
+      it "allows Джофр-эй" do
+        assert_good("Джофр-эй")
+      end
+
+      it "allows Д.жофрэй" do
+        assert_good("Д.жофрэй")
+      end
+
+      it "allows 乔夫雷" do
+        assert_good("乔夫雷")
+      end
+
+      it "allows 乔夫_雷" do
+        assert_good("乔夫_雷")
+      end
+
+      it "allows _乔夫雷" do
+        assert_good("_乔夫雷")
+      end
+
+      it "disallows .Джофрэй" do
+        assert_bad(".Джофрэй")
+      end
+
+      it "disallows Джофрэй." do
+        assert_bad("Джофрэй.")
+      end
+
+      it "disallows Джо фрэй" do
+        assert_bad("Джо фрэй")
+      end
+
+      it "disallows Джоф__рэй" do
+        assert_bad("Джоф__рэй")
+      end
+
+      it "disallows 乔夫雷.js" do
+        assert_bad("乔夫雷.js")
+      end
+
+      it "disallows 乔夫雷." do
+        assert_bad("乔夫雷.")
+      end
+
+      it "disallows 乔夫%雷" do
+        assert_bad("乔夫%雷")
       end
     end
   end
@@ -3859,17 +3964,25 @@ RSpec.describe User do
   end
 
   describe "#username_equals_to?" do
-    [
-      ["returns true for equal usernames", "john", "john", true],
-      ["returns false for different usernames", "john", "bill", false],
-      ["considers usernames that are different only in case as equal", "john", "JoHN", true],
-    ].each do |testcase_name, current_username, another_username, is_equal|
-      it "#{testcase_name}" do
-        user = Fabricate(:user, username: current_username)
-        result = user.username_equals_to?(another_username)
+    it "returns true for equal usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("john")
 
-        expect(result).to be(is_equal)
-      end
+      expect(result).to be(true)
+    end
+
+    it "returns false for different usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("bill")
+
+      expect(result).to be(false)
+    end
+
+    it "considers usernames that are different only in case as equal" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("JoHN")
+
+      expect(result).to be(true)
     end
 
     it "considers usernames that are equal after unicode normalization as equal" do
@@ -4133,7 +4246,7 @@ RSpec.describe User do
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
-    [false, true].each do |enabled|
+    shared_examples "finding secure categories for logged in users" do |enabled|
       it "includes logged-in pseudogroup categories with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
         category = Fabricate(:category, permissions: { logged_in_users: :readonly })
@@ -4144,6 +4257,9 @@ RSpec.describe User do
         expect(Category.secured(Guardian.new).exists?(id: category.id)).to eq(false)
       end
     end
+
+    it_behaves_like "finding secure categories for logged in users", false
+    it_behaves_like "finding secure categories for logged in users", true
 
     it "allows admin to see all secure categories" do
       expect(admin.secure_category_ids).to include(private_category.id)

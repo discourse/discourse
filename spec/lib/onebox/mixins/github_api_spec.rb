@@ -143,24 +143,70 @@ RSpec.describe Onebox::Mixins::GithubApi do
       )
     end
 
-    [
-      ["pull request", Onebox::Engine::GithubPullRequestOnebox, "https://github.com/d/d/pull/1"],
-      ["commit", Onebox::Engine::GithubCommitOnebox, "https://github.com/d/d/commit/#{"a" * 40}"],
-      ["issue", Onebox::Engine::GithubIssueOnebox, "https://github.com/d/d/issues/1"],
-      ["repo", Onebox::Engine::GithubRepoOnebox, "https://github.com/d/d"],
-      ["actions", Onebox::Engine::GithubActionsOnebox, "https://github.com/d/d/actions/runs/1"],
-      ["gist", Onebox::Engine::GithubGistOnebox, "https://gist.github.com/d/abc123def456"],
-    ].each do |name, klass, link|
-      it "records a backoff when the #{name} engine is rate-limited" do
-        begin
-          klass.new(link).to_html
-        rescue StandardError
-          nil
-        end
-        expect(
-          Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
-        ).to be_present
+    it "records a backoff when the pull request engine is rate-limited" do
+      begin
+        Onebox::Engine::GithubPullRequestOnebox.new("https://github.com/d/d/pull/1").to_html
+      rescue StandardError
+        nil
       end
+      expect(
+        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
+      ).to be_present
+    end
+
+    it "records a backoff when the commit engine is rate-limited" do
+      begin
+        Onebox::Engine::GithubCommitOnebox.new("https://github.com/d/d/commit/#{"a" * 40}").to_html
+      rescue StandardError
+        nil
+      end
+      expect(
+        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
+      ).to be_present
+    end
+
+    it "records a backoff when the issue engine is rate-limited" do
+      begin
+        Onebox::Engine::GithubIssueOnebox.new("https://github.com/d/d/issues/1").to_html
+      rescue StandardError
+        nil
+      end
+      expect(
+        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
+      ).to be_present
+    end
+
+    it "records a backoff when the repo engine is rate-limited" do
+      begin
+        Onebox::Engine::GithubRepoOnebox.new("https://github.com/d/d").to_html
+      rescue StandardError
+        nil
+      end
+      expect(
+        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
+      ).to be_present
+    end
+
+    it "records a backoff when the actions engine is rate-limited" do
+      begin
+        Onebox::Engine::GithubActionsOnebox.new("https://github.com/d/d/actions/runs/1").to_html
+      rescue StandardError
+        nil
+      end
+      expect(
+        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
+      ).to be_present
+    end
+
+    it "records a backoff when the gist engine is rate-limited" do
+      begin
+        Onebox::Engine::GithubGistOnebox.new("https://gist.github.com/d/abc123def456").to_html
+      rescue StandardError
+        nil
+      end
+      expect(
+        Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
+      ).to be_present
     end
   end
 

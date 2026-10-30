@@ -132,16 +132,18 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # the destination's metadata and the rest is dropped. The size group must not
     # reach past the line end, or a parenthesized line of the author's own text
     # disappears from the post.
-    {
-      "the next line" => "\n(this may take a while)",
-      "a line after a blank one" => "\n\n(a caption)",
-    }.each do |label, tail|
-      it "leaves #{label} alone after an attachment" do
-        result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)#{tail}")
+    it "leaves the next line alone after an attachment" do
+      result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)\n(this may take a while)")
 
-        expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
-        expect(result).to eq("#{buffer.uploads.first[:placeholder]}#{tail}")
-      end
+      expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+      expect(result).to eq("#{buffer.uploads.first[:placeholder]}\n(this may take a while)")
+    end
+
+    it "leaves a line after a blank one alone after an attachment" do
+      result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)\n\n(a caption)")
+
+      expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+      expect(result).to eq("#{buffer.uploads.first[:placeholder]}\n\n(a caption)")
     end
 
     it "records the verbatim source as original_markdown for an upload:// reference" do
@@ -310,7 +312,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     # linkify-it reads the scheme case-insensitively, so core links these too.
-    %w[HTTPS Https HTTP].each do |scheme|
+    shared_examples "an upload URL scheme" do |scheme|
       it "recognizes an upload URL with a #{scheme} scheme" do
         url = "#{scheme}://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
         extract("![x](#{url})")
@@ -325,6 +327,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         expect(buffer.uploads.first[:upload_id]).to eq(sha1)
       end
     end
+
+    it_behaves_like "an upload URL scheme", "HTTPS"
+    it_behaves_like "an upload URL scheme", "Https"
+    it_behaves_like "an upload URL scheme", "HTTP"
 
     it "keeps a bare URL's trailing sentence punctuation out of the match" do
       url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"

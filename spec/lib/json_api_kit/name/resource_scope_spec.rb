@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Name::ResourceScope do
-  [
-    JsonApiKit::Name::Field,
-    JsonApiKit::Name::Sort,
-    JsonApiKit::Name::Filter,
-    JsonApiKit::Name::Anchor,
-    JsonApiKit::Name::Relationship,
-  ].each do |kind|
+  shared_examples "converting resource scope identifiers" do |kind|
     describe kind do
       let(:name) { kind.new(value: "posted_at", type: "discussion_threads") }
 
@@ -28,4 +22,10 @@ RSpec.describe JsonApiKit::Name::ResourceScope do
       end
     end
   end
+
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Field
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Sort
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Filter
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Anchor
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Relationship
 end

@@ -321,12 +321,24 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
-    (Discourse.anonymous_filters - [:categories]).each do |filter|
-      context "with #{filter}" do
-        it "returns the requested list" do
-          get "/#{filter}"
-          expect(response.status).to eq(200)
-        end
+    context "with latest" do
+      it "returns the requested list" do
+        get "/latest"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "with top" do
+      it "returns the requested list" do
+        get "/top"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "with hot" do
+      it "returns the requested list" do
+        get "/hot"
+        expect(response.status).to eq(200)
       end
     end
 
@@ -1070,12 +1082,40 @@ RSpec.describe ListController do
       expect(response.status).to eq(400)
     end
 
-    TopTopic.periods.each do |period|
-      it "renders #{period} top RSS" do
-        get "/top.rss?period=#{period}"
-        expect(response.status).to eq(200)
-        expect(response.media_type).to eq("application/rss+xml")
-      end
+    it "renders all top RSS" do
+      get "/top.rss?period=all"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders yearly top RSS" do
+      get "/top.rss?period=yearly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders quarterly top RSS" do
+      get "/top.rss?period=quarterly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders monthly top RSS" do
+      get "/top.rss?period=monthly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders weekly top RSS" do
+      get "/top.rss?period=weekly"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "renders daily top RSS" do
+      get "/top.rss?period=daily"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
     end
 
     describe "RSS feeds ignore current user" do
@@ -1836,11 +1876,7 @@ RSpec.describe ListController do
     context "with encoded non-ASCII slugs" do
       before { SiteSetting.slug_generation_method = "encoded" }
 
-      {
-        "zh_CN" => %w[产品 问题],
-        "zh_TW" => %w[產品 問題],
-        "ja" => %w[製品 質問],
-      }.each do |locale, (old_name, new_name)|
+      shared_examples "an encoded category slug" do |locale:, old_name:, new_name:|
         context "with a #{locale} category" do
           let(:category) { Fabricate(:category, name: old_name) }
           let!(:old_slug) { category.slug }
@@ -1879,6 +1915,10 @@ RSpec.describe ListController do
           end
         end
       end
+
+      it_behaves_like "an encoded category slug", locale: "zh_CN", old_name: "产品", new_name: "问题"
+      it_behaves_like "an encoded category slug", locale: "zh_TW", old_name: "產品", new_name: "問題"
+      it_behaves_like "an encoded category slug", locale: "ja", old_name: "製品", new_name: "質問"
 
       it "redirects an outdated parent slug for a subcategory" do
         parent = Fabricate(:category, name: "製品")

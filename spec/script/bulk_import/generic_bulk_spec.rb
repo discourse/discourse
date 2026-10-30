@@ -516,24 +516,40 @@ if generic_import_dependencies_available
         expect(UserCustomField.where(name: "user_notes_count")).to be_empty
       end
 
-      [false, true].each do |merge_import|
-        it "preserves existing notes and counts in #{merge_import ? "merge" : "ordinary"} imports" do
-          allow(importer).to receive(:delta_import?).and_return(false)
-          existing = [stored_note("Existing")]
-          PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
-          UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
-          add_source_note(1, "New")
+      it "preserves existing notes and counts in ordinary imports" do
+        allow(importer).to receive(:delta_import?).and_return(false)
+        existing = [stored_note("Existing")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+        add_source_note(1, "New")
 
-          stub_const(described_class, :MERGE_IMPORT, merge_import) do
-            importer.import_user_notes
-            importer.import_user_note_counts
-          end
-
-          expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
-          expect(
-            UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
-          ).to eq("1")
+        stub_const(described_class, :MERGE_IMPORT, false) do
+          importer.import_user_notes
+          importer.import_user_note_counts
         end
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("1")
+      end
+
+      it "preserves existing notes and counts in merge imports" do
+        allow(importer).to receive(:delta_import?).and_return(false)
+        existing = [stored_note("Existing")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+        add_source_note(1, "New")
+
+        stub_const(described_class, :MERGE_IMPORT, true) do
+          importer.import_user_notes
+          importer.import_user_note_counts
+        end
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("1")
       end
     end
 

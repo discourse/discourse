@@ -13,7 +13,7 @@ RSpec.describe Jobs::ReindexSearch do
   # This works since test db has a small record less than limit.
   # Didn't check `topic` because topic doesn't have posts in fabrication
   # thus no search data
-  %w[post category user].each do |m|
+  shared_examples "rebuilding search data after a locale change" do |m|
     it "rebuilds `#{m}` when default_locale changes" do
       SiteSetting.default_locale = "en"
       model = Fabricate(m.to_sym)
@@ -35,6 +35,10 @@ RSpec.describe Jobs::ReindexSearch do
       )
     end
   end
+
+  it_behaves_like "rebuilding search data after a locale change", "post"
+  it_behaves_like "rebuilding search data after a locale change", "category"
+  it_behaves_like "rebuilding search data after a locale change", "user"
 
   describe "rebuild_posts" do
     class FakeIndexer

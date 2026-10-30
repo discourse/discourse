@@ -8,27 +8,42 @@ describe DiscourseAi::AiBot::EntryPoint do
         SiteSetting.ai_bot_enabled = false
       end
 
-      %i[discourse_ai_enabled ai_bot_enabled].each do |first_setting|
-        it "provisions users only after enabling both settings, starting with #{first_setting}" do
-          agent = Fabricate(:ai_agent)
-          second_setting =
-            first_setting == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
+      it "provisions users only after enabling both settings, starting with discourse_ai_enabled" do
+        agent = Fabricate(:ai_agent)
 
-          expect { SiteSetting.public_send("#{first_setting}=", true) }.not_to change(User, :count)
-          expect(agent.reload.user_id).to be_nil
+        expect { SiteSetting.discourse_ai_enabled = true }.not_to change(User, :count)
+        expect(agent.reload.user_id).to be_nil
 
-          SiteSetting.public_send("#{second_setting}=", true)
+        SiteSetting.ai_bot_enabled = true
 
-          user = agent.reload.user
-          expect(user).to be_present
-          expect(user).to be_bot
+        user = agent.reload.user
+        expect(user).to be_present
+        expect(user).to be_bot
 
-          expect do
-            SiteSetting.public_send("#{first_setting}=", false)
-            SiteSetting.public_send("#{first_setting}=", true)
-          end.not_to change(User, :count)
-          expect(agent.reload.user).to eq(user)
-        end
+        expect do
+          SiteSetting.discourse_ai_enabled = false
+          SiteSetting.discourse_ai_enabled = true
+        end.not_to change(User, :count)
+        expect(agent.reload.user).to eq(user)
+      end
+
+      it "provisions users only after enabling both settings, starting with ai_bot_enabled" do
+        agent = Fabricate(:ai_agent)
+
+        expect { SiteSetting.ai_bot_enabled = true }.not_to change(User, :count)
+        expect(agent.reload.user_id).to be_nil
+
+        SiteSetting.discourse_ai_enabled = true
+
+        user = agent.reload.user
+        expect(user).to be_present
+        expect(user).to be_bot
+
+        expect do
+          SiteSetting.ai_bot_enabled = false
+          SiteSetting.ai_bot_enabled = true
+        end.not_to change(User, :count)
+        expect(agent.reload.user).to eq(user)
       end
 
       it "leaves users unprovisioned on unrelated changes and disablement" do

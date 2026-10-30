@@ -180,24 +180,60 @@ describe "Uploading files in the composer" do
   context "when multiple images are uploaded" do
     before { SiteSetting.enable_auto_grid_images = true }
 
-    %w[en fr de].each do |locale|
-      before { SiteSetting.default_locale = locale }
+    context "when the locale is en" do
+      before { SiteSetting.default_locale = "en" }
 
-      context "when the locale is #{locale}" do
-        it "automatically wraps images in [grid] tags on 3 or more images" do
-          visit "/new-topic"
-          expect(composer).to be_opened
+      it "automatically wraps images in [grid] tags on 3 or more images" do
+        visit "/new-topic"
+        expect(composer).to be_opened
 
-          file_path_1 = file_from_fixtures("logo.png", "images").path
-          file_path_2 = file_from_fixtures("logo.jpg", "images").path
-          file_path_3 = file_from_fixtures("downsized.png", "images").path
-          attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+        file_path_1 = file_from_fixtures("logo.png", "images").path
+        file_path_2 = file_from_fixtures("logo.jpg", "images").path
+        file_path_3 = file_from_fixtures("downsized.png", "images").path
+        attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
 
-          expect(composer).to have_no_in_progress_uploads
-          expect(composer.composer_input.value).to match(
-            %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
-          )
-        end
+        expect(composer).to have_no_in_progress_uploads
+        expect(composer.composer_input.value).to match(
+          %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
+        )
+      end
+    end
+
+    context "when the locale is fr" do
+      before { SiteSetting.default_locale = "fr" }
+
+      it "automatically wraps images in [grid] tags on 3 or more images" do
+        visit "/new-topic"
+        expect(composer).to be_opened
+
+        file_path_1 = file_from_fixtures("logo.png", "images").path
+        file_path_2 = file_from_fixtures("logo.jpg", "images").path
+        file_path_3 = file_from_fixtures("downsized.png", "images").path
+        attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+
+        expect(composer).to have_no_in_progress_uploads
+        expect(composer.composer_input.value).to match(
+          %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
+        )
+      end
+    end
+
+    context "when the locale is de" do
+      before { SiteSetting.default_locale = "de" }
+
+      it "automatically wraps images in [grid] tags on 3 or more images" do
+        visit "/new-topic"
+        expect(composer).to be_opened
+
+        file_path_1 = file_from_fixtures("logo.png", "images").path
+        file_path_2 = file_from_fixtures("logo.jpg", "images").path
+        file_path_3 = file_from_fixtures("downsized.png", "images").path
+        attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+
+        expect(composer).to have_no_in_progress_uploads
+        expect(composer.composer_input.value).to match(
+          %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
+        )
       end
     end
 

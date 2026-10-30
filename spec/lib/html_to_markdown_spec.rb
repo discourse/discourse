@@ -231,10 +231,28 @@ RSpec.describe HtmlToMarkdown do
     ).to eq("![|200x100](https://www.discourse.org/logo.svg)")
   end
 
-  (1..6).each do |n|
-    it "converts <h#{n}>" do
-      expect(html_to_markdown("<h#{n}>Header #{n}</h#{n}>")).to eq("#" * n + " Header #{n}")
-    end
+  it "converts <h1>" do
+    expect(html_to_markdown("<h1>Header 1</h1>")).to eq("#" * 1 + " Header 1")
+  end
+
+  it "converts <h2>" do
+    expect(html_to_markdown("<h2>Header 2</h2>")).to eq("#" * 2 + " Header 2")
+  end
+
+  it "converts <h3>" do
+    expect(html_to_markdown("<h3>Header 3</h3>")).to eq("#" * 3 + " Header 3")
+  end
+
+  it "converts <h4>" do
+    expect(html_to_markdown("<h4>Header 4</h4>")).to eq("#" * 4 + " Header 4")
+  end
+
+  it "converts <h5>" do
+    expect(html_to_markdown("<h5>Header 5</h5>")).to eq("#" * 5 + " Header 5")
+  end
+
+  it "converts <h6>" do
+    expect(html_to_markdown("<h6>Header 6</h6>")).to eq("#" * 6 + " Header 6")
   end
 
   it "converts <br>" do
@@ -260,31 +278,187 @@ RSpec.describe HtmlToMarkdown do
   end
 
   describe "when HTML is used within Markdown" do
-    HtmlToMarkdown::ALLOWED.each do |tag|
-      it "keeps mandatory HTML entities in text of <#{tag}>" do
-        expect(html_to_markdown("<#{tag}>Less than: &lt;</#{tag}>")).to eq(
-          "<#{tag}>Less than: &lt;</#{tag}>",
-        )
-        expect(html_to_markdown("<#{tag}>Greater than: &gt;")).to eq(
-          "<#{tag}>Greater than: &gt;</#{tag}>",
-        )
-        expect(html_to_markdown("<#{tag}>Ampersand: &amp;")).to eq(
-          "<#{tag}>Ampersand: &amp;</#{tag}>",
-        )
+    it "keeps mandatory HTML entities in text of <kbd>" do
+      expect(html_to_markdown("<kbd>Less than: &lt;</kbd>")).to eq("<kbd>Less than: &lt;</kbd>")
+      expect(html_to_markdown("<kbd>Greater than: &gt;")).to eq("<kbd>Greater than: &gt;</kbd>")
+      expect(html_to_markdown("<kbd>Ampersand: &amp;")).to eq("<kbd>Ampersand: &amp;</kbd>")
 
-        expect(html_to_markdown("<#{tag}>Double Quote: &quot;</#{tag}>")).to eq(
-          "<#{tag}>Double Quote: \"</#{tag}>",
-        )
-        expect(html_to_markdown("<#{tag}>Single Quote: &apos;</#{tag}>")).to eq(
-          "<#{tag}>Single Quote: '</#{tag}>",
-        )
-        expect(html_to_markdown("<#{tag}>Copyright Symbol: &copy;</#{tag}>")).to eq(
-          "<#{tag}>Copyright Symbol: ©</#{tag}>",
-        )
-        expect(html_to_markdown("<#{tag}>Euro Symbol: &euro;</#{tag}>")).to eq(
-          "<#{tag}>Euro Symbol: €</#{tag}>",
-        )
-      end
+      expect(html_to_markdown("<kbd>Double Quote: &quot;</kbd>")).to eq(
+        "<kbd>Double Quote: \"</kbd>",
+      )
+      expect(html_to_markdown("<kbd>Single Quote: &apos;</kbd>")).to eq(
+        "<kbd>Single Quote: '</kbd>",
+      )
+      expect(html_to_markdown("<kbd>Copyright Symbol: &copy;</kbd>")).to eq(
+        "<kbd>Copyright Symbol: ©</kbd>",
+      )
+      expect(html_to_markdown("<kbd>Euro Symbol: &euro;</kbd>")).to eq("<kbd>Euro Symbol: €</kbd>")
+    end
+
+    it "keeps mandatory HTML entities in text of <del>" do
+      expect(html_to_markdown("<del>Less than: &lt;</del>")).to eq("<del>Less than: &lt;</del>")
+      expect(html_to_markdown("<del>Greater than: &gt;")).to eq("<del>Greater than: &gt;</del>")
+      expect(html_to_markdown("<del>Ampersand: &amp;")).to eq("<del>Ampersand: &amp;</del>")
+
+      expect(html_to_markdown("<del>Double Quote: &quot;</del>")).to eq(
+        "<del>Double Quote: \"</del>",
+      )
+      expect(html_to_markdown("<del>Single Quote: &apos;</del>")).to eq(
+        "<del>Single Quote: '</del>",
+      )
+      expect(html_to_markdown("<del>Copyright Symbol: &copy;</del>")).to eq(
+        "<del>Copyright Symbol: ©</del>",
+      )
+      expect(html_to_markdown("<del>Euro Symbol: &euro;</del>")).to eq("<del>Euro Symbol: €</del>")
+    end
+
+    it "keeps mandatory HTML entities in text of <ins>" do
+      expect(html_to_markdown("<ins>Less than: &lt;</ins>")).to eq("<ins>Less than: &lt;</ins>")
+      expect(html_to_markdown("<ins>Greater than: &gt;")).to eq("<ins>Greater than: &gt;</ins>")
+      expect(html_to_markdown("<ins>Ampersand: &amp;")).to eq("<ins>Ampersand: &amp;</ins>")
+
+      expect(html_to_markdown("<ins>Double Quote: &quot;</ins>")).to eq(
+        "<ins>Double Quote: \"</ins>",
+      )
+      expect(html_to_markdown("<ins>Single Quote: &apos;</ins>")).to eq(
+        "<ins>Single Quote: '</ins>",
+      )
+      expect(html_to_markdown("<ins>Copyright Symbol: &copy;</ins>")).to eq(
+        "<ins>Copyright Symbol: ©</ins>",
+      )
+      expect(html_to_markdown("<ins>Euro Symbol: &euro;</ins>")).to eq("<ins>Euro Symbol: €</ins>")
+    end
+
+    it "keeps mandatory HTML entities in text of <small>" do
+      expect(html_to_markdown("<small>Less than: &lt;</small>")).to eq(
+        "<small>Less than: &lt;</small>",
+      )
+      expect(html_to_markdown("<small>Greater than: &gt;")).to eq(
+        "<small>Greater than: &gt;</small>",
+      )
+      expect(html_to_markdown("<small>Ampersand: &amp;")).to eq("<small>Ampersand: &amp;</small>")
+
+      expect(html_to_markdown("<small>Double Quote: &quot;</small>")).to eq(
+        "<small>Double Quote: \"</small>",
+      )
+      expect(html_to_markdown("<small>Single Quote: &apos;</small>")).to eq(
+        "<small>Single Quote: '</small>",
+      )
+      expect(html_to_markdown("<small>Copyright Symbol: &copy;</small>")).to eq(
+        "<small>Copyright Symbol: ©</small>",
+      )
+      expect(html_to_markdown("<small>Euro Symbol: &euro;</small>")).to eq(
+        "<small>Euro Symbol: €</small>",
+      )
+    end
+
+    it "keeps mandatory HTML entities in text of <big>" do
+      expect(html_to_markdown("<big>Less than: &lt;</big>")).to eq("<big>Less than: &lt;</big>")
+      expect(html_to_markdown("<big>Greater than: &gt;")).to eq("<big>Greater than: &gt;</big>")
+      expect(html_to_markdown("<big>Ampersand: &amp;")).to eq("<big>Ampersand: &amp;</big>")
+
+      expect(html_to_markdown("<big>Double Quote: &quot;</big>")).to eq(
+        "<big>Double Quote: \"</big>",
+      )
+      expect(html_to_markdown("<big>Single Quote: &apos;</big>")).to eq(
+        "<big>Single Quote: '</big>",
+      )
+      expect(html_to_markdown("<big>Copyright Symbol: &copy;</big>")).to eq(
+        "<big>Copyright Symbol: ©</big>",
+      )
+      expect(html_to_markdown("<big>Euro Symbol: &euro;</big>")).to eq("<big>Euro Symbol: €</big>")
+    end
+
+    it "keeps mandatory HTML entities in text of <sub>" do
+      expect(html_to_markdown("<sub>Less than: &lt;</sub>")).to eq("<sub>Less than: &lt;</sub>")
+      expect(html_to_markdown("<sub>Greater than: &gt;")).to eq("<sub>Greater than: &gt;</sub>")
+      expect(html_to_markdown("<sub>Ampersand: &amp;")).to eq("<sub>Ampersand: &amp;</sub>")
+
+      expect(html_to_markdown("<sub>Double Quote: &quot;</sub>")).to eq(
+        "<sub>Double Quote: \"</sub>",
+      )
+      expect(html_to_markdown("<sub>Single Quote: &apos;</sub>")).to eq(
+        "<sub>Single Quote: '</sub>",
+      )
+      expect(html_to_markdown("<sub>Copyright Symbol: &copy;</sub>")).to eq(
+        "<sub>Copyright Symbol: ©</sub>",
+      )
+      expect(html_to_markdown("<sub>Euro Symbol: &euro;</sub>")).to eq("<sub>Euro Symbol: €</sub>")
+    end
+
+    it "keeps mandatory HTML entities in text of <sup>" do
+      expect(html_to_markdown("<sup>Less than: &lt;</sup>")).to eq("<sup>Less than: &lt;</sup>")
+      expect(html_to_markdown("<sup>Greater than: &gt;")).to eq("<sup>Greater than: &gt;</sup>")
+      expect(html_to_markdown("<sup>Ampersand: &amp;")).to eq("<sup>Ampersand: &amp;</sup>")
+
+      expect(html_to_markdown("<sup>Double Quote: &quot;</sup>")).to eq(
+        "<sup>Double Quote: \"</sup>",
+      )
+      expect(html_to_markdown("<sup>Single Quote: &apos;</sup>")).to eq(
+        "<sup>Single Quote: '</sup>",
+      )
+      expect(html_to_markdown("<sup>Copyright Symbol: &copy;</sup>")).to eq(
+        "<sup>Copyright Symbol: ©</sup>",
+      )
+      expect(html_to_markdown("<sup>Euro Symbol: &euro;</sup>")).to eq("<sup>Euro Symbol: €</sup>")
+    end
+
+    it "keeps mandatory HTML entities in text of <dl>" do
+      expect(html_to_markdown("<dl>Less than: &lt;</dl>")).to eq("<dl>Less than: &lt;</dl>")
+      expect(html_to_markdown("<dl>Greater than: &gt;")).to eq("<dl>Greater than: &gt;</dl>")
+      expect(html_to_markdown("<dl>Ampersand: &amp;")).to eq("<dl>Ampersand: &amp;</dl>")
+
+      expect(html_to_markdown("<dl>Double Quote: &quot;</dl>")).to eq("<dl>Double Quote: \"</dl>")
+      expect(html_to_markdown("<dl>Single Quote: &apos;</dl>")).to eq("<dl>Single Quote: '</dl>")
+      expect(html_to_markdown("<dl>Copyright Symbol: &copy;</dl>")).to eq(
+        "<dl>Copyright Symbol: ©</dl>",
+      )
+      expect(html_to_markdown("<dl>Euro Symbol: &euro;</dl>")).to eq("<dl>Euro Symbol: €</dl>")
+    end
+
+    it "keeps mandatory HTML entities in text of <dd>" do
+      expect(html_to_markdown("<dd>Less than: &lt;</dd>")).to eq("<dd>Less than: &lt;</dd>")
+      expect(html_to_markdown("<dd>Greater than: &gt;")).to eq("<dd>Greater than: &gt;</dd>")
+      expect(html_to_markdown("<dd>Ampersand: &amp;")).to eq("<dd>Ampersand: &amp;</dd>")
+
+      expect(html_to_markdown("<dd>Double Quote: &quot;</dd>")).to eq("<dd>Double Quote: \"</dd>")
+      expect(html_to_markdown("<dd>Single Quote: &apos;</dd>")).to eq("<dd>Single Quote: '</dd>")
+      expect(html_to_markdown("<dd>Copyright Symbol: &copy;</dd>")).to eq(
+        "<dd>Copyright Symbol: ©</dd>",
+      )
+      expect(html_to_markdown("<dd>Euro Symbol: &euro;</dd>")).to eq("<dd>Euro Symbol: €</dd>")
+    end
+
+    it "keeps mandatory HTML entities in text of <dt>" do
+      expect(html_to_markdown("<dt>Less than: &lt;</dt>")).to eq("<dt>Less than: &lt;</dt>")
+      expect(html_to_markdown("<dt>Greater than: &gt;")).to eq("<dt>Greater than: &gt;</dt>")
+      expect(html_to_markdown("<dt>Ampersand: &amp;")).to eq("<dt>Ampersand: &amp;</dt>")
+
+      expect(html_to_markdown("<dt>Double Quote: &quot;</dt>")).to eq("<dt>Double Quote: \"</dt>")
+      expect(html_to_markdown("<dt>Single Quote: &apos;</dt>")).to eq("<dt>Single Quote: '</dt>")
+      expect(html_to_markdown("<dt>Copyright Symbol: &copy;</dt>")).to eq(
+        "<dt>Copyright Symbol: ©</dt>",
+      )
+      expect(html_to_markdown("<dt>Euro Symbol: &euro;</dt>")).to eq("<dt>Euro Symbol: €</dt>")
+    end
+
+    it "keeps mandatory HTML entities in text of <mark>" do
+      expect(html_to_markdown("<mark>Less than: &lt;</mark>")).to eq("<mark>Less than: &lt;</mark>")
+      expect(html_to_markdown("<mark>Greater than: &gt;")).to eq("<mark>Greater than: &gt;</mark>")
+      expect(html_to_markdown("<mark>Ampersand: &amp;")).to eq("<mark>Ampersand: &amp;</mark>")
+
+      expect(html_to_markdown("<mark>Double Quote: &quot;</mark>")).to eq(
+        "<mark>Double Quote: \"</mark>",
+      )
+      expect(html_to_markdown("<mark>Single Quote: &apos;</mark>")).to eq(
+        "<mark>Single Quote: '</mark>",
+      )
+      expect(html_to_markdown("<mark>Copyright Symbol: &copy;</mark>")).to eq(
+        "<mark>Copyright Symbol: ©</mark>",
+      )
+      expect(html_to_markdown("<mark>Euro Symbol: &euro;</mark>")).to eq(
+        "<mark>Euro Symbol: €</mark>",
+      )
     end
   end
 

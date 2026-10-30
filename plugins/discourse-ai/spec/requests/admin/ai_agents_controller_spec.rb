@@ -1212,21 +1212,34 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       }
     end
 
-    [false, true].each do |bot_enabled|
-      it "imports a conversational agent with automatic provisioning #{bot_enabled ? "enabled" : "disabled"}" do
-        SiteSetting.ai_bot_enabled = bot_enabled
+    it "imports a conversational agent with automatic provisioning disabled" do
+      SiteSetting.ai_bot_enabled = false
 
-        expect do
-          post "/admin/plugins/discourse-ai/ai-agents/import.json",
-               params: valid_import_data,
-               as: :json
-        end.to change(User, :count).by(bot_enabled ? 1 : 0)
+      expect do
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: valid_import_data,
+             as: :json
+      end.not_to change(User, :count)
 
-        expect(response).to have_http_status(:created)
-        agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
-        expect(agent.allow_personal_messages).to eq(true)
-        expect(agent.user.present?).to eq(bot_enabled)
-      end
+      expect(response).to have_http_status(:created)
+      agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
+      expect(agent.allow_personal_messages).to eq(true)
+      expect(agent.user.present?).to eq(false)
+    end
+
+    it "imports a conversational agent with automatic provisioning enabled" do
+      SiteSetting.ai_bot_enabled = true
+
+      expect do
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: valid_import_data,
+             as: :json
+      end.to change(User, :count).by(1)
+
+      expect(response).to have_http_status(:created)
+      agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
+      expect(agent.allow_personal_messages).to eq(true)
+      expect(agent.user.present?).to eq(true)
     end
 
     it "imports a new agent successfully" do

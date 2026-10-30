@@ -60,17 +60,27 @@ RSpec.describe DiscourseWorkflows::Nodes::PostLifecycle do
     end
 
     context "with V2" do
-      %w[PostDestroyed PostRecovered].each do |node|
-        context "with #{node}" do
-          let(:klass) { "DiscourseWorkflows::Nodes::#{node}::V2".constantize }
+      context "with PostDestroyed" do
+        let(:klass) { "DiscourseWorkflows::Nodes::PostDestroyed::V2".constantize }
 
-          it "returns the author as user and the acting user as actor", :aggregate_failures do
-            output = trigger.output
+        it "returns the author as user and the acting user as actor", :aggregate_failures do
+          output = trigger.output
 
-            expect(output[:user]).to include(id: post.user.id, username: post.user.username)
-            expect(output[:actor]).to include(id: actor.id, username: actor.username)
-            expect(output).to match_node_output_schema(klass)
-          end
+          expect(output[:user]).to include(id: post.user.id, username: post.user.username)
+          expect(output[:actor]).to include(id: actor.id, username: actor.username)
+          expect(output).to match_node_output_schema(klass)
+        end
+      end
+
+      context "with PostRecovered" do
+        let(:klass) { "DiscourseWorkflows::Nodes::PostRecovered::V2".constantize }
+
+        it "returns the author as user and the acting user as actor", :aggregate_failures do
+          output = trigger.output
+
+          expect(output[:user]).to include(id: post.user.id, username: post.user.username)
+          expect(output[:actor]).to include(id: actor.id, username: actor.username)
+          expect(output).to match_node_output_schema(klass)
         end
       end
     end

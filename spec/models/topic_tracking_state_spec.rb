@@ -198,7 +198,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_unread" do
-    [false, true].each do |enabled|
+    shared_examples "notifying logged in category watchers" do |enabled|
       it "notifies logged-in category watchers with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
         topic.update!(category: Fabricate(:category, permissions: { logged_in_users: :readonly }))
@@ -208,6 +208,9 @@ RSpec.describe TopicTrackingState do
         expect(message.user_ids).to contain_exactly(other_user.id)
       end
     end
+
+    it_behaves_like "notifying logged in category watchers", false
+    it_behaves_like "notifying logged in category watchers", true
 
     let(:other_user) { Fabricate(:user) }
     let!(:other_user_watching_topic) do
@@ -843,7 +846,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe ".report" do
-    [false, true].each do |enabled|
+    shared_examples "reporting logged in category topics" do |enabled|
       it "reports logged-in pseudogroup topics with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
         author = Fabricate(:admin)
@@ -857,6 +860,9 @@ RSpec.describe TopicTrackingState do
         expect(report.map(&:topic_id)).to eq([public_post.topic_id])
       end
     end
+
+    it_behaves_like "reporting logged in category topics", false
+    it_behaves_like "reporting logged in category topics", true
 
     it "correctly reports topics with staff posts" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"

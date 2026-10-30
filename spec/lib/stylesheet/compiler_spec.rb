@@ -4,17 +4,32 @@ require "stylesheet/compiler"
 
 RSpec.describe Stylesheet::Compiler do
   describe "compilation" do
-    Dir["#{Rails.root.join("app/assets/stylesheets/*.scss")}"].each do |path|
-      path = File.basename(path, ".scss")
-
-      # mobile and desktop scss files are intentionally empty stubs
-      next if path.start_with?("mobile", "desktop")
-
-      it "can compile '#{path}' css" do
-        css, _map = Stylesheet::Compiler.compile_asset(path)
+    shared_examples "a compiled stylesheet" do |name|
+      it "can compile '#{name}' css" do
+        css, _map = Stylesheet::Compiler.compile_asset(name)
         expect(css.length).to be > 500
       end
     end
+
+    it_behaves_like "a compiled stylesheet", "admin"
+
+    it_behaves_like "a compiled stylesheet", "admin_rtl"
+
+    it_behaves_like "a compiled stylesheet", "color_definitions"
+
+    it_behaves_like "a compiled stylesheet", "common"
+
+    it_behaves_like "a compiled stylesheet", "embed"
+
+    it_behaves_like "a compiled stylesheet", "publish"
+
+    it_behaves_like "a compiled stylesheet", "qunit-custom"
+
+    it_behaves_like "a compiled stylesheet", "wcag"
+
+    it_behaves_like "a compiled stylesheet", "wizard"
+
+    it_behaves_like "a compiled stylesheet", "wizard_rtl"
   end
 
   context "with a theme" do

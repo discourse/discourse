@@ -45,20 +45,44 @@ describe OpenIDConnectAuthenticator do
   context "when the fallback is true and email_verified is supplied" do
     before { SiteSetting.openid_connect_email_verified_claim_fallback = true }
 
-    {
-      true => true,
-      "true" => true,
-      "True" => true,
-      false => false,
-      "false" => false,
-    }.each do |claim, verified|
-      it "uses the supplied #{claim.inspect} value instead of the fallback" do
-        hash[:extra][:raw_info][:email_verified] = claim
-        result = authenticator.after_authenticate(hash)
+    it "uses the supplied true value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = true
+      result = authenticator.after_authenticate(hash)
 
-        expect(result.email_valid).to eq(verified)
-        expect(result.user).to eq(verified ? user : nil)
-      end
+      expect(result.email_valid).to eq(true)
+      expect(result.user).to eq(user)
+    end
+
+    it "uses the supplied \"true\" value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = "true"
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(true)
+      expect(result.user).to eq(user)
+    end
+
+    it "uses the supplied \"True\" value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = "True"
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(true)
+      expect(result.user).to eq(user)
+    end
+
+    it "uses the supplied false value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = false
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(false)
+      expect(result.user).to eq(nil)
+    end
+
+    it "uses the supplied \"false\" value instead of the fallback" do
+      hash[:extra][:raw_info][:email_verified] = "false"
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.email_valid).to eq(false)
+      expect(result.user).to eq(nil)
     end
   end
 

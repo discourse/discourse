@@ -8,13 +8,11 @@ RSpec.describe CspScriptSrcValidator do
       end
 
       context "when there's a single value" do
-        %w[
-          'unsafe-eval'
-          'wasm-unsafe-eval'
-          'sha256-valid_h4sH'
-          'sha384-valid-h4sH='
-          'sha512-valid+h4sH=='
-        ].each { |valid_value| it { is_expected.to be_a_valid_value valid_value } }
+        it { is_expected.to be_a_valid_value("'unsafe-eval'") }
+        it { is_expected.to be_a_valid_value("'wasm-unsafe-eval'") }
+        it { is_expected.to be_a_valid_value("'sha256-valid_h4sH'") }
+        it { is_expected.to be_a_valid_value("'sha384-valid-h4sH='") }
+        it { is_expected.to be_a_valid_value("'sha512-valid+h4sH=='") }
       end
 
       context "when there are multiple valid values" do
@@ -32,14 +30,12 @@ RSpec.describe CspScriptSrcValidator do
 
     context "when values are invalid" do
       context "when there's a single value" do
-        %w[
-          unsafe-eval
-          'unsafe-eval'!
-          !'unsafe-eval'
-          'sha256-not+a+valid+base64===='
-          'md5-not+a+supported+hash+algo'
-          'sha224-not+a+supported+hash+algo'
-        ].each { |invalid_value| it { is_expected.not_to be_a_valid_value invalid_value } }
+        it { is_expected.not_to be_a_valid_value("unsafe-eval") }
+        it { is_expected.not_to be_a_valid_value("'unsafe-eval'!") }
+        it { is_expected.not_to be_a_valid_value("!'unsafe-eval'") }
+        it { is_expected.not_to be_a_valid_value("'sha256-not+a+valid+base64===='") }
+        it { is_expected.not_to be_a_valid_value("'md5-not+a+supported+hash+algo'") }
+        it { is_expected.not_to be_a_valid_value("'sha224-not+a+supported+hash+algo'") }
       end
 
       context "when there is at least 1 invalid value and 1 valid value" do

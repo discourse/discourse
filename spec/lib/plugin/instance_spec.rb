@@ -659,20 +659,34 @@ TEXT
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
     end
 
-    %w[
-      config/locales/client.foo_BAR.yml
-      config/locales/server.foo_BAR.yml
-      lib/javascripts/locale/moment_js/foo_BAR.js
-    ].each do |path|
-      it "does not register a new locale when #{path} is missing" do
-        path = "#{plugin_path}/#{path}"
-        File.stubs("exist?").returns(false)
-        File.stubs("exist?").with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
-        File.stubs("exist?").with(path).returns(false)
+    it "does not register a new locale when config/locales/client.foo_BAR.yml is missing" do
+      path = "#{plugin_path}/config/locales/client.foo_BAR.yml"
+      File.stubs("exist?").returns(false)
+      File.stubs("exist?").with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
+      File.stubs("exist?").with(path).returns(false)
 
-        register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
-        expect(DiscoursePluginRegistry.locales.count).to eq(0)
-      end
+      register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
+      expect(DiscoursePluginRegistry.locales.count).to eq(0)
+    end
+
+    it "does not register a new locale when config/locales/server.foo_BAR.yml is missing" do
+      path = "#{plugin_path}/config/locales/server.foo_BAR.yml"
+      File.stubs("exist?").returns(false)
+      File.stubs("exist?").with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
+      File.stubs("exist?").with(path).returns(false)
+
+      register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
+      expect(DiscoursePluginRegistry.locales.count).to eq(0)
+    end
+
+    it "does not register a new locale when lib/javascripts/locale/moment_js/foo_BAR.js is missing" do
+      path = "#{plugin_path}/lib/javascripts/locale/moment_js/foo_BAR.js"
+      File.stubs("exist?").returns(false)
+      File.stubs("exist?").with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
+      File.stubs("exist?").with(path).returns(false)
+
+      register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
+      expect(DiscoursePluginRegistry.locales.count).to eq(0)
     end
   end
 

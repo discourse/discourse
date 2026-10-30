@@ -408,36 +408,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       expect(Jobs::DiscourseWorkflows::RunWorkflowCall.jobs).to be_empty
     end
 
-    [
-      [
-        "flow wait",
-        "flow:wait",
-        { "resume" => "time_interval", "wait_amount" => 1, "wait_unit" => "seconds" },
-      ],
-      ["webhook wait", "flow:wait", { "resume" => "webhook" }],
-      [
-        "form wait",
-        "action:form",
-        {
-          "form_title" => "Approval",
-          "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
-        },
-      ],
-      [
-        "modal wait",
-        "action:modal",
-        lambda do
-          {
-            "target_user" => admin.username,
-            "title" => "Approve?",
-            "body" => "Choose an option",
-            "buttons" => {
-              "values" => [{ "label" => "Approve", "value" => "approve", "style" => "primary" }],
-            },
-          }
-        end,
-      ],
-    ].each do |label, wait_type, wait_configuration|
+    shared_examples "waiting for a child workflow" do |label:, wait_type:, wait_configuration:|
       it "keeps the parent waiting while a child #{label} is waiting" do
         allow(MessageBus).to receive(:publish)
         resolved_wait_configuration =
@@ -474,6 +445,43 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
         )
       end
     end
+
+    it_behaves_like "waiting for a child workflow",
+                    label: "flow wait",
+                    wait_type: "flow:wait",
+                    wait_configuration: {
+                      "resume" => "time_interval",
+                      "wait_amount" => 1,
+                      "wait_unit" => "seconds",
+                    }
+    it_behaves_like "waiting for a child workflow",
+                    label: "webhook wait",
+                    wait_type: "flow:wait",
+                    wait_configuration: {
+                      "resume" => "webhook",
+                    }
+    it_behaves_like "waiting for a child workflow",
+                    label: "form wait",
+                    wait_type: "action:form",
+                    wait_configuration: {
+                      "form_title" => "Approval",
+                      "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
+                    }
+    it_behaves_like "waiting for a child workflow",
+                    label: "modal wait",
+                    wait_type: "action:modal",
+                    wait_configuration: -> do
+                      {
+                        "target_user" => admin.username,
+                        "title" => "Approve?",
+                        "body" => "Choose an option",
+                        "buttons" => {
+                          "values" => [
+                            { "label" => "Approve", "value" => "approve", "style" => "primary" },
+                          ],
+                        },
+                      }
+                    end
 
     it "keeps $execution.called_by available to child nodes after the child waits and resumes" do
       target =

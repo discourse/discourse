@@ -165,27 +165,46 @@ RSpec.describe Admin::Config::DesignWizardController do
       expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
     end
 
-    %w[chat categories].each do |original_homepage|
-      it "restores the original #{original_homepage} homepage and channel settings after a preview" do
-        SiteSetting.default_homepage = original_homepage
-        SiteSetting.chat_homepage_channel = other_channel.id
+    it "restores the original chat homepage and channel settings after a preview" do
+      SiteSetting.default_homepage = "chat"
+      SiteSetting.chat_homepage_channel = other_channel.id
 
-        get "/admin/config/design-wizard.json"
-        snapshot = response.parsed_body.slice("homepage", "homepage_settings")
+      get "/admin/config/design-wizard.json"
+      snapshot = response.parsed_body.slice("homepage", "homepage_settings")
 
-        put "/admin/config/design-wizard.json",
-            params:
-              params.merge(homepage_settings: { chat_homepage_channel: general_channel.id.to_s })
-        expect(response.status).to eq(200)
-        expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
+      put "/admin/config/design-wizard.json",
+          params:
+            params.merge(homepage_settings: { chat_homepage_channel: general_channel.id.to_s })
+      expect(response.status).to eq(200)
+      expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
 
-        put "/admin/config/design-wizard.json",
-            params: snapshot.merge("theme_id" => Theme::CORE_THEMES["foundation"])
+      put "/admin/config/design-wizard.json",
+          params: snapshot.merge("theme_id" => Theme::CORE_THEMES["foundation"])
 
-        expect(response.status).to eq(200)
-        expect(SiteSetting.default_homepage).to eq(original_homepage)
-        expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
-      end
+      expect(response.status).to eq(200)
+      expect(SiteSetting.default_homepage).to eq("chat")
+      expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
+    end
+
+    it "restores the original categories homepage and channel settings after a preview" do
+      SiteSetting.default_homepage = "categories"
+      SiteSetting.chat_homepage_channel = other_channel.id
+
+      get "/admin/config/design-wizard.json"
+      snapshot = response.parsed_body.slice("homepage", "homepage_settings")
+
+      put "/admin/config/design-wizard.json",
+          params:
+            params.merge(homepage_settings: { chat_homepage_channel: general_channel.id.to_s })
+      expect(response.status).to eq(200)
+      expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
+
+      put "/admin/config/design-wizard.json",
+          params: snapshot.merge("theme_id" => Theme::CORE_THEMES["foundation"])
+
+      expect(response.status).to eq(200)
+      expect(SiteSetting.default_homepage).to eq("categories")
+      expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
     end
 
     it "rejects settings that are not registered homepage settings" do

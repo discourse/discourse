@@ -791,29 +791,31 @@ RSpec.describe UsernameChanger do
   end
 
   describe "#override" do
-    common_test_cases = [
-      ["overrides the username if a new name is different", "john", "bill", "bill", false],
-      ["does not change the username if a new name is the same", "john", "john", "john", false],
-      ["overrides the username if a new name has different case", "john", "JoHN", "JoHN", false],
-    ]
-
     context "when unicode_usernames is off" do
       before { SiteSetting.unicode_usernames = false }
 
-      [
-        *common_test_cases,
-        [
-          "does not change the username if a new name after unicode normalization is the same",
-          "john",
-          "john¥¥",
-          "john",
-        ],
-      ].each do |testcase_name, current, new, overrode|
-        it "#{testcase_name}" do
-          user = Fabricate(:user, username: current)
-          UsernameChanger.override(user, new)
-          expect(user.username).to eq(overrode)
-        end
+      it "overrides the username if a new name is different" do
+        user = Fabricate(:user, username: "john")
+        UsernameChanger.override(user, "bill")
+        expect(user.username).to eq("bill")
+      end
+
+      it "does not change the username if a new name is the same" do
+        user = Fabricate(:user, username: "john")
+        UsernameChanger.override(user, "john")
+        expect(user.username).to eq("john")
+      end
+
+      it "overrides the username if a new name has different case" do
+        user = Fabricate(:user, username: "john")
+        UsernameChanger.override(user, "JoHN")
+        expect(user.username).to eq("JoHN")
+      end
+
+      it "does not change the username if a new name after unicode normalization is the same" do
+        user = Fabricate(:user, username: "john")
+        UsernameChanger.override(user, "john¥¥")
+        expect(user.username).to eq("john")
       end
 
       it "overrides the username with username suggestions in case the username is already taken" do
@@ -829,20 +831,28 @@ RSpec.describe UsernameChanger do
     context "when unicode_usernames is on" do
       before { SiteSetting.unicode_usernames = true }
 
-      [
-        *common_test_cases,
-        [
-          "overrides the username if a new name after unicode normalization is different only in case",
-          "lo\u0308we",
-          "L\u00F6wee",
-          "L\u00F6wee",
-        ],
-      ].each do |testcase_name, current, new, overrode|
-        it "#{testcase_name}" do
-          user = Fabricate(:user, username: current)
-          UsernameChanger.override(user, new)
-          expect(user.username).to eq(overrode)
-        end
+      it "overrides the username if a new name is different" do
+        user = Fabricate(:user, username: "john")
+        UsernameChanger.override(user, "bill")
+        expect(user.username).to eq("bill")
+      end
+
+      it "does not change the username if a new name is the same" do
+        user = Fabricate(:user, username: "john")
+        UsernameChanger.override(user, "john")
+        expect(user.username).to eq("john")
+      end
+
+      it "overrides the username if a new name has different case" do
+        user = Fabricate(:user, username: "john")
+        UsernameChanger.override(user, "JoHN")
+        expect(user.username).to eq("JoHN")
+      end
+
+      it "overrides the username if a new name after unicode normalization is different only in case" do
+        user = Fabricate(:user, username: "lo\u0308we")
+        UsernameChanger.override(user, "L\u00F6wee")
+        expect(user.username).to eq("L\u00F6wee")
       end
     end
   end

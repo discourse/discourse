@@ -231,23 +231,68 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
   describe "linkage column coverage" do
     idb = Migrations::Database::IntermediateDB
 
-    {
-      quote: [:quotes, idb::EmbedQuote],
-      link: [:links, idb::EmbedLink],
-      mention: [:mentions, idb::EmbedMention],
-      hashtag: [:hashtags, idb::EmbedHashtag],
-      emoji: [:emojis, idb::EmbedEmoji],
-      poll: [:polls, idb::EmbedPoll],
-      event: [:events, idb::EmbedEvent],
-      upload: [:uploads, idb::EmbedUpload],
-    }.each do |recorder, (collection, model)|
-      it "records every #{model.name.split("::").last} column" do
-        buffer.public_send(recorder)
-        descriptor = buffer.public_send(collection).last
-        columns = model.method(:create).parameters.map { |_type, name| name }
+    it "records every #{idb::EmbedQuote.name.split("::").last} column" do
+      buffer.public_send(:quote)
+      descriptor = buffer.public_send(:quotes).last
+      columns = idb::EmbedQuote.method(:create).parameters.map { |_type, name| name }
 
-        expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
-      end
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    end
+
+    it "records every #{idb::EmbedLink.name.split("::").last} column" do
+      buffer.public_send(:link)
+      descriptor = buffer.public_send(:links).last
+      columns = idb::EmbedLink.method(:create).parameters.map { |_type, name| name }
+
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    end
+
+    it "records every #{idb::EmbedMention.name.split("::").last} column" do
+      buffer.public_send(:mention)
+      descriptor = buffer.public_send(:mentions).last
+      columns = idb::EmbedMention.method(:create).parameters.map { |_type, name| name }
+
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    end
+
+    it "records every #{idb::EmbedHashtag.name.split("::").last} column" do
+      buffer.public_send(:hashtag)
+      descriptor = buffer.public_send(:hashtags).last
+      columns = idb::EmbedHashtag.method(:create).parameters.map { |_type, name| name }
+
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    end
+
+    it "records every #{idb::EmbedEmoji.name.split("::").last} column" do
+      buffer.public_send(:emoji)
+      descriptor = buffer.public_send(:emojis).last
+      columns = idb::EmbedEmoji.method(:create).parameters.map { |_type, name| name }
+
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    end
+
+    it "records every #{idb::EmbedPoll.name.split("::").last} column" do
+      buffer.public_send(:poll)
+      descriptor = buffer.public_send(:polls).last
+      columns = idb::EmbedPoll.method(:create).parameters.map { |_type, name| name }
+
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    end
+
+    it "records every #{idb::EmbedEvent.name.split("::").last} column" do
+      buffer.public_send(:event)
+      descriptor = buffer.public_send(:events).last
+      columns = idb::EmbedEvent.method(:create).parameters.map { |_type, name| name }
+
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
+    end
+
+    it "records every #{idb::EmbedUpload.name.split("::").last} column" do
+      buffer.public_send(:upload)
+      descriptor = buffer.public_send(:uploads).last
+      columns = idb::EmbedUpload.method(:create).parameters.map { |_type, name| name }
+
+      expect(descriptor.keys + %i[owner_type owner_id]).to match_array(columns)
     end
   end
 

@@ -9,7 +9,7 @@ require Rails.root.join(
         )
 
 RSpec.describe SetBrowserPageviewEventSourceDefaultToBeacon do
-  %w[default explicit].each do |beacon_source|
+  shared_examples "preserving legacy pageviews after archiving" do |beacon_source|
     it "preserves legacy events when a #{beacon_source} beacon arrives after archiving" do
       migration = described_class.new
       migration.suppress_messages { migration.down }
@@ -51,6 +51,9 @@ RSpec.describe SetBrowserPageviewEventSourceDefaultToBeacon do
       )
     end
   end
+
+  it_behaves_like "preserving legacy pageviews after archiving", "default"
+  it_behaves_like "preserving legacy pageviews after archiving", "explicit"
 
   it "skips piggyback writes while allowing explicit and default beacon sources" do
     migration = described_class.new

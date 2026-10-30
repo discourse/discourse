@@ -226,7 +226,7 @@ RSpec.describe Report do
     end
   end
 
-  %i[signup topic post flag like email].each do |arg|
+  shared_examples "report totals over time" do |arg|
     describe "#{arg} report" do
       pluralized = arg.to_s.pluralize
 
@@ -281,17 +281,14 @@ RSpec.describe Report do
     end
   end
 
-  %i[
-    http_total
-    http_2xx
-    http_background
-    http_3xx
-    http_4xx
-    http_5xx
-    page_view_crawler
-    page_view_logged_in
-    page_view_anon
-  ].each do |request_type|
+  it_behaves_like "report totals over time", :signup
+  it_behaves_like "report totals over time", :topic
+  it_behaves_like "report totals over time", :post
+  it_behaves_like "report totals over time", :flag
+  it_behaves_like "report totals over time", :like
+  it_behaves_like "report totals over time", :email
+
+  shared_examples "a request type report" do |request_type|
     describe "#{request_type} request reports" do
       let(:report) do
         Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
@@ -354,6 +351,16 @@ RSpec.describe Report do
       end
     end
   end
+
+  it_behaves_like "a request type report", :http_total
+  it_behaves_like "a request type report", :http_2xx
+  it_behaves_like "a request type report", :http_background
+  it_behaves_like "a request type report", :http_3xx
+  it_behaves_like "a request type report", :http_4xx
+  it_behaves_like "a request type report", :http_5xx
+  it_behaves_like "a request type report", :page_view_crawler
+  it_behaves_like "a request type report", :page_view_logged_in
+  it_behaves_like "a request type report", :page_view_anon
 
   describe "page_view_legacy_total_reqs" do
     before do

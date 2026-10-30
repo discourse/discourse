@@ -196,48 +196,84 @@ RSpec.describe PostActionsController do
 
       before { sign_in(Fabricate(:user, refresh_auto_groups: true)) }
 
-      [true, "true"].each do |value|
-        it "forbids sending warnings when the is_warning query param is #{value.inspect}" do
-          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+      it "forbids sending warnings when the is_warning query param is true" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
 
+        post "/post_actions.json",
+             params: {
+               id: target_post.id,
+               post_action_type_id: PostActionType.types[:notify_user],
+               message: "action message goes here",
+               is_warning: true,
+             },
+             as: :json
+
+        expect(response.status).to eq(403)
+      end
+
+      it "forbids sending warnings when the is_warning query param is \"true\"" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        post "/post_actions.json",
+             params: {
+               id: target_post.id,
+               post_action_type_id: PostActionType.types[:notify_user],
+               message: "action message goes here",
+               is_warning: "true",
+             },
+             as: :json
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows notifying a user when the is_warning query param is false" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        message = "action message goes here"
+
+        expect do
           post "/post_actions.json",
                params: {
                  id: target_post.id,
                  post_action_type_id: PostActionType.types[:notify_user],
-                 message: "action message goes here",
-                 is_warning: value,
+                 message: message,
+                 is_warning: false,
                },
                as: :json
+        end.to change { PostAction.count }.by(1)
 
-          expect(response.status).to eq(403)
-        end
+        expect(response.status).to eq(200)
+
+        post_action = PostAction.last
+
+        expect(post_action.post_id).to eq(target_post.id)
+        expect(post_action.related_post.raw).to include(message)
+        expect(post_action.related_post.topic.is_official_warning?).to eq(false)
       end
 
-      [false, "false"].each do |value|
-        it "allows notifying a user when the is_warning query param is #{value.inspect}" do
-          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+      it "allows notifying a user when the is_warning query param is \"false\"" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
 
-          message = "action message goes here"
+        message = "action message goes here"
 
-          expect do
-            post "/post_actions.json",
-                 params: {
-                   id: target_post.id,
-                   post_action_type_id: PostActionType.types[:notify_user],
-                   message: message,
-                   is_warning: value,
-                 },
-                 as: :json
-          end.to change { PostAction.count }.by(1)
+        expect do
+          post "/post_actions.json",
+               params: {
+                 id: target_post.id,
+                 post_action_type_id: PostActionType.types[:notify_user],
+                 message: message,
+                 is_warning: "false",
+               },
+               as: :json
+        end.to change { PostAction.count }.by(1)
 
-          expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
 
-          post_action = PostAction.last
+        post_action = PostAction.last
 
-          expect(post_action.post_id).to eq(target_post.id)
-          expect(post_action.related_post.raw).to include(message)
-          expect(post_action.related_post.topic.is_official_warning?).to eq(false)
-        end
+        expect(post_action.post_id).to eq(target_post.id)
+        expect(post_action.related_post.raw).to include(message)
+        expect(post_action.related_post.topic.is_official_warning?).to eq(false)
       end
     end
 

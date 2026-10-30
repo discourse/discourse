@@ -287,7 +287,7 @@ RSpec.describe Category do
   end
 
   describe "resolve_permissions" do
-    [false, true].each do |enabled|
+    shared_examples "resolving logged in category permissions" do |enabled|
       it "keeps logged-in-only access restricted with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -300,6 +300,9 @@ RSpec.describe Category do
       end
     end
 
+    it_behaves_like "resolving logged in category permissions", false
+    it_behaves_like "resolving logged in category permissions", true
+
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(everyone: :full)
 
@@ -311,7 +314,7 @@ RSpec.describe Category do
   describe "pseudogroup permission validation" do
     fab!(:category)
 
-    [false, true].each do |enabled|
+    shared_examples "rejecting anonymous category grants" do |enabled|
       it "rejects anonymous grants on creation and updates with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
         permissions = { anonymous_users: :readonly, logged_in_users: :full }
@@ -328,6 +331,9 @@ RSpec.describe Category do
         expect(category.reload.category_groups).to be_empty
       end
     end
+
+    it_behaves_like "rejecting anonymous category grants", false
+    it_behaves_like "rejecting anonymous category grants", true
   end
 
   describe "logged-in parent permission compatibility" do
@@ -362,7 +368,7 @@ RSpec.describe Category do
     fab!(:user)
     fab!(:category)
 
-    [false, true].each do |enabled|
+    shared_examples "enforcing logged in posting permissions" do |enabled|
       it "honors permission levels with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -379,6 +385,9 @@ RSpec.describe Category do
         end
       end
     end
+
+    it_behaves_like "enforcing logged in posting permissions", false
+    it_behaves_like "enforcing logged in posting permissions", true
   end
 
   describe "permissions_params" do

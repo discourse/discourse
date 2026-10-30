@@ -4,12 +4,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
   before { enable_current_plugin }
 
   describe "#decode" do
-    [
-      ["CRLF", "\r\n\r\n", 1],
-      ["CRLF", "\r\n\r\n", 2],
-      ["CRLF", "\r\n\r\n", 3],
-      ["LF", "\n\n", 1],
-    ].each do |line_ending, separator, split_position|
+    shared_examples "a split event separator" do |line_ending:, separator:, split_position:|
       it "decodes all events when a chunk ends at byte #{split_position} of a #{line_ending} separator" do
         decoder = described_class.new
         events =
@@ -35,6 +30,26 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini::GeminiStreamingDecod
         expect(decoded).to eq(events)
       end
     end
+
+    it_behaves_like "a split event separator",
+                    line_ending: "CRLF",
+                    separator: "\r\n\r\n",
+                    split_position: 1
+
+    it_behaves_like "a split event separator",
+                    line_ending: "CRLF",
+                    separator: "\r\n\r\n",
+                    split_position: 2
+
+    it_behaves_like "a split event separator",
+                    line_ending: "CRLF",
+                    separator: "\r\n\r\n",
+                    split_position: 3
+
+    it_behaves_like "a split event separator",
+                    line_ending: "LF",
+                    separator: "\n\n",
+                    split_position: 1
 
     it "decodes the same events at every possible chunk boundary" do
       events = [

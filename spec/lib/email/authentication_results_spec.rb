@@ -196,26 +196,82 @@ RSpec.describe Email::AuthenticationResults do
   describe "#verdict and #action" do
     before { SiteSetting.email_in_authserv_id = "valid.com" }
 
-    {
-      "" => %i[gray accept],
-      "valid.com; dmarc=pass" => %i[pass accept],
-      "valid.com; dmarc=fail" => %i[fail enqueue],
-      "valid.com; DMARC=Fail" => %i[fail enqueue],
-      "valid.com; dmarc=error" => %i[gray accept],
-      "valid.com; none" => %i[gray accept],
-      "valid.com 1; NONE (no checks run)" => %i[gray accept],
-      "valid.com; none (a=b; dmarc=fail)" => %i[gray accept],
-      "valid.com; none; dmarc=fail" => %i[fail enqueue],
-      ["valid.com; dmarc=pass", "invalid.com; dmarc=fail"] => %i[pass accept],
-      ["valid.com; dmarc=fail", "valid.com; dmarc=pass"] => %i[fail enqueue],
-      ["valid.com; dmarc=fail", "valid.com; none"] => %i[fail enqueue],
-      ["valid.com; dmarc=foobar", "valid.com; dmarc=pass"] => %i[pass accept],
-    }.each do |headers, (verdict, action)|
-      it "is #{verdict} and #{action}s #{headers.inspect}" do
-        results = described_class.new(headers)
-        expect(results.verdict).to eq(verdict)
-        expect(results.action).to eq(action)
-      end
+    it "is gray and accepts \"\"" do
+      results = described_class.new("")
+      expect(results.verdict).to eq(:gray)
+      expect(results.action).to eq(:accept)
+    end
+
+    it "is pass and accepts \"valid.com; dmarc=pass\"" do
+      results = described_class.new("valid.com; dmarc=pass")
+      expect(results.verdict).to eq(:pass)
+      expect(results.action).to eq(:accept)
+    end
+
+    it "is fail and enqueues \"valid.com; dmarc=fail\"" do
+      results = described_class.new("valid.com; dmarc=fail")
+      expect(results.verdict).to eq(:fail)
+      expect(results.action).to eq(:enqueue)
+    end
+
+    it "is fail and enqueues \"valid.com; DMARC=Fail\"" do
+      results = described_class.new("valid.com; DMARC=Fail")
+      expect(results.verdict).to eq(:fail)
+      expect(results.action).to eq(:enqueue)
+    end
+
+    it "is gray and accepts \"valid.com; dmarc=error\"" do
+      results = described_class.new("valid.com; dmarc=error")
+      expect(results.verdict).to eq(:gray)
+      expect(results.action).to eq(:accept)
+    end
+
+    it "is gray and accepts \"valid.com; none\"" do
+      results = described_class.new("valid.com; none")
+      expect(results.verdict).to eq(:gray)
+      expect(results.action).to eq(:accept)
+    end
+
+    it "is gray and accepts \"valid.com 1; NONE (no checks run)\"" do
+      results = described_class.new("valid.com 1; NONE (no checks run)")
+      expect(results.verdict).to eq(:gray)
+      expect(results.action).to eq(:accept)
+    end
+
+    it "is gray and accepts \"valid.com; none (a=b; dmarc=fail)\"" do
+      results = described_class.new("valid.com; none (a=b; dmarc=fail)")
+      expect(results.verdict).to eq(:gray)
+      expect(results.action).to eq(:accept)
+    end
+
+    it "is fail and enqueues \"valid.com; none; dmarc=fail\"" do
+      results = described_class.new("valid.com; none; dmarc=fail")
+      expect(results.verdict).to eq(:fail)
+      expect(results.action).to eq(:enqueue)
+    end
+
+    it "is pass and accepts [\"valid.com; dmarc=pass\", \"invalid.com; dmarc=fail\"]" do
+      results = described_class.new(["valid.com; dmarc=pass", "invalid.com; dmarc=fail"])
+      expect(results.verdict).to eq(:pass)
+      expect(results.action).to eq(:accept)
+    end
+
+    it "is fail and enqueues [\"valid.com; dmarc=fail\", \"valid.com; dmarc=pass\"]" do
+      results = described_class.new(["valid.com; dmarc=fail", "valid.com; dmarc=pass"])
+      expect(results.verdict).to eq(:fail)
+      expect(results.action).to eq(:enqueue)
+    end
+
+    it "is fail and enqueues [\"valid.com; dmarc=fail\", \"valid.com; none\"]" do
+      results = described_class.new(["valid.com; dmarc=fail", "valid.com; none"])
+      expect(results.verdict).to eq(:fail)
+      expect(results.action).to eq(:enqueue)
+    end
+
+    it "is pass and accepts [\"valid.com; dmarc=foobar\", \"valid.com; dmarc=pass\"]" do
+      results = described_class.new(["valid.com; dmarc=foobar", "valid.com; dmarc=pass"])
+      expect(results.verdict).to eq(:pass)
+      expect(results.action).to eq(:accept)
     end
 
     it "is gray without a configured authserv-id" do

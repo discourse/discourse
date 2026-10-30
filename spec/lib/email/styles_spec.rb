@@ -58,23 +58,55 @@ RSpec.describe Email::Styles do
   end
 
   describe "custom formatter" do
-    ["a:visited", "a:hover", "a["].each do |selector|
-      it "skips #{selector} while applying supported custom selectors" do
-        SiteSetting.email_custom_css_compiled = <<~CSS
-          p { color: red; }
-          #{selector}, a:first-child { letter-spacing: 3px; }
-          a { background-color: green; }
-        CSS
+    it "skips a:visited while applying supported custom selectors" do
+      SiteSetting.email_custom_css_compiled = <<~CSS
+        p { color: red; }
+        a:visited, a:first-child { letter-spacing: 3px; }
+        a { background-color: green; }
+      CSS
 
-        frag =
-          html_fragment(
-            '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
-          )
+      frag =
+        html_fragment(
+          '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
+        )
 
-        expect(frag.at("p")["style"]).to include("color:red")
-        expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
-        expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
-      end
+      expect(frag.at("p")["style"]).to include("color:red")
+      expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
+      expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
+    end
+
+    it "skips a:hover while applying supported custom selectors" do
+      SiteSetting.email_custom_css_compiled = <<~CSS
+        p { color: red; }
+        a:hover, a:first-child { letter-spacing: 3px; }
+        a { background-color: green; }
+      CSS
+
+      frag =
+        html_fragment(
+          '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
+        )
+
+      expect(frag.at("p")["style"]).to include("color:red")
+      expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
+      expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
+    end
+
+    it "skips a[ while applying supported custom selectors" do
+      SiteSetting.email_custom_css_compiled = <<~CSS
+        p { color: red; }
+        a[, a:first-child { letter-spacing: 3px; }
+        a { background-color: green; }
+      CSS
+
+      frag =
+        html_fragment(
+          '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
+        )
+
+      expect(frag.at("p")["style"]).to include("color:red")
+      expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
+      expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
     end
   end
 

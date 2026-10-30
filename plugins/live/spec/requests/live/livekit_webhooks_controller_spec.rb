@@ -198,25 +198,39 @@ RSpec.describe Live::LivekitWebhooksController do
       expect(Live::Livekit.last_webhook_at).to be_within(5.seconds).of(Time.now)
     end
 
-    %w[participant_left participant_connection_aborted].each do |event_name|
-      context "with a #{event_name} event" do
-        it "expires the participant's presence, keeps their metadata, and broadcasts the change" do
-          Live::ParticipantTracker.pin_transport!(room.id, "livekit")
-          Live::ParticipantTracker.add(room.id, user.id)
-          Live::ParticipantTracker.update_metadata(room.id, user.id, { role: "participant" })
+    context "with a participant_left event and recorded presence" do
+      it "expires the participant's presence, keeps their metadata, and broadcasts the change" do
+        Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+        Live::ParticipantTracker.add(room.id, user.id)
+        Live::ParticipantTracker.update_metadata(room.id, user.id, { role: "participant" })
 
-          messages =
-            MessageBus.track_publish(Live.room_channel(room.id)) do
-              post_webhook(event_for(event: event_name))
-            end
+        messages =
+          MessageBus.track_publish(Live.room_channel(room.id)) do
+            post_webhook(event_for(event: "participant_left"))
+          end
 
-          expect(response.status).to eq(200)
-          expect(Live::ParticipantTracker.user_ids(room.id)).not_to include(user.id)
-          expect(Live::ParticipantTracker.get_metadata(room.id, user.id)[:role]).to eq(
-            "participant",
-          )
-          expect(messages.map { |message| message.data[:type] }).to include("participants")
-        end
+        expect(response.status).to eq(200)
+        expect(Live::ParticipantTracker.user_ids(room.id)).not_to include(user.id)
+        expect(Live::ParticipantTracker.get_metadata(room.id, user.id)[:role]).to eq("participant")
+        expect(messages.map { |message| message.data[:type] }).to include("participants")
+      end
+    end
+
+    context "with a participant_connection_aborted event" do
+      it "expires the participant's presence, keeps their metadata, and broadcasts the change" do
+        Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+        Live::ParticipantTracker.add(room.id, user.id)
+        Live::ParticipantTracker.update_metadata(room.id, user.id, { role: "participant" })
+
+        messages =
+          MessageBus.track_publish(Live.room_channel(room.id)) do
+            post_webhook(event_for(event: "participant_connection_aborted"))
+          end
+
+        expect(response.status).to eq(200)
+        expect(Live::ParticipantTracker.user_ids(room.id)).not_to include(user.id)
+        expect(Live::ParticipantTracker.get_metadata(room.id, user.id)[:role]).to eq("participant")
+        expect(messages.map { |message| message.data[:type] }).to include("participants")
       end
     end
 
