@@ -43,6 +43,69 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
   end
 
   describe "#create" do
+    fab!(:support_group, :group)
+    fab!(:support_user, :user)
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+
+    it "allows a creation group member without revealing the ticket link" do
+      support_group.add(support_user)
+      SiteSetting.zendesk_create_ticket_allowed_groups = support_group.id.to_s
+      sign_in(support_user)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["discourse_zendesk_plugin_has_ticket"]).to eq(true)
+      expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_zendesk_id")
+      expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_zendesk_url")
+      expect(WebMock).to have_requested(:post, zendesk_api_ticket_url).once
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(200)
+      expect(WebMock).to have_requested(:post, zendesk_api_ticket_url).once
+    end
+
+    it "denies creation to a viewer and an unrelated user" do
+      support_group.add(support_user)
+      SiteSetting.zendesk_view_ticket_allowed_groups = support_group.id.to_s
+      sign_in(support_user)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(WebMock).not_to have_requested(:post, zendesk_api_ticket_url)
+
+      sign_in(Fabricate(:user))
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(WebMock).not_to have_requested(:post, zendesk_api_ticket_url)
+    end
+
+    it "requires login even when everyone has creation permission" do
+      SiteSetting.zendesk_create_ticket_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(WebMock).not_to have_requested(:post, zendesk_api_ticket_url)
+    end
+
+    it "denies creation for topics the creation group member cannot see" do
+      support_group.add(support_user)
+      SiteSetting.zendesk_create_ticket_allowed_groups = support_group.id.to_s
+      private_topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: private_topic)
+      sign_in(support_user)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: private_topic.id }
+
+      expect(response.status).to eq(403)
+      expect(WebMock).not_to have_requested(:post, zendesk_api_ticket_url)
+    end
+
     it "creates a zendesk ticket for a topic" do
       moderator = Fabricate(:moderator)
       topic = Fabricate(:topic)
