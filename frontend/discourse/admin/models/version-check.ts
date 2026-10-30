@@ -21,9 +21,8 @@ export default interface VersionCheck extends VersionCheckPayload {}
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class VersionCheck {
   static async find(): Promise<VersionCheck> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
     return new VersionCheck(
-      (await ajax("/admin/version_check")) as VersionCheckPayload
+      await ajax<VersionCheckPayload>("/admin/version_check")
     );
   }
 
