@@ -296,6 +296,25 @@ RSpec.describe PluginGem do
     expect(installed).to be_empty
   end
 
+  it "keeps the version of a loaded gem that is not in the application's bundle" do
+    # Ruby loads some of its default gems before bundler runs. A plugin gem
+    # installed on an earlier boot plays that role here.
+    dir = add_plugin("one", %(gem "shared"), lock: { "shared" => "1.0.0" })
+    boot
+    booted_specs["shared"] = loaded_specs.fetch("shared")
+
+    write_plugin_files(dir, %(gem "shared"), { "shared" => "1.1.0" })
+    boot
+    expect(installed).to eq(%w[shared-1.0.0])
+    expect(activated).to be_empty
+
+    write_plugin_files(dir, %(gem "shared", ">= 1.1"), { "shared" => "1.1.0" })
+    expect { boot }.to raise_error(
+      /Plugin one's Gemfile needs shared >= 1.1, but Discourse has 1.0.0\z/,
+    )
+    expect(installed).to eq(%w[shared-1.0.0])
+  end
+
   it "loads dependencies from the groups enabled for the application" do
     add_plugin(
       "one",

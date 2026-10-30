@@ -87,6 +87,11 @@ module PluginGem
         directory = spec.full_gem_path if spec.source.is_a?(Bundler::Source::Path)
         [spec.name, [spec.version, directory, spec.full_name, spec.full_gem_path]]
       end
+    # Ruby loads some of its default gems before bundler runs. They are not
+    # in the application's bundle, but their version can't change anymore.
+    Gem.loaded_specs.each_value do |spec|
+      pins[spec.name] ||= [spec.version, nil, spec.full_name, spec.full_gem_path]
+    end
     pins.delete("bundler")
     app_lock = Bundler.definition.locked_gems
     app_groups = Bundler.definition.requested_dependencies.flat_map(&:groups).uniq
