@@ -17,7 +17,10 @@ describe "Live room chat panel" do
     )
   end
 
+  let(:chat_panel) { PageObjects::Components::LiveRoomChatPanel.new }
+
   before do
+    SiteSetting.chat_allow_uploads = true
     SiteSetting.live_enabled = true
     SiteSetting.live_mesh_privacy_warning_enabled = false
     SiteSetting.live_allowed_groups =
@@ -80,29 +83,53 @@ describe "Live room chat panel" do
     expect(page).to have_no_css(".chat-side-panel")
   end
 
-  it "opens the session thread from the first message sent through the starter composer" do
+  it "lets the user start a conversation with the full composer" do
     visit("/live/r/#{room.slug}?chat=true")
     click_button(I18n.t("js.live.room.join"))
-    # The panel slides in; typing into it mid-animation can miss the composer.
     wait_for_animation(find(".chat-side-panel"))
 
-    # No thread yet: the panel offers the starter composer, not the thread UI.
-    expect(page).to have_css(".chat-composer__wrapper.--live .chat-composer__input")
-    expect(page).to have_no_css(".live-chat .chat-thread")
+    expect(chat_panel).to have_toolbar
+    chat_panel.compose("kicking things off").send_message
 
-    find(".chat-composer__wrapper.--live .chat-composer__input").fill_in(with: "kicking things off")
-    # See the note above: the first send races thread creation, its message
-    # fetch, and the native composer's mount/focus against the settle check.
-    using_wait_time(20) do
-      find(".chat-composer__wrapper.--live .chat-composer__input").send_keys(:enter)
+    expect(chat_panel).to have_thread
+    expect(chat_panel).to have_message("kicking things off")
+    chat_panel.compose("a follow-up").send_message
+    expect(chat_panel).to have_message("a follow-up")
+  end
+
+  it "lets the user start a conversation with an attachment" do
+    visit("/live/r/#{room.slug}?chat=true")
+    click_button(I18n.t("js.live.room.join"))
+    wait_for_animation(find(".chat-side-panel"))
+
+    chat_panel.attach(file_from_fixtures("logo.png").path)
+    expect(chat_panel).to have_attachment
+    chat_panel.send_message
+
+    expect(chat_panel).to have_thread
+    expect(chat_panel).to have_image_message
+  end
+
+  it "keeps the user's draft when another participant starts the conversation" do
+    visit("/live/r/#{room.slug}?chat=true")
+    click_button(I18n.t("js.live.room.join"))
+    wait_for_animation(find(".chat-side-panel"))
+    chat_panel.compose("my unfinished message")
+
+    using_session(:other_participant) do
+      sign_in(admin)
+      install_live_fake_media
+      visit("/live/r/#{room.slug}?chat=true")
+      click_button(I18n.t("js.live.room.join"))
+      wait_for_animation(find(".chat-side-panel"))
+      chat_panel.compose("hello from the other participant").send_message
+      expect(chat_panel).to have_thread
     end
 
-    # The first message creates the thread and the panel swaps to the native UI.
-    expect(page).to have_css(".live-chat .chat-thread")
-    expect(page).to have_css(".live-chat .chat-message-text", text: "kicking things off")
-
-    thread = Chat::Thread.find_by(channel_id: channel.id)
-    expect(thread.original_message.message).to eq("In ##{room.slug}::room - kicking things off")
-    expect(thread.original_message.user_id).to eq(user.id)
+    expect(chat_panel).to have_thread
+    expect(chat_panel).to have_message("hello from the other participant")
+    expect(chat_panel).to have_draft("my unfinished message")
+    chat_panel.send_message
+    expect(chat_panel).to have_message("my unfinished message")
   end
 end
