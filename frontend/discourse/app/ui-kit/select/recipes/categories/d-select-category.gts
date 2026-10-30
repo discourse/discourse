@@ -126,6 +126,16 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
+  /** The control's name when the caller gives none; the placeholder is only drawn. */
+  get ariaLabel() {
+    if (this.args.ariaLabel) {
+      return this.args.ariaLabel;
+    }
+    return this.args.multiple && this.args.maximum !== 1
+      ? i18n("categories.categories")
+      : i18n("categories.category");
+  }
+
   get placeholder() {
     // The fallback ports the single chooser's empty header; multiple pickers keep the select's own.
     if (this.args.placeholder || this.args.multiple) {
@@ -363,7 +373,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   <template>
     <DSelect
       ...attributes
-      @ariaLabel={{if @ariaLabel @ariaLabel this.placeholder}}
+      @ariaLabel={{this.ariaLabel}}
       @ariaLabelledBy={{@ariaLabelledBy}}
       @clearable={{@clearable}}
       @describedBy={{@describedBy}}

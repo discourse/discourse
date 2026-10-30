@@ -1744,6 +1744,7 @@ en:
         other: "+%{count} more"
       view_all: "view all"
       category: "Category"
+      categories: "Categories"
       category_list: "Display category list"
       reorder:
         title: "Reorder Categories"

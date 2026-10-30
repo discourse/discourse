@@ -304,6 +304,9 @@ customization ports are done.
     (`category.select_with_subcategories`) and "%{category} (%{count} topics) and all
     subcategories" (`category.select_with_subcategories_count`), are placeholder strings, so
     translations can reorder them.
+  - Categories, 2026-10-29: a category picker with no caption is named "Category"
+    (`categories.category`), or "Categories" (`categories.categories`, new) when it can hold
+    more than one. Before, its placeholder was its name.
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
   to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each
@@ -429,7 +432,8 @@ A call site whose caption has an id passes it as `@ariaLabelledBy`. FormKit cust
 `@ariaLabel={{field.title}}`. The site setting and schema field controls receive their caption's
 text as `@label` and pass it on as `@ariaLabel`: the setting heading also holds a history link,
 and the schema label has no id.
-Pickers with no caption keep their placeholder as their name.
+Pickers with no caption are named "Category", or "Categories" when they can hold more than one;
+the placeholder is no longer the name.
 
 The parent-category field drops its caret icon options and the report category filter drops
 `filterable`; the recipe has no arguments for them.

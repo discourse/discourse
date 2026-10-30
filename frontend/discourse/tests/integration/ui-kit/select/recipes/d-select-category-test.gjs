@@ -197,7 +197,63 @@ module(
     setupRenderingTest(hooks);
 
     module("kind and values", function () {
-      test("a caption on the page names it through @labelledBy", async function (assert) {
+      test("a single picker is named Category, not by its placeholder", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template><DSelectCategory @placeholder="All categories" /></template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("categories.category")
+        );
+      });
+
+      test("a multiple picker is named Categories, not by its placeholder", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <DSelectCategory @multiple={{true}} @placeholder="All categories" />
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("categories.categories")
+        );
+      });
+
+      test("a multiple picker that holds one category is named Category", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <DSelectCategory @maximum={{1}} @multiple={{true}} />
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          i18n("categories.category")
+        );
+      });
+
+      test("@ariaLabel replaces the default name", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template><DSelectCategory @ariaLabel="Destination" /></template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          "Destination"
+        );
+      });
+
+      test("a caption on the page names it through @ariaLabelledBy", async function (assert) {
         const accessibleName = await loadAccessibleName();
 
         await render(
@@ -733,7 +789,7 @@ module(
         assert.strictEqual(placeholderText(), "root none label");
       });
 
-      test("multiple mode keeps the select's own empty text and name", async function (assert) {
+      test("multiple mode keeps the select's own empty text", async function (assert) {
         this.siteSettings.allow_uncategorized_topics = true;
 
         await render(<template><Host @multiple={{true}} /></template>);
@@ -743,9 +799,6 @@ module(
           i18n("d_select.add_placeholder"),
           "an empty multiple picker invites adding"
         );
-        assert
-          .dom("[role='combobox']")
-          .hasAria("label", i18n("d_select.label"), "no category names it");
       });
     });
 

@@ -2,6 +2,9 @@ import { getOwner } from "@ember/owner";
 import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import ActivityByCategory from "discourse/admin/components/dashboard/engagement/activity-by-category";
+import ReportFilterCategory from "discourse/admin/components/report-filters/category";
+import ReportFilterCategoryList from "discourse/admin/components/report-filters/category-list";
 import SchemaSettingField from "discourse/admin/components/schema-setting/field";
 import SiteSettingComponent from "discourse/admin/components/site-setting";
 import SiteSettingCategoryList from "discourse/admin/components/site-settings/category-list";
@@ -27,6 +30,7 @@ import {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
 } from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
+import { i18n } from "discourse-i18n";
 
 const TOP = ".category-breadcrumb__category-selector";
 const SUB = ".category-breadcrumb__subcategory-selector";
@@ -570,6 +574,46 @@ module(
           this.nameOf,
           find(".schema-field"),
           ".schema-field__label"
+        );
+      });
+
+      for (const [kind, Filter, name] of [
+        ["category", ReportFilterCategory, "categories.category"],
+        ["category list", ReportFilterCategoryList, "categories.categories"],
+      ]) {
+        test(`a report's ${kind} filter is named for what it filters`, async function (assert) {
+          const filter = { id: "category" };
+          const noop = () => {};
+          await render(
+            <template>
+              <Filter @applyFilter={{noop}} @filter={{filter}} />
+            </template>
+          );
+
+          assert.strictEqual(
+            this.nameOf(find("[role='combobox']")),
+            i18n(name)
+          );
+        });
+      }
+
+      test("the dashboard's activity by category filter is named for what it filters", async function (assert) {
+        const activity = { total: 0, rows: [] };
+        const start = new Date("2026-04-01");
+        const end = new Date("2026-04-30");
+        await render(
+          <template>
+            <ActivityByCategory
+              @activity={{activity}}
+              @endDate={{end}}
+              @startDate={{start}}
+            />
+          </template>
+        );
+
+        assert.strictEqual(
+          this.nameOf(find(".db-activity [role='combobox']")),
+          i18n("categories.categories")
         );
       });
 

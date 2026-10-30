@@ -55,11 +55,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       - ☐ Tag pickers.
       - ☐ The mobile modal is named by `@ariaLabel` only, because float-kit's menu modal takes no
         `aria-labelledby`. A picker named through `@ariaLabelledBy` reads "Options" there.
-      - ☐ Pickers with no caption take their name from the placeholder: the composer and topic
-        edit read "Category…", report and dashboard filters "All categories". A single picker
-        holding a value reads "All categories, <name>". A multiple picker with no placeholder
-        reads "Options": the dashboard's activity by category, and the translations scope in a
-        plugin.
+      - ☑ Pickers with no caption are named "Category", or "Categories" when they can hold more
+        than one (2026-10-29). Before, the placeholder was the name ("All categories, <name>"),
+        and a multiple picker with no placeholder read "Options".
     - ☑ Emoji-style category badges draw the emoji as decoration (2026-10-29); VoiceOver reads
       the name alone.
     - ☑ The mobile panel's search field lines up with the rows' content (2026-10-29).

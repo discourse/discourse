@@ -730,8 +730,11 @@ The category family has two recipes:
   - `@disabledCategories` are shown only as disabled rows at the top, described as read-only,
     and stay listed while a search matches them. The composer passes the category a new topic
     started from but cannot be posted in.
-  - `@placeholder` is the trigger text with no value. `@noneLabel` adds a selectable "none" row
-    instead.
+  - `@placeholder` is the trigger text with no value; it never names the control. `@noneLabel`
+    adds a selectable "none" row instead.
+  - Without `@ariaLabel` or `@ariaLabelledBy`, the control is named "Category"
+    (`categories.category`), or "Categories" (`categories.categories`) when it can hold more than
+    one: multiple, with `@maximum` other than 1.
   - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.
   - `@selectDescendants` (the default when multiple) groups a search of two or more characters
     by family and follows each family's category with a footer row that adds the category and
