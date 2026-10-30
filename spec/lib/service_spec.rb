@@ -435,6 +435,53 @@ RSpec.describe Service do
         end
       end
 
+      it "distinguishes a model default from supplied input", :aggregate_failures do
+        expect(result.params.id).to eq(1)
+        expect(result.params).not_to be_provided(:id)
+      end
+
+      context "when an explicit nil replaces a model default" do
+        let(:params) { { id: nil } }
+
+        it "retains the supplied nil", :aggregate_failures do
+          expect(result.params.id).to be_nil
+          expect(result.params).to be_provided(:id)
+        end
+      end
+
+      context "when the supplied value equals the model default" do
+        let(:params) { { id: 1 } }
+
+        it "marks the value as supplied" do
+          expect(result.params).to be_provided(:id)
+        end
+      end
+
+      context "when an undeclared input resembles presence metadata" do
+        let(:params) { { provided_attributes: [:id] } }
+
+        it "does not mark the model default as supplied" do
+          expect(result.params).not_to be_provided(:id)
+        end
+      end
+
+      context "when a named contract follows the default contract" do
+        let(:params) { { name: "Jane" } }
+
+        before do
+          service_class.params(:selection) do
+            attribute :id, :integer
+            attribute :name, :string
+          end
+        end
+
+        it "preserves supplied input across contracts", :aggregate_failures do
+          expect(result.selection_contract).to have_attributes(id: 1, name: "Jane")
+          expect(result.selection_contract).to be_provided(:name)
+          expect(result.selection_contract).not_to be_provided(:id)
+        end
+      end
+
       context "when the model has nested attributes" do
         let(:params) { super().merge(dimensions: { width: 800, crop: { x: 10 } }) }
         let(:defaults) do

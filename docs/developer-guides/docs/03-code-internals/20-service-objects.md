@@ -664,6 +664,14 @@ Some methods have been added to the contract object to make your life a bit easi
 - `#slice` and `#merge` are available.
 - `#to_hash` has been implemented, so the contract object will be automatically cast as a hash by Ruby depending on the context. For example, with an ActiveRecord model, you can do this: `user.update(**params)`.
 
+### Supplied parameters
+
+Use `params.provided?(:user_id)` to check whether the caller supplied a top-level attribute. String and symbol names are accepted. Explicit `nil`, `false`, empty arrays, and empty hashes count as supplied values. Undeclared attributes do not.
+
+Declaration defaults and values from `default_values_from:` do not count as supplied input. For example, an omitted `user_id` can receive a model default while `params.provided?(:user_id)` remains false. An explicitly supplied `user_id: nil` makes the predicate true. Presence is retained when a named contract follows the default contract.
+
+The predicate records input presence before coercion and later attribute assignment; it does not report whether a value changed. This tracks top-level inputs only, not the original presence of individual fields inside nested contracts populated from model defaults.
+
 ### Nested attributes
 
 It’s fairly common to get nested parameters from an endpoint. This usually helps keeping things organized. Contracts support nested hashes and nested arrays.
