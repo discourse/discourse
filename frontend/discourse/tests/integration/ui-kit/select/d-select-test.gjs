@@ -1135,7 +1135,12 @@ module(
     test("the closed root is a focusable button naming the field and its value", async function (assert) {
       await render(
         <template>
-          <DSelect class="kt" @items={{ITEMS}} @label="Fruit" @value={{2}} />
+          <DSelect
+            class="kt"
+            @ariaLabel="Fruit"
+            @items={{ITEMS}}
+            @value={{2}}
+          />
         </template>
       );
 
@@ -1287,10 +1292,10 @@ module(
         <template>
           <DSelect
             class="kt"
+            @ariaLabel="Settings"
             @icon="gear"
             @iconOnly={{true}}
             @items={{ITEMS}}
-            @label="Settings"
             @value={{2}}
           />
         </template>
@@ -1413,10 +1418,10 @@ module(
         <template>
           <DSelect
             class="kt"
+            @ariaLabel="Settings"
             @icon="gear"
             @iconOnly={{true}}
             @items={{ITEMS}}
-            @label="Settings"
             @value={{2}}
           />
         </template>
@@ -2866,8 +2871,8 @@ module(
         <template>
           <DSelect
             class="lbl-static"
+            @ariaLabel="Category"
             @items={{ITEMS}}
-            @label="Category"
             @value={{1}}
             @variant="static"
           >
@@ -2880,8 +2885,8 @@ module(
           </DSelect>
           <DSelect
             class="lbl-button"
+            @ariaLabel="Category"
             @items={{ITEMS}}
-            @label="Category"
             @value={{1}}
             @variant="button"
           >

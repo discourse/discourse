@@ -32,11 +32,11 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="group-watching-categories-label"
           @exclude={{otherCategoryIds
             @controller.selectedCategories
             @controller.model.watchingCategories
           }}
-          @labelledBy="group-watching-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.watchingCategories)}}
           @value={{@controller.model.watchingCategories}}
@@ -64,11 +64,11 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="group-tracking-categories-label"
           @exclude={{otherCategoryIds
             @controller.selectedCategories
             @controller.model.trackingCategories
           }}
-          @labelledBy="group-tracking-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.trackingCategories)}}
           @value={{@controller.model.trackingCategories}}
@@ -96,11 +96,11 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="group-watching-first-post-categories-label"
           @exclude={{otherCategoryIds
             @controller.selectedCategories
             @controller.model.watchingFirstPostCategories
           }}
-          @labelledBy="group-watching-first-post-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.watchingFirstPostCategories)}}
           @value={{@controller.model.watchingFirstPostCategories}}
@@ -130,11 +130,11 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="group-regular-categories-label"
           @exclude={{otherCategoryIds
             @controller.selectedCategories
             @controller.model.regularCategories
           }}
-          @labelledBy="group-regular-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.regularCategories)}}
           @value={{@controller.model.regularCategories}}
@@ -162,11 +162,11 @@ export default <template>
       {{#if @controller.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="group-muted-categories-label"
           @exclude={{otherCategoryIds
             @controller.selectedCategories
             @controller.model.mutedCategories
           }}
-          @labelledBy="group-muted-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @controller.model.mutedCategories)}}
           @value={{@controller.model.mutedCategories}}

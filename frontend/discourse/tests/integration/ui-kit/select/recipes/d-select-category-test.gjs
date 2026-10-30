@@ -203,7 +203,10 @@ module(
         await render(
           <template>
             <span id="category-caption">Destination</span>
-            <DSelectCategory @labelledBy="category-caption" @value={{1001}} />
+            <DSelectCategory
+              @ariaLabelledBy="category-caption"
+              @value={{1001}}
+            />
           </template>
         );
 

@@ -57,6 +57,7 @@ export default class FKControlTagChooser extends FKBaseControl {
       <DSelectTag
         class="form-kit__control-tag-chooser"
         @allowCreate={{@allowCreate}}
+        @ariaLabel={{@field.title}}
         @categoryId={{@categoryId}}
         @describedBy={{@field.describedBy}}
         @disabled={{@field.disabled}}
@@ -66,7 +67,6 @@ export default class FKControlTagChooser extends FKBaseControl {
         @id={{@field.id}}
         @ignoreRestrictions={{@showAllTags}}
         @invalid={{if @field.error true false}}
-        @label={{@field.title}}
         @maximum={{this.maximum}}
         @multiple={{this.multiple}}
         @onChange={{this.handleSelectChange}}

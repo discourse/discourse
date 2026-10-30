@@ -40,11 +40,11 @@ export default class IconOnlySelectExample extends Component {
   <template>
     <div class="select-examples__alignment">
       <DSelect
+        @ariaLabel={{i18n "styleguide.sections.select.icon_only_label"}}
         @icon={{this.icon}}
         @iconOnly={{true}}
         @identifier="sg-icon-only"
         @items={{this.items}}
-        @label={{i18n "styleguide.sections.select.icon_only_label"}}
         @onChange={{this.onChange}}
         @value={{this.value}}
         @variant="static"

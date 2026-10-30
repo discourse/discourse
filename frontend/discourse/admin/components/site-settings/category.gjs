@@ -13,8 +13,8 @@ export default class Category extends Component {
     {{#if this.siteSettings.enable_new_select_controls}}
       <DSelectCategory
         class="category-chooser"
+        @ariaLabel={{@label}}
         @emit="ids"
-        @label={{@label}}
         @onChange={{@changeValueCallback}}
         @permission="create"
         @placeholder={{i18n "category.none"}}

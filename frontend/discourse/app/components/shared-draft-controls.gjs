@@ -75,8 +75,8 @@ export default class SharedDraftControls extends Component {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-chooser"
+              @ariaLabelledBy="shared-draft-destination-category-label"
               @emit="ids"
-              @labelledBy="shared-draft-destination-category-label"
               @onChange={{this.updateDestinationCategory}}
               @permission="create"
               @value={{@topic.destination_category_id}}

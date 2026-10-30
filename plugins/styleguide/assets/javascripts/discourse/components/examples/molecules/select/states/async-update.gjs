@@ -79,9 +79,11 @@ export default class AsyncUpdateSelectExample extends Component {
     <div class="select-examples__pair">
       <div class="select-examples__pair-item">
         <DSelect
+          @ariaLabel={{i18n
+            "styleguide.sections.select.async_update_single_label"
+          }}
           @identifier="sg-async-update"
           @items={{this.items}}
-          @label={{i18n "styleguide.sections.select.async_update_single_label"}}
           @onChange={{this.onChange}}
           @placeholder={{i18n
             "styleguide.sections.select.placeholders.choose_language"
@@ -91,9 +93,11 @@ export default class AsyncUpdateSelectExample extends Component {
       </div>
       <div class="select-examples__pair-item">
         <DSelect
+          @ariaLabel={{i18n
+            "styleguide.sections.select.async_update_multi_label"
+          }}
           @identifier="sg-async-update-tags"
           @items={{this.tagItems}}
-          @label={{i18n "styleguide.sections.select.async_update_multi_label"}}
           @labelField="label"
           @multiple={{true}}
           @onChange={{this.onTagsChange}}

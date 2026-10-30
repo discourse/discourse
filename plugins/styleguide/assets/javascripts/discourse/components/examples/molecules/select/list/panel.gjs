@@ -63,9 +63,9 @@ export default class ListSelectExample extends Component {
         <Form @data={{this.data}} as |form|>
           <DSelectList
             class="select-examples__tag-list --include"
+            @ariaLabel={{i18n "styleguide.sections.select.list_include"}}
             @hideSelected={{true}}
             @identifier="sg-list-include"
-            @label={{i18n "styleguide.sections.select.list_include"}}
             @labelField="label"
             @load={{this.load}}
             @onChange={{this.updateIncluded}}
@@ -95,9 +95,9 @@ export default class ListSelectExample extends Component {
           {{#if this.exclude}}
             <DSelectList
               class="select-examples__tag-list --exclude"
+              @ariaLabel={{i18n "styleguide.sections.select.list_exclude"}}
               @hideSelected={{true}}
               @identifier="sg-list-exclude"
-              @label={{i18n "styleguide.sections.select.list_exclude"}}
               @labelField="label"
               @load={{this.load}}
               @onChange={{this.updateExcluded}}

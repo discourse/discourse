@@ -507,6 +507,7 @@ export default class ComposerContainer extends Component {
                                 "has-selection"
                               }}
                               @allowCreate={{true}}
+                              @ariaLabel={{i18n "tagging.choose_for_topic"}}
                               @categoryId={{this.composer.model.categoryId}}
                               @describedBy={{if
                                 this.composer.tagValidation.failed
@@ -519,7 +520,6 @@ export default class ComposerContainer extends Component {
                                 composer=this.composer.model
                               }}
                               @invalid={{this.composer.tagValidation.failed}}
-                              @label={{i18n "tagging.choose_for_topic"}}
                               @legacyKind="mini-tag-chooser"
                               @maxVisibleChips={{if
                                 (and this.composerRedesign this.site.mobileView)

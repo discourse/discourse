@@ -137,13 +137,14 @@ interface DSelectSignature {
      */
     searchIcon?: string;
     noResultsLabel?: string;
-    label?: string;
+    /** The control's name for assistive technology; it is never drawn. */
+    ariaLabel?: string;
     /**
      * Id of a visible caption that names the control, for a field whose caption is already on
-     * the page. It replaces `@label` for assistive technology on every part of the control, and
-     * the held value, or the count of a compact multiple select, is read after it.
+     * the page. It replaces `@ariaLabel` on every part of the control, and the held value, or
+     * the count of a compact multiple select, is read after it.
      */
-    labelledBy?: string;
+    ariaLabelledBy?: string;
     /**
      * Identity and description for the element that actually carries `role="combobox"`, which
      * differs by variant: the trigger root on `static`, the query input otherwise. Passing them
@@ -480,11 +481,11 @@ export default class DSelect extends Component<DSelectSignature> {
     });
     associateDestroyableChild(this, this.host);
     associateDestroyableChild(this, this.interaction);
-    if (DEBUG && args.labelledBy) {
+    if (DEBUG && args.ariaLabelledBy) {
       schedule("afterRender", () => {
-        const id = this.args.labelledBy;
+        const id = this.args.ariaLabelledBy;
         warn(
-          `DSelect: @labelledBy points at "${id}", which is not in the page, so the control has no name`,
+          `DSelect: @ariaLabelledBy points at "${id}", which is not in the page, so the control has no name`,
           !id || !!document.getElementById(id),
           { id: "discourse.d-select.labelled-by-missing" }
         );
@@ -498,14 +499,14 @@ export default class DSelect extends Component<DSelectSignature> {
     return kind ? `d-select__content --kind-${kind}` : "d-select__content";
   }
 
-  /** Stable id for the hidden value read after a `@labelledBy` caption. */
+  /** Stable id for the hidden value read after a `@ariaLabelledBy` caption. */
   get labelledValueId(): string {
     return `${this.#listboxId}-labelled-value`;
   }
 
   /** The caption, followed by the held value when there is one to read. */
   get labelledByWithValue(): string | undefined {
-    const caption = this.presenter.labelledBy;
+    const caption = this.presenter.ariaLabelledBy;
     if (!caption) {
       return undefined;
     }
@@ -848,7 +849,7 @@ export default class DSelect extends Component<DSelectSignature> {
             @hideSelectionMarker={{@hideSelected}}
             @hintRole="status"
             @label={{this.presenter.ariaLabelText}}
-            @labelledBy={{this.presenter.labelledBy}}
+            @labelledBy={{this.presenter.ariaLabelledBy}}
             @limitId={{this.limitId}}
             @limitMessage={{unless
               this.engine.belowMinChars
@@ -916,7 +917,7 @@ export default class DSelect extends Component<DSelectSignature> {
                     @id={{this.panelInputId}}
                     @invalid={{@invalid}}
                     @label={{this.presenter.ariaLabelText}}
-                    @labelledBy={{this.presenter.labelledBy}}
+                    @labelledBy={{this.presenter.ariaLabelledBy}}
                     @listboxId={{this.panelListboxId}}
                     @onChipFocus={{this.listbox.clearCursor}}
                     @onEscape={{this.interaction.escapePanel}}
@@ -972,7 +973,7 @@ export default class DSelect extends Component<DSelectSignature> {
                       @engine={{this.engine}}
                       @expanded={{true}}
                       @label={{this.presenter.ariaLabelText}}
-                      @labelledBy={{this.presenter.labelledBy}}
+                      @labelledBy={{this.presenter.ariaLabelledBy}}
                       @listboxId={{this.panelListboxId}}
                       @onRequestClose={{menuArgs.close}}
                       @placeholder={{this.presenter.searchPlaceholderText}}

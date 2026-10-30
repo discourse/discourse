@@ -905,7 +905,7 @@ export default class SelectEngine {
       {
         caretIcon: args.caretIcon,
         iconOnly: args.iconOnly,
-        label: args.label,
+        ariaLabel: args.ariaLabel,
         placeholder: args.placeholder,
         searchPlaceholder: args.searchPlaceholder,
         searchIcon: args.searchIcon,

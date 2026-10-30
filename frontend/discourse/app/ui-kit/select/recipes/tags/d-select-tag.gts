@@ -21,6 +21,7 @@ const DSelectTag: TemplateOnlyComponent<DSelectTagSignature> = <template>
   <SelectTagBase
     ...attributes
     @allowCreate={{@allowCreate}}
+    @ariaLabel={{@ariaLabel}}
     @categoryId={{@categoryId}}
     @describedBy={{@describedBy}}
     @disabled={{@disabled}}
@@ -37,7 +38,6 @@ const DSelectTag: TemplateOnlyComponent<DSelectTagSignature> = <template>
     @items={{@items}}
     @kind="select-tag"
     @kindContext={{hash value=@value categoryId=@categoryId exclude=@exclude}}
-    @label={{@label}}
     @legacyKind={{if @legacyKind @legacyKind "tag-chooser"}}
     @load={{@load}}
     @maximum={{@maximum}}

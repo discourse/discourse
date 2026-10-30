@@ -52,7 +52,7 @@ interface DSelectCategoryFilterSignature {
     /** Includes Uncategorized; defaults to the site setting. */
     uncategorized?: boolean;
     /** Accessible control name; defaults to what the level filters. The held value follows it. */
-    label?: string;
+    ariaLabel?: string;
     /** Text for an empty level; defaults to the level's name. */
     placeholder?: string;
     /** Receives a site category or a shortcut; never navigates. */
@@ -75,9 +75,9 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   @service declare currentUser: User | null;
   @service declare siteSettings: CategorySettings;
 
-  get label() {
+  get ariaLabel() {
     return (
-      this.args.label ||
+      this.args.ariaLabel ||
       i18n(
         this.args.parentCategory
           ? "categories.filter_by_subcategories_label"
@@ -243,12 +243,12 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     <DSelect
       class={{if this.filtering "category-drop --filtering" "category-drop"}}
       ...attributes
+      @ariaLabel={{this.ariaLabel}}
       @caretIcon={{hash closed="angle-right" open="angle-down"}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @kind="select-category-filter"
       @kindContext={{hash value=@value parentCategory=@parentCategory}}
-      @label={{this.label}}
       @legacyKind={{if @legacyKind @legacyKind "category-drop"}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}

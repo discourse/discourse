@@ -260,9 +260,9 @@ export default class BoardsColumnSettings extends Component {
                       {{#if this.siteSettings.enable_new_select_controls}}
                         <DSelectCategory
                           class="category-chooser"
+                          @ariaLabel={{field.title}}
                           @clearable={{true}}
                           @emit="ids"
-                          @label={{field.title}}
                           @onChange={{fn this.onCategoryChange field}}
                           @permission="create"
                           @value={{readonly data.move_to_category_id}}

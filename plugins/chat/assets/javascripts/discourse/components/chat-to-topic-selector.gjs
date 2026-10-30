@@ -145,9 +145,9 @@ export default class ChatToTopicSelector extends Component {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-chooser small"
+              @ariaLabelledBy="new-topic-category-selector-label"
               @emit="ids"
               @id="new-topic-category-selector"
-              @labelledBy="new-topic-category-selector-label"
               @onChange={{fn (mut this.categoryId)}}
               @permission="create"
               @value={{this.categoryId}}

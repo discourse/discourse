@@ -416,11 +416,11 @@ module(
       await typing;
     });
 
-    test("label names the combobox and the listbox", async function (assert) {
-      overrideOptions(() => ({ label: "Fruit picker" }));
+    test("ariaLabel names the combobox and the listbox", async function (assert) {
+      overrideOptions(() => ({ ariaLabel: "Fruit picker" }));
 
       await render(
-        <template><DSelect @items={{ITEMS}} @label="Call site" /></template>
+        <template><DSelect @ariaLabel="Call site" @items={{ITEMS}} /></template>
       );
       await click("[role='combobox']");
 
@@ -522,8 +522,8 @@ module(
       await render(
         <template>
           <DSelect
+            @ariaLabel="Settings"
             @items={{ITEMS}}
-            @label="Settings"
             @value={{2}}
             @variant="static"
           />
@@ -563,20 +563,20 @@ module(
       customize((selects) => {
         selects.forIdentifier("fruit", (spec) =>
           spec.options((current) => {
-            seen.push(["identifier", current.label]);
-            return { label: "From identifier" };
+            seen.push(["identifier", current.ariaLabel]);
+            return { ariaLabel: "From identifier" };
           })
         );
         selects.forKind("picker", (spec) =>
           spec.options((current) => {
-            seen.push(["kind", current.label]);
-            return { label: "From kind" };
+            seen.push(["kind", current.ariaLabel]);
+            return { ariaLabel: "From kind" };
           })
         );
         selects.forAll((spec) =>
           spec.options((current) => {
-            seen.push(["all", current.label]);
-            return { label: "From all", placeholder: "Kept" };
+            seen.push(["all", current.ariaLabel]);
+            return { ariaLabel: "From all", placeholder: "Kept" };
           })
         );
       });
@@ -584,10 +584,10 @@ module(
       await render(
         <template>
           <DSelect
+            @ariaLabel="Call site"
             @identifier="fruit"
             @items={{ITEMS}}
             @kind="picker"
-            @label="Call site"
           />
         </template>
       );
@@ -653,7 +653,7 @@ module(
       let calls = 0;
       overrideOptions(() => {
         calls++;
-        return { label: state.label };
+        return { ariaLabel: state.label };
       });
 
       await render(<template><DSelect @items={{MANY}} /></template>);
@@ -718,7 +718,7 @@ module(
         selects.forAll((spec) => spec.options(() => undefined));
         selects.forAll((spec) => spec.options(() => "label"));
         selects.forAll((spec) =>
-          spec.options(() => ({ label: "Kept", lable: "Typo" }))
+          spec.options(() => ({ ariaLabel: "Kept", lable: "Typo" }))
         );
       });
 
@@ -1117,20 +1117,20 @@ module(
     });
 
     test("delivered options carry the resolved core keys too", async function (assert) {
-      const itemsFor = (options) => [{ id: 1, name: options?.label }];
+      const itemsFor = (options) => [{ id: 1, name: options?.ariaLabel }];
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options(() => ({ label: "From extension" }))
+          spec.options(() => ({ ariaLabel: "From extension" }))
         )
       );
 
       await render(
         <template>
           <DSelect
+            @ariaLabel="Call site"
             @items={{itemsFor}}
             @kind="recipe"
             @kindOptions={{hash prefix="base"}}
-            @label="Call site"
           />
         </template>
       );
@@ -1207,7 +1207,7 @@ module(
       const warn = sinon.stub(console, "warn");
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options(() => ({ prefix: "ok", label: "ok", sufix: "typo" }))
+          spec.options(() => ({ prefix: "ok", ariaLabel: "ok", sufix: "typo" }))
         )
       );
 
@@ -1259,13 +1259,13 @@ module(
           <DSelect
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash label="Mine"}}
+            @kindOptions={{hash ariaLabel="Mine"}}
           />
         </template>
       );
 
       assert.true(
-        message?.includes("label"),
+        message?.includes("ariaLabel"),
         `the assertion names the colliding key: ${message}`
       );
     });

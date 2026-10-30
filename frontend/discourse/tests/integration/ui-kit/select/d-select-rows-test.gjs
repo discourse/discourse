@@ -1147,10 +1147,10 @@ class CompactStripHost extends Component {
 
   <template>
     <DSelect
+      @ariaLabel="Fruit"
       @describedBy="u1f-help"
       @disabled={{@disabled}}
       @items={{@items}}
-      @label="Fruit"
       @load={{@load}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@cap.value}}

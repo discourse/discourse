@@ -340,10 +340,10 @@ export default class SelectComparison extends Component {
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
             <DSelectTag
+              @ariaLabel={{i18n "tagging.settings.select_tag"}}
               @emit="names"
               @excludeSynonyms={{true}}
               @ignoreRestrictions={{true}}
-              @label={{i18n "tagging.settings.select_tag"}}
               {{! TODO (select-kit-replacement-cleanup): Retain the dropdown's compatibility class during rollout. }}
               @legacyKind="tag-dropdown"
               @multiple={{false}}

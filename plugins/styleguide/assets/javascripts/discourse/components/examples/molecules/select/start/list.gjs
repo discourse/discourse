@@ -21,9 +21,9 @@ export default class ListSelectStartExample extends Component {
 
   <template>
     <DSelectList
+      @ariaLabel={{i18n "styleguide.sections.select.list_start_label"}}
       @identifier="sg-list-start"
       @items={{this.items}}
-      @label={{i18n "styleguide.sections.select.list_start_label"}}
       @onChange={{this.onChange}}
       @value={{this.value}}
     />

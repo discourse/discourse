@@ -16,9 +16,9 @@ export default class ListWrappingExample extends Component {
   <template>
     <DSelectList
       class="select-examples__tag-list"
+      @ariaLabel={{i18n "styleguide.sections.select.list_languages_label"}}
       @identifier="sg-list-wrapping"
       @items={{LOCALES}}
-      @label={{i18n "styleguide.sections.select.list_languages_label"}}
       @onChange={{this.onChange}}
       @searchPlaceholder={{i18n
         "styleguide.sections.select.placeholders.search_languages"

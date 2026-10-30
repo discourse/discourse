@@ -283,9 +283,9 @@ export default class TagSettings extends Component {
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectTag
+                @ariaLabel={{i18n "tagging.settings.select_tag"}}
                 @excludeSynonyms={{true}}
                 @ignoreRestrictions={{true}}
-                @label={{i18n "tagging.settings.select_tag"}}
                 @legacyKind="tag-dropdown"
                 @multiple={{false}}
                 @onChange={{this.editTag}}

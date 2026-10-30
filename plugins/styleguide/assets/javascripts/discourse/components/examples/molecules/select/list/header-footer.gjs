@@ -24,9 +24,9 @@ export default class ListHeaderFooterExample extends Component {
   <template>
     <DSelectList
       class="select-examples__tag-list"
+      @ariaLabel={{i18n "styleguide.sections.select.list_tags_label"}}
       @hideSelected={{true}}
       @identifier="sg-list-header-footer"
-      @label={{i18n "styleguide.sections.select.list_tags_label"}}
       @labelField="label"
       @load={{this.load}}
       @maximum={{3}}

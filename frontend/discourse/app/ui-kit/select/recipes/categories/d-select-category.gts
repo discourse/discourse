@@ -30,8 +30,8 @@ interface DSelectCategorySignature {
     | "maximum"
     | "clearable"
     | "disabled"
-    | "label"
-    | "labelledBy"
+    | "ariaLabel"
+    | "ariaLabelledBy"
     | "id"
     | "describedBy"
     | "invalid"
@@ -363,6 +363,8 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   <template>
     <DSelect
       ...attributes
+      @ariaLabel={{if @ariaLabel @ariaLabel this.placeholder}}
+      @ariaLabelledBy={{@ariaLabelledBy}}
       @clearable={{@clearable}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
@@ -381,8 +383,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         scope=@scope
         exclude=@exclude
       }}
-      @label={{if @label @label this.placeholder}}
-      @labelledBy={{@labelledBy}}
       @legacyKind={{this.legacyKind}}
       @load={{if @load @load this.load}}
       @loadContext={{this.loadContext}}

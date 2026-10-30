@@ -83,9 +83,9 @@ export default class SelectHero extends Component {
             {{i18n "styleguide.sections.select.hero.category"}}
           </span>
           <DSelect
+            @ariaLabel={{i18n "styleguide.sections.select.hero.category"}}
             @identifier="sg-hero-category"
             @items={{this.categories}}
-            @label={{i18n "styleguide.sections.select.hero.category"}}
             @onChange={{this.updateCategory}}
             @placeholder={{i18n "styleguide.sections.select.hero.category"}}
             @value={{this.categoryValue}}
@@ -106,9 +106,9 @@ export default class SelectHero extends Component {
             {{i18n "styleguide.sections.select.hero.tags"}}
           </span>
           <DSelect
+            @ariaLabel={{i18n "styleguide.sections.select.hero.tags"}}
             @identifier="sg-hero-tags"
             @items={{this.tagItems}}
-            @label={{i18n "styleguide.sections.select.hero.tags"}}
             @labelField="label"
             @multiple={{true}}
             @onChange={{this.updateTags}}
@@ -132,9 +132,9 @@ export default class SelectHero extends Component {
             {{i18n "styleguide.sections.select.hero.notifications"}}
           </span>
           <DSelect
+            @ariaLabel={{i18n "styleguide.sections.select.hero.notifications"}}
             @identifier="sg-hero-notifications"
             @items={{this.notificationLevels}}
-            @label={{i18n "styleguide.sections.select.hero.notifications"}}
             @labelField="title"
             @onChange={{this.updateNotification}}
             @value={{this.notificationValue}}

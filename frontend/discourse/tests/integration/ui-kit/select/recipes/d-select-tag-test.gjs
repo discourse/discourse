@@ -1424,9 +1424,9 @@ module(
         await render(
           <template>
             <DSelectTag
+              @ariaLabel="Functional tags"
               @emit="names"
               @items={{items}}
-              @label="Functional tags"
               @multiple={{false}}
               @onChange={{onChange}}
               @value="STRATEGY"
@@ -1445,7 +1445,7 @@ module(
             "functional sources match stored names"
           );
         assert.strictEqual(
-          items.lastCall.args[0].label,
+          items.lastCall.args[0].ariaLabel,
           "Functional tags",
           "resolved presentation options reach the source"
         );

@@ -48,10 +48,10 @@ export interface SelectPresentationOptions {
         /** The glyph while the menu is closed. */
         closed?: string;
       }>;
-  /** Suppresses trigger text when a label supplies its accessible name. */
+  /** Suppresses trigger text when `ariaLabel` supplies its accessible name. */
   iconOnly?: boolean;
-  /** The accessible name of the trigger and listbox. */
-  label?: string;
+  /** The accessible name of the trigger and listbox; it is never drawn. */
+  ariaLabel?: string;
   /** Text shown when nothing is selected. */
   placeholder?: string;
   /** Text shown in an empty panel filter. */
@@ -87,7 +87,7 @@ export interface SelectResolvedContext extends SelectCustomizationContext {
 const CORE_OPTION_KEYS = new Set<keyof SelectPresentationOptions>([
   "caretIcon",
   "iconOnly",
-  "label",
+  "ariaLabel",
   "placeholder",
   "searchPlaceholder",
   "searchIcon",
@@ -360,10 +360,10 @@ export default class SelectCustomizations {
       }
       current = this.#optionsSnapshot(next);
     }
-    if (current.iconOnly && !current.label) {
+    if (current.iconOnly && !current.ariaLabel) {
       if (DEBUG) {
         warn(
-          "DSelect: iconOnly requires a label and is ignored without one",
+          "DSelect: iconOnly requires an ariaLabel and is ignored without one",
           false,
           {
             id: "discourse.d-select.icon-only-without-label",

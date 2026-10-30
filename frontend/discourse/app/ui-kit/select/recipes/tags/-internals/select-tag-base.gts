@@ -105,8 +105,8 @@ export interface SelectTagBaseSignature {
     id?: string;
     /** Translated text displayed when no tags are selected. */
     placeholder?: string;
-    /** Accessible control label. */
-    label?: string;
+    /** Accessible control name; it is never drawn. */
+    ariaLabel?: string;
     /** Additional persistent help element ids. */
     describedBy?: string;
     /** Skips the forwarded `:footer` block; see `DSelect`'s `@suppressFooter`. */
@@ -498,6 +498,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       class={{@kind}}
       ...attributes
       @allowCreate={{this.allowCreate}}
+      @ariaLabel={{@ariaLabel}}
       @createItem={{this.createItem}}
       @describedBy={{this.describedBy}}
       @disabled={{@disabled}}
@@ -510,7 +511,6 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       @kind={{@kind}}
       @kindContext={{@kindContext}}
       @kindOptions={{@kindOptions}}
-      @label={{@label}}
       @labelField="name"
       @legacyKind={{@legacyKind}}
       @load={{this.sourceLoad}}

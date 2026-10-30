@@ -193,11 +193,11 @@ module(
         await render(
           <template>
             <DSelectTagGroup
+              @ariaLabel="Groups"
               @id="groups-field"
               @identifier="groups"
               @instanceContext={{hash field="groups"}}
               @items={{items}}
-              @label="Groups"
               @multiple={{false}}
               @onChange={{onChange}}
               @value={{value.value}}

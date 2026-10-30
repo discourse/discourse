@@ -97,9 +97,9 @@ export default <template>
         {{#if @controller.siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-chooser"
+            @ariaLabelledBy="review-filter-category-label"
             @clearable={{true}}
             @emit="ids"
-            @labelledBy="review-filter-category-label"
             @onChange={{fn (mut @controller.filterCategoryId)}}
             @permission="create"
             @placeholder={{i18n "review.filters.all_categories"}}

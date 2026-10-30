@@ -69,8 +69,8 @@ interface DSelectTagFilterSignature {
     identifier?: string;
     /** Call-site state exposed to customizations. */
     instanceContext?: object;
-    /** Accessible control label. */
-    label?: string;
+    /** Accessible control name; it is never drawn. */
+    ariaLabel?: string;
     /** Prevent opening or selecting. */
     disabled?: boolean;
   };
@@ -262,6 +262,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     {{#if this.multiple}}
       <SelectTagBase
         ...attributes
+        @ariaLabel={{@ariaLabel}}
         @categoryId={{@categoryId}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}
@@ -269,7 +270,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @items={{this.localItems}}
         @kind="select-tag-filter"
         @kindContext={{hash value=@value categoryId=@categoryId}}
-        @label={{@label}}
         @legacyKind={{this.legacyKind}}
         @load={{@load}}
         @multiple={{true}}
@@ -300,6 +300,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       <DSelect
         class={{this.rootClass}}
         ...attributes
+        @ariaLabel={{if @ariaLabel @ariaLabel (i18n "tagging.selector_tags")}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}
         @instanceContext={{@instanceContext}}
@@ -309,7 +310,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
           caretDownIcon="angle-right"
           caretUpIcon="angle-down"
         }}
-        @label={{if @label @label (i18n "tagging.selector_tags")}}
         @labelField="name"
         @legacyKind={{this.legacyKind}}
         @load={{if @load @load this.load}}

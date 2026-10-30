@@ -171,8 +171,8 @@ export default class EditRule extends Component {
                 {{#if this.siteSettings.enable_new_select_controls}}
                   <DSelectCategory
                     class="category-chooser"
+                    @ariaLabel={{field.title}}
                     @emit="ids"
-                    @label={{field.title}}
                     @onChange={{this.onCategoryChange}}
                     @permission="create"
                     @placeholder={{i18n "chat_integration.all_categories"}}

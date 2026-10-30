@@ -103,8 +103,8 @@ interface DSelectListSignature {
     kindContext?: object;
     /** Call-site context supplied to customizations. */
     instanceContext?: object;
-    /** Accessible name for the search and list. */
-    label?: string;
+    /** Accessible name for the search and list; it is never drawn. */
+    ariaLabel?: string;
     /** Search placeholder text; defaults to the shared “Search…”. */
     searchPlaceholder?: string;
     /** A decorative trailing icon in the search field. */

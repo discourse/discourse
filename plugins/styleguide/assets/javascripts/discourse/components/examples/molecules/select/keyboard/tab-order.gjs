@@ -30,9 +30,9 @@ export default class TabOrderSelectExample extends Component {
 
   <template>
     <DSelect
+      @ariaLabel={{i18n "styleguide.sections.select.tab_order_label"}}
       @identifier="sg-tab-order"
       @items={{TIMEZONES}}
-      @label={{i18n "styleguide.sections.select.tab_order_label"}}
       @onChange={{this.onChange}}
       @placeholder={{i18n
         "styleguide.sections.select.placeholders.choose_timezone"

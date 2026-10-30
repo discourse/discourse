@@ -523,11 +523,11 @@ export default class BulkTopicActions extends Component {
                 {{#if this.siteSettings.enable_new_select_controls}}
                   <DSelectCategory
                     class="category-chooser"
-                    @emit="ids"
-                    @labelledBy={{if
+                    @ariaLabelledBy={{if
                       @model.description
                       "bulk-topic-actions-description"
                     }}
+                    @emit="ids"
                     @onChange={{this.onCategoryChange}}
                     @permission="create"
                     @value={{this.categoryId}}

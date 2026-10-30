@@ -34,11 +34,11 @@ const Categories = <template>
       {{#if @siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="user-watched-categories-label"
           @exclude={{otherCategoryIds
             @selectedCategories
             @model.watchedCategories
           }}
-          @labelledBy="user-watched-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @model.watchedCategories)}}
           @value={{@model.watchedCategories}}
@@ -71,11 +71,11 @@ const Categories = <template>
       {{#if @siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="user-tracked-categories-label"
           @exclude={{otherCategoryIds
             @selectedCategories
             @model.trackedCategories
           }}
-          @labelledBy="user-tracked-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @model.trackedCategories)}}
           @value={{@model.trackedCategories}}
@@ -103,11 +103,11 @@ const Categories = <template>
       {{#if @siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
+          @ariaLabelledBy="user-watched-first-post-categories-label"
           @exclude={{otherCategoryIds
             @selectedCategories
             @model.watchedFirstPostCategories
           }}
-          @labelledBy="user-watched-first-post-categories-label"
           @multiple={{true}}
           @onChange={{fn (mut @model.watchedFirstPostCategories)}}
           @value={{@model.watchedFirstPostCategories}}
@@ -136,11 +136,11 @@ const Categories = <template>
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-selector"
+            @ariaLabelledBy="user-regular-categories-label"
             @exclude={{otherCategoryIds
               @selectedCategories
               @model.regularCategories
             }}
-            @labelledBy="user-regular-categories-label"
             @multiple={{true}}
             @onChange={{fn (mut @model.regularCategories)}}
             @value={{@model.regularCategories}}
@@ -175,11 +175,11 @@ const Categories = <template>
         {{#if @siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-selector"
+            @ariaLabelledBy="user-muted-categories-label"
             @exclude={{otherCategoryIds
               @selectedCategories
               @model.mutedCategories
             }}
-            @labelledBy="user-muted-categories-label"
             @multiple={{true}}
             @onChange={{fn (mut @model.mutedCategories)}}
             @value={{@model.mutedCategories}}

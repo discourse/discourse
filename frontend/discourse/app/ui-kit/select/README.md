@@ -318,9 +318,9 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   footer (`role="presentation"`) it cannot be reached from the keyboard; inside an option it is
   flattened into the name, and a click on it reaches the row's handler, so it runs the row's
   action. An action belongs in an action row returned by `@groupHeader` or `@groupFooter`.
-- **Naming the control:** use `@label`, or `@labelledBy` with the id of a caption already on the
-  page. `@labelledBy` names the trigger, its query input and the list, and the held value (or a
-  compact multiple select's count) is read after the caption; an id missing from the page warns
+- **Naming the control:** use `@ariaLabel`, or `@ariaLabelledBy` with the id of a caption already
+  on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input and the
+  list, and the held value (or a compact multiple select's count) is read after the caption; an id missing from the page warns
   in development. A wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
   descendant, so the browser resolves the label to that sink instead of to whichever button
   happens to come first (a chip's remove control, or the clear control) — without it, clicking a
@@ -440,11 +440,11 @@ group headers, dividers, chips or the trigger. The context adds `item` (the raw 
 `selected` and `disabled` (which includes selection-cap restrictions). It has no `control`.
 
 **`options`** overrides presentation. The core keys are `caretIcon` (a string or
-`{ open, closed }`), `iconOnly`, `label`, `placeholder`, `searchPlaceholder`, `searchIcon`, `loadingLabel`, `icon`, `showCaret`,
+`{ open, closed }`), `iconOnly`, `ariaLabel`, `placeholder`, `searchPlaceholder`, `searchIcon`, `loadingLabel`, `icon`, `showCaret`,
 `clearable`, `noneLabel` and `disabled`, plus the keys a recipe declares (see
 [Recipes](#recipes)). `current` holds the values so far, starting from the call site's arguments.
 Every key is last-wins except `disabled`, which can add a lock but never lift one. `iconOnly`
-needs a label: without one it is ignored with a warning. A key that is neither core nor declared
+needs an `ariaLabel`: without one it is ignored with a warning. A key that is neither core nor declared
 warns in development and is ignored, and a non-object result is skipped. The values resolve once
 per change in what they read, not once per row. The context has `value` and `control`, and no
 `options`, because options cannot depend on themselves.
@@ -666,7 +666,7 @@ Presentation:
 - `@caretIcon={{hash open closed}}` sets the caret, and customizations override it as the core
   `caretIcon` option (`-internals/coordinators/variant-presenter.ts`,
   `-internals/engine/customizations.ts`). A recipe never tracks open state to draw its own.
-- `@label`, `@id`, `@describedBy` and `@placeholder` name and describe the control.
+- `@ariaLabel`, `@id`, `@describedBy` and `@placeholder` name and describe the control.
 - `@kindOptions` declares only rules the engine has no option for.
 
 Shared helpers outside the engine: `makeArray` (`lib/helpers.ts`) normalizes one-or-many values,
@@ -859,7 +859,7 @@ by mechanism.
 - Selected-row indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
-  icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved label for
+  icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved `@ariaLabel` for
   the accessible name and is ignored with a warning without one; drive `@icon` from `@value` for
   a selection-reactive glyph); caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
@@ -1047,7 +1047,7 @@ second ownership check for deferred reports. Adds and removals always speak. Emp
 and error content remains visible while unfocused without live-region roles. An
 empty query with no rows renders and speaks no empty-result message.
 
-`@label`, `@searchPlaceholder` (default “Search…”), `@searchIcon` (a trailing glyph), `@id`, `@describedBy`, `@invalid`,
+`@ariaLabel`, `@searchPlaceholder` (default “Search…”), `@searchIcon` (a trailing glyph), `@id`, `@describedBy`, `@invalid`,
 `@disabled` and `@readonly` apply to the search input. Its `aria-controls` exists only
 while a listbox renders. The root is `.d-select.--list`, takes `...attributes`, and
 exposes the same `data-select-id`, `data-value` and `data-name` hooks as DSelect.

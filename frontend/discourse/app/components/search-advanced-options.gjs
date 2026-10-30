@@ -861,11 +861,11 @@ export default class SearchAdvancedOptions extends Component {
                 {{#if this.siteSettings.enable_new_select_controls}}
                   <DSelectCategory
                     class="search-advanced-category-chooser category-chooser"
+                    @ariaLabelledBy="search-in-category-label"
                     @clearable={{true}}
                     @descriptions={{false}}
                     @emit="ids"
                     @id="search-in-category"
-                    @labelledBy="search-in-category-label"
                     @legacyKind={{array
                       "search-advanced-category-chooser"
                       "category-chooser"
@@ -896,10 +896,10 @@ export default class SearchAdvancedOptions extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectTag
                       @allowCreate={{false}}
+                      @ariaLabel={{i18n "search.advanced.with_tags.aria_label"}}
                       @emit="names"
                       @id="search-with-tags"
                       @ignoreRestrictions={{true}}
-                      @label={{i18n "search.advanced.with_tags.aria_label"}}
                       @maximum={{false}}
                       @onChange={{this.onChangeSearchTermForTags}}
                       @value={{this.searchedTerms.tags}}

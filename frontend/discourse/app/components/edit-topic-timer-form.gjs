@@ -258,12 +258,12 @@ export default class EditTopicTimerForm extends Component {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-chooser"
+              @ariaLabelledBy="topic-timer-category-label"
               @emit="ids"
               @exclude={{if
                 this.excludeCategoryId
                 (array this.excludeCategoryId)
               }}
-              @labelledBy="topic-timer-category-label"
               @onChange={{fn (mut @topicTimer.category_id)}}
               @permission="create"
               @value={{@topicTimer.category_id}}

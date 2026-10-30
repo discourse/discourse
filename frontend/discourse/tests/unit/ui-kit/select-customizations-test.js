@@ -810,33 +810,33 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       selects.forIdentifier("fruit", (spec) =>
         spec.options((current) => {
           snapshots.push(current);
-          return { disabled: false, label: "Identifier" };
+          return { disabled: false, ariaLabel: "Identifier" };
         })
       );
       selects.forAll((spec) => {
         spec.options((current) => {
           snapshots.push(current);
-          return { disabled: true, label: "First", caretIcon: caret };
+          return { disabled: true, ariaLabel: "First", caretIcon: caret };
         });
         spec.options((current) => {
           snapshots.push(current);
-          return { disabled: false, label: "Second" };
+          return { disabled: false, ariaLabel: "Second" };
         });
       });
     });
     const engine = new SelectEngine({
       identifier: "fruit",
-      getOptions: () => ({ label: "Base" }),
+      getOptions: () => ({ ariaLabel: "Base" }),
     });
 
     assert.true(engine.resolvedOptions.disabled, "the first lock stays");
     assert.strictEqual(
-      engine.resolvedOptions.label,
+      engine.resolvedOptions.ariaLabel,
       "Identifier",
       "the most specific tier wins"
     );
     assert.deepEqual(
-      snapshots.map((snapshot) => snapshot.label),
+      snapshots.map((snapshot) => snapshot.ariaLabel),
       ["Base", "First", "Second"],
       "earlier snapshots keep their values"
     );

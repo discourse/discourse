@@ -34,8 +34,8 @@ export default class ChangeCategory extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-chooser"
+          @ariaLabelledBy="bulk-change-category-label"
           @emit="ids"
-          @labelledBy="bulk-change-category-label"
           @onChange={{fn (mut this.categoryId)}}
           @permission="create"
           @value={{this.categoryId}}

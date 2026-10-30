@@ -15,8 +15,8 @@ export default class ListPaginatedExample extends Component {
 
   <template>
     <DSelectList
+      @ariaLabel={{i18n "styleguide.sections.select.list_topics_label"}}
       @identifier="sg-list-paginated"
-      @label={{i18n "styleguide.sections.select.list_topics_label"}}
       @load={{pagedTopicApi.search}}
       @onChange={{this.onChange}}
       @resolveValues={{pagedTopicApi.findMany}}

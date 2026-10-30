@@ -51,8 +51,8 @@ export default class ConvertToPublicTopic extends Component {
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-chooser"
+            @ariaLabelledBy="make-public-category-label"
             @emit="ids"
-            @labelledBy="make-public-category-label"
             @onChange={{fn (mut this.publicCategoryId)}}
             @permission="create"
             @value={{this.publicCategoryId}}

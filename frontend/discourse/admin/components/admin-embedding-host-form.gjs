@@ -102,8 +102,8 @@ export default class AdminEmbeddingHostForm extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectCategory
                       class="category-chooser admin-embedding-host-form__category"
+                      @ariaLabel={{field.title}}
                       @emit="ids"
-                      @label={{field.title}}
                       @onChange={{field.set}}
                       @permission="create"
                       @value={{field.value}}

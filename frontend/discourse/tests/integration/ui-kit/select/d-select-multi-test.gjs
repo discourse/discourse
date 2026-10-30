@@ -1118,8 +1118,8 @@ class StripHost extends Component {
   <template>
     <A11yLiveRegions />
     <DSelect
+      @ariaLabel="Fruit"
       @items={{ITEMS}}
-      @label="Fruit"
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @value={{this.value}}

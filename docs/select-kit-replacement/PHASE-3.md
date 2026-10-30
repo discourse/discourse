@@ -49,12 +49,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       read-only so you cannot choose it for this topic dimmed (1 of 65)". ArrowDown opens on the
       first row that can be picked, so the read-only row is heard only when the cursor moves
       onto it.
-    - ☑ Category pickers with a caption are named by it (2026-10-29). `@labelledBy` points at a
+    - ☑ Category pickers with a caption are named by it (2026-10-29). `@ariaLabelledBy` points at a
       caption that has an id; FormKit fields, site settings and schema fields pass their
-      caption's text as `@label`. Still open:
+      caption's text as `@ariaLabel`. Still open:
       - ☐ Tag pickers.
-      - ☐ The mobile modal is named by `@label` only, because float-kit's menu modal takes no
-        `aria-labelledby`. A picker named through `@labelledBy` reads "Options" there.
+      - ☐ The mobile modal is named by `@ariaLabel` only, because float-kit's menu modal takes no
+        `aria-labelledby`. A picker named through `@ariaLabelledBy` reads "Options" there.
       - ☐ Pickers with no caption take their name from the placeholder: the composer and topic
         edit read "Category…", report and dashboard filters "All categories". A single picker
         holding a value reads "All categories, <name>". A multiple picker with no placeholder
@@ -64,6 +64,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       the name alone.
     - ☑ The mobile panel's search field lines up with the rows' content (2026-10-29).
   - ☐ **Follow-ups from the category cycle (2026-10-28):**
+    - ☐ **Name ui-kit's spoken-only labels `@ariaLabel`, outside this branch** (2026-10-29).
+      DSelect's `@label`/`@labelledBy` became `@ariaLabel`/`@ariaLabelledBy`, because DSelect
+      never draws them. `DResizeSeparator` and the `DTabs` root use `@label` the same way and are
+      already on `main`; `DTabs`' tabs and `DDragHandle` draw or show theirs and keep `@label`.
+      Four production call sites, the styleguide and one outside theme component pass the
+      separator's `@label`, so the rename needs a transition. Planned as a separate change.
     - ☐ `SelectTagBase`'s `value` getter shadows `@value`, as `DSelectCategory`'s did before it
       became `selectedIds`.
     - ☑ The breadcrumb drop searches through `Category.searchCategories` (2026-10-28), so slugs

@@ -16,10 +16,10 @@ export default class ListHideSelectedExample extends Component {
   <template>
     <DSelectList
       class="select-examples__tag-list"
+      @ariaLabel={{i18n "styleguide.sections.select.list_people_label"}}
       @hideSelected={{true}}
       @identifier="sg-list-hide-selected"
       @items={{PEOPLE}}
-      @label={{i18n "styleguide.sections.select.list_people_label"}}
       @labelField="name"
       @onChange={{this.onChange}}
       @searchPlaceholder={{i18n

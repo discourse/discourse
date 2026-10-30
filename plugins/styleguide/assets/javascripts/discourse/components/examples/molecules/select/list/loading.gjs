@@ -24,8 +24,8 @@ export default class ListLoadingExample extends Component {
   <template>
     <DSelectList
       class="select-examples__tag-list"
+      @ariaLabel={{i18n "styleguide.sections.select.list_timezones_label"}}
       @identifier="sg-list-loading"
-      @label={{i18n "styleguide.sections.select.list_timezones_label"}}
       @load={{this.load}}
       @onChange={{this.onChange}}
       @searchPlaceholder={{i18n

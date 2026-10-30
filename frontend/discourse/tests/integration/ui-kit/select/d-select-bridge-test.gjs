@@ -573,10 +573,10 @@ class AsyncUpdateHost extends Component {
   <template>
     <A11yLiveRegions />
     <DSelect
+      @ariaLabel={{@label}}
       @icon={{@icon}}
       @iconOnly={{@iconOnly}}
       @items={{@items}}
-      @label={{@label}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @placeholder="Pick one"

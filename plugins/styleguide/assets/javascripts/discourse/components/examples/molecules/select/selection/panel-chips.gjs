@@ -15,9 +15,9 @@ export default class PanelChipsSelectExample extends Component {
 
   <template>
     <DSelect
+      @ariaLabel={{i18n "styleguide.sections.select.panel_chips_label"}}
       @identifier="sg-panel-chips"
       @items={{TEAM_MEMBERS}}
-      @label={{i18n "styleguide.sections.select.panel_chips_label"}}
       @labelField="name"
       @multiple={{true}}
       @onChange={{this.onChange}}

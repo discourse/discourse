@@ -189,7 +189,7 @@ export default class VariantPresenter
    * Multi-select held labels are exposed through a separate description.
    */
   get triggerRootLabel(): string | undefined {
-    if (!this.triggerTakesFocus || this.labelledBy) {
+    if (!this.triggerTakesFocus || this.ariaLabelledBy) {
       return undefined;
     }
     if (this.#getArgs().multiple || !this.#engine.hasValue) {
@@ -366,7 +366,7 @@ export default class VariantPresenter
 
   /** Compact and overflow controls announce the entire held count. */
   /**
-   * What a caption named by `@labelledBy` is followed by: the held value of a single select, or
+   * What a caption named by `@ariaLabelledBy` is followed by: the held value of a single select, or
    * the count of a compact multiple one. The caption replaces `label`, so the value the composed
    * names carry has to be spoken after it.
    */

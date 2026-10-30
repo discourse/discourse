@@ -46,8 +46,8 @@ interface DSelectTagGroupSignature {
     disabled?: boolean;
     /** External label target. */
     id?: string;
-    /** Accessible control label. */
-    label?: string;
+    /** Accessible control name; it is never drawn. */
+    ariaLabel?: string;
     /** Call-site customization identity. */
     identifier?: string;
     /** Call-site customization data. */
@@ -132,6 +132,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     {{! TODO (select-kit-replacement-cleanup): Retain the legacy family classes during rollout. }}
     <DSelect
       ...attributes
+      @ariaLabel={{@ariaLabel}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @icon={{@icon}}
@@ -142,7 +143,6 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @items={{@items}}
       @kind="select-tag-group"
       @kindContext={{hash value=@value}}
-      @label={{@label}}
       @labelField="name"
       @legacyKind={{this.legacyKind}}
       @load={{this.sourceLoad}}

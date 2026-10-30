@@ -20,9 +20,9 @@ export default class OpenBehaviourSelectExample extends Component {
 
   <template>
     <DSelect
+      @ariaLabel={{@label}}
       @identifier={{@identifier}}
       @items={{LOCALES}}
-      @label={{@label}}
       @onChange={{this.onChange}}
       @placeholder={{i18n
         "styleguide.sections.select.placeholders.choose_language"
