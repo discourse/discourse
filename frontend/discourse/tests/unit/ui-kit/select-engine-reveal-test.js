@@ -1441,7 +1441,7 @@ module(
           total: 100,
           hasMore: true,
         }),
-        noneLabel: "None",
+        getOptions: () => ({ noneRow: true }),
         specialItems: () => [{ id: "special", name: "Special", sticky: true }],
       });
       const rows = engine.buildItems(

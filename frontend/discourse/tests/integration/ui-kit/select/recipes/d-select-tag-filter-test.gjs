@@ -715,14 +715,16 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forIdentifier("custom-tags", (spec) =>
-              spec.options(() => ({ placeholder: "any label" }))
+              spec.options(() => ({ texts: { placeholder: "any label" } }))
             );
           })
         );
 
         await render(
           <template>
-            <div class="own"><DSelectTagFilter @placeholder="any tag" /></div>
+            <div class="own"><DSelectTagFilter
+                @texts={{hash placeholder="any tag"}}
+              /></div>
             <div class="custom"><DSelectTagFilter
                 @identifier="custom-tags"
               /></div>

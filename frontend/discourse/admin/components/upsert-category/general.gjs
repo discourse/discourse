@@ -906,15 +906,17 @@ export default class UpsertCategoryGeneral extends Component {
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectCategory
                 class="category-chooser"
-                @ariaLabel={{field.title}}
                 @clearable={{true}}
                 @descriptions={{false}}
                 @emit="ids"
                 @exclude={{if @category.id (array @category.id)}}
                 @onChange={{field.set}}
                 @permission="see"
-                @placeholder={{i18n "category.none_subcategory_text"}}
                 @subcategories={{this.allowSubCategoriesAsParent}}
+                @texts={{hash
+                  ariaLabel=field.title
+                  placeholder=(i18n "category.none_subcategory_text")
+                }}
                 @uncategorized={{false}}
                 @value={{@transientData.parent_category_id}}
               />

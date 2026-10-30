@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -24,10 +25,12 @@ export default class CustomErrorSelectExample extends Component {
       @load={{this.api.search}}
       @onChange={{this.onChange}}
       @onClose={{this.api.reset}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.mention_someone"
-      }}
       @resolveValue={{this.api.find}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.mention_someone"
+        )
+      }}
       @value={{this.value}}
       @variant="button"
     >

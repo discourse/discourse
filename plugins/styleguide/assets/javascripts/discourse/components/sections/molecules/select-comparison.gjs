@@ -342,7 +342,6 @@ export default class SelectComparison extends Component {
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
             <DSelectTag
-              @ariaLabel={{i18n "tagging.settings.select_tag"}}
               @emit="names"
               @excludeSynonyms={{true}}
               @ignoreRestrictions={{true}}
@@ -350,6 +349,7 @@ export default class SelectComparison extends Component {
               @legacyKind="tag-dropdown"
               @multiple={{false}}
               @onChange={{this.newTagName.update}}
+              @texts={{hash ariaLabel=(i18n "tagging.settings.select_tag")}}
               @value={{this.newTagName.value}}
               @variant="button"
             />

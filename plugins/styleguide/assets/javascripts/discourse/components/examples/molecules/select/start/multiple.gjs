@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -19,7 +20,9 @@ export default class MultipleSelectExample extends Component {
       @items={{PEOPLE}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholders.add_people"}}
+      @texts={{hash
+        placeholder=(i18n "styleguide.sections.select.placeholders.add_people")
+      }}
       @value={{this.value}}
     />
   </template>

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -30,12 +31,14 @@ export default class TabOrderSelectExample extends Component {
 
   <template>
     <DSelect
-      @ariaLabel={{i18n "styleguide.sections.select.tab_order_label"}}
       @identifier="sg-tab-order"
       @items={{TIMEZONES}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.choose_timezone"
+      @texts={{hash
+        ariaLabel=(i18n "styleguide.sections.select.tab_order_label")
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.choose_timezone"
+        )
       }}
       @value={{this.value}}
       @variant="button"

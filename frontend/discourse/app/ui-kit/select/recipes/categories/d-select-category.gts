@@ -2,9 +2,11 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import {
   renderSelectText,
@@ -33,7 +35,6 @@ interface DSelectCategorySignature {
     | "maximum"
     | "clearable"
     | "disabled"
-    | "ariaLabel"
     | "ariaLabelledBy"
     | "id"
     | "describedBy"
@@ -44,7 +45,6 @@ interface DSelectCategorySignature {
     | "identifier"
     | "instanceContext"
     | "legacyKind"
-    | "noneLabel"
     | "noneRow"
     | "texts"
   > & {
@@ -78,8 +78,6 @@ interface DSelectCategorySignature {
     disabledCategories?: number | string | readonly (number | string)[];
     /** Categories never offered; a held one stays selected. */
     exclude?: readonly (number | string)[];
-    /** Translated text used when empty. */
-    placeholder?: string;
     /** Shows transformed plain-text descriptions; defaults to single mode. */
     descriptions?: boolean;
     /** Includes ancestor badges on held selections. */
@@ -122,6 +120,11 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         : i18n("category.select_with_subcategories", { category }),
   };
 
+  constructor(owner: Owner, args: DSelectCategorySignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectCategory", args);
+  }
+
   get legacyKind() {
     if (this.args.legacyKind) {
       return this.args.legacyKind;
@@ -148,26 +151,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       this.args.uncategorized ??
       (this.args.multiple || this.siteSettings.allow_uncategorized_topics)
     );
-  }
-
-  /** The call site's texts, under which the old text arguments still apply. */
-  get texts(): SelectTexts | undefined {
-    const { ariaLabel, placeholder, noneLabel, texts } = this.args;
-    if (!ariaLabel && !placeholder && !noneLabel) {
-      return texts;
-    }
-    return {
-      ariaLabel: ariaLabel || undefined,
-      placeholder: placeholder || undefined,
-      noneLabel: noneLabel || undefined,
-      ...Object.fromEntries(
-        Object.entries(texts ?? {}).filter(([, text]) => text != null)
-      ),
-    };
-  }
-
-  get noneRow() {
-    return this.args.noneRow ?? !!this.args.noneLabel;
   }
 
   /** Ports the single chooser's empty header. */
@@ -426,13 +409,13 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @multiple={{@multiple}}
-      @noneRow={{this.noneRow}}
+      @noneRow={{@noneRow}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}
       @resolveValues={{this.resolveValues}}
       @specialItems={{this.specialItems}}
       @suppressFooter={{not (has-block "footer")}}
-      @texts={{this.texts}}
+      @texts={{@texts}}
       @value={{this.selectedIds}}
       @variant={{@variant}}
     >

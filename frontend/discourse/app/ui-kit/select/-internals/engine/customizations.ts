@@ -11,6 +11,7 @@ import {
   isCoreTextKey,
   kindTextLayers,
   RECIPE_TEXT_KEYS,
+  REMOVED_TEXT_NAMES,
   REQUIRED_SELECT_TEXTS,
   type SelectKindTexts,
   SelectTextNotices,
@@ -71,18 +72,10 @@ export interface SelectPresentationOptions {
    * @see SelectText
    */
   texts?: SelectTexts;
-  /** The accessible name of the trigger and listbox; it is never drawn. */
-  ariaLabel?: string;
-  /** Text shown when nothing is selected. */
-  placeholder?: string;
-  /** Text shown in an empty panel filter. */
-  searchPlaceholder?: string;
   /** A decorative trailing icon in a search field that is not the trigger. */
   searchIcon?: string;
   /** Shows a status line, with a spinner, above the loading skeleton; off by default. */
   loadingStatus?: boolean;
-  /** Turns the loading status line on, labeled with this text. */
-  loadingLabel?: string;
   /** A decorative leading trigger icon. */
   icon?: string;
   /** Whether the trigger shows its caret. */
@@ -91,16 +84,12 @@ export interface SelectPresentationOptions {
   clearable?: boolean;
   /** Adds a single-select "none" row that clears the value; off by default. */
   noneRow?: boolean;
-  /** Turns the single-select none row on, labeled with this text; empty leaves it off. */
-  noneLabel?: string;
   /** An additive lock: a later customization cannot remove it. */
   disabled?: boolean;
 }
 
 /** The call site's presentation arguments, read before customizations. */
 export interface SelectPresentationArgs extends SelectPresentationOptions {
-  /** Label for an empty result set. */
-  noResultsLabel?: string;
   /** Id of the caller's visible caption, which names the control instead of `texts.ariaLabel`. */
   ariaLabelledBy?: string;
 }
@@ -121,29 +110,14 @@ const CORE_OPTION_KEYS = new Set<keyof SelectPresentationOptions>([
   "caretIcon",
   "iconOnly",
   "texts",
-  "ariaLabel",
-  "placeholder",
-  "searchPlaceholder",
   "searchIcon",
   "loadingStatus",
-  "loadingLabel",
   "icon",
   "showCaret",
   "clearable",
   "noneRow",
-  "noneLabel",
   "disabled",
 ]);
-
-/** Old arguments and option keys that carry a text, and the text each one sets. */
-const LEGACY_TEXTS: Readonly<Record<string, string>> = {
-  ariaLabel: "ariaLabel",
-  placeholder: "placeholder",
-  searchPlaceholder: "searchPlaceholder",
-  noResultsLabel: "noResults",
-  noneLabel: "noneLabel",
-  loadingLabel: "loadingLabel",
-};
 
 /** Texts a wrapper can never change: the required texts, and the none row's and loading status's. */
 const UNWRAPPABLE_TEXTS = new Set([
@@ -158,8 +132,6 @@ export interface SelectTextInputs {
   kindTexts: SelectKindTexts | undefined;
   /** The call site's `@texts`. */
   texts: SelectTexts | undefined;
-  /** The call site's old text arguments, by argument name. */
-  legacy: Readonly<Record<string, unknown>>;
   /** The recipe's `@kindTextWrappers`. */
   wrappers: Readonly<Record<string, SelectTextWrapper | undefined>> | undefined;
   /** Whether the select holds several values. */
@@ -329,9 +301,11 @@ export default class SelectCustomizations {
     this.#names = names;
     this.#kindOptionKeys = Object.keys(kindOptions ?? {});
     for (const key of this.#kindOptionKeys) {
+      // TODO (select-kit-rework-merge): Drop the REMOVED_TEXT_NAMES reservation.
       assert(
         `DSelect: @kindOptions key "${key}" collides with a core option`,
-        !CORE_OPTION_KEYS.has(key as keyof SelectPresentationOptions)
+        !CORE_OPTION_KEYS.has(key as keyof SelectPresentationOptions) &&
+          !Object.hasOwn(REMOVED_TEXT_NAMES, key)
       );
     }
     this.#kindTextKeys = new Set(
@@ -462,13 +436,10 @@ export default class SelectCustomizations {
     const wrappers = Object.fromEntries(
       this.#wrapperKeys.map((key) => [key, textInputs.wrappers?.[key]])
     );
-    // Old arguments and option keys sit in their own layer just below their step's `texts`, so a
-    // nullish entry there still leaves them in place and `text(ownKey)` reaches them.
     const layers: Array<Record<string, unknown>> = [
       ...kindTextLayers(textInputs.kindTexts).map((layer) =>
         this.#kindTextLayer(layer)
       ),
-      this.#legacyLayer(textInputs.legacy, "argument"),
       this.#textLayer(textInputs.texts, "@texts"),
     ];
     let current = this.#optionsSnapshot(declared, layers, wrappers, textInputs);
@@ -482,10 +453,16 @@ export default class SelectCustomizations {
         return;
       }
       const next = { ...current };
-      const legacy: Record<string, unknown> = {};
       for (const key of Object.keys(partial)) {
         if (key === "texts") {
           continue;
+        }
+        // TODO (select-kit-rework-merge): Remove with REMOVED_TEXT_NAMES.
+        if (DEBUG && Object.hasOwn(REMOVED_TEXT_NAMES, key)) {
+          assert(
+            `DSelect: the "${key}" option was removed; return { texts: { ${REMOVED_TEXT_NAMES[key]}: … } }`,
+            false
+          );
         }
         if (!Object.hasOwn(declared, key)) {
           if (DEBUG) {
@@ -495,9 +472,6 @@ export default class SelectCustomizations {
           }
           continue;
         }
-        if (Object.hasOwn(LEGACY_TEXTS, key)) {
-          legacy[key] = partial[key];
-        }
         Object.assign(next, {
           [key]:
             key === "disabled"
@@ -506,7 +480,6 @@ export default class SelectCustomizations {
         });
       }
       layers.push(
-        this.#legacyLayer(legacy, "option"),
         this.#textLayer(
           partial.texts,
           "a customization",
@@ -515,8 +488,8 @@ export default class SelectCustomizations {
       );
       current = this.#optionsSnapshot(next, layers, wrappers, textInputs);
     });
-    const noneRow = !!(current.noneRow || current.noneLabel);
-    const loadingStatus = !!(current.loadingStatus || current.loadingLabel);
+    const noneRow = !!current.noneRow;
+    const loadingStatus = !!current.loadingStatus;
     let iconOnly = current.iconOnly;
     if (iconOnly && !selectTextResolver(current)!.explicit("ariaLabel")) {
       if (DEBUG) {
@@ -621,10 +594,10 @@ export default class SelectCustomizations {
     if (textInputs.labelledBy) {
       required.delete("ariaLabel");
     }
-    if (options.noneRow || options.noneLabel) {
+    if (options.noneRow) {
       required.add("noneLabel");
     }
-    if (options.loadingStatus || options.loadingLabel) {
+    if (options.loadingStatus) {
       required.add("loadingLabel");
     }
     attachSelectTextResolver(
@@ -677,47 +650,6 @@ export default class SelectCustomizations {
       }
     }
     return layer;
-  }
-
-  /**
-   * Maps old text arguments or option keys onto their texts. `""` removes the prompt for
-   * `searchPlaceholder`; for any other argument it shows the layer below, and for an option key
-   * it shows the engine default, so the option still overrides the argument.
-   */
-  #legacyLayer(
-    legacy: Readonly<Record<string, unknown>>,
-    source: "argument" | "option"
-  ): Record<string, unknown> {
-    const layer: Record<string, unknown> = {};
-    for (const [name, key] of Object.entries(LEGACY_TEXTS)) {
-      const value = legacy[name];
-      if (value === undefined) {
-        continue;
-      }
-      this.#notices.warn(
-        source === "argument"
-          ? `DSelect: @${name} is replaced by @texts={{hash ${key}=…}}`
-          : `DSelect: the "${name}" option is replaced by { texts: { ${key}: … } }`,
-        "discourse.d-select.texts-legacy",
-        name
-      );
-      layer[key] =
-        value === "" ? this.#emptyLegacyText(name, key, source) : value;
-    }
-    return layer;
-  }
-
-  #emptyLegacyText(
-    name: string,
-    key: string,
-    source: "argument" | "option"
-  ): unknown {
-    if (name === "searchPlaceholder") {
-      return "";
-    }
-    return source === "option"
-      ? DEFAULT_SELECT_TEXTS[key as keyof typeof DEFAULT_SELECT_TEXTS]
-      : undefined;
   }
 
   #isKnownText(key: string): boolean {

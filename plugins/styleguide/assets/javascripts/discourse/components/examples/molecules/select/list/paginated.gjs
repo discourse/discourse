@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { i18n } from "discourse-i18n";
@@ -15,13 +16,15 @@ export default class ListPaginatedExample extends Component {
 
   <template>
     <DSelectList
-      @ariaLabel={{i18n "styleguide.sections.select.list_topics_label"}}
       @identifier="sg-list-paginated"
       @load={{pagedTopicApi.search}}
       @onChange={{this.onChange}}
       @resolveValues={{pagedTopicApi.findMany}}
-      @searchPlaceholder={{i18n
-        "styleguide.sections.select.placeholders.search_topics"
+      @texts={{hash
+        ariaLabel=(i18n "styleguide.sections.select.list_topics_label")
+        searchPlaceholder=(i18n
+          "styleguide.sections.select.placeholders.search_topics"
+        )
       }}
       @value={{this.value}}
     />

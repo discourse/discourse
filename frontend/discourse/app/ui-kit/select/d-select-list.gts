@@ -20,6 +20,7 @@ import SelectHost, {
 import SelectListInteraction from "discourse/ui-kit/select/-internals/coordinators/select-list-interaction";
 import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators/select-list-presenter";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import { legacySelectKitIdentifiers } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
 import SelectPanel, {
@@ -122,18 +123,10 @@ interface DSelectListSignature {
     kindContext?: object;
     /** Call-site context supplied to customizations. */
     instanceContext?: object;
-    /** Accessible name for the search and list; it is never drawn. */
-    ariaLabel?: string;
-    /** Search placeholder text; defaults to the shared “Search…”. */
-    searchPlaceholder?: string;
     /** A decorative trailing icon in the search field. */
     searchIcon?: string;
     /** Shows a status line, with a spinner, above the loading skeleton; off by default. */
     loadingStatus?: boolean;
-    /** Turns the loading status line on, labeled with this text. */
-    loadingLabel?: string;
-    /** Label shown when a nonempty query returns no results. */
-    noResultsLabel?: string;
     /** Native search-input id, for a label's for attribute. */
     id?: string;
     /** Additional search-input description ids. */
@@ -236,6 +229,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
 
   constructor(owner: Owner, args: DSelectListSignature["Args"]) {
     super(owner, args);
+    assertNoRemovedTextArgs("DSelectList", args);
     this.interaction = new SelectListInteraction({
       engine: this.engine,
       presenter: this.presenter,

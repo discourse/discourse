@@ -34,7 +34,7 @@ export default class Category extends FilterComponent {
           }}
           @onChange={{this.onChange}}
           @permission="see"
-          @placeholder={{i18n "category.all"}}
+          @texts={{hash placeholder=(i18n "category.all")}}
           @uncategorized={{true}}
           @value={{this.category}}
         />

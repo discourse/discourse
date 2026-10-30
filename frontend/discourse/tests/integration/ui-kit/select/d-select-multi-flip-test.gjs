@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
@@ -45,7 +45,7 @@ class MultiHost extends Component {
       @items={{ITEMS}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder="Add some"
+      @texts={{hash placeholder="Add some"}}
       @value={{this.value}}
     >
       <:selection as |item|>

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -40,12 +41,14 @@ export default class IconOnlySelectExample extends Component {
   <template>
     <div class="select-examples__alignment">
       <DSelect
-        @ariaLabel={{i18n "styleguide.sections.select.icon_only_label"}}
         @icon={{this.icon}}
         @iconOnly={{true}}
         @identifier="sg-icon-only"
         @items={{this.items}}
         @onChange={{this.onChange}}
+        @texts={{hash
+          ariaLabel=(i18n "styleguide.sections.select.icon_only_label")
+        }}
         @value={{this.value}}
         @variant="static"
       >

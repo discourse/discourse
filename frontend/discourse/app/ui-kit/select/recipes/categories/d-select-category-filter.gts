@@ -3,9 +3,11 @@ import { DEBUG } from "@glimmer/env";
 import { warn } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import type User from "discourse/models/user";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import {
   renderSelectText,
@@ -54,10 +56,6 @@ interface DSelectCategoryFilterSignature {
     countSubcategories?: boolean;
     /** Includes Uncategorized; defaults to the site setting. */
     uncategorized?: boolean;
-    /** Accessible control name; defaults to what the level filters. The held value follows it. */
-    ariaLabel?: string;
-    /** Text for an empty level; defaults to the level's name. */
-    placeholder?: string;
     /**
      * The drop's texts, over the recipe's: `ariaLabel` and `placeholder` default to the level's
      * name, and `removeFilter` and `noSubcategories` name the shortcuts.
@@ -101,19 +99,9 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     noSubcategories: { key: "categories.no_subcategories" },
   };
 
-  /** The call site's texts, under which the old text arguments still apply. */
-  get texts(): SelectTexts | undefined {
-    const { ariaLabel, placeholder, texts } = this.args;
-    if (!ariaLabel && !placeholder) {
-      return texts;
-    }
-    return {
-      ariaLabel: ariaLabel || undefined,
-      placeholder: placeholder || undefined,
-      ...Object.fromEntries(
-        Object.entries(texts ?? {}).filter(([, text]) => text != null)
-      ),
-    };
+  constructor(owner: Owner, args: DSelectCategoryFilterSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectCategoryFilter", args);
   }
 
   get filtering() {
@@ -278,7 +266,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @loadContext={{this.loadContext}}
       @onChange={{this.onChange}}
       @specialItems={{this.specialItems}}
-      @texts={{this.texts}}
+      @texts={{@texts}}
       @value={{this.heldId}}
       @valueItems={{this.valueItems}}
       @variant="button"

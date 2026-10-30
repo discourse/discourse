@@ -2542,7 +2542,7 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
         { id: "early", name: "Early action", sticky: true, onSelect() {} },
         ROWS[1],
       ],
-      noneLabel: "None",
+      getOptions: () => ({ noneRow: true }),
       specialItems: () => [
         { id: "special", name: "Special" },
         { id: "sticky-special", name: "Sticky special", sticky: true },
@@ -2626,7 +2626,10 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
           )
       );
     });
-    const engine = new SelectEngine({ items: ROWS, noneLabel: "None" });
+    const engine = new SelectEngine({
+      items: ROWS,
+      getOptions: () => ({ noneRow: true }),
+    });
 
     const stickyRows = engine.buildItems(
       await engine.loadItems(engine.loadContext)

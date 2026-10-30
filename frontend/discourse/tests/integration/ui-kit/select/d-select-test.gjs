@@ -341,7 +341,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
         <DSelect
           @items={{items}}
           @labelField="title"
-          @placeholder="Pick one"
+          @texts={{hash placeholder="Pick one"}}
           @value={{1}}
         >
           <:selection as |item|><strong>{{item.title}}</strong></:selection>
@@ -1139,8 +1139,8 @@ module(
         <template>
           <DSelect
             class="kt"
-            @ariaLabel="Fruit"
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{2}}
           />
         </template>
@@ -1294,10 +1294,10 @@ module(
         <template>
           <DSelect
             class="kt"
-            @ariaLabel="Settings"
             @icon="gear"
             @iconOnly={{true}}
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Settings"}}
             @value={{2}}
           />
         </template>
@@ -1420,10 +1420,10 @@ module(
         <template>
           <DSelect
             class="kt"
-            @ariaLabel="Settings"
             @icon="gear"
             @iconOnly={{true}}
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Settings"}}
             @value={{2}}
           />
         </template>
@@ -1939,7 +1939,7 @@ module(
             @identifier="test-select"
             @load={{load}}
             @minChars={{3}}
-            @placeholder="Search"
+            @texts={{hash placeholder="Search"}}
           />
         </template>
       );
@@ -1981,7 +1981,7 @@ module(
             @identifier="test-select"
             @load={{load}}
             @minChars={{3}}
-            @placeholder="Search"
+            @texts={{hash placeholder="Search"}}
           />
         </template>
       );
@@ -2010,7 +2010,7 @@ module(
             @identifier="test-select"
             @load={{load}}
             @minChars={{3}}
-            @placeholder="Search"
+            @texts={{hash placeholder="Search"}}
           />
         </template>
       );
@@ -2036,7 +2036,7 @@ module(
           <DSelect
             @identifier="test-select"
             @load={{load}}
-            @placeholder="Search"
+            @texts={{hash placeholder="Search"}}
           />
         </template>
       );
@@ -2113,7 +2113,7 @@ module(
           <DSelect
             @identifier="test-select"
             @items={{ITEMS}}
-            @placeholder="Choose an option"
+            @texts={{hash placeholder="Choose an option"}}
             @value={{1}}
           >
             <:selection as |item|>
@@ -2873,8 +2873,8 @@ module(
         <template>
           <DSelect
             class="lbl-static"
-            @ariaLabel="Category"
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Category"}}
             @value={{1}}
             @variant="static"
           >
@@ -2887,8 +2887,8 @@ module(
           </DSelect>
           <DSelect
             class="lbl-button"
-            @ariaLabel="Category"
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Category"}}
             @value={{1}}
             @variant="button"
           >
@@ -3266,7 +3266,13 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
 
   test("the none row has an empty value", async function (assert) {
     await render(
-      <template><DSelect @items={{ITEMS}} @noneLabel="None" /></template>
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @noneRow={{true}}
+          @texts={{hash noneLabel="None"}}
+        />
+      </template>
     );
     await click("[role='combobox']");
 
@@ -4535,97 +4541,6 @@ module(
         search.offsetWidth,
         "the field fills the search row"
       );
-    });
-  }
-);
-
-module(
-  "Integration | ui-kit | select | DSelect (old text arguments)",
-  function (hooks) {
-    setupRenderingTest(hooks);
-
-    function customizeOptions(options) {
-      withPluginApi((api) =>
-        api.registerValueTransformer("select-customizations", ({ value }) =>
-          value.forIdentifier("old-texts", (spec) => spec.options(options))
-        )
-      );
-    }
-
-    test("an empty @searchPlaceholder still shows no prompt", async function (assert) {
-      await render(
-        <template>
-          <DSelect @items={{ITEMS}} @searchPlaceholder="" @variant="button" />
-        </template>
-      );
-      await click(".d-select__trigger");
-
-      assert
-        .dom(".d-select__panel .d-select__filter")
-        .doesNotHaveAttribute("placeholder");
-    });
-
-    test("an option's empty placeholder still replaces the argument with the default", async function (assert) {
-      customizeOptions(() => ({ placeholder: "" }));
-      await render(
-        <template>
-          <DSelect
-            @identifier="old-texts"
-            @items={{ITEMS}}
-            @placeholder="Choose fruit"
-          />
-        </template>
-      );
-
-      assert
-        .dom(".d-select__input")
-        .hasAttribute("placeholder", i18n("d_select.placeholder"));
-    });
-
-    test("a null entry in @texts leaves the old argument in place", async function (assert) {
-      await render(
-        <template>
-          <DSelect
-            @items={{ITEMS}}
-            @placeholder="Legacy"
-            @texts={{hash placeholder=null}}
-          />
-        </template>
-      );
-
-      assert.dom(".d-select__input").hasAttribute("placeholder", "Legacy");
-    });
-
-    test("a null entry in a customization's texts leaves its old option in place", async function (assert) {
-      customizeOptions(() => ({
-        placeholder: "From an option",
-        texts: { placeholder: null },
-      }));
-      await render(
-        <template>
-          <DSelect @identifier="old-texts" @items={{ITEMS}} />
-        </template>
-      );
-
-      assert
-        .dom(".d-select__input")
-        .hasAttribute("placeholder", "From an option");
-    });
-
-    test("a text reading its own key reaches the old argument below it", async function (assert) {
-      const placeholder = (_values, context) =>
-        `${context.text("placeholder")}!`;
-      await render(
-        <template>
-          <DSelect
-            @items={{ITEMS}}
-            @placeholder="Legacy"
-            @texts={{hash placeholder=placeholder}}
-          />
-        </template>
-      );
-
-      assert.dom(".d-select__input").hasAttribute("placeholder", "Legacy!");
     });
   }
 );

@@ -177,11 +177,9 @@ class Host extends Component {
       @exclude={{@exclude}}
       @legacyKind={{@legacyKind}}
       @multiple={{@multiple}}
-      @noneLabel={{@noneLabel}}
       @noneRow={{@noneRow}}
       @onChange={{this.onChange}}
       @permission={{@permission}}
-      @placeholder={{@placeholder}}
       @prioritize={{@prioritize}}
       @scope={{@scope}}
       @selectDescendants={{@selectDescendants}}
@@ -204,7 +202,9 @@ module(
         const accessibleName = await loadAccessibleName();
 
         await render(
-          <template><DSelectCategory @placeholder="All categories" /></template>
+          <template>
+            <DSelectCategory @texts={{hash placeholder="All categories"}} />
+          </template>
         );
 
         assert.strictEqual(
@@ -218,7 +218,10 @@ module(
 
         await render(
           <template>
-            <DSelectCategory @multiple={{true}} @placeholder="All categories" />
+            <DSelectCategory
+              @multiple={{true}}
+              @texts={{hash placeholder="All categories"}}
+            />
           </template>
         );
 
@@ -247,7 +250,9 @@ module(
         const accessibleName = await loadAccessibleName();
 
         await render(
-          <template><DSelectCategory @ariaLabel="Destination" /></template>
+          <template>
+            <DSelectCategory @texts={{hash ariaLabel="Destination"}} />
+          </template>
         );
 
         assert.strictEqual(
@@ -631,15 +636,16 @@ module(
         assert.deepEqual(optionValues(), ["9600"]);
       });
 
-      test("@noneLabel adds a selectable row that clears the value", async function (assert) {
+      test("@noneRow adds a selectable row that clears the value", async function (assert) {
         const onChange = sinon.spy();
 
         await render(
           <template>
             <Host
               @multiple={{false}}
-              @noneLabel="Any category"
+              @noneRow={{true}}
               @onChange={{onChange}}
+              @texts={{hash noneLabel="Any category"}}
               @value={{2}}
             />
           </template>
@@ -870,7 +876,7 @@ module(
       test("an explicit placeholder wins", async function (assert) {
         await render(
           <template>
-            <Host @multiple={{false}} @placeholder="Pick one" />
+            <Host @multiple={{false}} @texts={{hash placeholder="Pick one"}} />
           </template>
         );
 
@@ -940,7 +946,7 @@ module(
 
         await render(
           <template>
-            <Host @multiple={{false}} @placeholder={{label}} />
+            <Host @multiple={{false}} @texts={{hash placeholder=label}} />
           </template>
         );
 
@@ -1728,7 +1734,7 @@ module(
           <template>
             <DSelectCategory
               @multiple={{false}}
-              @placeholder="Pick one"
+              @texts={{hash placeholder="Pick one"}}
               @value={{null}}
             />
           </template>
@@ -1935,8 +1941,9 @@ module(
           <template>
             <DSelectCategory
               @multiple={{true}}
-              @noneLabel="Any category"
+              @noneRow={{true}}
               @onChange={{onChange}}
+              @texts={{hash noneLabel="Any category"}}
               @value={{value}}
             />
           </template>

@@ -171,11 +171,13 @@ export default class EditRule extends Component {
                 {{#if this.siteSettings.enable_new_select_controls}}
                   <DSelectCategory
                     class="category-chooser"
-                    @ariaLabel={{field.title}}
                     @emit="ids"
                     @onChange={{this.onCategoryChange}}
                     @permission="create"
-                    @placeholder={{i18n "chat_integration.all_categories"}}
+                    @texts={{hash
+                      ariaLabel=field.title
+                      placeholder=(i18n "chat_integration.all_categories")
+                    }}
                     @value={{this.category_id}}
                   />
                 {{else}}
@@ -227,7 +229,9 @@ export default class EditRule extends Component {
                     @ignoreRestrictions={{true}}
                     @multiple={{true}}
                     @onChange={{this.onTagsChange}}
-                    @placeholder={{i18n "chat_integration.all_tags"}}
+                    @texts={{hash
+                      placeholder=(i18n "chat_integration.all_tags")
+                    }}
                     @value={{this.tags}}
                   />
                 {{else}}

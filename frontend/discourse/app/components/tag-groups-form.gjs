@@ -168,7 +168,7 @@ export default class TagGroupsForm extends Component {
           @maximum={{false}}
           @multiple={{true}}
           @onChange={{fn this.updateTags "tags"}}
-          @placeholder={{i18n "tagging.groups.tags_placeholder"}}
+          @texts={{hash placeholder=(i18n "tagging.groups.tags_placeholder")}}
           @value={{this.buffered.tags}}
         />
       {{else}}
@@ -198,7 +198,9 @@ export default class TagGroupsForm extends Component {
             @ignoreRestrictions={{true}}
             @multiple={{false}}
             @onChange={{this.updateParentTag}}
-            @placeholder={{i18n "tagging.groups.parent_tag_placeholder"}}
+            @texts={{hash
+              placeholder=(i18n "tagging.groups.parent_tag_placeholder")
+            }}
             @value={{this.parentTag}}
           />
         {{else}}

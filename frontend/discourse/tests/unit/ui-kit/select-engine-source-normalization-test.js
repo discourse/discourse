@@ -388,7 +388,10 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
 
       test("the none row never shares a key with a record", function (assert) {
         const records = [{ id: "__row:0", name: "Looks synthetic" }];
-        const engine = new SelectEngine({ items: records, noneLabel: "None" });
+        const engine = new SelectEngine({
+          items: records,
+          getOptions: () => ({ noneRow: true }),
+        });
 
         const keys = engine.buildItems(records).map((row) => row.key);
 

@@ -26,6 +26,11 @@ import {
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectCategoryFilter from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectTagFilter from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
+import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
 import {
   DEFAULT_SELECT_TEXTS,
   renderSelectText,
@@ -1303,8 +1308,8 @@ function assertDescriptionRemoved(assert, selector, ids) {
   );
 }
 
-/** Each branch passes only the named legacy argument, so warning counts stay attributable. */
-async function mountLegacy(name, label, load) {
+/** Renders DSelect with one removed text argument. */
+async function mountRemoved(name, label, load) {
   switch (name) {
     case "ariaLabel":
       await render(
@@ -2461,87 +2466,23 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     });
   });
 
-  module("legacy compatibility", function () {
-    for (const name of [
-      "ariaLabel",
-      "placeholder",
-      "searchPlaceholder",
-      "noResultsLabel",
-      "noneLabel",
-      "loadingLabel",
-    ]) {
-      test(`legacy argument @${name} still works and warns`, async function (assert) {
-        const label = `Legacy ${name}`;
-        const pending = gate();
-        await mountLegacy(name, label, () => pending.promise);
-        if (name === "loadingLabel") {
-          const opening = click(".d-select__trigger");
-          try {
-            await waitFor(".d-select__skeleton");
-            assert
-              .dom(".d-select__loading-status")
-              .hasText(label, "the old loading label still enables the line");
-          } finally {
-            pending.resolve(ITEMS);
-            await opening;
-          }
-        } else if (name === "ariaLabel") {
-          assert
-            .dom(".d-select__input")
-            .hasAttribute(
-              "aria-label",
-              label,
-              "the legacy name still labels the input"
-            );
-        } else if (name === "placeholder") {
-          assert
-            .dom(".d-select__input")
-            .hasAttribute(
-              "placeholder",
-              label,
-              "the old placeholder still renders"
-            );
-        } else {
-          await click(".d-select__trigger");
-          if (name === "searchPlaceholder") {
-            assert
-              .dom(".d-select__filter")
-              .hasAttribute(
-                "placeholder",
-                label,
-                "the old search prompt still renders"
-              );
-          } else if (name === "noneLabel") {
-            assert
-              .dom("[role='option'][data-value='']")
-              .hasText(label, "the old none label still enables the row");
-          } else {
-            await fillIn(".d-select__input", "Pear");
-            assert
-              .dom(".d-select__empty")
-              .hasText(label, "the old empty-state label still renders");
-          }
-        }
-        const announcementPreserved =
-          name !== "noResultsLabel" ||
-          this.announce.calledWith(label, "polite");
-        assert.true(
-          announcementPreserved,
-          "the old empty-state label is still announced when used"
-        );
-        const notices = this.warnings
-          .getCalls()
-          .filter(
-            (call) => call.args[1].id === "discourse.d-select.texts-legacy"
-          );
-        assert.strictEqual(
-          notices.length,
-          1,
-          "this argument warns once per select"
-        );
-        assert.true(
-          notices[0]?.args[0].includes(name),
-          "the warning identifies the legacy argument"
+  // TODO (select-kit-rework-merge): Remove with REMOVED_TEXT_NAMES.
+  module("removed text names", function () {
+    const REMOVED = {
+      ariaLabel: "ariaLabel",
+      placeholder: "placeholder",
+      searchPlaceholder: "searchPlaceholder",
+      noResultsLabel: "noResults",
+      noneLabel: "noneLabel",
+      loadingLabel: "loadingLabel",
+    };
+
+    for (const [name, key] of Object.entries(REMOVED)) {
+      test(`@${name} is rejected, pointing at its text`, async function (assert) {
+        await expectAssertion(
+          assert,
+          () => mountRemoved(name, "Label", () => gate().promise),
+          new RegExp(`@${name}.*@texts=\\{\\{hash ${key}=`)
         );
       });
     }
@@ -2553,109 +2494,48 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       "noneLabel",
       "loadingLabel",
     ]) {
-      test(`legacy option ${name} still works and warns`, async function (assert) {
-        const label = `Legacy option ${name}`;
-        const pending = gate();
-        const snapshot = tracked(undefined);
+      test(`a customization's "${name}" option is rejected, pointing at its text`, async function (assert) {
         customize((selects) =>
-          selects.forIdentifier("texts-test", (spec) => {
-            spec.options(() => ({ [name]: label }));
-            spec.options((current) => {
-              snapshot.value = current;
-              return {};
-            });
-          })
+          selects.forIdentifier("texts-test", (spec) =>
+            spec.options(() => ({ [name]: "Label" }))
+          )
         );
-        await mount({
-          variant: name === "searchPlaceholder" ? "button" : undefined,
-          load: name === "loadingLabel" ? () => pending.promise : undefined,
-        });
-        if (name === "loadingLabel") {
-          const opening = click(".d-select__trigger");
-          try {
-            await waitFor(".d-select__skeleton");
-            assert
-              .dom(".d-select__loading-status")
-              .hasText(label, "the old option still enables loading status");
-          } finally {
-            pending.resolve(ITEMS);
-            await opening;
-          }
-        } else if (name === "ariaLabel" || name === "placeholder") {
-          assert
-            .dom(".d-select__input")
-            .hasAttribute(
-              name === "ariaLabel" ? "aria-label" : "placeholder",
-              label,
-              "the old option still supplies text"
-            );
-        } else {
-          await click(".d-select__trigger");
-          if (name === "noneLabel") {
-            assert
-              .dom("[role='option'][data-value='']")
-              .hasText(label, "the old option still enables the none row");
-          } else {
-            assert
-              .dom(".d-select__filter")
-              .hasAttribute(
-                "placeholder",
-                label,
-                "the old search option still renders"
-              );
-          }
-        }
-        assert.strictEqual(
-          snapshot.value[name],
-          label,
-          "the legacy option remains readable on a resolved snapshot"
-        );
-        const notices = this.warnings
-          .getCalls()
-          .filter(
-            (call) => call.args[1].id === "discourse.d-select.texts-legacy"
-          );
-        assert.strictEqual(
-          notices.length,
-          1,
-          "this option warns once per select"
-        );
-        assert.true(
-          notices[0]?.args[0].includes(name),
-          "the warning identifies the legacy option"
+        await expectAssertion(
+          assert,
+          () => mount({}),
+          new RegExp(`"${name}".*texts: \\{ ${REMOVED[name]}:`)
         );
       });
     }
 
-    test("new texts beat legacy option keys at the same layer", async function (assert) {
-      customize((selects) =>
-        selects.forIdentifier("texts-test", (spec) =>
-          spec.options(() => ({
-            placeholder: "Legacy option",
-            texts: { placeholder: "New option" },
-          }))
-        )
+    test("DSelectList rejects the removed arguments it took", async function (assert) {
+      await expectAssertion(
+        assert,
+        () =>
+          render(
+            <template>
+              <DSelectList @items={{ITEMS}} @searchPlaceholder="Find" />
+            </template>
+          ),
+        /@searchPlaceholder.*@texts/
       );
-      await mount();
-      assert
-        .dom(".d-select__input")
-        .hasAttribute(
-          "placeholder",
-          "New option",
-          "texts wins within a customization result"
-        );
     });
 
-    test("old empty arguments retain their fallback during the shim", async function (assert) {
-      await mountLegacy("placeholder", "");
-      assert
-        .dom(".d-select__input")
-        .hasAttribute(
-          "placeholder",
-          i18n("d_select.placeholder"),
-          "the legacy empty placeholder keeps today's fallback"
+    for (const [component, Recipe] of Object.entries({
+      DSelectCategory,
+      DSelectCategoryFilter,
+      DSelectTag,
+      DSelectTagFilter,
+      DSelectTagGroup,
+    })) {
+      test(`${component} rejects its own removed arguments`, async function (assert) {
+        await expectAssertion(
+          assert,
+          () => render(<template><Recipe @placeholder="Old" /></template>),
+          new RegExp(`${component}: @placeholder.*@texts`)
         );
-    });
+      });
+    }
   });
 
   module("warnings", function () {

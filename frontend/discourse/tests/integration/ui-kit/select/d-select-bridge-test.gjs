@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import {
@@ -573,14 +574,13 @@ class AsyncUpdateHost extends Component {
   <template>
     <A11yLiveRegions />
     <DSelect
-      @ariaLabel={{@label}}
       @icon={{@icon}}
       @iconOnly={{@iconOnly}}
       @items={{@items}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
-      @placeholder="Pick one"
       @showCaret={{@showCaret}}
+      @texts={{hash ariaLabel=@label placeholder="Pick one"}}
       @value={{this.value}}
       @variant={{@variant}}
     />
@@ -599,7 +599,7 @@ class AsyncUpdateSelectionHost extends Component {
     <DSelect
       @items={{@items}}
       @onChange={{this.onChange}}
-      @placeholder="Pick one"
+      @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
     >
       <:selection as |item|>
@@ -1411,7 +1411,8 @@ module(
             @createItem={{createItem}}
             @identifier="test-select"
             @items={{ITEMS}}
-            @noneLabel="None"
+            @noneRow={{true}}
+            @texts={{hash noneLabel="None"}}
           />
         </template>
       );
@@ -1710,7 +1711,12 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{items}} @noneLabel="None" @variant="button" />
+          <DSelect
+            @items={{items}}
+            @noneRow={{true}}
+            @texts={{hash noneLabel="None"}}
+            @variant="button"
+          />
         </template>
       );
       await click(".d-select__trigger");
@@ -2308,7 +2314,7 @@ class ContractHost extends Component {
       @kind="contract-select"
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
-      @placeholder="Pick one"
+      @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
     />
   </template>

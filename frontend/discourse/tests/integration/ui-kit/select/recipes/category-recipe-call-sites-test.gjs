@@ -209,7 +209,9 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forIdentifier("breadcrumb-category", (spec) =>
-              spec.options(() => ({ placeholder: "breadcrumb level" }))
+              spec.options(() => ({
+                texts: { placeholder: "breadcrumb level" },
+              }))
             );
           })
         );

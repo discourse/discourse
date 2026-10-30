@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -20,8 +21,10 @@ export default class StatusIconSelectExample extends Component {
       @items={{PEOPLE}}
       @labelField="name"
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.message_someone"
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.message_someone"
+        )
       }}
       @value={{this.value}}
     >

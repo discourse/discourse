@@ -7,6 +7,7 @@ import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { disableThrowingApplyExceptionOnTests } from "discourse/lib/transformer";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
+import { i18n } from "discourse-i18n";
 
 const ITEMS = [
   { id: 1, name: "Apple" },
@@ -749,20 +750,23 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     return engine.buildItems(ITEMS).find((row) => row.flags.__none)?.item.name;
   }
 
-  test("noneLabel reaches a headless engine", function (assert) {
+  test("a customization's noneRow and noneLabel reach a headless engine", function (assert) {
     customize((selects) =>
-      selects.forAll((spec) => spec.options(() => ({ noneLabel: "Nothing" })))
+      selects.forAll((spec) =>
+        spec.options(() => ({ noneRow: true, texts: { noneLabel: "Nothing" } }))
+      )
     );
 
     assert.strictEqual(
-      noneRow(new SelectEngine({ items: ITEMS, noneLabel: "None" })),
+      noneRow(
+        new SelectEngine({
+          items: ITEMS,
+          getOptions: () => ({ noneRow: true }),
+          getTexts: () => ({ noneLabel: "None" }),
+        })
+      ),
       "Nothing",
-      "it renames the static none label"
-    );
-    assert.strictEqual(
-      noneRow(new SelectEngine({ items: ITEMS, getNoneLabel: () => "None" })),
-      "Nothing",
-      "it wins over the live reader"
+      "it renames the call site's none row"
     );
     assert.strictEqual(
       noneRow(new SelectEngine({ items: ITEMS })),
@@ -783,15 +787,18 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
           throw new Error("options boom");
         })
       );
-      selects.forAll((spec) => spec.options(() => ({ noneLabel: "After" })));
+      selects.forAll((spec) =>
+        spec.options(() => ({ texts: { noneLabel: "After" } }))
+      );
     });
-    const engine = new SelectEngine({ items: ITEMS, noneLabel: "None" });
+    const withNoneRow = () =>
+      new SelectEngine({ items: ITEMS, getOptions: () => ({ noneRow: true }) });
 
-    assert.throws(() => engine.buildItems(ITEMS), /options boom/);
+    assert.throws(() => withNoneRow().buildItems(ITEMS), /options boom/);
 
     disableThrowingApplyExceptionOnTests();
     assert.strictEqual(
-      noneRow(new SelectEngine({ items: ITEMS, noneLabel: "None" })),
+      noneRow(withNoneRow()),
       "After",
       "later callbacks still apply"
     );
@@ -810,37 +817,45 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       selects.forIdentifier("fruit", (spec) =>
         spec.options((current) => {
           snapshots.push(current);
-          return { disabled: false, ariaLabel: "Identifier" };
+          return { disabled: false, texts: { ariaLabel: "Identifier" } };
         })
       );
       selects.forAll((spec) => {
         spec.options((current) => {
           snapshots.push(current);
-          return { disabled: true, ariaLabel: "First", caretIcon: caret };
+          return {
+            disabled: true,
+            texts: { ariaLabel: "First" },
+            caretIcon: caret,
+          };
         });
         spec.options((current) => {
           snapshots.push(current);
-          return { disabled: false, ariaLabel: "Second" };
+          return { disabled: false, texts: { ariaLabel: "Second" } };
         });
       });
     });
     const engine = new SelectEngine({
       identifier: "fruit",
-      getOptions: () => ({ ariaLabel: "Base" }),
+      getTexts: () => ({ ariaLabel: "Base" }),
     });
 
     assert.true(engine.resolvedOptions.disabled, "the first lock stays");
     assert.strictEqual(
-      engine.resolvedOptions.ariaLabel,
+      engine.text("ariaLabel"),
       "Identifier",
       "the most specific tier wins"
     );
     assert.deepEqual(
-      snapshots.map((snapshot) => snapshot.ariaLabel),
+      snapshots.map((snapshot) => snapshot.texts.ariaLabel),
       ["Base", "First", "Second"],
       "earlier snapshots keep their values"
     );
     assert.true(snapshots.every(Object.isFrozen), "every snapshot is frozen");
+    assert.true(
+      snapshots.every((snapshot) => Object.isFrozen(snapshot.texts)),
+      "so are their texts"
+    );
     assert.true(
       Object.isFrozen(engine.resolvedOptions.caretIcon),
       "nested caret state is frozen too"
@@ -848,7 +863,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     assert.false(Object.isFrozen(caret), "the callback's own object is not");
   });
 
-  test("a headless noneLabel follows the live reader until a customization overrides it", function (assert) {
+  test("a headless none row follows the live texts until a customization overrides them", function (assert) {
     const state = new (class {
       @tracked label;
       @tracked multiple = false;
@@ -857,21 +872,27 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     customize((selects) =>
       selects.forAll((spec) =>
         spec.options(() =>
-          state.override === undefined ? {} : { noneLabel: state.override }
+          state.override === undefined
+            ? {}
+            : { texts: { noneLabel: state.override } }
         )
       )
     );
     const engine = new SelectEngine({
-      noneLabel: "Static",
-      getNoneLabel: () => state.label,
+      getOptions: () => ({ noneRow: true }),
+      getTexts: () => ({ noneLabel: state.label }),
       getMultiple: () => state.multiple,
     });
     const noneLabel = () =>
       engine.buildItems([]).find((row) => row.flags.__none)?.item.name;
 
-    assert.strictEqual(noneLabel(), "Static", "the static label is the base");
+    assert.strictEqual(
+      noneLabel(),
+      i18n("d_select.none"),
+      "the engine default is the base"
+    );
     state.label = "Live";
-    assert.strictEqual(noneLabel(), "Live", "the live reader takes over");
+    assert.strictEqual(noneLabel(), "Live", "the live texts take over");
     state.override = "Override";
     assert.strictEqual(noneLabel(), "Override", "the customization wins");
     state.multiple = true;
@@ -881,12 +902,6 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       "a multi-select has no none row"
     );
     state.multiple = false;
-    state.override = "";
-    assert.strictEqual(
-      noneLabel(),
-      undefined,
-      "an empty label removes the row"
-    );
     state.override = undefined;
     assert.strictEqual(
       noneLabel(),

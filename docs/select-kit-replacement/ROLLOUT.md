@@ -294,12 +294,23 @@ customization ports are done.
   and live announcements. Then confirm that the API lets a call site override each one, and that
   every recipe exposes the same overrides instead of fixing them. Strings that cannot be overridden
   get an argument or a `@kindOptions` key before the families that render them join the flag.
-  Requested 2026-10-23.
+  Requested 2026-10-23. **Done 2026-10-30:** every text DSelect or a recipe draws or speaks is a
+  key in one `@texts` hash, and customizations set it under `texts` (README, "Texts"). The old
+  `@ariaLabel`, `@placeholder`, `@searchPlaceholder`, `@noResultsLabel`, `@noneLabel` and
+  `@loadingLabel` arguments are gone; the none row and the loading status are switches
+  (`@noneRow`, `@loadingStatus`). New strings: `d_select.none`, `d_select.loading`,
+  `d_select.compact_count`, `d_select.more_chips`, `tagging.tag_count_badge`,
+  `tagging.add_more_tags`, `tagging.choose_more_required`, `tagging.choose_more_required_group`,
+  `tagging.required_tags_progress`, `tagging.max_tags_reached` and
+  `tagging.filter_to_narrow_tags` (unused until the tag drop gets `@maxLoaded`).
+  `d_select.label_with_count` became a plural key and the unused `d_select.expand` is deleted.
+  The category badge helper's own texts ("× N", "+ Subcategories", "read-only") keep the site
+  wording, which Admin › Customize › Text changes.
   - Categories, 2026-10-26: the filter keeps select-kit's lowercase strings (`categories`,
     `subcategories`, `no subcategories`, `remove filter`, `view all`), as the tag filter does, so
     the navigation bar reads the same in both modes. The level name is the empty level's
-    placeholder, overridable with `@placeholder` or a customization's `placeholder`, and the drop
-    is named by `categories.filter_by_categories_label` / `filter_by_subcategories_label`
+    placeholder, overridable with a `placeholder` text from the call site or a customization, and
+    the drop is named by `categories.filter_by_categories_label` / `filter_by_subcategories_label`
     ("Filter by: categories", 2026-10-28). The family footer's names, "%{category} and all subcategories"
     (`category.select_with_subcategories`) and "%{category} (%{count} topics) and all
     subcategories" (`category.select_with_subcategories_count`), are placeholder strings, so
@@ -309,7 +320,7 @@ customization ports are done.
     more than one. Before, its placeholder was its name.
   - Tags, 2026-10-29: the tag filter is named "Filter by: tags" (`tagging.filter_by_tags_label`,
     new). With nothing filtered it holds nothing and shows "tags" (`tagging.selector_tags`) as its
-    placeholder, overridable with `@placeholder` or a customization's `placeholder`; the
+    placeholder, overridable with a `placeholder` text from the call site or a customization; the
     intersection drop shows the same instead of "Optional tags…".
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
@@ -432,6 +443,26 @@ Open items need a decision after manual testing; the rest are intended but still
   the client re-sorted the server's results by name, so typing "rock" could list "alpha-rock"
   above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.
 
+**Texts** (recorded 2026-10-30)
+
+- [ ] **`""` means no text.** An empty text at any layer now leaves its place out (no
+  placeholder, no empty status, no announcement). Before, an empty argument fell back on the
+  default. Required texts, such as names and button labels, still fall back.
+- [ ] **The tag requirement moved into the field.** The line DSelect drew under the tag picker
+  ("Select at least 2 tags") is gone; select-kit never had it. The placeholder says it instead:
+  the required tag group, then the minimum, then "Optional tags…". With tags held, the field
+  after the chips keeps saying what is missing ("Select 1 more tag from 'Genre'…"), then "Add more
+  tags…". The mobile modal's field says the same. The closed mobile trigger still shows only the
+  chips or the count.
+- [ ] **Multi-selects say "Add…" after their chips** while another item can be added, and nothing
+  at the maximum or while disabled.
+- [ ] **The tag panel's minimum line reads as progress** ("1 of 2 required tags selected"). It is
+  spoken after each add or remove below the minimum, since its text changes.
+- [ ] **Known gap: the required group can be stale.** The group comes from the server's answer to
+  a blank search, so it is unknown before the list first opens, and stale after the value or the
+  composer category changes while the list is closed. The placeholder then falls back to the
+  minimum or the prompt.
+
 ## Category call sites
 
 Category storage fields branch to `DSelectCategory` while `enable_new_select_controls` is on.
@@ -480,7 +511,7 @@ holds the survey to do first, the red flags and the review gate that these lesso
   own that lifecycle. Remote work belongs in `spec.load`: a pending loader shows the skeleton, its
   `signal` cancels a superseded request, and a rejection gets the error state with retry. A
   toggle row only flips a flag and calls `control.reload()`. `content` adds rows, `options`
-  presents (`loadingLabel` names a slow load). The rewrite needed two state values instead of a
+  presents (`loadingStatus` and the `loadingLabel` text name a slow load). The rewrite needed two state values instead of a
   state machine.
 - **Never stand in for a pending load with rows.** A fake loading row hides the real loading
   state and races it. If the list is waiting, its loader is pending.

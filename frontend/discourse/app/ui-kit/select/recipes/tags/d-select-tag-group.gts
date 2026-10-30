@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
 import { searchTagGroups } from "discourse/lib/tag-source";
 import type SiteSettingsService from "discourse/services/site-settings";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
@@ -35,8 +37,6 @@ interface DSelectTagGroupSignature {
     onChange?: (names: string[] | string | null) => void;
     /** Maximum number of selected groups. */
     maximum?: number | false;
-    /** Translated placeholder for an empty selection. */
-    placeholder?: string;
     /** The picker's texts, over its defaults. */
     texts?: SelectSignature["Args"]["texts"];
     /** Trigger presentation. */
@@ -53,8 +53,6 @@ interface DSelectTagGroupSignature {
     disabled?: boolean;
     /** External label target. */
     id?: string;
-    /** Accessible control name; it is never drawn. */
-    ariaLabel?: string;
     /** Call-site customization identity. */
     identifier?: string;
     /** Call-site customization data. */
@@ -78,6 +76,11 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
 
   kindTexts = TAG_GROUP_TEXTS;
 
+  constructor(owner: Owner, args: DSelectTagGroupSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectTagGroup", args);
+  }
+
   get selectionValue() {
     return this.args.multiple ? this.#value : (this.#value[0] ?? null);
   }
@@ -99,21 +102,6 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
 
   get valueItems() {
     return this.#value.map((name) => ({ id: name, name }));
-  }
-
-  /** The call site's texts, under which the old text arguments still apply. */
-  get texts(): SelectTexts | undefined {
-    const { ariaLabel, placeholder, texts } = this.args;
-    if (!ariaLabel && !placeholder) {
-      return texts;
-    }
-    return {
-      ariaLabel: ariaLabel || undefined,
-      placeholder: placeholder || undefined,
-      ...Object.fromEntries(
-        Object.entries(texts ?? {}).filter(([, text]) => text != null)
-      ),
-    };
   }
 
   get #value() {
@@ -172,7 +160,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @suppressFooter={{not (has-block "footer")}}
-      @texts={{this.texts}}
+      @texts={{@texts}}
       @value={{this.selectionValue}}
       @valueItems={{this.valueItems}}
       @variant={{@variant}}

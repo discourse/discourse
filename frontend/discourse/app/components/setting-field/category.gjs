@@ -25,12 +25,14 @@ export default class SettingFieldCategory extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-chooser"
-          @ariaLabel={{@field.title}}
           @disabled={{@field.disabled}}
           @emit="ids"
           @onChange={{this.onChange}}
           @permission="create"
-          @placeholder={{i18n "category.none"}}
+          @texts={{hash
+            ariaLabel=@field.title
+            placeholder=(i18n "category.none")
+          }}
           @uncategorized={{true}}
           @value={{this.categoryId}}
         />

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, concat } from "@ember/helper";
+import { array, concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
@@ -41,9 +41,9 @@ class NoneRowHost extends Component {
   <template>
     <DSelect
       @items={{ITEMS}}
-      @noneLabel="None"
+      @noneRow={{true}}
       @onChange={{this.onChange}}
-      @placeholder="Pick one"
+      @texts={{hash noneLabel="None" placeholder="Pick one"}}
       @value={{this.value}}
       @variant={{@variant}}
     />
@@ -63,9 +63,9 @@ class NoneRowMultiHost extends Component {
     <DSelect
       @items={{ITEMS}}
       @multiple={{true}}
-      @noneLabel="None"
+      @noneRow={{true}}
       @onChange={{this.onChange}}
-      @placeholder="Pick some"
+      @texts={{hash noneLabel="None" placeholder="Pick some"}}
       @value={{this.value}}
     />
   </template>
@@ -684,8 +684,9 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
           @groupBy="group"
           @groupHeader={{groupHeader}}
           @items={{items}}
-          @noneLabel="None"
+          @noneRow={{true}}
           @specialItems={{specialItems}}
+          @texts={{hash noneLabel="None"}}
         />
       </template>
     );
@@ -1147,7 +1148,6 @@ class CompactStripHost extends Component {
 
   <template>
     <DSelect
-      @ariaLabel="Fruit"
       @describedBy="u1f-help"
       @disabled={{@disabled}}
       @items={{@items}}
@@ -1157,6 +1157,7 @@ class CompactStripHost extends Component {
       @multiple={{true}}
       @onChange={{this.onChange}}
       @resolveValues={{@resolveValues}}
+      @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
       @variant={{@variant}}
     />

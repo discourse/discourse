@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -21,11 +21,13 @@ export default class SelectionBlockSelectExample extends Component {
       @labelField="name"
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        (if
-          @multiple
-          "styleguide.sections.select.placeholders.add_people"
-          "styleguide.sections.select.placeholders.find_person"
+      @texts={{hash
+        placeholder=(i18n
+          (if
+            @multiple
+            "styleguide.sections.select.placeholders.add_people"
+            "styleguide.sections.select.placeholders.find_person"
+          )
         )
       }}
       @value={{this.value}}

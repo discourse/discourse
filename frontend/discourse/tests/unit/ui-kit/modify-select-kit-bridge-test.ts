@@ -643,7 +643,7 @@ module(
       const element = document.createElement("div");
       const engine = new SelectEngine({
         kind: "sticky-select",
-        noneLabel: "None",
+        getOptions: () => ({ noneRow: true }),
         specialItems: () => [{ id: "special", name: "Special", sticky: true }],
         legacy: {
           owner: getOwner(this),

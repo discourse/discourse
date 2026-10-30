@@ -32,6 +32,7 @@ import VariantPresenter, {
   type SelectVariant,
 } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
@@ -147,20 +148,15 @@ interface DSelectSignature {
     groupFooter?: SelectEngineOptions["groupFooter"];
     /** Receives the next value, resolved items, and metadata including resolved options. */
     onChange?: SelectEngineOptions["onChange"];
-    placeholder?: string;
-    searchPlaceholder?: string;
     /**
      * A decorative trailing icon in a search field that is not the trigger: the `button` panel's
      * field and the mobile modal's. A desktop `typeahead` trigger is its own search field and
      * never shows it; `static` has no search.
      */
     searchIcon?: string;
-    noResultsLabel?: string;
-    /** The control's name for assistive technology; it is never drawn. */
-    ariaLabel?: string;
     /**
      * Id of a visible caption that names the control, for a field whose caption is already on
-     * the page. It replaces `@ariaLabel` on every part of the control, and the held value, or
+     * the page. It replaces `texts.ariaLabel` on every part of the control, and the held value, or
      * the count of a compact multiple select, is read after it.
      */
     ariaLabelledBy?: string;
@@ -187,8 +183,6 @@ interface DSelectSignature {
      * to need it. Its wording is `texts.loadingLabel`. Off by default.
      */
     loadingStatus?: boolean;
-    /** Turns the loading status line on, labeled with this text. */
-    loadingLabel?: string;
     /**
      * Icon marking the selected row(s) in the list. Multi-select always shows it (defaulting to a
      * check); single-select renders it only when this arg is set, so an ordinary single-select has
@@ -291,8 +285,6 @@ interface DSelectSignature {
      * multi-select, where the empty state is the placeholder rather than a row.
      */
     noneRow?: boolean;
-    /** Turns the none row on, labeled with this text. */
-    noneLabel?: string;
     /**
      * Skips the `:footer` block even when one is passed. A recipe that forwards its caller's
      * footer passes `(not (has-block "footer"))`, since a forwarded block always counts as passed.
@@ -492,6 +484,7 @@ export default class DSelect extends Component<DSelectSignature> {
 
   constructor(owner: Owner, args: DSelectSignature["Args"]) {
     super(owner, args);
+    assertNoRemovedTextArgs("DSelect", args);
     this.interaction = new InteractionCoordinator({
       engine: this.engine,
       presenter: this.presenter,

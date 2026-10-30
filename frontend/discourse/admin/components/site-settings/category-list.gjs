@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -54,9 +55,9 @@ export default class CategoryList extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectCategory
           class="category-selector"
-          @ariaLabel={{@label}}
           @multiple={{true}}
           @onChange={{this.onChangeSelectedCategories}}
+          @texts={{hash ariaLabel=@label}}
           @value={{this.selectedCategories}}
         />
       {{else}}

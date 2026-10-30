@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -334,9 +334,9 @@ export default class BoardsBoardSettings extends Component {
                         {{#if this.siteSettings.enable_new_select_controls}}
                           <DSelectCategory
                             class="category-selector"
-                            @ariaLabel={{field.title}}
                             @multiple={{true}}
                             @onChange={{fn this.onCategoriesChange field}}
+                            @texts={{hash ariaLabel=field.title}}
                             @value={{categories}}
                           />
                         {{else}}

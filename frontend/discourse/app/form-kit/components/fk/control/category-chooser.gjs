@@ -51,7 +51,6 @@ export default class FKControlCategoryChooser extends FKBaseControl {
       <DSelectCategory
         class="form-kit__control-category-chooser"
         ...attributes
-        @ariaLabel={{@field.title}}
         @clearable={{true}}
         @describedBy={{@field.describedBy}}
         @disabled={{@field.disabled}}
@@ -63,8 +62,8 @@ export default class FKControlCategoryChooser extends FKBaseControl {
         @multiple={{@multiple}}
         @onChange={{this.handleChange}}
         @permission={{@permission}}
-        @placeholder={{this.placeholder}}
         @subcategories={{@subcategories}}
+        @texts={{hash ariaLabel=@field.title placeholder=this.placeholder}}
         @uncategorized={{@uncategorized}}
         @value={{readonly @field.value}}
       />

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -21,10 +22,12 @@ export default class ReadonlySelectExample extends Component {
       @items={{this.items}}
       @labelField="title"
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.choose_visibility"
-      }}
       @readonly={{true}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.choose_visibility"
+        )
+      }}
       @value={{this.value}}
       @variant="static"
     />

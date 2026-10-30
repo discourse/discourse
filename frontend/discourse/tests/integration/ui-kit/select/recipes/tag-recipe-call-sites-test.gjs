@@ -295,7 +295,7 @@ module(
               "select-customizations",
               ({ value }) => {
                 value.forIdentifier("breadcrumb-tag", (spec) =>
-                  spec.options(() => ({ placeholder: "tag level" }))
+                  spec.options(() => ({ texts: { placeholder: "tag level" } }))
                 );
                 value.forIdentifier("breadcrumb-tag-intersection", (spec) =>
                   spec.row((row) => row.classes.push("x-intersection"))

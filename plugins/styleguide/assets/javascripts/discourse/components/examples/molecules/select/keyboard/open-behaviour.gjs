@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -20,12 +21,14 @@ export default class OpenBehaviourSelectExample extends Component {
 
   <template>
     <DSelect
-      @ariaLabel={{@label}}
       @identifier={{@identifier}}
       @items={{LOCALES}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.choose_language"
+      @texts={{hash
+        ariaLabel=@label
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.choose_language"
+        )
       }}
       @value={{this.value}}
       @variant={{@variant}}

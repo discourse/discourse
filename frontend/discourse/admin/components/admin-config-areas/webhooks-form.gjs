@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import WebhookEventChooser from "discourse/admin/components/webhook-event-chooser";
@@ -222,9 +222,9 @@ export default class AdminConfigAreasWebhookForm extends Component {
                     {{#if this.siteSettings.enable_new_select_controls}}
                       <DSelectCategory
                         class="category-selector"
-                        @ariaLabel={{field.title}}
                         @multiple={{true}}
                         @onChange={{field.set}}
+                        @texts={{hash ariaLabel=field.title}}
                         @value={{field.value}}
                       />
                     {{else}}

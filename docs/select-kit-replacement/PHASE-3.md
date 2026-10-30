@@ -21,7 +21,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ **Recipe follow-ups:** multiple pickers keep the select's own empty text, the drop marks an
     active filter with `--filtering`, and chooser rows show topic counts.
   - ☑ **The drop's empty level (2026-10-28):** an empty level holds nothing and shows the level
-    name as its placeholder, overridable by `@placeholder` or a customization; the drop is named
+    name as its placeholder, overridable by a `placeholder` text from the call site or a customization; the drop is named
     "Filter by: categories" / "Filter by: subcategories" and no longer repeats the level. A held
     "no subcategories" filter offers "remove filter". The breadcrumbs pass `breadcrumb-category`.
     The tag drop followed on 2026-10-29: "Filter by: tags", an empty filter that holds nothing,
@@ -138,6 +138,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   renders while the flag is on, attributed from the stack. Design it against this wave's first
   family (see `ROLLOUT.md`).
 - ☐ **Alpha:** staff plus a member group; member and anonymous coverage before exposure.
+
+- ☑ **Customizable texts (2026-10-30):** every text a select or recipe draws or speaks is a key in
+  `@texts` and the `texts` customization option; the old text arguments are gone. The tag
+  guidance line moved into the placeholder. Before the branch merges, remove the removed-name
+  guard tagged `TODO (select-kit-rework-merge)`.
 
 ### Wave 2: entity pickers and ui-kit wrappers
 

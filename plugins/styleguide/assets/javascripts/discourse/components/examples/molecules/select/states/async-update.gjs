@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -79,30 +80,34 @@ export default class AsyncUpdateSelectExample extends Component {
     <div class="select-examples__pair">
       <div class="select-examples__pair-item">
         <DSelect
-          @ariaLabel={{i18n
-            "styleguide.sections.select.async_update_single_label"
-          }}
           @identifier="sg-async-update"
           @items={{this.items}}
           @onChange={{this.onChange}}
-          @placeholder={{i18n
-            "styleguide.sections.select.placeholders.choose_language"
+          @texts={{hash
+            ariaLabel=(i18n
+              "styleguide.sections.select.async_update_single_label"
+            )
+            placeholder=(i18n
+              "styleguide.sections.select.placeholders.choose_language"
+            )
           }}
           @value={{this.value}}
         />
       </div>
       <div class="select-examples__pair-item">
         <DSelect
-          @ariaLabel={{i18n
-            "styleguide.sections.select.async_update_multi_label"
-          }}
           @identifier="sg-async-update-tags"
           @items={{this.tagItems}}
           @labelField="label"
           @multiple={{true}}
           @onChange={{this.onTagsChange}}
-          @placeholder={{i18n
-            "styleguide.sections.select.placeholders.choose_tags"
+          @texts={{hash
+            ariaLabel=(i18n
+              "styleguide.sections.select.async_update_multi_label"
+            )
+            placeholder=(i18n
+              "styleguide.sections.select.placeholders.choose_tags"
+            )
           }}
           @value={{this.tags}}
           @valueField="slug"

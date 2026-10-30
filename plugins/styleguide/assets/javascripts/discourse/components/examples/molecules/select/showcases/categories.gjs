@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -25,10 +26,12 @@ export default class CategoriesSelectExample extends Component {
       @identifier="sg-categories"
       @items={{@items}}
       @onChange={{this.update}}
-      @placeholder={{i18n
-        "styleguide.sections.select.showcases.categories.placeholder"
-      }}
       @specialItems={{@specialItems}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.showcases.categories.placeholder"
+        )
+      }}
       @value={{this.value}}
       @valueField="slug"
       @variant="button"

@@ -222,7 +222,7 @@ module(
             value.forKind("select-category-filter", (spec) =>
               spec.options((previous, { kindContext }) =>
                 kindContext.parentCategory?.id === 2
-                  ? { placeholder: "pick a child" }
+                  ? { texts: { placeholder: "pick a child" } }
                   : undefined
               )
             );
@@ -233,7 +233,7 @@ module(
         await render(
           <template>
             <div class="top"><DSelectCategoryFilter
-                @placeholder="any category"
+                @texts={{hash placeholder="any category"}}
               /></div>
             <div class="sub"><DSelectCategoryFilter
                 @parentCategory={{parent}}

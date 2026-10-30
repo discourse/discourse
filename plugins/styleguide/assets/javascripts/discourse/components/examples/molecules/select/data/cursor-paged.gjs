@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -18,10 +19,12 @@ export default class CursorPagedSelectExample extends Component {
       @identifier="sg-paged-cursor"
       @load={{cursorTopicApi.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.search_topic_archive"
-      }}
       @resolveValue={{cursorTopicApi.find}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.search_topic_archive"
+        )
+      }}
       @value={{this.value}}
     />
   </template>

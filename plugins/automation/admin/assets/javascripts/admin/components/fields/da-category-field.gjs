@@ -19,12 +19,12 @@ export default class CategoryField extends BaseField {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-chooser"
-              @ariaLabel={{@label}}
               @clearable={{true}}
               @disabled={{@field.isDisabled}}
               @emit="ids"
               @onChange={{this.mutValue}}
               @permission="create"
+              @texts={{hash ariaLabel=@label}}
               @value={{@field.metadata.value}}
             />
           {{else}}

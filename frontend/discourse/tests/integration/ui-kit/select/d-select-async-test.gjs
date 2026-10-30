@@ -1041,7 +1041,7 @@ module("Integration | ui-kit | select | DSelect (async)", function () {
             <DSelect
               @items={{items}}
               @multiple={{multiple}}
-              @placeholder="Pick a value"
+              @texts={{hash placeholder="Pick a value"}}
             />
           </template>
         );
@@ -1532,8 +1532,9 @@ module(
         <template>
           <DSelect
             @load={{load}}
-            @loadingLabel="Generating suggestions"
+            @loadingStatus={{true}}
             @skeletonCount={{3}}
+            @texts={{hash loadingLabel="Generating suggestions"}}
           />
         </template>
       );
@@ -1575,7 +1576,11 @@ module(
 
       await render(
         <template>
-          <DSelect @load={{load}} @loadingLabel="Generating suggestions" />
+          <DSelect
+            @load={{load}}
+            @loadingStatus={{true}}
+            @texts={{hash loadingLabel="Generating suggestions"}}
+          />
         </template>
       );
       await click("[role='combobox']");
@@ -1636,7 +1641,7 @@ module(
             @kind="probe"
             @kindContext={{kindContext.value}}
             @load={{load}}
-            @placeholder={{placeholder.value}}
+            @texts={{hash placeholder=placeholder.value}}
           />
         </template>
       );

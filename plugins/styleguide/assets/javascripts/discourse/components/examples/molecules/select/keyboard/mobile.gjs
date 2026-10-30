@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -19,8 +20,8 @@ export default class MobileSelectExample extends Component {
       @items={{TEAM_MEMBERS}}
       @labelField="name"
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.find_person"
+      @texts={{hash
+        placeholder=(i18n "styleguide.sections.select.placeholders.find_person")
       }}
       @value={{this.value}}
     />

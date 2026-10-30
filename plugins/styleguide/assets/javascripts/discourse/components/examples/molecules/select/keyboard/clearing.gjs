@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -20,7 +21,9 @@ export default class KeyboardClearingSelectExample extends Component {
       @items={{TAGS}}
       @labelField="label"
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholders.choose_tag"}}
+      @texts={{hash
+        placeholder=(i18n "styleguide.sections.select.placeholders.choose_tag")
+      }}
       @value={{this.value}}
       @valueField="slug"
     />

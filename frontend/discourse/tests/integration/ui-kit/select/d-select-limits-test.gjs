@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedArray, trackedObject } from "@ember/reactive/collections";
@@ -46,7 +46,7 @@ class MultiLimitsStaticHost extends Component {
       @maximum={{@maximum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder="Pick some"
+      @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
       @variant="static"
     >

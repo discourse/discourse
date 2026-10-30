@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -28,8 +29,10 @@ export default class TopicGlyphSelectExample extends Component {
       @items={{this.items}}
       @labelField="label"
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.content.glyph_placeholder"
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.content.glyph_placeholder"
+        )
       }}
       @value={{this.value}}
       @valueField="slug"

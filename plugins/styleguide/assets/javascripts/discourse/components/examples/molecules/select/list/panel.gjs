@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import Form from "discourse/components/form";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -63,13 +63,15 @@ export default class ListSelectExample extends Component {
         <Form @data={{this.data}} as |form|>
           <DSelectList
             class="select-examples__tag-list --include"
-            @ariaLabel={{i18n "styleguide.sections.select.list_include"}}
             @hideSelected={{true}}
             @identifier="sg-list-include"
             @labelField="label"
             @load={{this.load}}
             @onChange={{this.updateIncluded}}
-            @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
+            @texts={{hash
+              ariaLabel=(i18n "styleguide.sections.select.list_include")
+              searchPlaceholder=(i18n "styleguide.sections.select.list_search")
+            }}
             @value={{this.included}}
             @valueField="slug"
             @valueItems={{this.tags}}
@@ -95,14 +97,16 @@ export default class ListSelectExample extends Component {
           {{#if this.exclude}}
             <DSelectList
               class="select-examples__tag-list --exclude"
-              @ariaLabel={{i18n "styleguide.sections.select.list_exclude"}}
               @hideSelected={{true}}
               @identifier="sg-list-exclude"
               @labelField="label"
               @load={{this.load}}
               @onChange={{this.updateExcluded}}
-              @searchPlaceholder={{i18n
-                "styleguide.sections.select.list_search"
+              @texts={{hash
+                ariaLabel=(i18n "styleguide.sections.select.list_exclude")
+                searchPlaceholder=(i18n
+                  "styleguide.sections.select.list_search"
+                )
               }}
               @value={{this.excluded}}
               @valueField="slug"

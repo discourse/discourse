@@ -254,6 +254,158 @@ browser adopting a scroll container as a tab stop: such an element reports `tabI
 matches no focusable selector, so `tab()` skips it whether or not it was suppressed. That one
 assertion needs a real browser.
 
+## Texts
+
+Every text a select or a recipe draws or speaks can be set by the call site and overridden by a
+customization: names, placeholders, panel messages, announcements, button labels and counts.
+Item data (names, descriptions, row titles) is not a text.
+
+### Setting a text
+
+`@texts` takes a hash. Each entry merges over the layers below it, so overriding one text keeps
+every other:
+
+```gjs
+<DSelect @items={{fruits}} @texts={{hash ariaLabel="Fruit" noResults="No fruit matches"}} />
+```
+
+Every text accepts the same three forms:
+
+- **A translated string**, used as given.
+- **A translation key**, `(hash key="my_theme.fruit_empty")` in a template or `{ key }` in
+  JavaScript. The engine fills the message with the text's values, so plurals and word order stay
+  right. A plain string that is itself a translation key warns in development, because a
+  `DButton @label` habit would show the key.
+- **A function** `(values, context) => string`. It returns `""` for no text, or `null` or
+  `undefined` to hand back to the layer below. A text that needs a value the engine doesn't pass
+  uses a function that closes over its own state; there is no `{ key, values }` form.
+
+The values are named after the default translation's placeholders (`item`, `label`, `value`,
+`count`, `added`, `not_added`), and `count` is always a number. Extra values are harmless, since a
+message fills only the placeholders it has. The context holds `kind`, `identifier`, `multiple`
+and `text(key, values)`, which renders another text. For the text being evaluated, `text` returns
+the layer below, so a function can decorate the default or hand back to it.
+
+### No text
+
+`""` means "no text", at any layer, and the engine then leaves the place out: a drawn text isn't
+rendered, an attribute (`placeholder`, `aria-label`, `aria-describedby`) is omitted, and an
+announcement is skipped. Nullish means "not set at this layer". Two exceptions:
+
+- `noResults: ""` drops the text and its role, but keeps the element that records the row count.
+- **Required texts** name a control or a group, so they can't be empty: `ariaLabel`, `clear`,
+  `clearAll`, `retry`, `removeItem`, `chipsLabel`, `stripLabel`, `footerLabel`, `labelWithValue`,
+  `labelWithCount`, `unresolvedValue`, `createItem`, `removeHint` and `loadError`, plus
+  `noneLabel` and `loadingLabel` while their switch is on. An empty one asserts in development
+  and falls back one layer in production. `ariaLabel` isn't checked under `@ariaLabelledBy`.
+
+A computed value that is `""` when unset needs `|| undefined` to keep the default.
+
+### Layers
+
+From lowest to highest, per entry:
+
+1. the engine's default (`DEFAULT_SELECT_TEXTS`);
+2. the recipe's `@kindTexts` (a recipe built on another passes a list, lowest first);
+3. the call site's `@texts`;
+4. the `texts` key of `options` customizations: `forAll`, then `forKind`, then `forIdentifier`,
+   each in registration order (`spec.options(() => ({ texts: { noResults: "…" } }))`).
+
+A customization's callback reads the merged entries so far as `current.texts`. A recipe's
+`@kindTextWrappers` get the final say over a key, after every layer (see
+[Tag recipes](#tag-recipes)). A function that throws or returns another type, or two texts that
+read each other, assert in development and fall back one layer in production.
+
+`@noneRow` and `@loadingStatus` are switches, also core option keys. They turn on the none row
+and the loading status line, and `noneLabel` and `loadingLabel` word them, so a `forAll`
+rewording never turns a feature on.
+
+A recipe reads its texts with `renderSelectText(options, key, values)`, from the `options` that
+`@specialItems`, the group builders and the blocks receive. The engine reads its own with
+`engine.text(key, values)`. Both are exported from `select-engine.ts`, with the `SelectText`,
+`SelectTexts`, `SelectTextContext` and `SelectTextWrapper` types.
+
+### Development checks
+
+Asserts: a wrong entry type, a string containing `%{`, a failing function or a cycle, an empty
+required text, `@kindTexts` without `@kind`, and a recipe key that matches an engine key except
+for case. Warnings, once per key per select: an unknown key in `@texts` or a customization (once
+overall for `forAll`), a `{ key }` missing from the locale, and a plain string that is a
+translation key.
+
+### Engine texts
+
+| Key | Default | Values | Where |
+|---|---|---|---|
+| `ariaLabel` | `d_select.label` "Options" | | Names the trigger, the list and the panel. Required |
+| `labelWithValue` | `d_select.label_with_value` | `label`, `value` | Trigger name while a value is held. Required |
+| `labelWithCount` | `d_select.label_with_count` | `label`, `count` | Compact multi trigger name. Required |
+| `placeholder` | `d_select.placeholder` "Select…", or `d_select.add_placeholder` "Add…" when multiple | | Trigger and input with nothing held |
+| `addMorePlaceholder` | `d_select.add_placeholder` "Add…" | `selected`, `minimum`, `maximum` | Multi-select input after the chips, while another item can be added |
+| `searchPlaceholder` | `d_select.search_placeholder` "Search…" | | Panel and modal search field |
+| `noResults` | `d_select.no_results` | | Empty state, drawn and announced |
+| `minChars` | `d_select.min_chars` | `count` | Drawn and announced below `@minChars` |
+| `maximum` | `d_select.max_reached` | `count` | Limit line at `@maximum`, announced |
+| `minimum` | `d_select.min_not_reached` | `count`, `selected` | Limit line below `@minimum`, announced |
+| `maxLoaded` | `d_select.filter_to_narrow` | | Hint at `@maxLoaded`, announced |
+| `noneLabel` | `d_select.none` "None" | | The none row, with `@noneRow` |
+| `loadingLabel` | `d_select.loading` "Loading…" | | Loading status, with `@loadingStatus` |
+| `loadError` | `d_select.load_error` | | Error box. Required |
+| `retry` | `d_select.retry` | | Retry button. Required |
+| `unresolvedValue` | `d_select.unresolved_value` | `value` | A held id no source resolved. Required |
+| `createItem` | `d_select.create_item` | `label` | The create row. Required |
+| `clear` / `clearAll` | `d_select.clear` / `d_select.clear_all` | | Clear control, single / multiple. Required |
+| `chipsLabel` / `stripLabel` | `d_select.selected_items` / `d_select.selected_items_list` | | Chip list / selection strip. Required |
+| `removeItem` | `d_select.remove_item` | `item` | Touch remove buttons. Required |
+| `removeHint` | `d_select.remove_hint` | | Chip and strip remove hint. Required |
+| `chipsHint` / `selectedItemsHint` | `d_select.chips_hint` / `d_select.selected_items_hint` | | Input description beside chips |
+| `selectedCount` | `d_select.selected_count` | `count` | Compact count description |
+| `compactCount` / `moreChips` | `d_select.compact_count` / `d_select.more_chips` | `count` | Count with `@maxVisibleChips=0` / overflow badge |
+| `footerLabel` | `d_select.footer_label` | | Panel footer group. Required |
+| `itemSelected`, `itemAdded`, `itemRemoved` | `d_select.item_selected`, `item_added`, `item_removed` | `item` | Announced |
+| `itemsAdded`, `itemsNotAddedHeld`, `itemsNotAddedLimit` | `d_select.items_added`, `items_not_added_held`, `items_not_added_limit` | `count` | Announced bulk parts |
+| `bulkAddSummary` | `d_select.bulk_add_summary` | `added`, `not_added` | Announced, joins the parts |
+| `allAlreadySelected` | `d_select.all_already_selected` | | Announced when a bulk add adds nothing |
+| `selectionCleared`, `updatingSelection` | `d_select.selection_cleared`, `updating_selection` | | Announced |
+| `resultsCount`, `resultsLoaded` | `d_select.results_count`, `results_loaded` | `count` | Announced |
+| `stillLoading`, `loadingMore`, `loadingComplete` | `d_select.still_loading`, `loading_more`, `loading_complete` | | Announced |
+
+`maximum` is left out of `addMorePlaceholder`'s values when the select is uncapped. The engine
+draws `addMorePlaceholder` only on a field that has an input (the desktop trigger and the mobile
+typeahead modal), and never at `@maximum` or while disabled, read-only or pending. When the input
+also has a description, the engine repeats its placeholder as a hidden first description, because
+VoiceOver with Chrome drops the placeholder otherwise.
+
+`DSelectList` takes `@texts` too; it draws the search, list and announcement texts.
+
+### Recipe texts
+
+A recipe declares the same keys on every select, whatever `@multiple` is, and sets defaults for
+engine keys through `@kindTexts`.
+
+| Recipe | Key | Default | Values |
+|---|---|---|---|
+| `DSelectCategory` | `ariaLabel` | `categories.category`, or `categories.categories` when multiple without `@maximum={{1}}` | |
+| | `placeholder` | single: Uncategorized's name when it is offered, otherwise `category.choose`; multiple: the engine's | |
+| | `readOnlyDescription` | `category_row.read_only_description` | |
+| | `familyFooter` | `category.select_with_subcategories_count`, or `category.select_with_subcategories` with no count | `category`, `count` |
+| `DSelectCategoryFilter` | `ariaLabel` | `categories.filter_by_categories_label` / `filter_by_subcategories_label` | |
+| | `placeholder` | `categories.categories_label` / `subcategories_label` | |
+| | `removeFilter`, `noSubcategories` | `categories.remove_filter`, `categories.no_subcategories` | |
+| `DSelectTag` | `placeholder` | `tagging.choose_for_topic` | |
+| | `addMorePlaceholder` | the `addMoreTags` text | `selected`, `minimum`, `maximum` |
+| | `addMoreTags` | `tagging.add_more_tags` | |
+| | `minimum`, `maximum` | `tagging.required_tags_progress`, `tagging.max_tags_reached` | as the engine's |
+| | `requiredTagGroup`, `requiredTagGroupRemaining` | `tagging.choose_for_topic_required_group`, `tagging.choose_more_required_group` | `count`, `name` |
+| | `minimumPlaceholder`, `minimumRemaining` | `tagging.choose_for_topic_required`, `tagging.choose_more_required` | `count` |
+| | `tagCountBadge`, `tagCount` | `tagging.tag_count_badge` (drawn), `tagging.tag_count_hidden` (spoken) | `count` |
+| `DSelectTagFilter` | `ariaLabel`, `placeholder` | `tagging.filter_by_tags_label`, `tagging.selector_tags` | |
+| | `removeFilter`, `noTags`, `filterForMore` | `tagging.selector_remove_filter`, `tagging.selector_no_tags`, `select_kit.components.filter_for_more` | |
+| `DSelectTagGroup` | `placeholder` | `category.tag_groups_placeholder` | |
+
+`DSelectTagFilter` also takes `DSelectTag`'s keys, under its own. The tag picker's placeholder
+wrappers are described under [Tag recipes](#tag-recipes).
+
 ## Custom row content
 
 Named blocks control what the component renders: `:item`, `:selection`, `:selectionLoading`,
@@ -262,7 +414,7 @@ Named blocks control what the component renders: `:item`, `:selection`, `:select
 
 **Supply a block only when an argument cannot express the content.** `@labelField` picks the
 field to display, `@selectedIcon` marks the chosen row, `@icon` puts a glyph in the trigger, and
-`@noResultsLabel` rewords the empty state. A block that reproduces one of those is not neutral:
+`@texts` rewords the empty state (`noResults`). A block that reproduces one of those is not neutral:
 it costs behaviour (see `:selection` below) and it costs the reader a reason to look.
 
 ### What each block replaces
@@ -318,7 +470,7 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   footer (`role="presentation"`) it cannot be reached from the keyboard; inside an option it is
   flattened into the name, and a click on it reaches the row's handler, so it runs the row's
   action. An action belongs in an action row returned by `@groupHeader` or `@groupFooter`.
-- **Naming the control:** use `@ariaLabel`, or `@ariaLabelledBy` with the id of a caption already
+- **Naming the control:** use the `ariaLabel` text, or `@ariaLabelledBy` with the id of a caption already
   on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input, the
   list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption; an id missing from the page warns
   in development. A wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
@@ -440,18 +592,19 @@ group headers, dividers, chips or the trigger. The context adds `item` (the raw 
 `selected` and `disabled` (which includes selection-cap restrictions). It has no `control`.
 
 **`options`** overrides presentation. The core keys are `caretIcon` (a string or
-`{ open, closed }`), `iconOnly`, `ariaLabel`, `placeholder`, `searchPlaceholder`, `searchIcon`, `loadingLabel`, `icon`, `showCaret`,
-`clearable`, `noneLabel` and `disabled`, plus the keys a recipe declares (see
-[Recipes](#recipes)). `current` holds the values so far, starting from the call site's arguments.
-Every key is last-wins except `disabled`, which can add a lock but never lift one. `iconOnly`
-needs an `ariaLabel`: without one it is ignored with a warning. A key that is neither core nor declared
+`{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearable`, `noneRow`,
+`loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
+(see [Recipes](#recipes)). `current` holds the values so far, starting from the call site's
+arguments. Every key is last-wins except `disabled`, which can add a lock but never lift one, and
+`texts`, which merges per entry. `iconOnly` needs an `ariaLabel` text above the engine's default:
+without one it is ignored with a warning. A key that is neither core nor declared
 warns in development and is ignored, and a non-object result is skipped. The values resolve once
 per change in what they read, not once per row. The context has `value` and `control`, and no
 `options`, because options cannot depend on themselves.
 
 **`load`** receives the loader for a new query and returns the one to use. Remote work a
 customization adds belongs here rather than in a row's `onSelect`: a pending loader shows the
-loading skeleton (`loadingLabel` captions it, with a spinner, in place of one skeleton row), its
+loading skeleton (with `loadingStatus` on, `loadingLabel` captions it, with a spinner, in place of one skeleton row), its
 `signal` cancels a superseded request, and a rejection shows the error state. It runs when the
 query's first page starts, outside render, and the returned loader handles every reveal of that
 query. Its context includes `loadContext`, the query's snapshot of `@loadContext`. A filter
@@ -652,7 +805,7 @@ Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
   synchronously or not. The engine normalizes `@value`'s shape and the emitted ids' types.
 - `@specialItems` adds recipe-owned rows ahead of the source's, from a snapshot of the filter
   and value. They are not de-duplicated against the source, so the source must leave them out.
-- `@noneLabel` adds the single-select "none" row; `@maximum` and `@minimum` cap the selection
+- `@noneRow` adds the single-select "none" row, worded by the `noneLabel` text; `@maximum` and `@minimum` cap the selection
   and announce the limit.
 - Held rows stay listed and marked as selected, which keeps the selection reachable for
   assistive technology. `@hideSelected` exists, but is not a default to copy from the old
@@ -666,7 +819,9 @@ Presentation:
 - `@caretIcon={{hash open closed}}` sets the caret, and customizations override it as the core
   `caretIcon` option (`-internals/coordinators/variant-presenter.ts`,
   `-internals/engine/customizations.ts`). A recipe never tracks open state to draw its own.
-- `@ariaLabel`, `@id`, `@describedBy` and `@placeholder` name and describe the control.
+- `@texts` (`ariaLabel`, `placeholder`), `@ariaLabelledBy`, `@id` and `@describedBy` name and
+  describe the control. A recipe sets its own defaults through `@kindTexts` and forwards `@texts`
+  untouched (see [Texts](#texts)).
 - `@kindOptions` declares only rules the engine has no option for.
 
 Shared helpers outside the engine: `makeArray` (`lib/helpers.ts`) normalizes one-or-many values,
@@ -692,7 +847,7 @@ The tag family has three recipes, split by what the pick is for:
 - **`DSelectTagFilter`** (kind `select-tag-filter`) narrows a topic list. Its value is a tag,
   `NO_TAG_ID`, nothing or `ALL_TAGS_ID` (both filter nothing; the ids are exported by the
   module), or several tags with `@multiple` for intersections. It is named "Filter by: tags", and
-  with nothing filtered it shows `@placeholder`, "tags" by default. While browsing it offers the
+  with nothing filtered it shows the `placeholder` text, "tags" by default. While browsing it offers the
   "remove filter" (emitting `ALL_TAGS_ID`) and "no tags" shortcuts as `@specialItems`, then the
   top tags, and never navigates: the call site turns the pick into a URL. A single filter clears
   only through its "remove filter" row; Backspace leaves it alone, since a stray key would
@@ -714,7 +869,24 @@ composer passes `mini-tag-chooser`).
 one-per-group rules apply. A side effect, unchanged from select-kit: in the bulk "replace tag"
 rows, tags that share a one-per-topic group with the other row's tag are not offered.
 
-The default tag row renders new items with `d_select.create_item`. A custom `:item` block
+**The tag picker's placeholder carries its requirements.** With nothing held, it shows the
+required tag group (`requiredTagGroup`), otherwise "Select at least N tags…"
+(`minimumPlaceholder`) while `@minimum` applies, otherwise the `placeholder` text. With tags
+held, the field after the chips shows the group's remaining count (`requiredTagGroupRemaining`),
+then the tags the minimum still needs (`minimumRemaining`), then `addMorePlaceholder` ("Add more
+tags…"). A call site's or a customization's `placeholder` replaces only the last step; each step
+has its own key, and a step whose text is `""` hands over to the next. At a tag cap of zero the
+field says nothing more. `DSelectTagFilter` turns the requirement steps off. The panel's
+`minimum` line uses progress wording ("1 of 2 required tags selected"), so it never repeats the
+field.
+
+The required group comes from the server's answer to a blank search. So it is unknown before the
+list first opens, and stale after the value or the category changes while the list is closed; the
+chain then falls back to the minimum or the prompt. The server counts the group's remaining tags
+against the ids the search sends (at most 100), so tags held by name are missing from the count
+until their names resolve.
+
+The default tag row renders new items with the `createItem` text (`d_select.create_item`). A custom `:item` block
 owns that wording too; use the item's `isNew` flag to distinguish creation from existing tags.
 
 #### Category recipes
@@ -736,9 +908,9 @@ The category family has two recipes:
   - `@disabledCategories` are shown only as disabled rows at the top, described as read-only,
     and stay listed while a search matches them. The composer passes the category a new topic
     started from but cannot be posted in.
-  - `@placeholder` is the trigger text with no value; it never names the control. `@noneLabel`
-    adds a selectable "none" row instead.
-  - Without `@ariaLabel` or `@ariaLabelledBy`, the control is named "Category"
+  - The `placeholder` text is the trigger text with no value; it never names the control.
+    `@noneRow` adds a selectable "none" row instead, worded by the `noneLabel` text.
+  - Without an `ariaLabel` text or `@ariaLabelledBy`, the control is named "Category"
     (`categories.category`), or "Categories" (`categories.categories`) when it can hold more than
     one: multiple, with `@maximum` other than 1.
   - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.
@@ -752,7 +924,7 @@ The category family has two recipes:
   a time. Its value is a category, `ALL_CATEGORIES_ID` or `NO_CATEGORIES_ID` (exported by the
   module), and `@parentCategory` names the level. An empty level, or `ALL_CATEGORIES_ID` ("remove
   filter"), holds nothing and shows the level's name ("categories", "subcategories") as its
-  placeholder, which `@placeholder` or a customization's `placeholder` replaces. The drop is named
+  placeholder, which a `placeholder` text from the call site or a customization replaces. The drop is named
   "Filter by: categories" or "Filter by: subcategories", and a held filter follows that name.
   `@noSubcategories` holds `NO_CATEGORIES_ID`, which then offers "remove filter" in its place.
   The filter never navigates; the call site routes the pick. The breadcrumbs pass the identifier
@@ -834,7 +1006,7 @@ by mechanism.
 ### Covered
 
 - Single and multiple selection, with chips and per-chip removal (`@multiple`).
-- A first-class "none" row on single-select (`@noneLabel`): a selectable list row that clears the
+- A first-class "none" row on single-select (`@noneRow`, worded by `noneLabel`): a selectable list row that clears the
   value to `null` and reads as selected while nothing is chosen. Always present while browsing, and
   filtered out under an active query so a non-matching search still reaches the empty state.
 - Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and an
@@ -868,7 +1040,7 @@ by mechanism.
 - Selected-row indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
-  icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved `@ariaLabel` for
+  icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved `ariaLabel` text for
   the accessible name and is ignored with a warning without one; drive `@icon` from `@value` for
   a selection-reactive glyph); caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
@@ -878,7 +1050,7 @@ by mechanism.
 - Custom row and selection markup (`:item` / `:selection` blocks; on the typeahead variant the
   `:selection` block is the resting/closed display — once the menu opens the built-in input shows
   the editable label text, so it is not a live-while-editing surface); empty state
-  (`@noResultsLabel` / `:empty`); loading skeleton (`@skeletonCount`, and a `:skeletonItem` block
+  (the `noResults` text / `:empty`); loading skeleton (`@skeletonCount`, and a `:skeletonItem` block
   for one placeholder row); a muted source-error state with an optional retry (`@retryable`) and an
   `:error` consumer block.
 - A fixed `:footer` block below the option list (labels, links, action buttons), keyboard-reachable,
@@ -1056,7 +1228,7 @@ second ownership check for deferred reports. Adds and removals always speak. Emp
 and error content remains visible while unfocused without live-region roles. An
 empty query with no rows renders and speaks no empty-result message.
 
-`@ariaLabel`, `@searchPlaceholder` (default “Search…”), `@searchIcon` (a trailing glyph), `@id`, `@describedBy`, `@invalid`,
+`@texts` (`ariaLabel`, and `searchPlaceholder`, default “Search…”), `@searchIcon` (a trailing glyph), `@id`, `@describedBy`, `@invalid`,
 `@disabled` and `@readonly` apply to the search input. Its `aria-controls` exists only
 while a listbox renders. The root is `.d-select.--list`, takes `...attributes`, and
 exposes the same `data-select-id`, `data-value` and `data-name` hooks as DSelect.

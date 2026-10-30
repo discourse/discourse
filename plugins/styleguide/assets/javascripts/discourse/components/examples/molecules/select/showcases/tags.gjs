@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -66,11 +67,13 @@ export default class TagsSelectExample extends Component {
       @labelField="label"
       @multiple={{true}}
       @onChange={{this.update}}
-      @placeholder={{i18n
-        "styleguide.sections.select.showcases.tags.placeholder"
-      }}
-      @searchPlaceholder={{i18n
-        "styleguide.sections.select.showcases.tags.search_placeholder"
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.showcases.tags.placeholder"
+        )
+        searchPlaceholder=(i18n
+          "styleguide.sections.select.showcases.tags.search_placeholder"
+        )
       }}
       @value={{this.value}}
       @valueField="slug"

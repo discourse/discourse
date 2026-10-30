@@ -29,7 +29,9 @@ export default class SettingFieldTagGroupList extends Component {
           @disabled={{@field.disabled}}
           @multiple={{true}}
           @onChange={{this.onChange}}
-          @placeholder={{i18n "category.required_tag_group.placeholder"}}
+          @texts={{hash
+            placeholder=(i18n "category.required_tag_group.placeholder")
+          }}
           @value={{this.selectedTagGroups}}
         />
       {{else}}

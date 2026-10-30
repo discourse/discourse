@@ -1,3 +1,4 @@
+import { hash } from "@ember/helper";
 import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
@@ -7,17 +8,25 @@ declare const onChange: (value: unknown) => void;
 
 // The name is only ever spoken, so it is an `aria` argument, as on DButton.
 const Test = <template>
-  <DSelect @ariaLabel="Fruit" @items={{items}} @onChange={{onChange}} />
+  <DSelect
+    @items={{items}}
+    @onChange={{onChange}}
+    @texts={{hash ariaLabel="Fruit"}}
+  />
   <DSelect
     @ariaLabelledBy="fruit-caption"
     @items={{items}}
     @onChange={{onChange}}
   />
-  <DSelectList @ariaLabel="Fruit" @items={{items}} @onChange={{onChange}} />
+  <DSelectList
+    @items={{items}}
+    @onChange={{onChange}}
+    @texts={{hash ariaLabel="Fruit"}}
+  />
   <DSelectCategory
-    @ariaLabel="Category"
     @ariaLabelledBy="category-caption"
     @onChange={{onChange}}
+    @texts={{hash ariaLabel="Category"}}
   />
 
   {{! @glint-expect-error - the name is @ariaLabel }}

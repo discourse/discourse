@@ -165,6 +165,46 @@ export const RECIPE_TEXT_KEYS: ReadonlySet<string> = new Set([
   "filterForMore",
 ]);
 
+/**
+ * The old text arguments and option keys, and the text each one became.
+ *
+ * TODO (select-kit-rework-merge): A migration net for this branch's own call sites only;
+ * DSelect never shipped these names. Remove this map, `assertNoRemovedTextArgs` and its callers,
+ * the two checks in `customizations.ts`, and the "removed text names" tests before merging.
+ * `DSelectTag` is a class only to run the check, so it goes back to a template-only component.
+ */
+export const REMOVED_TEXT_NAMES: Readonly<Record<string, string>> =
+  Object.freeze({
+    ariaLabel: "ariaLabel",
+    placeholder: "placeholder",
+    searchPlaceholder: "searchPlaceholder",
+    noResultsLabel: "noResults",
+    noneLabel: "noneLabel",
+    loadingLabel: "loadingLabel",
+  });
+
+/** The switch an old argument used to turn on along with its text. */
+const REMOVED_TEXT_SWITCHES: Readonly<Record<string, string>> = {
+  noneLabel: " and @noneRow={{true}}",
+  loadingLabel: " and @loadingStatus={{true}}",
+};
+
+/**
+ * Asserts that a select or a recipe was given none of the old text arguments. A recipe checks
+ * its own arguments, because a recipe that no longer forwards one hides it from the select.
+ */
+export function assertNoRemovedTextArgs(component: string, args: object): void {
+  if (!DEBUG) {
+    return;
+  }
+  for (const [name, key] of Object.entries(REMOVED_TEXT_NAMES)) {
+    assert(
+      `${component}: @${name} was removed; use @texts={{hash ${key}=…}}${REMOVED_TEXT_SWITCHES[name] ?? ""}`,
+      (args as Record<string, unknown>)[name] === undefined
+    );
+  }
+}
+
 /** Whether a key is one of the engine's own texts. */
 export function isCoreTextKey(key: string): key is SelectCoreTextKey {
   return Object.hasOwn(DEFAULT_SELECT_TEXTS, key);

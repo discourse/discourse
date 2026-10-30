@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -17,10 +18,12 @@ export default class EmptySelectExample extends Component {
     <DSelect
       @identifier="sg-empty"
       @load={{emptyApi.search}}
-      @noResultsLabel={{i18n "styleguide.sections.select.empty_channels_label"}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.search_archived_channels"
+      @texts={{hash
+        noResults=(i18n "styleguide.sections.select.empty_channels_label")
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.search_archived_channels"
+        )
       }}
       @value={{this.value}}
       @variant="button"

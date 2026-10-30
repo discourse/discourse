@@ -117,7 +117,7 @@ export interface SelectItem {
   __divider?: boolean;
 
   /**
-   * Marks the synthetic single-select "none" row (engine-injected from `noneLabel`). Selectable
+   * Marks the synthetic single-select "none" row (engine-injected while `noneRow` is on). Selectable
    * and navigable like any option, but its value field is `null`, so selecting it clears the
    * selection.
    */
@@ -400,9 +400,6 @@ export interface SelectEngineOptions {
   /** Live reader for {@link minimum}. */
   getMinimum?: () => number | undefined;
 
-  /** Live reader for {@link noneLabel}. */
-  getNoneLabel?: () => string | undefined;
-
   /** Live raw presentation args, read before any items, resolved selection, or lock state. */
   getOptions?: () => Readonly<SelectPresentationArgs>;
 
@@ -551,14 +548,6 @@ export interface SelectEngineOptions {
    * down to an empty selection — so enforcement stays with the consuming form.
    */
   minimum?: number;
-
-  /**
-   * Single-select only: the label for a first-class "none" row prepended to the list. Selecting it
-   * clears the value to `null`. Shown only while the filter is empty (so a non-matching search can
-   * still reach the empty state); omitted entirely on multi-select, where the "none" concept is the
-   * placeholder rather than a row.
-   */
-  noneLabel?: string;
 
   /** Field holding an item's value. Defaults to `"id"`. */
   valueField?: string;
@@ -962,16 +951,11 @@ export default class SelectEngine {
       {
         caretIcon: args.caretIcon,
         iconOnly: args.iconOnly,
-        ariaLabel: args.ariaLabel,
-        placeholder: args.placeholder,
-        searchPlaceholder: args.searchPlaceholder,
         searchIcon: args.searchIcon,
-        loadingLabel: args.loadingLabel,
         icon: args.icon,
         showCaret: args.showCaret,
         clearable: args.clearable,
         noneRow: args.noneRow,
-        noneLabel: args.noneLabel ?? this.#options.baseNoneLabel,
         loadingStatus: args.loadingStatus,
         disabled: args.disabled,
       },
@@ -987,14 +971,6 @@ export default class SelectEngine {
       {
         kindTexts: this.#options.kindTexts,
         texts: this.#options.texts,
-        legacy: {
-          ariaLabel: args.ariaLabel,
-          placeholder: args.placeholder,
-          searchPlaceholder: args.searchPlaceholder,
-          noResultsLabel: args.noResultsLabel,
-          noneLabel: args.noneLabel ?? this.#options.baseNoneLabel,
-          loadingLabel: args.loadingLabel,
-        },
         wrappers: this.#options.kindTextWrappers,
         multiple: this.multiple,
         labelledBy: !!args.ariaLabelledBy,

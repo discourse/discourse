@@ -507,7 +507,6 @@ export default class ComposerContainer extends Component {
                                 "has-selection"
                               }}
                               @allowCreate={{true}}
-                              @ariaLabel={{i18n "tagging.choose_for_topic"}}
                               @categoryId={{this.composer.model.categoryId}}
                               @describedBy={{if
                                 this.composer.tagValidation.failed
@@ -529,6 +528,9 @@ export default class ComposerContainer extends Component {
                               @multiple={{true}}
                               @onChange={{fn (mut this.composer.model.tags)}}
                               @suggestRecent={{true}}
+                              @texts={{hash
+                                ariaLabel=(i18n "tagging.choose_for_topic")
+                              }}
                               @value={{this.composer.model.tags}}
                             />
                           {{else}}

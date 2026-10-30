@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
+import { hash } from "@ember/helper";
 import {
   click,
   fillIn,
@@ -183,9 +184,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -216,9 +217,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -234,9 +235,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -268,9 +269,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -286,9 +287,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -307,9 +308,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -332,9 +333,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -363,11 +364,11 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <div dir={{extra.dir}}>
             <DSelectList
-              @ariaLabel="Fruit"
               @disabled={{extra.disabled}}
               @items={{FRUIT}}
               @onChange={{setHeld}}
               @readonly={{extra.readonly}}
+              @texts={{hash ariaLabel="Fruit"}}
               @value={{held.value}}
             />
           </div>
@@ -717,17 +718,16 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <DSelectList
             class="default-placeholder"
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
           <DSelectList
             class="own-placeholder"
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
-            @searchPlaceholder="Find fruit"
+            @texts={{hash ariaLabel="Fruit" searchPlaceholder="Find fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -818,10 +818,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
             @resolveValue={{resolveValue}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -847,10 +847,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       const rendering = render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
             @resolveValues={{resolveValues}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           >
             <:selectionLoading><span
@@ -882,9 +882,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
           <label class="field-label">
             Pick fruit
             <DSelectList
-              @ariaLabel="Fruit"
               @items={{FRUIT}}
               @onChange={{setHeld}}
+              @texts={{hash ariaLabel="Fruit"}}
               @value={{held.value}}
             />
           </label>
@@ -910,10 +910,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @hideSelected={{true}}
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -938,10 +938,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @hideSelected={{true}}
             @items={{FRUIT}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -962,9 +962,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           >
             <:listHeader as |state|>
@@ -1004,10 +1004,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <DSelectList
             class="test-pills"
-            @ariaLabel="Fruit"
             @debounce={{false}}
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
             @virtualized={{false}}
           />
@@ -1077,10 +1077,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       const rendered = render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @debounce={{false}}
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
             @virtualized={{false}}
           />
@@ -1131,10 +1131,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @debounce={{false}}
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
             @virtualized={{false}}
           >
@@ -1175,10 +1175,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @debounce={{false}}
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
             @virtualized={{false}}
           >
@@ -1230,9 +1230,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1266,17 +1266,17 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <div class="test-a">
             <DSelectList
-              @ariaLabel="First"
               @load={{load}}
               @onChange={{setFirst}}
+              @texts={{hash ariaLabel="First"}}
               @value={{first.value}}
             />
           </div>
           <div class="test-b">
             <DSelectList
-              @ariaLabel="Second"
               @load={{load}}
               @onChange={{setSecond}}
+              @texts={{hash ariaLabel="Second"}}
               @value={{second.value}}
             />
           </div>
@@ -1307,9 +1307,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
           <button class="test-outside" type="button">Outside</button>
@@ -1341,10 +1341,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @debounce={{false}}
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
           <button class="test-outside" type="button">Outside</button>
@@ -1369,10 +1369,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @maximum={{2}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1393,9 +1393,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1424,15 +1424,15 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="First"
             @load={{load}}
             @onChange={{setFirst}}
+            @texts={{hash ariaLabel="First"}}
             @value={{first.value}}
           />
           <DSelectList
-            @ariaLabel="Second"
             @load={{load}}
             @onChange={{setSecond}}
+            @texts={{hash ariaLabel="Second"}}
             @value={{second.value}}
           />
         </template>
@@ -1454,18 +1454,18 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <div class="test-a">
             <DSelectList
-              @ariaLabel="First"
               @debounce={{false}}
               @load={{load}}
               @onChange={{setFirst}}
+              @texts={{hash ariaLabel="First"}}
               @value={{first.value}}
             />
           </div>
           <div class="test-b">
             <DSelectList
-              @ariaLabel="Second"
               @items={{FRUIT}}
               @onChange={{setSecond}}
+              @texts={{hash ariaLabel="Second"}}
               @value={{second.value}}
             />
           </div>
@@ -1502,9 +1502,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1527,9 +1527,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1560,10 +1560,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @loadContext={{context.value}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1589,9 +1589,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           >
             <:footer as |state|>
@@ -1611,10 +1611,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
             @searchIcon="magnifying-glass"
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1636,10 +1636,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
             @suppressFooter={{true}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           >
             <:footer>
@@ -1662,10 +1662,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @disabled={{true}}
             @items={{FRUIT}}
             @onChange={{onChange}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1683,10 +1683,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{onChange}}
             @readonly={{true}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1708,9 +1708,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1734,9 +1734,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
           <DMenu @identifier="test-panel" @inline={{true}} @label="Open panel">
             <:content>
               <DSelectList
-                @ariaLabel="Fruit"
                 @items={{FRUIT}}
                 @onChange={{setHeld}}
+                @texts={{hash ariaLabel="Fruit"}}
                 @value={{held.value}}
               />
             </:content>
@@ -1762,17 +1762,17 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <div class="test-a">
             <DSelectList
-              @ariaLabel="First"
               @items={{FRUIT}}
               @onChange={{setFirst}}
+              @texts={{hash ariaLabel="First"}}
               @value={{first.value}}
             />
           </div>
           <div class="test-b">
             <DSelectList
-              @ariaLabel="Second"
               @items={{FRUIT}}
               @onChange={{setSecond}}
+              @texts={{hash ariaLabel="Second"}}
               @value={{second.value}}
             />
           </div>
@@ -1815,9 +1815,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         await render(
           <template>
             <DSelectList
-              @ariaLabel="Items"
               @load={{load}}
               @onChange={{setHeld}}
+              @texts={{hash ariaLabel="Items"}}
               @value={{held.value}}
             />
           </template>
@@ -1848,9 +1848,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Items"
             @items={{many}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Items"}}
             @value={{held.value}}
             @virtualized={{false}}
           />
@@ -1875,9 +1875,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @load={{load}}
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
             @virtualized={{false}}
           />
@@ -1904,9 +1904,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         await render(
           <template>
             <DSelectList
-              @ariaLabel="Items"
               @items={{many}}
               @onChange={{setHeld}}
+              @texts={{hash ariaLabel="Items"}}
               @value={{held.value}}
               @virtualized={{virtualized}}
             />
@@ -1950,10 +1950,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @items={{FRUIT}}
             @kind="test-list"
             @onChange={{setHeld}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>
@@ -1975,10 +1975,10 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <section class="test-host">
             <DSelectList
-              @ariaLabel="Fruit"
               @items={{FRUIT}}
               @kind="test-list"
               @onChange={{setHeld}}
+              @texts={{hash ariaLabel="Fruit"}}
               @value={{held.value}}
             />
           </section>
@@ -2010,11 +2010,11 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @ariaLabel="Fruit"
             @disabled={{true}}
             @items={{FRUIT}}
             @kind="test-list"
             @onChange={{onChange}}
+            @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
         </template>

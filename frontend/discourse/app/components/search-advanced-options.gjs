@@ -872,7 +872,7 @@ export default class SearchAdvancedOptions extends Component {
                     }}
                     @onChange={{this.onChangeSearchTermForCategory}}
                     @permission="see"
-                    @placeholder={{i18n "category.all"}}
+                    @texts={{hash placeholder=(i18n "category.all")}}
                     @uncategorized={{true}}
                     @value={{this.searchedTerms.category.id}}
                   />
@@ -896,13 +896,15 @@ export default class SearchAdvancedOptions extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectTag
                       @allowCreate={{false}}
-                      @ariaLabel={{i18n "search.advanced.with_tags.aria_label"}}
                       @emit="names"
                       @id="search-with-tags"
                       @ignoreRestrictions={{true}}
                       @maximum={{false}}
                       @multiple={{true}}
                       @onChange={{this.onChangeSearchTermForTags}}
+                      @texts={{hash
+                        ariaLabel=(i18n "search.advanced.with_tags.aria_label")
+                      }}
                       @value={{this.searchedTerms.tags}}
                     />
                   {{else}}

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -36,10 +37,12 @@ export default class ReviewersSelectExample extends Component {
       @load={{reviewerApi.search}}
       @multiple={{true}}
       @onChange={{this.update}}
-      @placeholder={{i18n
-        "styleguide.sections.select.showcases.reviewers.placeholder"
-      }}
       @resolveValues={{reviewerApi.findMany}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.showcases.reviewers.placeholder"
+        )
+      }}
       @value={{this.value}}
     >
       <:selection as |person|>

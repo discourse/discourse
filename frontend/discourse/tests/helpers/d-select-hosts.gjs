@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { findAll } from "@ember/test-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -26,7 +27,7 @@ export class Host extends Component {
       @items={{ITEMS}}
       @kind="test-select"
       @onChange={{this.onChange}}
-      @placeholder="Pick one"
+      @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
       @variant={{@variant}}
     >
@@ -58,7 +59,7 @@ export class DefaultHost extends Component {
       @labelField={{@labelField}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
-      @placeholder="Pick one"
+      @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
       @variant={{@variant}}
     />
@@ -90,7 +91,7 @@ export class MultiLimitsHost extends Component {
       @minimum={{@minimum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder="Pick some"
+      @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
     >
       <:selection as |item|>

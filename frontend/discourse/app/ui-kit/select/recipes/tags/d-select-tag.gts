@@ -1,5 +1,7 @@
-import type { TemplateOnlyComponent } from "@ember/component/template-only";
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import type Owner from "@ember/owner";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import SelectTagBase, {
   type SelectTagBaseSignature,
 } from "discourse/ui-kit/select/recipes/tags/-internals/select-tag-base";
@@ -22,59 +24,62 @@ interface DSelectTagSignature extends Omit<SelectTagBaseSignature, "Args"> {
 }
 
 /** Picks tags to store, as tag objects or, with `@emit="names"`, stored names. */
-const DSelectTag: TemplateOnlyComponent<DSelectTagSignature> = <template>
-  <SelectTagBase
-    ...attributes
-    @allowCreate={{@allowCreate}}
-    @ariaLabel={{@ariaLabel}}
-    @categoryId={{@categoryId}}
-    @describedBy={{@describedBy}}
-    @disabled={{@disabled}}
-    @emit={{@emit}}
-    @exclude={{@exclude}}
-    @excludeSynonyms={{@excludeSynonyms}}
-    @excludeTagsWithSynonyms={{@excludeTagsWithSynonyms}}
-    @icon={{@icon}}
-    @id={{@id}}
-    @identifier={{@identifier}}
-    @ignoreRestrictions={{@ignoreRestrictions}}
-    @instanceContext={{@instanceContext}}
-    @invalid={{@invalid}}
-    @items={{@items}}
-    @kind="select-tag"
-    @kindContext={{hash value=@value categoryId=@categoryId exclude=@exclude}}
-    @legacyKind={{if @legacyKind @legacyKind "tag-chooser"}}
-    @load={{@load}}
-    @maximum={{@maximum}}
-    @maxVisibleChips={{@maxVisibleChips}}
-    @minimum={{@minimum}}
-    @multiple={{@multiple}}
-    @onChange={{@onChange}}
-    @placeholder={{@placeholder}}
-    @suggestRecent={{@suggestRecent}}
-    @suppressFooter={{not (has-block "footer")}}
-    @texts={{@texts}}
-    @value={{@value}}
-    @variant={{@variant}}
-  >
-    <:item as |item options|>
-      {{#if (has-block "item")}}
-        {{yield item options to="item"}}
-      {{else}}
-        <TagOption @item={{item}} @options={{options}} />
-      {{/if}}
-    </:item>
-    <:selection as |item options|>
-      {{#if (has-block "selection")}}
-        {{yield item options to="selection"}}
-      {{else}}
-        <TagSelection @item={{item}} />
-      {{/if}}
-    </:selection>
-    <:footer as |state options|>
-      {{yield state options to="footer"}}
-    </:footer>
-  </SelectTagBase>
-</template>;
+export default class DSelectTag extends Component<DSelectTagSignature> {
+  constructor(owner: Owner, args: DSelectTagSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectTag", args);
+  }
 
-export default DSelectTag;
+  <template>
+    <SelectTagBase
+      ...attributes
+      @allowCreate={{@allowCreate}}
+      @categoryId={{@categoryId}}
+      @describedBy={{@describedBy}}
+      @disabled={{@disabled}}
+      @emit={{@emit}}
+      @exclude={{@exclude}}
+      @excludeSynonyms={{@excludeSynonyms}}
+      @excludeTagsWithSynonyms={{@excludeTagsWithSynonyms}}
+      @icon={{@icon}}
+      @id={{@id}}
+      @identifier={{@identifier}}
+      @ignoreRestrictions={{@ignoreRestrictions}}
+      @instanceContext={{@instanceContext}}
+      @invalid={{@invalid}}
+      @items={{@items}}
+      @kind="select-tag"
+      @kindContext={{hash value=@value categoryId=@categoryId exclude=@exclude}}
+      @legacyKind={{if @legacyKind @legacyKind "tag-chooser"}}
+      @load={{@load}}
+      @maximum={{@maximum}}
+      @maxVisibleChips={{@maxVisibleChips}}
+      @minimum={{@minimum}}
+      @multiple={{@multiple}}
+      @onChange={{@onChange}}
+      @suggestRecent={{@suggestRecent}}
+      @suppressFooter={{not (has-block "footer")}}
+      @texts={{@texts}}
+      @value={{@value}}
+      @variant={{@variant}}
+    >
+      <:item as |item options|>
+        {{#if (has-block "item")}}
+          {{yield item options to="item"}}
+        {{else}}
+          <TagOption @item={{item}} @options={{options}} />
+        {{/if}}
+      </:item>
+      <:selection as |item options|>
+        {{#if (has-block "selection")}}
+          {{yield item options to="selection"}}
+        {{else}}
+          <TagSelection @item={{item}} />
+        {{/if}}
+      </:selection>
+      <:footer as |state options|>
+        {{yield state options to="footer"}}
+      </:footer>
+    </SelectTagBase>
+  </template>
+}

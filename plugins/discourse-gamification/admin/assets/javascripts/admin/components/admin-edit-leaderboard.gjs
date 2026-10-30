@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -322,9 +322,9 @@ export default class AdminEditLeaderboard extends Component {
                       {{#if this.siteSettings.enable_new_select_controls}}
                         <DSelectCategory
                           class="category-selector"
-                          @ariaLabel={{field.title}}
                           @multiple={{true}}
                           @onChange={{fn this.onCategoryChange field.set}}
+                          @texts={{hash ariaLabel=field.title}}
                           @value={{this.selectedScorableCategories}}
                         />
                       {{else}}

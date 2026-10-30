@@ -1807,11 +1807,11 @@ module(
         await render(
           <template>
             <DSelectTag
-              @ariaLabel="Functional tags"
               @emit="names"
               @items={{items}}
               @multiple={{false}}
               @onChange={{onChange}}
+              @texts={{hash ariaLabel="Functional tags"}}
               @value="STRATEGY"
             />
           </template>

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -22,10 +23,12 @@ export default class ErrorSelectExample extends Component {
       @load={{this.api.search}}
       @onChange={{this.onChange}}
       @onClose={{this.api.reset}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.choose_group"
-      }}
       @resolveValue={{this.api.find}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.choose_group"
+        )
+      }}
       @value={{this.value}}
       @variant="button"
     />

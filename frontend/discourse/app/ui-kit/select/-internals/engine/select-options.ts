@@ -49,8 +49,6 @@ export default class SelectOptionsView {
   #hasWarnedMaximum = false;
   #readMinimum?: SelectEngineOptions["getMinimum"];
   #minimum?: SelectEngineOptions["minimum"];
-  #readNoneLabel?: SelectEngineOptions["getNoneLabel"];
-  #noneLabel?: SelectEngineOptions["noneLabel"];
 
   /** Raw presentation inputs, kept separate from downstream lock and selection readers. */
   #readPresentationOptions?: SelectEngineOptions["getOptions"];
@@ -123,8 +121,6 @@ export default class SelectOptionsView {
     this.#maximum = opts.maximum;
     this.#readMinimum = opts.getMinimum;
     this.#minimum = opts.minimum;
-    this.#readNoneLabel = opts.getNoneLabel;
-    this.#noneLabel = opts.noneLabel;
     this.#readPresentationOptions = opts.getOptions;
     this.#readKindOptions = opts.getKindOptions;
     this.#kindOptions = opts.kindOptions;
@@ -195,11 +191,6 @@ export default class SelectOptionsView {
 
   get maxLoaded(): number | undefined {
     return this.#readMaxLoaded?.() ?? this.#maxLoaded;
-  }
-
-  /** Raw none label for options resolution, independent of the overlay and multiple mode. */
-  get baseNoneLabel(): string | undefined {
-    return this.#readNoneLabel?.() ?? this.#noneLabel;
   }
 
   /** The single-select none row's label, or `null` while the row is off or the select is multiple. */

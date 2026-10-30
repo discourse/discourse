@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -83,11 +84,13 @@ export default class SelectHero extends Component {
             {{i18n "styleguide.sections.select.hero.category"}}
           </span>
           <DSelect
-            @ariaLabel={{i18n "styleguide.sections.select.hero.category"}}
             @identifier="sg-hero-category"
             @items={{this.categories}}
             @onChange={{this.updateCategory}}
-            @placeholder={{i18n "styleguide.sections.select.hero.category"}}
+            @texts={{hash
+              ariaLabel=(i18n "styleguide.sections.select.hero.category")
+              placeholder=(i18n "styleguide.sections.select.hero.category")
+            }}
             @value={{this.categoryValue}}
             @valueField="slug"
           >
@@ -106,13 +109,15 @@ export default class SelectHero extends Component {
             {{i18n "styleguide.sections.select.hero.tags"}}
           </span>
           <DSelect
-            @ariaLabel={{i18n "styleguide.sections.select.hero.tags"}}
             @identifier="sg-hero-tags"
             @items={{this.tagItems}}
             @labelField="label"
             @multiple={{true}}
             @onChange={{this.updateTags}}
-            @placeholder={{i18n "styleguide.sections.select.hero.tags"}}
+            @texts={{hash
+              ariaLabel=(i18n "styleguide.sections.select.hero.tags")
+              placeholder=(i18n "styleguide.sections.select.hero.tags")
+            }}
             @value={{this.tagValue}}
             @valueField="slug"
           >
@@ -132,11 +137,13 @@ export default class SelectHero extends Component {
             {{i18n "styleguide.sections.select.hero.notifications"}}
           </span>
           <DSelect
-            @ariaLabel={{i18n "styleguide.sections.select.hero.notifications"}}
             @identifier="sg-hero-notifications"
             @items={{this.notificationLevels}}
             @labelField="title"
             @onChange={{this.updateNotification}}
+            @texts={{hash
+              ariaLabel=(i18n "styleguide.sections.select.hero.notifications")
+            }}
             @value={{this.notificationValue}}
             @valueField="level"
             @variant="static"

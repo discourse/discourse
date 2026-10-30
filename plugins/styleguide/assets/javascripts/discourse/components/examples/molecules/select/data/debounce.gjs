@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -46,11 +47,13 @@ export default class DebounceSelectExample extends Component {
       @load={{this.load}}
       @onChange={{this.onChange}}
       @onShow={{this.resetLog}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.search_people"
-      }}
       @placement="top-start"
       @resolveValue={{peopleApi.find}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.search_people"
+        )
+      }}
       @value={{this.value}}
       @variant="button"
       {{on "input" this.countKeystroke}}

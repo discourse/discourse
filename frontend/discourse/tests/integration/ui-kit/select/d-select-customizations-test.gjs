@@ -333,19 +333,22 @@ module(
     });
 
     test("placeholder reaches the single trigger of every variant", async function (assert) {
-      overrideOptions(() => ({ placeholder: "From extension" }));
+      overrideOptions(() => ({ texts: { placeholder: "From extension" } }));
 
       await render(
         <template>
           <div class="static-host">
             <DSelect
               @items={{ITEMS}}
-              @placeholder="From call site"
+              @texts={{hash placeholder="From call site"}}
               @variant="static"
             />
           </div>
           <div class="typeahead-host">
-            <DSelect @items={{ITEMS}} @placeholder="From call site" />
+            <DSelect
+              @items={{ITEMS}}
+              @texts={{hash placeholder="From call site"}}
+            />
           </div>
         </template>
       );
@@ -363,7 +366,7 @@ module(
     });
 
     test("placeholder reaches the multi-select input", async function (assert) {
-      overrideOptions(() => ({ placeholder: "From extension" }));
+      overrideOptions(() => ({ texts: { placeholder: "From extension" } }));
       const none = [];
 
       await render(
@@ -378,7 +381,7 @@ module(
     });
 
     test("searchPlaceholder reaches the panel filter", async function (assert) {
-      overrideOptions(() => ({ searchPlaceholder: "Find a fruit" }));
+      overrideOptions(() => ({ texts: { searchPlaceholder: "Find a fruit" } }));
 
       await render(
         <template><DSelect @items={{ITEMS}} @variant="button" /></template>
@@ -401,8 +404,11 @@ module(
       assert.dom(".d-select__panel .d-icon-magnifying-glass").exists();
     });
 
-    test("loadingLabel reaches the loading state", async function (assert) {
-      overrideOptions(() => ({ loadingLabel: "From extension" }));
+    test("loadingStatus and loadingLabel reach the loading state", async function (assert) {
+      overrideOptions(() => ({
+        loadingStatus: true,
+        texts: { loadingLabel: "From extension" },
+      }));
       let resolveLoad;
       const load = () => new Promise((resolve) => (resolveLoad = resolve));
 
@@ -417,10 +423,12 @@ module(
     });
 
     test("ariaLabel names the combobox and the listbox", async function (assert) {
-      overrideOptions(() => ({ ariaLabel: "Fruit picker" }));
+      overrideOptions(() => ({ texts: { ariaLabel: "Fruit picker" } }));
 
       await render(
-        <template><DSelect @ariaLabel="Call site" @items={{ITEMS}} /></template>
+        <template>
+          <DSelect @items={{ITEMS}} @texts={{hash ariaLabel="Call site"}} />
+        </template>
       );
       await click("[role='combobox']");
 
@@ -433,18 +441,27 @@ module(
     });
 
     test("noneLabel renames the call site's none row", async function (assert) {
-      overrideOptions(() => ({ noneLabel: "Nothing" }));
+      overrideOptions(() => ({ texts: { noneLabel: "Nothing" } }));
 
       await render(
-        <template><DSelect @items={{ITEMS}} @noneLabel="None" /></template>
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @noneRow={{true}}
+            @texts={{hash noneLabel="None"}}
+          />
+        </template>
       );
       await click("[role='combobox']");
 
       assert.dom("[role='option'].--none").hasText("Nothing");
     });
 
-    test("noneLabel adds a none row where the call site has none", async function (assert) {
-      overrideOptions(() => ({ noneLabel: "Nothing" }));
+    test("noneRow adds a none row where the call site has none", async function (assert) {
+      overrideOptions(() => ({
+        noneRow: true,
+        texts: { noneLabel: "Nothing" },
+      }));
 
       await render(<template><DSelect @items={{ITEMS}} /></template>);
       await click("[role='combobox']");
@@ -522,8 +539,8 @@ module(
       await render(
         <template>
           <DSelect
-            @ariaLabel="Settings"
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Settings"}}
             @value={{2}}
             @variant="static"
           />
@@ -563,20 +580,20 @@ module(
       customize((selects) => {
         selects.forIdentifier("fruit", (spec) =>
           spec.options((current) => {
-            seen.push(["identifier", current.ariaLabel]);
-            return { ariaLabel: "From identifier" };
+            seen.push(["identifier", current.texts.ariaLabel]);
+            return { texts: { ariaLabel: "From identifier" } };
           })
         );
         selects.forKind("picker", (spec) =>
           spec.options((current) => {
-            seen.push(["kind", current.ariaLabel]);
-            return { ariaLabel: "From kind" };
+            seen.push(["kind", current.texts.ariaLabel]);
+            return { texts: { ariaLabel: "From kind" } };
           })
         );
         selects.forAll((spec) =>
           spec.options((current) => {
-            seen.push(["all", current.ariaLabel]);
-            return { ariaLabel: "From all", placeholder: "Kept" };
+            seen.push(["all", current.texts.ariaLabel]);
+            return { texts: { ariaLabel: "From all", placeholder: "Kept" } };
           })
         );
       });
@@ -584,10 +601,10 @@ module(
       await render(
         <template>
           <DSelect
-            @ariaLabel="Call site"
             @identifier="fruit"
             @items={{ITEMS}}
             @kind="picker"
+            @texts={{hash ariaLabel="Call site"}}
           />
         </template>
       );
@@ -653,7 +670,7 @@ module(
       let calls = 0;
       overrideOptions(() => {
         calls++;
-        return { ariaLabel: state.label };
+        return { texts: { ariaLabel: state.label } };
       });
 
       await render(<template><DSelect @items={{MANY}} /></template>);
@@ -718,7 +735,7 @@ module(
         selects.forAll((spec) => spec.options(() => undefined));
         selects.forAll((spec) => spec.options(() => "label"));
         selects.forAll((spec) =>
-          spec.options(() => ({ ariaLabel: "Kept", lable: "Typo" }))
+          spec.options(() => ({ texts: { ariaLabel: "Kept" }, lable: "Typo" }))
         );
       });
 
@@ -1117,20 +1134,22 @@ module(
     });
 
     test("delivered options carry the resolved core keys too", async function (assert) {
-      const itemsFor = (options) => [{ id: 1, name: options?.ariaLabel }];
+      const itemsFor = (options) => [
+        { id: 1, name: options?.texts?.ariaLabel },
+      ];
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options(() => ({ ariaLabel: "From extension" }))
+          spec.options(() => ({ texts: { ariaLabel: "From extension" } }))
         )
       );
 
       await render(
         <template>
           <DSelect
-            @ariaLabel="Call site"
             @items={{itemsFor}}
             @kind="recipe"
             @kindOptions={{hash prefix="base"}}
+            @texts={{hash ariaLabel="Call site"}}
           />
         </template>
       );
@@ -1207,7 +1226,11 @@ module(
       const warn = sinon.stub(console, "warn");
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options(() => ({ prefix: "ok", ariaLabel: "ok", sufix: "typo" }))
+          spec.options(() => ({
+            prefix: "ok",
+            texts: { ariaLabel: "ok" },
+            sufix: "typo",
+          }))
         )
       );
 
@@ -1224,7 +1247,8 @@ module(
 
         assert.true(warn.calledWithMatch("sufix"), "the typo warns");
         assert.false(warn.calledWithMatch('"prefix"'), "a recipe key does not");
-        assert.false(warn.calledWithMatch('"label"'), "a core key does not");
+        assert.false(warn.calledWithMatch('"texts"'), "a core key does not");
+        assert.false(warn.calledWithMatch("ariaLabel"), "nor a core text");
       } finally {
         warn.restore();
       }
@@ -1382,8 +1406,8 @@ module(
           const state = trackedObject({ suggesting: false });
           spec.options(() =>
             state.suggesting
-              ? { placeholder: "Suggesting", prefix: "suggest" }
-              : { placeholder: "Browsing", prefix: "browse" }
+              ? { texts: { placeholder: "Suggesting" }, prefix: "suggest" }
+              : { texts: { placeholder: "Browsing" }, prefix: "browse" }
           );
           spec.content((items) => [
             {

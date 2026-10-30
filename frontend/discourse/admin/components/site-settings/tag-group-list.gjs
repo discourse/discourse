@@ -26,7 +26,9 @@ export default class TagGroupList extends Component {
           @disabled={{@disabled}}
           @multiple={{true}}
           @onChange={{this.onTagGroupChange}}
-          @placeholder={{i18n "category.required_tag_group.placeholder"}}
+          @texts={{hash
+            placeholder=(i18n "category.required_tag_group.placeholder")
+          }}
           @value={{this.selectedTagGroups}}
         />
       {{else}}

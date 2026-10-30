@@ -102,7 +102,7 @@ export default <template>
             @emit="ids"
             @onChange={{fn (mut @controller.filterCategoryId)}}
             @permission="create"
-            @placeholder={{i18n "review.filters.all_categories"}}
+            @texts={{hash placeholder=(i18n "review.filters.all_categories")}}
             @value={{@controller.filterCategoryId}}
           />
         {{else}}

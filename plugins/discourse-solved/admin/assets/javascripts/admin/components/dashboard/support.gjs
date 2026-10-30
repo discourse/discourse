@@ -423,8 +423,8 @@ export default class SupportSection extends Component {
                 @multiple={{true}}
                 @onChange={{this.onCategoriesChange}}
                 @onClose={{this.onClose}}
-                @placeholder={{i18n "category.all"}}
                 @showAncestors={{true}}
+                @texts={{hash placeholder=(i18n "category.all")}}
                 @value={{this.selectedCategories}}
               />
             {{else}}

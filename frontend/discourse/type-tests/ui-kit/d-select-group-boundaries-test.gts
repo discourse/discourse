@@ -1,5 +1,8 @@
 import DSelect from "discourse/ui-kit/select/d-select";
-import type { SelectItem } from "discourse/ui-kit/select/select-engine";
+import {
+  renderSelectText,
+  type SelectItem,
+} from "discourse/ui-kit/select/select-engine";
 
 declare const items: Array<{ id: number; name: string; group: string }>;
 
@@ -23,11 +26,11 @@ const Test = <template>
   >
     <:groupHeader as |item options|>
       {{if item.onSelect "action" "text"}}
-      {{options.placeholder}}
+      {{renderSelectText options "placeholder"}}
     </:groupHeader>
     <:groupFooter as |item options|>
       {{if item.onSelect "action" "text"}}
-      {{options.placeholder}}
+      {{renderSelectText options "placeholder"}}
     </:groupFooter>
   </DSelect>
   <DSelect

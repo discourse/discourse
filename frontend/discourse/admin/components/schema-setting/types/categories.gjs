@@ -40,10 +40,10 @@ export default class SchemaSettingTypeCategories extends SchemaSettingTypeModels
     {{#if this.siteSettings.enable_new_select_controls}}
       <DSelectCategory
         class="category-selector"
-        @ariaLabel={{@label}}
         @maximum={{this.max}}
         @multiple={{true}}
         @onChange={{this.onInput}}
+        @texts={{hash ariaLabel=@label}}
         @uncategorized={{false}}
         @value={{this.value}}
       />

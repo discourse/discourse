@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import {
   cleanTagName,
@@ -11,6 +12,7 @@ import {
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import SelectTagBase, {
   TAG_TEXTS,
@@ -90,10 +92,6 @@ interface DSelectTagFilterSignature {
     identifier?: string;
     /** Call-site state exposed to customizations. */
     instanceContext?: object;
-    /** Accessible control name; it is never drawn. Defaults to "Filter by: tags". */
-    ariaLabel?: string;
-    /** Text shown while nothing is filtered. Defaults to "tags". */
-    placeholder?: string;
     /**
      * The filter's texts, over its defaults: `removeFilter` and `noTags` name the shortcuts, and
      * `filterForMore` hints that a search finds tags beyond the listed ones.
@@ -134,19 +132,9 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   /** The intersection filter's texts, above the tag field's. */
   multipleKindTexts = FILTER_TEXTS;
 
-  /** The call site's texts, under which the old text arguments still apply. */
-  get texts(): SelectTexts | undefined {
-    const { ariaLabel, placeholder, texts } = this.args;
-    if (!ariaLabel && !placeholder) {
-      return texts;
-    }
-    return {
-      ariaLabel: ariaLabel || undefined,
-      placeholder: placeholder || undefined,
-      ...Object.fromEntries(
-        Object.entries(texts ?? {}).filter(([, text]) => text != null)
-      ),
-    };
+  constructor(owner: Owner, args: DSelectTagFilterSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectTagFilter", args);
   }
 
   get legacyKind() {
@@ -318,7 +306,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @onChange={{this.onMultipleChange}}
         @requirementPlaceholders={{false}}
         @suppressFooter={{not (has-block "footer")}}
-        @texts={{this.texts}}
+        @texts={{@texts}}
         @value={{this.multipleValue}}
       >
         <:item as |item options|>
@@ -359,7 +347,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @searchIcon="magnifying-glass"
         @specialItems={{this.specialItems}}
         @suppressFooter={{not (or (has-block "footer") this.moreTags)}}
-        @texts={{this.texts}}
+        @texts={{@texts}}
         @value={{this.heldId}}
         @valueItems={{this.valueItems}}
         @variant="button"

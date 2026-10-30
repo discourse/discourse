@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
@@ -16,6 +17,7 @@ import {
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect, {
   type SelectPasteContext,
 } from "discourse/ui-kit/select/d-select";
@@ -122,10 +124,6 @@ export interface SelectTagBaseSignature {
     invalid?: boolean;
     /** Id of the combobox element, for an external label. */
     id?: string;
-    /** Translated text displayed when no tags are selected. */
-    placeholder?: string;
-    /** Accessible control name; it is never drawn. */
-    ariaLabel?: string;
     /**
      * The field's texts, over the tag defaults. A `placeholder` replaces only the prompt: a
      * required group or a minimum still leads it, each worded through its own key.
@@ -234,6 +232,11 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
   @tracked private _resolvedNames: { key: string; ids: number[] } | undefined;
 
   @tracked private _validation = new Map<string, TagSearchResult>();
+
+  constructor(owner: Owner, args: SelectTagBaseSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("SelectTagBase", args);
+  }
 
   get #creationAllowed() {
     return this.args.allowCreate && this.site.can_create_tag && !this.#zeroCap;
@@ -350,21 +353,6 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
 
   get kindTexts(): SelectKindTexts {
     return [TAG_TEXTS, this.args.kindTexts ?? {}];
-  }
-
-  /** The call site's texts, under which the old text arguments still apply. */
-  get texts(): SelectTexts | undefined {
-    const { ariaLabel, placeholder, texts } = this.args;
-    if (!ariaLabel && !placeholder) {
-      return texts;
-    }
-    return {
-      ariaLabel: ariaLabel || undefined,
-      placeholder: placeholder || undefined,
-      ...Object.fromEntries(
-        Object.entries(texts ?? {}).filter(([, text]) => text != null)
-      ),
-    };
   }
 
   /** The first unmet required group, as the blank search for the current context reported it. */
@@ -589,7 +577,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       @onChange={{this.onChange}}
       @parsePaste={{this.parsePaste}}
       @suppressFooter={{@suppressFooter}}
-      @texts={{this.texts}}
+      @texts={{@texts}}
       @value={{this.selectedIds}}
       @valueItems={{this.valueItems}}
       @variant={{@variant}}

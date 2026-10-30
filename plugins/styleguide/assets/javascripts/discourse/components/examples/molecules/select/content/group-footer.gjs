@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -49,8 +50,8 @@ export default class GroupFooterSelectExample extends Component {
       @labelField="name"
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.find_person"
+      @texts={{hash
+        placeholder=(i18n "styleguide.sections.select.placeholders.find_person")
       }}
       @value={{this.value}}
     >

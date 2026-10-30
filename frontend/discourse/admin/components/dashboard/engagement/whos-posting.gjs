@@ -263,8 +263,8 @@ export default class WhosPosting extends Component {
               @multiple={{true}}
               @onChange={{this.onCategoriesChange}}
               @onClose={{this.onCategoriesClose}}
-              @placeholder={{i18n "category.all"}}
               @showAncestors={{true}}
+              @texts={{hash placeholder=(i18n "category.all")}}
               @value={{this.selectedCategories}}
             />
           {{else}}

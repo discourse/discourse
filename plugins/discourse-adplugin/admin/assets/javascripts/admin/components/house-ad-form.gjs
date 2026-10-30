@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
@@ -223,9 +223,9 @@ export default class HouseAdForm extends Component {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectCategory
               class="category-selector"
-              @ariaLabel={{field.title}}
               @multiple={{true}}
               @onChange={{field.set}}
+              @texts={{hash ariaLabel=field.title}}
               @value={{field.value}}
             />
           {{else}}

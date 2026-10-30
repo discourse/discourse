@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { i18n } from "discourse-i18n";
@@ -16,14 +17,16 @@ export default class ListHideSelectedExample extends Component {
   <template>
     <DSelectList
       class="select-examples__tag-list"
-      @ariaLabel={{i18n "styleguide.sections.select.list_people_label"}}
       @hideSelected={{true}}
       @identifier="sg-list-hide-selected"
       @items={{PEOPLE}}
       @labelField="name"
       @onChange={{this.onChange}}
-      @searchPlaceholder={{i18n
-        "styleguide.sections.select.placeholders.search_people"
+      @texts={{hash
+        ariaLabel=(i18n "styleguide.sections.select.list_people_label")
+        searchPlaceholder=(i18n
+          "styleguide.sections.select.placeholders.search_people"
+        )
       }}
       @value={{this.value}}
       @virtualized={{false}}

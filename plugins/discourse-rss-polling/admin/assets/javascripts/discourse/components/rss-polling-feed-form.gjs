@@ -344,10 +344,10 @@ export default class RssPollingFeedForm extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectCategory
                       class="category-chooser rss-polling-feed-form__category"
-                      @ariaLabel={{field.title}}
                       @emit="ids"
                       @onChange={{fn this.categoryChanged field}}
                       @permission="create"
+                      @texts={{hash ariaLabel=field.title}}
                       @value={{field.value}}
                     />
                   {{else}}

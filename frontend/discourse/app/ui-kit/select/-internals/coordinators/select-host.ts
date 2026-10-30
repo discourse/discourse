@@ -48,7 +48,6 @@ export interface SelectHostArgs
       | "maxLoaded"
       | "maximum"
       | "minimum"
-      | "noneLabel"
       | "items"
       | "load"
       | "loadContext"
@@ -206,7 +205,6 @@ export default class SelectHost {
       getMaxLoaded: () => this.#options.getArgs().maxLoaded,
       getMaximum: () => this.#options.getArgs().maximum,
       getMinimum: () => this.#options.getArgs().minimum,
-      getNoneLabel: () => this.#options.getArgs().noneLabel,
       getOptions: () => this.#options.getArgs(),
       items: (resolvedOptions) => {
         const args = this.#options.getArgs();

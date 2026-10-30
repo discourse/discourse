@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -34,8 +35,10 @@ export default class KeyboardTranscriptSelectExample extends Component {
       @items={{PEOPLE}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholders.add_people"}}
       @placement="top-start"
+      @texts={{hash
+        placeholder=(i18n "styleguide.sections.select.placeholders.add_people")
+      }}
       @value={{this.value}}
     />
 

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -20,10 +21,12 @@ export default class MinimumCharactersSelectExample extends Component {
       @load={{timezoneApi.search}}
       @minChars={{3}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n
-        "styleguide.sections.select.placeholders.search_cities"
-      }}
       @resolveValue={{timezoneApi.find}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.placeholders.search_cities"
+        )
+      }}
       @value={{this.value}}
     />
   </template>

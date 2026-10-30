@@ -21,7 +21,9 @@ export default class CaretSelectExample extends Component {
       @items={{TAGS}}
       @labelField="label"
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholders.choose_tag"}}
+      @texts={{hash
+        placeholder=(i18n "styleguide.sections.select.placeholders.choose_tag")
+      }}
       @value={{this.value}}
       @valueField="slug"
       @variant="static"

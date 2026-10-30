@@ -43,7 +43,7 @@ class MultiHost extends Component {
       @items={{ITEMS}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder="Pick some"
+      @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
     >
       <:selection as |item|>
@@ -72,7 +72,7 @@ class MultiValueCoercionHost extends Component {
       @kind="test-multi-value-coercion"
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder="Pick some"
+      @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
     />
   </template>
@@ -457,7 +457,7 @@ module(
           <DSelect
             @items={{ITEMS}}
             @onChange={{singleOnChange}}
-            @placeholder="Pick one"
+            @texts={{hash placeholder="Pick one"}}
             @value="1"
           />
           <MultiValueCoercionHost
@@ -725,7 +725,7 @@ module(
           <DSelect
             @items={{FRUITS}}
             @multiple={{true}}
-            @placeholder="Pick fruit"
+            @texts={{hash placeholder="Pick fruit"}}
             @value={{empty}}
           />
         </template>
@@ -760,7 +760,7 @@ module(
             <DSelect
               @items={{FRUITS}}
               @multiple={{true}}
-              @placeholder="Pick fruit"
+              @texts={{hash placeholder="Pick fruit"}}
               @value={{empty}}
               @variant={{variant}}
             />
@@ -780,7 +780,7 @@ module(
           <DSelect
             @items={{FRUITS}}
             @multiple={{true}}
-            @placeholder="Pick fruit"
+            @texts={{hash placeholder="Pick fruit"}}
             @value={{held}}
           />
         </template>
@@ -800,7 +800,7 @@ module(
           <DSelect
             @items={{FRUITS}}
             @multiple={{true}}
-            @placeholder="Pick fruit"
+            @texts={{hash placeholder="Pick fruit"}}
             @value={{empty}}
           />
         </template>
@@ -1118,10 +1118,10 @@ class StripHost extends Component {
   <template>
     <A11yLiveRegions />
     <DSelect
-      @ariaLabel="Fruit"
       @items={{ITEMS}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
+      @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
       @variant={{@variant}}
     />

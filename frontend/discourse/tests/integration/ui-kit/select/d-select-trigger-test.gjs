@@ -810,11 +810,11 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
         />
         <DSelect
           class="static"
-          @ariaLabel="Language"
           @describedBy="hint"
           @id="lang-static"
           @invalid={{true}}
           @items={{ITEMS}}
+          @texts={{hash ariaLabel="Language"}}
           @variant="static"
         />
       </template>
@@ -894,10 +894,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @ariaLabel="Settings"
           @icon="gear"
           @iconOnly={{true}}
           @items={{ITEMS}}
+          @texts={{hash ariaLabel="Settings"}}
           @value={{2}}
           @variant="static"
         />
@@ -923,10 +923,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @ariaLabel="Settings"
           @icon="gear"
           @iconOnly={{true}}
           @items={{ITEMS}}
+          @texts={{hash ariaLabel="Settings"}}
           @variant="button"
         />
       </template>
@@ -942,10 +942,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @ariaLabel="Settings"
           @icon="gear"
           @iconOnly={{true}}
           @items={{ITEMS}}
+          @texts={{hash ariaLabel="Settings"}}
           @variant="static"
         />
       </template>
@@ -964,10 +964,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @ariaLabel="Fruit"
           @icon="gear"
           @iconOnly={{true}}
           @items={{ITEMS}}
+          @texts={{hash ariaLabel="Fruit"}}
           @value={{2}}
           @variant="typeahead"
         />
@@ -986,11 +986,11 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @ariaLabel="Fruits"
           @icon="gear"
           @iconOnly={{true}}
           @items={{ITEMS}}
           @multiple={{true}}
+          @texts={{hash ariaLabel="Fruits"}}
           @value={{array 2}}
         />
       </template>
@@ -1008,9 +1008,9 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @ariaLabel="Fruit"
           @icon="gear"
           @items={{ITEMS}}
+          @texts={{hash ariaLabel="Fruit"}}
           @value={{2}}
           @variant="static"
         />
@@ -1057,10 +1057,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @ariaLabel="Pick"
           @icon="gear"
           @iconOnly={{true}}
           @items={{ITEMS}}
+          @texts={{hash ariaLabel="Pick"}}
           @variant="static"
         />
       </template>
@@ -1092,9 +1092,9 @@ module(
       await render(
         <template>
           <DSelect
-            @ariaLabel="Category"
             @identifier="test-select"
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Category"}}
             @variant="button"
           />
         </template>
@@ -1124,9 +1124,9 @@ module(
       await render(
         <template>
           <DSelect
-            @ariaLabel="Category"
             @identifier="test-select"
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Category"}}
             @value={{2}}
             @variant="static"
           />
@@ -1146,9 +1146,9 @@ module(
       await render(
         <template>
           <DSelect
-            @ariaLabel="Category"
             @identifier="test-select"
             @items={{ITEMS}}
+            @texts={{hash ariaLabel="Category"}}
             @variant="static"
           />
         </template>
@@ -1298,13 +1298,13 @@ class SupplementalStripHost extends Component {
 
   <template>
     <DSelect
-      @ariaLabel="Fruit"
       @clearable={{true}}
       @items={{@items}}
       @maximum={{@maximum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
       @resolveValues={{@resolveValues}}
+      @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
       @variant={{@variant}}
     />
@@ -1725,13 +1725,13 @@ class CompactHost extends Component {
 
   <template>
     <DSelect
-      @ariaLabel="Fruit"
       @items={{this.items}}
       @load={{this.load}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{true}}
       @onChange={{this.onChange}}
       @resolveValues={{this.resolveValues}}
+      @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
       @variant={{@variant}}
     />
@@ -1862,12 +1862,12 @@ class ResolvingHost extends Component {
 
   <template>
     <DSelect
-      @ariaLabel="Fruit"
       @load={{serverLoad}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{true}}
       @onChange={{this.onChange}}
       @resolveValues={{@resolver.resolveValues}}
+      @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
       @variant={{@variant}}
     />
@@ -1897,7 +1897,6 @@ class PanelBlocksHost extends Component {
 
   <template>
     <DSelect
-      @ariaLabel="Fruit"
       @debounce={{@debounce}}
       @hideSelected={{@hideSelected}}
       @items={{this.items}}
@@ -1905,6 +1904,7 @@ class PanelBlocksHost extends Component {
       @multiple={{true}}
       @onChange={{this.onChange}}
       @resolveValues={{this.resolveValues}}
+      @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
       @variant={{@variant}}
     >

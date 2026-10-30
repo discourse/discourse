@@ -53,7 +53,7 @@ export default class CategoryList extends FilterComponent {
           @multiple={{true}}
           @onChange={{this.onChange}}
           @onClose={{this.onClose}}
-          @placeholder={{i18n "category.all"}}
+          @texts={{hash placeholder=(i18n "category.all")}}
           @value={{this.selectedCategories}}
         />
       {{else}}

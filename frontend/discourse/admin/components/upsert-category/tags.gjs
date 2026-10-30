@@ -144,8 +144,10 @@ export default class UpsertCategoryTags extends Component {
                     @disabled={{field.disabled}}
                     @multiple={{false}}
                     @onChange={{fn this.onSingleTagGroupFieldChange field}}
-                    @placeholder={{i18n
-                      "category.required_tag_group.placeholder"
+                    @texts={{hash
+                      placeholder=(i18n
+                        "category.required_tag_group.placeholder"
+                      )
                     }}
                     @value={{field.value}}
                   />
