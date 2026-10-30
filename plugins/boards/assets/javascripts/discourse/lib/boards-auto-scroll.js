@@ -1,4 +1,5 @@
 import { modifier } from "ember-modifier";
+import { registerPointerDrag } from "discourse/ui-kit/modifiers/d-pointer-drag";
 
 const DRAG_SCROLL_SKIP_SELECTOR =
   ".discourse-boards-card, button, a, input, textarea, select, [contenteditable=''], [contenteditable='true']";
@@ -8,12 +9,12 @@ const DRAG_SCROLL_MOMENTUM_MAX_PX_PER_FRAME = 4;
 const DRAG_SCROLL_MOMENTUM_MIN_PX_PER_FRAME = 0.5;
 const DRAG_SCROLL_VELOCITY_WINDOW_MS = 80;
 const DRAG_SCROLL_MS_PER_FRAME = 1000 / 60;
+const DRAG_SCROLL_THRESHOLD = 4;
 
 export const dragToScroll = modifier((element) => {
-  let activePointerId = null;
   let startX = 0;
   let startScrollLeft = 0;
-  let dragStarted = false;
+  let panning = false;
   let velocitySamples = [];
   let momentumFrame = null;
   let pendingMoveFrame = null;
@@ -38,11 +39,6 @@ export const dragToScroll = modifier((element) => {
     while (velocitySamples.length > 1 && velocitySamples[0].time < cutoff) {
       velocitySamples.shift();
     }
-  };
-
-  const recordSample = (event) => {
-    velocitySamples.push({ time: event.timeStamp, x: event.clientX });
-    pruneVelocitySamples(event.timeStamp);
   };
 
   const startMomentum = (endTime) => {
@@ -72,6 +68,7 @@ export const dragToScroll = modifier((element) => {
     const step = () => {
       const previous = element.scrollLeft;
       element.scrollLeft = previous + velocity;
+      // Limit detection requires synchronous scrolling, without smooth behavior.
       if (element.scrollLeft === previous) {
         momentumFrame = null;
         return;
@@ -88,108 +85,96 @@ export const dragToScroll = modifier((element) => {
     momentumFrame = requestAnimationFrame(step);
   };
 
-  const onPointerDown = (event) => {
-    cancelMomentum();
-
-    if (event.button !== 0 || event.pointerType === "touch") {
-      return;
-    }
-    if (event.target.closest(DRAG_SCROLL_SKIP_SELECTOR)) {
-      return;
-    }
-    if (element.scrollWidth <= element.clientWidth) {
-      return;
-    }
-
-    activePointerId = event.pointerId;
-    startX = event.clientX;
-    startScrollLeft = element.scrollLeft;
-    dragStarted = false;
-    velocitySamples = [{ time: event.timeStamp, x: event.clientX }];
+  const stopPanning = () => {
+    panning = false;
+    element.classList.remove(
+      "discourse-boards-board-container--drag-scrolling"
+    );
   };
 
-  const onPointerMove = (event) => {
-    if (event.pointerId !== activePointerId) {
-      return;
-    }
+  const releaseGesture = registerPointerDrag(element, () => ({
+    // Preserve native touch scrolling and pinch zoom.
+    touchAction: "manipulation",
+    // Apply a horizontal threshold below; the engine measures travel in both axes.
+    threshold: 0,
 
-    const dx = event.clientX - startX;
-    if (!dragStarted) {
-      if (Math.abs(dx) < 4) {
-        return;
+    onDragStart: (event) => {
+      cancelMomentum();
+
+      if (
+        event.pointerType === "touch" ||
+        event.target.closest(DRAG_SCROLL_SKIP_SELECTOR) ||
+        element.scrollWidth <= element.clientWidth
+      ) {
+        return false;
       }
-      dragStarted = true;
-      element.classList.add("discourse-boards-board-container--drag-scrolling");
-      try {
-        element.setPointerCapture(activePointerId);
-      } catch {
-        // pointer capture is best-effort
+
+      startX = event.clientX;
+      startScrollLeft = element.scrollLeft;
+      velocitySamples = [{ time: event.timeStamp, x: event.clientX }];
+    },
+
+    onDrag: (event) => {
+      if (!panning) {
+        if (Math.abs(event.clientX - startX) < DRAG_SCROLL_THRESHOLD) {
+          return;
+        }
+        // This class suppresses descendant pointer events, so wait for an actual pan.
+        panning = true;
+        element.classList.add(
+          "discourse-boards-board-container--drag-scrolling"
+        );
       }
-    }
 
-    event.preventDefault();
-    latestClientX = event.clientX;
-    recordSample(event);
+      latestClientX = event.clientX;
+      velocitySamples.push({ time: event.timeStamp, x: event.clientX });
+      pruneVelocitySamples(event.timeStamp);
 
-    if (pendingMoveFrame === null) {
-      pendingMoveFrame = requestAnimationFrame(() => {
-        pendingMoveFrame = null;
-        element.scrollLeft = startScrollLeft - (latestClientX - startX);
-      });
-    }
-  };
-
-  const stopDrag = (event) => {
-    if (event.pointerId !== activePointerId) {
-      return;
-    }
-
-    cancelPendingMove();
-
-    const wasDragging = dragStarted;
-    if (dragStarted) {
-      try {
-        element.releasePointerCapture(activePointerId);
-      } catch {
-        // pointer capture release is best-effort
+      if (pendingMoveFrame === null) {
+        pendingMoveFrame = requestAnimationFrame(() => {
+          pendingMoveFrame = null;
+          element.scrollLeft = startScrollLeft - (latestClientX - startX);
+        });
       }
-      element.classList.remove(
-        "discourse-boards-board-container--drag-scrolling"
-      );
-    }
+    },
 
-    activePointerId = null;
-    dragStarted = false;
+    onDragEnd: (event, info) => {
+      const wasPanning = panning;
+      cancelPendingMove();
+      stopPanning();
 
-    if (wasDragging && event.type === "pointerup") {
-      startMomentum(event.timeStamp);
-    }
-  };
+      if (wasPanning && info.moved) {
+        startMomentum(event.timeStamp);
+      }
+    },
+
+    onDragCancel: () => {
+      cancelPendingMove();
+      stopPanning();
+    },
+  }));
+
+  /** Non-primary presses bypass the gesture callbacks but must stop momentum. */
+  const onAnyPointerDown = () => cancelMomentum();
+  const onWheel = () => cancelMomentum();
 
   const onClickCapture = (event) => {
-    if (dragStarted) {
+    if (panning) {
       event.stopPropagation();
       event.preventDefault();
     }
   };
 
-  const onWheel = () => cancelMomentum();
-
-  element.addEventListener("pointerdown", onPointerDown);
-  element.addEventListener("pointermove", onPointerMove);
-  element.addEventListener("pointerup", stopDrag);
-  element.addEventListener("pointercancel", stopDrag);
-  element.addEventListener("click", onClickCapture, true);
+  element.addEventListener("pointerdown", onAnyPointerDown);
   element.addEventListener("wheel", onWheel, { passive: true });
+  element.addEventListener("click", onClickCapture, true);
 
   return () => {
     cancelMomentum();
     cancelPendingMove();
-    element.removeEventListener("pointerdown", onPointerDown);
-    element.removeEventListener("pointermove", onPointerMove);
-    element.removeEventListener("pointerup", stopDrag);
-    element.removeEventListener("pointercancel", stopDrag);
-    element.removeEventListener("click", onClickCapture, true);
+    releaseGesture();
+    element.removeEventListener("pointerdown", onAnyPointerDown);
     element.removeEventListener("wheel", onWheel);
+    element.removeEventListener("click", onClickCapture, true);
   };
 });
