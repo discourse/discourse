@@ -29,6 +29,7 @@ Discourse is large with long history. Understand context before changes.
 - In the frontend, typescript is typically used for platform-level code, javascript for business-logic
 - Platform-level frontend code should include accurate types & tsdoc descriptions for public APIs
 - Use the skill at `.skills/discourse-writing-typescript` when authoring .ts/.gts or converting .js/.gjs to TypeScript
+- When a change alters what the server sends for a model (serializer attributes, `include_*?` conditions, endpoint JSON), update that model's `Fields` interface and type test in the same change; see "Model types follow the server" in `.skills/discourse-writing-typescript`
 - Simple JSDoc/TSDoc comments can be used in other code for editor intellisense, but this is not essential
 - In core, never name plugin features or specific libraries in comments/docs — describe by mechanism
 
