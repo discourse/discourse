@@ -604,6 +604,16 @@ RSpec.describe Email::Sender do
         *[small_pdf, large_pdf, csv_file].map(&:original_filename),
       )
     end
+    
+    it "resolves upload URLs in plain-text emails" do
+      Email::Sender.new(message, :valid_type).send
+
+      text = message.text_part.body.decoded
+
+      expect(text).to include("#{Discourse.base_url}#{image.short_path}")
+      expect(text).to include("#{Discourse.base_url}#{small_pdf.short_path}")
+      expect(text).not_to include("upload://")
+    end
 
     it "changes hashtags to their slug with a # symbol rather than the full resource name" do
       category = Fabricate(:category, slug: "dev")

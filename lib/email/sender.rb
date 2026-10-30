@@ -96,6 +96,20 @@ module Email
           "![](" + url_prefix + '\1)',
         )
 
+      # Resolve upload:// URLs to forum-hosted short URLs in plain-text emails.
+      short_url_pattern = %r{upload://[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*}
+      text_body = @message.text_part.body.to_s
+      short_urls = text_body.scan(short_url_pattern).uniq
+
+      if short_urls.any?
+        upload_paths = PrettyText::Helpers.lookup_upload_urls(short_urls)
+        @message.text_part.body =
+          text_body.gsub(short_url_pattern) do |short_url|
+            short_path = upload_paths.dig(short_url, :short_path)
+            short_path ? "#{url_prefix}#{short_path}" : short_url
+          end
+      end
+
       @message.text_part.content_type = "text/plain; charset=UTF-8"
       user_id = @user&.id
 
