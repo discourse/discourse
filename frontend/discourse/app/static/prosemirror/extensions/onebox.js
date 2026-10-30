@@ -338,6 +338,8 @@ const extension = {
                 !pendingUrls[spec.oneboxType].has(spec.oneboxUrl)
             );
 
+            const inlineUrls = new Set();
+
             for (const dec of decorations) {
               if (
                 !dec.spec.forceRetry &&
@@ -347,6 +349,10 @@ const extension = {
               }
 
               pendingUrls[dec.spec.oneboxType].add(dec.spec.oneboxUrl);
+
+              if (dec.spec.oneboxType === "inline") {
+                inlineUrls.add(dec.spec.oneboxUrl);
+              }
 
               // Full onebox, one by one
               if (dec.spec.oneboxType === "full") {
@@ -385,8 +391,7 @@ const extension = {
             }
 
             // Inline oneboxes, batched
-            if (pendingUrls.inline.size) {
-              const inlineUrls = pendingUrls.inline;
+            if (inlineUrls.size) {
               loadInlineOneboxes(inlineUrls, getContext())
                 .then((inlineOneboxes) => {
                   for (const url of inlineUrls) {
