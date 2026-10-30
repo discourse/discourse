@@ -2167,6 +2167,196 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
+-- Name: blog_paths; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_paths (
+    id bigint NOT NULL,
+    publication_id bigint NOT NULL,
+    path character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: blog_paths_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_paths_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_paths_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_paths_id_seq OWNED BY public.blog_paths.id;
+
+
+--
+-- Name: blog_publications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_publications (
+    id bigint NOT NULL,
+    topic_id bigint NOT NULL,
+    publisher_id bigint,
+    path character varying NOT NULL,
+    excerpt character varying DEFAULT ''::character varying NOT NULL,
+    featured boolean DEFAULT false NOT NULL,
+    published boolean DEFAULT false NOT NULL,
+    published_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    draft_topic_id bigint,
+    discussion_topic_id bigint,
+    published_revision_id bigint,
+    submitted_revision_id bigint,
+    approved_revision_id bigint,
+    scheduled_revision_id bigint,
+    scheduler_id bigint,
+    scheduled_at timestamp(6) without time zone,
+    last_published_at timestamp(6) without time zone,
+    schedule_token character varying,
+    schedule_error text DEFAULT ''::text NOT NULL,
+    draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: blog_publications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_publications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_publications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_publications_id_seq OWNED BY public.blog_publications.id;
+
+
+--
+-- Name: blog_review_feedback; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_review_feedback (
+    id bigint NOT NULL,
+    review_id bigint NOT NULL,
+    name character varying(100) DEFAULT ''::character varying NOT NULL,
+    email character varying(254) DEFAULT ''::character varying NOT NULL,
+    message text NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: blog_review_feedback_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_review_feedback_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_review_feedback_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_review_feedback_id_seq OWNED BY public.blog_review_feedback.id;
+
+
+--
+-- Name: blog_reviews; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_reviews (
+    id bigint NOT NULL,
+    topic_id bigint NOT NULL,
+    creator_id bigint NOT NULL,
+    label character varying(100) DEFAULT ''::character varying NOT NULL,
+    title character varying NOT NULL,
+    cooked text NOT NULL,
+    post_version integer NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    revoked_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    token character varying(64)
+);
+
+
+--
+-- Name: blog_reviews_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_reviews_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_reviews_id_seq OWNED BY public.blog_reviews.id;
+
+
+--
+-- Name: blog_revisions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_revisions (
+    id bigint NOT NULL,
+    publication_id bigint NOT NULL,
+    source_topic_id bigint NOT NULL,
+    creator_id bigint NOT NULL,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    approver_id bigint,
+    approved_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: blog_revisions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_revisions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_revisions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_revisions_id_seq OWNED BY public.blog_revisions.id;
+
+
+--
 -- Name: bookmarks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14393,6 +14583,41 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 
 
 --
+-- Name: blog_paths id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_paths ALTER COLUMN id SET DEFAULT nextval('public.blog_paths_id_seq'::regclass);
+
+
+--
+-- Name: blog_publications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_publications ALTER COLUMN id SET DEFAULT nextval('public.blog_publications_id_seq'::regclass);
+
+
+--
+-- Name: blog_review_feedback id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_review_feedback ALTER COLUMN id SET DEFAULT nextval('public.blog_review_feedback_id_seq'::regclass);
+
+
+--
+-- Name: blog_reviews id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_reviews ALTER COLUMN id SET DEFAULT nextval('public.blog_reviews_id_seq'::regclass);
+
+
+--
+-- Name: blog_revisions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_revisions ALTER COLUMN id SET DEFAULT nextval('public.blog_revisions_id_seq'::regclass);
+
+
+--
 -- Name: bookmarks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16967,6 +17192,46 @@ ALTER TABLE ONLY public.badge_types
 
 ALTER TABLE ONLY public.badges
     ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_paths blog_paths_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_paths
+    ADD CONSTRAINT blog_paths_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_publications blog_publications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_publications
+    ADD CONSTRAINT blog_publications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_review_feedback blog_review_feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_review_feedback
+    ADD CONSTRAINT blog_review_feedback_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_reviews blog_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_reviews
+    ADD CONSTRAINT blog_reviews_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_revisions blog_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_revisions
+    ADD CONSTRAINT blog_revisions_pkey PRIMARY KEY (id);
 
 
 --
@@ -19786,6 +20051,20 @@ CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summ
 
 
 --
+-- Name: idx_blog_publications_scheduled_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_blog_publications_scheduled_at ON public.blog_publications USING btree (scheduled_at) WHERE (scheduled_at IS NOT NULL);
+
+
+--
+-- Name: idx_blog_review_feedback_review_created; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_blog_review_feedback_review_created ON public.blog_review_feedback USING btree (review_id, created_at);
+
+
+--
 -- Name: idx_bookmarks_user_polymorphic_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21393,6 +21672,69 @@ CREATE INDEX index_badges_on_badge_type_id ON public.badges USING btree (badge_t
 --
 
 CREATE UNIQUE INDEX index_badges_on_name ON public.badges USING btree (name);
+
+
+--
+-- Name: index_blog_paths_on_path; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_paths_on_path ON public.blog_paths USING btree (path);
+
+
+--
+-- Name: index_blog_paths_on_publication_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_paths_on_publication_id ON public.blog_paths USING btree (publication_id);
+
+
+--
+-- Name: index_blog_publications_on_discussion_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_publications_on_discussion_topic_id ON public.blog_publications USING btree (discussion_topic_id);
+
+
+--
+-- Name: index_blog_publications_on_draft_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_publications_on_draft_topic_id ON public.blog_publications USING btree (draft_topic_id);
+
+
+--
+-- Name: index_blog_publications_on_published_and_published_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_publications_on_published_and_published_at ON public.blog_publications USING btree (published, published_at);
+
+
+--
+-- Name: index_blog_publications_on_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_publications_on_topic_id ON public.blog_publications USING btree (topic_id);
+
+
+--
+-- Name: index_blog_reviews_on_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_reviews_on_token ON public.blog_reviews USING btree (token);
+
+
+--
+-- Name: index_blog_reviews_on_topic_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_reviews_on_topic_id_and_created_at ON public.blog_reviews USING btree (topic_id, created_at);
+
+
+--
+-- Name: index_blog_revisions_on_publication_id_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_revisions_on_publication_id_and_id ON public.blog_revisions USING btree (publication_id, id);
 
 
 --
@@ -26167,6 +26509,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261029021723'),
+('20261028093149'),
+('20261028093146'),
 ('20261021180718'),
 ('20261021180714'),
 ('20261021063131'),
@@ -26202,6 +26546,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261009130230'),
 ('20261009121104'),
 ('20261009113440'),
+('20261008205400'),
 ('20261008184751'),
 ('20261008173326'),
 ('20261008005940'),
@@ -26233,10 +26578,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260916113806'),
 ('20260915204557'),
 ('20260915191328'),
+('20260915075802'),
+('20260915075800'),
+('20260915045302'),
 ('20260914213908'),
 ('20260914172801'),
 ('20260914172757'),
 ('20260914140746'),
+('20260914051629'),
+('20260914042438'),
 ('20260914032737'),
 ('20260913105655'),
 ('20260910110851'),
@@ -26246,9 +26596,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260910030345'),
 ('20260909181443'),
 ('20260909132955'),
+('20260909033948'),
+('20260909022122'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
+('20260908063229'),
 ('20260904171256'),
 ('20260904065041'),
 ('20260904063128'),

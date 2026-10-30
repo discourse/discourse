@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= @page_title %><%= " · #{SiteSetting.blog_title}" unless @page_title == SiteSetting.blog_title %></title>
+    <meta name="description" content="<%= @description %>">
+    <% if @preview || @theme_preview_token %>
+      <meta name="robots" content="noindex, nofollow">
+    <% else %>
+      <link rel="canonical" href="<%= @canonical_url %>">
+    <% end %>
+    <meta property="og:title" content="<%= @page_title %>">
+    <meta property="og:description" content="<%= @description %>">
+    <meta property="og:site_name" content="<%= SiteSetting.blog_title %>">
+    <meta property="og:url" content="<%= @canonical_url %>">
+    <meta property="og:type" content="<%= @topic ? 'article' : 'website' %>">
+    <meta name="twitter:card" content="<%= @topic && blog_revision_image(@article) ? 'summary_large_image' : 'summary' %>">
+    <% if @topic && !@preview %>
+      <% if blog_revision_image(@article) %><meta property="og:image" content="<%= blog_revision_image(@article) %>"><% end %>
+      <meta property="article:published_time" content="<%= @publication.published_at&.iso8601 %>">
+      <meta property="article:modified_time" content="<%= @publication.article_updated_at&.iso8601 %>">
+      <script type="application/ld+json" nonce="<%= csp_nonce_placeholder %>"><%= raw ERB::Util.json_escape(blog_article_schema) %></script>
+    <% end %>
+    <link rel="alternate" type="application/rss+xml" title="<%= SiteSetting.blog_title %>" href="<%= blog_url('/feed.xml') %>">
+    <% if SiteSetting.favicon %><link rel="icon" href="<%= ::UrlHelper.absolute(SiteSetting.favicon.url) %>"><% end %>
+    <%= discourse_color_scheme_stylesheets %>
+    <link rel="stylesheet" href="<%= Discourse.base_url %>/plugins/blog/blog.css">
+    <link rel="stylesheet" href="<%= blog_theme_asset_url %>">
+    <%= javascript_include_tag "#{Discourse.base_url}/plugins/blog/blog.js", defer: true, nonce: csp_nonce_placeholder %>
+    <% if !@preview && !blog_customizations_disabled? && blog_theme["javascript"].present? %>
+      <%= javascript_include_tag blog_theme_asset_url('/blog-custom.js'), defer: true, nonce: csp_nonce_placeholder, data: { blog_custom_script: true } %>
+    <% end %>
+  </head>
+  <body
+    class="blog"
+    data-blog-highlight-core-url="<%= blog_url(Blog::SyntaxHighlighter.path) %>"
+    data-blog-highlight-languages-url="<%= Discourse.base_url %><%= HighlightJs.path %>"
+    data-blog-highlight-auto="<%= SiteSetting.autohighlight_all_code %>"
+    data-blog-lightbox-close-label="<%= t('blog.lightbox.close') %>"
+    data-blog-lightbox-dialog-label="<%= t('blog.lightbox.dialog') %>"
+    data-blog-lightbox-open-label="<%= t('blog.lightbox.open') %>"
+    data-blog-lightbox-open-with-description-label="<%= t('blog.lightbox.open_with_description', description: '__IMAGE_DESCRIPTION__') %>"
+    data-blog-lightbox-original-label="<%= t('blog.lightbox.original') %>"
+    data-blog-page="<%= @topic ? 'article' : (@archive ? 'archive' : action_name) %>"
+  >
+    <a class="blog__skip" href="#main"><%= t('blog.skip_content') %></a>
+    <% if blog_customizations_disabled? %>
+      <aside class="blog__preview"><%= t('blog.customizations_disabled') %></aside>
+    <% end %>
+    <% if @theme_preview_token %>
+      <aside class="blog__preview"><strong><%= t('blog.themes.preview', name: blog_theme["name"]) %></strong> <%= t('blog.themes.preview_notice') %> <a href="<%= ::Blog::Configuration.base_url %><%= ::Blog::Configuration.relative_path(request) %>"><%= t('blog.themes.exit_preview') %></a></aside>
+    <% end %>
+    <% if @preview %>
+      <aside class="blog__preview"><strong><%= t('blog.preview') %></strong> <%= t('blog.preview_notice') %> <a href="<%= @topic.url %>"><%= t('blog.back_to_editor') %></a></aside>
+    <% end %>
+    <%= blog_render_template("layout", content: yield) %>
+  </body>
+</html>

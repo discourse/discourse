@@ -893,6 +893,12 @@ importers:
         specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
+  plugins/blog:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+
   plugins/boards:
     dependencies:
       discourse:

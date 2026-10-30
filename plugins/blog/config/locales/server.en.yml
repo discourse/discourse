@@ -1,0 +1,144 @@
+en:
+  site_settings:
+    blog_contributor_groups: Groups that can write and submit their own blog drafts. Also grant these groups access to the private drafts category. This does not grant forum staff privileges.
+    blog_editor_groups: Groups that can edit and submit any blog draft they can see. Also grant access to the private drafts category. Publication requires the publisher role.
+    blog_publisher_groups: Groups that can approve, publish, withdraw, and schedule blog revisions they can see. Publishers may approve their own work. Also grant access to the private drafts category and permission to create topics in the public blog category. Administrators always retain access.
+    blog_enabled: "A blog built on your community. Write and review articles with your editorial team, publish them under /blog with their own design, and let readers discuss each article in a linked topic. Configure the blog and drafts categories after enabling it."
+    blog_url:
+      Serve the blog from its own HTTPS origin, without a trailing slash
+      or path, instead of /blog on this site. It must differ from the discussion hostname. Configure this hostname
+      as an alias of this site at the proxy and database connection.
+    blog_category:
+      The single public category whose explicitly published
+      topics appear on the blog. Subcategories are not included. A topic is never
+      published merely by being in this category.
+    blog_drafts_category:
+      A separate private category for editorial drafts.
+      Restrict membership to editors. Publishing copies only the approved article into a separate discussion in {{setting:blog_category}}. Editorial topics and replies stay private.
+      Upload URLs are not private when secure uploads are disabled.
+    blog_title:
+      The blog name displayed in navigation, page titles, and
+      feeds.
+    blog_description:
+      A short description for the homepage, feed, and search
+      engines.
+    blog_about: Markdown content for the blog About page.
+    blog_posts_per_page:
+      Number of articles shown on each homepage or archive
+      page.
+  blog:
+    home: Home
+    continue_reading: Continue reading
+    posted_by: Posted by
+    permalink: Permalink
+    comments: Comments
+    twitter_updates: Twitter updates
+    on_social: On social
+    community_activity: Community activity
+    online_content: Online content
+    recent_questions: Recent questions
+    recent_answers: Recent answers
+    syndication: Syndication
+    time_ago: "%{time} ago"
+    discussion_load_error: "The inline discussion could not load. Refresh this page to try again, or use Open in the community above."
+    lightbox:
+      close: Close image
+      dialog: Enlarged article image
+      open: View image
+      open_with_description: "View image: %{description}"
+      original: Open original
+    skip_content: Skip to content
+    navigation: Blog navigation
+    archive: Archive
+    about: About
+    community: Community
+    rss: RSS
+    preview: Preview
+    preview_notice:
+      Only authorized editors can see this preview. Save publication
+      settings before previewing changes.
+    back_to_editor: Back to the topic
+    editor: Write in the community
+    footer: Written in Discourse. Open for conversation.
+    from_the_blog: Notes from the community
+    tagged: Filed under %{tag}
+    search: Search
+    search_placeholder: Search article titles and excerpts
+    featured: Featured
+    reading_time:
+      one: "%{count} min read"
+      other: "%{count} min read"
+    replies:
+      one: "%{count} reply"
+      other: "%{count} replies"
+    empty_title: Nothing here yet
+    empty_body: New stories will appear here when they are published.
+    pagination: Article pages
+    newer: Newer articles
+    older: Older articles
+    all_articles: All articles
+    updated: Updated %{date}
+    view_topic: View in the community
+    discussion: The conversation
+    open_discussion: Open in the community
+    discussion_closed:
+      This conversation is closed to new replies. You can still read
+      the discussion below.
+    discussion_description:
+      Have a thought or a question? Join the discussion below
+      with your community account.
+    join_community: Join the community
+    not_found_title: This page is not available
+    not_found_body: It may have moved, returned to drafts, or not been published yet.
+    errors:
+      private_site:
+        The blog requires a public site with secure uploads disabled.
+        Draft text stays private, but uploaded files are not access-controlled without
+        secure uploads.
+      anonymous_uploads: "The blog requires anonymous upload downloads. Disable prevent_anons_from_downloading_files before publishing or sharing reviews."
+      category: Choose one public Blog category in the blog site settings.
+      drafts_category:
+        Choose a separate private drafts category accessible only to configured editorial groups or staff, distinct from the core shared drafts category.
+      published_page:
+        Unpublish this topic from page publishing before publishing
+        it on the blog.
+      path_taken: is reserved or already belongs to another article
+      future_date:
+        must be today or earlier. Use the schedule controls to release
+        an article in the future.
+      color: "Use exactly six hexadecimal digits, without a # prefix."
+    latest_stories: Latest stories
+    explore_archive: Explore the archive
+    customizations_disabled:
+      Custom CSS and JavaScript are disabled for this page
+      view.
+    themes:
+      sample_article: Example article (no public article selected)
+      sample_body: Publish an article to see its real content in this reference.
+      preview_diagnostic: "%{template}, line %{line}: %{message}"
+      template_invalid: "Provide a valid Liquid template of at most 65,536 bytes."
+      template_parse_error: "Invalid Liquid template: %{error}"
+      current: Current appearance
+      invalid: "Provide a name (up to 100 characters), an Editorial or Minimal layout, six-digit hexadecimal colors, and CSS/JavaScript of at most 65,536 bytes each."
+      limit: You can save up to 30 blog themes. Delete an unused theme first.
+      stale: This theme has changed. Reload it and review the latest draft before continuing.
+      active_delete: Activate another theme before deleting this one.
+      repository_invalid: Use a public HTTPS Git repository URL without credentials, query parameters, or fragments.
+      archive_invalid: "The ZIP file is invalid, has too many files, or contains oversized theme files."
+      manifest_invalid: The theme must contain a valid blog-theme.json manifest (version 1 or 2).
+      file_too_large: "%{file} exceeds the allowed file size."
+      preview: "Theme preview: %{name}"
+      preview_notice: This preview is visible only through this temporary preview link. The live blog has not changed.
+      exit_preview: Exit preview
+    review:
+      page_title: Draft review
+      javascript_required: Enable JavaScript to read this shared draft and leave feedback.
+      unavailable: This review link has expired, was revoked, or is no longer available. Ask the editor for a new link.
+      limit: This draft already has 20 active review links. Revoke one before creating another.
+      feedback_limit: This review has reached its feedback limit. Contact the editor for a new review link.
+    editorial:
+      access_lost: Scheduled publication stopped because publisher access or article eligibility changed. Check permissions and the private source, then schedule again.
+      private_source: Editorial topics must stay in their private drafts category. Publish an approved revision instead.
+      stale: This revision is no longer the current submitted or approved revision. Reload and review it again.
+      approval_required: Approve a submitted revision before publishing or scheduling it.
+      schedule_time: Choose a publication time at least one minute ahead and within the next year.
