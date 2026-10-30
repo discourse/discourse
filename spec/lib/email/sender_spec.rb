@@ -604,7 +604,7 @@ RSpec.describe Email::Sender do
         *[small_pdf, large_pdf, csv_file].map(&:original_filename),
       )
     end
-    
+
     it "resolves upload URLs in plain-text emails" do
       Email::Sender.new(message, :valid_type).send
 

@@ -96,14 +96,15 @@ module Email
           "![](" + url_prefix + '\1)',
         )
 
-
       # Resolve upload:// URLs to forum-hosted short URLs in plain-text emails.
       @message.text_part.body =
-        @message.text_part.body.to_s.gsub(
-          %r{upload://[a-zA-Z0-9]{1,27}(?:\.[a-zA-Z0-9_-]+)*(?![a-zA-Z0-9_-])},
-        ) do |url|
-          "#{url_prefix}/uploads/short-url/#{url.delete_prefix("upload://")}"
-        end
+        @message
+          .text_part
+          .body
+          .to_s
+          .gsub(%r{upload://[a-zA-Z0-9]{1,27}(?:\.[a-zA-Z0-9_-]+)*(?![a-zA-Z0-9_-])}) do |url|
+            "#{url_prefix}/uploads/short-url/#{url.delete_prefix("upload://")}"
+          end
 
       @message.text_part.content_type = "text/plain; charset=UTF-8"
       user_id = @user&.id
