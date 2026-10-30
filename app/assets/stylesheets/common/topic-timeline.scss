@@ -299,16 +299,15 @@
       cursor: ns-resize;
       display: flex;
       align-items: center;
-
-      .back-button {
-        margin-top: var(--space-4);
-      }
     }
 
     .timeline-replies {
+      display: flex;
+      flex-wrap: wrap;
+      height: 1lh;
       overflow: hidden;
-      overflow-wrap: break-word;
       font-weight: bold;
+      white-space: pre;
     }
 
     .timeline-last-read {

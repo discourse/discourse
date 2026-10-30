@@ -1673,11 +1673,6 @@ posting:
     max: 36500
     client: true
     area: "posts_and_topics"
-  short_progress_text_threshold:
-    client: true
-    default: 10000
-    max: 99000
-    area: "posts_and_topics"
   default_code_lang:
     client: true
     default: "auto"
