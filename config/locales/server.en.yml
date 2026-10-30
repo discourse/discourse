@@ -3151,7 +3151,7 @@ en:
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or personal messages on a daily basis."
     default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
-    company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
+    company_name: "Name of your company or organization."
     company_url: "Website URL for your company or organization. Optional."
     governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
     city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
@@ -3363,7 +3363,7 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
-      uncategorized_category_missing: "'allow uncategorized topics' cannot be enabled because the \"Uncategorized\" category no longer exists."
+      uncategorized_category_missing: '''allow uncategorized topics'' cannot be enabled because the "Uncategorized" category no longer exists.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
