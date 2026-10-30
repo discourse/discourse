@@ -93,7 +93,7 @@ module("Unit | lib | tag-source", function (hooks) {
         ],
         forbidden: "nope",
         forbidden_message: "Not allowed",
-        required_tag_group: { name: "Kind", min_count: 1 },
+        required_tag_group: { name: "Kind", min_count: 1, remaining_count: 1 },
       })
     );
 
@@ -105,7 +105,11 @@ module("Unit | lib | tag-source", function (hooks) {
     assert.true(result.items[0].disabled);
     assert.strictEqual(result.items[0].description, "Requires parent");
     assert.strictEqual(result.forbidden, "nope");
-    assert.deepEqual(result.requiredTagGroup, { name: "Kind", min_count: 1 });
+    assert.deepEqual(result.requiredTagGroup, {
+      name: "Kind",
+      min_count: 1,
+      remaining_count: 1,
+    });
   });
 
   test("a failed search rejects", async function (assert) {

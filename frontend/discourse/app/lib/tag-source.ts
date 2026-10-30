@@ -28,7 +28,12 @@ export interface TagSearchResult {
   items: TagRow[];
   forbidden?: boolean | string;
   forbiddenMessage?: string;
-  requiredTagGroup?: { name: string; min_count: number } | null;
+  /** The first unmet required group; `remaining_count` is how many more of its tags are needed. */
+  requiredTagGroup?: {
+    name: string;
+    min_count: number;
+    remaining_count: number;
+  } | null;
 }
 
 const tagIdsByNames = new Map<string, Promise<Set<number>>>();

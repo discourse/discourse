@@ -1,8 +1,40 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import type { SelectItem } from "discourse/ui-kit/select/select-engine";
+import {
+  renderSelectText,
+  type SelectItem,
+  type SelectResolvedOptions,
+} from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
+
+/** The translations a row's texts default to when it's drawn without the select's options. */
+const ROW_TEXT_KEYS: Readonly<Record<string, string>> = {
+  createItem: "d_select.create_item",
+  tagCountBadge: "tagging.tag_count_badge",
+  tagCount: "tagging.tag_count_hidden",
+};
+
+/** A row text, from the select's options when the row has them. */
+function rowText(
+  options: SelectResolvedOptions | undefined,
+  key: string,
+  values: object
+): string {
+  return options
+    ? renderSelectText(options, key, values)
+    : i18n(ROW_TEXT_KEYS[key]!, values);
+}
+
+/** The values of a row's count texts. */
+function countValues(item: SelectItem) {
+  return { count: tagCount(item) };
+}
+
+/** The values of the create row's text. */
+function createValues(item: SelectItem) {
+  return { label: tagItemName(item) };
+}
 
 /** Narrows optional source counts at the rendering boundary. */
 function tagCount(item: SelectItem): number {
@@ -35,23 +67,35 @@ export const TagOption: TemplateOnlyComponent<{
   Args: {
     /** The tag row, including its optional count and synonym target. */
     item: SelectItem;
+    /** The select's resolved options, which carry its texts. */
+    options?: SelectResolvedOptions;
   };
 }> = <template>
   {{#if @item.onSelect}}
     {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
     {{tagItemName @item}}
   {{else if @item.isNew}}
-    {{i18n "d_select.create_item" label=@item.name}}
+    {{rowText @options "createItem" (createValues @item)}}
   {{else}}
     <span class="d-tag-option">
       {{dDiscourseTag @item.name noHref=true tagName="span"}}
       {{#if @item.count}}
-        <span aria-hidden="true" class="discourse-tag-count">
-          {{~i18n "tagging.tag_count_badge" count=(tagCount @item)~}}
-        </span>
-        <span class="sr-only">
-          {{~i18n "tagging.tag_count_hidden" count=(tagCount @item)~}}
-        </span>
+        {{#let
+          (rowText @options "tagCountBadge" (countValues @item))
+          (rowText @options "tagCount" (countValues @item))
+          as |badge spoken|
+        }}
+          {{#if badge}}
+            <span aria-hidden="true" class="discourse-tag-count">
+              {{~badge~}}
+            </span>
+          {{/if}}
+          {{#if spoken}}
+            <span class="sr-only">
+              {{~spoken~}}
+            </span>
+          {{/if}}
+        {{/let}}
       {{/if}}
       {{#if @item.target_tag}}
         <span class="synonym-hint"><span aria-hidden="true">→</span>

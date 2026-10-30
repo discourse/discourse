@@ -1408,6 +1408,45 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       );
     });
 
+    test("kindTexts takes a list of layers, each above the one before, for nested recipes", async function (assert) {
+      const options = tracked(undefined);
+      customize((selects) =>
+        selects.forIdentifier("texts-test", (spec) =>
+          spec.content((items, context) => {
+            options.value = context.options;
+            return items;
+          })
+        )
+      );
+      await mount({
+        kindTexts: [
+          { placeholder: "inner", innerText: "inner text", shared: "inner" },
+          {
+            placeholder: (_values, context) =>
+              `outer(${context.text("placeholder")})`,
+            outerText: "outer text",
+            shared: "outer",
+          },
+        ],
+      });
+
+      assert
+        .dom(".d-select__input")
+        .hasAttribute(
+          "placeholder",
+          "outer(inner)",
+          "the outer layer's own key reads the inner layer"
+        );
+      await click(".d-select__trigger");
+      assert.deepEqual(
+        ["innerText", "outerText", "shared"].map((key) =>
+          renderSelectText(options.value, key)
+        ),
+        ["inner text", "outer text", "outer"],
+        "every layer declares its keys, and the outer one wins"
+      );
+    });
+
     test("kindTextWrappers keys are fixed at construction", async function (assert) {
       const options = tracked(undefined);
       customize((selects) =>

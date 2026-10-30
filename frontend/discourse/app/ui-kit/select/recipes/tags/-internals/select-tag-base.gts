@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { action } from "@ember/object";
-import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
@@ -17,7 +16,6 @@ import {
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
-import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import DSelect, {
   type SelectPasteContext,
 } from "discourse/ui-kit/select/d-select";
@@ -35,10 +33,31 @@ import {
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
   SelectItem,
+  SelectKindTexts,
   SelectLoadOptions,
+  SelectResolvedOptions,
+  SelectTexts,
+  SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
+
+/**
+ * The tag texts. The placeholder is the prompt the requirement steps fall back to, and the panel's
+ * minimum line counts progress so it never repeats the field's "Select at least…".
+ */
+export const TAG_TEXTS: SelectTexts = Object.freeze({
+  placeholder: { key: "tagging.choose_for_topic" },
+  addMorePlaceholder: (_values, context) => context.text("addMoreTags"),
+  minimum: { key: "tagging.required_tags_progress" },
+  maximum: { key: "tagging.max_tags_reached" },
+  requiredTagGroup: { key: "tagging.choose_for_topic_required_group" },
+  requiredTagGroupRemaining: { key: "tagging.choose_more_required_group" },
+  minimumPlaceholder: { key: "tagging.choose_for_topic_required" },
+  minimumRemaining: { key: "tagging.choose_more_required" },
+  addMoreTags: { key: "tagging.add_more_tags" },
+  tagCountBadge: { key: "tagging.tag_count_badge" },
+  tagCount: { key: "tagging.tag_count_hidden" },
+});
 
 /** The engine's public arguments and yielded blocks, shared by tag recipes. */
 type SelectSignature =
@@ -83,7 +102,7 @@ export interface SelectTagBaseSignature {
     legacyKind?: SelectSignature["Args"]["legacyKind"];
     /** Trigger presentation. */
     variant?: SelectSignature["Args"]["variant"];
-    /** Advisory minimum, also shown as persistent guidance. */
+    /** Advisory minimum, shown in the field's placeholder until it's met. */
     minimum?: number;
     /** Receives selected tags in the consumer's shape. */
     onChange?: (
@@ -107,6 +126,15 @@ export interface SelectTagBaseSignature {
     placeholder?: string;
     /** Accessible control name; it is never drawn. */
     ariaLabel?: string;
+    /**
+     * The field's texts, over the tag defaults. A `placeholder` replaces only the prompt: a
+     * required group or a minimum still leads it, each worded through its own key.
+     */
+    texts?: SelectSignature["Args"]["texts"];
+    /** A recipe built on this one: its texts, above the tag defaults. */
+    kindTexts?: SelectTexts;
+    /** Whether the placeholder carries the required group and the minimum. Defaults to true. */
+    requirementPlaceholders?: boolean;
     /** Additional persistent help element ids. */
     describedBy?: string;
     /** Skips the forwarded `:footer` block; see `DSelect`'s `@suppressFooter`. */
@@ -132,7 +160,51 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
     prioritize_recently_used_tags: boolean;
   };
 
-  helpId = `${guidFor(this)}-tag-guidance`;
+  /**
+   * The requirement steps lead the placeholder: the required group, then the minimum, then the
+   * prompt every layer set. A step whose text is empty hands over to the next.
+   */
+  kindTextWrappers?: Readonly<Record<string, SelectTextWrapper>> =
+    this.args.requirementPlaceholders === false
+      ? undefined
+      : {
+          placeholder: (final, _values, context) => {
+            if (this.#zeroCap) {
+              return final;
+            }
+            const group = this.#requiredGroup;
+            const minimum = this.args.minimum ?? 0;
+            return (
+              (group &&
+                context.text("requiredTagGroup", {
+                  count: group.min_count,
+                  name: group.name,
+                })) ||
+              (minimum > 0 &&
+                context.text("minimumPlaceholder", { count: minimum })) ||
+              final
+            );
+          },
+          addMorePlaceholder: (final, values, context) => {
+            if (this.#zeroCap) {
+              return "";
+            }
+            const group = this.#requiredGroup;
+            const remaining =
+              Number(values.minimum ?? 0) - Number(values.selected ?? 0);
+            return (
+              (group &&
+                context.text("requiredTagGroupRemaining", {
+                  count: group.remaining_count,
+                  name: group.name,
+                })) ||
+              (remaining > 0 &&
+                context.text("minimumRemaining", { count: remaining })) ||
+              final
+            );
+          },
+        };
+
   resolveHeldNames = modifier(() => {
     const { names, key } = this._selectionInputs;
     if (this.#resolutionKey === key) {
@@ -276,30 +348,29 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
     };
   }
 
-  get guidance() {
-    const required = this._validation.get(
-      this.#validationKey(this.loadContext, "")
-    )?.requiredTagGroup;
-    if (required) {
-      return i18n("tagging.choose_for_topic_required_group", {
-        count: required.min_count,
-        name: required.name,
-      });
-    }
-    if (this.args.minimum) {
-      return i18n("tagging.choose_for_topic_required", {
-        count: this.args.minimum,
-      });
-    }
-    return undefined;
+  get kindTexts(): SelectKindTexts {
+    return [TAG_TEXTS, this.args.kindTexts ?? {}];
   }
 
-  get describedBy() {
-    return (
-      [this.args.describedBy, this.guidance ? this.helpId : undefined]
-        .filter(Boolean)
-        .join(" ") || undefined
-    );
+  /** The call site's texts, under which the old text arguments still apply. */
+  get texts(): SelectTexts | undefined {
+    const { ariaLabel, placeholder, texts } = this.args;
+    if (!ariaLabel && !placeholder) {
+      return texts;
+    }
+    return {
+      ariaLabel: ariaLabel || undefined,
+      placeholder: placeholder || undefined,
+      ...Object.fromEntries(
+        Object.entries(texts ?? {}).filter(([, text]) => text != null)
+      ),
+    };
+  }
+
+  /** The first unmet required group, as the blank search for the current context reported it. */
+  get #requiredGroup() {
+    return this._validation.get(this.#validationKey(this.loadContext, ""))
+      ?.requiredTagGroup;
   }
 
   @action
@@ -476,7 +547,6 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
         this.#validationKey(context, cleanTagName(filter, this.siteSettings)),
         result
       );
-      validation.set(this.#validationKey(context, ""), result);
       this._validation = validation;
     }
     const items = this.#prepareItems(result.items.map((item) => ({ ...item })));
@@ -494,9 +564,8 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       class={{@kind}}
       ...attributes
       @allowCreate={{this.allowCreate}}
-      @ariaLabel={{@ariaLabel}}
       @createItem={{this.createItem}}
-      @describedBy={{this.describedBy}}
+      @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @icon={{@icon}}
       @id={{@id}}
@@ -507,6 +576,8 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       @kind={{@kind}}
       @kindContext={{@kindContext}}
       @kindOptions={{@kindOptions}}
+      @kindTexts={{this.kindTexts}}
+      @kindTextWrappers={{this.kindTextWrappers}}
       @labelField="name"
       @legacyKind={{@legacyKind}}
       @load={{this.sourceLoad}}
@@ -517,12 +588,8 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @parsePaste={{this.parsePaste}}
-      @placeholder={{if
-        @placeholder
-        @placeholder
-        (i18n "tagging.choose_for_topic")
-      }}
       @suppressFooter={{@suppressFooter}}
+      @texts={{this.texts}}
       @value={{this.selectedIds}}
       @valueItems={{this.valueItems}}
       @variant={{@variant}}
@@ -532,7 +599,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
         {{#if (has-block "item")}}
           {{yield item options to="item"}}
         {{else}}
-          <TagOption @item={{item}} />
+          <TagOption @item={{item}} @options={{options}} />
         {{/if}}
       </:item>
       <:selection as |item options|>
@@ -546,8 +613,5 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
         {{yield state options to="footer"}}
       </:footer>
     </DSelect>
-    {{#if this.guidance}}
-      <p id={{this.helpId}}>{{this.guidance}}</p>
-    {{/if}}
   </template>
 }

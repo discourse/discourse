@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { set } from "@ember/object";
 import {
   click,
@@ -321,6 +322,68 @@ module(
           ["spec"],
           "no parent badge"
         );
+      });
+    });
+
+    module("texts", function () {
+      test("@texts names the drop and sets the empty level's text", async function (assert) {
+        await render(
+          <template>
+            <DSelectCategoryFilter
+              @texts={{hash ariaLabel="Narrow topics" placeholder="anywhere"}}
+            />
+          </template>
+        );
+
+        assert.strictEqual(
+          select().element().getAttribute("aria-label"),
+          "Narrow topics"
+        );
+        assert.dom(".d-select__placeholder").hasText("anywhere");
+      });
+
+      test("a customization renames both shortcuts, held or listed", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-category-filter", (spec) =>
+              spec.options(() => ({
+                texts: {
+                  removeFilter: "Show everything",
+                  noSubcategories: "Top level only",
+                },
+              }))
+            )
+          )
+        );
+        const parent = Category.findById(2);
+        const held = Category.findById(26);
+
+        await render(
+          <template>
+            <div class="none"><DSelectCategoryFilter
+                @noSubcategories={{true}}
+                @parentCategory={{parent}}
+              /></div>
+            <div class="held"><DSelectCategoryFilter
+                @parentCategory={{parent}}
+                @value={{held}}
+              /></div>
+          </template>
+        );
+
+        assert
+          .dom(select(".none").element())
+          .includesText("Top level only", "the held shortcut");
+        assert.strictEqual(
+          select(".none").element().getAttribute("aria-label"),
+          "Filter by: subcategories, Top level only"
+        );
+
+        await select(".held").open();
+        assert
+          .dom(optionFor(ALL_CATEGORIES_ID))
+          .includesText("Show everything");
+        assert.dom(optionFor(NO_CATEGORIES_ID)).includesText("Top level only");
       });
     });
 

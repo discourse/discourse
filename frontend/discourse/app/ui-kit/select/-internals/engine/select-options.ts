@@ -1,4 +1,5 @@
 import { DEBUG } from "@glimmer/env";
+import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { assert, warn } from "@ember/debug";
 import type {
   SelectPresentationArgs,
@@ -16,6 +17,7 @@ import type {
   SelectLoadOptions,
   SelectLoadResult,
   SelectValue,
+  SelectValueItemsBuilder,
 } from "discourse/ui-kit/select/select-engine";
 
 /** The default `kindContext` and `instanceContext` data when none was provided. */
@@ -77,6 +79,10 @@ export default class SelectOptionsView {
     opts: SelectLoadOptions
   ) => SelectLoadResult | Promise<SelectLoadResult>;
   #readValueItems?: SelectEngineOptions["getValueItems"];
+  #builtValueItems = new WeakMap<
+    SelectValueItemsBuilder,
+    WeakMap<object, ReturnType<typeof createCache<SelectItem | SelectItem[]>>>
+  >();
   #valueItems?: SelectEngineOptions["valueItems"];
   #resolveValue?: SelectEngineOptions["resolveValue"];
   #resolveValues?: SelectEngineOptions["resolveValues"];
@@ -268,7 +274,24 @@ export default class SelectOptionsView {
   }
 
   get valueItems(): SelectItem | SelectItem[] | undefined {
-    return this.#readValueItems?.() ?? this.#valueItems;
+    const items = this.#readValueItems?.() ?? this.#valueItems;
+    if (typeof items !== "function") {
+      return items;
+    }
+    // Built once per builder and options snapshot. The cache keeps tracking what the builder
+    // reads, so a change there rebuilds it even while the snapshot stays the same.
+    const options = this.#readResolvedOptions!();
+    let bySnapshot = this.#builtValueItems.get(items);
+    if (!bySnapshot) {
+      bySnapshot = new WeakMap();
+      this.#builtValueItems.set(items, bySnapshot);
+    }
+    let cache = bySnapshot.get(options);
+    if (!cache) {
+      cache = createCache(() => items(options));
+      bySnapshot.set(options, cache);
+    }
+    return getValue(cache);
   }
 
   get allowCreate(): SelectEngineOptions["allowCreate"] {

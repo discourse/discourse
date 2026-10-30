@@ -2164,6 +2164,28 @@ RSpec.describe TagsController do
                          SiteSetting.max_tag_search_results
       end
 
+      it "counts the required group's remaining tags from the held ones" do
+        member = Fabricate(:tag)
+        other_member = Fabricate(:tag)
+        unrelated = Fabricate(:tag)
+        tag_group = Fabricate(:tag_group, tags: [member, other_member, Fabricate(:tag)])
+        crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 2)
+        category = Fabricate(:category, category_required_tag_groups: [crtg])
+
+        get "/tags/filter/search.json",
+            params: {
+              q: "",
+              categoryId: category.id,
+              filterForInput: true,
+              selected_tag_ids: [member.id, unrelated.id],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["required_tag_group"]).to eq(
+          { "name" => tag_group.name, "min_count" => 2, "remaining_count" => 1 },
+        )
+      end
+
       it "includes required tag group information" do
         tag1 = Fabricate(:tag)
         tag2 = Fabricate(:tag)
@@ -2184,7 +2206,7 @@ RSpec.describe TagsController do
           tag2.name,
         )
         expect(response.parsed_body["required_tag_group"]).to eq(
-          { "name" => tag_group.name, "min_count" => crtg.min_count },
+          { "name" => tag_group.name, "min_count" => crtg.min_count, "remaining_count" => 1 },
         )
 
         get "/tags/filter/search.json",

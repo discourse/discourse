@@ -6,12 +6,15 @@ import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
 import DSelect from "discourse/ui-kit/select/d-select";
-import type {
-  SelectControl,
-  SelectItem,
-  SelectLoadOptions,
-  SelectSnapshot,
-  SelectValue,
+import {
+  renderSelectText,
+  type SelectControl,
+  type SelectItem,
+  type SelectLoadOptions,
+  type SelectResolvedOptions,
+  type SelectSnapshot,
+  type SelectTexts,
+  type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import { CategoryBadge, categoryItem } from "./category-renderers.gts";
@@ -42,6 +45,8 @@ interface DSelectCategorySignature {
     | "instanceContext"
     | "legacyKind"
     | "noneLabel"
+    | "noneRow"
+    | "texts"
   > & {
     /** Held ids, numeric strings or category records. */
     value?: CategoryValue | readonly CategoryValue[] | null;
@@ -98,6 +103,25 @@ interface DSelectCategorySignature {
 export default class DSelectCategory extends Component<DSelectCategorySignature> {
   @service declare siteSettings: CategorySettings;
 
+  /**
+   * The recipe's texts. The name is the only one the control is announced by; the placeholder is
+   * only drawn, and multiple pickers keep the select's own.
+   */
+  kindTexts: SelectTexts = {
+    ariaLabel: (_values, context) =>
+      context.multiple && this.args.maximum !== 1
+        ? i18n("categories.categories")
+        : i18n("categories.category"),
+    placeholder: (_values, context) =>
+      context.multiple ? undefined : this.#singlePlaceholder,
+    readOnlyDescription: { key: "category_row.read_only_description" },
+    // The badge draws no count of zero, so neither does the label.
+    familyFooter: ({ category, count }) =>
+      count
+        ? i18n("category.select_with_subcategories_count", { category, count })
+        : i18n("category.select_with_subcategories", { category }),
+  };
+
   get legacyKind() {
     if (this.args.legacyKind) {
       return this.args.legacyKind;
@@ -126,21 +150,28 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
-  /** The control's name when the caller gives none; the placeholder is only drawn. */
-  get ariaLabel() {
-    if (this.args.ariaLabel) {
-      return this.args.ariaLabel;
+  /** The call site's texts, under which the old text arguments still apply. */
+  get texts(): SelectTexts | undefined {
+    const { ariaLabel, placeholder, noneLabel, texts } = this.args;
+    if (!ariaLabel && !placeholder && !noneLabel) {
+      return texts;
     }
-    return this.args.multiple && this.args.maximum !== 1
-      ? i18n("categories.categories")
-      : i18n("categories.category");
+    return {
+      ariaLabel: ariaLabel || undefined,
+      placeholder: placeholder || undefined,
+      noneLabel: noneLabel || undefined,
+      ...Object.fromEntries(
+        Object.entries(texts ?? {}).filter(([, text]) => text != null)
+      ),
+    };
   }
 
-  get placeholder() {
-    // The fallback ports the single chooser's empty header; multiple pickers keep the select's own.
-    if (this.args.placeholder || this.args.multiple) {
-      return this.args.placeholder;
-    }
+  get noneRow() {
+    return this.args.noneRow ?? !!this.args.noneLabel;
+  }
+
+  /** Ports the single chooser's empty header. */
+  get #singlePlaceholder() {
     return (
       (!this.#disabledIds.length && this.#uncategorized
         ? Category.findUncategorized()?.name
@@ -200,18 +231,22 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return records.map((category) => categoryItem(category));
   }
 
+  /** In multiple mode the select draws no none row of its own, so the recipe adds it. */
   @action
-  specialItems(snapshot: SelectSnapshot): CategoryItem[] {
+  specialItems(
+    snapshot: SelectSnapshot,
+    options: SelectResolvedOptions
+  ): CategoryItem[] {
     const rows: CategoryItem[] = [];
-    if (this.args.multiple && this.args.noneLabel && !snapshot.filter) {
+    if (this.args.multiple && options.noneRow && !snapshot.filter) {
       rows.push({
         id: "category-none",
-        name: this.args.noneLabel,
+        name: renderSelectText(options, "noneLabel"),
         onSelect: (control) => control.clear(),
       });
     }
     if (!this.args.load) {
-      rows.push(...this.#pinned(snapshot.filter));
+      rows.push(...this.#pinned(snapshot.filter, options));
     }
     return rows;
   }
@@ -221,7 +256,11 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
    * when the key category's row is shown, so it never acts on a family the search did not show.
    */
   @action
-  groupFooter(key: unknown, rows: readonly SelectItem[]): CategoryItem | null {
+  groupFooter(
+    key: unknown,
+    rows: readonly SelectItem[],
+    options: SelectResolvedOptions
+  ): CategoryItem | null {
     const row = key == null ? undefined : rows.find((item) => item.id === key);
     const category = (row as CategoryItem | undefined)?.category;
     if (!category || row!.disabled) {
@@ -229,7 +268,11 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     }
     return {
       id: `category-descendants-${category.id}`,
-      name: this.#footerLabel(category),
+      // Names the category's own topic count, as the badge it draws shows it.
+      name: renderSelectText(options, "familyFooter", {
+        category: category.displayName,
+        count: category.topic_count,
+      }),
       category,
       onSelect: (control) => this.#selectFamily(control, category),
     };
@@ -269,7 +312,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
    * while browsing. Disabled categories are excluded from the search, so they are always
    * offered as pinned rows whenever they match, and are never grouped or given a footer.
    */
-  #pinned(query: string): CategoryItem[] {
+  #pinned(query: string, options: SelectResolvedOptions): CategoryItem[] {
     const root = query ? undefined : this.#familyId(this.args.scope);
     const roots = Category.findByIds(root == null ? [] : [root]).filter(
       this.#categoryAllowed()
@@ -278,7 +321,8 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       Category.matchesSearch(category, query)
     );
     const descriptions = this.args.descriptions ?? !this.args.multiple;
-    const readOnlyDescription = i18n("category_row.read_only_description");
+    const readOnlyDescription =
+      renderSelectText(options, "readOnlyDescription") || undefined;
     return [...new Set([...roots, ...disabled])].map((category) => {
       const row = categoryItem(category, descriptions);
       if (disabled.includes(category)) {
@@ -340,22 +384,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
-  /**
-   * The footer names its category's own topic count, as the badge it draws shows it. The badge
-   * draws no count of zero, so neither does the label.
-   */
-  #footerLabel(category: Category) {
-    const count = category.topic_count;
-    return count
-      ? i18n("category.select_with_subcategories_count", {
-          category: category.displayName,
-          count,
-        })
-      : i18n("category.select_with_subcategories", {
-          category: category.displayName,
-        });
-  }
-
   #selectFamily(control: SelectControl, category: Category) {
     void control.update(async (scope) => {
       const descendants: Category[] =
@@ -373,7 +401,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   <template>
     <DSelect
       ...attributes
-      @ariaLabel={{this.ariaLabel}}
       @ariaLabelledBy={{@ariaLabelledBy}}
       @clearable={{@clearable}}
       @describedBy={{@describedBy}}
@@ -393,18 +420,19 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
         scope=@scope
         exclude=@exclude
       }}
+      @kindTexts={{this.kindTexts}}
       @legacyKind={{this.legacyKind}}
       @load={{if @load @load this.load}}
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @multiple={{@multiple}}
-      @noneLabel={{@noneLabel}}
+      @noneRow={{this.noneRow}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}
-      @placeholder={{this.placeholder}}
       @resolveValues={{this.resolveValues}}
       @specialItems={{this.specialItems}}
       @suppressFooter={{not (has-block "footer")}}
+      @texts={{this.texts}}
       @value={{this.selectedIds}}
       @variant={{@variant}}
     >

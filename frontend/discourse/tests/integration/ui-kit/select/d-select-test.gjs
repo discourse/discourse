@@ -33,7 +33,9 @@ import {
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import SelectItem from "discourse/ui-kit/select/-internals/parts/select-item";
 import DSelect from "discourse/ui-kit/select/d-select";
-import SelectEngine from "discourse/ui-kit/select/select-engine";
+import SelectEngine, {
+  renderSelectText,
+} from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
@@ -4624,6 +4626,63 @@ module(
       );
 
       assert.dom(".d-select__input").hasAttribute("placeholder", "Legacy!");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (@valueItems builder)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("a builder receives the resolved options, so a held label follows a customized text", async function (assert) {
+      const label = tracked("No fruit");
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forIdentifier("held-builder", (spec) =>
+            spec.options(() => ({ texts: { heldName: label.value } }))
+          )
+        )
+      );
+      const kindTexts = { heldName: "none" };
+      const calls = [];
+      const valueItems = (options) => {
+        calls.push(options);
+        return [{ id: "none", name: renderSelectText(options, "heldName") }];
+      };
+      await render(
+        <template>
+          <DSelect
+            @identifier="held-builder"
+            @items={{ITEMS}}
+            @kind="held-builder-kind"
+            @kindTexts={{kindTexts}}
+            @value="none"
+            @valueItems={{valueItems}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__trigger").hasAttribute("data-name", "No fruit");
+      const built = calls.length;
+
+      await click(".d-select__trigger");
+      await click(".d-select__trigger");
+      assert.strictEqual(
+        calls.length,
+        built,
+        "an unchanged snapshot reuses the built items"
+      );
+
+      label.value = "Nothing picked";
+      await settled();
+      assert
+        .dom(".d-select__trigger")
+        .hasAttribute(
+          "data-name",
+          "Nothing picked",
+          "a changed text rebuilds the held item"
+        );
     });
   }
 );

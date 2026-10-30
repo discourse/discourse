@@ -170,6 +170,43 @@ module(
       });
     });
 
+    module("texts", function () {
+      test("the placeholder defaults to tag groups, and @texts or a customization replaces it", async function (assert) {
+        stubGroupSearch();
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forIdentifier("custom-groups", (spec) =>
+              spec.options(() => ({ texts: { placeholder: "Any group" } }))
+            )
+          )
+        );
+
+        await render(
+          <template>
+            <div class="default"><DSelectTagGroup @multiple={{true}} /></div>
+            <div class="call-site"><DSelectTagGroup
+                @multiple={{true}}
+                @texts={{hash placeholder="Pick groups"}}
+              /></div>
+            <div class="custom"><DSelectTagGroup
+                @identifier="custom-groups"
+                @multiple={{true}}
+              /></div>
+          </template>
+        );
+
+        assert
+          .dom(".default [role='combobox']")
+          .hasAttribute("placeholder", i18n("category.tag_groups_placeholder"));
+        assert
+          .dom(".call-site [role='combobox']")
+          .hasAttribute("placeholder", "Pick groups");
+        assert
+          .dom(".custom [role='combobox']")
+          .hasAttribute("placeholder", "Any group");
+      });
+    });
+
     module("local items and blocks", function (nestedHooks) {
       nestedHooks.beforeEach(function () {
         resetTagSourceCache();

@@ -9,9 +9,14 @@ import DSelect from "discourse/ui-kit/select/d-select";
 import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
   SelectLoadOptions,
+  SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
+
+/** The group picker's texts. */
+const TAG_GROUP_TEXTS: SelectTexts = Object.freeze({
+  placeholder: { key: "category.tag_groups_placeholder" },
+});
 
 /** Engine arguments shared by group chooser callers. */
 type SelectSignature =
@@ -32,6 +37,8 @@ interface DSelectTagGroupSignature {
     maximum?: number | false;
     /** Translated placeholder for an empty selection. */
     placeholder?: string;
+    /** The picker's texts, over its defaults. */
+    texts?: SelectSignature["Args"]["texts"];
     /** Trigger presentation. */
     variant?: SelectSignature["Args"]["variant"];
     /** Maximum visible chips before the count badge. */
@@ -69,6 +76,8 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     max_tag_search_results: number;
   };
 
+  kindTexts = TAG_GROUP_TEXTS;
+
   get selectionValue() {
     return this.args.multiple ? this.#value : (this.#value[0] ?? null);
   }
@@ -90,6 +99,21 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
 
   get valueItems() {
     return this.#value.map((name) => ({ id: name, name }));
+  }
+
+  /** The call site's texts, under which the old text arguments still apply. */
+  get texts(): SelectTexts | undefined {
+    const { ariaLabel, placeholder, texts } = this.args;
+    if (!ariaLabel && !placeholder) {
+      return texts;
+    }
+    return {
+      ariaLabel: ariaLabel || undefined,
+      placeholder: placeholder || undefined,
+      ...Object.fromEntries(
+        Object.entries(texts ?? {}).filter(([, text]) => text != null)
+      ),
+    };
   }
 
   get #value() {
@@ -128,7 +152,6 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     {{! TODO (select-kit-replacement-cleanup): Retain the legacy family classes during rollout. }}
     <DSelect
       ...attributes
-      @ariaLabel={{@ariaLabel}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @icon={{@icon}}
@@ -139,6 +162,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @items={{@items}}
       @kind="select-tag-group"
       @kindContext={{hash value=@value}}
+      @kindTexts={{this.kindTexts}}
       @labelField="name"
       @legacyKind={{this.legacyKind}}
       @load={{this.sourceLoad}}
@@ -147,12 +171,8 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
-      @placeholder={{if
-        @placeholder
-        @placeholder
-        (i18n "category.tag_groups_placeholder")
-      }}
       @suppressFooter={{not (has-block "footer")}}
+      @texts={{this.texts}}
       @value={{this.selectionValue}}
       @valueItems={{this.valueItems}}
       @variant={{@variant}}

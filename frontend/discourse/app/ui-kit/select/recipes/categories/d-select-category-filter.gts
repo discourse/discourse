@@ -7,12 +7,15 @@ import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import type User from "discourse/models/user";
 import DSelect from "discourse/ui-kit/select/d-select";
-import type {
-  SelectItem,
-  SelectLoadOptions,
-  SelectLoadResult,
-  SelectSnapshot,
-  SelectValue,
+import {
+  renderSelectText,
+  type SelectItem,
+  type SelectLoadOptions,
+  type SelectLoadResult,
+  type SelectResolvedOptions,
+  type SelectSnapshot,
+  type SelectTexts,
+  type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import { CategoryBadge, categoryItem } from "./category-renderers.gts";
@@ -55,6 +58,11 @@ interface DSelectCategoryFilterSignature {
     ariaLabel?: string;
     /** Text for an empty level; defaults to the level's name. */
     placeholder?: string;
+    /**
+     * The drop's texts, over the recipe's: `ariaLabel` and `placeholder` default to the level's
+     * name, and `removeFilter` and `noSubcategories` name the shortcuts.
+     */
+    texts?: SelectSignature["Args"]["texts"];
     /** Receives a site category or a shortcut; never navigates. */
     onChange?: (
       value: Category | typeof ALL_CATEGORIES_ID | typeof NO_CATEGORIES_ID
@@ -75,52 +83,53 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   @service declare currentUser: User | null;
   @service declare siteSettings: CategorySettings;
 
-  get ariaLabel() {
-    return (
-      this.args.ariaLabel ||
+  /** The recipe's texts; the name and the empty text follow the level being browsed. */
+  kindTexts: SelectTexts = {
+    ariaLabel: () =>
       i18n(
         this.args.parentCategory
           ? "categories.filter_by_subcategories_label"
           : "categories.filter_by_categories_label"
-      )
-    );
-  }
-
-  get placeholder() {
-    return (
-      this.args.placeholder ??
+      ),
+    placeholder: () =>
       i18n(
         this.args.parentCategory
           ? "categories.subcategories_label"
           : "categories.categories_label"
-      )
-    );
+      ),
+    removeFilter: { key: "categories.remove_filter" },
+    noSubcategories: { key: "categories.no_subcategories" },
+  };
+
+  /** The call site's texts, under which the old text arguments still apply. */
+  get texts(): SelectTexts | undefined {
+    const { ariaLabel, placeholder, texts } = this.args;
+    if (!ariaLabel && !placeholder) {
+      return texts;
+    }
+    return {
+      ariaLabel: ariaLabel || undefined,
+      placeholder: placeholder || undefined,
+      ...Object.fromEntries(
+        Object.entries(texts ?? {}).filter(([, text]) => text != null)
+      ),
+    };
   }
 
   get filtering() {
-    return !!this.selection;
+    return this.heldId !== undefined;
   }
 
   /** The held filter. An empty level and the "all" shortcut hold nothing, so the placeholder shows. */
-  get selection(): CategoryItem | undefined {
+  get heldId(): number | string | undefined {
     const value = this.args.value;
     if (
       value === NO_CATEGORIES_ID ||
       (value == null && this.args.noSubcategories)
     ) {
-      return {
-        id: NO_CATEGORIES_ID,
-        name: i18n("categories.no_subcategories"),
-      };
+      return NO_CATEGORIES_ID;
     }
-    if (typeof value !== "object" || !value) {
-      return;
-    }
-    const category: Category | undefined = Category.findById(value.id);
-    if (category) {
-      return categoryItem(category);
-    }
-    return { id: value.id!, name: value.name ?? "" };
+    return typeof value === "object" && value ? value.id! : undefined;
   }
 
   get #uncategorized() {
@@ -157,6 +166,21 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     };
   }
 
+  /** The held filter's row, built from the options so a customized shortcut name reaches it. */
+  @action
+  valueItems(options: SelectResolvedOptions): CategoryItem[] {
+    const id = this.heldId;
+    if (id === NO_CATEGORIES_ID) {
+      return [{ id, name: renderSelectText(options, "noSubcategories") }];
+    }
+    const value = this.args.value;
+    if (id === undefined || typeof value !== "object" || !value) {
+      return [];
+    }
+    const category: Category | undefined = Category.findById(id);
+    return [category ? categoryItem(category) : { id, name: value.name ?? "" }];
+  }
+
   /**
    * Browses and searches through the shared category search. It leaves out what the user mutes
    * only through a parent, the set the navigation drops from its own category list.
@@ -189,8 +213,8 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
 
   /** Shortcuts lead the level while browsing and are left out of searches. */
   @action
-  specialItems(snapshot: SelectSnapshot) {
-    return this.#shortcuts(snapshot.filter);
+  specialItems(snapshot: SelectSnapshot, options: SelectResolvedOptions) {
+    return this.#shortcuts(snapshot.filter, options);
   }
 
   /**
@@ -218,22 +242,22 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     }
   }
 
-  #shortcuts(query: string): CategoryItem[] {
+  #shortcuts(query: string, options: SelectResolvedOptions): CategoryItem[] {
     if (query) {
       return [];
     }
     const shortcuts: CategoryItem[] = [];
-    const held = this.selection?.id;
+    const held = this.heldId;
     if (held !== undefined && !this.args.editing) {
       shortcuts.push({
         id: ALL_CATEGORIES_ID,
-        name: i18n("categories.remove_filter"),
+        name: renderSelectText(options, "removeFilter"),
       });
     }
     if (this.args.parentCategory && held !== NO_CATEGORIES_ID) {
       shortcuts.push({
         id: NO_CATEGORIES_ID,
-        name: i18n("categories.no_subcategories"),
+        name: renderSelectText(options, "noSubcategories"),
       });
     }
     return shortcuts;
@@ -243,20 +267,20 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     <DSelect
       class={{if this.filtering "category-drop --filtering" "category-drop"}}
       ...attributes
-      @ariaLabel={{this.ariaLabel}}
       @caretIcon={{hash closed="angle-right" open="angle-down"}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @kind="select-category-filter"
       @kindContext={{hash value=@value parentCategory=@parentCategory}}
+      @kindTexts={{this.kindTexts}}
       @legacyKind={{if @legacyKind @legacyKind "category-drop"}}
       @load={{this.load}}
       @loadContext={{this.loadContext}}
       @onChange={{this.onChange}}
-      @placeholder={{this.placeholder}}
       @specialItems={{this.specialItems}}
-      @value={{this.selection.id}}
-      @valueItems={{this.selection}}
+      @texts={{this.texts}}
+      @value={{this.heldId}}
+      @valueItems={{this.valueItems}}
       @variant="button"
     >
       <:item as |item options|>

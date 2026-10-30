@@ -8,11 +8,16 @@ import {
   TagSelection,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 
-/** Arguments of `DSelectTag`, the shared tag base minus the kind it fixes. */
+/** Arguments of `DSelectTag`, the shared tag base minus what only a recipe built on it sets. */
 interface DSelectTagSignature extends Omit<SelectTagBaseSignature, "Args"> {
   Args: Omit<
     SelectTagBaseSignature["Args"],
-    "kind" | "kindContext" | "kindOptions" | "suppressFooter"
+    | "kind"
+    | "kindContext"
+    | "kindOptions"
+    | "kindTexts"
+    | "requirementPlaceholders"
+    | "suppressFooter"
   >;
 }
 
@@ -48,6 +53,7 @@ const DSelectTag: TemplateOnlyComponent<DSelectTagSignature> = <template>
     @placeholder={{@placeholder}}
     @suggestRecent={{@suggestRecent}}
     @suppressFooter={{not (has-block "footer")}}
+    @texts={{@texts}}
     @value={{@value}}
     @variant={{@variant}}
   >
@@ -55,7 +61,7 @@ const DSelectTag: TemplateOnlyComponent<DSelectTagSignature> = <template>
       {{#if (has-block "item")}}
         {{yield item options to="item"}}
       {{else}}
-        <TagOption @item={{item}} />
+        <TagOption @item={{item}} @options={{options}} />
       {{/if}}
     </:item>
     <:selection as |item options|>

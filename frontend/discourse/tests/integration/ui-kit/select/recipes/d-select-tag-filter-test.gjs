@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import {
   click,
@@ -477,6 +478,156 @@ module(
 
         assert.notStrictEqual(optionNamed("local-one"), undefined);
         assert.strictEqual(requests.length, 0, "no search request");
+      });
+    });
+
+    module("texts", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        resetTagSourceCache();
+        this.siteSettings.tagging_enabled = true;
+        this.siteSettings.max_tags_per_topic = 5;
+        this.siteSettings.max_tags_in_filter_list = 30;
+        this.siteSettings.max_tag_search_results = 5;
+        this.site.set("top_tags", TOP_TAGS);
+      });
+
+      test("@texts names the filter and sets its empty text, in both modes", async function (assert) {
+        stubSearch();
+        const held = [];
+
+        await render(
+          <template>
+            <div class="single"><DSelectTagFilter
+                @texts={{hash ariaLabel="Narrow topics" placeholder="any tag"}}
+              /></div>
+            <div class="multiple"><DSelectTagFilter
+                @multiple={{true}}
+                @texts={{hash ariaLabel="Narrow topics" placeholder="any tag"}}
+                @value={{held}}
+              /></div>
+          </template>
+        );
+
+        assert.dom(".single .d-select").hasAria("label", "Narrow topics");
+        assert.dom(".single .d-select__placeholder").hasText("any tag");
+        assert
+          .dom(".multiple [role='combobox']")
+          .hasAria("label", "Narrow topics")
+          .hasAttribute("placeholder", "any tag");
+      });
+
+      test("a customization renames the shortcuts, held or listed", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-tag-filter", (spec) =>
+              spec.options(() => ({
+                texts: { removeFilter: "Show everything", noTags: "Untagged" },
+              }))
+            )
+          )
+        );
+        const tag = { id: 1, name: "alpha", slug: "alpha" };
+
+        await render(
+          <template>
+            <div class="untagged"><DSelectTagFilter
+                @value={{NO_TAG_ID}}
+              /></div>
+            <div class="tagged"><DSelectTagFilter @value={{tag}} /></div>
+          </template>
+        );
+
+        assert
+          .dom(".untagged .d-select")
+          .hasAttribute("data-name", "Untagged", "the held shortcut");
+        await click(".tagged .d-select__trigger");
+        assert.dom(optionNamed("Show everything")).exists();
+        assert.dom(optionNamed("Untagged")).exists();
+      });
+
+      test("a customization rewords the hint for more tags", async function (assert) {
+        this.siteSettings.max_tags_in_filter_list = 1;
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-tag-filter", (spec) =>
+              spec.options(() => ({
+                texts: { filterForMore: "Type to find more" },
+              }))
+            )
+          )
+        );
+
+        await render(<template><DSelectTagFilter /></template>);
+        await click(".d-select__trigger");
+
+        assert.dom(".d-select__footer").hasText("Type to find more");
+      });
+
+      test("a multiple filter keeps its own prompt in a category with an unmet required group", async function (assert) {
+        stubSearch(ROWS, {
+          required_tag_group: {
+            name: "Platform",
+            min_count: 2,
+            remaining_count: 2,
+          },
+        });
+        const empty = [];
+        const held = [{ id: 1, name: "bug" }];
+
+        await render(
+          <template>
+            <div class="empty"><DSelectTagFilter
+                @categoryId={{7}}
+                @multiple={{true}}
+                @value={{empty}}
+              /></div>
+            <div class="held"><DSelectTagFilter
+                @categoryId={{7}}
+                @multiple={{true}}
+                @value={{held}}
+              /></div>
+          </template>
+        );
+        await new SelectDriver(".empty .d-select").open();
+        await new SelectDriver(".empty .d-select").close();
+        await new SelectDriver(".held .d-select").open();
+
+        assert
+          .dom(".empty [role='combobox']")
+          .hasAttribute("placeholder", i18n("tagging.selector_tags"));
+        assert
+          .dom(".held [role='combobox']")
+          .hasAttribute("placeholder", i18n("tagging.add_more_tags"));
+      });
+
+      test("a kind customization reaches the tag counts in both modes", async function (assert) {
+        stubSearch();
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-tag-filter", (spec) =>
+              spec.options(() => ({
+                texts: { tagCount: ({ count }) => `${count} uses` },
+              }))
+            )
+          )
+        );
+        const held = [];
+
+        await render(
+          <template>
+            <div class="single"><DSelectTagFilter /></div>
+            <div class="multiple"><DSelectTagFilter
+                @multiple={{true}}
+                @value={{held}}
+              /></div>
+          </template>
+        );
+        await click(".single .d-select__trigger");
+        assert.dom(".sr-only", optionNamed("alpha")).hasText("5 uses");
+        await new SelectDriver(".single .d-select").close();
+
+        await new SelectDriver(".multiple .d-select").open();
+        assert.dom(".sr-only", optionNamed("bug")).hasText("4 uses");
       });
     });
 

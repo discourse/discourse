@@ -24,6 +24,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import { paste as pasteTags } from "discourse/tests/helpers/qunit-helpers";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import { renderSelectText } from "discourse/ui-kit/select/select-engine";
 import I18n, { i18n } from "discourse-i18n";
 
 const ROWS = [
@@ -46,6 +47,41 @@ function stubSearch(rows = ROWS, extra = {}) {
     });
   });
   return requests;
+}
+
+/** The tag field's prompt, or `null` while it shows none. */
+function prompt() {
+  return find(".d-select__input").getAttribute("placeholder");
+}
+
+/**
+ * Stubs tag search with a required group of tags 1 and 2, reported only while fewer than
+ * `min` of them are held, as the server does. With `blankOnly`, only a blank term reports it.
+ */
+function stubRequiredGroup({ min = 2, blankOnly = false } = {}) {
+  pretender.get("/tags/list.json", () => response({ list_tags: [] }));
+  pretender.get("/tags/filter/search", (request) => {
+    const q = request.queryParams.q ?? "";
+    const selected = [].concat(
+      request.queryParams.selected_tag_ids ??
+        request.queryParams["selected_tag_ids[]"] ??
+        []
+    );
+    const remaining =
+      min - selected.filter((id) => id === "1" || id === "2").length;
+    return response({
+      results: ROWS.filter((row) => row.name.includes(q)),
+      ...(remaining > 0 && (!blankOnly || !q)
+        ? {
+            required_tag_group: {
+              name: "Platform",
+              min_count: min,
+              remaining_count: remaining,
+            },
+          }
+        : {}),
+    });
+  });
 }
 
 /** The option whose text includes `text`. */
@@ -676,7 +712,7 @@ module(
         );
       });
 
-      test("a minimum shows as persistent guidance", async function (assert) {
+      test("a minimum shows in the field's placeholder, with nothing drawn outside it", async function (assert) {
         await render(
           <template>
             <DSelectTag
@@ -688,19 +724,15 @@ module(
           </template>
         );
 
-        const input = find("[role='combobox']");
-        const described = (input.getAttribute("aria-describedby") ?? "")
-          .split(/\s+/)
-          .map((id) => document.getElementById(id)?.textContent.trim() ?? "")
-          .join(" ");
-        assert.true(
-          /2/.test(described),
-          `the requirement is described: ${described}`
+        assert.strictEqual(
+          prompt(),
+          i18n("tagging.choose_for_topic_required", { count: 2 })
         );
+        assert.dom("p").doesNotExist("no guidance below the field");
       });
     });
 
-    module("name resolution, guidance and blocks", function (nestedHooks) {
+    module("name resolution and blocks", function (nestedHooks) {
       nestedHooks.beforeEach(function () {
         resetTagSourceCache();
         this.site.set("can_create_tag", true);
@@ -986,12 +1018,18 @@ module(
         }
       });
 
-      test("required-group guidance persists through describedBy and follows category context", async function (assert) {
+      test("the required group leads the placeholder and follows the category", async function (assert) {
         pretender.get("/tags/filter/search", (request) =>
           response({
             results: [],
             ...(request.queryParams.categoryId === "7"
-              ? { required_tag_group: { name: "Required", min_count: 2 } }
+              ? {
+                  required_tag_group: {
+                    name: "Required",
+                    min_count: 2,
+                    remaining_count: 2,
+                  },
+                }
               : {}),
           })
         );
@@ -1009,25 +1047,21 @@ module(
         );
         const select = new DSelect();
         await select.open();
-        const id = find("[role='combobox']")
-          .getAttribute("aria-describedby")
-          .split(" ")
-          .find((part) => part.endsWith("-tag-guidance"));
-        assert.dom(`#${id}`).hasText(
+        assert.strictEqual(
+          prompt(),
           i18n("tagging.choose_for_topic_required_group", {
             count: 2,
             name: "Required",
           }),
-          "required group is persistent help"
+          "the required group comes first"
         );
         category.value = 8;
         await settled();
-        assert
-          .dom(`#${id}`)
-          .hasText(
-            i18n("tagging.choose_for_topic_required", { count: 1 }),
-            "old category guidance does not survive"
-          );
+        assert.strictEqual(
+          prompt(),
+          i18n("tagging.choose_for_topic_required", { count: 1 }),
+          "the old category's group does not survive"
+        );
       });
 
       test("forwards item, selection and footer blocks", async function (assert) {
@@ -1084,6 +1118,248 @@ module(
         assert
           .dom(".d-select__footer")
           .doesNotExist("no empty footer region below the list");
+      });
+    });
+
+    module("texts", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        resetTagSourceCache();
+        this.site.set("can_create_tag", true);
+        this.siteSettings.max_tags_per_topic = 5;
+        this.siteSettings.max_tag_search_results = 5;
+        this.siteSettings.max_tag_length = 20;
+      });
+
+      test("with tags held, the field counts the tags still needed, then invites more, then stops at the cap", async function (assert) {
+        stubSearch();
+        const held = tracked([{ id: 1, name: "bug" }]);
+
+        await render(
+          <template>
+            <DSelectTag
+              @maximum={{3}}
+              @minimum={{2}}
+              @multiple={{true}}
+              @value={{held.value}}
+            />
+          </template>
+        );
+        assert.strictEqual(
+          prompt(),
+          i18n("tagging.choose_more_required", { count: 1 })
+        );
+
+        held.value = [...held.value, { id: 2, name: "ui" }];
+        await settled();
+        assert.strictEqual(prompt(), i18n("tagging.add_more_tags"));
+
+        held.value = [...held.value, { id: 3, name: "perf" }];
+        await settled();
+        assert
+          .dom(".d-select__input")
+          .doesNotHaveAttribute("placeholder", "nothing at the cap");
+      });
+
+      test("a required group leads the field once a search reports it, and counts down from the server's count", async function (assert) {
+        stubRequiredGroup({ min: 2 });
+        const held = tracked([]);
+        const onChange = (tags) => (held.value = tags);
+
+        await render(
+          <template>
+            <DSelectTag
+              @minimum={{1}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held.value}}
+            />
+          </template>
+        );
+        assert.strictEqual(
+          prompt(),
+          i18n("tagging.choose_for_topic_required", { count: 1 }),
+          "the group is unknown until a search runs"
+        );
+
+        await new DSelect().open();
+        assert.strictEqual(
+          prompt(),
+          i18n("tagging.choose_for_topic_required_group", {
+            count: 2,
+            name: "Platform",
+          }),
+          "the search response alone updates the field"
+        );
+
+        await click(optionNamed("bug"));
+
+        assert.strictEqual(
+          prompt(),
+          i18n("tagging.choose_more_required_group", {
+            count: 1,
+            name: "Platform",
+          })
+        );
+      });
+
+      test("a typed search never replaces what the blank search reported", async function (assert) {
+        stubRequiredGroup({ blankOnly: true });
+
+        await render(<template><DSelectTag @multiple={{true}} /></template>);
+        const select = new DSelect();
+        await select.open();
+        const group = i18n("tagging.choose_for_topic_required_group", {
+          count: 2,
+          name: "Platform",
+        });
+        assert.strictEqual(prompt(), group);
+
+        await select.search("b");
+        assert.strictEqual(prompt(), group);
+      });
+
+      test("a call site's placeholder replaces only the prompt; the requirement stays ahead of it", async function (assert) {
+        stubSearch();
+        const minimum = tracked(undefined);
+        const texts = tracked({ placeholder: "Topic tags…" });
+
+        await render(
+          <template>
+            <DSelectTag
+              @minimum={{minimum.value}}
+              @multiple={{true}}
+              @texts={{texts.value}}
+            />
+          </template>
+        );
+        assert.strictEqual(prompt(), "Topic tags…");
+
+        minimum.value = 2;
+        await settled();
+        const required = i18n("tagging.choose_for_topic_required", {
+          count: 2,
+        });
+        assert.strictEqual(prompt(), required);
+
+        texts.value = { placeholder: "" };
+        await settled();
+        assert.strictEqual(prompt(), required, "an empty prompt keeps it");
+
+        texts.value = { minimumPlaceholder: "" };
+        await settled();
+        assert.strictEqual(
+          prompt(),
+          i18n("tagging.choose_for_topic"),
+          "an empty step hands over to the next"
+        );
+      });
+
+      test("a customization rewords each step of the chain", async function (assert) {
+        stubSearch();
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forIdentifier("composer-tags", (spec) =>
+              spec.options(() => ({
+                texts: {
+                  placeholder: "Customized…",
+                  minimumPlaceholder: ({ count }) => `Pick ${count}`,
+                },
+              }))
+            )
+          )
+        );
+        const minimum = tracked(2);
+
+        await render(
+          <template>
+            <DSelectTag
+              @identifier="composer-tags"
+              @minimum={{minimum.value}}
+              @multiple={{true}}
+            />
+          </template>
+        );
+        assert.strictEqual(prompt(), "Pick 2");
+
+        minimum.value = undefined;
+        await settled();
+        assert.strictEqual(prompt(), "Customized…");
+      });
+
+      test("the panel's minimum line counts progress, and the maximum speaks of tags", async function (assert) {
+        stubSearch();
+        const held = tracked([]);
+
+        await render(
+          <template>
+            <DSelectTag
+              @maximum={{2}}
+              @minimum={{2}}
+              @multiple={{true}}
+              @value={{held.value}}
+            />
+          </template>
+        );
+        await new DSelect().open();
+        assert
+          .dom(".d-select__limit")
+          .hasText(
+            i18n("tagging.required_tags_progress", { count: 2, selected: 0 })
+          );
+
+        held.value = [
+          { id: 1, name: "bug" },
+          { id: 2, name: "ui" },
+        ];
+        await settled();
+        assert
+          .dom(".d-select__limit")
+          .hasText(i18n("tagging.max_tags_reached", { count: 2 }));
+      });
+
+      test("a row's count and the create row take their texts from the options", async function (assert) {
+        stubSearch();
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-tag", (spec) =>
+              spec.options(() => ({
+                texts: {
+                  tagCountBadge: ({ count }) => `(${count})`,
+                  tagCount: ({ count }) => `${count} uses`,
+                  createItem: ({ label }) => `New tag ${label}`,
+                },
+              }))
+            )
+          )
+        );
+
+        await render(
+          <template>
+            <DSelectTag @allowCreate={{true}} @multiple={{true}} />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+        assert
+          .dom(".discourse-tag-count", optionNamed("bug"))
+          .hasText("(4)", "the drawn count");
+        assert
+          .dom(".sr-only", optionNamed("bug"))
+          .hasText("4 uses", "the spoken count");
+
+        await select.search("fresh");
+        assert.dom(optionNamed("New tag fresh")).exists("the create row");
+      });
+
+      test("at a zero tag cap the field keeps its prompt", async function (assert) {
+        stubSearch();
+        this.siteSettings.max_tags_per_topic = 0;
+
+        await render(
+          <template><DSelectTag @minimum={{1}} @multiple={{true}} /></template>
+        );
+
+        assert.strictEqual(prompt(), i18n("tagging.choose_for_topic"));
       });
     });
 
@@ -1552,7 +1828,7 @@ module(
             "functional sources match stored names"
           );
         assert.strictEqual(
-          items.lastCall.args[0].ariaLabel,
+          renderSelectText(items.lastCall.args[0], "ariaLabel"),
           "Functional tags",
           "resolved presentation options reach the source"
         );

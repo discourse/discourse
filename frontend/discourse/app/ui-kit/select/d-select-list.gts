@@ -30,6 +30,7 @@ import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowe
 import type {
   SelectDescriptor,
   SelectItem,
+  SelectKindTexts,
   SelectTexts,
   SelectTextWrapper,
 } from "discourse/ui-kit/select/select-engine";
@@ -106,10 +107,10 @@ interface DSelectListSignature {
      */
     texts?: SelectTexts;
     /**
-     * A recipe's texts: defaults for engine texts and its own. Requires `@kind`; the recipe's own
-     * keys are fixed at construction.
+     * A recipe's texts: defaults for engine texts and its own. A recipe built on another passes a
+     * list, lowest first. Requires `@kind`; the recipe's own keys are fixed at construction.
      */
-    kindTexts?: SelectTexts;
+    kindTexts?: SelectKindTexts;
     /**
      * A recipe's final say over a text, run once on the result of every layer. Requires `@kind`;
      * keys are fixed at construction, and texts that name a control can't be wrapped.

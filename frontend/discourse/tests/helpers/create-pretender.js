@@ -318,6 +318,7 @@ export function applyDefaultHandlers() {
       responseBody["required_tag_group"] = {
         name: "monkey group",
         min_count: 1,
+        remaining_count: 1,
       };
     }
 

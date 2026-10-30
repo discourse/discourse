@@ -9,8 +9,10 @@ import {
   DEFAULT_SELECT_TEXTS,
   forAllTextNotices,
   isCoreTextKey,
+  kindTextLayers,
   RECIPE_TEXT_KEYS,
   REQUIRED_SELECT_TEXTS,
+  type SelectKindTexts,
   SelectTextNotices,
   SelectTextResolver,
   selectTextResolver,
@@ -153,7 +155,7 @@ const UNWRAPPABLE_TEXTS = new Set([
 /** The text inputs of one resolution, read live by the engine. */
 export interface SelectTextInputs {
   /** The recipe's `@kindTexts`. */
-  kindTexts: SelectTexts | undefined;
+  kindTexts: SelectKindTexts | undefined;
   /** The call site's `@texts`. */
   texts: SelectTexts | undefined;
   /** The call site's old text arguments, by argument name. */
@@ -308,7 +310,7 @@ export default class SelectCustomizations {
     names: SelectNames,
     kindOptions?: Record<string, unknown>,
     textSchema: {
-      kindTexts?: SelectTexts;
+      kindTexts?: SelectKindTexts;
       kindTextWrappers?: Readonly<Record<string, unknown>>;
     } = {}
   ) {
@@ -333,9 +335,9 @@ export default class SelectCustomizations {
       );
     }
     this.#kindTextKeys = new Set(
-      Object.keys(textSchema.kindTexts ?? {}).filter(
-        (key) => !isCoreTextKey(key)
-      )
+      kindTextLayers(textSchema.kindTexts)
+        .flatMap((layer) => Object.keys(layer))
+        .filter((key) => !isCoreTextKey(key))
     );
     for (const key of this.#kindTextKeys) {
       const collision = Object.keys(DEFAULT_SELECT_TEXTS).find(
@@ -463,7 +465,9 @@ export default class SelectCustomizations {
     // Old arguments and option keys sit in their own layer just below their step's `texts`, so a
     // nullish entry there still leaves them in place and `text(ownKey)` reaches them.
     const layers: Array<Record<string, unknown>> = [
-      this.#kindTextLayer(textInputs.kindTexts),
+      ...kindTextLayers(textInputs.kindTexts).map((layer) =>
+        this.#kindTextLayer(layer)
+      ),
       this.#legacyLayer(textInputs.legacy, "argument"),
       this.#textLayer(textInputs.texts, "@texts"),
     ];

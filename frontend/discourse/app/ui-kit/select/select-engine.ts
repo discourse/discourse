@@ -23,6 +23,7 @@ import {
 } from "discourse/ui-kit/select/-internals/engine/select-sources";
 import {
   renderSelectText,
+  type SelectKindTexts,
   type SelectTexts,
   type SelectTextWrapper,
 } from "discourse/ui-kit/select/-internals/engine/select-texts";
@@ -40,12 +41,16 @@ import SelectionUpdates, {
 export {
   DEFAULT_SELECT_TEXTS,
   renderSelectText,
+  type SelectKindTexts,
   type SelectText,
   type SelectTextContext,
   type SelectTexts,
   type SelectTextValues,
   type SelectTextWrapper,
 } from "discourse/ui-kit/select/-internals/engine/select-texts";
+
+/** The frozen options snapshot recipes receive in their callbacks and blocks. */
+export type { SelectResolvedOptions };
 
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
@@ -354,6 +359,11 @@ export type SelectGroupBoundaryBuilder = (
  * non-reactive consumers. A component wires these to its live args; the engine re-applies
  * each default on read.
  */
+/** Builds the held items from the resolved options. */
+export type SelectValueItemsBuilder = (
+  options: SelectResolvedOptions
+) => SelectItem | SelectItem[];
+
 export interface SelectEngineOptions {
   /** Multi-select when true (drives value shape, chips, and close-on-select). */
   multiple?: boolean;
@@ -406,13 +416,14 @@ export interface SelectEngineOptions {
   getTexts?: () => SelectTexts | undefined;
 
   /**
-   * The recipe's texts: defaults for engine texts and the texts it declares. Its non-engine
-   * keys are fixed at construction. Requires `kind`.
+   * The recipe's texts: defaults for engine texts and the texts it declares. A recipe built on
+   * another passes a list, lowest first. Its non-engine keys are fixed at construction. Requires
+   * `kind`.
    */
-  kindTexts?: SelectTexts;
+  kindTexts?: SelectKindTexts;
 
   /** Live values for {@link kindTexts}; the initial keys declare the recipe's texts. */
-  getKindTexts?: () => SelectTexts | undefined;
+  getKindTexts?: () => SelectKindTexts | undefined;
 
   /**
    * The recipe's final say over a text, applied once to the result of every layer. Keys are fixed
@@ -426,7 +437,7 @@ export interface SelectEngineOptions {
     | undefined;
 
   /** Live reader for {@link valueItems}. */
-  getValueItems?: () => SelectItem | SelectItem[] | undefined;
+  getValueItems?: () => SelectEngineOptions["valueItems"];
 
   /** Live reader for {@link allowCreate}. */
   getAllowCreate?: () => SelectEngineOptions["allowCreate"];
@@ -564,8 +575,12 @@ export interface SelectEngineOptions {
    * loading them itself can hand them over when they land and every selection surface
    * refreshes. A resolver cannot do that: its outcome is cached, including the failure, and
    * only `reload()` retries it.
+   *
+   * A function receives the resolved options and returns the items, so a held item's name can
+   * come from a text (`renderSelectText(options, key)`). It is rebuilt when the options or what
+   * it reads change.
    */
-  valueItems?: SelectItem | SelectItem[];
+  valueItems?: SelectItem | SelectItem[] | SelectValueItemsBuilder;
 
   /**
    * `(value, { signal, options }) => item | Promise<item>`, used to resolve a value id to its

@@ -45,6 +45,22 @@ export type SelectTexts = Readonly<
   Record<string, SelectText | null | undefined>
 >;
 
+/**
+ * A recipe's texts: one layer, or a list of layers, lowest first, for a recipe built on another.
+ * Within the list, a function's own key reads the layer before it.
+ */
+export type SelectKindTexts = SelectTexts | readonly SelectTexts[];
+
+/** The layers of a recipe's texts, lowest first. */
+export function kindTextLayers(
+  kindTexts: SelectKindTexts | null | undefined
+): readonly SelectTexts[] {
+  if (!kindTexts) {
+    return [];
+  }
+  return Array.isArray(kindTexts) ? kindTexts : [kindTexts as SelectTexts];
+}
+
 /** Default translation key of each engine text, under `d_select`. */
 const LOCALE_KEYS = {
   addMorePlaceholder: "add_placeholder",

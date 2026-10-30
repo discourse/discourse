@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
@@ -177,6 +178,7 @@ class Host extends Component {
       @legacyKind={{@legacyKind}}
       @multiple={{@multiple}}
       @noneLabel={{@noneLabel}}
+      @noneRow={{@noneRow}}
       @onChange={{this.onChange}}
       @permission={{@permission}}
       @placeholder={{@placeholder}}
@@ -185,6 +187,7 @@ class Host extends Component {
       @selectDescendants={{@selectDescendants}}
       @showAncestors={{@showAncestors}}
       @subcategories={{@subcategories}}
+      @texts={{@texts}}
       @uncategorized={{@uncategorized}}
       @value={{this.value}}
     />
@@ -705,6 +708,161 @@ module(
         await triggerKeyEvent(filterInput(), "keydown", "Enter");
 
         assert.strictEqual(onChange.lastCall?.args[0], 1);
+      });
+    });
+
+    module("texts", function () {
+      test("@texts names the control and sets its prompt", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+
+        await render(
+          <template>
+            <Host
+              @multiple={{false}}
+              @texts={{hash ariaLabel="Destination" placeholder="Pick a home"}}
+            />
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find("[role='combobox']")),
+          "Destination"
+        );
+        assert.strictEqual(placeholderText(), "Pick a home");
+      });
+
+      test("a customization rewords the read-only note", async function (assert) {
+        Site.current().updateCategories([
+          { id: 9600, name: "Announcements", slug: "news", permission: null },
+        ]);
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-category", (spec) =>
+              spec.options(() => ({
+                texts: { readOnlyDescription: "Locked here" },
+              }))
+            )
+          )
+        );
+
+        await render(
+          <template>
+            <Host @disabledCategories={{9600}} @multiple={{false}} />
+          </template>
+        );
+        await select().open();
+
+        assert
+          .dom(".d-select__option-description", optionFor(9600))
+          .hasText("Locked here");
+      });
+
+      test("an empty read-only note leaves the description out", async function (assert) {
+        Site.current().updateCategories([
+          { id: 9600, name: "Announcements", slug: "news", permission: null },
+        ]);
+
+        await render(
+          <template>
+            <Host
+              @disabledCategories={{9600}}
+              @multiple={{false}}
+              @texts={{hash readOnlyDescription=""}}
+            />
+          </template>
+        );
+        await select().open();
+
+        assert.dom(optionFor(9600)).hasAttribute("aria-disabled", "true");
+        assert
+          .dom(".d-select__option-description", optionFor(9600))
+          .doesNotExist();
+      });
+
+      test("a customization rewords the family footer, given the category and its count", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+        const seen = [];
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-category", (spec) =>
+              spec.options(() => ({
+                texts: {
+                  familyFooter: (values) => {
+                    seen.push(values);
+                    return `Everything in ${values.category}`;
+                  },
+                },
+              }))
+            )
+          )
+        );
+
+        await render(<template><Host @multiple={{true}} /></template>);
+        await select().open();
+        await select().search("Parent Category");
+
+        assert.strictEqual(
+          accessibleName(find(".d-select__option.--action-footer")),
+          "Everything in Parent Category"
+        );
+        const category = Category.findById(1001);
+        assert.deepEqual(
+          seen.at(-1),
+          { category: category.displayName, count: category.topic_count },
+          "the values name the category and its own topic count"
+        );
+      });
+
+      test("@noneRow adds a row whose text a customization sets", async function (assert) {
+        const held = [1, 2];
+        const onChange = sinon.spy();
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-category", (spec) =>
+              spec.options(() => ({ texts: { noneLabel: "No category" } }))
+            )
+          )
+        );
+
+        await render(
+          <template>
+            <Host
+              @multiple={{true}}
+              @noneRow={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+        await select().open();
+        const row = findAll("[role='option']").find((option) =>
+          option.textContent.includes("No category")
+        );
+
+        assert.strictEqual(row?.dataset.value, "category-none");
+        await click(row);
+        assert.deepEqual(onChange.lastCall?.args[0], [], "it clears the value");
+      });
+
+      test("@noneRow in single mode clears through the select's own row", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <Host
+              @multiple={{false}}
+              @noneRow={{true}}
+              @onChange={{onChange}}
+              @texts={{hash noneLabel="No category"}}
+              @value={{2}}
+            />
+          </template>
+        );
+        await select().open();
+
+        assert.dom("[role='option'].--none").hasText("No category");
+        await click("[role='option'].--none");
+        assert.strictEqual(onChange.lastCall.args[0], null);
       });
     });
 

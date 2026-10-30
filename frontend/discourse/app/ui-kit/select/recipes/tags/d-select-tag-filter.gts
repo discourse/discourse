@@ -12,20 +12,25 @@ import {
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
 import DSelect from "discourse/ui-kit/select/d-select";
-import SelectTagBase from "discourse/ui-kit/select/recipes/tags/-internals/select-tag-base";
+import SelectTagBase, {
+  TAG_TEXTS,
+} from "discourse/ui-kit/select/recipes/tags/-internals/select-tag-base";
 import {
   tagItemName,
   TagOption,
   TagSelection,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
-import type {
-  SelectItem,
-  SelectLoadOptions,
-  SelectSnapshot,
-  SelectValue,
+import {
+  renderSelectText,
+  type SelectItem,
+  type SelectKindTexts,
+  type SelectLoadOptions,
+  type SelectResolvedOptions,
+  type SelectSnapshot,
+  type SelectTexts,
+  type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 /** Shortcut for clearing a tag filter. */
 export const ALL_TAGS_ID = "all-tags";
@@ -40,6 +45,18 @@ type FilterTag = SelectItem & {
   slug?: string;
   target_tag?: FilterTag;
 };
+
+/**
+ * The filter's texts. Both modes declare them, so a customization for the kind applies whatever
+ * `@multiple` is.
+ */
+const FILTER_TEXTS: SelectTexts = Object.freeze({
+  ariaLabel: { key: "tagging.filter_by_tags_label" },
+  placeholder: { key: "tagging.selector_tags" },
+  removeFilter: { key: "tagging.selector_remove_filter" },
+  noTags: { key: "tagging.selector_no_tags" },
+  filterForMore: { key: "select_kit.components.filter_for_more" },
+});
 
 /** Engine blocks and source overrides shared with callers. */
 type SelectSignature =
@@ -77,6 +94,11 @@ interface DSelectTagFilterSignature {
     ariaLabel?: string;
     /** Text shown while nothing is filtered. Defaults to "tags". */
     placeholder?: string;
+    /**
+     * The filter's texts, over its defaults: `removeFilter` and `noTags` name the shortcuts, and
+     * `filterForMore` hints that a search finds tags beyond the listed ones.
+     */
+    texts?: SelectSignature["Args"]["texts"];
     /** Prevent opening or selecting. */
     disabled?: boolean;
   };
@@ -106,12 +128,25 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   @tracked moreTags = false;
 
-  get ariaLabel() {
-    return this.args.ariaLabel || i18n("tagging.filter_by_tags_label");
-  }
+  /** The single drop's texts; it draws tag rows too, so it declares the tag texts as well. */
+  kindTexts: SelectKindTexts = [TAG_TEXTS, FILTER_TEXTS];
 
-  get placeholder() {
-    return this.args.placeholder ?? i18n("tagging.selector_tags");
+  /** The intersection filter's texts, above the tag field's. */
+  multipleKindTexts = FILTER_TEXTS;
+
+  /** The call site's texts, under which the old text arguments still apply. */
+  get texts(): SelectTexts | undefined {
+    const { ariaLabel, placeholder, texts } = this.args;
+    if (!ariaLabel && !placeholder) {
+      return texts;
+    }
+    return {
+      ariaLabel: ariaLabel || undefined,
+      placeholder: placeholder || undefined,
+      ...Object.fromEntries(
+        Object.entries(texts ?? {}).filter(([, text]) => text != null)
+      ),
+    };
   }
 
   get legacyKind() {
@@ -128,7 +163,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     const tag = this.#tag;
     const tagClass =
       tag && "slug" in tag && tag.slug ? `tag-${tag.slug}` : "tag_all";
-    return this.selection ? `${tagClass} --filtering` : tagClass;
+    return this.heldId !== undefined ? `${tagClass} --filtering` : tagClass;
   }
 
   get #tag(): FilterTag | undefined {
@@ -139,17 +174,16 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   /** The held filter. With no tag, or the "all tags" shortcut, it holds nothing, so the placeholder shows. */
-  get selection(): SelectItem | undefined {
+  get heldId(): number | string | undefined {
     const tag = this.#tag;
     if (
       this.args.value === NO_TAG_ID ||
       tag?.name === "none" ||
       tag?.name === NO_TAG_ID
     ) {
-      return { id: NO_TAG_ID, name: i18n("tagging.selector_no_tags") };
+      return NO_TAG_ID;
     }
-    // A tag model keeps its fields on getters, which a spread would drop.
-    return tag?.id ? tag : undefined;
+    return tag?.id || undefined;
   }
 
   get localItems() {
@@ -165,6 +199,17 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       categoryId: this.args.categoryId,
       items: this.args.items,
     };
+  }
+
+  /** The held filter's row, built from the options so a customized shortcut name reaches it. */
+  @action
+  valueItems(options: SelectResolvedOptions): SelectItem[] {
+    const id = this.heldId;
+    if (id === NO_TAG_ID) {
+      return [{ id, name: renderSelectText(options, "noTags") }];
+    }
+    // A tag model keeps its fields on getters, which a spread would drop.
+    return id === undefined ? [] : [this.#tag!];
   }
 
   isShortcut(item: SelectItem) {
@@ -206,19 +251,26 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   /** The shortcuts lead browsing and are left out of searches. */
   @action
-  specialItems(snapshot: SelectSnapshot): SelectItem[] {
+  specialItems(
+    snapshot: SelectSnapshot,
+    options: SelectResolvedOptions
+  ): SelectItem[] {
     if (snapshot.filter) {
       return [];
     }
     const shortcuts: SelectItem[] = [];
-    if (this.selection) {
+    const held = this.heldId;
+    if (held !== undefined) {
       shortcuts.push({
         id: ALL_TAGS_ID,
-        name: i18n("tagging.selector_remove_filter"),
+        name: renderSelectText(options, "removeFilter"),
       });
     }
-    if (this.selection?.id !== NO_TAG_ID) {
-      shortcuts.push({ id: NO_TAG_ID, name: i18n("tagging.selector_no_tags") });
+    if (held !== NO_TAG_ID) {
+      shortcuts.push({
+        id: NO_TAG_ID,
+        name: renderSelectText(options, "noTags"),
+      });
     }
     return shortcuts;
   }
@@ -252,7 +304,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     {{#if @multiple}}
       <SelectTagBase
         ...attributes
-        @ariaLabel={{this.ariaLabel}}
         @categoryId={{@categoryId}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}
@@ -260,19 +311,21 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @items={{this.localItems}}
         @kind="select-tag-filter"
         @kindContext={{hash value=@value categoryId=@categoryId}}
+        @kindTexts={{this.multipleKindTexts}}
         @legacyKind={{this.legacyKind}}
         @load={{@load}}
         @multiple={{true}}
         @onChange={{this.onMultipleChange}}
-        @placeholder={{this.placeholder}}
+        @requirementPlaceholders={{false}}
         @suppressFooter={{not (has-block "footer")}}
+        @texts={{this.texts}}
         @value={{this.multipleValue}}
       >
         <:item as |item options|>
           {{#if (has-block "item")}}
             {{yield item options to="item"}}
           {{else}}
-            <TagOption @item={{item}} />
+            <TagOption @item={{item}} @options={{options}} />
           {{/if}}
         </:item>
         <:selection as |item options|>
@@ -291,24 +344,24 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       <DSelect
         class={{this.rootClass}}
         ...attributes
-        @ariaLabel={{this.ariaLabel}}
         @caretIcon={{hash closed="angle-right" open="angle-down"}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}
         @instanceContext={{@instanceContext}}
         @kind="select-tag-filter"
         @kindContext={{hash value=@value categoryId=@categoryId}}
+        @kindTexts={{this.kindTexts}}
         @labelField="name"
         @legacyKind={{this.legacyKind}}
         @load={{if @load @load this.load}}
         @loadContext={{this.loadContext}}
         @onChange={{this.onChange}}
-        @placeholder={{this.placeholder}}
         @searchIcon="magnifying-glass"
         @specialItems={{this.specialItems}}
         @suppressFooter={{not (or (has-block "footer") this.moreTags)}}
-        @value={{this.selection.id}}
-        @valueItems={{this.selection}}
+        @texts={{this.texts}}
+        @value={{this.heldId}}
+        @valueItems={{this.valueItems}}
         @variant="button"
       >
         <:item as |item options|>
@@ -317,7 +370,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
           {{else if (this.isShortcut item)}}
             <span class="d-tag-drop__shortcut">{{tagItemName item}}</span>
           {{else}}
-            <TagOption @item={{item}} />
+            <TagOption @item={{item}} @options={{options}} />
           {{/if}}
         </:item>
         <:selection as |item options|>
@@ -334,9 +387,13 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
           {{#if (has-block "footer")}}
             {{yield state options to="footer"}}
           {{else if this.moreTags}}
-            <span class="d-tag-drop__filter-for-more">
-              {{~i18n "select_kit.components.filter_for_more"~}}
-            </span>
+            {{#let (renderSelectText options "filterForMore") as |hint|}}
+              {{#if hint}}
+                <span class="d-tag-drop__filter-for-more">
+                  {{~hint~}}
+                </span>
+              {{/if}}
+            {{/let}}
           {{/if}}
         </:footer>
       </DSelect>
