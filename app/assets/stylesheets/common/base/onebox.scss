@@ -6,6 +6,7 @@
 }
 
 @mixin onebox-shadow($thickness) {
+  $thickness: var(--onebox-shadow-width, #{$thickness});
   border: 0;
   margin-inline: $thickness;
   box-shadow:
@@ -426,17 +427,25 @@ aside.onebox:has(.discourse-event-onebox) {
     min-width: 0;
   }
 
-  &__time {
+  &__time,
+  &__recurrence {
     align-items: center;
     display: flex;
     gap: var(--space-2);
-    margin-block: var(--space-3) var(--space-1);
 
     .d-icon {
       color: var(--primary-high);
       font-size: var(--font-down-1);
       flex: 0 0 auto;
     }
+  }
+
+  &__time {
+    margin-block: var(--space-3) var(--space-1);
+  }
+
+  &__recurrence {
+    margin-block-end: var(--space-1);
   }
 
   &__description {
@@ -488,6 +497,7 @@ aside.onebox:has(.discourse-event-onebox) {
     grid-template:
       "image date title" auto
       "image time time" auto
+      "image recurrence recurrence" auto
       "image description description" auto
       "image . ." 1fr / 8rem auto minmax(0, 1fr);
     row-gap: 0;
@@ -520,6 +530,10 @@ aside.onebox:has(.discourse-event-onebox) {
       grid-area: time;
     }
 
+    .discourse-event-onebox__recurrence {
+      grid-area: recurrence;
+    }
+
     .discourse-event-onebox__description {
       grid-area: description;
     }
@@ -532,6 +546,7 @@ aside.onebox:has(.discourse-event-onebox) {
         "image image" auto
         "date title" auto
         ". time" auto
+        ". recurrence" auto
         ". description" auto / auto minmax(0, 1fr);
 
       .discourse-event-onebox__image.thumbnail {
@@ -761,6 +776,7 @@ aside.onebox.github-onebox {
   --github-onebox-header-background: var(--primary-very-low);
   --onebox-border-color: light-dark(#d1d9e0, #3d444d);
   --onebox-shadow-color: transparent;
+  --onebox-shadow-width: 1px;
   container: github-onebox / inline-size;
   padding: 0;
   overflow: hidden;
@@ -781,7 +797,7 @@ aside.onebox.github-onebox {
   &.githubpullrequest.--github-open {
     --github-onebox-status-color: var(--primary-high);
 
-    .github-onebox__label svg {
+    .github-onebox__label {
       color: light-dark(#1a7f37, #3fb950);
     }
   }
@@ -821,7 +837,8 @@ aside.onebox.github-onebox {
   }
 
   > .source.github-onebox__header {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(max-content, 1fr);
     gap: 0.5em 1em;
     margin: 0;
     padding: 0.5em 1em;
@@ -844,13 +861,15 @@ aside.onebox.github-onebox {
   }
 
   .github-onebox__label {
+    grid-area: 1 / 2;
+    justify-self: end;
     color: var(--github-onebox-status-color);
     font-weight: var(--token-font-weight-semibold);
+    white-space: nowrap;
   }
 
   .github-onebox__repo[href] {
-    max-width: min(20rem, 50%);
-    margin-inline-start: auto;
+    grid-area: 1 / 1;
     color: var(--primary);
 
     > span {
@@ -872,7 +891,11 @@ aside.onebox.github-onebox {
   }
 
   @container github-onebox (width < 28rem) {
-    .github-onebox__repo {
+    > .source.github-onebox__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .github-onebox__label {
       gap: 0;
 
       > span {

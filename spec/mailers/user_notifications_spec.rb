@@ -1909,7 +1909,7 @@ RSpec.describe UserNotifications do
     end
   end
 
-  shared_examples "notification email building" do
+  shared_examples "notification email building" do |invitation: false|
     let(:post) { Fabricate(:post, user: user) }
     let(:mail_type) { "user_#{notification_type}" }
     let(:mail_template) { "user_notifications.#{mail_type}" }
@@ -1981,6 +1981,61 @@ RSpec.describe UserNotifications do
       it "omits response instructions for suspended users" do
         User.any_instance.stubs(:suspended?).returns(true)
         expects_build_with(has_entry(:include_respond_instructions, false))
+      end
+
+      if invitation
+        shared_examples "an invitation preserving its literal title" do |description:, custom_body:|
+          context "with #{description}" do
+            before do
+              if custom_body
+                TranslationOverride.upsert!(
+                  SiteSetting.default_locale,
+                  "#{mail_template}.text_body_template",
+                  custom_body,
+                )
+                TranslationOverride.upsert!(
+                  SiteSetting.default_locale,
+                  "#{mail_template}.subject_template",
+                  "Invitation: %{topic_title}",
+                )
+              end
+            end
+
+            it "preserves the literal title and invitation link without changing the subject" do
+              title = 'Planning *notes* `draft` [agenda] (updated) \ & <details>'
+              post.topic.update!(title: title)
+              notification.data_hash[:topic_title] = title
+              mail =
+                UserNotifications.public_send(
+                  mail_type,
+                  user,
+                  notification_type: notification_type,
+                  notification_data_hash: notification.data_hash,
+                  post: post,
+                )
+              html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
+
+              expect(mail.subject).to include(title)
+              expect(html.css("a[href='#{post.topic.url}']").map(&:text)).to include(title)
+              expect(html.css("em, code, details")).to be_empty
+              expect(html.text.scan(title).size).to eq(
+                custom_body&.include?("%{topic_title}") ? 2 : 1,
+              )
+            end
+          end
+        end
+
+        it_behaves_like "an invitation preserving its literal title",
+                        description: "the default body",
+                        custom_body: nil
+
+        it_behaves_like "an invitation preserving its literal title",
+                        description: "a customized message",
+                        custom_body: "%{message}"
+
+        it_behaves_like "an invitation preserving its literal title",
+                        description: "a customized title and message",
+                        custom_body: "%{topic_title}\n\n%{message}"
       end
 
       context "when customized" do
@@ -2152,7 +2207,7 @@ RSpec.describe UserNotifications do
   end
 
   describe "user invited to a private message" do
-    it_behaves_like "notification email building" do
+    include_examples "notification email building", invitation: true do
       let(:notification_type) { :invited_to_private_message }
       let(:post) { Fabricate(:private_message_post) }
       let(:user) { post.user }
@@ -2165,7 +2220,7 @@ RSpec.describe UserNotifications do
   end
 
   describe "group invited to a private message" do
-    it_behaves_like "notification email building" do
+    include_examples "notification email building", invitation: true do
       let(:notification_type) { :invited_to_private_message }
       let(:post) { Fabricate(:private_message_post) }
       let(:user) { post.user }
@@ -2190,7 +2245,7 @@ RSpec.describe UserNotifications do
   describe "user invited to a topic" do
     let(:notification_type) { :invited_to_topic }
 
-    it_behaves_like "notification email building" do
+    include_examples "notification email building", invitation: true do
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"

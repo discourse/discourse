@@ -1873,6 +1873,80 @@ RSpec.describe ListController do
       end
     end
 
+    context "with encoded non-ASCII slugs" do
+      before { SiteSetting.slug_generation_method = "encoded" }
+
+      shared_examples "an encoded category slug" do |locale:, old_name:, new_name:|
+        context "with a #{locale} category" do
+          let(:category) { Fabricate(:category, name: old_name) }
+          let!(:old_slug) { category.slug }
+
+          before { category.update!(slug: new_name) }
+
+          it "redirects an outdated slug to the current encoded slug" do
+            get "/c/#{old_slug}/#{category.id}"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{CGI.escape(new_name)}/#{category.id}")
+
+            get response.location
+            expect(response.status).to eq(200)
+          end
+
+          it "redirects the slug without an id to the URL with the id" do
+            get "/c/#{category.slug}"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
+          end
+
+          it "keeps the filter and the query string" do
+            get "/c/#{old_slug}/#{category.id}/l/latest?page=2"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}/l/latest?page=2")
+          end
+
+          it "keeps the format" do
+            get "/c/#{old_slug}/#{category.id}.json"
+
+            expect(response.status).to eq(301)
+            expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json")
+          end
+        end
+      end
+
+      it_behaves_like "an encoded category slug", locale: "zh_CN", old_name: "产品", new_name: "问题"
+      it_behaves_like "an encoded category slug", locale: "zh_TW", old_name: "產品", new_name: "問題"
+      it_behaves_like "an encoded category slug", locale: "ja", old_name: "製品", new_name: "質問"
+
+      it "redirects an outdated parent slug for a subcategory" do
+        parent = Fabricate(:category, name: "製品")
+        old_parent_slug = parent.slug
+        subcategory = Fabricate(:category, name: "質問", parent_category: parent)
+        parent.update!(slug: "新製品")
+
+        get "/c/#{old_parent_slug}/#{subcategory.slug}/#{subcategory.id}/none"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to(
+          "/c/#{parent.slug}/#{subcategory.slug}/#{subcategory.id}/none",
+        )
+      end
+
+      it "keeps the subfolder" do
+        set_subfolder "/forum"
+        category = Fabricate(:category, name: "製品")
+        old_slug = category.slug
+        category.update!(slug: "質問")
+
+        get "/c/#{old_slug}/#{category.id}/l/latest"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}/l/latest")
+      end
+    end
+
     context "with subfolder" do
       it "main category redirects to URL containing the updated slug" do
         set_subfolder "/forum"

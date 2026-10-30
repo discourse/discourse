@@ -2409,6 +2409,13 @@ RSpec.describe TopicsController do
         expect(topic.archetype).to eq(Archetype.default)
       end
 
+      it "does not allow changing archetype to an unregistered one" do
+        put "/t/#{topic.id}.json", params: { archetype: "unknown" }
+
+        expect(response.status).to eq(422)
+        expect(topic.reload.archetype).to eq(Archetype.default)
+      end
+
       it "does not allow a regular user to convert a private message to a public topic" do
         private_message = Fabricate(:private_message_topic, user: user, recipient: user_2)
         Fabricate(:post, topic: private_message, user: user)
@@ -3601,6 +3608,26 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2")
     end
 
+    it "keeps the locale param when redirecting an over-range page" do
+      topic_with_posts = Fabricate(:topic)
+      Fabricate.times(25, :post, topic: topic_with_posts)
+      Topic.reset_highest(topic_with_posts.id)
+
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}",
+          params: {
+            :page => 5,
+            Discourse::LOCALE_PARAM => "ja",
+          }
+
+      expect(response).to redirect_to(
+        "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2&#{Discourse::LOCALE_PARAM}=ja",
+      )
+
+      get "/t/#{topic.slug}/#{topic.id}", params: { :page => 2, Discourse::LOCALE_PARAM => "ja" }
+
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}?#{Discourse::LOCALE_PARAM}=ja")
+    end
+
     it "uses viewer-visible post count when deciding the last valid page (whispers)" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
 
@@ -3922,6 +3949,16 @@ RSpec.describe TopicsController do
         user_badges = response.parsed_body["user_badges"]
         expect(user_badges).to eq(expected_payload)
       end
+    end
+
+    it "keeps the locale param when redirecting to the correct slug" do
+      get "/t/#{topic.slug}", params: { Discourse::LOCALE_PARAM => "ja" }
+
+      expect(response).to redirect_to("#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=ja")
+
+      get "/t/wrong-slug/#{topic.id}", params: { Discourse::LOCALE_PARAM => "ja" }
+
+      expect(response).to redirect_to("#{topic.relative_url}?#{Discourse::LOCALE_PARAM}=ja")
     end
 
     context "with registered redirect_to_correct_topic_additional_query_parameters" do

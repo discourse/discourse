@@ -13,6 +13,10 @@ module DiscourseWorkflows
       100_000
     end
 
+    def thinking_effort
+      "high"
+    end
+
     def tools
       [
         DiscourseWorkflows::Ai::Tools::WorkflowAskQuestions,

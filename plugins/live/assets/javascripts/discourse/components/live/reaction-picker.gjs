@@ -1,10 +1,13 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DAnimatedEmoji from "discourse/ui-kit/d-animated-emoji";
 import DButton from "discourse/ui-kit/d-button";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
@@ -16,6 +19,8 @@ export default class LiveReactionPicker extends Component {
   @service menu;
   @service site;
   @service siteSettings;
+
+  @tracked hoveredEmoji = null;
 
   #menuApi = null;
 
@@ -41,6 +46,18 @@ export default class LiveReactionPicker extends Component {
     return this.liveReactions.rateLimited
       ? i18n("live.reactions.rate_limited")
       : i18n("live.reactions.title");
+  }
+
+  @action
+  hover(emoji, event) {
+    if (event.pointerType === "mouse") {
+      this.hoveredEmoji = emoji;
+    }
+  }
+
+  @action
+  unhover() {
+    this.hoveredEmoji = null;
   }
 
   @action
@@ -80,6 +97,8 @@ export default class LiveReactionPicker extends Component {
         @disabled={{this.liveReactions.rateLimited}}
         @icon="far-face-smile"
         @identifier="live-reaction-menu"
+        {{! A full row of our larger emoji outgrows the default menu width. }}
+        @maxWidth={{500}}
         @onRegisterApi={{this.registerMenu}}
         @placement="top"
         @title={{this.title}}
@@ -93,8 +112,14 @@ export default class LiveReactionPicker extends Component {
                 data-emoji={{emoji}}
                 @action={{fn this.react emoji}}
                 @translatedTitle={{emoji}}
+                {{on "pointerenter" (fn this.hover emoji)}}
+                {{on "pointerleave" this.unhover}}
               >
-                {{dEmoji emoji}}
+                {{#if (eq this.hoveredEmoji emoji)}}
+                  <DAnimatedEmoji @code={{emoji}} />
+                {{else}}
+                  {{dEmoji emoji}}
+                {{/if}}
               </DButton>
             {{/each}}
             {{#if this.allowAnyEmoji}}

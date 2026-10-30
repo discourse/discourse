@@ -1,6 +1,8 @@
 <div class="{{event_onebox_classes}}"
      data-event-all-day="{{event_all_day}}"
      data-event-ends-at="{{event_ends_at}}"
+     data-event-rrule="{{event_rrule}}"
+     data-event-schedule-timezone="{{event_schedule_timezone}}"
      data-event-starts-at="{{event_starts_at}}"
      data-event-timezone="{{event_timezone}}">
   <div class="discourse-event-onebox__media">
@@ -44,6 +46,13 @@
       <svg class="fa d-icon d-icon-clock svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg>
       <span class="discourse-event-onebox__time-text">{{event_time}}</span>
     </div>
+
+    {{#event_recurrence}}
+      <div class="discourse-event-onebox__recurrence">
+        <svg class="fa d-icon d-icon-arrows-rotate svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#arrows-rotate" /></svg>
+        <span class="discourse-event-onebox__recurrence-text">{{event_recurrence}}</span>
+      </div>
+    {{/event_recurrence}}
 
     {{#description}}
       <div class="discourse-event-onebox__description">

@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT.strip
           You are a markdown proofreader. You correct egregious typos and phrasing issues but keep the user's original voice.

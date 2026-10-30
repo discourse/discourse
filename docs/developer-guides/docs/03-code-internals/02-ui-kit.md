@@ -231,6 +231,29 @@ Every primitive is browsable at `/styleguide/<category>/<section>`, and the sect
 
 A section should be designed, with multiple examples that each isolate one capability. `sections/molecules/drag-and-drop.gjs` is the model: it groups its examples with `StyleguideGroups`, and each `Example` carries a title, a `@kind`, a description of what the example demonstrates, a `@tryThis` prompt telling the reader what to do, an optional `@note` on the subtlety it exposes, and the source via `@code` so the reader can copy it. Aim for one example per argument or behaviour worth understanding (types, positions, disabled state, nesting, custom preview, and so on), rather than a single kitchen-sink demo.
 
+## DMultiSelect footer actions
+
+`DMultiSelect` accepts an optional `footer` block below the search results, including when
+there are no matching results. The block receives the menu API; await `menu.close()` before
+opening another dialog so focus moves to the new dialog. Without a footer block, no footer
+or divider is rendered. Set `@matchTriggerWidth={{true}}` when a caller needs the menu to
+match the trigger width; this is opt-in and independent of the footer.
+
+```hbs
+<DMultiSelect
+  @matchTriggerWidth={{true}}
+  @loadFn={{this.loadItems}}
+  @selection={{this.selection}}
+  @onChange={{this.selectItems}}
+>
+  <:selection as |item|>{{item.name}}</:selection>
+  <:result as |item|>{{item.name}}</:result>
+  <:footer as |menu|>
+    <DButton @action={{fn this.createItem menu}} @label="create" @icon="plus" />
+  </:footer>
+</DMultiSelect>
+```
+
 # Related guides
 
 - [FormKit](22-form-kit.md) for forms.

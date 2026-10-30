@@ -25,6 +25,19 @@ RSpec.describe Archetype do
     end
   end
 
+  describe ".exists?" do
+    it "returns true for registered archetypes" do
+      expect(Archetype.exists?(Archetype.default)).to eq(true)
+      expect(Archetype.exists?(Archetype.private_message)).to eq(true)
+      expect(Archetype.exists?(Archetype.banner)).to eq(true)
+    end
+
+    it "returns false for unregistered archetypes" do
+      expect(Archetype.exists?("unknown")).to eq(false)
+      expect(Archetype.exists?(nil)).to eq(false)
+    end
+  end
+
   describe "register an archetype" do
     it "has one more element" do
       @list = Archetype.list.dup
