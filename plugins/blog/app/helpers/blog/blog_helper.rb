@@ -3,7 +3,7 @@
 module ::Blog
   module BlogHelper
     def blog_url(path = "")
-      url = "#{Configuration.origin}#{path}"
+      url = "#{Configuration.base_url}#{path}"
       if @theme_preview_token
         url +=
           "#{path.include?("?") ? "&" : "?"}#{{ blog_theme_preview: @theme_preview_token }.to_query}"
@@ -76,7 +76,7 @@ module ::Blog
 
     def blog_page_url(page)
       values = { page: page, q: @query.presence }.compact
-      blog_url("#{request.path}?#{values.to_query}")
+      blog_url("#{Configuration.relative_path(request)}?#{values.to_query}")
     end
 
     def blog_render_template(page, content: nil)
@@ -101,7 +101,7 @@ module ::Blog
           "about_url" => blog_url("/about"),
           "feed_url" => blog_url("/feed.xml"),
           "community_url" => Discourse.base_url,
-          "editor_url" => "#{Discourse.base_url}/blog/editor",
+          "editor_url" => "#{Discourse.base_url}/blog-editor",
           "about_html" =>
             TemplateRenderer::Html.new(
               PrettyText.cook(SiteSetting.blog_about.presence || SiteSetting.blog_description),

@@ -3,12 +3,10 @@ en:
     blog_contributor_groups: Groups that can write and submit their own blog drafts. Also grant these groups access to the private drafts category. This does not grant forum staff privileges.
     blog_editor_groups: Groups that can edit and submit any blog draft they can see. Also grant access to the private drafts category. Publication requires the publisher role.
     blog_publisher_groups: Groups that can approve, publish, withdraw, and schedule blog revisions they can see. Publishers may approve their own work. Also grant access to the private drafts category and permission to create topics in the public blog category. Administrators always retain access.
-    blog_enabled:
-      Enable the blog publication and staff editorial dashboard.
-      Configure both category settings and a dedicated blog URL first.
+    blog_enabled: "A blog built on your community. Write and review articles with your editorial team, publish them under /blog with their own design, and let readers discuss each article in a linked topic. Configure the blog and drafts categories after enabling it."
     blog_url:
-      The public HTTPS origin of the blog, without a trailing slash
-      or path. It must differ from the discussion hostname. Configure this hostname
+      Serve the blog from its own HTTPS origin, without a trailing slash
+      or path, instead of /blog on this site. It must differ from the discussion hostname. Configure this hostname
       as an alias of this site at the proxy and database connection.
     blog_category:
       The single public category whose explicitly published
@@ -42,7 +40,7 @@ en:
     recent_answers: Recent answers
     syndication: Syndication
     time_ago: "%{time} ago"
-    discussion_load_error: "The inline discussion could not load. Refresh this page to try again, or use Open in Discuss above."
+    discussion_load_error: "The inline discussion could not load. Refresh this page to try again, or use Open in the community above."
     lightbox:
       close: Close image
       dialog: Enlarged article image
@@ -60,7 +58,7 @@ en:
       Only authorized editors can see this preview. Save publication
       settings before previewing changes.
     back_to_editor: Back to the topic
-    editor: Write in Discuss
+    editor: Write in the community
     footer: Written in Discourse. Open for conversation.
     from_the_blog: Notes from the community
     tagged: Filed under %{tag}
@@ -80,9 +78,9 @@ en:
     older: Older articles
     all_articles: All articles
     updated: Updated %{date}
-    view_topic: View in Discuss
+    view_topic: View in the community
     discussion: The conversation
-    open_discussion: Open in Discuss
+    open_discussion: Open in the community
     discussion_closed:
       This conversation is closed to new replies. You can still read
       the discussion below.
@@ -93,7 +91,6 @@ en:
     not_found_title: This page is not available
     not_found_body: It may have moved, returned to drafts, or not been published yet.
     errors:
-      origin: Set a dedicated HTTPS blog URL, different from the discussion hostname.
       private_site:
         The blog requires a public site with secure uploads disabled.
         Draft text stays private, but uploaded files are not access-controlled without

@@ -74,7 +74,7 @@ export default class BlogDashboard extends Component {
     }
     this.loading = true;
     try {
-      this._data = await ajax("/blog/editor.json", {
+      this._data = await ajax("/blog-editor.json", {
         data: { filter: this.filter, q: this.query },
       });
       this.page = 0;
@@ -94,7 +94,7 @@ export default class BlogDashboard extends Component {
     }
     this.loading = true;
     try {
-      const data = await ajax("/blog/editor.json", {
+      const data = await ajax("/blog-editor.json", {
         data: { page: this.page + 1, filter: this.filter, q: this.query },
       });
       this.page += 1;
@@ -120,7 +120,7 @@ export default class BlogDashboard extends Component {
   async editPrivately(topic) {
     try {
       const publication = await ajax(
-        `/blog/publications/${topic.id}/prepare.json`,
+        `/blog-editor/publications/${topic.id}/prepare.json`,
         { type: "POST" }
       );
       DiscourseURL.routeTo(publication.source_url);

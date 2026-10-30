@@ -126,11 +126,11 @@ module ::Blog
     end
 
     def url
-      "#{Configuration.origin}#{published_revision&.data&.fetch("path") || path}"
+      "#{Configuration.base_url}#{published_revision&.data&.fetch("path") || path}"
     end
 
     def preview_url
-      "#{Discourse.base_url}/blog/preview/#{topic_id}"
+      "#{Discourse.base_url}/blog-editor/preview/#{topic_id}"
     end
 
     def display_excerpt

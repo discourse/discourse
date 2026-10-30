@@ -37,7 +37,7 @@ RSpec.describe "Blog publication panel", type: :request do
 
   it "publishes the current draft in one step and then reports drift from the live revision" do
     sign_in(admin)
-    post "/blog/publications/#{topic.id}/publish.json"
+    post "/blog-editor/publications/#{topic.id}/publish.json"
     expect(response.status).to eq(200)
     expect(response.parsed_body).to include("status" => "live", "published" => true)
 
@@ -58,7 +58,7 @@ RSpec.describe "Blog publication panel", type: :request do
     expect(entry["changes"]).to contain_exactly("title", "body")
     expect(entry["edits_since_publish"]).to eq(1)
 
-    get "/blog/publications/#{topic.id}/changes.json"
+    get "/blog-editor/publications/#{topic.id}/changes.json"
     expect(response.status).to eq(200)
     expect(response.parsed_body["diff_html"]).to include("<ins>corrected </ins>", "<del>An </del>")
     expect(response.parsed_body["title_diff_html"]).to include("<ins>corrected </ins>")
@@ -84,7 +84,7 @@ RSpec.describe "Blog publication panel", type: :request do
       "active_review_links" => 1,
     )
 
-    get "/blog/publications/#{topic.id}/feedback.json"
+    get "/blog-editor/publications/#{topic.id}/feedback.json"
     expect(response.status).to eq(200)
     feedback = response.parsed_body["feedback"]
     expect(feedback.map { |entry| entry["message"] }).to eq(
@@ -96,7 +96,7 @@ RSpec.describe "Blog publication panel", type: :request do
     expect(response.parsed_body["more"]).to be(false)
 
     sign_in(user)
-    get "/blog/publications/#{topic.id}/feedback.json"
+    get "/blog-editor/publications/#{topic.id}/feedback.json"
     expect(response.status).to eq(403)
   end
 
@@ -112,13 +112,13 @@ RSpec.describe "Blog publication panel", type: :request do
     sign_in(user)
     get "/t/#{discussion.id}.json"
     expect(response.parsed_body).not_to have_key("blog_publication")
-    get "/blog/publications/#{topic.id}/changes.json"
+    get "/blog-editor/publications/#{topic.id}/changes.json"
     expect(response.status).to eq(403)
 
     sign_in(admin)
     other = Fabricate(:topic, category: drafts, user: admin)
     Fabricate(:post, topic: other, user: admin)
-    get "/blog/publications/#{other.id}/changes.json"
+    get "/blog-editor/publications/#{other.id}/changes.json"
     expect(response.status).to eq(404)
   end
 
@@ -169,7 +169,7 @@ RSpec.describe "Blog publication panel", type: :request do
         ),
       )
 
-    get "/blog/publications/#{topic.id}/changes.json"
+    get "/blog-editor/publications/#{topic.id}/changes.json"
     expect(response.status).to eq(200)
     expect(response.parsed_body).to include("diff_error" => true, "diff_html" => nil)
   end

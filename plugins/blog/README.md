@@ -1,8 +1,8 @@
 # Discourse Blog
 
 A lightweight, server-rendered blog backed by Discourse topics. Write and revise in
-Discuss; read articles on a dedicated blog hostname; reply in a deferred, interactive
-Discourse discussion below each article.
+the community; read articles at `/blog` on the community or on a dedicated blog hostname; reply in
+a deferred, interactive Discourse discussion below each article.
 
 ## Features
 
@@ -26,8 +26,8 @@ Discourse discussion below each article.
   plus/comma characters. Dated `/blog/archive/YYYY/MM/DD/...` paths are supported;
   other editorial and asset paths remain reserved. Paths cannot contain queries,
   fragments, traversal segments, or encoded separators.
-- Legacy `/posts` redirects permanently to `/`; `/posts.rss` and `/posts.atom`
-  redirect permanently to the RSS feed at `/feed.xml`. Article discussions retain
+- On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`
+  and `/posts.atom` redirect permanently to the RSS feed at `/feed.xml`. Article discussions retain
   both the `#discussion` and `#comments` fragment targets.
 - Excerpts, featured articles, author bylines, reading time, publication/updated
   dates, and card/social images from the topic's first image upload.
@@ -46,14 +46,33 @@ Discourse discussion below each article.
 - Automatic light/dark mode, responsive layouts, and a custom-code safe mode.
 - The article requires no Ember boot. Full-app discussion loads near the comments.
 
+## Hosting modes
+
+By default the blog is served under `/blog` on the community, for example
+`https://forum.example.com/blog/my-article`. It needs no extra hostname, and admins
+can pick it as the site homepage.
+
+A blog can instead have its own hostname, such as `https://blog.example.com`, set
+in `blog_url`. The hostname needs DNS, TLS and routing set up outside Discourse
+first. A host that offers it only on some plans can hide `blog_url` elsewhere, since
+site admins cannot change hidden settings. While a dedicated hostname is active,
+`/blog` on the community redirects to it with a temporary (302) redirect, so
+dropping the hostname later does not leave browsers stuck on the old one.
+
+Enabling the blog claims `/blog` in both modes. A theme or plugin that already
+serves its own page under `/blog` stops receiving those requests.
+
+Editorial pages and endpoints live under `/blog-editor` in both modes, and draft
+review links under `/blog/review`.
+
 ## Installation
 
 The plugin is bundled with Discourse as `plugins/blog`. Until launch its enabled
 setting is hidden, so it can only be turned on from the Rails console (step 5).
 
 1. Make sure migrations have run; they create the plugin's tables on every site.
-2. Route both HTTPS hostnames to the same Discourse installation/database. Keep
-   Discuss as the primary/canonical Discourse hostname. On multisite deployments,
+2. For a dedicated hostname only: route both HTTPS hostnames to the same Discourse installation/database. Keep
+   the community as the primary/canonical Discourse hostname. On multisite deployments,
    register the blog hostname as an alias in the database connection's `host_names`
    configuration so the correct database is selected before the plugin runs. The
    plugin preserves its configured hostname after database selection; single-site
@@ -70,26 +89,30 @@ setting is hidden, so it can only be turned on from the Rails console (step 5).
    drafts feature. Do not use the Blog category's description
    topic as an article.
 5. Configure:
-   - `blog_url`: e.g. `https://blog.example.com`, no trailing slash/path.
+   - For a dedicated hostname only: `blog_url`, e.g. `https://blog.example.com`, no
+     trailing slash/path.
    - `blog_category`: the single public category.
    - `blog_drafts_category`: the private editorial category.
    - `blog_title`, `blog_description`, `blog_about`.
    - `blog_enabled`: enable after configuration. The setting is hidden
      for now, so set it from the Rails console:
      `SiteSetting.blog_enabled = true`.
-6. In **Admin → Customize → Embedding**, add the exact blog hostname. Enable
-   `embed_full_app` and `embed_full_app_signin_flow`. Do not enable embedding from
-   every origin merely to make this plugin work.
-7. Visit `/blog/editor` on Discuss and create your first draft.
+6. In **Admin → Customize → Embedding**, add an embedding host for the blog. Under
+   `/blog`, that is the community's own hostname with the allowed paths `^/blog(/|$)`; on a
+   dedicated hostname, it is that exact hostname. Enable `embed_full_app` and
+   `embed_full_app_signin_flow`. Do not enable embedding from every origin merely
+   to make this plugin work.
+7. Visit `/blog-editor` on the community and create your first draft.
 
-In production, also make sure a proxy's existing `/robots.txt` or `/sitemap.xml`
-handlers do not override the blog routes.
+On a dedicated hostname, also make sure a proxy's existing `/robots.txt` or
+`/sitemap.xml` handlers do not override the blog routes.
 
 ### Local hostnames
 
-The blog and Discuss must be the same site: the same scheme and the same
+This only applies to a dedicated hostname; under `/blog` the blog needs no setup
+beyond `bin/dev`. The blog and the community must be the same site: the same scheme and the same
 registrable domain, such as `blog.example.com` and `forum.example.com`. Otherwise
-the embedded discussion does not receive the Discuss session cookie, and readers
+the embedded discussion does not receive the community session cookie, and readers
 appear signed out in the comments.
 
 Locally, `*.localhost` names reach the Rails server without DNS or hosts-file
@@ -109,7 +132,7 @@ bin/dev
 
 The environment override skips the setting's `https://` validation. Frame-ancestors
 protection is turned off because core only allows `https://` embedding hosts to
-frame Discuss, which would otherwise block the discussion. Add
+frame the community, which would otherwise block the discussion. Add
 `blog.dev.localhost:3000` as an embedding host, then sign in at
 `http://community.dev.localhost:3000`.
 
@@ -156,7 +179,7 @@ during plugin installation or migration.
 Open **Admin → Plugins → Blog**. **Themes** lists the saved designs and the one
 currently shown to readers; **Identity** holds the blog name, tagline, and About
 content. A design owns its whole look: palette, CSS, JavaScript, and Liquid
-templates. Design and color changes are blog-only; they do not restyle Discuss.
+templates. Design and color changes are blog-only; they do not restyle the community.
 
 Theme cards use a shared typographic specimen and the saved draft's paper, ink,
 and accent colors. These covers are palette samples, not screenshots: they do not
@@ -181,8 +204,9 @@ syntax-highlighted code editors:
   It cannot cross the discussion iframe boundary; that surface is tinted with the
   design's palette instead. Further discussion styling belongs in a forum theme,
   scoped to `html.discourse-blog-discussion body.embed-mode`.
-- **Custom JavaScript** runs deferred, after the document is parsed, on blog-origin
-  pages. It is served as a JavaScript file, so `<script>` markup would be a syntax
+- **Custom JavaScript** runs deferred, after the document is parsed, on blog
+  pages. Under `/blog` those pages share the community's origin, so the code has the same
+  reach as forum theme JavaScript. It is served as a JavaScript file, so `<script>` markup would be a syntax
   error. To load another script, append the element instead:
 
   ```js
@@ -193,8 +217,8 @@ syntax-highlighted code editors:
 
   The file loads with a CSP nonce and the blog's policy uses `strict-dynamic`, so a
   script it appends runs without allowlisting that origin. The code deliberately does
-  **not** run in authenticated previews on the Discuss origin, in normal Discuss
-  pages, or inside the cross-origin discussion iframe.
+  **not** run in authenticated previews, in normal community pages, or inside the
+  discussion iframe.
 
 Both are administrator-only and publicly downloadable. They are executable/trusted
 customizations, not a place for secrets. Saves go through the theme editor and then
@@ -204,7 +228,7 @@ silently repaired: test your code before deploying it to readers.
 
 **Recovery:** open a blog URL with `?blog_safe_mode=1` to skip both custom snippets
 for that view. The Identity page links to the blog and to that recovery view, and
-remains on the separate Discuss hostname even if a customization breaks the blog.
+stays usable even if a customization breaks the blog.
 Clear the relevant code field in the theme editor, save the draft, and activate it
 to remove a customization. The built-in theme still loads in safe mode. CSS and
 JavaScript assets are uncached so a reload picks up saved changes.
@@ -291,14 +315,14 @@ in one of the three group settings, or the drafts category is rejected.
   effect on the next request. Do not add a CDN cache without a purge/revocation
   design. Already delivered pages, feeds, screenshots, and search copies cannot
   be recalled.
-- Preview is authenticated on Discuss, `noindex` and `no-store`; it does not change
+- Preview is authenticated on the community, `noindex` and `no-store`; it does not change
   Guardian permissions or enable anonymous share tokens.
 - **Secure uploads, login-required sites, and sites that prohibit anonymous file
   downloads are unsupported in this version.**
   Draft text is private, but upload URLs are not access-controlled when secure
   uploads are disabled. Do not put confidential attachments into these drafts.
   Supporting private draft media needs an explicit media-publication design.
-- Discourse authentication remains on Discuss. No API key is exposed to the blog
+- Discourse authentication remains on the community. No API key is exposed to the blog
   browser and cookies are not broadened to the parent domain.
 
 ## Rendering and discussion scope
@@ -336,7 +360,7 @@ minified modules, CSP, cross-origin language loading, and DOM preservation.
 
 Complex cooked-content widgets (poll interaction, client-side math, galleries,
 and arbitrary plugin decorators) are not a complete match
-for the full topic renderer yet. The article links to Discuss for that experience.
+for the full topic renderer yet. The article links to the community for that experience.
 The full discussion does use the existing Discourse application and its features.
 
 The embed is deferred, not weightless: interaction loads Discourse. It currently
@@ -349,10 +373,10 @@ paper, ink, and accent colors of the active design, which the blog sends to the
 frame, with dark-mode support. Styles are scoped
 to `html.discourse-blog-discussion body.embed-mode`; ordinary forum pages and
 other embeds are unchanged. Historical small-action rows, the topic map, progress counters, redundant topic
-footer actions, and development overlays are hidden in this reading view; the full history remains in Discuss.
+footer actions, and development overlays are hidden in this reading view; the full history remains in the community.
 
 Existing login, composer, live
-updates, moderation, and closed-topic behavior are reused. An **Open in Discuss**
+updates, moderation, and closed-topic behavior are reused. An **Open in the community**
 link always remains available. Same-site HTTPS subdomains are the intended v1
 setup; unrelated domains and browser storage restrictions need separate testing.
 
@@ -421,7 +445,7 @@ style `.blog-post-summary` without reaching into cooked article content.
 
 ## Finding articles in the editor
 
-`/blog/editor` does not infinitely scroll or download the whole library. It fetches
+`/blog-editor` does not infinitely scroll or download the whole library. It fetches
 up to 30 results and offers **Load more** only while another page exists.
 
 The All articles, Drafts, Published, and Not on the blog filters run on the server

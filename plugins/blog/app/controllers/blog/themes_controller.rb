@@ -33,7 +33,7 @@ module ::Blog
       sample = view_context.blog_template_assigns
       sample["article"] ||= {
         "title" => I18n.t("blog.themes.sample_article"),
-        "url" => "#{Configuration.origin}/example",
+        "url" => "#{Configuration.base_url}/example",
         "excerpt" => I18n.t("blog.themes.sample_body"),
         "standfirst" => "",
         "author" => "",
@@ -83,7 +83,7 @@ module ::Blog
         end
       token = BlogTheme.working_preview(theme_params, user: current_user)
       render json: {
-               url: "#{Configuration.origin}#{path}?#{{ blog_theme_preview: token }.to_query}",
+               url: "#{Configuration.base_url}#{path}?#{{ blog_theme_preview: token }.to_query}",
              },
              status: :created
     end
@@ -170,7 +170,7 @@ module ::Blog
     def present(theme)
       token = BlogTheme.preview_token(theme)
       theme.merge(
-        "preview_url" => "#{Configuration.origin}/?#{{ blog_theme_preview: token }.to_query}",
+        "preview_url" => "#{Configuration.base_url}/?#{{ blog_theme_preview: token }.to_query}",
       )
     end
 

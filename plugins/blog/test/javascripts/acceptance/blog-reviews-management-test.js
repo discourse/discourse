@@ -37,13 +37,13 @@ acceptance("Blog review management", function (needs) {
       topic.blog_publication = draft;
       return response(topic);
     });
-    pretender.get("/blog/publications/280/reviews.json", () =>
+    pretender.get("/blog-editor/publications/280/reviews.json", () =>
       response({ reviews, more: false })
     );
   });
 
   test("creates, reads private feedback, and revokes a review link separately from publication", async function (assert) {
-    pretender.post("/blog/publications/280/reviews.json", (request) => {
+    pretender.post("/blog-editor/publications/280/reviews.json", (request) => {
       assert.strictEqual(
         new URLSearchParams(request.requestBody).get("label"),
         "Editorial round",
@@ -55,12 +55,12 @@ acceptance("Blog review management", function (needs) {
         post_version: 1,
         active: true,
         feedback_count: 1,
-        url: "https://blog.example.com/review?review_token=secret",
+        url: "https://blog.example.com/blog/review?review_token=secret",
       };
       reviews = [review];
       return response({ review });
     });
-    pretender.get("/blog/publications/280/reviews/1/feedback.json", () =>
+    pretender.get("/blog-editor/publications/280/reviews/1/feedback.json", () =>
       response({
         feedback: [
           {
@@ -74,7 +74,7 @@ acceptance("Blog review management", function (needs) {
         more: false,
       })
     );
-    pretender.delete("/blog/publications/280/reviews/1.json", () => {
+    pretender.delete("/blog-editor/publications/280/reviews/1.json", () => {
       reviews = [
         {
           ...reviews[0],
@@ -101,14 +101,14 @@ acceptance("Blog review management", function (needs) {
     assert
       .dom(".blog-reviews__link-url")
       .hasValue(
-        "https://blog.example.com/review?review_token=secret",
+        "https://blog.example.com/blog/review?review_token=secret",
         "an issued link stays readable instead of being shown once"
       );
     assert
       .dom(".blog-reviews__open")
       .hasAttribute(
         "href",
-        "https://blog.example.com/review?review_token=secret"
+        "https://blog.example.com/blog/review?review_token=secret"
       );
     await click(".blog-reviews__feedback-toggle");
     assert

@@ -18,7 +18,7 @@ export default class BlogEditorRoute extends DiscourseRoute {
 
   model() {
     if (this.currentUser?.can_blog_edit ?? this.currentUser?.staff) {
-      return ajax("/blog/editor.json");
+      return ajax("/blog-editor.json");
     }
   }
 }

@@ -24,7 +24,20 @@ end
 require_relative "lib/blog/engine"
 require_relative "lib/blog/color_validator"
 
+register_homepage(
+  "blog",
+  name: "blog.homepage_option",
+  path: "/blog",
+  route: "blog/articles#index",
+  anonymous: true,
+  server_side: true,
+  enabled: -> { Blog::Configuration.public_enabled? && !Blog::Configuration.custom_domain? },
+)
+
 after_initialize do
+  add_to_serializer(:site, :blog_base_url, include_condition: -> { SiteSetting.blog_enabled }) do
+    Blog::Configuration.base_url
+  end
   add_to_serializer(:current_user, :can_blog_edit) { Blog::Configuration.contributor?(object) }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
@@ -94,20 +107,9 @@ after_initialize do
     @blog_publication
   end
 
-  Discourse::Application.routes.prepend do
-    constraints(
-      ->(request) do
-        Blog::Configuration.blog_host?(request) && !Blog::Configuration.asset_path?(request.path)
-      end,
-    ) do
-      get "/session/csrf" => "blog/review_reader#csrf"
-      get "/review" => "blog/review_reader#show"
-      post "/review/feedback" => "blog/review_reader#feedback"
+  blog_routes =
+    proc do
       get "/" => "blog/articles#index"
-      get "/posts" => redirect { "#{Blog::Configuration.origin}/" }, :format => false
-      %w[/posts.rss /posts.atom].each do |path|
-        get path => redirect { "#{Blog::Configuration.origin}/feed.xml" }, :format => false
-      end
       get "/archive" => "blog/articles#index", :defaults => { archive: true }
       get "/tag/:tag" => "blog/articles#index"
       get "/about" => "blog/articles#about"
@@ -116,8 +118,45 @@ after_initialize do
       get "/blog-custom.js" => "blog/articles#theme_js", :format => false
       get "/feed.xml" => "blog/articles#feed", :defaults => { format: "rss" }, :format => false
       get "/sitemap" => "blog/articles#sitemap", :format => true, :constraints => { format: :xml }
+    end
+
+  Discourse::Application.routes.prepend do
+    constraints(
+      ->(request) do
+        Blog::Configuration.blog_host?(request) && !Blog::Configuration.asset_path?(request.path)
+      end,
+    ) do
+      get "/session/csrf" => "blog/review_reader#csrf"
+      get "/blog/review" => "blog/review_reader#show"
+      post "/blog/review/feedback" => "blog/review_reader#feedback"
+      get "/review" => redirect { |_, request| request.fullpath.sub("/review", "/blog/review") },
+          :format => false
+      get "/posts" => redirect { "#{Blog::Configuration.base_url}/" }, :format => false
+      %w[/posts.rss /posts.atom].each do |path|
+        get path => redirect { "#{Blog::Configuration.base_url}/feed.xml" }, :format => false
+      end
+      instance_exec(&blog_routes)
       get "/robots.txt" => "blog/articles#robots", :defaults => { format: "text" }, :format => false
       get "/*path" => "blog/articles#show", :format => false
+    end
+    scope Blog::Configuration::PATH_PREFIX do
+      constraints(->(_) { SiteSetting.blog_enabled && !Blog::Configuration.custom_domain? }) do
+        get "/review" => "blog/review_reader#show"
+        post "/review/feedback" => "blog/review_reader#feedback"
+        instance_exec(&blog_routes)
+        get "/*path" => "blog/articles#show", :format => false
+      end
+      constraints(->(_) { SiteSetting.blog_enabled && Blog::Configuration.custom_domain? }) do
+        # Temporary, since a site can drop its custom domain and browsers cache 301s.
+        get "/(*path)" =>
+              redirect(status: 302) { |_, request|
+                path =
+                  request.path_info.delete_prefix(Blog::Configuration::PATH_PREFIX).presence || "/"
+                path += "?#{request.query_string}" if request.query_string.present?
+                "#{Blog::Configuration.base_url}#{path}"
+              },
+            :format => false
+      end
     end
     %w[appearance identity themes themes/new themes/import/new themes/:id/edit].each do |path|
       get "/admin/plugins/blog/#{path}" => "admin/plugins#show",

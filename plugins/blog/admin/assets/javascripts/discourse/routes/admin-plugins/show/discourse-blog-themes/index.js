@@ -3,6 +3,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class BlogThemesIndexRoute extends DiscourseRoute {
   model() {
-    return ajax("/blog/themes.json");
+    return ajax("/blog-editor/themes.json");
   }
 }

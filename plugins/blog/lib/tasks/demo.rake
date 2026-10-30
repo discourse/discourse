@@ -40,8 +40,6 @@ namespace :blog do
       drafts.set_permissions(staff: :full)
       drafts.save!
     end
-    SiteSetting.blog_url = SiteSetting.blog_url.presence || "https://blog.localhost"
-    blog_uri = URI(SiteSetting.blog_url)
     SiteSetting.blog_category = blog.id
     SiteSetting.blog_drafts_category = drafts.id
     SiteSetting.blog_title = "Fieldnotes"
@@ -62,9 +60,16 @@ namespace :blog do
     Blog::Configuration.ensure_ready!
     SiteSetting.embed_full_app = true
     SiteSetting.embed_full_app_signin_flow = true
+    blog_uri = URI(Blog::Configuration.origin)
     embed_host =
       blog_uri.port == blog_uri.default_port ? blog_uri.host : "#{blog_uri.host}:#{blog_uri.port}"
-    EmbeddableHost.find_or_create_by!(host: embed_host) { |host| host.category_id = blog.id }
+    EmbeddableHost.find_or_create_by!(host: embed_host) do |host|
+      host.category_id = blog.id
+      # Under /blog the embedding host is the forum itself, so only blog pages may embed.
+      if !Blog::Configuration.custom_domain?
+        host.allowed_paths = "^#{Discourse.base_path}#{Blog::Configuration::PATH_PREFIX}(/|$)"
+      end
+    end
 
     examples = [
       {
@@ -215,7 +220,7 @@ namespace :blog do
         ],
         [
           :admin,
-          "Exactly the idea. Try replying here from the blog — this is the same discussion you can open in Discuss.",
+          "Exactly the idea. Try replying here from the blog — this is the same discussion you can open in the community.",
         ],
         [
           :first_reader,
@@ -290,8 +295,8 @@ namespace :blog do
       end
     end
 
-    puts "Blog: #{Blog::Configuration.origin}"
-    puts "Editor: #{Discourse.base_url}/blog/editor"
+    puts "Blog: #{Blog::Configuration.base_url}"
+    puts "Editor: #{Discourse.base_url}/blog-editor"
     puts "Categories: Blog=#{blog.id}, private drafts=#{drafts.id}"
   end
 end

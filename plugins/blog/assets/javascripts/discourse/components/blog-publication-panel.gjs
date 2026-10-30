@@ -334,14 +334,14 @@ export default class BlogPublicationPanel extends Component {
   }
 
   #url(suffix) {
-    return `/blog/publications/${this.publication.id}${suffix}.json`;
+    return `/blog-editor/publications/${this.publication.id}${suffix}.json`;
   }
 
   async #loadFeedback(page) {
     this.busy = true;
     try {
       const result = await ajax(
-        `/blog/publications/${this.publication.source_topic_id}/feedback.json`,
+        `/blog-editor/publications/${this.publication.source_topic_id}/feedback.json`,
         { data: { page } }
       );
       this.feedback = page

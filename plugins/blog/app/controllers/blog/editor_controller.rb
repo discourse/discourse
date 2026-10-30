@@ -39,7 +39,7 @@ module ::Blog
             Publication.publicly_visible.where(topic_id: selected.map(&:id)).pluck(:topic_id).to_set
           render json: {
                    error: Configuration.error,
-                   blog_url: Configuration.origin,
+                   blog_url: Configuration.base_url,
                    more: selected.size > 30,
                    topics:
                      selected

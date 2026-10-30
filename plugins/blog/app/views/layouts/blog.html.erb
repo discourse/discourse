@@ -49,7 +49,7 @@
       <aside class="blog__preview"><%= t('blog.customizations_disabled') %></aside>
     <% end %>
     <% if @theme_preview_token %>
-      <aside class="blog__preview"><strong><%= t('blog.themes.preview', name: blog_theme["name"]) %></strong> <%= t('blog.themes.preview_notice') %> <a href="<%= ::Blog::Configuration.origin %><%= request.path %>"><%= t('blog.themes.exit_preview') %></a></aside>
+      <aside class="blog__preview"><strong><%= t('blog.themes.preview', name: blog_theme["name"]) %></strong> <%= t('blog.themes.preview_notice') %> <a href="<%= ::Blog::Configuration.base_url %><%= ::Blog::Configuration.relative_path(request) %>"><%= t('blog.themes.exit_preview') %></a></aside>
     <% end %>
     <% if @preview %>
       <aside class="blog__preview"><strong><%= t('blog.preview') %></strong> <%= t('blog.preview_notice') %> <a href="<%= @topic.url %>"><%= t('blog.back_to_editor') %></a></aside>

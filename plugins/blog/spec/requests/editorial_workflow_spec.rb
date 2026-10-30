@@ -32,21 +32,21 @@ RSpec.describe "Blog editorial workflow", type: :request do
         raw: "Confidential editorial notes must never become public.",
       )
     sign_in(writer)
-    post "/blog/publications/#{topic.id}/submit.json"
+    post "/blog-editor/publications/#{topic.id}/submit.json"
     expect(response.status).to eq(200)
     revision_id = response.parsed_body.dig("submitted_revision", "id")
-    post "/blog/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
     expect(response.status).to eq(403)
-    post "/blog/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
     expect(response.status).to eq(403)
 
     sign_in(admin)
-    post "/blog/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
     expect(response.status).to eq(400)
-    post "/blog/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)
     first_post.revise(writer, raw: "A newer private edit that has not been submitted or approved.")
-    post "/blog/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)
 
     publication = Blog::Publication.find_by!(topic: topic)
@@ -100,11 +100,11 @@ RSpec.describe "Blog editorial workflow", type: :request do
     publication = Blog::Publication.for_topic(other)
     revision = publication.submit!(admin)
     sign_in(writer)
-    get "/blog/publications/#{other.id}.json"
+    get "/blog-editor/publications/#{other.id}.json"
     expect(response.status).to eq(403)
-    get "/blog/preview/#{other.id}", params: { revision_id: revision.id }
+    get "/blog-editor/preview/#{other.id}", params: { revision_id: revision.id }
     expect(response.status).to eq(403)
-    get "/blog/editor.json"
+    get "/blog-editor.json"
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to contain_exactly(topic.id)
   end
 
@@ -116,7 +116,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
       raw: "Later unpublished article content must stay out of the revision preview.",
     )
     sign_in(admin)
-    get "/blog/preview/#{topic.id}", params: { revision_id: revision.id }
+    get "/blog-editor/preview/#{topic.id}", params: { revision_id: revision.id }
     expect(response.status).to eq(200)
     expect(response.body).to include(revision.raw)
     expect(response.body).not_to include(first_post.reload.raw)
@@ -239,12 +239,12 @@ RSpec.describe "Blog editorial workflow", type: :request do
   it "lets a non-staff publisher self-approve and publish within native category permissions" do
     SiteSetting.blog_publisher_groups = writers.id.to_s
     sign_in(writer)
-    post "/blog/publications/#{topic.id}/submit.json"
+    post "/blog-editor/publications/#{topic.id}/submit.json"
     expect(response.status).to eq(200)
     revision_id = response.parsed_body.dig("submitted_revision", "id")
-    post "/blog/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)
-    post "/blog/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)
     publication = Blog::Publication.find_by!(topic: topic)
     expect(publication).to be_publicly_visible
@@ -269,7 +269,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
       raw: "The corrected article text is ready for another approved release.",
     )
     sign_in(admin)
-    put "/blog/publications/#{topic.id}.json",
+    put "/blog-editor/publications/#{topic.id}.json",
         params: {
           publication: {
             published_at: nil,
@@ -278,12 +278,12 @@ RSpec.describe "Blog editorial workflow", type: :request do
         as: :json
     expect(response.status).to eq(200)
     expect(response.parsed_body["published_revision_id"]).to eq(publication.published_revision_id)
-    post "/blog/publications/#{topic.id}/submit.json"
+    post "/blog-editor/publications/#{topic.id}/submit.json"
     expect(response.status).to eq(200)
     revision_id = response.parsed_body.dig("submitted_revision", "id")
-    post "/blog/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)
-    post "/blog/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
+    post "/blog-editor/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
     expect(response.status).to eq(200)
     expect(response.parsed_body["published_revision_id"]).to eq(revision_id)
     expect(response.parsed_body["live"]).to eq(true)
@@ -297,12 +297,12 @@ RSpec.describe "Blog editorial workflow", type: :request do
     publication.publish!(admin)
     original_title = topic.title
     sign_in(admin)
-    get "/blog/publications/#{topic.id}.json"
+    get "/blog-editor/publications/#{topic.id}.json"
     expect(response.parsed_body["draft_correction"]).to eq(false)
     first_post.revise(writer, raw: "A private correction that has not been published yet.")
     topic.update!(title: "A private correction title for review")
     publication.save_metadata!(admin, excerpt: "A private correction introduction")
-    get "/blog/editor.json"
+    get "/blog-editor.json"
     entry = response.parsed_body["topics"].find { |item| item["id"] == topic.id }
     expect(entry["live"]).to eq(true)
     expect(entry["draft_correction"]).to eq(true)
@@ -310,7 +310,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
     expect(entry["source_url"]).to eq(topic.url)
     expect(entry["discussion_url"]).to eq(publication.discussion_topic.url)
     publication.publish!(admin)
-    get "/blog/publications/#{topic.id}.json"
+    get "/blog-editor/publications/#{topic.id}.json"
     expect(response.parsed_body["draft_correction"]).to eq(false)
     expect(response.parsed_body["public_title"]).to eq(topic.title)
   end

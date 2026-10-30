@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 
 export default class BlogThemesNewRoute extends DiscourseRoute {
   async model() {
-    const { active } = await ajax("/blog/themes.json");
+    const { active } = await ajax("/blog-editor/themes.json");
     return {
       active,
       theme: {

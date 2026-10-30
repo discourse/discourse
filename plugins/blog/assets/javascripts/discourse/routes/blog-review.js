@@ -31,7 +31,9 @@ export default class BlogReviewRoute extends DiscourseRoute {
 
   async model({ review_token }) {
     try {
-      const review = await ajax("/review.json", { data: { review_token } });
+      const review = await ajax("/blog/review.json", {
+        data: { review_token },
+      });
       return { ...review, token: review_token };
     } catch (error) {
       if ([403, 404].includes(error.jqXHR?.status)) {

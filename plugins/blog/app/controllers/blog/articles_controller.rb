@@ -13,7 +13,7 @@ module ::Blog
     rescue_from ActiveRecord::RecordNotFound, Discourse::NotFound do
       @page_title = I18n.t("blog.not_found_title")
       @description = I18n.t("blog.not_found_body")
-      @canonical_url = "#{Configuration.origin}#{request.path}"
+      @canonical_url = "#{Configuration.base_url}#{blog_path}"
       response.headers["Cache-Control"] = "private, no-store"
       response.headers["X-Robots-Tag"] = "noindex"
       render "blog/articles/not_found", formats: [:html], status: :not_found
@@ -60,19 +60,19 @@ module ::Blog
             end
           )
       @description = SiteSetting.blog_description
-      @canonical_url = "#{Configuration.origin}#{request.path}"
+      @canonical_url = "#{Configuration.base_url}#{blog_path}"
       @canonical_url += "?page=#{@page}" if @page > 1
       response.headers["X-Robots-Tag"] = "noindex" if @query.present?
     end
 
     def show
-      stored_path = Path.find_by!(path: request.path)
+      stored_path = Path.find_by!(path: blog_path)
       @publication =
         Publication
           .publicly_visible
           .includes(:published_revision, discussion_topic: %i[first_post user image_upload tags])
           .find(stored_path.publication_id)
-      if @publication.path != request.path
+      if @publication.path != blog_path
         return(redirect_to(@publication.url, status: :moved_permanently, allow_other_host: true))
       end
       @topic = @publication.discussion_topic
@@ -85,7 +85,7 @@ module ::Blog
     def about
       @page_title = I18n.t("blog.about")
       @description = SiteSetting.blog_description
-      @canonical_url = "#{Configuration.origin}/about"
+      @canonical_url = "#{Configuration.base_url}/about"
     end
 
     def feed
@@ -137,10 +137,14 @@ module ::Blog
     end
 
     def robots
-      render plain: "User-agent: *\nAllow: /\nSitemap: #{Configuration.origin}/sitemap.xml\n"
+      render plain: "User-agent: *\nAllow: /\nSitemap: #{Configuration.base_url}/sitemap.xml\n"
     end
 
     private
+
+    def blog_path
+      @blog_path ||= Configuration.relative_path(request)
+    end
 
     def load_blog_theme
       if params[:blog_theme_preview].present?
@@ -148,7 +152,10 @@ module ::Blog
         @theme_preview_token = params[:blog_theme_preview]
         response.headers.delete("X-Frame-Options")
         policy =
-          ContentSecurityPolicy.policy(base_url: Configuration.origin, path_info: request.path)
+          ContentSecurityPolicy.policy(
+            base_url: "#{request.base_url}#{Discourse.base_path}",
+            path_info: request.path_info,
+          )
         policy = policy.gsub(/frame-ancestors[^;]*(;|$)/, "")
         response.headers[
           "Content-Security-Policy"
@@ -163,9 +170,7 @@ module ::Blog
     end
 
     def ensure_public_blog
-      unless Configuration.blog_host?(request) && Configuration.public_enabled?
-        raise Discourse::NotFound
-      end
+      raise Discourse::NotFound unless Configuration.blog_request?(request)
       # Revoked visibility must take effect on the next request, including feeds and previews.
       response.headers["Cache-Control"] = "private, no-store"
     end

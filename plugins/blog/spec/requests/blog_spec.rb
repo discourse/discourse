@@ -17,28 +17,28 @@ RSpec.describe "Blog publication", type: :request do
 
   before { enable_blog!(category: category, drafts: drafts) }
 
-  describe "GET /blog/editor.json" do
+  describe "GET /blog-editor.json" do
     it "requires staff access" do
-      get "/blog/editor.json"
+      get "/blog-editor.json"
       expect(response.status).to eq(403)
       sign_in(user)
-      get "/blog/editor.json"
+      get "/blog-editor.json"
       expect(response.status).to eq(403)
     end
 
-    it "keeps the editor reachable when the blog origin is misconfigured as Discuss" do
+    it "serves the blog under /blog when the blog URL is the forum's own hostname" do
       SiteSetting.blog_url = "https://test.localhost"
       sign_in(admin)
-      get "/blog/editor.json"
+      get "/blog-editor.json"
       expect(response.status).to eq(200)
-      expect(response.parsed_body["error"]).to eq(I18n.t("blog.errors.origin"))
+      expect(response.parsed_body["blog_url"]).to eq("#{Discourse.base_url}/blog")
     end
 
     it "renders an anonymous login shell without exposing draft data" do
-      get "/blog/editor"
+      get "/blog-editor"
       expect(response.status).to eq(200)
       expect(response.body).not_to include(topic.title)
-      get "/blog/editor.json"
+      get "/blog-editor.json"
       expect(response.status).to eq(403)
     end
 
@@ -52,18 +52,18 @@ RSpec.describe "Blog publication", type: :request do
       expect(publication.reload).not_to be_publicly_visible
 
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      get "https://test.localhost/blog/editor.json"
+      get "https://test.localhost/blog-editor.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["error"]).to eq(I18n.t("blog.errors.anonymous_uploads"))
 
-      post "https://test.localhost/blog/publications/#{topic.id}/publish.json"
+      post "https://test.localhost/blog-editor/publications/#{topic.id}/publish.json"
       expect(response.status).to eq(400)
     end
 
     it "lists only editorial topics" do
       Fabricate(:topic)
       sign_in(admin)
-      get "/blog/editor.json"
+      get "/blog-editor.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to contain_exactly(
         topic.id,
@@ -72,12 +72,12 @@ RSpec.describe "Blog publication", type: :request do
     end
   end
 
-  describe "PUT /blog/publications/:topic_id" do
+  describe "PUT /blog-editor/publications/:topic_id" do
     before { sign_in(admin) }
 
     it "rejects paths reserved by routing" do
       %w[/sitemap /images/story /font/story /plugins/story /about].each do |path|
-        put "/blog/publications/#{topic.id}.json", params: { publication: { path: path } }
+        put "/blog-editor/publications/#{topic.id}.json", params: { publication: { path: path } }
         expect(response.status).to eq(422)
       end
       expect(Blog::Publication.where(topic_id: topic.id)).not_to exist
@@ -90,7 +90,11 @@ RSpec.describe "Blog publication", type: :request do
         { published_at: "not-a-date" },
         { published_at: 1.day.from_now.iso8601 },
       ].each do |attributes|
-        put "/blog/publications/#{topic.id}.json", params: { publication: attributes }, as: :json
+        put "/blog-editor/publications/#{topic.id}.json",
+            params: {
+              publication: attributes,
+            },
+            as: :json
         expect(response.status).to eq(422)
       end
     end
@@ -99,13 +103,18 @@ RSpec.describe "Blog publication", type: :request do
       group = Fabricate(:group)
       drafts.set_permissions(group.name => :full, :staff => :full)
       drafts.save!
-      put "/blog/publications/#{topic.id}.json", params: { publication: { excerpt: "A draft" } }
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              excerpt: "A draft",
+            },
+          }
       expect(response.status).to eq(400)
       expect(Blog::Publication.where(topic_id: topic.id)).not_to exist
     end
   end
 
-  describe "GET /blog/preview/:topic_id" do
+  describe "GET /blog-editor/preview/:topic_id" do
     it "allows a staff-only uncached preview without publishing" do
       design =
         Blog::BlogTheme.save(
@@ -121,10 +130,10 @@ RSpec.describe "Blog publication", type: :request do
         )
       Blog::BlogTheme.activate(design["id"], revision: 1, user: admin)
 
-      get "/blog/preview/#{topic.id}"
+      get "/blog-editor/preview/#{topic.id}"
       expect(response.status).to eq(404)
       sign_in(admin)
-      get "/blog/preview/#{topic.id}"
+      get "/blog-editor/preview/#{topic.id}"
       expect(response.status).to eq(200)
       expect(response.body).to include(first_post.cooked)
       expect(Nokogiri.HTML5(response.body).at_css("script[data-blog-custom-script]")).to be_nil
@@ -135,10 +144,10 @@ RSpec.describe "Blog publication", type: :request do
     end
   end
 
-  describe "POST /blog/publications/:topic_id/publish" do
+  describe "POST /blog-editor/publications/:topic_id/publish" do
     it "publishes a private draft, serves it on the blog host, and preserves the discussion" do
       sign_in(admin)
-      put "/blog/publications/#{topic.id}.json",
+      put "/blog-editor/publications/#{topic.id}.json",
           params: {
             publication: {
               path: "/first-story",
@@ -146,12 +155,18 @@ RSpec.describe "Blog publication", type: :request do
             },
           }
       expect(response.status).to eq(200)
-      post "/blog/publications/#{topic.id}/submit.json"
+      post "/blog-editor/publications/#{topic.id}/submit.json"
       expect(response.status).to eq(200)
       revision_id = response.parsed_body.dig("submitted_revision", "id")
-      post "/blog/publications/#{topic.id}/approve.json", params: { revision_id: revision_id }
+      post "/blog-editor/publications/#{topic.id}/approve.json",
+           params: {
+             revision_id: revision_id,
+           }
       expect(response.status).to eq(200)
-      post "/blog/publications/#{topic.id}/publish.json", params: { revision_id: revision_id }
+      post "/blog-editor/publications/#{topic.id}/publish.json",
+           params: {
+             revision_id: revision_id,
+           }
       expect(response.status).to eq(200)
       publication = Blog::Publication.find_by!(topic_id: topic.id)
       expect(publication.discussion_topic.reload.category_id).to eq(category.id)
@@ -172,10 +187,10 @@ RSpec.describe "Blog publication", type: :request do
     it "rejects unrelated topics and normal users" do
       sign_in(admin)
       other_topic = Fabricate(:topic)
-      post "/blog/publications/#{other_topic.id}/publish.json"
+      post "/blog-editor/publications/#{other_topic.id}/publish.json"
       expect(response.status).to eq(403)
       sign_in(user)
-      post "/blog/publications/#{topic.id}/publish.json"
+      post "/blog-editor/publications/#{topic.id}/publish.json"
       expect(response.status).to eq(403)
       expect(topic.reload.category_id).to eq(drafts.id)
     end
@@ -183,7 +198,7 @@ RSpec.describe "Blog publication", type: :request do
     it "fails closed when the draft category is public" do
       SiteSetting.blog_drafts_category = category.id
       sign_in(admin)
-      post "/blog/publications/#{topic.id}/publish.json"
+      post "/blog-editor/publications/#{topic.id}/publish.json"
       expect(response.status).to eq(403)
       expect(topic.reload.category_id).to eq(drafts.id)
     end
@@ -378,7 +393,7 @@ RSpec.describe "Blog publication", type: :request do
       another = Fabricate(:topic, category: drafts)
       Fabricate(:post, topic: another)
       sign_in(admin)
-      put "/blog/publications/#{another.id}.json",
+      put "/blog-editor/publications/#{another.id}.json",
           params: {
             publication: {
               path: "/private-to-public",
@@ -455,9 +470,9 @@ RSpec.describe "Blog publication", type: :request do
       get "/about.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body).to have_key("about")
-      get "/blog/editor.json"
+      get "/blog-editor.json"
       expect(response.status).to eq(403)
-      get "https://blog.example.com/blog/editor.json"
+      get "https://blog.example.com/blog-editor.json"
       expect(response.status).to eq(404)
     end
 
@@ -470,12 +485,12 @@ RSpec.describe "Blog publication", type: :request do
     end
   end
 
-  describe "DELETE /blog/publications/:topic_id" do
+  describe "DELETE /blog-editor/publications/:topic_id" do
     it "withdraws the blog without privatizing the discussion" do
       publication = Blog::Publication.for_topic(topic)
       publication.publish!(admin)
       sign_in(admin)
-      delete "/blog/publications/#{topic.id}.json"
+      delete "/blog-editor/publications/#{topic.id}.json"
       expect(response.status).to eq(204)
       expect(publication.discussion_topic.reload.category_id).to eq(category.id)
       expect(publication.reload).not_to be_publicly_visible
@@ -487,12 +502,12 @@ RSpec.describe "Blog publication", type: :request do
     end
   end
 
-  describe "POST /blog/publications/:topic_id/return-to-drafts" do
+  describe "POST /blog-editor/publications/:topic_id/return-to-drafts" do
     it "returns an article without replies to private drafts" do
       publication = Blog::Publication.for_topic(topic)
       publication.publish!(admin)
       sign_in(admin)
-      post "/blog/publications/#{topic.id}/return-to-drafts.json"
+      post "/blog-editor/publications/#{topic.id}/return-to-drafts.json"
       expect(response.status).to eq(204)
       expect(topic.reload.category_id).to eq(drafts.id)
       expect(publication.reload).not_to be_published
@@ -503,7 +518,7 @@ RSpec.describe "Blog publication", type: :request do
       publication.publish!(admin)
       reply = Fabricate(:post, topic: publication.discussion_topic, user: user)
       sign_in(admin)
-      post "/blog/publications/#{topic.id}/return-to-drafts.json"
+      post "/blog-editor/publications/#{topic.id}/return-to-drafts.json"
       expect(response.status).to eq(204)
       expect(publication.discussion_topic.reload.category_id).to eq(category.id)
       expect(reply.reload.topic_id).to eq(publication.discussion_topic_id)

@@ -30,7 +30,7 @@ RSpec.describe "Blog themes", type: :request do
         template_index: "<h1 data-custom-liquid>{{ site.title }}</h1>",
         template_layout: "<div data-custom-layout>{{ content_html }}</div>",
       )
-    post "https://test.localhost/blog/themes.json", params: { theme: custom }
+    post "https://test.localhost/blog-editor/themes.json", params: { theme: custom }
     expect(response.status).to eq(201)
     draft = response.parsed_body
     get "https://blog.example.com/"
@@ -38,9 +38,12 @@ RSpec.describe "Blog themes", type: :request do
     get draft["preview_url"]
     expect(response.body).to include("data-custom-liquid", "data-custom-layout")
     expect(response.headers["Cache-Control"]).to include("no-store")
-    post "https://test.localhost/blog/themes/#{draft["id"]}/activate.json", params: { revision: 1 }
+    post "https://test.localhost/blog-editor/themes/#{draft["id"]}/activate.json",
+         params: {
+           revision: 1,
+         }
     expect(response.status).to eq(200)
-    put "https://test.localhost/blog/themes/#{draft["id"]}.json",
+    put "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
         params: {
           theme: custom.merge(template_index: "Changed draft only"),
           revision: 1,
@@ -69,7 +72,7 @@ RSpec.describe "Blog themes", type: :request do
       )
     Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
     get "https://test.localhost/session/#{admin.encoded_username}/become"
-    get "https://test.localhost/blog/preview/#{private_topic.id}"
+    get "https://test.localhost/blog-editor/preview/#{private_topic.id}"
     expect(response.status).to eq(200)
     expect(response.body).to include(private_post.cooked)
     expect(response.body).not_to include("CUSTOM ARTICLE", "CUSTOM LAYOUT")
@@ -180,27 +183,27 @@ RSpec.describe "Blog themes", type: :request do
 
   describe "management" do
     it "requires administrators and rejects the public blog origin" do
-      get "https://test.localhost/blog/themes.json"
+      get "https://test.localhost/blog-editor/themes.json"
       expect(response.status).to eq(403)
       get "https://test.localhost/session/#{moderator.encoded_username}/become"
-      get "https://test.localhost/blog/themes.json"
+      get "https://test.localhost/blog-editor/themes.json"
       expect(response.status).to eq(403)
-      post "https://test.localhost/blog/themes.json", params: { theme: attributes }
+      post "https://test.localhost/blog-editor/themes.json", params: { theme: attributes }
       expect(response.status).to eq(403)
       expect(Blog::BlogTheme.all).to be_empty
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      get "https://test.localhost/blog/themes.json"
+      get "https://test.localhost/blog-editor/themes.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["themes"]).to be_empty
-      get "https://blog.example.com/blog/themes.json"
+      get "https://blog.example.com/blog-editor/themes.json"
       expect(response.status).to eq(404)
     end
 
     it "serves focused theme data and supports direct loading of all admin pages" do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      post "https://test.localhost/blog/themes.json", params: { theme: attributes }
+      post "https://test.localhost/blog-editor/themes.json", params: { theme: attributes }
       draft = response.parsed_body
-      get "https://test.localhost/blog/themes/#{draft["id"]}.json"
+      get "https://test.localhost/blog-editor/themes/#{draft["id"]}.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body.dig("theme", "id")).to eq(draft["id"])
       expect(response.parsed_body.dig("theme", "css")).to eq(attributes[:css])
@@ -216,16 +219,16 @@ RSpec.describe "Blog themes", type: :request do
         get "https://test.localhost/admin/plugins/blog/#{path}"
         expect(response.status).to eq(200)
       end
-      get "https://test.localhost/blog/themes/missing.json"
+      get "https://test.localhost/blog-editor/themes/missing.json"
       expect(response.status).to eq(404)
       get "https://test.localhost/session/#{moderator.encoded_username}/become"
-      get "https://test.localhost/blog/themes/#{draft["id"]}.json"
+      get "https://test.localhost/blog-editor/themes/#{draft["id"]}.json"
       expect(response.status).to eq(403)
     end
 
     it "saves multiple drafts without changing readers, then explicitly activates a snapshot" do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      post "https://test.localhost/blog/themes.json", params: { theme: attributes }
+      post "https://test.localhost/blog-editor/themes.json", params: { theme: attributes }
       expect(response.status).to eq(201)
       draft = response.parsed_body
       expect(draft["preview_url"]).to start_with("https://blog.example.com/?blog_theme_preview=")
@@ -234,7 +237,7 @@ RSpec.describe "Blog themes", type: :request do
       get "https://blog.example.com/"
       expect(Nokogiri.HTML5(response.body).at_css('link[href*="blog-theme.css"]')).to be_present
 
-      post "https://test.localhost/blog/themes/#{draft["id"]}/activate.json",
+      post "https://test.localhost/blog-editor/themes/#{draft["id"]}/activate.json",
            params: {
              revision: draft["revision"],
            }
@@ -246,7 +249,7 @@ RSpec.describe "Blog themes", type: :request do
 
       changed =
         attributes.merge(css: ".blog { font-size: 42px; }", javascript: "window.changed = true;")
-      put "https://test.localhost/blog/themes/#{draft["id"]}.json",
+      put "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
           params: {
             theme: changed,
             revision: 1,
@@ -257,7 +260,7 @@ RSpec.describe "Blog themes", type: :request do
       expect(response.body).to include(attributes[:css])
       expect(response.body).not_to include(changed[:css])
 
-      post "https://test.localhost/blog/themes/#{draft["id"]}/activate.json",
+      post "https://test.localhost/blog-editor/themes/#{draft["id"]}/activate.json",
            params: {
              revision: 2,
            }
@@ -271,12 +274,12 @@ RSpec.describe "Blog themes", type: :request do
         UserHistory.where(acting_user_id: admin.id, custom_type: "blog_theme_activate").count,
       ).to eq(2)
 
-      post "https://test.localhost/blog/themes.json",
+      post "https://test.localhost/blog-editor/themes.json",
            params: {
              theme: attributes.merge(name: "Another design"),
            }
       expect(response.status).to eq(201)
-      get "https://test.localhost/blog/themes.json"
+      get "https://test.localhost/blog-editor/themes.json"
       expect(response.parsed_body["themes"].map { |theme| theme["name"] }).to contain_exactly(
         "Quiet draft",
         "Another design",
@@ -286,32 +289,38 @@ RSpec.describe "Blog themes", type: :request do
 
     it "rejects stale changes and activation, and protects the active theme from deletion" do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      post "https://test.localhost/blog/themes.json", params: { theme: attributes }
+      post "https://test.localhost/blog-editor/themes.json", params: { theme: attributes }
       draft = response.parsed_body
-      put "https://test.localhost/blog/themes/#{draft["id"]}.json",
+      put "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
           params: {
             theme: attributes.merge(name: "Updated"),
             revision: 1,
           }
-      put "https://test.localhost/blog/themes/#{draft["id"]}.json",
+      put "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
           params: {
             theme: attributes,
             revision: 1,
           }
       expect(response.status).to eq(400)
-      post "https://test.localhost/blog/themes/#{draft["id"]}/activate.json",
+      post "https://test.localhost/blog-editor/themes/#{draft["id"]}/activate.json",
            params: {
              revision: 1,
            }
       expect(response.status).to eq(400)
-      delete "https://test.localhost/blog/themes/#{draft["id"]}.json", params: { revision: 1 }
+      delete "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
+             params: {
+               revision: 1,
+             }
       expect(response.status).to eq(400)
-      post "https://test.localhost/blog/themes/#{draft["id"]}/activate.json",
+      post "https://test.localhost/blog-editor/themes/#{draft["id"]}/activate.json",
            params: {
              revision: 2,
            }
       expect(response.status).to eq(200)
-      delete "https://test.localhost/blog/themes/#{draft["id"]}.json", params: { revision: 2 }
+      delete "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
+             params: {
+               revision: 2,
+             }
       expect(response.status).to eq(400)
       expect(Blog::BlogTheme.find(draft["id"])["name"]).to eq("Updated")
     end
@@ -324,13 +333,19 @@ RSpec.describe "Blog themes", type: :request do
         { css: "a" * 65_537 },
         { javascript: "ü" * 32_769 },
       ].each do |invalid|
-        post "https://test.localhost/blog/themes.json", params: { theme: attributes.merge(invalid) }
+        post "https://test.localhost/blog-editor/themes.json",
+             params: {
+               theme: attributes.merge(invalid),
+             }
         expect(response.status).to eq(400)
       end
       expect(Blog::BlogTheme.all).to be_empty
-      post "https://test.localhost/blog/themes.json", params: { theme: attributes }
+      post "https://test.localhost/blog-editor/themes.json", params: { theme: attributes }
       draft = response.parsed_body
-      delete "https://test.localhost/blog/themes/#{draft["id"]}.json", params: { revision: 1 }
+      delete "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
+             params: {
+               revision: 1,
+             }
       expect(response.status).to eq(204)
       get draft["preview_url"]
       expect(response.status).to eq(404)
@@ -342,7 +357,7 @@ RSpec.describe "Blog themes", type: :request do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
       theme = Blog::BlogTheme.save(attributes.stringify_keys, user: admin)
 
-      get "https://test.localhost/blog/themes/#{theme["id"]}/export"
+      get "https://test.localhost/blog-editor/themes/#{theme["id"]}/export"
 
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("application/zip")
@@ -354,7 +369,7 @@ RSpec.describe "Blog themes", type: :request do
         file.binmode
         file.write(response.body)
         file.flush
-        post "https://test.localhost/blog/themes/import.json",
+        post "https://test.localhost/blog-editor/themes/import.json",
              params: {
                file: Rack::Test::UploadedFile.new(file.path, "application/zip"),
              }
@@ -369,23 +384,23 @@ RSpec.describe "Blog themes", type: :request do
 
     it "restricts imports and exports to admins on the discussion host" do
       theme = Blog::BlogTheme.save(attributes.stringify_keys, user: admin)
-      get "https://test.localhost/blog/themes/#{theme["id"]}/export"
+      get "https://test.localhost/blog-editor/themes/#{theme["id"]}/export"
       expect(response.status).to eq(403)
-      post "https://test.localhost/blog/themes/import.json", params: { file: "theme.zip" }
+      post "https://test.localhost/blog-editor/themes/import.json", params: { file: "theme.zip" }
       expect(response.status).to eq(403)
 
       get "https://test.localhost/session/#{moderator.encoded_username}/become"
-      get "https://test.localhost/blog/themes/#{theme["id"]}/export"
+      get "https://test.localhost/blog-editor/themes/#{theme["id"]}/export"
       expect(response.status).to eq(403)
-      post "https://test.localhost/blog/themes/import.json", params: { file: "theme.zip" }
+      post "https://test.localhost/blog-editor/themes/import.json", params: { file: "theme.zip" }
       expect(response.status).to eq(403)
 
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      get "https://blog.example.com/blog/themes/#{theme["id"]}/export"
+      get "https://blog.example.com/blog-editor/themes/#{theme["id"]}/export"
       expect(response.status).to eq(404)
-      get "https://test.localhost/blog/themes/missing/export"
+      get "https://test.localhost/blog-editor/themes/missing/export"
       expect(response.status).to eq(404)
-      post "https://test.localhost/blog/themes/import.json", params: { file: "theme.zip" }
+      post "https://test.localhost/blog-editor/themes/import.json", params: { file: "theme.zip" }
       expect(response.status).to eq(400)
     end
   end
@@ -402,7 +417,7 @@ RSpec.describe "Blog themes", type: :request do
         importer.stubs(:version).returns("a" * 40)
         Blog::ThemeImporter::GitSource.stubs(:new).returns(importer)
         get "https://test.localhost/session/#{admin.encoded_username}/become"
-        post "https://test.localhost/blog/themes/import.json",
+        post "https://test.localhost/blog-editor/themes/import.json",
              params: {
                repository: "https://github.com/example/theme",
                branch: "design",
@@ -411,7 +426,10 @@ RSpec.describe "Blog themes", type: :request do
         draft = response.parsed_body
         expect(draft.dig("source", "branch")).to eq("design")
         File.write(File.join(directory, "blog.css"), ".blog { color: blue; }")
-        post "https://test.localhost/blog/themes/#{draft["id"]}/pull.json", params: { revision: 1 }
+        post "https://test.localhost/blog-editor/themes/#{draft["id"]}/pull.json",
+             params: {
+               revision: 1,
+             }
         expect(response.status).to eq(200)
         expect(response.parsed_body["revision"]).to eq(2)
         expect(response.parsed_body["css"]).to eq(".blog { color: blue; }")
@@ -433,7 +451,7 @@ RSpec.describe "Blog themes", type: :request do
         )
       publication.paths.create!(path: publication.path)
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      post "https://test.localhost/blog/themes.json", params: { theme: attributes }
+      post "https://test.localhost/blog-editor/themes.json", params: { theme: attributes }
       draft = response.parsed_body
       get draft["preview_url"]
       expect(response.status).to eq(200)
@@ -478,18 +496,18 @@ RSpec.describe "Blog themes", type: :request do
 
     it "rejects tampered, expired, and superseded preview links" do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
-      post "https://test.localhost/blog/themes.json", params: { theme: attributes }
+      post "https://test.localhost/blog-editor/themes.json", params: { theme: attributes }
       draft = response.parsed_body
       get "#{draft["preview_url"]}tampered"
       expect(response.status).to eq(404)
       freeze_time 61.minutes.from_now
       get draft["preview_url"]
       expect(response.status).to eq(404)
-      get "https://test.localhost/blog/themes.json"
+      get "https://test.localhost/blog-editor/themes.json"
       url = response.parsed_body["themes"].first["preview_url"]
       get url
       expect(response.status).to eq(200)
-      put "https://test.localhost/blog/themes/#{draft["id"]}.json",
+      put "https://test.localhost/blog-editor/themes/#{draft["id"]}.json",
           params: {
             theme: attributes,
             revision: 1,

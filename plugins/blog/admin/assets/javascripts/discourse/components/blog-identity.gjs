@@ -11,6 +11,7 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default class BlogIdentity extends Component {
+  @service site;
   @service toasts;
 
   @tracked saving = false;
@@ -26,7 +27,7 @@ export default class BlogIdentity extends Component {
   }
 
   get safeUrl() {
-    return `${this.args.settings.blog_url}/?blog_safe_mode=1`;
+    return `${this.site.blog_base_url}/?blog_safe_mode=1`;
   }
 
   @action
@@ -61,7 +62,7 @@ export default class BlogIdentity extends Component {
       />
       <div class="blog-identity__links">
         <a
-          href={{@settings.blog_url}}
+          href={{this.site.blog_base_url}}
           rel="noopener noreferrer"
           target="_blank"
         >{{i18n "blog.admin.open_blog"}} ↗</a>

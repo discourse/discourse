@@ -13,41 +13,64 @@ module ::Blog
       extra-locales
       svg-sprite
     ].freeze
+    PATH_PREFIX = "/blog"
 
     def self.asset_path?(path)
       ASSET_PREFIXES.include?(path.split("/")[1])
     end
 
-    def self.origin
-      SiteSetting.blog_url
+    # Without a custom domain the blog lives under PATH_PREFIX on the forum.
+    def self.custom_domain?
+      SiteSetting.blog_url.present? && URI(SiteSetting.blog_url).host != Discourse.current_hostname
+    rescue URI::InvalidURIError
+      false
     end
 
-    def self.configured_origin?
-      origin.present? && URI(origin).host != Discourse.current_hostname
+    def self.origin
+      custom_domain? ? SiteSetting.blog_url : Discourse.base_url_no_prefix
+    end
+
+    def self.base_url
+      custom_domain? ? SiteSetting.blog_url : "#{Discourse.base_url}#{PATH_PREFIX}"
+    end
+
+    # The reader keeps the prefix on a custom domain too, so one client route serves both modes.
+    def self.review_url
+      "#{custom_domain? ? origin : Discourse.base_url}#{PATH_PREFIX}/review"
     end
 
     def self.blog_host?(request)
-      SiteSetting.blog_enabled && configured_origin? && request.host == URI(origin).host
+      SiteSetting.blog_enabled && custom_domain? && request.host == URI(origin).host
+    end
+
+    # Whether a public blog page may be served for this request in the current mode.
+    def self.blog_request?(request)
+      public_enabled? && (!custom_domain? || blog_host?(request))
+    end
+
+    # The request path relative to the blog root, matching stored article paths.
+    def self.relative_path(request)
+      return request.path_info if custom_domain?
+      request.path_info.delete_prefix(PATH_PREFIX).presence || "/"
     end
 
     def self.public_enabled?
-      SiteSetting.blog_enabled && configured_origin? && !SiteSetting.login_required &&
-        !SiteSetting.secure_uploads && !SiteSetting.prevent_anons_from_downloading_files
+      SiteSetting.blog_enabled && !SiteSetting.login_required && !SiteSetting.secure_uploads &&
+        !SiteSetting.prevent_anons_from_downloading_files
     end
 
     def self.error
-      if origin.blank? || URI(origin).host == Discourse.current_hostname
-        return I18n.t("blog.errors.origin")
-      end
       if SiteSetting.login_required || SiteSetting.secure_uploads
         return I18n.t("blog.errors.private_site")
-      end
-      if SiteSetting.prevent_anons_from_downloading_files
+      elsif SiteSetting.prevent_anons_from_downloading_files
         return I18n.t("blog.errors.anonymous_uploads")
       end
+
       category = Category.find_by(id: SiteSetting.blog_category)
       drafts = Category.find_by(id: SiteSetting.blog_drafts_category)
+
       return I18n.t("blog.errors.category") if !category || category.read_restricted?
+
       if !drafts || !drafts.read_restricted? || category.id == drafts.id ||
            drafts.id == SiteSetting.shared_drafts_category.to_i ||
            drafts.category_groups.where.not(group_id: editorial_group_ids).exists?

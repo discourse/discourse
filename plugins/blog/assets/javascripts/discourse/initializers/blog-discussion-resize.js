@@ -9,7 +9,7 @@ export default {
 
   initialize(container) {
     const settings = container.lookup("service:site-settings");
-    const origin = blogOrigin(settings.blog_url);
+    const origin = blogOrigin(container.lookup("service:site").blog_base_url);
     if (
       !settings.blog_enabled ||
       !EmbedMode.enabled ||

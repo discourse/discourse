@@ -19,7 +19,7 @@ RSpec.describe "External draft review", type: :request do
 
   def issue_review
     get "https://test.localhost/session/#{admin.encoded_username}/become"
-    post "https://test.localhost/blog/publications/#{topic.id}/reviews.json",
+    post "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json",
          params: {
            label: "Editorial round",
          }
@@ -32,19 +32,19 @@ RSpec.describe "External draft review", type: :request do
     review, token = issue_review
     SiteSetting.prevent_anons_from_downloading_files = true
 
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
 
-    post "https://test.localhost/blog/publications/#{topic.id}/reviews.json"
+    post "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
     expect(response.status).to eq(400)
     expect(Blog::Review.where(topic: topic).pluck(:id)).to eq([review["id"]])
   end
 
   it "requires an authorized editor and keeps issued links readable by editors" do
-    post "/blog/publications/#{topic.id}/reviews.json"
+    post "/blog-editor/publications/#{topic.id}/reviews.json"
     expect(response.status).to eq(403)
     sign_in(user)
-    post "/blog/publications/#{topic.id}/reviews.json"
+    post "/blog-editor/publications/#{topic.id}/reviews.json"
     expect(response.status).to eq(403)
     review, token = issue_review
     stored = Blog::Review.find(review["id"])
@@ -52,10 +52,10 @@ RSpec.describe "External draft review", type: :request do
     expect(stored.expires_at).to be_within(2.seconds).of(7.days.from_now)
 
     # The link stays retrievable, so a lost link does not force a new one.
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews.json"
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
     expect(response.parsed_body["reviews"].first["url"]).to eq(review["url"])
     sign_in(user)
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews.json"
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
     expect(response.status).to eq(403)
     get "https://test.localhost/session/#{admin.encoded_username}/become"
     expect(topic.reload.category_id).to eq(drafts.id)
@@ -91,7 +91,7 @@ RSpec.describe "External draft review", type: :request do
       )
     Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
 
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(200)
     expect(response.parsed_body["cooked"]).to eq(snapshot)
     expect(response.body).not_to include(private_reply.raw, first_post.reload.raw)
@@ -105,7 +105,7 @@ RSpec.describe "External draft review", type: :request do
     expect(response.headers["Cache-Control"]).to include("no-store")
     expect(response.headers["X-Robots-Tag"]).to include("noindex")
     expect(response.headers["Referrer-Policy"]).to eq("no-referrer")
-    get "https://blog.example.com/review", params: { review_token: token }
+    get "https://blog.example.com/blog/review", params: { review_token: token }
     expect(response.status).to eq(200)
     expect(response.body).not_to include("blog-custom.js", "data-theme-id=", private_reply.raw)
     expect(response.body).to include("no_themes")
@@ -121,7 +121,7 @@ RSpec.describe "External draft review", type: :request do
   it "keeps anonymous feedback private even after publication" do
     review, token = issue_review
     message = "Please reconsider the conclusion before publication."
-    post "https://blog.example.com/review/feedback.json",
+    post "https://blog.example.com/blog/review/feedback.json",
          params: {
            review_token: token,
            feedback: {
@@ -137,23 +137,23 @@ RSpec.describe "External draft review", type: :request do
     expect(topic.posts.count).to eq(1)
     expect(Blog::ReviewFeedback.find_by!(review_id: review["id"]).message).to eq(message)
 
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
     expect(response.status).to eq(200)
     expect(response.parsed_body["feedback"].first["message"]).to eq(message)
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews.json"
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews.json"
     expect(response.parsed_body["reviews"].first["feedback_count"]).to eq(1)
     Blog::Publication.for_topic(topic).publish!(admin)
     expect(Blog::Review.find(review["id"]).revoked_at).to be_present
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
     expect(response.parsed_body["feedback"].first["message"]).to eq(message)
     expect(topic.posts.pluck(:raw)).not_to include(message)
   end
 
   it "revokes links and rejects forged tokens and cross-origin feedback" do
     review, token = issue_review
-    post "https://blog.example.com/review/feedback.json",
+    post "https://blog.example.com/blog/review/feedback.json",
          params: {
            review_token: token,
            feedback: {
@@ -164,13 +164,13 @@ RSpec.describe "External draft review", type: :request do
            "Origin" => "https://elsewhere.example",
          }
     expect(response.status).to eq(403)
-    get "https://blog.example.com/review.json", params: { review_token: "x" * 43 }
+    get "https://blog.example.com/blog/review.json", params: { review_token: "x" * 43 }
     expect(response.status).to eq(404)
-    delete "https://test.localhost/blog/publications/#{topic.id}/reviews/#{review["id"]}.json"
+    delete "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{review["id"]}.json"
     expect(response.status).to eq(204)
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
-    post "https://blog.example.com/review/feedback.json",
+    post "https://blog.example.com/blog/review/feedback.json",
          params: {
            review_token: token,
            feedback: {
@@ -187,24 +187,24 @@ RSpec.describe "External draft review", type: :request do
   it "rejects expired links, inaccessible articles, and revoked creator access" do
     review, token = issue_review
     Blog::Review.find(review["id"]).update!(expires_at: 1.minute.ago)
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
     _, token = issue_review
     first_post.update!(hidden: true)
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
     first_post.update!(hidden: false)
     _, token = issue_review
     admin.update!(admin: false)
     admin.reload.update!(moderator: false)
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
   end
 
   it "validates feedback and scopes management endpoints to their topic" do
     review, token = issue_review
     ["", "x" * 10_001].each do |message|
-      post "https://blog.example.com/review/feedback.json",
+      post "https://blog.example.com/blog/review/feedback.json",
            params: {
              review_token: token,
              feedback: {
@@ -218,10 +218,10 @@ RSpec.describe "External draft review", type: :request do
     end
     other = Fabricate(:topic, category: drafts, user: admin)
     Fabricate(:post, topic: other, user: admin)
-    delete "https://test.localhost/blog/publications/#{other.id}/reviews/#{review["id"]}.json"
+    delete "https://test.localhost/blog-editor/publications/#{other.id}/reviews/#{review["id"]}.json"
     expect(response.status).to eq(404)
     get "https://test.localhost/session/#{user.encoded_username}/become"
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
     expect(response.status).to eq(403)
     expect(Blog::ReviewFeedback.count).to eq(0)
   end
@@ -231,7 +231,7 @@ RSpec.describe "External draft review", type: :request do
     previous = Blog::ReviewReaderController.allow_forgery_protection
     Blog::ReviewReaderController.allow_forgery_protection = true
     begin
-      post "https://blog.example.com/review/feedback.json",
+      post "https://blog.example.com/blog/review/feedback.json",
            params: {
              review_token: token,
              feedback: {
@@ -245,7 +245,7 @@ RSpec.describe "External draft review", type: :request do
       get "https://blog.example.com/session/csrf.json"
       expect(response.status).to eq(200)
       csrf = response.parsed_body["csrf"]
-      post "https://blog.example.com/review/feedback.json",
+      post "https://blog.example.com/blog/review/feedback.json",
            params: {
              review_token: token,
              feedback: {
@@ -269,7 +269,7 @@ RSpec.describe "External draft review", type: :request do
       { "main" => { "fileName" => "#{name}.js", "imports" => [], "externalPluginImports" => [] } }
     end
     _, token = issue_review
-    get "https://blog.example.com/review", params: { review_token: token }
+    get "https://blog.example.com/blog/review", params: { review_token: token }
     expect(response.status).to eq(200)
     document = Nokogiri.HTML5(response.body)
     plugin_names =
@@ -286,7 +286,7 @@ RSpec.describe "External draft review", type: :request do
     topic.save!(validate: false)
     expect(Blog::Review.find(review["id"]).revoked_at).to be_present
     topic.update!(category_id: drafts.id)
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
   end
 
@@ -294,7 +294,7 @@ RSpec.describe "External draft review", type: :request do
     _, token = issue_review
     RateLimiter.enable
     30.times do
-      post "https://blog.example.com/review/feedback.json",
+      post "https://blog.example.com/blog/review/feedback.json",
            params: {
              review_token: token,
              feedback: {
@@ -306,7 +306,7 @@ RSpec.describe "External draft review", type: :request do
            }
       expect(response.status).to eq(204)
     end
-    post "https://blog.example.com/review/feedback.json",
+    post "https://blog.example.com/blog/review/feedback.json",
          params: {
            review_token: token,
            feedback: {
@@ -337,7 +337,7 @@ RSpec.describe "External draft review", type: :request do
         }
       end,
     )
-    post "https://blog.example.com/review/feedback.json",
+    post "https://blog.example.com/blog/review/feedback.json",
          params: {
            review_token: token,
            feedback: {
@@ -348,11 +348,11 @@ RSpec.describe "External draft review", type: :request do
            "Origin" => "https://blog.example.com",
          }
     expect(response.status).to eq(400)
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json"
     expect(response.parsed_body["feedback"].length).to eq(30)
     expect(response.parsed_body["more"]).to eq(true)
     first_ids = response.parsed_body["feedback"].map { |entry| entry["id"] }
-    get "https://test.localhost/blog/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json",
+    get "https://test.localhost/blog-editor/publications/#{topic.id}/reviews/#{review["id"]}/feedback.json",
         params: {
           page: 1,
         }
@@ -371,7 +371,7 @@ RSpec.describe "External draft review", type: :request do
     topic.destroy!
     expect(Blog::Review.where(id: review["id"])).not_to exist
     expect(Blog::ReviewFeedback.where(review_id: review["id"])).not_to exist
-    get "https://blog.example.com/review.json", params: { review_token: token }
+    get "https://blog.example.com/blog/review.json", params: { review_token: token }
     expect(response.status).to eq(404)
   end
 end

@@ -28,7 +28,7 @@ RSpec.describe "Blog editor filtering", type: :request do
     published_topic.update_column(:updated_at, 3.days.ago)
     Fabricate.times(31, :topic, category: drafts)
 
-    get "/blog/editor.json", params: { filter: "published" }
+    get "/blog-editor.json", params: { filter: "published" }
 
     expect(response.status).to eq(200)
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to eq([published_topic.id])
@@ -42,25 +42,25 @@ RSpec.describe "Blog editor filtering", type: :request do
     Fabricate(:topic, category: drafts, title: "Unrelated newer draft")
     Fabricate(:topic, title: "Needle outside editorial categories")
 
-    get "/blog/editor.json", params: { filter: "drafts", q: "NEEDLE" }
+    get "/blog-editor.json", params: { filter: "drafts", q: "NEEDLE" }
     expect(response.status).to eq(200)
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to eq(
       matching.reverse.first(30).map(&:id),
     )
     expect(response.parsed_body["more"]).to eq(true)
 
-    get "/blog/editor.json", params: { filter: "drafts", q: "NEEDLE", page: 1 }
+    get "/blog-editor.json", params: { filter: "drafts", q: "NEEDLE", page: 1 }
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to eq([matching.first.id])
     expect(response.parsed_body["more"]).to eq(false)
   end
 
   it "searches stored article paths and treats wildcard characters literally" do
-    get "/blog/editor.json", params: { q: "special-workflow" }
+    get "/blog-editor.json", params: { q: "special-workflow" }
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to eq([published_topic.id])
 
     literal = Fabricate(:topic, category: drafts, title: "A 100%_literal example")
     Fabricate(:topic, category: drafts, title: "An unrelated example")
-    get "/blog/editor.json", params: { q: "%_" }
+    get "/blog-editor.json", params: { q: "%_" }
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to eq([literal.id])
   end
 
@@ -68,17 +68,17 @@ RSpec.describe "Blog editor filtering", type: :request do
     unpublished = Fabricate(:topic, category: category)
     Fabricate(:topic, category: drafts)
 
-    get "/blog/editor.json", params: { filter: "unpublished" }
+    get "/blog-editor.json", params: { filter: "unpublished" }
 
     expect(response.parsed_body["topics"].map { |entry| entry["id"] }).to eq([unpublished.id])
   end
 
   it "rejects invalid filters and oversized or structured search input" do
-    get "/blog/editor.json", params: { filter: "invalid" }
+    get "/blog-editor.json", params: { filter: "invalid" }
     expect(response.status).to eq(400)
-    get "/blog/editor.json", params: { q: "a" * 101 }
+    get "/blog-editor.json", params: { q: "a" * 101 }
     expect(response.status).to eq(400)
-    get "/blog/editor.json", params: { q: { title: "test" } }
+    get "/blog-editor.json", params: { q: { title: "test" } }
     expect(response.status).to eq(400)
   end
 end

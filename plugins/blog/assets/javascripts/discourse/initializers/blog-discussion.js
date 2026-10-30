@@ -29,7 +29,9 @@ export default {
     // An iframe-only reload can lose the server class when its referrer changes.
     root.classList.add(embedClass);
 
-    const parentOrigin = blogOrigin(settings.blog_url);
+    const parentOrigin = blogOrigin(
+      container.lookup("service:site").blog_base_url
+    );
 
     withPluginApi((api) => {
       api.onPageChange(() => {

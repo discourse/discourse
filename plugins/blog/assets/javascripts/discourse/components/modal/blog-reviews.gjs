@@ -32,7 +32,7 @@ export default class BlogReviews extends Component {
   }
 
   get baseUrl() {
-    return `/blog/publications/${this.args.model.topicId}/reviews`;
+    return `/blog-editor/publications/${this.args.model.topicId}/reviews`;
   }
 
   formatDate(value) {

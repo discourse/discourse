@@ -8,7 +8,7 @@ acceptance("Blog review reader", function (needs) {
   needs.settings({ blog_enabled: true });
 
   needs.hooks.beforeEach(() => {
-    pretender.get("/review.json", (request) =>
+    pretender.get("/blog/review.json", (request) =>
       response({
         title: "A frozen draft",
         cooked: "<p>The article selected for review.</p>",
@@ -19,7 +19,7 @@ acceptance("Blog review reader", function (needs) {
   });
 
   test("accepts private feedback without an account or forum chrome", async function (assert) {
-    pretender.post("/review/feedback.json", (request) => {
+    pretender.post("/blog/review/feedback.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
       assert.strictEqual(
         values.get("review_token"),
@@ -34,7 +34,7 @@ acceptance("Blog review reader", function (needs) {
       assert.step("feedback");
       return response(204);
     });
-    await visit("/review?review_token=reader-capability");
+    await visit("/blog/review?review_token=reader-capability");
     assert
       .dom(".blog-review h1")
       .hasText("A frozen draft", "the frozen title is rendered");
@@ -64,10 +64,10 @@ acceptance("Blog review reader", function (needs) {
   });
 
   test("clears the reader when access expires before submission", async function (assert) {
-    pretender.post("/review/feedback.json", () =>
+    pretender.post("/blog/review/feedback.json", () =>
       response(404, { errors: ["Unavailable"] })
     );
-    await visit("/review?review_token=reader-capability");
+    await visit("/blog/review?review_token=reader-capability");
     await formKit(".blog-review form")
       .field("message")
       .fillIn("A late response");
@@ -84,10 +84,10 @@ acceptance("Blog review reader", function (needs) {
   });
 
   test("shows unavailable links without a feedback form", async function (assert) {
-    pretender.get("/review.json", () =>
+    pretender.get("/blog/review.json", () =>
       response(404, { errors: ["Unavailable"] })
     );
-    await visit("/review?review_token=missing");
+    await visit("/blog/review?review_token=missing");
     assert
       .dom(".blog-review form")
       .doesNotExist("unavailable reviews cannot accept feedback");

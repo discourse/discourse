@@ -48,9 +48,7 @@ module ::Blog
       response.headers["Referrer-Policy"] = "no-referrer"
       request.env[ApplicationController::NO_THEMES] = true
       request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = nil
-      unless Configuration.blog_host?(request) && Configuration.public_enabled?
-        raise Discourse::NotFound
-      end
+      raise Discourse::NotFound unless Configuration.blog_request?(request)
     end
 
     def find_review

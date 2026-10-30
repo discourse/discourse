@@ -63,7 +63,7 @@ en:
         template_not_found: Not found page
         code_warning:
           "Add only code you trust: it runs with the blog origin's privileges and is
-          publicly downloadable. It never runs in authenticated Discuss previews."
+          publicly downloadable. It never runs in authenticated previews in the community."
         css: Custom CSS
         css_description: Plain CSS, up to 65,536 bytes. Loads after the base stylesheet.
         js: Custom JavaScript
@@ -126,6 +126,7 @@ en:
         delete_confirm: "Delete %{name} and its saved draft? This cannot be undone."
   js:
     blog:
+      homepage_option: Blog
       panel:
         aria_label: Blog publication
         badge:
@@ -283,7 +284,7 @@ en:
       load_more: Load more
       unpublish_confirm:
         Remove this article from the blog? The topic and its replies
-        will remain public in Discuss. Existing copies in feeds and search engines
+        will remain public in the community. Existing copies in feeds and search engines
         cannot be recalled.
       path: Article path
       path_hint:

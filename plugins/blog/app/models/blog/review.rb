@@ -61,7 +61,7 @@ module ::Blog
 
     # The link only reaches editors, who can already read the draft and issue more links.
     def url
-      "#{Configuration.origin}/review?#{{ review_token: token }.to_query}"
+      "#{Configuration.review_url}?#{{ review_token: token }.to_query}"
     end
 
     def self.eligible_topic?(topic)

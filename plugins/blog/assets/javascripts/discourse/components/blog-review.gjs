@@ -24,7 +24,7 @@ export default class BlogReview extends Component {
   @action
   async submit(data) {
     try {
-      await ajax("/review/feedback.json", {
+      await ajax("/blog/review/feedback.json", {
         type: "POST",
         data: { review_token: this.args.review.token, feedback: data },
       });

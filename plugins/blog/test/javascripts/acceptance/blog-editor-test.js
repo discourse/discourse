@@ -32,7 +32,7 @@ acceptance("Blog editor", function (needs) {
       live: false,
       replies: 0,
       topic_url: "/t/an-unfinished-story/123",
-      preview_url: "/blog/preview/123",
+      preview_url: "/blog-editor/preview/123",
     };
     published = {
       ...draft,
@@ -44,7 +44,7 @@ acceptance("Blog editor", function (needs) {
       published_at: "2026-09-01T14:20:00.000Z",
       replies: 2,
     };
-    pretender.get("/blog/editor.json", (request) => {
+    pretender.get("/blog-editor.json", (request) => {
       const status = request.queryParams.filter;
       return response({
         topics: {
@@ -59,7 +59,7 @@ acceptance("Blog editor", function (needs) {
   });
 
   test("filters private drafts and published articles", async function (assert) {
-    await visit("/blog/editor");
+    await visit("/blog-editor");
     assert
       .dom(".blog-dashboard__entry")
       .exists({ count: 2 }, "both editorial states are listed");
@@ -91,7 +91,7 @@ acceptance("Blog editor", function (needs) {
       source_url: "/t/private-correction/201",
       draft_correction: true,
     };
-    await visit("/blog/editor");
+    await visit("/blog-editor");
     assert
       .dom('[data-topic-id="124"] h2 a')
       .hasText(
@@ -137,14 +137,14 @@ acceptance("Blog editor", function (needs) {
 
   test("creates a private working copy for articles without one", async function (assert) {
     published = { ...published, source_url: null, source_topic_id: null };
-    pretender.post("/blog/publications/124/prepare.json", () => {
+    pretender.post("/blog-editor/publications/124/prepare.json", () => {
       assert.step("prepare");
       return response({
         ...published,
         source_url: "/t/internationalization-localization/280",
       });
     });
-    await visit("/blog/editor");
+    await visit("/blog-editor");
     await click('[data-topic-id="124"] .blog-dashboard__edit-private');
     assert.verifySteps(["prepare"], "a working copy is created on demand");
     assert.strictEqual(
@@ -155,7 +155,7 @@ acceptance("Blog editor", function (needs) {
   });
 
   test("marks exactly one article filter as selected", async function (assert) {
-    await visit("/blog/editor");
+    await visit("/blog-editor");
     const filters = ".blog-dashboard__filters";
     assert
       .dom(`${filters} button[aria-pressed="true"]`)
@@ -183,7 +183,7 @@ acceptance("Blog editor", function (needs) {
 
   test("searches the server and preserves filters through load more and refresh", async function (assert) {
     const requests = [];
-    pretender.get("/blog/editor.json", (request) => {
+    pretender.get("/blog-editor.json", (request) => {
       requests.push({ ...request.queryParams });
       return response({
         topics:
@@ -195,7 +195,7 @@ acceptance("Blog editor", function (needs) {
           request.queryParams.page !== "1",
       });
     });
-    await visit("/blog/editor");
+    await visit("/blog-editor");
     await click(".blog-dashboard__filters button:nth-child(2)");
     await formKit(".blog-dashboard__search").field("q").fillIn("workflow");
     await formKit(".blog-dashboard__search").submit();

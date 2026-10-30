@@ -30,7 +30,7 @@ acceptance("Blog publication panel", function (needs) {
       draft_updated_at: "2026-09-01T10:00:00Z",
       source_topic_id: 280,
       source_url: TOPIC_URL,
-      preview_url: "/blog/preview/280",
+      preview_url: "/blog-editor/preview/280",
       published: false,
       live: false,
       draft: true,
@@ -48,11 +48,13 @@ acceptance("Blog publication panel", function (needs) {
       topic.blog_publication = publication;
       return response(topic);
     });
-    pretender.get("/blog/publications/280.json", () => response(publication));
+    pretender.get("/blog-editor/publications/280.json", () =>
+      response(publication)
+    );
   });
 
   test("publishes the current draft in one step", async function (assert) {
-    pretender.post("/blog/publications/280/publish.json", (request) => {
+    pretender.post("/blog-editor/publications/280/publish.json", (request) => {
       assert.false(
         new URLSearchParams(request.requestBody).has("revision_id"),
         "the current draft is published without a frozen revision id"
@@ -110,7 +112,7 @@ acceptance("Blog publication panel", function (needs) {
       changes: ["body", "excerpt"],
       edits_since_publish: 3,
     };
-    pretender.get("/blog/publications/280/changes.json", () =>
+    pretender.get("/blog-editor/publications/280/changes.json", () =>
       response({
         title_diff_html: null,
         diff_html:
@@ -142,12 +144,12 @@ acceptance("Blog publication panel", function (needs) {
 
   test("contributors submit for approval without publisher actions", async function (assert) {
     publication.can_publish = false;
-    pretender.post("/blog/publications/280/submit.json", () => {
+    pretender.post("/blog-editor/publications/280/submit.json", () => {
       publication = {
         ...publication,
         submitted_revision: {
           id: 7,
-          preview_url: "/blog/preview/280?revision_id=7",
+          preview_url: "/blog-editor/preview/280?revision_id=7",
         },
       };
       return response(publication);
@@ -171,9 +173,9 @@ acceptance("Blog publication panel", function (needs) {
   test("publishers approve and publish a submitted revision", async function (assert) {
     publication.submitted_revision = {
       id: 7,
-      preview_url: "/blog/preview/280?revision_id=7",
+      preview_url: "/blog-editor/preview/280?revision_id=7",
     };
-    pretender.post("/blog/publications/280/approve.json", (request) => {
+    pretender.post("/blog-editor/publications/280/approve.json", (request) => {
       assert.step(
         `approve ${new URLSearchParams(request.requestBody).get("revision_id")}`
       );
@@ -183,7 +185,7 @@ acceptance("Blog publication panel", function (needs) {
       };
       return response(publication);
     });
-    pretender.post("/blog/publications/280/publish.json", (request) => {
+    pretender.post("/blog-editor/publications/280/publish.json", (request) => {
       assert.step(
         `publish ${new URLSearchParams(request.requestBody).get("revision_id")}`
       );
@@ -201,7 +203,7 @@ acceptance("Blog publication panel", function (needs) {
       .dom(`${PANEL}__pending a`)
       .hasAttribute(
         "href",
-        "/blog/preview/280?revision_id=7",
+        "/blog-editor/preview/280?revision_id=7",
         "the frozen revision can be previewed"
       );
     await click(`${PANEL}__approve`);
@@ -215,18 +217,18 @@ acceptance("Blog publication panel", function (needs) {
   });
 
   test("schedules the current draft and allows cancellation", async function (assert) {
-    pretender.post("/blog/publications/280/submit.json", () => {
+    pretender.post("/blog-editor/publications/280/submit.json", () => {
       assert.step("submit");
       publication = {
         ...publication,
         submitted_revision: {
           id: 7,
-          preview_url: "/blog/preview/280?revision_id=7",
+          preview_url: "/blog-editor/preview/280?revision_id=7",
         },
       };
       return response(publication);
     });
-    pretender.post("/blog/publications/280/approve.json", () => {
+    pretender.post("/blog-editor/publications/280/approve.json", () => {
       assert.step("approve");
       publication = {
         ...publication,
@@ -234,7 +236,7 @@ acceptance("Blog publication panel", function (needs) {
       };
       return response(publication);
     });
-    pretender.post("/blog/publications/280/schedule.json", (request) => {
+    pretender.post("/blog-editor/publications/280/schedule.json", (request) => {
       const data = new URLSearchParams(request.requestBody);
       assert.step(`schedule ${data.get("revision_id")}`);
       assert.strictEqual(
@@ -249,12 +251,12 @@ acceptance("Blog publication panel", function (needs) {
         scheduled_revision: {
           id: 7,
           approved_by: "eviltrout",
-          preview_url: "/blog/preview/280?revision_id=7",
+          preview_url: "/blog-editor/preview/280?revision_id=7",
         },
       };
       return response(publication);
     });
-    pretender.delete("/blog/publications/280/schedule.json", () => {
+    pretender.delete("/blog-editor/publications/280/schedule.json", () => {
       assert.step("cancel");
       publication = {
         ...publication,
@@ -295,7 +297,7 @@ acceptance("Blog publication panel", function (needs) {
       review_feedback_count: 2,
       active_review_links: 1,
     };
-    pretender.get("/blog/publications/280/feedback.json", () =>
+    pretender.get("/blog-editor/publications/280/feedback.json", () =>
       response({
         feedback: [
           {
@@ -349,7 +351,7 @@ acceptance("Blog publication panel", function (needs) {
   });
 
   test("saves article settings without publishing", async function (assert) {
-    pretender.put("/blog/publications/280.json", (request) => {
+    pretender.put("/blog-editor/publications/280.json", (request) => {
       const data = new URLSearchParams(request.requestBody);
       assert.strictEqual(
         data.get("publication[excerpt]"),
@@ -440,7 +442,7 @@ acceptance("Blog publication panel", function (needs) {
       scheduled_revision: {
         id: 9,
         approved_by: "eviltrout",
-        preview_url: "/blog/preview/280?revision_id=9",
+        preview_url: "/blog-editor/preview/280?revision_id=9",
       },
     };
     await visit("/");
