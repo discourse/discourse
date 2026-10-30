@@ -146,7 +146,15 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
    * actually resolves, and let `ariaLabel` name the float in every other case.
    */
   get contentAriaLabelledby(): string | null | undefined {
-    if (this.#hasPresentationalRole || this.contentAriaLabel) {
+    if (this.#hasPresentationalRole) {
+      return;
+    }
+
+    if (this.options.ariaLabelledBy) {
+      return this.options.ariaLabelledBy;
+    }
+
+    if (this.contentAriaLabel) {
       return;
     }
 
@@ -155,7 +163,7 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
   }
 
   get contentAriaLabel(): string | null | undefined {
-    if (this.#hasPresentationalRole) {
+    if (this.#hasPresentationalRole || this.options.ariaLabelledBy) {
       return;
     }
 

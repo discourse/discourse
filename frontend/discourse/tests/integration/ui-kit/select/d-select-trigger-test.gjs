@@ -2707,7 +2707,7 @@ module(
 );
 
 module(
-  "Integration | ui-kit | select | DSelect (@labelledBy)",
+  "Integration | ui-kit | select | DSelect (@ariaLabelledBy)",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -2768,6 +2768,32 @@ module(
 
       assert.strictEqual(this.nameOf(find(".d-select__filter")), "Fruit");
     });
+
+    for (const mobile of [false, true]) {
+      const overlay = mobile ? ".fk-d-menu-modal" : ".fk-d-menu";
+
+      test(`the ${mobile ? "mobile modal" : "desktop panel"} is named by the caption alone`, async function (assert) {
+        if (mobile) {
+          forceMobile();
+        }
+
+        await render(
+          <template>
+            <span id="fruit-caption">Fruit</span>
+            <DSelect
+              @ariaLabelledBy="fruit-caption"
+              @items={{ITEMS}}
+              @value={{1}}
+              @variant="button"
+            />
+          </template>
+        );
+        await click(TRIGGER);
+
+        assert.strictEqual(this.nameOf(find(overlay)), "Fruit");
+        assert.dom(overlay).doesNotHaveAttribute("aria-label");
+      });
+    }
 
     test("a compact multiple trigger is named by the caption, then the count", async function (assert) {
       await render(

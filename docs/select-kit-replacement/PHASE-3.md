@@ -53,8 +53,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       caption that has an id; FormKit fields, site settings and schema fields pass their
       caption's text as `@ariaLabel`. Still open:
       - ☐ Tag pickers.
-      - ☐ The mobile modal is named by `@ariaLabel` only, because float-kit's menu modal takes no
-        `aria-labelledby`. A picker named through `@ariaLabelledBy` reads "Options" there.
+      - ☑ The panel and the mobile modal are named by the caption too (2026-10-29). Float-kit
+        gained an `ariaLabelledBy` option, beside `ariaLabel`, that both modal paths and the
+        positioned body honour. Before, both read "Options".
       - ☑ Pickers with no caption are named "Category", or "Categories" when they can hold more
         than one (2026-10-29). Before, the placeholder was the name ("All categories, <name>"),
         and a multiple picker with no placeholder read "Options".

@@ -319,8 +319,8 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   flattened into the name, and a click on it reaches the row's handler, so it runs the row's
   action. An action belongs in an action row returned by `@groupHeader` or `@groupFooter`.
 - **Naming the control:** use `@ariaLabel`, or `@ariaLabelledBy` with the id of a caption already
-  on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input and the
-  list, and the held value (or a compact multiple select's count) is read after the caption; an id missing from the page warns
+  on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input, the
+  list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption; an id missing from the page warns
   in development. A wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
   descendant, so the browser resolves the label to that sink instead of to whichever button
   happens to come first (a chip's remove control, or the clear control) — without it, clicking a

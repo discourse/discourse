@@ -648,6 +648,7 @@ export default class DSelect extends Component<DSelectSignature> {
         min-width floor overrides that (it also gives the windowed option list a real width).
         The kind modifier lets a recipe or theme style its portaled overlay. }}
       @ariaLabel={{this.presenter.ariaLabelText}}
+      @ariaLabelledBy={{this.presenter.ariaLabelledBy}}
       @contentClass={{this.contentClass}}
       @contentRole={{this.presenter.panelContentRole}}
       {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
