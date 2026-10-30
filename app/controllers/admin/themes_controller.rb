@@ -81,9 +81,12 @@ class Admin::ThemesController < Admin::AdminController
           if params[:placeholder]
             create_remote_theme_placeholder(remote, branch:, private_key:)
           else
-            RemoteTheme.import_theme(remote, theme_user, private_key:, branch:)
+            RemoteTheme.import_theme(remote, theme_user, private_key:, branch:, guardian:)
           end
         render json: serialize_data(@theme, ThemeSerializer), status: :created
+      rescue Discourse::InvalidAccess
+        # hijacked requests don't go through the usual error handling
+        render_json_error I18n.t("invalid_access"), status: :forbidden
       rescue RemoteTheme::ImportError => e
         if params[:force]
           @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
@@ -116,6 +119,7 @@ class Admin::ThemesController < Admin::AdminController
             theme_id:,
             update_components:,
             run_migrations:,
+            guardian:,
           )
 
         log_theme_change(nil, @theme)
@@ -232,7 +236,11 @@ class Admin::ThemesController < Admin::AdminController
       skipped_components =
         @theme
           .remote_theme
-          .update_from_remote(raise_if_theme_save_fails: false, raise_on_import_error: true)
+          .update_from_remote(
+            raise_if_theme_save_fails: false,
+            raise_on_import_error: true,
+            guardian:,
+          )
           .skipped_child_components
     else
       @theme.save
@@ -423,7 +431,11 @@ class Admin::ThemesController < Admin::AdminController
         remote_theme.branch = params[:branch].presence
         remote_theme.private_key = private_key if private_key.present?
 
-        remote_theme.update_from_remote(already_in_transaction: true, refresh_name_and_type: true)
+        remote_theme.update_from_remote(
+          already_in_transaction: true,
+          refresh_name_and_type: true,
+          guardian:,
+        )
 
         if remote_theme.last_error_text.present?
           raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
@@ -433,6 +445,10 @@ class Admin::ThemesController < Admin::AdminController
       log_theme_change(nil, theme.reload)
       render json: theme_json(theme, skipped_components: remote_theme.skipped_child_components),
              status: :ok
+    rescue Discourse::InvalidAccess
+      # hijacked requests don't go through the usual error handling
+      remote_theme.reload
+      render_json_error I18n.t("invalid_access"), status: :forbidden
     rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid, Theme::SettingsMigrationError => e
       remote_theme.reload
       render_json_error e.message

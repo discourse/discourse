@@ -73,7 +73,8 @@ class RemoteTheme < ActiveRecord::Base
     user: Discourse.system_user,
     theme_id: nil,
     update_components: nil,
-    run_migrations: true
+    run_migrations: true,
+    guardian: nil
   )
     update_theme(
       ThemeStore::ZipImporter.new(filename, original_filename),
@@ -81,8 +82,45 @@ class RemoteTheme < ActiveRecord::Base
       theme_id:,
       update_components:,
       run_migrations:,
+      guardian:,
     )
   end
+
+  # Importing a theme can include its listed components, or drop the ones it
+  # no longer lists, which changes where their code runs. When an import
+  # runs for someone, every existing component it would include or drop has
+  # to be editable by them.
+  def self.ensure_can_change_components!(guardian, theme, component_urls, update_components:)
+    return if guardian.nil? || theme.component?
+
+    urls = component_urls.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+    if theme.new_record?
+      return if update_components == "none"
+      added_ids = component_ids_for(urls)
+      removed_ids = []
+    else
+      return if update_components.blank? || update_components == "none"
+      added_ids = component_ids_for(urls) - theme.child_theme_ids
+      removed_ids =
+        if update_components == "sync"
+          theme
+            .child_themes
+            .joins(:remote_theme)
+            .where.not(remote_themes: { remote_url: urls })
+            .pluck(:id)
+        else
+          []
+        end
+    end
+
+    changed = Theme.where(id: added_ids + removed_ids)
+    raise Discourse::InvalidAccess if !changed.all? { |related| guardian.can_edit_theme?(related) }
+  end
+
+  def self.component_ids_for(urls)
+    Theme.joins(:remote_theme).where(remote_themes: { remote_url: urls }).pluck(:id)
+  end
+  private_class_method :component_ids_for
 
   def self.import_theme_from_directory(
     directory,
@@ -106,7 +144,8 @@ class RemoteTheme < ActiveRecord::Base
     update_components: nil,
     run_migrations: true,
     allow_out_of_sequence_migration: false,
-    before_save: nil
+    before_save: nil,
+    guardian: nil
   )
     importer.import!
 
@@ -129,6 +168,7 @@ class RemoteTheme < ActiveRecord::Base
     theme.child_components = theme_info["components"].presence || []
     theme.skip_child_components_update = true if update_components == "none"
     update_children = existing && update_components.present? && update_components != "none"
+    ensure_can_change_components!(guardian, theme, theme.child_components, update_components:)
 
     remote_theme = new
     remote_theme.theme = theme
@@ -165,7 +205,13 @@ class RemoteTheme < ActiveRecord::Base
   end
   private_class_method :update_theme
 
-  def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
+  def self.import_theme(
+    url,
+    user = Discourse.system_user,
+    private_key: nil,
+    branch: nil,
+    guardian: nil
+  )
     importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
     importer.import!
 
@@ -181,7 +227,7 @@ class RemoteTheme < ActiveRecord::Base
     remote_theme.branch = branch
     remote_theme.remote_url = importer.url
 
-    remote_theme.update_from_remote(importer)
+    remote_theme.update_from_remote(importer, guardian:)
 
     theme
   ensure
@@ -246,7 +292,8 @@ class RemoteTheme < ActiveRecord::Base
     allow_out_of_sequence_migration: false,
     before_save: nil,
     raise_on_import_error: false,
-    refresh_name_and_type: false
+    refresh_name_and_type: false,
+    guardian: nil
   )
     cleanup = false
 
@@ -308,7 +355,17 @@ class RemoteTheme < ActiveRecord::Base
       theme.name = theme_info["name"]
       theme.component = [true, "true"].include?(theme_info["component"])
     end
-    theme.child_components = theme_info["components"].presence || [] if was_placeholder
+    if was_placeholder
+      theme.child_components = theme_info["components"].presence || []
+      # a new theme links its components when it's created, and finishing a
+      # placeholder links them afterwards
+      self.class.ensure_can_change_components!(
+        guardian,
+        theme,
+        theme.child_components,
+        update_components: new_theme ? nil : "merge",
+      )
+    end
 
     METADATA_PROPERTIES.each { |property| public_send(:"#{property}=", theme_info[property.to_s]) }
 
