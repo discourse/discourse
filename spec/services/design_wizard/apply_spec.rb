@@ -244,6 +244,77 @@ RSpec.describe DesignWizard::Apply do
       it { is_expected.to fail_to_find_a_model(:theme) }
     end
 
+    context "when a plugin restricts editing the theme" do
+      let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { proc { false } }
+
+      before { plugin.register_modifier(:user_guardian_can_edit_theme, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:can_edit_theme) }
+
+      it "changes nothing" do
+        expect { result }.not_to change {
+          [foundation_theme.reload.color_scheme_id, ColorScheme.count]
+        }
+      end
+    end
+
+    context "when a plugin restricts palette creation" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { proc { false } }
+
+      before { plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_create_color_scheme,
+          &modifier
+        )
+      end
+
+      context "when a built-in palette has to be saved first" do
+        let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+
+        # new sites start with the built-in palettes saved, but they can be deleted
+        before do
+          ColorScheme.where(
+            base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+            via_wizard: true,
+          ).destroy_all
+        end
+
+        it { is_expected.to fail_a_policy(:can_create_needed_palettes) }
+      end
+
+      context "when offering the built-in palettes would save them" do
+        let(:params) { { theme_id:, palettes_user_selectable: true } }
+
+        it { is_expected.to fail_a_policy(:can_create_needed_palettes) }
+      end
+
+      context "when the built-in palette was saved before" do
+        let(:params) { { theme_id:, light_palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"] } }
+
+        before do
+          DesignWizard::Action::ResolvePalette.call(
+            palette_id: ColorScheme::NAMES_TO_ID_MAP["WCAG"],
+          )
+        end
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when a provided palette belongs to another theme" do
       fab!(:horizon_palette) { Fabricate(:color_scheme, theme_id: Theme::CORE_THEMES["horizon"]) }
 

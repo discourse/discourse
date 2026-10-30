@@ -28,6 +28,15 @@ RSpec.describe Themes::Destroy do
       it { is_expected.to fail_to_find_a_model(:theme) }
     end
 
+    context "when the theme can't be edited" do
+      let(:guardian) { admin.guardian }
+      let(:dependencies) { { guardian: } }
+
+      before { allow(guardian).to receive(:can_edit_theme?).with(theme).and_return(false) }
+
+      it { is_expected.to fail_a_policy(:can_edit_theme) }
+    end
+
     context "for a default theme" do
       before { theme.set_default! }
 

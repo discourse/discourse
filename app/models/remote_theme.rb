@@ -73,7 +73,8 @@ class RemoteTheme < ActiveRecord::Base
     user: Discourse.system_user,
     theme_id: nil,
     update_components: nil,
-    run_migrations: true
+    run_migrations: true,
+    guardian: nil
   )
     update_theme(
       ThemeStore::ZipImporter.new(filename, original_filename),
@@ -81,8 +82,50 @@ class RemoteTheme < ActiveRecord::Base
       theme_id:,
       update_components:,
       run_migrations:,
+      guardian:,
     )
   end
+
+  # Importing a theme can include its listed components, or drop the ones it
+  # no longer lists, which changes where their code runs. When an import
+  # runs for someone, every existing component it would include or drop has
+  # to be editable by them.
+  # The archive may have just changed whether the theme is a component, so
+  # removals go by the links the theme has now: syncing drops them either way.
+  def self.ensure_can_change_components!(guardian, theme, component_urls, update_components:)
+    return if guardian.nil?
+
+    urls = component_urls.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+    # components are only included in themes
+    adds_components = !theme.component?
+    if theme.new_record?
+      return if update_components == "none" || !adds_components
+      added_ids = component_ids_for(urls)
+      removed_ids = []
+    else
+      return if update_components.blank? || update_components == "none"
+      added_ids = adds_components ? component_ids_for(urls) - theme.child_theme_ids : []
+      removed_ids =
+        if update_components == "sync"
+          theme
+            .child_themes
+            .joins(:remote_theme)
+            .where.not(remote_themes: { remote_url: urls })
+            .pluck(:id)
+        else
+          []
+        end
+    end
+
+    changed = Theme.where(id: added_ids + removed_ids)
+    raise Discourse::InvalidAccess if !changed.all? { |related| guardian.can_edit_theme?(related) }
+  end
+  private_class_method :ensure_can_change_components!
+
+  def self.component_ids_for(urls)
+    Theme.joins(:remote_theme).where(remote_themes: { remote_url: urls }).pluck(:id)
+  end
+  private_class_method :component_ids_for
 
   def self.import_theme_from_directory(
     directory,
@@ -106,7 +149,8 @@ class RemoteTheme < ActiveRecord::Base
     update_components: nil,
     run_migrations: true,
     allow_out_of_sequence_migration: false,
-    before_save: nil
+    before_save: nil,
+    guardian: nil
   )
     importer.import!
 
@@ -128,6 +172,7 @@ class RemoteTheme < ActiveRecord::Base
     theme.component = theme_info["component"].to_s == "true"
     theme.child_components = child_components = theme_info["components"].presence || []
     theme.skip_child_components_update = true if update_components == "none"
+    ensure_can_change_components!(guardian, theme, child_components, update_components:)
 
     remote_theme = new
     remote_theme.theme = theme
@@ -150,6 +195,7 @@ class RemoteTheme < ActiveRecord::Base
 
         if update_components == "sync"
           ChildTheme
+            .where(parent_theme_id: theme.id)
             .joins(child_theme: :remote_theme)
             .where.not(remote_themes: { remote_url: child_components })
             .delete_all
@@ -177,7 +223,13 @@ class RemoteTheme < ActiveRecord::Base
   end
   private_class_method :update_theme
 
-  def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
+  def self.import_theme(
+    url,
+    user = Discourse.system_user,
+    private_key: nil,
+    branch: nil,
+    guardian: nil
+  )
     importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
     importer.import!
 
@@ -186,6 +238,7 @@ class RemoteTheme < ActiveRecord::Base
     component = [true, "true"].include?(theme_info["component"])
     theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
     theme.child_components = theme_info["components"].presence || []
+    ensure_can_change_components!(guardian, theme, theme.child_components, update_components: nil)
 
     remote_theme = new
     theme.remote_theme = remote_theme

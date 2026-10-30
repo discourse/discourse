@@ -10,6 +10,8 @@ class Admin::ColorSchemesController < Admin::AdminController
   end
 
   def create
+    guardian.ensure_can_create_color_scheme!
+
     color_scheme = ColorScheme.create(color_scheme_params)
     if color_scheme.valid?
       render json: color_scheme, root: false
@@ -20,6 +22,16 @@ class Admin::ColorSchemesController < Admin::AdminController
 
   def update
     update_params = color_scheme_params
+
+    # a theme's own palettes are part of the theme, and the default-on-theme
+    # options change the default theme's palettes
+    if @color_scheme.theme.present? && !guardian.can_edit_theme?(@color_scheme.theme)
+      raise Discourse::InvalidAccess
+    end
+    if (Array(update_params&.keys) & %w[default_light_on_theme default_dark_on_theme]).present? &&
+         !guardian.can_edit_theme?(Theme.find_default)
+      raise Discourse::InvalidAccess
+    end
 
     if @color_scheme.theme_id.present?
       if (update_params.key?(:name) && update_params[:name] != @color_scheme.name) ||
