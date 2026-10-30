@@ -297,6 +297,15 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
         ).count,
       ).to eq(1)
     end
+
+    it "refuses to delete a decision model used for spam detection" do
+      AiModerationSetting.create!(setting_type: :spam, decision_model:)
+
+      delete "/admin/plugins/discourse-ai/ai-decision-models/#{decision_model.id}.json"
+
+      expect(response.status).to eq(409)
+      expect(DecisionModel.exists?(decision_model.id)).to eq(true)
+    end
   end
 
   describe "#test" do

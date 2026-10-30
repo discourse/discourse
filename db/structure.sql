@@ -917,10 +917,11 @@ CREATE TABLE public.ai_moderation_settings (
     id bigint NOT NULL,
     setting_type public.ai_moderation_setting_type NOT NULL,
     data jsonb DEFAULT '{}'::jsonb,
-    llm_model_id bigint NOT NULL,
+    llm_model_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    ai_agent_id bigint DEFAULT '-31'::integer NOT NULL
+    ai_agent_id bigint DEFAULT '-31'::integer NOT NULL,
+    decision_model_id bigint
 );
 
 
@@ -1038,7 +1039,7 @@ ALTER SEQUENCE public.ai_secrets_id_seq OWNED BY public.ai_secrets.id;
 CREATE TABLE public.ai_spam_logs (
     id bigint NOT NULL,
     post_id bigint NOT NULL,
-    llm_model_id bigint NOT NULL,
+    llm_model_id bigint,
     ai_api_audit_log_id bigint,
     reviewable_id bigint,
     is_spam boolean NOT NULL,
@@ -1046,7 +1047,9 @@ CREATE TABLE public.ai_spam_logs (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     error character varying(3000),
-    reason text
+    reason text,
+    decision_model_id bigint,
+    spam_probability double precision
 );
 
 
@@ -26166,6 +26169,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261030183551'),
 ('20261029021723'),
 ('20261021180718'),
 ('20261021180714'),
