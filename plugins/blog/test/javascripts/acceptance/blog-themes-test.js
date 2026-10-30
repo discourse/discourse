@@ -33,7 +33,7 @@ acceptance("Blog themes and identity", function (needs) {
         admin_route: { use_new_show_route: true, location: "blog" },
       })
     );
-    pretender.get("/blog-editor/theme-authoring.json", () =>
+    pretender.get("/admin/plugins/blog/theme-authoring.json", () =>
       response({
         templates: Object.fromEntries(
           ["layout", "index", "article", "about", "not_found"].map((name) => [
@@ -69,10 +69,10 @@ acceptance("Blog themes and identity", function (needs) {
       revision: 1,
       preview_url: "https://blog.example.com/?blog_theme_preview=signed",
     };
-    pretender.get("/blog-editor/themes.json", () =>
+    pretender.get("/admin/plugins/blog/themes.json", () =>
       response({ themes: [draft], active })
     );
-    pretender.get("/blog-editor/themes/candidate.json", () =>
+    pretender.get("/admin/plugins/blog/themes/candidate.json", () =>
       response({ theme: draft, active })
     );
     const settings = {
@@ -128,7 +128,7 @@ acceptance("Blog themes and identity", function (needs) {
   });
 
   test("saves a draft without activation and blocks activating unsaved edits", async function (assert) {
-    pretender.put("/blog-editor/themes/candidate.json", (request) => {
+    pretender.put("/admin/plugins/blog/themes/candidate.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
       assert.strictEqual(
         values.get("theme[css]"),
@@ -165,7 +165,7 @@ acceptance("Blog themes and identity", function (needs) {
   });
 
   test("edits Liquid templates as a saved draft without activating them", async function (assert) {
-    pretender.put("/blog-editor/themes/candidate.json", (request) => {
+    pretender.put("/admin/plugins/blog/themes/candidate.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
       assert.strictEqual(
         values.get("theme[template_index]"),
@@ -300,26 +300,31 @@ acceptance("Blog themes and identity", function (needs) {
 
   test("previews unsaved changes in a modal without saving or activating", async function (assert) {
     const previewedPages = [];
-    pretender.post("/blog-editor/theme-authoring/preview.json", (request) => {
-      const values = new URLSearchParams(request.requestBody);
-      previewedPages.push(values.get("page"));
-      assert.strictEqual(
-        values.get("theme[css]"),
-        ".blog { color: blue; }",
-        "design edits survive unmounting their tab"
-      );
-      assert.strictEqual(
-        values.get("theme[template_index]"),
-        "<h1>Unsaved preview</h1>",
-        "preview includes unsaved template changes"
-      );
-      assert.strictEqual(
-        values.get("article_id"),
-        "1",
-        "the selected public article is used"
-      );
-      return response({ url: `about:blank#preview-${previewedPages.length}` });
-    });
+    pretender.post(
+      "/admin/plugins/blog/theme-authoring/preview.json",
+      (request) => {
+        const values = new URLSearchParams(request.requestBody);
+        previewedPages.push(values.get("page"));
+        assert.strictEqual(
+          values.get("theme[css]"),
+          ".blog { color: blue; }",
+          "design edits survive unmounting their tab"
+        );
+        assert.strictEqual(
+          values.get("theme[template_index]"),
+          "<h1>Unsaved preview</h1>",
+          "preview includes unsaved template changes"
+        );
+        assert.strictEqual(
+          values.get("article_id"),
+          "1",
+          "the selected public article is used"
+        );
+        return response({
+          url: `about:blank#preview-${previewedPages.length}`,
+        });
+      }
+    );
     await visit("/admin/plugins/blog/themes/candidate/edit");
     await formKit(".blog-theme-editor__form")
       .field("css")
@@ -376,14 +381,14 @@ acceptance("Blog themes and identity", function (needs) {
 
   test("explains that article previews need a published article", async function (assert) {
     let previews = 0;
-    pretender.get("/blog-editor/theme-authoring.json", () =>
+    pretender.get("/admin/plugins/blog/theme-authoring.json", () =>
       response({
         templates: { template_article: "<h1>{{ site.title }}</h1>" },
         articles: [],
         variables: { site: { title: "Example blog" } },
       })
     );
-    pretender.post("/blog-editor/theme-authoring/preview.json", () => {
+    pretender.post("/admin/plugins/blog/theme-authoring/preview.json", () => {
       previews++;
       return response({ url: "about:blank#preview" });
     });
@@ -446,15 +451,18 @@ acceptance("Blog themes and identity", function (needs) {
   });
 
   test("activates a saved draft only after confirmation", async function (assert) {
-    pretender.post("/blog-editor/themes/candidate/activate.json", (request) => {
-      assert.strictEqual(
-        new URLSearchParams(request.requestBody).get("revision"),
-        "1",
-        "the reviewed revision is activated"
-      );
-      assert.step("activated");
-      return response(draft);
-    });
+    pretender.post(
+      "/admin/plugins/blog/themes/candidate/activate.json",
+      (request) => {
+        assert.strictEqual(
+          new URLSearchParams(request.requestBody).get("revision"),
+          "1",
+          "the reviewed revision is activated"
+        );
+        assert.step("activated");
+        return response(draft);
+      }
+    );
     await visit("/admin/plugins/blog/themes/candidate/edit");
     await click(".blog-theme-editor__activate");
     assert.verifySteps([], "opening confirmation makes no changes");
@@ -463,7 +471,7 @@ acceptance("Blog themes and identity", function (needs) {
   });
 
   test("creates a theme on its own page then opens the persisted editor", async function (assert) {
-    pretender.post("/blog-editor/themes.json", () => response(draft));
+    pretender.post("/admin/plugins/blog/themes.json", () => response(draft));
     await visit("/admin/plugins/blog/themes/new");
     assert
       .dom(".blog-themes")
@@ -488,7 +496,7 @@ acceptance("Blog themes and identity", function (needs) {
       .dom(".blog-theme-editor__export")
       .hasAttribute(
         "href",
-        "/blog-editor/themes/candidate/export",
+        "/admin/plugins/blog/themes/candidate/export",
         "exports the saved draft"
       )
       .hasAttribute("download", "", "downloads rather than navigating");
@@ -513,7 +521,7 @@ acceptance("Blog themes and identity", function (needs) {
     const file = new File(["theme archive"], "theme.zip", {
       type: "application/zip",
     });
-    pretender.post("/blog-editor/themes/import.json", (request) => {
+    pretender.post("/admin/plugins/blog/themes/import.json", (request) => {
       assert.strictEqual(
         request.requestBody.get("file"),
         file,
@@ -565,7 +573,7 @@ acceptance("Blog themes and identity", function (needs) {
   });
 
   test("imports Git on a separate page and opens the imported draft", async function (assert) {
-    pretender.post("/blog-editor/themes/import.json", (request) => {
+    pretender.post("/admin/plugins/blog/themes/import.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
       assert.strictEqual(
         values.get("repository"),
@@ -716,7 +724,7 @@ acceptance("Blog themes and identity", function (needs) {
       },
       locally_modified: true,
     };
-    pretender.get("/blog-editor/themes.json", () =>
+    pretender.get("/admin/plugins/blog/themes.json", () =>
       response({ themes: [active, imported], active })
     );
 
@@ -780,11 +788,11 @@ acceptance("Blog themes and identity", function (needs) {
 
   test("activating from a card confirms first and reloads the list", async function (assert) {
     let listLoads = 0;
-    pretender.get("/blog-editor/themes.json", () => {
+    pretender.get("/admin/plugins/blog/themes.json", () => {
       listLoads++;
       return response({ themes: [active, draft], active });
     });
-    pretender.post("/blog-editor/themes/candidate/activate.json", () => {
+    pretender.post("/admin/plugins/blog/themes/candidate/activate.json", () => {
       assert.step("activated");
       return response(draft);
     });
@@ -816,19 +824,22 @@ acceptance("Blog themes and identity", function (needs) {
       },
       locally_modified: true,
     };
-    pretender.get("/blog-editor/themes.json", () =>
+    pretender.get("/admin/plugins/blog/themes.json", () =>
       response({ themes: [active, theme], active })
     );
-    pretender.post("/blog-editor/themes/candidate/pull.json", (request) => {
-      assert.strictEqual(
-        new URLSearchParams(request.requestBody).get("revision"),
-        "1",
-        "the saved revision is pulled"
-      );
-      assert.step("pulled");
-      theme = { ...theme, locally_modified: false, revision: 2 };
-      return response(theme);
-    });
+    pretender.post(
+      "/admin/plugins/blog/themes/candidate/pull.json",
+      (request) => {
+        assert.strictEqual(
+          new URLSearchParams(request.requestBody).get("revision"),
+          "1",
+          "the saved revision is pulled"
+        );
+        assert.step("pulled");
+        theme = { ...theme, locally_modified: false, revision: 2 };
+        return response(theme);
+      }
+    );
 
     await visit("/admin/plugins/blog/themes");
     assert

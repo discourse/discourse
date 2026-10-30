@@ -158,7 +158,8 @@ after_initialize do
             :format => false
       end
     end
-    %w[appearance identity themes themes/new themes/import/new themes/:id/edit].each do |path|
+    # The themes list is served by Blog::ThemesController, which renders the app for page loads.
+    %w[appearance identity themes/new themes/import/new themes/:id/edit].each do |path|
       get "/admin/plugins/blog/#{path}" => "admin/plugins#show",
           :defaults => {
             plugin_id: "blog",

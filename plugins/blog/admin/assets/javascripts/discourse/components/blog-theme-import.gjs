@@ -36,7 +36,7 @@ export default class BlogThemeImport extends Component {
     }
 
     try {
-      const theme = await ajax("/blog-editor/themes/import.json", {
+      const theme = await ajax("/admin/plugins/blog/themes/import.json", {
         type: "POST",
         data: requestData,
         ...(data.source === "file"

@@ -63,7 +63,7 @@ export default class BlogThemeEditor extends Component {
   }
 
   get exportUrl() {
-    return getURL(`/blog-editor/themes/${this.state.draft.id}/export`);
+    return getURL(`/admin/plugins/blog/themes/${this.state.draft.id}/export`);
   }
 
   get hasUnsavedChanges() {
@@ -249,7 +249,7 @@ export default class BlogThemeEditor extends Component {
     const sequence = ++this.#catalogSequence;
     this.catalogError = false;
     try {
-      const catalog = await ajax("/blog-editor/theme-authoring.json", {
+      const catalog = await ajax("/admin/plugins/blog/theme-authoring.json", {
         data: { article_id: this.selectedArticle },
       });
       if (sequence !== this.#catalogSequence || this.isDestroying) {
@@ -318,14 +318,17 @@ export default class BlogThemeEditor extends Component {
           this.formApi.get(key) ?? this.state.draft[key] ?? "",
         ])
       );
-      const result = await ajax("/blog-editor/theme-authoring/preview.json", {
-        type: "POST",
-        data: {
-          theme,
-          page: this.previewPage,
-          article_id: this.selectedArticle,
-        },
-      });
+      const result = await ajax(
+        "/admin/plugins/blog/theme-authoring/preview.json",
+        {
+          type: "POST",
+          data: {
+            theme,
+            page: this.previewPage,
+            article_id: this.selectedArticle,
+          },
+        }
+      );
       if (sequence === this.#previewSequence) {
         this.previewUrl = result.url;
       }
@@ -413,7 +416,10 @@ export default class BlogThemeEditor extends Component {
   async #request(path, type, data) {
     this.busy = true;
     try {
-      return await ajax(`/blog-editor/themes${path}.json`, { type, data });
+      return await ajax(`/admin/plugins/blog/themes${path}.json`, {
+        type,
+        data,
+      });
     } catch (error) {
       popupAjaxError(error);
       return false;

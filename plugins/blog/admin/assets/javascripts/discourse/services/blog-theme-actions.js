@@ -71,7 +71,10 @@ export default class BlogThemeActions extends Service {
     this.busy = true;
 
     try {
-      return await ajax(`/blog-editor/themes${path}.json`, { type, data });
+      return await ajax(`/admin/plugins/blog/themes${path}.json`, {
+        type,
+        data,
+      });
     } catch (error) {
       popupAjaxError(error);
       return false;

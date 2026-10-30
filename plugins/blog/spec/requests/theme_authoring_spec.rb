@@ -40,27 +40,27 @@ RSpec.describe "Blog theme authoring", type: :request do
   end
 
   it "requires administrators and serves only public samples" do
-    get "https://test.localhost/blog-editor/theme-authoring.json"
+    get "https://test.localhost/admin/plugins/blog/theme-authoring.json"
     expect(response.status).to eq(403)
     get "https://test.localhost/session/#{user.encoded_username}/become"
-    get "https://test.localhost/blog-editor/theme-authoring.json"
+    get "https://test.localhost/admin/plugins/blog/theme-authoring.json"
     expect(response.status).to eq(403)
     get "https://test.localhost/session/#{admin.encoded_username}/become"
-    get "https://test.localhost/blog-editor/theme-authoring.json"
+    get "https://test.localhost/admin/plugins/blog/theme-authoring.json"
     expect(response.status).to eq(200)
     data = response.parsed_body
     expect(data["templates"]["template_layout"]).to include("{{ content_html }}")
     expect(data["articles"].map { |article| article["id"] }).to eq([publication.id])
     expect(data.dig("variables", "article", "title")).to eq(publication.article.title)
     expect(response.body).not_to include(private_post.raw, private_topic.title)
-    get "https://blog.example.com/blog-editor/theme-authoring.json"
+    get "https://blog.example.com/admin/plugins/blog/theme-authoring.json"
     expect(response.status).to eq(404)
   end
 
   it "previews unsaved changes without saving or activating and expires the capability" do
     freeze_time
     get "https://test.localhost/session/#{admin.encoded_username}/become"
-    post "https://test.localhost/blog-editor/theme-authoring/preview.json",
+    post "https://test.localhost/admin/plugins/blog/theme-authoring/preview.json",
          params: {
            theme: attributes,
            page: "index",
@@ -86,7 +86,7 @@ RSpec.describe "Blog theme authoring", type: :request do
 
   it "shows syntax errors with template and line instead of silently substituting live output" do
     get "https://test.localhost/session/#{admin.encoded_username}/become"
-    post "https://test.localhost/blog-editor/theme-authoring/preview.json",
+    post "https://test.localhost/admin/plugins/blog/theme-authoring/preview.json",
          params: {
            theme: attributes.merge("template_index" => "<h1>Broken</h1>\n{% unknown_tag %}"),
            page: "index",
@@ -99,7 +99,7 @@ RSpec.describe "Blog theme authoring", type: :request do
 
   it "warns about undefined variables while rendering the rest of the working page" do
     get "https://test.localhost/session/#{admin.encoded_username}/become"
-    post "https://test.localhost/blog-editor/theme-authoring/preview.json",
+    post "https://test.localhost/admin/plugins/blog/theme-authoring/preview.json",
          params: {
            theme:
              attributes.merge(
@@ -120,7 +120,7 @@ RSpec.describe "Blog theme authoring", type: :request do
     get "https://test.localhost/session/#{admin.encoded_username}/become"
     urls =
       4.times.map do
-        post "https://test.localhost/blog-editor/theme-authoring/preview.json",
+        post "https://test.localhost/admin/plugins/blog/theme-authoring/preview.json",
              params: {
                theme: attributes,
                page: "article",
@@ -134,7 +134,7 @@ RSpec.describe "Blog theme authoring", type: :request do
     get urls.last
     expect(response.status).to eq(200)
     expect(response.body).to include(first_post.cooked)
-    post "https://test.localhost/blog-editor/theme-authoring/preview.json",
+    post "https://test.localhost/admin/plugins/blog/theme-authoring/preview.json",
          params: {
            theme: attributes,
            page: "article",
