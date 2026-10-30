@@ -178,6 +178,45 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
       )
     end
 
+    it "still drafts a font change when the theme already uses the closest palettes" do
+      clover = ColorScheme.find_by(theme: horizon, name: "Clover")
+      clover_dark = ColorScheme.find_by(theme: horizon, name: "Clover Dark")
+      horizon.update!(color_scheme: clover, dark_color_scheme: clover_dark)
+
+      result = invoke(name: "Acme", brand_color: "#1ed760", body_font: "Lora")
+      expect(result).to include(status: "success", fonts: { "base_font" => "Lora" })
+
+      appearance_change =
+        AppearanceChange::DraftExistingPalettes.call(
+          params:
+            draft(result).slice(
+              *%i[
+                theme_id
+                name
+                light_palette_id
+                dark_palette_id
+                site_settings
+                light_colors
+                dark_colors
+              ],
+            ),
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      expect(appearance_change.applied?).to eq(false)
+
+      expect {
+        AppearanceChange::Activate.call(
+          params: {
+            appearance_change_id: appearance_change.id,
+          },
+          guardian: admin.guardian,
+        )
+      }.to change { SiteSetting.base_font }.to("lora")
+      expect(appearance_change.reload.applied?).to eq(true)
+    end
+
     it "doesn't draft a new theme, which would need new palettes" do
       expect(invoke(name: "Acme", brand_color: "#1ed760", new_theme: true)[:error]).to eq(
         "New palettes aren't available here.",

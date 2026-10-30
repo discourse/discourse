@@ -59,12 +59,14 @@ class AppearanceChange < ActiveRecord::Base
   end
 
   # Whether the site uses the change now: the new theme is the default, or the
-  # palettes are the theme's.
+  # palettes are the theme's. A change that also sets fonts only counts once
+  # it has gone live, since the theme can already have the palettes it picks.
   def applied?
     return theme.default? if kind_theme?
 
     theme.color_scheme_id == light_color_scheme_id &&
-      theme.dark_color_scheme_id == dark_color_scheme_id
+      theme.dark_color_scheme_id == dark_color_scheme_id &&
+      (site_settings.blank? || previous_state.present?)
   end
 
   # The site settings making the change live sets: its fonts and, for a new

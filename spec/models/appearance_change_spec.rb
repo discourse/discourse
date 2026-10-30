@@ -45,6 +45,19 @@ RSpec.describe AppearanceChange do
       theme.update!(dark_color_scheme: appearance_change.dark_color_scheme)
       expect(appearance_change.reload.applied?).to eq(true)
     end
+
+    it "is only true for palettes that also set fonts once the change has gone live" do
+      appearance_change =
+        Fabricate(:appearance_change, theme:, site_settings: { "base_font" => "lora" })
+      theme.update!(
+        color_scheme: appearance_change.light_color_scheme,
+        dark_color_scheme: appearance_change.dark_color_scheme,
+      )
+      expect(appearance_change.reload.applied?).to eq(false)
+
+      appearance_change.update!(previous_state: { "site_settings" => { "base_font" => "inter" } })
+      expect(appearance_change.applied?).to eq(true)
+    end
   end
 
   describe "#discard!" do

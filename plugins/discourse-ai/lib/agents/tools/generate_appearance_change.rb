@@ -297,7 +297,8 @@ module DiscourseAi
           choice = AppearanceAuthoring::PaletteChoice.closest(theme:, brand:, accent:, header:)
           refuse(reason) if choice.nil?
 
-          if same_palettes?(theme, choice)
+          # the closest palettes may be the theme's already, while the fonts still change
+          if same_palettes?(theme, choice) && AppearanceAuthoring.font_changes(site_settings).empty?
             return(
               {
                 status: "no_change",
