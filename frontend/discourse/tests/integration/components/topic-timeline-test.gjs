@@ -63,4 +63,35 @@ module("Integration | Component | topic-timeline", function (hooks) {
 
     assert.true(jumpToIndex.calledOnceWith(55));
   });
+
+  test("shows the total posts count only when it fits", async function (assert) {
+    const topic = createMegaTopic(this, { highest_post_number: 10_050 });
+    const jumpTop = () => {};
+    const sameLine = () => {
+      const [current, total] = document.querySelectorAll(
+        ".timeline-replies span"
+      );
+      return current.offsetTop === total.offsetTop;
+    };
+
+    await render(
+      <template>
+        <TopicTimeline @enteredIndex={{5000}} @model={{topic}} />
+      </template>
+    );
+    assert.dom(".timeline-replies").hasText("5001 / 10050");
+    assert.true(sameLine(), "the total fits next to the current post");
+
+    await render(
+      <template>
+        <TopicTimeline
+          @enteredIndex={{5000}}
+          @fullscreen={{true}}
+          @jumpTop={{jumpTop}}
+          @model={{topic}}
+        />
+      </template>
+    );
+    assert.false(sameLine(), "the total wraps out of view");
+  });
 });

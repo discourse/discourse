@@ -41,14 +41,6 @@ export default class TopicProgress extends Component {
     );
   }
 
-  @computed("postStream.filteredPostsCount")
-  get hugeNumberOfPosts() {
-    return (
-      this.postStream?.filteredPostsCount >=
-      this.siteSettings.short_progress_text_threshold
-    );
-  }
-
   @computed(
     "progressPosition",
     "topic.last_read_post_id",
@@ -145,10 +137,8 @@ export default class TopicProgress extends Component {
     >
       <div class="nums">
         <span>{{this.progressPosition}}</span>
-        <span class={{if this.hugeNumberOfPosts "hidden"}}>/</span>
-        <span
-          class={{if this.hugeNumberOfPosts "hidden"}}
-        >{{this.postStream.filteredPostsCount}}</span>
+        <span>/</span>
+        <span>{{this.postStream.filteredPostsCount}}</span>
       </div>
       <div class="bg"></div>
     </nav>
