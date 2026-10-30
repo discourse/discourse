@@ -179,9 +179,7 @@ export default class DInterpolatedTranslation extends Component {
 
   <template>
     {{#let this.textAndPlaceholders as |info|}}
-      {{#each info.parts as |part|}}
-        {{part}}
-      {{/each}}
+      {{#each info.parts as |part|}}{{part}}{{/each}}
 
       {{yield (this.curriedPlaceholderComponent info.elements info.rendered)}}
       {{this.checkPlaceholders info}}
@@ -240,9 +238,7 @@ class Placeholder extends Component {
 
   <template>
     {{#each (this.getFromMap @elements @name) as |element|}}
-      {{#in-element element}}
-        {{yield}}
-      {{/in-element}}
+      {{#in-element element}}{{yield}}{{/in-element}}
     {{/each}}
 
     {{#unless (has-block)}}

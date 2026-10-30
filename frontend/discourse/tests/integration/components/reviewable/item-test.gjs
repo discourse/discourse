@@ -145,6 +145,30 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
     assert.dom(".review-item__aside-title").hasText("Moderator actions");
   });
 
+  test("keeps the context question when an action automatically claims the reviewable", async function (assert) {
+    const flagged = claimableReviewable(this, {
+      created_from_flag: true,
+      type: "ReviewableFlaggedPost",
+      reviewable_scores: [{ score_type: { type: "spam", title: "Spam" } }],
+      bundled_actions: [actionBundle("agree_and_hide", "Hide post")],
+    });
+    const question = "Is this post spam?";
+
+    await render(
+      <template><ReviewableItem @reviewable={{flagged}} /></template>
+    );
+
+    assert.dom(".review-item__aside-title").hasText(question);
+
+    flagged.claimed_by = {
+      user: getOwner(this).lookup("service:current-user"),
+      automatic: true,
+    };
+    await settled();
+
+    assert.dom(".review-item__aside-title").hasText(question);
+  });
+
   test("lists secondary actions below the answers to the context question", async function (assert) {
     const pending = userReviewable(this, {
       bundled_actions: [

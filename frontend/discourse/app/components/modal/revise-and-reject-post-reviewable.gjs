@@ -5,10 +5,10 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import DsaModeration from "discourse/components/dsa-moderation";
 import ReviewableQueuedPost from "discourse/components/reviewable/queued-post";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import { i18n } from "discourse-i18n";
@@ -50,7 +50,7 @@ export default class ReviseAndRejectPostReviewable extends Component {
   }
 
   @action
-  async rejectAndSendPM() {
+  async rejectAndSendPM(additionalData = {}) {
     this.submitting = true;
 
     try {
@@ -58,6 +58,7 @@ export default class ReviseAndRejectPostReviewable extends Component {
         revise_reason: this.reason,
         revise_custom_reason: this.customReason,
         revise_feedback: this.feedback,
+        ...additionalData,
       });
       this.args.closeModal();
     } catch (error) {
@@ -68,72 +69,79 @@ export default class ReviseAndRejectPostReviewable extends Component {
   }
 
   <template>
-    <DModal
-      class="revise-and-reject-reviewable"
-      @closeModal={{@closeModal}}
-      @title={{i18n "review.revise_and_reject_post.title"}}
+    <DsaModeration
+      @onSubmit={{this.rejectAndSendPM}}
+      @options={{@model.classificationOptions}}
+      as |flow|
     >
-      <:body>
-        <div class="revise-and-reject-reviewable__queued-post">
-          <ReviewableQueuedPost @reviewable={{@model.reviewable}} />
-        </div>
+      <DModal
+        class="revise-and-reject-reviewable"
+        @closeModal={{@closeModal}}
+        @title={{i18n "review.revise_and_reject_post.title"}}
+      >
+        <:belowHeader>
+          <flow.Steps @disabled={{this.submitting}} />
+        </:belowHeader>
+        <:body>
+          <flow.Body>
+            <div class="revise-and-reject-reviewable__queued-post">
+              <ReviewableQueuedPost @reviewable={{@model.reviewable}} />
+            </div>
 
-        <div class="control-group">
-          <label class="control-label" for="reason">{{i18n
-              "review.revise_and_reject_post.reason"
-            }}</label>
-          <ComboBox
-            class="revise-and-reject-reviewable__reason"
-            @content={{this.configuredReasons}}
-            @name="reason"
-            @onChange={{fn (mut this.reason)}}
-            @value={{this.reason}}
+            <div class="control-group">
+              <label class="control-label" for="reason">{{i18n
+                  "review.revise_and_reject_post.reason"
+                }}</label>
+              <ComboBox
+                class="revise-and-reject-reviewable__reason"
+                @content={{this.configuredReasons}}
+                @name="reason"
+                @onChange={{fn (mut this.reason)}}
+                @value={{this.reason}}
+              />
+            </div>
+
+            {{#if this.showCustomReason}}
+              <div class="control-group">
+                <label class="control-label" for="custom_reason">{{i18n
+                    "review.revise_and_reject_post.custom_reason"
+                  }}</label>
+                <Input
+                  class="revise-and-reject-reviewable__custom-reason"
+                  name="custom_reason"
+                  @type="text"
+                  @value={{this.customReason}}
+                />
+              </div>
+            {{/if}}
+
+            <div class="control-group">
+              <label class="control-label" for="feedback">{{i18n
+                  "review.revise_and_reject_post.feedback"
+                }}
+                <span class="revise-and-reject-reviewable__optional">({{i18n
+                    "review.revise_and_reject_post.optional"
+                  }})</span>
+              </label>
+              <DTextarea
+                class="revise-and-reject-reviewable__feedback"
+                @name="feedback"
+                @onChange={{fn (mut this.feedback)}}
+                @value={{this.feedback}}
+              />
+            </div>
+          </flow.Body>
+        </:body>
+        <:footer>
+          <flow.Footer
+            @cancel={{@closeModal}}
+            @disabled={{this.sendPMDisabled}}
+            @isLoading={{this.submitting}}
+            @submitClass="btn-primary"
+            @submitLabel={{i18n "review.revise_and_reject_post.send_pm"}}
           />
-        </div>
-
-        {{#if this.showCustomReason}}
-          <div class="control-group">
-            <label class="control-label" for="custom_reason">{{i18n
-                "review.revise_and_reject_post.custom_reason"
-              }}</label>
-            <Input
-              class="revise-and-reject-reviewable__custom-reason"
-              name="custom_reason"
-              @type="text"
-              @value={{this.customReason}}
-            />
-          </div>
-        {{/if}}
-
-        <div class="control-group">
-          <label class="control-label" for="feedback">{{i18n
-              "review.revise_and_reject_post.feedback"
-            }}
-            <span class="revise-and-reject-reviewable__optional">({{i18n
-                "review.revise_and_reject_post.optional"
-              }})</span>
-          </label>
-          <DTextarea
-            class="revise-and-reject-reviewable__feedback"
-            @name="feedback"
-            @onChange={{fn (mut this.feedback)}}
-            @value={{this.feedback}}
-          />
-        </div>
-      </:body>
-      <:footer>
-        <DButton
-          class="btn-primary"
-          @action={{this.rejectAndSendPM}}
-          @disabled={{this.sendPMDisabled}}
-          @label="review.revise_and_reject_post.send_pm"
-        />
-        <DButton
-          class="btn-flat d-modal-cancel"
-          @action={{@closeModal}}
-          @label="cancel"
-        />
-      </:footer>
-    </DModal>
+        </:footer>
+      </DModal>
+    </DsaModeration>
   </template>
 }

@@ -61,8 +61,6 @@ export default class DUserLink extends Component {
       data-user-card={{this.username}}
       href={{this.href}}
       tabindex={{if this.ariaHidden "-1" "0"}}
-    >
-      {{yield}}
-    </a>
+    >{{yield}}</a>
   </template>
 }

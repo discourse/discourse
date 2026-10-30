@@ -1023,6 +1023,14 @@ en:
       saving: "Saving…"
       saved: "Classification saved"
     review:
+      continue_to_editor: "Continue to editor"
+      moderation_steps:
+        label: "Moderation steps"
+        action: "Action details"
+        confirm: "Confirm action"
+      user_prompts:
+        delete: "Are you sure you want to delete %{user}?"
+        block: "Are you sure you want to delete and block %{user}?"
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
