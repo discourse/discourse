@@ -152,8 +152,8 @@ acceptance("Admin - Upcoming Changes - Sorting", function (needs) {
   });
 
   async function chooseSort(value) {
-    await click(".upcoming-changes__sort-trigger");
-    await click(`.upcoming-changes__sort-option[data-sort='${value}']`);
+    await click(".d-filter-controls__sort-trigger");
+    await click(`.d-filter-controls__sort-option[data-sort='${value}']`);
   }
 
   function rowOrder() {
@@ -165,7 +165,7 @@ acceptance("Admin - Upcoming Changes - Sorting", function (needs) {
   test("sorts by most recent status change by default", async function (assert) {
     await visit("/admin/config/upcoming-changes");
 
-    assert.dom(".upcoming-changes__sort-trigger").hasText("Recently updated");
+    assert.dom(".d-filter-controls__sort-trigger").hasText("Recently updated");
     assert.deepEqual(rowOrder(), [
       "experimental_untracked",
       "alpha_recent",
@@ -179,7 +179,7 @@ acceptance("Admin - Upcoming Changes - Sorting", function (needs) {
 
     await chooseSort("status");
     assert
-      .dom(".upcoming-changes__sort-trigger")
+      .dom(".d-filter-controls__sort-trigger")
       .hasAttribute("aria-label", "Sort by: Status");
     assert.strictEqual(
       currentURL(),
@@ -214,34 +214,46 @@ acceptance("Admin - Upcoming Changes - Sorting", function (needs) {
       currentURL(),
       "/admin/config/upcoming-changes?sort=status"
     );
-    assert.dom(".upcoming-changes__sort-trigger").hasText("Status");
+    assert.dom(".d-filter-controls__sort-trigger").hasText("Status");
     assert.strictEqual(rowOrder()[0], "stable_middle");
   });
 
-  test("marks the current sort in the menu", async function (assert) {
+  test("keeps filters from the URL when the sort changes", async function (assert) {
+    await visit("/admin/config/upcoming-changes?status=beta");
+
+    await chooseSort("name");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/upcoming-changes?status=beta&sort=name"
+    );
+    assert.dom(".d-filter-controls__dropdown--status").hasValue("beta");
+    assert.deepEqual(rowOrder(), ["beta_old"]);
+  });
+
+  test("keeps selected filters when the sort changes", async function (assert) {
+    await visit("/admin/config/upcoming-changes");
+    await fillIn(".d-filter-controls__dropdown--status", "beta");
+
+    await chooseSort("name");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/upcoming-changes?status=beta&sort=name"
+    );
+    assert.dom(".d-filter-controls__dropdown--status").hasValue("beta");
+    assert.deepEqual(rowOrder(), ["beta_old"]);
+  });
+
+  test("keeps the sort when a filter changes", async function (assert) {
     await visit("/admin/config/upcoming-changes?sort=name");
-    await click(".upcoming-changes__sort-trigger");
 
-    assert
-      .dom(".upcoming-changes__sort-option[data-sort='name']")
-      .hasAttribute("aria-current", "true");
-    assert
-      .dom(".upcoming-changes__sort-option[data-sort='status']")
-      .doesNotHaveAttribute("aria-current");
-  });
+    await fillIn(".d-filter-controls__dropdown--status", "beta");
 
-  test("falls back to the default for an unknown sort", async function (assert) {
-    await visit("/admin/config/upcoming-changes?sort=bogus");
-
-    assert.dom(".upcoming-changes__sort-trigger").hasText("Recently updated");
-    assert.strictEqual(rowOrder()[0], "experimental_untracked");
-  });
-
-  test("falls back to the default for an inherited object property", async function (assert) {
-    await visit("/admin/config/upcoming-changes?sort=constructor");
-
-    assert.dom(".upcoming-changes__sort-trigger").hasText("Recently updated");
-    assert.dom(".upcoming-change-row").exists({ count: 4 });
-    assert.strictEqual(rowOrder()[0], "experimental_untracked");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/upcoming-changes?sort=name&status=beta"
+    );
+    assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
   });
 });

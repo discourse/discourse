@@ -3524,6 +3524,8 @@ en:
     filter_controls:
       reset: "Reset"
       toggle: "Toggle dropdown filters"
+      sort_label: "Sort by"
+      sort_trigger_label: "Sort by: %{sort}"
 
     d_icon_grid_picker:
       select_icon: "Select icon"
@@ -6999,8 +7001,6 @@ en:
           impact_role_all_members: "All members"
           impact_role_developers: "Developers"
         sort:
-          label: "Sort by"
-          trigger_label: "Sort by: %{sort}"
           recently_updated: "Recently updated"
           status: "Status"
           name: "Name"

@@ -25,8 +25,6 @@ export default <template>
     <AdminConfigAreasUpcomingChanges
       @changeNamesFilter={{@controller.changeNamesFilter}}
       @onClearChangeNamesFilter={{@controller.clearChangeNamesFilter}}
-      @onSortChange={{@controller.updateSort}}
-      @sort={{@controller.sort}}
       @upcomingChanges={{@controller.model}}
     />
   </div>

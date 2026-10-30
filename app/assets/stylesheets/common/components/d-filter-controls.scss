@@ -49,6 +49,15 @@
     }
   }
 
+  &__sort-trigger {
+    flex: none;
+  }
+
+  &__sort-option {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   &__no-results {
     display: flex;
     flex-direction: column;
