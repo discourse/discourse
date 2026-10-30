@@ -158,6 +158,78 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
     end
   end
 
+  describe ".perform_scan! with a decision model" do
+    fab!(:decision_model) { Fabricate(:decision_model, id: -1) }
+
+    before { spam_setting.update!(decision_model:) }
+
+    def scan_with(probability, llm_responses: [])
+      DiscourseAi::Decisions.with_canned_answers(spam: probability) do |canned|
+        DiscourseAi::Completions::Llm.with_prepared_responses(llm_responses) do |_, _, prompts|
+          described_class.perform_scan!(post, triggering_user_id: post.user_id)
+          [canned.calls, prompts]
+        end
+      end
+    end
+
+    it "flags confident spam without asking the LLM" do
+      decision_calls, prompts = scan_with(0.95)
+
+      log = AiSpamLog.find_by!(post:)
+      expect([log.is_spam, log.spam_probability, log.decision_model_id, log.llm_model_id]).to eq(
+        [true, 0.95, decision_model.id, nil],
+      )
+      expect(log.reviewable).to be_present
+      expect(post.user.reload).to be_silenced
+      expect(prompts).to be_empty
+      expect(decision_calls.first[:questions].first.instructions).to include("test instructions")
+    end
+
+    it "clears confident non-spam without asking the LLM" do
+      _, prompts = scan_with(0.01)
+
+      expect(AiSpamLog.find_by!(post:).is_spam).to eq(false)
+      expect(prompts).to be_empty
+    end
+
+    it "lets the LLM decide unsure posts and keeps the decision model's probability" do
+      scan_with(0.5, llm_responses: [{ spam: true, reason: "llm reason" }])
+
+      log = AiSpamLog.find_by!(post:)
+      expect([log.is_spam, log.reason, log.spam_probability, log.llm_model_id]).to eq(
+        [true, "llm reason", 0.5, llm_model.id],
+      )
+    end
+
+    it "lets the LLM decide when the decision model fails" do
+      stub_request(:post, decision_model.url).to_return(status: 400, body: "{}")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: false }]) do
+        described_class.perform_scan!(post)
+      end
+
+      expect(AiSpamLog.find_by!(post:).llm_model_id).to eq(llm_model.id)
+    end
+
+    it "decides every post at one cutoff without an LLM" do
+      spam_setting.update!(llm_model: nil)
+
+      scan_with(0.6)
+      expect(AiSpamLog.find_by!(post:).is_spam).to eq(true)
+
+      AiSpamLog.delete_all
+      scan_with(0.4)
+      expect(AiSpamLog.find_by!(post:).is_spam).to eq(false)
+    end
+
+    it "skips the scan without an LLM once the decision model is out of credits" do
+      spam_setting.update!(llm_model: nil)
+      Fabricate(:decision_model_credit_allocation, decision_model:, daily_used: 10_000)
+
+      expect { described_class.perform_scan!(post) }.not_to change { AiSpamLog.count }
+    end
+  end
+
   describe ".scanned_max_times?" do
     it "returns true when post has been scanned 3 times" do
       3.times do

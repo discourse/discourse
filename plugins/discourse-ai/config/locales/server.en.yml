@@ -508,6 +508,9 @@ en:
       bot_user_update_failed: "Failed to update the spam scanning bot user"
       configuration_missing: "The AI spam detection configuration is missing. Add configuration in the 'Admin > Plugins > Discourse AI > Spam' before enabling."
       logging_subject: "Spam detection"
+      model_missing: "Select an LLM or a decision model for spam detection."
+      decision_reason: "The decision model rated this post %{probability}% likely to be spam."
+      decision_refused: "The decision model did not answer, so the post was not flagged."
 
     ai_bot:
       sources:

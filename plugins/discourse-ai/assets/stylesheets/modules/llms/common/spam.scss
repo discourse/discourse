@@ -24,6 +24,7 @@
 
   &__toggle,
   &__llm,
+  &__decision-model,
   &__agent,
   &__instructions {
     margin-bottom: 1em;
@@ -31,6 +32,7 @@
 
   &__toggle-label,
   &__llm-label,
+  &__decision-model-label,
   &__agent-label,
   &__instructions-label {
     display: block;

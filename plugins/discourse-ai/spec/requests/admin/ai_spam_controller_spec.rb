@@ -70,6 +70,25 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
         expect(response.status).to eq(422)
       end
 
+      it "can enable spam detection with only a decision model" do
+        decision_model = Fabricate(:decision_model)
+
+        put "/admin/plugins/discourse-ai/ai-spam.json",
+            params: {
+              is_enabled: true,
+              llm_model_id: "",
+              decision_model_id: decision_model.id,
+            }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.ai_spam_detection_enabled).to eq(true)
+        expect(AiModerationSetting.spam.slice(:llm_model_id, :decision_model_id)).to eq(
+          "llm_model_id" => nil,
+          "decision_model_id" => decision_model.id,
+        )
+        expect(response.parsed_body["decision_model_id"]).to eq(decision_model.id)
+      end
+
       context "when spam detection was already set" do
         fab!(:setting) do
           AiModerationSetting.create(
@@ -275,6 +294,28 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
       parsed = response.parsed_body
       expect(parsed["sent_message"]).to include(spam_post.raw)
       expect(parsed["reason"]).to eq("because apples")
+    end
+
+    it "tests with only a decision model" do
+      decision_model = Fabricate(:decision_model)
+
+      DiscourseAi::Decisions.with_canned_answers(spam: 0.8) do
+        post "/admin/plugins/discourse-ai/ai-spam/test.json",
+             params: {
+               post_url: spam_post.url,
+               llm_id: "",
+               decision_model_id: decision_model.id,
+             }
+      end
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body.slice("is_spam", "spam_probability", "decision_model_name"),
+      ).to eq(
+        "is_spam" => true,
+        "spam_probability" => 0.8,
+        "decision_model_name" => decision_model.display_name,
+      )
     end
 
     it "rejects llm_id that is not a valid LlmModel" do
