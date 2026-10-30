@@ -388,20 +388,6 @@ class DiscoursePoll::Poll
     chart_data
   end
 
-  def self.schedule_jobs(post)
-    Poll
-      .where(post: post)
-      .find_each do |poll|
-        job_args = { post_id: post.id, poll_name: poll.name }
-
-        Jobs.cancel_scheduled_job(:close_poll, job_args)
-
-        if poll.open? && poll.close_at && poll.close_at > Time.zone.now
-          Jobs.enqueue_at(poll.close_at, :close_poll, job_args)
-        end
-      end
-  end
-
   def self.create!(post_id, poll)
     close_at =
       begin
