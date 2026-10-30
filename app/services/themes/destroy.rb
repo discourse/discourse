@@ -42,8 +42,9 @@ class Themes::Destroy
     Theme.find_by(id: params.id)
   end
 
+  # deleting a theme also removes it from the themes it's related to
   def can_edit_theme(guardian:, theme:)
-    guardian.can_edit_theme?(theme)
+    guardian.can_edit_theme_relations?(theme, child_theme_ids: [], parent_theme_ids: [])
   end
 
   def not_default(theme:)
