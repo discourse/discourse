@@ -1757,6 +1757,35 @@ RSpec.describe Admin::ThemesController do
         expect(theme.remote_theme.branch).to eq("develop")
       end
 
+      it "adopts the name and type of the new source without installing its components" do
+        add_to_git_repo(
+          other_repo,
+          "about.json" => {
+            name: "comp",
+            component: true,
+            components: ["https://github.com/discourse/missing.git"],
+          }.to_json,
+        )
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url, local_version: "abc"))
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(200)
+        expect(theme.reload).to have_attributes(name: "comp", component: true)
+        expect(theme.remote_theme.local_version).to be_present
+      end
+
+      it "refuses to turn the default theme into a component" do
+        add_to_git_repo(other_repo, "about.json" => { name: "comp", component: true }.to_json)
+        theme.update!(remote_theme: RemoteTheme.create!(remote_url: repo_url, local_version: "abc"))
+        theme.set_default!
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(422)
+        expect(theme.reload.component).to eq(false)
+      end
+
       it "returns error for non-git theme" do
         put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
 

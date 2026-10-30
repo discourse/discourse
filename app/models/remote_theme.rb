@@ -173,7 +173,6 @@ class RemoteTheme < ActiveRecord::Base
 
     component = [true, "true"].include?(theme_info["component"])
     theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
-    theme.child_components = theme_info["components"].presence || []
 
     remote_theme = new
     theme.remote_theme = remote_theme
@@ -208,6 +207,10 @@ class RemoteTheme < ActiveRecord::Base
     commits_behind > 0 || remote_version != local_version
   end
 
+  def placeholder?
+    remote_url.present? && local_version.blank?
+  end
+
   def update_remote_version
     return unless is_git?
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
@@ -238,7 +241,8 @@ class RemoteTheme < ActiveRecord::Base
     run_migrations: true,
     allow_out_of_sequence_migration: false,
     before_save: nil,
-    raise_on_import_error: false
+    raise_on_import_error: false,
+    refresh_name_and_type: false
   )
     cleanup = false
 
@@ -292,12 +296,11 @@ class RemoteTheme < ActiveRecord::Base
       raise ImportError, err.message
     end
 
-    # Update all theme attributes if this is just a placeholder
-    if remote_url.present? && !local_version && !commits_behind
+    if placeholder? || refresh_name_and_type
       theme.name = theme_info["name"]
       theme.component = [true, "true"].include?(theme_info["component"])
-      theme.child_components = theme_info["components"].presence || []
     end
+    theme.child_components = theme_info["components"].presence || [] if placeholder?
 
     METADATA_PROPERTIES.each { |property| public_send(:"#{property}=", theme_info[property.to_s]) }
 

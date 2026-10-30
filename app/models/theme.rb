@@ -93,8 +93,11 @@ class Theme < ActiveRecord::Base
   validate :component_validations
   validate :validate_theme_fields
 
+  before_validation :reset_attributes_for_type,
+                    if: -> { persisted? && will_save_change_to_component? }
   after_create :update_child_components
   before_update :check_editable_attributes, if: :system?
+  after_update :unlink_relatives_for_type, if: :saved_change_to_component?
   before_destroy :raise_invalid_parameters, if: :system?
 
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
@@ -435,13 +438,8 @@ class Theme < ActiveRecord::Base
     return if component
 
     Theme.transaction do
-      self.component = true
-
-      self.color_scheme_id = nil
-      self.user_selectable = false
       Theme.clear_default! if default?
-
-      ChildTheme.where("parent_theme_id = ?", id).destroy_all
+      self.component = true
       save!
     end
   end
@@ -449,12 +447,8 @@ class Theme < ActiveRecord::Base
   def switch_to_theme!
     return unless component
 
-    Theme.transaction do
-      self.enabled = true
-      self.component = false
-      ChildTheme.where("child_theme_id = ?", id).destroy_all
-      save!
-    end
+    self.component = false
+    save!
   end
 
   def self.find_default
@@ -1178,6 +1172,20 @@ class Theme < ActiveRecord::Base
 
   def raise_invalid_parameters
     raise Discourse::InvalidParameters
+  end
+
+  def reset_attributes_for_type
+    if component
+      self.color_scheme_id = nil
+      self.user_selectable = false
+    else
+      self.enabled = true
+    end
+  end
+
+  def unlink_relatives_for_type
+    column = component ? :parent_theme_id : :child_theme_id
+    ChildTheme.where(column => id).delete_all
   end
 end
 

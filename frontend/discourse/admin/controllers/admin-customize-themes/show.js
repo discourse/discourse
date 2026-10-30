@@ -45,17 +45,9 @@ export default class AdminCustomizeThemesShowController extends Controller {
     return this.model?.remoteError && !this.updatingRemote;
   }
 
-  @computed(
-    "model.remote_theme.remote_url",
-    "model.remote_theme.local_version",
-    "model.remote_theme.commits_behind"
-  )
+  @computed("model.remote_theme.placeholder")
   get finishInstall() {
-    return (
-      this.model?.remote_theme?.remote_url &&
-      !this.model?.remote_theme?.local_version &&
-      !this.model?.remote_theme?.commits_behind
-    );
+    return this.model?.remote_theme?.placeholder;
   }
 
   @action
