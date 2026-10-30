@@ -356,7 +356,7 @@ customization ports are done.
   | `.select-kit-row`, `.is-highlighted`, `.is-selected` | `.d-select__option`, `.--active`, `[aria-selected="true"]` |
   | `.select-kit-row[data-value="all-tags"]`, `[data-value="no-tags"]` | `.d-tag-drop__shortcut` (rows keep `data-value`) |
   | `.select-kit-row .discourse-tag-count` | `.d-tag-option .discourse-tag-count` |
-  | `.filter-for-more` | `.d-tag-drop__filter-for-more`, inside `.d-select__footer` |
+  | `.filter-for-more` | `.d-select__narrow`, the engine's keep-typing hint |
 
   | Legacy selector (category pickers) | DSelect equivalent |
   |---|---|
@@ -449,6 +449,9 @@ Open items need a decision after manual testing; the rest are intended but still
   above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.
 - [ ] **Held tag groups stay listed.** The legacy tag group chooser left held groups out of its
   results; the new picker lists them, marked selected, as every DSelect does.
+- [ ] **The tag drop says to keep typing.** It lists the first `max_tags_in_filter_list` tags,
+  browsing or searching, and below them shows "Showing the first tags only. Keep typing to narrow
+  them down." where select-kit had a "Filter for more…" footer that searching never showed.
 - [ ] **Signed-out visitors send no tag name lookup.** The breadcrumb intersection holds its extra
   tags by name, and resolving them asked `/tags/list.json`, which needs a login, so every value
   change got a 403. Signed out, the held names are now searched without their ids.

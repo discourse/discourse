@@ -407,7 +407,8 @@ engine keys through `@kindTexts`.
 | | `minimumPlaceholder`, `minimumRemaining` | `tagging.choose_for_topic_required`, `tagging.choose_more_required` | `count` |
 | | `tagCountBadge`, `tagCount` | `tagging.tag_count_badge` (drawn), `tagging.tag_count_hidden` (spoken) | `count` |
 | `DSelectTagFilter` | `ariaLabel`, `placeholder` | `tagging.filter_by_tags_label`, `tagging.selector_tags` | |
-| | `removeFilter`, `noTags`, `filterForMore` | `tagging.selector_remove_filter`, `tagging.selector_no_tags`, `select_kit.components.filter_for_more` | |
+| | `removeFilter`, `noTags` | `tagging.selector_remove_filter`, `tagging.selector_no_tags` | |
+| | `maxLoaded` | `tagging.filter_to_narrow_tags`, below the first `max_tags_in_filter_list` top tags | |
 | `DSelectTagGroup` | `ariaLabel` | `tagging.tag_group_label` while it holds at most one, otherwise `tagging.tag_groups_label` | |
 | | `placeholder` | `category.tag_groups_placeholder` | |
 

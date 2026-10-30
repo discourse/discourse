@@ -86,14 +86,19 @@ module(
           .doesNotExist("no empty footer region below the list");
       });
 
-      test("suppressFooter: a single filter with more tags than listed shows its hint", async function (assert) {
+      test("a single filter lists its first top tags and says to keep typing for more", async function (assert) {
         this.siteSettings.max_tags_in_filter_list = 1;
         await render(<template><DSelectTagFilter /></template>);
         await click(".d-select__trigger");
 
+        const tagRows = TOP_TAGS.filter((tag) => optionNamed(tag.name));
+        assert.strictEqual(tagRows.length, 1, "the cap holds the list");
+        assert
+          .dom(".d-select__narrow")
+          .hasText(i18n("tagging.filter_to_narrow_tags"));
         assert
           .dom(".d-select__footer")
-          .hasText(i18n("select_kit.components.filter_for_more"));
+          .doesNotExist("the hint is the engine's, not a footer");
       });
 
       test("suppressFooter: a single filter keeps its caller's footer", async function (assert) {
@@ -552,7 +557,7 @@ module(
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-tag-filter", (spec) =>
               spec.options(() => ({
-                texts: { filterForMore: "Type to find more" },
+                texts: { maxLoaded: "Type to find more" },
               }))
             )
           )
@@ -561,7 +566,7 @@ module(
         await render(<template><DSelectTagFilter /></template>);
         await click(".d-select__trigger");
 
-        assert.dom(".d-select__footer").hasText("Type to find more");
+        assert.dom(".d-select__narrow").hasText("Type to find more");
       });
 
       test("a multiple filter keeps its own prompt in a category with an unmet required group", async function (assert) {

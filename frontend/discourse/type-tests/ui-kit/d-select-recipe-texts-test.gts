@@ -51,7 +51,7 @@ const Keys = <template>
   {{! @glint-expect-error - a tag filter text }}
   <DSelectTag @texts={{hash noTags="x"}} />
   <DSelectTagFilter
-    @texts={{hash noTags="x" addMoreTags="y" filterForMore="z"}}
+    @texts={{hash noTags="x" addMoreTags="y" removeFilter="z"}}
   />
   {{! @glint-expect-error - a category filter text }}
   <DSelectTagFilter @texts={{hash noSubcategories="x"}} />

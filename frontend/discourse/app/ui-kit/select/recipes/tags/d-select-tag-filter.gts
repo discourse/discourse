@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
@@ -58,7 +57,7 @@ const FILTER_TEXTS: SelectTexts = Object.freeze({
   placeholder: { key: "tagging.selector_tags" },
   removeFilter: { key: "tagging.selector_remove_filter" },
   noTags: { key: "tagging.selector_no_tags" },
-  filterForMore: { key: "select_kit.components.filter_for_more" },
+  maxLoaded: { key: "tagging.filter_to_narrow_tags" },
 });
 
 /** Engine blocks and source overrides shared with callers. */
@@ -95,11 +94,9 @@ interface DSelectTagFilterSignature {
     instanceContext?: object;
     /**
      * The filter's texts, over its defaults: `removeFilter` and `noTags` name the shortcuts, and
-     * `filterForMore` hints that a search finds tags beyond the listed ones.
+     * `maxLoaded` says to keep typing when the top tags outnumber the list.
      */
-    texts?: SelectTexts<
-      SelectTagTextKey | "removeFilter" | "noTags" | "filterForMore"
-    >;
+    texts?: SelectTexts<SelectTagTextKey | "removeFilter" | "noTags">;
     /** Prevent opening or selecting. */
     disabled?: boolean;
     /** Ids of visible captions that name the control, replacing "Filter by: tags". */
@@ -128,8 +125,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     max_tag_length: number;
     force_lowercase_tags: boolean;
   };
-
-  @tracked moreTags = false;
 
   /** The single drop's texts; it draws tag rows too, so it declares the tag texts as well. */
   kindTexts: SelectKindTexts = [TAG_TEXTS, FILTER_TEXTS];
@@ -217,8 +212,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         signal: opts.signal,
         siteSettings: this.siteSettings,
       });
-      this.moreTags =
-        result.items.length > this.siteSettings.max_tags_in_filter_list;
       return result.items.map((tag) => ({ ...tag }));
     }
     const tags =
@@ -231,15 +224,10 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     const matches = term
       ? tags.filter((tag) => tag.name.toLowerCase().includes(term))
       : [...tags];
-    this.moreTags =
-      !filter && tags.length > this.siteSettings.max_tags_in_filter_list;
-    return sortTagRows(
-      matches.slice(0, this.siteSettings.max_tags_in_filter_list),
-      {
-        alphabetical: this.siteSettings.tags_sort_alphabetically,
-        exact: cleanTagName(filter, this.siteSettings),
-      }
-    );
+    return sortTagRows(matches, {
+      alphabetical: this.siteSettings.tags_sort_alphabetically,
+      exact: cleanTagName(filter, this.siteSettings),
+    });
   }
 
   /** The shortcuts lead browsing and are left out of searches. */
@@ -350,10 +338,11 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @legacyKind={{this.legacyKind}}
         @load={{if @load @load this.load}}
         @loadContext={{this.loadContext}}
+        @maxLoaded={{this.siteSettings.max_tags_in_filter_list}}
         @onChange={{this.onChange}}
         @searchIcon="magnifying-glass"
         @specialItems={{this.specialItems}}
-        @suppressFooter={{not (or (has-block "footer") this.moreTags)}}
+        @suppressFooter={{not (has-block "footer")}}
         @texts={{@texts}}
         @value={{this.heldId}}
         @valueItems={{this.valueItems}}
@@ -379,17 +368,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
           {{/if}}
         </:selection>
         <:footer as |state options|>
-          {{#if (has-block "footer")}}
-            {{yield state options to="footer"}}
-          {{else if this.moreTags}}
-            {{#let (renderSelectText options "filterForMore") as |hint|}}
-              {{#if hint}}
-                <span class="d-tag-drop__filter-for-more">
-                  {{~hint~}}
-                </span>
-              {{/if}}
-            {{/let}}
-          {{/if}}
+          {{yield state options to="footer"}}
         </:footer>
       </DSelect>
     {{/if}}

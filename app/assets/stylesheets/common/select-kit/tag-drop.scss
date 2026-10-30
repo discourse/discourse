@@ -62,11 +62,6 @@
   font-weight: 700;
 }
 
-.d-tag-drop__filter-for-more {
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-}
-
 // The tag filter's trigger is a short label and its windowed list cannot size the overlay to the
 // longest tag, so the overlay gets a wider floor than the select default.
 .d-select__content.--kind-select-tag-filter {
