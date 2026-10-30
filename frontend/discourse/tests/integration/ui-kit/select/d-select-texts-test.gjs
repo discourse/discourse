@@ -1388,7 +1388,6 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       state.value = {
         ...state.value,
         kindTexts: { recipePrompt: "second", latePrompt: "late" },
-        texts: { latePrompt: "caller" },
       };
       await settled();
       assert.strictEqual(
@@ -1400,16 +1399,14 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         Object.hasOwn(options.value.texts, "latePrompt"),
         "a later recipe key is not admitted into the schema"
       );
-      assert.strictEqual(
-        this.warnings
-          .getCalls()
-          .filter(
-            (call) =>
-              call.args[1].id === "discourse.d-select.texts-unknown-key" &&
-              call.args[0].includes("latePrompt")
-          ).length,
-        1,
-        "the undeclared call-site entry warns"
+
+      await expectAssertion(
+        assert,
+        async () => {
+          state.value = { ...state.value, texts: { latePrompt: "caller" } };
+          await settled();
+        },
+        /unknown text "latePrompt"/
       );
     });
 
@@ -2564,37 +2561,36 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       );
     });
 
-    for (const source of ["@texts", "customization"]) {
-      test(`an unknown key in ${source} warns once per key per select`, async function (assert) {
-        const texts = { noResultz: "typo", otherTypo: "another typo" };
-        if (source === "customization") {
+    for (const source of ["@texts", "forKind", "forIdentifier"]) {
+      test(`an unknown key in ${source} asserts, listing the known texts`, async function (assert) {
+        const texts = { noResultz: "typo" };
+        if (source === "forKind") {
+          customize((selects) =>
+            selects.forKind("texts-kind", (spec) =>
+              spec.options(() => ({ texts }))
+            )
+          );
+        } else if (source === "forIdentifier") {
           forIdentifier(texts);
         }
-        const state = await mount({
-          texts: source === "@texts" ? texts : undefined,
-        });
-        await click(".d-select__trigger");
-        state.value = { ...state.value, value: 1 };
-        await settled();
-        const notices = this.warnings
-          .getCalls()
-          .filter(
-            (call) => call.args[1].id === "discourse.d-select.texts-unknown-key"
-          );
-        assert.strictEqual(
-          notices.length,
-          2,
-          "each unknown entry warns once despite re-resolution"
+
+        await expectAssertion(
+          assert,
+          () => mount({ texts: source === "@texts" ? texts : undefined }),
+          /unknown text "noResultz".*\bnoResults\b/
         );
-        for (const key of Object.keys(texts)) {
-          assert.strictEqual(
-            notices.filter((call) => call.args[0].includes(key)).length,
-            1,
-            `${key} is identified once`
-          );
-        }
       });
     }
+
+    test("a forAll key that differs from an engine text only in case asserts", async function (assert) {
+      customize((selects) =>
+        selects.forAll((spec) =>
+          spec.options(() => ({ texts: { noresults: "typo" } }))
+        )
+      );
+
+      await expectAssertion(assert, () => mount(), /unknown text "noresults"/);
+    });
 
     for (const [name, entry, id] of [
       [

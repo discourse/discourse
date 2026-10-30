@@ -11,6 +11,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect from "discourse/ui-kit/select/d-select";
 import {
   renderSelectText,
+  type SelectCoreTextKey,
   type SelectItem,
   type SelectLoadOptions,
   type SelectLoadResult,
@@ -60,7 +61,7 @@ interface DSelectCategoryFilterSignature {
      * The drop's texts, over the recipe's: `ariaLabel` and `placeholder` default to the level's
      * name, and `removeFilter` and `noSubcategories` name the shortcuts.
      */
-    texts?: SelectSignature["Args"]["texts"];
+    texts?: SelectTexts<SelectCoreTextKey | "removeFilter" | "noSubcategories">;
     /** Receives a site category or a shortcut; never navigates. */
     onChange?: (
       value: Category | typeof ALL_CATEGORIES_ID | typeof NO_CATEGORIES_ID

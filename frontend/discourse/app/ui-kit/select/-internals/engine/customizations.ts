@@ -140,6 +140,14 @@ export interface SelectTextInputs {
   labelledBy: boolean;
 }
 
+/** Whether a key is an engine or core recipe text spelled with different case. */
+function isCaseMissOfKnownText(key: string): boolean {
+  const lower = key.toLowerCase();
+  return [...Object.keys(DEFAULT_SELECT_TEXTS), ...RECIPE_TEXT_KEYS].some(
+    (known) => known.toLowerCase() === lower
+  );
+}
+
 /** Options callbacks read upstream state only, avoiding selection and presentation cycles. */
 export interface SelectOptionsContext extends SelectCustomizationContext {
   /** The normalized controlled value. */
@@ -628,7 +636,10 @@ export default class SelectCustomizations {
     );
   }
 
-  /** A call-site or customization layer; unknown keys warn once and are left out. */
+  /**
+   * A call-site or customization layer; unknown keys are left out. They assert in development,
+   * except in `forAll`, where a key may belong to a kind this select isn't, so it warns once.
+   */
   #textLayer(
     texts: unknown,
     source: string,
@@ -641,12 +652,20 @@ export default class SelectCustomizations {
     for (const [key, entry] of Object.entries(texts)) {
       if (this.#isKnownText(key)) {
         layer[key] = entry;
-      } else if (!(forAll && RECIPE_TEXT_KEYS.has(key))) {
-        (forAll ? forAllTextNotices() : this.#notices).warn(
-          `DSelect: ${source} sets the unknown text "${key}". Known texts are the engine's and those of kind "${this.#names.kind ?? "(none)"}": ${[...Object.keys(DEFAULT_SELECT_TEXTS), ...this.#kindTextKeys].join(", ")}. Old names: noResultsLabel is noResults, minimumLabel is minimum, maximumLabel is maximum.`,
+        continue;
+      }
+      if (!DEBUG || (forAll && RECIPE_TEXT_KEYS.has(key))) {
+        continue;
+      }
+      const message = `DSelect: ${source} sets the unknown text "${key}". Known texts are the engine's and those of kind "${this.#names.kind ?? "(none)"}": ${[...Object.keys(DEFAULT_SELECT_TEXTS), ...this.#kindTextKeys].join(", ")}. Old names: noResultsLabel is noResults, minimumLabel is minimum, maximumLabel is maximum.`;
+      if (forAll && !isCaseMissOfKnownText(key)) {
+        forAllTextNotices().warn(
+          message,
           "discourse.d-select.texts-unknown-key",
           key
         );
+      } else {
+        assert(message, false);
       }
     }
     return layer;

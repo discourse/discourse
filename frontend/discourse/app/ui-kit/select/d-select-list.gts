@@ -29,10 +29,10 @@ import SelectPanel, {
 import StaticOptionList from "discourse/ui-kit/select/-internals/parts/static-option-list";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
+  SelectCoreTexts,
   SelectDescriptor,
   SelectItem,
   SelectKindTexts,
-  SelectTexts,
   SelectTextWrapper,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -106,7 +106,7 @@ interface DSelectListSignature {
      * translation, or a function of the text's values. Each entry merges over the recipe's and
      * the engine's defaults; `""` means the place shows nothing.
      */
-    texts?: SelectTexts;
+    texts?: SelectCoreTexts;
     /**
      * A recipe's texts: defaults for engine texts and its own. A recipe built on another passes a
      * list, lowest first. Requires `@kind`; the recipe's own keys are fixed at construction.

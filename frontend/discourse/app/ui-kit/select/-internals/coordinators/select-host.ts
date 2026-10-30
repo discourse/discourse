@@ -79,8 +79,6 @@ export interface SelectHostArgs
   hideSelected?: boolean;
   /** Number of initial loading placeholders. */
   skeletonCount?: number;
-  /** Label for an empty result set. */
-  noResultsLabel?: string;
   /** Parses pasted text into a selection batch. */
   parsePaste?: (
     text: string,

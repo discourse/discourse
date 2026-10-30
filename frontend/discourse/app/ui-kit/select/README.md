@@ -327,11 +327,17 @@ A recipe reads its texts with `renderSelectText(options, key, values)`, from the
 
 ### Development checks
 
-Asserts: a wrong entry type, a string containing `%{`, a failing function or a cycle, an empty
-required text, `@kindTexts` without `@kind`, and a recipe key that matches an engine key except
-for case. Warnings, once per key per select: an unknown key in `@texts` or a customization (once
-overall for `forAll`), a `{ key }` missing from the locale, and a plain string that is a
-translation key.
+In TypeScript, each component's `@texts` accepts only its own keys (the engine's on DSelect and
+DSelectList, plus the recipe's on a recipe), so a misspelled key in a `(hash …)` fails type
+checking. `SelectTexts<K>` takes the allowed keys, and `SelectCoreTexts` is the engine's set.
+
+Asserts: an unknown key in `@texts`, `forKind` or `forIdentifier`, a wrong entry type, a string
+containing `%{`, a failing function or a cycle, an empty required text, `@kindTexts` without
+`@kind`, and a recipe key that matches an engine key except for case. In `forAll`, a key that
+differs from a known text only in case asserts; any other unknown key warns once overall, because
+it may belong to a kind that isn't on the page. Warnings, once per key per select: a `{ key }`
+missing from the locale, and a plain string that is a translation key. Production drops an
+unknown key silently.
 
 ### Engine texts
 

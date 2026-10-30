@@ -34,6 +34,7 @@ import {
   type TagObject,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
+  SelectCoreTextKey,
   SelectItem,
   SelectKindTexts,
   SelectLoadOptions,
@@ -42,6 +43,17 @@ import type {
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
+
+/** The texts a tag picker accepts: the engine's and the tag recipe's. */
+export type SelectTagTextKey =
+  | SelectCoreTextKey
+  | "addMoreTags"
+  | "requiredTagGroup"
+  | "requiredTagGroupRemaining"
+  | "minimumPlaceholder"
+  | "minimumRemaining"
+  | "tagCountBadge"
+  | "tagCount";
 
 /**
  * The tag texts. The placeholder is the prompt the requirement steps fall back to, and the panel's
@@ -128,7 +140,7 @@ export interface SelectTagBaseSignature {
      * The field's texts, over the tag defaults. A `placeholder` replaces only the prompt: a
      * required group or a minimum still leads it, each worded through its own key.
      */
-    texts?: SelectSignature["Args"]["texts"];
+    texts?: SelectTexts<SelectTagTextKey>;
     /** A recipe built on this one: its texts, above the tag defaults. */
     kindTexts?: SelectTexts;
     /** Whether the placeholder carries the required group and the minimum. Defaults to true. */

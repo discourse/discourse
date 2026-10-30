@@ -15,6 +15,7 @@ import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import SelectTagBase, {
+  type SelectTagTextKey,
   TAG_TEXTS,
 } from "discourse/ui-kit/select/recipes/tags/-internals/select-tag-base";
 import {
@@ -96,7 +97,9 @@ interface DSelectTagFilterSignature {
      * The filter's texts, over its defaults: `removeFilter` and `noTags` name the shortcuts, and
      * `filterForMore` hints that a search finds tags beyond the listed ones.
      */
-    texts?: SelectSignature["Args"]["texts"];
+    texts?: SelectTexts<
+      SelectTagTextKey | "removeFilter" | "noTags" | "filterForMore"
+    >;
     /** Prevent opening or selecting. */
     disabled?: boolean;
   };

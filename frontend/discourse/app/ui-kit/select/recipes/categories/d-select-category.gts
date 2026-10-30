@@ -11,6 +11,7 @@ import DSelect from "discourse/ui-kit/select/d-select";
 import {
   renderSelectText,
   type SelectControl,
+  type SelectCoreTextKey,
   type SelectItem,
   type SelectLoadOptions,
   type SelectResolvedOptions,
@@ -46,7 +47,6 @@ interface DSelectCategorySignature {
     | "instanceContext"
     | "legacyKind"
     | "noneRow"
-    | "texts"
   > & {
     /** Held ids, numeric strings or category records. */
     value?: CategoryValue | readonly CategoryValue[] | null;
@@ -78,6 +78,10 @@ interface DSelectCategorySignature {
     disabledCategories?: number | string | readonly (number | string)[];
     /** Categories never offered; a held one stays selected. */
     exclude?: readonly (number | string)[];
+    /** The picker's texts, over its defaults: the engine's, `readOnlyDescription` and `familyFooter`. */
+    texts?: SelectTexts<
+      SelectCoreTextKey | "readOnlyDescription" | "familyFooter"
+    >;
     /** Shows transformed plain-text descriptions; defaults to single mode. */
     descriptions?: boolean;
     /** Includes ancestor badges on held selections. */

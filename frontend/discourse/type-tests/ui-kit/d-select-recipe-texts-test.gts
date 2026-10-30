@@ -1,4 +1,6 @@
 import { hash } from "@ember/helper";
+import DSelect from "discourse/ui-kit/select/d-select";
+import DSelectList from "discourse/ui-kit/select/d-select-list";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectCategoryFilter from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
@@ -23,4 +25,38 @@ const Test = <template>
   <DSelectTag @requirementPlaceholders={{false}} />
 </template>;
 
-export default Test;
+// A misspelled key fails on every component, and a recipe's own key only works on that recipe.
+const Keys = <template>
+  <DSelect @texts={{hash noResults="ok" addMorePlaceholder="ok"}} />
+  {{! @glint-expect-error - not an engine text }}
+  <DSelect @texts={{hash noResultz="typo"}} />
+  {{! @glint-expect-error - a recipe's text, not the engine's }}
+  <DSelect @texts={{hash familyFooter="x"}} />
+  {{! @glint-expect-error - not an engine text }}
+  <DSelectList @texts={{hash noResultz="typo"}} />
+
+  <DSelectCategory
+    @onChange={{onChange}}
+    @texts={{hash familyFooter="x" readOnlyDescription="y" noResults="z"}}
+  />
+  {{! @glint-expect-error - not a category text }}
+  <DSelectCategory @onChange={{onChange}} @texts={{hash familyFootr="x"}} />
+  <DSelectCategoryFilter @texts={{hash removeFilter="x" noSubcategories="y"}} />
+  {{! @glint-expect-error - a tag filter text }}
+  <DSelectCategoryFilter @texts={{hash noTags="x"}} />
+
+  <DSelectTag
+    @texts={{hash addMoreTags="x" requiredTagGroup="y" tagCount="z"}}
+  />
+  {{! @glint-expect-error - a tag filter text }}
+  <DSelectTag @texts={{hash noTags="x"}} />
+  <DSelectTagFilter
+    @texts={{hash noTags="x" addMoreTags="y" filterForMore="z"}}
+  />
+  {{! @glint-expect-error - a category filter text }}
+  <DSelectTagFilter @texts={{hash noSubcategories="x"}} />
+  {{! @glint-expect-error - a tag filter text }}
+  <DSelectTagGroup @texts={{hash noTags="x"}} />
+</template>;
+
+export default [Test, Keys];

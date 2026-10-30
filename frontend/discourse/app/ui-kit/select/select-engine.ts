@@ -41,6 +41,8 @@ import SelectionUpdates, {
 export {
   DEFAULT_SELECT_TEXTS,
   renderSelectText,
+  type SelectCoreTextKey,
+  type SelectCoreTexts,
   type SelectKindTexts,
   type SelectText,
   type SelectTextContext,

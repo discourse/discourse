@@ -232,9 +232,12 @@ function initInlineTagSuggester(api) {
           spec.options(() =>
             state.suggesting
               ? {
-                  loadingLabel: i18n(
-                    "discourse_ai.ai_helper.context_menu.loading"
-                  ),
+                  loadingStatus: true,
+                  texts: {
+                    loadingLabel: i18n(
+                      "discourse_ai.ai_helper.context_menu.loading"
+                    ),
+                  },
                 }
               : {}
           );

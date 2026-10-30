@@ -40,9 +40,12 @@ export type SelectTextWrapper = (
   context: SelectTextContext
 ) => string | null | undefined;
 
-/** A layer of texts, keyed by text name; nullish entries leave the layer below in place. */
-export type SelectTexts = Readonly<
-  Record<string, SelectText | null | undefined>
+/**
+ * A layer of texts, keyed by text name; nullish entries leave the layer below in place. `K`
+ * lists the keys a component accepts, so a misspelled key fails type checking.
+ */
+export type SelectTexts<K extends string = string> = Readonly<
+  Partial<Record<K, SelectText | null>>
 >;
 
 /**
@@ -110,6 +113,9 @@ const LOCALE_KEYS = {
 
 /** The engine's own text keys. */
 export type SelectCoreTextKey = keyof typeof LOCALE_KEYS | "placeholder";
+
+/** The texts a call site can set on a select: the engine's own. */
+export type SelectCoreTexts = SelectTexts<SelectCoreTextKey>;
 
 /** Every engine text's default; each points at an existing translation. */
 export const DEFAULT_SELECT_TEXTS: Readonly<

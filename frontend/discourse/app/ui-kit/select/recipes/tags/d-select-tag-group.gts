@@ -10,6 +10,7 @@ import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engi
 import DSelect from "discourse/ui-kit/select/d-select";
 import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
+  SelectCoreTexts,
   SelectLoadOptions,
   SelectTexts,
   SelectValue,
@@ -38,7 +39,7 @@ interface DSelectTagGroupSignature {
     /** Maximum number of selected groups. */
     maximum?: number | false;
     /** The picker's texts, over its defaults. */
-    texts?: SelectSignature["Args"]["texts"];
+    texts?: SelectCoreTexts;
     /** Trigger presentation. */
     variant?: SelectSignature["Args"]["variant"];
     /** Maximum visible chips before the count badge. */

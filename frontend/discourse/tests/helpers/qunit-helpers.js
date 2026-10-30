@@ -103,6 +103,7 @@ import Site from "discourse/models/site";
 import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
+import { clearCallbacks as clearSelectKitCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { noteKeyboardEvidence } from "discourse/services/capabilities";
 import {
@@ -297,6 +298,7 @@ export function testCleanup(container, app) {
   clearAdditionalUserNavSidebarLinks();
   resetAdminPluginConfigNav();
   resetTransformers();
+  clearSelectKitCallbacks();
   rollbackAllPrepends();
   clearAboutPageActivities();
   clearPluginHeaderActionComponents();
