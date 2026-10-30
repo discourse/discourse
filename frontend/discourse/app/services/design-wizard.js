@@ -52,6 +52,7 @@ export default class DesignWizardService extends Service {
   @service siteSettings;
 
   @tracked active = false;
+  @tracked minimized = false;
   @tracked data;
   @tracked themeId;
   @tracked colorMode = "light";
@@ -376,6 +377,12 @@ export default class DesignWizardService extends Service {
     this.#persistState();
   }
 
+  setMinimized(minimized) {
+    this.minimized = minimized;
+    this.animateEntrance = false;
+    this.#persistState();
+  }
+
   setStepIndex(stepIndex) {
     this.stepIndex = stepIndex;
     this.#persistState();
@@ -581,6 +588,7 @@ export default class DesignWizardService extends Service {
   }
 
   #reset() {
+    this.minimized = false;
     this.source = SOURCE_ONBOARDING;
     this.returnUrl = undefined;
     this.progressSaved = false;
@@ -627,6 +635,7 @@ export default class DesignWizardService extends Service {
   }
 
   #initFromData() {
+    this.minimized = false;
     // a custom default theme isn't offered by the wizard, so nothing is
     // preselected and the page keeps rendering it until a theme is chosen
     const preselectedTheme =
@@ -653,6 +662,7 @@ export default class DesignWizardService extends Service {
   }
 
   #restore(stored) {
+    this.minimized = stored.minimized ?? false;
     this.source = stored.source ?? SOURCE_ONBOARDING;
     this.returnUrl = stored.returnUrl;
     this.progressSaved = stored.progressSaved ?? false;
@@ -710,6 +720,7 @@ export default class DesignWizardService extends Service {
     this.keyValueStore.set({
       key: STATE_KEY,
       value: JSON.stringify({
+        minimized: this.minimized,
         themeId: this.themeId,
         selectedPairKeys: [...this.selectedPairKeys.entries()],
         colorMode: this.colorMode,
