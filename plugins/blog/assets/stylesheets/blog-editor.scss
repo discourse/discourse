@@ -4,57 +4,39 @@
   margin-inline: auto;
   padding-block: 2em;
 
-  &__toolbar,
-  &__filters,
-  &__links,
-  &__entry-actions,
+  // An icon-only trigger is shorter than a labelled button, so size the
+  // header actions to their tallest button and stretch the rest to match.
+  .d-page-header__actions {
+    align-self: center;
+    align-items: stretch;
+  }
+
+  .d-page-action-wrapped-button {
+    display: flex;
+  }
+
+  .d-filter-controls {
+    margin-block: var(--space-4);
+  }
+
   &__statuses {
     display: flex;
-    align-items: center;
-    gap: 0.75em;
     flex-wrap: wrap;
-  }
-
-  &__toolbar {
-    justify-content: space-between;
-    margin-block: 2em 1em;
-  }
-
-  &__filters .btn[aria-pressed="true"] {
-    color: var(--tertiary);
-    background: var(--tertiary-low);
+    align-items: center;
+    gap: 0.25em 0.75em;
   }
 
   &__correction,
-  &__hint,
-  &__path {
+  &__excerpt,
+  &__published,
+  &__replies,
+  &__scheduled {
     color: var(--primary-high);
     font-size: var(--font-down-1);
   }
 
-  &__entry {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5em;
-    flex-wrap: wrap;
-    padding-block: 1.5em;
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__entry-content {
-    min-width: 0;
-    flex: 1 1 300px;
-
-    h2 {
-      margin-block: 0.5em;
-      font-size: var(--font-up-2);
-    }
-  }
-
-  &__status {
-    color: var(--tertiary);
-    font-size: var(--font-down-1);
-    font-weight: 600;
+  &__excerpt {
+    @include line-clamp(2);
+    margin-block: 0.25em 0;
   }
 }

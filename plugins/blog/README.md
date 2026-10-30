@@ -9,7 +9,7 @@ a deferred, interactive Discourse discussion below each article.
 - Exactly one configured public Blog category; subcategories are not included.
 - Separate editorial-only drafts category and native Discourse composer autosave.
 - Editorial dashboard with server-side status filtering, title/path search, and
-  explicit 30-item Load more pagination.
+  pages of 20 that load as you scroll.
 - An editor-only publication panel on the article's own topic: state, one-click
   publish or correction, an inline summary and diff of pending changes, inline
   article settings, and scheduling, approval, and withdrawal behind a menu.
@@ -445,16 +445,17 @@ style `.blog-post-summary` without reaching into cooked article content.
 
 ## Finding articles in the editor
 
-`/blog-editor` does not infinitely scroll or download the whole library. It fetches
-up to 30 results and offers **Load more** only while another page exists.
+`/blog-editor` does not download the whole library. It fetches 20 results at a
+time and loads the next page as you scroll near the end of the list, while another
+page exists.
 
 The All articles, Drafts, Published, and Not on the blog filters run on the server
 before pagination. Not on the blog means discussions in the public publication
 category which are not currently live articles; private drafts have their own
 filter. Search matches titles, slugs, and stored article paths case-insensitively,
 across the entire authorized editorial collection, not just downloaded entries.
-Search and status remain active for Load more and Refresh; changing either starts
-at the first page. Search input is bounded to 100 characters and SQL wildcards are
+Search and status apply to every page that loads and are kept in the URL, so a
+filtered view survives a reload; changing either starts at the first page. Search input is bounded to 100 characters and SQL wildcards are
 escaped. Ordering uses update time and ID, with duplicate rows suppressed when
 appending pages if entries move between requests.
 
