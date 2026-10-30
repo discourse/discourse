@@ -199,10 +199,7 @@ export default class AdminUser extends User {
     user_id: string | number,
     opts: { raw?: boolean } | null = { raw: false }
   ): Promise<AdminUserDetails | AdminUser> {
-    // TODO(typescript-pending): ajax has no endpoint contracts; remove when admin user responses are typed.
-    const result = (await ajax(
-      `/admin/users/${user_id}.json`
-    )) as AdminUserDetails;
+    const result = await ajax<AdminUserDetails>(`/admin/users/${user_id}.json`);
     result.loadedDetails = true;
 
     if (Object.hasOwn(result, "groups")) {

@@ -57,19 +57,17 @@ export default class FormTemplate extends RestModel {
 
   /** Resolves the plain records, not model instances. */
   static async findAll(): Promise<FormTemplateFields[]> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const result = (await ajax("/admin/customize/form-templates.json")) as {
+    const result = await ajax<{
       form_templates: FormTemplateFields[];
-    };
+    }>("/admin/customize/form-templates.json");
     return result.form_templates;
   }
 
   /** Resolves the plain record, not a model instance. */
   static async findById(id: number | string): Promise<FormTemplateFields> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const result = (await ajax(
+    const result = await ajax<{ form_template: FormTemplateFields }>(
       `/admin/customize/form-templates/${id}.json`
-    )) as { form_template: FormTemplateFields };
+    );
     return result.form_template;
   }
 

@@ -416,11 +416,10 @@ export default class Reviewable extends RestModel {
 
     // eslint-disable-next-line prefer-const
     let adapter = this.store.adapterFor("reviewable");
-    // TODO(typescript-pending): ajax has no endpoint response types; remove the callback annotation when generic.
-    return ajax(
+    return ajax<Partial<ReviewableFields>>(
       `/review/${this.id}?version=${this.version}`,
       adapter.getPayload("PUT", { reviewable: updates })
-    ).then((updated: Partial<ReviewableFields>) => {
+    ).then((updated) => {
       updated.payload = Object.assign(
         {},
         this.payload || {},

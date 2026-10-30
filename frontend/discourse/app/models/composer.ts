@@ -8,6 +8,7 @@ import { isEmpty } from "@ember/utils";
 import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import type DialogService from "discourse/dialog-holder/services/dialog";
+import type { AjaxError } from "discourse/lib/ajax";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
@@ -1550,90 +1551,72 @@ export default class Composer extends RestModel {
     const draftSequence = this.draftSequence;
     this.set("draftSequence", this.draftSequence! + 1);
 
-    return (
-      Draft.save(
-        this.draftKey!,
-        draftSequence!,
-        this.serializeDraftData(),
-        this.messageBus.clientId,
-        { forceSave: this.draftForceSave }
-      )
-        .then((result) => {
-          if ("draft_sequence" in result) {
-            this.set("draftSequence", result.draft_sequence);
-          }
-          if (result.conflict_user) {
-            this.setProperties({
-              draftStatus: i18n("composer.edit_conflict"),
-              draftConflictUser: result.conflict_user,
-            });
-          } else {
-            this.setProperties({
-              draftStatus: null,
-              draftConflictUser: null,
-              draftForceSave: false,
-            });
-          }
+    return Draft.save(
+      this.draftKey!,
+      draftSequence!,
+      this.serializeDraftData(),
+      this.messageBus.clientId,
+      { forceSave: this.draftForceSave }
+    )
+      .then((result) => {
+        if ("draft_sequence" in result) {
+          this.set("draftSequence", result.draft_sequence);
+        }
+        if (result.conflict_user) {
+          this.setProperties({
+            draftStatus: i18n("composer.edit_conflict"),
+            draftConflictUser: result.conflict_user,
+          });
+        } else {
+          this.setProperties({
+            draftStatus: null,
+            draftConflictUser: null,
+            draftForceSave: false,
+          });
+        }
 
-          return result;
-        })
-        // TODO(typescript-pending): ajax rejection values have no typed envelope; use its error contract when ajax is typed.
-        .catch(
-          (
-            e:
-              | {
-                  jqXHR?: {
-                    status?: number;
-                    responseJSON?: {
-                      errors?: string[];
-                      extras?: { description?: string };
-                    };
-                  };
-                }
-              | null
-              | undefined
-          ) => {
-            let draftStatus;
-            const xhr = e && e.jqXHR;
+        return result;
+      })
+      .catch((e: AjaxError | null | undefined) => {
+        let draftStatus;
+        const xhr = e && e.jqXHR;
 
-            if (
-              xhr &&
-              xhr.status === 409 &&
-              xhr.responseJSON &&
-              xhr.responseJSON.errors &&
-              xhr.responseJSON.errors.length
-            ) {
-              const json = e!.jqXHR!.responseJSON!;
-              draftStatus = json.errors![0];
+        if (
+          xhr &&
+          xhr.status === 409 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.errors &&
+          xhr.responseJSON.errors.length
+        ) {
+          const json = e!.jqXHR!.responseJSON!;
+          draftStatus = json.errors![0];
 
-              if (json.extras?.description) {
-                this.dialog.alert({
-                  message: json.extras.description,
-                  buttons: [
-                    {
-                      label: i18n("composer.reload"),
-                      class: "btn-primary",
-                      action: () => window.location.reload(),
-                    },
-                    {
-                      label: i18n("composer.ignore"),
-                      class: "btn-default",
-                      action: () => this.set("draftForceSave", true),
-                    },
-                  ],
-                });
-              }
-            }
-            this.setProperties({
-              draftStatus: draftStatus || i18n("composer.drafts_offline"),
-              draftConflictUser: null,
+          if (json.extras?.description) {
+            this.dialog.alert({
+              message: json.extras.description,
+              buttons: [
+                {
+                  label: i18n("composer.reload"),
+                  class: "btn-primary",
+                  action: () => window.location.reload(),
+                },
+                {
+                  label: i18n("composer.ignore"),
+                  class: "btn-default",
+                  action: () => this.set("draftForceSave", true),
+                },
+              ],
             });
           }
-        )
-        .finally(() => {
-          this.set("draftSaving", false);
-        })
-    );
+        }
+        this.setProperties({
+          draftStatus: draftStatus || i18n("composer.drafts_offline"),
+          draftConflictUser: null,
+        });
+      })
+      .finally(() => {
+        this.set("draftSaving", false);
+      });
   }
 
   customizationFor(type: string) {

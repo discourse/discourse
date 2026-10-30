@@ -1740,10 +1740,9 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   async loadUserAction(id: number) {
-    // TODO(typescript-pending): ajax has no endpoint response contracts; remove when user-action responses are typed.
-    const result = (await ajax(`/user_actions/${id}.json`)) as {
+    const result = await ajax<{
       user_action?: UserActionFields & RestPayload;
-    };
+    }>(`/user_actions/${id}.json`);
 
     if (!result?.user_action) {
       return;
@@ -1991,57 +1990,54 @@ export default class User extends RestModel.extend(Evented) {
       "service:store"
     ) as StoreService;
 
-    return ajax(userPath(`${this.username_lower}/summary.json`)).then(
-      // TODO(typescript-pending): ajax has no endpoint response contracts; remove when summary responses are typed.
-      (json: {
-        topics: RestModelAttrs<Topic>[];
-        user_summary: Omit<UserSummary, "badges"> & {
-          badges?: { badge_id: number; count: number }[];
-        };
-      }) => {
-        const summary = json.user_summary;
-        const topicMap: Record<number, Topic> = {};
-        const badgeMap: Record<number, UserBadgeModel> = {};
+    return ajax<{
+      topics: RestModelAttrs<Topic>[];
+      user_summary: Omit<UserSummary, "badges"> & {
+        badges?: { badge_id: number; count: number }[];
+      };
+    }>(userPath(`${this.username_lower}/summary.json`)).then((json) => {
+      const summary = json.user_summary;
+      const topicMap: Record<number, Topic> = {};
+      const badgeMap: Record<number, UserBadgeModel> = {};
 
-        json.topics.forEach(
-          (t) => (topicMap[t.id!] = store.createRecord("topic", t))
-        );
-        (Badge.createFromJson(json) as UserBadgeModel[]).forEach(
-          (b) => (badgeMap[b.id] = b)
-        );
+      json.topics.forEach(
+        (t) => (topicMap[t.id!] = store.createRecord("topic", t))
+      );
+      (Badge.createFromJson(json) as UserBadgeModel[]).forEach(
+        (b) => (badgeMap[b.id] = b)
+      );
 
-        summary.topics = summary.topic_ids.map((id) => topicMap[id]);
+      summary.topics = summary.topic_ids.map((id) => topicMap[id]);
 
-        summary.replies.forEach((r) => {
-          r.topic = topicMap[r.topic_id];
-          r.url = r.topic.urlForPostNumber(r.post_number);
-          r.createdAt = new Date(r.created_at);
+      summary.replies.forEach((r) => {
+        r.topic = topicMap[r.topic_id];
+        r.url = r.topic.urlForPostNumber(r.post_number);
+        r.createdAt = new Date(r.created_at);
+      });
+
+      summary.links.forEach((l) => {
+        l.topic = topicMap[l.topic_id];
+        l.post_url = l.topic.urlForPostNumber(l.post_number);
+      });
+
+      if (summary.badges) {
+        (summary as UserSummary).badges = summary.badges.map((ub) => {
+          const badge = badgeMap[ub.badge_id];
+          badge.count = ub.count;
+          return badge;
         });
-
-        summary.links.forEach((l) => {
-          l.topic = topicMap[l.topic_id];
-          l.post_url = l.topic.urlForPostNumber(l.post_number);
-        });
-
-        if (summary.badges) {
-          (summary as UserSummary).badges = summary.badges.map((ub) => {
-            const badge = badgeMap[ub.badge_id];
-            badge.count = ub.count;
-            return badge;
-          });
-        }
-
-        if (summary.top_categories) {
-          summary.top_categories.forEach((c) => {
-            if (c.parent_category_id) {
-              c.parentCategory = Category.findById(c.parent_category_id);
-            }
-          });
-        }
-
-        return summary as UserSummary;
       }
-    );
+
+      if (summary.top_categories) {
+        summary.top_categories.forEach((c) => {
+          if (c.parent_category_id) {
+            c.parentCategory = Category.findById(c.parent_category_id);
+          }
+        });
+      }
+
+      return summary as UserSummary;
+    });
   }
 
   canManageGroup(group: Group) {

@@ -275,10 +275,9 @@ export default class CategoryList extends LegacyArrayLikeObject<Category> {
         }),
       };
 
-      // TODO(typescript-pending): ajax does not publish response types; remove the assertion when its response is generic.
-      const result = (await ajax("/categories.json", {
+      const result = await ajax<CategoryListEnvelope>("/categories.json", {
         data,
-      })) as CategoryListEnvelope;
+      });
 
       this.page = nextPage;
 

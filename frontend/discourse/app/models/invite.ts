@@ -90,13 +90,11 @@ export default class Invite extends EmberObject {
     }
     data.offset = offset || 0;
 
-    // TODO(typescript-pending): ajax has no endpoint response types; remove the assertion when generic.
-    const result = (await ajax(
-      userPath(`${user.username_lower}/invited.json`),
-      {
-        data,
-      }
-    )) as Omit<InvitedFields, "invites"> & { invites: InviteCreateAttrs[] };
+    const result = await ajax<
+      Omit<InvitedFields, "invites"> & { invites: InviteCreateAttrs[] }
+    >(userPath(`${user.username_lower}/invited.json`), {
+      data,
+    });
 
     result.invites = trackedArray(result.invites.map((i) => Invite.create(i)));
 
@@ -157,13 +155,13 @@ export default class Invite extends EmberObject {
 
   save(data: object) {
     const promise = this.id
-      ? ajax(`/invites/${this.id}`, { type: "PUT", data })
-      : ajax("/invites", { type: "POST", data });
+      ? ajax<Partial<InviteFields>>(`/invites/${this.id}`, {
+          type: "PUT",
+          data,
+        })
+      : ajax<Partial<InviteFields>>("/invites", { type: "POST", data });
 
-    // TODO(typescript-pending): ajax has no endpoint response types; remove the callback annotation when generic.
-    return promise.then((result: Partial<InviteFields>) =>
-      this.setProperties(result)
-    );
+    return promise.then((result) => this.setProperties(result));
   }
 
   /** Deletes the invite remotely rather than scheduling Ember destruction. */
