@@ -185,10 +185,17 @@ RSpec.describe PluginGem do
   # Bundler's temporary settings can't hold an empty group list: an empty
   # value removes the key, and the host's bundle config shows through. The
   # child resets the settings, so every instance is stubbed.
+  #
+  # The application gets an optional `:extras` group, so the spec doesn't
+  # depend on the optional groups of the application's own Gemfile.
   def boot_with_groups(with: [], without: [], only: [])
     groups = { with:, without:, only: }
     allow_any_instance_of(Bundler::Settings).to receive(:[]).and_wrap_original do |original, key|
       groups.fetch(key.to_sym) { original.call(key) }
+    end
+    extras = Bundler::Dependency.new("extras", ">= 0", "group" => :extras)
+    allow(Bundler.definition).to receive(:requested_dependencies).and_wrap_original do |original|
+      with.include?(:extras) ? original.call + [extras] : original.call
     end
     boot
   end
@@ -324,7 +331,7 @@ RSpec.describe PluginGem do
       gem "solo"
       gem "alpha", group: :development
       gem "shared", group: :test
-      gem "gamma", group: :migrations
+      gem "gamma", group: :extras
     GEMFILE
       lock: {
         "alpha" => "1.1.0",
@@ -353,7 +360,7 @@ RSpec.describe PluginGem do
     boot_with_groups(only: %i[default development])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 solo-1.0.0])
 
-    boot_with_groups(with: %i[migrations], without: %i[development test])
+    boot_with_groups(with: %i[extras], without: %i[development test])
     expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0 solo-1.0.0])
   end
 
