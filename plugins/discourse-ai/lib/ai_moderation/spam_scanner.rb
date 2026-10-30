@@ -326,7 +326,12 @@ module DiscourseAi
         llm_model: settings.llm_model,
         user: Discourse.system_user
       )
-        agent = settings.ai_agent.class_instance&.new
+        ai_agent =
+          settings&.ai_agent ||
+            AiAgent.find_by_id_from_cache(
+              DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::SpamDetector],
+            )
+        agent = ai_agent.class_instance&.new
 
         DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm_model)
       end

@@ -466,6 +466,17 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(result[:is_spam]).to eq(false)
     end
 
+    it "tests with the spam detector agent before any spam settings are saved" do
+      spam_setting.destroy!
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true }]) do
+          described_class.test_post(post, llm_model:, decision_model: nil)
+        end
+
+      expect(result[:is_spam]).to eq(true)
+    end
+
     it "correctly handles spam scanning" do
       expect(described_class.flagging_user.id).not_to eq(Discourse.system_user.id)
 
