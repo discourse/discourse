@@ -2130,5 +2130,27 @@ RSpec.describe Admin::ThemesController do
       expect(response.status).to eq(200)
       expect(theme.reload.child_theme_ids).to contain_exactly(locked_component.id, component.id)
     end
+
+    it "blocks dropping a restricted theme's relations by switching or deleting the other side" do
+      component = Fabricate(:theme, component: true)
+      locked_theme.add_relative_theme!(:child, component)
+
+      put "/admin/themes/#{component.id}.json", params: { theme: { component: false } }
+      expect(response.status).to eq(403)
+
+      delete "/admin/themes/#{component.id}.json"
+      expect(response.status).to eq(403)
+
+      delete "/admin/themes/bulk_destroy.json", params: { theme_ids: [component.id] }
+      expect(response.status).to eq(403)
+
+      theme.add_relative_theme!(:child, locked_component)
+      put "/admin/themes/#{theme.id}.json", params: { theme: { component: true } }
+      expect(response.status).to eq(403)
+
+      expect(component.reload).to be_component
+      expect(locked_theme.reload.child_theme_ids).to eq([component.id])
+      expect(theme.reload.child_theme_ids).to eq([locked_component.id])
+    end
   end
 end

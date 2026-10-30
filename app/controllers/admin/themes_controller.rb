@@ -184,11 +184,16 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     guardian.ensure_can_edit_theme!(@theme)
-    if !guardian.can_edit_theme_relations?(
-         @theme,
-         child_theme_ids: theme_params[:child_theme_ids],
-         parent_theme_ids: theme_params[:parent_theme_ids],
-       )
+    child_theme_ids = theme_params[:child_theme_ids]
+    parent_theme_ids = theme_params[:parent_theme_ids]
+    # switching between theme and component drops the relations on one side
+    case theme_params[:component].to_s
+    when "true"
+      child_theme_ids = [] if !@theme.component?
+    when "false"
+      parent_theme_ids = [] if @theme.component?
+    end
+    if !guardian.can_edit_theme_relations?(@theme, child_theme_ids:, parent_theme_ids:)
       raise Discourse::InvalidAccess
     end
 
