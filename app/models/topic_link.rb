@@ -229,7 +229,7 @@ class TopicLink < ActiveRecord::Base
     builder.where(<<~SQL)
       #{target_topic}.deleted_at IS NULL
       AND (#{target_topic}.id IS NULL OR #{target_topic}.visible = true)
-      AND (#{link}.internal = false OR #{target_topic}.id IS NOT NULL)
+      AND (#{link}.internal = false OR #{link}.link_topic_id IS NULL OR #{target_topic}.id IS NOT NULL)
       AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
     SQL
   end

@@ -680,4 +680,21 @@ RSpec.describe TopicLink do
 
     expect { Timeout.timeout(2) { TopicLink.extract_from(post) } }.not_to raise_error
   end
+
+  describe ".counts_for" do
+    it "includes click counts for internal upload links without a target topic" do
+      upload = Fabricate(:upload)
+      topic_link = Fabricate(:topic_link,
+        topic: post.topic,
+        post: post,
+        url: upload.short_url,
+        internal: true,
+        link_topic_id: nil,
+        clicks: 3
+      )
+
+      counts = TopicLink.counts_for(Guardian.new(user), post.topic, [post])
+      expect(counts[post.id].first[:clicks]).to eq(3)
+    end
+  end
 end
