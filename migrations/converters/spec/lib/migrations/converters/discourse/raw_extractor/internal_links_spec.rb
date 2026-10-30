@@ -599,10 +599,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
     end
 
-    include_examples "a bare internal link scheme", "HTTPS"
-    include_examples "a bare internal link scheme", "Https"
-    include_examples "a bare internal link scheme", "HTTP"
-    include_examples "a bare internal link scheme", "hTTp"
+    it_behaves_like "a bare internal link scheme", "HTTPS"
+    it_behaves_like "a bare internal link scheme", "Https"
+    it_behaves_like "a bare internal link scheme", "HTTP"
+    it_behaves_like "a bare internal link scheme", "hTTp"
 
     it "recognizes an uppercase scheme with an uppercase host" do
       link, = link_for("read HTTPS://FORUM.EXAMPLE.COM/t/slug/99 now")

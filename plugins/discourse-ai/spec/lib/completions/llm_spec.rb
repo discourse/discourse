@@ -825,8 +825,8 @@ RSpec.describe DiscourseAi::Completions::Llm do
         end
       end
 
-      include_examples "settling generated tool output after streaming failure", ""
-      include_examples "settling generated tool output after streaming failure", "Visible prefix "
+      it_behaves_like "settling generated tool output after streaming failure", ""
+      it_behaves_like "settling generated tool output after streaming failure", "Visible prefix "
 
       it "retries rate limits three times" do
         request =

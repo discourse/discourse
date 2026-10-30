@@ -322,8 +322,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
       end
     end
 
-    include_examples "interleaved tool progress across transport chunks", "coalesced"
-    include_examples "interleaved tool progress across transport chunks", "split"
+    it_behaves_like "interleaved tool progress across transport chunks", "coalesced"
+    it_behaves_like "interleaved tool progress across transport chunks", "split"
 
     it "assigns the provider batch to every tool call in a streamed event" do
       event = {

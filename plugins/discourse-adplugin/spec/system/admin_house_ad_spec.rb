@@ -52,8 +52,8 @@ describe "Admin House Ad" do
       end
     end
 
-    include_examples "saving an advertisement category", false
-    include_examples "saving an advertisement category", true
+    it_behaves_like "saving an advertisement category", false
+    it_behaves_like "saving an advertisement category", true
 
     it "supports the full house ad lifecycle" do
       house_ads_page.visit_page

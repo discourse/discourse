@@ -237,450 +237,118 @@ RSpec.describe "Styleguide Smoke Test" do
       sign_in(admin)
     end
 
-    it "renders the /syntax/bem page correctly" do
-      item = sections.fetch("syntax").find { |candidate| candidate[:href] == "/syntax/bem" }
-      visit "/styleguide/#{item[:href]}"
+    shared_examples "a rendered styleguide page" do |href|
+      it "renders the #{href} page correctly" do
+        item = sections.fetch(href.split("/")[1]).find { |candidate| candidate[:href] == href }
+        visit "/styleguide/#{item[:href]}"
 
-      expect(styleguide).to have_heading(item[:title])
+        expect(styleguide).to have_heading(item[:title])
+      end
     end
 
-    it "renders the /atoms/typography page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/typography" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/syntax/bem"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/atoms/typography"
 
-    it "renders the /atoms/font-scale page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/font-scale" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/atoms/font-scale"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/atoms/buttons"
 
-    it "renders the /atoms/buttons page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/buttons" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/atoms/colors"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/atoms/icons"
 
-    it "renders the /atoms/colors page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/colors" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/atoms/forms"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/atoms/spinners"
 
-    it "renders the /atoms/icons page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/icons" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/atoms/otp"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/atoms/date-time-inputs"
 
-    it "renders the /atoms/forms page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/forms" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/atoms/dropdowns"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/atoms/topic-link"
 
-    it "renders the /atoms/spinners page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/spinners" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/atoms/segmented-control"
 
-    it "renders the /atoms/otp page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/otp" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/atoms/shortcut"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/molecules/bread-crumbs"
 
-    it "renders the /atoms/date-time-inputs page correctly" do
-      item =
-        sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/date-time-inputs" }
-      visit "/styleguide/#{item[:href]}"
+    it_behaves_like "a rendered styleguide page", "/molecules/categories"
 
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /atoms/dropdowns page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/dropdowns" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /atoms/topic-link page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/topic-link" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /atoms/segmented-control page correctly" do
-      item =
-        sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/segmented-control" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /atoms/shortcut page correctly" do
-      item = sections.fetch("atoms").find { |candidate| candidate[:href] == "/atoms/shortcut" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/bread-crumbs page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/bread-crumbs" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/categories page correctly" do
-      item =
-        sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/categories" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/char-counter page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/char-counter" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/combo-button page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/combo-button" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/context-menu page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/context-menu" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/empty-state page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/empty-state" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/menus page correctly" do
-      item = sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/menus" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/navigation-bar page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/navigation-bar" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/navigation-stacked page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/navigation-stacked" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/post-menu page correctly" do
-      item =
-        sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/post-menu" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/reorderable-list page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/reorderable-list" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/roving-focus page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/roving-focus" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/signup-cta page correctly" do
-      item =
-        sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/signup-cta" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/multi-select page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/multi-select" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/toasts page correctly" do
-      item =
-        sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/toasts" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/dialog page correctly" do
-      item =
-        sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/dialog" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/drag-and-drop page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/drag-and-drop" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/tooltips page correctly" do
-      item =
-        sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/tooltips" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/topic-list-item page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/topic-list-item" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/topic-notifications page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/topic-notifications" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/topic-timer-info page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/topic-timer-info" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/virtual-list page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/virtual-list" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/tabs page correctly" do
-      item = sections.fetch("molecules").find { |candidate| candidate[:href] == "/molecules/tabs" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /molecules/overflow-controls page correctly" do
-      item =
-        sections
-          .fetch("molecules")
-          .find { |candidate| candidate[:href] == "/molecules/overflow-controls" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/post page correctly" do
-      item = sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/post" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/post-list page correctly" do
-      item =
-        sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/post-list" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/post-oneboxes page correctly" do
-      item =
-        sections
-          .fetch("organisms")
-          .find { |candidate| candidate[:href] == "/organisms/post-oneboxes" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/topic-map page correctly" do
-      item =
-        sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/topic-map" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/topic-footer-buttons page correctly" do
-      item =
-        sections
-          .fetch("organisms")
-          .find { |candidate| candidate[:href] == "/organisms/topic-footer-buttons" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/topic-list page correctly" do
-      item =
-        sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/topic-list" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/basic-topic-list page correctly" do
-      item =
-        sections
-          .fetch("organisms")
-          .find { |candidate| candidate[:href] == "/organisms/basic-topic-list" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/categories-list page correctly" do
-      item =
-        sections
-          .fetch("organisms")
-          .find { |candidate| candidate[:href] == "/organisms/categories-list" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/chat page correctly" do
-      item = sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/chat" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/docked-composer page correctly" do
-      item =
-        sections
-          .fetch("organisms")
-          .find { |candidate| candidate[:href] == "/organisms/docked-composer" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/modal page correctly" do
-      item = sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/modal" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/navigation page correctly" do
-      item =
-        sections.fetch("organisms").find { |candidate| candidate[:href] == "/organisms/navigation" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/site-header page correctly" do
-      item =
-        sections
-          .fetch("organisms")
-          .find { |candidate| candidate[:href] == "/organisms/site-header" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
-
-    it "renders the /organisms/more-topics page correctly" do
-      item =
-        sections
-          .fetch("organisms")
-          .find { |candidate| candidate[:href] == "/organisms/more-topics" }
-      visit "/styleguide/#{item[:href]}"
-
-      expect(styleguide).to have_heading(item[:title])
-    end
+    it_behaves_like "a rendered styleguide page", "/molecules/char-counter"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/combo-button"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/context-menu"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/empty-state"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/menus"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/navigation-bar"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/navigation-stacked"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/post-menu"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/reorderable-list"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/roving-focus"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/signup-cta"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/multi-select"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/toasts"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/dialog"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/drag-and-drop"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/tooltips"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/topic-list-item"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/topic-notifications"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/topic-timer-info"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/virtual-list"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/tabs"
+
+    it_behaves_like "a rendered styleguide page", "/molecules/overflow-controls"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/post"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/post-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/post-oneboxes"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/topic-map"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/topic-footer-buttons"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/topic-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/basic-topic-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/categories-list"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/chat"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/docked-composer"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/modal"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/navigation"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/site-header"
+
+    it_behaves_like "a rendered styleguide page", "/organisms/more-topics"
   end
 
   context "when the styleguide is enabled for everyone" do

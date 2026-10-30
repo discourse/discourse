@@ -77,104 +77,104 @@ RSpec.describe JsLocaleHelper do
     end
   end
 
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ar" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "be" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "bg" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "bs_BA" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ca" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "cs" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "da" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "de" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "el" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "en" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "en_GB" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "es" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "et" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "fa_IR" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "fi" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "fr" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "gl" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "he" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "hr" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "hu" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "hy" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "id" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "it" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ja" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ko" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "lt" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "lv" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "nb_NO" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "nl" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "pl_PL" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "pt" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "pt_BR" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ro" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ru" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "sk" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "sl" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "sq" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "sr" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "sv" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "sw" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "te" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "th" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "tr_TR" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ug" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "uk" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "ur" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "vi" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "zh_CN" }
-  include_examples "a supported JavaScript locale",
-                   LocaleSiteSetting.values.find { it[:value] == "zh_TW" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ar" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "be" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "bg" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "bs_BA" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ca" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "cs" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "da" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "de" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "el" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "en" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "en_GB" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "es" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "et" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "fa_IR" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "fi" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "fr" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "gl" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "he" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "hr" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "hu" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "hy" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "id" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "it" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ja" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ko" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "lt" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "lv" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "nb_NO" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "nl" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "pl_PL" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "pt" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "pt_BR" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ro" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ru" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "sk" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "sl" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "sq" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "sr" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "sv" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "sw" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "te" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "th" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "tr_TR" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ug" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "uk" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "ur" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "vi" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "zh_CN" }
+  it_behaves_like "a supported JavaScript locale",
+                  LocaleSiteSetting.values.find { it[:value] == "zh_TW" }
 
   describe ".output_client_overrides" do
     subject(:client_overrides) { described_class.output_client_overrides("en") }

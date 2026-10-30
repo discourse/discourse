@@ -281,12 +281,12 @@ RSpec.describe Report do
     end
   end
 
-  include_examples "report totals over time", :signup
-  include_examples "report totals over time", :topic
-  include_examples "report totals over time", :post
-  include_examples "report totals over time", :flag
-  include_examples "report totals over time", :like
-  include_examples "report totals over time", :email
+  it_behaves_like "report totals over time", :signup
+  it_behaves_like "report totals over time", :topic
+  it_behaves_like "report totals over time", :post
+  it_behaves_like "report totals over time", :flag
+  it_behaves_like "report totals over time", :like
+  it_behaves_like "report totals over time", :email
 
   shared_examples "a request type report" do |request_type|
     describe "#{request_type} request reports" do
@@ -352,15 +352,15 @@ RSpec.describe Report do
     end
   end
 
-  include_examples "a request type report", :http_total
-  include_examples "a request type report", :http_2xx
-  include_examples "a request type report", :http_background
-  include_examples "a request type report", :http_3xx
-  include_examples "a request type report", :http_4xx
-  include_examples "a request type report", :http_5xx
-  include_examples "a request type report", :page_view_crawler
-  include_examples "a request type report", :page_view_logged_in
-  include_examples "a request type report", :page_view_anon
+  it_behaves_like "a request type report", :http_total
+  it_behaves_like "a request type report", :http_2xx
+  it_behaves_like "a request type report", :http_background
+  it_behaves_like "a request type report", :http_3xx
+  it_behaves_like "a request type report", :http_4xx
+  it_behaves_like "a request type report", :http_5xx
+  it_behaves_like "a request type report", :page_view_crawler
+  it_behaves_like "a request type report", :page_view_logged_in
+  it_behaves_like "a request type report", :page_view_anon
 
   describe "page_view_legacy_total_reqs" do
     before do

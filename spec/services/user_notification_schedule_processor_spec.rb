@@ -47,11 +47,11 @@ RSpec.describe UserNotificationScheduleProcessor do
       end
     end
 
-    include_examples "creating quiet hours across time zones", { timezone: "UTC", offset: "+00:00" }
-    include_examples "creating quiet hours across time zones",
-                     { timezone: "America/Chicago", offset: "-06:00" }
-    include_examples "creating quiet hours across time zones",
-                     { timezone: "Australia/Sydney", offset: "+11:00" }
+    it_behaves_like "creating quiet hours across time zones", { timezone: "UTC", offset: "+00:00" }
+    it_behaves_like "creating quiet hours across time zones",
+                    { timezone: "America/Chicago", offset: "-06:00" }
+    it_behaves_like "creating quiet hours across time zones",
+                    { timezone: "Australia/Sydney", offset: "+11:00" }
 
     it "does not create duplicate record, but ensures the correct records exist" do
       user.user_option.update(timezone: "UTC")

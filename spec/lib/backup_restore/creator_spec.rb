@@ -340,8 +340,8 @@ describe BackupRestore::Creator do
       end
     end
 
-    include_examples "creating a backup with concurrent downloads", 1
-    include_examples "creating a backup with concurrent downloads", 4
+    it_behaves_like "creating a backup with concurrent downloads", 1
+    it_behaves_like "creating a backup with concurrent downloads", 4
   end
 
   describe "#create_archive" do
@@ -402,8 +402,8 @@ describe BackupRestore::Creator do
       end
     end
 
-    include_examples "creating a compatible backup archive", true
-    include_examples "creating a compatible backup archive", false
+    it_behaves_like "creating a compatible backup archive", true
+    it_behaves_like "creating a compatible backup archive", false
 
     it "skips dangling symlinks and still produces a readable backup" do
       File.symlink("missing", File.join(@local_uploads, "dangling"))

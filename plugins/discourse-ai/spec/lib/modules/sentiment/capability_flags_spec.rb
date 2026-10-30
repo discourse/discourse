@@ -77,16 +77,16 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         end
       end
 
-      include_examples "running enabled sentiment capabilities", [false, false]
-      include_examples "running enabled sentiment capabilities", [true, false]
-      include_examples "running enabled sentiment capabilities", [false, true]
-      include_examples "running enabled sentiment capabilities", [true, true]
+      it_behaves_like "running enabled sentiment capabilities", [false, false]
+      it_behaves_like "running enabled sentiment capabilities", [true, false]
+      it_behaves_like "running enabled sentiment capabilities", [false, true]
+      it_behaves_like "running enabled sentiment capabilities", [true, true]
     end
   end
 
-  include_examples "independent sentiment capability settings", "classification_model"
-  include_examples "independent sentiment capability settings", "agent"
-  include_examples "independent sentiment capability settings", "decision_model"
+  it_behaves_like "independent sentiment capability settings", "classification_model"
+  it_behaves_like "independent sentiment capability settings", "agent"
+  it_behaves_like "independent sentiment capability settings", "decision_model"
 
   describe "dedicated capability attribution" do
     before do

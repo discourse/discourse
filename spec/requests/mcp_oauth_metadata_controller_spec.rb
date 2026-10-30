@@ -24,12 +24,12 @@ describe McpOauthMetadataController do
     end
   end
 
-  include_examples "public OAuth metadata when login is required",
-                   "/.well-known/oauth-protected-resource/mcp"
-  include_examples "public OAuth metadata when login is required",
-                   "/.well-known/oauth-authorization-server"
-  include_examples "public OAuth metadata when login is required",
-                   "/.well-known/openid-configuration"
+  it_behaves_like "public OAuth metadata when login is required",
+                  "/.well-known/oauth-protected-resource/mcp"
+  it_behaves_like "public OAuth metadata when login is required",
+                  "/.well-known/oauth-authorization-server"
+  it_behaves_like "public OAuth metadata when login is required",
+                  "/.well-known/openid-configuration"
 
   it "advertises every registered scope in protected resource metadata" do
     get "/.well-known/oauth-protected-resource/mcp"

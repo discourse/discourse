@@ -24,19 +24,19 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
       end
     end
 
-    include_examples "a supported Stack Exchange domain", "stackoverflow.com"
-    include_examples "a supported Stack Exchange domain", "meta.stackoverflow.com"
-    include_examples "a supported Stack Exchange domain", "superuser.com"
-    include_examples "a supported Stack Exchange domain", "meta.superuser.com"
-    include_examples "a supported Stack Exchange domain", "serverfault.com"
-    include_examples "a supported Stack Exchange domain", "meta.serverfault.com"
-    include_examples "a supported Stack Exchange domain", "askubuntu.com"
-    include_examples "a supported Stack Exchange domain", "meta.askubuntu.com"
-    include_examples "a supported Stack Exchange domain", "mathoverflow.net"
-    include_examples "a supported Stack Exchange domain", "meta.mathoverflow.net"
-    include_examples "a supported Stack Exchange domain", "money.stackexchange.com"
-    include_examples "a supported Stack Exchange domain", "meta.money.stackexchange.com"
-    include_examples "a supported Stack Exchange domain", "stackapps.com"
+    it_behaves_like "a supported Stack Exchange domain", "stackoverflow.com"
+    it_behaves_like "a supported Stack Exchange domain", "meta.stackoverflow.com"
+    it_behaves_like "a supported Stack Exchange domain", "superuser.com"
+    it_behaves_like "a supported Stack Exchange domain", "meta.superuser.com"
+    it_behaves_like "a supported Stack Exchange domain", "serverfault.com"
+    it_behaves_like "a supported Stack Exchange domain", "meta.serverfault.com"
+    it_behaves_like "a supported Stack Exchange domain", "askubuntu.com"
+    it_behaves_like "a supported Stack Exchange domain", "meta.askubuntu.com"
+    it_behaves_like "a supported Stack Exchange domain", "mathoverflow.net"
+    it_behaves_like "a supported Stack Exchange domain", "meta.mathoverflow.net"
+    it_behaves_like "a supported Stack Exchange domain", "money.stackexchange.com"
+    it_behaves_like "a supported Stack Exchange domain", "meta.money.stackexchange.com"
+    it_behaves_like "a supported Stack Exchange domain", "stackapps.com"
 
     it "doesn't match question on example.com" do
       expect(described_class === URI("http://example.com/q/4711")).to eq(false)
@@ -77,13 +77,13 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  include_examples "a Stack Exchange question URL",
-                   [
-                     "long URL",
-                     "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code",
-                   ]
-  include_examples "a Stack Exchange question URL",
-                   ["short URL", "http://stackoverflow.com/q/17992553"]
+  it_behaves_like "a Stack Exchange question URL",
+                  [
+                    "long URL",
+                    "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code",
+                  ]
+  it_behaves_like "a Stack Exchange question URL",
+                  ["short URL", "http://stackoverflow.com/q/17992553"]
 
   shared_examples "a Stack Exchange answer URL" do |name, url|
     describe "answer with #{name}" do
@@ -115,11 +115,11 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  include_examples "a Stack Exchange answer URL",
-                   [
-                     "long URL",
-                     "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906",
-                   ]
-  include_examples "a Stack Exchange answer URL",
-                   ["short URL", "http://stackoverflow.com/a/17992906"]
+  it_behaves_like "a Stack Exchange answer URL",
+                  [
+                    "long URL",
+                    "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906",
+                  ]
+  it_behaves_like "a Stack Exchange answer URL",
+                  ["short URL", "http://stackoverflow.com/a/17992906"]
 end

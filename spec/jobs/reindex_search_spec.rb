@@ -36,9 +36,9 @@ RSpec.describe Jobs::ReindexSearch do
     end
   end
 
-  include_examples "rebuilding search data after a locale change", "post"
-  include_examples "rebuilding search data after a locale change", "category"
-  include_examples "rebuilding search data after a locale change", "user"
+  it_behaves_like "rebuilding search data after a locale change", "post"
+  it_behaves_like "rebuilding search data after a locale change", "category"
+  it_behaves_like "rebuilding search data after a locale change", "user"
 
   describe "rebuild_posts" do
     class FakeIndexer

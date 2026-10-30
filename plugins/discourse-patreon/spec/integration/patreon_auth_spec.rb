@@ -85,8 +85,8 @@ describe "Patreon Oauth2" do
       end
     end
 
-    include_examples "rejecting a patron without verified email", false
-    include_examples "rejecting a patron without verified email", nil
+    it_behaves_like "rejecting a patron without verified email", false
+    it_behaves_like "rejecting a patron without verified email", nil
 
     it "signs in the user if the email from patreon is verified" do
       post "/auth/patreon"

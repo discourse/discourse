@@ -511,9 +511,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
     end
 
-    include_examples "reporting tool script errors to the model", nil
-    include_examples "reporting tool script errors to the model", "setCustomRaw"
-    include_examples "reporting tool script errors to the model", "streamCustomRaw"
+    it_behaves_like "reporting tool script errors to the model", nil
+    it_behaves_like "reporting tool script errors to the model", "setCustomRaw"
+    it_behaves_like "reporting tool script errors to the model", "streamCustomRaw"
 
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)

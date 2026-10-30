@@ -118,6 +118,6 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     end
   end
 
-  include_examples "preparing input within operation budgets", :classify!
-  include_examples "preparing input within operation budgets", :bulk_classify!
+  it_behaves_like "preparing input within operation budgets", :classify!
+  it_behaves_like "preparing input within operation budgets", :bulk_classify!
 end

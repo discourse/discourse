@@ -2147,12 +2147,12 @@ RSpec.describe UserNotifications do
       end
     end
 
-    include_examples "escaping HTML in invitation titles", :private_message
-    include_examples "escaping HTML in invitation titles", :topic
+    it_behaves_like "escaping HTML in invitation titles", :private_message
+    it_behaves_like "escaping HTML in invitation titles", :topic
   end
 
   describe "user invited to a private message" do
-    include_examples "notification email building" do
+    it_behaves_like "notification email building" do
       let(:notification_type) { :invited_to_private_message }
       let(:post) { Fabricate(:private_message_post) }
       let(:user) { post.user }
@@ -2165,7 +2165,7 @@ RSpec.describe UserNotifications do
   end
 
   describe "group invited to a private message" do
-    include_examples "notification email building" do
+    it_behaves_like "notification email building" do
       let(:notification_type) { :invited_to_private_message }
       let(:post) { Fabricate(:private_message_post) }
       let(:user) { post.user }
@@ -2190,7 +2190,7 @@ RSpec.describe UserNotifications do
   describe "user invited to a topic" do
     let(:notification_type) { :invited_to_topic }
 
-    include_examples "notification email building" do
+    it_behaves_like "notification email building" do
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"

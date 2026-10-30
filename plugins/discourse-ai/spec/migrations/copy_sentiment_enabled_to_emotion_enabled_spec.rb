@@ -49,8 +49,8 @@ RSpec.describe CopySentimentEnabledToEmotionEnabled do
     end
   end
 
-  include_examples "idempotently copying the stored sentiment setting", "t"
-  include_examples "idempotently copying the stored sentiment setting", "f"
+  it_behaves_like "idempotently copying the stored sentiment setting", "t"
+  it_behaves_like "idempotently copying the stored sentiment setting", "f"
 
   it "inserts nothing without a stored source setting" do
     described_class.new.up

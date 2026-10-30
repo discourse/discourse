@@ -329,9 +329,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
     end
 
-    include_examples "an upload URL scheme", "HTTPS"
-    include_examples "an upload URL scheme", "Https"
-    include_examples "an upload URL scheme", "HTTP"
+    it_behaves_like "an upload URL scheme", "HTTPS"
+    it_behaves_like "an upload URL scheme", "Https"
+    it_behaves_like "an upload URL scheme", "HTTP"
 
     it "keeps a bare URL's trailing sentence punctuation out of the match" do
       url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"

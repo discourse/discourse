@@ -219,9 +219,9 @@ RSpec.describe StaticController do
       end
     end
 
-    include_examples "a configured static information page", ["tos", :tos_url, I18n.t("js.tos")]
-    include_examples "a configured static information page",
-                     ["privacy", :privacy_policy_url, I18n.t("js.privacy")]
+    it_behaves_like "a configured static information page", ["tos", :tos_url, I18n.t("js.tos")]
+    it_behaves_like "a configured static information page",
+                    ["privacy", :privacy_policy_url, I18n.t("js.privacy")]
 
     it "renders the localized guidelines post" do
       SiteSetting.content_localization_enabled = true

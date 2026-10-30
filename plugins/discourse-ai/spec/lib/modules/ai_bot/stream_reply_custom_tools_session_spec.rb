@@ -157,8 +157,8 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         end
       end
 
-      include_examples "preserving conversation rounds after failed resume", false
-      include_examples "preserving conversation rounds after failed resume", true
+      it_behaves_like "preserving conversation rounds after failed resume", false
+      it_behaves_like "preserving conversation rounds after failed resume", true
     end
 
     it "preserves completed caller results when a permission change invalidates the resumed history" do
@@ -262,8 +262,8 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    include_examples "restoring consumed resume state after history changes", :missing
-    include_examples "restoring consumed resume state after history changes", :extra
+    it_behaves_like "restoring consumed resume state after history changes", :missing
+    it_behaves_like "restoring consumed resume state after history changes", :extra
 
     it "retains caller results privately if topic access is revoked during suspension" do
       call =
@@ -809,8 +809,8 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    include_examples "persisting consumed completions after access revocation", "maintenance"
-    include_examples "persisting consumed completions after access revocation", "final_reply"
+    it_behaves_like "persisting consumed completions after access revocation", "maintenance"
+    it_behaves_like "persisting consumed completions after access revocation", "final_reply"
 
     it "preserves completed results when the execution completion limit blocks required compaction" do
       llm.update!(max_prompt_tokens: 16_000)

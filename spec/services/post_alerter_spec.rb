@@ -1098,9 +1098,9 @@ RSpec.describe PostAlerter do
           end
         end
 
-        include_examples "private message username mention notifications", :watching
-        include_examples "private message username mention notifications", :tracking
-        include_examples "private message username mention notifications", :regular
+        it_behaves_like "private message username mention notifications", :watching
+        it_behaves_like "private message username mention notifications", :tracking
+        it_behaves_like "private message username mention notifications", :regular
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }
@@ -1172,9 +1172,9 @@ RSpec.describe PostAlerter do
           end
         end
 
-        include_examples "private message group mention notifications", :watching
-        include_examples "private message group mention notifications", :tracking
-        include_examples "private message group mention notifications", :regular
+        it_behaves_like "private message group mention notifications", :watching
+        it_behaves_like "private message group mention notifications", :tracking
+        it_behaves_like "private message group mention notifications", :regular
 
         context "when notification level is 'muted'" do
           before { set_topic_notification_level(alice, pm_topic, :muted) }

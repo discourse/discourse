@@ -403,9 +403,9 @@ RSpec.describe DiscourseAi::Agents::Bot do
         end
       end
 
-      include_examples "admitted output within a tight context window", :text
-      include_examples "admitted output within a tight context window", :tools
-      include_examples "admitted output within a tight context window", :final
+      it_behaves_like "admitted output within a tight context window", :text
+      it_behaves_like "admitted output within a tight context window", :tools
+      it_behaves_like "admitted output within a tight context window", :final
 
       it "starts fresh work for a second root reply while retaining the actual usage tracker" do
         agent_record.update!(max_turn_tokens: 4000, tools: [])

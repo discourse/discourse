@@ -176,9 +176,9 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  include_examples "scheduling policy renewal from its start date", "monthly"
-  include_examples "scheduling policy renewal from its start date", "quarterly"
-  include_examples "scheduling policy renewal from its start date", "yearly"
+  it_behaves_like "scheduling policy renewal from its start date", "monthly"
+  it_behaves_like "scheduling policy renewal from its start date", "quarterly"
+  it_behaves_like "scheduling policy renewal from its start date", "yearly"
 
   shared_examples "expiring a renewable policy" do |how_often|
     it "expires policies when #{how_often}" do
@@ -220,9 +220,9 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  include_examples "expiring a renewable policy", "monthly"
-  include_examples "expiring a renewable policy", "quarterly"
-  include_examples "expiring a renewable policy", "yearly"
+  it_behaves_like "expiring a renewable policy", "monthly"
+  it_behaves_like "expiring a renewable policy", "quarterly"
+  it_behaves_like "expiring a renewable policy", "yearly"
 
   it "sends high-priority notifications to users" do
     Jobs.run_immediately!

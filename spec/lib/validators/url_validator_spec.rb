@@ -6,57 +6,37 @@ RSpec.describe UrlValidator do
   let(:record) { Fabricate.build(:user_profile, user: Fabricate.build(:user)) }
   let(:validator) { described_class.new(attributes: :website) }
 
-  it "http://https://google.com should not be valid" do
-    record.website = "http://https://google.com"
-    validate
-    expect(record.errors[:website]).to be_present
+  shared_examples "an invalid website URL" do |url|
+    it "#{url} should not be valid" do
+      record.website = url
+      validate
+      expect(record.errors[:website]).to be_present
+    end
   end
 
-  it "http://google/ should not be valid" do
-    record.website = "http://google/"
-    validate
-    expect(record.errors[:website]).to be_present
+  it_behaves_like "an invalid website URL", "http://https://google.com"
+
+  it_behaves_like "an invalid website URL", "http://google/"
+
+  it_behaves_like "an invalid website URL", "ftp://ftp.google.com"
+
+  it_behaves_like "an invalid website URL", "http:///what.is.this"
+
+  it_behaves_like "an invalid website URL", "http://meta.discourse.org TEST"
+
+  shared_examples "a valid website URL" do |url|
+    it "#{url} should be valid" do
+      record.website = url
+      validate
+      expect(record.errors[:website]).to_not be_present
+    end
   end
 
-  it "ftp://ftp.google.com should not be valid" do
-    record.website = "ftp://ftp.google.com"
-    validate
-    expect(record.errors[:website]).to be_present
-  end
+  it_behaves_like "a valid website URL", "http://discourse.productions"
 
-  it "http:///what.is.this should not be valid" do
-    record.website = "http:///what.is.this"
-    validate
-    expect(record.errors[:website]).to be_present
-  end
+  it_behaves_like "a valid website URL", "https://google.com"
 
-  it "http://meta.discourse.org TEST should not be valid" do
-    record.website = "http://meta.discourse.org TEST"
-    validate
-    expect(record.errors[:website]).to be_present
-  end
+  it_behaves_like "a valid website URL", "http://xn--nw2a.xn--j6w193g/"
 
-  it "http://discourse.productions should be valid" do
-    record.website = "http://discourse.productions"
-    validate
-    expect(record.errors[:website]).to_not be_present
-  end
-
-  it "https://google.com should be valid" do
-    record.website = "https://google.com"
-    validate
-    expect(record.errors[:website]).to_not be_present
-  end
-
-  it "http://xn--nw2a.xn--j6w193g/ should be valid" do
-    record.website = "http://xn--nw2a.xn--j6w193g/"
-    validate
-    expect(record.errors[:website]).to_not be_present
-  end
-
-  it "http://見.香港/ should be valid" do
-    record.website = "http://見.香港/"
-    validate
-    expect(record.errors[:website]).to_not be_present
-  end
+  it_behaves_like "a valid website URL", "http://見.香港/"
 end

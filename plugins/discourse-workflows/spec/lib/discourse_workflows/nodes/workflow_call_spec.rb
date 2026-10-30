@@ -446,44 +446,40 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       end
     end
 
-    include_examples "waiting for a child workflow",
-                     [
-                       "flow wait",
-                       "flow:wait",
-                       {
-                         "resume" => "time_interval",
-                         "wait_amount" => 1,
-                         "wait_unit" => "seconds",
-                       },
-                     ]
-    include_examples "waiting for a child workflow",
-                     ["webhook wait", "flow:wait", { "resume" => "webhook" }]
-    include_examples "waiting for a child workflow",
-                     [
-                       "form wait",
-                       "action:form",
-                       {
-                         "form_title" => "Approval",
-                         "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
-                       },
-                     ]
-    include_examples "waiting for a child workflow",
-                     [
-                       "modal wait",
-                       "action:modal",
-                       lambda do
-                         {
-                           "target_user" => admin.username,
-                           "title" => "Approve?",
-                           "body" => "Choose an option",
-                           "buttons" => {
-                             "values" => [
-                               { "label" => "Approve", "value" => "approve", "style" => "primary" },
-                             ],
-                           },
-                         }
-                       end,
-                     ]
+    it_behaves_like "waiting for a child workflow",
+                    [
+                      "flow wait",
+                      "flow:wait",
+                      { "resume" => "time_interval", "wait_amount" => 1, "wait_unit" => "seconds" },
+                    ]
+    it_behaves_like "waiting for a child workflow",
+                    ["webhook wait", "flow:wait", { "resume" => "webhook" }]
+    it_behaves_like "waiting for a child workflow",
+                    [
+                      "form wait",
+                      "action:form",
+                      {
+                        "form_title" => "Approval",
+                        "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
+                      },
+                    ]
+    it_behaves_like "waiting for a child workflow",
+                    [
+                      "modal wait",
+                      "action:modal",
+                      lambda do
+                        {
+                          "target_user" => admin.username,
+                          "title" => "Approve?",
+                          "body" => "Choose an option",
+                          "buttons" => {
+                            "values" => [
+                              { "label" => "Approve", "value" => "approve", "style" => "primary" },
+                            ],
+                          },
+                        }
+                      end,
+                    ]
 
     it "keeps $execution.called_by available to child nodes after the child waits and resumes" do
       target =

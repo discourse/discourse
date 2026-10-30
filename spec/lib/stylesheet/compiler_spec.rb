@@ -4,55 +4,32 @@ require "stylesheet/compiler"
 
 RSpec.describe Stylesheet::Compiler do
   describe "compilation" do
-    it "can compile 'admin' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("admin")
-      expect(css.length).to be > 500
+    shared_examples "a compiled stylesheet" do |name|
+      it "can compile '#{name}' css" do
+        css, _map = Stylesheet::Compiler.compile_asset(name)
+        expect(css.length).to be > 500
+      end
     end
 
-    it "can compile 'admin_rtl' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("admin_rtl")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "admin"
 
-    it "can compile 'color_definitions' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("color_definitions")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "admin_rtl"
 
-    it "can compile 'common' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("common")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "color_definitions"
 
-    it "can compile 'embed' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("embed")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "common"
 
-    it "can compile 'publish' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("publish")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "embed"
 
-    it "can compile 'qunit-custom' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("qunit-custom")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "publish"
 
-    it "can compile 'wcag' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("wcag")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "qunit-custom"
 
-    it "can compile 'wizard' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("wizard")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "wcag"
 
-    it "can compile 'wizard_rtl' css" do
-      css, _map = Stylesheet::Compiler.compile_asset("wizard_rtl")
-      expect(css.length).to be > 500
-    end
+    it_behaves_like "a compiled stylesheet", "wizard"
+
+    it_behaves_like "a compiled stylesheet", "wizard_rtl"
   end
 
   context "with a theme" do

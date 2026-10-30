@@ -131,9 +131,9 @@ describe "Admin Onboarding Banner" do
       end
     end
 
-    include_examples "publishing an onboarding choice", "plan_invites"
-    include_examples "publishing an onboarding choice", "introduce_yourself"
-    include_examples "publishing an onboarding choice", "write_your_own"
+    it_behaves_like "publishing an onboarding choice", "plan_invites"
+    it_behaves_like "publishing an onboarding choice", "introduce_yourself"
+    it_behaves_like "publishing an onboarding choice", "write_your_own"
 
     it "does not attribute an unrelated topic to a discarded suggestion" do
       visit("/")

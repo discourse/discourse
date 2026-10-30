@@ -20,6 +20,9 @@ Discourse/NoResetColumnInformationInMigrations:
 
 Discourse/NoIterationOverRSpecDefinitions:
   Enabled: true
+  Exclude:
+    - spec/integrity/i18n_spec.rb
+    - spec/integrity/upcoming_change_metadata_spec.rb
 
 Discourse/Plugins/CallRequiresPlugin:
   Include:

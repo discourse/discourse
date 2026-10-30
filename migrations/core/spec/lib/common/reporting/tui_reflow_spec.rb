@@ -60,7 +60,7 @@ RSpec.describe Migrations::Reporting::Tui do
       end
     end
 
-    include_examples "terminal history during a resize", :truncate
-    include_examples "terminal history during a resize", :reflow
+    it_behaves_like "terminal history during a resize", :truncate
+    it_behaves_like "terminal history during a resize", :reflow
   end
 end

@@ -476,6 +476,6 @@ RSpec.describe User::CreateBot, ".call" do
     end
   end
 
-  include_examples "concurrent bot creation", nil
-  include_examples "concurrent bot creation", -5000
+  it_behaves_like "concurrent bot creation", nil
+  it_behaves_like "concurrent bot creation", -5000
 end

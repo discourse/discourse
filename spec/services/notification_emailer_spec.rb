@@ -257,8 +257,8 @@ RSpec.describe NotificationEmailer do
     end
   end
 
-  include_examples "delivering notification emails", true
-  include_examples "delivering notification emails", false
+  it_behaves_like "delivering notification emails", true
+  it_behaves_like "delivering notification emails", false
 
   it "has translations for each sendable notification type" do
     notification =

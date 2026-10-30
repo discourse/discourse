@@ -644,9 +644,9 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
-  include_examples "moderating topics in bulk", "close"
-  include_examples "moderating topics in bulk", "archive"
-  include_examples "moderating topics in bulk", "unlist"
+  it_behaves_like "moderating topics in bulk", "close"
+  it_behaves_like "moderating topics in bulk", "archive"
+  it_behaves_like "moderating topics in bulk", "unlist"
 
   describe "reset_bump_dates" do
     it "resets bump date when user can update" do

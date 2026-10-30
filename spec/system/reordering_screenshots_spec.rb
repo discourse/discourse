@@ -124,6 +124,6 @@ describe "Reordering surfaces" do
     end
   end
 
-  include_examples "reordering screenshots with the selected interface", false
-  include_examples "reordering screenshots with the selected interface", true
+  it_behaves_like "reordering screenshots with the selected interface", false
+  it_behaves_like "reordering screenshots with the selected interface", true
 end

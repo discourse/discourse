@@ -52,8 +52,8 @@ RSpec.describe SetBrowserPageviewEventSourceDefaultToBeacon do
     end
   end
 
-  include_examples "preserving legacy pageviews after archiving", "default"
-  include_examples "preserving legacy pageviews after archiving", "explicit"
+  it_behaves_like "preserving legacy pageviews after archiving", "default"
+  it_behaves_like "preserving legacy pageviews after archiving", "explicit"
 
   it "skips piggyback writes while allowing explicit and default beacon sources" do
     migration = described_class.new

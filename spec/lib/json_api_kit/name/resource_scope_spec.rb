@@ -23,9 +23,9 @@ RSpec.describe JsonApiKit::Name::ResourceScope do
     end
   end
 
-  include_examples "converting resource scope identifiers", JsonApiKit::Name::Field
-  include_examples "converting resource scope identifiers", JsonApiKit::Name::Sort
-  include_examples "converting resource scope identifiers", JsonApiKit::Name::Filter
-  include_examples "converting resource scope identifiers", JsonApiKit::Name::Anchor
-  include_examples "converting resource scope identifiers", JsonApiKit::Name::Relationship
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Field
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Sort
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Filter
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Anchor
+  it_behaves_like "converting resource scope identifiers", JsonApiKit::Name::Relationship
 end
