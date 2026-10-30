@@ -11,7 +11,7 @@ import {
   isWhiteSpace,
 } from "discourse/static/prosemirror/lib/markdown-it";
 import { i18n } from "discourse-i18n";
-import { isTopLevel } from "discourse-markdown-it/features/onebox";
+import { isTopLevel, ONEBOX_HREF } from "discourse-markdown-it/features/onebox";
 
 export const oneboxPluginKey = new PluginKey("onebox");
 
@@ -30,7 +30,52 @@ export function oneboxTypeAtPos(doc, pos) {
     (!next ||
       next.type.name === "hard_break" ||
       hasTrailingWhitespaceOnly(doc, pos));
-  return $pos.depth === 1 && isAlone ? "full" : "inline";
+  return $pos.depth === 1 && parent.type.name === "paragraph" && isAlone
+    ? "full"
+    : "inline";
+}
+
+const oneboxSlotsCache = new WeakMap();
+
+function oneboxSlots(doc) {
+  let slots = oneboxSlotsCache.get(doc);
+  if (slots) {
+    return slots;
+  }
+
+  slots = [];
+  doc.descendants((node, pos) => {
+    if (takesOneboxSlot(doc, node, pos)) {
+      slots.push(pos);
+    }
+  });
+
+  oneboxSlotsCache.set(doc, slots);
+  return slots;
+}
+
+function takesOneboxSlot(doc, node, pos) {
+  if (node.type.name === "onebox" || node.type.name === "onebox_inline") {
+    return true;
+  }
+
+  const href = node.marks.find(
+    (mark) => mark.type.name === "link" && mark.attrs.markup === "linkify"
+  )?.attrs.href;
+
+  if (!href || !ONEBOX_HREF.test(href)) {
+    return false;
+  }
+
+  return oneboxTypeAtPos(doc, pos) === "full" || !isTopLevel(href);
+}
+
+function oneboxesPastLimit(doc, maxOneboxes) {
+  return new Set(oneboxSlots(doc).slice(maxOneboxes));
+}
+
+export function isPastOneboxLimit(doc, pos, maxOneboxes) {
+  return oneboxSlots(doc).filter((slot) => slot < pos).length >= maxOneboxes;
 }
 
 /** @type {RichEditorExtension} */
@@ -117,17 +162,20 @@ const extension = {
     getContext,
   }) {
     const failedUrls = { full: new Set(), inline: new Set() };
+    const maxOneboxes = () => getContext().siteSettings.max_oneboxes_per_post;
 
     // Scans for linkified URLs and creates onebox loading decorations.
     // `forceUrl` bypasses selection/topLevel/failed checks for that URL.
     function scanForOneboxLinks(doc, decoSet, tr, forceUrl) {
       const decorations = [];
+      const pastLimit = oneboxesPastLimit(doc, maxOneboxes());
       doc.descendants((node, pos) => {
         const link = node.marks.find((mark) => mark.type.name === "link");
 
         if (
           link?.attrs.markup === "linkify" &&
           getLinkify().test(node.text) &&
+          !pastLimit.has(pos) &&
           decoSet.find(pos, pos + node.nodeSize).length === 0
         ) {
           const isForced = forceUrl === link.attrs.href;
@@ -478,6 +526,7 @@ const extension = {
 
         const tr = state.tr;
         const inspected = new Set();
+        const pastLimit = oneboxesPastLimit(state.doc, maxOneboxes());
 
         for (const position of [state.selection.from, leftPos]) {
           const { from, to } = topBlockRange(state.doc, position);
@@ -487,7 +536,7 @@ const extension = {
           inspected.add(from);
 
           state.doc.nodesBetween(from, to, (node, nodePos) => {
-            if (node.type.name !== "onebox_inline") {
+            if (node.type.name !== "onebox_inline" || pastLimit.has(nodePos)) {
               return;
             }
 
@@ -511,6 +560,31 @@ const extension = {
               state.schema.text(url, [mark])
             );
           });
+        }
+
+        for (const pos of pastLimit) {
+          const node = state.doc.nodeAt(pos);
+          if (
+            node.type.name !== "onebox" &&
+            node.type.name !== "onebox_inline"
+          ) {
+            continue;
+          }
+
+          const { url } = node.attrs;
+          const mark = state.schema.marks.link.create({
+            href: url,
+            markup: "linkify",
+          });
+          const text = state.schema.text(url, mark.addToSet(node.marks));
+
+          tr.replaceWith(
+            tr.mapping.map(pos),
+            tr.mapping.map(pos + node.nodeSize),
+            node.isBlock
+              ? state.schema.nodes.paragraph.create(null, text)
+              : text
+          );
         }
 
         return tr.steps.length ? tr.setMeta("addToHistory", false) : null;
