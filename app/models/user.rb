@@ -1158,12 +1158,18 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.update_ip_address!(user_id, new_ip:, old_ip:)
+  def self.update_ip_address!(user_id, new_ip:, old_ip:, log_out_if_blocked: false)
     can_update_ip_address =
       DiscoursePluginRegistry.apply_modifier(:user_can_update_ip_address, user_id: user_id)
     return if !can_update_ip_address
 
     unless old_ip == new_ip || new_ip.blank?
+      if log_out_if_blocked && ScreenedIpAddress.should_block?(new_ip)
+        UserAuthToken.where(user_id: user_id).destroy_all
+        User.find_by(id: user_id)&.log_out!
+        return
+      end
+
       DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip)
         UPDATE users
         SET ip_address = :ip_address
@@ -1190,11 +1196,6 @@ class User < ActiveRecord::Base
           OFFSET :offset
         )
         SQL
-      end
-
-      if ScreenedIpAddress.should_block?(new_ip)
-        UserAuthToken.where(user_id: user_id).destroy_all
-        User.find_by(id: user_id)&.log_out!
       end
     end
   end

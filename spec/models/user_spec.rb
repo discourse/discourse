@@ -3779,16 +3779,38 @@ RSpec.describe User do
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &allow_block)
     end
 
-    it "logs the user out everywhere when the new ip address is blocked" do
-      Fabricate(:screened_ip_address, ip_address: "10.20.30.0/24")
-      UserAuthToken.generate!(user_id: user.id)
-      UserAuthToken.generate!(user_id: user.id)
+    context "with a blocked new ip address" do
+      fab!(:screened_ip) { Fabricate(:screened_ip_address, ip_address: "10.20.30.0/24") }
 
-      messages =
-        MessageBus.track_publish("/logout/#{user.id}") { user.update_ip_address!("10.20.30.40") }
+      before { user.update!(ip_address: "1.2.3.4") }
 
-      expect(UserAuthToken.where(user_id: user.id)).to be_empty
-      expect(messages.map(&:data)).to eq([user.id])
+      it "logs the user out everywhere and keeps the old ip address when log_out_if_blocked is true" do
+        UserAuthToken.generate!(user_id: user.id)
+        UserAuthToken.generate!(user_id: user.id)
+
+        messages =
+          MessageBus.track_publish("/logout/#{user.id}") do
+            User.update_ip_address!(
+              user.id,
+              new_ip: "10.20.30.40",
+              old_ip: "1.2.3.4",
+              log_out_if_blocked: true,
+            )
+          end
+
+        expect(UserAuthToken.where(user_id: user.id)).to be_empty
+        expect(messages.map(&:data)).to eq([user.id])
+        expect(user.reload.ip_address.to_s).to eq("1.2.3.4")
+      end
+
+      it "stores the ip address and keeps the sessions when log_out_if_blocked is false" do
+        UserAuthToken.generate!(user_id: user.id)
+
+        User.update_ip_address!(user.id, new_ip: "10.20.30.40", old_ip: "1.2.3.4")
+
+        expect(UserAuthToken.where(user_id: user.id).count).to eq(1)
+        expect(user.reload.ip_address.to_s).to eq("10.20.30.40")
+      end
     end
 
     describe "keeping old ip address" do
