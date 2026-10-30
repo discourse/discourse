@@ -117,6 +117,52 @@ acceptance("Design wizard - admin launch", function (needs) {
     );
   });
 
+  test("saves a dark-only palette for both system color modes", async function (assert) {
+    wizardData.themes[0].palette_pairs.push({
+      key: "dracula",
+      name: "Dracula",
+      dark_only: true,
+      light: null,
+      dark: {
+        id: -11,
+        name: "Dracula",
+        colors: { primary: "f8f8f2", secondary: "282a36" },
+      },
+    });
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/admin");
+    await click(APPEARANCE_LAUNCH_BUTTON);
+    await click(".design-wizard__intro-start");
+    await click(".design-wizard__next");
+    await click('[data-pair-key="dracula"]');
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "progress saves Dracula as the default palette for light systems"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "progress saves Dracula for dark systems"
+    );
+
+    await click(".design-wizard__save");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-11",
+      "the final save keeps Dracula as the default palette"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-11",
+      "the final save keeps Dracula for dark systems"
+    );
+  });
+
   test("installs a remote theme before navigating to its preview", async function (assert) {
     const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
     wizardData.themes.push({

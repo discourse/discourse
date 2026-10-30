@@ -149,7 +149,8 @@ export default class DesignWizardService extends Service {
   get #selectionsPayload() {
     return {
       theme_id: this.themeId,
-      light_palette_id: this.selectedPair?.light?.id,
+      light_palette_id:
+        this.selectedPair?.light?.id ?? this.selectedPair?.dark?.id,
       dark_palette_id: this.selectedPair?.dark?.id,
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
