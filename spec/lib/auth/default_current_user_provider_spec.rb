@@ -825,7 +825,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(request_from("1.2.3.4", token)&.id).to eq(user.id)
     end
 
-    it "does not log the user out when a user api key request comes from a blocked ip address" do
+    it "does not let a user api key request store a blocked ip address that would hide it from the cookie session check" do
       browser_token = UserAuthToken.generate!(user_id: user.id).unhashed_auth_token
       user_api_key =
         Fabricate(:user_api_key, scopes: [UserApiKeyScope.new(name: "read")], user: user)
@@ -842,7 +842,11 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
         ).current_user
 
       expect(api_user&.id).to eq(user.id)
-      expect(request_from("1.2.3.4", browser_token)&.id).to eq(user.id)
+      expect(UserAuthToken.where(user_id: user.id).count).to eq(1)
+
+      request_from("10.20.30.40", browser_token)
+
+      expect(request_from("10.20.30.40", browser_token)).to eq(nil)
     end
   end
 

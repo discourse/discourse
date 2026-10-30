@@ -3782,9 +3782,12 @@ RSpec.describe User do
     context "with a blocked new ip address" do
       fab!(:screened_ip) { Fabricate(:screened_ip_address, ip_address: "10.20.30.0/24") }
 
-      before { user.update!(ip_address: "1.2.3.4") }
+      before do
+        SiteSetting.log_out_sessions_on_blocked_ips = true
+        user.update!(ip_address: "1.2.3.4")
+      end
 
-      it "logs the user out everywhere and keeps the old ip address when log_out_if_blocked is true" do
+      it "logs the user out everywhere and keeps the old ip address for a cookie session" do
         UserAuthToken.generate!(user_id: user.id)
         UserAuthToken.generate!(user_id: user.id)
 
@@ -3794,7 +3797,7 @@ RSpec.describe User do
               user.id,
               new_ip: "10.20.30.40",
               old_ip: "1.2.3.4",
-              log_out_if_blocked: true,
+              cookie_session: true,
             )
           end
 
@@ -3803,10 +3806,25 @@ RSpec.describe User do
         expect(user.reload.ip_address.to_s).to eq("1.2.3.4")
       end
 
-      it "stores the ip address and keeps the sessions when log_out_if_blocked is false" do
+      it "neither stores the ip address nor ends sessions when the request is not a cookie session" do
         UserAuthToken.generate!(user_id: user.id)
 
         User.update_ip_address!(user.id, new_ip: "10.20.30.40", old_ip: "1.2.3.4")
+
+        expect(UserAuthToken.where(user_id: user.id).count).to eq(1)
+        expect(user.reload.ip_address.to_s).to eq("1.2.3.4")
+      end
+
+      it "stores the ip address and keeps the sessions when log_out_sessions_on_blocked_ips is disabled" do
+        SiteSetting.log_out_sessions_on_blocked_ips = false
+        UserAuthToken.generate!(user_id: user.id)
+
+        User.update_ip_address!(
+          user.id,
+          new_ip: "10.20.30.40",
+          old_ip: "1.2.3.4",
+          cookie_session: true,
+        )
 
         expect(UserAuthToken.where(user_id: user.id).count).to eq(1)
         expect(user.reload.ip_address.to_s).to eq("10.20.30.40")
