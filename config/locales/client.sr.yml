@@ -3656,6 +3656,10 @@ sr:
         activation_filter:
           activated: "Aktivirano"
         approved: "Potvrđenji?"
+        bots:
+          name: "Ime foruma"
+          username: "Korisničko Ime"
+          trust_level: "Nivo poverenja"
         titles:
           pending: "Korisnici koji čekaju reviziju"
           newuser: "Korisnici na nivou poverenja 0 (Novi Korisnik)"

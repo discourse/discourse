@@ -3558,7 +3558,6 @@ sv:
     category:
       none: "(ingen kategori)"
       all: "Alla kategorier"
-      choose: "Kategori&hellip;"
       edit: "Redigera"
       edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
@@ -5997,6 +5996,11 @@ sv:
           all: "Alla användare"
           activated: "Aktiverad"
         approved: "Godkänd?"
+        source: "Källa"
+        bots:
+          name: "Namn"
+          username: "Användarnamn"
+          trust_level: "Förtroendenivå"
         titles:
           active: "Aktiva användare"
           pending: "Användare under granskning"

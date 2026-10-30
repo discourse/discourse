@@ -392,7 +392,7 @@ No arguments passed to this event.
 | 1        | match       | variable | True           | -           |
 | 2        | replacement | variable | True           | -           |
 
-#### composer:reply-reloaded [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1011)
+#### composer:reply-reloaded [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1822)
 
 | Position | Argument | Type | Always Present | Description |
 | -------- | -------- | ---- | -------------- | ----------- |
@@ -400,13 +400,13 @@ No arguments passed to this event.
 
 <details><summary>Detailed List</summary>
 
-##### /frontend/discourse/app/models/composer.js#1011 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1011)
+##### /frontend/discourse/app/models/composer.ts#1822 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1822)
 
 | Position | Argument | Type | Description |
 | -------- | -------- | ---- | ----------- |
 | 1        | this     | this | -           |
 
-##### /frontend/discourse/app/models/composer.js#1030 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1030)
+##### /frontend/discourse/app/models/composer.ts#1841 [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1841)
 
 | Position | Argument | Type | Description |
 | -------- | -------- | ---- | ----------- |
@@ -1183,7 +1183,7 @@ No arguments passed to this event.
 
 ### post
 
-#### post:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1276)
+#### post:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1499)
 
 | Position | Argument    | Type     | Always Present | Description |
 | -------- | ----------- | -------- | -------------- | ----------- |
@@ -1331,7 +1331,7 @@ No arguments passed to this event.
 
 ### topic
 
-#### topic:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.js#L1278)
+#### topic:created [:link:](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/models/composer.ts#L1501)
 
 | Position | Argument    | Type     | Always Present | Description |
 | -------- | ----------- | -------- | -------------- | ----------- |

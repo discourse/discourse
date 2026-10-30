@@ -3952,7 +3952,6 @@ pt:
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "Categoria&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -5844,6 +5843,9 @@ pt:
           silenced: "Silenciado"
           staged: "Não Confirmado"
         approved: "Aprovado?"
+        bots:
+          name: "Nome"
+          username: "Nome de Utilizador"
         titles:
           active: "Utilizadores ativos"
           pending: "Utilizadores com Confirmação Pendente"
@@ -5862,6 +5864,7 @@ pt:
           title: "Mostrar carga SSO"
           text: "Mostrar"
       user:
+        bot: "Robô"
         suspend_failed: "Ocorreu um erro ao suspender este utilizador %{error}"
         unsuspend_failed: "Ocorreu um erro ao retirar a suspensão deste utilizador %{error}"
         suspend_reason_label: "Qual é o motivo da sua suspensão? Este texto <b>estará visível para todos</b> na página do perfil deste utilizador, e será mostrada ao utilizador quando tentar iniciar sessão. Mantenha-o breve."

@@ -106,3 +106,51 @@ describe "Post history with a hidden revision" do
     expect(post_history_modal).to have_body_diff("Latest public version")
   end
 end
+
+describe "Post history with an unlisted revision" do
+  fab!(:admin)
+  fab!(:post_owner, :user)
+  fab!(:topic) { Fabricate(:topic, user: post_owner) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: post_owner, raw: "Initial public version") }
+
+  let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
+
+  before do
+    SiteSetting.editing_grace_period = 0
+
+    post.revise(post_owner, raw: "Second public version")
+    post.revise(post_owner, raw: "Noisy intermediate version")
+    post.revise(post_owner, raw: "Latest public version")
+  end
+
+  it "lets staff unlist a revision" do
+    sign_in(admin)
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+    post_history_modal.click_previous_revision
+
+    expect(post_history_modal).to have_body_diff("Noisy intermediate version")
+    expect(post_history_modal).to have_no_unlisted_marker
+
+    post_history_modal.choose_visibility("unlisted")
+
+    expect(post_history_modal).to have_unlisted_marker
+  end
+
+  it "skips the unlisted revision for users until they show all edits" do
+    post.revisions.find_by(number: 3).unlist!
+
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+    post_history_modal.click_previous_revision
+
+    expect(post_history_modal).to have_body_diff("Second public version")
+    expect(post_history_modal).to have_no_body_diff("Noisy intermediate version")
+
+    post_history_modal.show_all_edits.click_next_revision
+
+    expect(post_history_modal).to have_unlisted_marker
+    expect(post_history_modal).to have_body_diff("Noisy intermediate version")
+  end
+end

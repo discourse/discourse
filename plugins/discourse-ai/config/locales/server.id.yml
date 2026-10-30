@@ -47,6 +47,8 @@ id:
       prompts:
         custom_prompt: "Perintah Khusus"
     ai_bot:
+      sources:
+        historical: "Discourse"
       navigation:
         users:
           title: "Pengguna"

@@ -4132,7 +4132,6 @@ vi:
     category:
       none: "(chưa có chuyên mục)"
       all: "Tất cả chuyên mục"
-      choose: "Chuyênmục&hellip;"
       edit: "Sửa"
       edit_title: "Sửa chuyên mục này"
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"
@@ -7602,6 +7601,10 @@ vi:
           all: "Tất cả Thành viên"
           activated: "Đã kích hoạt"
         approved: "Đã duyệt?"
+        source: "Nguồn"
+        bots:
+          name: "Tên"
+          username: "Tên người dùng"
         titles:
           active: "Thành viên đang hoạt động"
           new: "Thành viên mới"

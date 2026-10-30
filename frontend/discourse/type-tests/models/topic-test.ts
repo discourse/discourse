@@ -106,6 +106,33 @@ interface ExpectedBasicUser {
   avatar_template: string;
 }
 
+/** List hydration adds a User and a plain EmberObject primary group. */
+interface ExpectedPoster {
+  user_id: number;
+  extras: string | null;
+  description: string | null;
+  primary_group_id: number | null;
+  flair_group_id: number | null;
+  user?: User;
+  primary_group?: EmberObject & { id: number; name: string };
+  extraClasses?: string | null;
+}
+
+type ExpectedParticipant = Omit<
+  ExpectedPoster,
+  "primary_group" | "extraClasses"
+>;
+
+type ExpectedFeaturedUser =
+  | (ExpectedParticipant &
+      Partial<Pick<ExpectedPoster, "primary_group" | "extraClasses">>)
+  | {
+      moreCount: string;
+      user?: undefined;
+      user_id?: undefined;
+      extras?: undefined;
+    };
+
 type ExpectedTimerValue = ExpectedTimer | EmberObject | null;
 
 expectTypeOf<TopicTag>().toEqualTypeOf<ExpectedTag>();
@@ -186,7 +213,7 @@ interface ExpectedTopicFields {
   op_liked?: boolean;
   participant_count?: number | null;
   participant_groups?: string[];
-  participants?: object[];
+  participants?: ExpectedParticipant[];
   pending_posts?: ExpectedPendingPost[];
   pinned?: boolean;
   pinned_at?: string | null;
@@ -195,7 +222,7 @@ interface ExpectedTopicFields {
   pm_with_non_human_user?: boolean;
   post_stream?: object;
   posted?: boolean;
-  posters?: object[];
+  posters?: ExpectedPoster[] & { firstObject?: ExpectedPoster };
   posts_count?: number;
   published_page?: ExpectedPublishedPage;
   queued_posts_count?: number;
@@ -351,8 +378,8 @@ expectTypeOf(topic.summaryUrl).toEqualTypeOf<string>();
 expectTypeOf(topic.lastPosterUrl).toEqualTypeOf<string>();
 expectTypeOf(topic.urlForPostNumber(3)).toEqualTypeOf<string>();
 
-// Poster entries stay untyped until their payload is, but never `any`.
-expectTypeOf(topic.featuredUsers).toEqualTypeOf<object[]>();
+// The list supplies hydrated references, while featuredUsers can append a count marker.
+expectTypeOf(topic.featuredUsers).toEqualTypeOf<ExpectedFeaturedUser[]>();
 expectTypeOf(topic.creator).not.toBeAny();
 expectTypeOf(topic.lastPoster).not.toBeAny();
 expectTypeOf(topic.lastPosterUser).not.toBeAny();

@@ -426,17 +426,25 @@ aside.onebox:has(.discourse-event-onebox) {
     min-width: 0;
   }
 
-  &__time {
+  &__time,
+  &__recurrence {
     align-items: center;
     display: flex;
     gap: var(--space-2);
-    margin-block: var(--space-3) var(--space-1);
 
     .d-icon {
       color: var(--primary-high);
       font-size: var(--font-down-1);
       flex: 0 0 auto;
     }
+  }
+
+  &__time {
+    margin-block: var(--space-3) var(--space-1);
+  }
+
+  &__recurrence {
+    margin-block-end: var(--space-1);
   }
 
   &__description {
@@ -488,6 +496,7 @@ aside.onebox:has(.discourse-event-onebox) {
     grid-template:
       "image date title" auto
       "image time time" auto
+      "image recurrence recurrence" auto
       "image description description" auto
       "image . ." 1fr / 8rem auto minmax(0, 1fr);
     row-gap: 0;
@@ -520,6 +529,10 @@ aside.onebox:has(.discourse-event-onebox) {
       grid-area: time;
     }
 
+    .discourse-event-onebox__recurrence {
+      grid-area: recurrence;
+    }
+
     .discourse-event-onebox__description {
       grid-area: description;
     }
@@ -532,6 +545,7 @@ aside.onebox:has(.discourse-event-onebox) {
         "image image" auto
         "date title" auto
         ". time" auto
+        ". recurrence" auto
         ". description" auto / auto minmax(0, 1fr);
 
       .discourse-event-onebox__image.thumbnail {

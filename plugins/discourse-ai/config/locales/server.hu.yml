@@ -16,6 +16,8 @@ hu:
         image_generation_custom:
           name: "Egyéni"
     ai_bot:
+      sources:
+        spam_detection: "Kéretlen tartalom észlelése"
       navigation:
         settings:
           title: "Webhely beállítások"

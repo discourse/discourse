@@ -385,10 +385,6 @@ Discourse::Application.routes.draw do
       put "dashboard/sections/:section_id/settings/:setting_key" =>
             "dashboard#update_section_settings",
           :constraints => AdminConstraint.new
-      get "dashboard/general" => "dashboard#general"
-      get "dashboard/moderation" => "dashboard#moderation"
-      get "dashboard/security" => "dashboard#security"
-      get "dashboard/reports" => "dashboard#reports"
       post "dashboard/reports/bulk" => "dashboard#bulk_reports"
       get "dashboard/reports/available" => "dashboard#available_reports",
           :constraints => AdminConstraint.new
@@ -1370,6 +1366,14 @@ Discourse::Application.routes.draw do
       get "revisions/:revision" => "posts#revisions", :constraints => { revision: /\d+/ }
       put "revisions/:revision/hide" => "posts#hide_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
+      put "revisions/:revision/unlist" => "posts#unlist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
+      put "revisions/:revision/relist" => "posts#relist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
       delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
       get "permanently_delete_check" => "posts#permanently_delete_check",

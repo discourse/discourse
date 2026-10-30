@@ -3019,6 +3019,10 @@ id:
           active: "Aktif"
           staff: "Staf"
         approved: "Disetujui?"
+        bots:
+          name: "Nama"
+          username: "Nama Pengguna"
+          trust_level: "Trust level"
         titles:
           active: "Pengguna Aktif"
           staff: "Staf"
@@ -3041,6 +3045,7 @@ id:
         permissions: Izin
         activity: Aktifitas
         posts_read_count: Tulisan dilihat
+        post_count: Post dibuat
         topics_entered: Topik dilihat
         approve: "Terima"
         time_read: "Waktu Baca"

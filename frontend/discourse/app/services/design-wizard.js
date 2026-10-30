@@ -656,11 +656,19 @@ export default class DesignWizardService extends Service {
     this.returnUrl = stored.returnUrl;
     this.progressSaved = stored.progressSaved ?? false;
     this.#snapshot = stored.snapshot;
-    this.#originalHomepageSettings =
+    if (this.#snapshot) {
+      this.#snapshot.homepage_settings = this.#availableHomepageSettings(
+        this.#snapshot.homepage_settings
+      );
+      if (!this.#supportedHomepages.includes(this.#snapshot.homepage)) {
+        this.#snapshot.homepage = null;
+      }
+    }
+    this.#originalHomepageSettings = this.#availableHomepageSettings(
       stored.originalHomepageSettings ??
-      stored.snapshot?.homepage_settings ??
-      this.data.homepage_settings ??
-      {};
+        stored.snapshot?.homepage_settings ??
+        this.data.homepage_settings
+    );
     // the intro is only ever shown once, before the first selection
     this.showIntro = false;
     this.themeId = stored.themeId;
@@ -669,10 +677,12 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
-    this.homepage =
-      stored.homepage ?? this.#supportedHomepage(this.data.homepage);
-    this.homepageSettings =
-      stored.homepageSettings ?? this.data.homepage_settings ?? {};
+    this.homepage = this.#supportedHomepage(
+      stored.homepage ?? this.data.homepage
+    );
+    this.homepageSettings = this.#availableHomepageSettings(
+      stored.homepageSettings ?? this.data.homepage_settings
+    );
     this.categoryPageStyle =
       stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
     this.welcomeBanner =
@@ -684,6 +694,15 @@ export default class DesignWizardService extends Service {
     // selections are restored but the flow always restarts from the first
     // step, so a resumed wizard walks the same path as a fresh one
     this.stepIndex = 0;
+  }
+
+  #availableHomepageSettings(settings) {
+    // A preview reload can resume after the available homepage options changed.
+    return Object.fromEntries(
+      Object.entries(settings ?? {}).filter(([name]) =>
+        Object.hasOwn(this.data.homepage_settings ?? {}, name)
+      )
+    );
   }
 
   #persistState() {

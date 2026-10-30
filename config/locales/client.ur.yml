@@ -9,6 +9,7 @@ ur:
     dsa_notice:
       choice_title: "یہ غیر قانونی ہے"
       title: "غیر قانونی مواد کی اطلاع دیں"
+      content_url: "مواد کا URL"
       email: "ای میل"
       resend_email_code: "کوڈ دوبارہ بھیجیں"
     mcp_oauth_client_id_metadata_policy:
@@ -4909,7 +4910,6 @@ ur:
     category:
       none: "(کوئی زمرہ نہیں)"
       all: "تمام زمرہ جات"
-      choose: "زمرہ&hellip;"
       edit: "ترمیم"
       edit_title: "اس زمرے میں ترمیم"
       edit_dialog_title: "ترمیم: %{categoryName}"
@@ -8494,6 +8494,11 @@ ur:
           activated: "فعال"
           not_activated: "فعال نہیں"
         approved: "منظورشدہ؟"
+        source: "بذریعہ"
+        bots:
+          name: "نام"
+          username: "اسمِ صارف"
+          trust_level: "فعالیت کا درجہ"
         titles:
           active: "فعال اراکین"
           new: "نئے اراکین"

@@ -4449,7 +4449,6 @@ sk:
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
-      choose: "Kategória&hellip;"
       edit: "Upraviť"
       edit_title: "Upraviť túto kategóriu"
       edit_dialog_title: "Úprava: %{categoryName}"
@@ -7851,6 +7850,11 @@ sk:
           all: "Všetci používatelia"
           activated: "Aktivované"
         approved: "Schválený?"
+        source: "Zdroj"
+        bots:
+          name: "Meno"
+          username: "Používateľské meno"
+          trust_level: "Úroveň dôvery"
         titles:
           active: "Aktívni používatelia"
           new: "Noví používatelia"
@@ -7877,6 +7881,7 @@ sk:
           title: "Odstráňte všetky priradené účty pre tohto používateľa"
           text: "Odstrániť priradené účty"
       user:
+        bot: "Bot"
         suspend_failed: "Niečo sa pokazilo pri odoberaní práv tomuto používateľovi %{error}"
         unsuspend_failed: "Niečo sa pokazilo pri obnovovaní práv tomuto používateľovi %{error}"
         suspend_duration: "Používateľa pozastaviť až do:"

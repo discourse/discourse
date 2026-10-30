@@ -1,21 +1,7 @@
 /* eslint-disable ember/route-path-style */
 export default function () {
   this.route("admin", function () {
-    this.route("dashboard", { path: "/" }, function () {
-      this.route("general", { path: "/" });
-      this.route("admin.dashboardModeration", {
-        path: "/dashboard/moderation",
-        resetNamespace: true,
-      });
-      this.route("admin.dashboardSecurity", {
-        path: "/dashboard/security",
-        resetNamespace: true,
-      });
-      this.route("admin.dashboardReports", {
-        path: "/dashboard/reports",
-        resetNamespace: true,
-      });
-    });
+    this.route("dashboard", { path: "/" });
     this.route("adminSiteTraffic", {
       path: "/dashboard/site-traffic-explorer",
       resetNamespace: true,

@@ -198,5 +198,87 @@ RSpec.describe DiscourseEvents::Events::Action::GenerateSchemaJson do
         expect(schema).not_to have_key("image")
       end
     end
+
+    it "omits the schedule for a one-off event" do
+      expect(schema).not_to have_key("eventSchedule")
+    end
+
+    context "with a recurring event" do
+      before { freeze_time Time.utc(2026, 10, 1) }
+
+      it "describes a weekly recurrence on the event's local weekday" do
+        # 01:00 UTC on Friday is still Thursday evening in New York
+        event.update!(
+          recurrence: "every_week",
+          original_starts_at: Time.iso8601("2026-10-23T01:00:00Z"),
+          original_ends_at: Time.iso8601("2026-10-23T02:00:00Z"),
+          recurrence_until: Time.iso8601("2026-12-31T23:59:00-05:00"),
+        )
+
+        expect(schema["eventSchedule"]).to eq(
+          "@type" => "Schedule",
+          "repeatFrequency" => "P1W",
+          "byDay" => "https://schema.org/Thursday",
+          "endDate" => "2026-12-31",
+          "scheduleTimezone" => "America/New_York",
+        )
+      end
+
+      it "describes the weekdays of a weekday recurrence" do
+        event.update!(recurrence: "every_weekday")
+
+        expect(schema["eventSchedule"]).to include(
+          "repeatFrequency" => "P1D",
+          "byDay" =>
+            %w[Monday Tuesday Wednesday Thursday Friday].map { "https://schema.org/#{it}" },
+        )
+      end
+
+      it "describes the week of the month for a monthly recurrence" do
+        event.update!(recurrence: "every_month")
+
+        expect(schema["eventSchedule"]).to include(
+          "repeatFrequency" => "P1M",
+          "byDay" => "https://schema.org/Thursday",
+          "byMonthWeek" => 4,
+        )
+      end
+
+      it "describes a fifth weekday as the last of the month" do
+        event.update!(
+          recurrence: "every_month",
+          original_starts_at: Time.iso8601("2026-10-29T13:00:00Z"),
+          original_ends_at: Time.iso8601("2026-10-29T14:00:00Z"),
+        )
+
+        expect(schema["eventSchedule"]).to include("byMonthWeek" => -1)
+      end
+
+      it "takes the week of the month from the start of the series" do
+        # The series runs on the last Thursday, even when the current one is also the fourth
+        event.update!(
+          recurrence: "every_month",
+          original_starts_at: Time.iso8601("2026-10-29T13:00:00Z"),
+          original_ends_at: Time.iso8601("2026-10-29T14:00:00Z"),
+        )
+        event.event_dates.create!(
+          starts_at: Time.iso8601("2026-11-26T14:00:00Z"),
+          ends_at: Time.iso8601("2026-11-26T15:00:00Z"),
+        )
+
+        expect(schema).to include("startDate" => "2026-11-26T09:00:00.000-05:00")
+        expect(schema["eventSchedule"]).to include("byMonthWeek" => -1)
+      end
+
+      it "describes multi-week intervals" do
+        event.update!(recurrence: "every_two_weeks")
+        expect(schema["eventSchedule"]).to include("repeatFrequency" => "P2W")
+
+        event.update!(recurrence: "every_four_weeks")
+        expect(
+          JSON.parse(described_class.call(topic:, first_post:, event:))["eventSchedule"],
+        ).to include("repeatFrequency" => "P4W")
+      end
+    end
   end
 end

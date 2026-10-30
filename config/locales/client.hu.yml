@@ -4405,7 +4405,6 @@ hu:
     category:
       none: "(nincs kategória)"
       all: "Összes kategória"
-      choose: "Kategória&hellip;"
       edit: "Szerkesztés"
       edit_title: "Kategória szerkesztése"
       edit_dialog_title: "Szerkesztés: %{categoryName}"
@@ -7950,6 +7949,11 @@ hu:
           all: "Minden felhasználó"
           activated: "Aktiválva"
         approved: "Jóváhagyott?"
+        source: "Forrás"
+        bots:
+          name: "Név"
+          username: "Felhasználónév"
+          trust_level: "Bizalmi szint"
         titles:
           active: "Aktív felhasználók"
           new: "Új felhasználó"

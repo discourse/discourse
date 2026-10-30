@@ -4839,6 +4839,9 @@ sq:
           suspended: "Të pezulluar"
           staged: "Staged"
         approved: "Aprovuar?"
+        bots:
+          name: "Emri"
+          username: "Emri i përdoruesit"
         titles:
           active: "Përdoruesit aktivë"
           pending: "Përdorues në pritje"
