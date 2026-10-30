@@ -15,9 +15,16 @@ module("Integration | Component | ZendeskTopicActions", function (hooks) {
 
   test("links to the issue it creates", async function (assert) {
     logIn(getOwner(this));
-    updateCurrentUser({ staff: true, discourse_zendesk_plugin_status: true });
+    updateCurrentUser({
+      staff: true,
+      discourse_zendesk_plugin_status: true,
+      can_create_zendesk_ticket: true,
+      can_view_zendesk_ticket: true,
+    });
     pretender.post("/zendesk-plugin/issues", () =>
       response({
+        id: 1,
+        discourse_zendesk_plugin_has_ticket: true,
         discourse_zendesk_plugin_zendesk_id: "42",
         discourse_zendesk_plugin_zendesk_url: "https://zendesk.example/42",
       })

@@ -30,6 +30,28 @@ RSpec.describe TopicsController do
       expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_has_ticket")
     end
 
+    it "preserves staff ticket metadata when disabled without granting group access" do
+      group.add(user)
+      SiteSetting.zendesk_view_ticket_allowed_groups = group.id.to_s
+      SiteSetting.zendesk_enabled = false
+      sign_in(Fabricate(:admin))
+
+      get "/t/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["discourse_zendesk_plugin_zendesk_id"]).to eq("123")
+      expect(response.parsed_body["discourse_zendesk_plugin_zendesk_url"]).to eq(
+        "https://your-url.zendesk.com/agent/tickets/123",
+      )
+
+      sign_in(user)
+      get "/t/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_zendesk_id")
+      expect(response.parsed_body).not_to have_key("discourse_zendesk_plugin_zendesk_url")
+    end
+
     it "exposes the ticket link only to viewing groups" do
       group.add(user)
       SiteSetting.zendesk_view_ticket_allowed_groups = group.id.to_s

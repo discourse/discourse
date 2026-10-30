@@ -8,23 +8,32 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class ZendeskTopicActions extends Component {
-  @service a11y;
   @service currentUser;
 
   @tracked creating = false;
-  @tracked ticket;
 
-  get currentTicket() {
-    return this.ticket?.id === this.args.topic.id
-      ? this.ticket
+  @service("a11y") _a11y;
+
+  @tracked _updatedTopic;
+
+  get #topicState() {
+    return this._updatedTopic?.id === this.args.topic.id
+      ? this._updatedTopic
       : this.args.topic;
   }
 
   get hasTicket() {
-    return this.currentTicket.discourse_zendesk_plugin_has_ticket;
+    return this.#topicState.discourse_zendesk_plugin_has_ticket;
   }
 
   get showActions() {
+    if (
+      !this.currentUser?.discourse_zendesk_plugin_status &&
+      !this.currentUser?.staff
+    ) {
+      return false;
+    }
+
     return (
       this.currentUser?.can_create_zendesk_ticket ||
       (this.hasTicket && this.currentUser?.can_view_zendesk_ticket)
@@ -32,7 +41,7 @@ export default class ZendeskTopicActions extends Component {
   }
 
   get ticketUrl() {
-    return this.currentTicket.discourse_zendesk_plugin_zendesk_url;
+    return this.#topicState.discourse_zendesk_plugin_zendesk_url;
   }
 
   @action
@@ -43,12 +52,12 @@ export default class ZendeskTopicActions extends Component {
 
     this.creating = true;
     try {
-      this.ticket = await ajax("/zendesk-plugin/issues", {
+      this._updatedTopic = await ajax("/zendesk-plugin/issues", {
         type: "POST",
         data: { topic_id: this.args.topic.id },
       });
       if (this.hasTicket) {
-        this.a11y.announce(i18n("zendesk.ticket_created"));
+        this._a11y.announce(i18n("zendesk.ticket_created"));
       }
     } catch (error) {
       popupAjaxError(error);
@@ -75,7 +84,9 @@ export default class ZendeskTopicActions extends Component {
                 {{i18n "topic.view_zendesk_issue"}}
               </a>
             {{else}}
-              <span>{{i18n "zendesk.ticket_created"}}</span>
+              <span class="zendesk-topic-actions__confirmation">{{i18n
+                  "zendesk.ticket_created"
+                }}</span>
             {{/if}}
           {{else if this.currentUser.can_create_zendesk_ticket}}
             <DButton
