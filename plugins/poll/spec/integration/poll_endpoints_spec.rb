@@ -126,8 +126,7 @@ RSpec.describe "DiscoursePoll endpoints" do
               post_id: -1,
               poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
             }
-        expect(response.status).to eq(400)
-        expect(response.body).to include("post_id")
+        expect(response.status).to eq(404)
       end
     end
 
@@ -565,8 +564,7 @@ RSpec.describe "DiscoursePoll endpoints" do
               user_field_name: groupable_user_field,
             }
 
-        expect(response).to have_http_status :unprocessable_entity
-        expect(response.parsed_body["errors"][0]).to eq(I18n.t("poll.user_cant_post_in_topic"))
+        expect(response).to have_http_status :forbidden
       end
     end
   end
@@ -612,8 +610,7 @@ RSpec.describe "DiscoursePoll endpoints" do
             poll_name: "poll",
             status: "closed",
           }
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"][0]).to eq(I18n.t("poll.user_cant_post_in_topic"))
+      expect(response.status).to eq(403)
     end
   end
 end

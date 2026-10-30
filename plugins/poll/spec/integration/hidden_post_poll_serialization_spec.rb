@@ -104,7 +104,8 @@ RSpec.describe "DiscoursePoll hidden post serialization", type: :request do
     it "denies refresh access for viewers who cannot see the hidden post" do
       get "/posts/#{poll_post.id}.json"
 
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(403)
+      expect(response.body).not_to include("Secret option A")
     end
   end
 

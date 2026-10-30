@@ -103,7 +103,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
 
   def ensure_can_see_post
     post = Post.find_by(id: params.require(:post_id))
-    return if !post || !guardian.can_see_topic?(post.topic)
+    raise Discourse::NotFound unless post
 
     guardian.ensure_can_see!(post)
   end
