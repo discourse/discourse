@@ -155,6 +155,18 @@ module(
       assert.strictEqual(toasts.activeToasts.length, 1);
     });
 
+    test("saves the bracket after a bare link unescaped", async function (assert) {
+      pretender.get("/inline-onebox", () => [
+        200,
+        { "Content-Type": "application/json" },
+        { "inline-oneboxes": [] },
+      ]);
+
+      const [editor] = await setupRichEditor(assert, `see [${OTHER_URL}] here`);
+
+      assert.strictEqual(editor.value, `see \\[${OTHER_URL}] here`);
+    });
+
     test("holds a lone link inline while the cursor is on its line", async function (assert) {
       const [editor] = await setupRichEditor(assert, "a\n\nb");
       const { view } = editor;
