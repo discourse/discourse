@@ -2131,6 +2131,95 @@ RSpec.describe Admin::ThemesController do
       expect(theme.reload.child_theme_ids).to contain_exactly(locked_component.id, component.id)
     end
 
+    describe "importing a theme that lists components" do
+      let(:locked_url) do
+        ThemeStore::GitImporter.new("https://github.com/org/locked-component").url
+      end
+      let(:other_url) { ThemeStore::GitImporter.new("https://github.com/org/other-component").url }
+      let!(:other_component) do
+        Fabricate(:theme, component: true, remote_theme: RemoteTheme.create!(remote_url: other_url))
+      end
+
+      before { locked_component.update!(remote_theme: RemoteTheme.create!(remote_url: locked_url)) }
+
+      def archive(components)
+        dir = Dir.mktmpdir
+        FileUtils.mkdir_p(File.join(dir, "listing-theme"))
+        File.write(
+          File.join(dir, "listing-theme", "about.json"),
+          { name: "Listing theme", components: }.to_json,
+        )
+        Rack::Test::UploadedFile.new(
+          Compression::Zip.new.compress(dir, "listing-theme"),
+          "application/zip",
+        )
+      end
+
+      it "blocks including a restricted component in a new theme" do
+        expect do
+          post "/admin/themes/import.json", params: { bundle: archive([locked_url]) }
+        end.not_to change { Theme.count }
+
+        expect(response.status).to eq(403)
+        expect(locked_component.reload.parent_theme_ids).to be_empty
+      end
+
+      it "blocks including or dropping a restricted component when updating a theme" do
+        theme.add_relative_theme!(:child, locked_component)
+
+        post "/admin/themes/import.json",
+             params: {
+               bundle: archive([]),
+               theme_id: theme.id,
+               components: "sync",
+             }
+        expect(response.status).to eq(403)
+        expect(theme.reload.child_theme_ids).to eq([locked_component.id])
+
+        other_theme = Fabricate(:theme)
+        post "/admin/themes/import.json",
+             params: {
+               bundle: archive([locked_url]),
+               theme_id: other_theme.id,
+               components: "merge",
+             }
+        expect(response.status).to eq(403)
+        expect(other_theme.reload.child_theme_ids).to be_empty
+      end
+
+      it "blocks including a restricted component in a theme imported from a repository" do
+        repo =
+          setup_git_repo(
+            "about.json" => { name: "Listing theme", components: [locked_url] }.to_json,
+          )
+        remote = MockGitImporter.register("https://github.com/org/listing-theme.git", repo)
+
+        expect { post "/admin/themes/import.json", params: { remote: } }.not_to change {
+          Theme.count
+        }
+
+        expect(response.status).to eq(403)
+        expect(locked_component.reload.parent_theme_ids).to be_empty
+      end
+
+      it "only drops components from the imported theme when syncing" do
+        other_theme = Fabricate(:theme)
+        theme.add_relative_theme!(:child, other_component)
+        other_theme.add_relative_theme!(:child, other_component)
+
+        post "/admin/themes/import.json",
+             params: {
+               bundle: archive([]),
+               theme_id: theme.id,
+               components: "sync",
+             }
+
+        expect(response.status).to eq(201)
+        expect(theme.reload.child_theme_ids).to be_empty
+        expect(other_theme.reload.child_theme_ids).to eq([other_component.id])
+      end
+    end
+
     it "blocks dropping a restricted theme's relations by switching or deleting the other side" do
       component = Fabricate(:theme, component: true)
       locked_theme.add_relative_theme!(:child, component)

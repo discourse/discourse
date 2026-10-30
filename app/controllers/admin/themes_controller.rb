@@ -83,8 +83,17 @@ class Admin::ThemesController < Admin::AdminController
         end
 
         @theme =
-          RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
+          RemoteTheme.import_theme(
+            remote,
+            theme_user,
+            private_key: private_key,
+            branch: branch,
+            guardian:,
+          )
         render json: serialize_data(@theme, ThemeSerializer), status: :created
+      rescue Discourse::InvalidAccess
+        # hijacked requests don't go through the usual error handling
+        render_json_error I18n.t("invalid_access"), status: :forbidden
       rescue RemoteTheme::ImportError => e
         if params[:force]
           @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
@@ -117,6 +126,7 @@ class Admin::ThemesController < Admin::AdminController
             theme_id:,
             update_components:,
             run_migrations:,
+            guardian:,
           )
 
         log_theme_change(nil, @theme)
