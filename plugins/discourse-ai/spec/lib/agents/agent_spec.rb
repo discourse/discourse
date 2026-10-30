@@ -299,7 +299,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
       expect(agents).to include(
         DiscourseAi::Agents::General,
         DiscourseAi::Agents::Creative,
-        DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
@@ -323,7 +322,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
       expect(admin_agents).to include(
         DiscourseAi::Agents::General,
         DiscourseAi::Agents::Creative,
-        DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
@@ -356,7 +354,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::SqlHelper,
         DiscourseAi::Agents::SettingsExplorer,
         DiscourseAi::Agents::Creative,
-        DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
         DiscourseAi::Agents::GithubHelper,
       )
@@ -376,7 +373,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::SqlHelper,
         DiscourseAi::Agents::SettingsExplorer,
         DiscourseAi::Agents::Creative,
-        DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
         DiscourseAi::Agents::GithubHelper,
       )
