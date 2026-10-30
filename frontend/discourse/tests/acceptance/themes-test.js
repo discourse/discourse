@@ -7,7 +7,7 @@ acceptance("Theme", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    const themes = [
+    let themes = [
       {
         id: 42,
         name: "discourse-incomplete-theme",
@@ -113,55 +113,75 @@ acceptance("Theme", function (needs) {
       });
     });
 
+    const childComponent = {
+      id: 43,
+      name: "discourse-child-component",
+      created_at: "2022-01-01T12:00:30.000Z",
+      updated_at: "2022-01-01T12:00:30.000Z",
+      component: true,
+      user_selectable: false,
+      supported: true,
+      enabled: true,
+      child_themes: [],
+      parent_themes: [{ id: 42, name: "discourse-complete-theme" }],
+    };
+
     server.put("/admin/themes/42", () => {
-      return helper.response(200, {
-        theme: {
-          id: 42,
-          name: "discourse-complete-theme",
-          created_at: "2022-01-01T12:00:00.000Z",
-          updated_at: "2022-01-01T12:00:00.000Z",
-          component: false,
-          color_scheme: null,
-          color_scheme_id: null,
-          user_selectable: false,
-          auto_update: true,
-          remote_theme_id: 42,
-          settings: [],
-          supported: true,
-          description: null,
-          enabled: true,
-          user: {
-            id: 1,
-            username: "foo",
-            name: null,
-            avatar_template:
-              "/letter_avatar_proxy/v4/letter/f/3be4f8/{size}.png",
-          },
-          theme_fields: [],
-          child_themes: [],
-          parent_themes: [],
-          remote_theme: {
-            id: 42,
-            remote_url:
-              "git@github.com:discourse-org/discourse-incomplete-theme.git",
-            remote_version: "0000000000000000000000000000000000000000",
-            local_version: "0000000000000000000000000000000000000000",
-            commits_behind: 0,
-            branch: null,
-            remote_updated_at: "2022-01-01T12:00:30.000Z",
-            updated_at: "2022-01-01T12:00:30.000Z",
-            last_error_text: null,
-            is_git: true,
-            placeholder: false,
-            license_url: "URL",
-            about_url: "URL",
-            authors: null,
-            theme_version: null,
-            minimum_discourse_version: null,
-            maximum_discourse_version: null,
-          },
-          translations: [],
+      const finished = {
+        id: 42,
+        name: "discourse-complete-theme",
+        created_at: "2022-01-01T12:00:00.000Z",
+        updated_at: "2022-01-01T12:00:00.000Z",
+        component: false,
+        color_scheme: null,
+        color_scheme_id: null,
+        user_selectable: false,
+        auto_update: true,
+        remote_theme_id: 42,
+        settings: [],
+        supported: true,
+        description: null,
+        enabled: true,
+        user: {
+          id: 1,
+          username: "foo",
+          name: null,
+          avatar_template: "/letter_avatar_proxy/v4/letter/f/3be4f8/{size}.png",
         },
+        theme_fields: [],
+        child_themes: [{ id: 43, name: "discourse-child-component" }],
+        parent_themes: [],
+        remote_theme: {
+          id: 42,
+          remote_url:
+            "git@github.com:discourse-org/discourse-incomplete-theme.git",
+          remote_version: "0000000000000000000000000000000000000000",
+          local_version: "0000000000000000000000000000000000000000",
+          commits_behind: 0,
+          branch: null,
+          remote_updated_at: "2022-01-01T12:00:30.000Z",
+          updated_at: "2022-01-01T12:00:30.000Z",
+          last_error_text: null,
+          is_git: true,
+          placeholder: false,
+          license_url: "URL",
+          about_url: "URL",
+          authors: null,
+          theme_version: null,
+          minimum_discourse_version: null,
+          maximum_discourse_version: null,
+        },
+        translations: [],
+      };
+      themes = [finished, childComponent];
+      return helper.response(200, {
+        theme: finished,
+        skipped_components: [
+          {
+            url: "https://github.com/discourse/private-child.git",
+            error: "Error cloning git repository",
+          },
+        ],
       });
     });
   });
@@ -218,5 +238,19 @@ acceptance("Theme", function (needs) {
     assert
       .dom(".control-unit .btn-primary.finish-install")
       .doesNotExist("does not show finish install button");
+
+    assert
+      .dom(".included-components-setting")
+      .includesText(
+        "discourse-child-component",
+        "shows the components installed while finishing"
+      );
+
+    assert
+      .dom(".dialog-body .skipped-theme-components__item")
+      .includesText(
+        "https://github.com/discourse/private-child.git",
+        "lists the components that couldn't be installed"
+      );
   });
 });

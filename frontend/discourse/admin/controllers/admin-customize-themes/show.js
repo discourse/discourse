@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { alertSkippedComponents } from "discourse/admin/components/skipped-theme-components";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
@@ -73,6 +74,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
     this.set("updatingRemote", true);
     this.model
       .updateToLatest()
+      .then((result) => {
+        // Finishing can install components that the loaded theme list doesn't know about yet
+        this.send("routeRefreshModel");
+        alertSkippedComponents(this.dialog, result.responseJson);
+      })
       .catch(popupAjaxError)
       .finally(() => {
         this.set("updatingRemote", false);

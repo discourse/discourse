@@ -317,9 +317,10 @@ class Theme extends RestModel {
   }
 
   updateToLatest() {
-    return this.save({ remote_update: true }).then(() =>
-      this.set("changed", false)
-    );
+    return this.save({ remote_update: true }).then((result) => {
+      this.set("changed", false);
+      return result;
+    });
   }
 
   saveChanges() {
