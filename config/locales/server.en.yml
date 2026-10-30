@@ -5583,6 +5583,9 @@ en:
     group_smtp_topic_deleted: "topic has been deleted"
     group_smtp_disabled_for_group: "smtp has been disabled for the group"
 
+  appearance_changes:
+    dark_palette_name: "%{name} Dark"
+
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
