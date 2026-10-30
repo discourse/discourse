@@ -183,18 +183,15 @@ module DiscourseAi
         digits.downcase
       end
 
-      # Lets staff see a saved change before it goes live: a new theme through
-      # theme preview, new palettes on top of the current theme.
+      # Lets staff see a saved change before it goes live. The link fixes the
+      # theme and both palettes, so an administrator's own theme or palette
+      # choice can't change what the preview shows.
       def self.preview_url(appearance_change)
-        query =
-          if appearance_change.kind_theme?
-            { preview_theme_id: appearance_change.theme_id }
-          else
-            {
-              preview_color_scheme_id: appearance_change.light_color_scheme_id,
-              preview_dark_color_scheme_id: appearance_change.dark_color_scheme_id,
-            }
-          end
+        query = {
+          preview_theme_id: appearance_change.theme_id,
+          preview_color_scheme_id: appearance_change.light_color_scheme_id,
+          preview_dark_color_scheme_id: appearance_change.dark_color_scheme_id,
+        }
         "#{Discourse.base_url}/?#{query.to_query}"
       end
 

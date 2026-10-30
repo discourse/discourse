@@ -124,9 +124,13 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
       status: "success",
       appearance_change_id: appearance_change.id,
       name: "Acme",
-      preview_url:
-        "#{Discourse.base_url}/?preview_color_scheme_id=#{appearance_change.light_color_scheme_id}&preview_dark_color_scheme_id=#{appearance_change.dark_color_scheme_id}",
+      preview_url: a_string_starting_with("#{Discourse.base_url}/?"),
       message: I18n.t("discourse_ai.appearance_authoring.saved"),
+    )
+    expect(Rack::Utils.parse_query(URI(result[:preview_url]).query)).to eq(
+      "preview_theme_id" => Theme.foundation_theme.id.to_s,
+      "preview_color_scheme_id" => appearance_change.light_color_scheme_id.to_s,
+      "preview_dark_color_scheme_id" => appearance_change.dark_color_scheme_id.to_s,
     )
   end
 
@@ -147,7 +151,11 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
 
       theme = AppearanceChange.last.theme
       expect(theme).to have_attributes(name: "Acme", default?: false, user_selectable: false)
-      expect(result[:preview_url]).to eq("#{Discourse.base_url}/?preview_theme_id=#{theme.id}")
+      expect(Rack::Utils.parse_query(URI(result[:preview_url]).query)).to eq(
+        "preview_theme_id" => theme.id.to_s,
+        "preview_color_scheme_id" => theme.color_scheme_id.to_s,
+        "preview_dark_color_scheme_id" => theme.dark_color_scheme_id.to_s,
+      )
     end
   end
 
