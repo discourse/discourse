@@ -5,30 +5,17 @@ module CookedProcessorMixin
   MIN_LIGHTBOX_WIDTH = 100
   MIN_LIGHTBOX_HEIGHT = 100
 
+  def onebox_limit
+    SiteSetting.max_oneboxes_per_post - @doc.css("aside.onebox, a.inline-onebox").size
+  end
+
   def post_process_oneboxes
-    limit = SiteSetting.max_oneboxes_per_post - @doc.css("aside.onebox, a.inline-onebox").size
-    oneboxes = {}
-    inlineOneboxes = {}
-
-    Oneboxer.apply(@doc, extra_paths: [".inline-onebox-loading"]) do |url, element|
-      is_onebox = element["class"] == Oneboxer::ONEBOX_CSS_CLASS
-      map = is_onebox ? oneboxes : inlineOneboxes
-      skip_onebox = limit <= 0 && !map[url]
-
-      if skip_onebox
-        if is_onebox
-          element.remove_class("onebox")
-        else
-          remove_inline_onebox_loading_class(element)
-        end
-
-        next
-      end
-
-      limit -= 1
-      map[url] = true
-
-      if is_onebox
+    Oneboxer.apply(
+      @doc,
+      extra_paths: [".#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}"],
+      limit: onebox_limit,
+    ) do |url, element|
+      if element["class"] == Oneboxer::ONEBOX_CSS_CLASS
         onebox =
           Oneboxer.onebox(
             url,
@@ -362,7 +349,7 @@ module CookedProcessorMixin
   end
 
   def remove_inline_onebox_loading_class(element)
-    element.remove_class("inline-onebox-loading")
+    element.remove_class(Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS)
   end
 
   def dirty?

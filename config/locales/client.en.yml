@@ -3924,6 +3924,7 @@ en:
         link_copied: "Link copied!"
         load_preview: "Load preview"
         preview_failed: "Could not load preview"
+        preview_limit_reached: "This post has reached the maximum number of previews"
 
       onebox_toolbar:
         copy: "Copy link"

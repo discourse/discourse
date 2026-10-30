@@ -24,6 +24,10 @@ module Chat
       @doc = Loofah.html5_fragment(cooked)
     end
 
+    def onebox_limit
+      nil
+    end
+
     def run!
       post_process_oneboxes
       process_hotlinked_images

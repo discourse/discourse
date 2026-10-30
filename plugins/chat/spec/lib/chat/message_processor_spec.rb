@@ -37,6 +37,21 @@ RSpec.describe Chat::MessageProcessor do
       # This should not raise an error even though @post is nil
       expect { processor.run! }.not_to raise_error
     end
+
+    it "ignores max_oneboxes_per_post" do
+      SiteSetting.max_oneboxes_per_post = 1
+      urls = %w[https://example.com/1 https://example.com/2 https://example.com/3]
+      message.update!(message: urls.join("\n\n"))
+      Oneboxer.stubs(:cached_onebox).returns(nil)
+      urls.each do |url|
+        Oneboxer.stubs(:onebox).with(url, anything).returns("<aside class='onebox'>#{url}</aside>")
+      end
+
+      processor = described_class.new(message)
+      processor.run!
+
+      expect(processor.html).to have_tag("aside.onebox", count: urls.size)
+    end
   end
 
   describe "#process_hotlinked_image" do

@@ -4,6 +4,10 @@ import { lookupCache } from "pretty-text/oneboxer-cache";
 const ONEBOX = 1;
 const INLINE = 2;
 
+const NO_ONEBOX_LIMIT = "none";
+
+export const ONEBOX_HREF = /^http|^\/\//i;
+
 export function isTopLevel(href) {
   let split = href.split(/https?:\/\/[^\/]+[\/?]/i);
   let hasExtra = split && split[1] && split[1].length > 0;
@@ -14,6 +18,9 @@ function applyOnebox(state, silent) {
   if (silent || !state.tokens) {
     return;
   }
+
+  const { maxOneboxes } = state.md.options.discourse;
+  let oneboxes = 0;
 
   for (let i = 1; i < state.tokens.length; i++) {
     let token = state.tokens[i];
@@ -63,7 +70,7 @@ function applyOnebox(state, silent) {
           let href = attrs[0][1];
 
           // edge case ... what if this is not http or protocolless?
-          if (!/^http|^\/\//i.test(href)) {
+          if (!ONEBOX_HREF.test(href)) {
             continue;
           }
 
@@ -71,6 +78,16 @@ function applyOnebox(state, silent) {
           if (!close || close.type !== "link_close") {
             continue;
           }
+
+          if (mode === INLINE && isTopLevel(href)) {
+            continue;
+          }
+
+          if (oneboxes >= maxOneboxes) {
+            continue;
+          }
+
+          oneboxes++;
 
           if (mode === ONEBOX) {
             // we already determined earlier that 0 0 was href
@@ -115,6 +132,13 @@ function applyOnebox(state, silent) {
 }
 
 export function setup(helper) {
+  helper.registerOptions((opts, siteSettings, state) => {
+    opts.maxOneboxes =
+      state.oneboxLimit === NO_ONEBOX_LIMIT
+        ? Infinity
+        : siteSettings.max_oneboxes_per_post;
+  });
+
   helper.registerPlugin((md) => {
     md.core.ruler.after("linkify", "onebox", applyOnebox);
   });
