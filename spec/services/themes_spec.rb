@@ -174,6 +174,45 @@ RSpec.describe ThemesInstallTask do
     end
   end
 
+  describe ".install" do
+    context "when the theme has been staged as a placeholder" do
+      let(:url) { "https://github.com/discourse/private-theme.git" }
+      let(:child_url) { "https://github.com/discourse/child.git" }
+      let(:repo) do
+        setup_git_repo("about.json" => { name: "Private theme", components: [child_url] }.to_json)
+      end
+      let!(:placeholder) do
+        Fabricate(
+          :theme,
+          remote_theme: RemoteTheme.create!(remote_url: url, private_key: "private key"),
+        )
+      end
+
+      around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+      before { MockGitImporter.register(url, repo) }
+
+      after { FileUtils.rm_rf(repo) }
+
+      it "counts a theme that can't be saved as an error and carries on" do
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private component", component: true }.to_json,
+        )
+        placeholder.set_default!
+        other_repo = setup_git_repo("about.json" => { name: "Other theme" }.to_json)
+        other_url = MockGitImporter.register("https://github.com/discourse/other.git", other_repo)
+
+        _log, counts = ThemesInstallTask.install({ private_theme: url, other_theme: other_url })
+
+        expect(counts).to include(installed: 1, updated: 0, errors: 1)
+        expect(placeholder.remote_theme.reload).to be_placeholder
+      ensure
+        FileUtils.rm_rf(other_repo)
+      end
+    end
+  end
+
   describe "#theme_exists?" do
     it "can use https or ssh and find the same repo" do
       remote_theme =

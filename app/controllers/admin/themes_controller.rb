@@ -400,11 +400,8 @@ class Admin::ThemesController < Admin::AdminController
         remote_theme.remote_url = remote_url
         remote_theme.branch = params[:branch].presence
         remote_theme.private_key = private_key if private_key.present?
-        remote_theme.local_version = nil
-        remote_theme.remote_version = nil
-        remote_theme.commits_behind = nil
 
-        remote_theme.update_from_remote(already_in_transaction: true)
+        remote_theme.update_from_remote(already_in_transaction: true, refresh_name_and_type: true)
 
         if remote_theme.last_error_text.present?
           raise RemoteTheme::ImportError.new(remote_theme.last_error_text)

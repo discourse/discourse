@@ -435,13 +435,9 @@ class Theme < ActiveRecord::Base
     return if component
 
     Theme.transaction do
-      self.component = true
-
-      self.color_scheme_id = nil
-      self.user_selectable = false
       Theme.clear_default! if default?
-
-      ChildTheme.where("parent_theme_id = ?", id).destroy_all
+      self.component = true
+      prepare_type_change
       save!
     end
   end
@@ -450,10 +446,24 @@ class Theme < ActiveRecord::Base
     return unless component
 
     Theme.transaction do
-      self.enabled = true
       self.component = false
-      ChildTheme.where("child_theme_id = ?", id).destroy_all
+      prepare_type_change
       save!
+    end
+  end
+
+  # Clears what the pending type change is incompatible with. Deletes relations, so call it
+  # within the transaction that saves the theme. Being the default theme is left to fail validation.
+  def prepare_type_change
+    return if new_record? || !will_save_change_to_component?
+
+    if component
+      self.color_scheme_id = nil
+      self.user_selectable = false
+      ChildTheme.where(parent_theme_id: id).delete_all
+    else
+      self.enabled = true
+      ChildTheme.where(child_theme_id: id).delete_all
     end
   end
 

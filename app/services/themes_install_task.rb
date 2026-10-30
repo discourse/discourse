@@ -20,15 +20,15 @@ class ThemesInstallTask
           counts[:errors] += 1
         end
       else
-        begin
-          installer.install
-          log << "#{name}: installed from #{installer.url}"
-          counts[:installed] += 1
-        rescue RemoteTheme::ImportError, Discourse::InvalidParameters => err
-          log << "#{name}: #{err.message}"
-          counts[:errors] += 1
-        end
+        installer.install
+        log << "#{name}: installed from #{installer.url}"
+        counts[:installed] += 1
       end
+    rescue RemoteTheme::ImportError,
+           ActiveRecord::RecordInvalid,
+           Discourse::InvalidParameters => err
+      log << "#{name}: #{err.message}"
+      counts[:errors] += 1
     end
 
     [log, counts]
@@ -74,7 +74,7 @@ class ThemesInstallTask
   end
 
   def update
-    @remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+    @remote_theme.update_from_remote
     add_component_to_all_themes
     @remote_theme.last_error_text.nil?
   end

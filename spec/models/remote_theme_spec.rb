@@ -760,6 +760,76 @@ RSpec.describe RemoteTheme do
     end
   end
 
+  describe "#update_from_remote" do
+    context "when the theme is a placeholder" do
+      let(:repo_url) { "git@github.com:discourse/private-component.git" }
+      let(:repo) do
+        setup_git_repo(
+          "about.json" => { name: "Private component", component: true }.to_json,
+          "common/header.html" => "HI",
+        )
+      end
+      let(:theme) do
+        Fabricate(
+          :theme,
+          name: "private-component",
+          remote_theme: RemoteTheme.create!(remote_url: repo_url, private_key: "private key"),
+        )
+      end
+      let(:remote_theme) { theme.remote_theme }
+
+      around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+      before { MockGitImporter.register(repo_url, repo) }
+      after { FileUtils.rm_rf(repo) }
+
+      it "uses the type from about.json even after the remote version has been checked" do
+        remote_theme.update_remote_version
+        expect(remote_theme.commits_behind).to eq(0)
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme).not_to be_placeholder
+        expect(theme.reload).to have_attributes(name: "Private component", component: true)
+      end
+
+      it "clears what a component can't have when switching to a component" do
+        child_component = Fabricate(:theme, component: true)
+        theme.update!(user_selectable: true, child_theme_ids: [child_component.id])
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload).to have_attributes(component: true, user_selectable: false)
+        expect(theme.child_themes).to be_empty
+      end
+
+      it "clears what a theme can't have when switching to a theme" do
+        add_to_git_repo(repo, "about.json" => { name: "Private theme" }.to_json)
+        parent_theme = Fabricate(:theme)
+        theme.update!(component: true)
+        parent_theme.update!(child_theme_ids: [theme.id])
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload.component).to eq(false)
+        expect(parent_theme.reload.child_themes).to be_empty
+      end
+
+      it "keeps everything when the theme can't become a component" do
+        child_component = Fabricate(:theme, component: true)
+        theme.update!(child_theme_ids: [child_component.id])
+        theme.set_default!
+
+        remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+
+        expect(theme.reload.component).to eq(false)
+        expect(theme).to be_default
+        expect(theme.child_themes).to contain_exactly(child_component)
+        expect(remote_theme.reload).to be_placeholder
+      end
+    end
+  end
+
   describe ".joined_remotes" do
     it "finds records that are associated with themes" do
       github_repo
