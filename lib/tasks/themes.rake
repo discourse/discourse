@@ -292,6 +292,12 @@ def update_themes(version_cache: Concurrent::Map.new)
         remote_theme = theme.remote_theme
         next if remote_theme.blank? || remote_theme.remote_url.blank?
         prefix = "[db:#{RailsMultisite::ConnectionManagement.current_db}] '#{theme.name}' - "
+
+        if remote_theme.placeholder?
+          puts "#{prefix} skipping, installation not finished"
+          next
+        end
+
         puts "#{prefix} checking..."
 
         cache_key =
