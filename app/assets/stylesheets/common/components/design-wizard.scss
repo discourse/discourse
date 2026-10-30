@@ -369,10 +369,7 @@ $dw-button-default-border: #d3d3d3;
     position: relative;
     display: flex;
     align-items: center;
-
-    // matches the serialized screenshot size, so the box is reserved at the
-    // right shape before the image lands and the card never reflows
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 8 / 5;
     overflow: hidden;
     background: var(--primary-very-low);
     border: 1px solid var(--content-border-color);
@@ -401,7 +398,7 @@ $dw-button-default-border: #d3d3d3;
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 
     /*! rtl:ignore */
     object-position: top left;

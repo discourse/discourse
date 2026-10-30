@@ -48,6 +48,10 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(horizon_pair["dark"]["name"]).to eq("Horizon Dark")
 
         foundation = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["foundation"] }
+        expect(foundation).to include(
+          "screenshot_light_url" => "/images/design-wizard/foundation-light.webp",
+          "screenshot_dark_url" => "/images/design-wizard/foundation-dark.webp",
+        )
         expect(foundation["palette_pairs"].map { |pair| pair["key"] }).to eq(
           %w[default wcag solarized dracula],
         )
@@ -89,8 +93,8 @@ RSpec.describe Admin::Config::DesignWizardController do
           "palette_pairs" => [],
           "supports_welcome_banner" => false,
           "supports_search" => false,
-          "screenshot_light_url" => "/images/design-wizard/concord-light.jpg",
-          "screenshot_dark_url" => "/images/design-wizard/concord-dark.jpg",
+          "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
+          "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
       end
 
@@ -182,8 +186,8 @@ RSpec.describe Admin::Config::DesignWizardController do
           "color_scheme_id" => palette.id,
           "supports_welcome_banner" => false,
           "supports_search" => false,
-          "screenshot_light_url" => "/images/design-wizard/concord-light.jpg",
-          "screenshot_dark_url" => "/images/design-wizard/concord-dark.jpg",
+          "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
+          "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
         expect(response.parsed_body["current_theme"]).to be_nil
         expect(response.parsed_body["palettes_user_selectable"]).to eq(true)
@@ -210,36 +214,10 @@ RSpec.describe Admin::Config::DesignWizardController do
           end
         end
 
-        it "serves the full-size screenshot and schedules a resize when none exists yet" do
-          expect_enqueued_with(
-            job: :generate_theme_screenshot_thumbnails,
-            args: {
-              theme_id: Theme::CORE_THEMES["horizon"],
-            },
-          ) { expect(serialized_horizon["screenshot_light_url"]).to eq(upload.url) }
-        end
-
-        it "only schedules the resize once while it is outstanding" do
-          serialized_horizon
-
-          expect { serialized_horizon }.not_to change {
-            Jobs::GenerateThemeScreenshotThumbnails.jobs.size
-          }
-        end
-
-        it "serves the resized screenshot once it has been generated" do
-          Jobs::GenerateThemeScreenshotThumbnails.new.execute(
-            theme_id: Theme::CORE_THEMES["horizon"],
-          )
-
-          url = serialized_horizon["screenshot_light_url"]
-
-          expect(url).not_to eq(upload.url)
-          expect(OptimizedImage.find_by(upload_id: upload.id)).to have_attributes(
-            url:,
-            width: ThemeScreenshotThumbnails::WIDTH,
-            height: ThemeScreenshotThumbnails::HEIGHT,
-            extension: ".webp",
+        it "uses the bundled previews even when the theme has an uploaded screenshot" do
+          expect(serialized_horizon).to include(
+            "screenshot_light_url" => "/images/design-wizard/horizon-light.webp",
+            "screenshot_dark_url" => "/images/design-wizard/horizon-dark.webp",
           )
         end
       end
