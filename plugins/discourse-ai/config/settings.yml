@@ -699,6 +699,11 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/translation"
+  ai_translation_locale_detector_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/translation"
   ai_translation_post_raw_translator_agent:
     default: "-28"
     type: enum

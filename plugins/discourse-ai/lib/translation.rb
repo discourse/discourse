@@ -204,23 +204,30 @@ module DiscourseAi
       models.all? { |model| LlmCreditAllocation.credits_available?(model) }
     end
 
+    def self.locale_detector_configured?
+      DecisionLocaleDetector.decision_model.present? ||
+        llm_model_for_agent(SiteSetting.ai_translation_locale_detector_agent).present?
+    end
+
+    # The detector agent only fills in for a decision model, so the decision model's credits
+    # are what detection depends on.
+    def self.credits_available_for_locale_detection?
+      if (decision_model = DecisionLocaleDetector.decision_model)
+        DecisionModelCreditAllocation.credits_available?(
+          decision_model,
+          DecisionLocaleDetector::FEATURE_NAME,
+        )
+      else
+        credits_available_for_agent_ids?([SiteSetting.ai_translation_locale_detector_agent])
+      end
+    end
+
     def self.credits_available_for_post_detection?
-      credits_available_for_agent_ids?(
-        [
-          SiteSetting.ai_translation_locale_detector_agent,
-          SiteSetting.ai_translation_post_raw_translator_agent,
-        ],
-      )
+      credits_available_for_locale_detection? && credits_available_for_post_localization?
     end
 
     def self.credits_available_for_topic_detection?
-      credits_available_for_agent_ids?(
-        [
-          SiteSetting.ai_translation_locale_detector_agent,
-          SiteSetting.ai_translation_topic_title_translator_agent,
-          SiteSetting.ai_translation_post_raw_translator_agent,
-        ],
-      )
+      credits_available_for_locale_detection? && credits_available_for_topic_localization?
     end
 
     def self.credits_available_for_post_localization?
