@@ -105,6 +105,18 @@ RSpec.describe DiscourseAi::Agents::McpThemeAccess do
         ),
       )
     end
+
+    it "keeps apps that have to be approved again after theme access is turned on" do
+      authorize(admin, create_client("Claude"), scopes: described_class::THEME_SCOPES)
+      revoked = authorize(admin, create_client("Old app"), scopes: described_class::THEME_SCOPES)
+      revoked.update!(status: "revoked", revoked_at: Time.zone.now)
+
+      described_class.enable!(guardian: admin.guardian)
+
+      expect(described_class.connections(admin)).to contain_exactly(
+        a_hash_including(app: "Claude", theme_access: true, needs_approval: true),
+      )
+    end
   end
 
   describe ".recent_theme_calls" do

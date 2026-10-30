@@ -123,19 +123,20 @@ module DiscourseAi
         ).success?
       end
 
-      # The apps connected to the user's account, and whether each can use
-      # the theme tools.
+      # The apps connected to the user's account, whether each can use the
+      # theme tools, and whether it has to be approved again first, as
+      # happens when new tools become available to it.
       def self.connections(user)
         McpOauthAuthorization
-          .active
-          .where(user:)
+          .where(user:, status: %w[active consent_required], revoked_at: nil)
           .includes(:client, :scope_records)
           .order(consented_at: :desc)
           .map do |authorization|
             {
               app: authorization.client.name,
               theme_access: (THEME_SCOPES - authorization.scopes).empty?,
-              needs_approval: !authorization.consent_current?,
+              needs_approval:
+                authorization.status == "consent_required" || !authorization.consent_current?,
               connected_at: authorization.consented_at.iso8601,
             }
           end
