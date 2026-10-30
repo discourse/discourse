@@ -10,10 +10,9 @@ module Jobs
       return if !SiteSetting.content_localization_enabled
       return if !DiscourseAi::Translation.backfill_enabled?(target: SidebarSection)
 
-      llm_model = find_llm_model
-      return if llm_model.blank?
+      return if !DiscourseAi::Translation.locale_detector_configured?
 
-      unless LlmCreditAllocation.credits_available?(llm_model)
+      unless DiscourseAi::Translation.credits_available_for_locale_detection?
         Rails.logger.info(
           "Sidebar section locale detection backfill skipped: insufficient credits. Will resume when credits reset.",
         )
@@ -40,15 +39,6 @@ module Jobs
       DiscourseAi::Translation::VerboseLogger.log(
         "Detected #{sidebar_sections.size} sidebar section locales",
       )
-    end
-
-    private
-
-    def find_llm_model
-      agent_klass = AiAgent.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_agent)
-      return nil if agent_klass.blank?
-
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
     end
   end
 end

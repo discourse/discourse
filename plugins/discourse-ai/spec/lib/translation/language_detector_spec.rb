@@ -87,4 +87,69 @@ describe DiscourseAi::Translation::LanguageDetector do
       expect(AiAgent).not_to have_received(:find_by)
     end
   end
+
+  describe ".detect with a decision model" do
+    fab!(:decision_model) { Fabricate(:decision_model, id: -1) }
+
+    let(:other_choice) { DiscourseAi::Translation::DecisionLocaleDetector::OTHER_CHOICE }
+
+    before do
+      SiteSetting.ai_translation_locale_detector_decision_model = decision_model.id
+      SiteSetting.content_localization_supported_locales = "pt_BR|ja"
+    end
+
+    def choice(base)
+      name, variants =
+        DiscourseAi::Translation::DecisionLocaleDetector::COMMON_LANGUAGES.fetch(base)
+      "#{name} (#{base}): #{variants}"
+    end
+
+    it "returns the site's variant of a language the model is confident about" do
+      DiscourseAi::Decisions.with_canned_answers(language: { choice("pt") => 0.95 }) do |canned|
+        expect(described_class.new("Dúvida sobre pagamento").detect).to eq("pt_BR")
+        expect(canned.calls.first[:feature_name]).to eq("locale_detection")
+      end
+    end
+
+    it "offers the site's languages beyond the common ones and truncates long text" do
+      SiteSetting.content_localization_supported_locales = "pt_BR|bs_BA"
+      long_text = "a" * 2000
+
+      DiscourseAi::Decisions.with_canned_answers(
+        language: "Bosnian (bs): Bosnian in any variant",
+      ) do |canned|
+        expect(described_class.new(long_text).detect).to eq("bs_BA")
+        expect(canned.calls.first[:state].length).to eq(
+          DiscourseAi::Translation::LanguageDetector::DETECTION_CHAR_LIMIT,
+        )
+      end
+    end
+
+    it "lets the agent decide when the language is unlisted, unsure or refused" do
+      [other_choice, { choice("nl") => 0.86, other_choice => 0.14 }, :refusal].each do |answer|
+        DiscourseAi::Decisions.with_canned_answers(language: answer) do
+          DiscourseAi::Completions::Llm.with_prepared_responses(["af"]) do
+            expect(described_class.new("Goeie môre").detect).to eq("af")
+          end
+        end
+      end
+    end
+
+    it "lets the agent decide when the decision model request fails" do
+      stub_request(:post, decision_model.url).to_return(status: 400, body: "{}")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["es"]) do
+        expect(described_class.new("Hola").detect).to eq("es")
+      end
+    end
+
+    it "detects nothing when the decision model has used up its credits" do
+      Fabricate(:decision_model_credit_allocation, decision_model:, daily_used: 10_000)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["es"]) do |_, _, prompts|
+        expect(described_class.new("Hola").detect).to be_nil
+        expect(prompts).to be_empty
+      end
+    end
+  end
 end
