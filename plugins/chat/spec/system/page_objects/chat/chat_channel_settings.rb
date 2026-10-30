@@ -3,12 +3,25 @@
 module PageObjects
   module Pages
     class ChatChannelSettings < PageObjects::Pages::Base
-      EDIT_MODAL_SELECTOR = ".chat-modal-edit-channel-name"
+      def channel_form
+        PageObjects::Components::FormKit.new(".c-channel-settings__channel-form")
+      end
 
-      def open_edit_modal
-        click_button(class: "edit-name-slug-btn")
-        find(EDIT_MODAL_SELECTOR) # wait for modal to appear
-        PageObjects::Modals::ChatChannelEdit.new
+      def notification_form
+        PageObjects::Components::FormKit.new(".c-channel-settings__notification-form")
+      end
+
+      def select_emoji(value)
+        within(".c-channel-settings__channel-form .form-kit__field[data-name='emoji']") do
+          find(".btn-emoji").click
+        end
+        PageObjects::Components::EmojiPicker.new.select_emoji(":#{value}:")
+        self
+      end
+
+      def reset_emoji
+        find(".c-channel-settings__channel-form .edit-channel-clear-emoji").click
+        self
       end
 
       def has_slug?(slug)

@@ -58,6 +58,7 @@ export default class ChatChannel {
   @tracked title;
   @tracked slug;
   @tracked description;
+  @tracked emoji;
   @tracked status;
   @tracked activeThread;
   @tracked meta;

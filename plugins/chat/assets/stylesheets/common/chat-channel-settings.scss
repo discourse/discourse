@@ -1,28 +1,89 @@
+@use "lib/viewport";
+
 .c-channel-settings {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
 
-  .c-channel-settings__slug {
-    max-width: 250px;
-
-    @include ellipsis;
+  .form-kit__field-emoji {
+    .form-kit__container-content {
+      flex-direction: row;
+      align-items: center;
+    }
   }
 
   .chat-retention-reminder-text {
     color: var(--primary-medium);
   }
 
-  &__leave-info {
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 
-    .d-icon {
-      color: var(--danger);
+  &__danger-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__danger-zone-title {
+    margin: 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--danger);
+    font-size: var(--font-up-1);
+    color: var(--danger);
+  }
+
+  &__danger-actions {
+    @include unstyled-list;
+    border: 1px solid var(--danger);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__danger-action {
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: start;
+    }
+
+    &.--forbidden {
+      background: var(--highlight-bg);
     }
   }
 
-  .chat-form__section.--leave-channel {
-    .chat-form__section-content {
-      gap: 0.25rem 0.5rem;
+  &__danger-action-title {
+    font-weight: bold;
+  }
+
+  &__danger-action-description {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+  }
+
+  &__danger-cta {
+    text-align: right;
+
+    @include viewport.until(sm) {
+      align-self: stretch;
+    }
+  }
+}
+
+@include viewport.until(sm) {
+  .c-channel-settings {
+    html.footer-nav-ipad &,
+    html.footer-nav-visible & {
+      padding-bottom: calc(
+        env(safe-area-inset-bottom) + var(--footer-nav-height, 0px)
+      );
     }
   }
 }

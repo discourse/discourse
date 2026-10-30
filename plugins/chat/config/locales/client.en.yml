@@ -102,8 +102,7 @@ en:
           other: "Are you sure you want to delete these %{count} messages?"
       channel_settings:
         title: "Channel settings"
-        edit: "Edit"
-        add: "Add"
+        page_title: "%{channel} settings"
         star_channel: "Star channel"
         unstar_channel: "Unstar channel"
         close_channel: "Close channel"
@@ -112,10 +111,21 @@ en:
         open_channel_disabled_read_only: "Read-only channels cannot be reopened."
         archive_channel: "Archive channel"
         delete_channel: "Delete channel"
+        danger_zone:
+          title: "Danger zone"
+          archive_title: "Archive this channel"
+          archive_description: "Move this channel’s messages into a topic and make the channel read-only."
+          close_title: "Close this channel"
+          close_description: "Stop members from sending new messages. You can reopen the channel at any time."
+          open_title: "Reopen this channel"
+          open_description: "Let members send messages in this channel again."
+          delete_title: "Delete this channel"
+          delete_description: "Once deleted, this channel and all of its messages cannot be recovered."
+          leave_title: "Leave this channel"
+          leave_description: "You will stop receiving messages and notifications from this channel. You can rejoin at any time."
         join_channel: "Join channel"
         leave_channel: "Leave channel"
         leave_groupchat_info: "By leaving this group chat, you will no longer have access to it and won’t receive notifications related to it. To rejoin, you will need to be re-invited by a member of the group chat."
-        notification_settings: "Notification settings"
         notification_settings_context: "Notifications"
         join: "Join"
         leave: "Leave"
@@ -419,7 +429,6 @@ en:
       about_view:
         associated_topic: Linked topic
         associated_category: Linked category
-        title: Title
         name: Name
         description: Description
 
@@ -431,6 +440,7 @@ en:
           settings: Settings
           search: Search
         remove_member: "Remove"
+        members_title: "%{channel} members"
 
       new_message_modal:
         title: Send message
@@ -452,7 +462,6 @@ en:
         group_with_too_many_members: "has too many members (%{membersCount})"
 
       channel_edit_name_slug_modal:
-        title: Edit channel
         input_placeholder: Add a name
         slug_description: A channel slug is used in the URL instead of the channel name
         name: Channel name
@@ -461,9 +470,7 @@ en:
         reset_emoji: Reset emoji
 
       channel_edit_description_modal:
-        title: Edit description
         input_placeholder: Add a description
-        description: Tell people what this channel is all about
 
       direct_message_creator:
         add_to_channel: "Add to channel"
@@ -596,7 +603,6 @@ en:
 
       settings:
         channel_wide_mentions_label: "Allow @all and @here mentions"
-        channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
         channel_threading_label: "Threading"
         channel_threading_description: "When threading is enabled, replies to a chat message will create a separate conversation, which will exist alongside the main channel."
         auto_join_users_label: "Automatically add users"
@@ -617,8 +623,6 @@ en:
         save: "Save"
         saved: "Saved"
         unfollow: "Leave"
-        admin_title: "Admin"
-        settings_title: "Settings"
         info_title: "Channel info"
         category_label: "Category"
         history_label: "History"
