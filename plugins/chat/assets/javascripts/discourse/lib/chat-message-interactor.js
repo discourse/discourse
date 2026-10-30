@@ -123,9 +123,7 @@ export default class ChatMessageInteractor {
   }
 
   get canReply() {
-    return (
-      this.canInteractWithMessage && this.context !== MESSAGE_CONTEXT_THREAD
-    );
+    return this.canInteractWithMessage;
   }
 
   get canReact() {

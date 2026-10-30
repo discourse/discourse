@@ -77,10 +77,7 @@ export default class ChatComposer extends Component {
   @tracked inProgressUploadsCount = 0;
 
   get shouldRenderMessageDetails() {
-    return (
-      this.draft?.editing ||
-      (this.context === "channel" && this.draft?.inReplyTo)
-    );
+    return this.draft?.editing || !!this.draft?.inReplyTo;
   }
 
   get inlineButtons() {
