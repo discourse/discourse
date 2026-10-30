@@ -1,4 +1,4 @@
-import { settled } from "@ember/test-helpers";
+import { click, settled } from "@ember/test-helpers";
 import { setLocalCache } from "pretty-text/oneboxer-cache";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
@@ -9,6 +9,7 @@ import { setupRichEditor } from "discourse/tests/helpers/rich-editor-helper";
 
 // Mocked by create-pretender for both /inline-onebox and /onebox.
 const URL = "http://www.example.com/has-title.html";
+const OTHER_URL = "http://www.example.com/no-title.html";
 
 function lastParagraphStart(doc) {
   let pos = null;
@@ -49,6 +50,109 @@ module(
       );
 
       setLocalCache(testUrl, null);
+    });
+
+    test("respects max_oneboxes_per_post site setting", async function (assert) {
+      this.siteSettings.max_oneboxes_per_post = 0;
+
+      const [editor] = await setupRichEditor(assert, "a\n\nb");
+      const { view } = editor;
+
+      view.dispatch(view.state.tr.insertText(URL, 1, 2));
+      moveCursorTo(view, lastParagraphStart(view.state.doc));
+      await settled();
+
+      assert.dom(".onebox-wrapper").doesNotExist("does not render a onebox");
+      assert
+        .dom("a.inline-onebox")
+        .doesNotExist("does not render an inline onebox");
+    });
+
+    test("each copy of a repeated onebox takes a slot", async function (assert) {
+      this.siteSettings.max_oneboxes_per_post = 1;
+
+      const [editor] = await setupRichEditor(assert, `${URL}\n\n${URL}\n\nb`);
+
+      moveCursorTo(editor.view, lastParagraphStart(editor.view.state.doc));
+      await settled();
+
+      assert.dom(".onebox-wrapper").exists({ count: 1 });
+      assert.dom(`a[href="${URL}"]`).hasText(URL);
+    });
+
+    test("demotes a onebox pushed past max_oneboxes_per_post by an earlier link", async function (assert) {
+      this.siteSettings.max_oneboxes_per_post = 1;
+
+      const [editor] = await setupRichEditor(assert, `a\n\n${OTHER_URL}\n\nb`);
+      const { view } = editor;
+
+      moveCursorTo(view, lastParagraphStart(view.state.doc));
+      await settled();
+      assert.dom(".onebox-wrapper").hasText("No title");
+
+      const tr = view.state.tr.insertText(URL, 1, 2);
+      tr.setSelection(TextSelection.atEnd(tr.doc));
+      view.dispatch(tr);
+      await settled();
+
+      assert.dom(".onebox-wrapper").exists({ count: 1 });
+      assert.dom(".onebox-wrapper").includesText("An interesting article");
+      assert.dom(`a[href="${OTHER_URL}"]`).hasText(OTHER_URL);
+      assert.strictEqual(editor.value, `${URL}\n\n${OTHER_URL}\n\nb`);
+    });
+
+    test("links that never cook to a onebox do not take a slot", async function (assert) {
+      this.siteSettings.max_oneboxes_per_post = 1;
+
+      const [editor] = await setupRichEditor(
+        assert,
+        `# http://www.example.com\n\nfoo@example.com\n\n${URL}\n\nb`
+      );
+
+      moveCursorTo(editor.view, lastParagraphStart(editor.view.state.doc));
+      await settled();
+
+      assert.dom(".onebox-wrapper").exists({ count: 1 });
+      assert.dom(".onebox-wrapper").includesText("An interesting article");
+    });
+
+    test("keeps marks when demoting an inline onebox", async function (assert) {
+      this.siteSettings.max_oneboxes_per_post = 0;
+
+      const [editor] = await setupRichEditor(assert, "see x here");
+      const { view } = editor;
+      const { schema } = view.state;
+
+      view.dispatch(
+        view.state.tr.replaceWith(5, 6, [
+          schema.nodes.onebox_inline.create(
+            { url: URL, title: "Title" },
+            null,
+            [schema.marks.strong.create()]
+          ),
+        ])
+      );
+      await settled();
+
+      assert.dom("a.inline-onebox").doesNotExist();
+      assert.strictEqual(editor.value, `see **${URL}** here`);
+    });
+
+    test("show preview past max_oneboxes_per_post keeps the link and shows a toast", async function (assert) {
+      this.siteSettings.max_oneboxes_per_post = 0;
+      const toasts = this.owner.lookup("service:toasts");
+
+      const [editor] = await setupRichEditor(assert, `a\n\n<${URL}>`, {
+        withMenus: true,
+      });
+      moveCursorTo(editor.view, lastParagraphStart(editor.view.state.doc) + 5);
+      await settled();
+
+      await click(".composer-link-toolbar__show-preview");
+
+      assert.dom(".onebox-wrapper").doesNotExist();
+      assert.strictEqual(editor.value, `a\n\n<${URL}>`);
+      assert.strictEqual(toasts.activeToasts.length, 1);
     });
 
     test("holds a lone link inline while the cursor is on its line", async function (assert) {

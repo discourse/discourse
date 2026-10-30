@@ -11,7 +11,7 @@ import {
   isWhiteSpace,
 } from "discourse/static/prosemirror/lib/markdown-it";
 import { i18n } from "discourse-i18n";
-import { isTopLevel } from "discourse-markdown-it/features/onebox";
+import { isTopLevel, ONEBOX_HREF } from "discourse-markdown-it/features/onebox";
 
 export const oneboxPluginKey = new PluginKey("onebox");
 
@@ -30,7 +30,85 @@ export function oneboxTypeAtPos(doc, pos) {
     (!next ||
       next.type.name === "hard_break" ||
       hasTrailingWhitespaceOnly(doc, pos));
-  return $pos.depth === 1 && isAlone ? "full" : "inline";
+  return $pos.depth === 1 && parent.type.name === "paragraph" && isAlone
+    ? "full"
+    : "inline";
+}
+
+const ONEBOX_NODE_TYPES = new Set(["onebox", "onebox_inline"]);
+
+const oneboxSlotsCache = new WeakMap();
+
+function oneboxSlots(doc) {
+  let slots = oneboxSlotsCache.get(doc);
+  if (slots) {
+    return slots;
+  }
+
+  slots = [];
+  doc.descendants((node, pos) => {
+    if (takesOneboxSlot(doc, node, pos)) {
+      slots.push({ pos, order: cookedOrder(doc, pos) });
+    }
+  });
+  slots.sort((a, b) => a.order - b.order);
+
+  oneboxSlotsCache.set(doc, slots);
+  return slots;
+}
+
+function cookedOrder(doc, pos) {
+  const $pos = doc.resolve(pos);
+  for (let depth = $pos.depth; depth > 0; depth--) {
+    const node = $pos.node(depth);
+    if (node.isInline && !node.isLeaf && !node.inlineContent) {
+      return doc.content.size + pos;
+    }
+  }
+  return pos;
+}
+
+function takesOneboxSlot(doc, node, pos) {
+  if (ONEBOX_NODE_TYPES.has(node.type.name)) {
+    return true;
+  }
+
+  const href = node.marks.find(
+    (mark) => mark.type.name === "link" && mark.attrs.markup === "linkify"
+  )?.attrs.href;
+
+  if (!href || !ONEBOX_HREF.test(href)) {
+    return false;
+  }
+
+  return oneboxTypeAtPos(doc, pos) === "full" || !isTopLevel(href);
+}
+
+function oneboxesPastLimit(doc, maxOneboxes) {
+  return new Set(
+    oneboxSlots(doc)
+      .slice(maxOneboxes)
+      .map((slot) => slot.pos)
+  );
+}
+
+function oneboxToLink(state, tr, node, pos, marks) {
+  const { url } = node.attrs;
+  const link = state.schema.marks.link.create({ href: url, markup: "linkify" });
+  const text = state.schema.text(url, link.addToSet(marks));
+
+  tr.replaceWith(
+    tr.mapping.map(pos),
+    tr.mapping.map(pos + node.nodeSize),
+    node.isBlock ? state.schema.nodes.paragraph.create(null, text) : text
+  );
+}
+
+export function isPastOneboxLimit(doc, pos, maxOneboxes) {
+  const order = cookedOrder(doc, pos);
+  return (
+    oneboxSlots(doc).filter((slot) => slot.order < order).length >= maxOneboxes
+  );
 }
 
 /** @type {RichEditorExtension} */
@@ -117,17 +195,20 @@ const extension = {
     getContext,
   }) {
     const failedUrls = { full: new Set(), inline: new Set() };
+    const maxOneboxes = () => getContext().siteSettings.max_oneboxes_per_post;
 
     // Scans for linkified URLs and creates onebox loading decorations.
     // `forceUrl` bypasses selection/topLevel/failed checks for that URL.
     function scanForOneboxLinks(doc, decoSet, tr, forceUrl) {
       const decorations = [];
+      const pastLimit = oneboxesPastLimit(doc, maxOneboxes());
       doc.descendants((node, pos) => {
         const link = node.marks.find((mark) => mark.type.name === "link");
 
         if (
           link?.attrs.markup === "linkify" &&
           getLinkify().test(node.text) &&
+          !pastLimit.has(pos) &&
           decoSet.find(pos, pos + node.nodeSize).length === 0
         ) {
           const isForced = forceUrl === link.attrs.href;
@@ -478,6 +559,7 @@ const extension = {
 
         const tr = state.tr;
         const inspected = new Set();
+        const pastLimit = oneboxesPastLimit(state.doc, maxOneboxes());
 
         for (const position of [state.selection.from, leftPos]) {
           const { from, to } = topBlockRange(state.doc, position);
@@ -487,7 +569,7 @@ const extension = {
           inspected.add(from);
 
           state.doc.nodesBetween(from, to, (node, nodePos) => {
-            if (node.type.name !== "onebox_inline") {
+            if (node.type.name !== "onebox_inline" || pastLimit.has(nodePos)) {
               return;
             }
 
@@ -499,18 +581,17 @@ const extension = {
               return;
             }
 
-            const { url } = node.attrs;
-            const mark = state.schema.marks.link.create({
-              href: url,
-              markup: "linkify",
-            });
-
-            tr.replaceWith(
-              tr.mapping.map(nodePos),
-              tr.mapping.map(nodePos + node.nodeSize),
-              state.schema.text(url, [mark])
-            );
+            oneboxToLink(state, tr, node, nodePos, []);
           });
+        }
+
+        for (const pos of pastLimit) {
+          const node = state.doc.nodeAt(pos);
+          if (!ONEBOX_NODE_TYPES.has(node.type.name)) {
+            continue;
+          }
+
+          oneboxToLink(state, tr, node, pos, node.marks);
         }
 
         return tr.steps.length ? tr.setMeta("addToHistory", false) : null;
