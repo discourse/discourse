@@ -13,9 +13,9 @@ module("Integration | Component | DfpCategorySettingsPanel", function (hooks) {
         id: 1,
         category_id: 3,
         category: Category.findById(3),
-        gam_adunit: "/123456789/example.com/forums",
-        gam_keywords: "sports",
-        gtm_taxonomy: "forums/sports",
+        gam_adunit: "/6355419/Travel",
+        gam_keywords: "travel",
+        gtm_taxonomy: "travel/europe",
       },
     ];
 
@@ -30,10 +30,7 @@ module("Integration | Component | DfpCategorySettingsPanel", function (hooks) {
       .exists({ count: 1 }, "the saved configuration renders as a row");
     assert
       .dom(".dfp-category-settings__value")
-      .includesText(
-        "/123456789/example.com/forums",
-        "the GAM ad unit is shown"
-      );
+      .includesText("/6355419/Travel", "the GAM ad unit is shown");
     assert
       .dom(".dfp-category-settings__edit")
       .exists("the row has a standard edit action");

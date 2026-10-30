@@ -4,16 +4,16 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { dfpConfig } from "discourse/plugins/discourse-adplugin/discourse/components/google-dfp-ad";
 
 const SETTINGS = {
-  dfp_publisher_id: "123456789",
-  dfp_topic_list_top_code: "example.com/forums",
+  dfp_publisher_id: "6355419",
+  dfp_topic_list_top_code: "Travel",
   dfp_target_topic_list_top_key_code: "gam_keywords",
   dfp_target_topic_list_top_value_code: "red,blue",
 };
 
 function context(overrides = {}) {
   return {
-    categorySlug: "cards-talk",
-    categoryPath: ["sports", "cards-talk"],
+    categorySlug: "paris",
+    categoryPath: ["travel", "paris"],
     categoryId: 41,
     routeName: "discovery.category",
     customFields: {},
@@ -35,7 +35,7 @@ module("Unit | Lib | dfp-config", function (hooks) {
 
     assert.strictEqual(
       config.adUnitPath,
-      "/123456789/example.com/forums",
+      "/6355419/Travel",
       "ad unit path is built from the publisher id and placement code"
     );
 
@@ -53,23 +53,23 @@ module("Unit | Lib | dfp-config", function (hooks) {
       false,
       context({
         customFields: {
-          gam_adunit: "/123456789/example.com/sports/forums/cards-talk",
-          gam_keywords: "sports, mlb",
+          gam_adunit: "/6355419/Travel/Europe/France/Paris",
+          gam_keywords: "travel, europe",
         },
       })
     );
 
     assert.strictEqual(
       config.adUnitPath,
-      "/123456789/example.com/sports/forums/cards-talk",
+      "/6355419/Travel/Europe/France/Paris",
       "gam_adunit overrides the configured ad unit path"
     );
 
     assert.deepEqual(
       config.targeting,
       {
-        gam_keywords: ["sports", "mlb"],
-        "discourse-category": "cards-talk",
+        gam_keywords: ["travel", "europe"],
+        "discourse-category": "paris",
       },
       "gam_keywords override the dfp_target_* values"
     );
@@ -80,14 +80,14 @@ module("Unit | Lib | dfp-config", function (hooks) {
       "topic-list-top",
       SETTINGS,
       false,
-      context({ customFields: { gtm_taxonomy: "sports/forums/cards-talk" } })
+      context({ customFields: { gtm_taxonomy: "travel/europe/france/paris" } })
     );
 
-    assert.strictEqual(config.adUnitPath, "/123456789/example.com/forums");
+    assert.strictEqual(config.adUnitPath, "/6355419/Travel");
 
     assert.deepEqual(
       config.targeting,
-      { gam_keywords: ["red", "blue"], "discourse-category": "cards-talk" },
+      { gam_keywords: ["red", "blue"], "discourse-category": "paris" },
       "non-gam custom fields do not affect the ad config"
     );
   });
@@ -99,25 +99,25 @@ module("Unit | Lib | dfp-config", function (hooks) {
       false,
       context({
         customFields: {
-          gam_adunit: "/123456789/from/custom-fields",
+          gam_adunit: "/6355419/Travel/Custom",
           gam_keywords: "custom,keywords",
         },
         categoryConfig: {
-          gam_adunit: "/123456789/example.com/sports/forums/cards-talk",
-          gam_keywords: "sports, mlb",
+          gam_adunit: "/6355419/Travel/Europe/France/Paris",
+          gam_keywords: "travel, europe",
         },
       })
     );
 
     assert.strictEqual(
       config.adUnitPath,
-      "/123456789/example.com/sports/forums/cards-talk",
+      "/6355419/Travel/Europe/France/Paris",
       "the centralized plugin configuration wins"
     );
 
     assert.deepEqual(
       config.targeting,
-      { gam_keywords: ["sports", "mlb"], "discourse-category": "cards-talk" },
+      { gam_keywords: ["travel", "europe"], "discourse-category": "paris" },
       "centralized keywords replace category custom field keywords"
     );
   });
@@ -127,11 +127,11 @@ module("Unit | Lib | dfp-config", function (hooks) {
       api.registerValueTransformer(
         "dfp-ad-config",
         ({ value, context: ctx }) => {
-          if (ctx.categorySlug === "cards-talk") {
+          if (ctx.categorySlug === "paris") {
             return {
               ...value,
-              adUnitPath: "/123456789/example.com/sports/forums/cards-talk",
-              targeting: { gam_keywords: ["sports", "mlb"] },
+              adUnitPath: "/6355419/Travel/Europe/France/Paris",
+              targeting: { gam_keywords: ["travel", "europe"] },
             };
           }
 
@@ -146,7 +146,7 @@ module("Unit | Lib | dfp-config", function (hooks) {
       false,
       context({
         customFields: {
-          gam_adunit: "/123456789/example.com/other/unit",
+          gam_adunit: "/6355419/Travel/Other",
           gam_keywords: "from,fields",
         },
       })
@@ -154,13 +154,13 @@ module("Unit | Lib | dfp-config", function (hooks) {
 
     assert.strictEqual(
       config.adUnitPath,
-      "/123456789/example.com/sports/forums/cards-talk",
+      "/6355419/Travel/Europe/France/Paris",
       "the transformer wins over category custom fields"
     );
 
     assert.deepEqual(
       config.targeting,
-      { gam_keywords: ["sports", "mlb"], "discourse-category": "cards-talk" },
+      { gam_keywords: ["travel", "europe"], "discourse-category": "paris" },
       "transformer targeting replaces the resolved values"
     );
   });
@@ -174,14 +174,14 @@ module("Unit | Lib | dfp-config", function (hooks) {
       dfp_target_topic_list_top_key_code: "geo",
       dfp_target_topic_list_top_value_code: "eu",
     };
-    const unit = "/123456789/example.com/forums";
+    const unit = "/6355419/Travel";
 
     const first = dfpConfig(
       "topic-list-top",
       settings,
       false,
       context({
-        categorySlug: "sports",
+        categorySlug: "travel",
         categoryConfig: { gam_adunit: unit, gam_keywords: "a,b" },
       })
     );

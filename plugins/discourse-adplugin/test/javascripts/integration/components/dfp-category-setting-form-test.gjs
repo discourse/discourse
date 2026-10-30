@@ -16,9 +16,9 @@ module("Integration | Component | DfpCategorySettingForm", function (hooks) {
       setting: {
         id: 1,
         category_id: 3,
-        gam_adunit: "/123456789/example.com/forums",
-        gam_keywords: "sports",
-        gtm_taxonomy: "forums/sports",
+        gam_adunit: "/6355419/Travel",
+        gam_keywords: "travel",
+        gtm_taxonomy: "travel/europe",
       },
       settings: [],
     };
@@ -47,14 +47,14 @@ module("Integration | Component | DfpCategorySettingForm", function (hooks) {
 
         assert.strictEqual(
           body.get("gam_keywords"),
-          "sports,premium",
+          "travel,premium",
           "the edited keywords are submitted"
         );
 
         return response({
           dfp_category_setting: {
             ...this.model.setting,
-            gam_keywords: "sports,premium",
+            gam_keywords: "travel,premium",
           },
         });
       }
@@ -64,7 +64,7 @@ module("Integration | Component | DfpCategorySettingForm", function (hooks) {
       <template><DfpCategorySettingForm @model={{this.model}} /></template>
     );
 
-    await formKit().field("gam_keywords").fillIn("sports,premium");
+    await formKit().field("gam_keywords").fillIn("travel,premium");
     await formKit().submit();
 
     assert.deepEqual(
@@ -83,7 +83,7 @@ module("Integration | Component | DfpCategorySettingForm", function (hooks) {
       <template><DfpCategorySettingForm @model={{this.model}} /></template>
     );
 
-    await formKit().field("gam_keywords").fillIn("sports,premium");
+    await formKit().field("gam_keywords").fillIn("travel,premium");
     await formKit().submit();
 
     assert.strictEqual(
@@ -93,7 +93,7 @@ module("Integration | Component | DfpCategorySettingForm", function (hooks) {
     );
     assert.strictEqual(
       formKit().field("gam_keywords").value(),
-      "sports,premium",
+      "travel,premium",
       "the unsaved edit is preserved so the dirty-form guard still protects it"
     );
   });

@@ -198,7 +198,7 @@ export function applyCategoryCustomFields(config, customFields) {
  * per-category `gam_adunit`/`gam_keywords` custom fields, then the centralized
  * per-category settings from the plugin dashboard (`context.categoryConfig`),
  * then any `dfp-ad-config` value transformer registered by a theme component
- * or plugin. `adUnitPath` is the full GPT ad unit (e.g. `/123456789/example.com/forums`).
+ * or plugin. `adUnitPath` is the full GPT ad unit (e.g. `/6355419/Travel`).
  */
 export function dfpConfig(placement, settings, isMobile, context) {
   const config = isMobile

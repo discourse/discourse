@@ -190,6 +190,10 @@ To give some users an ad-free experience, put the users in groups and add those 
 
 To disable ads in certain categories, add them to the "no ads for categories" setting. Also consider using the "no ads for restricted categories" to disable ads in all categories that have read access restrictions.
 
+#### DFP / GAM per-category targeting
+
+For Google Ad Manager (DFP), you can serve a different ad unit, keywords, and GTM taxonomy per category — configured from **Admin → Plugins → Discourse Ad Plugin → DFP / GAM** (or as per-category custom fields). Categories left unconfigured fall back to the site-wide `dfp_*_code` ad unit. See [docs/README.md](docs/README.md) for setup and local testing.
+
 ### Tags
 
 Individual topics can have ads disabled by using tags, and entering those tags in the "no ads for tags" setting. This is useful if some topics violate ad network policies.

@@ -3,11 +3,11 @@ en:
     adplugin:
       advertisement_label: "ADVERTISEMENT"
       gam_adunit: "GAM ad unit"
-      gam_adunit_placeholder: "e.g. /123456789/example.com/sports/forums/cards-talk"
+      gam_adunit_placeholder: "e.g. /6355419/Travel/Europe/France/Paris"
       gam_keywords: "GAM keywords"
-      gam_keywords_placeholder: "Comma separated, e.g. sports,mlb"
+      gam_keywords_placeholder: "Comma separated, e.g. travel,europe"
       gtm_taxonomy: "GTM taxonomy"
-      gtm_taxonomy_placeholder: "e.g. sports/forums/cards-talk"
+      gtm_taxonomy_placeholder: "e.g. travel/europe/france/paris"
       gam_category_settings:
         title: "GAM / DFP"
         legacy_description: "The plugin uses these legacy GAM fields when the matching dashboard field is blank. GTM taxonomy is retained for existing integrations."

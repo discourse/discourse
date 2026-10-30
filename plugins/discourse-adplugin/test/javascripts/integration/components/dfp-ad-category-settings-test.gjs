@@ -11,7 +11,7 @@ module("Integration | Component | DfpAdCategorySettings", function (hooks) {
 
   test("renders the GAM fields for a category", async function (assert) {
     this.data = { custom_fields: {} };
-    this.category = { id: 41, slug: "cards-talk", custom_fields: {} };
+    this.category = { id: 41, slug: "paris", custom_fields: {} };
 
     await render(
       <template>
@@ -44,14 +44,14 @@ module("Integration | Component | DfpAdCategorySettings", function (hooks) {
   test("shows existing category custom field values", async function (assert) {
     this.data = {
       custom_fields: {
-        gam_adunit: "/123456789/example.com/sports/forums/cards-talk",
-        gam_keywords: "sports,mlb",
-        gtm_taxonomy: "sports/forums/cards-talk",
+        gam_adunit: "/6355419/Travel/Europe/France/Paris",
+        gam_keywords: "travel,europe",
+        gtm_taxonomy: "travel/europe/france/paris",
       },
     };
     this.category = {
       id: 41,
-      slug: "cards-talk",
+      slug: "paris",
       custom_fields: this.data.custom_fields,
     };
 
@@ -68,20 +68,23 @@ module("Integration | Component | DfpAdCategorySettings", function (hooks) {
     assert
       .dom('.dfp-ad-category-settings input[name="custom_fields.gam_adunit"]')
       .hasValue(
-        "/123456789/example.com/sports/forums/cards-talk",
+        "/6355419/Travel/Europe/France/Paris",
         "the saved gam_adunit is shown"
       );
     assert
       .dom('.dfp-ad-category-settings input[name="custom_fields.gam_keywords"]')
-      .hasValue("sports,mlb", "the saved gam_keywords are shown");
+      .hasValue("travel,europe", "the saved gam_keywords are shown");
     assert
       .dom('.dfp-ad-category-settings input[name="custom_fields.gtm_taxonomy"]')
-      .hasValue("sports/forums/cards-talk", "the saved gtm_taxonomy is shown");
+      .hasValue(
+        "travel/europe/france/paris",
+        "the saved gtm_taxonomy is shown"
+      );
   });
 
   test("renders the legacy explanation as the section subtitle", async function (assert) {
     this.data = { custom_fields: {} };
-    this.category = { id: 41, slug: "cards-talk", custom_fields: {} };
+    this.category = { id: 41, slug: "paris", custom_fields: {} };
 
     await render(
       <template>

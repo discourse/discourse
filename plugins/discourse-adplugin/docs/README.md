@@ -3,10 +3,6 @@
 How to target Google Ad Manager (DFP/GAM) ads per category using this plugin, with no
 theme component or code changes.
 
-For the full technical deep-dive (how the plug rules compose, the `dfp-ad-config` value
-transformer, examples for every option), see
-[`dfp-gam-category-targeting.md`](./dfp-gam-category-targeting.md).
-
 ## What the feature does
 
 Each category can define its own GAM ad unit and keywords. When a page inside that
@@ -15,9 +11,9 @@ category's keywords as targeting. Categories with no configuration fall back to 
 globally configured ad unit.
 
 - `gam_adunit` — the full GPT ad unit path for that category
-  (e.g. `/8438/stltoday.com/sports/forums/cards-talk`). Leave blank to use the fallback.
+  (e.g. `/6355419/Travel/Europe/France/Paris`). Leave blank to use the fallback.
 - `gam_keywords` — comma-separated targeting values for that category
-  (e.g. `sports,mlb`).
+  (e.g. `travel,europe`).
 - `gtm_taxonomy` — optional taxonomy string exposed to theme components (e.g. to push
   into `window.dataLayer`). The plugin stores it but does not use it itself.
 
@@ -90,10 +86,10 @@ Set the default ad unit that unconfigured categories (and private/special catego
 use. It is built from `dfp_publisher_id` + the per-placement `dfp_*_code` settings:
 
 ```yaml
-dfp_publisher_id: 8438
-dfp_topic_list_top_code: stltoday.com/forums          # → /8438/stltoday.com/forums
-dfp_topic_above_post_stream_code: stltoday.com/forums
-dfp_post_bottom_code: stltoday.com/forums
+dfp_publisher_id: 6355419
+dfp_topic_list_top_code: Travel          # → /6355419/Travel
+dfp_topic_above_post_stream_code: Travel
+dfp_post_bottom_code: Travel
 dfp_topic_list_top_ad_sizes: "728*90 - leaderboard"
 ```
 
@@ -102,19 +98,19 @@ dfp_topic_list_top_ad_sizes: "728*90 - leaderboard"
 Open **Admin → Plugins → discourse-adplugin → DFP / GAM**, click **Add category
 configuration**, and select a category:
 
-| Field | Example for "Cards Talk" | Example for "Food Talk" |
+| Field | Example for "Paris" | Example for "Europe" |
 |---|---|---|
-| GAM ad unit | `/8438/stltoday.com/sports/forums/cards-talk` | `/8438/stltoday.com/life-entertainment/forums/food-talk` |
-| GAM keywords | `sports,mlb,St. Louis Cardinals, Baseball` | `entertainment,food,drink` |
-| GTM taxonomy | `sports/forums/cards-talk` | `life-entertainment/forums/food-talk` |
+| GAM ad unit | `/6355419/Travel/Europe/France/Paris` | `/6355419/Travel/Europe` |
+| GAM keywords | `travel,europe,france,paris` | `travel,europe` |
+| GTM taxonomy | `travel/europe/france/paris` | `travel/europe` |
 
 Rules:
 
 - Values are saved in the plugin's per-category settings and applied wherever that
   category appears (category and topic pages, desktop and mobile).
 - Leave **GAM ad unit / GAM keywords blank** to inherit the fallback — this is how
-  private or special categories (e.g. Limbo, Probation, Recycle Bin) keep the fallback
-  unit.
+  private or special categories (e.g. Uncategorized or a private category) keep the
+  fallback unit.
 - Edits are pushed to connected browsers live, each viewer receiving only the
   categories they can see (restricted-category config reaches just the members
   allowed to view it).
@@ -141,7 +137,7 @@ at slot-creation time — a plain refresh would keep the old one).
 - Register `discourse-category` (String) as a custom-targeting key in GAM if you want
   line-item targeting or reporting by category.
 - Keep your line items on the **ad-unit hierarchy** — a line item targeting a parent
-  unit (e.g. `/8438/stltoday.com/forums`) serves descendants, which is what covers blank /
+  unit (e.g. `/6355419/Travel`) serves descendants, which is what covers blank /
   special categories.
 - Per-category keywords arrive as the `gam_keywords` key-value (Slug).
 
