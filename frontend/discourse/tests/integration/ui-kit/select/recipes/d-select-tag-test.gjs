@@ -57,8 +57,7 @@ function optionNamed(text) {
 
 /** A controlled `DSelectTag`, as a call site would own it. */
 class SelectTagHost extends Component {
-  @tracked
-  value = this.args.value ?? (this.args.multiple === false ? null : []);
+  @tracked value = this.args.value ?? (this.args.multiple ? [] : null);
 
   @action
   onChange(value) {
@@ -101,6 +100,7 @@ class TagFieldHost extends Component {
       @exclude={{@blockedTags}}
       @ignoreRestrictions={{@everyTag}}
       @maximum={{if @unlimitedTagCount false}}
+      @multiple={{true}}
       @onChange={{this.onChange}}
       @value={{this.tags}}
     />
@@ -132,9 +132,10 @@ module(
 
         await render(
           <template>
-            <div class="default"><SelectTagHost /></div>
+            <div class="default"><SelectTagHost @multiple={{true}} /></div>
             <div class="mini"><SelectTagHost
                 @legacyKind="mini-tag-chooser"
+                @multiple={{true}}
               /></div>
           </template>
         );
@@ -152,7 +153,11 @@ module(
 
         await render(
           <template>
-            <SelectTagHost @onChange={{onChange}} @value={{held}} />
+            <SelectTagHost
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
           </template>
         );
         assert.dom(".d-select__chip").includesText("ui", "a held name renders");
@@ -188,7 +193,11 @@ module(
 
         await render(
           <template>
-            <SelectTagHost @emit="names" @onChange={{onChange}} />
+            <SelectTagHost
+              @emit="names"
+              @multiple={{true}}
+              @onChange={{onChange}}
+            />
           </template>
         );
         await click(".d-select__trigger");
@@ -203,7 +212,9 @@ module(
         let error;
         setupOnerror((e) => (error = e));
 
-        await render(<template><SelectTagHost @emit="name" /></template>);
+        await render(
+          <template><SelectTagHost @emit="name" @multiple={{true}} /></template>
+        );
 
         assert.true(
           String(error?.message).includes("@emit"),
@@ -218,8 +229,11 @@ module(
 
         await render(
           <template>
-            <div class="allowed"><SelectTagHost @allowCreate={{true}} /></div>
-            <div class="default"><SelectTagHost /></div>
+            <div class="allowed"><SelectTagHost
+                @allowCreate={{true}}
+                @multiple={{true}}
+              /></div>
+            <div class="default"><SelectTagHost @multiple={{true}} /></div>
           </template>
         );
 
@@ -260,9 +274,13 @@ module(
 
         await render(
           <template>
-            <div class="capped"><SelectTagHost @value={{held}} /></div>
+            <div class="capped"><SelectTagHost
+                @multiple={{true}}
+                @value={{held}}
+              /></div>
             <div class="open"><SelectTagHost
                 @maximum={{false}}
+                @multiple={{true}}
                 @value={{held}}
               /></div>
           </template>
@@ -290,11 +308,13 @@ module(
           <template>
             <div class="site"><SelectTagHost
                 @allowCreate={{true}}
+                @multiple={{true}}
                 @onChange={{onChange}}
                 @value={{held}}
               /></div>
             <div class="explicit"><SelectTagHost
                 @maximum={{0}}
+                @multiple={{true}}
                 @value={{held}}
               /></div>
           </template>
@@ -365,7 +385,9 @@ module(
         const excluded = [{ id: 3, name: "perf" }];
 
         await render(
-          <template><SelectTagHost @exclude={{excluded}} /></template>
+          <template>
+            <SelectTagHost @exclude={{excluded}} @multiple={{true}} />
+          </template>
         );
         await click(".d-select__trigger");
 
@@ -382,10 +404,11 @@ module(
 
         await render(
           <template>
-            <div class="restricted"><SelectTagHost /></div>
+            <div class="restricted"><SelectTagHost @multiple={{true}} /></div>
             <div class="all"><SelectTagHost
                 @excludeTagsWithSynonyms={{true}}
                 @ignoreRestrictions={{true}}
+                @multiple={{true}}
                 @suggestRecent={{true}}
               /></div>
           </template>
@@ -430,6 +453,22 @@ module(
         this.siteSettings.max_tag_search_results = 5;
         this.site.set("can_create_tag", true);
         stubSearch();
+      });
+
+      test("without @multiple, a picker holds one tag", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template><DSelectTag @onChange={{onChange}} /></template>
+        );
+        await click(".d-select__trigger");
+        await click(optionNamed("bug"));
+
+        assert.false(
+          Array.isArray(onChange.lastCall.args[0]),
+          "one tag is emitted, not a list"
+        );
+        assert.strictEqual(onChange.lastCall.args[0].name, "bug");
       });
 
       test("search sends the category, held and blocked ids", async function (assert) {
@@ -608,6 +647,7 @@ module(
             <DSelectTag
               @allowCreate={{true}}
               @legacyKind="mini-tag-chooser"
+              @multiple={{true}}
               @onChange={{onChange}}
             />
           </template>
@@ -643,6 +683,7 @@ module(
               @allowCreate={{true}}
               @legacyKind="mini-tag-chooser"
               @minimum={{2}}
+              @multiple={{true}}
             />
           </template>
         );
@@ -694,6 +735,7 @@ module(
           <template>
             <DSelectTag
               @exclude={{array "blocked" (hash id=9 name="numeric")}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{tags.value}}
             />
@@ -758,6 +800,7 @@ module(
           <template>
             <DSelectTag
               @exclude={{array (hash id=9 name="blocked")}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{array "held"}}
             />
@@ -815,6 +858,7 @@ module(
           <template>
             <DSelectTag
               @exclude={{array (hash id=9 name="blocked")}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{array "held"}}
             />
@@ -856,6 +900,7 @@ module(
           <template>
             <DSelectTag
               @allowCreate={{true}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{array "Held"}}
             />
@@ -896,7 +941,11 @@ module(
         const onChange = () => {};
         await render(
           <template>
-            <DSelectTag @exclude={{array "blocked"}} @onChange={{onChange}} />
+            <DSelectTag
+              @exclude={{array "blocked"}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+            />
           </template>
         );
         await new DSelect().open();
@@ -933,6 +982,7 @@ module(
             <DSelectTag
               @categoryId={{category.value}}
               @minimum={{1}}
+              @multiple={{true}}
               @onChange={{onChange}}
             />
           </template>
@@ -968,6 +1018,7 @@ module(
         await render(
           <template>
             <DSelectTag
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{array (hash id=2 name="held")}}
             >
@@ -1003,7 +1054,9 @@ module(
         );
         const onChange = () => {};
         await render(
-          <template><DSelectTag @onChange={{onChange}} /></template>
+          <template>
+            <DSelectTag @multiple={{true}} @onChange={{onChange}} />
+          </template>
         );
         await new DSelect().open();
 
@@ -1035,6 +1088,7 @@ module(
             <DSelectTag
               @allowCreate={{true}}
               @load={{load}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{tags.value}}
             />
@@ -1121,7 +1175,9 @@ module(
         setupOnerror((e) => (error = e));
         try {
           await render(
-            <template><DSelectTag @emit={{emit.value}} /></template>
+            <template>
+              <DSelectTag @emit={{emit.value}} @multiple={{true}} />
+            </template>
           );
           emit.value = "name";
           await settled();
@@ -1199,7 +1255,11 @@ module(
         const onChange = sinon.spy();
         await render(
           <template>
-            <DSelectTag @allowCreate={{true}} @onChange={{onChange}} />
+            <DSelectTag
+              @allowCreate={{true}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+            />
           </template>
         );
         await click(".d-select__trigger");
@@ -1231,6 +1291,7 @@ module(
           <template>
             <DSelectTag
               @allowCreate={{true}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{value.value}}
             />
@@ -1304,7 +1365,11 @@ module(
         };
         await render(
           <template>
-            <DSelectTag @onChange={{onChange}} @value={{value.value}} />
+            <DSelectTag
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{value.value}}
+            />
           </template>
         );
         await click(".d-select__trigger");
@@ -1345,6 +1410,7 @@ module(
             <DSelectTag
               @exclude={{array "excluded"}}
               @load={{load}}
+              @multiple={{true}}
               @onChange={{onChange}}
               @value={{held}}
             />
@@ -1382,6 +1448,7 @@ module(
               @allowCreate={{true}}
               @exclude={{excluded}}
               @items={{items}}
+              @multiple={{true}}
               @onChange={{onChange}}
             />
           </template>

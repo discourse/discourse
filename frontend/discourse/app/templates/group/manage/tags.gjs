@@ -37,6 +37,7 @@ export default <template>
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{fn updateTags @controller.model "watching_tags"}}
           @value={{@controller.model.watching_tags}}
         />
@@ -67,6 +68,7 @@ export default <template>
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{fn updateTags @controller.model "tracking_tags"}}
           @value={{@controller.model.tracking_tags}}
         />
@@ -97,6 +99,7 @@ export default <template>
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{fn
             updateTags
             @controller.model
@@ -135,6 +138,7 @@ export default <template>
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{fn updateTags @controller.model "regular_tags"}}
           @value={{@controller.model.regular_tags}}
         />
@@ -165,6 +169,7 @@ export default <template>
           @exclude={{@controller.selectedTags}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{fn updateTags @controller.model "muted_tags"}}
           @value={{@controller.model.muted_tags}}
         />

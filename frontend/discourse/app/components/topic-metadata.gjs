@@ -56,6 +56,7 @@ export default class TopicMetadata extends Component {
               @instanceContext={{hash topic=@model buffered=@buffered}}
               @legacyKind="mini-tag-chooser"
               @minimum={{@minimumRequiredTags}}
+              @multiple={{true}}
               @onChange={{@topicTagsChanged}}
               @suggestRecent={{true}}
               @value={{@buffered.tags}}

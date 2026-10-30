@@ -409,6 +409,7 @@ export default class TagSettings extends Component {
                   @ignoreRestrictions={{true}}
                   @legacyKind="mini-tag-chooser"
                   @maximum={{200}}
+                  @multiple={{true}}
                   @onChange={{this.handleSynonymChange}}
                   @placeholder={{i18n
                     "tagging.settings.add_synonym_placeholder"

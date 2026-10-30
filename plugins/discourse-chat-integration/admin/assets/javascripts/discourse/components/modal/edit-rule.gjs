@@ -225,6 +225,7 @@ export default class EditRule extends Component {
                   <DSelectTag
                     @emit="names"
                     @ignoreRestrictions={{true}}
+                    @multiple={{true}}
                     @onChange={{this.onTagsChange}}
                     @placeholder={{i18n "chat_integration.all_tags"}}
                     @value={{this.tags}}

@@ -901,6 +901,7 @@ export default class SearchAdvancedOptions extends Component {
                       @id="search-with-tags"
                       @ignoreRestrictions={{true}}
                       @maximum={{false}}
+                      @multiple={{true}}
                       @onChange={{this.onChangeSearchTermForTags}}
                       @value={{this.searchedTerms.tags}}
                     />

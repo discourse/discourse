@@ -35,6 +35,7 @@ export default class ReviewableFieldTags extends Component {
         @allowCreate={{true}}
         @categoryId={{@tagCategoryId}}
         @legacyKind="mini-tag-chooser"
+        @multiple={{true}}
         @onChange={{this.onChange}}
         @value={{this.value}}
       />

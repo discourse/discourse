@@ -106,14 +106,10 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   @tracked moreTags = false;
   @tracked _expanded = false;
 
-  get multiple() {
-    return this.args.multiple === true;
-  }
-
   get legacyKind() {
     return (
       this.args.legacyKind ??
-      (this.multiple
+      (this.args.multiple
         ? ["tags-intersection-chooser", "mini-tag-chooser"]
         : "tag-drop")
     );
@@ -267,7 +263,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   <template>
-    {{#if this.multiple}}
+    {{#if @multiple}}
       <SelectTagBase
         ...attributes
         @ariaLabel={{@ariaLabel}}

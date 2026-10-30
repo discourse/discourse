@@ -69,8 +69,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       already on `main`; `DTabs`' tabs and `DDragHandle` draw or show theirs and keep `@label`.
       Four production call sites, the styleguide and one outside theme component pass the
       separator's `@label`, so the rename needs a transition. Planned as a separate change.
-    - ☐ `SelectTagBase`'s `value` getter shadows `@value`, as `DSelectCategory`'s did before it
-      became `selectedIds`.
+    - ☑ `SelectTagBase`'s `value` getter shadowed `@value`; it is `selectedIds` (2026-10-29).
     - ☑ The breadcrumb drop searches through `Category.searchCategories` (2026-10-28), so slugs
       no longer match on preloaded sites. Lazy levels browse in the preloaded order and page
       as the list scrolls; the 15-row cap, its "+ N more" count and the "view all" link are
@@ -101,13 +100,17 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
         the closed menu.
       - To reproduce, on a category page open the subcategory drop, press Escape, and at once
         open the category drop and type.
-- ☐ **Tag recipe rework**, the follow-up to the category rework: `cleanTagName` and
-  `sortTagRows` in `lib/tag-source.ts` copy select-kit's `tag-utils` service
-  (`createContentFromInput`, `sortSearchResults`); the tag filter draws its own caret from the
-  `caretDownIcon`/`caretUpIcon` kind options instead of the core `caretIcon`; `SelectTagBase.multiple`
-  flips DSelect's default to `true`; and `DSelectTagFilter.multiple` only turns `undefined` into
-  `false`, which DSelect already does. The tag model has no search or lookup API, so the source's
-  server helpers fill a real gap and stay.
+- ☐ **Tag recipe rework**, the follow-up to the category rework. The tag model has no search or
+  lookup API, so the source's server helpers fill a real gap and stay.
+  - ☑ One cleaning rule (2026-10-29): `cleanTagName` follows the server's `clean_tag`, select-kit's
+    `tag-utils` calls it, and `tests/fixtures/tag-clean-parity.json` pins both sides.
+  - ☑ One sort (2026-10-29): `sortTagRows` keeps an exact match first, and select-kit's
+    `sortSearchResults` calls it.
+  - ☑ The kit's defaults (2026-10-29): `SelectTagBase`, `DSelectTagGroup` and `DSelectTagFilter`
+    forward `@multiple`, so a tag picker holds one tag unless the call site passes
+    `@multiple={{true}}`.
+  - ☐ The tag filter draws its own caret from the `caretDownIcon`/`caretUpIcon` kind options
+    instead of the core `caretIcon`, and returns its shortcuts as source rows.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
   dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic

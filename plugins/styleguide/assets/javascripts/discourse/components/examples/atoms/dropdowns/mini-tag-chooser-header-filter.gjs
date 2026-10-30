@@ -22,6 +22,7 @@ export default class MiniTagChooserHeaderFilterExample extends Component {
       <DSelectTag
         @allowCreate={{true}}
         @legacyKind="mini-tag-chooser"
+        @multiple={{true}}
         @onChange={{this.onChange}}
         @value={{this.tags}}
       />

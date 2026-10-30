@@ -41,6 +41,7 @@ export default class TagsControl extends Component {
           @allowCreate={{true}}
           @emit="names"
           @legacyKind="mini-tag-chooser"
+          @multiple={{true}}
           @onChange={{this.handleChange}}
           @value={{tagValue @field.value}}
         />

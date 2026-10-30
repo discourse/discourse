@@ -105,7 +105,11 @@ export default <template>
           as |field|
         >
           <field.Control>
-            <DSelectTag @onChange={{field.set}} @value={{field.value}} />
+            <DSelectTag
+              @multiple={{true}}
+              @onChange={{field.set}}
+              @value={{field.value}}
+            />
           </field.Control>
         </form.Field>
       </Form>

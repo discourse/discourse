@@ -51,7 +51,11 @@ module(
       );
       await render(
         <template>
-          <DSelectTagGroup @maximum={{1}} @value={{array "Area"}} />
+          <DSelectTagGroup
+            @maximum={{1}}
+            @multiple={{true}}
+            @value={{array "Area"}}
+          />
         </template>
       );
       await click(".d-select__trigger");
@@ -83,7 +87,11 @@ module(
 
         await render(
           <template>
-            <DSelectTagGroup @onChange={{onChange}} @value={{held}} />
+            <DSelectTagGroup
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
           </template>
         );
 
@@ -113,8 +121,22 @@ module(
         assert.strictEqual(onChange.lastCall.args[0], "Kind");
       });
 
+      test("without @multiple, a picker holds one group", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template><DSelectTagGroup @onChange={{onChange}} /></template>
+        );
+        await click(".d-select__trigger");
+        await click(optionNamed("Kind"));
+
+        assert.strictEqual(onChange.lastCall.args[0], "Kind");
+      });
+
       test("suppressFooter: no footer region without a caller footer", async function (assert) {
-        await render(<template><DSelectTagGroup /></template>);
+        await render(
+          <template><DSelectTagGroup @multiple={{true}} /></template>
+        );
         await click(".d-select__trigger");
 
         assert.dom(optionNamed("Kind")).exists("the panel is open");
@@ -129,7 +151,7 @@ module(
         await render(
           <template>
             <div class="multiple-host">
-              <DSelectTagGroup @value={{held}} />
+              <DSelectTagGroup @multiple={{true}} @value={{held}} />
             </div>
             <div class="single-host">
               <DSelectTagGroup @multiple={{false}} @value="Retired" />

@@ -376,6 +376,7 @@ export default class RssPollingFeedForm extends Component {
                       @emit="names"
                       @ignoreRestrictions={{true}}
                       @maximum={{false}}
+                      @multiple={{true}}
                       @onChange={{field.set}}
                       @value={{field.value}}
                     />

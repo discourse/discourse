@@ -73,7 +73,7 @@ export interface SelectTagBaseSignature {
     allowCreate?: boolean;
     /** Emit stored names instead of tag objects. */
     emit?: "names";
-    /** Multiple selection defaults to true. */
+    /** Holds several tags; defaults to one, as DSelect does. */
     multiple?: boolean;
     /** Prefer recently used tags when the site enables suggestions. */
     suggestRecent?: boolean;
@@ -190,16 +190,12 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
     );
   }
 
-  get multiple() {
-    return this.args.multiple !== false;
-  }
-
   @cached
   private get _selectionInputs() {
     const ids = new Set<number>();
     const names = new Set<string>();
     for (const tag of [
-      ...(this.multiple ? this.#tags : []),
+      ...(this.args.multiple ? this.#tags : []),
       ...(this.args.exclude ?? []),
     ]) {
       const key = tagKey(tag);
@@ -246,13 +242,13 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       : (this.args.maximum ?? this.siteSettings.max_tags_per_topic);
   }
 
-  get value() {
+  get selectedIds() {
     assert(
       'DSelectTag: @emit must be "names" or undefined',
       this.args.emit === undefined || this.args.emit === "names"
     );
     const keys = this.#tags.map((tag) => this.#itemForTag(tag).id);
-    return this.multiple ? keys : (keys[0] ?? null);
+    return this.args.multiple ? keys : (keys[0] ?? null);
   }
 
   get valueItems() {
@@ -390,7 +386,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       items: rows as unknown as TagObject[],
     });
     const result = this.args.emit === "names" ? tags.map(storedName) : tags;
-    this.args.onChange?.(this.multiple ? result : (result[0] ?? null));
+    this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
   }
 
   #itemForTag(
@@ -518,7 +514,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       @maximum={{this.maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @minimum={{@minimum}}
-      @multiple={{this.multiple}}
+      @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @parsePaste={{this.parsePaste}}
       @placeholder={{if
@@ -527,7 +523,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
         (i18n "tagging.choose_for_topic")
       }}
       @suppressFooter={{@suppressFooter}}
-      @value={{this.value}}
+      @value={{this.selectedIds}}
       @valueItems={{this.valueItems}}
       @variant={{@variant}}
       {{this.resolveHeldNames}}

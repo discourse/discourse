@@ -36,6 +36,7 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
         @emit="names"
         @ignoreRestrictions={{@spec.every_tag}}
         @maximum={{this.max}}
+        @multiple={{true}}
         @onChange={{this.onNamesInput}}
         @value={{this.value}}
       />

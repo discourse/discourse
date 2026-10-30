@@ -36,6 +36,7 @@ export default class TagsField extends BaseField {
               @emit="names"
               @ignoreRestrictions={{true}}
               @maximum={{false}}
+              @multiple={{true}}
               @onChange={{this.onChangeTags}}
               @value={{readonly @field.metadata.value}}
             />

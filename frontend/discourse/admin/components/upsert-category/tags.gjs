@@ -83,6 +83,7 @@ export default class UpsertCategoryTags extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectTagGroup
           @id="category-allowed-tag-groups"
+          @multiple={{true}}
           @onChange={{this.onAllowedTagGroupsChange}}
           @value={{this.allowedTagGroups}}
         />

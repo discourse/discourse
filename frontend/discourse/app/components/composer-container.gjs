@@ -526,6 +526,7 @@ export default class ComposerContainer extends Component {
                                 0
                               }}
                               @minimum={{this.composer.model.minimumRequiredTags}}
+                              @multiple={{true}}
                               @onChange={{fn (mut this.composer.model.tags)}}
                               @suggestRecent={{true}}
                               @value={{this.composer.model.tags}}

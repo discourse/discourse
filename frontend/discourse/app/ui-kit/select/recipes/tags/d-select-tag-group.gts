@@ -69,12 +69,8 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     max_tag_search_results: number;
   };
 
-  get multiple() {
-    return this.args.multiple !== false;
-  }
-
   get selectionValue() {
-    return this.multiple ? this.#value : (this.#value[0] ?? null);
+    return this.args.multiple ? this.#value : (this.#value[0] ?? null);
   }
 
   get legacyKind() {
@@ -106,7 +102,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
 
   @action
   onChange(value: SelectValue) {
-    if (this.multiple) {
+    if (this.args.multiple) {
       this.args.onChange?.(
         makeArray(value).filter(
           (name): name is string => typeof name === "string"
@@ -123,7 +119,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       signal: opts.signal,
       siteSettings: this.siteSettings,
     });
-    return this.multiple
+    return this.args.multiple
       ? groups.filter((group) => !this.#value.includes(group.name))
       : groups;
   }
@@ -149,7 +145,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
-      @multiple={{this.multiple}}
+      @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @placeholder={{if
         @placeholder

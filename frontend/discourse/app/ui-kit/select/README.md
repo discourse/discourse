@@ -683,8 +683,9 @@ The tag family has three recipes, split by what the pick is for:
 - **`DSelectTag`** (kind `select-tag`) picks tags to store on something: topic tags, settings,
   preferences, synonyms. `@value` takes tag objects or names; `@onChange` emits tag objects, or
   stored names with `@emit="names"` (the untranslated name even when search shows a translation).
-  `@multiple={{false}}` holds one tag. Creation needs both `@allowCreate` and the site's
-  permission. `@maximum` defaults to the site's tags-per-topic and `@maximum={{false}}` lifts it;
+  Like `DSelect`, it holds one tag unless `@multiple={{true}}`. Creation needs both
+  `@allowCreate` and the site's permission. `@maximum` defaults to the site's tags-per-topic and
+  `@maximum={{false}}` lifts it;
   a site limit of 0 blocks additions while keeping removal. Search options are
   `@categoryId`, `@ignoreRestrictions` (all tags, not only those usable on topics), `@exclude`,
   `@excludeSynonyms`, `@excludeTagsWithSynonyms` and `@suggestRecent`.
@@ -693,7 +694,8 @@ The tag family has three recipes, split by what the pick is for:
   intersections. It offers the "all tags" and "no tags" shortcuts and the top tags, and never
   navigates: the call site turns the pick into a URL. A single filter clears only through its
   "all tags" row; Backspace leaves it alone, since a stray key would otherwise change the page.
-- **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name.
+- **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name, one unless
+  `@multiple={{true}}`.
 
 Held names resolve when the value changes. Search sends only known numeric ids, and a pending or
 failed name lookup never holds up search; a completed lookup reloads an open list with the

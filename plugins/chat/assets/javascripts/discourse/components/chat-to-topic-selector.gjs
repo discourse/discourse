@@ -167,6 +167,7 @@ export default class ChatToTopicSelector extends Component {
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectTag
                 @categoryId={{this.categoryId}}
+                @multiple={{true}}
                 @onChange={{this.changeTags}}
                 @value={{this.tags}}
               />
@@ -211,7 +212,11 @@ export default class ChatToTopicSelector extends Component {
             <label>{{i18n "tagging.tags"}}</label>
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DSelectTag @onChange={{this.changeTags}} @value={{this.tags}} />
+              <DSelectTag
+                @multiple={{true}}
+                @onChange={{this.changeTags}}
+                @value={{this.tags}}
+              />
             {{else}}
               {{! TODO (select-kit-replacement-cleanup) }}
               <TagChooser

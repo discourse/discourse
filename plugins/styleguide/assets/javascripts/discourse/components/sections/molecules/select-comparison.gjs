@@ -168,6 +168,7 @@ export default class SelectComparison extends Component {
             <DSelectTag
               @allowCreate={{false}}
               @maximum={{5}}
+              @multiple={{true}}
               @onChange={{this.newTags.update}}
               @value={{this.newTags.value}}
             />
@@ -214,6 +215,7 @@ export default class SelectComparison extends Component {
             <DSelectTag
               @legacyKind="mini-tag-chooser"
               @maximum={{5}}
+              @multiple={{true}}
               @onChange={{this.newMiniTags.update}}
               @value={{this.newMiniTags.value}}
             />
@@ -390,6 +392,7 @@ export default class SelectComparison extends Component {
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
             <DSelectTagGroup
+              @multiple={{true}}
               @onChange={{this.newTagGroups.update}}
               @value={{this.newTagGroups.value}}
             />

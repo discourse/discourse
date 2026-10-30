@@ -32,6 +32,7 @@ export default class TagList extends Component {
           @emit="names"
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{this.changeSelectedNames}}
           @value={{this.selectedTags}}
         />

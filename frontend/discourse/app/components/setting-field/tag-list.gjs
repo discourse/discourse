@@ -35,6 +35,7 @@ export default class SettingFieldTagList extends Component {
           @emit="names"
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{this.onNamesChange}}
           @value={{this.selectedTags}}
         />

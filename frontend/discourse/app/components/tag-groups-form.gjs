@@ -166,6 +166,7 @@ export default class TagGroupsForm extends Component {
           @excludeSynonyms={{true}}
           @ignoreRestrictions={{true}}
           @maximum={{false}}
+          @multiple={{true}}
           @onChange={{fn this.updateTags "tags"}}
           @placeholder={{i18n "tagging.groups.tags_placeholder"}}
           @value={{this.buffered.tags}}

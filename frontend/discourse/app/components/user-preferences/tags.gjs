@@ -24,6 +24,7 @@ const Tags = <template>
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}
+            @multiple={{true}}
             @onChange={{fn updateTags @model "watched_tags"}}
             @value={{@model.watched_tags}}
           />
@@ -51,6 +52,7 @@ const Tags = <template>
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}
+            @multiple={{true}}
             @onChange={{fn updateTags @model "tracked_tags"}}
             @value={{@model.tracked_tags}}
           />
@@ -80,6 +82,7 @@ const Tags = <template>
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}
+            @multiple={{true}}
             @onChange={{fn updateTags @model "watching_first_post_tags"}}
             @value={{@model.watching_first_post_tags}}
           />
@@ -109,6 +112,7 @@ const Tags = <template>
             @exclude={{@selectedTags}}
             @ignoreRestrictions={{true}}
             @maximum={{false}}
+            @multiple={{true}}
             @onChange={{fn updateTags @model "muted_tags"}}
             @value={{@model.muted_tags}}
           />

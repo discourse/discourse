@@ -271,6 +271,7 @@ export default class MoveToTopic extends Component {
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectTag
+                      @multiple={{true}}
                       @onChange={{this.updateTags}}
                       @value={{this.tags}}
                     />
@@ -456,6 +457,7 @@ export default class MoveToTopic extends Component {
                     {{#if this.siteSettings.enable_new_select_controls}}
                       <DSelectTag
                         @categoryId={{this.categoryId}}
+                        @multiple={{true}}
                         @onChange={{this.updateTags}}
                         @value={{this.tags}}
                       />
@@ -507,6 +509,7 @@ export default class MoveToTopic extends Component {
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectTag
+                      @multiple={{true}}
                       @onChange={{this.updateTags}}
                       @value={{this.tags}}
                     />

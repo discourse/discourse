@@ -131,6 +131,7 @@ export default class AdminEmbeddingHostForm extends Component {
                       @excludeSynonyms={{true}}
                       @ignoreRestrictions={{true}}
                       @maximum={{false}}
+                      @multiple={{true}}
                       @onChange={{field.set}}
                       @placeholder={{i18n "category.tags_placeholder"}}
                       @value={{field.value}}

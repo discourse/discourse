@@ -24,6 +24,7 @@ export default class TagGroupList extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectTagGroup
           @disabled={{@disabled}}
+          @multiple={{true}}
           @onChange={{this.onTagGroupChange}}
           @placeholder={{i18n "category.required_tag_group.placeholder"}}
           @value={{this.selectedTagGroups}}

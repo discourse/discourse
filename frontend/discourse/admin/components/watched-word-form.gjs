@@ -195,6 +195,7 @@ export default class WatchedWordForm extends Component {
               @disabled={{this.formSubmitted}}
               @id="watched-tag"
               @ignoreRestrictions={{true}}
+              @multiple={{true}}
               @onChange={{this.changeSelectedTags}}
               @value={{this.selectedTags}}
             />
