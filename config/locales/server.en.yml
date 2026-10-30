@@ -795,6 +795,7 @@ en:
     other: "Sorry, you can only include %{count} quotes in a post."
   contains_blocked_word: "Sorry, you can't post the word '%{word}'; it's not allowed."
   contains_blocked_words: "Sorry, you can't post that. Not allowed: %{words}."
+  post_not_allowed_from_ip_address: "You can't post from this IP address."
 
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
@@ -2340,6 +2341,7 @@ en:
     change_post_ownership_allowed_groups: "Allow users in these groups to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the <a href='%{base_path}/admin/logs/screened_ip_addresses'>Screened IPs list</a>."
+    block_posting_from_blocked_ips: "Prevent signed-in users from creating topics, replies and personal messages from an IP address blocked in the <a href='%{base_path}/admin/logs/screened_ip_addresses'>Screened IPs list</a>."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."

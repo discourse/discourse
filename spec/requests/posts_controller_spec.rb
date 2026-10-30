@@ -1595,6 +1595,60 @@ RSpec.describe PostsController do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
+    context "when posting from a blocked IP address" do
+      fab!(:blocked_ip) do
+        Fabricate(
+          :screened_ip_address,
+          ip_address: "1.2.3.4",
+          action_type: ScreenedIpAddress.actions[:block],
+        )
+      end
+
+      before do
+        SiteSetting.block_posting_from_blocked_ips = true
+        sign_in(user)
+      end
+
+      it "rejects replies and personal messages and accepts other IPs" do
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "this is a reply from a blocked ip",
+                 topic_id: topic.id,
+               },
+               env: {
+                 REMOTE_ADDR: "1.2.3.4",
+               }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("post_not_allowed_from_ip_address"),
+          )
+
+          post "/posts.json",
+               params: {
+                 raw: "this is a personal message from a blocked ip",
+                 title: "personal message from a blocked ip",
+                 archetype: Archetype.private_message,
+                 target_recipients: Fabricate(:user).username,
+               },
+               env: {
+                 REMOTE_ADDR: "1.2.3.4",
+               }
+          expect(response.status).to eq(422)
+        end.not_to change { Post.count }
+
+        post "/posts.json",
+             params: {
+               raw: "this is a reply from an allowed ip",
+               topic_id: topic.id,
+             },
+             env: {
+               REMOTE_ADDR: "5.6.7.8",
+             }
+        expect(response.status).to eq(200)
+      end
+    end
+
     it "prevents regular users from publishing a global banner while creating a topic" do
       ApplicationLayoutPreloader.banner_json_cache.clear
       sign_in(user_trust_level_1)
