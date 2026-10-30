@@ -469,7 +469,7 @@ describe "Tags" do
 
         visit "/latest"
         expect(discovery.topic_list).to have_topic(topic_with_one_tag)
-        expect(discovery.tag_drop).to have_selected_value("all-tags")
+        expect(discovery.tag_drop).to have_selected_value("")
 
         category_page.visit(category)
         expect(discovery.topic_list).to have_topic_tag(topic_in_category_with_tag, "tag-three")

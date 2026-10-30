@@ -100,8 +100,11 @@ describe "Navigating with breadcrumbs" do
       visit("/c/#{category1.id}")
       expect(discovery.topic_list).to have_topics(count: 2)
 
-      expect(discovery.tag_drop).to have_selected_value("all-tags")
-      expect(discovery.tag_drop).to have_selected_name(I18n.t("js.tagging.selector_tags"))
+      expect(discovery.tag_drop).to have_selected_value("")
+      expect(page).to have_css(
+        ".category-breadcrumb .tag-drop .d-select__placeholder",
+        text: I18n.t("js.tagging.selector_tags"),
+      )
       discovery.tag_drop.select_name(tag.name)
 
       expect(page).to have_current_path(
@@ -147,7 +150,7 @@ describe "Navigating with breadcrumbs" do
 
       expect(page).to have_current_path("/c/#{category1.slug}/#{category1.id}")
       expect(discovery.topic_list).to have_topics(count: 2)
-      expect(discovery.tag_drop).to have_selected_value("all-tags")
+      expect(discovery.tag_drop).to have_selected_value("")
     end
   end
 
