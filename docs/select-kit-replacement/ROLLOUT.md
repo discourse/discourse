@@ -420,6 +420,9 @@ Open items need a decision after manual testing; the rest are intended but still
   used to keep emoji, symbols and zero-width characters, and cut long names in UTF-16 units, so
   "Create rock🎸" saved `rock`. Both controls now clean names exactly as the server does, in
   select-kit too (`tests/fixtures/tag-clean-parity.json`).
+- [ ] **Sorting alphabetically keeps an exact match first.** With `tags_sort_alphabetically` on,
+  the client re-sorted the server's results by name, so typing "rock" could list "alpha-rock"
+  above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.
 
 ## Category call sites
 

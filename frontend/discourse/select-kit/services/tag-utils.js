@@ -3,7 +3,7 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
-import { cleanTagName } from "discourse/lib/tag-source";
+import { cleanTagName, sortTagRows } from "discourse/lib/tag-source";
 import { i18n } from "discourse-i18n";
 
 export default class TagUtils extends Service {
@@ -16,14 +16,11 @@ export default class TagUtils extends Service {
       .catch(popupAjaxError);
   }
 
-  sortSearchResults(results) {
-    if (!this.siteSettings.tags_sort_alphabetically) {
-      return results;
-    }
-    const byName = (a, b) => a.name.localeCompare(b.name);
-    const enabled = results.filter((r) => !r.disabled).sort(byName);
-    const disabled = results.filter((r) => r.disabled).sort(byName);
-    return [...enabled, ...disabled];
+  sortSearchResults(results, filter) {
+    return sortTagRows(results, {
+      alphabetical: this.siteSettings.tags_sort_alphabetically,
+      exact: filter && cleanTagName(filter, this.siteSettings),
+    });
   }
 
   validateCreate(

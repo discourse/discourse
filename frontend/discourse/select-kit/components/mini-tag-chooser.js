@@ -228,7 +228,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
 
     let results = skipSort
       ? json.results
-      : this.tagUtils.sortSearchResults(json.results);
+      : this.tagUtils.sortSearchResults(json.results, this.selectKit.filter);
 
     if (json.required_tag_group) {
       this.set(

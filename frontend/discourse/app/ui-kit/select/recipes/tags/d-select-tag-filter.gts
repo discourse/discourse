@@ -3,7 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { searchTags, sortTagRows, topTags } from "discourse/lib/tag-source";
+import {
+  cleanTagName,
+  searchTags,
+  sortTagRows,
+  topTags,
+} from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -94,6 +99,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     max_tag_search_results: number;
     tags_sort_alphabetically: boolean;
     max_tags_per_topic: number;
+    max_tag_length: number;
+    force_lowercase_tags: boolean;
   };
 
   @tracked moreTags = false;
@@ -216,6 +223,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         ).slice(0, this.siteSettings.max_tags_in_filter_list),
         {
           alphabetical: this.siteSettings.tags_sort_alphabetically,
+          exact: cleanTagName(filter, this.siteSettings),
         }
       ),
     ].filter(

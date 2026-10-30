@@ -56,6 +56,8 @@ export async function searchTags(
     siteSettings: {
       max_tag_search_results: number;
       tags_sort_alphabetically?: boolean;
+      max_tag_length: number;
+      force_lowercase_tags: boolean;
     };
   }
 ): Promise<TagSearchResult> {
@@ -94,6 +96,7 @@ export async function searchTags(
       alphabetical:
         !!siteSettings.tags_sort_alphabetically &&
         !context.prioritizeRecentTags,
+      exact: cleanTagName(filter, siteSettings),
     }),
     forbidden: result.forbidden,
     forbiddenMessage: result.forbidden_message,
@@ -189,15 +192,23 @@ export function cleanTagName(
     .replace(/^\.+|\.+$/g, "");
 }
 
-/** Sorts enabled and disabled groups separately, or preserves the original array and order. */
-export function sortTagRows<T extends { name: string; disabled?: boolean }>(
+/**
+ * Sorts enabled and disabled groups separately, or preserves the original array and order. A row
+ * whose stored name equals `exact` leads its group, as the server ranks it.
+ */
+export function sortTagRows<
+  T extends { name: string; original_name?: string; disabled?: boolean },
+>(
   rows: T[],
-  { alphabetical }: { alphabetical: boolean }
+  { alphabetical, exact }: { alphabetical: boolean; exact?: string }
 ): T[] {
   if (!alphabetical) {
     return rows;
   }
-  const byName = (a: T, b: T) => a.name.localeCompare(b.name);
+  const term = exact?.toLowerCase();
+  const isExact = (row: T) => !!term && storedName(row).toLowerCase() === term;
+  const byName = (a: T, b: T) =>
+    Number(isExact(b)) - Number(isExact(a)) || a.name.localeCompare(b.name);
   return [
     ...rows.filter((row) => !row.disabled).sort(byName),
     ...rows.filter((row) => row.disabled).sort(byName),

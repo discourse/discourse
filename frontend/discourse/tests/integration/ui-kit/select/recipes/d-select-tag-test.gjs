@@ -458,6 +458,26 @@ module(
         );
       });
 
+      test("sorting alphabetically keeps an exact match first", async function (assert) {
+        this.siteSettings.tags_sort_alphabetically = true;
+        stubSearch([
+          { id: 1, name: "rock", text: "rock", count: 1 },
+          { id: 2, name: "rock-band", text: "rock-band", count: 9 },
+          { id: 3, name: "alpha-rock", text: "alpha-rock", count: 5 },
+        ]);
+
+        await render(<template><TagFieldHost /></template>);
+        await click(".d-select__trigger");
+        await fillIn("[role='combobox']", "rock");
+
+        assert.deepEqual(
+          findAll("[role='option'] .discourse-tag").map((tag) =>
+            tag.textContent.trim()
+          ),
+          ["rock", "alpha-rock", "rock-band"]
+        );
+      });
+
       test("rows are tags without links, counts hidden from the name", async function (assert) {
         stubSearch();
 

@@ -133,6 +133,44 @@ module("Unit | lib | tag-source", function (hooks) {
     );
   });
 
+  test("sortTagRows keeps an exact match first, by its stored name", function (assert) {
+    const rows = [
+      { name: "rock-band" },
+      { name: "Roca", original_name: "rock" },
+      { name: "alpha" },
+      { name: "rock-off", disabled: true },
+    ];
+
+    assert.deepEqual(
+      sortTagRows(rows, { alphabetical: true, exact: "ROCK" }).map(
+        (r) => r.name
+      ),
+      ["Roca", "alpha", "rock-band", "rock-off"]
+    );
+  });
+
+  test("searchTags compares the cleaned term when sorting alphabetically", async function (assert) {
+    pretender.get("/tags/filter/search", () =>
+      response({
+        results: [
+          { id: 1, name: "rock" },
+          { id: 2, name: "rock-band" },
+          { id: 3, name: "alpha-rock" },
+        ],
+      })
+    );
+
+    const result = await searchTags("Rock!", {
+      context: {},
+      siteSettings: { ...SETTINGS, tags_sort_alphabetically: true },
+    });
+
+    assert.deepEqual(
+      result.items.map((r) => r.name),
+      ["rock", "alpha-rock", "rock-band"]
+    );
+  });
+
   test("cleanTagName mirrors the server's clean_tag", function (assert) {
     assert.strictEqual(cleanTagName("  Foo Bar!! ", SETTINGS), "Foo-Bar");
     assert.strictEqual(
