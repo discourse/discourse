@@ -77,6 +77,14 @@ module DiscourseAi
       def destroy
         decision_model = DecisionModel.find(params[:id])
         return render_seeded_error if decision_model.seeded?
+        if AiModerationSetting.exists?(decision_model_id: decision_model.id)
+          return(
+            render_json_error(
+              I18n.t("discourse_ai.decision_models.delete_failed_spam"),
+              status: 409,
+            )
+          )
+        end
 
         details =
           decision_model
