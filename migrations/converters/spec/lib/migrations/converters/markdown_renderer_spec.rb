@@ -128,7 +128,6 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     # (deferrable) label and the fence lands as a sibling block in the raw. Only
     # code that is inline to begin with (`[tt]`, or a Code node with no `block`
     # flag) can stay in a label; the unit test further down covers that.
-
     it "hoists single-line, with a language code out of a link label instead of deferring it into text" do
       raw = link_renderer.to_markdown("[url=https://example.com][code=ruby]x = 1[/code][/url]")
 

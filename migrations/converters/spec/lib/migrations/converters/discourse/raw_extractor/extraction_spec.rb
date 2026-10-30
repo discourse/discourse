@@ -316,7 +316,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # A destination may be followed by a title, and padded, and wrapped in angle
     # brackets. Core cooks all of these as links, so nothing inside them counts.
-
     it "leaves a mention alone in \"[x](https://external.com/@bob \\\"title\\\")\"" do
       expect(extract("[x](https://external.com/@bob \"title\")")).to eq(
         "[x](https://external.com/@bob \"title\")",

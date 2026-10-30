@@ -132,7 +132,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # the destination's metadata and the rest is dropped. The size group must not
     # reach past the line end, or a parenthesized line of the author's own text
     # disappears from the post.
-
     it "leaves the next line alone after an attachment" do
       result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)\n(this may take a while)")
 

@@ -196,7 +196,7 @@ RSpec.describe StaticController do
       end
     end
 
-    shared_examples "a configured static information page" do |id, setting_name, text|
+    shared_examples "a configured static information page" do |id:, setting_name:, text:|
       context "with #{id}" do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
@@ -219,9 +219,14 @@ RSpec.describe StaticController do
       end
     end
 
-    it_behaves_like "a configured static information page", ["tos", :tos_url, I18n.t("js.tos")]
     it_behaves_like "a configured static information page",
-                    ["privacy", :privacy_policy_url, I18n.t("js.privacy")]
+                    id: "tos",
+                    setting_name: :tos_url,
+                    text: I18n.t("js.tos")
+    it_behaves_like "a configured static information page",
+                    id: "privacy",
+                    setting_name: :privacy_policy_url,
+                    text: I18n.t("js.privacy")
 
     it "renders the localized guidelines post" do
       SiteSetting.content_localization_enabled = true

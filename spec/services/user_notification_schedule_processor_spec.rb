@@ -13,9 +13,9 @@ RSpec.describe UserNotificationScheduleProcessor do
   end
 
   describe "#create_do_not_disturb_timings" do
-    shared_examples "creating quiet hours across time zones" do |timezone_info|
+    shared_examples "creating quiet hours across time zones" do |timezone:, offset:|
       it "creates dnd timings correctly for each timezone" do
-        user.user_option.update(timezone: timezone_info[:timezone])
+        user.user_option.update(timezone: timezone)
 
         travel_to Time.new(2020, 1, 4, 12, 0, 0, "+00:00") do
           UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(standard_schedule)
@@ -23,7 +23,6 @@ RSpec.describe UserNotificationScheduleProcessor do
           # The default schedule is 8am - 5pm.
           # Expect DND timings to fill gaps before/after those times for 3 days.
           dnd_timings = user.do_not_disturb_timings
-          offset = timezone_info[:offset]
           expect(dnd_timings[0].starts_at).to eq_time(Time.new(2020, 1, 4, 0, 0, 0, offset))
           expect(dnd_timings[0].ends_at).to eq_time(Time.new(2020, 1, 4, 7, 59, 0, offset))
 
@@ -47,11 +46,13 @@ RSpec.describe UserNotificationScheduleProcessor do
       end
     end
 
-    it_behaves_like "creating quiet hours across time zones", { timezone: "UTC", offset: "+00:00" }
+    it_behaves_like "creating quiet hours across time zones", timezone: "UTC", offset: "+00:00"
     it_behaves_like "creating quiet hours across time zones",
-                    { timezone: "America/Chicago", offset: "-06:00" }
+                    timezone: "America/Chicago",
+                    offset: "-06:00"
     it_behaves_like "creating quiet hours across time zones",
-                    { timezone: "Australia/Sydney", offset: "+11:00" }
+                    timezone: "Australia/Sydney",
+                    offset: "+11:00"
 
     it "does not create duplicate record, but ensures the correct records exist" do
       user.user_option.update(timezone: "UTC")

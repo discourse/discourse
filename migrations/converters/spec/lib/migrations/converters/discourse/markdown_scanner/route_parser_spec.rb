@@ -2,7 +2,7 @@
 
 RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::Constructs::InternalLink::RouteParser do
   describe ".parse" do
-    shared_examples "a numeric tag route" do |path, suffix|
+    shared_examples "a numeric tag route" do |path:, suffix:|
       it "reads the numeric tag id from #{path}" do
         target = described_class.parse(path)
 
@@ -11,16 +11,19 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::Constructs::I
       end
     end
 
-    it_behaves_like "a numeric tag route", ["/tag/release/42", ""]
-    it_behaves_like "a numeric tag route", ["/tag/c/42", ""]
-    it_behaves_like "a numeric tag route", ["/tag/intersection/42", ""]
-    it_behaves_like "a numeric tag route", %w[/tags/release/42/ /]
+    it_behaves_like "a numeric tag route", path: "/tag/release/42", suffix: ""
+    it_behaves_like "a numeric tag route", path: "/tag/c/42", suffix: ""
+    it_behaves_like "a numeric tag route", path: "/tag/intersection/42", suffix: ""
+    it_behaves_like "a numeric tag route", path: "/tags/release/42/", suffix: "/"
     it_behaves_like "a numeric tag route",
-                    %w[/tag/2015/42/l/latest?ascending=true#top /l/latest?ascending=true#top]
-    it_behaves_like "a numeric tag route", %w[/tag/42.json?include=details .json?include=details]
-    it_behaves_like "a numeric tag route", %w[/tag/release/42.rss .rss]
+                    path: "/tag/2015/42/l/latest?ascending=true#top",
+                    suffix: "/l/latest?ascending=true#top"
+    it_behaves_like "a numeric tag route",
+                    path: "/tag/42.json?include=details",
+                    suffix: ".json?include=details"
+    it_behaves_like "a numeric tag route", path: "/tag/release/42.rss", suffix: ".rss"
 
-    shared_examples "a numeric category route" do |path, suffix|
+    shared_examples "a numeric category route" do |path:, suffix:|
       it "reads the final category id from #{path}" do
         target = described_class.parse(path)
 
@@ -29,18 +32,20 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::Constructs::I
       end
     end
 
-    it_behaves_like "a numeric category route", ["/c/parent/123/456", ""]
-    it_behaves_like "a numeric category route", %w[/category/parent/123/456/ /]
-    it_behaves_like "a numeric category route", ["/c/123/456", ""]
+    it_behaves_like "a numeric category route", path: "/c/parent/123/456", suffix: ""
+    it_behaves_like "a numeric category route", path: "/category/parent/123/456/", suffix: "/"
+    it_behaves_like "a numeric category route", path: "/c/123/456", suffix: ""
     it_behaves_like "a numeric category route",
-                    %w[
-                      /c/parent/123/456/l/top/weekly?ascending=true#top
-                      /l/top/weekly?ascending=true#top
-                    ]
-    it_behaves_like "a numeric category route", %w[/c/parent/123/456/none/bug/12 /none/bug/12]
-    it_behaves_like "a numeric category route", %w[/c/parent/123/456/all /all]
-    it_behaves_like "a numeric category route", %w[/c/parent/123/456/subcategories /subcategories]
-    it_behaves_like "a numeric category route", %w[/c/parent/123/456.json .json]
+                    path: "/c/parent/123/456/l/top/weekly?ascending=true#top",
+                    suffix: "/l/top/weekly?ascending=true#top"
+    it_behaves_like "a numeric category route",
+                    path: "/c/parent/123/456/none/bug/12",
+                    suffix: "/none/bug/12"
+    it_behaves_like "a numeric category route", path: "/c/parent/123/456/all", suffix: "/all"
+    it_behaves_like "a numeric category route",
+                    path: "/c/parent/123/456/subcategories",
+                    suffix: "/subcategories"
+    it_behaves_like "a numeric category route", path: "/c/parent/123/456.json", suffix: ".json"
 
     it "keeps reserved multi-tag routes out of single-tag id parsing" do
       expect(described_class.parse("/tags/c/support/feature/12")).to be_nil

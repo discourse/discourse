@@ -279,7 +279,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # cooks `\\@bob` as a mention. A counter that read the escape as a
     # rejection counted one occurrence too few here and handed the token to the
     # code-span look-alike — the post came back with its code span rewritten.
-
     it "rewrites an escaped mention and leaves the code-span copy alone" do
       output = extract("\\@bob and `@bob`")
 

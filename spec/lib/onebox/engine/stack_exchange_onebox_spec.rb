@@ -47,7 +47,7 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
     end
   end
 
-  shared_examples "a Stack Exchange question URL" do |name, url|
+  shared_examples "a Stack Exchange question URL" do |name:, url:|
     describe "question with #{name}" do
       before do
         @link = url
@@ -78,14 +78,14 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
   end
 
   it_behaves_like "a Stack Exchange question URL",
-                  [
-                    "long URL",
-                    "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code",
-                  ]
+                  name: "long URL",
+                  url:
+                    "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code"
   it_behaves_like "a Stack Exchange question URL",
-                  ["short URL", "http://stackoverflow.com/q/17992553"]
+                  name: "short URL",
+                  url: "http://stackoverflow.com/q/17992553"
 
-  shared_examples "a Stack Exchange answer URL" do |name, url|
+  shared_examples "a Stack Exchange answer URL" do |name:, url:|
     describe "answer with #{name}" do
       before do
         @link = url
@@ -116,10 +116,10 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
   end
 
   it_behaves_like "a Stack Exchange answer URL",
-                  [
-                    "long URL",
-                    "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906",
-                  ]
+                  name: "long URL",
+                  url:
+                    "http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906"
   it_behaves_like "a Stack Exchange answer URL",
-                  ["short URL", "http://stackoverflow.com/a/17992906"]
+                  name: "short URL",
+                  url: "http://stackoverflow.com/a/17992906"
 end

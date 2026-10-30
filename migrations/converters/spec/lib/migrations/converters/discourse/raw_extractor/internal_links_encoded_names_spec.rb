@@ -129,7 +129,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # Bytes that decode to no valid UTF-8 name no record, and a `%2F` would
     # invent path structure the author never wrote — both refuse rather than
     # rewrite a coordinate-shaped path onto the destination.
-
     it "refuses a name holding invalid UTF-8 bytes" do
       raw = "see https://forum.example.com/u/%FF%FE there"
 

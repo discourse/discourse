@@ -13,7 +13,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # site's ids — `/t//209` is an empty-slug spelling of topic 209 — so an
     # origin-only rewrite would point the new host at stale coordinates. Worse
     # than verbatim: the construct stays untouched and the body is reported.
-
     it "refuses an empty topic slug instead of recording a SITE link" do
       raw = "This topic you've named [>>>>>](https://forum.example.com/t//209) doesn't load"
 
@@ -102,7 +101,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # path, so it gets the same origin rewrite the bracketed form does. Before,
     # only a path carrying a route segment was recognized bare, and a plain
     # `/faq` in prose survived the migration pointing at the dead origin.
-
     it "records a bare URL with a route-less page as a SITE link" do
       link, = link_for("https://forum.example.com/faq")
 
@@ -157,7 +155,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # A URL with no path is the forum's own front page, and its origin needs
     # rewriting like any other — otherwise it survives pointing at the site being
     # retired. A query or fragment with no path is the same page.
-
     it "records the front page as a SITE link" do
       link, = link_for("https://forum.example.com")
 

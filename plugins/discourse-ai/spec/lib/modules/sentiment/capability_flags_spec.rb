@@ -40,21 +40,21 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
             .to_json
       end
 
-      shared_examples "running enabled sentiment capabilities" do |sentiment, emotion|
-        it "runs only enabled capabilities with sentiment=#{sentiment} and emotion=#{emotion}" do
-          SiteSetting.ai_sentiment_enabled = sentiment
-          SiteSetting.ai_sentiment_emotion_enabled = emotion
+      shared_examples "running enabled sentiment capabilities" do |sentiment_enabled:, emotion_enabled:|
+        it "runs only enabled capabilities with sentiment=#{sentiment_enabled} and emotion=#{emotion_enabled}" do
+          SiteSetting.ai_sentiment_enabled = sentiment_enabled
+          SiteSetting.ai_sentiment_emotion_enabled = emotion_enabled
           enabled_types = []
-          enabled_types << "sentiment" if sentiment
-          enabled_types << "emotion" if emotion
+          enabled_types << "sentiment" if sentiment_enabled
+          enabled_types << "emotion" if emotion_enabled
           model_names = enabled_types.map { |type| described_class.active_model_name_for(type) }
           classifier = described_class.new
 
-          expect(described_class.enabled_for?(:sentiment)).to eq(sentiment)
-          expect(described_class.enabled_for?("emotion")).to eq(emotion)
-          expect(described_class.any_enabled?).to eq(sentiment || emotion)
+          expect(described_class.enabled_for?(:sentiment)).to eq(sentiment_enabled)
+          expect(described_class.enabled_for?("emotion")).to eq(emotion_enabled)
+          expect(described_class.any_enabled?).to eq(sentiment_enabled || emotion_enabled)
           expect(described_class.active_classifier_names).to match_array(model_names)
-          expect(classifier.has_classifiers?).to eq(sentiment || emotion)
+          expect(classifier.has_classifiers?).to eq(sentiment_enabled || emotion_enabled)
           expect(described_class.backfill_query).to match_array(enabled_types.empty? ? [] : [post])
           %w[sentiment emotion].each do |type|
             expect(described_class.classifier_summary_for(type)[:ready]).to eq(true)
@@ -77,10 +77,18 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         end
       end
 
-      it_behaves_like "running enabled sentiment capabilities", [false, false]
-      it_behaves_like "running enabled sentiment capabilities", [true, false]
-      it_behaves_like "running enabled sentiment capabilities", [false, true]
-      it_behaves_like "running enabled sentiment capabilities", [true, true]
+      it_behaves_like "running enabled sentiment capabilities",
+                      sentiment_enabled: false,
+                      emotion_enabled: false
+      it_behaves_like "running enabled sentiment capabilities",
+                      sentiment_enabled: true,
+                      emotion_enabled: false
+      it_behaves_like "running enabled sentiment capabilities",
+                      sentiment_enabled: false,
+                      emotion_enabled: true
+      it_behaves_like "running enabled sentiment capabilities",
+                      sentiment_enabled: true,
+                      emotion_enabled: true
     end
   end
 

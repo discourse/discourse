@@ -26,7 +26,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # The host's own root is somebody else's app, not the forum, so rewriting its
     # origin would move a link that never pointed at us.
-
     it "leaves https://www.example.com alone, since only the prefix belongs to the forum" do
       expect(extract("https://www.example.com")).to eq("https://www.example.com")
       expect(buffer.links).to be_empty

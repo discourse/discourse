@@ -41,7 +41,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # a Unicode punctuation/symbol (`isPunctChar`), and a zero-width space. The
     # cases below are verified against PrettyText in `emoji_parity_spec.rb`; kept
     # here as fixtures so the fast suite pins each one.
-
     it "leaves a shortcode after a no-break space literal, like core" do
       expect(extract("a\u00A0:parrot: b")).to eq("a\u00A0:parrot: b")
       expect(buffer.emojis).to be_empty

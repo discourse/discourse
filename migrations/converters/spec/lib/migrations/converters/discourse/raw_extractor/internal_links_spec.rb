@@ -89,7 +89,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # A destination can carry a title, padding, or angle brackets and still be a
     # link core resolves. Missing those left such a link pointing at the source
     # site after the migration. Each of these cooks to href="/t/slug/5".
-
     it "defers a topic link written with a title" do
       link, = link_for("[t](/t/slug/5 \"title\")")
 
@@ -133,7 +132,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     # Core builds no link for either of these, so neither may be rewritten.
-
     it "leaves [t](/t/slug/5 not-a-title) literal, since core makes no link of it" do
       expect(extract("[t](/t/slug/5 not-a-title)")).to eq("[t](/t/slug/5 not-a-title)")
       expect(buffer.links).to be_empty
@@ -242,7 +240,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # Categories nest three deep, so the slug path has to survive a third level
     # with the tab tail still coming off it.
-
     it "reads a three-level category slug path with no tail" do
       link, = link_for("[x](/c/gp/parent/child)")
 
@@ -287,7 +284,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     # A tag name is a single segment, so anything after it is already suffix —
     # the tab tails that needed guarding on the category routes cost nothing here.
-
     it "keeps a filter tail out of a tag name" do
       link, = link_for("[x](/tag/release/l/latest)")
 
