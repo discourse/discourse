@@ -218,6 +218,7 @@ export default class BreadCrumbs extends Component {
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectTagFilter
                 @categoryId={{@category.id}}
+                @identifier="breadcrumb-tag-intersection"
                 @multiple={{true}}
                 @onChange={{this.changeIntersection}}
                 @value={{this.intersectionTags}}
@@ -237,6 +238,7 @@ export default class BreadCrumbs extends Component {
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectTagFilter
                 @categoryId={{@category.id}}
+                @identifier="breadcrumb-tag"
                 @onChange={{this.changeTag}}
                 @value={{@tag}}
               />

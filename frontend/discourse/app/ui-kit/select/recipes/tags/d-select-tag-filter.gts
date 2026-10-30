@@ -11,8 +11,6 @@ import {
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import DSelect from "discourse/ui-kit/select/d-select";
 import SelectTagBase from "discourse/ui-kit/select/recipes/tags/-internals/select-tag-base";
 import {
@@ -24,6 +22,7 @@ import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/
 import type {
   SelectItem,
   SelectLoadOptions,
+  SelectSnapshot,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -49,7 +48,7 @@ type SelectSignature =
 /** A topic-list filter that leaves navigation to its caller. */
 interface DSelectTagFilterSignature {
   Args: {
-    /** Current tag or shortcut; multiple mode holds tags in order. */
+    /** Current tag or shortcut, where none or `ALL_TAGS_ID` filters nothing; multiple mode holds tags in order. */
     value?:
       | TagObject
       | readonly TagObject[]
@@ -74,8 +73,10 @@ interface DSelectTagFilterSignature {
     identifier?: string;
     /** Call-site state exposed to customizations. */
     instanceContext?: object;
-    /** Accessible control name; it is never drawn. */
+    /** Accessible control name; it is never drawn. Defaults to "Filter by: tags". */
     ariaLabel?: string;
+    /** Text shown while nothing is filtered. Defaults to "tags". */
+    placeholder?: string;
     /** Prevent opening or selecting. */
     disabled?: boolean;
   };
@@ -104,7 +105,14 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   };
 
   @tracked moreTags = false;
-  @tracked _expanded = false;
+
+  get ariaLabel() {
+    return this.args.ariaLabel || i18n("tagging.filter_by_tags_label");
+  }
+
+  get placeholder() {
+    return this.args.placeholder ?? i18n("tagging.selector_tags");
+  }
 
   get legacyKind() {
     return (
@@ -120,10 +128,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     const tag = this.#tag;
     const tagClass =
       tag && "slug" in tag && tag.slug ? `tag-${tag.slug}` : "tag_all";
-    if (this.selection.id === ALL_TAGS_ID) {
-      return tagClass;
-    }
-    return `${tagClass} --filtering`;
+    return this.selection ? `${tagClass} --filtering` : tagClass;
   }
 
   get #tag(): FilterTag | undefined {
@@ -133,7 +138,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       : undefined;
   }
 
-  get selection(): SelectItem {
+  /** The held filter. With no tag, or the "all tags" shortcut, it holds nothing, so the placeholder shows. */
+  get selection(): SelectItem | undefined {
     const tag = this.#tag;
     if (
       this.args.value === NO_TAG_ID ||
@@ -143,9 +149,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       return { id: NO_TAG_ID, name: i18n("tagging.selector_no_tags") };
     }
     // A tag model keeps its fields on getters, which a spread would drop.
-    return tag?.id
-      ? tag
-      : { id: ALL_TAGS_ID, name: i18n("tagging.selector_tags") };
+    return tag?.id ? tag : undefined;
   }
 
   get localItems() {
@@ -160,17 +164,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return {
       categoryId: this.args.categoryId,
       items: this.args.items,
-      value: this.args.value,
     };
-  }
-
-  @action
-  caret(options: SelectResolvedOptions) {
-    const icon = this._expanded ? options.caretUpIcon : options.caretDownIcon;
-    if (typeof icon === "string") {
-      return icon;
-    }
-    return this._expanded ? "angle-down" : "angle-right";
   }
 
   isShortcut(item: SelectItem) {
@@ -189,42 +183,44 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         result.items.length > this.siteSettings.max_tags_in_filter_list;
       return result.items.map((tag) => ({ ...tag }));
     }
-    const tags = [
-      ...(this.args.items ??
-        topTags<FilterTag>({
-          site: this.site,
-          categoryId: this.args.categoryId,
-        })),
-    ];
+    const tags =
+      this.args.items ??
+      topTags<FilterTag>({
+        site: this.site,
+        categoryId: this.args.categoryId,
+      });
+    const term = filter.toLowerCase();
+    const matches = term
+      ? tags.filter((tag) => tag.name.toLowerCase().includes(term))
+      : [...tags];
     this.moreTags =
       !filter && tags.length > this.siteSettings.max_tags_in_filter_list;
-    const shortcuts: FilterTag[] = [];
-    if (this.selection.id !== ALL_TAGS_ID) {
+    return sortTagRows(
+      matches.slice(0, this.siteSettings.max_tags_in_filter_list),
+      {
+        alphabetical: this.siteSettings.tags_sort_alphabetically,
+        exact: cleanTagName(filter, this.siteSettings),
+      }
+    );
+  }
+
+  /** The shortcuts lead browsing and are left out of searches. */
+  @action
+  specialItems(snapshot: SelectSnapshot): SelectItem[] {
+    if (snapshot.filter) {
+      return [];
+    }
+    const shortcuts: SelectItem[] = [];
+    if (this.selection) {
       shortcuts.push({
         id: ALL_TAGS_ID,
         name: i18n("tagging.selector_remove_filter"),
       });
     }
-    if (this.selection.id !== NO_TAG_ID) {
+    if (this.selection?.id !== NO_TAG_ID) {
       shortcuts.push({ id: NO_TAG_ID, name: i18n("tagging.selector_no_tags") });
     }
-    return [
-      ...shortcuts,
-      ...sortTagRows(
-        (filter
-          ? tags.filter((tag) =>
-              tag.name.toLowerCase().includes(filter.toLowerCase())
-            )
-          : tags
-        ).slice(0, this.siteSettings.max_tags_in_filter_list),
-        {
-          alphabetical: this.siteSettings.tags_sort_alphabetically,
-          exact: cleanTagName(filter, this.siteSettings),
-        }
-      ),
-    ].filter(
-      (tag) => !filter || tag.name.toLowerCase().includes(filter.toLowerCase())
-    );
+    return shortcuts;
   }
 
   @action
@@ -252,21 +248,11 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     }
   }
 
-  @action
-  onClose() {
-    this._expanded = false;
-  }
-
-  @action
-  onShow() {
-    this._expanded = true;
-  }
-
   <template>
     {{#if @multiple}}
       <SelectTagBase
         ...attributes
-        @ariaLabel={{@ariaLabel}}
+        @ariaLabel={{this.ariaLabel}}
         @categoryId={{@categoryId}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}
@@ -278,6 +264,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         @load={{@load}}
         @multiple={{true}}
         @onChange={{this.onMultipleChange}}
+        @placeholder={{this.placeholder}}
         @suppressFooter={{not (has-block "footer")}}
         @value={{this.multipleValue}}
       >
@@ -304,25 +291,21 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       <DSelect
         class={{this.rootClass}}
         ...attributes
-        @ariaLabel={{if @ariaLabel @ariaLabel (i18n "tagging.selector_tags")}}
+        @ariaLabel={{this.ariaLabel}}
+        @caretIcon={{hash closed="angle-right" open="angle-down"}}
         @disabled={{@disabled}}
         @identifier={{@identifier}}
         @instanceContext={{@instanceContext}}
         @kind="select-tag-filter"
         @kindContext={{hash value=@value categoryId=@categoryId}}
-        @kindOptions={{hash
-          caretDownIcon="angle-right"
-          caretUpIcon="angle-down"
-        }}
         @labelField="name"
         @legacyKind={{this.legacyKind}}
         @load={{if @load @load this.load}}
         @loadContext={{this.loadContext}}
         @onChange={{this.onChange}}
-        @onClose={{this.onClose}}
-        @onShow={{this.onShow}}
+        @placeholder={{this.placeholder}}
         @searchIcon="magnifying-glass"
-        @showCaret={{false}}
+        @specialItems={{this.specialItems}}
         @suppressFooter={{not (or (has-block "footer") this.moreTags)}}
         @value={{this.selection.id}}
         @valueItems={{this.selection}}
@@ -342,9 +325,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
             {{yield item options to="selection"}}
           {{else}}
             <span class="d-tag-drop__selection">
-              {{~! no whitespace around the tag and its caret ~}}
+              {{~! no whitespace around the tag ~}}
               <TagSelection @item={{item}} />
-              {{~dIcon (this.caret options)~}}
             </span>
           {{/if}}
         </:selection>

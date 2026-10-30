@@ -8,6 +8,7 @@ import Form from "discourse/components/form";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import TagSettings from "discourse/components/tag-settings";
 import UserPreferencesTags from "discourse/components/user-preferences/tags";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import GroupManageTags from "discourse/templates/group/manage/tags";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -285,6 +286,50 @@ module(
           assert.true(
             this.routeToUrl.calledWithExactly("/c/support/7/none"),
             "all tags clears only the tag filter"
+          );
+        });
+
+        test("customizations reach the breadcrumbs' tag drops by identifier", async function (assert) {
+          withPluginApi((api) =>
+            api.registerValueTransformer(
+              "select-customizations",
+              ({ value }) => {
+                value.forIdentifier("breadcrumb-tag", (spec) =>
+                  spec.options(() => ({ placeholder: "tag level" }))
+                );
+                value.forIdentifier("breadcrumb-tag-intersection", (spec) =>
+                  spec.row((row) => row.classes.push("x-intersection"))
+                );
+              }
+            )
+          );
+          const main = { id: 2, name: "ui", slug: "ui" };
+          await render(
+            <template>
+              <div class="single"><BreadCrumbs
+                  @categories={{this.categories}}
+                /></div>
+              <div class="intersection"><BreadCrumbs
+                  @additionalTags={{array "perf"}}
+                  @categories={{this.categories}}
+                  @tag={{main}}
+                /></div>
+            </template>
+          );
+
+          assert
+            .dom(".single .tag-drop .d-select__placeholder")
+            .hasText("tag level");
+          assert
+            .dom(".single .category-drop .d-select__placeholder")
+            .doesNotHaveTextContaining("tag level", "not the category drop");
+          await click(".intersection .tags-intersection-chooser.d-select");
+          assert.dom("[role='option']").exists("the intersection drop is open");
+          assert.true(
+            findAll("[role='option']").every((row) =>
+              row.classList.contains("x-intersection")
+            ),
+            "the intersection drop's rows"
           );
         });
 

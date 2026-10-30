@@ -690,10 +690,14 @@ The tag family has three recipes, split by what the pick is for:
   `@categoryId`, `@ignoreRestrictions` (all tags, not only those usable on topics), `@exclude`,
   `@excludeSynonyms`, `@excludeTagsWithSynonyms` and `@suggestRecent`.
 - **`DSelectTagFilter`** (kind `select-tag-filter`) narrows a topic list. Its value is a tag,
-  `ALL_TAGS_ID` or `NO_TAG_ID` (exported by the module), or several tags with `@multiple` for
-  intersections. It offers the "all tags" and "no tags" shortcuts and the top tags, and never
-  navigates: the call site turns the pick into a URL. A single filter clears only through its
-  "all tags" row; Backspace leaves it alone, since a stray key would otherwise change the page.
+  `NO_TAG_ID`, nothing or `ALL_TAGS_ID` (both filter nothing; the ids are exported by the
+  module), or several tags with `@multiple` for intersections. It is named "Filter by: tags", and
+  with nothing filtered it shows `@placeholder`, "tags" by default. While browsing it offers the
+  "remove filter" (emitting `ALL_TAGS_ID`) and "no tags" shortcuts as `@specialItems`, then the
+  top tags, and never navigates: the call site turns the pick into a URL. A single filter clears
+  only through its "remove filter" row; Backspace leaves it alone, since a stray key would
+  otherwise change the page. The breadcrumbs pass `breadcrumb-tag` and
+  `breadcrumb-tag-intersection`.
 - **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name, one unless
   `@multiple={{true}}`.
 

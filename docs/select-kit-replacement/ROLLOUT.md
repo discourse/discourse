@@ -307,6 +307,10 @@ customization ports are done.
   - Categories, 2026-10-29: a category picker with no caption is named "Category"
     (`categories.category`), or "Categories" (`categories.categories`, new) when it can hold
     more than one. Before, its placeholder was its name.
+  - Tags, 2026-10-29: the tag filter is named "Filter by: tags" (`tagging.filter_by_tags_label`,
+    new). With nothing filtered it holds nothing and shows "tags" (`tagging.selector_tags`) as its
+    placeholder, overridable with `@placeholder` or a customization's `placeholder`; the
+    intersection drop shows the same instead of "Optional tags…".
 - **Theme CSS.** Before a family joins the flag, search customer themes for the legacy selectors
   it renders and map each one to the DSelect equivalent below; a hit with no equivalent is a gap
   to close in core or a theme fix to hand over. Requested 2026-10-23; extend the table as each
@@ -327,8 +331,8 @@ customization ports are done.
   | `.tag-drop-header`, `.select-kit-header` | `.d-select.tag-drop` itself |
   | `.select-kit.tag-drop.has-selection` | `.d-select.tag-drop.--filtering` (a tag or untagged) |
   | `.is-expanded`, `.is-focused`, `.is-highlighted` on the header | `[aria-expanded="true"]`, `:focus`, `:focus-visible` on the root |
-  | `.selected-name` | `.d-tag-drop__selection` |
-  | `.caret-icon`, `.angle-icon` | `.d-tag-drop__selection .d-icon` (`@kindOptions` `caretDownIcon` / `caretUpIcon` for the glyph) |
+  | `.selected-name` | `.d-tag-drop__selection` (a held tag), `.d-select__placeholder` ("tags") |
+  | `.caret-icon`, `.angle-icon` | `.d-select.tag-drop .d-select__caret` (the core `caretIcon` option for the glyph) |
   | `.select-kit-body` | `.d-select__content.--kind-select-tag-filter` (width: `--d-select-menu-min-width`) |
   | `.select-kit-collection` | `.d-select__panel` (height: `--d-select-panel-max-height`) |
   | `.select-kit-filter`, `.filter-input` | `.d-select__search`, `.d-select__filter` |
@@ -420,6 +424,10 @@ Open items need a decision after manual testing; the rest are intended but still
   used to keep emoji, symbols and zero-width characters, and cut long names in UTF-16 units, so
   "Create rock🎸" saved `rock`. Both controls now clean names exactly as the server does, in
   select-kit too (`tests/fixtures/tag-clean-parity.json`).
+- [ ] **The breadcrumb tag drop names what it filters.** With nothing filtered it shows "tags"
+  as a placeholder and is named "Filter by: tags"; with a tag it reads "Filter by: tags, rock",
+  where select-kit read "Filter by: rock". The intersection drop is named the same. Customizations
+  reach the drops through `breadcrumb-tag` and `breadcrumb-tag-intersection`.
 - [ ] **Sorting alphabetically keeps an exact match first.** With `tags_sort_alphabetically` on,
   the client re-sorted the server's results by name, so typing "rock" could list "alpha-rock"
   above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.

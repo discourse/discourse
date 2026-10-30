@@ -46,11 +46,15 @@
   }
 }
 
+.d-tag-drop__selection,
+.d-select.tag-drop :is(.d-select__placeholder, .d-select__caret) {
+  color: var(--primary-high);
+}
+
 .d-tag-drop__selection {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--primary-high);
 }
 
 .d-tag-drop__shortcut {

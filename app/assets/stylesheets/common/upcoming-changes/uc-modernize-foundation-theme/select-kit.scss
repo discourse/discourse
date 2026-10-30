@@ -31,12 +31,13 @@
     color: var(--primary);
   }
 
-  .d-tag-drop__selection {
+  .d-tag-drop__selection,
+  .d-select.tag-drop :is(.d-select__placeholder, .d-select__caret) {
     color: var(--primary);
+  }
 
-    .d-icon {
-      font-size: var(--font-down-1);
-    }
+  .d-select.tag-drop .d-select__caret {
+    font-size: var(--font-down-1);
   }
 
   .d-select.tag-drop.d-select__trigger {

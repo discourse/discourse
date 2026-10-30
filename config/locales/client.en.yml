@@ -6328,6 +6328,7 @@ en:
       selector_tags: "tags"
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
+      filter_by_tags_label: "Filter by: tags"
       tags: "Tags"
       tag_count_hidden:
         one: "%{count} topic"

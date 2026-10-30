@@ -24,8 +24,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     name as its placeholder, overridable by `@placeholder` or a customization; the drop is named
     "Filter by: categories" / "Filter by: subcategories" and no longer repeats the level. A held
     "no subcategories" filter offers "remove filter". The breadcrumbs pass `breadcrumb-category`.
-    Still open: the tag drop shares the old pattern, and the breadcrumbs' tag drops have no
-    identifier (tag rework).
+    The tag drop followed on 2026-10-29: "Filter by: tags", an empty filter that holds nothing,
+    and the `breadcrumb-tag` / `breadcrumb-tag-intersection` identifiers.
   - ☑ **Recipe rework (2026-10-27):** the recipes stopped re-implementing what the engine, the
     `Category` model and ui-kit helpers already do. Paging, sizing and de-duplication are the
     engine's; lazy pages come from `Category.asyncSearch` (now with `only_postable`), held ids from
@@ -109,8 +109,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ The kit's defaults (2026-10-29): `SelectTagBase`, `DSelectTagGroup` and `DSelectTagFilter`
     forward `@multiple`, so a tag picker holds one tag unless the call site passes
     `@multiple={{true}}`.
-  - ☐ The tag filter draws its own caret from the `caretDownIcon`/`caretUpIcon` kind options
-    instead of the core `caretIcon`, and returns its shortcuts as source rows.
+  - ☑ The tag filter (2026-10-29): the core `caretIcon` replaces its own caret and its
+    `caretDownIcon`/`caretUpIcon` kind options, its shortcuts are `@specialItems`, and an empty
+    filter holds nothing and shows its placeholder.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
   dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic

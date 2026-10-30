@@ -11,6 +11,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetTagSourceCache } from "discourse/lib/tag-source";
 import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -252,6 +253,37 @@ module(
         assert.true(matching(true).length > 0, "the hover rule applies");
       });
 
+      test("tag drop parity: the empty trigger draws its text and caret like the legacy header", async function (assert) {
+        await render(
+          <template>
+            <div class="list-controls">
+              <span class="high" style="color: var(--primary-high)">high</span>
+              <DSelectTagFilter />
+            </div>
+            <div class="uc-modernize-foundation-theme">
+              <div class="list-controls">
+                <span class="plain" style="color: var(--primary)">plain</span>
+                <DSelectTagFilter />
+              </div>
+            </div>
+          </template>
+        );
+
+        const color = (selector) => getComputedStyle(find(selector)).color;
+        for (const part of [".d-select__placeholder", ".d-select__caret"]) {
+          assert.strictEqual(
+            color(`.list-controls > .d-select ${part}`),
+            color(".high"),
+            part
+          );
+          assert.strictEqual(
+            color(`.uc-modernize-foundation-theme .d-select ${part}`),
+            color(".plain"),
+            `${part}, modernized`
+          );
+        }
+      });
+
       test("tag drop parity: the open trigger shows the focus ring", async function (assert) {
         await render(
           <template>
@@ -445,6 +477,164 @@ module(
 
         assert.notStrictEqual(optionNamed("local-one"), undefined);
         assert.strictEqual(requests.length, 0, "no search request");
+      });
+    });
+
+    module("name, empty level and caret", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        this.siteSettings.tagging_enabled = true;
+        this.siteSettings.max_tags_in_filter_list = 30;
+        this.siteSettings.max_tag_search_results = 5;
+        this.site.set("top_tags", TOP_TAGS);
+      });
+
+      test("an empty filter is named for what it filters and shows tags as its placeholder", async function (assert) {
+        await render(
+          <template>
+            <div class="none"><DSelectTagFilter /></div>
+            <div class="all"><DSelectTagFilter @value={{ALL_TAGS_ID}} /></div>
+          </template>
+        );
+
+        for (const scope of [".none", ".all"]) {
+          const root = find(`${scope} .d-select`);
+          assert.strictEqual(
+            root.getAttribute("aria-label"),
+            i18n("tagging.filter_by_tags_label"),
+            scope
+          );
+          assert.strictEqual(root.dataset.value, "", `${scope} holds nothing`);
+          assert
+            .dom(".d-select__placeholder", root)
+            .hasText(i18n("tagging.selector_tags"), `${scope} shows tags`);
+        }
+      });
+
+      test("a held filter follows the name", async function (assert) {
+        const tag = { id: 1, name: "alpha", slug: "alpha" };
+
+        await render(
+          <template>
+            <div class="tagged"><DSelectTagFilter @value={{tag}} /></div>
+            <div class="untagged"><DSelectTagFilter
+                @value={{NO_TAG_ID}}
+              /></div>
+          </template>
+        );
+
+        assert
+          .dom(".tagged .d-select")
+          .hasAria("label", `${i18n("tagging.filter_by_tags_label")}, alpha`);
+        assert
+          .dom(".untagged .d-select")
+          .hasAria(
+            "label",
+            `${i18n("tagging.filter_by_tags_label")}, ${i18n(
+              "tagging.selector_no_tags"
+            )}`
+          );
+        assert.strictEqual(
+          find(".untagged .d-select").dataset.value,
+          NO_TAG_ID,
+          "no tags is a held filter"
+        );
+      });
+
+      test("the intersection filter is named for what it filters", async function (assert) {
+        stubSearch();
+        const held = [];
+
+        await render(
+          <template>
+            <DSelectTagFilter @multiple={{true}} @value={{held}} />
+          </template>
+        );
+
+        assert
+          .dom("[role='combobox']")
+          .hasAria("label", i18n("tagging.filter_by_tags_label"))
+          .hasAttribute(
+            "placeholder",
+            i18n("tagging.selector_tags"),
+            "not the composer's text"
+          );
+      });
+
+      test("a call site or a customization can replace the empty text", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forIdentifier("custom-tags", (spec) =>
+              spec.options(() => ({ placeholder: "any label" }))
+            );
+          })
+        );
+
+        await render(
+          <template>
+            <div class="own"><DSelectTagFilter @placeholder="any tag" /></div>
+            <div class="custom"><DSelectTagFilter
+                @identifier="custom-tags"
+              /></div>
+          </template>
+        );
+
+        assert.dom(".own .d-select__placeholder").hasText("any tag");
+        assert.dom(".custom .d-select__placeholder").hasText("any label");
+      });
+
+      test("the caret points right while closed and down while open", async function (assert) {
+        await render(<template><DSelectTagFilter /></template>);
+
+        assert.dom(".d-select__caret").hasClass("d-icon-angle-right");
+        await click(".d-select__trigger");
+        assert.dom(".d-select__caret").hasClass("d-icon-angle-down");
+      });
+
+      test("a customization can replace the caret", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-tag-filter", (spec) =>
+              spec.options(() => ({
+                caretIcon: { open: "chevron-up", closed: "chevron-right" },
+              }))
+            );
+          })
+        );
+
+        await render(<template><DSelectTagFilter /></template>);
+
+        assert.dom(".d-select__caret").hasClass("d-icon-chevron-right");
+        await click(".d-select__trigger");
+        assert.dom(".d-select__caret").hasClass("d-icon-chevron-up");
+      });
+
+      test("the shortcuts lead browsing and leave a search", async function (assert) {
+        stubSearch();
+        const tag = { id: 1, name: "alpha", slug: "alpha" };
+
+        await render(<template><DSelectTagFilter @value={{tag}} /></template>);
+        await click(".d-select__trigger");
+
+        const names = findAll("[role='option']").map((row) =>
+          row.textContent.trim()
+        );
+        assert.deepEqual(names.slice(0, 2), [
+          i18n("tagging.selector_remove_filter"),
+          i18n("tagging.selector_no_tags"),
+        ]);
+
+        await fillIn(".d-select__panel input", "bu");
+        assert.notStrictEqual(optionNamed("bug"), undefined, "the match");
+        assert.strictEqual(
+          optionNamed(i18n("tagging.selector_remove_filter")),
+          undefined,
+          "no shortcut in a search"
+        );
+        assert.strictEqual(
+          optionNamed(i18n("tagging.selector_no_tags")),
+          undefined,
+          "no shortcut in a search"
+        );
       });
     });
 
