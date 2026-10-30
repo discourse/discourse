@@ -34,6 +34,7 @@ RSpec.describe PluginGem do
       %w[delta 1.0.0],
       %w[shared 1.0.0],
       %w[shared 1.1.0],
+      %w[solo 1.0.0],
       # Newer than anything the application has, so only a pin keeps them out.
       %w[rack 99.0.0],
     ]
@@ -320,6 +321,7 @@ RSpec.describe PluginGem do
       "one",
       <<~GEMFILE,
       gem "beta"
+      gem "solo"
       gem "alpha", group: :development
       gem "shared", group: :test
       gem "gamma", group: :migrations
@@ -330,23 +332,29 @@ RSpec.describe PluginGem do
         "gamma" => "1.0.0",
         git_gem.name => git_gem.version.to_s,
         "shared" => "1.0.0",
+        "solo" => "1.0.0",
       },
     )
 
     boot_with_groups(without: %i[development test])
-    expect(activated).to eq(%w[beta-1.0.0])
+    expect(activated).to eq(%w[beta-1.0.0 solo-1.0.0])
 
     boot_with_groups(without: %i[development])
-    expect(activated).to eq(%w[beta-1.0.0 shared-1.0.0])
+    expect(activated).to eq(%w[beta-1.0.0 shared-1.0.0 solo-1.0.0])
 
     boot_with_groups
-    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0 solo-1.0.0])
 
+    # Like bundler, `only` doesn't add the default group. beta stays as
+    # alpha's dependency.
     boot_with_groups(only: %i[development])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
 
+    boot_with_groups(only: %i[default development])
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 solo-1.0.0])
+
     boot_with_groups(with: %i[migrations], without: %i[development test])
-    expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0])
+    expect(activated).to eq(%w[beta-1.0.0 gamma-1.0.0 solo-1.0.0])
   end
 
   it "ignores dependencies for other platforms when selecting lock pins" do
