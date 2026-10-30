@@ -315,6 +315,7 @@ class TopicTrackingState
           min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
           max_topics: TopicTrackingState::MAX_TOPICS,
           user_first_unread_at: user.user_stat.first_unread_at,
+          logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
         }.merge(treat_as_new_topic_params),
       )
 
@@ -447,7 +448,7 @@ class TopicTrackingState
               JOIN category_groups cg ON cg.category_id = c2.id
               WHERE c2.read_restricted AND (
                 cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)
-                OR cg.group_id = #{Group::AUTO_GROUPS[:logged_in_users]}
+                OR cg.group_id = :logged_in_users
               ))
           ) AND
         SQL
@@ -630,6 +631,7 @@ class TopicTrackingState
         min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
         max_topics: TopicTrackingState::MAX_TOPICS,
         user_first_unread_at: user.user_stat.first_unread_at,
+        logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
       }.merge(treat_as_new_topic_params),
     ).count
   end
