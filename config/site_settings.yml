@@ -1221,10 +1221,16 @@ users:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   hide_silencing_reasons:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   log_personal_messages_views:
     default: false
     area: "users"
@@ -5037,6 +5043,16 @@ experimental:
       status: "alpha"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/408429"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
+  enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,all_members"
       permanent_warning: false
       allow_enabled_for:
         - everyone

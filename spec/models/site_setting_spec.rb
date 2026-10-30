@@ -102,6 +102,61 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "moderation reason defaults" do
+    it "hides both reasons while the upcoming change is enabled and restores untouched defaults on disable" do
+      expect(SiteSetting.hide_suspension_reasons).to eq(false)
+      expect(SiteSetting.hide_silencing_reasons).to eq(false)
+
+      SiteSetting.enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons = true
+      SiteSetting.refresh!
+
+      expect(SiteSetting.hide_suspension_reasons).to eq(true)
+      expect(SiteSetting.hide_silencing_reasons).to eq(true)
+
+      SiteSetting.enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons = false
+      SiteSetting.refresh!
+
+      expect(SiteSetting.hide_suspension_reasons).to eq(false)
+      expect(SiteSetting.hide_silencing_reasons).to eq(false)
+    end
+
+    [true, false].each do |saved_value|
+      it "preserves explicitly saved #{saved_value} values when the upcoming change is enabled and disabled" do
+        SiteSetting.hide_suspension_reasons = saved_value
+        SiteSetting.hide_silencing_reasons = saved_value
+
+        SiteSetting.enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons = true
+        SiteSetting.refresh!
+
+        expect(SiteSetting.hide_suspension_reasons).to eq(saved_value)
+        expect(SiteSetting.hide_silencing_reasons).to eq(saved_value)
+
+        SiteSetting.enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons =
+          false
+        SiteSetting.refresh!
+
+        expect(SiteSetting.hide_suspension_reasons).to eq(saved_value)
+        expect(SiteSetting.hide_silencing_reasons).to eq(saved_value)
+      end
+    end
+
+    it "promotes both defaults automatically while preserving a saved value and an explicit opt out" do
+      SiteSetting.hide_suspension_reasons = false
+
+      SiteSetting.promote_upcoming_changes_on_status = "alpha"
+      SiteSetting.refresh!
+
+      expect(SiteSetting.hide_suspension_reasons).to eq(false)
+      expect(SiteSetting.hide_silencing_reasons).to eq(true)
+
+      SiteSetting.enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons = false
+      SiteSetting.refresh!
+
+      expect(SiteSetting.hide_suspension_reasons).to eq(false)
+      expect(SiteSetting.hide_silencing_reasons).to eq(false)
+    end
+  end
+
   describe "whispers_allowed_groups" do
     it "defaults to staff while the update_whispers_allowed_groups_default change is enabled" do
       expect(SiteSetting.whispers_allowed_groups).to eq("")

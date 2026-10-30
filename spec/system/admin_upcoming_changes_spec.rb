@@ -26,6 +26,42 @@ describe "Admin upcoming changes" do
     sign_in(current_user)
   end
 
+  it "lets admins enable and reverse the new moderation reason defaults" do
+    clear_mocked_upcoming_change_metadata
+    SiteSetting.refresh!
+    settings_page = PageObjects::Pages::AdminSiteSettings.new
+    change_name = :enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons
+
+    upcoming_changes_page.visit
+
+    expect(upcoming_changes_page).to have_change(
+      change_name,
+      description: "hide these reasons from public view by default",
+    )
+    change_item = upcoming_changes_page.change_item(change_name)
+    ["Hide suspension reasons", "Hide silencing reasons"].each do |label|
+      expect(change_item.find_item(change_name)).to have_link(
+        label,
+        href: "/admin/site_settings/category/all_results?filter=hide%20reasons",
+      )
+    end
+
+    change_item.select_enabled_for("everyone")
+    expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
+
+    settings_page.visit("hide reasons")
+    expect(settings_page.bool_setting_checkbox(:hide_suspension_reasons)).to be_checked
+    expect(settings_page.bool_setting_checkbox(:hide_silencing_reasons)).to be_checked
+
+    upcoming_changes_page.visit
+    upcoming_changes_page.change_item(change_name).select_enabled_for("no_one")
+    expect(upcoming_changes_page).to have_disabled_success_toast
+
+    settings_page.visit("hide reasons")
+    expect(settings_page.bool_setting_checkbox(:hide_suspension_reasons)).not_to be_checked
+    expect(settings_page.bool_setting_checkbox(:hide_silencing_reasons)).not_to be_checked
+  end
+
   it "shows a list of upcoming changes and their metadata" do
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_change(:about_page_extra_groups_show_description)
