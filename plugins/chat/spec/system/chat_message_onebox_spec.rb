@@ -55,6 +55,7 @@ RSpec.describe "Chat message onebox" do
     end
 
     it "is inline oneboxed with _blank target attribute" do
+      current_user.user_option.update!(external_links_in_new_tab: true)
       chat_page.visit_channel(channel_1)
       channel_page.send_message("test message - https://example.com")
 
