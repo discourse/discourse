@@ -7,18 +7,6 @@ module JsonApiKit
 
       def required_owner_fields(...) = definition_class.required_owner_fields(...)
 
-      def schema(resource) = definition_for(resource).schema
-
-      def order(resource, ordering) = definition_for(resource).order(ordering)
-
-      def paged_from?(resource, cursor, ordering:)
-        definition_for(resource).paged_from?(cursor, ordering:)
-      end
-
-      def anchored_by?(resource, anchor_name:, ordering:)
-        definition_for(resource).anchored_by?(anchor_name:, ordering:)
-      end
-
       def definition_for(resource)
         definition_class.new(Declarations::Resource.new(resource))
       end
@@ -29,6 +17,7 @@ module JsonApiKit
     end
 
     delegate :schema,
+             :identifier_type,
              :order,
              :sort_key,
              :paged_from?,

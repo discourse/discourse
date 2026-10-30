@@ -25,7 +25,7 @@ module Service
 
     def cast_hash(value)
       return unless value.is_a?(Hash)
-      contract_class.new(**value)
+      contract_class.new(**value, provided_attributes: value.keys)
     end
   end
 end

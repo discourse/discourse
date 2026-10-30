@@ -11,6 +11,8 @@ module JsonApiKit
 
       def valid_cursor?(_raw) = false
 
+      def identifier_type = ActiveModel::Type.lookup(:string)
+
       private
 
       attr_reader :declarations

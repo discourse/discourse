@@ -4,6 +4,13 @@ module JsonApiKit
   module Declarations
     class Relationship
       class ToMany < Relationship
+        def parameter_name = "#{name.singularize}_ids"
+
+        def parameter_type =
+          ActiveSupportTypeExtensions::Array.new(element_type: resource.identifier_type)
+
+        def input_contract = Request::Body::Contract::Relationship::ToMany
+
         def linkage(records, filtering: {}) =
           Linkage::ToMany.new(records.page(resource.page_size), filtering:)
 

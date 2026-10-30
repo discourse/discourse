@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+module ServiceResourceImportSpec
+  class TestUuidAdapter < JsonApiKit::Adapter
+    class Definition < JsonApiKit::Adapter::Definition
+      def identifier_type = ActiveRecord::Type.lookup(:uuid, adapter: :postgresql)
+    end
+  end
+end
+
 RSpec.describe Service do
   let(:service_class) { Class.new { include Service::Base } }
 
@@ -396,6 +404,233 @@ RSpec.describe Service do
       end
     end
 
+    describe "Relationship imports" do
+      let(:users_resource) do
+        Class.new(JsonApiKit::Resource) do
+          model User
+          type :users
+        end
+      end
+      let(:groups_resource) do
+        Class.new(JsonApiKit::Resource) do
+          model Group
+          type :groups
+        end
+      end
+      let(:resource_class) do
+        Class
+          .new(JsonApiKit::Resource) { attribute :title, :string, writable: true }
+          .tap do |resource|
+            resource.has_one(:user, resource: users_resource, writable: true)
+            resource.has_many(:groups, resource: groups_resource, writable: true)
+            resource.has_one(:reviewer, resource: users_resource)
+          end
+      end
+      let(:options) { { from_resource: resource_class } }
+
+      context "when writable relationships are imported" do
+        let(:args) { super().merge(params:) }
+        let(:params) { { title: "A title", user_id: "3", group_ids: %w[4 5] } }
+        let(:inline_declarations) { nil }
+
+        before { service_class.params(**options, &inline_declarations) }
+
+        context "when relationships are omitted" do
+          let(:params) { super().except(:user_id, :group_ids) }
+
+          it "preserves omission", :aggregate_failures do
+            expect(result).to run_successfully
+            expect(result.params).to have_attributes(user_id: nil, group_ids: nil)
+            expect(result.params).not_to be_user_provided
+            expect(result.params).not_to be_groups_provided
+          end
+        end
+
+        context "when only one relationship is supplied" do
+          let(:params) { super().except(:user_id) }
+
+          it "tracks each relationship independently", :aggregate_failures do
+            expect(result.params).to be_groups_provided
+            expect(result.params).not_to be_user_provided
+          end
+        end
+
+        context "when relationships are cleared" do
+          let(:params) { super().merge(user_id: nil, group_ids: []) }
+
+          it "retains the supplied clearing values", :aggregate_failures do
+            expect(result).to run_successfully
+            expect(result.params).to have_attributes(user_id: nil, group_ids: [])
+            expect(result.params).to be_user_provided
+            expect(result.params).to be_groups_provided
+          end
+        end
+
+        context "when a supplied identifier casts to nil" do
+          let(:params) { super().merge(user_id: "") }
+
+          it "rejects the identifier", :aggregate_failures do
+            expect(result).to fail_a_contract
+            expect(result.params.errors.attribute_names).to contain_exactly(:user_id)
+          end
+        end
+
+        context "when an identifier inside a collection casts to nil" do
+          let(:params) { super().merge(group_ids: ["4", ""]) }
+
+          it "identifies the invalid element", :aggregate_failures do
+            expect(result).to fail_a_contract
+            expect(result.params.errors.attribute_names).to contain_exactly(:"group_ids[1]")
+          end
+        end
+
+        context "when an ID collection receives a hash" do
+          let(:params) { super().merge(group_ids: {}) }
+
+          it "rejects the invalid identifier", :aggregate_failures do
+            expect(result).to fail_a_contract
+            expect(result.params.errors.attribute_names).to contain_exactly(:"group_ids[0]")
+          end
+        end
+
+        context "when the target adapter uses UUID identifiers" do
+          let(:users_resource) do
+            Class.new(JsonApiKit::Resource) do
+              adapter ServiceResourceImportSpec::TestUuidAdapter
+              type :external_users
+            end
+          end
+          let(:groups_resource) { users_resource }
+          let(:uuid) { "1d21ece8-c46f-432b-a501-cd975a50bfb1" }
+          let(:params) { super().merge(user_id: uuid.upcase, group_ids: [uuid.upcase]) }
+
+          context "when the UUID is invalid" do
+            let(:params) { super().merge(user_id: "invalid-uuid") }
+
+            it "rejects a failed UUID cast", :aggregate_failures do
+              expect(result).to fail_a_contract
+              expect(result.params.errors.attribute_names).to contain_exactly(:user_id)
+            end
+          end
+
+          it "casts UUID identifiers", :aggregate_failures do
+            expect(result).to run_successfully
+            expect(result.params).to have_attributes(user_id: uuid, group_ids: [uuid])
+          end
+        end
+
+        context "when only selects a relationship" do
+          let(:options) { super().merge(only: [:group_ids]) }
+
+          it "imports the selected parameter and helper", :aggregate_failures do
+            expect(result.params.to_hash).to eq(group_ids: [4, 5])
+            expect(result.params).to be_groups_provided
+            expect(result.params).not_to respond_to(:user_provided?)
+          end
+        end
+
+        context "when except excludes a relationship" do
+          let(:options) { super().merge(except: [:user_id]) }
+
+          it "omits its parameter and helper", :aggregate_failures do
+            expect(result.params.to_hash).to eq(title: "A title", group_ids: [4, 5])
+            expect(result.params).not_to respond_to(:user_provided?)
+          end
+        end
+
+        context "when the contract overrides an imported type" do
+          let(:inline_declarations) { proc { attribute :user_id, :string } }
+
+          context "when the string is empty" do
+            let(:params) { super().merge(user_id: "") }
+
+            it "preserves the string", :aggregate_failures do
+              expect(result).to run_successfully
+              expect(result.params.user_id).to eq("")
+            end
+          end
+
+          it "uses the explicit type" do
+            expect(result.params.user_id).to eq("3")
+          end
+        end
+
+        context "when the target adapter uses string identifiers" do
+          let(:users_resource) do
+            Class.new(JsonApiKit::Resource) do
+              adapter JsonApiKit::Adapter
+              type :external_users
+            end
+          end
+          let(:groups_resource) { users_resource }
+          let(:params) { super().merge(user_id: "0012", group_ids: ["0012"]) }
+
+          it "preserves opaque identifiers", :aggregate_failures do
+            expect(result).to run_successfully
+            expect(result.params).to have_attributes(user_id: "0012", group_ids: ["0012"])
+          end
+        end
+
+        it "imports the mapped names and identifier types" do
+          expect(result.params.to_hash).to eq(title: "A title", user_id: 3, group_ids: [4, 5])
+        end
+
+        it "exposes relationship presence", :aggregate_failures do
+          expect(result.params).to be_user_provided
+          expect(result.params).to be_groups_provided
+          expect(result.params).not_to respond_to(:reviewer_provided?)
+        end
+      end
+
+      context "when an attribute and relationship map to the same parameter" do
+        subject(:declaration) { service_class.params(**options) }
+
+        let(:resource_class) { super().tap { it.attribute(:user_id, :integer, writable: true) } }
+
+        it "rejects the ambiguous import" do
+          expect { declaration }.to raise_error(ArgumentError, /user_id.*more than one/i)
+        end
+
+        context "when only selects the ambiguous parameter" do
+          let(:options) { super().merge(only: [:user_id]) }
+
+          it "rejects the ambiguous import" do
+            expect { declaration }.to raise_error(ArgumentError, /user_id.*more than one/i)
+          end
+        end
+
+        context "when except excludes the ambiguous parameter" do
+          let(:options) { super().merge(except: [:user_id]) }
+
+          it "imports the remaining parameters" do
+            declaration
+
+            expect(service_class::Contract.attribute_names).to contain_exactly("title", "group_ids")
+          end
+        end
+      end
+
+      context "when only selects a read-only relationship" do
+        subject(:declaration) { service_class.params(**options) }
+
+        let(:options) { super().merge(only: [:reviewer_id]) }
+
+        it "identifies the invalid selection" do
+          expect { declaration }.to raise_error(ArgumentError, /reviewer_id.*writable/i)
+        end
+      end
+
+      context "when only uses a relationship name" do
+        subject(:declaration) { service_class.params(**options) }
+
+        let(:options) { super().merge(only: [:groups]) }
+
+        it "rejects the unmapped name" do
+          expect { declaration }.to raise_error(ArgumentError, /groups.*writable/i)
+        end
+      end
+    end
+
     describe "Reusability" do
       before do
         another_contract =
@@ -432,6 +667,31 @@ RSpec.describe Service do
           def fetch_model(stored_model:)
             stored_model
           end
+        end
+      end
+
+      context "when an explicit nil replaces a model default" do
+        let(:params) { { id: nil } }
+
+        it "retains the supplied nil", :aggregate_failures do
+          expect(result.params.id).to be_nil
+          expect(result.params).to be_provided(:id)
+        end
+      end
+
+      context "when the supplied value equals the model default" do
+        let(:params) { { id: 1 } }
+
+        it "marks the value as supplied" do
+          expect(result.params).to be_provided(:id)
+        end
+      end
+
+      context "when an undeclared input resembles presence metadata" do
+        let(:params) { { provided_attributes: [:id] } }
+
+        it "does not mark the model default as supplied" do
+          expect(result.params).not_to be_provided(:id)
         end
       end
 
@@ -626,8 +886,9 @@ RSpec.describe Service do
         end
       end
 
-      it "applies values from a model to the contract attributes" do
+      it "applies values from a model to the contract attributes", :aggregate_failures do
         expect(result.params).to have_attributes(id: 1, name: "John", groups: [])
+        expect(result.params).not_to be_provided(:id)
       end
     end
   end

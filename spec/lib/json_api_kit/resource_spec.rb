@@ -469,6 +469,52 @@ RSpec.describe JsonApiKit::Resource do
     end
   end
 
+  describe ".writable_relationships" do
+    subject(:writable_names) { resource.writable_relationships.map(&:name) }
+
+    let(:resource) do
+      Class
+        .new(described_class)
+        .tap do |declaration|
+          declaration.has_one(:user, resource: user_resource, writable: true)
+          declaration.has_many(:groups, resource: group_resource, writable: true)
+          declaration.has_one(:owner, resource: user_resource)
+          declaration.has_many(:reviewers, resource: user_resource, writable: false)
+        end
+    end
+
+    it "returns only writable relationships" do
+      expect(writable_names).to contain_exactly("user", "groups")
+    end
+
+    context "when a writable relationship is unreadable" do
+      before do
+        resource.has_one(
+          :moderator,
+          resource: user_resource,
+          writable: true,
+          readable: ->(_guardian) { false },
+        )
+      end
+
+      it "includes the writable relationship" do
+        expect(writable_names).to contain_exactly("user", "groups", "moderator")
+      end
+    end
+
+    context "when a subclass adds a writable relationship" do
+      let(:child_resource) { Class.new(resource) }
+      let(:child_writable_names) { child_resource.writable_relationships.map(&:name) }
+
+      before { child_resource.has_one(:moderator, resource: user_resource, writable: true) }
+
+      it "preserves the parent declarations", :aggregate_failures do
+        expect(child_writable_names).to contain_exactly("user", "groups", "moderator")
+        expect(writable_names).to contain_exactly("user", "groups")
+      end
+    end
+  end
+
   describe ".has_one" do
     subject(:user_relationships) { topic_resource.fields(guardian:).relationships.pick(%w[user]) }
 

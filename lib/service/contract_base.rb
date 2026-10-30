@@ -28,10 +28,17 @@ class Service::ContractBase
     end
   end
 
-  def initialize(*args, options: nil, **kwargs)
+  def initialize(*args, options: nil, provided_attributes: nil, **kwargs)
     @__options__ = options
+    @__provided_attributes__ =
+      (
+        (provided_attributes || (args.first || kwargs).to_hash.keys).map(&:to_s) &
+          self.class.attribute_names
+      ).freeze
     super(*args, **kwargs.deep_symbolize_keys.slice(*self.class.attribute_names.map(&:to_sym)))
   end
+
+  def provided?(name) = @__provided_attributes__.include?(name.to_s)
 
   def options
     @__options__

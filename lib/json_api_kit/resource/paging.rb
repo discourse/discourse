@@ -14,6 +14,8 @@ module JsonApiKit
       end
 
       class_methods do
+        delegate :paged_from?, to: :adapter_definition
+
         def page(default: nil, max: nil)
           self.declared_page_limits = declared_page_limits.merge({ default:, max: }.compact)
           page_limits
@@ -24,8 +26,6 @@ module JsonApiKit
         def page_size = page_limits.size
 
         def max_page_size = page_limits.max
-
-        def paged_from?(cursor, ordering:) = adapter.paged_from?(self, cursor, ordering:)
       end
 
       delegate :page_limits, :page_size, :max_page_size, to: :class

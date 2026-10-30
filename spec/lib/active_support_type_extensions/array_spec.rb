@@ -8,6 +8,52 @@ RSpec.describe ActiveSupportTypeExtensions::Array do
   describe "#cast" do
     subject(:casted_value) { type.cast(value) }
 
+    context "when an element type is supplied" do
+      let(:type) { described_class.new(element_type: ActiveModel::Type::String.new) }
+      let(:value) { ["0012", 34] }
+
+      it "casts each element using that type" do
+        expect(casted_value).to eq(%w[0012 34])
+      end
+
+      context "when the input is a delimited string" do
+        let(:value) { "0012,0034" }
+
+        it "preserves string identifiers" do
+          expect(casted_value).to eq(%w[0012 0034])
+        end
+      end
+
+      context "when the input is a scalar" do
+        let(:value) { 12 }
+
+        it "casts the wrapped value" do
+          expect(casted_value).to eq(["12"])
+        end
+
+        context "when the scalar cannot be cast" do
+          let(:type) { described_class.new(element_type: ActiveModel::Type::Integer.new) }
+          let(:value) { {} }
+
+          it "retains the invalid element" do
+            expect(casted_value).to eq([nil])
+          end
+        end
+      end
+
+      context "when the input is nil" do
+        let(:value) { nil }
+
+        it { is_expected.to be_nil }
+      end
+
+      context "when the input is an empty array" do
+        let(:value) { [] }
+
+        it { is_expected.to be_empty }
+      end
+    end
+
     context "when 'value' is a string" do
       let(:value) { "first,second,third" }
 
