@@ -302,6 +302,7 @@ module Chat
         features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
         markdown_it_rules: rules,
         force_quote_link: true,
+        onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
         user_id: opts[:user_id],
         hashtag_context: "chat-composer",
       }
