@@ -38,6 +38,8 @@ module DiscourseAi
           Tools::SuspendUser,
           Tools::SilenceUser,
           Tools::MarkAsSolved,
+          Tools::ThemeAppHandoff,
+          Tools::EnableMcpThemeAccess,
         ]
 
         DiscoursePluginRegistry.apply_modifier(:admin_assistant_tools, base_tools, self).uniq

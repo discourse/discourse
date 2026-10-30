@@ -141,6 +141,8 @@ module DiscourseAi
             Tools::SettingContext,
             Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
+            Tools::ThemeAppHandoff,
+            Tools::EnableMcpThemeAccess,
             Tools::RandomPicker,
             Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
