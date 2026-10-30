@@ -2142,12 +2142,12 @@ RSpec.describe Admin::ThemesController do
 
       before { locked_component.update!(remote_theme: RemoteTheme.create!(remote_url: locked_url)) }
 
-      def archive(components)
+      def archive(components, component: false)
         dir = Dir.mktmpdir
         FileUtils.mkdir_p(File.join(dir, "listing-theme"))
         File.write(
           File.join(dir, "listing-theme", "about.json"),
-          { name: "Listing theme", components: }.to_json,
+          { name: "Listing theme", component:, components: }.to_json,
         )
         Rack::Test::UploadedFile.new(
           Compression::Zip.new.compress(dir, "listing-theme"),
@@ -2185,6 +2185,20 @@ RSpec.describe Admin::ThemesController do
              }
         expect(response.status).to eq(403)
         expect(other_theme.reload.child_theme_ids).to be_empty
+      end
+
+      it "blocks dropping a restricted component from a theme the archive turns into a component" do
+        theme.add_relative_theme!(:child, locked_component)
+
+        post "/admin/themes/import.json",
+             params: {
+               bundle: archive([], component: true),
+               theme_id: theme.id,
+               components: "sync",
+             }
+
+        expect(response.status).to eq(403)
+        expect(theme.reload.child_theme_ids).to eq([locked_component.id])
       end
 
       it "blocks including a restricted component in a theme imported from a repository" do
