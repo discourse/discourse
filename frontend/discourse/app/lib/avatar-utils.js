@@ -86,7 +86,12 @@ export function avatarImg(options, customGetURL) {
     loading = ` loading='${escaped}'`;
   }
 
-  return `<img alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}${loading}>`;
+  // Empty by default: an avatar almost always sits beside the name it belongs
+  // to, where alt text would only repeat it. Pass `alt` where the image is the
+  // sole identification of the person.
+  const alt = escape(options.alt || "");
+
+  return `<img alt='${alt}' width='${size}' height='${size}' src='${url}' class='${classes}'${title}${loading}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {
