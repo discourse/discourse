@@ -56,6 +56,9 @@ module ApplicationHelper
     result[:cookieDomain] = ua_domain_name.gsub(%r{\Ahttp(s)?://}, "") if ua_domain_name
     result[:userId] = current_user.id if current_user.present?
     result[:allowLinker] = true if SiteSetting.ga_universal_auto_link_domains.present?
+    if SiteSetting.mark_staff_traffic_as_internal && current_user&.staff?
+      result[:traffic_type] = "internal"
+    end
     result.to_json
   end
 

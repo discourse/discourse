@@ -275,6 +275,9 @@ basic:
     default: ""
     regex: "^GTM-"
     area: "analytics"
+  mark_staff_traffic_as_internal:
+    default: false
+    area: "analytics"
   google_site_verification_token:
     default: ""
     area: "analytics"
