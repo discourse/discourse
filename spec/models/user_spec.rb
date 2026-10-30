@@ -3779,6 +3779,18 @@ RSpec.describe User do
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &allow_block)
     end
 
+    it "logs the user out everywhere when the new ip address is blocked" do
+      Fabricate(:screened_ip_address, ip_address: "10.20.30.0/24")
+      UserAuthToken.generate!(user_id: user.id)
+      UserAuthToken.generate!(user_id: user.id)
+
+      messages =
+        MessageBus.track_publish("/logout/#{user.id}") { user.update_ip_address!("10.20.30.40") }
+
+      expect(UserAuthToken.where(user_id: user.id)).to be_empty
+      expect(messages.map(&:data)).to eq([user.id])
+    end
+
     describe "keeping old ip address" do
       before { SiteSetting.keep_old_ip_address_count = 2 }
 

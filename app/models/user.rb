@@ -1191,6 +1191,11 @@ class User < ActiveRecord::Base
         )
         SQL
       end
+
+      if ScreenedIpAddress.should_block?(new_ip)
+        UserAuthToken.where(user_id: user_id).destroy_all
+        User.find_by(id: user_id)&.log_out!
+      end
     end
   end
 

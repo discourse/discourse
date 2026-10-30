@@ -791,6 +791,30 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
   end
 
+  describe "when the ip address of a signed-in user changes" do
+    fab!(:blocked_range) { Fabricate(:screened_ip_address, ip_address: "10.20.30.0/24") }
+
+    before { user.update!(ip_address: "1.2.3.4") }
+
+    def request_from(ip, token)
+      provider("/", { "HTTP_COOKIE" => "_t=#{token}", "REMOTE_ADDR" => ip }).current_user
+    end
+
+    it "logs the user out when the new ip address is blocked" do
+      token = UserAuthToken.generate!(user_id: user.id).unhashed_auth_token
+
+      expect(request_from("10.20.30.40", token)&.id).to eq(user.id)
+      expect(request_from("1.2.3.4", token)).to eq(nil)
+    end
+
+    it "keeps the session when the new ip address is not blocked" do
+      token = UserAuthToken.generate!(user_id: user.id).unhashed_auth_token
+
+      expect(request_from("5.6.7.8", token)&.id).to eq(user.id)
+      expect(request_from("1.2.3.4", token)&.id).to eq(user.id)
+    end
+  end
+
   it "ignores a valid auth cookie that has been tampered with" do
     @provider = provider("/")
     @provider.log_on_user(user, {}, @provider.cookie_jar)
