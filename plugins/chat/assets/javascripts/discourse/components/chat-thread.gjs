@@ -94,6 +94,7 @@ export default class ChatThread extends Component {
     this.messagesManager.clear();
     if (this.currentUser) {
       this.args.thread.draft =
+        this.args.initialDraft ||
         this.chatDraftsManager.get(
           this.args.thread.channel?.id,
           this.args.thread.id
@@ -102,7 +103,23 @@ export default class ChatThread extends Component {
           user: this.currentUser,
           thread: this.args.thread,
         });
-      this.chatThreadComposer.focus();
+      if (this.args.composerSelection) {
+        next(() => {
+          if (this.isDestroying) {
+            return;
+          }
+          const { focused, start, end } = this.args.composerSelection;
+          const textarea = this.chatThreadComposer.textarea?.element;
+          if (textarea) {
+            if (focused) {
+              textarea.focus();
+            }
+            textarea.setSelectionRange(start, end);
+          }
+        });
+      } else {
+        this.chatThreadComposer.focus();
+      }
     }
     this.loadMessages();
   }

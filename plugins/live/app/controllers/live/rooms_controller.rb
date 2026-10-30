@@ -732,12 +732,19 @@ module Live
     def chat_message
       ensure_chat_available!
 
-      text = params.require(:message).to_s
+      message_params = params.permit(:message, upload_ids: [])
+      text = message_params[:message].to_s
       # We post through Chat::CreateMessage directly, which bypasses the
       # per-user flood limit + auto-silence that chat enforces in its own
       # controller — apply it here so this endpoint isn't a way around it.
       ::Chat::MessageRateLimiter.run!(current_user)
-      render json: Live::ChatSession.post_message!(@room, current_user, text)
+      render json:
+               Live::ChatSession.post_message!(
+                 @room,
+                 current_user,
+                 text,
+                 upload_ids: message_params[:upload_ids] || [],
+               )
     rescue Live::ChatSession::Error => e
       # The chat plugin rejected the message for a reason worth showing (a
       # duplicate, a too-long message, threading disabled, …) — surface it
