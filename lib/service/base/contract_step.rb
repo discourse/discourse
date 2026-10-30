@@ -13,7 +13,11 @@ module Service
 
       def run_step
         contract =
-          class_name.new(**default_values.deep_merge(context[:params]), options: context[:options])
+          class_name.new(
+            **default_values.deep_merge(params),
+            options: context[:options],
+            provided_attributes:,
+          )
         context[contract_name] = contract
         if contract.invalid?
           context[result_key].fail(errors: contract.errors, parameters: contract.raw_attributes)
@@ -23,6 +27,17 @@ module Service
       end
 
       private
+
+      def params = context[:params]
+
+      def provided_attributes
+        case params
+        when ContractBase
+          class_name.attribute_names.select { params.provided?(it) }
+        else
+          params.to_hash.keys
+        end
+      end
 
       def contract_name
         return :params if default?
