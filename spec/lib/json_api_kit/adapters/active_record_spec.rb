@@ -32,6 +32,12 @@ RSpec.describe JsonApiKit::Adapters::ActiveRecord do
   describe "#filter" do
     subject(:matching_records) { adapter.filter(scope, filter_name, value).to_a }
 
+    let(:value) { first_topic.title }
+
+    it "restricts the scope to matching records" do
+      expect(matching_records).to contain_exactly(first_topic)
+    end
+
     context "when the value is an array" do
       let(:value) { [first_topic.title, second_topic.title] }
 

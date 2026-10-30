@@ -9,7 +9,7 @@ module JsonApiKit
           @scoped_to = scoped_to
         end
 
-        def rows = page.rows
+        def rows = @rows ||= scoping.rows(page)
 
         private
 

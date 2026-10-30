@@ -3,27 +3,25 @@
 module JsonApiKit
   module Adapters
     class ActiveRecord < Adapter
-      class RelatedRecords
+      class RelatedRecords < Adapter::RelatedRecords
+        def self.for(resource, relationship, **)
+          case relationship
+          when JsonApiKit::Declarations::Relationship::ToOne
+            ToOne.new(resource, relationship, **)
+          else
+            ToMany.new(resource, relationship, **)
+          end
+        end
+
         def initialize(resource, relationship, owners:, owner_resource:)
-          @resource = resource
+          super(resource, owners:)
           @relationship = relationship
-          @owners = owners
           @owner_resource = owner_resource
         end
 
-        def scope = association.related_scope
-
-        def records_by_owner(params) = pair(records(params))
-
         private
 
-        attr_reader :resource, :relationship, :owners, :owner_resource
-
-        def records(params) = resource.all(params, scoped_to: association.to_scoping).records
-
-        def pair(records)
-          association.pair(records.map(&:record)).transform_values { records.fetch_all(it) }
-        end
+        attr_reader :relationship, :owner_resource
 
         def association
           @association ||= owner_resource.schema.association(relationship.name.to_sym, owners)

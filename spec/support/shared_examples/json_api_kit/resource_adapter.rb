@@ -45,6 +45,16 @@ RSpec.shared_examples "a resource adapter" do
       end
     end
 
+    context "when the resource scope excludes some requested records" do
+      let(:scoped_to) { scope }
+
+      before { resource.class.scope { restricted_scope } }
+
+      it "returns only the records in the resource scope" do
+        expect(loaded_records).to contain_exactly(record)
+      end
+    end
+
     context "when the request supplies a filter" do
       let(:parameters) { super().merge(filter: { filter_name => filter_value }) }
 
@@ -83,19 +93,6 @@ RSpec.shared_examples "a resource adapter" do
       it "raises a missing record error" do
         expect { found_record }.to raise_error(JsonApiKit::NotFound)
       end
-    end
-  end
-
-  describe "#filter" do
-    subject(:matching_records) do
-      adapter
-        .all(collection_request, scoped_to: adapter.filter(scope, filter_name, filter_value))
-        .records
-        .map(&:record)
-    end
-
-    it "restricts the scope to matching records" do
-      expect(matching_records).to contain_exactly(record)
     end
   end
 

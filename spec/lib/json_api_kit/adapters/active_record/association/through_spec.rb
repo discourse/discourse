@@ -30,7 +30,9 @@ RSpec.describe JsonApiKit::Adapters::ActiveRecord::Association::Through do
   end
 
   describe "#pair" do
-    subject(:pairs) { association.pair([own_tag, shared_tag, other_tag]) }
+    subject(:pairs) { association.pair(related_rows) }
+
+    let(:related_rows) { [own_tag, shared_tag, other_tag] }
 
     it "pairs each owner row with the rows it reaches" do
       expect(pairs).to include(topic => [own_tag, shared_tag], another_topic => [shared_tag])
@@ -38,6 +40,26 @@ RSpec.describe JsonApiKit::Adapters::ActiveRecord::Association::Through do
 
     it "returns nothing for a row with no pair" do
       expect(pairs).to include(untagged_topic => [])
+    end
+
+    context "when the owner mapping has already been read" do
+      before { association.pair([shared_tag, own_tag, other_tag]) }
+
+      it "reuses the owner mapping" do
+        expect(track_sql_queries { pairs }).to be_empty
+      end
+
+      it "uses the current record order" do
+        expect(pairs).to include(topic => [own_tag, shared_tag])
+      end
+
+      context "when the selection changes" do
+        let(:related_rows) { [shared_tag] }
+
+        it "pairs only the selected records" do
+          expect(pairs).to include(topic => [shared_tag], another_topic => [shared_tag])
+        end
+      end
     end
   end
 end

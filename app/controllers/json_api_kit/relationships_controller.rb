@@ -4,6 +4,6 @@ module JsonApiKit
   class RelationshipsController < EndpointController
     include RelationshipReading
 
-    def show = render_relationship(Document::Relationship)
+    def show = render_linkage
   end
 end

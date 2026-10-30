@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::QueryRunner do
+RSpec.describe DiscourseDataExplorer::QueryRunner do
   fab!(:admin)
 
   fab!(:query) { Fabricate(:query, sql: "SELECT 1 AS value", user: admin) }
@@ -67,6 +67,18 @@ describe DiscourseDataExplorer::QueryRunner do
   end
 
   describe ".cached_result" do
+    context "when the cached JSON contains null" do
+      subject(:cached_result) { described_class.cached_result(query, nil, current_user: admin) }
+
+      let(:cache_key) { DiscourseDataExplorer::QueryResultCache.cache_key(query.id, admin, {}) }
+
+      before { Discourse.redis.set(cache_key, "null") }
+
+      it "returns a cache miss" do
+        expect(cached_result).to be_nil
+      end
+    end
+
     it "returns nil when no cache exists" do
       expect(described_class.cached_result(query, nil, current_user: admin)).to be_nil
     end

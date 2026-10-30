@@ -12,7 +12,7 @@ module JsonApiKit
       @owner_resource = owner_resource
     end
 
-    def linkage_for(row) = relationship.linkage(related_to(row))
+    def linkage_for(row) = relationship.linkage(related_to(row), filtering:)
 
     private
 
@@ -21,7 +21,13 @@ module JsonApiKit
     def related_to(row) = related_by_row.fetch(row.record) { Records.new([]) }
 
     def related_by_row
-      @related_by_row ||= related_records.records_by_owner(request.for_sideload(paths))
+      @related_by_row ||= related_records.records_by_owner(related_parameters)
+    end
+
+    def related_parameters = @related_parameters ||= request.for_sideload(paths, through: name)
+
+    def filtering
+      @filtering ||= Request::Filters.new(related_parameters, resource:).to_h
     end
 
     def owner_records = rows.map(&:record)
@@ -31,7 +37,7 @@ module JsonApiKit
     end
 
     def resource
-      @resource ||= relationship.resource.new(guardian: request.guardian, edition: request.edition)
+      @resource ||= owner_resource.resource_for(relationship.resource)
     end
   end
 end

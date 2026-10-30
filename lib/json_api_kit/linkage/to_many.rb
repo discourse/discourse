@@ -3,8 +3,8 @@
 module JsonApiKit
   class Linkage
     class ToMany < Linkage
-      def initialize(page, previous_page: nil)
-        super(page.records)
+      def initialize(page, previous_page: nil, filtering: {})
+        super(page.records, filtering:)
         @next_page = page.cursor
         @previous_page = previous_page
       end

@@ -238,6 +238,22 @@ RSpec.describe "a refused request" do
       end
     end
 
+    context "when the filter value is an empty list" do
+      let(:params) { { filter: { title: [] } } }
+
+      it "refuses the filter value" do
+        expect(document).to eq(
+          errors: [
+            refusal(
+              title: "Invalid filter value",
+              detail: "filter[title] must be a value or a non-empty list of values.",
+              parameter: "filter[title]",
+            ),
+          ],
+        )
+      end
+    end
+
     context "when the filter value is an empty set" do
       let(:params) { { filter: { title: {} } } }
 
@@ -246,7 +262,7 @@ RSpec.describe "a refused request" do
           errors: [
             refusal(
               title: "Invalid filter value",
-              detail: "filter[title] must be a value or a list of values.",
+              detail: "filter[title] must be a value or a non-empty list of values.",
               parameter: "filter[title]",
             ),
           ],
@@ -262,7 +278,7 @@ RSpec.describe "a refused request" do
           errors: [
             refusal(
               title: "Invalid filter value",
-              detail: "filter[title] must be a value or a list of values.",
+              detail: "filter[title] must be a value or a non-empty list of values.",
               parameter: "filter[title]",
             ),
           ],
