@@ -135,7 +135,11 @@ class ChatSetupInit {
 
       api.registerHashtagType("channel", new ChannelHashtagType(owner));
 
-      if (this.siteSettings.enable_emoji) {
+      // the composer picker has an inline button on every device
+      const unifiedPicker =
+        this.siteSettings.enable_composer_picker_and_rich_chat;
+
+      if (this.siteSettings.enable_emoji && !unifiedPicker) {
         api.registerChatComposerButton({
           label: "chat.emoji",
           id: "emoji",
@@ -179,7 +183,7 @@ class ChatSetupInit {
         },
       });
 
-      if (this.siteSettings.enable_gifs) {
+      if (this.siteSettings.enable_gifs && !unifiedPicker) {
         api.registerChatComposerButton({
           id: "gifs",
           label: "gifs.composer_title",
