@@ -287,12 +287,107 @@ RSpec.describe Category do
   end
 
   describe "resolve_permissions" do
+    shared_examples "resolving logged in category permissions" do |enabled|
+      it "keeps logged-in-only access restricted with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+        read_restricted, resolved = Category.resolve_permissions(logged_in_users: :full)
+
+        expect(read_restricted).to eq(true)
+        expect(resolved).to eq(
+          [[Group::AUTO_GROUPS[:logged_in_users], CategoryGroup.permission_types[:full]]],
+        )
+      end
+    end
+
+    it_behaves_like "resolving logged in category permissions", false
+    it_behaves_like "resolving logged in category permissions", true
+
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(everyone: :full)
 
       expect(read_restricted).to be false
       expect(resolved).to be_blank
     end
+  end
+
+  describe "pseudogroup permission validation" do
+    fab!(:category)
+
+    shared_examples "rejecting anonymous category grants" do |enabled|
+      it "rejects anonymous grants on creation and updates with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+        permissions = { anonymous_users: :readonly, logged_in_users: :full }
+        new_category = Fabricate.build(:category, permissions: permissions)
+
+        expect(new_category.save).to eq(false)
+        expect(new_category.errors[:base]).to include(
+          I18n.t("category.errors.anonymous_permissions_not_supported"),
+        )
+        expect(category.update(permissions: permissions)).to eq(false)
+        expect(category.errors[:base]).to include(
+          I18n.t("category.errors.anonymous_permissions_not_supported"),
+        )
+        expect(category.reload.category_groups).to be_empty
+      end
+    end
+
+    it_behaves_like "rejecting anonymous category grants", false
+    it_behaves_like "rejecting anonymous category grants", true
+  end
+
+  describe "logged-in parent permission compatibility" do
+    fab!(:group)
+    fab!(:parent) { Fabricate(:category, permissions: { logged_in_users: :readonly }) }
+
+    it "allows a child restricted to a custom group" do
+      child = Fabricate(:category, parent_category: parent, permissions: { group.name => :full })
+
+      expect(child).to be_persisted
+    end
+
+    it "allows an existing public parent to become logged-in-only with a private child" do
+      parent.update!(permissions: { everyone: :readonly })
+      Fabricate(:category, parent_category: parent, permissions: { group.name => :full })
+
+      expect(parent.update(permissions: { logged_in_users: :readonly })).to eq(true)
+    end
+
+    it "rejects a public child beneath a logged-in-only parent" do
+      child =
+        Fabricate.build(:category, parent_category: parent, permissions: { everyone: :readonly })
+
+      expect(child.save).to eq(false)
+      expect(child.errors[:base]).to include(
+        I18n.t("category.errors.permission_conflict", group_names: Group[:everyone].name),
+      )
+    end
+  end
+
+  describe "logged-in pseudogroup posting permissions" do
+    fab!(:user)
+    fab!(:category)
+
+    shared_examples "enforcing logged in posting permissions" do |enabled|
+      it "honors permission levels with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+        %i[readonly create_post full].each do |permission|
+          category.update!(permissions: { logged_in_users: permission })
+
+          expect(Category.topic_create_allowed(user.guardian).exists?(id: category.id)).to eq(
+            permission == :full,
+          )
+          expect(Category.post_create_allowed(user.guardian).exists?(id: category.id)).to eq(
+            permission != :readonly,
+          )
+          expect(Category.post_create_allowed(Guardian.new).exists?(id: category.id)).to eq(false)
+        end
+      end
+    end
+
+    it_behaves_like "enforcing logged in posting permissions", false
+    it_behaves_like "enforcing logged in posting permissions", true
   end
 
   describe "permissions_params" do

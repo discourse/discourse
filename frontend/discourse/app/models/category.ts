@@ -185,6 +185,7 @@ export interface CategoryFields {
   category_types?: Record<string, CategoryTypeMetadata>;
   locale?: string | null;
   available_groups?: string[];
+  permission_groups?: { id: number; name: string }[];
   allowed_tags?: (CategoryAllowedTag | string)[];
   allowed_tag_groups?: string[];
   auto_close_hours?: number | null;

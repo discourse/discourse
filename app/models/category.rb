@@ -123,6 +123,7 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
   validate :ensure_slug
   validate :permissions_compatibility_validator
+  validate :pseudogroup_permissions_validator
   validate :special_category_permissions_validator, on: :update
   validate :posting_review_groups_validator
 
@@ -514,12 +515,15 @@ class Category < ActiveRecord::Base
                 SELECT category_id
                   FROM category_groups
                  WHERE permission_type IN (:permissions)
-                   AND (group_id = :everyone OR group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
+                   AND (group_id = :everyone
+                        OR group_id = :logged_in_users
+                        OR group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
              )",
         staged: guardian.is_staged?,
         permissions: permissions,
         user_id: guardian.user.id,
         everyone: Group::AUTO_GROUPS[:everyone],
+        logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
       )
     end
   end
@@ -1227,6 +1231,16 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def pseudogroup_permissions_validator
+    return if !@permissions
+
+    if @permissions.any? { |group_id, _permission|
+         group_id == Group::AUTO_GROUPS[:anonymous_users]
+       }
+      errors.add(:base, I18n.t("category.errors.anonymous_permissions_not_supported"))
+    end
+  end
+
   def permissions_compatibility_validator
     # when saving subcategories
     if (@permissions || parent_category_id_changed?) && parent_category_id.present?
@@ -1461,6 +1475,10 @@ class Category < ActiveRecord::Base
     return if parent_groups.include?(Group[:everyone].id)
 
     child_groups = child_permissions.map(&:first)
+    if parent_groups.include?(Group::AUTO_GROUPS[:logged_in_users])
+      child_groups &= Group::AUTO_GROUPS.values_at(:everyone, :anonymous_users)
+    end
+
     only_subcategory_groups = child_groups - parent_groups
 
     if only_subcategory_groups.present?
