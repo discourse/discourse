@@ -147,8 +147,6 @@ export interface SelectTagBaseSignature {
     texts?: SelectTexts<SelectTagTextKey>;
     /** A recipe built on this one: its texts, above the tag defaults. */
     kindTexts?: SelectTexts;
-    /** Whether the placeholder carries the required group and the minimum. Defaults to true. */
-    requirementPlaceholders?: boolean;
     /** Additional persistent help element ids. */
     describedBy?: string;
     /** Skips the forwarded `:footer` block; see `DSelect`'s `@suppressFooter`. */
@@ -180,46 +178,43 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
    * The requirement steps lead the placeholder: the required group, then the minimum, then the
    * prompt every layer set. A step whose text is empty hands over to the next.
    */
-  kindTextWrappers?: Readonly<Record<string, SelectTextWrapper>> =
-    this.args.requirementPlaceholders === false
-      ? undefined
-      : {
-          placeholder: (final, _values, context) => {
-            if (this.#zeroCap) {
-              return final;
-            }
-            const group = this.#requiredGroup;
-            const minimum = this.args.minimum ?? 0;
-            return (
-              (group &&
-                context.text("requiredTagGroup", {
-                  count: group.min_count,
-                  name: group.name,
-                })) ||
-              (minimum > 0 &&
-                context.text("minimumPlaceholder", { count: minimum })) ||
-              final
-            );
-          },
-          addMorePlaceholder: (final, values, context) => {
-            if (this.#zeroCap) {
-              return "";
-            }
-            const group = this.#requiredGroup;
-            const remaining =
-              Number(values.minimum ?? 0) - Number(values.selected ?? 0);
-            return (
-              (group &&
-                context.text("requiredTagGroupRemaining", {
-                  count: group.remaining_count,
-                  name: group.name,
-                })) ||
-              (remaining > 0 &&
-                context.text("minimumRemaining", { count: remaining })) ||
-              final
-            );
-          },
-        };
+  kindTextWrappers: Readonly<Record<string, SelectTextWrapper>> = {
+    placeholder: (final, _values, context) => {
+      if (this.#zeroCap) {
+        return final;
+      }
+      const group = this.#requiredGroup;
+      const minimum = this.args.minimum ?? 0;
+      return (
+        (group &&
+          context.text("requiredTagGroup", {
+            count: group.min_count,
+            name: group.name,
+          })) ||
+        (minimum > 0 &&
+          context.text("minimumPlaceholder", { count: minimum })) ||
+        final
+      );
+    },
+    addMorePlaceholder: (final, values, context) => {
+      if (this.#zeroCap) {
+        return "";
+      }
+      const group = this.#requiredGroup;
+      const remaining =
+        Number(values.minimum ?? 0) - Number(values.selected ?? 0);
+      return (
+        (group &&
+          context.text("requiredTagGroupRemaining", {
+            count: group.remaining_count,
+            name: group.name,
+          })) ||
+        (remaining > 0 &&
+          context.text("minimumRemaining", { count: remaining })) ||
+        final
+      );
+    },
+  };
 
   resolveHeldNames = modifier(() => {
     const { names, key } = this._selectionInputs;

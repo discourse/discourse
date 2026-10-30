@@ -807,5 +807,296 @@ module(
         assert.strictEqual(onChange.lastCall?.args[0], ALL_TAGS_ID);
       });
     });
+
+    module("multiple", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        resetTagSourceCache();
+        this.siteSettings.tagging_enabled = true;
+        this.siteSettings.max_tags_per_topic = 5;
+        this.siteSettings.max_tags_in_filter_list = 30;
+        this.siteSettings.max_tag_search_results = 5;
+        this.siteSettings.tags_sort_alphabetically = false;
+        this.site.set("top_tags", TOP_TAGS);
+        this.routeTo = sinon.stub(DiscourseURL, "routeTo");
+      });
+
+      test("holds tags in order, by identity, with the intersection classes", async function (assert) {
+        stubSearch();
+        const onChange = sinon.spy();
+        const main = { id: 3, name: "zeta", slug: "zeta" };
+        const held = [main];
+
+        await render(
+          <template>
+            <DSelectTagFilter
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+
+        assert.dom(".d-select").hasClass("tags-intersection-chooser");
+        assert.dom(".d-select").hasClass("mini-tag-chooser");
+        assert.dom(".d-select").doesNotHaveClass("tag-drop");
+
+        await click(".d-select__trigger");
+        assert.strictEqual(
+          optionNamed(i18n("tagging.selector_no_tags")),
+          undefined,
+          "no shortcuts"
+        );
+        await click(optionNamed("alpha"));
+
+        const emitted = onChange.lastCall.args[0];
+        assert.strictEqual(emitted[0], main, "the held tag keeps its identity");
+        assert.strictEqual(emitted[1].name, "alpha");
+        assert.false(this.routeTo.called, "no navigation");
+      });
+
+      test("browses the top tags and searches every tag, as the single filter does", async function (assert) {
+        const requests = stubSearch();
+        const held = [];
+
+        await render(
+          <template>
+            <DSelectTagFilter @multiple={{true}} @value={{held}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        assert.notStrictEqual(optionNamed("alpha"), undefined, "a top tag");
+        assert.strictEqual(requests.length, 0, "browsing sends no search");
+
+        await fillIn("[role='combobox']", "bu");
+        assert.notStrictEqual(optionNamed("bug"), undefined, "the match");
+        assert.strictEqual(requests.at(-1).q, "bu");
+        assert.strictEqual(
+          requests.at(-1).filterForInput,
+          undefined,
+          "search bypasses input restrictions"
+        );
+      });
+
+      test("a held name is its listed tag, marked selected and never repeated", async function (assert) {
+        stubSearch();
+        const onChange = sinon.spy();
+        const tag = getOwner(this)
+          .lookup("service:store")
+          .createRecord("tag", { id: 3, name: "zeta", slug: "zeta" });
+        const held = [tag, { name: "alpha" }];
+
+        await render(
+          <template>
+            <DSelectTagFilter
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+
+        assert
+          .dom(".d-select__chip[data-name='zeta']")
+          .exists("a tag model's name is read");
+        assert.dom(".d-select__chip[data-name='alpha']").exists();
+
+        await click(".d-select__trigger");
+        assert
+          .dom(optionNamed("alpha"))
+          .hasAttribute("aria-selected", "true", "the held name's row");
+        assert.dom(optionNamed("zeta")).hasAttribute("aria-selected", "true");
+
+        await fillIn("[role='combobox']", "bu");
+        await click(optionNamed("bug"));
+        assert.deepEqual(
+          onChange.lastCall.args[0].map((row) => row.name),
+          ["zeta", "alpha", "bug"],
+          "each tag once, in order"
+        );
+      });
+
+      test("never looks held names up", async function (assert) {
+        stubSearch();
+        let lookups = 0;
+        pretender.get("/tags/list.json", () => {
+          lookups++;
+          return response({ list_tags: [] });
+        });
+        const held = [
+          { id: 1, name: "alpha", slug: "alpha" },
+          { name: "rock" },
+        ];
+
+        await render(
+          <template>
+            <DSelectTagFilter @multiple={{true}} @value={{held}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+        await fillIn("[role='combobox']", "bu");
+
+        assert.strictEqual(lookups, 0, "no lookup, signed in");
+        assert.dom(".d-select__chip[data-name='rock']").exists();
+      });
+
+      test("local items, no tag cap, and no creation", async function (assert) {
+        this.siteSettings.max_tags_per_topic = 1;
+        this.site.set("can_create_tag", true);
+        const requests = stubSearch();
+        const items = [
+          { id: 1, name: "first" },
+          { id: 2, name: "second" },
+        ];
+        const held = [items[0]];
+
+        await render(
+          <template>
+            <DSelectTagFilter
+              @items={{items}}
+              @multiple={{true}}
+              @value={{held}}
+            />
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        assert
+          .dom(optionNamed("second"))
+          .doesNotHaveAttribute(
+            "aria-disabled",
+            "the topic tag limit is not a filter's"
+          );
+        await fillIn("[role='combobox']", "unknown");
+        assert
+          .dom("[role='option'].--create")
+          .doesNotExist("a filter never creates");
+        assert.strictEqual(requests.length, 0, "local items never search");
+      });
+
+      test("suppressFooter: no footer region without a caller footer", async function (assert) {
+        const held = [];
+        await render(
+          <template>
+            <DSelectTagFilter @multiple={{true}} @value={{held}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        assert.dom(".d-select__trigger").hasClass("--multiple");
+        assert.dom(optionNamed("alpha")).exists("the panel is open");
+        assert.dom(".d-select__footer").doesNotExist();
+      });
+
+      test("it is named for what it filters, with tags, then more tags, as its empty text", async function (assert) {
+        const empty = [];
+        const held = [{ id: 1, name: "alpha", slug: "alpha" }];
+
+        await render(
+          <template>
+            <div class="empty"><DSelectTagFilter
+                @multiple={{true}}
+                @value={{empty}}
+              /></div>
+            <div class="held"><DSelectTagFilter
+                @multiple={{true}}
+                @value={{held}}
+              /></div>
+          </template>
+        );
+
+        assert
+          .dom(".empty [role='combobox']")
+          .hasAria("label", i18n("tagging.filter_by_tags_label"))
+          .hasAttribute("placeholder", i18n("tagging.selector_tags"));
+        assert
+          .dom(".held [role='combobox']")
+          .hasAttribute("placeholder", i18n("tagging.add_more_tags"));
+      });
+
+      test("an unmet required group never reaches its empty text", async function (assert) {
+        stubSearch(ROWS, {
+          required_tag_group: {
+            name: "Platform",
+            min_count: 2,
+            remaining_count: 2,
+          },
+        });
+        const empty = [];
+
+        await render(
+          <template>
+            <DSelectTagFilter
+              @categoryId={{7}}
+              @multiple={{true}}
+              @value={{empty}}
+            />
+          </template>
+        );
+        await new SelectDriver(".d-select").search("bu");
+
+        assert
+          .dom("[role='combobox']")
+          .hasAttribute("placeholder", i18n("tagging.selector_tags"));
+      });
+
+      test("@ariaLabelledBy and @texts name it", async function (assert) {
+        const accessibleName = await loadAccessibleName();
+        const held = [];
+
+        await render(
+          <template>
+            <span id="intersection-caption">Narrow by tags</span>
+            <div class="captioned"><DSelectTagFilter
+                @ariaLabelledBy="intersection-caption"
+                @multiple={{true}}
+                @value={{held}}
+              /></div>
+            <div class="texts"><DSelectTagFilter
+                @multiple={{true}}
+                @texts={{hash ariaLabel="Narrow topics" placeholder="any tag"}}
+                @value={{held}}
+              /></div>
+          </template>
+        );
+
+        assert.strictEqual(
+          accessibleName(find(".captioned [role='combobox']")),
+          "Narrow by tags"
+        );
+        assert
+          .dom(".texts [role='combobox']")
+          .hasAria("label", "Narrow topics")
+          .hasAttribute("placeholder", "any tag");
+      });
+
+      test("a kind customization reaches it as it reaches the single filter", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forKind("select-tag-filter", (spec) =>
+              spec.options(() => ({
+                texts: {
+                  placeholder: "more tags",
+                  tagCount: ({ count }) => `${count} uses`,
+                },
+              }))
+            )
+          )
+        );
+        const held = [];
+
+        await render(
+          <template>
+            <DSelectTagFilter @multiple={{true}} @value={{held}} />
+          </template>
+        );
+        assert
+          .dom("[role='combobox']")
+          .hasAttribute("placeholder", "more tags", "the field's empty text");
+        await click(".d-select__trigger");
+
+        assert.dom(".sr-only", optionNamed("alpha")).hasText("5 uses");
+      });
+    });
   }
 );

@@ -22,7 +22,6 @@ import DSelectTagFilter, {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
-import DSelectTagIntersection from "discourse/ui-kit/select/recipes/tags/d-select-tag-intersection";
 import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
 
 export default class BreadCrumbs extends Component {
@@ -217,9 +216,10 @@ export default class BreadCrumbs extends Component {
           <li>
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DSelectTagIntersection
+              <DSelectTagFilter
                 @categoryId={{@category.id}}
                 @identifier="breadcrumb-tag-intersection"
+                @multiple={{true}}
                 @onChange={{this.changeIntersection}}
                 @value={{this.intersectionTags}}
               />

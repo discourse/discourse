@@ -6,7 +6,6 @@ import DSelectCategoryFilter from "discourse/ui-kit/select/recipes/categories/d-
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import DSelectTagFilter from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
 import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
-import DSelectTagIntersection from "discourse/ui-kit/select/recipes/tags/d-select-tag-intersection";
 import type { SelectTexts } from "discourse/ui-kit/select/select-engine";
 
 declare const texts: SelectTexts;
@@ -19,14 +18,10 @@ const Test = <template>
   <DSelectTag @texts={{hash placeholder="Topic tags…"}} />
   <DSelectTagFilter @texts={{texts}} />
   <DSelectTagGroup @texts={{texts}} />
-  <DSelectTagIntersection @texts={{texts}} />
+  <DSelectTagFilter @multiple={{true}} @texts={{texts}} />
 
-  {{! @glint-expect-error - the tag filter holds one tag; the intersection holds several }}
-  <DSelectTagFilter @multiple={{true}} />
   {{! @glint-expect-error - only a recipe built on the tag field adds its texts }}
   <DSelectTag @kindTexts={{texts}} />
-  {{! @glint-expect-error - only a recipe built on the tag field turns the requirement off }}
-  <DSelectTag @requirementPlaceholders={{false}} />
 </template>;
 
 // A misspelled key fails on every component, and a recipe's own key only works on that recipe.
@@ -61,9 +56,6 @@ const Keys = <template>
   <DSelectTagFilter @texts={{hash noSubcategories="x"}} />
   {{! @glint-expect-error - a tag filter text }}
   <DSelectTagGroup @texts={{hash noTags="x"}} />
-  <DSelectTagIntersection @texts={{hash addMoreTags="x" placeholder="y"}} />
-  {{! @glint-expect-error - a tag filter's shortcut text }}
-  <DSelectTagIntersection @texts={{hash noTags="x"}} />
 </template>;
 
 export default [Test, Keys];

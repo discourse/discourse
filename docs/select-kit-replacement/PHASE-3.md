@@ -120,8 +120,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ The tag drop caps its rows through the engine's `@maxLoaded` and its narrow hint
     (2026-10-30); the recipe's slice and "more tags" footer are gone. Paging the drop through every
     tag needs a server change and stays open.
-  - ☑ The intersection is its own recipe, `DSelectTagIntersection` (kind `select-tag-intersection`,
-    2026-10-30), so `DSelectTagFilter` holds one tag and no longer branches on `@multiple`.
+  - ☑ The intersection follows the filter's rules (2026-10-30): one `DSelect` in
+    `DSelectTagFilter` for both modes, browsing and searching as the single drop does, with no
+    tag cap and no name lookup, instead of the composer field's rules through `SelectTagBase`.
   - ☐ Move search and lookup onto the `Tag` / `TagGroup` models, deferred until those models
     become TypeScript. `Tag.search` will return plain typed rows, and `Site.topTags` /
     `categoryTopTags` will replace the source's `topTags`.

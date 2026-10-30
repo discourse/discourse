@@ -14,12 +14,7 @@ import {
 interface DSelectTagSignature extends Omit<SelectTagBaseSignature, "Args"> {
   Args: Omit<
     SelectTagBaseSignature["Args"],
-    | "kind"
-    | "kindContext"
-    | "kindOptions"
-    | "kindTexts"
-    | "requirementPlaceholders"
-    | "suppressFooter"
+    "kind" | "kindContext" | "kindOptions" | "kindTexts" | "suppressFooter"
   >;
 }
 

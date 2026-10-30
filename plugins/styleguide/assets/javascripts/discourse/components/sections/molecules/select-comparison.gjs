@@ -21,7 +21,6 @@ import DSelectTagFilter, {
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
 import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
-import DSelectTagIntersection from "discourse/ui-kit/select/recipes/tags/d-select-tag-intersection";
 import { i18n } from "discourse-i18n";
 
 function initialTags() {
@@ -299,7 +298,8 @@ export default class SelectComparison extends Component {
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
-            <DSelectTagIntersection
+            <DSelectTagFilter
+              @multiple={{true}}
               @onChange={{this.newIntersection.update}}
               @value={{this.newIntersection.value}}
             />

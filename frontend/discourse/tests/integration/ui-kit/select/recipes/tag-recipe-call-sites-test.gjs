@@ -338,16 +338,13 @@ module(
           );
         });
 
-        test("the breadcrumb tag drop and intersection are separate kinds", async function (assert) {
+        test("one kind reaches both breadcrumb tag filters", async function (assert) {
           withPluginApi((api) =>
             api.registerValueTransformer(
               "select-customizations",
               ({ value }) => {
                 value.forKind("select-tag-filter", (spec) =>
                   spec.row((row) => row.classes.push("x-filter"))
-                );
-                value.forKind("select-tag-intersection", (spec) =>
-                  spec.row((row) => row.classes.push("x-intersection"))
                 );
               }
             )
@@ -370,12 +367,8 @@ module(
           const intersectionRows = findAll("[role='option']");
           assert.true(intersectionRows.length > 0, "the intersection is open");
           assert.true(
-            intersectionRows.every(
-              (row) =>
-                row.classList.contains("x-intersection") &&
-                !row.classList.contains("x-filter")
-            ),
-            "only the intersection kind reaches the intersection"
+            intersectionRows.every((row) => row.classList.contains("x-filter")),
+            "the intersection's rows"
           );
           await new SelectDriver(
             ".intersection .tags-intersection-chooser.d-select"
@@ -385,12 +378,8 @@ module(
           const dropRows = findAll("[role='option']");
           assert.true(dropRows.length > 0, "the tag drop is open");
           assert.true(
-            dropRows.every(
-              (row) =>
-                row.classList.contains("x-filter") &&
-                !row.classList.contains("x-intersection")
-            ),
-            "only the filter kind reaches the tag drop"
+            dropRows.every((row) => row.classList.contains("x-filter")),
+            "the tag drop's rows"
           );
         });
 
@@ -409,10 +398,10 @@ module(
             .dom(".tags-intersection-chooser")
             .hasAttribute("data-name", "ui,perf");
           await click(".tags-intersection-chooser.d-select");
-          await click(optionNamed("bug"));
+          await click(optionNamed("alpha"));
           assert.true(
             this.routeTo.calledOnceWithExactly(
-              "/tags/intersection/ui/perf/bug"
+              "/tags/intersection/ui/perf/alpha"
             ),
             "main tag precedes held and newly picked tags"
           );
@@ -430,14 +419,14 @@ module(
             </template>
           );
           await new SelectDriver(".tags-intersection-chooser.d-select").remove(
-            "tag-name:perf"
+            "perf"
           );
           assert.true(
             this.routeTo.calledWithExactly("/tag/translated-ui/2"),
             "the main tag uses its slug and id"
           );
           await new SelectDriver(".tags-intersection-chooser.d-select").remove(
-            2
+            "ui"
           );
           assert.true(
             this.routeTo.calledWithExactly("/tag/perf"),
@@ -455,7 +444,7 @@ module(
             </template>
           );
           await new SelectDriver(".tags-intersection-chooser.d-select").remove(
-            "tag-name:perf"
+            "perf"
           );
           assert.true(
             this.routeTo.calledOnceWithExactly("/tags"),

@@ -7,6 +7,7 @@ import {
   cleanTagName,
   searchTags,
   sortTagRows,
+  storedName,
   topTags,
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
@@ -48,7 +49,10 @@ type FilterTag = SelectItem & {
   target_tag?: FilterTag;
 };
 
-/** The filter's texts, above the tag field's. */
+/**
+ * The filter's texts, above the tag field's. Both modes declare them, so a customization for the
+ * kind applies whatever `@multiple` is.
+ */
 const FILTER_TEXTS: SelectTexts = Object.freeze({
   ariaLabel: { key: "tagging.filter_by_tags_label" },
   placeholder: { key: "tagging.selector_tags" },
@@ -57,6 +61,14 @@ const FILTER_TEXTS: SelectTexts = Object.freeze({
   maxLoaded: { key: "tagging.filter_to_narrow_tags" },
 });
 
+/** The single filter's caret, pointing right while closed. */
+const DROP_CARET = Object.freeze({ closed: "angle-right", open: "angle-down" });
+
+/** A held tag's or a row's key while the filter holds several: its stored name, in lowercase. */
+function nameKey(tag: { name: string; original_name?: string }) {
+  return storedName(tag).toLowerCase();
+}
+
 /** Engine blocks and source overrides shared with callers. */
 type SelectSignature =
   DSelect extends Component<infer Signature> ? Signature : never;
@@ -64,8 +76,18 @@ type SelectSignature =
 /** A topic-list filter that leaves navigation to its caller. */
 interface DSelectTagFilterSignature {
   Args: {
-    /** Current tag or shortcut, where none or `ALL_TAGS_ID` filters nothing. */
-    value?: TagObject | typeof ALL_TAGS_ID | typeof NO_TAG_ID | null;
+    /**
+     * Current tag or shortcut, where none or `ALL_TAGS_ID` filters nothing; with `@multiple`, the
+     * held tags in order, by id or by name.
+     */
+    value?:
+      | TagObject
+      | readonly TagObject[]
+      | typeof ALL_TAGS_ID
+      | typeof NO_TAG_ID
+      | null;
+    /** Holds several tags, for an intersection; defaults to one. */
+    multiple?: boolean;
     /** Category limiting the available tags. */
     categoryId?: number;
     /** Temporary compatibility aliases for legacy customizations and CSS. */
@@ -74,9 +96,9 @@ interface DSelectTagFilterSignature {
     items?: readonly FilterTag[];
     /** Optional asynchronous source override. */
     load?: SelectSignature["Args"]["load"];
-    /** Receives a full tag row or a shortcut id. */
+    /** Receives a full tag row or a shortcut id; with `@multiple`, the held tags in order. */
     onChange?: (
-      value: TagObject | typeof ALL_TAGS_ID | typeof NO_TAG_ID
+      value: TagObject | TagObject[] | typeof ALL_TAGS_ID | typeof NO_TAG_ID
     ) => void;
     /** Call-site customization identity. */
     identifier?: string;
@@ -96,7 +118,7 @@ interface DSelectTagFilterSignature {
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
-/** Selects one tag, or a shortcut, for a topic list without navigating. */
+/** Selects a tag, a shortcut or, with `@multiple`, several tags for a topic list without navigating. */
 export default class DSelectTagFilter extends Component<DSelectTagFilterSignature> {
   /** TODO(typescript-pending): Remove the extension when Site declares serialized top tags. */
   @service
@@ -116,7 +138,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     force_lowercase_tags: boolean;
   };
 
-  /** The drop's texts; it draws tag rows too, so it declares the tag texts as well. */
+  /** The filter's texts; it draws tag rows too, so it declares the tag texts as well. */
   kindTexts: SelectKindTexts = [TAG_TEXTS, FILTER_TEXTS];
 
   constructor(owner: Owner, args: DSelectTagFilterSignature["Args"]) {
@@ -125,11 +147,19 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   get legacyKind() {
-    return this.args.legacyKind ?? "tag-drop";
+    if (this.args.legacyKind) {
+      return this.args.legacyKind;
+    }
+    return this.args.multiple
+      ? ["tags-intersection-chooser", "mini-tag-chooser"]
+      : "tag-drop";
   }
 
   /** The legacy tag class, plus `--filtering` while the filter narrows the list. */
   get rootClass() {
+    if (this.args.multiple) {
+      return undefined;
+    }
     const tag = this.#tag;
     const tagClass =
       tag && "slug" in tag && tag.slug ? `tag-${tag.slug}` : "tag_all";
@@ -138,9 +168,13 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   get #tag(): FilterTag | undefined {
     const value = this.args.value;
-    return value && typeof value === "object"
+    return value && !Array.isArray(value) && typeof value === "object"
       ? (value as FilterTag)
       : undefined;
+  }
+
+  get #heldTags(): readonly TagObject[] {
+    return Array.isArray(this.args.value) ? this.args.value : [];
   }
 
   /** The held filter. With no tag, or the "all tags" shortcut, it holds nothing, so the placeholder shows. */
@@ -156,6 +190,30 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return tag?.id || undefined;
   }
 
+  get selection() {
+    return this.args.multiple
+      ? this.#heldTags.map((tag) => nameKey(tag))
+      : this.heldId;
+  }
+
+  /** Several held tags are matched to rows by name, because a URL holds them by name. */
+  get valueField() {
+    return this.args.multiple ? "nameKey" : "id";
+  }
+
+  /** A caller's loader, unless several are held: then its rows are keyed by name too. */
+  get source() {
+    return this.args.load && !this.args.multiple ? this.args.load : this.load;
+  }
+
+  get caretIcon() {
+    return this.args.multiple ? undefined : DROP_CARET;
+  }
+
+  get variant() {
+    return this.args.multiple ? undefined : "button";
+  }
+
   get loadContext() {
     return {
       categoryId: this.args.categoryId,
@@ -166,6 +224,15 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   /** The held filter's row, built from the options so a customized shortcut name reaches it. */
   @action
   valueItems(options: SelectResolvedOptions): SelectItem[] {
+    if (this.args.multiple) {
+      // A tag model keeps its fields on getters, which a spread would drop.
+      return this.#heldTags.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+        slug: (tag as FilterTag).slug,
+        nameKey: nameKey(tag),
+      }));
+    }
     const id = this.heldId;
     if (id === NO_TAG_ID) {
       return [{ id, name: renderSelectText(options, "noTags") }];
@@ -179,14 +246,20 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   @action
-  async load(filter: string, opts: SelectLoadOptions): Promise<SelectItem[]> {
+  async load(filter: string, opts: SelectLoadOptions) {
+    if (this.args.load) {
+      const result = await this.args.load(filter, opts);
+      return Array.isArray(result)
+        ? this.#keyed(result as FilterTag[])
+        : { ...result, items: this.#keyed(result.items as FilterTag[]) };
+    }
     if (filter && !this.args.items) {
       const result = await searchTags(filter, {
         context: { everyTag: true, categoryId: this.args.categoryId },
         signal: opts.signal,
         siteSettings: this.siteSettings,
       });
-      return result.items.map((tag) => ({ ...tag }));
+      return this.#keyed(result.items);
     }
     const tags =
       this.args.items ??
@@ -198,10 +271,12 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     const matches = term
       ? tags.filter((tag) => tag.name.toLowerCase().includes(term))
       : [...tags];
-    return sortTagRows(matches, {
-      alphabetical: this.siteSettings.tags_sort_alphabetically,
-      exact: cleanTagName(filter, this.siteSettings),
-    });
+    return this.#keyed(
+      sortTagRows(matches, {
+        alphabetical: this.siteSettings.tags_sort_alphabetically,
+        exact: cleanTagName(filter, this.siteSettings),
+      })
+    );
   }
 
   /** The shortcuts lead browsing and are left out of searches. */
@@ -210,7 +285,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     snapshot: SelectSnapshot,
     options: SelectResolvedOptions
   ): SelectItem[] {
-    if (snapshot.filter) {
+    if (snapshot.filter || this.args.multiple) {
       return [];
     }
     const shortcuts: SelectItem[] = [];
@@ -232,6 +307,10 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   @action
   onChange(id: SelectValue, item: SelectItem | SelectItem[] | null) {
+    if (this.args.multiple) {
+      this.#onMultipleChange(item);
+      return;
+    }
     // A null id is DSelect's keyboard clear; a filter only clears through its "All tags" row.
     if (
       (typeof id !== "string" && typeof id !== "number") ||
@@ -248,13 +327,31 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     );
   }
 
+  /** Held tags keep their identity; new picks are emitted as their rows. */
+  #onMultipleChange(items: SelectItem | SelectItem[] | null) {
+    const held = new Map(this.#heldTags.map((tag) => [nameKey(tag), tag]));
+    const tags = (Array.isArray(items) ? items : []).map((item) => {
+      const { nameKey: key, ...row } = item;
+      return held.get(key as string) ?? (row as unknown as TagObject);
+    });
+    this.args.onChange?.(tags);
+  }
+
+  #keyed(
+    rows: readonly { name: string; original_name?: string }[]
+  ): SelectItem[] {
+    return rows.map((row) =>
+      this.args.multiple ? { ...row, nameKey: nameKey(row) } : { ...row }
+    );
+  }
+
   <template>
     {{! TODO (select-kit-replacement-cleanup): Retain the legacy family and filter classes during rollout. }}
     <DSelect
       class={{this.rootClass}}
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
-      @caretIcon={{hash closed="angle-right" open="angle-down"}}
+      @caretIcon={{this.caretIcon}}
       @disabled={{@disabled}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
@@ -263,17 +360,19 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @kindTexts={{this.kindTexts}}
       @labelField="name"
       @legacyKind={{this.legacyKind}}
-      @load={{if @load @load this.load}}
+      @load={{this.source}}
       @loadContext={{this.loadContext}}
       @maxLoaded={{this.siteSettings.max_tags_in_filter_list}}
+      @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @searchIcon="magnifying-glass"
       @specialItems={{this.specialItems}}
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
-      @value={{this.heldId}}
+      @value={{this.selection}}
+      @valueField={{this.valueField}}
       @valueItems={{this.valueItems}}
-      @variant="button"
+      @variant={{this.variant}}
     >
       <:item as |item options|>
         {{#if (has-block "item")}}
@@ -287,6 +386,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       <:selection as |item options|>
         {{#if (has-block "selection")}}
           {{yield item options to="selection"}}
+        {{else if @multiple}}
+          <TagSelection @item={{item}} />
         {{else}}
           <span class="d-tag-drop__selection">
             {{~! no whitespace around the tag ~}}
