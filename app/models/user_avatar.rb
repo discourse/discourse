@@ -66,6 +66,8 @@ class UserAvatar < ActiveRecord::Base
             for_gravatar: true,
           ).create_for(user_id)
 
+        return unless upload&.persisted?
+
         if gravatar_upload_id != upload.id
           User.transaction do
             if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
@@ -131,6 +133,8 @@ class UserAvatar < ActiveRecord::Base
         origin: avatar_url,
         type: "avatar",
       ).create_for(user.id)
+
+    return unless upload&.persisted?
 
     user.create_user_avatar! unless user.user_avatar
 

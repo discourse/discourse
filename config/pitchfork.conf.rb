@@ -79,6 +79,7 @@ after_mold_fork do |server, mold|
   end
 
   Discourse.redis.close
+  DiscourseVips::Client.use_shared_worker
   Discourse.before_fork
   Process.warmup
 end
@@ -102,6 +103,9 @@ end
 
 before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
+
+  require "demon/discourse_vips"
+  Demon::DiscourseVips.start(logger: server.logger) if GlobalSetting.enable_vips_image_processing
 
   if sidekiqs > 0
     server.logger.info "starting #{sidekiqs} supervised sidekiqs"
@@ -148,22 +152,31 @@ before_service_worker_ready do |server, service_worker|
     STDOUT.puts "Pitchfork ready on http://localhost:#{ENV["UNICORN_PORT"] || 3000} (#{parts.join(", ")})"
   end
 
+  check_demon =
+    lambda do |&check|
+      check.call
+    rescue => e
+      Rails.logger.warn("Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}")
+    end
+
   Thread.new do
     while true
-      begin
-        sleep 60
+      sleep 60
 
-        if sidekiqs > 0
+      if sidekiqs > 0
+        check_demon.call do
           Demon::Sidekiq.ensure_running
           Demon::Sidekiq.heartbeat_check
           Demon::Sidekiq.rss_memory_check
         end
+      end
 
-        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
-      rescue => e
-        Rails.logger.warn(
-          "Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}",
-        )
+      if GlobalSetting.enable_vips_image_processing
+        check_demon.call { Demon::DiscourseVips.ensure_running }
+      end
+
+      DiscoursePluginRegistry.demon_processes.each do |demon_class|
+        check_demon.call { demon_class.ensure_running }
       end
     end
   end
