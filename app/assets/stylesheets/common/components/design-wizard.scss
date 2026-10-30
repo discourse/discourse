@@ -163,7 +163,7 @@ $dw-button-default-border: #d3d3d3;
   }
 
   &.--minimized {
-    transform: var(--design-wizard-slide-out);
+    transform: translateY(100%);
     visibility: hidden;
   }
 
