@@ -1,4 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import type { ModifierLike } from "@glint/template";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
@@ -11,7 +12,6 @@ import SelectEngine, {
   SelectItem as SelectItemModel,
   selectItemLabel,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 interface SelectOptionRowSignature {
   Args: {
@@ -22,7 +22,7 @@ interface SelectOptionRowSignature {
     /** The windowed-list controller. */
     listbox: WindowedListCoordinator;
     /** Stable id of the panel's selection-limit message. */
-    limitId: string;
+    limitId?: string;
     /** Icon marking selected rows. */
     selectedIcon?: string;
     /** Omits the selection marker, for a list that never shows a held row. */
@@ -173,9 +173,9 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             {{else if @hasItemBlock}}
               {{yield option.item to="item"}}
             {{else if option.flags.__create}}
-              {{i18n
-                "d_select.create_item"
-                label=(selectItemLabel option.item @presenter.labelField)
+              {{@engine.text
+                "createItem"
+                (hash label=(selectItemLabel option.item @presenter.labelField))
               }}
             {{else}}
               {{selectItemLabel option.item @presenter.labelField}}

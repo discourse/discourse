@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -23,7 +23,6 @@ import SelectEngine, {
   SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 interface SelectionStripSignature {
   Args: {
@@ -146,7 +145,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
     <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
       <:loading>
         <ul
-          aria-label={{i18n "d_select.selected_items_list"}}
+          aria-label={{@engine.text "stripLabel"}}
           class="d-select__strip"
           tabindex="-1"
           {{dOnResize @onResize}}
@@ -162,7 +161,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
       </:loading>
       <:content as |chips|>
         <ul
-          aria-label={{i18n "d_select.selected_items_list"}}
+          aria-label={{@engine.text "stripLabel"}}
           class="d-select__strip"
           tabindex="-1"
           {{dOnResize @onResize}}
@@ -185,9 +184,9 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
               <button
                 aria-label={{if
                   this.capabilities.touch
-                  (i18n
-                    "d_select.remove_item"
-                    item=(@engine.getSelectionLabel chip.item)
+                  (@engine.text
+                    "removeItem"
+                    (hash item=(@engine.getSelectionLabel chip.item))
                   )
                 }}
                 aria-labelledby={{unless
@@ -232,7 +231,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                   {{/if}}
                 </span>
                 <span class="sr-only" id="{{this.idPrefix}}-{{index}}-hint">
-                  {{~i18n "d_select.remove_hint"~}}
+                  {{~@engine.text "removeHint"~}}
                 </span>
                 {{dIcon "xmark"}}
               </button>

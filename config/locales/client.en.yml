@@ -3603,6 +3603,10 @@ en:
       still_loading: "Still loading…"
       loading_more: "Loading more results…"
       loading_complete: "More results loaded"
+      compact_count: "%{count}"
+      more_chips: "+%{count}"
+      none: "None"
+      loading: "Loading…"
 
     shared_drafts:
       title: "Shared Drafts"

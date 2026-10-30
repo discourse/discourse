@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import type { DRovingFocusApi } from "discourse/ui-kit/modifiers/d-roving-focus";
@@ -18,7 +19,6 @@ import SelectEngine, {
   SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 /** Live state yielded to a select's `:listHeader` and `:footer` blocks. */
 export interface SelectPanelState {
@@ -127,8 +127,6 @@ interface SelectPanelSignature<State> {
     staticBody?: boolean;
     /** Whether the option list accepts multiple values. */
     multiple?: boolean;
-    /** Label for an empty result set. */
-    noResultsLabel?: string;
     /** Omits selection markers from result rows. */
     hideSelectionMarker?: boolean;
     /** Accessible name for the option list. */
@@ -272,21 +270,28 @@ export default class SelectPanel<State> extends Component<
       {{! Below the minimum query length: no source call (no request, no skeleton flash), and
         the truthy-empty-array routing and stray create-row are sidestepped by not rendering the
         list at all. Announced through the a11y service, like the limit. }}
-      <div
-        class="d-select__min-chars"
-        role={{@hintRole}}
-        {{didInsert
-          @announcer.announceMinCharsOnEntry
-          @engine.remainingMinChars
-        }}
-        {{didUpdate
-          @announcer.announceMinChars
-          @engine.remainingMinChars
-          @reportsActive
-        }}
-      >
-        {{i18n "d_select.min_chars" count=@engine.remainingMinChars}}
-      </div>
+      {{#let
+        (@engine.text "minChars" (hash count=@engine.remainingMinChars))
+        as |hint|
+      }}
+        {{#if hint}}
+          <div
+            class="d-select__min-chars"
+            role={{@hintRole}}
+            {{didInsert
+              @announcer.announceMinCharsOnEntry
+              @engine.remainingMinChars
+            }}
+            {{didUpdate
+              @announcer.announceMinChars
+              @engine.remainingMinChars
+              @reportsActive
+            }}
+          >
+            {{hint}}
+          </div>
+        {{/if}}
+      {{/let}}
     {{else if @renderOptions}}
       <SelectOptions
         @announcer={{@announcer}}
@@ -300,7 +305,6 @@ export default class SelectPanel<State> extends Component<
         @listbox={{@listbox}}
         @loadListContent={{@loadListContent}}
         @multiple={{@multiple}}
-        @noResultsLabel={{@noResultsLabel}}
         @onRegisterListbox={{@onRegisterListbox}}
         @onRegisterRoving={{@onRegisterRoving}}
         @presenter={{@presenter}}
@@ -319,7 +323,7 @@ export default class SelectPanel<State> extends Component<
             @items={{items}}
             @label={{@label}}
             @labelledBy={{@labelledBy}}
-            @limitId={{@limitId}}
+            @limitId={{if @limitMessage @limitId}}
             @listbox={{@listbox}}
             @listboxId={{@listboxId}}
             @modifiers={{modifiers}}
@@ -357,7 +361,7 @@ export default class SelectPanel<State> extends Component<
     {{#if @hasFooterBlock}}
       {{! A labeled region pinned below the list (a sibling of the listbox, never inside it). }}
       <div
-        aria-label={{i18n "d_select.footer_label"}}
+        aria-label={{@engine.text "footerLabel"}}
         class="d-select__footer"
         role="group"
       >

@@ -126,6 +126,7 @@ import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
+import { resetSelectTextNotices } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import I18n from "discourse-i18n";
 import { setupDNativeSelectAssertions } from "./d-native-select-assertions.js";
 import { setupDSelectAssertions } from "./d-select-assertions.ts";
@@ -232,6 +233,7 @@ export function testCleanup(container, app) {
   resetAdminDashboardSections();
   resetDeferredClassModifications();
   resetSelectKitLegacyRenderNotices();
+  resetSelectTextNotices();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();

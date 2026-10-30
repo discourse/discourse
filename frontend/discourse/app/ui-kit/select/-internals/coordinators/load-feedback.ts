@@ -83,7 +83,7 @@ export default class LoadFeedbackTracker {
     let count = this.#getSkeletonCountArg();
     if (count === undefined) {
       count = this.#skeletonCount;
-      if (this.#engine.resolvedOptions.loadingLabel) {
+      if (this.#engine.resolvedOptions.loadingStatus) {
         count = Math.max(count - 1, 1);
       }
     }

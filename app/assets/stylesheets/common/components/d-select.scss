@@ -481,6 +481,7 @@
   // trigger that already provides the field inset, so the box aligns the first chip (or the
   // inline input) with where a single-select value would sit. Adding $hpad here would
   // double the inset.
+  --d-select-input-room: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -488,6 +489,18 @@
   box-sizing: border-box;
   min-width: 0;
   width: 100%;
+
+  // A placeholder never wraps, so a long one takes its own row rather than being cut short.
+  &.--with-icon {
+    --d-select-input-room: calc(100% - 1.25em);
+  }
+}
+
+.d-select__trigger.--typeahead .d-select__chips > .d-select__input {
+  min-width: min(
+    var(--d-select-input-room),
+    max(4em, var(--d-select-placeholder-width, 0px))
+  );
 }
 
 .d-select__chip-list {
@@ -664,7 +677,10 @@
 
   .d-select__filter {
     flex: 1 0 8em;
-    min-width: min(8em, 100%);
+    min-width: min(
+      var(--d-select-input-room),
+      max(8em, var(--d-select-placeholder-width, 0px))
+    );
     width: auto;
     max-width: 100%;
     margin: 0;

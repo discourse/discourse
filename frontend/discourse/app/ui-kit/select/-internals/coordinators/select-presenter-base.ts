@@ -3,7 +3,6 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
 import type { SelectPresentationOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 /** Presentation contract shared by every options body. */
 export interface OptionsPresenter {
@@ -97,15 +96,16 @@ export default class SelectPresenterBase {
    * footer or an error body for the same edge.
    */
   get limitMessage(): string | undefined {
+    let message = "";
     if (this.#engine.atMaximum) {
-      return i18n("d_select.max_reached", { count: this.#engine.maximum });
-    }
-    if (this.#engine.belowMinimum) {
-      return i18n("d_select.min_not_reached", {
+      message = this.#engine.text("maximum", { count: this.#engine.maximum });
+    } else if (this.#engine.belowMinimum) {
+      message = this.#engine.text("minimum", {
         count: this.#engine.minimum,
+        selected: this.#engine.selectedCount,
       });
     }
-    return undefined;
+    return message || undefined;
   }
 
   get labelField(): string {
@@ -117,14 +117,14 @@ export default class SelectPresenterBase {
     return this.#getArgs().ariaLabelledBy;
   }
 
-  /** The combobox/listbox's resolved accessible name, or a default. */
-  get ariaLabelText(): string {
-    return this.#engine.resolvedOptions.ariaLabel ?? i18n("d_select.label");
+  /** The combobox and listbox name; `undefined` when empty, so no empty `aria-label` renders. */
+  get ariaLabelText(): string | undefined {
+    return this.#engine.text("ariaLabel") || undefined;
   }
 
-  /** The resolved empty-selection text for a single trigger. */
-  get placeholder(): string | undefined {
-    return this.#engine.resolvedOptions.placeholder;
+  /** The text shown while nothing is held. */
+  get placeholder(): string {
+    return this.#engine.text("placeholder");
   }
 
   /**

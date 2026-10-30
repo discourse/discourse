@@ -499,7 +499,7 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
       .exists("the first option is highlighted for aria-activedescendant");
   });
 
-  test("the query input advertises the chip-navigation hint via aria-describedby", async function (assert) {
+  test("the query input lists the chip-navigation hint among its descriptions", async function (assert) {
     await render(<template><MultiHost @value={{array 1}} /></template>);
 
     assert
@@ -509,14 +509,19 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
         /.+/,
         "the input names a describedby target while chips exist"
       );
-    const hintId = find(TRIGGER_INPUT).getAttribute("aria-describedby");
-    assert
-      .dom(`#${hintId}`)
-      .exists("the hint element is present")
-      .hasText(
-        "Press Left arrow to reach selected items.",
-        "the hint tells keyboard users how to reach the chips"
-      );
+    const ids = find(TRIGGER_INPUT).getAttribute("aria-describedby").split(" ");
+    assert.true(
+      ids.every((id) => document.getElementById(id)),
+      "every description it names exists"
+    );
+    assert.true(
+      ids.some(
+        (id) =>
+          document.getElementById(id).textContent.trim() ===
+          "Press Left arrow to reach selected items."
+      ),
+      "one of them tells keyboard users how to reach the chips"
+    );
   });
 
   test("ArrowLeft with a non-empty query does not enter the chips", async function (assert) {

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -4533,6 +4533,97 @@ module(
         search.offsetWidth,
         "the field fills the search row"
       );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (old text arguments)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    function customizeOptions(options) {
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forIdentifier("old-texts", (spec) => spec.options(options))
+        )
+      );
+    }
+
+    test("an empty @searchPlaceholder still shows no prompt", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @searchPlaceholder="" @variant="button" />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      assert
+        .dom(".d-select__panel .d-select__filter")
+        .doesNotHaveAttribute("placeholder");
+    });
+
+    test("an option's empty placeholder still replaces the argument with the default", async function (assert) {
+      customizeOptions(() => ({ placeholder: "" }));
+      await render(
+        <template>
+          <DSelect
+            @identifier="old-texts"
+            @items={{ITEMS}}
+            @placeholder="Choose fruit"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".d-select__input")
+        .hasAttribute("placeholder", i18n("d_select.placeholder"));
+    });
+
+    test("a null entry in @texts leaves the old argument in place", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @placeholder="Legacy"
+            @texts={{hash placeholder=null}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__input").hasAttribute("placeholder", "Legacy");
+    });
+
+    test("a null entry in a customization's texts leaves its old option in place", async function (assert) {
+      customizeOptions(() => ({
+        placeholder: "From an option",
+        texts: { placeholder: null },
+      }));
+      await render(
+        <template>
+          <DSelect @identifier="old-texts" @items={{ITEMS}} />
+        </template>
+      );
+
+      assert
+        .dom(".d-select__input")
+        .hasAttribute("placeholder", "From an option");
+    });
+
+    test("a text reading its own key reaches the old argument below it", async function (assert) {
+      const placeholder = (_values, context) =>
+        `${context.text("placeholder")}!`;
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @placeholder="Legacy"
+            @texts={{hash placeholder=placeholder}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__input").hasAttribute("placeholder", "Legacy!");
     });
   }
 );

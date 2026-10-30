@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -26,7 +26,6 @@ import SelectEngine, {
   SelectItem,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 interface MultiChipsSignature {
   Args: {
@@ -65,7 +64,7 @@ interface MultiChipsSignature {
     /** Defaults to showing the query only while editing; always shows the engine's filter. */
     queryDisplay?: "editing" | "always";
     /** The input's accessible name. */
-    label: string;
+    label?: string;
     /** Ids of the elements naming the input, used instead of `label`. */
     labelledBy?: string;
     /** The field placeholder. */
@@ -173,7 +172,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   /** The count shown in place of the chips. */
   get summary(): string {
     const value = this.args.engine.value;
-    return i18n("d_select.selected_count", {
+    return this.args.engine.text("selectedCount", {
       count: Array.isArray(value) ? value.length : 0,
     });
   }
@@ -210,7 +209,9 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     if (maximum === undefined || count <= maximum) {
       return undefined;
     }
-    return maximum === 0 ? String(count) : `+${count - maximum}`;
+    return maximum === 0
+      ? this.args.engine.text("compactCount", { count })
+      : this.args.engine.text("moreChips", { count: count - maximum });
   }
 
   /** Display-only chips describe the panel instead of advertising trigger-chip removal. */
@@ -218,10 +219,8 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     if (!this.args.engine.hasValue) {
       return undefined;
     }
-    return i18n(
-      this.args.triggerChipsInteractive
-        ? "d_select.chips_hint"
-        : "d_select.selected_items_hint"
+    return this.args.engine.text(
+      this.args.triggerChipsInteractive ? "chipsHint" : "selectedItemsHint"
     );
   }
 
@@ -354,6 +353,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     <div
       class="d-select__chips
         {{if (eq @roleMode 'search') '--field'}}
+        {{if (and (eq @roleMode 'search') @searchIcon) '--with-icon'}}
         {{if this.summarized '--summarized'}}"
       {{this.watchField @value (if @selection.isResolved @selection.value)}}
       {{(if @onResize (modifier dOnResize this.handleFieldResize))}}
@@ -372,7 +372,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       {{! Removal restores focus here, not through the modifier: once the last chip goes this
         list falls back to the query input, which is outside the group. }}
       <ul
-        aria-label={{i18n "d_select.selected_items"}}
+        aria-label={{@engine.text "chipsLabel"}}
         class="d-select__chip-list"
         {{(if
           @triggerChipsInteractive
@@ -433,9 +433,9 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     aria-disabled={{if @presenter.isLocked "true"}}
                     aria-label={{if
                       this.capabilities.touch
-                      (i18n
-                        "d_select.remove_item"
-                        item=(@engine.getSelectionLabel chip.item)
+                      (@engine.text
+                        "removeItem"
+                        (hash item=(@engine.getSelectionLabel chip.item))
                       )
                     }}
                     aria-labelledby={{unless
@@ -461,7 +461,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                       class="sr-only"
                       id="{{this.chipIdPrefix}}-{{index}}-remove"
                     >
-                      {{i18n "d_select.remove_hint"}}
+                      {{@engine.text "removeHint"}}
                     </span>
                     {{dIcon "xmark"}}
                   </button>
@@ -476,7 +476,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           {{~this.moreLabel~}}
         </span>
       {{/if}}
-      {{#if this.summarized}}
+      {{#if (and this.summarized this.summary)}}
         {{! The field's name and description already carry the held labels for assistive
           technology; the count is the visual stand-in for the hidden chips. }}
         <span aria-hidden="true" class="d-select__chips-summary">
@@ -489,14 +489,14 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             (if (eq @roleMode "search") @engine.serverPending @pending)
             "true"
           }}
-          aria-describedby={{@composeDescribedBy
-            (if this.chipHint this.chipHintId)
-            @describedBy
-          }}
           aria-invalid={{if @invalid "true"}}
           class={{if (eq @roleMode "search") "d-select__filter"}}
           id={{@id}}
           @ariaOwns={{@ariaOwns}}
+          @describedBy={{@composeDescribedBy
+            (if this.chipHint this.chipHintId)
+            @describedBy
+          }}
           @disabled={{@presenter.isDisabled}}
           @displayValue=""
           @editing={{@editing}}
@@ -505,6 +505,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           @label={{@label}}
           @labelledBy={{@labelledBy}}
           @listboxId={{@listboxId}}
+          @measurePlaceholder={{true}}
           @onBlur={{@onBlur}}
           @onEdit={{@onEdit}}
           @onEscape={{@onEscape}}

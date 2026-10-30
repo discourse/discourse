@@ -42,6 +42,8 @@ export interface SelectHostArgs
       | "kind"
       | "identifier"
       | "kindOptions"
+      | "kindTexts"
+      | "kindTextWrappers"
       | "minChars"
       | "maxLoaded"
       | "maximum"
@@ -194,6 +196,11 @@ export default class SelectHost {
       identifier: this.#options.getArgs().identifier,
       getKindContext: () => this.#options.getArgs().kindContext,
       getKindOptions: () => this.#options.getArgs().kindOptions,
+      getTexts: () => this.#options.getArgs().texts,
+      kindTexts: this.#options.getArgs().kindTexts,
+      getKindTexts: () => this.#options.getArgs().kindTexts,
+      kindTextWrappers: this.#options.getArgs().kindTextWrappers,
+      getKindTextWrappers: () => this.#options.getArgs().kindTextWrappers,
       getInstanceContext: () => this.#options.getArgs().instanceContext,
       getMinChars: () => this.#options.getArgs().minChars,
       getMaxLoaded: () => this.#options.getArgs().maxLoaded,
@@ -262,9 +269,9 @@ export default class SelectHost {
       engine: this.engine,
       getActiveOptionKey: () => this.listbox.activeOptionKey,
       reannounceActive: () => this.listbox.reannounceActive(),
-      getNoResultsLabel: () => this.#options.getArgs().noResultsLabel,
       getShouldSuppressEntryCount: () =>
         this.#options.shouldSuppressEntryCount(),
+      isRevealDue: () => this.feedback.showRevealPlaceholder,
     });
     associateDestroyableChild(this, this.engine);
     associateDestroyableChild(this, this.feedback);

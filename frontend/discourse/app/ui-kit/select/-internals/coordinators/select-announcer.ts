@@ -10,7 +10,6 @@ import SelectEngine, {
   type SelectItem,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 // How long a settled query waits before it is reported. Long, and deliberately so: a screen
 // reader echoes what is being typed, and that echo interrupts anything the page says underneath
@@ -39,8 +38,12 @@ interface SelectAnnouncerOptions {
   engine: SelectEngine;
   getActiveOptionKey: () => string | null;
   reannounceActive: () => boolean;
-  getNoResultsLabel: () => string | undefined;
   getShouldSuppressEntryCount: () => boolean;
+  /**
+   * Whether a pending reveal has waited long enough to show its frontier placeholders. The
+   * "loading more" report follows the same signal, so it is spoken in the render that draws them.
+   */
+  isRevealDue?: () => boolean;
 }
 
 interface ValueChangedOptions {
@@ -56,8 +59,8 @@ export default class SelectAnnouncer {
   #updateTimer?: ReturnType<typeof discourseLater>;
   #engine: SelectEngine;
   #getActiveOptionKey: () => string | null;
-  #getNoResultsLabel: () => string | undefined;
   #getShouldSuppressEntryCount: () => boolean;
+  #isRevealDue: () => boolean;
   #reannounceActive: () => boolean;
 
   // Deduping on the message rather than a count keeps a change silent whenever it does not
@@ -84,7 +87,6 @@ export default class SelectAnnouncer {
 
   // Whether a "loading more" was announced and still owes its completion.
   #revealAnnounced = false;
-  #revealTimer?: ReturnType<typeof discourseLater>;
 
   // The last limit message announced, so re-crossing the cap boundary does not re-read it.
   #lastAnnouncedLimit: string | null = null;
@@ -102,17 +104,22 @@ export default class SelectAnnouncer {
     engine,
     getActiveOptionKey,
     reannounceActive,
-    getNoResultsLabel,
     getShouldSuppressEntryCount,
+    isRevealDue = () => false,
   }: SelectAnnouncerOptions) {
     this.#a11y = a11y;
     this.#canReport = canReport;
     this.#engine = engine;
     this.#getActiveOptionKey = getActiveOptionKey;
     this.#reannounceActive = reannounceActive;
-    this.#getNoResultsLabel = getNoResultsLabel;
     this.#getShouldSuppressEntryCount = getShouldSuppressEntryCount;
+    this.#isRevealDue = isRevealDue;
     registerDestructor(this, () => this.cancelPending());
+  }
+
+  /** Whether a pending reveal is due its report; the list re-runs {@link announceReveal} on it. */
+  get revealDue(): boolean {
+    return this.#isRevealDue();
   }
 
   /**
@@ -147,8 +154,8 @@ export default class SelectAnnouncer {
     }
     const message =
       total == null
-        ? i18n("d_select.results_loaded", { count: setSize })
-        : i18n("d_select.results_count", { count: setSize });
+        ? this.#engine.text("resultsLoaded", { count: setSize })
+        : this.#engine.text("resultsCount", { count: setSize });
 
     if (this.#suppressNextCount) {
       this.#suppressNextCount = false;
@@ -231,8 +238,8 @@ export default class SelectAnnouncer {
       return;
     }
 
-    // `||`, not `??`, to match the template's `{{or}}`: an empty label is not a label.
-    const message = this.#getNoResultsLabel() || i18n("d_select.no_results");
+    // An empty text still replaces a held count below; it is just never spoken.
+    const message = this.#engine.text("noResults");
     const settledQuery = query ?? "";
 
     if (this.#suppressNextCount) {
@@ -248,8 +255,9 @@ export default class SelectAnnouncer {
   }
 
   /**
-   * Politely reports a server reveal, which is otherwise silent: the rows stay put while the
-   * next page is in flight, so nothing visibly changes until it lands.
+   * Politely reports a server reveal, which is otherwise silent until its frontier placeholders
+   * appear. Runs again when the reveal settles or becomes due, and speaks only once it is due, so
+   * a fast page says nothing.
    */
   @action
   announceReveal(): void {
@@ -261,27 +269,16 @@ export default class SelectAnnouncer {
     // A new query is also pending and also retains its rows, but it is not more results — its
     // own count announcement covers it when it lands.
     if (this.#engine.serverRevealPending) {
-      if (!this.#revealTimer && !this.#revealAnnounced) {
-        this.#revealTimer = discourseLater(() => {
-          this.#revealTimer = undefined;
-          if (
-            !isDestroying(this) &&
-            this.#canReport() &&
-            this.#engine.serverRevealPending
-          ) {
-            this.#revealAnnounced = true;
-            this.#a11y.announce(i18n("d_select.loading_more"), "polite");
-          }
-        }, LOADING_FEEDBACK_DELAY);
+      if (this.#isRevealDue() && !this.#revealAnnounced) {
+        this.#revealAnnounced = true;
+        this.#say(this.#engine.text("loadingMore"));
       }
       return;
     }
 
-    cancel(this.#revealTimer);
-    this.#revealTimer = undefined;
     if (this.#revealAnnounced && !this.#engine.serverPending) {
       this.#revealAnnounced = false;
-      this.#a11y.announce(i18n("d_select.loading_complete"), "polite");
+      this.#say(this.#engine.text("loadingComplete"));
     }
   }
 
@@ -302,7 +299,7 @@ export default class SelectAnnouncer {
     this.#narrowAnnouncedFor = filter;
     // Longer than the default window: the cap is typically reached while scrolling, when a
     // screen reader is still voicing option changes and would miss a short-lived message.
-    this.#a11y.announce(i18n("d_select.filter_to_narrow"), "polite", 5000);
+    this.#say(this.#engine.text("maxLoaded"), 5000);
   }
 
   /**
@@ -323,10 +320,7 @@ export default class SelectAnnouncer {
       return;
     }
     this.#lastAnnouncedRemaining = remaining;
-    this.#a11y.announce(
-      i18n("d_select.min_chars", { count: remaining }),
-      "polite"
-    );
+    this.#say(this.#engine.text("minChars", { count: remaining }));
   }
 
   /**
@@ -364,7 +358,7 @@ export default class SelectAnnouncer {
       return;
     }
     this.#lastAnnouncedLimit = message;
-    this.#a11y.announce(message, "polite");
+    this.#say(message);
   }
 
   /**
@@ -389,7 +383,7 @@ export default class SelectAnnouncer {
       return;
     }
 
-    this.#a11y.announce(i18n("d_select.still_loading"), "polite");
+    this.#say(this.#engine.text("stillLoading"));
   }
 
   /**
@@ -428,11 +422,10 @@ export default class SelectAnnouncer {
   /** Confirms programmatic intent even when the controlled value does not change. */
   reconfirm(item: SelectItem, origin: SelectionOrigin): void {
     if (!this.#engine.multiple && (origin.programmatic || origin.record)) {
-      this.#a11y.announce(
-        i18n("d_select.item_selected", {
+      this.#say(
+        this.#engine.text("itemSelected", {
           item: this.#engine.getSelectionLabel(item),
-        }),
-        "polite"
+        })
       );
     }
   }
@@ -443,11 +436,10 @@ export default class SelectAnnouncer {
       return;
     }
     this.suppressCount();
-    this.#a11y.announce(
+    this.#say(
       limit === 0
-        ? i18n("d_select.all_already_selected")
-        : this.#bulkSummary(0, held, limit),
-      "polite"
+        ? this.#engine.text("allAlreadySelected")
+        : this.#bulkSummary(0, held, limit)
     );
   }
 
@@ -457,7 +449,7 @@ export default class SelectAnnouncer {
     this.#updateTimer = discourseLater(() => {
       this.#updateTimer = undefined;
       if (!isDestroying(this) && isCurrent()) {
-        this.#a11y.announce(i18n("d_select.updating_selection"), "polite");
+        this.#say(this.#engine.text("updatingSelection"));
       }
     }, LOADING_FEEDBACK_DELAY);
   }
@@ -477,11 +469,11 @@ export default class SelectAnnouncer {
     if (origin?.bulk) {
       const { added, held, limit } = origin.bulk;
       this.suppressCount();
-      this.#a11y.announce(this.#bulkSummary(added, held, limit), "polite");
+      this.#say(this.#bulkSummary(added, held, limit));
       return;
     }
     if (reason === "clear" && this.#engine.hasValue) {
-      this.#a11y.announce(i18n("d_select.selection_cleared"), "polite");
+      this.#say(this.#engine.text("selectionCleared"));
       return;
     }
     if (this.#engine.multiple) {
@@ -492,11 +484,10 @@ export default class SelectAnnouncer {
 
       if (added !== undefined) {
         const item = this.#engine.resolveSingleSync(added);
-        this.#a11y.announce(
-          i18n("d_select.item_added", {
+        this.#say(
+          this.#engine.text("itemAdded", {
             item: item ? this.#engine.getSelectionLabel(item) : String(added),
-          }),
-          "polite"
+          })
         );
         if (this.#engine.filter !== "") {
           this.#suppressNextCount = true;
@@ -505,11 +496,10 @@ export default class SelectAnnouncer {
         }
       } else if (removed !== undefined) {
         const item = this.#engine.resolveSingleSync(removed);
-        this.#a11y.announce(
-          i18n("d_select.item_removed", {
+        this.#say(
+          this.#engine.text("itemRemoved", {
             item: item ? this.#engine.getSelectionLabel(item) : String(removed),
-          }),
-          "polite"
+          })
         );
       }
     } else if (nextValues == null && this.#engine.hasValue) {
@@ -517,7 +507,7 @@ export default class SelectAnnouncer {
       // back the new value. Clearing has neither: the row simply stops being selected and the
       // trigger's name changes, and a name change on an already-focused element is not reliably
       // re-read. So the one single-select transition that needs saying out loud is this one.
-      this.#a11y.announce(i18n("d_select.selection_cleared"), "polite");
+      this.#say(this.#engine.text("selectionCleared"));
     } else if (origin && nextValues != null) {
       const item = this.#engine.resolveSingleSync(nextValues);
       if (item) {
@@ -539,25 +529,48 @@ export default class SelectAnnouncer {
     this.#suppressNextCount = false;
   }
 
+  /**
+   * Composes a batch's parts, leaving out the empty ones. An empty summary text drops the whole
+   * announcement, since its parts were never meant to be spoken alone.
+   */
   #bulkSummary(added: number, held: number, limit: number): string {
-    let message = i18n("d_select.items_added", { count: added });
+    let message = this.#engine.text("itemsAdded", { count: added });
     for (const [key, count] of [
-      ["items_not_added_held", held],
-      ["items_not_added_limit", limit],
+      ["itemsNotAddedHeld", held],
+      ["itemsNotAddedLimit", limit],
     ] as const) {
-      if (count > 0) {
-        message = i18n("d_select.bulk_add_summary", {
-          added: message,
-          not_added: i18n(`d_select.${key}`, { count }),
-        });
+      const part = count > 0 ? this.#engine.text(key, { count }) : "";
+      if (!part) {
+        continue;
+      }
+      if (!message) {
+        message = part;
+        continue;
+      }
+      message = this.#engine.text("bulkAddSummary", {
+        added: message,
+        not_added: part,
+      });
+      if (!message) {
+        return "";
       }
     }
     return message;
   }
 
+  /** Speaks politely; an empty text is "no text", and announcing it would clear the queue. */
+  #say(message: string, duration?: number): void {
+    if (!message.trim()) {
+      return;
+    }
+    if (duration === undefined) {
+      this.#a11y.announce(message, "polite");
+    } else {
+      this.#a11y.announce(message, "polite", duration);
+    }
+  }
+
   #cancelReveal(): void {
-    cancel(this.#revealTimer);
-    this.#revealTimer = undefined;
     this.#revealAnnounced = false;
   }
 
@@ -621,7 +634,7 @@ export default class SelectAnnouncer {
       return;
     }
 
-    this.#a11y.announce(pending.message, "polite");
+    this.#say(pending.message);
   }
 
   /**

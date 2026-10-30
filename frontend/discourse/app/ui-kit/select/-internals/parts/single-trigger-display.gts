@@ -11,7 +11,6 @@ import SelectEngine, {
   SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 interface SingleTriggerDisplaySignature {
   Args: {
@@ -136,9 +135,9 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                   {{/if}}
                 </:content>
               </DAsyncContent>
-            {{else}}
+            {{else if @placeholder}}
               <span class="d-select__placeholder">
-                {{or @placeholder (i18n "d_select.placeholder")}}
+                {{@placeholder}}
               </span>
             {{/if}}
           </span>
@@ -193,18 +192,18 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
       {{#if @presenter.isDesktopTypeahead}}
         <ComboboxQueryInput
           aria-busy={{if @pending "true"}}
-          aria-describedby={{@composeDescribedBy
+          aria-invalid={{if @invalid "true"}}
+          id={{@id}}
+          @ariaOwns={{true}}
+          {{! Only the resting held value needs a description. Pending feedback can also
+            render while focused, when the input must not describe that sibling. }}
+          @describedBy={{@composeDescribedBy
             (if
               (and @hasSelectionBlock @engine.hasValue (not @triggerFocused))
               @selectionId
             )
             @describedBy
           }}
-          aria-invalid={{if @invalid "true"}}
-          {{! Only the resting held value needs a description. Pending feedback can also
-            render while focused, when the input must not describe that sibling. }}
-          id={{@id}}
-          @ariaOwns={{true}}
           @disabled={{@presenter.isDisabled}}
           @displayValue={{if
             (or @pending (and @hasSelectionBlock (not @triggerFocused)))
@@ -224,10 +223,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           {{! No placeholder once a value is chosen: the value is shown either in this input
             (default) or in the sibling selection presentation (with a :selection block),
             so a placeholder would otherwise sit next to it. }}
-          @placeholder={{if
-            (not (or @pending @engine.hasValue))
-            (or @placeholder (i18n "d_select.placeholder"))
-          }}
+          @placeholder={{unless (or @pending @engine.hasValue) @placeholder}}
           @readonly={{@presenter.isReadonly}}
           @registerInput={{@registerInput}}
           @selectLabelOnAppear={{@hasSelectionBlock}}
@@ -268,9 +264,11 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           {{/if}}
         </:content>
         <:empty>
-          <span class="d-select__placeholder">
-            {{or @placeholder (i18n "d_select.placeholder")}}
-          </span>
+          {{#if @placeholder}}
+            <span class="d-select__placeholder">
+              {{@placeholder}}
+            </span>
+          {{/if}}
         </:empty>
       </DAsyncContent>
     {{/if}}

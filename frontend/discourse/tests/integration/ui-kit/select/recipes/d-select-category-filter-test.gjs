@@ -1009,9 +1009,14 @@ module(
         await click("[role='option'][data-value='99001']");
 
         assert.true(onChange.notCalled, "only a site category can be routed");
-        assert.true(
-          warn.calledOnceWithMatch("DSelectCategoryFilter"),
-          "the dropped pick is reported"
+        assert.strictEqual(
+          warn
+            .getCalls()
+            .filter(({ args }) =>
+              String(args[0]).includes("DSelectCategoryFilter")
+            ).length,
+          1,
+          "the dropped pick is reported once"
         );
         warn.restore();
       });

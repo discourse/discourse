@@ -5,7 +5,6 @@ import SelectPresenterBase, {
   type SelectPresenterArgs,
 } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 /** Presentation for a persistent, searchable multi-select. */
 export default class SelectListPresenter
@@ -40,12 +39,9 @@ export default class SelectListPresenter
     return this.#canSeed() && !this.#usesDirectFocus() ? "first" : "none";
   }
 
-  /** The search placeholder, falling back to the shared panel default. */
+  /** The search field's prompt. */
   get searchPlaceholderText(): string {
-    return (
-      this.#engine.resolvedOptions.searchPlaceholder ??
-      i18n("d_select.search_placeholder")
-    );
+    return this.#engine.text("searchPlaceholder");
   }
 
   /** Reconciles when focus ownership or cap eligibility changes, as well as the query. */

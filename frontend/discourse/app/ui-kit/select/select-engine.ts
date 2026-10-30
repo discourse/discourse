@@ -6,7 +6,7 @@ import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import SelectCustomizations, {
-  type SelectPresentationOptions,
+  type SelectPresentationArgs,
   type SelectResolvedContext,
   type SelectResolvedOptions,
   type SelectRowPresentation,
@@ -21,16 +21,31 @@ import {
   type SelectSource,
   SelectState,
 } from "discourse/ui-kit/select/-internals/engine/select-sources";
+import {
+  renderSelectText,
+  type SelectTexts,
+  type SelectTextWrapper,
+} from "discourse/ui-kit/select/-internals/engine/select-texts";
 import SelectionActions from "discourse/ui-kit/select/-internals/engine/selection-actions";
 import ValueResolver from "discourse/ui-kit/select/-internals/engine/value-resolver";
 import {
   applyLegacySelectKitContent,
   applyLegacySelectKitOnChange,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
-import { i18n } from "discourse-i18n";
 import SelectionUpdates, {
   type SelectionOrigin,
 } from "./-internals/engine/selection-updates.ts";
+
+/** Every text DSelect draws or speaks, and how recipes render them from a resolved snapshot. */
+export {
+  DEFAULT_SELECT_TEXTS,
+  renderSelectText,
+  type SelectText,
+  type SelectTextContext,
+  type SelectTexts,
+  type SelectTextValues,
+  type SelectTextWrapper,
+} from "discourse/ui-kit/select/-internals/engine/select-texts";
 
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
@@ -379,13 +394,36 @@ export interface SelectEngineOptions {
   getNoneLabel?: () => string | undefined;
 
   /** Live raw presentation args, read before any items, resolved selection, or lock state. */
-  getOptions?: () => Readonly<SelectPresentationOptions>;
+  getOptions?: () => Readonly<SelectPresentationArgs>;
 
   /** Recipe option keys and base values; keys are fixed at construction. Requires `kind`. */
   kindOptions?: Record<string, unknown>;
 
   /** Live base values for {@link kindOptions}; the initial keys declare the schema. */
   getKindOptions?: () => Record<string, unknown> | undefined;
+
+  /** Live reader for the call site's texts, the layer above the recipe's. */
+  getTexts?: () => SelectTexts | undefined;
+
+  /**
+   * The recipe's texts: defaults for engine texts and the texts it declares. Its non-engine
+   * keys are fixed at construction. Requires `kind`.
+   */
+  kindTexts?: SelectTexts;
+
+  /** Live values for {@link kindTexts}; the initial keys declare the recipe's texts. */
+  getKindTexts?: () => SelectTexts | undefined;
+
+  /**
+   * The recipe's final say over a text, applied once to the result of every layer. Keys are fixed
+   * at construction; required texts can't be wrapped. Requires `kind`.
+   */
+  kindTextWrappers?: Readonly<Record<string, SelectTextWrapper | undefined>>;
+
+  /** Live values for {@link kindTextWrappers}. */
+  getKindTextWrappers?: () =>
+    | Readonly<Record<string, SelectTextWrapper | undefined>>
+    | undefined;
 
   /** Live reader for {@link valueItems}. */
   getValueItems?: () => SelectItem | SelectItem[] | undefined;
@@ -849,7 +887,11 @@ export default class SelectEngine {
         kind: this.kind,
         identifier: this.identifier,
       },
-      this.#options.kindOptions
+      this.#options.kindOptions,
+      {
+        kindTexts: this.#options.kindTexts,
+        kindTextWrappers: this.#options.kindTextWrappers,
+      }
     );
     this.#options.attachResolvedOptions(() => this.resolvedOptions);
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
@@ -913,7 +955,9 @@ export default class SelectEngine {
         icon: args.icon,
         showCaret: args.showCaret,
         clearable: args.clearable,
+        noneRow: args.noneRow,
         noneLabel: args.noneLabel ?? this.#options.baseNoneLabel,
+        loadingStatus: args.loadingStatus,
         disabled: args.disabled,
       },
       this.#options.kindOptions,
@@ -924,6 +968,21 @@ export default class SelectEngine {
         instanceContext: this.#options.instanceContext,
         value: this.value,
         control: this.#control,
+      },
+      {
+        kindTexts: this.#options.kindTexts,
+        texts: this.#options.texts,
+        legacy: {
+          ariaLabel: args.ariaLabel,
+          placeholder: args.placeholder,
+          searchPlaceholder: args.searchPlaceholder,
+          noResultsLabel: args.noResultsLabel,
+          noneLabel: args.noneLabel ?? this.#options.baseNoneLabel,
+          loadingLabel: args.loadingLabel,
+        },
+        wrappers: this.#options.kindTextWrappers,
+        multiple: this.multiple,
+        labelledBy: !!args.ariaLabelledBy,
       }
     );
   }
@@ -994,6 +1053,11 @@ export default class SelectEngine {
   /** Whether the selection is still short of the advisory {@link minimum}. */
   get belowMinimum(): boolean {
     return this.#selectionActions.belowMinimum;
+  }
+
+  /** The held count the limits are measured against: every held id, deduped. */
+  get selectedCount(): number {
+    return this.#selectionActions.selectedCount;
   }
 
   /** How many more items may still be added, or `undefined` when uncapped. */
@@ -1167,6 +1231,19 @@ export default class SelectEngine {
   }
 
   /**
+   * Renders a text from the resolved options: every layer, then the recipe's wrapper. Call it
+   * where the text is drawn or spoken, so a text that reads live recipe state stays current.
+   *
+   * @param key - The text's key.
+   * @param values - The values its translation interpolates.
+   * @returns The text; `""` means the place shows nothing.
+   */
+  @bind
+  text(key: string, values?: object): string {
+    return renderSelectText(this.resolvedOptions, key, values);
+  }
+
+  /**
    * Whether an item is currently selected, comparing its `valueField` id against the
    * controlled value.
    */
@@ -1285,7 +1362,7 @@ export default class SelectEngine {
   @bind
   getSelectionLabel(item: SelectItem | null | undefined): string {
     if (item?.__unresolved && !this.isCustomUnresolvedItem(item)) {
-      return i18n("d_select.unresolved_value", {
+      return this.text("unresolvedValue", {
         value: String(item[this.#options.valueField] ?? ""),
       });
     }

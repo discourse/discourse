@@ -1,9 +1,13 @@
 import { DEBUG } from "@glimmer/env";
 import { assert, warn } from "@ember/debug";
 import type {
-  SelectPresentationOptions,
+  SelectPresentationArgs,
   SelectResolvedOptions,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
+import {
+  renderSelectText,
+  type SelectTexts,
+} from "discourse/ui-kit/select/-internals/engine/select-texts";
 import type {
   SelectEngineOptions,
   SelectItem,
@@ -55,6 +59,11 @@ export default class SelectOptionsView {
   /** Raw recipe values remain upstream of option resolution. */
   #readKindOptions?: SelectEngineOptions["getKindOptions"];
   #kindOptions?: SelectEngineOptions["kindOptions"];
+  #readTexts?: SelectEngineOptions["getTexts"];
+  #readKindTexts?: SelectEngineOptions["getKindTexts"];
+  #kindTexts?: SelectEngineOptions["kindTexts"];
+  #readKindTextWrappers?: SelectEngineOptions["getKindTextWrappers"];
+  #kindTextWrappers?: SelectEngineOptions["kindTextWrappers"];
   #valueField: string;
   #labelField: string;
   // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
@@ -113,6 +122,11 @@ export default class SelectOptionsView {
     this.#readPresentationOptions = opts.getOptions;
     this.#readKindOptions = opts.getKindOptions;
     this.#kindOptions = opts.kindOptions;
+    this.#readTexts = opts.getTexts;
+    this.#readKindTexts = opts.getKindTexts;
+    this.#kindTexts = opts.kindTexts;
+    this.#readKindTextWrappers = opts.getKindTextWrappers;
+    this.#kindTextWrappers = opts.kindTextWrappers;
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     // Values are unique by contract (selection identity, row keys), so grouping by the value
@@ -182,18 +196,35 @@ export default class SelectOptionsView {
     return this.#readNoneLabel?.() ?? this.#noneLabel;
   }
 
-  /** Customized single-select none label; empty labels and multiple mode suppress the row. */
+  /** The single-select none row's label, or `null` while the row is off or the select is multiple. */
   get noneLabel(): string | null {
-    if (this.multiple) {
+    const options = this.#readResolvedOptions?.();
+    if (this.multiple || !options?.noneRow) {
       return null;
     }
-    const label = this.#readResolvedOptions?.().noneLabel ?? this.baseNoneLabel;
-    return label ? label : null;
+    return renderSelectText(options, "noneLabel");
   }
 
   /** The call site's live presentation args, before customizations. */
-  get presentationOptions(): Readonly<SelectPresentationOptions> {
+  get presentationOptions(): Readonly<SelectPresentationArgs> {
     return this.#readPresentationOptions?.() ?? {};
+  }
+
+  /** The call site's live texts. */
+  get texts(): SelectTexts | undefined {
+    return this.#readTexts?.();
+  }
+
+  /** The recipe's live texts; the customization registry captures their initial keys. */
+  get kindTexts(): SelectEngineOptions["kindTexts"] {
+    return this.#readKindTexts ? this.#readKindTexts() : this.#kindTexts;
+  }
+
+  /** The recipe's live text wrappers; their initial keys are captured at construction. */
+  get kindTextWrappers(): SelectEngineOptions["kindTextWrappers"] {
+    return this.#readKindTextWrappers
+      ? this.#readKindTextWrappers()
+      : this.#kindTextWrappers;
   }
 
   /** Live recipe base values; the customization registry captures their initial keys. */

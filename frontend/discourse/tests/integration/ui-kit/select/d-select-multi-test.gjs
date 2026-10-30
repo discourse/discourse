@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
@@ -1791,6 +1791,228 @@ module(
       );
       assert.true(onChange.notCalled, "the value is unchanged");
       assert.deepEqual(changes, [], "no change middleware or callback runs");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect multi placeholder width",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const FRUITS = [
+      { id: 1, name: "Apple" },
+      { id: 2, name: "Banana" },
+    ];
+    const LONG = "Select at least three more tags from the Required group…";
+
+    function chipsRow() {
+      return find(".d-select__trigger .d-select__chips");
+    }
+
+    function measured(input) {
+      return parseFloat(
+        input.style.getPropertyValue("--d-select-placeholder-width")
+      );
+    }
+
+    test("a short add-more placeholder stays beside the chips", async function (assert) {
+      const held = [1];
+      await render(
+        <template>
+          <div style="width: 24em">
+            <DSelect @items={{FRUITS}} @multiple={{true}} @value={{held}} />
+          </div>
+        </template>
+      );
+
+      const input = find(".d-select__trigger .d-select__input");
+      assert
+        .dom(input)
+        .hasAttribute("placeholder", i18n("d_select.add_placeholder"));
+      assert.strictEqual(
+        input.offsetTop,
+        find(".d-select__chip").offsetTop,
+        "the input shares the chip's row"
+      );
+    });
+
+    test("a placeholder that does not fit beside the chips takes its own row, whole", async function (assert) {
+      const held = [1];
+      await render(
+        <template>
+          <div class="width-host" style="width: 60em">
+            <DSelect
+              @items={{FRUITS}}
+              @multiple={{true}}
+              @texts={{hash addMorePlaceholder=LONG}}
+              @value={{held}}
+            />
+          </div>
+        </template>
+      );
+
+      const host = find(".width-host");
+      const input = find(".d-select__trigger .d-select__input");
+      const chip = find(".d-select__chip");
+      const text = measured(input);
+      assert.true(text > 0, "the placeholder's width is measured");
+      assert.strictEqual(
+        input.offsetTop,
+        chip.offsetTop,
+        "with room to spare the input stays beside the chip"
+      );
+
+      // Leave the row just wider than the text, so it fits alone but not after the chip.
+      const frame = host.clientWidth - chipsRow().clientWidth;
+      host.style.width = `${Math.ceil(text + frame + chip.offsetWidth / 2)}px`;
+
+      assert.true(
+        input.offsetTop > chip.offsetTop,
+        "the input moves below the chip"
+      );
+      const style = getComputedStyle(input);
+      const room =
+        input.clientWidth -
+        parseFloat(style.paddingInlineStart) -
+        parseFloat(style.paddingInlineEnd);
+      assert.true(
+        room >= text,
+        `the placeholder fits inside the input (${room}px for ${text}px)`
+      );
+    });
+
+    test("a placeholder wider than the row is capped at the row", async function (assert) {
+      const held = [1];
+      const text = `${LONG} ${LONG} ${LONG}`;
+      await render(
+        <template>
+          <div style="width: 16em">
+            <DSelect
+              @items={{FRUITS}}
+              @multiple={{true}}
+              @texts={{hash addMorePlaceholder=text}}
+              @value={{held}}
+            />
+          </div>
+        </template>
+      );
+
+      const input = find(".d-select__trigger .d-select__input");
+      const row = chipsRow();
+      assert.true(
+        measured(input) > row.clientWidth,
+        "the text is wider than the row"
+      );
+      assert.true(
+        input.getBoundingClientRect().right <=
+          row.getBoundingClientRect().right + 0.5,
+        "the input ends inside the row"
+      );
+      assert.true(
+        row.scrollWidth <= row.clientWidth,
+        "the row does not overflow sideways"
+      );
+    });
+
+    test("the measured width follows the placeholder and clears with it", async function (assert) {
+      const held = [1];
+      const text = tracked("Add…");
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUITS}}
+            @multiple={{true}}
+            @texts={{hash addMorePlaceholder=text.value}}
+            @value={{held}}
+          />
+        </template>
+      );
+
+      const input = find(".d-select__trigger .d-select__input");
+      const short = measured(input);
+      assert.true(short > 0, "a short placeholder is measured");
+
+      text.value = LONG;
+      await settled();
+      assert.true(measured(input) > short, "a longer one measures wider");
+
+      text.value = "";
+      await settled();
+      assert.false(
+        input.hasAttribute("placeholder"),
+        "no placeholder is drawn"
+      );
+      assert.strictEqual(
+        input.style.getPropertyValue("--d-select-placeholder-width"),
+        "",
+        "and no width is kept for it"
+      );
+    });
+
+    test("a single-select input does not take its placeholder's width", async function (assert) {
+      await render(
+        <template>
+          <div style="width: 24em">
+            <DSelect @items={{FRUITS}} @texts={{hash placeholder=LONG}} />
+          </div>
+        </template>
+      );
+
+      assert.strictEqual(
+        find(".d-select__trigger .d-select__input").style.getPropertyValue(
+          "--d-select-placeholder-width"
+        ),
+        "",
+        "only an input among chips is measured"
+      );
+    });
+
+    test("the mobile field leaves room for its search icon", async function (assert) {
+      forceMobile();
+      const held = [1];
+      const text = `${LONG} ${LONG} ${LONG} ${LONG}`;
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUITS}}
+            @multiple={{true}}
+            @searchIcon="magnifying-glass"
+            @texts={{hash addMorePlaceholder=text}}
+            @value={{held}}
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const filter = find(
+        ".fk-d-menu-modal .d-select__chips .d-select__filter"
+      );
+      const icon = find(
+        ".fk-d-menu-modal .d-select__chips .d-select__search-icon"
+      );
+      assert.dom(filter).hasAttribute("placeholder", text);
+      assert.true(
+        measured(filter) > filter.parentElement.clientWidth,
+        "the text is wider than the field's row"
+      );
+      const field = filter.getBoundingClientRect();
+      const glyph = icon.getBoundingClientRect();
+      const fieldMiddle = field.top + field.height / 2;
+      const glyphMiddle = glyph.top + glyph.height / 2;
+      assert.true(
+        Math.abs(fieldMiddle - glyphMiddle) < field.height / 2,
+        "the icon stays on the field's row"
+      );
+      assert.true(
+        glyph.left >= field.right - 0.5,
+        "the icon sits after the field, not on top of it"
+      );
+      const row = find(".fk-d-menu-modal .d-select__chips");
+      assert.true(
+        row.scrollWidth <= row.clientWidth,
+        "the modal row does not overflow sideways"
+      );
     });
   }
 );

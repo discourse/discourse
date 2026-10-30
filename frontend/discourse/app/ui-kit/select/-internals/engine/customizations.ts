@@ -4,6 +4,19 @@ import {
   applyMutableValueTransformer,
   withTransformerErrorHandling,
 } from "discourse/lib/transformer";
+import {
+  attachSelectTextResolver,
+  DEFAULT_SELECT_TEXTS,
+  forAllTextNotices,
+  isCoreTextKey,
+  RECIPE_TEXT_KEYS,
+  REQUIRED_SELECT_TEXTS,
+  SelectTextNotices,
+  SelectTextResolver,
+  selectTextResolver,
+  type SelectTexts,
+  type SelectTextWrapper,
+} from "discourse/ui-kit/select/-internals/engine/select-texts";
 import type {
   SelectControl,
   SelectEngineOptions,
@@ -48,8 +61,14 @@ export interface SelectPresentationOptions {
         /** The glyph while the menu is closed. */
         closed?: string;
       }>;
-  /** Suppresses trigger text when `ariaLabel` supplies its accessible name. */
+  /** Suppresses trigger text when `texts.ariaLabel` supplies its accessible name. */
   iconOnly?: boolean;
+  /**
+   * Every text the select draws or speaks, merged per entry over the layers below.
+   *
+   * @see SelectText
+   */
+  texts?: SelectTexts;
   /** The accessible name of the trigger and listbox; it is never drawn. */
   ariaLabel?: string;
   /** Text shown when nothing is selected. */
@@ -58,7 +77,9 @@ export interface SelectPresentationOptions {
   searchPlaceholder?: string;
   /** A decorative trailing icon in a search field that is not the trigger. */
   searchIcon?: string;
-  /** A status line, with a spinner, above the loading skeleton; absent by default. */
+  /** Shows a status line, with a spinner, above the loading skeleton; off by default. */
+  loadingStatus?: boolean;
+  /** Turns the loading status line on, labeled with this text. */
   loadingLabel?: string;
   /** A decorative leading trigger icon. */
   icon?: string;
@@ -66,10 +87,20 @@ export interface SelectPresentationOptions {
   showCaret?: boolean;
   /** Whether a selection can offer a clear control. */
   clearable?: boolean;
-  /** The single-select none row's label; empty suppresses the row. */
+  /** Adds a single-select "none" row that clears the value; off by default. */
+  noneRow?: boolean;
+  /** Turns the single-select none row on, labeled with this text; empty leaves it off. */
   noneLabel?: string;
   /** An additive lock: a later customization cannot remove it. */
   disabled?: boolean;
+}
+
+/** The call site's presentation arguments, read before customizations. */
+export interface SelectPresentationArgs extends SelectPresentationOptions {
+  /** Label for an empty result set. */
+  noResultsLabel?: string;
+  /** Id of the caller's visible caption, which names the control instead of `texts.ariaLabel`. */
+  ariaLabelledBy?: string;
 }
 
 /** Core and declared recipe values, resolved together into an immutable snapshot. */
@@ -87,17 +118,53 @@ export interface SelectResolvedContext extends SelectCustomizationContext {
 const CORE_OPTION_KEYS = new Set<keyof SelectPresentationOptions>([
   "caretIcon",
   "iconOnly",
+  "texts",
   "ariaLabel",
   "placeholder",
   "searchPlaceholder",
   "searchIcon",
+  "loadingStatus",
   "loadingLabel",
   "icon",
   "showCaret",
   "clearable",
+  "noneRow",
   "noneLabel",
   "disabled",
 ]);
+
+/** Old arguments and option keys that carry a text, and the text each one sets. */
+const LEGACY_TEXTS: Readonly<Record<string, string>> = {
+  ariaLabel: "ariaLabel",
+  placeholder: "placeholder",
+  searchPlaceholder: "searchPlaceholder",
+  noResultsLabel: "noResults",
+  noneLabel: "noneLabel",
+  loadingLabel: "loadingLabel",
+};
+
+/** Texts a wrapper can never change: the required texts, and the none row's and loading status's. */
+const UNWRAPPABLE_TEXTS = new Set([
+  ...REQUIRED_SELECT_TEXTS,
+  "noneLabel",
+  "loadingLabel",
+]);
+
+/** The text inputs of one resolution, read live by the engine. */
+export interface SelectTextInputs {
+  /** The recipe's `@kindTexts`. */
+  kindTexts: SelectTexts | undefined;
+  /** The call site's `@texts`. */
+  texts: SelectTexts | undefined;
+  /** The call site's old text arguments, by argument name. */
+  legacy: Readonly<Record<string, unknown>>;
+  /** The recipe's `@kindTextWrappers`. */
+  wrappers: Readonly<Record<string, SelectTextWrapper | undefined>> | undefined;
+  /** Whether the select holds several values. */
+  multiple: boolean;
+  /** Whether a visible caption names the control, so `ariaLabel` may be empty. */
+  labelledBy: boolean;
+}
 
 /** Options callbacks read upstream state only, avoiding selection and presentation cycles. */
 export interface SelectOptionsContext extends SelectCustomizationContext {
@@ -207,6 +274,9 @@ class Declarations {
   /** Options steps, in declaration order. */
   options: Options[] = [];
 
+  /** The tier of each options step: 0 for `forAll`, 1 for `forKind`, 2 for `forIdentifier`. */
+  optionsTiers: number[] = [];
+
   /** Loader steps, in declaration order. */
   load: Load[] = [];
 
@@ -222,17 +292,65 @@ export default class SelectCustomizations {
   /** Recipe schema is captured once; base values are read live during resolution. */
   #kindOptionKeys: string[];
 
+  /** Text keys the recipe declares, captured once like its option keys. */
+  #kindTextKeys: Set<string>;
+
+  /** Texts the recipe wraps, captured once; the wrappers themselves are read live. */
+  #wrapperKeys: string[];
+
+  #names: SelectNames;
+
+  /** Each text notice is given once per select, however often its options resolve again. */
+  #notices = new SelectTextNotices();
+
   /** Collects all registrations before running matching setups in tier order. */
-  constructor(names: SelectNames, kindOptions?: Record<string, unknown>) {
+  constructor(
+    names: SelectNames,
+    kindOptions?: Record<string, unknown>,
+    textSchema: {
+      kindTexts?: SelectTexts;
+      kindTextWrappers?: Readonly<Record<string, unknown>>;
+    } = {}
+  ) {
     assert(
       "DSelect: @kindOptions requires @kind",
       !kindOptions || !!names.kind
     );
+    assert(
+      "DSelect: @kindTexts requires @kind",
+      !textSchema.kindTexts || !!names.kind
+    );
+    assert(
+      "DSelect: @kindTextWrappers requires @kind",
+      !textSchema.kindTextWrappers || !!names.kind
+    );
+    this.#names = names;
     this.#kindOptionKeys = Object.keys(kindOptions ?? {});
     for (const key of this.#kindOptionKeys) {
       assert(
         `DSelect: @kindOptions key "${key}" collides with a core option`,
         !CORE_OPTION_KEYS.has(key as keyof SelectPresentationOptions)
+      );
+    }
+    this.#kindTextKeys = new Set(
+      Object.keys(textSchema.kindTexts ?? {}).filter(
+        (key) => !isCoreTextKey(key)
+      )
+    );
+    for (const key of this.#kindTextKeys) {
+      const collision = Object.keys(DEFAULT_SELECT_TEXTS).find(
+        (core) => core.toLowerCase() === key.toLowerCase()
+      );
+      assert(
+        `DSelect: @kindTexts key "${key}" collides with the core text "${collision}"; text keys are case-sensitive`,
+        !collision
+      );
+    }
+    this.#wrapperKeys = Object.keys(textSchema.kindTextWrappers ?? {});
+    for (const key of this.#wrapperKeys) {
+      assert(
+        `DSelect: @kindTextWrappers can't wrap "${key}", a text that must never be empty`,
+        !UNWRAPPABLE_TEXTS.has(key)
       );
     }
     const tiers: Setup[][] = [[], [], []];
@@ -265,9 +383,11 @@ export default class SelectCustomizations {
       sealed = true;
     }
 
-    for (const setup of tiers.flat()) {
-      this.#setup(setup, names);
-    }
+    tiers.forEach((setups, tier) => {
+      for (const setup of setups) {
+        this.#setup(setup, names, tier);
+      }
+    });
   }
 
   /** Chains valid arrays, retaining the previous list when a step fails. */
@@ -316,13 +436,18 @@ export default class SelectCustomizations {
     return load;
   }
 
-  /** Resolves core and recipe keys in tier order, keeping snapshots immutable and locks additive. */
+  /**
+   * Resolves core and recipe keys in tier order, keeping snapshots immutable and locks additive.
+   * Texts merge per entry instead: each step adds a layer, and every snapshot carries a resolver
+   * over the layers it has seen.
+   */
   resolveOptions(
     base: SelectPresentationOptions,
     kindOptions: Record<string, unknown> | undefined,
-    context: SelectOptionsContext
+    context: SelectOptionsContext,
+    textInputs: SelectTextInputs
   ): SelectResolvedOptions {
-    const declared = {
+    const declared: SelectPresentationOptions & Record<string, unknown> = {
       ...base,
       ...Object.fromEntries(
         this.#kindOptionKeys.map((key) => [
@@ -330,19 +455,34 @@ export default class SelectCustomizations {
           kindOptions?.[key] ?? undefined,
         ])
       ),
+      texts: undefined,
     };
-    let current = this.#optionsSnapshot(declared);
-    for (const step of this.#steps.options) {
+    const wrappers = Object.fromEntries(
+      this.#wrapperKeys.map((key) => [key, textInputs.wrappers?.[key]])
+    );
+    // Old arguments and option keys sit in their own layer just below their step's `texts`, so a
+    // nullish entry there still leaves them in place and `text(ownKey)` reaches them.
+    const layers: Array<Record<string, unknown>> = [
+      this.#kindTextLayer(textInputs.kindTexts),
+      this.#legacyLayer(textInputs.legacy, "argument"),
+      this.#textLayer(textInputs.texts, "@texts"),
+    ];
+    let current = this.#optionsSnapshot(declared, layers, wrappers, textInputs);
+    this.#steps.options.forEach((step, index) => {
       const previous = current;
       const partial = withTransformerErrorHandling(
         () => step(previous, context),
         () => undefined
       );
       if (!partial || typeof partial !== "object" || Array.isArray(partial)) {
-        continue;
+        return;
       }
       const next = { ...current };
+      const legacy: Record<string, unknown> = {};
       for (const key of Object.keys(partial)) {
+        if (key === "texts") {
+          continue;
+        }
         if (!Object.hasOwn(declared, key)) {
           if (DEBUG) {
             warn(`DSelect: unknown options customization key "${key}"`, false, {
@@ -351,6 +491,9 @@ export default class SelectCustomizations {
           }
           continue;
         }
+        if (Object.hasOwn(LEGACY_TEXTS, key)) {
+          legacy[key] = partial[key];
+        }
         Object.assign(next, {
           [key]:
             key === "disabled"
@@ -358,19 +501,42 @@ export default class SelectCustomizations {
               : partial[key],
         });
       }
-      current = this.#optionsSnapshot(next);
-    }
-    if (current.iconOnly && !current.ariaLabel) {
+      layers.push(
+        this.#legacyLayer(legacy, "option"),
+        this.#textLayer(
+          partial.texts,
+          "a customization",
+          this.#steps.optionsTiers[index] === 0
+        )
+      );
+      current = this.#optionsSnapshot(next, layers, wrappers, textInputs);
+    });
+    const noneRow = !!(current.noneRow || current.noneLabel);
+    const loadingStatus = !!(current.loadingStatus || current.loadingLabel);
+    let iconOnly = current.iconOnly;
+    if (iconOnly && !selectTextResolver(current)!.explicit("ariaLabel")) {
       if (DEBUG) {
         warn(
-          "DSelect: iconOnly requires an ariaLabel and is ignored without one",
+          "DSelect: iconOnly requires an ariaLabel text and is ignored without one",
           false,
           {
             id: "discourse.d-select.icon-only-without-label",
           }
         );
       }
-      current = this.#optionsSnapshot({ ...current, iconOnly: false });
+      iconOnly = false;
+    }
+    if (
+      noneRow !== current.noneRow ||
+      loadingStatus !== current.loadingStatus ||
+      iconOnly !== current.iconOnly
+    ) {
+      current = this.#optionsSnapshot(
+        { ...current, noneRow, loadingStatus, iconOnly },
+        layers,
+        wrappers,
+        textInputs
+      );
     }
     return current;
   }
@@ -421,21 +587,141 @@ export default class SelectCustomizations {
     return run(0);
   }
 
-  /** Copies nested caret state so freezing a snapshot never freezes caller-owned data. */
+  /**
+   * Copies nested caret state and the merged texts, so freezing a snapshot never freezes
+   * caller-owned data, then attaches a resolver over the text layers seen so far.
+   */
   #optionsSnapshot(
-    options: SelectPresentationOptions & Record<string, unknown>
+    options: SelectPresentationOptions & Record<string, unknown>,
+    layers: ReadonlyArray<Record<string, unknown>>,
+    wrappers: Readonly<Record<string, unknown>>,
+    textInputs: SelectTextInputs
   ): SelectResolvedOptions {
-    return Object.freeze({
+    const texts: Record<string, unknown> = {};
+    for (const layer of layers) {
+      for (const [key, entry] of Object.entries(layer)) {
+        if (entry !== null && entry !== undefined) {
+          texts[key] = entry;
+        }
+      }
+    }
+    const snapshot = {
       ...options,
+      texts: Object.freeze(texts) as SelectTexts,
       caretIcon:
         typeof options.caretIcon === "object" && options.caretIcon !== null
           ? Object.freeze({ ...options.caretIcon })
           : options.caretIcon,
-    });
+    };
+    const required = new Set(REQUIRED_SELECT_TEXTS);
+    if (textInputs.labelledBy) {
+      required.delete("ariaLabel");
+    }
+    if (options.noneRow || options.noneLabel) {
+      required.add("noneLabel");
+    }
+    if (options.loadingStatus || options.loadingLabel) {
+      required.add("loadingLabel");
+    }
+    attachSelectTextResolver(
+      snapshot,
+      new SelectTextResolver({
+        layers: layers.map((layer, index) => ({
+          source: `layer ${index}`,
+          texts: Object.freeze({ ...layer }) as SelectTexts,
+        })),
+        wrappers: wrappers as Record<string, SelectTextWrapper | undefined>,
+        kind: this.#names.kind,
+        identifier: this.#names.identifier,
+        multiple: textInputs.multiple,
+        notices: this.#notices,
+        required,
+      })
+    );
+    return Object.freeze(snapshot);
+  }
+
+  /** The recipe's layer: its declared keys and core keys, without warnings. */
+  #kindTextLayer(texts: SelectTexts | undefined): Record<string, unknown> {
+    if (!texts || typeof texts !== "object") {
+      return {};
+    }
+    return Object.fromEntries(
+      Object.entries(texts).filter(([key]) => this.#isKnownText(key))
+    );
+  }
+
+  /** A call-site or customization layer; unknown keys warn once and are left out. */
+  #textLayer(
+    texts: unknown,
+    source: string,
+    forAll = false
+  ): Record<string, unknown> {
+    if (!texts || typeof texts !== "object" || Array.isArray(texts)) {
+      return {};
+    }
+    const layer: Record<string, unknown> = {};
+    for (const [key, entry] of Object.entries(texts)) {
+      if (this.#isKnownText(key)) {
+        layer[key] = entry;
+      } else if (!(forAll && RECIPE_TEXT_KEYS.has(key))) {
+        (forAll ? forAllTextNotices() : this.#notices).warn(
+          `DSelect: ${source} sets the unknown text "${key}". Known texts are the engine's and those of kind "${this.#names.kind ?? "(none)"}": ${[...Object.keys(DEFAULT_SELECT_TEXTS), ...this.#kindTextKeys].join(", ")}. Old names: noResultsLabel is noResults, minimumLabel is minimum, maximumLabel is maximum.`,
+          "discourse.d-select.texts-unknown-key",
+          key
+        );
+      }
+    }
+    return layer;
+  }
+
+  /**
+   * Maps old text arguments or option keys onto their texts. `""` removes the prompt for
+   * `searchPlaceholder`; for any other argument it shows the layer below, and for an option key
+   * it shows the engine default, so the option still overrides the argument.
+   */
+  #legacyLayer(
+    legacy: Readonly<Record<string, unknown>>,
+    source: "argument" | "option"
+  ): Record<string, unknown> {
+    const layer: Record<string, unknown> = {};
+    for (const [name, key] of Object.entries(LEGACY_TEXTS)) {
+      const value = legacy[name];
+      if (value === undefined) {
+        continue;
+      }
+      this.#notices.warn(
+        source === "argument"
+          ? `DSelect: @${name} is replaced by @texts={{hash ${key}=…}}`
+          : `DSelect: the "${name}" option is replaced by { texts: { ${key}: … } }`,
+        "discourse.d-select.texts-legacy",
+        name
+      );
+      layer[key] =
+        value === "" ? this.#emptyLegacyText(name, key, source) : value;
+    }
+    return layer;
+  }
+
+  #emptyLegacyText(
+    name: string,
+    key: string,
+    source: "argument" | "option"
+  ): unknown {
+    if (name === "searchPlaceholder") {
+      return "";
+    }
+    return source === "option"
+      ? DEFAULT_SELECT_TEXTS[key as keyof typeof DEFAULT_SELECT_TEXTS]
+      : undefined;
+  }
+
+  #isKnownText(key: string): boolean {
+    return isCoreTextKey(key) || this.#kindTextKeys.has(key);
   }
 
   /** Seals even failed setups and discards every declaration they made. */
-  #setup(setup: Setup, names: SelectNames): void {
+  #setup(setup: Setup, names: SelectNames, tier: number): void {
     const pending = new Declarations();
     let sealed = false;
     const append = <T>(list: T[], callback: T): void => {
@@ -486,6 +772,7 @@ export default class SelectCustomizations {
       this.#steps.content.push(...pending.content);
       this.#steps.row.push(...pending.row);
       this.#steps.options.push(...pending.options);
+      this.#steps.optionsTiers.push(...pending.options.map(() => tier));
       this.#steps.load.push(...pending.load);
       this.#steps.change.push(...pending.change);
     }

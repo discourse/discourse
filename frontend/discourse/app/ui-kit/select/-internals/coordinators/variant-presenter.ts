@@ -9,7 +9,6 @@ import SelectPresenterBase, {
 import SelectEngine, {
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 export const SELECT_VARIANTS = {
   typeahead: "typeahead",
@@ -195,10 +194,12 @@ export default class VariantPresenter
     if (this.#getArgs().multiple || !this.#engine.hasValue) {
       return this.selectionLabel;
     }
-    return i18n("d_select.label_with_value", {
-      label: this.ariaLabelText,
-      value: this.fallbackSelectionLabel,
-    });
+    return (
+      this.#engine.text("labelWithValue", {
+        label: this.ariaLabelText ?? "",
+        value: this.fallbackSelectionLabel,
+      }) || undefined
+    );
   }
 
   get triggerRootControls(): string | undefined {
@@ -273,9 +274,7 @@ export default class VariantPresenter
 
   /** The clear control's accessible name — `"Clear all"` for multi, `"Clear selection"` otherwise. */
   get clearLabel(): string {
-    return this.#getArgs().multiple
-      ? i18n("d_select.clear_all")
-      : i18n("d_select.clear");
+    return this.#engine.text(this.#getArgs().multiple ? "clearAll" : "clear");
   }
 
   /**
@@ -376,20 +375,24 @@ export default class VariantPresenter
         return undefined;
       }
       const value = this.#engine.value;
-      return i18n("d_select.selected_count", {
-        count: Array.isArray(value) ? value.length : 0,
-      });
+      return (
+        this.#engine.text("selectedCount", {
+          count: Array.isArray(value) ? value.length : 0,
+        }) || undefined
+      );
     }
     return this.#engine.hasValue ? this.fallbackSelectionLabel : undefined;
   }
 
-  get selectionLabel(): string {
+  get selectionLabel(): string | undefined {
     if (this.#getArgs().multiple && this.maxVisibleChips !== undefined) {
       const value = this.#engine.value;
-      return i18n("d_select.label_with_count", {
-        label: this.ariaLabelText,
-        count: Array.isArray(value) ? value.length : 0,
-      });
+      return (
+        this.#engine.text("labelWithCount", {
+          label: this.ariaLabelText ?? "",
+          count: Array.isArray(value) ? value.length : 0,
+        }) || undefined
+      );
     }
     return this.ariaLabelText;
   }
@@ -492,24 +495,73 @@ export default class VariantPresenter
     return this.#engine.getSingleSelectionLabel(value);
   }
 
-  get queryPlaceholder(): string {
-    if (this.#engine.hasValue || this.#engine.pending) {
-      return "";
+  /**
+   * The multi-select field's prompt: the placeholder while nothing is held, then the add-more
+   * prompt. Only a field with an input shows the add-more prompt; elsewhere the chips stand alone.
+   */
+  get queryPlaceholder(): string | undefined {
+    if (!this.#engine.hasValue) {
+      return this.#engine.pending ? undefined : this.placeholder;
     }
-    return this.placeholder || i18n("d_select.add_placeholder");
+    return this.fieldRendersInput
+      ? (this.#addMorePlaceholder() ?? undefined)
+      : undefined;
   }
 
-  /** The filter input's resolved placeholder, or a default. */
+  /**
+   * The panel field's prompt. A mobile typeahead multi-select modal stands in for the desktop
+   * field, so it shows the same prompts; where they don't apply it keeps the search prompt.
+   */
+  get panelPlaceholder(): string | undefined {
+    if (!(this.isMobileTypeahead && this.#getArgs().multiple)) {
+      return this.searchPlaceholderText;
+    }
+    if (!this.#engine.pending && !this.isLocked) {
+      if (!this.#engine.hasValue) {
+        return this.placeholder;
+      }
+      const prompt = this.#addMorePlaceholder();
+      if (prompt !== null) {
+        return prompt;
+      }
+    }
+    return this.searchPlaceholderText;
+  }
+
+  /** The filter input's prompt. */
   get searchPlaceholderText(): string {
-    return (
-      this.#engine.resolvedOptions.searchPlaceholder ??
-      i18n("d_select.search_placeholder")
-    );
+    return this.#engine.text("searchPlaceholder");
   }
 
   /** Keeps typeahead reconciliation keyed to the displayed array. */
   @bind
   rovingItemsKey(items: readonly unknown[]): readonly unknown[] | string {
     return this.isTypeahead ? items : this.rovingNonTypeaheadKey;
+  }
+
+  /**
+   * The prompt after held items, or `null` while no further item can be added. A bound that
+   * doesn't apply (no `minimum`, or uncapped `maximum`) is left out of the values, because a
+   * translation can't render a missing bound.
+   */
+  #addMorePlaceholder(): string | null {
+    const engine = this.#engine;
+    if (
+      !this.#getArgs().multiple ||
+      !engine.hasValue ||
+      engine.atMaximum ||
+      engine.pending ||
+      this.isLocked
+    ) {
+      return null;
+    }
+    const values: Record<string, number> = { selected: engine.selectedCount };
+    if (engine.minimum > 0) {
+      values.minimum = engine.minimum;
+    }
+    if (engine.maximum != null) {
+      values.maximum = engine.maximum;
+    }
+    return engine.text("addMorePlaceholder", values);
   }
 }

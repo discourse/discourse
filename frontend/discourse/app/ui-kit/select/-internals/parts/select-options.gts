@@ -25,7 +25,6 @@ import SelectEngine, {
   selectItemLabel,
   type SelectLoadOptions,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 /** Fixes the callback tuple before the template curries a lifecycle modifier. */
 type ListLifecycleModifier<Args extends unknown[]> = ModifierLike<{
@@ -157,8 +156,6 @@ interface SelectOptionsSignature {
     reportsActive?: boolean;
     /** Whether the select accepts multiple values. */
     multiple?: boolean;
-    /** Consumer-provided label for an empty result set. */
-    noResultsLabel?: string;
     /** Whether the consumer supplied custom placeholder-row markup. */
     hasSkeletonItemBlock: boolean;
     /** Whether the consumer supplied custom empty-state markup. */
@@ -208,11 +205,11 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
         tabindex="-1"
       >
         {{#if (or (not @staticBody) @feedback.showInitialPlaceholder)}}
-          {{#if @engine.resolvedOptions.loadingLabel}}
+          {{#if @engine.resolvedOptions.loadingStatus}}
             <li class="d-select__loading-status" role="status">
               {{dIcon "spinner" class="d-select__pending-icon"}}
               <span>
-                {{~@engine.resolvedOptions.loadingLabel~}}
+                {{~@engine.text "loadingLabel"~}}
               </span>
             </li>
           {{/if}}
@@ -324,16 +321,20 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
           {{/let}}
 
           {{#if @engine.atCapWithMore}}
-            {{! Sits outside the listbox, which admits only list items. The text also
-          goes through the a11y service because a live region announces unreliably on
-          the render that mounts it. }}
-            <div
-              class="d-select__narrow"
-              role={{unless (eq @reportsActive false) "status"}}
-              {{didInsert @announcer.announceNarrow}}
-            >
-              {{i18n "d_select.filter_to_narrow"}}
-            </div>
+            {{#let (@engine.text "maxLoaded") as |narrow|}}
+              {{#if narrow}}
+                {{! Sits outside the listbox, which admits only list items. The text also
+              goes through the a11y service because a live region announces unreliably on
+              the render that mounts it. }}
+                <div
+                  class="d-select__narrow"
+                  role={{unless (eq @reportsActive false) "status"}}
+                  {{didInsert @announcer.announceNarrow}}
+                >
+                  {{narrow}}
+                </div>
+              {{/if}}
+            {{/let}}
           {{/if}}
         {{else if (or content.filter (not @hideEmptyQuery))}}
           {{! Recorded here too, not only on the list: a query that found nothing is a
@@ -348,19 +349,28 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
             Keyed on the resolved query, never the engine query, which advances on
             a keystroke or reload. That would report an empty result for a query still in
             flight, over rows that still belong to the previous one. }}
-          <div
-            class="d-select__empty"
-            role={{unless (eq @reportsActive false) "status"}}
-            {{didInsert @feedback.recordRowCount 0}}
-            {{didInsert @announcer.announceNoResults content.query}}
-            {{didUpdate @announcer.announceNoResults content.query}}
-          >
-            {{#if @hasEmptyBlock}}
-              {{yield to="empty"}}
-            {{else}}
-              {{or @noResultsLabel (i18n "d_select.no_results")}}
-            {{/if}}
-          </div>
+          {{! An empty text keeps the element, without a role, because it still
+            records the row count and replaces a held result count. }}
+          {{#let (@engine.text "noResults") as |noResults|}}
+            <div
+              class="d-select__empty"
+              role={{if
+                (and
+                  (not (eq @reportsActive false)) (or @hasEmptyBlock noResults)
+                )
+                "status"
+              }}
+              {{didInsert @feedback.recordRowCount 0}}
+              {{didInsert @announcer.announceNoResults content.query}}
+              {{didUpdate @announcer.announceNoResults content.query}}
+            >
+              {{#if @hasEmptyBlock}}
+                {{yield to="empty"}}
+              {{else}}
+                {{noResults}}
+              {{/if}}
+            </div>
+          {{/let}}
         {{/if}}
       {{/let}}
     </:content>
@@ -384,13 +394,13 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
         {{else}}
           <span class="d-select__error-message">
             {{dIcon "triangle-exclamation"}}
-            {{i18n "d_select.load_error"}}
+            {{@engine.text "loadError"}}
           </span>
           {{#if @presenter.retryable}}
             <DButton
               class="d-select__retry btn-flat"
               @action={{@engine.reload}}
-              @label="d_select.retry"
+              @translatedLabel={{@engine.text "retry"}}
             />
           {{/if}}
         {{/if}}

@@ -609,6 +609,61 @@ module(
       );
     });
 
+    test("a held reveal is announced in the render that draws its placeholder rows", async function (assert) {
+      let engine;
+      let releaseReveal;
+      let revealRequested = false;
+      const skeletonsWhenSpoken = [];
+      const a11y = getOwner(this).lookup("service:a11y");
+      const announce = a11y.announce.bind(a11y);
+      sinon.stub(a11y, "announce").callsFake((message, ...rest) => {
+        if (message === i18n("d_select.loading_more")) {
+          skeletonsWhenSpoken.push(
+            findAll("ul[role='listbox'] .d-select__skeleton").length
+          );
+        }
+        return announce(message, ...rest);
+      });
+      const allItems = buildItems(500);
+      const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
+      const load = (_filter, { offset = 0 }) => {
+        if (offset === 0) {
+          return { items: allItems.slice(0, 50), total: allItems.length };
+        }
+        revealRequested = true;
+        return revealPromise;
+      };
+
+      await render(
+        <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
+      );
+      await openSelect();
+      engine = probedEngine();
+
+      engine.revealMore();
+      await waitUntil(() => revealRequested);
+      try {
+        await waitUntil(() =>
+          document.querySelector("ul[role='listbox'] .d-select__skeleton")
+        );
+        assert.strictEqual(
+          skeletonsWhenSpoken.length,
+          1,
+          "the reveal is announced once, by the time its placeholders show"
+        );
+        assert.true(
+          skeletonsWhenSpoken[0] > 0,
+          "the announcement never runs ahead of the placeholders"
+        );
+      } finally {
+        releaseReveal({
+          items: allItems.slice(50, 100),
+          total: allItems.length,
+        });
+        await settled();
+      }
+    });
+
     test("special and create rows keep flat positions around the source rows", async function (assert) {
       const items = buildItems(5);
       const specialItems = () => [

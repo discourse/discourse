@@ -2894,15 +2894,53 @@ module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
   });
 });
 
-module(
-  "Unit | ui-kit | SelectAnnouncer | delayed reveal reports",
-  function (hooks) {
-    setupTest(hooks);
+module("Unit | ui-kit | SelectAnnouncer | reveal reports", function (hooks) {
+  setupTest(hooks);
 
-    const A = { id: 1, name: "One" };
-    const B = { id: 2, name: "Two" };
+  const A = { id: 1, name: "One" };
+  const B = { id: 2, name: "Two" };
 
-    test("closing after delayed feedback clears the completion debt", async function (assert) {
+  test("closing after a due reveal clears the completion debt", async function (assert) {
+    const gate = deferred();
+    let due = false;
+    let calls = 0;
+    const engine = new SelectEngine({
+      load: () =>
+        ++calls === 1 ? { items: [A], hasMore: true } : gate.promise,
+    });
+    const announce = sinon.spy();
+    const announcer = new SelectAnnouncer({
+      a11y: { announce },
+      engine,
+      getActiveOptionKey: () => null,
+      reannounceActive: () => false,
+      getShouldSuppressEntryCount: () => false,
+      isRevealDue: () => due,
+    });
+    await engine.loadItems(engine.loadContext);
+    engine.revealMore();
+    const pending = engine.loadItems(engine.loadContext);
+    announcer.announceReveal();
+    assert.false(announce.called, "a reveal says nothing before it is due");
+    due = true;
+    announcer.announceReveal();
+    assert.true(
+      announce.calledWith(i18n("d_select.loading_more")),
+      "a reveal announces its start once it is due"
+    );
+    announcer.releaseSession();
+    gate.resolve({ items: [B], hasMore: false });
+    await pending;
+    announcer.announceReveal();
+    assert.false(
+      announce.calledWith(i18n("d_select.loading_complete")),
+      "the interrupted announcement owes no completion"
+    );
+    destroy(announcer);
+  });
+
+  for (const cleanup of ["close", "teardown"]) {
+    test(`${cleanup} clears a reported reveal's completion debt`, async function (assert) {
       const gate = deferred();
       let calls = 0;
       const engine = new SelectEngine({
@@ -2915,77 +2953,38 @@ module(
         engine,
         getActiveOptionKey: () => null,
         reannounceActive: () => false,
-        getNoResultsLabel: () => undefined,
         getShouldSuppressEntryCount: () => false,
+        isRevealDue: () => true,
       });
       await engine.loadItems(engine.loadContext);
       engine.revealMore();
       const pending = engine.loadItems(engine.loadContext);
       announcer.announceReveal();
-      await settled();
       assert.true(
         announce.calledWith(i18n("d_select.loading_more")),
-        "a reveal held beyond the delay announces its start"
+        "the due reveal was reported"
       );
-      announcer.releaseSession();
+      runLoop(() => {
+        if (cleanup === "close") {
+          announcer.releaseSession();
+        } else {
+          destroy(announcer);
+        }
+      });
+      assert.true(isSettled(), "the reveal report leaves no timer behind");
       gate.resolve({ items: [B], hasMore: false });
       await pending;
-      announcer.announceReveal();
+      if (cleanup === "close") {
+        announcer.announceReveal();
+      }
       assert.false(
         announce.calledWith(i18n("d_select.loading_complete")),
-        "the interrupted announcement owes no completion"
+        "the interrupted reveal owes no completion"
       );
       destroy(announcer);
     });
-
-    for (const cleanup of ["close", "teardown"]) {
-      test(`${cleanup} cancels a delayed reveal report`, async function (assert) {
-        const gate = deferred();
-        let calls = 0;
-        const engine = new SelectEngine({
-          load: () =>
-            ++calls === 1 ? { items: [A], hasMore: true } : gate.promise,
-        });
-        const announce = sinon.spy();
-        const announcer = new SelectAnnouncer({
-          a11y: { announce },
-          engine,
-          getActiveOptionKey: () => null,
-          reannounceActive: () => false,
-          getNoResultsLabel: () => undefined,
-          getShouldSuppressEntryCount: () => false,
-        });
-        await engine.loadItems(engine.loadContext);
-        engine.revealMore();
-        const pending = engine.loadItems(engine.loadContext);
-        announcer.announceReveal();
-        runLoop(() => {
-          if (cleanup === "close") {
-            announcer.releaseSession();
-          } else {
-            destroy(announcer);
-          }
-        });
-        assert.true(
-          isSettled(),
-          "cleanup cancels the timer rather than waiting it out"
-        );
-        await settled();
-        assert.false(announce.called, "no delayed report survives cleanup");
-        gate.resolve({ items: [B], hasMore: false });
-        await pending;
-        if (cleanup === "close") {
-          announcer.announceReveal();
-        }
-        assert.false(
-          announce.calledWith(i18n("d_select.loading_complete")),
-          "the interrupted reveal owes no completion"
-        );
-        destroy(announcer);
-      });
-    }
   }
-);
+});
 
 module("Unit | ui-kit | SelectEngine | held value reads", function (hooks) {
   setupTest(hooks);

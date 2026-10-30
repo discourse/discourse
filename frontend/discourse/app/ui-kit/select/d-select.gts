@@ -45,6 +45,8 @@ import type {
   SelectDescriptor,
   SelectEngineOptions,
   SelectItem as SelectItemModel,
+  SelectTexts,
+  SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -83,6 +85,22 @@ interface DSelectSignature {
     legacyKind?: string | string[];
     /** Declares recipe option keys and their live base values. Requires `@kind`; core keys are reserved. */
     kindOptions?: Record<string, unknown>;
+    /**
+     * Every text the select draws or speaks, by key: a translated string, `{ key }` for a
+     * translation, or a function of the text's values. Each entry merges over the recipe's and
+     * the engine's defaults; `""` means the place shows nothing.
+     */
+    texts?: SelectTexts;
+    /**
+     * A recipe's texts: defaults for engine texts and its own. Requires `@kind`; the recipe's own
+     * keys are fixed at construction.
+     */
+    kindTexts?: SelectTexts;
+    /**
+     * A recipe's final say over a text, run once on the result of every layer. Requires `@kind`;
+     * keys are fixed at construction, and texts that name a control can't be wrapped.
+     */
+    kindTextWrappers?: Readonly<Record<string, SelectTextWrapper | undefined>>;
     /** The call-site name used for customization and menu identity. */
     identifier?: string;
     /** A recipe's own data, passed to customizations as `context.kindContext`. */
@@ -164,9 +182,11 @@ interface DSelectSignature {
      */
     skeletonCount?: number;
     /**
-     * A status line, with a spinner, above the loading skeleton, naming what is loading for a
-     * source slow enough to need it. Absent by default.
+     * Shows a status line, with a spinner, above the loading skeleton, for a source slow enough
+     * to need it. Its wording is `texts.loadingLabel`. Off by default.
      */
+    loadingStatus?: boolean;
+    /** Turns the loading status line on, labeled with this text. */
     loadingLabel?: string;
     /**
      * Icon marking the selected row(s) in the list. Multi-select always shows it (defaulting to a
@@ -262,13 +282,15 @@ interface DSelectSignature {
      */
     minimum?: number;
     /**
-     * Single-select only: adds a first-class "none" row to the top of the list, labeled with this
-     * string. Selecting it clears the value to `null`, and the row reads as selected whenever
-     * nothing else is. It is a list affordance shown only while browsing (an active filter query
-     * hides it, so a non-matching search still reaches the empty state), and after choosing it the
-     * trigger shows the placeholder — `null` cannot encode "None" in the trigger. Ignored on
+     * Single-select only: adds a first-class "none" row to the top of the list, labeled with
+     * `texts.noneLabel`. Selecting it clears the value to `null`, and the row reads as selected
+     * whenever nothing else is. It is a list affordance shown only while browsing (an active filter
+     * query hides it, so a non-matching search still reaches the empty state), and after choosing
+     * it the trigger shows the placeholder — `null` cannot encode "None" in the trigger. Ignored on
      * multi-select, where the empty state is the placeholder rather than a row.
      */
+    noneRow?: boolean;
+    /** Turns the none row on, labeled with this text. */
     noneLabel?: string;
     /**
      * Skips the `:footer` block even when one is passed. A recipe that forwards its caller's
@@ -861,7 +883,6 @@ export default class DSelect extends Component<DSelectSignature> {
             @loadListContent={{this.host.loadListContent}}
             @locked={{this.presenter.isLocked}}
             @multiple={{@multiple}}
-            @noResultsLabel={{@noResultsLabel}}
             @onOptionMousedown={{this.interaction.preventPointerBlur}}
             @onRegisterListbox={{this.interaction.registerListbox}}
             @onRegisterStripRoving={{this.interaction.registerStripRoving}}
@@ -927,7 +948,7 @@ export default class DSelect extends Component<DSelectSignature> {
                     @onRegisterChipRoving={{this.interaction.registerChipRoving}}
                     @onResize={{this.listbox.remeasureListbox}}
                     @pending={{this.engine.pending}}
-                    @placeholder={{this.presenter.searchPlaceholderText}}
+                    @placeholder={{this.presenter.panelPlaceholder}}
                     @presenter={{this.presenter}}
                     @queryDisplay="always"
                     @registerInput={{this.interaction.captureFilter}}
@@ -966,10 +987,10 @@ export default class DSelect extends Component<DSelectSignature> {
                     }}
                   >
                     <ComboboxQueryInput
-                      aria-describedby={{@describedBy}}
                       aria-invalid={{if @invalid "true"}}
                       class="d-select__filter"
                       id={{this.panelInputId}}
+                      @describedBy={{@describedBy}}
                       @disabled={{this.presenter.isDisabled}}
                       @engine={{this.engine}}
                       @expanded={{true}}
@@ -1037,7 +1058,7 @@ export default class DSelect extends Component<DSelectSignature> {
         </div>
       </:content>
     </DMenu>
-    {{#if this.labelledByWithValue}}
+    {{#if (and this.presenter.ariaLabelledBy this.presenter.labelledValue)}}
       <span hidden id={{this.labelledValueId}}>
         {{~this.presenter.labelledValue~}}
       </span>

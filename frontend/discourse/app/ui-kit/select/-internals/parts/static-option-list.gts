@@ -14,7 +14,6 @@ import type { SelectOptionsModifiers } from "discourse/ui-kit/select/-internals/
 import SelectEngine, {
   SelectItem as SelectItemModel,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 interface StaticOptionListSignature {
   Args: {
@@ -31,7 +30,7 @@ interface StaticOptionListSignature {
     /** The rendered listbox id. */
     listboxId: string;
     /** Stable id of the panel's selection-limit message. */
-    limitId: string;
+    limitId?: string;
     /** Icon marking selected rows. */
     selectedIcon?: string;
     /** Omits the selection marker, for a list that never shows a held row. */
@@ -97,7 +96,7 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
   <template>
     <ul
       aria-busy={{if @engine.serverPending "true" "false"}}
-      aria-label={{unless @labelledBy (or @label (i18n "d_select.label"))}}
+      aria-label={{unless @labelledBy @label}}
       aria-labelledby={{@labelledBy}}
       aria-multiselectable="true"
       class="d-select__listbox d-select__options"

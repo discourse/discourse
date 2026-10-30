@@ -100,15 +100,7 @@ export default class SelectionActions {
   /** Whether the selection is still short of the advisory {@link minimum}. */
   get belowMinimum(): boolean {
     const minimum = this.#options.minimum;
-    return minimum > 0 && this.#selectedCount < minimum;
-  }
-
-  /** How many more items may still be added, or `undefined` when uncapped. */
-  get remaining(): number | undefined {
-    const maximum = this.#options.maximum;
-    return maximum == null
-      ? undefined
-      : Math.max(0, maximum - this.#selectedCount);
+    return minimum > 0 && this.selectedCount < minimum;
   }
 
   /**
@@ -117,13 +109,21 @@ export default class SelectionActions {
    * let the visible selection exceed the cap, and the user can always reclaim its slot by
    * removing that chip.
    */
-  get #selectedCount(): number {
+  get selectedCount(): number {
     return this._valueArray.length;
+  }
+
+  /** How many more items may still be added, or `undefined` when uncapped. */
+  get remaining(): number | undefined {
+    const maximum = this.#options.maximum;
+    return maximum == null
+      ? undefined
+      : Math.max(0, maximum - this.selectedCount);
   }
 
   get #atMaximum(): boolean {
     const maximum = this.#options.maximum;
-    return maximum != null && this.#selectedCount >= maximum;
+    return maximum != null && this.selectedCount >= maximum;
   }
 
   @cached

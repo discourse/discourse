@@ -12,7 +12,6 @@ import type { SelectOptionsModifiers } from "discourse/ui-kit/select/-internals/
 import SelectEngine, {
   SelectItem as SelectItemModel,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 interface WindowedOptionListSignature {
   Args: {
@@ -29,7 +28,7 @@ interface WindowedOptionListSignature {
     /** The rendered listbox id. */
     listboxId: string;
     /** Stable id of the panel's selection-limit message. */
-    limitId: string;
+    limitId?: string;
     /** Icon marking selected rows. */
     selectedIcon?: string;
     /** Omits the selection marker, for a list that never shows a held row. */
@@ -82,7 +81,7 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
       {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
           fetch itself; the frontier skeleton is the sighted counterpart. }}
       aria-busy={{if @engine.serverPending "true" "false"}}
-      aria-label={{unless @labelledBy (or @label (i18n "d_select.label"))}}
+      aria-label={{unless @labelledBy @label}}
       aria-labelledby={{@labelledBy}}
       aria-multiselectable={{if @multiple "true"}}
       class="d-select__listbox"
@@ -125,7 +124,11 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
       {{@modifiers.record}}
       {{@modifiers.countOnEntry}}
       {{@modifiers.count}}
-      {{didUpdate @announcer.announceReveal @engine.serverPending}}
+      {{didUpdate
+        @announcer.announceReveal
+        @engine.serverPending
+        @announcer.revealDue
+      }}
       {{didUpdate @listbox.rearmEndAfterPage @engine.serverPending}}
       {{! Static in the mobile modal moves DOM focus into the listbox; every other
           surface keeps focus on its controller (no-op there). }}

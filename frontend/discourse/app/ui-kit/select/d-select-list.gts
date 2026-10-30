@@ -30,6 +30,8 @@ import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowe
 import type {
   SelectDescriptor,
   SelectItem,
+  SelectTexts,
+  SelectTextWrapper,
 } from "discourse/ui-kit/select/select-engine";
 
 /** Live state yielded to the list's `:listHeader` and `:footer` blocks. */
@@ -97,6 +99,22 @@ interface DSelectListSignature {
     legacyKind?: string | string[];
     /** Declares live recipe options; core option keys remain reserved. */
     kindOptions?: Record<string, unknown>;
+    /**
+     * Every text the select draws or speaks, by key: a translated string, `{ key }` for a
+     * translation, or a function of the text's values. Each entry merges over the recipe's and
+     * the engine's defaults; `""` means the place shows nothing.
+     */
+    texts?: SelectTexts;
+    /**
+     * A recipe's texts: defaults for engine texts and its own. Requires `@kind`; the recipe's own
+     * keys are fixed at construction.
+     */
+    kindTexts?: SelectTexts;
+    /**
+     * A recipe's final say over a text, run once on the result of every layer. Requires `@kind`;
+     * keys are fixed at construction, and texts that name a control can't be wrapped.
+     */
+    kindTextWrappers?: Readonly<Record<string, SelectTextWrapper | undefined>>;
     /** Call-site customization identity. */
     identifier?: string;
     /** Recipe context supplied to customizations. */
@@ -109,7 +127,9 @@ interface DSelectListSignature {
     searchPlaceholder?: string;
     /** A decorative trailing icon in the search field. */
     searchIcon?: string;
-    /** A status line, with a spinner, above the loading skeleton; absent by default. */
+    /** Shows a status line, with a spinner, above the loading skeleton; off by default. */
+    loadingStatus?: boolean;
+    /** Turns the loading status line on, labeled with this text. */
     loadingLabel?: string;
     /** Label shown when a nonempty query returns no results. */
     noResultsLabel?: string;
@@ -317,7 +337,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @loadListContent={{this.host.loadListContent}}
         @locked={{this.presenter.isLocked}}
         @multiple={{true}}
-        @noResultsLabel={{@noResultsLabel}}
         @onOptionMousedown={{this.interaction.preventPointerBlur}}
         @onRegisterListbox={{this.interaction.registerListbox}}
         @onRegisterRoving={{this.interaction.registerRoving}}

@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import measurePlaceholder from "discourse/ui-kit/select/-internals/modifiers/measure-placeholder";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
 interface ComboboxQueryInputSignature {
@@ -23,8 +25,12 @@ interface ComboboxQueryInputSignature {
     label?: string;
     /** Ids of the elements naming the input, used instead of `label`. */
     labelledBy?: string;
-    /** The input placeholder. */
+    /** The input placeholder; empty omits the attribute. */
     placeholder?: string;
+    /** Space-separated ids describing the input, such as a hint or a form's validation message. */
+    describedBy?: string;
+    /** Publishes the placeholder's width, for a chip row that keeps a long placeholder whole. */
+    measurePlaceholder?: boolean;
     /** Defaults to the resting display until editing; always shows the engine's filter. */
     queryDisplay?: "editing" | "always";
     /** Selected label displayed in the input before query editing begins. */
@@ -103,6 +109,34 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     return this.args.ariaOwns && this.args.expanded
       ? this.args.listboxId
       : undefined;
+  }
+
+  /**
+   * The id of a visually hidden copy of the placeholder, listed first among the input's
+   * descriptions. Only while the input has another description: some screen readers stop
+   * speaking a placeholder once `aria-describedby` is set, so the requirement it states would
+   * go unheard.
+   */
+  get placeholderDescriptionId(): string | undefined {
+    return this.args.placeholder && this.args.describedBy
+      ? `${guidFor(this)}-placeholder`
+      : undefined;
+  }
+
+  /** An empty name is no name: the caption, or nothing, names the input instead. */
+  get labelAttribute(): string | undefined {
+    return this.args.labelledBy ? undefined : this.args.label || undefined;
+  }
+
+  get placeholderAttribute(): string | undefined {
+    return this.args.placeholder || undefined;
+  }
+
+  get describedBy(): string | undefined {
+    const ids = [this.placeholderDescriptionId, this.args.describedBy].filter(
+      Boolean
+    );
+    return ids.length ? ids.join(" ") : undefined;
   }
 
   /** No typing, no open when disabled or readonly. */
@@ -233,15 +267,16 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     <input
       aria-autocomplete="list"
       aria-controls={{this.controlsId}}
+      aria-describedby={{this.describedBy}}
       aria-expanded={{if this.isCombobox (if @expanded "true" "false")}}
       aria-haspopup={{if this.isCombobox "listbox"}}
-      aria-label={{unless @labelledBy @label}}
+      aria-label={{this.labelAttribute}}
       aria-labelledby={{@labelledBy}}
       aria-owns={{this.ownsId}}
       autocomplete="off"
       class="d-select__input"
       disabled={{@disabled}}
-      placeholder={{@placeholder}}
+      placeholder={{this.placeholderAttribute}}
       readonly={{@readonly}}
       role={{if this.isCombobox "combobox"}}
       type={{if this.isCombobox "text" "search"}}
@@ -258,6 +293,15 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       {{on "focusout" this.handleFocusout}}
       {{didInsert @registerInput}}
       {{didUpdate this.selectOnDisplayValue @displayValue}}
+      {{(if
+        @measurePlaceholder
+        (modifier measurePlaceholder this.placeholderAttribute)
+      )}}
     />
+    {{#if this.placeholderDescriptionId}}
+      <span class="sr-only" id={{this.placeholderDescriptionId}}>
+        {{~@placeholder~}}
+      </span>
+    {{/if}}
   </template>
 }
