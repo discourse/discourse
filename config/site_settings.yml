@@ -3207,6 +3207,7 @@ security:
     client: true
   log_out_sessions_on_blocked_ips:
     default: false
+    hidden: true
   blocked_ip_blocks:
     default: ""
     type: list
