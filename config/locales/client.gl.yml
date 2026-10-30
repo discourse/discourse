@@ -2762,13 +2762,14 @@ gl:
           one: "Confirma a eliminación desta publicación?"
           other: "Confirma a eliminación destas %{count} publicacións?"
       revisions:
+        visibility:
+          hidden:
+            title: "Agochado"
         controls:
           first: "Primeira revisión"
           previous: "Revisión anterior"
           next: "Revisión seguinte"
           last: "Última revisión"
-          hide: "Agochar a revisión"
-          show: "Amosar revisión"
           revert: "Volver á revisión %{revision}"
           edit_wiki: "Editar wiki"
           edit_post: "Editar publicación"
@@ -3704,29 +3705,13 @@ gl:
           anonymous_human: "Anónimo"
       dashboard:
         title: "Panel"
-        last_updated: "Actualización do panel:"
-        discourse_last_updated: "Actualización de Discourse:"
         version: "Versión"
         up_to_date: "Está actualizado/a!"
         updates_available: "Hai actualizacións dispoñíbeis."
-        no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
-        stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."
-        installed_version: "Instalado"
-        github: "Github"
-        problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
         dismiss_notice: "Ignorar"
         new_features:
           learn_more: "Saber máis..."
-        last_checked: "Última comprobación"
         refresh_problems: "Actualizar"
-        no_problems: "Non se atoparon problemas."
-        moderators: "Moderadores:"
-        admins: "Administradores:"
-        silenced: "Silenciado:"
-        suspended: "Suspendidos:"
-        private_messages_short: "Mensaxes"
-        private_messages_title: "Mensaxes"
-        mobile_title: "Móbil"
         space_used: "%{usedSize} usados"
         space_used_and_free: "%{usedSize} (%{freeSize} libres)"
         uploads: "Cargas"
@@ -3735,20 +3720,7 @@ gl:
           one: "%{count} copia en %{location}"
           other: "%{count} copias en %{location}"
         lastest_backup: "Últimas: %{date}"
-        traffic_short: "Tráfico"
-        traffic: "Peticións web de aplicativos"
-        page_views: "Visualizacións de páxinas"
-        page_views_short: "Visualizacións de páxinas"
-        show_traffic_report: "Amosar o informe detallado do tráfico"
-        community_health: Saúde da comunidade
-        moderators_activity: Actividade dos moderadores
         whats_new_in_discourse: Novidades do Discourse?
-        activity_metrics: Métricas de actividade
-        all_reports: "Todos os informes"
-        general_tab: "Xeral"
-        moderation_tab: "Moderación"
-        security_tab: "Seguranza"
-        reports_tab: "Informes"
         report_filter_any: "calquera"
         disabled: Desactivado
         timeout_error: Sentímolo, pero a consulta está demorando moito. Escolla un intervalo máis curto
@@ -3784,7 +3756,6 @@ gl:
             title: "Sistema"
             status: "Estado"
             discourse_updated: "Actualización de Discourse"
-            dashboard_updated: "Actualización do panel"
         reports_section:
           header_action: "Xestionar"
           no_data: "Non hai datos que amosar"
@@ -3797,8 +3768,6 @@ gl:
             anonymous: "Anónimo"
             crawlers: "Rastrexadores"
           crawler_learn_more: "Saber máis"
-        period:
-          custom: "Personalizado"
         reports:
           trend_title: "Cambio do %{percent}. Actualmente %{current}, era %{prev} no período anterior."
           today: "Hoxe"
@@ -3829,9 +3798,6 @@ gl:
             posts_count:
               one: "%{count} publicación"
               other: "%{count} publicacións"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Buscar rexistros</a>'
-            disabled: 'O informe de busca de tendencias está desactivado. Activa as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de busca de rexistros</a> para obter datos.'
           sort_ascending: "ascendente"
           sort_descending: "descendente"
           filters:
@@ -4775,7 +4741,6 @@ gl:
           in_wrong_place: "No lugar equivocado"
           no_constructive_purpose: "Non ten ningún propósito construtivo nas súas accións que non sexa crear disensión dentro da comunidade"
         suspend_message: "Mensaxe de correo"
-        suspend_message_placeholder: "Pode achegar máis información sobre a suspensión e enviarlla por correo electrónico ao usuario."
         suspended_by: "Suspendido por"
         silence_reason: "Razón"
         silenced_by: "Silenciado por"
@@ -4783,7 +4748,6 @@ gl:
         silence_duration: "Canto tempo estará silenciado o usuario?"
         silence_reason_placeholder: "Razón do silencio"
         silence_message: "Mensaxe de correo"
-        silence_message_placeholder: "(deixar baleiro para enviar mensaxe predeterminada)"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."

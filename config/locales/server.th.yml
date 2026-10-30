@@ -587,6 +587,13 @@ th:
               private:
                 label: "ส่วนตัว"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "ทุกวัน"
+        ordinals:
+          last: "ล่าสุด"
+        weekdays:
+          monday: "วันจันทร์"
     github:
       header:
         success: "สำเร็จ"

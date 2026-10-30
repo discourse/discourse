@@ -2046,9 +2046,6 @@ sv:
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_tips: "Aktivera tips för nya användare som beskriver viktiga funktioner för användare"
-    dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
-    dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
-    dashboard_general_tab_activity_metrics: "Välj rapporter som ska visas som aktivitetsmätningar på fliken Allmänt."
     share_quote_buttons: "Bestäm vilka objekt som visas i citatdelningswidgeten, samt i vilken ordning."
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
@@ -3794,6 +3791,19 @@ sv:
     graph_title: "Sökningar"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Varje dag"
+        every_weekday: "Varje veckodag"
+        ordinals:
+          last: "senaste"
+        weekdays:
+          sunday: "Söndag"
+          monday: "Måndag"
+          tuesday: "Tisdag"
+          wednesday: "Onsdag"
+          thursday: "Torsdag"
+          friday: "Fredag"
+          saturday: "Lördag"
       user_joined_community: "Gick med %{date}"
     google_meet:
       meeting_code: "Kod:"

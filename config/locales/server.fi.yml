@@ -2373,9 +2373,6 @@ fi:
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
     enable_user_tips: "Käytä keskeisiä ominaisuuksia uusille käyttäjille kuvaavat vinkit"
-    dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
-    dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
-    dashboard_general_tab_activity_metrics: "Valitse raportit, jotka näytetään aktiivisuusmittareina Yleistä-välilehdellä."
     gravatar_name: "Määritä Gravatar-palveluntarjoajan nimi. Tätä nimeä käytetään yleensä Gravatar-avatareita sivustolle tarjoavan lähteen tunnistamiseen."
     gravatar_base_url: "Määritä Gravatar-palveluntarjoajan APIn URL-osoite. Tämä asetus on ehdottoman tärkeä muunnettaessa sähköpostiosoitteita Gravatarin URL-osoitteiksi, joihin avatar-kuvat on tallennettu."
     share_quote_buttons: "Mitkä kohteet näytetään lainauksen jakamispienoisohjelmassa ja missä järjestyksessä."
@@ -4495,6 +4492,19 @@ fi:
     graph_title: "Hakujen määrä"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Joka päivä"
+        every_weekday: "Arkipäivisin"
+        ordinals:
+          last: "viimeisin"
+        weekdays:
+          sunday: "Sunnuntai"
+          monday: "Maanantaina"
+          tuesday: "Tiistai"
+          wednesday: "Keskiviikko"
+          thursday: "Torstai"
+          friday: "Perjantai"
+          saturday: "Lauantai"
       user_joined_community: "Liittynyt %{date}"
     google_meet:
       meeting_code: "Koodi:"

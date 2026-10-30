@@ -2586,17 +2586,9 @@ id:
         series:
           anonymous_human: "Anonim"
       dashboard:
-        please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
-        github: "GitHub"
         dismiss_notice: "Abaikan"
-        last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
-        moderators: "Moderator:"
-        private_messages_title: "Pesan"
-        page_views: "Tampilan halaman"
-        page_views_short: "Tampilan halaman"
-        general_tab: "Umum"
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
         custom_date_range: Rentang tanggal tertentu
@@ -2631,9 +2623,6 @@ id:
           series:
             anonymous: "Anonim"
             crawlers: "Perayap"
-        period:
-          last_7_days: "7 hari terakhir"
-          last_30_days: "30 hari terakhir"
         reports:
           last_7_days: "7 terakhir"
           last_30_days: "30 terakhir"
@@ -2647,8 +2636,6 @@ id:
               other: "%{count} pengguna"
             posts_count:
               other: "%{count} post"
-          trending_search:
-            disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
           sort_button: "Urutkan berdasarkan %{column}"
           filters:
             category:

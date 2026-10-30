@@ -896,6 +896,7 @@ pl_PL:
   edit_conflict: "Ten wpis został zmieniony przez innego użytkownika i Twoje zmiany nie zostaną zapisane."
   revert_version_same: "Obecna wersja jest taka sama jak w wersja, którą próbujesz przywrócić."
   reverted_to_version: "powrócono do wersji #%{version}"
+  cannot_unlist_hidden_revision: "Ukrytej wersji nie można usunąć z listy. Najpierw ją pokaż, a potem usuń z listy."
   cannot_edit_on_slow_mode: "Ten temat jest w trybie powolnym. Aby zachęcić do przemyślanej, rozważanej dyskusji, edycja starych postów w tym temacie nie jest obecnie dozwolona w trybie powolnym."
   excerpt_image: "zdjęcie"
   bookmarks:
@@ -3072,9 +3073,6 @@ pl_PL:
     enable_user_status: "Zezwól użytkownikom na ustawienie niestandardowego statusu (emoji + opis)."
     enable_user_tips: "Włącz nowe wskazówki dla użytkowników, które opisują najważniejsze funkcje witryny"
     short_title: "Krótki tytuł będzie używany na ekranie głównym użytkownika, w programie uruchamiającym lub w innych miejscach, gdzie przestrzeń może być ograniczona. Powinien on mieć maksymalnie 12 znaków. Należy pamiętać, że zmiana tego tytułu może spowodować wyświetlenie monitu dla użytkowników aplikacji PWA z prośbą o zaktualizowanie lub odinstalowanie aplikacji."
-    dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
-    dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
-    dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
     site_traffic_explorer_event_limit: "Kontroluje maksymalną liczbę ostatnich odsłon stron przetwarzanych przez Site Traffic Explorer. Wyższe limity obejmują większy ruch, ale mogą wymagać dłuższego ładowania lub przekroczenia limitu czasu na serwerach baz danych o niższych zasobach."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
@@ -6187,6 +6185,28 @@ pl_PL:
   onebox:
     discourse:
       event_all_day: "Cały dzień"
+      recurrence:
+        every_day: "Codziennie"
+        every_weekday: "Każdego dnia roboczego"
+        every_week: "Co %{weekday}"
+        every_two_weeks: "Co drugi %{weekday}"
+        every_four_weeks: "Co 4 tygodnie w %{weekday}"
+        every_month: "%{ordinal} %{weekday} każdego miesiąca"
+        until: "%{recurrence} do %{date}"
+        ordinals:
+          first: "pierwszy"
+          second: "drugi"
+          third: "trzeci"
+          fourth: "czwarty"
+          last: "ostatni"
+        weekdays:
+          sunday: "Niedziela"
+          monday: "Poniedziałek"
+          tuesday: "Wtorek"
+          wednesday: "Środa"
+          thursday: "Czwartek"
+          friday: "Piątek"
+          saturday: "Sobota"
       user_joined_community: "Dołączył %{date}"
     google_meet:
       title: "Spotkanie w Google Meet"

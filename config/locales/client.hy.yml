@@ -3154,13 +3154,14 @@ hy:
           one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հրապարակումը:"
           other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ%{count} գրառումները:"
       revisions:
+        visibility:
+          hidden:
+            title: "Թաքցված"
         controls:
           first: "Առաջին խմբագրությունը"
           previous: "Նախորդ խմբագրությունը"
           next: "Հաջորդ խմբագրությունը"
           last: "Վերջին խմբագրությունը"
-          hide: "Թաքցնել խմբագրությունը"
-          show: "Ցուցադրել խմբագրությունը"
           edit_wiki: "Խմբագրել Wiki-ն"
           edit_post: "Խմբագրել Գրառումը"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -4081,29 +4082,13 @@ hy:
           anonymous_human: "Անանուն"
       dashboard:
         title: "Կառավարման Հարթակ"
-        last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
-        discourse_last_updated: "Discourse վերջին թարմացումը՝"
         version: "Տարբերակ"
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
         updates_available: "Կան հասանելի թարմացումներ:"
-        no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
-        stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
-        installed_version: "Տեղադրված է "
-        github: "GitHub"
-        problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
         dismiss_notice: "Անտեսել"
         new_features:
           learn_more: "Իմանալ ավելին..."
-        last_checked: "Վերջին ստուգումը՝ "
         refresh_problems: "Թարմացնել"
-        no_problems: "Խնդիրներ չեն գտնվել:"
-        moderators: "Մոդերատորներ՝ "
-        admins: "Ադմիններ՝ "
-        silenced: "Լռեցված՝ "
-        suspended: "Սառեցված՝ "
-        private_messages_short: "Հղգր"
-        private_messages_title: "Հաղորդագրություններ"
-        mobile_title: "Մոբայլ"
         space_used: "%{usedSize} օգտագործված է"
         space_used_and_free: "%{usedSize} (%{freeSize} ազատ է)"
         uploads: "Վերբեռնումներ"
@@ -4112,20 +4097,7 @@ hy:
           one: "%{count} պահուստ այստեղ՝ %{location}"
           other: "%{count} պահուստ այստեղ՝ %{location}"
         lastest_backup: "Վերջինը՝ %{date}"
-        traffic_short: "Այցելությունները"
-        traffic: "Հավելվածի վեբ-հարցումները"
-        page_views: "Էջադիտումներ"
-        page_views_short: "Էջադիտումներ"
-        show_traffic_report: "Ցուցադրել այցելությունների մանրամասն հաշվետվությունը"
-        community_health: Համայնքի վիճակը
-        moderators_activity: Մոդերատորների ակտիվությունը
         whats_new_in_discourse: 'Ի՞նչ նորություն կա Discourse-ում:'
-        activity_metrics: Ակտիվության Չափումները
-        all_reports: "Բոլոր հաշվետվությունները"
-        general_tab: "Ընդհանուր"
-        moderation_tab: "Մոդերացիա"
-        security_tab: "Անվտանգություն"
-        reports_tab: "Հաշվետվություններ"
         report_filter_any: "ցանկացած"
         disabled: Անջատված
         timeout_error: Ներողություն, հարցումը շատ երկար է տևում, խնդրում ենք ընտրել ավելի կարճ ժամանակահատված
@@ -4170,8 +4142,6 @@ hy:
             anonymous: "Անանուն"
             crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
           crawler_learn_more: "Իմանալ ավելին"
-        period:
-          custom: "Մասնավոր"
         reports:
           trend_title: "%{percent} փոփոխություն: Ներկայումս %{current}, նախորդ շրջանում եղել է %{prev}:"
           today: "Այսօրվա"
@@ -4202,9 +4172,6 @@ hy:
             posts_count:
               one: "%{count} գրառում"
               other: "%{count} գրառում"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
-            disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'
           sort_button: "Դասավորել ըստ %{column}"
           sort_ascending: "ըստ աճման"
           sort_descending: "ըստ նվազման"
@@ -5085,7 +5052,6 @@ hy:
         suspend_reason: "Պատճառ"
         suspend_reason_title: "Սառեցման Պատճառը"
         suspend_message: "Էլ. նամակ"
-        suspend_message_placeholder: "Ըստ ցանկության, տրամադրեք ավելի շատ տեղեկություններ սառեցման մասին, և այն կուղարկվի օգտատիրոջը էլ. նամակով:"
         suspended_by: "Սառեցնող՝ "
         silence_reason: "Պատճառ"
         silenced_by: "Լռեցնող՝ "
@@ -5093,7 +5059,6 @@ hy:
         silence_duration: "Որքա՞ն ժամանակ պետք է լռեցվի օգտատերը:"
         silence_reason_placeholder: "Լռեցման Պատճառը"
         silence_message: "Էլ. Նամակ"
-        silence_message_placeholder: "(թողեք դատարկ՝ լռելյայն հաղորդագրությունն ուղարկելու համար)"
         suspended_until: "(մինչև %{until})"
         cant_suspend: "Այս օգտատերը չի կարող սառեցվել:"
         delete_posts_failed: "Գրառումները ջնջելիս խնդիր է առաջացել:"

@@ -3046,6 +3046,27 @@ el:
   onebox:
     discourse:
       event_all_day: "Όλη μέρα"
+      recurrence:
+        every_day: "Κάθε μέρα"
+        every_weekday: "Κάθε εργάσιμη ημέρα"
+        every_week: "Κάθε %{weekday}"
+        every_two_weeks: "Κάθε δεύτερη %{weekday}"
+        every_four_weeks: "Κάθε 4 εβδομάδες την %{weekday}"
+        every_month: "Την %{ordinal} %{weekday} κάθε μήνα"
+        ordinals:
+          first: "πρώτη"
+          second: "δεύτερη"
+          third: "τρίτη"
+          fourth: "τέταρτη"
+          last: "τελευταία"
+        weekdays:
+          sunday: "Κυριακή"
+          monday: "Τη Δευτέρα"
+          tuesday: "Τρίτη"
+          wednesday: "Τετάρτη"
+          thursday: "Πέμπτη"
+          friday: "Παρασκευή"
+          saturday: "Σάββατο"
     google_meet:
       meeting_code: "Κωδικός:"
     gitlab:

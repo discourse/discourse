@@ -1533,9 +1533,6 @@ hr:
     heading_font: "Font koji se koristi za naslove na stranici. Teme se mogu nadjačati putem CSS prilagođenog svojstva `--heading-font-family`."
     enable_sitemap: "Generirajte kartu web stranice za svoju web stranicu i uključite je u datoteku robots.txt."
     sitemap_page_size: "Broj URL-ova koje treba uključiti u svaku stranicu karte web-lokacije. Najviše 50.000"
-    dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
-    dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
-    dashboard_general_tab_activity_metrics: "Odaberite izvješća koja će se prikazivati kao metrika aktivnosti na kartici općenito."
     share_quote_buttons: "Odredite koje se stavke pojavljuju u widgetu za dijeljenje ponuda i kojim redoslijedom."
     share_quote_visibility: "Odredite kada prikazati gumbe za dijeljenje ponuda: nikada, samo anonimnim korisnicima ili svim korisnicima. "
     allow_changing_staged_user_tracking: "Dopustite korisniku administratoru da promijeni postavke obavijesti o kategorijama i oznakama postupnog korisnika."
@@ -2797,6 +2794,19 @@ hr:
               private:
                 label: "Privatno"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Svaki dan"
+        ordinals:
+          last: "zadnji"
+        weekdays:
+          sunday: "nedjelja"
+          monday: "ponedjeljak"
+          tuesday: "utorak"
+          wednesday: "srijeda"
+          thursday: "četvrtak"
+          friday: "petak"
+          saturday: "subota"
     google_meet:
       meeting_code: "Šifra:"
     github:

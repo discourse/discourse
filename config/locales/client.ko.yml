@@ -3068,13 +3068,14 @@ ko:
         confirm:
           other: "%{count}개의 게시물을 삭제할까요?"
       revisions:
+        visibility:
+          hidden:
+            title: "숨김"
         controls:
           first: "첫 수정 버전"
           previous: "이전 수정 버전"
           next: "다음 수정 버전"
           last: "마지막 수정 버전"
-          hide: "수정 버전 숨기기"
-          show: "수정 버전 표시"
           revert: "%{revision} 수정 버전으로 되돌리기"
           edit_wiki: "Wiki 편집"
           edit_post: "게시물 편집"
@@ -4111,30 +4112,13 @@ ko:
           anonymous_human: "익명"
       dashboard:
         title: "대시보드"
-        last_updated: "대시보드 업데이트됨:"
-        discourse_last_updated: "Discourse 업데이트됨:"
         version: "버전"
         up_to_date: "최신상태입니다!"
         updates_available: "업데이트를 사용할 수 있습니다."
-        please_update: "업데이트해 주세요!"
-        no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
-        stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
-        installed_version: "설치됨"
-        github: "GitHub"
-        problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
         dismiss_notice: "무시"
         new_features:
           learn_more: "더 보기..."
-        last_checked: "마지막으로 확인함"
         refresh_problems: "새로고침"
-        no_problems: "문제가 발견되지 않았습니다."
-        moderators: "운영자:"
-        admins: "관리자:"
-        silenced: "차단됨:"
-        suspended: "정지됨:"
-        private_messages_short: "메시지"
-        private_messages_title: "메시지"
-        mobile_title: "모바일"
         space_used: "%{usedSize} 사용됨"
         space_used_and_free: "%{usedSize}(%{freeSize} 남음)"
         uploads: "업로드된 파일"
@@ -4142,20 +4126,7 @@ ko:
         backup_count:
           other: "%{location}에 %{count}개의 백업 존재"
         lastest_backup: "최근: %{date}"
-        traffic_short: "트래픽"
-        traffic: "어플리케이션 웹 요청"
-        page_views: "페이지 조회수"
-        page_views_short: "페이지 조회수"
-        show_traffic_report: "자세한 트래픽 리포트 표시"
-        community_health: 커뮤니티 상태
-        moderators_activity: 운영자 활동
         whats_new_in_discourse: Discourse의 소식
-        activity_metrics: 활동 지표
-        all_reports: "모든 리포트"
-        general_tab: "일반"
-        moderation_tab: "관리"
-        security_tab: "보안"
-        reports_tab: "리포트"
         report_filter_any: "모두"
         disabled: 비활성화됨
         timeout_error: 쿼리가 너무 오래 걸립니다. 간격을 좁혀보세요
@@ -4203,11 +4174,6 @@ ko:
             anonymous: "익명"
             crawlers: "겉옷"
           crawler_learn_more: "더 보기"
-        period:
-          last_7_days: "지난 7일"
-          last_30_days: "지난 30일"
-          last_3_months: "지난 3개월"
-          custom: "사용자 정의"
         reports:
           trend_title: "%{percent} 변경. 현재 %{current}이며, 이전 기간의 %{prev}입니다."
           today: "오늘"
@@ -4236,9 +4202,6 @@ ko:
               other: "사용자 %{count}명"
             posts_count:
               other: "글 %{count}개"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">검색 로그</a>'
-            disabled: '인기 검색 리포트가 비활성화되었습니다. <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">로그 검색 쿼리</a> 를 활성화하여 데이터를 수집하세요.'
           sort_button: "%{column}로 정렬"
           sort_ascending: "오름차순"
           sort_descending: "내림차순"
@@ -5239,7 +5202,6 @@ ko:
           in_wrong_place: "이곳과 맞지 않음"
           no_constructive_purpose: "커뮤니티 내에서 반대하는 것 외에는 건설적인 목적이 없음"
         suspend_message: "메시지 이메일 전송"
-        suspend_message_placeholder: "(선택사항) 사용자에게 이메일을 보내 정지와 관련한 자세한 정보를 제공합니다."
         suspended_by: "정지자:"
         silence_reason: "사유"
         silenced_by: "차단자:"
@@ -5247,7 +5209,6 @@ ko:
         silence_duration: "이 사용자를 언제까지 차단할까요?"
         silence_reason_placeholder: "차단 이유"
         silence_message: "메시지 이메일 전송"
-        silence_message_placeholder: "(디폴트 메시지를 보내려면 비워 두세요)"
         suspended_until: "(%{until}까지)"
         cant_suspend: "이 사용자는 정지할 수 없습니다."
         delete_posts_failed: "게시물을 삭제하는 중에 문제가 발생했습니다."

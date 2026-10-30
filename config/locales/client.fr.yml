@@ -4803,6 +4803,9 @@ fr:
       revisions:
         diff_too_complex: "Cette modification a changé une trop grande partie de la publication en une seule fois, elle ne peut donc pas être affichée."
         diff_hidden: "Une partie de l'historique des modifications de cette publication a été masquée, cette modification ne peut donc pas être affichée."
+        visibility:
+          hidden:
+            title: "Masqué"
         locale:
           no_locale_set: "Aucune langue définie"
           locale_removed: "Langue supprimée"
@@ -4813,9 +4816,6 @@ fr:
           previous: "Révision précédente"
           next: "Révision suivante"
           last: "Dernière révision"
-          hide: "Masquer la révision"
-          show: "Afficher la révision"
-          destroy: "Supprimer les révisions"
           destroy_confirm: "Voulez-vous vraiment supprimer toutes les révisions de ce message ? Cette action est permanente."
           revert: "Revenir à la révision %{revision}"
           edit_wiki: "Modifier le wiki"
@@ -6824,27 +6824,17 @@ fr:
           anonymous_human: "Anonymes"
       dashboard:
         title: "Tableau de bord"
-        last_updated: "Dernière actualisation du tableau de bord :"
-        discourse_last_updated: "Dernière mise à jour de Discourse :"
         version: "Version"
         up_to_date: "À jour !"
         up_to_date_newer_commits:
           one: "Vous utilisez la version la plus récente, mais %{count} nouvelle modification est disponible."
           other: "Vous utilisez la version la plus récente, mais %{count} nouvelles modifications sont disponibles."
         updates_available: "Des mises à jour sont disponibles."
-        please_update: "Veuillez mettre à jour !"
-        no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."
-        stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
         version_check_pending: "Il semble que vous avez effectué une mise à jour récemment. Fantastique !"
-        installed_version: "Installée"
-        latest_version: "Disponible"
-        github: "GitHub"
         commit_on_github: "Voir le commit %{sha} sur GitHub"
-        changelog: "Journal des modifications"
         commits_ahead:
           one: "Exécution de %{count} modification supplémentaire depuis le début de cette série de versions"
           other: "Exécution de %{count} modifications supplémentaires depuis le début de cette série de versions"
-        problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Ignorer"
         site_advice:
           title:
@@ -6856,16 +6846,7 @@ fr:
           no_new_features_found: "Il n'y a aucun élément dans le flux ou le filtre que vous avez sélectionné n'a renvoyé aucun résultat. Vous pouvez consulter les précédentes annonces de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>le site Discourse Releases</a>."
           no_new_features_error: "Une erreur s'est produite lors du chargement du flux. Vous pouvez consulter les annonces de nouvelles fonctionnalités précédentes sur le site <a href='%{url}' target='_blank'>de Discourse Releases</a>."
           learn_more: "En savoir plus…"
-        last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
-        no_problems: "Aucun problème n'a été trouvé."
-        moderators: "Modérateurs :"
-        admins: "Administrateurs :"
-        silenced: "En sourdine :"
-        suspended: "Suspendus :"
-        private_messages_short: "Msgs"
-        private_messages_title: "Messages"
-        mobile_title: "Mobile"
         space_used: "%{usedSize} utilisés"
         space_used_and_free: "%{usedSize} utilisés (%{freeSize} disponibles)"
         uploads: "Fichiers envoyés"
@@ -6874,20 +6855,7 @@ fr:
           one: "%{count} sauvegarde sur %{location}"
           other: "%{count} sauvegardes sur %{location}"
         lastest_backup: "Dernière sauvegarde : %{date}"
-        traffic_short: "Trafic"
-        traffic: "Requêtes d'application Web"
-        page_views: "Pages vues"
-        page_views_short: "Pages vues"
-        show_traffic_report: "Afficher le rapport de trafic détaillé"
-        community_health: Santé communautaire
-        moderators_activity: Activité des modérateurs
         whats_new_in_discourse: Quoi de neuf dans Discourse ?
-        activity_metrics: Mesures d'activité
-        all_reports: "Tous les rapports"
-        general_tab: "Général"
-        moderation_tab: "Modération"
-        security_tab: "Sécurité"
-        reports_tab: "Rapports"
         report_filter_any: "tous"
         disabled: Désactivé
         timeout_error: Nous sommes désolés, la requête prend trop de temps, veuillez sélectionner un intervalle plus court
@@ -7006,7 +6974,6 @@ fr:
             title: "Système"
             status: "Statut"
             discourse_updated: "Dernière mise à jour de Discourse "
-            dashboard_updated: "Dernière actualisation du tableau de bord "
         reports_section:
           header_action: "Gérer"
           description: "Épinglez des rapports standard ou des requêtes Data Explorer pour suivre ce qui compte pour votre communauté."
@@ -7110,12 +7077,6 @@ fr:
             crawlers: "Robots d'indexation"
           see_details: "Voir les détails"
           crawler_learn_more: "En savoir plus…"
-        period:
-          last_7_days: "Ces 7 derniers jours"
-          last_30_days: "30 derniers jours"
-          last_3_months: "3 derniers mois"
-          custom: "Personnalisé"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."
@@ -7160,9 +7121,6 @@ fr:
               one: "%{count} publication"
               other: "%{count} publications"
             deselect: "Désélectionner %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
-            disabled: 'Rapport sur les tendances de recherche désactivé. Activez la <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collecter des données.'
           average_chart_label: Afficher les moyennes, pas les totaux
           sort_button: "Trier par %{column}"
           sort_button_current: "Trié par %{column}, %{direction}"
@@ -7347,7 +7305,6 @@ fr:
               list: Répertorier les derniers messages et les messages privés. Le RSS est également pris en charge.
             revisions:
               read: "Obtenir la dernière révision ou une révision spécifique."
-              modify: "Masquer, afficher ou annuler les révisions."
               permanently_delete: "Supprimer définitivement une révision."
             tags:
               list: Répertorier les étiquettes.
@@ -8892,7 +8849,6 @@ fr:
           no_constructive_purpose: "Aucun but constructif à ses actions autre que de créer une dissidence au sein de la communauté"
           custom: "Personnalisé…"
         suspend_message: "E-mail"
-        suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension. Elles seront envoyées à l'utilisateur par e-mail."
         suspended_by: "Suspendu par"
         silence_reason: "Raison"
         silenced_by: "Mis en sourdine par"
@@ -8901,7 +8857,6 @@ fr:
         silence_reason_title: "Raison de la mise en sourdine"
         silence_reason_placeholder: "Raison de la mise en sourdine"
         silence_message: "E-mail"
-        silence_message_placeholder: "(laissez vide pour envoyer un message par défaut)"
         suspended_until: "(jusqu'à %{until})"
         suspend_forever: "Suspendre pour toujours"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."

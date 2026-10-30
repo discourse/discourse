@@ -2519,9 +2519,6 @@ sk:
     sitemap_page_size: "Počet adries URL, ktoré sa majú zahrnúť do každej stránky mapy lokality. Maximálne 50 000"
     enable_user_status: "Umožniť používateľom nastaviť vlastnú správu o stave (emoji + popis)."
     enable_user_tips: "Povolenie nových tipov pre používateľov, ktoré popisujú kľúčové funkcie pre používateľov"
-    dashboard_hidden_reports: "Povoliť skrytie zadaných správ z hlavného panela."
-    dashboard_visible_tabs: "Vyberte, ktoré karty hlavného panela budú viditeľné."
-    dashboard_general_tab_activity_metrics: "Na karte Všeobecné vyberte správy, ktoré sa majú zobrazovať ako metriky aktivity."
     gravatar_name: "Zadajte názov poskytovateľa služby Gravatar. Tento názov sa zvyčajne používa na identifikáciu zdroja, ktorý poskytuje avatary Gravatar na lokalitu."
     gravatar_base_url: "Zadajte adresu URL na prístup k rozhraniu API poskytovateľa Gravatar. Toto nastavenie je rozhodujúce pre konverziu e-mailových adries na adresy URL Gravataru, v ktorých sú uložené obrázky avataru."
     share_quote_buttons: "Určite, ktoré položky a v akom poradí sa zobrazia vo widgete na zdieľanie citácií."
@@ -4816,6 +4813,17 @@ sk:
     graph_title: "Počet vyhľadávaní"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Každý deň"
+        every_weekday: "Každý pracovný deň"
+        weekdays:
+          sunday: "Nedeľa"
+          monday: "Pondelok"
+          tuesday: "Utorok"
+          wednesday: "Streda"
+          thursday: "Štvrtok"
+          friday: "Piatok"
+          saturday: "Sobota"
       user_joined_community: "Pripojil sa k %{date}"
     google_meet:
       meeting_code: "Kód:"

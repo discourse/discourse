@@ -1912,10 +1912,7 @@ pl_PL:
           streaming_below: "Nowa treść poniżej"
           editing_post: "Edycja wpisu"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Przegląd nastrojów"
           analysis: "Analiza sentymentu"
         sentiment_analysis:
           share_chart: "Skopiuj link do wykresu"

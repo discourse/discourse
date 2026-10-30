@@ -4050,6 +4050,9 @@ it:
           one: "Vuoi unire questi messaggi?"
           other: "Vuoi unire questi %{count} messaggi?"
       revisions:
+        visibility:
+          hidden:
+            title: "Nascosto"
         locale:
           no_locale_set: "Nessuna lingua impostata"
           locale_removed: "Lingua rimossa"
@@ -4058,9 +4061,6 @@ it:
           previous: "Revisione precedente"
           next: "Prossima revisione"
           last: "Ultima revisione"
-          hide: "Nascondi revisione"
-          show: "Mostra revisione"
-          destroy: "Elimina revisioni"
           destroy_confirm: "Vuoi davvero eliminare tutte le revisioni di questo messaggio? L'azione è irreversibile."
           revert: "Ripristina revisione %{revision}"
           edit_wiki: "Modifica Wiki"
@@ -5685,33 +5685,16 @@ it:
           anonymous_human: "Anonimo"
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard aggiornato:"
-        discourse_last_updated: "Discourse aggiornato:"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
         updates_available: "Sono disponibili aggiornamenti."
-        please_update: "Aggiorna!"
-        no_check_performed: "Non è stato effettuato un controllo sugli aggiornamenti. Assicurati che sidekiq sia attivo."
-        stale_data: "Non è stato effettuato un controllo recente sugli aggiornamenti. Assicurati che sidekiq sia attivo."
         version_check_pending: "Hai effettuato l'aggiornamento di recente. Ottimo!"
-        installed_version: "Versione Installata"
-        github: "GitHub"
-        problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         dismiss_notice: "Ignora"
         new_features:
           title: "Cosa c'è di nuovo?"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
           learn_more: "Scopri di più..."
-        last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
-        no_problems: "Nessun problema rilevato."
-        moderators: "Moderatori:"
-        admins: "Amministratori:"
-        silenced: "Silenziati:"
-        suspended: "Sospesi: "
-        private_messages_short: "MP"
-        private_messages_title: "Messaggi"
-        mobile_title: "Mobile"
         space_used: "%{usedSize} usati"
         space_used_and_free: "%{usedSize} (%{freeSize} liberi)"
         uploads: "Caricamenti"
@@ -5720,20 +5703,7 @@ it:
           one: "%{count} backup su %{location}"
           other: "%{count} backup su %{location}"
         lastest_backup: "Recenti: %{date}"
-        traffic_short: "Traffico"
-        traffic: "Richieste web dell'applicazione"
-        page_views: "Pagine Viste"
-        page_views_short: "Pagine Viste"
-        show_traffic_report: "Mostra rapporto di traffico dettagliato"
-        community_health: Informazioni sulla community
-        moderators_activity: Attività dei Moderatori
         whats_new_in_discourse: Novità in Discourse?
-        activity_metrics: Metriche Attività
-        all_reports: "Tutti i rapporti"
-        general_tab: "Generale"
-        moderation_tab: "Moderazione"
-        security_tab: "Sicurezza"
-        reports_tab: "Rapporti"
         report_filter_any: "tutti"
         disabled: Disabilitato
         timeout_error: Spiacenti, la ricerca sta impiegando troppo tempo, per favore scegli un intervallo più breve
@@ -5772,7 +5742,6 @@ it:
             title: "Sistema"
             status: "Stato"
             discourse_updated: "Discourse aggiornato"
-            dashboard_updated: "Dashboard aggiornato"
         reports_section:
           header_action: "Gestisci"
           no_data: "Non ci sono dati da mostrare"
@@ -5787,11 +5756,6 @@ it:
             anonymous: "Anonimo"
             crawlers: "Crawler"
           crawler_learn_more: "Scopri di più"
-        period:
-          last_7_days: "Ultimi 7 giorni"
-          last_30_days: "Ultimi 30 giorni"
-          last_3_months: "Ultimi 3 mesi"
-          custom: "Personalizzato"
         reports:
           trend_title: "Variazione del %{percent}. Attualmente %{current}, era %{prev} nel periodo precedente."
           percent_change_tooltip: "%{percent} di modifica."
@@ -5834,9 +5798,6 @@ it:
               one: "%{count} messaggio"
               other: "%{count} messaggi"
             deselect: "Deseleziona %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Ricerche nei log</a>'
-            disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
           sort_button: "Ordina per %{column}"
           sort_ascending: "crescente"
           sort_descending: "decrescente"
@@ -6016,7 +5977,6 @@ it:
               list: Elenca gli ultimi messaggi e i messaggi privati. È supportato anche RSS.
             revisions:
               read: "Ottieni la revisione più recente o una specifica."
-              modify: "Nascondi, mostra o ripristina revisioni."
               permanently_delete: "Elimina definitivamente una revisione."
             tags:
               list: Elenca le etichette.
@@ -7458,7 +7418,6 @@ it:
           no_constructive_purpose: "Azioni senza fini costruttivi se non creare disaccordo nella comunità"
           custom: "Personalizzato…"
         suspend_message: "Messaggio Email"
-        suspend_message_placeholder: "Facoltativamente, fornisci ulteriori informazioni sulla sospensione e verranno inviate via email all'utente."
         suspended_by: "Sospeso da"
         silence_reason: "Motivo"
         silenced_by: "Silenziato Da"
@@ -7467,7 +7426,6 @@ it:
         silence_reason_title: "Motivo del silenzio"
         silence_reason_placeholder: "Motivo Silenzio"
         silence_message: "Messaggio Email"
-        silence_message_placeholder: "(lasciare vuoto per inviare il messaggio predefinito)"
         suspended_until: "(fino a %{until})"
         suspend_forever: "Sospendi definitivamente"
         cant_suspend: "Questo utente non può essere sospeso."

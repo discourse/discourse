@@ -3881,6 +3881,9 @@ pt:
           notify_moderators: "Sinalizou isto para moderação"
           notify_user: "Enviou uma mensagem para este utilizador"
       revisions:
+        visibility:
+          hidden:
+            title: "Escondido"
         locale:
           no_locale_set: "Nenhum idioma definido"
           locale_removed: "Idioma removido"
@@ -3889,9 +3892,6 @@ pt:
           previous: "Revisão anterior"
           next: "Revisão seguinte"
           last: "Última revisão"
-          hide: "Ocultar revisão"
-          show: "Mostrar revisão"
-          destroy: "Eliminar revisões"
           destroy_confirm: "Tem certeza que deseja eliminar todas as revisões desta publicação? Esta ação é permanente."
           revert: "Reverter para a versão %{revision}"
           edit_wiki: "Editar Wiki"
@@ -4917,30 +4917,14 @@ pt:
           anonymous_human: "Anónimo"
       dashboard:
         title: "Painel de Administração"
-        last_updated: "Painel atualizado:"
-        discourse_last_updated: "Discourse atualizado:"
         version: "Versão"
         up_to_date: "Está atualizado!"
         updates_available: "Há atualizações disponíveis."
-        no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
-        stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."
-        installed_version: "Instalado"
-        github: "GitHub"
-        problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
         dismiss_notice: "Ignorar"
         new_features:
           title: "O que é novo?"
           learn_more: "Saiba mais..."
-        last_checked: "Última verificação"
         refresh_problems: "Atualizar"
-        no_problems: "Nenhum problema encontrado."
-        moderators: "Moderadores:"
-        admins: "Administradores:"
-        silenced: "Silenciado:"
-        suspended: "Suspenso: "
-        private_messages_short: "Msgs"
-        private_messages_title: "Mensagens"
-        mobile_title: "Móvel"
         space_used: "%{usedSize} usado"
         space_used_and_free: "%{usedSize} (%{freeSize} livre)"
         uploads: "Uploads"
@@ -4949,20 +4933,7 @@ pt:
           one: "%{count} backup em %{location}"
           other: "%{count} backups em %{location}"
         lastest_backup: "Mais recente: %{date}"
-        traffic_short: "Tráfego"
-        traffic: "Pedidos de aplicação web"
-        page_views: "Exibições de Página"
-        page_views_short: "Exibições de Página"
-        show_traffic_report: "Mostrar Relatório Detalhado do Tráfego"
-        community_health: Saúde da comunidade
-        moderators_activity: Atividade de moderadores
         whats_new_in_discourse: O que há de novo no Discourse?
-        activity_metrics: Métricas de Atividade
-        all_reports: "Todos os relatórios"
-        general_tab: "Geral"
-        moderation_tab: "Moderação"
-        security_tab: "Segurança"
-        reports_tab: "Relatórios"
         report_filter_any: "qualquer"
         disabled: Desativado
         timeout_error: A consulta está demorando muito, escolha um intervalo mais curto
@@ -4998,7 +4969,6 @@ pt:
             title: "Sistema"
             status: "Estado"
             discourse_updated: "Discourse atualizado"
-            dashboard_updated: "Painel atualizado"
         reports_section:
           header_action: "Gerir"
           no_data: "Sem dados para exibir"
@@ -5010,10 +4980,6 @@ pt:
           series:
             anonymous: "Anónimo"
           crawler_learn_more: "Saiba mais"
-        period:
-          last_7_days: "Últimos 7 Dias"
-          last_30_days: "Últimos 30 Dias"
-          custom: "Personalizar"
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           today: "Hoje"
@@ -5044,8 +5010,6 @@ pt:
             posts_count:
               one: "%{count} mensagem"
               other: "%{count} mensagens"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Pesquisar logs</a>'
           sort_button: "Organizado por %{column}"
           sort_ascending: "ascendente"
           sort_descending: "descendente"

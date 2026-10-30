@@ -4837,6 +4837,9 @@ de:
       revisions:
         diff_too_complex: "Diese Bearbeitung hat zu viel vom Beitrag auf einmal verändert, daher kann sie nicht angezeigt werden."
         diff_hidden: "Ein Teil des Bearbeitungsverlaufs dieses Beitrags wurde ausgeblendet, daher kann diese Bearbeitung nicht angezeigt werden."
+        visibility:
+          hidden:
+            title: "Versteckt"
         locale:
           no_locale_set: "Keine Sprache eingestellt"
           locale_removed: "Sprache entfernt"
@@ -4847,9 +4850,6 @@ de:
           previous: "Vorherige Überarbeitung"
           next: "Nächste Überarbeitung"
           last: "Letzte Überarbeitung"
-          hide: "Überarbeitung verstecken"
-          show: "Überarbeitung anzeigen"
-          destroy: "Revisionen löschen"
           destroy_confirm: "Bist du sicher, dass du alle Revisionen dieses Beitrags löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
           revert: "Auf Überarbeitung %{revision} zurücksetzen"
           edit_wiki: "Wiki bearbeiten"
@@ -6859,27 +6859,17 @@ de:
           anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard aktualisiert:"
-        discourse_last_updated: "Discourse aktualisiert:"
         version: "Version"
         up_to_date: "Du verwendest die neueste Version!"
         up_to_date_newer_commits:
           one: "Du verwendest bereits den aktuellsten Release, aber es gibt %{count} neue Änderung."
           other: "Du verwendest bereits den aktuellsten Release, aber es gibt %{count} neue Änderungen."
         updates_available: "Updates sind verfügbar."
-        please_update: "Bitte Update durchführen!"
-        no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
-        stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
         version_check_pending: "Sieht so aus, als hättest du vor Kurzem aktualisiert. Großartig!"
-        installed_version: "Installiert"
-        latest_version: "Verfügbar"
-        github: "GitHub"
         commit_on_github: "Commit %{sha} auf GitHub anzeigen"
-        changelog: "Änderungsprotokoll"
         commits_ahead:
           one: "Seit Beginn der Release-Reihe wurde %{count} weitere Änderung vorgenommen"
           other: "Seit Beginn der Release-Reihe wurden %{count} weitere Änderungen vorgenommen"
-        problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
         dismiss_notice: "Ignorieren"
         site_advice:
           title:
@@ -6891,16 +6881,7 @@ de:
           no_new_features_found: "Es gibt keine Einträge im Feed oder der ausgewählte Filter hat keine Ergebnisse zurückgegeben. Du kannst frühere Ankündigungen neuer Funktionen auf der <a href='%{url}' target='_blank'>Seite mit den Discource-Releases</a> sehen."
           no_new_features_error: "Es gab einen Fehler beim Laden des Feeds. Du kannst frühere Ankündigungen neuer Funktionen auf der <a href='%{url}' target='_blank'>Seite mit den Discource-Releases</a> sehen."
           learn_more: "Mehr erfahren …"
-        last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
-        no_problems: "Es wurden keine Probleme gefunden."
-        moderators: "Moderatoren:"
-        admins: "Administratoren:"
-        silenced: "Stummgeschaltet:"
-        suspended: "Gesperrt:"
-        private_messages_short: "Nachr."
-        private_messages_title: "Nachrichten"
-        mobile_title: "Mobilgerät"
         space_used: "%{usedSize} verwendet"
         space_used_and_free: "%{usedSize} (%{freeSize} frei)"
         uploads: "Uploads"
@@ -6909,20 +6890,7 @@ de:
           one: "%{count} Backup auf %{location}"
           other: "%{count} Backups auf %{location}"
         lastest_backup: "Letztes: %{date}"
-        traffic_short: "Traffic"
-        traffic: "Webanfragen der Anwendung"
-        page_views: "Seitenaufrufe"
-        page_views_short: "Seitenaufrufe"
-        show_traffic_report: "Zeige detaillierten Traffic-Bericht"
-        community_health: Community-Gesundheit
-        moderators_activity: Moderator-Aktivität
         whats_new_in_discourse: Was ist neu in Discourse?
-        activity_metrics: Aktivitätsmetriken
-        all_reports: "Alle Berichte"
-        general_tab: "Allgemein"
-        moderation_tab: "Moderation"
-        security_tab: "Sicherheit"
-        reports_tab: "Berichte"
         report_filter_any: "alle"
         disabled: Deaktiviert
         timeout_error: Entschuldige, die Abfrage dauert zu lange, bitte wähle ein kürzeres Intervall
@@ -7041,7 +7009,6 @@ de:
             title: "System"
             status: "Status"
             discourse_updated: "Discourse aktualisiert"
-            dashboard_updated: "Dashboard aktualisiert"
         reports_section:
           header_action: "Verwalten"
           description: "Hefte Standardberichte oder Daten-Explorer-Abfragen an, um zu verfolgen, was für deine Community wichtig ist."
@@ -7145,12 +7112,6 @@ de:
             crawlers: "Crawler"
           see_details: "Details anzeigen"
           crawler_learn_more: "Mehr erfahren"
-        period:
-          last_7_days: "Letzte 7 Tage"
-          last_30_days: "Letzte 30 Tage"
-          last_3_months: "Letzte 3 Monate"
-          custom: "Benutzerdefiniert"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           percent_change_tooltip: "Änderung von %{percent}."
@@ -7195,9 +7156,6 @@ de:
               one: "%{count} Beitrag"
               other: "%{count} Beiträge"
             deselect: "%{name} abwählen"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokolle</a>'
-            disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
           average_chart_label: Durchschnittswerte, keine Gesamtwerte
           sort_button: "Sortieren nach %{column}"
           sort_button_current: "Sortiert nach %{column}, %{direction}"
@@ -7382,7 +7340,6 @@ de:
               list: Die neuesten und private Beiträge auflisten. RSS wird ebenfalls unterstützt.
             revisions:
               read: "Rufe die letzte oder eine bestimmte Überarbeitung ab."
-              modify: "Überarbeitungen ausblenden, anzeigen oder rückgängig machen."
               permanently_delete: "Eine Überarbeitung dauerhaft löschen."
             tags:
               list: Schlagwörter auflisten.
@@ -8927,7 +8884,6 @@ de:
           no_constructive_purpose: "Kein konstruktiver Zweck der Handlungen, außer Dissens innerhalb der Gemeinschaft zu erzeugen"
           custom: "Benutzerdefiniert …"
         suspend_message: "E-Mail-Nachricht"
-        suspend_message_placeholder: "Optional: Gib weitere Informationen zur Sperre an und sie werden dem Benutzer per E-Mail geschickt."
         suspended_by: "Gesperrt von"
         silence_reason: "Grund"
         silenced_by: "Stummgeschaltet von"
@@ -8936,7 +8892,6 @@ de:
         silence_reason_title: "Grund der Stummschaltung"
         silence_reason_placeholder: "Grund der Stummschaltung"
         silence_message: "E-Mail-Nachricht"
-        silence_message_placeholder: "(leer lassen, um Standardnachricht zu schicken)"
         suspended_until: "(bis %{until})"
         suspend_forever: "Für immer sperren"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."

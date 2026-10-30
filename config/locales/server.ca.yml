@@ -1579,7 +1579,6 @@ ca:
     remove_muted_tags_from_latest: "No mostris temes etiquetats sols amb etiquetes silenciades en la llista de temes més recents."
     force_lowercase_tags: "Obliga que totes les etiquetes noves siguin completament en minúscula."
     shared_drafts_category: "Activa la funció 'Esborranys compartits' designant una categoria per als esborranys de tema. Els temes d'aquesta categoria seran suprimits de les llistes de temes per als usuaris de l'equip responsable."
-    dashboard_general_tab_activity_metrics: "Trieu reports que es mostraran com a mètriques d'activitat en la pestanya general."
     errors:
       invalid_email: "Adreça de correu no vàlida."
       invalid_username: "No hi ha cap usuari amb aquest nom."
@@ -2803,6 +2802,13 @@ ca:
   search_logs:
     graph_title: "Recompte de cerques"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Cada dia"
+        ordinals:
+          last: "darrer"
+        weekdays:
+          monday: "Dilluns"
     google_meet:
       meeting_code: "Codi:"
     github:

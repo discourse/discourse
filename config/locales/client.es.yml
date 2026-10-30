@@ -4431,6 +4431,9 @@ es:
           one: "¿Seguro que quieres fusionar estas publicaciones?"
           other: "¿Seguro que quieres fusionar estas %{count} publicaciones?"
       revisions:
+        visibility:
+          hidden:
+            title: "Oculto"
         locale:
           no_locale_set: "No hay ningún idioma establecido"
           locale_removed: "Idioma eliminado"
@@ -4439,9 +4442,6 @@ es:
           previous: "Edición anterior"
           next: "Siguiente edición"
           last: "Última edición"
-          hide: "Ocultar edición"
-          show: "Mostrar edición"
-          destroy: "Eliminar revisiones"
           destroy_confirm: "¿Seguro que quieres eliminar todas las revisiones de esta publicación? Esta acción es permanente."
           revert: "Volver a la edición %{revision}"
           edit_wiki: "Editar wiki"
@@ -6305,33 +6305,16 @@ es:
           anonymous_human: "Anónimas"
       dashboard:
         title: "Panel de control"
-        last_updated: "Última actualización del panel de control:"
-        discourse_last_updated: "Última actualización de Discourse:"
         version: "Versión"
         up_to_date: "Estás en la última versión"
         updates_available: "Hay actualizaciones disponibles."
-        please_update: "Por favor, ¡actualiza!"
-        no_check_performed: "Todavía no se ha realizado ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
-        stale_data: "No se ha realizado recientemente ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
         version_check_pending: "Parece que has actualizado recientemente. ¡Fantástico!"
-        installed_version: "Instalada"
-        github: "GitHub"
-        problems_found: "Algunos consejos con base en tus ajustes actuales"
         dismiss_notice: "Ignorar"
         new_features:
           title: "Novedades"
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
           learn_more: "Más información..."
-        last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
-        no_problems: "No se ha encontrado ningún problema."
-        moderators: "Moderadores:"
-        admins: "Administradores:"
-        silenced: "Silenciados:"
-        suspended: "Suspendidos:"
-        private_messages_short: "Mensajes"
-        private_messages_title: "Mensajes"
-        mobile_title: "Móvil"
         space_used: "%{usedSize} usado"
         space_used_and_free: "%{usedSize} (%{freeSize} libre)"
         uploads: "Archivos subidos"
@@ -6340,20 +6323,7 @@ es:
           one: "%{count} copia de seguridad en %{location}"
           other: "%{count} copias de seguridad en %{location}"
         lastest_backup: "Recientes: %{date}"
-        traffic_short: "Tráfico"
-        traffic: "Solicitudes web de la app"
-        page_views: "Vistas de página"
-        page_views_short: "Vistas de página"
-        show_traffic_report: "Mostrar informe detallado del tráfico"
-        community_health: Salud de la comunidad
-        moderators_activity: Actividad de moderación
         whats_new_in_discourse: '¿Qué hay de nuevo en Discourse?'
-        activity_metrics: Medidas de actividad
-        all_reports: "Todos los informes"
-        general_tab: "General"
-        moderation_tab: "Moderación"
-        security_tab: "Seguridad"
-        reports_tab: "Informes"
         report_filter_any: "cualquiera"
         disabled: Desactivado
         timeout_error: Lo sentimos, la solicitud está durando demasiado. Por favor, selecciona un periodo más corto
@@ -6394,7 +6364,6 @@ es:
             title: "Sistema"
             status: "Estado"
             discourse_updated: "Última actualización de Discourse"
-            dashboard_updated: "Última actualización del panel de control"
         reports_section:
           header_action: "Gestionar"
           no_data: "No hay datos que mostrar"
@@ -6409,11 +6378,6 @@ es:
             anonymous: "Anónimas"
             crawlers: "Rastreadores"
           crawler_learn_more: "Más información"
-        period:
-          last_7_days: "Últimos 7 días"
-          last_30_days: "Últimos 30 días"
-          last_3_months: "Últimos 3 meses"
-          custom: "Personalizado"
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el período previo."
           percent_change_tooltip: "%{percent} de cambio."
@@ -6458,9 +6422,6 @@ es:
               one: "%{count} publicación"
               other: "%{count} publicaciones"
             deselect: "Deseleccionar %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Registros de búsqueda</a>'
-            disabled: 'El informe de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recopilar datos.'
           average_chart_label: Se muestran promedios, no totales
           sort_button: "Ordenar por %{column}"
           sort_button_current: "Ordenado por %{column}, %{direction}"
@@ -6643,7 +6604,6 @@ es:
               list: Listar las últimas publicaciones y publicaciones privadas. También se admite RSS.
             revisions:
               read: "Consigue la última revisión o una revisión concreta."
-              modify: "Ocultar, mostrar o revertir revisiones."
               permanently_delete: "Eliminar permanentemente una revisión."
             tags:
               list: Listar etiquetas.
@@ -8137,7 +8097,6 @@ es:
           no_constructive_purpose: "No hay otro propósito constructivo para sus acciones que crear conflictos dentro de la comunidad"
           custom: "Personalizado…"
         suspend_message: "Mensaje por correo electrónico"
-        suspend_message_placeholder: "Opcionalmente, brinda más información sobre la suspensión y esta se enviará por correo electrónico al usuario."
         suspended_by: "Suspendido por"
         silence_reason: "Motivo"
         silenced_by: "Silenciado por"
@@ -8146,7 +8105,6 @@ es:
         silence_reason_title: "Motivo para silenciar"
         silence_reason_placeholder: "Motivo para silenciar"
         silence_message: "Mensaje por correo electrónico"
-        silence_message_placeholder: "(dejar en blanco para enviar mensaje por defecto)"
         suspended_until: "(hasta %{until})"
         suspend_forever: "Suspender para siempre"
         cant_suspend: "Este usuario no puede ser suspendido."

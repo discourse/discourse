@@ -1389,6 +1389,17 @@ nb_NO:
               private:
                 label: "Privat"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Hver dag"
+        weekdays:
+          sunday: "Søndag"
+          monday: "Mandag"
+          tuesday: "Tirsdag"
+          wednesday: "Onsdag"
+          thursday: "Torsdag"
+          friday: "Fredag"
+          saturday: "Lørdag"
     google_meet:
       meeting_code: "Kode:"
     github:
