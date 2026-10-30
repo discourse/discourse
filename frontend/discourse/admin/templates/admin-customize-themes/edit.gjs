@@ -13,7 +13,9 @@ export default <template>
         @fieldName={{@controller.fieldName}}
         @goBack={{@controller.goBack}}
         @maximized={{@controller.maximized}}
+        @onShowAdvancedChange={{@controller.setShowAdvanced}}
         @save={{@controller.save}}
+        @showAdvanced={{@controller.showAdvanced}}
         @showRouteName={{@controller.showRouteName}}
         @theme={{@controller.model}}
       />

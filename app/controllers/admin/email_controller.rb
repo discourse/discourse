@@ -2,6 +2,7 @@
 
 class Admin::EmailController < Admin::AdminController
   allow_when_archived :handle_mail
+  skip_before_action :check_xhr, only: :preview_redirect
 
   def index
   end
@@ -13,6 +14,14 @@ class Admin::EmailController < Admin::AdminController
 
   def test
     params.require(:email_address)
+    ensure_test_email_recipient!(params[:email_address])
+    RateLimiter.new(
+      current_user,
+      "admin-email-test-send",
+      10,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
     begin
       message = TestMailer.send_test(params[:email_address])
       Email::Sender.new(message, :test_message).send
@@ -23,14 +32,31 @@ class Admin::EmailController < Admin::AdminController
     end
   end
 
-  def preview_digest
-    params.require(:last_seen_at)
-    params.require(:username)
-    user = User.find_by_username(params[:username])
-    raise Discourse::InvalidParameters unless user
+  def preview
+    preview = email_preview
+    if preview.empty?
+      render json: { subject: nil, html_content: "", text_content: "" }
+    else
+      render json: {
+               subject: preview.message.subject,
+               html_content: preview.renderer.html,
+               text_content: preview.renderer.text,
+             }
+    end
+  end
 
-    renderer = Email::Renderer.new(UserNotifications.digest(user, since: params[:last_seen_at]))
-    render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
+  def preview_redirect
+    url = path("/admin/email/preview")
+    url = "#{url}?#{request.query_string}" if request.query_string.present?
+    redirect_to url, status: :moved_permanently
+  end
+
+  def preview_types
+    render json: {
+             message_types: Email::Preview.message_types,
+             email_templates: Email::Preview.email_templates,
+             branding_themes: Email::Preview.branding_themes,
+           }
   end
 
   def advanced_test
@@ -42,32 +68,39 @@ class Admin::EmailController < Admin::AdminController
     render json: success_json.merge!(text: text, elided: elided, format: format)
   end
 
-  def send_digest
-    params.require(:last_seen_at)
-    params.require(:username)
+  def send_preview
     params.require(:email)
-    user = User.find_by_username(params[:username])
-    raise Discourse::InvalidParameters unless user
-
-    message, skip_reason =
-      UserNotifications.public_send(
-        :digest,
-        user,
-        since: params[:last_seen_at],
-        skip_unsubscribe_links: true,
-      )
-
-    if message
-      message.to = params[:email]
-
-      begin
-        Email::Sender.new(message, :digest).send
-        render json: success_json
-      rescue => e
-        render json: { errors: [e.message] }, status: :unprocessable_entity
-      end
-    else
-      render json: { errors: skip_reason }
+    ensure_test_email_recipient!(params[:email])
+    preview = email_preview
+    if SiteSetting.disable_emails == "yes" ||
+         (SiteSetting.disable_emails == "non-staff" && !User.find_by_email(params[:email])&.staff?)
+      render json: {
+               errors: [I18n.t("email_settings.preview_sends_disabled")],
+             },
+             status: :unprocessable_entity
+      return
+    end
+    if preview.empty?
+      render json: {
+               errors: [I18n.t("email_settings.preview_empty")],
+             },
+             status: :unprocessable_entity
+      return
+    end
+    RateLimiter.new(
+      current_user,
+      "admin-email-preview-send",
+      10,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
+    message = preview.message
+    message.to = params[:email]
+    begin
+      I18n.with_locale(preview.locale) { Email::Sender.new(message, :email_preview).send }
+      render json: success_json
+    rescue => error
+      render json: { errors: [error.message] }, status: :unprocessable_entity
     end
   end
 
@@ -109,6 +142,29 @@ class Admin::EmailController < Admin::AdminController
   end
 
   private
+
+  def ensure_test_email_recipient!(recipient)
+    return if !SiteSetting.restrict_admin_email_test_sends_to_self
+
+    normalized_recipient = recipient.to_s.strip.downcase
+    return if current_user.user_emails.where("lower(email) = ?", normalized_recipient).exists?
+
+    raise Discourse::InvalidParameters.new(I18n.t("email_settings.test_email_restricted"))
+  end
+
+  def email_preview
+    params.require(:username)
+    user = User.find_by_username(params[:username])
+    raise Discourse::InvalidParameters.new(:username) if !user
+
+    Email::Preview.new(
+      user:,
+      email_type: params[:email_type],
+      locale: params[:locale],
+      since: params[:last_seen_at],
+      theme_id: params[:theme_id],
+    )
+  end
 
   def delivery_settings
     action_mailer_settings.reject { |k, _| k == :password }.map { |k, v| { name: k, value: v } }

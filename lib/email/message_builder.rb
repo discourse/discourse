@@ -153,7 +153,7 @@ module Email
       DiscoursePluginRegistry.apply_modifier(:message_builder_subject, subject, @opts, @to)
     end
 
-    def html_part
+    def html_part(theme_renderer: nil)
       return unless html_override = @opts[:html_override]
 
       if @template_args[:unsubscribe_instructions].present?
@@ -193,6 +193,14 @@ module Email
           format: :html,
           locals: {
             html_body: html_override.html_safe,
+            email_theme_renderer:
+              theme_renderer ||
+                Email::ThemeRenderer.new(
+                  unsubscribe_url: @template_args[:unsubscribe_url],
+                  locale: @template_args[:locale] || I18n.locale,
+                  theme_id: @template_args[:theme_id],
+                  preview_theme: @template_args[:preview_theme],
+                ),
           },
         )
       html = DiscoursePluginRegistry.apply_modifier(:message_builder_html_part, html, @opts, @to)

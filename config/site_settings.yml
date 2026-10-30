@@ -2247,6 +2247,15 @@ email:
   apply_custom_styles_to_digest:
     default: true
     area: "email"
+  enable_email_theme_header_and_footer:
+    default: false
+    client: true
+    hidden: true
+    area: "email"
+  restrict_admin_email_test_sends_to_self:
+    default: false
+    hidden: true
+    area: "email"
   email_accent_bg_color:
     type: color
     default: "#2F70AC"

@@ -526,6 +526,7 @@ class Theme < ActiveRecord::Base
         tests_js: 7,
         migrations: 8,
         about: 9,
+        email: 10,
       )
   end
 
