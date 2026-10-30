@@ -14,6 +14,8 @@ require "zendesk_api"
 
 enabled_site_setting :zendesk_enabled
 
+register_asset "stylesheets/zendesk.scss"
+
 register_svg_icon "headset"
 
 module ::DiscourseZendeskPlugin
@@ -42,16 +44,38 @@ after_initialize do
     Topic.prepend DiscourseZendeskPlugin::TopicExtension
   end
 
+  add_to_class(:guardian, :can_create_zendesk_ticket?) do
+    authenticated? &&
+      (is_staff? || in_any_groups?(SiteSetting.zendesk_create_ticket_allowed_groups_map))
+  end
+
+  add_to_class(:guardian, :can_view_zendesk_ticket?) do
+    authenticated? &&
+      (is_staff? || in_any_groups?(SiteSetting.zendesk_view_ticket_allowed_groups_map))
+  end
+
+  add_to_serializer(:current_user, :can_create_zendesk_ticket) { scope.can_create_zendesk_ticket? }
+
+  add_to_serializer(:current_user, :can_view_zendesk_ticket) { scope.can_view_zendesk_ticket? }
+
+  add_to_serializer(
+    :topic_view,
+    :discourse_zendesk_plugin_has_ticket,
+    include_condition: -> { scope.can_create_zendesk_ticket? || scope.can_view_zendesk_ticket? },
+  ) { object.topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD].present? }
+
   add_to_serializer(
     :topic_view,
     DiscourseZendeskPlugin::ZENDESK_ID_FIELD.to_sym,
     respect_plugin_enabled: false,
+    include_condition: -> { scope.is_staff? || scope.can_view_zendesk_ticket? },
   ) { object.topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD] }
 
   add_to_serializer(
     :topic_view,
     DiscourseZendeskPlugin::ZENDESK_URL_FIELD.to_sym,
     respect_plugin_enabled: false,
+    include_condition: -> { scope.is_staff? || scope.can_view_zendesk_ticket? },
   ) do
     id = object.topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]
     uri = URI.parse(SiteSetting.zendesk_url)
