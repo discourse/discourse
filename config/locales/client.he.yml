@@ -8,7 +8,16 @@ he:
   js:
     dsa_notice:
       title: "דיווח על תוכן לא חוקי"
+      content_url: "הכתובת המדויקת של התוכן"
+      explanation: "למה לדעתך התוכן הזה לא חוקי?"
+      explanation_help: "נא לתאר את העובדות ולמה לדעתך התוכן לא חוקי. לא צריך לצטט חוקים מסוימים."
+      name: "שם מלא או שם הארגון"
       email: "כתובת דוא״ל"
+      declaration_section: "הצהרה"
+      submit: "הגשת דיווח"
+      get_email_code: "קבלת קוד בדוא״ל"
+      resend_email_code: "שליחת קוד מחדש"
+      verification_code: "קוד אימות"
     mcp_oauth_client_id_metadata_policy:
       disabled: "רישום מנהלים בלבד"
     user_api_key:
@@ -390,6 +399,7 @@ he:
       move_up: "העלאה למעלה"
       move_down: "הורדה למטה"
       position: "%{position} מתוך %{total}"
+      add_item: "הוספת פריט"
     emails_are_disabled: "כל הדוא״ל היוצא הושבת באופן גורף על ידי הנהלת באתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תישלח."
     emails_are_disabled_no_smtp: "כל הדוא״ל היוצא מושבת כי לא מוגדר שרת SMTP. אי אפשר לשלוח שום הודעות משום סוג."
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
