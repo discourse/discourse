@@ -449,6 +449,9 @@ Open items need a decision after manual testing; the rest are intended but still
   above "rock". The tag typed in full now stays first, as the server ranks it, in select-kit too.
 - [ ] **Held tag groups stay listed.** The legacy tag group chooser left held groups out of its
   results; the new picker lists them, marked selected, as every DSelect does.
+- [ ] **Signed-out visitors send no tag name lookup.** The breadcrumb intersection holds its extra
+  tags by name, and resolving them asked `/tags/list.json`, which needs a login, so every value
+  change got a 403. Signed out, the held names are now searched without their ids.
 
 **Texts** (recorded 2026-10-30)
 

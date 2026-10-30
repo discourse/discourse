@@ -851,6 +851,33 @@ module(
         );
       });
 
+      test("a signed-out intersection never looks held names up", async function (assert) {
+        resetTagSourceCache();
+        stubSearch();
+        let lookups = 0;
+        pretender.get("/tags/list.json", () => {
+          lookups++;
+          return response({ list_tags: [] });
+        });
+        this.owner.unregister("service:current-user");
+        const held = [
+          { id: 1, name: "alpha", slug: "alpha" },
+          { name: "rock" },
+        ];
+
+        await render(
+          <template>
+            <DSelectTagFilter @multiple={{true}} @value={{held}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+
+        assert.strictEqual(lookups, 0, "the list endpoint needs a login");
+        assert
+          .dom(".d-select__chip[data-name='rock']")
+          .exists("the held name still shows");
+      });
+
       test("typing searches all tags", async function (assert) {
         const requests = stubSearch();
         await render(<template><DSelectTagFilter /></template>);

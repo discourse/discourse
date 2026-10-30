@@ -16,6 +16,7 @@ import {
   type TagSearchResult,
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
+import type User from "discourse/models/user";
 import type SiteSettingsService from "discourse/services/site-settings";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect, {
@@ -159,6 +160,8 @@ export interface SelectTagBaseSignature {
 
 /** Stored-name selection and explicit creation shared by the new tag recipes. */
 export default class SelectTagBase extends Component<SelectTagBaseSignature> {
+  @service declare currentUser: User | null;
+
   /** TODO(typescript-pending): Remove the extension when Site types serialized permissions. */
   @service declare site: Site & { can_create_tag: boolean };
 
@@ -224,7 +227,8 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
       return;
     }
     this.#resolutionKey = key;
-    if (names.length) {
+    // The list endpoint needs a login; signed out, held names are searched without their ids.
+    if (names.length && this.currentUser) {
       void waitForPromise(findTagIdsByNames(names)).then(
         (ids) => {
           if (!this.isDestroying && this.#resolutionKey === key) {

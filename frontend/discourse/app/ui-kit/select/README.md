@@ -870,7 +870,7 @@ groups". The placeholder is only drawn. All three recipes take `@ariaLabelledBy`
 
 Held names resolve when the value changes. Search sends only known numeric ids, and a pending or
 failed name lookup never holds up search; a completed lookup reloads an open list with the
-resolved ids.
+resolved ids. Signed out, nothing is looked up, because the lookup endpoint needs a login.
 
 Until cleanup, each recipe sets a default `@legacyKind` (`tag-chooser`, `tag-drop` or
 `tags-intersection-chooser` with `mini-tag-chooser`, and `tag-group-chooser` with
