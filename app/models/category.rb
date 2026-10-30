@@ -516,14 +516,13 @@ class Category < ActiveRecord::Base
                   FROM category_groups
                  WHERE permission_type IN (:permissions)
                    AND (group_id = :everyone
-                        OR (:granular_permissions AND group_id = :logged_in_users)
+                        OR group_id = :logged_in_users
                         OR group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
              )",
         staged: guardian.is_staged?,
         permissions: permissions,
         user_id: guardian.user.id,
         everyone: Group::AUTO_GROUPS[:everyone],
-        granular_permissions: SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
         logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
       )
     end
@@ -924,13 +923,6 @@ class Category < ActiveRecord::Base
       read_restricted = false if group == everyone
     end
 
-    if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-         (
-           Group::AUTO_GROUPS.values_at(:anonymous_users, :logged_in_users) - mapped.map(&:first)
-         ).empty?
-      read_restricted = false
-    end
-
     [read_restricted, mapped]
   end
 
@@ -1240,16 +1232,12 @@ class Category < ActiveRecord::Base
   end
 
   def pseudogroup_permissions_validator
-    return if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions || !@permissions
+    return if !@permissions
 
-    group_ids = @permissions.map(&:first)
-
-    # NOTE (martin): This is kind of temporary, maybe one day we will want to allow certain
-    # groups and anonymous users but not other logged in users to view a category? For now
-    # we do this to have parity with the existing `everyone` group
-    if group_ids.include?(Group::AUTO_GROUPS[:anonymous_users]) &&
-         !group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
-      errors.add(:base, I18n.t("category.errors.anonymous_requires_logged_in_users"))
+    if @permissions.any? { |group_id, _permission|
+         group_id == Group::AUTO_GROUPS[:anonymous_users]
+       }
+      errors.add(:base, I18n.t("category.errors.anonymous_permissions_not_supported"))
     end
   end
 
@@ -1487,6 +1475,10 @@ class Category < ActiveRecord::Base
     return if parent_groups.include?(Group[:everyone].id)
 
     child_groups = child_permissions.map(&:first)
+    if parent_groups.include?(Group::AUTO_GROUPS[:logged_in_users])
+      child_groups &= Group::AUTO_GROUPS.values_at(:everyone, :anonymous_users)
+    end
+
     only_subcategory_groups = child_groups - parent_groups
 
     if only_subcategory_groups.present?

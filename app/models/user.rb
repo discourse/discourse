@@ -1623,7 +1623,7 @@ class User < ActiveRecord::Base
     cats =
       if admin? && !SiteSetting.suppress_secured_categories_from_admin
         Category.unscoped.where(read_restricted: true)
-      elsif SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+      else
         Category.where(id: secure_categories.select(:id)).or(
           Category.where(
             id:
@@ -1632,8 +1632,6 @@ class User < ActiveRecord::Base
               ),
           ),
         )
-      else
-        secure_categories.references(:categories)
       end
 
     cats.pluck("categories.id").sort

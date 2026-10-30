@@ -4138,9 +4138,9 @@ RSpec.describe User do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
         category = Fabricate(:category, permissions: { logged_in_users: :readonly })
 
-        expect(user.secure_category_ids).to eq(enabled ? [category.id] : [])
-        expect(user.guardian.can_see_category?(category)).to eq(enabled)
-        expect(Category.secured(user.guardian).exists?(id: category.id)).to eq(enabled)
+        expect(user.secure_category_ids).to eq([category.id])
+        expect(user.guardian.can_see_category?(category)).to eq(true)
+        expect(Category.secured(user.guardian).exists?(id: category.id)).to eq(true)
         expect(Category.secured(Guardian.new).exists?(id: category.id)).to eq(false)
       end
     end

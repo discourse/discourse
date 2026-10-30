@@ -142,7 +142,7 @@ class TopicTrackingState
         post.topic.category && post.topic.category.secure_group_ids
       end
 
-    if group_ids.present?
+    if group_ids.present? && !group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
       scope =
         scope.joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id").where(
           "gu.group_id IN (?)",
@@ -447,7 +447,7 @@ class TopicTrackingState
               JOIN category_groups cg ON cg.category_id = c2.id
               WHERE c2.read_restricted AND (
                 cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)
-                #{SiteSetting.granular_anonymous_and_logged_in_groups_permissions ? "OR cg.group_id = #{Group::AUTO_GROUPS[:logged_in_users]}" : ""}
+                OR cg.group_id = #{Group::AUTO_GROUPS[:logged_in_users]}
               ))
           ) AND
         SQL

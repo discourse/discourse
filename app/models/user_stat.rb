@@ -154,7 +154,7 @@ class UserStat < ActiveRecord::Base
                      JOIN category_groups cg ON cg.category_id = c2.id
                      WHERE c2.read_restricted AND (
                        cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = u.id)
-                       OR (:granular_permissions AND cg.group_id = :logged_in_users)
+                       OR cg.group_id = :logged_in_users
                      )))
              AND NOT EXISTS
                (SELECT 1
@@ -180,7 +180,6 @@ class UserStat < ActiveRecord::Base
       min_date: last_seen,
       limit: limit,
       now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
-      granular_permissions: SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
       logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
     )
   end

@@ -26,7 +26,7 @@ RSpec.describe "Viewing categories with group permissions" do
 
           visible_categories = [public_category]
           visible_categories << private_category if viewer == :member
-          visible_categories << logged_in_category if enabled && viewer != :anonymous
+          visible_categories << logged_in_category if viewer != :anonymous
 
           category_page.visit_categories
 

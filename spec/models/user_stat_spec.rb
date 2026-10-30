@@ -152,8 +152,7 @@ RSpec.describe UserStat do
 
         UserStat.update_first_unread(1.day.ago)
 
-        expected =
-          enabled ? post.topic.reload.updated_at : UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago
+        expected = post.topic.reload.updated_at
         expect(user.user_stat.reload.first_unread_at).to eq_time(expected)
       end
     end
