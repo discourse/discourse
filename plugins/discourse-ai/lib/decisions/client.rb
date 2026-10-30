@@ -3,9 +3,9 @@
 module DiscourseAi
   module Decisions
     class Client
-      # Billing a provider that omits usage must not make its decisions free. System One
-      # engines evaluate the state once per question, adding a fixed prompt to each pass.
-      ESTIMATED_TOKENS_PER_QUESTION = 85
+      # Billing a provider that omits usage must not make its decisions free. Engines
+      # answer every question in a single pass over the state, behind a fixed prompt.
+      ESTIMATED_PROMPT_TOKENS = 85
       ESTIMATED_TOKENS_PER_IMAGE = 1_000
 
       def initialize(decision_model, timeout: 30, max_attempts: 3)
@@ -80,14 +80,13 @@ module DiscourseAi
 
       def estimated_input_tokens(state, questions, images)
         tokenizer = DiscourseAi::Tokenizer::OpenAiTokenizer
-        state_tokens =
-          tokenizer.size(state.is_a?(String) ? state : state.to_json) +
-            images.size * ESTIMATED_TOKENS_PER_IMAGE
-        questions.sum do |question|
-          criteria = [*question.choices, *question.levels].join(" ")
-          state_tokens + tokenizer.size("#{question.instructions} #{criteria}") +
-            ESTIMATED_TOKENS_PER_QUESTION
-        end
+        question_tokens =
+          questions.sum do |question|
+            criteria = [*question.choices, *question.levels].join(" ")
+            tokenizer.size("#{question.instructions} #{criteria}")
+          end
+        tokenizer.size(state.is_a?(String) ? state : state.to_json) +
+          images.size * ESTIMATED_TOKENS_PER_IMAGE + question_tokens + ESTIMATED_PROMPT_TOKENS
       end
 
       def validate!(state, questions, feature_name, images)
