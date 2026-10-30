@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import TopicTimeline from "discourse/components/topic-timeline";
@@ -41,5 +41,26 @@ module("Integration | Component | topic-timeline", function (hooks) {
 
     assert.dom(".show-summary").doesNotExist();
     assert.dom(".post-excerpt").hasText("Last post");
+  });
+
+  test("the back button jumps to the last read post", async function (assert) {
+    const topic = createMegaTopic(this, {
+      last_read_post_id: 5500,
+      last_read_post_number: 55,
+    });
+    const jumpToIndex = sinon.spy();
+
+    await render(
+      <template>
+        <TopicTimeline
+          @enteredIndex={{10}}
+          @jumpToIndex={{jumpToIndex}}
+          @model={{topic}}
+        />
+      </template>
+    );
+    await click(".timeline-last-read .back-button");
+
+    assert.true(jumpToIndex.calledOnceWith(55));
   });
 });
