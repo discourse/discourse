@@ -1,3 +1,4 @@
+# Version updates are paused. Raise `open-pull-requests-limit` above 0 to resume them.
 version: 2
 updates:
   - package-ecosystem: "github-actions"
@@ -6,6 +7,7 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "DEPS"
+    open-pull-requests-limit: 0
   - package-ecosystem: bundler
     directory: "/"
     schedule:
@@ -16,7 +18,7 @@ updates:
       prefix: "DEPS"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 40
+    open-pull-requests-limit: 0
     versioning-strategy: lockfile-only
     allow:
       - dependency-type: direct
@@ -77,7 +79,7 @@ updates:
       exclude:
         - "@discourse/*"
         - "discourse" # npm alias for @discourse/types in plugins
-    open-pull-requests-limit: 40
+    open-pull-requests-limit: 0
     versioning-strategy: increase
     ignore:
       - dependency-name: "webpack" # Recent versions have bugs with `/static` loading. We're working to move away from webpack anyway.

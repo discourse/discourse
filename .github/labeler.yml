@@ -189,3 +189,6 @@ rte:
       - any-glob-to-any-file:
           - frontend/discourse/app/static/prosemirror/**/*
           - spec/system/composer/prosemirror_editor_spec.rb
+
+dependencies:
+  - head-branch: ["^deps/"]
